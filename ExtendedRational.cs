@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO
 {
-  /// <summary>Arbitrary-precision rational number.</summary>
+    /// <summary>Arbitrary-precision rational number.</summary>
   public class ExtendedRational : IComparable<ExtendedRational>, IEquatable<ExtendedRational> {
     private BigInteger unsignedNumerator;
 
@@ -88,6 +88,12 @@ namespace PeterO
       if (denNegative) {
         denominator = -denominator;
       }
+      #if DEBUG
+      if (!(!denominator.IsZero)) {
+        throw new ArgumentException("doesn't satisfy !denominator.IsZero");
+      }
+      #endif
+
       this.unsignedNumerator = numerator;
       this.denominator = denominator;
     }
@@ -323,8 +329,8 @@ namespace PeterO
       if (this.IsNegativeInfinity()) {
         return ExtendedFloat.NegativeInfinity;
       }
-      if (this.IsNegative && this.IsZero) {
-        return ExtendedFloat.NegativeZero;
+      if (this.IsZero) {
+        return this.IsNegative ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
       }
       ExtendedFloat valueEdNum = (this.IsNegative && this.IsZero) ?
         ExtendedFloat.NegativeZero : ExtendedFloat.FromBigInteger(this.Numerator);
@@ -361,12 +367,6 @@ namespace PeterO
     public static ExtendedRational FromInt64(long longInt) {
       return new ExtendedRational((BigInteger)longInt, BigInteger.One);
     }
-
-    public static readonly ExtendedRational Zero = FromBigInteger(BigInteger.Zero);
-    // TODO: Not correct
-    public static readonly ExtendedRational NegativeZero = FromBigInteger(BigInteger.Zero);
-    public static readonly ExtendedRational One = FromBigInteger(BigInteger.One);
-    public static readonly ExtendedRational Ten = FromBigInteger((BigInteger)10);
 
     /// <summary>Converts this value to a 64-bit floating-point number.
     /// The half-even rounding mode is used.</summary>
@@ -662,6 +662,15 @@ namespace PeterO
     /// <summary>Negative infinity, less than any other number.</summary>
     public static readonly ExtendedRational NegativeInfinity = CreateWithFlags(BigInteger.Zero, BigInteger.One, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
+    private ExtendedRational SetSign(bool negative) {
+      if (negative) {
+ this.flags |= BigNumberFlags.FlagNegative;
+  } else {
+ this.flags &= ~BigNumberFlags.FlagNegative;
+}
+      return this;
+    }
+
     private ExtendedRational Simplify() {
       if ((this.flags & BigNumberFlags.FlagSpecial) == 0) {
         int lowBit = this.unsignedNumerator.getLowestSetBit();
@@ -678,6 +687,9 @@ namespace PeterO
     /// <param name='otherValue'>An ExtendedRational object. (2).</param>
     /// <returns>An ExtendedRational object.</returns>
     public ExtendedRational Add(ExtendedRational otherValue) {
+      if (otherValue == null) {
+        throw new ArgumentNullException("otherValue");
+      }
       if (this.IsSignalingNaN()) {
         return CreateNaN(this.unsignedNumerator, false, this.IsNegative);
       }
@@ -702,6 +714,9 @@ namespace PeterO
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The difference of the two objects.</returns>
     public ExtendedRational Subtract(ExtendedRational otherValue) {
+      if (otherValue == null) {
+        throw new ArgumentNullException("otherValue");
+      }
       if (this.IsSignalingNaN()) {
         return CreateNaN(this.unsignedNumerator, false, this.IsNegative);
       }
@@ -727,6 +742,9 @@ namespace PeterO
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The product of the two objects.</returns>
     public ExtendedRational Multiply(ExtendedRational otherValue) {
+      if (otherValue == null) {
+        throw new ArgumentNullException("otherValue");
+      }
       if (this.IsSignalingNaN()) {
         return CreateNaN(this.unsignedNumerator, false, this.IsNegative);
       }
@@ -745,8 +763,7 @@ namespace PeterO
       if (ac.IsZero) {
         return (this.IsNegative ^ otherValue.IsNegative) ? NegativeZero : Zero;
       }
-      // TODO: Set sign correctly
-      return new ExtendedRational(ac, bd).Simplify();
+      return new ExtendedRational(ac, bd).Simplify().SetSign(this.IsNegative ^ otherValue.IsNegative);
     }
 
     /// <summary>Divides this instance by the value of an ExtendedRational
@@ -754,6 +771,9 @@ namespace PeterO
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The quotient of the two objects.</returns>
     public ExtendedRational Divide(ExtendedRational otherValue) {
+      if (otherValue == null) {
+        throw new ArgumentNullException("otherValue");
+      }
       if (this.IsSignalingNaN()) {
         return CreateNaN(this.unsignedNumerator, false, this.IsNegative);
       }
@@ -772,8 +792,12 @@ namespace PeterO
       if (ad.IsZero) {
         return (this.IsNegative ^ otherValue.IsNegative) ? NegativeZero : Zero;
       }
-      // TODO: Set sign correctly
-      return new ExtendedRational(ad, bc).Simplify();
+      return new ExtendedRational(ad, bc).Simplify().SetSign(this.IsNegative ^ otherValue.IsNegative);
     }
+
+    public static readonly ExtendedRational Zero = FromBigInteger(BigInteger.Zero);
+    public static readonly ExtendedRational NegativeZero = FromBigInteger(BigInteger.Zero).SetSign(false);
+    public static readonly ExtendedRational One = FromBigInteger(BigInteger.One);
+    public static readonly ExtendedRational Ten = FromBigInteger((BigInteger)10);
   }
 }

@@ -197,12 +197,6 @@ at: http://peteroupc.github.io/CBOR/
 
     private static BigInteger valueUInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
 
-    public boolean CanFitInTypeZeroOrOne(Object obj) {
-      BigInteger bigint = (BigInteger)obj;
-      return bigint.compareTo(valueLowestMajorType1) >= 0 &&
-        bigint.compareTo(valueUInt64MaxValue) <= 0;
-    }
-
     /**
      * Not documented yet.
      * @param obj An arbitrary object.

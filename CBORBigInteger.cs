@@ -161,12 +161,6 @@ namespace PeterO
 
     private static BigInteger valueUInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
-    public bool CanFitInTypeZeroOrOne(object obj) {
-      BigInteger bigint = (BigInteger)obj;
-      return bigint.CompareTo(valueLowestMajorType1) >= 0 &&
-        bigint.CompareTo(valueUInt64MaxValue) <= 0;
-    }
-
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <param name='minValue'>A 32-bit signed integer. (2).</param>

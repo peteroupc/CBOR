@@ -231,20 +231,6 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Not documented yet.
      * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
-    public boolean CanFitInTypeZeroOrOne(Object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
-      if (!ef.isFinite()) {
-        return false;
-      }
-      return ef.compareTo(ExtendedFloat.FromBigInteger(CBORObject.LowestMajorType1)) >= 0 &&
-        ef.compareTo(ExtendedFloat.FromBigInteger(CBORObject.UInt64MaxValue)) <= 0;
-    }
-
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
      * @param minValue A 32-bit signed integer. (2).
      * @param maxValue A 32-bit signed integer. (3).
      * @return A 32-bit signed integer.

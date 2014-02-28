@@ -194,18 +194,6 @@ namespace PeterO
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>A Boolean object.</returns>
-    public bool CanFitInTypeZeroOrOne(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
-      if (!ef.IsFinite) {
-        return false;
-      }
-      return ef.CompareTo(ExtendedFloat.FromBigInteger(CBORObject.LowestMajorType1)) >= 0 &&
-        ef.CompareTo(ExtendedFloat.FromBigInteger(CBORObject.UInt64MaxValue)) <= 0;
-    }
-
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
     /// <param name='minValue'>A 32-bit signed integer. (2).</param>
     /// <param name='maxValue'>A 32-bit signed integer. (3).</param>
     /// <returns>A 32-bit signed integer.</returns>

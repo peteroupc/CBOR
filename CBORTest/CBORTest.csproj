@@ -70,6 +70,7 @@
     <Compile Include="BigIntTests.cs" />
     <Compile Include="CBORExtraTest.cs" />
     <Compile Include="CBORTest.cs" />
+    <Compile Include="CBORTest2.cs" />
     <Compile Include="DecimalTest.cs" />
     <Compile Include="ExtensiveTest.cs" />
     <Compile Include="FastRandom.cs" />

@@ -43,8 +43,6 @@ at: http://peteroupc.github.io/CBOR/
 
     boolean CanFitInInt64(Object obj);
 
-    boolean CanFitInTypeZeroOrOne(Object obj);
-
     boolean CanTruncatedIntFitInInt64(Object obj);
 
     boolean CanTruncatedIntFitInInt32(Object obj);

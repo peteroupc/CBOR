@@ -195,15 +195,6 @@ namespace PeterO
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>A Boolean object.</returns>
-    public bool CanFitInTypeZeroOrOne(object obj) {
-      double value = (double)obj;
-      return value >= -18446744073709551616.0 &&
-        value <= 18446744073709549568.0;  // Highest double less or eq. to UInt64.MaxValue
-    }
-
-    /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
     public object Negate(object obj) {

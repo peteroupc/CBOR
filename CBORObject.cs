@@ -9,8 +9,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-// using System.Numerics;
 using System.Text;
+using PeterO.Cbor;
 
 namespace PeterO {
     /// <summary>Represents an object in Concise Binary Object Representation
@@ -95,6 +95,35 @@ namespace PeterO {
 
     internal static readonly BigInteger UInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
+    private sealed class ConverterInfo {
+      private object toObject;
+
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+      public object ToObject {
+        get {
+          return this.toObject;
+        }
+
+        set { this.toObject = value; }
+      }
+
+      private object converter;
+
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+      public object Converter {
+        get {
+          return this.converter;
+        }
+
+        set { this.converter = value; }
+      }
+    }
+
+    private static IDictionary<Type, ConverterInfo> converters = new Dictionary<Type, ConverterInfo>();
+    private static IDictionary<BigInteger, ICBORTag> tagHandlers = new Dictionary<BigInteger, ICBORTag>();
+
     private static int[] valueNumberTypeOrder = new int[] {
       0, 0, 2, 3, 4, 5, 1, 0, 0, 0, 0, 0, 0
     };
@@ -164,6 +193,70 @@ namespace PeterO {
       this.tagHigh = tagHigh;
     }
 
+    public static void AddConverter<T>(Type type, ICBORConverter<T> converter) {
+      if (type == null) {
+        throw new ArgumentNullException("type");
+      }
+      if (converter == null) {
+        throw new ArgumentNullException("converter");
+      }
+      ConverterInfo ci = new CBORObject.ConverterInfo();
+      ci.Converter = converter;
+      ci.ToObject = PropertyMap.FindMethod(converter, "ToCBORObject");
+      lock (converters) {
+        converters[typeof(T)] = ci;
+      }
+    }
+
+    private static bool TagHandlersEmpty() {
+      lock (tagHandlers) {
+        return tagHandlers.Count == 0;
+      }
+    }
+
+    public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
+      if (bigintTag == null) {
+        throw new ArgumentNullException("bigintTag");
+      }
+      if (handler == null) {
+        throw new ArgumentNullException("handler");
+      }
+      if (bigintTag.Sign < 0) {
+        throw new ArgumentException("bigintTag.Sign (" + Convert.ToString((long)bigintTag.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+      }
+      if (bigintTag.bitLength() > 64) {
+        throw new ArgumentException("bigintTag.bitLength (" + Convert.ToString((long)bigintTag.bitLength(), System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + "64");
+      }
+      lock (tagHandlers) {
+        tagHandlers[bigintTag] = handler;
+      }
+    }
+
+    private static CBORObject ConvertWithConverter(object obj) {
+      #if DEBUG
+      if (obj == null) {
+        throw new ArgumentNullException("obj");
+      }
+      #endif
+
+      Type type = obj.GetType();
+      ConverterInfo convinfo = null;
+      lock (converters) {
+        if (converters.ContainsKey(type)) {
+          convinfo = converters[type];
+        } else {
+          return null;
+        }
+      }
+      if (convinfo == null) {
+        return null;
+      }
+      return (CBORObject)PropertyMap.InvokeOneArgumentMethod(
+        convinfo.ToObject,
+        convinfo.Converter,
+        obj);
+    }
+
     private CBORObject(int type, object item) {
       #if DEBUG
       // Check range in debug mode to ensure that Integer and BigInteger
@@ -171,9 +264,9 @@ namespace PeterO {
       if ((type == CBORObjectTypeBigInteger) &&
           ((BigInteger)item).CompareTo(Int64MinValue) >= 0 &&
           ((BigInteger)item).CompareTo(Int64MaxValue) <= 0) {
-        if (!false) {
-          throw new ArgumentException("Big integer is within range for Integer");
-        }
+        // if (!false) {
+        throw new ArgumentException("Big integer is within range for Integer");
+        // }
       }
       #endif
       this.itemtypeValue = type;
@@ -1806,7 +1899,7 @@ namespace PeterO {
     /// or parsing the data.</exception>
     public static CBORObject Read(Stream stream) {
       try {
-        return Read(stream, 0, false, -1, null, 0);
+        return Read(stream, 0, false, -1, null);
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
       }
@@ -3715,6 +3808,10 @@ namespace PeterO {
         }
         return objret;
       }
+      objret = ConvertWithConverter(obj);
+      if (objret != null) {
+        return objret;
+      }
       objret = CBORObject.NewMap();
       foreach (KeyValuePair<string, object> key in PropertyMap.GetProperties(obj)) {
         objret[key.Key] = CBORObject.FromObject(key.Value);
@@ -3750,20 +3847,18 @@ namespace PeterO {
         throw new ArgumentException("tag not less or equal to 18446744073709551615 (" + Convert.ToString(bigintTag, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       CBORObject c = FromObject(valueOb);
-      if (bigintTag.CompareTo(valueBigInt65536) < 0) {
+      if (bigintTag.bitLength() <= 16) {
         // Low-numbered, commonly used tags
-        return new CBORObject(c, (int)bigintTag, 0);
-      } else if (bigintTag.CompareTo((BigInteger)2) == 0) {
-        return ConvertToBigNum(c, false);
-      } else if (bigintTag.CompareTo((BigInteger)3) == 0) {
-        return ConvertToBigNum(c, true);
-      } else if (bigintTag.CompareTo((BigInteger)4) == 0) {
-        return ConvertToDecimalFrac(c, true);
-      } else if (bigintTag.CompareTo((BigInteger)5) == 0) {
-        return ConvertToDecimalFrac(c, false);
-      } else if (bigintTag.CompareTo((BigInteger)30) == 0) {
-        return ConvertToRationalNumber(c);
+        return FromObjectAndTag(c, (int)bigintTag);
       } else {
+        ICBORTag tagconv = FindTagConverter(bigintTag);
+        if (tagconv != null) {
+          CBORObject c2 = tagconv.ValidateObject(c);
+          if (c.IsTagged && c != c2) {
+            c2 = RewrapObject(c, c2);
+          }
+          return c2;
+        }
         int tagLow = 0;
         int tagHigh = 0;
         byte[] bytes = bigintTag.ToByteArray();
@@ -3776,6 +3871,35 @@ namespace PeterO {
           tagHigh = unchecked(tagHigh | (((int)b) << (i * 8)));
         }
         return new CBORObject(c, tagLow, tagHigh);
+      }
+    }
+
+    private static ICBORTag FindTagConverter(int tag) {
+      return FindTagConverter((BigInteger)tag);
+    }
+
+    private static ICBORTag FindTagConverter(long tag) {
+      return FindTagConverter((BigInteger)tag);
+    }
+
+    private static ICBORTag FindTagConverter(BigInteger bigintTag) {
+      if (TagHandlersEmpty()) {
+        AddTagHandler((BigInteger)2, new CBORTag2());
+        AddTagHandler((BigInteger)3, new CBORTag3());
+        AddTagHandler((BigInteger)5, new CBORTag5());
+        AddTagHandler((BigInteger)4, new CBORTag4());
+        AddTagHandler((BigInteger)30, new CBORTag30());
+      }
+      lock (tagHandlers) {
+        if (tagHandlers.ContainsKey(bigintTag)) {
+          return tagHandlers[bigintTag];
+        }
+        #if DEBUG
+        if (bigintTag.Equals((BigInteger)2)) {
+          throw new InvalidOperationException("Expected valid tag handler");
+        }
+        #endif
+        return null;
       }
     }
 
@@ -3799,15 +3923,14 @@ namespace PeterO {
       if (smallTag < 0) {
         throw new ArgumentException("smallTag (" + Convert.ToString((long)smallTag, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
       }
+      ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);
-      if (smallTag == 2 || smallTag == 3) {
-        return ConvertToBigNum(c, smallTag == 3);
-      }
-      if (smallTag == 4 || smallTag == 5) {
-        return ConvertToDecimalFrac(c, smallTag == 4);
-      }
-      if (smallTag == 30) {
-        return ConvertToRationalNumber(c);
+      if (tagconv != null) {
+        CBORObject c2 = tagconv.ValidateObject(c);
+        if (c.IsTagged && c != c2) {
+          c2 = RewrapObject(c, c2);
+        }
+        return c2;
       }
       return new CBORObject(c, smallTag, 0);
     }
@@ -4026,64 +4149,17 @@ namespace PeterO {
       return sb.ToString();
     }
 
-    private static CBORObject ConvertToBigNum(CBORObject o, bool negative) {
-      if (o.ItemType != CBORObjectTypeByteString) {
-        throw new CBORException("Byte array expected");
-      }
-      byte[] data = (byte[])o.ThisItem;
-      if (data.Length <= 7) {
-        long x = 0;
-        for (int i = 0; i < data.Length; ++i) {
-          x <<= 8;
-          x |= ((long)data[i]) & 0xFF;
-        }
-        if (negative) {
-          x = -x;
-        }
-        return FromObject(x);
-      }
-      int neededLength = data.Length;
-      byte[] bytes;
-      bool extended = false;
-      if (((data[0] >> 7) & 1) != 0) {
-        // Increase the needed length
-        // if the highest bit is set, to
-        // distinguish negative and positive
-        // values
-        ++neededLength;
-        extended = true;
-      }
-      bytes = new byte[neededLength];
-      for (int i = 0; i < data.Length; ++i) {
-        bytes[i] = data[data.Length - 1 - i];
-        if (negative) {
-          bytes[i] = (byte)((~((int)bytes[i])) & 0xFF);
-        }
-      }
-      if (extended) {
-        if (negative) {
-          bytes[bytes.Length - 1] = (byte)0xFF;
-        } else {
-          bytes[bytes.Length - 1] = 0;
-        }
-      }
-      BigInteger bi = new BigInteger((byte[])bytes);
-      return RewrapObject(o, FromObject(bi));
-    }
-
     private static bool BigIntFits(BigInteger bigint) {
       return bigint.bitLength() <= 64;
     }
 
-    private bool CanFitInTypeZeroOrOne() {
-      ICBORNumber cn = NumberInterfaces[this.ItemType];
-      if (cn == null) {
-        return false;
-      }
-      return cn.CanFitInTypeZeroOrOne(this.ThisItem);
-    }
     // Wrap a new object in another one to retain its tags
+    // TODO: Decide on a rewrapping approach with ICBORTag
     private static CBORObject RewrapObject(CBORObject original, CBORObject newObject) {
+      if (original == newObject) {
+        // Object is the same as this one
+        return newObject;
+      }
       if (!original.IsTagged) {
         return newObject;
       }
@@ -4094,87 +4170,12 @@ namespace PeterO {
       return newObject;
     }
 
-    private static CBORObject ConvertToRationalNumber(CBORObject o) {
-      if (o.ItemType != CBORObjectTypeArray) {
-        throw new CBORException("Rational number must be an array");
-      }
-      if (o.Count != 2) {
-        throw new CBORException("Rational number requires exactly 2 items");
-      }
-      IList<CBORObject> list = o.AsList();
-      if (list[0].ItemType != CBORObjectTypeInteger &&
-          list[0].ItemType != CBORObjectTypeBigInteger) {
-        throw new CBORException("Rational number requires integer numerator");
-      }
-      if (list[1].ItemType != CBORObjectTypeInteger &&
-          list[1].ItemType != CBORObjectTypeBigInteger) {
-        throw new CBORException("Rational number requires integer denominator");
-      }
-      if (list[1].Sign <= 0) {
-        throw new CBORException("Rational number requires denominator greater than 0");
-      }
-      CBORObject objectToWrap = new CBORObject(
-        CBORObjectTypeExtendedRational,
-        new ExtendedRational(list[0].AsBigInteger(), list[1].AsBigInteger()));
-      return RewrapObject(
-        o,
-        objectToWrap);
-    }
-
-    private static CBORObject ConvertToDecimalFrac(CBORObject o, bool isDecimal) {
-      if (o.ItemType != CBORObjectTypeArray) {
-        throw new CBORException("Big fraction must be an array");
-      }
-      if (o.Count != 2) {
-        throw new CBORException("Big fraction requires exactly 2 items");
-      }
-      IList<CBORObject> list = o.AsList();
-      if (!list[0].CanFitInTypeZeroOrOne()) {
-        throw new CBORException("Exponent is too big");
-      }
-      // check type of mantissa
-      if (list[1].ItemType != CBORObjectTypeInteger &&
-          list[1].ItemType != CBORObjectTypeBigInteger) {
-        throw new CBORException("Big fraction requires mantissa to be an integer or big integer");
-      }
-      if (list[0].IsZero) {
-        // Exponent is 0, so return mantissa instead
-        return RewrapObject(o, list[1]);
-      }
-      if (isDecimal) {
-        CBORObject objectToWrap = new CBORObject(
-          CBORObjectTypeExtendedDecimal,
-          ExtendedDecimal.Create(list[1].AsBigInteger(), list[0].AsBigInteger()));
-        return RewrapObject(
-          o,
-          objectToWrap);
-      } else {
-        CBORObject objectToWrap = new CBORObject(
-          CBORObjectTypeExtendedFloat,
-          ExtendedFloat.Create(list[1].AsBigInteger(), list[0].AsBigInteger()));
-        return RewrapObject(
-          o,
-          objectToWrap);
-      }
-    }
-
-    private static bool CheckMajorTypeIndex(int type, int index, int[] validTypeFlags) {
-      if (validTypeFlags == null || index < 0 || index >= validTypeFlags.Length) {
-        return false;
-      }
-      if (type < 0 || type > 7) {
-        return false;
-      }
-      return (validTypeFlags[index] & (1 << type)) != 0;
-    }
-
     private static CBORObject Read(
       Stream s,
       int depth,
       bool allowBreak,
       int allowOnlyType,
-      int[] validTypeFlags,
-      int validTypeIndex) {
+      CBORTypeFilter filter) {
       if (depth > 1000) {
         throw new CBORException("Too deeply nested");
       }
@@ -4210,10 +4211,15 @@ namespace PeterO {
           throw new CBORException("Unexpected data encountered");
         }
       }
-      if (validTypeFlags != null) {
+      if (filter != null) {
         // Check for valid major types if asked
-        if (!CheckMajorTypeIndex(type, validTypeIndex, validTypeFlags)) {
+        if (!filter.MajorTypeMatches(type)) {
           throw new CBORException("Unexpected data type encountered");
+        }
+        if (firstbyte >= 0xE0 && firstbyte <= 0xFF && firstbyte != 0xF9 && firstbyte != 0xFA && firstbyte != 0xFB) {
+          if (!filter.NonFPSimpleValueAllowed()) {
+            throw new CBORException("Unexpected data type encountered");
+          }
         }
       }
       // Check if this represents a fixed object
@@ -4309,9 +4315,8 @@ namespace PeterO {
           // Streaming byte string
           using (MemoryStream ms = new MemoryStream()) {
             // Requires same type as this one
-            int[] subFlags = new int[] { (1 << type) };
             while (true) {
-              CBORObject o = Read(s, depth + 1, true, type, subFlags, 0);
+              CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.ByteString);
               // break if the "break" code was read
               if (o == null) {
                 break;
@@ -4370,7 +4375,7 @@ namespace PeterO {
           // Requires same type as this one
           int[] subFlags = new int[] { (1 << type) };
           while (true) {
-            CBORObject o = Read(s, depth + 1, true, type, subFlags, 0);
+            CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.TextString);
             if (o == null) {
               // break if the "break" code was read
               break;
@@ -4406,7 +4411,13 @@ namespace PeterO {
         int vtindex = 1;
         if (additional == 31) {
           while (true) {
-            CBORObject o = Read(s, depth + 1, true, -1, validTypeFlags, vtindex);
+            if (filter != null && !filter.ArrayIndexAllowed(vtindex)) {
+              throw new CBORException("Array is too long");
+            }
+            CBORObject o = Read(
+
+              s, depth + 1, true, -1,
+              filter == null ? null : filter.GetSubFilter(vtindex));
             // break if the "break" code was read
             if (o == null) {
               break;
@@ -4425,8 +4436,11 @@ namespace PeterO {
                                     Convert.ToString((long)uadditional, CultureInfo.InvariantCulture) +
                                     " is bigger than supported");
           }
+          if (filter != null && !filter.ArrayLengthMatches(uadditional)) {
+            throw new CBORException("Array is too long");
+          }
           for (long i = 0; i < uadditional; ++i) {
-            list.Add(Read(s, depth + 1, false, -1, validTypeFlags, vtindex));
+            list.Add(Read(s, depth + 1, false, -1, filter == null ? null : filter.GetSubFilter(i)));
             ++vtindex;
           }
           return new CBORObject(CBORObjectTypeArray, list);
@@ -4435,12 +4449,12 @@ namespace PeterO {
         var dict = new Dictionary<CBORObject, CBORObject>();
         if (additional == 31) {
           while (true) {
-            CBORObject key = Read(s, depth + 1, true, -1, null, 0);
+            CBORObject key = Read(s, depth + 1, true, -1, null);
             if (key == null) {
               // break if the "break" code was read
               break;
             }
-            CBORObject value = Read(s, depth + 1, false, -1, null, 0);
+            CBORObject value = Read(s, depth + 1, false, -1, null);
             dict[key] = value;
           }
           return new CBORObject(CBORObjectTypeMap, dict);
@@ -4455,8 +4469,8 @@ namespace PeterO {
                                     " is bigger than supported");
           }
           for (long i = 0; i < uadditional; ++i) {
-            CBORObject key = Read(s, depth + 1, false, -1, null, 0);
-            CBORObject value = Read(s, depth + 1, false, -1, null, 0);
+            CBORObject key = Read(s, depth + 1, false, -1, null);
+            CBORObject value = Read(s, depth + 1, false, -1, null);
             dict[key] = value;
           }
           return new CBORObject(CBORObjectTypeMap, dict);
@@ -4464,41 +4478,27 @@ namespace PeterO {
       } else if (type == 6) {  // Tagged item
         CBORObject o;
         if (!hasBigAdditional) {
-          if (uadditional == 0) {
-            // Requires a text string
-            int[] subFlags = new int[] { (1 << 3) };
-            o = Read(s, depth + 1, false, -1, subFlags, 0);
-          } else if (uadditional == 2 || uadditional == 3) {
-            // Big number
-            // Requires a byte string
-            int[] subFlags = new int[] { (1 << 2) };
-            o = Read(s, depth + 1, false, -1, subFlags, 0);
-            return ConvertToBigNum(o, uadditional == 3);
-          } else if (uadditional == 4 || uadditional == 5) {
-            // Requires an array with two elements of
-            // a valid type
-            int[] subFlags = new int[] {
-              (1 << 4),  // array
-              (1 << 0) | (1 << 1),  // exponent
-              (1 << 0) | (1 << 1) | (1 << 6)  // mantissa
-            };
-            o = Read(s, depth + 1, false, -1, subFlags, 0);
-            return ConvertToDecimalFrac(o, uadditional == 4);
-          } else if (uadditional == 30) {
-            // Requires an array with two elements of
-            // a valid type
-            int[] subFlags = new int[] {
-              (1 << 4),  // array
-              (1 << 0) | (1 << 1) | (1 << 6),  // numerator
-              (1 << 0) | (1 << 6)  // denominator
-            };
-            o = Read(s, depth + 1, false, -1, subFlags, 0);
-            return ConvertToRationalNumber(o);
+          if (filter != null && !filter.TagAllowed(uadditional)) {
+            throw new CBORException("Unexpected tag encountered: " + uadditional);
+          }
+          ICBORTag taginfo = FindTagConverter(uadditional);
+          if (taginfo != null) {
+            o = Read(s, depth + 1, false, -1, taginfo.GetTypeFilter());
+            return RewrapObject(o, taginfo.ValidateObject(o));
           } else {
-            o = Read(s, depth + 1, false, -1, null, 0);
+            o = Read(s, depth + 1, false, -1, null);
           }
         } else {
-          o = Read(s, depth + 1, false, -1, null, 0);
+          if (filter != null && !filter.TagAllowed(bigintAdditional)) {
+            throw new CBORException("Unexpected tag encountered: " + uadditional);
+          }
+          ICBORTag taginfo = FindTagConverter(bigintAdditional);
+          if (taginfo != null) {
+            o = Read(s, depth + 1, false, -1, taginfo.GetTypeFilter());
+            return RewrapObject(o, taginfo.ValidateObject(o));
+          } else {
+            o = Read(s, depth + 1, false, -1, null);
+          }
         }
         if (hasBigAdditional) {
           return FromObjectAndTag(o, bigintAdditional);

@@ -177,13 +177,6 @@ namespace PeterO
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>A Boolean object.</returns>
-    public bool CanFitInTypeZeroOrOne(object obj) {
-      return true;
-    }
-
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
     /// <param name='minValue'>A 32-bit signed integer. (2).</param>
     /// <param name='maxValue'>A 32-bit signed integer. (3).</param>
     /// <returns>A 32-bit signed integer.</returns>

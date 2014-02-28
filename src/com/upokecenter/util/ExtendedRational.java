@@ -7,9 +7,9 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-  /**
-   * Arbitrary-precision rational number.
-   */
+    /**
+     * Arbitrary-precision rational number.
+     */
   public class ExtendedRational implements Comparable<ExtendedRational> {
     private BigInteger unsignedNumerator;
 
@@ -88,6 +88,7 @@ at: http://peteroupc.github.io/CBOR/
       if (denNegative) {
         denominator=denominator.negate();
       }
+
       this.unsignedNumerator = numerator;
       this.denominator = denominator;
     }
@@ -337,8 +338,8 @@ at: http://peteroupc.github.io/CBOR/
       if (this.IsNegativeInfinity()) {
         return ExtendedFloat.NegativeInfinity;
       }
-      if (this.isNegative() && this.signum()==0) {
-        return ExtendedFloat.NegativeZero;
+      if (this.signum()==0) {
+        return this.isNegative() ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
       }
       ExtendedFloat valueEdNum = (this.isNegative() && this.signum()==0) ?
         ExtendedFloat.NegativeZero : ExtendedFloat.FromBigInteger(this.getNumerator());
@@ -376,12 +377,6 @@ at: http://peteroupc.github.io/CBOR/
     public static ExtendedRational FromInt64(long longInt) {
       return new ExtendedRational(BigInteger.valueOf(longInt), BigInteger.ONE);
     }
-
-    public static final ExtendedRational Zero = FromBigInteger(BigInteger.ZERO);
-    // TODO: Not correct
-    public static final ExtendedRational NegativeZero = FromBigInteger(BigInteger.ZERO);
-    public static final ExtendedRational One = FromBigInteger(BigInteger.ONE);
-    public static final ExtendedRational Ten = FromBigInteger(BigInteger.TEN);
 
     /**
      * Converts this value to a 64-bit floating-point number. The half-even
@@ -697,6 +692,15 @@ thisRem=divrem[1]; }
      */
     public static final ExtendedRational NegativeInfinity = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
+    private ExtendedRational SetSign(boolean negative) {
+      if (negative) {
+ this.flags |= BigNumberFlags.FlagNegative;
+  } else {
+ this.flags &= ~BigNumberFlags.FlagNegative;
+}
+      return this;
+    }
+
     private ExtendedRational Simplify() {
       if ((this.flags & BigNumberFlags.FlagSpecial) == 0) {
         int lowBit = this.unsignedNumerator.getLowestSetBit();
@@ -715,6 +719,9 @@ thisRem=divrem[1]; }
      * @return An ExtendedRational object.
      */
     public ExtendedRational Add(ExtendedRational otherValue) {
+      if (otherValue == null) {
+        throw new NullPointerException("otherValue");
+      }
       if (this.IsSignalingNaN()) {
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
       }
@@ -741,6 +748,9 @@ thisRem=divrem[1]; }
      * @return The difference of the two objects.
      */
     public ExtendedRational Subtract(ExtendedRational otherValue) {
+      if (otherValue == null) {
+        throw new NullPointerException("otherValue");
+      }
       if (this.IsSignalingNaN()) {
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
       }
@@ -767,6 +777,9 @@ thisRem=divrem[1]; }
      * @return The product of the two objects.
      */
     public ExtendedRational Multiply(ExtendedRational otherValue) {
+      if (otherValue == null) {
+        throw new NullPointerException("otherValue");
+      }
       if (this.IsSignalingNaN()) {
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
       }
@@ -785,8 +798,7 @@ thisRem=divrem[1]; }
       if (ac.signum()==0) {
         return (this.isNegative() ^ otherValue.isNegative()) ? NegativeZero : Zero;
       }
-      // TODO: Set sign correctly
-      return new ExtendedRational(ac, bd).Simplify();
+      return new ExtendedRational(ac, bd).Simplify().SetSign(this.isNegative() ^ otherValue.isNegative());
     }
 
     /**
@@ -795,6 +807,9 @@ thisRem=divrem[1]; }
      * @return The quotient of the two objects.
      */
     public ExtendedRational Divide(ExtendedRational otherValue) {
+      if (otherValue == null) {
+        throw new NullPointerException("otherValue");
+      }
       if (this.IsSignalingNaN()) {
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
       }
@@ -813,7 +828,11 @@ thisRem=divrem[1]; }
       if (ad.signum()==0) {
         return (this.isNegative() ^ otherValue.isNegative()) ? NegativeZero : Zero;
       }
-      // TODO: Set sign correctly
-      return new ExtendedRational(ad, bc).Simplify();
+      return new ExtendedRational(ad, bc).Simplify().SetSign(this.isNegative() ^ otherValue.isNegative());
     }
+
+    public static final ExtendedRational Zero = FromBigInteger(BigInteger.ZERO);
+    public static final ExtendedRational NegativeZero = FromBigInteger(BigInteger.ZERO).SetSign(false);
+    public static final ExtendedRational One = FromBigInteger(BigInteger.ONE);
+    public static final ExtendedRational Ten = FromBigInteger(BigInteger.TEN);
   }

@@ -234,17 +234,6 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
-    public boolean CanFitInTypeZeroOrOne(Object obj) {
-      double value = ((Double)obj).doubleValue();
-      return value >= -18446744073709551616.0 &&
-        value <= 18446744073709549568.0;  // Highest double less or eq. to ULong.MAX_VALUE
-    }
-
-    /**
-     * Not documented yet.
      * @param obj An arbitrary object. (2).
      * @return An arbitrary object.
      */

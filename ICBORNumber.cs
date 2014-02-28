@@ -45,8 +45,6 @@ namespace PeterO
 
     bool CanFitInInt64(Object obj);
 
-    bool CanFitInTypeZeroOrOne(Object obj);
-
     bool CanTruncatedIntFitInInt64(Object obj);
 
     bool CanTruncatedIntFitInInt32(Object obj);
