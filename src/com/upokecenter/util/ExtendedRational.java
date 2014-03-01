@@ -694,10 +694,10 @@ thisRem=divrem[1]; }
 
     private ExtendedRational SetSign(boolean negative) {
       if (negative) {
- this.flags |= BigNumberFlags.FlagNegative;
-  } else {
- this.flags &= ~BigNumberFlags.FlagNegative;
-}
+        this.flags |= BigNumberFlags.FlagNegative;
+      } else {
+        this.flags &= ~BigNumberFlags.FlagNegative;
+      }
       return this;
     }
 

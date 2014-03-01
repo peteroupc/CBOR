@@ -664,10 +664,10 @@ namespace PeterO
 
     private ExtendedRational SetSign(bool negative) {
       if (negative) {
- this.flags |= BigNumberFlags.FlagNegative;
-  } else {
- this.flags &= ~BigNumberFlags.FlagNegative;
-}
+        this.flags |= BigNumberFlags.FlagNegative;
+      } else {
+        this.flags &= ~BigNumberFlags.FlagNegative;
+      }
       return this;
     }
 

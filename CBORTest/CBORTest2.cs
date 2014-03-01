@@ -87,232 +87,232 @@ namespace Test
     [Test]
     public void TestBuiltInTags() {
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x00 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x00 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x20 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x20 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x60 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x60 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x80 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x80 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0xA0 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0xA0 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0xE0 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0xE0 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
 
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x00 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x00 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x20 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x20 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x60 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x60 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x80 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x80 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0xA0 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0xA0 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0xE0 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0xE0 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
 
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x00 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x00 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x20 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x20 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x40 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x40 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x60 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x60 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x80 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x80 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x81, 0x00 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x81, 0x00 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0xA0 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0xA0 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0xE0 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0xE0 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
 
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x00 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x00 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x20 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x20 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x40 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x40 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x60 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x60 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x80 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x80 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x81, 0x00 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x81, 0x00 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0xA0 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0xA0 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0xE0 });
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0xE0 });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
 
       Assert.AreEqual(BigInteger.Zero, CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsBigInteger());
       Assert.AreEqual(BigInteger.Zero-BigInteger.One, CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x41, 0x00 }).AsBigInteger());

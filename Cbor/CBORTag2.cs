@@ -19,6 +19,22 @@ namespace PeterO.Cbor
       return CBORTypeFilter.ByteString;
     }
 
+    internal static CBORObject FromObjectAndInnerTags(object objectValue, CBORObject objectWithTags) {
+      CBORObject newObject = CBORObject.FromObject(objectValue);
+      if (!objectWithTags.IsTagged) {
+ return newObject;
+}
+      objectWithTags = objectWithTags.UntagOne();
+      if (!objectWithTags.IsTagged) {
+ return newObject;
+}
+      BigInteger[] tags = objectWithTags.GetTags();
+      for (int i = tags.Length - 1;i >= 0; --i) {
+        newObject = CBORObject.FromObjectAndTag(newObject, tags[i]);
+      }
+      return newObject;
+    }
+
     internal static CBORObject ConvertToBigNum(CBORObject o, bool negative) {
       if (o.Type != CBORType.ByteString) {
         throw new CBORException("Byte array expected");
@@ -33,7 +49,7 @@ namespace PeterO.Cbor
         if (negative) {
           x =-1L - x;
         }
-        return CBORObject.FromObject(x);
+        return FromObjectAndInnerTags(x, o);
       }
       int neededLength = data.Length;
       byte[] bytes;
@@ -61,6 +77,12 @@ namespace PeterO.Cbor
         }
       }
       BigInteger bi = new BigInteger((byte[])bytes);
+      // NOTE: Here, any tags are discarded; when called from
+      // the Read method, "o" will have no tags anyway (beyond tag 2),
+      // and when called from FromObjectAndTag, we prefer
+      // flexibility over throwing an error if the input
+      // object contains other tags. The tag 2 is also discarded
+      // because we are returning a "natively" supported CBOR object.
       return CBORObject.FromObject(bi);
     }
 

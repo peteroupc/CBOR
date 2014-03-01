@@ -43,7 +43,12 @@ namespace PeterO.Cbor
       if (second.Sign <= 0) {
         throw new CBORException("Rational number requires denominator greater than 0");
       }
-      return CBORObject.FromObject(new ExtendedRational(first.AsBigInteger(), second.AsBigInteger()));
+      BigInteger denom = second.AsBigInteger();
+      // NOTE: Discards tags.  See comment in CBORTag2.
+      if (denom.Equals(BigInteger.One)) {
+        return CBORObject.FromObject(first.AsBigInteger());
+      }
+      return CBORObject.FromObject(new ExtendedRational(first.AsBigInteger(), denom));
     }
   }
 }

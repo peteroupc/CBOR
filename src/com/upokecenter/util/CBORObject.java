@@ -211,6 +211,9 @@ public void setConverter(Object value) { this.converter = value; }
       Type type = obj.GetType();
       ConverterInfo convinfo = null;
       synchronized(converters) {
+        if (converters.size() == 0) {
+          AddConverter(typeof(DateTime), new CBORTag0());
+        }
         if (converters.containsKey(type)) {
           convinfo = converters.get(type);
         } else {
@@ -1206,7 +1209,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * @throws IllegalStateException This object is not a byte string.
      */
     public byte[] GetByteString() {
-      if (this.itemtypeValue == CBORObjectTypeByteString) {
+      if (this.getItemType() == CBORObjectTypeByteString) {
         return (byte[])this.getThisItem();
       } else {
         throw new IllegalStateException("Not a byte String");
@@ -3892,14 +3895,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         // Low-numbered, commonly used tags
         return FromObjectAndTag(c, bigintTag.intValue());
       } else {
-        ICBORTag tagconv = FindTagConverter(bigintTag);
-        if (tagconv != null) {
-          CBORObject c2 = tagconv.ValidateObject(c);
-          if (c.isTagged() && c != c2) {
-            c2 = RewrapObject(c, c2);
-          }
-          return c2;
-        }
         int tagLow = 0;
         int tagHigh = 0;
         byte[] bytes = bigintTag.toByteArray(true);
@@ -3911,7 +3906,12 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           int b = ((int)bytes[i]) & 0xFF;
           tagHigh = (tagHigh | (((int)b) << (i * 8)));
         }
-        return new CBORObject(c, tagLow, tagHigh);
+        CBORObject c2 = new CBORObject(c, tagLow, tagHigh);
+        ICBORTag tagconv = FindTagConverter(bigintTag);
+        if (tagconv != null) {
+          c2 = tagconv.ValidateObject(c2);
+        }
+        return c2;
       }
     }
 
@@ -3928,6 +3928,12 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         AddTagHandler(BigInteger.valueOf(2), new CBORTag2());
         AddTagHandler(BigInteger.valueOf(3), new CBORTag3());
         AddTagHandler(BigInteger.valueOf(5), new CBORTag5());
+        AddTagHandler(BigInteger.ZERO, new CBORTag0());
+        AddTagHandler(BigInteger.valueOf(32), new CBORTagGenericString());
+        AddTagHandler(BigInteger.valueOf(33), new CBORTagGenericString());
+        AddTagHandler(BigInteger.valueOf(34), new CBORTagGenericString());
+        AddTagHandler(BigInteger.valueOf(35), new CBORTagGenericString());
+        AddTagHandler(BigInteger.valueOf(36), new CBORTagGenericString());
         AddTagHandler(BigInteger.valueOf(4), new CBORTag4());
         AddTagHandler(BigInteger.valueOf(30), new CBORTag30());
       }
@@ -3963,15 +3969,13 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
       ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);
+      c = new CBORObject(c, smallTag, 0);
       if (tagconv != null) {
-        CBORObject c2 = tagconv.ValidateObject(c);
-        if (c.isTagged() && c != c2) {
-          c2 = RewrapObject(c, c2);
-        }
-        return c2;
+        return tagconv.ValidateObject(c);
       }
-      return new CBORObject(c, smallTag, 0);
+      return c;
     }
+
     //-----------------------------------------------------------
     private void AppendClosingTags(StringBuilder sb) {
       CBORObject curobject = this;
@@ -4191,23 +4195,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     private static boolean BigIntFits(BigInteger bigint) {
       return bigint.bitLength() <= 64;
-    }
-
-    // Wrap a new Object in another one to retain its tags
-    // TODO: Decide on a rewrapping approach with ICBORTag
-    private static CBORObject RewrapObject(CBORObject original, CBORObject newObject) {
-      if (original == newObject) {
-        // Object is the same as this one
-        return newObject;
-      }
-      if (!original.isTagged()) {
-        return newObject;
-      }
-      BigInteger[] tags = original.GetTags();
-      for (int i = tags.length - 1; i >= 0; ++i) {
-        newObject = FromObjectAndTag(newObject, tags[i]);
-      }
-      return newObject;
     }
 
     private static CBORObject Read(
@@ -4529,28 +4516,22 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         }
       } else if (type == 6) {  // Tagged item
         CBORObject o;
+        ICBORTag taginfo = null;
         if (!hasBigAdditional) {
           if (filter != null && !filter.TagAllowed(uadditional)) {
             throw new CBORException("Unexpected tag encountered: " + uadditional);
           }
-          ICBORTag taginfo = FindTagConverter(uadditional);
-          if (taginfo != null) {
-            o = Read(s, depth + 1, false, -1, taginfo.GetTypeFilter());
-            return RewrapObject(o, taginfo.ValidateObject(o));
-          } else {
-            o = Read(s, depth + 1, false, -1, null);
-          }
+          taginfo = FindTagConverter(uadditional);
         } else {
           if (filter != null && !filter.TagAllowed(bigintAdditional)) {
             throw new CBORException("Unexpected tag encountered: " + uadditional);
           }
-          ICBORTag taginfo = FindTagConverter(bigintAdditional);
-          if (taginfo != null) {
-            o = Read(s, depth + 1, false, -1, taginfo.GetTypeFilter());
-            return RewrapObject(o, taginfo.ValidateObject(o));
-          } else {
-            o = Read(s, depth + 1, false, -1, null);
-          }
+          taginfo = FindTagConverter(bigintAdditional);
+        }
+        if (taginfo != null) {
+          o = Read(s, depth + 1, false, -1, taginfo.GetTypeFilter());
+        } else {
+          o = Read(s, depth + 1, false, -1, null);
         }
         if (hasBigAdditional) {
           return FromObjectAndTag(o, bigintAdditional);

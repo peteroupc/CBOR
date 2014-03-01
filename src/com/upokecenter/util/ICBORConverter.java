@@ -10,6 +10,7 @@ package com.upokecenter.util;
 
     /**
      * Description of ICBORConverter.
+     * @param <T> Type to convert to a CBOR object.
      */
   public interface ICBORConverter<T>
   {
