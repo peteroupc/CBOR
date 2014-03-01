@@ -11,6 +11,7 @@ using System;
 namespace PeterO
 {
     /// <summary>Description of ICBORConverter.</summary>
+    /// <typeparam name='T'>Type to convert to a CBOR object.</typeparam>
   public interface ICBORConverter<T>
   {
     CBORObject ToCBORObject(T obj);

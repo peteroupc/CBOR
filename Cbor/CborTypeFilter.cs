@@ -146,6 +146,24 @@ namespace PeterO.Cbor
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
+    public CBORTypeFilter WithArrayAnyLength() {
+      if (this.any) {
+        return this;
+      }
+      if (this.arrayLength < 0) {
+        throw new ArgumentException("this.arrayLength (" + Convert.ToString((long)this.arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+      }
+      if (this.arrayLength < this.elements.Length) {
+        throw new ArgumentException("this.arrayLength (" + Convert.ToString((long)this.arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)this.elements.Length, System.Globalization.CultureInfo.InvariantCulture));
+      }
+      CBORTypeFilter filter = this.Copy();
+      filter.types |= 1 << 4;
+      filter.anyArrayLength = true;
+      return filter;
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithFloatingPoint() {
       if (this.any) {
         return this;
@@ -258,6 +276,9 @@ namespace PeterO.Cbor
         // Index is out of bounds
         return None;
       }
+      if (this.elements == null) {
+        return Any;
+      }
       if (index >= this.elements.Length) {
         // Index is greater than the number of elements for
         // which a type is defined
@@ -270,12 +291,15 @@ namespace PeterO.Cbor
     /// <param name='index'>A 64-bit signed integer.</param>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter GetSubFilter(long index) {
-      if (this.anyArrayLength) {
+      if (this.anyArrayLength || this.any) {
         return Any;
       }
       if (index < 0 || index >= this.arrayLength) {
         // Index is out of bounds
         return None;
+      }
+      if (this.elements == null) {
+        return Any;
       }
       if (index >= this.elements.Length) {
         // Index is greater than the number of elements for

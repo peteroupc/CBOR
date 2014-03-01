@@ -242,6 +242,9 @@ namespace PeterO {
       Type type = obj.GetType();
       ConverterInfo convinfo = null;
       lock (converters) {
+        if (converters.Count == 0) {
+          AddConverter(typeof(DateTime), new CBORTag0());
+        }
         if (converters.ContainsKey(type)) {
           convinfo = converters[type];
         } else {
@@ -1234,7 +1237,7 @@ namespace PeterO {
     /// not a byte string.</exception>
     /// <returns>A byte array.</returns>
     public byte[] GetByteString() {
-      if (this.itemtypeValue == CBORObjectTypeByteString) {
+      if (this.ItemType == CBORObjectTypeByteString) {
         return (byte[])this.ThisItem;
       } else {
         throw new InvalidOperationException("Not a byte string");
@@ -3775,9 +3778,6 @@ namespace PeterO {
       if (obj is decimal) {
         return FromObject((decimal)obj);
       }
-      if (obj is DateTime) {
-        return FromObject((DateTime)obj);
-      }
       if (obj is Enum) {
         return FromObject(PropertyMap.EnumToObject((Enum)obj));
       }
@@ -3851,14 +3851,6 @@ namespace PeterO {
         // Low-numbered, commonly used tags
         return FromObjectAndTag(c, (int)bigintTag);
       } else {
-        ICBORTag tagconv = FindTagConverter(bigintTag);
-        if (tagconv != null) {
-          CBORObject c2 = tagconv.ValidateObject(c);
-          if (c.IsTagged && c != c2) {
-            c2 = RewrapObject(c, c2);
-          }
-          return c2;
-        }
         int tagLow = 0;
         int tagHigh = 0;
         byte[] bytes = bigintTag.ToByteArray();
@@ -3870,7 +3862,12 @@ namespace PeterO {
           int b = ((int)bytes[i]) & 0xFF;
           tagHigh = unchecked(tagHigh | (((int)b) << (i * 8)));
         }
-        return new CBORObject(c, tagLow, tagHigh);
+        CBORObject c2 = new CBORObject(c, tagLow, tagHigh);
+        ICBORTag tagconv = FindTagConverter(bigintTag);
+        if (tagconv != null) {
+          c2 = tagconv.ValidateObject(c2);
+        }
+        return c2;
       }
     }
 
@@ -3887,6 +3884,12 @@ namespace PeterO {
         AddTagHandler((BigInteger)2, new CBORTag2());
         AddTagHandler((BigInteger)3, new CBORTag3());
         AddTagHandler((BigInteger)5, new CBORTag5());
+        AddTagHandler(BigInteger.Zero, new CBORTag0());
+        AddTagHandler((BigInteger)32, new CBORTagGenericString());
+        AddTagHandler((BigInteger)33, new CBORTagGenericString());
+        AddTagHandler((BigInteger)34, new CBORTagGenericString());
+        AddTagHandler((BigInteger)35, new CBORTagGenericString());
+        AddTagHandler((BigInteger)36, new CBORTagGenericString());
         AddTagHandler((BigInteger)4, new CBORTag4());
         AddTagHandler((BigInteger)30, new CBORTag30());
       }
@@ -3925,15 +3928,13 @@ namespace PeterO {
       }
       ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);
+      c = new CBORObject(c, smallTag, 0);
       if (tagconv != null) {
-        CBORObject c2 = tagconv.ValidateObject(c);
-        if (c.IsTagged && c != c2) {
-          c2 = RewrapObject(c, c2);
-        }
-        return c2;
+        return tagconv.ValidateObject(c);
       }
-      return new CBORObject(c, smallTag, 0);
+      return c;
     }
+
     //-----------------------------------------------------------
     private void AppendClosingTags(StringBuilder sb) {
       CBORObject curobject = this;
@@ -4151,23 +4152,6 @@ namespace PeterO {
 
     private static bool BigIntFits(BigInteger bigint) {
       return bigint.bitLength() <= 64;
-    }
-
-    // Wrap a new object in another one to retain its tags
-    // TODO: Decide on a rewrapping approach with ICBORTag
-    private static CBORObject RewrapObject(CBORObject original, CBORObject newObject) {
-      if (original == newObject) {
-        // Object is the same as this one
-        return newObject;
-      }
-      if (!original.IsTagged) {
-        return newObject;
-      }
-      BigInteger[] tags = original.GetTags();
-      for (int i = tags.Length - 1; i >= 0; ++i) {
-        newObject = FromObjectAndTag(newObject, tags[i]);
-      }
-      return newObject;
     }
 
     private static CBORObject Read(
@@ -4477,28 +4461,22 @@ namespace PeterO {
         }
       } else if (type == 6) {  // Tagged item
         CBORObject o;
+        ICBORTag taginfo = null;
         if (!hasBigAdditional) {
           if (filter != null && !filter.TagAllowed(uadditional)) {
             throw new CBORException("Unexpected tag encountered: " + uadditional);
           }
-          ICBORTag taginfo = FindTagConverter(uadditional);
-          if (taginfo != null) {
-            o = Read(s, depth + 1, false, -1, taginfo.GetTypeFilter());
-            return RewrapObject(o, taginfo.ValidateObject(o));
-          } else {
-            o = Read(s, depth + 1, false, -1, null);
-          }
+          taginfo = FindTagConverter(uadditional);
         } else {
           if (filter != null && !filter.TagAllowed(bigintAdditional)) {
             throw new CBORException("Unexpected tag encountered: " + uadditional);
           }
-          ICBORTag taginfo = FindTagConverter(bigintAdditional);
-          if (taginfo != null) {
-            o = Read(s, depth + 1, false, -1, taginfo.GetTypeFilter());
-            return RewrapObject(o, taginfo.ValidateObject(o));
-          } else {
-            o = Read(s, depth + 1, false, -1, null);
-          }
+          taginfo = FindTagConverter(bigintAdditional);
+        }
+        if (taginfo != null) {
+          o = Read(s, depth + 1, false, -1, taginfo.GetTypeFilter());
+        } else {
+          o = Read(s, depth + 1, false, -1, null);
         }
         if (hasBigAdditional) {
           return FromObjectAndTag(o, bigintAdditional);
