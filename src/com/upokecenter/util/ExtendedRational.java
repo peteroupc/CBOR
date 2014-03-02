@@ -98,6 +98,18 @@ at: http://peteroupc.github.io/CBOR/
      * @return A string representation of this object.
      */
     @Override public String toString() {
+      if (!this.isFinite()) {
+        // TODO: Include diagnostic information in NaN
+        if (this.IsSignalingNaN()) {
+          return this.isNegative() ? "-sNaN" : "sNaN";
+        }
+        if (this.IsQuietNaN()) {
+          return this.isNegative() ? "-NaN" : "NaN";
+        }
+        if (this.IsInfinity()) {
+          return this.isNegative() ? "-Infinity" : "Infinity";
+        }
+      }
       return "(" + this.getNumerator() + "/" + this.getDenominator() + ")";
     }
 
@@ -692,7 +704,7 @@ thisRem=divrem[1]; }
      */
     public static final ExtendedRational NegativeInfinity = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
-    private ExtendedRational SetSign(boolean negative) {
+    private ExtendedRational ChangeSign(boolean negative) {
       if (negative) {
         this.flags |= BigNumberFlags.FlagNegative;
       } else {
@@ -734,7 +746,15 @@ thisRem=divrem[1]; }
       if (otherValue.IsQuietNaN()) {
         return otherValue;
       }
-      // TODO: Handle infinity
+      if (this.IsInfinity()) {
+        if (otherValue.IsInfinity()) {
+          return (this.isNegative() == otherValue.isNegative()) ? this : NaN;
+        }
+        return this;
+      }
+      if (otherValue.IsInfinity()) {
+        return otherValue;
+      }
       BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
       BigInteger bc = this.getDenominator().multiply(otherValue.getNumerator());
       BigInteger bd = this.getDenominator().multiply(otherValue.getDenominator());
@@ -763,7 +783,16 @@ thisRem=divrem[1]; }
       if (otherValue.IsQuietNaN()) {
         return otherValue;
       }
-      // TODO: Handle infinity
+      if (this.IsInfinity()) {
+        if (otherValue.IsInfinity()) {
+          return (this.isNegative() != otherValue.isNegative()) ?
+            (this.isNegative() ? PositiveInfinity : NegativeInfinity) : NaN;
+        }
+        return this.isNegative() ? PositiveInfinity : NegativeInfinity;
+      }
+      if (otherValue.IsInfinity()) {
+        return otherValue.isNegative() ? PositiveInfinity : NegativeInfinity;
+      }
       BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
       BigInteger bc = this.getDenominator().multiply(otherValue.getNumerator());
       BigInteger bd = this.getDenominator().multiply(otherValue.getDenominator());
@@ -792,13 +821,19 @@ thisRem=divrem[1]; }
       if (otherValue.IsQuietNaN()) {
         return otherValue;
       }
-      // TODO: Handle infinity
+      boolean resultNeg = this.isNegative() ^ otherValue.isNegative();
+      if (this.IsInfinity()) {
+        return otherValue.signum()==0 ? NaN : (resultNeg ? NegativeInfinity : PositiveInfinity);
+      }
+      if (otherValue.IsInfinity()) {
+        return this.signum()==0 ? NaN : (resultNeg ? NegativeInfinity : PositiveInfinity);
+      }
       BigInteger ac = this.getNumerator().multiply(otherValue.getNumerator());
       BigInteger bd = this.getDenominator().multiply(otherValue.getDenominator());
       if (ac.signum()==0) {
-        return (this.isNegative() ^ otherValue.isNegative()) ? NegativeZero : Zero;
+        return resultNeg ? NegativeZero : Zero;
       }
-      return new ExtendedRational(ac, bd).Simplify().SetSign(this.isNegative() ^ otherValue.isNegative());
+      return new ExtendedRational(ac, bd).Simplify().ChangeSign(resultNeg);
     }
 
     /**
@@ -822,17 +857,18 @@ thisRem=divrem[1]; }
       if (otherValue.IsQuietNaN()) {
         return otherValue;
       }
+      boolean resultNeg = this.isNegative() ^ otherValue.isNegative();
       // TODO: Handle infinity
       BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
       BigInteger bc = this.getDenominator().multiply(otherValue.getNumerator());
       if (ad.signum()==0) {
-        return (this.isNegative() ^ otherValue.isNegative()) ? NegativeZero : Zero;
+        return resultNeg ? NegativeZero : Zero;
       }
-      return new ExtendedRational(ad, bc).Simplify().SetSign(this.isNegative() ^ otherValue.isNegative());
+      return new ExtendedRational(ad, bc).Simplify().ChangeSign(resultNeg);
     }
 
     public static final ExtendedRational Zero = FromBigInteger(BigInteger.ZERO);
-    public static final ExtendedRational NegativeZero = FromBigInteger(BigInteger.ZERO).SetSign(false);
+    public static final ExtendedRational NegativeZero = FromBigInteger(BigInteger.ZERO).ChangeSign(false);
     public static final ExtendedRational One = FromBigInteger(BigInteger.ONE);
     public static final ExtendedRational Ten = FromBigInteger(BigInteger.TEN);
   }

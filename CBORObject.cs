@@ -2169,6 +2169,10 @@ namespace PeterO {
         stream.WriteByte(0xf6);
         return;
       }
+      if (!rational.IsFinite) {
+        Write(rational.ToDouble(), stream);
+        return;
+      }
       if (rational.Denominator.Equals(BigInteger.One)) {
         Write(rational.Numerator, stream);
         return;
@@ -2737,6 +2741,19 @@ namespace PeterO {
       }
     }
 
+    private static int SkipWhitespaceOrByteOrderMarkJSON(CharacterReader reader) {
+      bool allowBOM = true;
+      while (true) {
+        int c = reader.NextChar();
+        if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
+          if (!allowBOM || c != 0xFEFF) {
+            return c;
+          }
+        }
+        allowBOM = false;
+      }
+    }
+
     private static string NextJSONString(CharacterReader reader, int quote) {
       int c;
       StringBuilder sb = null;
@@ -2757,8 +2774,7 @@ namespace PeterO {
                 c = '\\';
                 break;
               case '/':
-                // Not allowed to be escaped by RFC 4627,
-                // but will be allowed in the revision to RFC 4627
+                // Now allowed to be escaped under RFC 7158
                 c = '/';
                 break;
               case '\"':
@@ -2920,13 +2936,16 @@ namespace PeterO {
       }
     }
 
-    private static CBORObject ParseJSONObjectOrArray(CharacterReader reader, bool noDuplicates, bool skipByteOrderMark) {
+    private static CBORObject ParseJSONValue(
+CharacterReader reader,
+bool noDuplicates,
+bool skipByteOrderMark,
+bool objectOrArrayOnly) {
       int c;
-      c = SkipWhitespaceJSON(reader);
-      if (skipByteOrderMark && c == (char)0xFEFF) {
-        // Skip the Unicode byte order mark
-        c = SkipWhitespaceJSON(reader);
-      } else if (c == (char)0xFEFF) {
+      c = skipByteOrderMark ?
+        SkipWhitespaceOrByteOrderMarkJSON(reader) :
+        SkipWhitespaceJSON(reader);
+      if (!skipByteOrderMark && c == (char)0xFEFF) {
         throw reader.NewError("JSON object began with a byte order mark (U+FEFF)");
       }
       if (c == '[') {
@@ -2935,7 +2954,11 @@ namespace PeterO {
       if (c == '{') {
         return ParseJSONObject(reader, noDuplicates);
       }
-      throw reader.NewError("A JSON object must begin with '{' or '['");
+      if (objectOrArrayOnly) {
+        throw reader.NewError("A JSON object must begin with '{' or '['");
+      }
+      int[] nextChar = new int[1];
+      return NextJSONValue(reader, c, noDuplicates, nextChar);
     }
 
     private static CBORObject ParseJSONObject(CharacterReader reader, bool noDuplicates) {
@@ -3027,10 +3050,9 @@ namespace PeterO {
     }
 
     /// <summary>Generates a CBOR object from a string in JavaScript Object
-    /// Notation (JSON) format. This function only accepts maps and arrays.
-    /// <para>If a JSON object has the same key, only the last given value will
-    /// be used for each duplicated key. The JSON string may not begin with
-    /// a byte order mark (U + FEFF).</para>
+    /// Notation (JSON) format. <para>If a JSON object has the same key, only
+    /// the last given value will be used for each duplicated key. The JSON
+    /// string may not begin with a byte order mark (U + FEFF).</para>
     /// </summary>
     /// <param name='str'>A string in JSON format.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
@@ -3039,7 +3061,7 @@ namespace PeterO {
     /// <returns>A CBORObject object.</returns>
     public static CBORObject FromJSONString(string str) {
       CharacterReader reader = new CharacterReader(str);
-      CBORObject obj = ParseJSONObjectOrArray(reader, false, false);
+      CBORObject obj = ParseJSONValue(reader, false, false, false);
       if (SkipWhitespaceJSON(reader) != -1) {
         throw reader.NewError("End of string not reached");
       }
@@ -3047,11 +3069,10 @@ namespace PeterO {
     }
 
     /// <summary>Generates a CBOR object from a data stream in JavaScript
-    /// Object Notation (JSON) format and UTF-8 encoding. This function
-    /// only accepts maps and arrays. The JSON stream may begin with a byte
-    /// order mark (U + FEFF); however, this implementation's ToJSONString
-    /// method will not place this character at the beginning of a JSON text,
-    /// since doing so is forbidden under the revision to RFC 4627. <para>If
+    /// Object Notation (JSON) format and UTF-8 encoding. The JSON stream
+    /// may begin with a byte order mark (U + FEFF); however, this implementation's
+    /// ToJSONString method will not place this character at the beginning
+    /// of a JSON text, since doing so is forbidden under RFC 7158. <para>If
     /// a JSON object has the same key, only the last given value will be used
     /// for each duplicated key.</para>
     /// </summary>
@@ -3065,7 +3086,7 @@ namespace PeterO {
     public static CBORObject ReadJSON(Stream stream) {
       CharacterReader reader = new CharacterReader(stream);
       try {
-        CBORObject obj = ParseJSONObjectOrArray(reader, false, true);
+        CBORObject obj = ParseJSONValue(reader, false, true, false);
         if (SkipWhitespaceJSON(reader) != -1) {
           throw reader.NewError("End of data stream not reached");
         }
@@ -3124,9 +3145,8 @@ namespace PeterO {
     }
 
     /// <summary>Converts this object to a JSON string. This function works
-    /// not only with arrays and maps (the only proper JSON objects under RFC
-    /// 4627), but also integers, strings, byte arrays, and other JSON data
-    /// types.</summary>
+    /// not only with arrays and maps, but also integers, strings, byte arrays,
+    /// and other JSON data types.</summary>
     /// <returns>A string object.</returns>
     public string ToJSONString() {
       int type = this.ItemType;
@@ -3467,7 +3487,7 @@ namespace PeterO {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
       }
-      if (bigValue.Denominator.Equals(BigInteger.One)) {
+      if (bigValue.IsFinite && bigValue.Denominator.Equals(BigInteger.One)) {
         return FromObject(bigValue.Numerator);
       }
       return new CBORObject(CBORObjectTypeExtendedRational, bigValue);

@@ -511,6 +511,8 @@ namespace Test {
 
     [Test]
     public void TestCompareB() {
+      Assert.IsTrue(CBORObject.DecodeFromBytes(new byte[] { (byte)0xFA, 0x7F, (byte)0x80, 0x00, 0x00 }).IsInfinity());
+      Assert.IsTrue(CBORObject.DecodeFromBytes(new byte[] { (byte)0xFA, 0x7F, (byte)0x80, 0x00, 0x00 }).AsExtendedRational().IsInfinity());
       AddSubCompare(
         CBORObject.DecodeFromBytes(new byte[] { (byte)0xD8, 0x1E, (byte)0x82, (byte)0xC2, 0x58, 0x28, 0x77, 0x24, 0x73, (byte)0x84, (byte)0xBD, 0x72, (byte)0x82, 0x7C, (byte)0xD6, (byte)0x93, 0x18, 0x44, (byte)0x8A, (byte)0x88, 0x43, 0x67, (byte)0xA2, (byte)0xEB, 0x11, 0x00, 0x15, 0x1B, 0x1D, 0x5D, (byte)0xDC, (byte)0xEB, 0x39, 0x17, 0x72, 0x11, 0x5B, 0x03, (byte)0xFA, (byte)0xA8, 0x3F, (byte)0xD2, 0x75, (byte)0xF8, 0x36, (byte)0xC8, 0x1A, 0x00, 0x2E, (byte)0x8C, (byte)0x8D }),
         CBORObject.DecodeFromBytes(new byte[] { (byte)0xFA, 0x7F, (byte)0x80, 0x00, 0x00 }));
@@ -739,6 +741,58 @@ namespace Test {
       Assert.IsFalse(ExtendedRational.NegativeInfinity.IsPositiveInfinity());
       Assert.IsTrue(ExtendedRational.NegativeInfinity.IsNegativeInfinity());
       Assert.IsTrue(ExtendedRational.NegativeInfinity.IsNegative);
+
+      Assert.AreEqual(
+        ExtendedDecimal.PositiveInfinity,
+        ExtendedDecimal.FromDouble(Double.PositiveInfinity));
+      Assert.AreEqual(
+        ExtendedDecimal.NegativeInfinity,
+        ExtendedDecimal.FromDouble(Double.NegativeInfinity));
+      Assert.AreEqual(
+        ExtendedDecimal.PositiveInfinity,
+        ExtendedDecimal.FromSingle(Single.PositiveInfinity));
+      Assert.AreEqual(
+        ExtendedDecimal.NegativeInfinity,
+        ExtendedDecimal.FromSingle(Single.NegativeInfinity));
+
+      Assert.AreEqual(
+        ExtendedFloat.PositiveInfinity,
+        ExtendedFloat.FromDouble(Double.PositiveInfinity));
+      Assert.AreEqual(
+        ExtendedFloat.NegativeInfinity,
+        ExtendedFloat.FromDouble(Double.NegativeInfinity));
+      Assert.AreEqual(
+        ExtendedFloat.PositiveInfinity,
+        ExtendedFloat.FromSingle(Single.PositiveInfinity));
+      Assert.AreEqual(
+        ExtendedFloat.NegativeInfinity,
+        ExtendedFloat.FromSingle(Single.NegativeInfinity));
+
+      Assert.AreEqual(
+        ExtendedRational.PositiveInfinity,
+        ExtendedRational.FromDouble(Double.PositiveInfinity));
+      Assert.AreEqual(
+        ExtendedRational.NegativeInfinity,
+        ExtendedRational.FromDouble(Double.NegativeInfinity));
+      Assert.AreEqual(
+        ExtendedRational.PositiveInfinity,
+        ExtendedRational.FromSingle(Single.PositiveInfinity));
+      Assert.AreEqual(
+        ExtendedRational.NegativeInfinity,
+        ExtendedRational.FromSingle(Single.NegativeInfinity));
+
+      Assert.AreEqual(
+        ExtendedRational.PositiveInfinity,
+        ExtendedRational.FromExtendedDecimal(ExtendedDecimal.PositiveInfinity));
+      Assert.AreEqual(
+        ExtendedRational.NegativeInfinity,
+        ExtendedRational.FromExtendedDecimal(ExtendedDecimal.NegativeInfinity));
+      Assert.AreEqual(
+        ExtendedRational.PositiveInfinity,
+        ExtendedRational.FromExtendedFloat(ExtendedFloat.PositiveInfinity));
+      Assert.AreEqual(
+        ExtendedRational.NegativeInfinity,
+        ExtendedRational.FromExtendedFloat(ExtendedFloat.NegativeInfinity));
     }
 
     [Test]
@@ -944,12 +998,20 @@ namespace Test {
 
     [Test]
     public void TestCBORInfinity() {
+      Assert.AreEqual("-Infinity",CBORObject.FromObject(ExtendedRational.NegativeInfinity).ToString());
+      Assert.AreEqual("Infinity",CBORObject.FromObject(ExtendedRational.PositiveInfinity).ToString());
+      Assert.IsTrue(CBORObject.FromObject(ExtendedRational.NegativeInfinity).IsInfinity());
+      Assert.IsTrue(CBORObject.FromObject(ExtendedRational.PositiveInfinity).IsInfinity());
+      Assert.IsTrue(CBORObject.FromObject(ExtendedRational.NegativeInfinity).IsNegativeInfinity());
+      Assert.IsTrue(CBORObject.FromObject(ExtendedRational.PositiveInfinity).IsPositiveInfinity());
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.NegativeInfinity));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Single.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.PositiveInfinity));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.PositiveInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.PositiveInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Single.PositiveInfinity));
     }
@@ -1454,6 +1516,49 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+      using(MemoryStream ms = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
+        try {
+ CBORObject.ReadJSON(ms);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      }
+      // whitespace followed by BOM
+      using(MemoryStream ms2 = new MemoryStream(new byte[] { 0x20, 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
+        try {
+ CBORObject.ReadJSON(ms2);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      }
+      // two BOMs
+      using(MemoryStream ms3 = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
+        try {
+ CBORObject.ReadJSON(ms3);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      }
+      try {
+ CBORObject.FromJSONString("\ufeff {}");
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      Assert.AreEqual("true",CBORObject.FromJSONString("true").ToJSONString());
+      Assert.AreEqual("true",CBORObject.FromJSONString(" true ").ToJSONString());
+      Assert.AreEqual("false",CBORObject.FromJSONString("false").ToJSONString());
+      Assert.AreEqual("null",CBORObject.FromJSONString("null").ToJSONString());
+      Assert.AreEqual("5",CBORObject.FromJSONString("5").ToJSONString());
     }
 
     [Test]

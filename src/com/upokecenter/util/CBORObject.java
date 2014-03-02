@@ -2187,6 +2187,10 @@ public void set(String key, CBORObject value) {
         stream.write(0xf6);
         return;
       }
+      if (!rational.isFinite()) {
+        Write(rational.ToDouble(), stream);
+        return;
+      }
       if (rational.getDenominator().equals(BigInteger.ONE)) {
         Write(rational.getNumerator(), stream);
         return;
@@ -2772,6 +2776,19 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
+    private static int SkipWhitespaceOrByteOrderMarkJSON(CharacterReader reader) {
+      boolean allowBOM = true;
+      while (true) {
+        int c = reader.NextChar();
+        if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
+          if (!allowBOM || c != 0xFEFF) {
+            return c;
+          }
+        }
+        allowBOM = false;
+      }
+    }
+
     private static String NextJSONString(CharacterReader reader, int quote) {
       int c;
       StringBuilder sb = null;
@@ -2792,8 +2809,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
                 c = '\\';
                 break;
               case '/':
-                // Not allowed to be escaped by RFC 4627,
-                // but will be allowed in the revision to RFC 4627
+                // Now allowed to be escaped under RFC 7158
                 c = '/';
                 break;
               case '\"':
@@ -2955,13 +2971,16 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
-    private static CBORObject ParseJSONObjectOrArray(CharacterReader reader, boolean noDuplicates, boolean skipByteOrderMark) {
+    private static CBORObject ParseJSONValue(
+CharacterReader reader,
+boolean noDuplicates,
+boolean skipByteOrderMark,
+boolean objectOrArrayOnly) {
       int c;
-      c = SkipWhitespaceJSON(reader);
-      if (skipByteOrderMark && c == (char)0xFEFF) {
-        // Skip the Unicode byte order mark
-        c = SkipWhitespaceJSON(reader);
-      } else if (c == (char)0xFEFF) {
+      c = skipByteOrderMark ?
+        SkipWhitespaceOrByteOrderMarkJSON(reader) :
+        SkipWhitespaceJSON(reader);
+      if (!skipByteOrderMark && c == (char)0xFEFF) {
         throw reader.NewError("JSON Object began with a byte order mark (U+FEFF)");
       }
       if (c == '[') {
@@ -2970,7 +2989,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if (c == '{') {
         return ParseJSONObject(reader, noDuplicates);
       }
-      throw reader.NewError("A JSON Object must begin with '{' or '['");
+      if (objectOrArrayOnly) {
+        throw reader.NewError("A JSON Object must begin with '{' or '['");
+      }
+      int[] nextChar = new int[1];
+      return NextJSONValue(reader, c, noDuplicates, nextChar);
     }
 
     private static CBORObject ParseJSONObject(CharacterReader reader, boolean noDuplicates) {
@@ -3063,10 +3086,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     /**
      * Generates a CBOR object from a string in JavaScript Object Notation
-     * (JSON) format. This function only accepts maps and arrays. <p>If
-     * a JSON object has the same key, only the last given value will be used
-     * for each duplicated key. The JSON string may not begin with a byte order
-     * mark (U + FEFF).</p>
+     * (JSON) format. <p>If a JSON object has the same key, only the last given
+     * value will be used for each duplicated key. The JSON string may not
+     * begin with a byte order mark (U + FEFF).</p>
      * @param str A string in JSON format.
      * @return A CBORObject object.
      * @throws java.lang.NullPointerException The parameter {@code str}
@@ -3075,7 +3097,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      */
     public static CBORObject FromJSONString(String str) {
       CharacterReader reader = new CharacterReader(str);
-      CBORObject obj = ParseJSONObjectOrArray(reader, false, false);
+      CBORObject obj = ParseJSONValue(reader, false, false, false);
       if (SkipWhitespaceJSON(reader) != -1) {
         throw reader.NewError("End of String not reached");
       }
@@ -3084,12 +3106,12 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     /**
      * Generates a CBOR object from a data stream in JavaScript Object Notation
-     * (JSON) format and UTF-8 encoding. This function only accepts maps
-     * and arrays. The JSON stream may begin with a byte order mark (U + FEFF);
-     * however, this implementation's ToJSONString method will not place
-     * this character at the beginning of a JSON text, since doing so is forbidden
-     * under the revision to RFC 4627. <p>If a JSON object has the same key,
-     * only the last given value will be used for each duplicated key.</p>
+     * (JSON) format and UTF-8 encoding. The JSON stream may begin with a
+     * byte order mark (U + FEFF); however, this implementation's ToJSONString
+     * method will not place this character at the beginning of a JSON text,
+     * since doing so is forbidden under RFC 7158. <p>If a JSON object has
+     * the same key, only the last given value will be used for each duplicated
+     * key.</p>
      * @param stream A readable data stream.
      * @return A CBORObject object.
      * @throws java.lang.NullPointerException The parameter {@code stream}
@@ -3101,7 +3123,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     public static CBORObject ReadJSON(InputStream stream) throws IOException {
       CharacterReader reader = new CharacterReader(stream);
       try {
-        CBORObject obj = ParseJSONObjectOrArray(reader, false, true);
+        CBORObject obj = ParseJSONValue(reader, false, true, false);
         if (SkipWhitespaceJSON(reader) != -1) {
           throw reader.NewError("End of data stream not reached");
         }
@@ -3161,8 +3183,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     /**
      * Converts this object to a JSON string. This function works not only
-     * with arrays and maps (the only proper JSON objects under RFC 4627),
-     * but also integers, strings, byte arrays, and other JSON data types.
+     * with arrays and maps, but also integers, strings, byte arrays, and
+     * other JSON data types.
      * @return A string object.
      */
     public String ToJSONString() {
@@ -3521,7 +3543,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if ((Object)bigValue == (Object)null) {
         return CBORObject.Null;
       }
-      if (bigValue.getDenominator().equals(BigInteger.ONE)) {
+      if (bigValue.isFinite() && bigValue.getDenominator().equals(BigInteger.ONE)) {
         return FromObject(bigValue.getNumerator());
       }
       return new CBORObject(CBORObjectTypeExtendedRational, bigValue);

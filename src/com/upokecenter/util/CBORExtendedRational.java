@@ -15,7 +15,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsPositiveInfinity(Object obj) {
-      return false;
+      return ((ExtendedRational)obj).IsPositiveInfinity();
     }
 
     /**
@@ -24,7 +24,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsInfinity(Object obj) {
-      return false;
+      return ((ExtendedRational)obj).IsInfinity();
     }
 
     /**
@@ -33,7 +33,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsNegativeInfinity(Object obj) {
-      return false;
+      return ((ExtendedRational)obj).IsNegativeInfinity();
     }
 
     /**
@@ -42,7 +42,7 @@ at: http://peteroupc.github.io/CBOR/
      * @return A Boolean object.
      */
     public boolean IsNaN(Object obj) {
-      return false;
+      return ((ExtendedRational)obj).IsNaN();
     }
 
     /**
