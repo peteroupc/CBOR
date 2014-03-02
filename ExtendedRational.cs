@@ -101,6 +101,18 @@ namespace PeterO
     /// <summary>Converts this object to a text string.</summary>
     /// <returns>A string representation of this object.</returns>
     public override string ToString() {
+      if (!this.IsFinite) {
+        // TODO: Include diagnostic information in NaN
+        if (this.IsSignalingNaN()) {
+          return this.IsNegative ? "-sNaN" : "sNaN";
+        }
+        if (this.IsQuietNaN()) {
+          return this.IsNegative ? "-NaN" : "NaN";
+        }
+        if (this.IsInfinity()) {
+          return this.IsNegative ? "-Infinity" : "Infinity";
+        }
+      }
       return "(" + this.Numerator + "/" + this.Denominator + ")";
     }
 
@@ -662,7 +674,7 @@ namespace PeterO
     /// <summary>Negative infinity, less than any other number.</summary>
     public static readonly ExtendedRational NegativeInfinity = CreateWithFlags(BigInteger.Zero, BigInteger.One, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
-    private ExtendedRational SetSign(bool negative) {
+    private ExtendedRational ChangeSign(bool negative) {
       if (negative) {
         this.flags |= BigNumberFlags.FlagNegative;
       } else {
@@ -702,7 +714,15 @@ namespace PeterO
       if (otherValue.IsQuietNaN()) {
         return otherValue;
       }
-      // TODO: Handle infinity
+      if (this.IsInfinity()) {
+        if (otherValue.IsInfinity()) {
+          return (this.IsNegative == otherValue.IsNegative) ? this : NaN;
+        }
+        return this;
+      }
+      if (otherValue.IsInfinity()) {
+        return otherValue;
+      }
       BigInteger ad = this.Numerator * (BigInteger)otherValue.Denominator;
       BigInteger bc = this.Denominator * (BigInteger)otherValue.Numerator;
       BigInteger bd = this.Denominator * (BigInteger)otherValue.Denominator;
@@ -729,7 +749,16 @@ namespace PeterO
       if (otherValue.IsQuietNaN()) {
         return otherValue;
       }
-      // TODO: Handle infinity
+      if (this.IsInfinity()) {
+        if (otherValue.IsInfinity()) {
+          return (this.IsNegative != otherValue.IsNegative) ?
+            (this.IsNegative ? PositiveInfinity : NegativeInfinity) : NaN;
+        }
+        return this.IsNegative ? PositiveInfinity : NegativeInfinity;
+      }
+      if (otherValue.IsInfinity()) {
+        return otherValue.IsNegative ? PositiveInfinity : NegativeInfinity;
+      }
       BigInteger ad = this.Numerator * (BigInteger)otherValue.Denominator;
       BigInteger bc = this.Denominator * (BigInteger)otherValue.Numerator;
       BigInteger bd = this.Denominator * (BigInteger)otherValue.Denominator;
@@ -757,13 +786,19 @@ namespace PeterO
       if (otherValue.IsQuietNaN()) {
         return otherValue;
       }
-      // TODO: Handle infinity
+      bool resultNeg = this.IsNegative ^ otherValue.IsNegative;
+      if (this.IsInfinity()) {
+        return otherValue.IsZero ? NaN : (resultNeg ? NegativeInfinity : PositiveInfinity);
+      }
+      if (otherValue.IsInfinity()) {
+        return this.IsZero ? NaN : (resultNeg ? NegativeInfinity : PositiveInfinity);
+      }
       BigInteger ac = this.Numerator * (BigInteger)otherValue.Numerator;
       BigInteger bd = this.Denominator * (BigInteger)otherValue.Denominator;
       if (ac.IsZero) {
-        return (this.IsNegative ^ otherValue.IsNegative) ? NegativeZero : Zero;
+        return resultNeg ? NegativeZero : Zero;
       }
-      return new ExtendedRational(ac, bd).Simplify().SetSign(this.IsNegative ^ otherValue.IsNegative);
+      return new ExtendedRational(ac, bd).Simplify().ChangeSign(resultNeg);
     }
 
     /// <summary>Divides this instance by the value of an ExtendedRational
@@ -786,17 +821,18 @@ namespace PeterO
       if (otherValue.IsQuietNaN()) {
         return otherValue;
       }
+      bool resultNeg = this.IsNegative ^ otherValue.IsNegative;
       // TODO: Handle infinity
       BigInteger ad = this.Numerator * (BigInteger)otherValue.Denominator;
       BigInteger bc = this.Denominator * (BigInteger)otherValue.Numerator;
       if (ad.IsZero) {
-        return (this.IsNegative ^ otherValue.IsNegative) ? NegativeZero : Zero;
+        return resultNeg ? NegativeZero : Zero;
       }
-      return new ExtendedRational(ad, bc).Simplify().SetSign(this.IsNegative ^ otherValue.IsNegative);
+      return new ExtendedRational(ad, bc).Simplify().ChangeSign(resultNeg);
     }
 
     public static readonly ExtendedRational Zero = FromBigInteger(BigInteger.Zero);
-    public static readonly ExtendedRational NegativeZero = FromBigInteger(BigInteger.Zero).SetSign(false);
+    public static readonly ExtendedRational NegativeZero = FromBigInteger(BigInteger.Zero).ChangeSign(false);
     public static readonly ExtendedRational One = FromBigInteger(BigInteger.One);
     public static readonly ExtendedRational Ten = FromBigInteger((BigInteger)10);
   }

@@ -16,28 +16,28 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsPositiveInfinity(object obj) {
-      return false;
+      return ((ExtendedRational)obj).IsPositiveInfinity();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsInfinity(object obj) {
-      return false;
+      return ((ExtendedRational)obj).IsInfinity();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsNegativeInfinity(object obj) {
-      return false;
+      return ((ExtendedRational)obj).IsNegativeInfinity();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsNaN(object obj) {
-      return false;
+      return ((ExtendedRational)obj).IsNaN();
     }
 
     /// <summary>Not documented yet.</summary>

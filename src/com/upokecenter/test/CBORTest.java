@@ -500,6 +500,8 @@ import com.upokecenter.util.*;
 
     @Test
     public void TestCompareB() {
+      if(!(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFA, 0x7F, (byte)0x80, 0x00, 0x00  }).IsInfinity()))Assert.fail();
+      if(!(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFA, 0x7F, (byte)0x80, 0x00, 0x00  }).AsExtendedRational().IsInfinity()))Assert.fail();
       AddSubCompare(
         CBORObject.DecodeFromBytes(new byte[] {  (byte)0xD8, 0x1E, (byte)0x82, (byte)0xC2, 0x58, 0x28, 0x77, 0x24, 0x73, (byte)0x84, (byte)0xBD, 0x72, (byte)0x82, 0x7C, (byte)0xD6, (byte)0x93, 0x18, 0x44, (byte)0x8A, (byte)0x88, 0x43, 0x67, (byte)0xA2, (byte)0xEB, 0x11, 0x00, 0x15, 0x1B, 0x1D, 0x5D, (byte)0xDC, (byte)0xEB, 0x39, 0x17, 0x72, 0x11, 0x5B, 0x03, (byte)0xFA, (byte)0xA8, 0x3F, (byte)0xD2, 0x75, (byte)0xF8, 0x36, (byte)0xC8, 0x1A, 0x00, 0x2E, (byte)0x8C, (byte)0x8D  }),
         CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFA, 0x7F, (byte)0x80, 0x00, 0x00  }));
@@ -729,6 +731,58 @@ import com.upokecenter.util.*;
       if(ExtendedRational.NegativeInfinity.IsPositiveInfinity())Assert.fail();
       if(!(ExtendedRational.NegativeInfinity.IsNegativeInfinity()))Assert.fail();
       if(!(ExtendedRational.NegativeInfinity.isNegative()))Assert.fail();
+
+      Assert.assertEquals(
+        ExtendedDecimal.PositiveInfinity,
+        ExtendedDecimal.FromDouble(Double.POSITIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedDecimal.NegativeInfinity,
+        ExtendedDecimal.FromDouble(Double.NEGATIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedDecimal.PositiveInfinity,
+        ExtendedDecimal.FromSingle(Float.POSITIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedDecimal.NegativeInfinity,
+        ExtendedDecimal.FromSingle(Float.NEGATIVE_INFINITY));
+
+      Assert.assertEquals(
+        ExtendedFloat.PositiveInfinity,
+        ExtendedFloat.FromDouble(Double.POSITIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedFloat.NegativeInfinity,
+        ExtendedFloat.FromDouble(Double.NEGATIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedFloat.PositiveInfinity,
+        ExtendedFloat.FromSingle(Float.POSITIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedFloat.NegativeInfinity,
+        ExtendedFloat.FromSingle(Float.NEGATIVE_INFINITY));
+
+      Assert.assertEquals(
+        ExtendedRational.PositiveInfinity,
+        ExtendedRational.FromDouble(Double.POSITIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedRational.NegativeInfinity,
+        ExtendedRational.FromDouble(Double.NEGATIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedRational.PositiveInfinity,
+        ExtendedRational.FromSingle(Float.POSITIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedRational.NegativeInfinity,
+        ExtendedRational.FromSingle(Float.NEGATIVE_INFINITY));
+
+      Assert.assertEquals(
+        ExtendedRational.PositiveInfinity,
+        ExtendedRational.FromExtendedDecimal(ExtendedDecimal.PositiveInfinity));
+      Assert.assertEquals(
+        ExtendedRational.NegativeInfinity,
+        ExtendedRational.FromExtendedDecimal(ExtendedDecimal.NegativeInfinity));
+      Assert.assertEquals(
+        ExtendedRational.PositiveInfinity,
+        ExtendedRational.FromExtendedFloat(ExtendedFloat.PositiveInfinity));
+      Assert.assertEquals(
+        ExtendedRational.NegativeInfinity,
+        ExtendedRational.FromExtendedFloat(ExtendedFloat.NegativeInfinity));
     }
 
     @Test
@@ -934,12 +988,20 @@ import com.upokecenter.util.*;
 
     @Test
     public void TestCBORInfinity() {
+      Assert.assertEquals("-Infinity",CBORObject.FromObject(ExtendedRational.NegativeInfinity).toString());
+      Assert.assertEquals("Infinity",CBORObject.FromObject(ExtendedRational.PositiveInfinity).toString());
+      if(!(CBORObject.FromObject(ExtendedRational.NegativeInfinity).IsInfinity()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedRational.PositiveInfinity).IsInfinity()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedRational.NegativeInfinity).IsNegativeInfinity()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedRational.PositiveInfinity).IsPositiveInfinity()))Assert.fail();
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.NegativeInfinity));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.NEGATIVE_INFINITY));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Float.NEGATIVE_INFINITY));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.PositiveInfinity));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.PositiveInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.POSITIVE_INFINITY));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Float.POSITIVE_INFINITY));
     }
@@ -1471,6 +1533,49 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
+      using(MemoryStream ms = new MemoryStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  })) {
+        try {
+ CBORObject.ReadJSON(ms);
+} catch (Exception ex) {
+Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      }
+      // whitespace followed by BOM
+      using(MemoryStream ms2 = new MemoryStream(new byte[] {  0x20, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  })) {
+        try {
+ CBORObject.ReadJSON(ms2);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      }
+      // two BOMs
+      using(MemoryStream ms3 = new MemoryStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  })) {
+        try {
+ CBORObject.ReadJSON(ms3);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      }
+      try {
+ CBORObject.FromJSONString("\ufeff {}");
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      Assert.assertEquals("true",CBORObject.FromJSONString("true").ToJSONString());
+      Assert.assertEquals("true",CBORObject.FromJSONString(" true ").ToJSONString());
+      Assert.assertEquals("false",CBORObject.FromJSONString("false").ToJSONString());
+      Assert.assertEquals("null",CBORObject.FromJSONString("null").ToJSONString());
+      Assert.assertEquals("5",CBORObject.FromJSONString("5").ToJSONString());
     }
 
     @Test
