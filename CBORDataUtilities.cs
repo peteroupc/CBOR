@@ -128,6 +128,10 @@ namespace PeterO {
             }
           }
         } else if (!integersOnly && str[i] == '.') {
+          if (!haveDigits) {
+            // no digits before the decimal point
+            return null;
+          }
           if (haveDecimalPoint) {
             return null;
           }

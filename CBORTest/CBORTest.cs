@@ -694,6 +694,8 @@ namespace Test {
       }
       Assert.IsNull(CBORDataUtilities.ParseJSONNumber(String.Empty, false, false, false));
       Assert.IsNull(CBORDataUtilities.ParseJSONNumber("xyz", false, false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("true", false, false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(".1", false, false, false));
       Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0..1", false, false, false));
       Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0xyz", false, false, false));
       Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.1xyz", false, false, false));
@@ -1518,16 +1520,45 @@ namespace Test {
       }
       using(MemoryStream ms = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
         try {
- CBORObject.ReadJSON(ms);
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+          CBORObject.ReadJSON(ms);
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
       }
       // whitespace followed by BOM
       using(MemoryStream ms2 = new MemoryStream(new byte[] { 0x20, 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
         try {
- CBORObject.ReadJSON(ms2);
+          CBORObject.ReadJSON(ms2);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+      }
+      // two BOMs
+      using(MemoryStream ms3 = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
+        try {
+          CBORObject.ReadJSON(ms3);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+      }
+      try {
+        CBORObject.FromJSONString("\ufeff\u0020 {}");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      using(MemoryStream ms2a = new MemoryStream(new byte[] { })) {
+        try {
+ CBORObject.ReadJSON(ms2a);
 Assert.Fail("Should have failed");
 } catch (CBORException) {
 } catch (Exception ex) {
@@ -1535,10 +1566,9 @@ Assert.Fail("Should have failed");
 throw new InvalidOperationException(String.Empty, ex);
 }
       }
-      // two BOMs
-      using(MemoryStream ms3 = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
+      using(MemoryStream ms2b = new MemoryStream(new byte[] { 0x20 })) {
         try {
- CBORObject.ReadJSON(ms3);
+ CBORObject.ReadJSON(ms2b);
 Assert.Fail("Should have failed");
 } catch (CBORException) {
 } catch (Exception ex) {
@@ -1547,7 +1577,31 @@ throw new InvalidOperationException(String.Empty, ex);
 }
       }
       try {
- CBORObject.FromJSONString("\ufeff {}");
+ CBORObject.FromJSONString("");
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromJSONString("[.1]");
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromJSONString("[-.1]");
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromJSONString("\u0020");
 Assert.Fail("Should have failed");
 } catch (CBORException) {
 } catch (Exception ex) {
@@ -6285,7 +6339,7 @@ throw new InvalidOperationException(String.Empty, ex);
     public void TestTags() {
       BigInteger maxuint = (BigInteger.One << 64) - BigInteger.One;
       BigInteger[] ranges = new BigInteger[] {
-        (BigInteger)6,
+        (BigInteger)37,
         (BigInteger)65539,
         (BigInteger)Int32.MaxValue - (BigInteger)500,
         (BigInteger)Int32.MaxValue + (BigInteger)500,
@@ -6301,8 +6355,8 @@ throw new InvalidOperationException(String.Empty, ex);
       for (int i = 0; i < ranges.Length; i += 2) {
         BigInteger bigintTemp = ranges[i];
         while (true) {
-          if (bigintTemp.Equals((BigInteger)30) ||
-              bigintTemp.Equals((BigInteger)29)) {
+          if (bigintTemp.CompareTo((BigInteger)(-1)) >= 0 &&
+              bigintTemp.CompareTo((BigInteger)37) <= 0) {
             bigintTemp += BigInteger.One;
             continue;
           }

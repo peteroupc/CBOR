@@ -16,8 +16,6 @@ namespace PeterO.Cbor
     CBORTypeFilter GetTypeFilter();
 
     // NOTE: Will be passed an object with the corresponding tag
-    // TODO: Rewrite ValidateObject methods to remove the tag
-    // if returning a "native" CBOR object
     CBORObject ValidateObject(CBORObject obj);
   }
 }

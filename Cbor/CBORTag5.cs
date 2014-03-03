@@ -39,7 +39,7 @@ namespace PeterO.Cbor
       }
       BigInteger exponent = o[0].AsBigInteger();
       BigInteger mantissa = o[1].AsBigInteger();
-      if (exponent.bitLength() >64) {
+      if (exponent.bitLength() > 64) {
         throw new CBORException("Exponent is too big");
       }
       if (exponent.IsZero) {

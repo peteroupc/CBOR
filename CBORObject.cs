@@ -98,26 +98,30 @@ namespace PeterO {
     private sealed class ConverterInfo {
       private object toObject;
 
-    /// <summary>Gets a value not documented yet.</summary>
+    /// <summary>Gets or sets a value not documented yet.</summary>
     /// <value>A value not documented yet.</value>
       public object ToObject {
         get {
           return this.toObject;
         }
 
-        set { this.toObject = value; }
+        set {
+          this.toObject = value;
+        }
       }
 
       private object converter;
 
-    /// <summary>Gets a value not documented yet.</summary>
+    /// <summary>Gets or sets a value not documented yet.</summary>
     /// <value>A value not documented yet.</value>
       public object Converter {
         get {
           return this.converter;
         }
 
-        set { this.converter = value; }
+        set {
+          this.converter = value;
+        }
       }
     }
 
@@ -2937,10 +2941,10 @@ namespace PeterO {
     }
 
     private static CBORObject ParseJSONValue(
-CharacterReader reader,
-bool noDuplicates,
-bool skipByteOrderMark,
-bool objectOrArrayOnly) {
+      CharacterReader reader,
+      bool noDuplicates,
+      bool skipByteOrderMark,
+      bool objectOrArrayOnly) {
       int c;
       c = skipByteOrderMark ?
         SkipWhitespaceOrByteOrderMarkJSON(reader) :
@@ -4419,8 +4423,10 @@ bool objectOrArrayOnly) {
               throw new CBORException("Array is too long");
             }
             CBORObject o = Read(
-
-              s, depth + 1, true, -1,
+              s,
+              depth + 1,
+              true,
+              -1,
               filter == null ? null : filter.GetSubFilter(vtindex));
             // break if the "break" code was read
             if (o == null) {

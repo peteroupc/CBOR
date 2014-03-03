@@ -682,6 +682,8 @@ import com.upokecenter.util.*;
       }
       if((CBORDataUtilities.ParseJSONNumber("", false, false, false))!=null)Assert.fail();
       if((CBORDataUtilities.ParseJSONNumber("xyz", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("true", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber(".1", false, false, false))!=null)Assert.fail();
       if((CBORDataUtilities.ParseJSONNumber("0..1", false, false, false))!=null)Assert.fail();
       if((CBORDataUtilities.ParseJSONNumber("0xyz", false, false, false))!=null)Assert.fail();
       if((CBORDataUtilities.ParseJSONNumber("0.1xyz", false, false, false))!=null)Assert.fail();
@@ -1535,36 +1537,100 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       }
       using(MemoryStream ms = new MemoryStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  })) {
         try {
- CBORObject.ReadJSON(ms);
-} catch (Exception ex) {
-Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+          CBORObject.ReadJSON(ms);
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
       }
       // whitespace followed by BOM
       using(MemoryStream ms2 = new MemoryStream(new byte[] {  0x20, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  })) {
         try {
- CBORObject.ReadJSON(ms2);
-Assert.fail("Should have failed");
-} catch (CBORException ex) {
-} catch (Exception ex) {
- Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+          CBORObject.ReadJSON(ms2);
+          Assert.fail("Should have failed");
+        } catch (CBORException ex) {
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
       }
       // two BOMs
       using(MemoryStream ms3 = new MemoryStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  })) {
         try {
- CBORObject.ReadJSON(ms3);
+          CBORObject.ReadJSON(ms3);
+          Assert.fail("Should have failed");
+        } catch (CBORException ex) {
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
+      }
+      try {
+        CBORObject.FromJSONString("\ufeff\u0020 {}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      java.io.ByteArrayInputStream ms2a=null;
+try {
+ms2a=new ByteArrayInputStream(new byte[] {   });
+
+        try {
+ CBORObject.ReadJSON(ms2a);
 Assert.fail("Should have failed");
 } catch (CBORException ex) {
 } catch (Exception ex) {
  Assert.fail(ex.toString());
 throw new IllegalStateException("", ex);
 }
-      }
+}
+finally {
+try { if(ms2a!=null)ms2a.close(); } catch (IOException ex){}
+}
+      java.io.ByteArrayInputStream ms2b=null;
+try {
+ms2b=new ByteArrayInputStream(new byte[] {  0x20  });
+
+        try {
+ CBORObject.ReadJSON(ms2b);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+}
+finally {
+try { if(ms2b!=null)ms2b.close(); } catch (IOException ex){}
+}
       try {
- CBORObject.FromJSONString("\ufeff {}");
+ CBORObject.FromJSONString("");
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.FromJSONString("[.1]");
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.FromJSONString("[-.1]");
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ CBORObject.FromJSONString("\u0020");
 Assert.fail("Should have failed");
 } catch (CBORException ex) {
 } catch (Exception ex) {
@@ -6372,7 +6438,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     public void TestTags() {
       BigInteger maxuint = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
       BigInteger[] ranges = new BigInteger[] {
-        BigInteger.valueOf(6),
+        BigInteger.valueOf(37),
         BigInteger.valueOf(65539),
         BigInteger.valueOf(Integer.MAX_VALUE).subtract(BigInteger.valueOf(500)),
         BigInteger.valueOf(Integer.MAX_VALUE).add(BigInteger.valueOf(500)),
@@ -6388,8 +6454,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       for (int i = 0; i < ranges.length; i += 2) {
         BigInteger bigintTemp = ranges[i];
         while (true) {
-          if (bigintTemp.equals(BigInteger.valueOf(30)) ||
-              bigintTemp.equals(BigInteger.valueOf(29))) {
+          if (bigintTemp.compareTo(BigInteger.valueOf(-1)) >= 0 &&
+              bigintTemp.compareTo(BigInteger.valueOf(37)) <= 0) {
             bigintTemp=bigintTemp.add(BigInteger.ONE);
             continue;
           }

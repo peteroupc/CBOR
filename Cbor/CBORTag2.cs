@@ -29,7 +29,7 @@ namespace PeterO.Cbor
  return newObject;
 }
       BigInteger[] tags = objectWithTags.GetTags();
-      for (int i = tags.Length - 1;i >= 0; --i) {
+      for (int i = tags.Length - 1; i >= 0; --i) {
         newObject = CBORObject.FromObjectAndTag(newObject, tags[i]);
       }
       return newObject;
@@ -47,7 +47,8 @@ namespace PeterO.Cbor
           x |= ((long)data[i]) & 0xFF;
         }
         if (negative) {
-          x =-1L - x;
+          x = -x;
+          x -= 1L;
         }
         return FromObjectAndInnerTags(x, o);
       }

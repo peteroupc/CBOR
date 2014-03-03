@@ -132,6 +132,10 @@ private CBORDataUtilities() {
             }
           }
         } else if (!integersOnly && str.charAt(i) == '.') {
+          if (!haveDigits) {
+            // no digits before the decimal point
+            return null;
+          }
           if (haveDecimalPoint) {
             return null;
           }
