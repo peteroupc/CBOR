@@ -193,8 +193,6 @@ at: http://peteroupc.github.io/CBOR/
       return true;
     }
 
-    private static BigInteger valueLowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
-
     private static BigInteger valueUInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
 
     /**
@@ -240,7 +238,7 @@ at: http://peteroupc.github.io/CBOR/
      * @param obj An arbitrary object.
      * @return An ExtendedRational object.
      */
-public ExtendedRational AsExtendedRational(Object obj) {
+    public ExtendedRational AsExtendedRational(Object obj) {
       return ExtendedRational.FromBigInteger((BigInteger)obj);
     }
   }

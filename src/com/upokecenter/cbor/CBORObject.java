@@ -11,7 +11,7 @@ import java.util.*;
 
 import java.io.*;
 
-using PeterO.Cbor;
+import com.upokecenter.util.*;
 
     /**
      * Represents an object in Concise Binary Object Representation (CBOR)
@@ -1754,7 +1754,7 @@ public void set(String key, CBORObject value) {
      * @throws java.lang.IllegalStateException This object's type is
      * not a number type.
      * @throws java.lang.ArithmeticException This object's value exceeds
-     * the range of a byte (is less than 0 or would be greater than 255 when truncated
+     * the range of a byte (would be less than 0 or greater than 255 when truncated
      * to an integer).
      */
     public byte AsByte() {
@@ -4472,6 +4472,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           return new CBORObject(CBORObjectTypeTextString, builder.toString());
         }
       } else if (type == 4) {  // Array
+        CBORObject cbor = NewArray();
         List<CBORObject> list = new ArrayList<CBORObject>();
         int vtindex = 1;
         if (additional == 31) {
@@ -4489,10 +4490,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             if (o == null) {
               break;
             }
-            list.add(o);
+            cbor.Add(o);
             ++vtindex;
           }
-          return new CBORObject(CBORObjectTypeArray, list);
+          return cbor;
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
@@ -4507,13 +4508,13 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             throw new CBORException("Array is too long");
           }
           for (long i = 0; i < uadditional; ++i) {
-            list.add(Read(s, depth + 1, false, -1, filter == null ? null : filter.GetSubFilter(i)));
+            cbor.Add(Read(s, depth + 1, false, -1, filter == null ? null : filter.GetSubFilter(i)));
             ++vtindex;
           }
-          return new CBORObject(CBORObjectTypeArray, list);
+          return cbor;
         }
       } else if (type == 5) {  // Map, type 5
-        HashMap<CBORObject, CBORObject> dict=new HashMap<CBORObject, CBORObject>();
+        CBORObject cbor = NewMap();
         if (additional == 31) {
           while (true) {
             CBORObject key = Read(s, depth + 1, true, -1, null);
@@ -4522,9 +4523,9 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
               break;
             }
             CBORObject value = Read(s, depth + 1, false, -1, null);
-            dict.put(key,value);
+            cbor.set(key,value);
           }
-          return new CBORObject(CBORObjectTypeMap, dict);
+          return cbor;
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
@@ -4538,9 +4539,9 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           for (long i = 0; i < uadditional; ++i) {
             CBORObject key = Read(s, depth + 1, false, -1, null);
             CBORObject value = Read(s, depth + 1, false, -1, null);
-            dict.put(key,value);
+            cbor.set(key,value);
           }
-          return new CBORObject(CBORObjectTypeMap, dict);
+          return cbor;
         }
       } else if (type == 6) {  // Tagged item
         CBORObject o;
@@ -4556,11 +4557,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           }
           taginfo = FindTagConverter(bigintAdditional);
         }
-        if (taginfo != null) {
-          o = Read(s, depth + 1, false, -1, taginfo.GetTypeFilter());
-        } else {
-          o = Read(s, depth + 1, false, -1, null);
-        }
+        o = Read(s, depth + 1, false, -1, taginfo == null ? null : taginfo.GetTypeFilter());
         if (hasBigAdditional) {
           return FromObjectAndTag(o, bigintAdditional);
         } else if (uadditional < 65536) {
