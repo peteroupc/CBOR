@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using NUnit.Framework;
 using PeterO;
+using PeterO.Cbor;
 
 namespace Test {
   internal static class TestCommon {

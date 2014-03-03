@@ -10,9 +10,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using PeterO.Cbor;
+using PeterO;
 
-namespace PeterO {
+namespace PeterO.Cbor {
     /// <summary>Represents an object in Concise Binary Object Representation
     /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
     /// is defined in RFC 7049. <para>There are many ways to get a CBOR object,

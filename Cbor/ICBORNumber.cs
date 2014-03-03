@@ -7,7 +7,7 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 
-namespace PeterO
+namespace PeterO.Cbor
 {
   internal interface ICBORNumber
   {

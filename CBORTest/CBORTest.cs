@@ -11,6 +11,7 @@ using System.IO;
 using System.Text;
 using NUnit.Framework;
 using PeterO;
+using PeterO.Cbor;
 
 namespace Test {
     /// <summary>Contains CBOR tests.</summary>
@@ -1558,56 +1559,56 @@ namespace Test {
       }
       using(MemoryStream ms2a = new MemoryStream(new byte[] { })) {
         try {
- CBORObject.ReadJSON(ms2a);
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+          CBORObject.ReadJSON(ms2a);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
       }
       using(MemoryStream ms2b = new MemoryStream(new byte[] { 0x20 })) {
         try {
- CBORObject.ReadJSON(ms2b);
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+          CBORObject.ReadJSON(ms2b);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
       }
       try {
- CBORObject.FromJSONString("");
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.FromJSONString("");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.FromJSONString("[.1]");
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.FromJSONString("[.1]");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.FromJSONString("[-.1]");
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.FromJSONString("[-.1]");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- CBORObject.FromJSONString("\u0020");
-Assert.Fail("Should have failed");
-} catch (CBORException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.FromJSONString("\u0020");
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       Assert.AreEqual("true",CBORObject.FromJSONString("true").ToJSONString());
       Assert.AreEqual("true",CBORObject.FromJSONString(" true ").ToJSONString());
       Assert.AreEqual("false",CBORObject.FromJSONString("false").ToJSONString());

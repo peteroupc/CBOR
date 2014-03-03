@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace PeterO
+namespace PeterO.Cbor
 {
     /// <summary>Description of PropertyMap.</summary>
   internal class PropertyMap

@@ -9,6 +9,7 @@
 using System;
 using NUnit.Framework;
 using PeterO;
+using PeterO.Cbor;
 
 namespace Test
 {

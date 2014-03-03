@@ -1,8 +1,10 @@
 using System;
 using System.IO;
 using System.Text;
+
 using NUnit.Framework;
 using PeterO;
+using PeterO.Cbor;
 
 namespace Test {
 [TestFixture]

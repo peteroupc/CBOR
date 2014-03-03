@@ -11,8 +11,8 @@ using PeterO;
 
 namespace PeterO.Cbor
 {
-  /// <summary>A generic CBOR tag class for strings.</summary>
-  public class CBORTagGenericString : ICBORTag
+    /// <summary>A generic CBOR tag class for strings.</summary>
+  internal class CBORTagGenericString : ICBORTag
   {
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>

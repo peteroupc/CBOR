@@ -12,7 +12,7 @@ using System.IO;
 // using System.Numerics;
 using System.Text;
 
-namespace PeterO {
+namespace PeterO.Cbor {
   // Contains extra methods placed separately
   // because they are not CLS-compliant or they
   // are specific to the .NET framework.

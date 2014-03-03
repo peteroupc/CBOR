@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using PeterO.Cbor;
 
 namespace PeterO {
     /// <summary>Contains methods for reading and writing objects represented

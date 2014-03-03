@@ -5,86 +5,89 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
-
 using System;
 
-namespace PeterO
+namespace PeterO.Cbor
 {
-  internal class CBORExtendedRational : ICBORNumber
+  internal class CBORExtendedDecimal : ICBORNumber
   {
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsPositiveInfinity(object obj) {
-      return ((ExtendedRational)obj).IsPositiveInfinity();
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.IsPositiveInfinity();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsInfinity(object obj) {
-      return ((ExtendedRational)obj).IsInfinity();
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.IsInfinity();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsNegativeInfinity(object obj) {
-      return ((ExtendedRational)obj).IsNegativeInfinity();
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.IsNegativeInfinity();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsNaN(object obj) {
-      return ((ExtendedRational)obj).IsNaN();
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.IsNaN();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 64-bit floating-point number.</returns>
     public double AsDouble(object obj) {
-      ExtendedRational er = (ExtendedRational)obj;
-      return er.ToDouble();
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.ToDouble();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal AsExtendedDecimal(object obj) {
-      ExtendedRational er = (ExtendedRational)obj;
-      return er.ToExtendedDecimalExactIfPossible(PrecisionContext.Decimal128.WithUnlimitedExponents());
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat AsExtendedFloat(object obj) {
-      ExtendedRational er = (ExtendedRational)obj;
-      return er.ToExtendedFloatExactIfPossible(PrecisionContext.Binary128.WithUnlimitedExponents());
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.ToExtendedFloat();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 32-bit floating-point number.</returns>
     public float AsSingle(object obj) {
-      ExtendedRational er = (ExtendedRational)obj;
-      return er.ToSingle();
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.ToSingle();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A BigInteger object.</returns>
     public BigInteger AsBigInteger(object obj) {
-      ExtendedRational er = (ExtendedRational)obj;
-      return er.ToBigInteger();
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.ToBigInteger();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 64-bit signed integer.</returns>
     public long AsInt64(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
       if (ef.IsFinite) {
         BigInteger bi = ef.ToBigInteger();
         if (bi.bitLength() <= 63) {
@@ -98,22 +101,22 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInSingle(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
       if (!ef.IsFinite) {
         return true;
       }
-      return ef.CompareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0;
+      return ef.CompareTo(ExtendedDecimal.FromSingle(ef.ToSingle())) == 0;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInDouble(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
       if (!ef.IsFinite) {
         return true;
       }
-      return ef.CompareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0;
+      return ef.CompareTo(ExtendedDecimal.FromDouble(ef.ToDouble())) == 0;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -134,7 +137,7 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt64(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
       if (!ef.IsFinite) {
         return false;
       }
@@ -146,7 +149,7 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt32(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
       if (!ef.IsFinite) {
         return false;
       }
@@ -158,34 +161,33 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsZero(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
-      return ef.IsZero;
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      return ed.IsZero;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int Sign(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
-      return ef.Sign;
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      if (ed.IsNaN()) {
+        return 2;
+      }
+      return ed.Sign;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsIntegral(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
-      if (!ef.IsFinite) {
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      if (!ed.IsFinite) {
         return false;
       }
-      if (ef.Denominator.Equals(BigInteger.One)) {
+      if (ed.Exponent.Sign >= 0) {
         return true;
       }
-      // A rational number is integral if the remainder
-      // of the numerator divided by the denominator is 0
-      BigInteger denom = ef.Denominator;
-      BigInteger rem = ef.Numerator % (BigInteger)denom;
-      return rem.IsZero;
+      return ed.CompareTo(ExtendedDecimal.FromBigInteger(ed.ToBigInteger())) == 0;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -194,7 +196,7 @@ namespace PeterO
     /// <param name='maxValue'>A 32-bit signed integer. (3).</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int AsInt32(object obj, int minValue, int maxValue) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      ExtendedDecimal ef = (ExtendedDecimal)obj;
       if (ef.IsFinite) {
         BigInteger bi = ef.ToBigInteger();
         if (bi.canFitInInt()) {
@@ -211,7 +213,7 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
     public object Negate(object obj) {
-      ExtendedRational ed = (ExtendedRational)obj;
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
       return ed.Negate();
     }
 
@@ -219,7 +221,7 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
     public object Abs(object obj) {
-      ExtendedRational ed = (ExtendedRational)obj;
+      ExtendedDecimal ed = (ExtendedDecimal)obj;
       return ed.Abs();
     }
 
@@ -227,7 +229,7 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedRational object.</returns>
     public ExtendedRational AsExtendedRational(object obj) {
-      return (ExtendedRational)obj;
+      return ExtendedRational.FromExtendedDecimal((ExtendedDecimal)obj);
     }
   }
 }
