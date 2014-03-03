@@ -157,8 +157,6 @@ namespace PeterO.Cbor
       return true;
     }
 
-    private static BigInteger valueLowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
-
     private static BigInteger valueUInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
     /// <summary>Not documented yet.</summary>
@@ -196,7 +194,7 @@ namespace PeterO.Cbor
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedRational object.</returns>
-public ExtendedRational AsExtendedRational(object obj) {
+    public ExtendedRational AsExtendedRational(object obj) {
       return ExtendedRational.FromBigInteger((BigInteger)obj);
     }
   }
