@@ -11,22 +11,22 @@ using PeterO;
 
 namespace PeterO.Cbor
 {
-    /// <summary/>
-public class CBORTagGenericString : ICBORTag
+  /// <summary>A generic CBOR tag class for strings.</summary>
+  public class CBORTagGenericString : ICBORTag
   {
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
-public CBORTypeFilter GetTypeFilter() {
+    public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.TextString;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>A CBORObject object. (2).</param>
     /// <returns>A CBORObject object.</returns>
-public CBORObject ValidateObject(CBORObject obj) {
+    public CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type == CBORType.TextString) {
- throw new CBORException("Not a text string");
-}
+        throw new CBORException("Not a text string");
+      }
       return obj;
     }
   }

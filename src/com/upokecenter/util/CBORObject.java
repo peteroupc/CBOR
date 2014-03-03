@@ -97,7 +97,9 @@ using PeterO.Cbor;
       public Object getToObject() {
           return this.toObject;
         }
-public void setToObject(Object value) { this.toObject = value; }
+public void setToObject(Object value) {
+          this.toObject = value;
+        }
 
       private Object converter;
 
@@ -108,7 +110,9 @@ public void setToObject(Object value) { this.toObject = value; }
       public Object getConverter() {
           return this.converter;
         }
-public void setConverter(Object value) { this.converter = value; }
+public void setConverter(Object value) {
+          this.converter = value;
+        }
     }
 
     private static Map<Type, ConverterInfo> converters = new HashMap<Type, ConverterInfo>();
@@ -2972,10 +2976,10 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     private static CBORObject ParseJSONValue(
-CharacterReader reader,
-boolean noDuplicates,
-boolean skipByteOrderMark,
-boolean objectOrArrayOnly) {
+      CharacterReader reader,
+      boolean noDuplicates,
+      boolean skipByteOrderMark,
+      boolean objectOrArrayOnly) {
       int c;
       c = skipByteOrderMark ?
         SkipWhitespaceOrByteOrderMarkJSON(reader) :
@@ -4476,8 +4480,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
               throw new CBORException("Array is too long");
             }
             CBORObject o = Read(
-
-              s, depth + 1, true, -1,
+              s,
+              depth + 1,
+              true,
+              -1,
               filter == null ? null : filter.GetSubFilter(vtindex));
             // break if the "break" code was read
             if (o == null) {

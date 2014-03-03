@@ -11,7 +11,7 @@ using PeterO;
 
 namespace PeterO.Cbor
 {
-    /// <summary>Description of CborTypeFilter.</summary>
+    /// <summary>Description of CBORTypeFilter.</summary>
   public class CBORTypeFilter
   {
     private bool any;
@@ -88,7 +88,7 @@ namespace PeterO.Cbor
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='tags'>A params object.</param>
+    /// <param name='tags'>An integer array of tags allowed.</param>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithTags(params int[] tags) {
       if (this.any) {
@@ -125,7 +125,7 @@ namespace PeterO.Cbor
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     /// <param name='arrayLength'>A 32-bit signed integer.</param>
-    /// <param name='elements'>A params object.</param>
+    /// <param name='elements'>An array of CBORTypeFilter.</param>
     public CBORTypeFilter WithArray(int arrayLength, params CBORTypeFilter[] elements) {
       if (this.any) {
         return this;
@@ -262,7 +262,7 @@ namespace PeterO.Cbor
     /// <param name='index'>A 32-bit signed integer.</param>
     /// <returns>A Boolean object.</returns>
     public bool ArrayIndexAllowed(int index) {
-      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength || index < this.arrayLength && index >= 0);
+      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength || (index < this.arrayLength && index >= 0));
     }
 
     /// <summary>Not documented yet.</summary>

@@ -10,8 +10,8 @@ using System;
 
 namespace PeterO.Cbor
 {
-    /// <summary/>
-public class CBORTag3 : ICBORTag
+  /// <summary>Implements CBOR tag 3.</summary>
+  public class CBORTag3 : ICBORTag
   {
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
