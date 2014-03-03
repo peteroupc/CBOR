@@ -99,12 +99,21 @@ at: http://peteroupc.github.io/CBOR/
      */
     @Override public String toString() {
       if (!this.isFinite()) {
-        // TODO: Include diagnostic information in NaN
         if (this.IsSignalingNaN()) {
-          return this.isNegative() ? "-sNaN" : "sNaN";
+          if (this.unsignedNumerator.signum()==0) {
+ return this.isNegative() ? "-sNaN" : "sNaN";
+}
+          else
+            return this.isNegative() ? "-sNaN" + this.unsignedNumerator.toString() :
+              "sNaN" + this.unsignedNumerator.toString();
         }
         if (this.IsQuietNaN()) {
-          return this.isNegative() ? "-NaN" : "NaN";
+          if (this.unsignedNumerator.signum()==0) {
+ return this.isNegative() ? "-NaN" : "NaN";
+}
+          else
+            return this.isNegative() ? "-NaN" + this.unsignedNumerator.toString() :
+              "NaN" + this.unsignedNumerator.toString();
         }
         if (this.IsInfinity()) {
           return this.isNegative() ? "-Infinity" : "Infinity";
@@ -858,12 +867,20 @@ thisRem=divrem[1]; }
         return otherValue;
       }
       boolean resultNeg = this.isNegative() ^ otherValue.isNegative();
-      // TODO: Handle infinity
-      BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
-      BigInteger bc = this.getDenominator().multiply(otherValue.getNumerator());
-      if (ad.signum()==0) {
+      if (this.IsInfinity()) {
+        return otherValue.IsInfinity() ? NaN : (resultNeg ? NegativeInfinity : PositiveInfinity);
+      }
+      if (otherValue.IsInfinity()) {
         return resultNeg ? NegativeZero : Zero;
       }
+      if (otherValue.signum()==0) {
+        return this.signum()==0 ? NaN : (resultNeg ? NegativeInfinity : PositiveInfinity);
+      }
+      if (this.signum()==0) {
+        return resultNeg ? NegativeZero : Zero;
+      }
+      BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
+      BigInteger bc = this.getDenominator().multiply(otherValue.getNumerator());
       return new ExtendedRational(ad, bc).Simplify().ChangeSign(resultNeg);
     }
 

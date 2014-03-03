@@ -4415,6 +4415,7 @@ namespace PeterO.Cbor {
           return new CBORObject(CBORObjectTypeTextString, builder.ToString());
         }
       } else if (type == 4) {  // Array
+        CBORObject cbor = NewArray();
         IList<CBORObject> list = new List<CBORObject>();
         int vtindex = 1;
         if (additional == 31) {
@@ -4432,10 +4433,10 @@ namespace PeterO.Cbor {
             if (o == null) {
               break;
             }
-            list.Add(o);
+            cbor.Add(o);
             ++vtindex;
           }
-          return new CBORObject(CBORObjectTypeArray, list);
+          return cbor;
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
@@ -4450,13 +4451,13 @@ namespace PeterO.Cbor {
             throw new CBORException("Array is too long");
           }
           for (long i = 0; i < uadditional; ++i) {
-            list.Add(Read(s, depth + 1, false, -1, filter == null ? null : filter.GetSubFilter(i)));
+            cbor.Add(Read(s, depth + 1, false, -1, filter == null ? null : filter.GetSubFilter(i)));
             ++vtindex;
           }
-          return new CBORObject(CBORObjectTypeArray, list);
+          return cbor;
         }
       } else if (type == 5) {  // Map, type 5
-        var dict = new Dictionary<CBORObject, CBORObject>();
+        CBORObject cbor = NewMap();
         if (additional == 31) {
           while (true) {
             CBORObject key = Read(s, depth + 1, true, -1, null);
@@ -4465,9 +4466,9 @@ namespace PeterO.Cbor {
               break;
             }
             CBORObject value = Read(s, depth + 1, false, -1, null);
-            dict[key] = value;
+            cbor[key] = value;
           }
-          return new CBORObject(CBORObjectTypeMap, dict);
+          return cbor;
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
@@ -4481,9 +4482,9 @@ namespace PeterO.Cbor {
           for (long i = 0; i < uadditional; ++i) {
             CBORObject key = Read(s, depth + 1, false, -1, null);
             CBORObject value = Read(s, depth + 1, false, -1, null);
-            dict[key] = value;
+            cbor[key] = value;
           }
-          return new CBORObject(CBORObjectTypeMap, dict);
+          return cbor;
         }
       } else if (type == 6) {  // Tagged item
         CBORObject o;
@@ -4499,11 +4500,7 @@ namespace PeterO.Cbor {
           }
           taginfo = FindTagConverter(bigintAdditional);
         }
-        if (taginfo != null) {
-          o = Read(s, depth + 1, false, -1, taginfo.GetTypeFilter());
-        } else {
-          o = Read(s, depth + 1, false, -1, null);
-        }
+        o = Read(s, depth + 1, false, -1, taginfo == null ? null : taginfo.GetTypeFilter());
         if (hasBigAdditional) {
           return FromObjectAndTag(o, bigintAdditional);
         } else if (uadditional < 65536) {

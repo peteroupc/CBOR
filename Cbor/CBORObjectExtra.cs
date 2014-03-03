@@ -173,7 +173,7 @@ namespace PeterO.Cbor {
       } else if (this.ItemType == CBORObjectTypeExtendedRational) {
         return ExtendedRationalToDecimal((ExtendedRational)this.ThisItem);
       } else {
-        return ExtendedDecimalToDecimal(AsExtendedDecimal());
+        return ExtendedDecimalToDecimal(this.AsExtendedDecimal());
       }
     }
 
@@ -187,7 +187,7 @@ namespace PeterO.Cbor {
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       BigInteger bigint = this.AsBigInteger();
-      if (bigint.Sign < 0 || bigint.bitLength()>64) {
+      if (bigint.Sign < 0 || bigint.bitLength() >64) {
         throw new OverflowException("This object's value is out of range");
       }
       byte[] data = bigint.ToByteArray();
@@ -200,11 +200,11 @@ namespace PeterO.Cbor {
         b |= (((int)data[i]) & 0xFF) << ((i - 4) * 8);
       }
       unchecked {
-        ulong ret=(ulong)a;
-        ret&=0xFFFFFFFFL;
-        ulong retb=(ulong)b;
-        retb&=0xFFFFFFFFL;
-        ret|=(retb<<32);
+        ulong ret = (ulong)a;
+        ret &= 0xFFFFFFFFL;
+        ulong retb = (ulong)b;
+        retb &= 0xFFFFFFFFL;
+        ret |= retb << 32;
         return ret;
       }
     }
@@ -277,7 +277,7 @@ namespace PeterO.Cbor {
         }
         return FromObjectAndTag(
           new CBORObject[] { FromObject(-scale),
-            FromObject(mantissa) },
+          FromObject(mantissa) },
           4);
       }
     }
@@ -306,7 +306,7 @@ namespace PeterO.Cbor {
       return FromObject((long)value);
     }
 
-    private static BigInteger UInt64ToBigInteger(ulong value){
+    private static BigInteger UInt64ToBigInteger(ulong value) {
       byte[] data = new byte[9];
       ulong uvalue = value;
       data[0] = (byte)(uvalue & 0xFF);
@@ -320,7 +320,7 @@ namespace PeterO.Cbor {
       data[8] = (byte)0;
       return BigInteger.fromByteArray(data, true);
     }
-    
+
     /// <summary>Not documented yet.</summary>
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>

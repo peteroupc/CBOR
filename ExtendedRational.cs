@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO
 {
-  /// <summary>Arbitrary-precision rational number.</summary>
+    /// <summary>Arbitrary-precision rational number.</summary>
   public class ExtendedRational : IComparable<ExtendedRational>, IEquatable<ExtendedRational> {
     private BigInteger unsignedNumerator;
 
@@ -103,17 +103,19 @@ namespace PeterO
     public override string ToString() {
       if (!this.IsFinite) {
         if (this.IsSignalingNaN()) {
-          if(this.unsignedNumerator.IsZero)
-            return this.IsNegative ? "-sNaN" : "sNaN";
+          if (this.unsignedNumerator.IsZero) {
+ return this.IsNegative ? "-sNaN" : "sNaN";
+}
           else
-            return this.IsNegative ? "-sNaN" + this.unsignedNumerator.ToString() : 
+            return this.IsNegative ? "-sNaN" + this.unsignedNumerator.ToString() :
               "sNaN" + this.unsignedNumerator.ToString();
         }
         if (this.IsQuietNaN()) {
-          if(this.unsignedNumerator.IsZero)
-            return this.IsNegative ? "-NaN" : "NaN";
+          if (this.unsignedNumerator.IsZero) {
+ return this.IsNegative ? "-NaN" : "NaN";
+}
           else
-            return this.IsNegative ? "-NaN" + this.unsignedNumerator.ToString() : 
+            return this.IsNegative ? "-NaN" + this.unsignedNumerator.ToString() :
               "NaN" + this.unsignedNumerator.ToString();
         }
         if (this.IsInfinity()) {
@@ -829,16 +831,16 @@ namespace PeterO
         return otherValue;
       }
       bool resultNeg = this.IsNegative ^ otherValue.IsNegative;
-      if(this.IsInfinity()){
-        return otherValue.IsInfinity() ? NaN : ((resultNeg) ? NegativeInfinity : PositiveInfinity);
+      if (this.IsInfinity()) {
+        return otherValue.IsInfinity() ? NaN : (resultNeg ? NegativeInfinity : PositiveInfinity);
       }
-      if(otherValue.IsInfinity()){
+      if (otherValue.IsInfinity()) {
         return resultNeg ? NegativeZero : Zero;
       }
-      if(otherValue.IsZero){
-        return this.IsZero ? NaN : ((resultNeg) ? NegativeInfinity : PositiveInfinity);
+      if (otherValue.IsZero) {
+        return this.IsZero ? NaN : (resultNeg ? NegativeInfinity : PositiveInfinity);
       }
-      if(this.IsZero){
+      if (this.IsZero) {
         return resultNeg ? NegativeZero : Zero;
       }
       BigInteger ad = this.Numerator * (BigInteger)otherValue.Denominator;
