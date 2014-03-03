@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-// using System.Numerics;
+
 using System.Text;
 
 namespace PeterO.Cbor {
@@ -168,38 +168,12 @@ namespace PeterO.Cbor {
     /// exceeds the range of a .NET decimal.</exception>
     [CLSCompliant(false)]
     public decimal AsDecimal() {
-      // TODO: Use ICBORNumber
       if (this.ItemType == CBORObjectTypeInteger) {
         return (decimal)(long)this.ThisItem;
-      } else if (this.ItemType == CBORObjectTypeBigInteger) {
-        if ((BigInteger)this.ThisItem > DecimalMaxValue ||
-            (BigInteger)this.ThisItem < DecimalMinValue) {
-          throw new OverflowException("This object's value is out of range");
-        }
-        return BigIntegerToDecimal((BigInteger)this.ThisItem);
-      } else if (this.ItemType == CBORObjectTypeSingle) {
-        if (Single.IsNaN((float)this.ThisItem) ||
-            (float)this.ThisItem > (float)Decimal.MaxValue ||
-            (float)this.ThisItem < (float)Decimal.MinValue) {
-          throw new OverflowException("This object's value is out of range");
-        }
-        return (decimal)(float)this.ThisItem;
-      } else if (this.ItemType == CBORObjectTypeDouble) {
-        if (Double.IsNaN((double)this.ThisItem) ||
-            (double)this.ThisItem > (double)Decimal.MaxValue ||
-            (double)this.ThisItem < (double)Decimal.MinValue) {
-          throw new OverflowException("This object's value is out of range");
-        }
-        return (decimal)(double)this.ThisItem;
-      } else if (this.ItemType == CBORObjectTypeExtendedDecimal) {
-        return ExtendedDecimalToDecimal((ExtendedDecimal)this.ThisItem);
-      } else if (this.ItemType == CBORObjectTypeExtendedFloat) {
-        return ExtendedDecimalToDecimal(
-          ExtendedDecimal.FromExtendedFloat((ExtendedFloat)this.ThisItem));
       } else if (this.ItemType == CBORObjectTypeExtendedRational) {
         return ExtendedRationalToDecimal((ExtendedRational)this.ThisItem);
       } else {
-        throw new InvalidOperationException("Not a number type");
+        return ExtendedDecimalToDecimal(AsExtendedDecimal());
       }
     }
 
@@ -213,10 +187,26 @@ namespace PeterO.Cbor {
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       BigInteger bigint = this.AsBigInteger();
-      if (bigint.Sign < 0 || bigint.CompareTo(UInt64MaxValue) > 0) {
+      if (bigint.Sign < 0 || bigint.bitLength()>64) {
         throw new OverflowException("This object's value is out of range");
       }
-      return (ulong)BigIntegerToDecimal(bigint);
+      byte[] data = bigint.ToByteArray();
+      int a = 0;
+      int b = 0;
+      for (int i = 0; i < Math.Min(4, data.Length); ++i) {
+        a |= (((int)data[i]) & 0xFF) << (i * 8);
+      }
+      for (int i = 4; i < Math.Min(8, data.Length); ++i) {
+        b |= (((int)data[i]) & 0xFF) << ((i - 4) * 8);
+      }
+      unchecked {
+        ulong ret=(ulong)a;
+        ret&=0xFFFFFFFFL;
+        ulong retb=(ulong)b;
+        retb&=0xFFFFFFFFL;
+        ret|=(retb<<32);
+        return ret;
+      }
     }
 
     /// <summary>Not documented yet.</summary>
@@ -287,7 +277,7 @@ namespace PeterO.Cbor {
         }
         return FromObjectAndTag(
           new CBORObject[] { FromObject(-scale),
-          FromObject(mantissa) },
+            FromObject(mantissa) },
           4);
       }
     }
@@ -316,23 +306,27 @@ namespace PeterO.Cbor {
       return FromObject((long)value);
     }
 
+    private static BigInteger UInt64ToBigInteger(ulong value){
+      byte[] data = new byte[9];
+      ulong uvalue = value;
+      data[0] = (byte)(uvalue & 0xFF);
+      data[1] = (byte)((uvalue >> 8) & 0xFF);
+      data[2] = (byte)((uvalue >> 16) & 0xFF);
+      data[3] = (byte)((uvalue >> 24) & 0xFF);
+      data[4] = (byte)((uvalue >> 32) & 0xFF);
+      data[5] = (byte)((uvalue >> 40) & 0xFF);
+      data[6] = (byte)((uvalue >> 48) & 0xFF);
+      data[7] = (byte)((uvalue >> 56) & 0xFF);
+      data[8] = (byte)0;
+      return BigInteger.fromByteArray(data, true);
+    }
+    
     /// <summary>Not documented yet.</summary>
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ulong value) {
-        byte[] data = new byte[13];
-        ulong uvalue = value;
-        data[0] = (byte)(uvalue & 0xFF);
-        data[1] = (byte)((uvalue >> 8) & 0xFF);
-        data[2] = (byte)((uvalue >> 16) & 0xFF);
-        data[3] = (byte)((uvalue >> 24) & 0xFF);
-        data[4] = (byte)((uvalue >> 32) & 0xFF);
-        data[5] = (byte)((uvalue >> 40) & 0xFF);
-        data[6] = (byte)((uvalue >> 48) & 0xFF);
-        data[7] = (byte)((uvalue >> 56) & 0xFF);
-        data[8] = (byte)0;
-        return CBORObject.FromObject(BigInteger.fromByteArray(data, true));
+      return CBORObject.FromObject(UInt64ToBigInteger(value));
     }
 
     /// <summary>Not documented yet.</summary>
@@ -357,7 +351,7 @@ namespace PeterO.Cbor {
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
-      return FromObjectAndTag(o, DecimalToBigInteger((decimal)tag));
+      return FromObjectAndTag(o, UInt64ToBigInteger(tag));
     }
   }
 }

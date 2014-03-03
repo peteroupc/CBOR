@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO
 {
-    /// <summary>Arbitrary-precision rational number.</summary>
+  /// <summary>Arbitrary-precision rational number.</summary>
   public class ExtendedRational : IComparable<ExtendedRational>, IEquatable<ExtendedRational> {
     private BigInteger unsignedNumerator;
 
@@ -102,12 +102,19 @@ namespace PeterO
     /// <returns>A string representation of this object.</returns>
     public override string ToString() {
       if (!this.IsFinite) {
-        // TODO: Include diagnostic information in NaN
         if (this.IsSignalingNaN()) {
-          return this.IsNegative ? "-sNaN" : "sNaN";
+          if(this.unsignedNumerator.IsZero)
+            return this.IsNegative ? "-sNaN" : "sNaN";
+          else
+            return this.IsNegative ? "-sNaN" + this.unsignedNumerator.ToString() : 
+              "sNaN" + this.unsignedNumerator.ToString();
         }
         if (this.IsQuietNaN()) {
-          return this.IsNegative ? "-NaN" : "NaN";
+          if(this.unsignedNumerator.IsZero)
+            return this.IsNegative ? "-NaN" : "NaN";
+          else
+            return this.IsNegative ? "-NaN" + this.unsignedNumerator.ToString() : 
+              "NaN" + this.unsignedNumerator.ToString();
         }
         if (this.IsInfinity()) {
           return this.IsNegative ? "-Infinity" : "Infinity";
@@ -822,12 +829,20 @@ namespace PeterO
         return otherValue;
       }
       bool resultNeg = this.IsNegative ^ otherValue.IsNegative;
-      // TODO: Handle infinity
-      BigInteger ad = this.Numerator * (BigInteger)otherValue.Denominator;
-      BigInteger bc = this.Denominator * (BigInteger)otherValue.Numerator;
-      if (ad.IsZero) {
+      if(this.IsInfinity()){
+        return otherValue.IsInfinity() ? NaN : ((resultNeg) ? NegativeInfinity : PositiveInfinity);
+      }
+      if(otherValue.IsInfinity()){
         return resultNeg ? NegativeZero : Zero;
       }
+      if(otherValue.IsZero){
+        return this.IsZero ? NaN : ((resultNeg) ? NegativeInfinity : PositiveInfinity);
+      }
+      if(this.IsZero){
+        return resultNeg ? NegativeZero : Zero;
+      }
+      BigInteger ad = this.Numerator * (BigInteger)otherValue.Denominator;
+      BigInteger bc = this.Denominator * (BigInteger)otherValue.Numerator;
       return new ExtendedRational(ad, bc).Simplify().ChangeSign(resultNeg);
     }
 

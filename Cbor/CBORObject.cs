@@ -1757,7 +1757,7 @@ namespace PeterO.Cbor {
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     /// <exception cref='System.OverflowException'>This object's value
-    /// exceeds the range of a byte (is less than 0 or would be greater than 255
+    /// exceeds the range of a byte (would be less than 0 or greater than 255
     /// when truncated to an integer).</exception>
     public byte AsByte() {
       return (byte)this.AsInt32(0, 255);
