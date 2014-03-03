@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 
-// import java.math.*;
-
     /**
      * Contains utility methods that may have use outside of the CBORObject
      * class.

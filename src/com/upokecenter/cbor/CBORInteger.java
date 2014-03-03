@@ -10,7 +10,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Not documented yet.
      */
-  public class CBORInteger implements ICBORNumber
+  class CBORInteger implements ICBORNumber
   {
     /**
      * Not documented yet.
