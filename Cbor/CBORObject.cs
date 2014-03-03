@@ -2778,7 +2778,7 @@ namespace PeterO.Cbor {
                 c = '\\';
                 break;
               case '/':
-                // Now allowed to be escaped under RFC 7158
+                // Now allowed to be escaped under RFC 7159
                 c = '/';
                 break;
               case '\"':
@@ -3076,7 +3076,7 @@ namespace PeterO.Cbor {
     /// Object Notation (JSON) format and UTF-8 encoding. The JSON stream
     /// may begin with a byte order mark (U + FEFF); however, this implementation's
     /// ToJSONString method will not place this character at the beginning
-    /// of a JSON text, since doing so is forbidden under RFC 7158. <para>If
+    /// of a JSON text, since doing so is forbidden under RFC 7159. <para>If
     /// a JSON object has the same key, only the last given value will be used
     /// for each duplicated key.</para>
     /// </summary>
