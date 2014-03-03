@@ -111,7 +111,7 @@ namespace PeterO.Cbor {
         return CBORObject.FromObject(b1 - (BigInteger)b2);
       }
     }
-    
+
     public static CBORObject Multiply(CBORObject a, CBORObject b) {
       if (a == null) {
         throw new ArgumentNullException("a");
