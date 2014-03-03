@@ -7,7 +7,7 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 
-namespace PeterO {
+namespace PeterO.Cbor {
     /// <summary>Implements arithmetic operations with CBOR objects.</summary>
     /// <returns>A CBORObject object.</returns>
     /// <param name='a'>A CBORObject object. (2).</param>

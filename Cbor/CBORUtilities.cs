@@ -7,8 +7,8 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 using System.Text;
-// using System.Numerics;
-namespace PeterO {
+
+namespace PeterO.Cbor {
     /// <summary>Contains utility methods that may have use outside of the
     /// CBORObject class.</summary>
   internal static class CBORUtilities {

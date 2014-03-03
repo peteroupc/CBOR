@@ -12,6 +12,7 @@ import java.io.*;
 import org.junit.Assert;
 
 import com.upokecenter.util.*;
+using PeterO.Cbor;
 
   final class TestCommon {
 private TestCommon() {

@@ -8,7 +8,7 @@
  */
 using System;
 
-namespace PeterO
+namespace PeterO.Cbor
 {
     /// <summary>Description of ICBORConverter.</summary>
     /// <typeparam name='T'>Type to convert to a CBOR object.</typeparam>

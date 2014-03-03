@@ -8,7 +8,7 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 using System.IO;
 
-namespace PeterO
+namespace PeterO.Cbor
 {
     /// <summary>Description of CharacterReader.</summary>
   internal class CharacterReader

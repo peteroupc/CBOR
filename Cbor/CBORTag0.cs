@@ -11,7 +11,7 @@ using System;
 namespace PeterO.Cbor
 {
     /// <summary>Description of CBORTag0.</summary>
-  public class CBORTag0 : ICBORTag, ICBORConverter<DateTime>
+  internal class CBORTag0 : ICBORTag, ICBORConverter<DateTime>
   {
     private static string DateTimeToString(DateTime bi) {
       DateTime dt = bi.ToUniversalTime();

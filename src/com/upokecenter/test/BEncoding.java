@@ -11,6 +11,8 @@ import java.util.*;
 
 import java.io.*;
 
+using PeterO.Cbor;
+
     /**
      * Contains methods for reading and writing objects represented in
      * BEncode, a serialization format used in the BitTorrent protocol.

@@ -11,7 +11,7 @@ using System;
 namespace PeterO.Cbor
 {
     /// <summary>Description of CBORTag30.</summary>
-  public class CBORTag30 : ICBORTag
+  internal class CBORTag30 : ICBORTag
   {
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>

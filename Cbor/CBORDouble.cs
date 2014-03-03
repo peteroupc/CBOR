@@ -5,174 +5,145 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
-
 using System;
 
-namespace PeterO
+namespace PeterO.Cbor
 {
-    /// <summary>Not documented yet.</summary>
-  public class CBORInteger : ICBORNumber
+  internal class CBORDouble : ICBORNumber
   {
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsPositiveInfinity(object obj) {
-      return false;
+      return Double.IsPositiveInfinity((double)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsInfinity(object obj) {
-      return false;
+      return Double.IsInfinity((double)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsNegativeInfinity(object obj) {
-      return false;
+      return Double.IsNegativeInfinity((double)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsNaN(object obj) {
-      return false;
+      return Double.IsNaN((double)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 64-bit floating-point number.</returns>
     public double AsDouble(object obj) {
-      return (double)(long)obj;
+      return (double)obj;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal AsExtendedDecimal(object obj) {
-      return ExtendedDecimal.FromInt64((long)obj);
+      return ExtendedDecimal.FromDouble((double)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat AsExtendedFloat(object obj) {
-      return ExtendedFloat.FromInt64((long)obj);
+      return ExtendedFloat.FromDouble((double)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 32-bit floating-point number.</returns>
     public float AsSingle(object obj) {
-      return (float)(long)obj;
+      return (float)(double)obj;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A BigInteger object.</returns>
     public BigInteger AsBigInteger(object obj) {
-      return (BigInteger)(long)obj;
+      return CBORUtilities.BigIntegerFromDouble((double)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 64-bit signed integer.</returns>
     public long AsInt64(object obj) {
-      return (long)obj;
+      double fltItem = (double)obj;
+      if (Double.IsNaN(fltItem)) {
+        throw new OverflowException("This object's value is out of range");
+      }
+      fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      if (fltItem >= Int64.MinValue && fltItem <= Int64.MaxValue) {
+        return (long)fltItem;
+      }
+      throw new OverflowException("This object's value is out of range");
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInSingle(object obj) {
-      long intItem = (long)obj;
-      if (intItem == Int64.MinValue) {
+      double fltItem = (double)obj;
+      if (Double.IsNaN(fltItem)) {
         return true;
       }
-      intItem = Math.Abs(intItem);
-      while (intItem >= (1L << 24) && (intItem & 1) == 0) {
-        intItem >>= 1;
-      }
-      return intItem < (1L << 24);
+      float sing = (float)fltItem;
+      return (double)sing == fltItem;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInDouble(object obj) {
-      long intItem = (long)obj;
-      if (intItem == Int64.MinValue) {
-        return true;
-      }
-      intItem = Math.Abs(intItem);
-      while (intItem >= (1L << 53) && (intItem & 1) == 0) {
-        intItem >>= 1;
-      }
-      return intItem < (1L << 53);
+      return true;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInInt32(object obj) {
-      long val = (long)obj;
-      return val >= Int32.MinValue && val <= Int32.MaxValue;
+      return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt32(obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInInt64(object obj) {
-      return true;
-    }
-
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>An arbitrary object. (2).</param>
-    /// <returns>An arbitrary object.</returns>
-    public object Negate(object obj) {
-      if (((long)obj) == Int64.MinValue) {
-        return BigInteger.One << 63;
-      }
-      return -((long)obj);
+      return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt64(obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt64(object obj) {
-      return true;
+      double fltItem = (double)obj;
+      if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
+        return false;
+      }
+      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      return fltItem2 >= Int64.MinValue && fltItem2 <= Int64.MaxValue;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt32(object obj) {
-      long val = (long)obj;
-      return val >= Int32.MinValue && val <= Int32.MaxValue;
-    }
-
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>A Boolean object.</returns>
-    public bool IsZero(object obj) {
-      return ((long)obj) == 0;
-    }
-
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>A 32-bit signed integer.</returns>
-    public int Sign(object obj) {
-      long val = (long)obj;
-      return (val == 0) ? 0 : ((val < 0) ? -1 : 1);
-    }
-
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>A Boolean object.</returns>
-    public bool IsIntegral(object obj) {
-      return true;
+      double fltItem = (double)obj;
+      if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
+        return false;
+      }
+      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      return fltItem2 >= Int32.MinValue && fltItem2 <= Int32.MaxValue;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -181,21 +152,61 @@ namespace PeterO
     /// <param name='maxValue'>A 32-bit signed integer. (3).</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int AsInt32(object obj, int minValue, int maxValue) {
-      long val = (long)obj;
-      if (val >= minValue && val <= maxValue) {
-        return (int)val;
+      double fltItem = (double)obj;
+      if (Double.IsNaN(fltItem)) {
+        throw new OverflowException("This object's value is out of range");
+      }
+      fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      if (fltItem >= minValue && fltItem <= maxValue) {
+        int ret = (int)fltItem;
+        return ret;
       }
       throw new OverflowException("This object's value is out of range");
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsZero(object obj) {
+      return ((double)obj) == 0.0;
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A 32-bit signed integer.</returns>
+    public int Sign(object obj) {
+      double flt = (double)obj;
+      if (Double.IsNaN(flt)) {
+        return 2;
+      }
+      return flt == 0.0f ? 0 : (flt < 0.0f ? -1 : 1);
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool IsIntegral(object obj) {
+      double fltItem = (double)obj;
+      if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
+        return false;
+      }
+      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      return fltItem2 == fltItem;
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>An arbitrary object. (2).</param>
+    /// <returns>An arbitrary object.</returns>
+    public object Negate(object obj) {
+      double val = (double)obj;
+      return -val;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
     public object Abs(object obj) {
-      long val = (long)obj;
-      if (val == Int32.MinValue) {
-        return BigInteger.One << 63;
-      }
+      double val = (double)obj;
       return (val < 0) ? -val : obj;
     }
 
@@ -203,7 +214,7 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedRational object.</returns>
 public ExtendedRational AsExtendedRational(object obj) {
-      return ExtendedRational.FromInt64((long)obj);
+      return ExtendedRational.FromDouble((double)obj);
     }
   }
 }

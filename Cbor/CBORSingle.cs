@@ -7,82 +7,82 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 
-namespace PeterO
+namespace PeterO.Cbor
 {
-  internal class CBORDouble : ICBORNumber
+  internal sealed class CBORSingle : ICBORNumber
   {
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsPositiveInfinity(object obj) {
-      return Double.IsPositiveInfinity((double)obj);
+      return Single.IsPositiveInfinity((float)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsInfinity(object obj) {
-      return Double.IsInfinity((double)obj);
+      return Single.IsInfinity((float)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsNegativeInfinity(object obj) {
-      return Double.IsNegativeInfinity((double)obj);
+      return Single.IsNegativeInfinity((float)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsNaN(object obj) {
-      return Double.IsNaN((double)obj);
+      return Single.IsNaN((float)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 64-bit floating-point number.</returns>
     public double AsDouble(object obj) {
-      return (double)obj;
+      return (double)(float)obj;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal AsExtendedDecimal(object obj) {
-      return ExtendedDecimal.FromDouble((double)obj);
+      return ExtendedDecimal.FromSingle((float)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat AsExtendedFloat(object obj) {
-      return ExtendedFloat.FromDouble((double)obj);
+      return ExtendedFloat.FromSingle((float)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 32-bit floating-point number.</returns>
     public float AsSingle(object obj) {
-      return (float)(double)obj;
+      return (float)obj;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A BigInteger object.</returns>
     public BigInteger AsBigInteger(object obj) {
-      return CBORUtilities.BigIntegerFromDouble((double)obj);
+      return CBORUtilities.BigIntegerFromSingle((float)obj);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 64-bit signed integer.</returns>
     public long AsInt64(object obj) {
-      double fltItem = (double)obj;
-      if (Double.IsNaN(fltItem)) {
+      float fltItem = (float)obj;
+      if (Single.IsNaN(fltItem)) {
         throw new OverflowException("This object's value is out of range");
       }
-      fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
       if (fltItem >= Int64.MinValue && fltItem <= Int64.MaxValue) {
         return (long)fltItem;
       }
@@ -93,12 +93,7 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanFitInSingle(object obj) {
-      double fltItem = (double)obj;
-      if (Double.IsNaN(fltItem)) {
-        return true;
-      }
-      float sing = (float)fltItem;
-      return (double)sing == fltItem;
+      return true;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -126,11 +121,11 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt64(object obj) {
-      double fltItem = (double)obj;
-      if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
+      float fltItem = (float)obj;
+      if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
         return false;
       }
-      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
       return fltItem2 >= Int64.MinValue && fltItem2 <= Int64.MaxValue;
     }
 
@@ -138,11 +133,11 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool CanTruncatedIntFitInInt32(object obj) {
-      double fltItem = (double)obj;
-      if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
+      float fltItem = (float)obj;
+      if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
         return false;
       }
-      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
       return fltItem2 >= Int32.MinValue && fltItem2 <= Int32.MaxValue;
     }
 
@@ -152,12 +147,12 @@ namespace PeterO
     /// <param name='maxValue'>A 32-bit signed integer. (3).</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int AsInt32(object obj, int minValue, int maxValue) {
-      double fltItem = (double)obj;
-      if (Double.IsNaN(fltItem)) {
+      float fltItem = (float)obj;
+      if (Single.IsNaN(fltItem)) {
         throw new OverflowException("This object's value is out of range");
       }
-      fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
-      if (fltItem >= minValue && fltItem <= maxValue) {
+      fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
+      if (fltItem >= Int32.MinValue && fltItem <= Int32.MaxValue) {
         int ret = (int)fltItem;
         return ret;
       }
@@ -168,15 +163,15 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsZero(object obj) {
-      return ((double)obj) == 0.0;
+      return ((float)obj) == 0.0f;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int Sign(object obj) {
-      double flt = (double)obj;
-      if (Double.IsNaN(flt)) {
+      float flt = (float)obj;
+      if (Single.IsNaN(flt)) {
         return 2;
       }
       return flt == 0.0f ? 0 : (flt < 0.0f ? -1 : 1);
@@ -186,11 +181,11 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A Boolean object.</returns>
     public bool IsIntegral(object obj) {
-      double fltItem = (double)obj;
-      if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
+      float fltItem = (float)obj;
+      if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
         return false;
       }
-      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
       return fltItem2 == fltItem;
     }
 
@@ -198,7 +193,7 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
     public object Negate(object obj) {
-      double val = (double)obj;
+      float val = (float)obj;
       return -val;
     }
 
@@ -206,7 +201,7 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object. (2).</param>
     /// <returns>An arbitrary object.</returns>
     public object Abs(object obj) {
-      double val = (double)obj;
+      float val = (float)obj;
       return (val < 0) ? -val : obj;
     }
 
@@ -214,7 +209,7 @@ namespace PeterO
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedRational object.</returns>
 public ExtendedRational AsExtendedRational(object obj) {
-      return ExtendedRational.FromDouble((double)obj);
+      return ExtendedRational.FromSingle((float)obj);
     }
   }
 }

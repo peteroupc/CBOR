@@ -6,7 +6,7 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 
-namespace PeterO {
+namespace PeterO.Cbor {
     /// <summary>Exception thrown for errors involving CBOR data.</summary>
     public class CBORException : Exception {
     /// <summary>Initializes a new instance of the CBORException class.</summary>

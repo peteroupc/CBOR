@@ -11,7 +11,7 @@ using System;
 namespace PeterO.Cbor
 {
     /// <summary>Description of CBORTag5.</summary>
-  public class CBORTag4 : ICBORTag
+  internal class CBORTag4 : ICBORTag
   {
     private static CBORTypeFilter valueFilter = new CBORTypeFilter().WithArray(
       2,

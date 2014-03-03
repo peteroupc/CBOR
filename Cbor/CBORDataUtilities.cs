@@ -9,7 +9,7 @@ using System;
 using System.Globalization;
 using System.Text;
 
-namespace PeterO {
+namespace PeterO.Cbor {
     /// <summary>Contains methods useful for reading and writing data,
     /// with a focus on CBOR.</summary>
   public static class CBORDataUtilities {
