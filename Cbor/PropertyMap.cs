@@ -8,6 +8,7 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using PeterO;
 
 namespace PeterO.Cbor
 {

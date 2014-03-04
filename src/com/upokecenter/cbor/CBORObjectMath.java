@@ -1,4 +1,4 @@
-package com.upokecenter.util;
+package com.upokecenter.cbor;
 /*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
@@ -6,6 +6,8 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
+
+import com.upokecenter.util.*;
 
     /**
      * Implements arithmetic operations with CBOR objects.
@@ -45,23 +47,23 @@ private CBORObjectMath() {
         return CBORObject.FromObject(valueA + valueB);
       } else if (typeA == CBORObject.CBORObjectTypeExtendedRational ||
                  typeB == CBORObject.CBORObjectTypeExtendedRational) {
-        ExtendedRational e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedRational(objA);
-        ExtendedRational e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedRational(objB);
+        ExtendedRational e1 = CBORObject.GetNumberInterface(typeA).AsExtendedRational(objA);
+        ExtendedRational e2 = CBORObject.GetNumberInterface(typeB).AsExtendedRational(objB);
         return CBORObject.FromObject(e1.Add(e2));
       } else if (typeA == CBORObject.CBORObjectTypeExtendedDecimal ||
                  typeB == CBORObject.CBORObjectTypeExtendedDecimal) {
-        ExtendedDecimal e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedDecimal(objA);
-        ExtendedDecimal e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedDecimal(objB);
+        ExtendedDecimal e1 = CBORObject.GetNumberInterface(typeA).AsExtendedDecimal(objA);
+        ExtendedDecimal e2 = CBORObject.GetNumberInterface(typeB).AsExtendedDecimal(objB);
         return CBORObject.FromObject(e1.Add(e2));
       } else if (typeA == CBORObject.CBORObjectTypeExtendedFloat || typeB == CBORObject.CBORObjectTypeExtendedFloat ||
                  typeA == CBORObject.CBORObjectTypeDouble || typeB == CBORObject.CBORObjectTypeDouble ||
                  typeA == CBORObject.CBORObjectTypeSingle || typeB == CBORObject.CBORObjectTypeSingle) {
-        ExtendedFloat e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedFloat(objA);
-        ExtendedFloat e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedFloat(objB);
+        ExtendedFloat e1 = CBORObject.GetNumberInterface(typeA).AsExtendedFloat(objA);
+        ExtendedFloat e2 = CBORObject.GetNumberInterface(typeB).AsExtendedFloat(objB);
         return CBORObject.FromObject(e1.Add(e2));
       } else {
-        BigInteger b1 = CBORObject.NumberInterfaces.get(typeA).AsBigInteger(objA);
-        BigInteger b2 = CBORObject.NumberInterfaces.get(typeB).AsBigInteger(objB);
+        BigInteger b1 = CBORObject.GetNumberInterface(typeA).AsBigInteger(objA);
+        BigInteger b2 = CBORObject.GetNumberInterface(typeB).AsBigInteger(objB);
         return CBORObject.FromObject(b1.add(b2));
       }
     }
@@ -94,23 +96,23 @@ private CBORObjectMath() {
         return CBORObject.FromObject(valueA - valueB);
       } else if (typeA == CBORObject.CBORObjectTypeExtendedRational ||
                  typeB == CBORObject.CBORObjectTypeExtendedRational) {
-        ExtendedRational e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedRational(objA);
-        ExtendedRational e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedRational(objB);
+        ExtendedRational e1 = CBORObject.GetNumberInterface(typeA).AsExtendedRational(objA);
+        ExtendedRational e2 = CBORObject.GetNumberInterface(typeB).AsExtendedRational(objB);
         return CBORObject.FromObject(e1.Subtract(e2));
       } else if (typeA == CBORObject.CBORObjectTypeExtendedDecimal ||
                  typeB == CBORObject.CBORObjectTypeExtendedDecimal) {
-        ExtendedDecimal e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedDecimal(objA);
-        ExtendedDecimal e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedDecimal(objB);
+        ExtendedDecimal e1 = CBORObject.GetNumberInterface(typeA).AsExtendedDecimal(objA);
+        ExtendedDecimal e2 = CBORObject.GetNumberInterface(typeB).AsExtendedDecimal(objB);
         return CBORObject.FromObject(e1.Subtract(e2));
       } else if (typeA == CBORObject.CBORObjectTypeExtendedFloat || typeB == CBORObject.CBORObjectTypeExtendedFloat ||
                  typeA == CBORObject.CBORObjectTypeDouble || typeB == CBORObject.CBORObjectTypeDouble ||
                  typeA == CBORObject.CBORObjectTypeSingle || typeB == CBORObject.CBORObjectTypeSingle) {
-        ExtendedFloat e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedFloat(objA);
-        ExtendedFloat e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedFloat(objB);
+        ExtendedFloat e1 = CBORObject.GetNumberInterface(typeA).AsExtendedFloat(objA);
+        ExtendedFloat e2 = CBORObject.GetNumberInterface(typeB).AsExtendedFloat(objB);
         return CBORObject.FromObject(e1.Subtract(e2));
       } else {
-        BigInteger b1 = CBORObject.NumberInterfaces.get(typeA).AsBigInteger(objA);
-        BigInteger b2 = CBORObject.NumberInterfaces.get(typeB).AsBigInteger(objB);
+        BigInteger b1 = CBORObject.GetNumberInterface(typeA).AsBigInteger(objA);
+        BigInteger b2 = CBORObject.GetNumberInterface(typeB).AsBigInteger(objB);
         return CBORObject.FromObject(b1.subtract(b2));
       }
     }
@@ -151,23 +153,23 @@ private CBORObjectMath() {
         return CBORObject.FromObject(valueA * valueB);
       } else if (typeA == CBORObject.CBORObjectTypeExtendedRational ||
                  typeB == CBORObject.CBORObjectTypeExtendedRational) {
-        ExtendedRational e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedRational(objA);
-        ExtendedRational e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedRational(objB);
+        ExtendedRational e1 = CBORObject.GetNumberInterface(typeA).AsExtendedRational(objA);
+        ExtendedRational e2 = CBORObject.GetNumberInterface(typeB).AsExtendedRational(objB);
         return CBORObject.FromObject(e1.Multiply(e2));
       } else if (typeA == CBORObject.CBORObjectTypeExtendedDecimal ||
                  typeB == CBORObject.CBORObjectTypeExtendedDecimal) {
-        ExtendedDecimal e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedDecimal(objA);
-        ExtendedDecimal e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedDecimal(objB);
+        ExtendedDecimal e1 = CBORObject.GetNumberInterface(typeA).AsExtendedDecimal(objA);
+        ExtendedDecimal e2 = CBORObject.GetNumberInterface(typeB).AsExtendedDecimal(objB);
         return CBORObject.FromObject(e1.Multiply(e2));
       } else if (typeA == CBORObject.CBORObjectTypeExtendedFloat || typeB == CBORObject.CBORObjectTypeExtendedFloat ||
                  typeA == CBORObject.CBORObjectTypeDouble || typeB == CBORObject.CBORObjectTypeDouble ||
                  typeA == CBORObject.CBORObjectTypeSingle || typeB == CBORObject.CBORObjectTypeSingle) {
-        ExtendedFloat e1 = CBORObject.NumberInterfaces.get(typeA).AsExtendedFloat(objA);
-        ExtendedFloat e2 = CBORObject.NumberInterfaces.get(typeB).AsExtendedFloat(objB);
+        ExtendedFloat e1 = CBORObject.GetNumberInterface(typeA).AsExtendedFloat(objA);
+        ExtendedFloat e2 = CBORObject.GetNumberInterface(typeB).AsExtendedFloat(objB);
         return CBORObject.FromObject(e1.Multiply(e2));
       } else {
-        BigInteger b1 = CBORObject.NumberInterfaces.get(typeA).AsBigInteger(objA);
-        BigInteger b2 = CBORObject.NumberInterfaces.get(typeB).AsBigInteger(objB);
+        BigInteger b1 = CBORObject.GetNumberInterface(typeA).AsBigInteger(objA);
+        BigInteger b2 = CBORObject.GetNumberInterface(typeB).AsBigInteger(objB);
         return CBORObject.FromObject(b1.multiply(b2));
       }
     }

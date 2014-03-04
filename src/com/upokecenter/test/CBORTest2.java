@@ -11,7 +11,7 @@ package com.upokecenter.test;
 import org.junit.Assert;
 import org.junit.Test;
 import com.upokecenter.util.*;
-using PeterO.Cbor;
+import com.upokecenter.cbor.*;
 
   public class CBORTest2
   {

@@ -7,6 +7,7 @@ at: http://peteroupc.github.io/CBOR/
  */
 
 using System;
+using PeterO;
 
 namespace PeterO.Cbor
 {

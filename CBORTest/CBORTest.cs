@@ -2069,9 +2069,6 @@ namespace Test {
       cbor = CBORObject.FromObject(new String[] { "a", "b", "c", "d", "e" });
       Assert.AreEqual("[\"a\",\"b\",\"c\",\"d\",\"e\"]", cbor.ToJSONString());
       TestCommon.AssertRoundTrip(cbor);
-      cbor = CBORObject.FromObject(new int[2, 3, 2]);
-      Assert.AreEqual("[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]", cbor.ToJSONString());
-      TestCommon.AssertRoundTrip(cbor);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -5393,10 +5390,18 @@ namespace Test {
       Assert.AreEqual("sNaN", ExtendedDecimal.SignalingNaN.ToPlainString());
       Assert.AreEqual(ExtendedFloat.Zero, ExtendedDecimal.Zero.ToExtendedFloat());
       Assert.AreEqual(ExtendedFloat.NegativeZero, ExtendedDecimal.NegativeZero.ToExtendedFloat());
-      Assert.AreEqual(0.0f, ExtendedDecimal.Zero.ToSingle());
-      Assert.AreEqual(0.0, ExtendedDecimal.Zero.ToDouble());
-      Assert.AreEqual(0.0f, ExtendedFloat.Zero.ToSingle());
-      Assert.AreEqual(0.0, ExtendedFloat.Zero.ToDouble());
+      if (0.0 != ExtendedDecimal.Zero.ToSingle()) {
+ Assert.Fail("Failed "+  ExtendedDecimal.Zero.ToSingle());
+}
+      if (0.0 != ExtendedDecimal.Zero.ToDouble()) {
+ Assert.Fail("Failed "+ExtendedDecimal.Zero.ToDouble());
+}
+      if (0.0f != ExtendedFloat.Zero.ToSingle()) {
+ Assert.Fail("Failed "+ExtendedFloat.Zero.ToDouble());
+}
+      if (0.0f != ExtendedFloat.Zero.ToDouble()) {
+ Assert.Fail("Failed "+ExtendedFloat.Zero.ToDouble());
+}
       try {
         CBORObject.FromSimpleValue(-1);
         Assert.Fail("Should have failed");
@@ -5489,7 +5494,8 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(CBORObject.False.Keys);
+        cbor = CBORObject.False;
+        CBORObject.FromObject(cbor.Keys);
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
       } catch (Exception ex) {
@@ -5522,7 +5528,6 @@ namespace Test {
       }
       Assert.AreEqual(CBORObject.FromObject(0.1), CBORObject.FromObjectAndTag(0.1, 999999).Untag());
       Assert.AreEqual(-1, CBORObject.NewArray().SimpleValue);
-      Assert.AreEqual(false, CBORObject.NewArray().ContainsKey(CBORObject.True));
       Assert.AreEqual(0, CBORObject.FromObject(0.1).CompareTo(CBORObject.FromObject(0.1)));
       Assert.AreEqual(0, CBORObject.FromObject(0.1f).CompareTo(CBORObject.FromObject(0.1f)));
       Assert.AreEqual(CBORObject.FromObject(2), CBORObject.FromObject(-2).Negate());

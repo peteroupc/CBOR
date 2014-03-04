@@ -1,4 +1,4 @@
-package com.upokecenter.util;
+package com.upokecenter.cbor;
 /*
  * Created by SharpDevelop.
  * User: Peter
@@ -103,7 +103,7 @@ import com.upokecenter.util.*;
      * @param tags An integer array of tags allowed.
      * @return A CBORTypeFilter object.
      */
-    public CBORTypeFilter WithTags(params int[] tags) {
+    public CBORTypeFilter WithTags(int... tags) {
       if (this.any) {
         return this;
       }
@@ -121,7 +121,7 @@ import com.upokecenter.util.*;
      * @param tags A BigInteger[] object.
      * @return A CBORTypeFilter object.
      */
-    public CBORTypeFilter WithTags(params BigInteger[] tags) {
+    public CBORTypeFilter WithTags(BigInteger... tags) {
       if (this.any) {
         return this;
       }
@@ -143,7 +143,7 @@ import com.upokecenter.util.*;
      * @param elements An array of CBORTypeFilter.
      * @return A CBORTypeFilter object.
      */
-    public CBORTypeFilter WithArray(int arrayLength, params CBORTypeFilter[] elements) {
+    public CBORTypeFilter WithArray(int arrayLength, CBORTypeFilter... elements) {
       if (this.any) {
         return this;
       }
@@ -339,7 +339,9 @@ import com.upokecenter.util.*;
         // which a type is defined
         return Any;
       }
-      return this.elements[(long)index];
+      // NOTE: Index shouldn't be greater than Integer.MAX_VALUE,
+      // since the length is an int
+      return this.elements[(int)index];
     }
 
     /**

@@ -6,6 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 using System;
+using PeterO;
 
 namespace PeterO.Cbor
 {
@@ -156,8 +157,6 @@ namespace PeterO.Cbor
     public bool IsIntegral(object obj) {
       return true;
     }
-
-    private static BigInteger valueUInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>

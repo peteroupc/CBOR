@@ -8,15 +8,13 @@ at: http://peteroupc.github.io/CBOR/
 using System;
 using System.Globalization;
 using System.Text;
+using PeterO;
 
 namespace PeterO.Cbor {
     /// <summary>Contains methods useful for reading and writing data,
     /// with a focus on CBOR.</summary>
   public static class CBORDataUtilities {
     private const int MaxSafeInt = 214748363;
-
-    private static BigInteger valueLowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
-    private static BigInteger valueUInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
     /// <summary>Parses a number whose format follows the JSON specification.
     /// See #ParseJSONNumber(String, integersOnly, parseOnly) for more
@@ -225,27 +223,40 @@ namespace PeterO.Cbor {
         // End of the string wasn't reached, so isn't a number
         return null;
       }
-      if (negative) {
-        if (mant == null) {
-          mantInt = -mantInt;
-        } else {
-          mant.Negate();
-        }
-      }
       if ((newScale == null && newScaleInt == 0) || (newScale != null && newScale.Sign == 0)) {
         // No fractional part
+        if (mant != null && mant.CanFitInInt32()) {
+          mantInt = mant.AsInt32();
+          mant = null;
+        }
         if (mant == null) {
+          // NOTE: mantInt can only be positive, so overflow is impossible
+          #if DEBUG
+if (mantInt < 0) {
+ throw new ArgumentException("mantInt (" + Convert.ToString((long)mantInt, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+}
+#endif
+
+          if (negative) {
+ mantInt = -mantInt;
+}
           return CBORObject.FromObject(mantInt);
-        } else if (mant.CanFitInInt32()) {
-          return CBORObject.FromObject(mant.AsInt32());
         } else {
-          return CBORObject.FromObject(mant.AsBigInteger());
+          BigInteger bigmant2 = mant.AsBigInteger();
+          if (negative) {
+ bigmant2 = -(BigInteger)bigmant2;
+}
+          return CBORObject.FromObject(bigmant2);
         }
       } else {
         BigInteger bigmant = (mant == null) ? ((BigInteger)mantInt) : mant.AsBigInteger();
         BigInteger bigexp = (newScale == null) ? ((BigInteger)newScaleInt) : newScale.AsBigInteger();
-        if (newScale != null && !newScale.CanFitInInt32()) {
-          if (bigexp.CompareTo(valueUInt64MaxValue) > 0) {
+        if (negative) {
+ bigmant = -(BigInteger)bigmant;
+}
+        if (newScale != null && bigexp.bitLength() >64) {
+          int bigexpSign = bigexp.Sign;
+          if (bigexpSign > 0) {
             // Exponent is higher than the highest representable
             // integer of major type 0
             if (failOnExponentOverflow) {
@@ -255,8 +266,7 @@ namespace PeterO.Cbor {
                 CBORObject.FromObject(Double.NegativeInfinity) :
                 CBORObject.FromObject(Double.PositiveInfinity);
             }
-          }
-          if (bigexp.CompareTo(valueLowestMajorType1) < 0) {
+          } else {
             // Exponent is lower than the lowest representable
             // integer of major type 1
             if (failOnExponentOverflow) {

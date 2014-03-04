@@ -7,6 +7,7 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
+using PeterO;
 
 namespace PeterO.Cbor
 {
@@ -54,26 +55,30 @@ namespace PeterO.Cbor
       return new String(charbuf);
     }
 
+    internal static void AddConverter() {
+      CBORObject.AddConverter(typeof(DateTime), new CBORTag0());
+    }
+
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
-public CBORTypeFilter GetTypeFilter() {
+    public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.TextString;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>A CBORObject object. (2).</param>
     /// <returns>A CBORObject object.</returns>
-public CBORObject ValidateObject(CBORObject obj) {
+    public CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {
- throw new CBORException("Not a text string");
-}
+        throw new CBORException("Not a text string");
+      }
       return obj;
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>A DateTime object.</param>
     /// <returns>A CBORObject object.</returns>
-public CBORObject ToCBORObject(DateTime obj) {
+    public CBORObject ToCBORObject(DateTime obj) {
       return CBORObject.FromObjectAndTag(DateTimeToString(obj), 0);
     }
   }

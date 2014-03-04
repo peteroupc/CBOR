@@ -125,7 +125,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static IDictionary<Type, ConverterInfo> converters = new Dictionary<Type, ConverterInfo>();
+    private static IDictionary<Object, ConverterInfo> converters = new Dictionary<Object, ConverterInfo>();
     private static IDictionary<BigInteger, ICBORTag> tagHandlers = new Dictionary<BigInteger, ICBORTag>();
 
     private static int[] valueNumberTypeOrder = new int[] {
@@ -208,7 +208,7 @@ namespace PeterO.Cbor {
       ci.Converter = converter;
       ci.ToObject = PropertyMap.FindMethod(converter, "ToCBORObject");
       lock (converters) {
-        converters[typeof(T)] = ci;
+        converters[type] = ci;
       }
     }
 
@@ -216,6 +216,10 @@ namespace PeterO.Cbor {
       lock (tagHandlers) {
         return tagHandlers.Count == 0;
       }
+    }
+
+    internal static ICBORNumber GetNumberInterface(int type) {
+      return NumberInterfaces[type];
     }
 
     public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
@@ -243,11 +247,11 @@ namespace PeterO.Cbor {
       }
       #endif
 
-      Type type = obj.GetType();
+      Object type = obj.GetType();
       ConverterInfo convinfo = null;
       lock (converters) {
         if (converters.Count == 0) {
-          AddConverter(typeof(DateTime), new CBORTag0());
+          CBORTag0.AddConverter();
         }
         if (converters.ContainsKey(type)) {
           convinfo = converters[type];
@@ -3843,8 +3847,6 @@ namespace PeterO.Cbor {
       return objret;
     }
 
-    private static BigInteger valueBigInt65536 = (BigInteger)65536;
-
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag.</summary>
     /// <returns>A CBOR object where the object <paramref name='valueOb'/>
@@ -4380,8 +4382,6 @@ namespace PeterO.Cbor {
         if (additional == 31) {
           // Streaming text string
           StringBuilder builder = new StringBuilder();
-          // Requires same type as this one
-          int[] subFlags = new int[] { (1 << type) };
           while (true) {
             CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.TextString);
             if (o == null) {
@@ -4416,7 +4416,6 @@ namespace PeterO.Cbor {
         }
       } else if (type == 4) {  // Array
         CBORObject cbor = NewArray();
-        IList<CBORObject> list = new List<CBORObject>();
         int vtindex = 1;
         if (additional == 31) {
           while (true) {

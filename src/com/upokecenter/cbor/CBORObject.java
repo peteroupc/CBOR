@@ -1,4 +1,4 @@
-package com.upokecenter.util;
+package com.upokecenter.cbor;
 /*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
@@ -115,7 +115,7 @@ public void setConverter(Object value) {
         }
     }
 
-    private static Map<Type, ConverterInfo> converters = new HashMap<Type, ConverterInfo>();
+    private static Map<Object, ConverterInfo> converters = new HashMap<Object, ConverterInfo>();
     private static Map<BigInteger, ICBORTag> tagHandlers = new HashMap<BigInteger, ICBORTag>();
 
     private static int[] valueNumberTypeOrder = new int[] {
@@ -171,7 +171,7 @@ public void setConverter(Object value) {
       this.tagHigh = tagHigh;
     }
 
-    public static <T> void AddConverter(Type type, ICBORConverter<T> converter) {
+    public static <T> void AddConverter(Class<?> type, ICBORConverter<T> converter) {
       if (type == null) {
         throw new NullPointerException("type");
       }
@@ -182,7 +182,7 @@ public void setConverter(Object value) {
       ci.setConverter(converter);
       ci.setToObject(PropertyMap.FindMethod(converter, "ToCBORObject"));
       synchronized(converters) {
-        converters.set(typeof(T),ci);
+        converters.put(type,ci);
       }
     }
 
@@ -190,6 +190,10 @@ public void setConverter(Object value) {
       synchronized(tagHandlers) {
         return tagHandlers.size() == 0;
       }
+    }
+
+    static ICBORNumber GetNumberInterface(int type) {
+      return NumberInterfaces[type];
     }
 
     public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
@@ -206,17 +210,17 @@ public void setConverter(Object value) {
         throw new IllegalArgumentException("bigintTag.bitLength (" + Long.toString((long)bigintTag.bitLength()) + ") is not less or equal to " + "64");
       }
       synchronized(tagHandlers) {
-        tagHandlers.set(bigintTag,handler);
+        tagHandlers.put(bigintTag,handler);
       }
     }
 
     private static CBORObject ConvertWithConverter(Object obj) {
 
-      Type type = obj.GetType();
+      Object type = obj.getClass();
       ConverterInfo convinfo = null;
       synchronized(converters) {
         if (converters.size() == 0) {
-          AddConverter(typeof(DateTime), new CBORTag0());
+          CBORTag0.AddConverter();
         }
         if (converters.containsKey(type)) {
           convinfo = converters.get(type);
@@ -3887,8 +3891,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       return objret;
     }
 
-    private static BigInteger valueBigInt65536 = BigInteger.valueOf(65536);
-
     /**
      * Generates a CBOR object from an arbitrary object and gives the resulting
      * object a tag.
@@ -4255,7 +4257,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           throw new CBORException("Expected major type " +
                                   Integer.toString((int)allowOnlyType) +
                                   ", instead got type " +
-                                  Integer.toString((int)type));
+                                  Integer.toString(((Integer)type).intValue()));
         }
         if (additional == 31) {
           throw new CBORException("Indefinite-length data not allowed here");
@@ -4437,8 +4439,6 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         if (additional == 31) {
           // Streaming text String
           StringBuilder builder = new StringBuilder();
-          // Requires same type as this one
-          int[] subFlags = new int[] { (1 << type) };
           while (true) {
             CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.TextString);
             if (o == null) {
@@ -4473,7 +4473,6 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         }
       } else if (type == 4) {  // Array
         CBORObject cbor = NewArray();
-        List<CBORObject> list = new ArrayList<CBORObject>();
         int vtindex = 1;
         if (additional == 31) {
           while (true) {

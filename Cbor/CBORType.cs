@@ -7,7 +7,7 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 
-namespace PeterO {
+namespace PeterO.Cbor {
     /// <summary>Represents a type that a CBOR object can have.</summary>
   public enum CBORType {
     /// <summary>A number of any kind, including integers, big integers,

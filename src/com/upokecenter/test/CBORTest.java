@@ -12,7 +12,7 @@ import java.io.*;
 import org.junit.Assert;
 import org.junit.Test;
 import com.upokecenter.util.*;
-using PeterO.Cbor;
+import com.upokecenter.cbor.*;
 
     /**
      * Contains CBOR tests.
@@ -1536,16 +1536,25 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
-      using(MemoryStream ms = new MemoryStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  })) {
+      java.io.ByteArrayInputStream ms=null;
+try {
+ms=new ByteArrayInputStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
+
         try {
           CBORObject.ReadJSON(ms);
         } catch (Exception ex) {
           Assert.fail(ex.toString());
           throw new IllegalStateException("", ex);
         }
-      }
+}
+finally {
+try { if(ms!=null)ms.close(); } catch (IOException ex){}
+}
       // whitespace followed by BOM
-      using(MemoryStream ms2 = new MemoryStream(new byte[] {  0x20, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  })) {
+      java.io.ByteArrayInputStream ms2=null;
+try {
+ms2=new ByteArrayInputStream(new byte[] {  0x20, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
+
         try {
           CBORObject.ReadJSON(ms2);
           Assert.fail("Should have failed");
@@ -1554,9 +1563,15 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           Assert.fail(ex.toString());
           throw new IllegalStateException("", ex);
         }
-      }
+}
+finally {
+try { if(ms2!=null)ms2.close(); } catch (IOException ex){}
+}
       // two BOMs
-      using(MemoryStream ms3 = new MemoryStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  })) {
+      java.io.ByteArrayInputStream ms3=null;
+try {
+ms3=new ByteArrayInputStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
+
         try {
           CBORObject.ReadJSON(ms3);
           Assert.fail("Should have failed");
@@ -1565,7 +1580,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           Assert.fail(ex.toString());
           throw new IllegalStateException("", ex);
         }
-      }
+}
+finally {
+try { if(ms3!=null)ms3.close(); } catch (IOException ex){}
+}
       try {
         CBORObject.FromJSONString("\ufeff\u0020 {}");
         Assert.fail("Should have failed");
@@ -2121,9 +2139,6 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       if(!(isequal))Assert.fail( "array not equal");
       cbor = CBORObject.FromObject(new String[] { "a", "b", "c", "d", "e" });
       Assert.assertEquals("[\"a\",\"b\",\"c\",\"d\",\"e\"]", cbor.ToJSONString());
-      TestCommon.AssertRoundTrip(cbor);
-      cbor = CBORObject.FromObject(new int[2, 3, 2]);
-      Assert.assertEquals("[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]", cbor.ToJSONString());
       TestCommon.AssertRoundTrip(cbor);
     }
 
@@ -5460,10 +5475,18 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals("sNaN", ExtendedDecimal.SignalingNaN.ToPlainString());
       Assert.assertEquals(ExtendedFloat.Zero, ExtendedDecimal.Zero.ToExtendedFloat());
       Assert.assertEquals(ExtendedFloat.NegativeZero, ExtendedDecimal.NegativeZero.ToExtendedFloat());
-      Assert.assertEquals(0.0f, ExtendedDecimal.Zero.ToSingle());
-      Assert.assertEquals(0.0, ExtendedDecimal.Zero.ToDouble());
-      Assert.assertEquals(0.0f, ExtendedFloat.Zero.ToSingle());
-      Assert.assertEquals(0.0, ExtendedFloat.Zero.ToDouble());
+      if (0.0 != ExtendedDecimal.Zero.ToSingle()) {
+ Assert.fail("Failed "+  ExtendedDecimal.Zero.ToSingle());
+}
+      if (0.0 != ExtendedDecimal.Zero.ToDouble()) {
+ Assert.fail("Failed "+ExtendedDecimal.Zero.ToDouble());
+}
+      if (0.0f != ExtendedFloat.Zero.ToSingle()) {
+ Assert.fail("Failed "+ExtendedFloat.Zero.ToDouble());
+}
+      if (0.0f != ExtendedFloat.Zero.ToDouble()) {
+ Assert.fail("Failed "+ExtendedFloat.Zero.ToDouble());
+}
       try {
         CBORObject.FromSimpleValue(-1);
         Assert.fail("Should have failed");
@@ -5556,7 +5579,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         throw new IllegalStateException("", ex);
       }
       try {
-        CBORObject.FromObject(CBORObject.False.Keys);
+        cbor = CBORObject.False;
+        CBORObject.FromObject(cbor.getKeys());
         Assert.fail("Should have failed");
       } catch (IllegalStateException ex) {
       } catch (Exception ex) {
@@ -5589,7 +5613,6 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       }
       Assert.assertEquals(CBORObject.FromObject(0.1), CBORObject.FromObjectAndTag(0.1, 999999).Untag());
       Assert.assertEquals(-1, CBORObject.NewArray().getSimpleValue());
-      Assert.assertEquals(false, CBORObject.NewArray().containsKey(CBORObject.True));
       Assert.assertEquals(0, CBORObject.FromObject(0.1).compareTo(CBORObject.FromObject(0.1)));
       Assert.assertEquals(0, CBORObject.FromObject(0.1f).compareTo(CBORObject.FromObject(0.1f)));
       Assert.assertEquals(CBORObject.FromObject(2), CBORObject.FromObject(-2).Negate());

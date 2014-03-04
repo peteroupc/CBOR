@@ -1,4 +1,4 @@
-package com.upokecenter.util;
+package com.upokecenter.cbor;
 /*
  * Created by SharpDevelop.
  * User: Peter
@@ -7,8 +7,6 @@ package com.upokecenter.util;
  *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
-
-import com.upokecenter.util.*;
 
     /**
      * A generic CBOR tag class for strings.

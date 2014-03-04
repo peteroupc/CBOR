@@ -6,11 +6,8 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-
-using System.Text;
+using PeterO;
 
 namespace PeterO.Cbor {
   // Contains extra methods placed separately
@@ -187,7 +184,7 @@ namespace PeterO.Cbor {
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       BigInteger bigint = this.AsBigInteger();
-      if (bigint.Sign < 0 || bigint.bitLength() >64) {
+      if (bigint.Sign < 0 || bigint.bitLength() > 64) {
         throw new OverflowException("This object's value is out of range");
       }
       byte[] data = bigint.ToByteArray();

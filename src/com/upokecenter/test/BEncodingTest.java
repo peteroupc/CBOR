@@ -5,7 +5,7 @@ import java.io.*;
 import org.junit.Assert;
 import org.junit.Test;
 import com.upokecenter.util.*;
-using PeterO.Cbor;
+import com.upokecenter.cbor.*;
 
   public class BEncodingTest {
     private static CBORObject EncodingFromBytes(byte[] b) {

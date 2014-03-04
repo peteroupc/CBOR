@@ -101,19 +101,19 @@ at: http://peteroupc.github.io/CBOR/
       if (!this.isFinite()) {
         if (this.IsSignalingNaN()) {
           if (this.unsignedNumerator.signum()==0) {
- return this.isNegative() ? "-sNaN" : "sNaN";
-}
-          else
+            return this.isNegative() ? "-sNaN" : "sNaN";
+  } else {
             return this.isNegative() ? "-sNaN" + this.unsignedNumerator.toString() :
               "sNaN" + this.unsignedNumerator.toString();
+          }
         }
         if (this.IsQuietNaN()) {
           if (this.unsignedNumerator.signum()==0) {
- return this.isNegative() ? "-NaN" : "NaN";
-}
-          else
+            return this.isNegative() ? "-NaN" : "NaN";
+  } else {
             return this.isNegative() ? "-NaN" + this.unsignedNumerator.toString() :
               "NaN" + this.unsignedNumerator.toString();
+          }
         }
         if (this.IsInfinity()) {
           return this.isNegative() ? "-Infinity" : "Infinity";
