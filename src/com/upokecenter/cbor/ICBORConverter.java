@@ -1,4 +1,4 @@
-package com.upokecenter.util;
+package com.upokecenter.cbor;
 /*
  * Created by SharpDevelop.
  * User: Peter

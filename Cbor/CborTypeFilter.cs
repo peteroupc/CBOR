@@ -306,7 +306,9 @@ namespace PeterO.Cbor
         // which a type is defined
         return Any;
       }
-      return this.elements[(long)index];
+      // NOTE: Index shouldn't be greater than Int32.MaxValue,
+      // since the length is an int
+      return this.elements[(int)index];
     }
 
     /// <summary>Not documented yet.</summary>

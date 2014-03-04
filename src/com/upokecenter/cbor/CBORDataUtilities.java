@@ -1,4 +1,4 @@
-package com.upokecenter.util;
+package com.upokecenter.cbor;
 /*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
@@ -6,6 +6,8 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
+
+import com.upokecenter.util.*;
 
     /**
      * Contains methods useful for reading and writing data, with a focus
@@ -15,9 +17,6 @@ at: http://peteroupc.github.io/CBOR/
 private CBORDataUtilities() {
 }
     private static final int MaxSafeInt = 214748363;
-
-    private static BigInteger valueLowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
-    private static BigInteger valueUInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
 
     /**
      * Parses a number whose format follows the JSON specification. See
@@ -229,27 +228,35 @@ private CBORDataUtilities() {
         // End of the String wasn't reached, so isn't a number
         return null;
       }
-      if (negative) {
-        if (mant == null) {
-          mantInt = -mantInt;
-        } else {
-          mant.Negate();
-        }
-      }
       if ((newScale == null && newScaleInt == 0) || (newScale != null && newScale.signum() == 0)) {
         // No fractional part
+        if (mant != null && mant.CanFitInInt32()) {
+          mantInt = mant.AsInt32();
+          mant = null;
+        }
         if (mant == null) {
+          // NOTE: mantInt can only be positive, so overflow is impossible
+
+          if (negative) {
+ mantInt = -mantInt;
+}
           return CBORObject.FromObject(mantInt);
-        } else if (mant.CanFitInInt32()) {
-          return CBORObject.FromObject(mant.AsInt32());
         } else {
-          return CBORObject.FromObject(mant.AsBigInteger());
+          BigInteger bigmant2 = mant.AsBigInteger();
+          if (negative) {
+ bigmant2=(bigmant2).negate();
+}
+          return CBORObject.FromObject(bigmant2);
         }
       } else {
         BigInteger bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
         BigInteger bigexp = (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger();
-        if (newScale != null && !newScale.CanFitInInt32()) {
-          if (bigexp.compareTo(valueUInt64MaxValue) > 0) {
+        if (negative) {
+ bigmant=(bigmant).negate();
+}
+        if (newScale != null && bigexp.bitLength() >64) {
+          int bigexpSign = bigexp.signum();
+          if (bigexpSign > 0) {
             // Exponent is higher than the highest representable
             // integer of major type 0
             if (failOnExponentOverflow) {
@@ -259,8 +266,7 @@ private CBORDataUtilities() {
                 CBORObject.FromObject(Double.NEGATIVE_INFINITY) :
                 CBORObject.FromObject(Double.POSITIVE_INFINITY);
             }
-          }
-          if (bigexp.compareTo(valueLowestMajorType1) < 0) {
+          } else {
             // Exponent is lower than the lowest representable
             // integer of major type 1
             if (failOnExponentOverflow) {

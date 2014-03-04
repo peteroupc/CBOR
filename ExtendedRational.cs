@@ -104,19 +104,19 @@ namespace PeterO
       if (!this.IsFinite) {
         if (this.IsSignalingNaN()) {
           if (this.unsignedNumerator.IsZero) {
- return this.IsNegative ? "-sNaN" : "sNaN";
-}
-          else
+            return this.IsNegative ? "-sNaN" : "sNaN";
+  } else {
             return this.IsNegative ? "-sNaN" + this.unsignedNumerator.ToString() :
               "sNaN" + this.unsignedNumerator.ToString();
+          }
         }
         if (this.IsQuietNaN()) {
           if (this.unsignedNumerator.IsZero) {
- return this.IsNegative ? "-NaN" : "NaN";
-}
-          else
+            return this.IsNegative ? "-NaN" : "NaN";
+  } else {
             return this.IsNegative ? "-NaN" + this.unsignedNumerator.ToString() :
               "NaN" + this.unsignedNumerator.ToString();
+          }
         }
         if (this.IsInfinity()) {
           return this.IsNegative ? "-Infinity" : "Infinity";

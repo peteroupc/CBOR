@@ -11,7 +11,7 @@ import java.util.*;
 
 import java.io.*;
 
-using PeterO.Cbor;
+import com.upokecenter.cbor.*;
 
     /**
      * Contains methods for reading and writing objects represented in

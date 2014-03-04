@@ -1,4 +1,4 @@
-package com.upokecenter.util;
+package com.upokecenter.cbor;
 /*
 Written in 2014 by Peter O.
 Any copyright is dedicated to the Public Domain.
@@ -102,6 +102,28 @@ class PropertyMap
 			throw (RuntimeException)new RuntimeException("").initCause(ex);
 		} catch (IllegalAccessException ex) {
 			throw (RuntimeException)new RuntimeException("").initCause(ex);
+		}
+	}
+	
+	public static Object FindMethod(Object obj, String name){
+		try {
+			return obj.getClass().getMethod(name);
+		} catch (SecurityException e) {
+			return null;
+		} catch (NoSuchMethodException e) {
+			return null;
+		}
+	}
+
+	public static Object InvokeOneArgumentMethod(Object method,
+			Object obj, Object argument) {
+		Method m=(Method)method;
+		try {
+			return m.invoke(obj, argument);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		} catch (InvocationTargetException e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

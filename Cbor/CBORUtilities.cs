@@ -7,6 +7,7 @@ at: http://peteroupc.github.io/CBOR/
  */
 using System;
 using System.Text;
+using PeterO;
 
 namespace PeterO.Cbor {
     /// <summary>Contains utility methods that may have use outside of the
@@ -165,23 +166,42 @@ namespace PeterO.Cbor {
     }
 
     public static BigInteger BigIntegerFromDouble(double dbl) {
-      int[] value = Extras.DoubleToIntegers(dbl);
-      int floatExponent = (int)((value[1] >> 20) & 0x7ff);
-      bool neg = (value[1] >> 31) != 0;
+      long lvalue = BitConverter.ToInt64(
+        BitConverter.GetBytes((double)dbl),
+        0);
+      int value0 = unchecked((int)(lvalue & 0xFFFFFFFFL));
+      int value1 = unchecked((int)((lvalue >> 32) & 0xFFFFFFFFL));
+      int floatExponent = (int)((value1 >> 20) & 0x7ff);
+      bool neg = (value1 >> 31) != 0;
       if (floatExponent == 2047) {
         throw new OverflowException("Value is infinity or NaN");
       }
-      value[1] &= 0xFFFFF;  // Mask out the exponent and sign
+      value1 &= 0xFFFFF;  // Mask out the exponent and sign
       if (floatExponent == 0) {
         ++floatExponent;
       } else {
-        value[1] |= 0x100000;
+        value1 |= 0x100000;
       }
-      if ((value[1] | value[0]) != 0) {
-        floatExponent += DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
+      if ((value1 | value0) != 0) {
+        while ((value0 & 1) == 0) {
+          value0 >>= 1;
+          value0 &= 0x7FFFFFFF;
+          value0 = unchecked(value0 | (value1 << 31));
+          value1 >>= 1;
+        }
       }
       floatExponent -= 1075;
-      BigInteger bigmantissa = FastInteger.WordsToBigInteger(value);
+      byte[] bytes = new byte[9];
+      bytes[0] = (byte)(value0 & 0xFF);
+      bytes[1] = (byte)((value0 >> 8) & 0xFF);
+      bytes[2] = (byte)((value0 >> 16) & 0xFF);
+      bytes[3] = (byte)((value0 >> 24) & 0xFF);
+      bytes[4] = (byte)(value1 & 0xFF);
+      bytes[5] = (byte)((value1 >> 8) & 0xFF);
+      bytes[6] = (byte)((value1 >> 16) & 0xFF);
+      bytes[7] = (byte)((value1 >> 24) & 0xFF);
+      bytes[8] = (byte)0;
+      BigInteger bigmantissa = new BigInteger((byte[])bytes);
       if (floatExponent == 0) {
         if (neg) {
           bigmantissa = -bigmantissa;

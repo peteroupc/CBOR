@@ -6,6 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://peteroupc.github.io/CBOR/
  */
 using System;
+using PeterO;
 
 namespace PeterO.Cbor
 {

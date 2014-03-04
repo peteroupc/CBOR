@@ -4302,6 +4302,13 @@ namespace Test {
     }
 
     [Test]
+    public void TestOther() {
+      CBORObject       cbor = CBORObject.FromObject(new int[2, 3, 2]);
+      Assert.AreEqual("[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]", cbor.ToJSONString());
+      TestCommon.AssertRoundTrip(cbor);
+    }
+
+    [Test]
     public void TestDivideUnsigned() {
       FastRandom fr = new FastRandom();
       unchecked {
