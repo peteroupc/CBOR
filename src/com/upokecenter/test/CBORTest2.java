@@ -39,6 +39,51 @@ import com.upokecenter.cbor.*;
     }
 
     @Test
+    public void TestRationalDivide() {
+      FastRandom fr = new FastRandom();
+      for (int i = 0; i < 100; ++i) {
+        ExtendedRational er = CBORTest.RandomRational(fr);
+        ExtendedRational er2 = CBORTest.RandomRational(fr);
+        if (er2.signum()==0 || !er2.isFinite()) {
+ continue;
+}
+        ExtendedRational ermult = er.Multiply(er2);
+        ExtendedRational erdiv = ermult.Divide(er);
+        if (erdiv.compareTo(er2) != 0) {
+          Assert.fail(er + "; " + er2);
+        }
+        erdiv = ermult.Divide(er2);
+        if (erdiv.compareTo(er) != 0) {
+          Assert.fail(er + "; " + er2);
+        }
+      }
+    }
+
+    @Test
+    public void TestRationalRemainder() {
+      FastRandom fr = new FastRandom();
+      for (int i = 0; i < 100; ++i) {
+        ExtendedRational er;
+        ExtendedRational er2;
+        er = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.ONE);
+        er2 = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.ONE);
+        if (er2.signum()==0 || !er2.isFinite()) {
+ continue;
+}
+        ExtendedRational ermult = er.Multiply(er2);
+        ExtendedRational erdiv = ermult.Divide(er);
+        erdiv = ermult.Remainder(er);
+        if (erdiv.signum()!=0) {
+          Assert.fail(ermult + "; " + er);
+        }
+        erdiv = ermult.Remainder(er2);
+        if (erdiv.signum()!=0) {
+          Assert.fail(er + "; " + er2);
+        }
+      }
+    }
+
+    @Test
     public void TestRationalCompare() {
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {

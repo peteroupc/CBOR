@@ -40,6 +40,51 @@ namespace Test
     }
 
     [Test]
+    public void TestRationalDivide() {
+      FastRandom fr = new FastRandom();
+      for (int i = 0; i < 100; ++i) {
+        ExtendedRational er = CBORTest.RandomRational(fr);
+        ExtendedRational er2 = CBORTest.RandomRational(fr);
+        if (er2.IsZero || !er2.IsFinite) {
+ continue;
+}
+        ExtendedRational ermult = er.Multiply(er2);
+        ExtendedRational erdiv = ermult.Divide(er);
+        if (erdiv.CompareTo(er2) != 0) {
+          Assert.Fail(er + "; " + er2);
+        }
+        erdiv = ermult.Divide(er2);
+        if (erdiv.CompareTo(er) != 0) {
+          Assert.Fail(er + "; " + er2);
+        }
+      }
+    }
+
+    [Test]
+    public void TestRationalRemainder() {
+      FastRandom fr = new FastRandom();
+      for (int i = 0; i < 100; ++i) {
+        ExtendedRational er;
+        ExtendedRational er2;
+        er = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.One);
+        er2 = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.One);
+        if (er2.IsZero || !er2.IsFinite) {
+ continue;
+}
+        ExtendedRational ermult = er.Multiply(er2);
+        ExtendedRational erdiv = ermult.Divide(er);
+        erdiv = ermult.Remainder(er);
+        if (!erdiv.IsZero) {
+          Assert.Fail(ermult + "; " + er);
+        }
+        erdiv = ermult.Remainder(er2);
+        if (!erdiv.IsZero) {
+          Assert.Fail(er + "; " + er2);
+        }
+      }
+    }
+
+    [Test]
     public void TestRationalCompare() {
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {

@@ -5391,17 +5391,17 @@ namespace Test {
       Assert.AreEqual(ExtendedFloat.Zero, ExtendedDecimal.Zero.ToExtendedFloat());
       Assert.AreEqual(ExtendedFloat.NegativeZero, ExtendedDecimal.NegativeZero.ToExtendedFloat());
       if (0.0 != ExtendedDecimal.Zero.ToSingle()) {
- Assert.Fail("Failed "+  ExtendedDecimal.Zero.ToSingle());
-}
+        Assert.Fail("Failed "+  ExtendedDecimal.Zero.ToSingle());
+      }
       if (0.0 != ExtendedDecimal.Zero.ToDouble()) {
- Assert.Fail("Failed "+ExtendedDecimal.Zero.ToDouble());
-}
+        Assert.Fail("Failed "+ExtendedDecimal.Zero.ToDouble());
+      }
       if (0.0f != ExtendedFloat.Zero.ToSingle()) {
- Assert.Fail("Failed "+ExtendedFloat.Zero.ToDouble());
-}
+        Assert.Fail("Failed "+ExtendedFloat.Zero.ToDouble());
+      }
       if (0.0f != ExtendedFloat.Zero.ToDouble()) {
- Assert.Fail("Failed "+ExtendedFloat.Zero.ToDouble());
-}
+        Assert.Fail("Failed "+ExtendedFloat.Zero.ToDouble());
+      }
       try {
         CBORObject.FromSimpleValue(-1);
         Assert.Fail("Should have failed");
@@ -5841,6 +5841,10 @@ namespace Test {
 
     [Test]
     public void TestCanFitInSpecificCases() {
+      CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xFB, 0x41, (byte)0xE0, (byte)0x85, 0x48, 0x2D, 0x14, 0x47, 0x7A });  // 2217361768.63373
+      Assert.AreEqual(BigInteger.fromString("2217361768"),cbor.AsBigInteger());
+      Assert.IsFalse(cbor.AsBigInteger().canFitInInt());
+      Assert.IsFalse(cbor.CanTruncatedIntFitInInt32());
       Assert.IsFalse(CBORObject.FromObject(2554895343L).CanFitInSingle());
     }
 

@@ -188,6 +188,7 @@ namespace PeterO.Cbor {
           value0 &= 0x7FFFFFFF;
           value0 = unchecked(value0 | (value1 << 31));
           value1 >>= 1;
+          ++floatExponent;
         }
       }
       floatExponent -= 1075;

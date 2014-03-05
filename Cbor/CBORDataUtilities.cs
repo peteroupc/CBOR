@@ -232,29 +232,29 @@ namespace PeterO.Cbor {
         if (mant == null) {
           // NOTE: mantInt can only be positive, so overflow is impossible
           #if DEBUG
-if (mantInt < 0) {
- throw new ArgumentException("mantInt (" + Convert.ToString((long)mantInt, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
-}
-#endif
+          if (mantInt < 0) {
+            throw new ArgumentException("mantInt (" + Convert.ToString((long)mantInt, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+          }
+          #endif
 
           if (negative) {
- mantInt = -mantInt;
-}
+            mantInt = -mantInt;
+          }
           return CBORObject.FromObject(mantInt);
         } else {
           BigInteger bigmant2 = mant.AsBigInteger();
           if (negative) {
- bigmant2 = -(BigInteger)bigmant2;
-}
+            bigmant2 = -(BigInteger)bigmant2;
+          }
           return CBORObject.FromObject(bigmant2);
         }
       } else {
         BigInteger bigmant = (mant == null) ? ((BigInteger)mantInt) : mant.AsBigInteger();
         BigInteger bigexp = (newScale == null) ? ((BigInteger)newScaleInt) : newScale.AsBigInteger();
         if (negative) {
- bigmant = -(BigInteger)bigmant;
-}
-        if (newScale != null && bigexp.bitLength() >64) {
+          bigmant = -(BigInteger)bigmant;
+        }
+        if (newScale != null && bigexp.bitLength() > 64) {
           int bigexpSign = bigexp.Sign;
           if (bigexpSign > 0) {
             // Exponent is higher than the highest representable

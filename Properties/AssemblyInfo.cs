@@ -18,7 +18,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("CBOR")]
-[assembly: AssemblyCopyright("Written by Peter O. in 2013. Any copyright is dedicated to the Public Domain. <http://creativecommons.org/publicdomain/zero/1.0/>")]
+[assembly: AssemblyCopyright("Written by Peter O. in 2013-2014. Any copyright is dedicated to the Public Domain. <http://creativecommons.org/publicdomain/zero/1.0/>")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]
@@ -28,4 +28,4 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can use the default the Revision and
 // Build Numbers by using the '*' as shown below:
-[assembly: AssemblyVersion("0.17.0.0")]
+[assembly: AssemblyVersion("0.18.0.0")]
