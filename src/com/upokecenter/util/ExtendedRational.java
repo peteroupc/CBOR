@@ -929,9 +929,10 @@ thisRem=divrem[1]; }
       BigInteger quo = ad.divide(bc);  // Find the integer quotient
       BigInteger tnum = quo.multiply(otherValue.getNumerator());
       BigInteger tden = otherValue.getDenominator();
+      BigInteger thisDen = this.getDenominator();
       ad = this.getNumerator().multiply(tden);
-      bc = this.getDenominator().multiply(tnum);
-      tden=tden.multiply(BigInteger.valueOf(this.getDenominator))();
+      bc = thisDen.multiply(tnum);
+      tden=tden.multiply(thisDen);
       ad=ad.subtract(bc);
       return new ExtendedRational(ad, tden).Simplify().ChangeSign(resultNeg);
     }

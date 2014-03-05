@@ -891,9 +891,10 @@ namespace PeterO
       BigInteger quo = ad / (BigInteger)bc;  // Find the integer quotient
       BigInteger tnum = quo * (BigInteger)otherValue.Numerator;
       BigInteger tden = otherValue.Denominator;
+      BigInteger thisDen = this.Denominator;
       ad = this.Numerator * (BigInteger)tden;
-      bc = this.Denominator * (BigInteger)tnum;
-      tden *= (BigInteger)this.Denominator;
+      bc = thisDen * (BigInteger)tnum;
+      tden *= (BigInteger)thisDen;
       ad -= (BigInteger)bc;
       return new ExtendedRational(ad, tden).Simplify().ChangeSign(resultNeg);
     }
