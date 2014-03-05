@@ -99,7 +99,9 @@ namespace PeterO
     }
 
     /// <summary>Converts this object to a text string.</summary>
-    /// <returns>A string representation of this object.</returns>
+    /// <returns>A string representation of this object. The result can
+    /// be Infinity, NaN, or sNaN (with a minus sign before it for negative
+    /// values), or a number of the following form: [-]numerator/denominator.</returns>
     public override string ToString() {
       if (!this.IsFinite) {
         if (this.IsSignalingNaN()) {
@@ -122,7 +124,7 @@ namespace PeterO
           return this.IsNegative ? "-Infinity" : "Infinity";
         }
       }
-      return "(" + this.Numerator + "/" + this.Denominator + ")";
+      return this.Numerator + "/" + this.Denominator;
     }
 
     public static ExtendedRational FromBigInteger(BigInteger bigint) {
@@ -468,6 +470,9 @@ namespace PeterO
           return 0;
         }
         return 1;
+      }
+      if (other.IsNaN()) {
+        return -1;
       }
       int signA = this.Sign;
       int signB = other.Sign;

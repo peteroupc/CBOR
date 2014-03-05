@@ -190,7 +190,7 @@ namespace PeterO.Cbor {
         long valueA = (long)objA;
         long valueB = (long)objB;
         if (valueB == 0) {
-          return (valueA == 0) ? CBORObject.NaN : ((valueA < 0) ^ (valueB < 0) ?
+          return (valueA == 0) ? CBORObject.NaN : ((valueA < 0) ?
                                                  CBORObject.NegativeInfinity : CBORObject.PositiveInfinity);
         }
         if (valueA == Int64.MinValue && valueB == -1) {
@@ -216,7 +216,9 @@ namespace PeterO.Cbor {
           return CBORObject.NaN;
         }
         ExtendedDecimal eret = e1.Divide(e2, null);
-        if (!e1.IsFinite || !e2.IsFinite || !eret.IsFinite) {
+        // If either operand is infinity or NaN, the result
+        // is already exact.  Likewise if the result is a finite number.
+        if (!e1.IsFinite || !e2.IsFinite || eret.IsFinite) {
           return CBORObject.FromObject(eret);
         }
         ExtendedRational er1 = CBORObject.GetNumberInterface(typeA).AsExtendedRational(objA);
@@ -231,7 +233,9 @@ namespace PeterO.Cbor {
           return CBORObject.NaN;
         }
         ExtendedFloat eret = e1.Divide(e2, null);
-        if (!e1.IsFinite || !e2.IsFinite || !eret.IsFinite) {
+        // If either operand is infinity or NaN, the result
+        // is already exact.  Likewise if the result is a finite number.
+        if (!e1.IsFinite || !e2.IsFinite || eret.IsFinite) {
           return CBORObject.FromObject(eret);
         }
         ExtendedRational er1 = CBORObject.GetNumberInterface(typeA).AsExtendedRational(objA);
@@ -241,7 +245,7 @@ namespace PeterO.Cbor {
         BigInteger b1 = CBORObject.GetNumberInterface(typeA).AsBigInteger(objA);
         BigInteger b2 = CBORObject.GetNumberInterface(typeB).AsBigInteger(objB);
         if (b2.IsZero) {
-          return b1.IsZero ? CBORObject.NaN : ((b1.Sign < 0) ^ (b2.Sign<0) ?
+          return b1.IsZero ? CBORObject.NaN : ((b1.Sign < 0) ?
                                                  CBORObject.NegativeInfinity : CBORObject.PositiveInfinity);
         }
         BigInteger bigrem;
