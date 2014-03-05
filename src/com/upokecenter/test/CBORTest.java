@@ -381,6 +381,14 @@ import com.upokecenter.cbor.*;
           Assert.fail(ObjectMessages(o1, o2, "Results don't match"));
         }
       }
+      for (int i = 0; i < 3000; ++i) {
+        CBORObject o1 = RandomNumber(r);
+        CBORObject o2 = RandomNumber(r);
+        ExtendedRational er = o1.AsExtendedRational().Divide(o2.AsExtendedRational());
+        if (er.compareTo(CBORObject.Divide(o1, o2).AsExtendedRational()) != 0) {
+          Assert.fail(ObjectMessages(o1, o2, "Results don't match"));
+        }
+      }
     }
     @Test
     public void TestMultiply() {
@@ -473,6 +481,13 @@ import com.upokecenter.cbor.*;
       }
       sb.append("})");
       return sb.toString();
+    }
+
+    @Test
+    public void TestExtendedCompare() {
+      Assert.assertEquals(-1, ExtendedRational.Zero.compareTo(ExtendedRational.NaN));
+      Assert.assertEquals(-1, ExtendedFloat.Zero.compareTo(ExtendedFloat.NaN));
+      Assert.assertEquals(-1, ExtendedDecimal.Zero.compareTo(ExtendedDecimal.NaN));
     }
 
     @Test

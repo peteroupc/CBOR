@@ -382,6 +382,14 @@ namespace Test {
           Assert.Fail(ObjectMessages(o1, o2, "Results don't match"));
         }
       }
+      for (int i = 0; i < 3000; ++i) {
+        CBORObject o1 = RandomNumber(r);
+        CBORObject o2 = RandomNumber(r);
+        ExtendedRational er = o1.AsExtendedRational().Divide(o2.AsExtendedRational());
+        if (er.CompareTo(CBORObject.Divide(o1, o2).AsExtendedRational()) != 0) {
+          Assert.Fail(ObjectMessages(o1, o2, "Results don't match"));
+        }
+      }
     }
     [Test]
     public void TestMultiply() {
@@ -478,6 +486,13 @@ namespace Test {
       }
       sb.Append("})");
       return sb.ToString();
+    }
+
+    [Test]
+    public void TestExtendedCompare() {
+      Assert.AreEqual(-1, ExtendedRational.Zero.CompareTo(ExtendedRational.NaN));
+      Assert.AreEqual(-1, ExtendedFloat.Zero.CompareTo(ExtendedFloat.NaN));
+      Assert.AreEqual(-1, ExtendedDecimal.Zero.CompareTo(ExtendedDecimal.NaN));
     }
 
     [Test]

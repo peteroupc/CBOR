@@ -194,7 +194,7 @@ private CBORObjectMath() {
         long valueA = (((Long)objA).longValue());
         long valueB = (((Long)objB).longValue());
         if (valueB == 0) {
-          return (valueA == 0) ? CBORObject.NaN : ((valueA < 0) ^ (valueB < 0) ?
+          return (valueA == 0) ? CBORObject.NaN : ((valueA < 0) ?
                                                  CBORObject.NegativeInfinity : CBORObject.PositiveInfinity);
         }
         if (valueA == Long.MIN_VALUE && valueB == -1) {
@@ -220,7 +220,9 @@ private CBORObjectMath() {
           return CBORObject.NaN;
         }
         ExtendedDecimal eret = e1.Divide(e2, null);
-        if (!e1.isFinite() || !e2.isFinite() || !eret.isFinite()) {
+        // If either operand is infinity or NaN, the result
+        // is already exact.  Likewise if the result is a finite number.
+        if (!e1.isFinite() || !e2.isFinite() || eret.isFinite()) {
           return CBORObject.FromObject(eret);
         }
         ExtendedRational er1 = CBORObject.GetNumberInterface(typeA).AsExtendedRational(objA);
@@ -235,7 +237,9 @@ private CBORObjectMath() {
           return CBORObject.NaN;
         }
         ExtendedFloat eret = e1.Divide(e2, null);
-        if (!e1.isFinite() || !e2.isFinite() || !eret.isFinite()) {
+        // If either operand is infinity or NaN, the result
+        // is already exact.  Likewise if the result is a finite number.
+        if (!e1.isFinite() || !e2.isFinite() || eret.isFinite()) {
           return CBORObject.FromObject(eret);
         }
         ExtendedRational er1 = CBORObject.GetNumberInterface(typeA).AsExtendedRational(objA);
@@ -245,7 +249,7 @@ private CBORObjectMath() {
         BigInteger b1 = CBORObject.GetNumberInterface(typeA).AsBigInteger(objA);
         BigInteger b2 = CBORObject.GetNumberInterface(typeB).AsBigInteger(objB);
         if (b2.signum()==0) {
-          return b1.signum()==0 ? CBORObject.NaN : ((b1.signum() < 0) ^ (b2.signum()<0) ?
+          return b1.signum()==0 ? CBORObject.NaN : ((b1.signum() < 0) ?
                                                  CBORObject.NegativeInfinity : CBORObject.PositiveInfinity);
         }
         BigInteger bigrem;

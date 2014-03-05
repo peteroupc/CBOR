@@ -95,7 +95,9 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Converts this object to a text string.
-     * @return A string representation of this object.
+     * @return A string representation of this object. The result can be
+     * Infinity, NaN, or sNaN (with a minus sign before it for negative values),
+     * or a number of the following form: [-]numerator/denominator.
      */
     @Override public String toString() {
       if (!this.isFinite()) {
@@ -119,7 +121,7 @@ at: http://peteroupc.github.io/CBOR/
           return this.isNegative() ? "-Infinity" : "Infinity";
         }
       }
-      return "(" + this.getNumerator() + "/" + this.getDenominator() + ")";
+      return this.getNumerator() + "/" + this.getDenominator();
     }
 
     public static ExtendedRational FromBigInteger(BigInteger bigint) {
@@ -487,6 +489,9 @@ at: http://peteroupc.github.io/CBOR/
           return 0;
         }
         return 1;
+      }
+      if (other.IsNaN()) {
+        return -1;
       }
       int signA = this.signum();
       int signB = other.signum();
