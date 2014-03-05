@@ -350,5 +350,25 @@ namespace PeterO.Cbor {
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
       return FromObjectAndTag(o, UInt64ToBigInteger(tag));
     }
+
+    public static CBORObject operator +(CBORObject a, CBORObject b) {
+      return Addition(a, b);
+    }
+
+    public static CBORObject operator -(CBORObject a, CBORObject b) {
+      return Subtract(a, b);
+    }
+
+    public static CBORObject operator *(CBORObject a, CBORObject b) {
+      return Multiply(a, b);
+    }
+
+    public static CBORObject operator /(CBORObject a, CBORObject b) {
+      return Divide(a, b);
+    }
+
+    public static CBORObject operator %(CBORObject a, CBORObject b) {
+      return Remainder(a, b);
+    }
   }
 }

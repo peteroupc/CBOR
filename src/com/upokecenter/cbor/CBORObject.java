@@ -364,6 +364,10 @@ public void setConverter(Object value) {
         return ret;
       }
 
+    public static final CBORObject PositiveInfinity = CBORObject.FromObject(Double.POSITIVE_INFINITY);
+    public static final CBORObject NegativeInfinity = CBORObject.FromObject(Double.NEGATIVE_INFINITY);
+    public static final CBORObject NaN = CBORObject.FromObject(Double.NaN);
+
     /**
      * Gets a value indicating whether this CBOR object represents positive
      * infinity.
@@ -3433,6 +3437,14 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      */
     public static CBORObject Multiply(CBORObject first, CBORObject second) {
       return CBORObjectMath.Multiply(first, second);
+    }
+
+    public static CBORObject Divide(CBORObject first, CBORObject second) {
+      return CBORObjectMath.Divide(first, second);
+    }
+
+    public static CBORObject Remainder(CBORObject first, CBORObject second) {
+      return CBORObjectMath.Remainder(first, second);
     }
 
     /**

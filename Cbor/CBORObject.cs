@@ -408,6 +408,10 @@ namespace PeterO.Cbor {
       }
     }
 
+    public static readonly CBORObject PositiveInfinity = CBORObject.FromObject(Double.PositiveInfinity);
+    public static readonly CBORObject NegativeInfinity = CBORObject.FromObject(Double.NegativeInfinity);
+    public static readonly CBORObject NaN = CBORObject.FromObject(Double.NaN);
+
     /// <summary>Gets a value indicating whether this CBOR object represents
     /// positive infinity.</summary>
     /// <returns>A Boolean object.</returns>
@@ -3392,6 +3396,14 @@ namespace PeterO.Cbor {
     /// <param name='second'>A CBORObject object. (2).</param>
     public static CBORObject Multiply(CBORObject first, CBORObject second) {
       return CBORObjectMath.Multiply(first, second);
+    }
+
+    public static CBORObject Divide(CBORObject first, CBORObject second) {
+      return CBORObjectMath.Divide(first, second);
+    }
+
+    public static CBORObject Remainder(CBORObject first, CBORObject second) {
+      return CBORObjectMath.Remainder(first, second);
     }
 
     /// <summary>Creates a new empty CBOR array.</summary>
