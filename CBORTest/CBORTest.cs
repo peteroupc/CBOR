@@ -369,6 +369,21 @@ namespace Test {
     }
 
     [Test]
+    public void TestDivide() {
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 3000; ++i) {
+        CBORObject o1 = CBORObject.FromObject(RandomBigInteger(r));
+        CBORObject o2 = CBORObject.FromObject(RandomBigInteger(r));
+        if (o2.IsZero) {
+          continue;
+        }
+        ExtendedRational er = new ExtendedRational(o1.AsBigInteger(), o2.AsBigInteger());
+        if (er.CompareTo(CBORObject.Divide(o1, o2).AsExtendedRational()) != 0) {
+          Assert.Fail(ObjectMessages(o1, o2, "Results don't match"));
+        }
+      }
+    }
+    [Test]
     public void TestMultiply() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
@@ -1007,6 +1022,11 @@ namespace Test {
       Assert.IsTrue(CBORObject.FromObject(ExtendedRational.PositiveInfinity).IsInfinity());
       Assert.IsTrue(CBORObject.FromObject(ExtendedRational.NegativeInfinity).IsNegativeInfinity());
       Assert.IsTrue(CBORObject.FromObject(ExtendedRational.PositiveInfinity).IsPositiveInfinity());
+      Assert.IsTrue(CBORObject.PositiveInfinity.IsInfinity());
+      Assert.IsTrue(CBORObject.PositiveInfinity.IsPositiveInfinity());
+      Assert.IsTrue(CBORObject.NegativeInfinity.IsInfinity());
+      Assert.IsTrue(CBORObject.NegativeInfinity.IsNegativeInfinity());
+      Assert.IsTrue(CBORObject.NaN.IsNaN());
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.NegativeInfinity));

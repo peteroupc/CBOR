@@ -14,7 +14,6 @@ namespace PeterO.Cbor {
     /// <param name='a'>A CBORObject object. (2).</param>
     /// <param name='b'>A CBORObject object. (3).</param>
   internal static class CBORObjectMath {
-    // TODO: Implement division
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) {
         throw new ArgumentNullException("a");
@@ -167,6 +166,91 @@ namespace PeterO.Cbor {
         BigInteger b1 = CBORObject.GetNumberInterface(typeA).AsBigInteger(objA);
         BigInteger b2 = CBORObject.GetNumberInterface(typeB).AsBigInteger(objB);
         return CBORObject.FromObject(b1 * (BigInteger)b2);
+      }
+    }
+
+    public static CBORObject Divide(CBORObject a, CBORObject b) {
+      if (a == null) {
+        throw new ArgumentNullException("a");
+      }
+      if (b == null) {
+        throw new ArgumentNullException("b");
+      }
+      if (a.Type != CBORType.Number) {
+        throw new ArgumentException("a.Type (" + a.Type + ") is not equal to " + CBORType.Number);
+      }
+      if (b.Type != CBORType.Number) {
+        throw new ArgumentException("b.Type (" + b.Type + ") is not equal to " + CBORType.Number);
+      }
+      object objA = a.ThisItem;
+      object objB = b.ThisItem;
+      int typeA = a.ItemType;
+      int typeB = b.ItemType;
+      if (typeA == CBORObject.CBORObjectTypeInteger && typeB == CBORObject.CBORObjectTypeInteger) {
+        long valueA = (long)objA;
+        long valueB = (long)objB;
+        if (valueB == 0) {
+          return (valueA == 0) ? CBORObject.NaN : ((valueA < 0) ^ (valueB < 0) ?
+                                                 CBORObject.NegativeInfinity : CBORObject.PositiveInfinity);
+        }
+        if (valueA == Int64.MinValue && valueB == -1) {
+          return CBORObject.FromObject(valueA).Negate();
+        }
+        long quo = valueA / valueB;
+        long rem = valueA - (quo * valueB);
+        if (rem == 0) {
+          return CBORObject.FromObject(quo);
+        } else {
+          return CBORObject.FromObject(new ExtendedRational(valueA, valueB));
+        }
+      } else if (typeA == CBORObject.CBORObjectTypeExtendedRational ||
+                 typeB == CBORObject.CBORObjectTypeExtendedRational) {
+        ExtendedRational e1 = CBORObject.GetNumberInterface(typeA).AsExtendedRational(objA);
+        ExtendedRational e2 = CBORObject.GetNumberInterface(typeB).AsExtendedRational(objB);
+        return CBORObject.FromObject(e1.Divide(e2));
+      } else if (typeA == CBORObject.CBORObjectTypeExtendedDecimal ||
+                 typeB == CBORObject.CBORObjectTypeExtendedDecimal) {
+        ExtendedDecimal e1 = CBORObject.GetNumberInterface(typeA).AsExtendedDecimal(objA);
+        ExtendedDecimal e2 = CBORObject.GetNumberInterface(typeB).AsExtendedDecimal(objB);
+        if (e1.IsZero && e2.IsZero) {
+          return CBORObject.NaN;
+        }
+        ExtendedDecimal eret = e1.Divide(e2, null);
+        if (!e1.IsFinite || !e2.IsFinite || !eret.IsFinite) {
+          return CBORObject.FromObject(eret);
+        }
+        ExtendedRational er1 = CBORObject.GetNumberInterface(typeA).AsExtendedRational(objA);
+        ExtendedRational er2 = CBORObject.GetNumberInterface(typeB).AsExtendedRational(objB);
+        return CBORObject.FromObject(er1.Divide(er2));
+      } else if (typeA == CBORObject.CBORObjectTypeExtendedFloat || typeB == CBORObject.CBORObjectTypeExtendedFloat ||
+                 typeA == CBORObject.CBORObjectTypeDouble || typeB == CBORObject.CBORObjectTypeDouble ||
+                 typeA == CBORObject.CBORObjectTypeSingle || typeB == CBORObject.CBORObjectTypeSingle) {
+        ExtendedFloat e1 = CBORObject.GetNumberInterface(typeA).AsExtendedFloat(objA);
+        ExtendedFloat e2 = CBORObject.GetNumberInterface(typeB).AsExtendedFloat(objB);
+        if (e1.IsZero && e2.IsZero) {
+          return CBORObject.NaN;
+        }
+        ExtendedFloat eret = e1.Divide(e2, null);
+        if (!e1.IsFinite || !e2.IsFinite || !eret.IsFinite) {
+          return CBORObject.FromObject(eret);
+        }
+        ExtendedRational er1 = CBORObject.GetNumberInterface(typeA).AsExtendedRational(objA);
+        ExtendedRational er2 = CBORObject.GetNumberInterface(typeB).AsExtendedRational(objB);
+        return CBORObject.FromObject(er1.Divide(er2));
+      } else {
+        BigInteger b1 = CBORObject.GetNumberInterface(typeA).AsBigInteger(objA);
+        BigInteger b2 = CBORObject.GetNumberInterface(typeB).AsBigInteger(objB);
+        if (b2.IsZero) {
+          return b1.IsZero ? CBORObject.NaN : ((b1.Sign < 0) ^ (b2.Sign<0) ?
+                                                 CBORObject.NegativeInfinity : CBORObject.PositiveInfinity);
+        }
+        BigInteger bigrem;
+        BigInteger bigquo = BigInteger.DivRem(b1, b2, out bigrem);
+        if (bigrem.IsZero) {
+          return CBORObject.FromObject(bigquo);
+        } else {
+          return CBORObject.FromObject(new ExtendedRational(b1, b2));
+        }
       }
     }
 
