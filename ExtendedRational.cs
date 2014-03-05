@@ -105,7 +105,7 @@ namespace PeterO
         if (this.IsSignalingNaN()) {
           if (this.unsignedNumerator.IsZero) {
             return this.IsNegative ? "-sNaN" : "sNaN";
-  } else {
+          } else {
             return this.IsNegative ? "-sNaN" + this.unsignedNumerator.ToString() :
               "sNaN" + this.unsignedNumerator.ToString();
           }
@@ -113,7 +113,7 @@ namespace PeterO
         if (this.IsQuietNaN()) {
           if (this.unsignedNumerator.IsZero) {
             return this.IsNegative ? "-NaN" : "NaN";
-  } else {
+          } else {
             return this.IsNegative ? "-NaN" + this.unsignedNumerator.ToString() :
               "NaN" + this.unsignedNumerator.ToString();
           }
@@ -846,6 +846,51 @@ namespace PeterO
       BigInteger ad = this.Numerator * (BigInteger)otherValue.Denominator;
       BigInteger bc = this.Denominator * (BigInteger)otherValue.Numerator;
       return new ExtendedRational(ad, bc).Simplify().ChangeSign(resultNeg);
+    }
+
+    /// <summary>Finds the remainder that results when this instance is
+    /// divided by the value of a ExtendedRational object.</summary>
+    /// <param name='otherValue'>An ExtendedRational object.</param>
+    /// <returns>The remainder of the two objects.</returns>
+    public ExtendedRational Remainder(ExtendedRational otherValue) {
+      if (otherValue == null) {
+        throw new ArgumentNullException("otherValue");
+      }
+      if (this.IsSignalingNaN()) {
+        return CreateNaN(this.unsignedNumerator, false, this.IsNegative);
+      }
+      if (otherValue.IsSignalingNaN()) {
+        return CreateNaN(otherValue.unsignedNumerator, false, otherValue.IsNegative);
+      }
+      if (this.IsQuietNaN()) {
+        return this;
+      }
+      if (otherValue.IsQuietNaN()) {
+        return otherValue;
+      }
+      bool resultNeg = this.IsNegative ^ otherValue.IsNegative;
+      if (this.IsInfinity()) {
+        return NaN;
+      }
+      if (otherValue.IsInfinity()) {
+        return this;
+      }
+      if (otherValue.IsZero) {
+        return NaN;
+      }
+      if (this.IsZero) {
+        return this;
+      }
+      BigInteger ad = this.Numerator * (BigInteger)otherValue.Denominator;
+      BigInteger bc = this.Denominator * (BigInteger)otherValue.Numerator;
+      BigInteger quo = ad / (BigInteger)bc;  // Find the integer quotient
+      BigInteger tnum = quo * (BigInteger)otherValue.Numerator;
+      BigInteger tden = otherValue.Denominator;
+      ad = this.Numerator * (BigInteger)tden;
+      bc = this.Denominator * (BigInteger)tnum;
+      tden *= (BigInteger)this.Denominator;
+      ad -= (BigInteger)bc;
+      return new ExtendedRational(ad, tden).Simplify().ChangeSign(resultNeg);
     }
 
     public static readonly ExtendedRational Zero = FromBigInteger(BigInteger.Zero);

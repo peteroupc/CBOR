@@ -238,23 +238,23 @@ private CBORDataUtilities() {
           // NOTE: mantInt can only be positive, so overflow is impossible
 
           if (negative) {
- mantInt = -mantInt;
-}
+            mantInt = -mantInt;
+          }
           return CBORObject.FromObject(mantInt);
         } else {
           BigInteger bigmant2 = mant.AsBigInteger();
           if (negative) {
- bigmant2=(bigmant2).negate();
-}
+            bigmant2=(bigmant2).negate();
+          }
           return CBORObject.FromObject(bigmant2);
         }
       } else {
         BigInteger bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
         BigInteger bigexp = (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger();
         if (negative) {
- bigmant=(bigmant).negate();
-}
-        if (newScale != null && bigexp.bitLength() >64) {
+          bigmant=(bigmant).negate();
+        }
+        if (newScale != null && bigexp.bitLength() > 64) {
           int bigexpSign = bigexp.signum();
           if (bigexpSign > 0) {
             // Exponent is higher than the highest representable

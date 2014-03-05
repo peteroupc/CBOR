@@ -102,7 +102,7 @@ at: http://peteroupc.github.io/CBOR/
         if (this.IsSignalingNaN()) {
           if (this.unsignedNumerator.signum()==0) {
             return this.isNegative() ? "-sNaN" : "sNaN";
-  } else {
+          } else {
             return this.isNegative() ? "-sNaN" + this.unsignedNumerator.toString() :
               "sNaN" + this.unsignedNumerator.toString();
           }
@@ -110,7 +110,7 @@ at: http://peteroupc.github.io/CBOR/
         if (this.IsQuietNaN()) {
           if (this.unsignedNumerator.signum()==0) {
             return this.isNegative() ? "-NaN" : "NaN";
-  } else {
+          } else {
             return this.isNegative() ? "-NaN" + this.unsignedNumerator.toString() :
               "NaN" + this.unsignedNumerator.toString();
           }
@@ -882,6 +882,53 @@ thisRem=divrem[1]; }
       BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
       BigInteger bc = this.getDenominator().multiply(otherValue.getNumerator());
       return new ExtendedRational(ad, bc).Simplify().ChangeSign(resultNeg);
+    }
+
+    /**
+     * Finds the remainder that results when this instance is divided by
+     * the value of a ExtendedRational object.
+     * @param otherValue An ExtendedRational object.
+     * @return The remainder of the two objects.
+     */
+    public ExtendedRational Remainder(ExtendedRational otherValue) {
+      if (otherValue == null) {
+        throw new NullPointerException("otherValue");
+      }
+      if (this.IsSignalingNaN()) {
+        return CreateNaN(this.unsignedNumerator, false, this.isNegative());
+      }
+      if (otherValue.IsSignalingNaN()) {
+        return CreateNaN(otherValue.unsignedNumerator, false, otherValue.isNegative());
+      }
+      if (this.IsQuietNaN()) {
+        return this;
+      }
+      if (otherValue.IsQuietNaN()) {
+        return otherValue;
+      }
+      boolean resultNeg = this.isNegative() ^ otherValue.isNegative();
+      if (this.IsInfinity()) {
+        return NaN;
+      }
+      if (otherValue.IsInfinity()) {
+        return this;
+      }
+      if (otherValue.signum()==0) {
+        return NaN;
+      }
+      if (this.signum()==0) {
+        return this;
+      }
+      BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
+      BigInteger bc = this.getDenominator().multiply(otherValue.getNumerator());
+      BigInteger quo = ad.divide(bc);  // Find the integer quotient
+      BigInteger tnum = quo.multiply(otherValue.getNumerator());
+      BigInteger tden = otherValue.getDenominator();
+      ad = this.getNumerator().multiply(tden);
+      bc = this.getDenominator().multiply(tnum);
+      tden=tden.multiply(BigInteger.valueOf(this.getDenominator))();
+      ad=ad.subtract(bc);
+      return new ExtendedRational(ad, tden).Simplify().ChangeSign(resultNeg);
     }
 
     public static final ExtendedRational Zero = FromBigInteger(BigInteger.ZERO);

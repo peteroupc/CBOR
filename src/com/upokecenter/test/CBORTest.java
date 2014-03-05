@@ -5476,17 +5476,17 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals(ExtendedFloat.Zero, ExtendedDecimal.Zero.ToExtendedFloat());
       Assert.assertEquals(ExtendedFloat.NegativeZero, ExtendedDecimal.NegativeZero.ToExtendedFloat());
       if (0.0 != ExtendedDecimal.Zero.ToSingle()) {
- Assert.fail("Failed "+  ExtendedDecimal.Zero.ToSingle());
-}
+        Assert.fail("Failed "+  ExtendedDecimal.Zero.ToSingle());
+      }
       if (0.0 != ExtendedDecimal.Zero.ToDouble()) {
- Assert.fail("Failed "+ExtendedDecimal.Zero.ToDouble());
-}
+        Assert.fail("Failed "+ExtendedDecimal.Zero.ToDouble());
+      }
       if (0.0f != ExtendedFloat.Zero.ToSingle()) {
- Assert.fail("Failed "+ExtendedFloat.Zero.ToDouble());
-}
+        Assert.fail("Failed "+ExtendedFloat.Zero.ToDouble());
+      }
       if (0.0f != ExtendedFloat.Zero.ToDouble()) {
- Assert.fail("Failed "+ExtendedFloat.Zero.ToDouble());
-}
+        Assert.fail("Failed "+ExtendedFloat.Zero.ToDouble());
+      }
       try {
         CBORObject.FromSimpleValue(-1);
         Assert.fail("Should have failed");
@@ -5928,6 +5928,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     @Test
     public void TestCanFitInSpecificCases() {
+      CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFB, 0x41, (byte)0xE0, (byte)0x85, 0x48, 0x2D, 0x14, 0x47, 0x7A  });  // 2217361768.63373
+      Assert.assertEquals(BigInteger.fromString("2217361768"),cbor.AsBigInteger());
+      if(cbor.AsBigInteger().canFitInInt())Assert.fail();
+      if(cbor.CanTruncatedIntFitInInt32())Assert.fail();
       if(CBORObject.FromObject(2554895343L).CanFitInSingle())Assert.fail();
     }
 

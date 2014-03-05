@@ -33,6 +33,16 @@ decimal fractions, and bigfloats.  It currently doesn't support converting
 singles and doubles to big numbers and its support for converting other
 objects, except strings, to big numbers is limited. 
 
+Clarifications
+------------------
+
+The following are some clarifications to RFC 7049.
+
+* Section 2.4.2 doesn't specify what happens if a bignum's byte
+  string has a length of 0.  This implementation treats a positive
+  bignum with length 0 as having a value of 0 and a negative
+  bignum with length 0 as having a value of -1.
+
 About
 -----------
 
