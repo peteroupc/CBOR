@@ -205,7 +205,7 @@ private CBORObjectMath() {
         if (rem == 0) {
           return CBORObject.FromObject(quo);
         } else {
-          return CBORObject.FromObject(new ExtendedRational(valueA, valueB));
+          return CBORObject.FromObject(new ExtendedRational(BigInteger.valueOf(valueA), BigInteger.valueOf(valueB)));
         }
       } else if (typeA == CBORObject.CBORObjectTypeExtendedRational ||
                  typeB == CBORObject.CBORObjectTypeExtendedRational) {
