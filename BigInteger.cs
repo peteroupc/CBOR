@@ -2411,8 +2411,7 @@ if (bytes.Length <= 0) {
       if (!neg) {
         ret.negative = false;
         ret.reg = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
-        Array.Copy(this.reg, ret.reg, numWords);
-        ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
+        Array.Copy(this.reg, 0, ret.reg, shiftWords, numWords);
         ShiftWordsLeftByBits(ret.reg, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
         ret.wordCount = ret.CalcWordCount();
       } else {

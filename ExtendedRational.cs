@@ -616,6 +616,9 @@ namespace PeterO
       }
       // Convert to rational number and use usual rational number
       // comparison
+      //Console.WriteLine("no shortcircuit");
+      // Console.WriteLine(this);
+      //Console.WriteLine(other);
       ExtendedRational otherRational = ExtendedRational.FromExtendedDecimal(other);
       BigInteger ad = this.Numerator * (BigInteger)otherRational.Denominator;
       BigInteger bc = this.Denominator * (BigInteger)otherRational.Numerator;

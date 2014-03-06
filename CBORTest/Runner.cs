@@ -34,6 +34,8 @@ namespace PeterO {
     public static void Main(string[] args) {
       String param = null;
       // Run all the tests in this assembly
+      new Test.CBORTest().TestExtendedHighExponent();
+      return;
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
           continue;

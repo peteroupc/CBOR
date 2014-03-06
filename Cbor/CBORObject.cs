@@ -660,6 +660,7 @@ namespace PeterO.Cbor {
           // second object is NaN
           return -1;
         } else {
+          //Console.WriteLine("a={0} b={1}",this,other);
           if (typeA == CBORObjectTypeExtendedRational) {
             ExtendedRational e1 = NumberInterfaces[typeA].AsExtendedRational(objA);
             ExtendedDecimal e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
@@ -670,8 +671,36 @@ namespace PeterO.Cbor {
             cmp = -e2.CompareToDecimal(e1);
           } else if (typeA == CBORObjectTypeExtendedDecimal ||
                      typeB == CBORObjectTypeExtendedDecimal) {
-            ExtendedDecimal e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
-            ExtendedDecimal e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
+            ExtendedDecimal e1=null;
+            ExtendedDecimal e2=null;
+            if(typeA == CBORObjectTypeExtendedFloat){
+              ExtendedFloat ef1=(ExtendedFloat)objA;
+              if(ef1.Exponent.CompareTo((BigInteger)(-1000))<0){
+                // For very low exponents, the conversion to decimal can take
+                // very long, so try this approach
+                if(ef1.Abs().CompareTo(ExtendedFloat.One)<0){ // Abs less than 1
+                  e2=(ExtendedDecimal)objB;
+                  if(e2.Abs().CompareTo(ExtendedDecimal.One)>=0){ // Abs 1 or more
+                    return (s1>0) ? -1 : 1;
+                  }
+                }
+              }
+            }
+            if(typeB == CBORObjectTypeExtendedFloat){
+              ExtendedFloat ef2=(ExtendedFloat)objB;
+              if(ef2.Exponent.CompareTo((BigInteger)(-1000))<0){
+                // For very low exponents, the conversion to decimal can take
+                // very long, so try this approach
+                if(ef2.Abs().CompareTo(ExtendedFloat.One)<0){ // Abs less than 1
+                  e1=(ExtendedDecimal)objA;
+                  if(e1.Abs().CompareTo(ExtendedDecimal.One)>=0){ // Abs 1 or more
+                    return (s1<0) ? -1 : 1;
+                  }
+                }
+              }
+            }
+            e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
+            e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
             cmp = e1.CompareTo(e2);
           } else if (typeA == CBORObjectTypeExtendedFloat || typeB == CBORObjectTypeExtendedFloat ||
                      typeA == CBORObjectTypeDouble || typeB == CBORObjectTypeDouble ||
@@ -4036,6 +4065,15 @@ namespace PeterO.Cbor {
       return str;
     }
 
+    private static string ExtendedToString(ExtendedFloat ef){
+      if(ef.IsFinite && (ef.Exponent.CompareTo((BigInteger)1000)>0 || ef.Exponent.CompareTo((BigInteger)(-1000))<0)){
+        // It can take very long to convert a number with a very high
+        // or very low exponent to a decimal string, so do this instead
+        return ef.Mantissa.ToString()+"p"+ef.Exponent.ToString();
+      }
+      return ef.ToString();
+    }
+    
     /// <summary>Returns this CBOR object in string form. The format is intended
     /// to be human-readable, not machine-readable, and the format may change
     /// at any time.</summary>
@@ -4111,6 +4149,8 @@ namespace PeterO.Cbor {
           return simvalue;
         }
         sb.Append(simvalue);
+      } else if(type==CBORObjectTypeExtendedFloat){
+        return ExtendedToString((ExtendedFloat)this.ThisItem);
       } else if (type == CBORObjectTypeInteger) {
         long v = (long)this.ThisItem;
         simvalue = Convert.ToString((long)v, CultureInfo.InvariantCulture);
