@@ -2086,8 +2086,7 @@ at: http://peteroupc.github.io/CBOR/
       if (!neg) {
         ret.negative = false;
         ret.reg = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
-        System.arraycopy(this.reg, 0, ret.reg, 0, numWords);
-        ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
+        System.arraycopy(this.reg, 0, ret.reg, shiftWords, numWords);
         ShiftWordsLeftByBits(ret.reg, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
         ret.wordCount = ret.CalcWordCount();
       } else {

@@ -95,6 +95,14 @@ import com.upokecenter.cbor.*;
       return CBORObject.FromObject(bytes);
     }
 
+    private static CBORObject RandomCBORByteStringShort(FastRandom rand) {
+      int x = rand.NextValue(50);
+      byte[] bytes = new byte[x];
+      for (int i = 0; i < x; ++i) {
+        bytes[i] = ((byte)rand.NextValue(256));
+      }
+      return CBORObject.FromObject(bytes);
+    }
     private static CBORObject RandomCBORTextString(FastRandom rand) {
       int length = rand.NextValue(0x2000);
       StringBuilder sb = new StringBuilder();
@@ -144,11 +152,46 @@ import com.upokecenter.cbor.*;
     }
 
     private static CBORObject RandomCBORTaggedObject(FastRandom rand, int depth) {
-      int tag = rand.NextValue(0x1000000);
-      if (tag == 2 || tag == 3 || tag == 4 || tag == 5 || tag == 30) {
-        tag = 0;
+      int tag = 0;
+      if (rand.NextValue(2) == 0) {
+        int[] tagselection = new int[] { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30, 30, 0, 1, 25, 26, 27};
+        tag = tagselection[rand.NextValue(tagselection.length)];
+      } else {
+        tag = rand.NextValue(0x1000000);
       }
-      return CBORObject.FromObjectAndTag(RandomCBORObject(rand, depth + 1), tag);
+      if (tag == 30) {
+ return RandomCBORByteString(rand);
+}
+      for (int i = 0; i < 15; ++i) {
+        CBORObject o;
+        //        System.out.println("tag "+tag+" "+i);
+        if (tag == 2 ||tag == 3) {
+ o = RandomCBORByteStringShort(rand);
+  } else if (tag == 4 || tag == 5) {
+          o = CBORObject.NewArray();
+          o.Add(RandomNumber(rand));
+          o.Add(RandomNumber(rand));
+  } else if (tag == 30) {
+          o = CBORObject.NewArray();
+          o.Add(RandomNumber(rand));
+          o.Add(RandomNumber(rand));
+  } else {
+ o = RandomCBORObject(rand, depth + 1);
+}
+        try {
+          o = CBORObject.FromObjectAndTag(o, tag);
+          //          System.out.println("done");
+          return o;
+        } catch(Exception ex) {
+          while (ex.getCause() != null) {
+ ex = ex.getCause();
+}
+          //          System.out.println(ex.getMessage());
+          continue;
+        }
+      }
+      //System.out.println("Failed "+tag);
+      return CBORObject.Null;
     }
 
     private static CBORObject RandomCBORArray(FastRandom rand, int depth) {
@@ -605,15 +648,15 @@ import com.upokecenter.cbor.*;
     @Test
     public void TestCompare() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 5000; ++i) {
-        CBORObject o1 = RandomNumber(r);
-        CBORObject o2 = RandomNumber(r);
-        CompareDecimals(o1, o2);
-      }
       for (int i = 0; i < 500; ++i) {
         CBORObject o1 = RandomCBORObject(r);
         CBORObject o2 = RandomCBORObject(r);
         CompareTestReciprocal(o1, o2);
+      }
+      for (int i = 0; i < 5000; ++i) {
+        CBORObject o1 = RandomNumber(r);
+        CBORObject o2 = RandomNumber(r);
+        CompareDecimals(o1, o2);
       }
       for (int i = 0; i < 50; ++i) {
         CBORObject o1 = CBORObject.FromObject(Float.NEGATIVE_INFINITY);
@@ -1044,15 +1087,50 @@ import com.upokecenter.cbor.*;
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Float.POSITIVE_INFINITY));
     }
 
+    @Test
+    public void TestExtendedHighExponent() {
+      CBORObject obj;
+      obj = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xC4, (byte)0x82, 0x3A, 0x00, 0x1C, 0x2D, 0x0D, 0x1A, 0x13, 0x6C, (byte)0xA1, (byte)0x97  });
+      TestCommon.AssertRoundTrip(obj);
+      obj = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xDA, 0x00, 0x14, 0x57, (byte)0xCE, (byte)0xC5, (byte)0x82, 0x1A, 0x46, 0x5A, 0x37, (byte)0x87, (byte)0xC3, 0x50, 0x5E, (byte)0xEC, (byte)0xFD, 0x73, 0x50, 0x64, (byte)0xA1, 0x1F, 0x10, (byte)0xC4, (byte)0xFF, (byte)0xF2, (byte)0xC4, (byte)0xC9, 0x65, 0x12  });
+      TestCommon.AssertRoundTrip(obj);
+      Assert.assertEquals(
+        1,
+        CBORObject.FromObject(ExtendedDecimal.Create(BigInteger.valueOf(333333), BigInteger.valueOf(-2))).compareTo(
+          CBORObject.FromObject(ExtendedFloat.Create(BigInteger.valueOf(5234222), BigInteger.valueOf(-24936668661488L))))
+);
+    }
+
     /**
      * Not documented yet.
      */
     @Test
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
-      for (int i = 0; i < 2000; ++i) {
-        CBORObject obj = RandomCBORObject(rand);
-        TestCommon.AssertRoundTrip(obj);
+      CBORObject obj;
+      String badstr = null;
+      for (int i = 0; i < 100000; ++i) {
+        //System.out.println("=="+i+"==");
+        obj = RandomCBORObject(rand);
+        System.Threading.Thread thread=new System.Threading.Thread(
+          ()=>
+          TestCommon.AssertRoundTrip(obj)
+);
+        thread.Start();
+        if (!thread.Join(5000)) {
+          String bas = ToByteArrayString(obj);
+          thread.Abort();
+          System.out.println(bas.length());
+          if (badstr == null || bas.length()<badstr.length()) {
+            badstr = bas;
+          }
+        }
+      }
+      if (badstr != null) {
+        if (badstr.length()>10000) {
+          Assert.fail("badstr "+badstr.length());
+        }
+        Assert.fail(badstr);
       }
       // Test slightly modified objects
       for (int i = 0; i < 200; ++i) {

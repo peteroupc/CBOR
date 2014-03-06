@@ -9,7 +9,7 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Exception thrown for errors involving CBOR data.
      */
-    public class CBORException extends RuntimeException {
+  public class CBORException extends RuntimeException {
 private static final long serialVersionUID=1L;
     /**
      * Initializes a new instance of the CBORException class.

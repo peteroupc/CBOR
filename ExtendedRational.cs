@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO
 {
-    /// <summary>Arbitrary-precision rational number.</summary>
+  /// <summary>Arbitrary-precision rational number.</summary>
   public class ExtendedRational : IComparable<ExtendedRational>, IEquatable<ExtendedRational> {
     private BigInteger unsignedNumerator;
 
@@ -527,6 +527,116 @@ namespace PeterO
       return ad.CompareTo(bc);
     }
 
+    /// <summary>Compares an ExtendedFloat object with this instance.</summary>
+    /// <param name='other'>An ExtendedFloat object.</param>
+    /// <returns>Zero if the values are equal; a negative number if this instance
+    /// is less, or a positive number if this instance is greater.</returns>
+    public int CompareToBinary(ExtendedFloat other) {
+      if (other == null) {
+        return 1;
+      }
+      if (this.IsNaN()) {
+        if (other.IsNaN()) {
+          return 0;
+        }
+        return 1;
+      }
+      int signA = this.Sign;
+      int signB = other.Sign;
+      if (signA != signB) {
+        return (signA < signB) ? -1 : 1;
+      }
+      if (signB == 0 || signA == 0) {
+        // Special case: Either operand is zero
+        return 0;
+      }
+      if (this.IsInfinity()) {
+        if (other.IsInfinity()) {
+          // if we get here, this only means that
+          // both are positive infinity or both
+          // are negative infinity
+          return 0;
+        }
+        return this.IsNegative ? -1 : 1;
+      }
+      if (other.IsInfinity()) {
+        return other.IsNegative ? 1 : -1;
+      }
+      // At this point, both numbers are finite and
+      // have the same sign
+      #if DEBUG
+      if (!this.IsFinite) {
+        throw new ArgumentException("doesn't satisfy this.IsFinite");
+      }
+      if (!other.IsFinite) {
+        throw new ArgumentException("doesn't satisfy other.IsFinite");
+      }
+      #endif
+      if (other.Exponent.IsZero) {
+        // Special case: other has exponent 0
+        BigInteger otherMant = other.Mantissa;
+        BigInteger bcx = this.Denominator * (BigInteger)otherMant;
+        return this.Numerator.CompareTo(bcx);
+      }
+      if (BigInteger.Abs(other.Exponent).CompareTo((BigInteger)1000) > 0) {
+        // Other has a high absolute value of exponent, so try different approaches to
+        // comparison
+        BigInteger thisRem;
+        BigInteger thisInt = BigInteger.DivRem(this.UnsignedNumerator, this.Denominator, out thisRem);
+        ExtendedFloat otherAbs = other.Abs();
+        ExtendedFloat thisIntDec = ExtendedFloat.FromBigInteger(thisInt);
+        if (thisRem.IsZero) {
+          // This object's value is an integer
+          // Console.WriteLine("Shortcircuit IV");
+          int ret = thisIntDec.CompareTo(otherAbs);
+          return this.IsNegative ? -ret : ret;
+        }
+        if (thisIntDec.CompareTo(otherAbs) > 0) {
+          // Truncated absolute value is greater than other's untruncated absolute value
+          // Console.WriteLine("Shortcircuit I");
+          return this.IsNegative ? -1 : 1;
+        }
+        // Round up
+        thisInt += BigInteger.One;
+        thisIntDec = ExtendedFloat.FromBigInteger(thisInt);
+        if (thisIntDec.CompareTo(otherAbs) < 0) {
+          // Absolute value rounded up is less than other's unrounded absolute value
+          // Console.WriteLine("Shortcircuit II");
+          return this.IsNegative ? 1 : -1;
+        }
+        thisIntDec = ExtendedFloat.FromBigInteger(this.UnsignedNumerator).Divide(
+          ExtendedFloat.FromBigInteger(this.Denominator),
+          PrecisionContext.ForPrecisionAndRounding(256, Rounding.Down));
+        if (thisIntDec.CompareTo(otherAbs) > 0) {
+          // Truncated absolute value is greater than other's untruncated absolute value
+          // Console.WriteLine("Shortcircuit III");
+          return this.IsNegative ? -1 : 1;
+        }
+        if(other.Exponent.Sign>0){
+          // NOTE: if unsigned numerator is 0, bitLength will return
+          // 0 instead of 1, but the possibility of 0 was already excluded
+          int digitCount=this.UnsignedNumerator.bitLength();
+          digitCount-=1;
+          BigInteger bigDigitCount=(BigInteger)digitCount;
+          if(digitCount.CompareTo(other.Exponent)<0){
+            // Numerator's digit count minus 1 is less than the other's exponent,
+            // and other's exponent is positive, so this value's absolute
+            // value is less
+            return this.IsNegative ? 1 : -1;
+          }
+        }
+      }
+      // Convert to rational number and use usual rational number
+      // comparison
+      // Console.WriteLine("no shortcircuit");
+      // Console.WriteLine(this);
+      // Console.WriteLine(other);
+      ExtendedRational otherRational = ExtendedRational.FromExtendedFloat(other);
+      BigInteger ad = this.Numerator * (BigInteger)otherRational.Denominator;
+      BigInteger bc = this.Denominator * (BigInteger)otherRational.Numerator;
+      return ad.CompareTo(bc);
+    }
+    
     /// <summary>Compares an ExtendedDecimal object with this instance.</summary>
     /// <param name='other'>An ExtendedDecimal object.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
@@ -605,6 +715,8 @@ namespace PeterO
           // Console.WriteLine("Shortcircuit II");
           return this.IsNegative ? 1 : -1;
         }
+        // Conservative approximation of this rational number's absolute value,
+        // as a decimal number.  The true value will be greater or equal.
         thisIntDec = ExtendedDecimal.FromBigInteger(this.UnsignedNumerator).Divide(
           ExtendedDecimal.FromBigInteger(this.Denominator),
           PrecisionContext.ForPrecisionAndRounding(20, Rounding.Down));
@@ -613,12 +725,24 @@ namespace PeterO
           // Console.WriteLine("Shortcircuit III");
           return this.IsNegative ? -1 : 1;
         }
+        //Console.WriteLine("---{0} {1}",this,other);
+        if(other.Exponent.Sign>0){
+          int digitCount=this.UnsignedNumerator.getDigitCount();
+          digitCount-=1;
+          BigInteger bigDigitCount=(BigInteger)digitCount;
+          if(digitCount.CompareTo(other.Exponent)<0){
+            // Numerator's digit count minus 1 is less than the other's exponent,
+            // and other's exponent is positive, so this value's absolute
+            // value is less
+            return this.IsNegative ? 1 : -1;
+          }
+        }
       }
       // Convert to rational number and use usual rational number
       // comparison
-      //Console.WriteLine("no shortcircuit");
+      // Console.WriteLine("no shortcircuit");
       // Console.WriteLine(this);
-      //Console.WriteLine(other);
+      // Console.WriteLine(other);
       ExtendedRational otherRational = ExtendedRational.FromExtendedDecimal(other);
       BigInteger ad = this.Numerator * (BigInteger)otherRational.Denominator;
       BigInteger bc = this.Denominator * (BigInteger)otherRational.Numerator;

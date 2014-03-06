@@ -625,6 +625,9 @@ thisRem=divrem[1]; }
       }
       // Convert to rational number and use usual rational number
       // comparison
+      // System.out.println("no shortcircuit");
+      // System.out.println(this);
+      // System.out.println(other);
       ExtendedRational otherRational = ExtendedRational.FromExtendedDecimal(other);
       BigInteger ad = this.getNumerator().multiply(otherRational.getDenominator());
       BigInteger bc = this.getDenominator().multiply(otherRational.getNumerator());

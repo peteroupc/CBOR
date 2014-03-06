@@ -920,6 +920,77 @@ namespace PeterO
       }
     }
 
+    public int CompareToBinary(ExtendedFloat other){
+      if (other == null) {
+        return 1;
+      }
+      if (this.IsNaN()) {
+        if (other.IsNaN()) {
+          return 0;
+        }
+        return 1;
+      }
+      int signA = this.Sign;
+      int signB = other.Sign;
+      if (signA != signB) {
+        return (signA < signB) ? -1 : 1;
+      }
+      if (signB == 0 || signA == 0) {
+        // Special case: Either operand is zero
+        return 0;
+      }
+      if (this.IsInfinity()) {
+        if (other.IsInfinity()) {
+          // if we get here, this only means that
+          // both are positive infinity or both
+          // are negative infinity
+          return 0;
+        }
+        return this.IsNegative ? -1 : 1;
+      }
+      if (other.IsInfinity()) {
+        return other.IsNegative ? 1 : -1;
+      }
+      // At this point, both numbers are finite and
+      // have the same sign
+      #if DEBUG
+      if (!this.IsFinite) {
+        throw new ArgumentException("doesn't satisfy this.IsFinite");
+      }
+      if (!other.IsFinite) {
+        throw new ArgumentException("doesn't satisfy other.IsFinite");
+      }
+      #endif
+      if (other.Exponent.CompareTo((BigInteger)(-1000)) < 0) {
+        // For very low exponents, the conversion to decimal can take
+        // very long, so try this approach
+        if (other.Abs().CompareTo(ExtendedFloat.One) <0) {  // Abs less than 1
+          if (this.Abs().CompareTo(ExtendedDecimal.One) >= 0) {  // Abs 1 or more
+            return (signA > 0) ? 1 : -1;
+          }
+        }
+      }
+      if (other.Exponent.CompareTo((BigInteger)(1000)) > 0) {
+        // Very high exponents
+        BigInteger bignum=BigInteger.One<<999;
+        if (this.Abs().CompareTo(ExtendedDecimal.FromBigInteger(bignum)) <= 0) {
+          // this object's absolute value is less
+          return (signA > 0) ? -1 : 1;
+        }
+        // NOTE: The following check assumes that both
+        // operands are nonzero
+        BigInteger thisAdjExp=this.GetAdjustedExponent();
+        BigInteger otherAdjExp=GetAdjustedExponentBinary(other);
+        if(thisAdjExp.Sign>0 && thisAdjExp.CompareTo(otherAdjExp)>=0){
+          // This object's adjusted exponent is greater and is positive;
+          // so this object's absolute value is greater, since exponents
+          // have a greater value in decimal than in binary
+          return (signA > 0) ? 1 : -1;
+        }
+      }
+      ExtendedDecimal otherDec=ExtendedDecimal.FromExtendedFloat(other);
+      return this.CompareTo(otherDec);
+    }
     /// <summary>Converts this value to an arbitrary-precision integer.
     /// Any fractional part in this value will be discarded when converting
     /// to a big integer.</summary>
@@ -931,7 +1002,7 @@ namespace PeterO
         throw new OverflowException("Value is infinity or NaN");
       }
       int sign = this.Exponent.Sign;
-      if(this.IsZero){
+      if (this.IsZero) {
         return BigInteger.Zero;
       }
       if (sign == 0) {
@@ -946,10 +1017,10 @@ namespace PeterO
         BigInteger bigmantissa = this.Mantissa;
         BigInteger bigexponent = this.Exponent;
         bigexponent = -bigexponent;
-        if(bigexponent.CompareTo((BigInteger)1000)>0){
-          int smallPrecision=this.UnsignedMantissa.getDigitCount();
-          BigInteger bigPrecision=(BigInteger)smallPrecision;
-          if(bigPrecision.CompareTo(bigexponent)<=0){
+        if (bigexponent.CompareTo((BigInteger)1000) >0) {
+          int smallPrecision = this.UnsignedMantissa.getDigitCount();
+          BigInteger bigPrecision = (BigInteger)smallPrecision;
+          if (bigPrecision.CompareTo(bigexponent) <= 0) {
             // Unsigned mantissa is less than the power of 10
             // to be divided by
             return BigInteger.Zero;
@@ -1067,33 +1138,49 @@ namespace PeterO
       if (this.IsNegative && this.IsZero) {
         return BitConverter.ToSingle(BitConverter.GetBytes((int)1 << 31), 0);
       }
-      if(this.IsZero){
+      if (this.IsZero) {
         return 0.0f;
       }
-      BigInteger adjExp=GetAdjustedExponent();
-      if(adjExp.CompareTo((BigInteger)(-47))<0){
+      BigInteger adjExp = this.GetAdjustedExponent();
+      if (adjExp.CompareTo((BigInteger)(-47)) <0) {
         // Very low exponent, treat as 0
         return this.IsNegative ?
           BitConverter.ToSingle(BitConverter.GetBytes((int)1 << 31), 0) :
           0.0f;
       }
-      if(adjExp.CompareTo((BigInteger)(39))>0){
+      if (adjExp.CompareTo((BigInteger)39) >0) {
         // Very high exponent, treat as infinity
         return this.IsNegative ?
           Single.NegativeInfinity : Single.PositiveInfinity;
-      }
+      }      
       return this.ToExtendedFloat().ToSingle();
     }
-    
-    private BigInteger GetAdjustedExponent(){
-      if(!this.IsFinite)
+
+    private BigInteger GetAdjustedExponent() {
+      if (!this.IsFinite) {
         return BigInteger.Zero;
-      if(this.IsZero)
-        return this.Exponent;
-      BigInteger ret=this.Exponent;
-      int smallPrecision=this.UnsignedMantissa.getDigitCount();
-      smallPrecision-=1;
-      ret+=(BigInteger)smallPrecision;
+      }
+      if (this.IsZero) {
+        return BigInteger.Zero;
+      }
+      BigInteger ret = this.Exponent;
+      int smallPrecision = this.UnsignedMantissa.getDigitCount();
+      --smallPrecision;
+      ret += (BigInteger)smallPrecision;
+      return ret;
+    }
+
+    private static BigInteger GetAdjustedExponentBinary(ExtendedFloat ef) {
+      if (!ef.IsFinite) {
+        return BigInteger.Zero;
+      }
+      if (ef.IsZero) {
+        return BigInteger.Zero;
+      }
+      BigInteger ret = ef.Exponent;
+      int smallPrecision = ef.UnsignedMantissa.bitLength();
+      --smallPrecision;
+      ret += (BigInteger)smallPrecision;
       return ret;
     }
 
@@ -1121,11 +1208,11 @@ namespace PeterO
                                          0
                                        });
       }
-      if(this.IsZero){
+      if (this.IsZero) {
         return 0.0;
       }
-      BigInteger adjExp=GetAdjustedExponent();
-      if(adjExp.CompareTo((BigInteger)(-326))<0){
+      BigInteger adjExp = this.GetAdjustedExponent();
+      if (adjExp.CompareTo((BigInteger)(-326)) <0) {
         // Very low exponent, treat as 0
         return this.IsNegative ?
           Extras.IntegersToDouble(new int[] {
@@ -1134,7 +1221,7 @@ namespace PeterO
                                   }) :
           0.0;
       }
-      if(adjExp.CompareTo((BigInteger)(309))>0){
+      if (adjExp.CompareTo((BigInteger)309) >0) {
         // Very high exponent, treat as infinity
         return this.IsNegative ?
           Double.NegativeInfinity : Double.PositiveInfinity;

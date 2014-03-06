@@ -2144,8 +2144,7 @@ function() {
             ret.negative = false;
             ret.reg = [];
             for (var arrfillI = 0; arrfillI < BigInteger.RoundupSize(numWords + BigInteger.BitsToWords(numberBits|0)); arrfillI++) ret.reg[arrfillI] = 0;
-            for (var arrfillI = 0; arrfillI < numWords; arrfillI++) ret.reg[0 + arrfillI] = this.reg[0 + arrfillI];
-            BigInteger.ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
+            for (var arrfillI = 0; arrfillI < numWords; arrfillI++) ret.reg[shiftWords + arrfillI] = this.reg[0 + arrfillI];
             BigInteger.ShiftWordsLeftByBits(ret.reg, (shiftWords|0), numWords + BigInteger.BitsToWords(shiftBits), shiftBits);
             ret.wordCount = ret.CalcWordCount();
         } else {
@@ -11340,6 +11339,9 @@ function() {
             throw new Error("Value is infinity or NaN");
         }
         var sign = this.getExponent().signum();
+        if (this.signum() == 0) {
+            return BigInteger.ZERO;
+        }
         if (sign == 0) {
             var bigmantissa = this.getMantissa();
             return bigmantissa;
@@ -11352,6 +11354,14 @@ function() {
             var bigmantissa = this.getMantissa();
             var bigexponent = this.getExponent();
             bigexponent = bigexponent.negate();
+            if (bigexponent.compareTo(BigInteger.valueOf(1000)) > 0) {
+                var smallPrecision = this.getUnsignedMantissa().getDigitCount();
+                var bigPrecision = BigInteger.valueOf(smallPrecision);
+                if (bigPrecision.compareTo(bigexponent) <= 0) {
+
+                    return BigInteger.ZERO;
+                }
+            }
             bigexponent = DecimalUtility.FindPowerOfTenFromBig(bigexponent);
             bigmantissa = bigmantissa.divide(bigexponent);
             return bigmantissa;
@@ -11448,7 +11458,32 @@ function() {
         if (this.isNegative() && this.signum() == 0) {
             return Float.intBitsToFloat(1 << 31);
         }
+        if (this.signum() == 0) {
+            return 0.0;
+        }
+        var adjExp = this.GetAdjustedExponent();
+        if (adjExp.compareTo(BigInteger.valueOf(-47)) < 0) {
+
+            return this.isNegative() ? Float.intBitsToFloat(1 << 31) : 0.0;
+        }
+        if (adjExp.compareTo(BigInteger.valueOf(39)) > 0) {
+
+            return this.isNegative() ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+        }
         return this.ToExtendedFloat().ToSingle();
+    };
+    prototype['GetAdjustedExponent'] = prototype.GetAdjustedExponent = function() {
+        if (!this.isFinite()) {
+            return BigInteger.ZERO;
+        }
+        if (this.signum() == 0) {
+            return this.getExponent();
+        }
+        var ret = this.getExponent();
+        var smallPrecision = this.getUnsignedMantissa().getDigitCount();
+        --smallPrecision;
+        ret = ret.add(BigInteger.valueOf(smallPrecision));
+        return ret;
     };
 
     prototype['ToDouble'] = prototype.ToDouble = function() {
@@ -11460,6 +11495,18 @@ function() {
         }
         if (this.isNegative() && this.signum() == 0) {
             return Extras.IntegersToDouble([((1 << 31)|0), 0]);
+        }
+        if (this.signum() == 0) {
+            return 0.0;
+        }
+        var adjExp = this.GetAdjustedExponent();
+        if (adjExp.compareTo(BigInteger.valueOf(-326)) < 0) {
+
+            return this.isNegative() ? Extras.IntegersToDouble([((1 << 31)|0), 0]) : 0.0;
+        }
+        if (adjExp.compareTo(BigInteger.valueOf(309)) > 0) {
+
+            return this.isNegative() ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
         }
         return this.ToExtendedFloat().ToDouble();
     };
@@ -11618,8 +11665,8 @@ function() {
                 bigmantissa = (bigmantissa).negate();
             }
             while (intcurexp.signum() > 0) {
-                var shift = 512;
-                if (intcurexp.CompareToInt(512) < 0) {
+                var shift = 1000000;
+                if (intcurexp.CompareToInt(1000000) < 0) {
                     shift = intcurexp.AsInt32();
                 }
                 bigmantissa = bigmantissa.shiftLeft(shift);

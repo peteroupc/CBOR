@@ -612,6 +612,7 @@ public int compareTo(CBORObject other) {
           // second Object is NaN
           return -1;
         } else {
+          // System.out.println("a=" + this + " b=" + (other));
           if (typeA == CBORObjectTypeExtendedRational) {
             ExtendedRational e1 = NumberInterfaces[typeA].AsExtendedRational(objA);
             ExtendedDecimal e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
@@ -622,8 +623,36 @@ public int compareTo(CBORObject other) {
             cmp = -e2.CompareToDecimal(e1);
           } else if (typeA == CBORObjectTypeExtendedDecimal ||
                      typeB == CBORObjectTypeExtendedDecimal) {
-            ExtendedDecimal e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
-            ExtendedDecimal e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
+            ExtendedDecimal e1 = null;
+            ExtendedDecimal e2 = null;
+            if (typeA == CBORObjectTypeExtendedFloat) {
+              ExtendedFloat ef1 = (ExtendedFloat)objA;
+              if (ef1.getExponent().compareTo(BigInteger.valueOf(-1000)) <0) {
+                // For very low exponents, the conversion to decimal can take
+                // very long, so try this approach
+                if (ef1.Abs().compareTo(ExtendedFloat.One) <0) {  // Abs less than 1
+                  e2 = (ExtendedDecimal)objB;
+                  if (e2.Abs().compareTo(ExtendedDecimal.One) >= 0) {  // Abs 1 or more
+                    return (s1 > 0) ? -1 : 1;
+                  }
+                }
+              }
+            }
+            if (typeB == CBORObjectTypeExtendedFloat) {
+              ExtendedFloat ef2 = (ExtendedFloat)objB;
+              if (ef2.getExponent().compareTo(BigInteger.valueOf(-1000)) <0) {
+                // For very low exponents, the conversion to decimal can take
+                // very long, so try this approach
+                if (ef2.Abs().compareTo(ExtendedFloat.One) <0) {  // Abs less than 1
+                  e1 = (ExtendedDecimal)objA;
+                  if (e1.Abs().compareTo(ExtendedDecimal.One) >= 0) {  // Abs 1 or more
+                    return (s1 < 0) ? -1 : 1;
+                  }
+                }
+              }
+            }
+            e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
+            e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
             cmp = e1.compareTo(e2);
           } else if (typeA == CBORObjectTypeExtendedFloat || typeB == CBORObjectTypeExtendedFloat ||
                      typeA == CBORObjectTypeDouble || typeB == CBORObjectTypeDouble ||
@@ -4079,6 +4108,15 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       return str;
     }
 
+    private static String ExtendedToString(ExtendedFloat ef) {
+      if (ef.isFinite() && (ef.getExponent().compareTo(BigInteger.valueOf(1000)) >0 || ef.getExponent().compareTo(BigInteger.valueOf(-1000)) <0)) {
+        // It can take very long to convert a number with a very high
+        // or very low exponent to a decimal String, so do this instead
+        return ef.getMantissa().toString() +"p" + ef.getExponent().toString();
+      }
+      return ef.toString();
+    }
+
     /**
      * Returns this CBOR object in string form. The format is intended to
      * be human-readable, not machine-readable, and the format may change
@@ -4156,6 +4194,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           return simvalue;
         }
         sb.append(simvalue);
+      } else if (type == CBORObjectTypeExtendedFloat) {
+        return ExtendedToString((ExtendedFloat)this.getThisItem());
       } else if (type == CBORObjectTypeInteger) {
         long v = (((Long)this.getThisItem()).longValue());
         simvalue = Long.toString((long)v);
