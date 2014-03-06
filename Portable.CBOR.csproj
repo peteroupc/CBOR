@@ -116,6 +116,14 @@
   <ItemGroup>
     <Folder Include='Cbor'/>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include='ProfilingSessions\Session20140305_234452.sdps'/>
+    <Content Include='ProfilingSessions\Session20140305_234953.sdps'/>
+    <Content Include='ProfilingSessions\Session20140305_235146.sdps'/>
+    <Content Include='ProfilingSessions\Session20140306_061053.sdps'/>
+    <Content Include='ProfilingSessions\Session20140306_062234.sdps'/>
+    <Content Include='ProfilingSessions\Session20140306_063811.sdps'/>
+  </ItemGroup>
   <Import Project='$(MSBuildExtensionsPath)\Microsoft\Portable\v4.0\Microsoft.Portable.CSharp.targets'/>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
