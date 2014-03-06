@@ -201,7 +201,7 @@ namespace PeterO.Cbor {
         if (rem == 0) {
           return CBORObject.FromObject(quo);
         } else {
-          return CBORObject.FromObject(new ExtendedRational(valueA, valueB));
+          return CBORObject.FromObject(new ExtendedRational((BigInteger)valueA, (BigInteger)valueB));
         }
       } else if (typeA == CBORObject.CBORObjectTypeExtendedRational ||
                  typeB == CBORObject.CBORObjectTypeExtendedRational) {
