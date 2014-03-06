@@ -95,7 +95,9 @@
     <Compile Include='DecimalUtility.cs'/>
     <Compile Include='DigitShiftAccumulator.cs'/>
     <Compile Include='ExtendedDecimal.cs'/>
-    <Compile Include='ExtendedFloat.cs'/>
+    <Compile Include='ExtendedFloat.cs'>
+      <DependentUpon>ExtendedRational.cs</DependentUpon>
+    </Compile>
     <Compile Include='ExtendedOrSimpleRadixMath.cs'/>
     <Compile Include='ExtendedRational.cs'/>
     <Compile Include='FastInteger.cs'/>
@@ -123,6 +125,7 @@
     <Content Include='ProfilingSessions\Session20140306_061053.sdps'/>
     <Content Include='ProfilingSessions\Session20140306_062234.sdps'/>
     <Content Include='ProfilingSessions\Session20140306_063811.sdps'/>
+    <Content Include='ProfilingSessions\Session20140306_133043.sdps'/>
   </ItemGroup>
   <Import Project='$(MSBuildExtensionsPath)\Microsoft\Portable\v4.0\Microsoft.Portable.CSharp.targets'/>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

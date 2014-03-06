@@ -45,7 +45,7 @@ namespace PeterO.Cbor
       }
       if (exponent.IsZero) {
         // Exponent is 0, so return mantissa instead
-        return o[1];
+        return CBORObject.FromObject(mantissa);
       }
       // NOTE: Discards tags. See comment in CBORTag2.
       if (isDecimal) {

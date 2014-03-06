@@ -2798,9 +2798,12 @@ if (bytes.Length <= 0) {
     public int bitLength() {
       int wc = this.wordCount;
       if (wc != 0) {
+        if(this.negative && !(wc>=2 && this.reg[0]!=0)){
+          return this.abs().subtract(BigInteger.One).bitLength();
+        }
         int numberValue = ((int)this.reg[wc - 1]) & 0xFFFF;
         wc = (wc - 1) << 4;
-        if (numberValue == (this.negative ? 1 : 0)) {
+        if (numberValue == 0) {
           return wc;
         }
         wc += 16;

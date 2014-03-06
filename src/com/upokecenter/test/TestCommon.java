@@ -205,63 +205,68 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           o.IsNaN()) {
         try {
           o.AsByte();
+          Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
           Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
         }
         try {
           o.AsInt16();
+          Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
           Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
         }
         try {
           o.AsInt32();
+          Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
           Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
         }
         try {
           o.AsInt64();
+          Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
           Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
         }
         try {
-          o.AsSingle();
-        } catch (ArithmeticException ex) {
-        } catch (Exception ex) {
-          Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
-        }
+ o.AsSingle();
+} catch (Exception ex) {
+Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
         try {
-          o.AsDouble();
-        } catch (ArithmeticException ex) {
-        } catch (Exception ex) {
-          Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
-        }
+ o.AsDouble();
+} catch (Exception ex) {
+Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
         try {
           o.AsBigInteger();
+          Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
           Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
         }
         return;
       }
-      BigInteger df = o.AsExtendedDecimal().ToBigInteger();
       try {
-        o.AsBigInteger();
+        // TODO: Limit exponents to be tested
+        //  o.AsBigInteger();
       } catch (Exception ex) {
-        Assert.fail("Object: " + o + ", int: " + df + ", " + ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail("Object: " + o + ",  " + ex.toString()); throw new IllegalStateException("", ex);
       }
       try {
         o.AsSingle();
       } catch (Exception ex) {
-        Assert.fail("Object: " + o + ", int: " + df + ", " + ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail("Object: " + o + ",  " + ex.toString()); throw new IllegalStateException("", ex);
       }
       try {
         o.AsDouble();
       } catch (Exception ex) {
-        Assert.fail("Object: " + o + ", int: " + df + ", " + ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail("Object: " + o + ",  " + ex.toString()); throw new IllegalStateException("", ex);
       }
     }
 

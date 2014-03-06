@@ -956,6 +956,9 @@ bigrem=divrem[1]; }
         throw new ArithmeticException("Value is infinity or NaN");
       }
       int sign = this.getExponent().signum();
+      if (this.signum()==0) {
+        return BigInteger.ZERO;
+      }
       if (sign == 0) {
         BigInteger bigmantissa = this.getMantissa();
         return bigmantissa;
@@ -968,6 +971,15 @@ bigrem=divrem[1]; }
         BigInteger bigmantissa = this.getMantissa();
         BigInteger bigexponent = this.getExponent();
         bigexponent=bigexponent.negate();
+        if (bigexponent.compareTo(BigInteger.valueOf(1000)) >0) {
+          int smallPrecision = this.getUnsignedMantissa().getDigitCount();
+          BigInteger bigPrecision = BigInteger.valueOf(smallPrecision);
+          if (bigPrecision.compareTo(bigexponent) <= 0) {
+            // Unsigned mantissa is less than the power of 10
+            // to be divided by
+            return BigInteger.ZERO;
+          }
+        }
         bigexponent = DecimalUtility.FindPowerOfTenFromBig(bigexponent);
         bigmantissa=bigmantissa.divide(bigexponent);
         return bigmantissa;
@@ -1087,7 +1099,36 @@ remainder=divrem[1]; }
       if (this.isNegative() && this.signum()==0) {
         return Float.intBitsToFloat(1 << 31);
       }
+      if (this.signum()==0) {
+        return 0.0f;
+      }
+      BigInteger adjExp = this.GetAdjustedExponent();
+      if (adjExp.compareTo(BigInteger.valueOf(-47)) <0) {
+        // Very low exponent, treat as 0
+        return this.isNegative() ?
+          Float.intBitsToFloat(1 << 31) :
+          0.0f;
+      }
+      if (adjExp.compareTo(BigInteger.valueOf(39)) >0) {
+        // Very high exponent, treat as infinity
+        return this.isNegative() ?
+          Float.NEGATIVE_INFINITY : Float.POSITIVE_INFINITY;
+      }
       return this.ToExtendedFloat().ToSingle();
+    }
+
+    private BigInteger GetAdjustedExponent() {
+      if (!this.isFinite()) {
+ return BigInteger.ZERO;
+}
+      if (this.signum()==0) {
+ return this.getExponent();
+}
+      BigInteger ret = this.getExponent();
+      int smallPrecision = this.getUnsignedMantissa().getDigitCount();
+      --smallPrecision;
+      ret=ret.add(BigInteger.valueOf(smallPrecision));
+      return ret;
     }
 
     /**
@@ -1114,6 +1155,24 @@ remainder=divrem[1]; }
                                          ((int)(1 << 31)),
                                          0
                                        });
+      }
+      if (this.signum()==0) {
+        return 0.0;
+      }
+      BigInteger adjExp = this.GetAdjustedExponent();
+      if (adjExp.compareTo(BigInteger.valueOf(-326)) <0) {
+        // Very low exponent, treat as 0
+        return this.isNegative() ?
+          Extras.IntegersToDouble(new int[] {
+                                    ((int)(1 << 31)),
+                                    0
+                                  }) :
+          0.0;
+      }
+      if (adjExp.compareTo(BigInteger.valueOf(309)) >0) {
+        // Very high exponent, treat as infinity
+        return this.isNegative() ?
+          Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
       }
       return this.ToExtendedFloat().ToDouble();
     }
@@ -1308,8 +1367,8 @@ remainder=divrem[1]; }
           bigmantissa=(bigmantissa).negate();
         }
         while (intcurexp.signum() > 0) {
-          int shift = 512;
-          if (intcurexp.CompareToInt(512) < 0) {
+          int shift = 1000000;
+          if (intcurexp.CompareToInt(1000000) < 0) {
             shift = intcurexp.AsInt32();
           }
           bigmantissa=bigmantissa.shiftLeft(shift);

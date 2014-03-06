@@ -250,8 +250,18 @@ namespace Test {
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
         }
-        Assert.DoesNotThrow(()=>o.AsSingle());
-        Assert.DoesNotThrow(()=>o.AsDouble());
+        try {
+ o.AsSingle();
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        try {
+ o.AsDouble();
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
         try {
           o.AsBigInteger();
           Assert.Fail("Should have failed");
