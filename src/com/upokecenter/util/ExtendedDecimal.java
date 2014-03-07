@@ -1011,6 +1011,27 @@ public int CompareToBinary(ExtendedFloat other) {
           // have a greater value in decimal than in binary
           return (signA > 0) ? 1 : -1;
         }
+        if (thisAdjExp.signum() > 0 &&
+           thisAdjExp.compareTo(BigInteger.valueOf(1000)) >= 0 &&
+           otherAdjExp.compareTo(BigInteger.valueOf(1000)) >= 0) {
+          thisAdjExp=thisAdjExp.add(BigInteger.ONE);
+          otherAdjExp=otherAdjExp.add(BigInteger.ONE);
+          BigInteger ratio = otherAdjExp.divide(thisAdjExp);
+          // Check the ratio of the binary exponent to the decimal exponent.
+          // If the ratio is less than 3, the decimal's absolute value is
+          // greater. If it's 4 or greater, the binary's absolute value is greater.
+          // (If the two absolute values are equal, the ratio will approach
+          // ln(10)/ln(2), or about 3.322, as the exponents get higher and
+          // higher.) This check assumes that both exponents are 1000 or greater,
+          // when the ratio between exponents of equal values is close to
+          // ln(10)/ln(2).
+          if (ratio.compareTo(BigInteger.valueOf(3))<0) {
+            // Decimal abs. value is greater
+            return (signA > 0) ? 1 : -1;
+          } else if (ratio >= 4) {
+            return (signA > 0) ? -1 : 1;
+          }
+        }
       }
       ExtendedDecimal otherDec = ExtendedDecimal.FromExtendedFloat(other);
       return this.compareTo(otherDec);
@@ -1254,7 +1275,7 @@ remainder=divrem[1]; }
                                   }) :
           0.0;
       }
-      if (adjExp.compareTo(BigInteger.valueOf(309)) >0) {
+      if (adjExp.compareTo(BigInteger.valueOf(309)) > 0) {
         // Very high exponent, treat as infinity
         return this.isNegative() ?
           Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
