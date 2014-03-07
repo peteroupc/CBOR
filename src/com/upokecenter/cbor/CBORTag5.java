@@ -48,7 +48,7 @@ import com.upokecenter.util.*;
       }
       if (exponent.signum()==0) {
         // Exponent is 0, so return mantissa instead
-        return o.get(1);
+        return CBORObject.FromObject(mantissa);
       }
       // NOTE: Discards tags. See comment in CBORTag2.
       if (isDecimal) {

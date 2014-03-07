@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO
 {
-  /// <summary>Arbitrary-precision rational number.</summary>
+    /// <summary>Arbitrary-precision rational number.</summary>
   public class ExtendedRational : IComparable<ExtendedRational>, IEquatable<ExtendedRational> {
     private BigInteger unsignedNumerator;
 
@@ -612,13 +612,13 @@ namespace PeterO
           // Console.WriteLine("Shortcircuit III");
           return this.IsNegative ? -1 : 1;
         }
-        if(other.Exponent.Sign>0){
+        if (other.Exponent.Sign > 0) {
           // NOTE: if unsigned numerator is 0, bitLength will return
           // 0 instead of 1, but the possibility of 0 was already excluded
-          int digitCount=this.UnsignedNumerator.bitLength();
-          digitCount-=1;
-          BigInteger bigDigitCount=(BigInteger)digitCount;
-          if(digitCount.CompareTo(other.Exponent)<0){
+          int digitCount = this.UnsignedNumerator.bitLength();
+          --digitCount;
+          BigInteger bigDigitCount = (BigInteger)digitCount;
+          if (bigDigitCount.CompareTo(other.Exponent) < 0) {
             // Numerator's digit count minus 1 is less than the other's exponent,
             // and other's exponent is positive, so this value's absolute
             // value is less
@@ -636,7 +636,7 @@ namespace PeterO
       BigInteger bc = this.Denominator * (BigInteger)otherRational.Numerator;
       return ad.CompareTo(bc);
     }
-    
+
     /// <summary>Compares an ExtendedDecimal object with this instance.</summary>
     /// <param name='other'>An ExtendedDecimal object.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
@@ -716,7 +716,7 @@ namespace PeterO
           return this.IsNegative ? 1 : -1;
         }
         // Conservative approximation of this rational number's absolute value,
-        // as a decimal number.  The true value will be greater or equal.
+        // as a decimal number. The true value will be greater or equal.
         thisIntDec = ExtendedDecimal.FromBigInteger(this.UnsignedNumerator).Divide(
           ExtendedDecimal.FromBigInteger(this.Denominator),
           PrecisionContext.ForPrecisionAndRounding(20, Rounding.Down));
@@ -725,12 +725,12 @@ namespace PeterO
           // Console.WriteLine("Shortcircuit III");
           return this.IsNegative ? -1 : 1;
         }
-        //Console.WriteLine("---{0} {1}",this,other);
-        if(other.Exponent.Sign>0){
-          int digitCount=this.UnsignedNumerator.getDigitCount();
-          digitCount-=1;
-          BigInteger bigDigitCount=(BigInteger)digitCount;
-          if(digitCount.CompareTo(other.Exponent)<0){
+        // Console.WriteLine("---" + this + " " + (other));
+        if (other.Exponent.Sign > 0) {
+          int digitCount = this.UnsignedNumerator.getDigitCount();
+          --digitCount;
+          BigInteger bigDigitCount = (BigInteger)digitCount;
+          if (bigDigitCount.CompareTo(other.Exponent) < 0) {
             // Numerator's digit count minus 1 is less than the other's exponent,
             // and other's exponent is positive, so this value's absolute
             // value is less
