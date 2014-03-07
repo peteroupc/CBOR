@@ -380,6 +380,9 @@ namespace PeterO
     /// to a big integer.</summary>
     /// <returns>A BigInteger object.</returns>
     public BigInteger ToBigInteger() {
+      if (!this.IsFinite) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
       return this.Numerator / (BigInteger)this.denominator;
     }
 

@@ -43,7 +43,7 @@ namespace PeterO.Cbor
       }
       CBORTypeFilter filter = this.Copy();
       filter.any = true;
-      filter.anyArrayLength = false;
+      filter.anyArrayLength = true;
       filter.types = 0xFF;
       return filter;
     }

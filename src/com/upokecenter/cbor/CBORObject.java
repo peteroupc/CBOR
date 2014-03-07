@@ -1957,7 +1957,7 @@ public void set(String key, CBORObject value) {
      */
     public static CBORObject Read(InputStream stream) {
       try {
-        return Read(stream, 0, false, -1, null, null);
+        return Read(stream, 0, false, null, null);
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
       }
@@ -4276,11 +4276,126 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       return bigint.bitLength() <= 64;
     }
 
+    private static long ReadDataLength(InputStream s, int headByte, int expectedType) throws IOException {
+      if (headByte < 0) {
+ throw new CBORException("Unexpected data encountered");
+}
+      if (((headByte >> 5) & 0x07) != expectedType) {
+ throw new CBORException("Unexpected data encountered");
+}
+      headByte &= 0x1F;
+      if (headByte < 24) {
+ return headByte;
+}
+      byte[] data = new byte[8];
+      switch (headByte & 0x1F) {
+          case 24: {
+            int tmp = s.read();
+            if (tmp < 0) {
+              throw new CBORException("Premature end of data");
+            }
+            return tmp;
+          }
+          case 25: {
+            if (s.read(data, 0, 2) != 2) {
+              throw new CBORException("Premature end of data");
+            }
+            int lowAdditional = ((int)(data[0] & (int)0xFF)) << 8;
+            lowAdditional |= (int)(data[1] & (int)0xFF);
+            return lowAdditional;
+          }
+          case 26: {
+            if (s.read(data, 0, 4) != 4) {
+              throw new CBORException("Premature end of data");
+            }
+            long uadditional = ((long)(data[0] & (long)0xFF)) << 24;
+            uadditional |= ((long)(data[1] & (long)0xFF)) << 16;
+            uadditional |= ((long)(data[2] & (long)0xFF)) << 8;
+            uadditional |= (long)(data[3] & (long)0xFF);
+            return uadditional;
+          }
+          case 27: {
+            if (s.read(data, 0, 8) != 8) {
+              throw new CBORException("Premature end of data");
+            }
+            // Treat return value as an unsigned integer
+            long uadditional = ((long)(data[0] & (long)0xFF)) << 56;
+            uadditional |= ((long)(data[1] & (long)0xFF)) << 48;
+            uadditional |= ((long)(data[2] & (long)0xFF)) << 40;
+            uadditional |= ((long)(data[3] & (long)0xFF)) << 32;
+            uadditional |= ((long)(data[4] & (long)0xFF)) << 24;
+            uadditional |= ((long)(data[5] & (long)0xFF)) << 16;
+            uadditional |= ((long)(data[6] & (long)0xFF)) << 8;
+            uadditional |= (long)(data[7] & (long)0xFF);
+            return uadditional;
+          }
+        case 28:
+        case 29:
+        case 30:
+          throw new CBORException("Unexpected data encountered");
+        case 31:
+          throw new CBORException("Indefinite-length data not allowed here");
+        default:
+          return headByte;
+      }
+    }
+
+    private static byte[] ReadByteData(InputStream s, long uadditional, MemoryStream outputStream) throws IOException {
+      if ((uadditional >> 63) != 0 || uadditional > Integer.MAX_VALUE) {
+        // TODO: Display huge length in exception
+        throw new CBORException("Huge length is bigger than supported");
+      }
+      if (uadditional <= 0x10000) {
+        // Simple case: small size
+        byte[] data = new byte[(int)uadditional];
+        if (s.read(data, 0, data.length) != data.length) {
+          throw new CBORException("Premature end of stream");
+        }
+        if (outputStream != null) {
+          outputStream.write(data,0,data.length);
+          return null;
+        } else {
+          return data;
+        }
+      } else {
+        byte[] tmpdata = new byte[0x10000];
+        int total = (int)uadditional;
+        if (outputStream != null) {
+          while (total > 0) {
+            int bufsize = Math.min(tmpdata.length, total);
+            if (s.read(tmpdata, 0, bufsize) != bufsize) {
+              throw new CBORException("Premature end of stream");
+            }
+            outputStream.write(tmpdata,0,bufsize);
+            total -= bufsize;
+          }
+          return null;
+        } else {
+          java.io.ByteArrayOutputStream ms=null;
+try {
+ms=new ByteArrayOutputStream();
+
+            while (total > 0) {
+              int bufsize = Math.min(tmpdata.length, total);
+              if (s.read(tmpdata, 0, bufsize) != bufsize) {
+                throw new CBORException("Premature end of stream");
+              }
+              ms.write(tmpdata,0,bufsize);
+              total -= bufsize;
+            }
+            return ms.toByteArray();
+}
+finally {
+try { if(ms!=null)ms.close(); } catch (IOException ex){}
+}
+        }
+      }
+    }
+
     private static CBORObject Read(
       InputStream s,
       int depth,
       boolean allowBreak,
-      int allowOnlyType,
       CBORTypeFilter filter,
       StringRefs srefs) throws IOException {
       if (depth > 1000) {
@@ -4303,20 +4418,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if (expectedLength == -1) {
         // if the head byte is invalid
         throw new CBORException("Unexpected data encountered");
-      }
-      if (allowOnlyType >= 0) {
-        if (allowOnlyType != type) {
-          throw new CBORException("Expected major type " +
-                                  Integer.toString((int)allowOnlyType) +
-                                  ", instead got type " +
-                                  Integer.toString(((Integer)type).intValue()));
-        }
-        if (additional == 31) {
-          throw new CBORException("Indefinite-length data not allowed here");
-        }
-        if (additional >= 28) {
-          throw new CBORException("Unexpected data encountered");
-        }
       }
       if (filter != null) {
         // Check for valid major types if asked
@@ -4426,13 +4527,19 @@ ms=new ByteArrayOutputStream();
 
             // Requires same type as this one
             while (true) {
-              CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.ByteString, null);
-              // break if the "break" code was read
-              if (o == null) {
+              int nextByte = s.read();
+              if (nextByte == 0xFF) {
+                // break if the "break" code was read
                 break;
               }
-              data = (byte[])o.getThisItem();
-              ms.write(data,0,data.length);
+              long len = ReadDataLength(s, nextByte, 2);
+              if ((len >> 63) != 0 || len > Integer.MAX_VALUE) {
+                // TODO: Display huge length in exception
+                throw new CBORException("Huge length is bigger than supported");
+              }
+              if (nextByte != 0x40) {  // NOTE: 0x40 means the empty byte String
+                ReadByteData(s, len, ms);
+              }
             }
             if (ms.size() > Integer.MAX_VALUE) {
               throw new CBORException("Length of bytes to be streamed is bigger than supported");
@@ -4455,49 +4562,40 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
                                     Long.toString((long)uadditional) +
                                     " is bigger than supported");
           }
-          data = null;
-          if (uadditional <= 0x10000) {
-            // Simple case: small size
-            data = new byte[(int)uadditional];
-            if (s.read(data, 0, data.length) != data.length) {
-              throw new CBORException("Premature end of stream");
-            }
-          } else {
-            byte[] tmpdata = new byte[0x10000];
-            int total = (int)uadditional;
-            java.io.ByteArrayOutputStream ms=null;
-try {
-ms=new ByteArrayOutputStream();
-
-              while (total > 0) {
-                int bufsize = Math.min(tmpdata.length, total);
-                if (s.read(tmpdata, 0, bufsize) != bufsize) {
-                  throw new CBORException("Premature end of stream");
-                }
-                ms.write(tmpdata,0,bufsize);
-                total -= bufsize;
-              }
-              data = ms.toByteArray();
-}
-finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
-}
+          data = ReadByteData(s, uadditional, null);
+          CBORObject cbor = new CBORObject(CBORObjectTypeByteString, data);
+          if (srefs != null) {
+            int hint = (uadditional > Integer.MAX_VALUE || hasBigAdditional) ? Integer.MAX_VALUE :
+              (int)uadditional;
+            srefs.AddStringIfNeeded(cbor, hint);
           }
-          return new CBORObject(
-            CBORObjectTypeByteString,
-            data);
+          return cbor;
         }
       } else if (type == 3) {  // Text String
         if (additional == 31) {
           // Streaming text String
           StringBuilder builder = new StringBuilder();
           while (true) {
-            CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.TextString, null);
-            if (o == null) {
+            int nextByte = s.read();
+            if (nextByte == 0xFF) {
               // break if the "break" code was read
               break;
             }
-            builder.append((String)o.getThisItem());
+            long len = ReadDataLength(s, nextByte, 3);
+            if ((len >> 63) != 0 || len > Integer.MAX_VALUE) {
+              // TODO: Display huge length in exception
+              throw new CBORException("Huge length is bigger than supported");
+            }
+            if (nextByte != 0x60) {  // NOTE: 0x60 means the empty String
+              switch (DataUtilities.ReadUtf8(s, (int)len, builder, false)) {
+                case -1:
+                  throw new CBORException("Invalid UTF-8");
+                case -2:
+                  throw new CBORException("Premature end of data");
+                default:
+                  break;  // No error
+              }
+            }
           }
           return new CBORObject(
             CBORObjectTypeTextString,
@@ -4521,7 +4619,13 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             default:
               break;  // No error
           }
-          return new CBORObject(CBORObjectTypeTextString, builder.toString());
+          CBORObject cbor = new CBORObject(CBORObjectTypeTextString, builder.toString());
+          if (srefs != null) {
+            int hint = (uadditional > Integer.MAX_VALUE || hasBigAdditional) ? Integer.MAX_VALUE :
+              (int)uadditional;
+            srefs.AddStringIfNeeded(cbor, hint);
+          }
+          return cbor;
         }
       } else if (type == 4) {  // Array
         CBORObject cbor = NewArray();
@@ -4532,12 +4636,11 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
               throw new CBORException("Array is too long");
             }
             CBORObject o = Read(
-
               s,
               depth + 1,
               true,
-              -1,
-              filter == null ? null : filter.GetSubFilter(vtindex), srefs);
+              filter == null ? null : filter.GetSubFilter(vtindex),
+              srefs);
             // break if the "break" code was read
             if (o == null) {
               break;
@@ -4562,9 +4665,11 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           for (long i = 0; i < uadditional; ++i) {
             cbor.Add(
               Read(
-
-                s, depth + 1, false, -1,
-                filter == null ? null : filter.GetSubFilter(i), srefs));
+                s,
+                depth + 1,
+                false,
+                filter == null ? null : filter.GetSubFilter(i),
+                srefs));
             ++vtindex;
           }
           return cbor;
@@ -4573,12 +4678,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         CBORObject cbor = NewMap();
         if (additional == 31) {
           while (true) {
-            CBORObject key = Read(s, depth + 1, true, -1, null, srefs);
+            CBORObject key = Read(s, depth + 1, true, null, srefs);
             if (key == null) {
               // break if the "break" code was read
               break;
             }
-            CBORObject value = Read(s, depth + 1, false, -1, null, srefs);
+            CBORObject value = Read(s, depth + 1, false, null, srefs);
             cbor.set(key,value);
           }
           return cbor;
@@ -4593,8 +4698,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
                                     " is bigger than supported");
           }
           for (long i = 0; i < uadditional; ++i) {
-            CBORObject key = Read(s, depth + 1, false, -1, null, srefs);
-            CBORObject value = Read(s, depth + 1, false, -1, null, srefs);
+            CBORObject key = Read(s, depth + 1, false, null, srefs);
+            CBORObject value = Read(s, depth + 1, false, null, srefs);
             cbor.set(key,value);
           }
           return cbor;
@@ -4627,7 +4732,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         }
         o = Read(
 
-          s, depth + 1, false, -1,
+          s, depth + 1, false,
           taginfo == null ? null : taginfo.GetTypeFilter(), srefs);
         if (hasBigAdditional) {
           return FromObjectAndTag(o, bigintAdditional);

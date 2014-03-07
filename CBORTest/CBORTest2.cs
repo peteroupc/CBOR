@@ -46,8 +46,8 @@ namespace Test
         ExtendedRational er = CBORTest.RandomRational(fr);
         ExtendedRational er2 = CBORTest.RandomRational(fr);
         if (er2.IsZero || !er2.IsFinite) {
- continue;
-}
+          continue;
+        }
         ExtendedRational ermult = er.Multiply(er2);
         ExtendedRational erdiv = ermult.Divide(er);
         if (erdiv.CompareTo(er2) != 0) {
@@ -69,8 +69,8 @@ namespace Test
         er = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.One);
         er2 = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.One);
         if (er2.IsZero || !er2.IsFinite) {
- continue;
-}
+          continue;
+        }
         ExtendedRational ermult = er.Multiply(er2);
         ExtendedRational erdiv = ermult.Divide(er);
         erdiv = ermult.Remainder(er);
@@ -388,6 +388,26 @@ namespace Test
                       CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x4a, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }).AsBigInteger());
     }
 
+    
+    [Test]
+    public void TestStringRefs(){
+      CBORObject cbor=CBORObject.DecodeFromBytes(
+        new byte[]{
+          0xd9,1,0,
+          0x9F,
+          0x64,0x61,0x62,0x63,0x64,
+          0xd8,0x19,0x00,
+          0xd8,0x19,0x00,
+          0x64,0x62,0x62,0x63,0x64,
+          0xd8,0x19,0x01,
+          0xd8,0x19,0x00,
+          0xd8,0x19,0x01,
+          0xFF
+        });
+      string expected="[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
+      Assert.AreEqual(expected,cbor.ToJSONString());
+    }
+    
     [Test]
     public void TestExtendedNaNZero() {
       Assert.IsFalse(ExtendedDecimal.NaN.IsZero);

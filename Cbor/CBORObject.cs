@@ -4230,16 +4230,19 @@ namespace PeterO.Cbor {
     private static bool BigIntFits(BigInteger bigint) {
       return bigint.bitLength() <= 64;
     }
-    
-    private static long ReadDataLength(Stream s, int headByte, int expectedType){
-      if(headByte<0)
+
+    private static long ReadDataLength(Stream s, int headByte, int expectedType) {
+      if (headByte < 0) {
         throw new CBORException("Unexpected data encountered");
-      if(((headByte>>5)&0x07)!=expectedType)
+      }
+      if (((headByte >> 5) & 0x07) != expectedType) {
         throw new CBORException("Unexpected data encountered");
-      headByte&=0x1F;
-      if(headByte<24)
+      }
+      headByte &= 0x1F;
+      if (headByte < 24) {
         return headByte;
-      byte[] data=new byte[8];
+      }
+      byte[] data = new byte[8];
       switch (headByte & 0x1F) {
           case 24: {
             int tmp = s.ReadByte();
@@ -4292,8 +4295,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static byte[] ReadByteData(Stream s, long uadditional, MemoryStream outputStream){
-      if((uadditional>>63)!=0 || uadditional>Int32.MaxValue){
+    private static byte[] ReadByteData(Stream s, long uadditional, MemoryStream outputStream) {
+      if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
         // TODO: Display huge length in exception
         throw new CBORException("Huge length is bigger than supported");
       }
@@ -4303,8 +4306,8 @@ namespace PeterO.Cbor {
         if (s.Read(data, 0, data.Length) != data.Length) {
           throw new CBORException("Premature end of stream");
         }
-        if(outputStream!=null){
-          outputStream.Write(data,0,data.Length);
+        if (outputStream != null) {
+          outputStream.Write(data, 0, data.Length);
           return null;
         } else {
           return data;
@@ -4312,7 +4315,7 @@ namespace PeterO.Cbor {
       } else {
         byte[] tmpdata = new byte[0x10000];
         int total = (int)uadditional;
-        if(outputStream!=null){
+        if (outputStream != null) {
           while (total > 0) {
             int bufsize = Math.Min(tmpdata.Length, total);
             if (s.Read(tmpdata, 0, bufsize) != bufsize) {
@@ -4337,7 +4340,7 @@ namespace PeterO.Cbor {
         }
       }
     }
-    
+
     private static CBORObject Read(
       Stream s,
       int depth,
@@ -4392,7 +4395,11 @@ namespace PeterO.Cbor {
             s.Read(data, 1, expectedLength - 1) != expectedLength - 1) {
           throw new CBORException("Premature end of data");
         }
-        return GetFixedLengthObject(firstbyte, data);
+        CBORObject cbor=GetFixedLengthObject(firstbyte, data);
+        if(srefs!=null && (type==2 || type==3)){
+          srefs.AddStringIfNeeded(cbor,expectedLength-1);
+        }
+        return cbor;
       }
       long uadditional = (long)additional;
       BigInteger bigintAdditional = BigInteger.Zero;
@@ -4470,18 +4477,18 @@ namespace PeterO.Cbor {
           using (MemoryStream ms = new MemoryStream()) {
             // Requires same type as this one
             while (true) {
-              int nextByte=s.ReadByte();
-              if(nextByte==0xFF) {
+              int nextByte = s.ReadByte();
+              if (nextByte == 0xFF) {
                 // break if the "break" code was read
                 break;
               }
-              long len=ReadDataLength(s,nextByte,2);
-              if((len>>63)!=0 || len>Int32.MaxValue){
+              long len = ReadDataLength(s, nextByte, 2);
+              if ((len >> 63) != 0 || len > Int32.MaxValue) {
                 // TODO: Display huge length in exception
                 throw new CBORException("Huge length is bigger than supported");
               }
-              if(nextByte!=0x40){ // NOTE: 0x40 means the empty byte string
-                ReadByteData(s,len,ms);
+              if (nextByte != 0x40) {  // NOTE: 0x40 means the empty byte string
+                ReadByteData(s, len, ms);
               }
             }
             if (ms.Position > Int32.MaxValue) {
@@ -4502,12 +4509,12 @@ namespace PeterO.Cbor {
                                     Convert.ToString((long)uadditional, CultureInfo.InvariantCulture) +
                                     " is bigger than supported");
           }
-          data = ReadByteData(s,uadditional,null);
-          CBORObject cbor=new CBORObject(CBORObjectTypeByteString, data);
-          if(srefs!=null){
-            int hint=(uadditional>Int32.MaxValue || hasBigAdditional) ? Int32.MaxValue :
+          data = ReadByteData(s, uadditional, null);
+          CBORObject cbor = new CBORObject(CBORObjectTypeByteString, data);
+          if (srefs != null) {
+            int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ? Int32.MaxValue :
               (int)uadditional;
-            srefs.AddStringIfNeeded(cbor,hint);
+            srefs.AddStringIfNeeded(cbor, hint);
           }
           return cbor;
         }
@@ -4516,17 +4523,17 @@ namespace PeterO.Cbor {
           // Streaming text string
           StringBuilder builder = new StringBuilder();
           while (true) {
-            int nextByte=s.ReadByte();
-            if(nextByte==0xFF) {
+            int nextByte = s.ReadByte();
+            if (nextByte == 0xFF) {
               // break if the "break" code was read
               break;
             }
-            long len=ReadDataLength(s,nextByte,3);
-            if((len>>63)!=0 || len>Int32.MaxValue){
+            long len = ReadDataLength(s, nextByte, 3);
+            if ((len >> 63) != 0 || len > Int32.MaxValue) {
               // TODO: Display huge length in exception
               throw new CBORException("Huge length is bigger than supported");
             }
-            if(nextByte!=0x60){ // NOTE: 0x60 means the empty string
+            if (nextByte != 0x60) {  // NOTE: 0x60 means the empty string
               switch (DataUtilities.ReadUtf8(s, (int)len, builder, false)) {
                 case -1:
                   throw new CBORException("Invalid UTF-8");
@@ -4559,11 +4566,11 @@ namespace PeterO.Cbor {
             default:
               break;  // No error
           }
-          CBORObject cbor=new CBORObject(CBORObjectTypeTextString, builder.ToString());
-          if(srefs!=null){
-            int hint=(uadditional>Int32.MaxValue || hasBigAdditional) ? Int32.MaxValue :
+          CBORObject cbor = new CBORObject(CBORObjectTypeTextString, builder.ToString());
+          if (srefs != null) {
+            int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ? Int32.MaxValue :
               (int)uadditional;
-            srefs.AddStringIfNeeded(cbor,hint);
+            srefs.AddStringIfNeeded(cbor, hint);
           }
           return cbor;
         }
@@ -4605,10 +4612,10 @@ namespace PeterO.Cbor {
           for (long i = 0; i < uadditional; ++i) {
             cbor.Add(
               Read(
-                s, 
+                s,
                 depth + 1,
                 false,
-                filter == null ? null : filter.GetSubFilter(i), 
+                filter == null ? null : filter.GetSubFilter(i),
                 srefs));
             ++vtindex;
           }
@@ -4671,6 +4678,7 @@ namespace PeterO.Cbor {
           taginfo = FindTagConverter(bigintAdditional);
         }
         o = Read(
+
           s, depth + 1, false,
           taginfo == null ? null : taginfo.GetTypeFilter(), srefs);
         if (hasBigAdditional) {
