@@ -2491,9 +2491,12 @@ function() {
     prototype['bitLength'] = prototype.bitLength = function() {
         var wc = this.wordCount;
         if (wc != 0) {
+            if (this.negative && !(wc >= 2 && this.reg[0] != 0)) {
+                return this.abs().subtract(BigInteger.ONE).bitLength();
+            }
             var numberValue = ((this.reg[wc - 1])|0) & 65535;
             wc = (wc - 1) << 4;
-            if (numberValue == (this.negative ? 1 : 0)) {
+            if (numberValue == 0) {
                 return wc;
             }
             wc = wc + (16);

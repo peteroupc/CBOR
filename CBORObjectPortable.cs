@@ -25,7 +25,7 @@ namespace PeterO
         return;
       }
       int datatype = 0;
-      if (bigint.Sign<0) {
+      if (bigint.Sign< 0) {
         datatype = 1;
         bigint+=(BigInteger)BigInteger.One;
         bigint=-(BigInteger)bigint;

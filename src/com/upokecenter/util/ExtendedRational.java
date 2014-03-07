@@ -539,6 +539,115 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     /**
+     * Compares an ExtendedFloat object with this instance.
+     * @param other An ExtendedFloat object.
+     * @return Zero if the values are equal; a negative number if this instance
+     * is less, or a positive number if this instance is greater.
+     */
+    public int CompareToBinary(ExtendedFloat other) {
+      if (other == null) {
+        return 1;
+      }
+      if (this.IsNaN()) {
+        if (other.IsNaN()) {
+          return 0;
+        }
+        return 1;
+      }
+      int signA = this.signum();
+      int signB = other.signum();
+      if (signA != signB) {
+        return (signA < signB) ? -1 : 1;
+      }
+      if (signB == 0 || signA == 0) {
+        // Special case: Either operand is zero
+        return 0;
+      }
+      if (this.IsInfinity()) {
+        if (other.IsInfinity()) {
+          // if we get here, this only means that
+          // both are positive infinity or both
+          // are negative infinity
+          return 0;
+        }
+        return this.isNegative() ? -1 : 1;
+      }
+      if (other.IsInfinity()) {
+        return other.isNegative() ? 1 : -1;
+      }
+      // At this point, both numbers are finite and
+      // have the same sign
+
+      if (other.getExponent().signum()==0) {
+        // Special case: other has exponent 0
+        BigInteger otherMant = other.getMantissa();
+        BigInteger bcx = this.getDenominator().multiply(otherMant);
+        return this.getNumerator().compareTo(bcx);
+      }
+      if ((other.getExponent()).abs().compareTo(BigInteger.valueOf(1000)) > 0) {
+        // Other has a high absolute value of exponent, so try different approaches to
+        // comparison
+        BigInteger thisRem;
+        BigInteger thisInt;
+{
+BigInteger[] divrem=(this.getUnsignedNumerator()).divideAndRemainder(this.getDenominator());
+thisInt=divrem[0];
+thisRem=divrem[1]; }
+        ExtendedFloat otherAbs = other.Abs();
+        ExtendedFloat thisIntDec = ExtendedFloat.FromBigInteger(thisInt);
+        if (thisRem.signum()==0) {
+          // This Object's value is an integer
+          // System.out.println("Shortcircuit IV");
+          int ret = thisIntDec.compareTo(otherAbs);
+          return this.isNegative() ? -ret : ret;
+        }
+        if (thisIntDec.compareTo(otherAbs) > 0) {
+          // Truncated absolute value is greater than other's untruncated absolute value
+          // System.out.println("Shortcircuit I");
+          return this.isNegative() ? -1 : 1;
+        }
+        // Round up
+        thisInt=thisInt.add(BigInteger.ONE);
+        thisIntDec = ExtendedFloat.FromBigInteger(thisInt);
+        if (thisIntDec.compareTo(otherAbs) < 0) {
+          // Absolute value rounded up is less than other's unrounded absolute value
+          // System.out.println("Shortcircuit II");
+          return this.isNegative() ? 1 : -1;
+        }
+        thisIntDec = ExtendedFloat.FromBigInteger(this.getUnsignedNumerator()).Divide(
+          ExtendedFloat.FromBigInteger(this.getDenominator()),
+          PrecisionContext.ForPrecisionAndRounding(256, Rounding.Down));
+        if (thisIntDec.compareTo(otherAbs) > 0) {
+          // Truncated absolute value is greater than other's untruncated absolute value
+          // System.out.println("Shortcircuit III");
+          return this.isNegative() ? -1 : 1;
+        }
+        if (other.getExponent().signum() > 0) {
+          // NOTE: if unsigned numerator is 0, bitLength will return
+          // 0 instead of 1, but the possibility of 0 was already excluded
+          int digitCount = this.getUnsignedNumerator().bitLength();
+          --digitCount;
+          BigInteger bigDigitCount = BigInteger.valueOf(digitCount);
+          if (bigDigitCount.compareTo(other.getExponent()) < 0) {
+            // Numerator's digit count minus 1 is less than the other's exponent,
+            // and other's exponent is positive, so this value's absolute
+            // value is less
+            return this.isNegative() ? 1 : -1;
+          }
+        }
+      }
+      // Convert to rational number and use usual rational number
+      // comparison
+      // System.out.println("no shortcircuit");
+      // System.out.println(this);
+      // System.out.println(other);
+      ExtendedRational otherRational = ExtendedRational.FromExtendedFloat(other);
+      BigInteger ad = this.getNumerator().multiply(otherRational.getDenominator());
+      BigInteger bc = this.getDenominator().multiply(otherRational.getNumerator());
+      return ad.compareTo(bc);
+    }
+
+    /**
      * Compares an ExtendedDecimal object with this instance.
      * @param other An ExtendedDecimal object.
      * @return Zero if the values are equal; a negative number if this instance
@@ -614,6 +723,8 @@ thisRem=divrem[1]; }
           // System.out.println("Shortcircuit II");
           return this.isNegative() ? 1 : -1;
         }
+        // Conservative approximation of this rational number's absolute value,
+        // as a decimal number. The true value will be greater or equal.
         thisIntDec = ExtendedDecimal.FromBigInteger(this.getUnsignedNumerator()).Divide(
           ExtendedDecimal.FromBigInteger(this.getDenominator()),
           PrecisionContext.ForPrecisionAndRounding(20, Rounding.Down));
@@ -621,6 +732,18 @@ thisRem=divrem[1]; }
           // Truncated absolute value is greater than other's untruncated absolute value
           // System.out.println("Shortcircuit III");
           return this.isNegative() ? -1 : 1;
+        }
+        // System.out.println("---" + this + " " + (other));
+        if (other.getExponent().signum() > 0) {
+          int digitCount = this.getUnsignedNumerator().getDigitCount();
+          --digitCount;
+          BigInteger bigDigitCount = BigInteger.valueOf(digitCount);
+          if (bigDigitCount.compareTo(other.getExponent()) < 0) {
+            // Numerator's digit count minus 1 is less than the other's exponent,
+            // and other's exponent is positive, so this value's absolute
+            // value is less
+            return this.isNegative() ? 1 : -1;
+          }
         }
       }
       // Convert to rational number and use usual rational number

@@ -599,6 +599,8 @@ bigintRem=divrem[1]; }
       Assert.assertEquals(16, BigInteger.valueOf(-65535).bitLength());
       Assert.assertEquals(17, BigInteger.valueOf(65536).bitLength());
       Assert.assertEquals(16, BigInteger.valueOf(-65536).bitLength());
+      Assert.assertEquals(65, BigInteger.fromString("19084941898444092059").bitLength());
+      Assert.assertEquals(65, BigInteger.fromString("-19084941898444092059").bitLength());
       Assert.assertEquals(0, BigInteger.valueOf(-1).bitLength());
       Assert.assertEquals(1, BigInteger.valueOf(-2).bitLength());
     }

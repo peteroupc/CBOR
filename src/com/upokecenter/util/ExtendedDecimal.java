@@ -946,6 +946,77 @@ bigrem=divrem[1]; }
     }
 
     /**
+     * Compares a ExtendedFloat object with this instance.
+     * @param other An ExtendedFloat object.
+     * @return Zero if the values are equal; a negative number if this instance
+     * is less, or a positive number if this instance is greater.
+     */
+public int CompareToBinary(ExtendedFloat other) {
+      if (other == null) {
+        return 1;
+      }
+      if (this.IsNaN()) {
+        if (other.IsNaN()) {
+          return 0;
+        }
+        return 1;
+      }
+      int signA = this.signum();
+      int signB = other.signum();
+      if (signA != signB) {
+        return (signA < signB) ? -1 : 1;
+      }
+      if (signB == 0 || signA == 0) {
+        // Special case: Either operand is zero
+        return 0;
+      }
+      if (this.IsInfinity()) {
+        if (other.IsInfinity()) {
+          // if we get here, this only means that
+          // both are positive infinity or both
+          // are negative infinity
+          return 0;
+        }
+        return this.isNegative() ? -1 : 1;
+      }
+      if (other.IsInfinity()) {
+        return other.isNegative() ? 1 : -1;
+      }
+      // At this point, both numbers are finite and
+      // have the same sign
+
+      if (other.getExponent().compareTo(BigInteger.valueOf(-1000)) < 0) {
+        // For very low exponents, the conversion to decimal can take
+        // very long, so try this approach
+        if (other.Abs().compareTo(ExtendedFloat.One) < 0) {  // Abs less than 1
+          if (this.Abs().compareTo(ExtendedDecimal.One) >= 0) {  // Abs 1 or more
+            return (signA > 0) ? 1 : -1;
+          }
+        }
+      }
+      if (other.getExponent().compareTo(BigInteger.valueOf(1000)) > 0) {
+        // Very high exponents
+        BigInteger bignum = BigInteger.ONE.shiftLeft(999);
+        if (this.Abs().compareTo(ExtendedDecimal.FromBigInteger(bignum)) <= 0) {
+          // this object's absolute value is less
+          return (signA > 0) ? -1 : 1;
+        }
+        // NOTE: The following check assumes that both
+        // operands are nonzero
+        BigInteger thisAdjExp = this.GetAdjustedExponent();
+        BigInteger otherAdjExp = GetAdjustedExponentBinary(other);
+        if (thisAdjExp.signum() > 0 && thisAdjExp.compareTo(otherAdjExp) >= 0) {
+          // This Object's adjusted exponent is greater and is positive;
+          // so this object's absolute value is greater, since exponents
+          // have a greater value in decimal than in binary
+          return (signA > 0) ? 1 : -1;
+        }
+      }
+      ExtendedDecimal otherDec = ExtendedDecimal.FromExtendedFloat(other);
+      return this.compareTo(otherDec);
+    }
+
+    /**
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
      * @return A BigInteger object.
@@ -1103,7 +1174,7 @@ remainder=divrem[1]; }
         return 0.0f;
       }
       BigInteger adjExp = this.GetAdjustedExponent();
-      if (adjExp.compareTo(BigInteger.valueOf(-47)) <0) {
+      if (adjExp.compareTo(BigInteger.valueOf(-47)) < 0) {
         // Very low exponent, treat as 0
         return this.isNegative() ?
           Float.intBitsToFloat(1 << 31) :
@@ -1119,13 +1190,27 @@ remainder=divrem[1]; }
 
     private BigInteger GetAdjustedExponent() {
       if (!this.isFinite()) {
- return BigInteger.ZERO;
-}
+        return BigInteger.ZERO;
+      }
       if (this.signum()==0) {
- return this.getExponent();
-}
+        return BigInteger.ZERO;
+      }
       BigInteger ret = this.getExponent();
       int smallPrecision = this.getUnsignedMantissa().getDigitCount();
+      --smallPrecision;
+      ret=ret.add(BigInteger.valueOf(smallPrecision));
+      return ret;
+    }
+
+    private static BigInteger GetAdjustedExponentBinary(ExtendedFloat ef) {
+      if (!ef.isFinite()) {
+        return BigInteger.ZERO;
+      }
+      if (ef.signum()==0) {
+        return BigInteger.ZERO;
+      }
+      BigInteger ret = ef.getExponent();
+      int smallPrecision = ef.getUnsignedMantissa().bitLength();
       --smallPrecision;
       ret=ret.add(BigInteger.valueOf(smallPrecision));
       return ret;
@@ -1160,7 +1245,7 @@ remainder=divrem[1]; }
         return 0.0;
       }
       BigInteger adjExp = this.GetAdjustedExponent();
-      if (adjExp.compareTo(BigInteger.valueOf(-326)) <0) {
+      if (adjExp.compareTo(BigInteger.valueOf(-326)) < 0) {
         // Very low exponent, treat as 0
         return this.isNegative() ?
           Extras.IntegersToDouble(new int[] {
