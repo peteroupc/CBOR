@@ -1957,7 +1957,7 @@ public void set(String key, CBORObject value) {
      */
     public static CBORObject Read(InputStream stream) {
       try {
-        return Read(stream, 0, false, -1, null);
+        return Read(stream, 0, false, -1, null, null);
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
       }
@@ -3994,6 +3994,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         AddTagHandler(BigInteger.valueOf(2), new CBORTag2());
         AddTagHandler(BigInteger.valueOf(3), new CBORTag3());
         AddTagHandler(BigInteger.valueOf(5), new CBORTag5());
+        AddTagHandler(BigInteger.valueOf(25), new CBORTag25());
+        AddTagHandler(BigInteger.valueOf(256), new CBORTag256());
         AddTagHandler(BigInteger.ZERO, new CBORTag0());
         AddTagHandler(BigInteger.valueOf(32), new CBORTagGenericString());
         AddTagHandler(BigInteger.valueOf(33), new CBORTagGenericString());
@@ -4109,7 +4111,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if (ef.isFinite() && (ef.getExponent().compareTo(BigInteger.valueOf(1000)) >0 || ef.getExponent().compareTo(BigInteger.valueOf(-1000)) < 0)) {
         // It can take very long to convert a number with a very high
         // or very low exponent to a decimal String, so do this instead
-        return ef.getMantissa().toString() +"p" + ef.getExponent().toString();
+        return ef.getMantissa().toString() + "p" + ef.getExponent().toString();
       }
       return ef.toString();
     }
@@ -4279,7 +4281,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       int depth,
       boolean allowBreak,
       int allowOnlyType,
-      CBORTypeFilter filter) throws IOException {
+      CBORTypeFilter filter,
+      StringRefs srefs) throws IOException {
       if (depth > 1000) {
         throw new CBORException("Too deeply nested");
       }
@@ -4423,7 +4426,7 @@ ms=new ByteArrayOutputStream();
 
             // Requires same type as this one
             while (true) {
-              CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.ByteString);
+              CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.ByteString, null);
               // break if the "break" code was read
               if (o == null) {
                 break;
@@ -4489,7 +4492,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           // Streaming text String
           StringBuilder builder = new StringBuilder();
           while (true) {
-            CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.TextString);
+            CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.TextString, null);
             if (o == null) {
               // break if the "break" code was read
               break;
@@ -4529,11 +4532,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
               throw new CBORException("Array is too long");
             }
             CBORObject o = Read(
+
               s,
               depth + 1,
               true,
               -1,
-              filter == null ? null : filter.GetSubFilter(vtindex));
+              filter == null ? null : filter.GetSubFilter(vtindex), srefs);
             // break if the "break" code was read
             if (o == null) {
               break;
@@ -4556,7 +4560,11 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             throw new CBORException("Array is too long");
           }
           for (long i = 0; i < uadditional; ++i) {
-            cbor.Add(Read(s, depth + 1, false, -1, filter == null ? null : filter.GetSubFilter(i)));
+            cbor.Add(
+              Read(
+
+                s, depth + 1, false, -1,
+                filter == null ? null : filter.GetSubFilter(i), srefs));
             ++vtindex;
           }
           return cbor;
@@ -4565,12 +4573,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         CBORObject cbor = NewMap();
         if (additional == 31) {
           while (true) {
-            CBORObject key = Read(s, depth + 1, true, -1, null);
+            CBORObject key = Read(s, depth + 1, true, -1, null, srefs);
             if (key == null) {
               // break if the "break" code was read
               break;
             }
-            CBORObject value = Read(s, depth + 1, false, -1, null);
+            CBORObject value = Read(s, depth + 1, false, -1, null, srefs);
             cbor.set(key,value);
           }
           return cbor;
@@ -4585,8 +4593,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
                                     " is bigger than supported");
           }
           for (long i = 0; i < uadditional; ++i) {
-            CBORObject key = Read(s, depth + 1, false, -1, null);
-            CBORObject value = Read(s, depth + 1, false, -1, null);
+            CBORObject key = Read(s, depth + 1, false, -1, null, srefs);
+            CBORObject value = Read(s, depth + 1, false, -1, null, srefs);
             cbor.set(key,value);
           }
           return cbor;
@@ -4598,6 +4606,18 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           if (filter != null && !filter.TagAllowed(uadditional)) {
             throw new CBORException("Unexpected tag encountered: " + uadditional);
           }
+          // Tag 256: String namespace
+          if (uadditional == 256) {
+            if (srefs == null) {
+              srefs = new StringRefs();
+            } else {
+              srefs.Push();
+            }
+          } else if (uadditional == 25) {
+            if (srefs == null) {
+              throw new CBORException("No stringref namespace");
+            }
+          }
           taginfo = FindTagConverter(uadditional);
         } else {
           if (filter != null && !filter.TagAllowed(bigintAdditional)) {
@@ -4605,10 +4625,20 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           }
           taginfo = FindTagConverter(bigintAdditional);
         }
-        o = Read(s, depth + 1, false, -1, taginfo == null ? null : taginfo.GetTypeFilter());
+        o = Read(
+
+          s, depth + 1, false, -1,
+          taginfo == null ? null : taginfo.GetTypeFilter(), srefs);
         if (hasBigAdditional) {
           return FromObjectAndTag(o, bigintAdditional);
         } else if (uadditional < 65536) {
+          if (uadditional == 256) {
+            // String tag
+            srefs.Pop();
+          } else if (uadditional == 25) {
+            // stringref tag
+            return srefs.GetString(o.AsBigInteger());
+          }
           return FromObjectAndTag(
             o,
             (int)uadditional);

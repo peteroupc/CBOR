@@ -14,8 +14,8 @@ using PeterO;
 using PeterO.Cbor;
 
 namespace Test {
-  /// <summary>Contains CBOR tests.</summary>
-  /// <returns/><param name='r'> A FastRandom object.</param>
+    /// <summary>Contains CBOR tests.</summary>
+    /// <returns/><param name='r'> A FastRandom object.</param>
   [TestFixture]
   public class CBORTest {
     private static void TestExtendedFloatDoubleCore(double d, string s) {
@@ -1154,7 +1154,7 @@ namespace Test {
         1,
         CBORObject.FromObject(ExtendedDecimal.Create((BigInteger)333333, (BigInteger)(-2))).CompareTo(
           CBORObject.FromObject(ExtendedFloat.Create((BigInteger)5234222, (BigInteger)(-24936668661488L))))
-       );
+);
       CBORObject.DecodeFromBytes(new byte[] { (byte)0xC4, (byte)0x82, 0x31, 0x19, 0x03, 0x43 }).CompareTo(CBORObject.DecodeFromBytes(new byte[] { (byte)0xDA, 0x00, (byte)0xA3, 0x35, (byte)0xC8, (byte)0xC5, (byte)0x82, 0x1B, 0x00, 0x01, (byte)0xE0, (byte)0xB2, (byte)0x83, 0x32, 0x0F, (byte)0x8B, (byte)0xC2, 0x58, 0x27, 0x2A, 0x65, 0x4A, (byte)0xBD, 0x67, 0x00, 0x15, (byte)0x94, (byte)0xB3, (byte)0xDD, (byte)0x80, 0x49, 0x7C, 0x16, (byte)0x9F, (byte)0x83, 0x05, (byte)0xD0, (byte)0x80, (byte)0xF8, (byte)0x8D, (byte)0xE3, 0x26, 0x14, (byte)0xD6, 0x2D, (byte)0xAB, 0x53, (byte)0xD1, 0x79, (byte)0xE7, (byte)0xB5, (byte)0xC0, 0x73, (byte)0xF0, 0x1D, (byte)0xBD, 0x45, (byte)0xFA }));
       CBORObject.DecodeFromBytes(new byte[] { (byte)0xC5, (byte)0x82, 0x1B, 0x01, 0x58, 0x0A, (byte)0xC0, (byte)0xC8, 0x66, 0x47, (byte)0xC0, (byte)0xC3, 0x58, 0x19, 0x50, 0x4D, (byte)0x89, 0x04, (byte)0x8A, (byte)0xC4, (byte)0xB7, 0x3A, 0x49, (byte)0xCC, 0x13, 0x4C, 0x33, (byte)0x80, 0x0C, 0x60, (byte)0xE7, (byte)0xD4, 0x5B, (byte)0x89, (byte)0xDB, (byte)0xC8, (byte)0x81, 0x0A, (byte)0x85 }).CompareTo(CBORObject.DecodeFromBytes(new byte[] { (byte)0xD8, 0x1E, (byte)0x82, (byte)0xC3, 0x58, 0x28, 0x3B, 0x1F, 0x60, (byte)0xA0, 0x4A, (byte)0xD3, (byte)0x94, 0x20, (byte)0xE9, (byte)0xFA, (byte)0xD2, 0x03, (byte)0xB5, (byte)0xD2, 0x0F, 0x7B, 0x7C, (byte)0x8D, 0x50, 0x4B, (byte)0x93, 0x5D, 0x6A, (byte)0xC6, (byte)0xDF, 0x01, (byte)0xA9, (byte)0xA6, 0x3C, (byte)0xF4, (byte)0xF8, (byte)0xB2, 0x41, (byte)0xC3, (byte)0xFD, 0x5D, (byte)0xC8, (byte)0x86, 0x2B, (byte)0xF3, (byte)0xC2, 0x52, 0x58, 0x3A, (byte)0xAF, 0x69, (byte)0x89, (byte)0xC0, (byte)0xA4, (byte)0xE1, 0x51, (byte)0x9F, 0x09, (byte)0xCB, (byte)0xBB, 0x15, 0x35, (byte)0xCF, 0x2B, 0x52 }));
       CBORObject.DecodeFromBytes(new byte[] { (byte)0xC4, (byte)0x82, 0x23, 0x3B, 0x00, 0x1B, (byte)0xDA, (byte)0xB3, 0x03, 0x15, 0x28, (byte)0xD8 }).CompareTo(CBORObject.DecodeFromBytes(new byte[] { (byte)0xC5, (byte)0x82, 0x1B, 0x00, 0x6F, 0x25, 0x52, (byte)0xC2, 0x11, (byte)0xE1, (byte)0xE7, (byte)0xC3, 0x58, 0x3A, 0x64, (byte)0xC7, 0x29, (byte)0xDD, (byte)0x94, 0x6C, 0x4B, 0x09, (byte)0xA3, (byte)0xDF, 0x28, (byte)0xAF, 0x0F, (byte)0xBF, (byte)0xDF, (byte)0xD7, 0x73, (byte)0xAC, 0x20, 0x40, (byte)0xAF, (byte)0x94, 0x6D, (byte)0xD7, (byte)0xD2, 0x38, (byte)0xD6, 0x14, 0x0A, 0x58, (byte)0xA2, 0x18, 0x12, 0x19, 0x2D, 0x40, (byte)0x99, (byte)0xCA, (byte)0xB6, (byte)0x98, 0x61, (byte)0x91, 0x5D, 0x49, 0x68, (byte)0xAC, 0x1B, 0x32, 0x57, (byte)0xCA, (byte)0x85, 0x0A, (byte)0xEA, 0x48, (byte)0xF8, 0x09, (byte)0xC2, 0x7E }));
@@ -1199,7 +1199,7 @@ namespace Test {
         var thread = new System.Threading.Thread(
           ()=>
           TestCommon.AssertRoundTrip(obj)
-         );
+);
         thread.Start();
         if (!thread.Join(5000)) {
           String bas = ToByteArrayString(obj);
@@ -2035,91 +2035,91 @@ namespace Test {
     public void TestReadUtf8() {
       this.DoTestReadUtf8(
         new byte[] { 0x21,
-          0x21,
-          0x21 },
+        0x21,
+        0x21 },
         0,
         "!!!",
         0,
         "!!!");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xc2,
-          0x80 },
+        0xc2,
+        0x80 },
         0,
         " \u0080",
         0,
         " \u0080");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xc2,
-          0x80,
-          0x20 },
+        0xc2,
+        0x80,
+        0x20 },
         0,
         " \u0080 ",
         0,
         " \u0080 ");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xc2,
-          0x80,
-          0xc2 },
+        0xc2,
+        0x80,
+        0xc2 },
         0,
         " \u0080\ufffd",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xc2,
-          0x21,
-          0x21 },
+        0xc2,
+        0x21,
+        0x21 },
         0,
         " \ufffd!!",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xc2,
-          0xff,
-          0x20 },
+        0xc2,
+        0xff,
+        0x20 },
         0,
         " \ufffd\ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xe0,
-          0xa0,
-          0x80 },
+        0xe0,
+        0xa0,
+        0x80 },
         0,
         " \u0800",
         0,
         " \u0800");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xe0,
-          0xa0,
-          0x80,
-          0x20 },
+        0xe0,
+        0xa0,
+        0x80,
+        0x20 },
         0,
         " \u0800 ",
         0,
         " \u0800 ");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xf0,
-          0x90,
-          0x80,
-          0x80 },
+        0xf0,
+        0x90,
+        0x80,
+        0x80 },
         0,
         " \ud800\udc00",
         0,
         " \ud800\udc00");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xf0,
-          0x90,
-          0x80,
-          0x80 },
+        0xf0,
+        0x90,
+        0x80,
+        0x80 },
         3,
         0,
         " \ufffd",
@@ -2127,8 +2127,8 @@ namespace Test {
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xf0,
-          0x90 },
+        0xf0,
+        0x90 },
         5,
         -2,
         null,
@@ -2136,8 +2136,8 @@ namespace Test {
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0x20,
-          0x20 },
+        0x20,
+        0x20 },
         5,
         -2,
         null,
@@ -2145,83 +2145,83 @@ namespace Test {
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xf0,
-          0x90,
-          0x80,
-          0x80,
-          0x20 },
+        0xf0,
+        0x90,
+        0x80,
+        0x80,
+        0x20 },
         0,
         " \ud800\udc00 ",
         0,
         " \ud800\udc00 ");
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xf0,
-          0x90,
-          0x80,
-          0x20 },
+        0xf0,
+        0x90,
+        0x80,
+        0x20 },
         0,
         " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xf0,
-          0x90,
-          0x20 },
+        0xf0,
+        0x90,
+        0x20 },
         0,
         " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xf0,
-          0x90,
-          0x80,
-          0xff },
+        0xf0,
+        0x90,
+        0x80,
+        0xff },
         0,
         " \ufffd\ufffd",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xf0,
-          0x90,
-          0xff },
+        0xf0,
+        0x90,
+        0xff },
         0,
         " \ufffd\ufffd",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xe0,
-          0xa0,
-          0x20 },
+        0xe0,
+        0xa0,
+        0x20 },
         0,
         " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xe0,
-          0x20 },
+        0xe0,
+        0x20 },
         0,
         " \ufffd ",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xe0,
-          0xa0,
-          0xff },
+        0xe0,
+        0xa0,
+        0xff },
         0,
         " \ufffd\ufffd",
         -1,
         null);
       this.DoTestReadUtf8(
         new byte[] { 0x20,
-          0xe0,
-          0xff },
+        0xe0,
+        0xff },
         0,
         " \ufffd\ufffd",
         -1,
@@ -2297,11 +2297,11 @@ namespace Test {
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
         new byte[] { 0x7F,
-          0x61,
-          0x2e,
-          0x61,
-          0x2e,
-          0xFF });
+        0x61,
+        0x2e,
+        0x61,
+        0x2e,
+        0xFF });
       Assert.AreEqual("..", cbor.AsString());
       // Test streaming of long strings
       string longString = Repeat('x', 200000);
@@ -2331,25 +2331,25 @@ namespace Test {
     public void TestTextStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x7F,
-          0x61,
-          0x20,
-          0xC0,
-          0x61,
-          0x20,
-          0xFF });
+        0x61,
+        0x20,
+        0xC0,
+        0x61,
+        0x20,
+        0xFF });
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x7F,
-          0x61,
-          0x20,
-          0x7F,
-          0x61,
-          0x20,
-          0xFF,
-          0xFF });
+        0x61,
+        0x20,
+        0x7F,
+        0x61,
+        0x20,
+        0xFF,
+        0xFF });
     }
 
     /// <summary>Not documented yet.</summary>
@@ -2357,23 +2357,23 @@ namespace Test {
     public void TestByteStringStream() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x5F,
-          0x41,
-          0x20,
-          0x41,
-          0x20,
-          0xFF });
+        0x41,
+        0x20,
+        0x41,
+        0x20,
+        0xFF });
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
     public void TestByteStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x5F,
-          0x41,
-          0x20,
-          0xC2,
-          0x41,
-          0x20,
-          0xFF });
+        0x41,
+        0x20,
+        0xC2,
+        0x41,
+        0x20,
+        0xFF });
     }
 
     public static void AssertDecimalsEquivalent(string a, string b) {
@@ -5451,13 +5451,13 @@ namespace Test {
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x5F,
-          0x41,
-          0x20,
-          0x5F,
-          0x41,
-          0x20,
-          0xFF,
-          0xFF });
+        0x41,
+        0x20,
+        0x5F,
+        0x41,
+        0x20,
+        0xFF,
+        0xFF });
     }
 
     [Test]
@@ -6084,28 +6084,28 @@ namespace Test {
     public void TestDecimalFrac() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
-          0x82,
-          0x3,
-          0x1a,
-          1,
-          2,
-          3,
-          4 });
+        0x82,
+        0x3,
+        0x1a,
+        1,
+        2,
+        3,
+        4 });
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
     public void TestDecimalFracExponentMustNotBeBignum() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
-          0x82,
-          0xc2,
-          0x41,
-          1,
-          0x1a,
-          1,
-          2,
-          3,
-          4 });
+        0x82,
+        0xc2,
+        0x41,
+        1,
+        0x1a,
+        1,
+        2,
+        3,
+        4 });
     }
 
     /// <summary>Not documented yet.</summary>
@@ -6181,10 +6181,10 @@ namespace Test {
     public void TestDecimalFracExactlyTwoElements() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
-          0x82,
-          0xc2,
-          0x41,
-          1 });
+        0x82,
+        0xc2,
+        0x41,
+        1 });
     }
 
     /// <summary>Not documented yet.</summary>
@@ -6192,11 +6192,11 @@ namespace Test {
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o = TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
-          0x82,
-          0x3,
-          0xc2,
-          0x41,
-          1 });
+        0x82,
+        0x3,
+        0xc2,
+        0x41,
+        1 });
       Assert.AreEqual(
         ExtendedDecimal.Create(BigInteger.One, (BigInteger)3),
         o.AsExtendedDecimal());

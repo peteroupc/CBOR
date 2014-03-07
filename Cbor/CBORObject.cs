@@ -13,44 +13,44 @@ using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Represents an object in Concise Binary Object Representation
-    /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
-    /// is defined in RFC 7049. <para>There are many ways to get a CBOR object,
-    /// including from bytes, objects, streams and JSON, as described below.</para>
-    /// <para> <b>To and from byte arrays:</b>
-    /// The CBORObject.DecodeToBytes method converts a byte array in CBOR
-    /// format to a CBOR object. The EncodeToBytes method converts a CBOR
-    /// object to its corresponding byte array in CBOR format. </para>
-    /// <para> <b>To and from data streams:</b>
-    /// The CBORObject.Write methods write many kinds of objects to a data
-    /// stream, including numbers, CBOR objects, strings, and arrays of
-    /// numbers and strings. The CBORObject.Read method reads a CBOR object
-    /// from a data stream. </para>
-    /// <para> <b>To and from other objects:</b>
-    /// The CBORObject.FromObject methods converts many kinds of objects
-    /// to a CBOR object, including numbers, strings, and arrays and maps
-    /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
-    /// convert a CBOR object to different types of object. </para>
-    /// <para> <b>To and from JSON:</b>
-    /// This class also doubles as a reader and writer of JavaScript Object
-    /// Notation (JSON). The CBORObject.FromJSONString method converts
-    /// JSON to a CBOR object, and the ToJSONString method converts a CBOR
-    /// object to a JSON string. </para>
-    /// <para> Thread Safety: CBOR objects that are numbers, "simple values",
-    /// and text strings are immutable (their values can't be changed), so
-    /// they are inherently safe for use by multiple threads. CBOR objects
-    /// that are arrays, maps, and byte strings are mutable, but this class
-    /// doesn't attempt to synchronize reads and writes to those objects
-    /// by multiple threads, so those objects are not thread safe without
-    /// such synchronization. </para>
-    /// <para> One kind of CBOR object is called a map, or a list of key-value
-    /// pairs. Keys can be any kind of CBOR object, including numbers, strings,
-    /// arrays, and maps. However, since byte strings, arrays, and maps are
-    /// mutable, it is not advisable to use these three kinds of object as keys;
-    /// they are much better used as map values instead, keeping in mind that
-    /// they are not thread safe without synchronizing reads and writes to
-    /// them. </para>
-    /// </summary>
+  /// <summary>Represents an object in Concise Binary Object Representation
+  /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
+  /// is defined in RFC 7049. <para>There are many ways to get a CBOR object,
+  /// including from bytes, objects, streams and JSON, as described below.</para>
+  /// <para> <b>To and from byte arrays:</b>
+  /// The CBORObject.DecodeToBytes method converts a byte array in CBOR
+  /// format to a CBOR object. The EncodeToBytes method converts a CBOR
+  /// object to its corresponding byte array in CBOR format. </para>
+  /// <para> <b>To and from data streams:</b>
+  /// The CBORObject.Write methods write many kinds of objects to a data
+  /// stream, including numbers, CBOR objects, strings, and arrays of
+  /// numbers and strings. The CBORObject.Read method reads a CBOR object
+  /// from a data stream. </para>
+  /// <para> <b>To and from other objects:</b>
+  /// The CBORObject.FromObject methods converts many kinds of objects
+  /// to a CBOR object, including numbers, strings, and arrays and maps
+  /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
+  /// convert a CBOR object to different types of object. </para>
+  /// <para> <b>To and from JSON:</b>
+  /// This class also doubles as a reader and writer of JavaScript Object
+  /// Notation (JSON). The CBORObject.FromJSONString method converts
+  /// JSON to a CBOR object, and the ToJSONString method converts a CBOR
+  /// object to a JSON string. </para>
+  /// <para> Thread Safety: CBOR objects that are numbers, "simple values",
+  /// and text strings are immutable (their values can't be changed), so
+  /// they are inherently safe for use by multiple threads. CBOR objects
+  /// that are arrays, maps, and byte strings are mutable, but this class
+  /// doesn't attempt to synchronize reads and writes to those objects
+  /// by multiple threads, so those objects are not thread safe without
+  /// such synchronization. </para>
+  /// <para> One kind of CBOR object is called a map, or a list of key-value
+  /// pairs. Keys can be any kind of CBOR object, including numbers, strings,
+  /// arrays, and maps. However, since byte strings, arrays, and maps are
+  /// mutable, it is not advisable to use these three kinds of object as keys;
+  /// they are much better used as map values instead, keeping in mind that
+  /// they are not thread safe without synchronizing reads and writes to
+  /// them. </para>
+  /// </summary>
   public sealed partial class CBORObject : IComparable<CBORObject>, IEquatable<CBORObject> {
     internal int ItemType {
       get {
@@ -98,8 +98,8 @@ namespace PeterO.Cbor {
     private sealed class ConverterInfo {
       private object toObject;
 
-    /// <summary>Gets or sets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+      /// <summary>Gets or sets a value not documented yet.</summary>
+      /// <value>A value not documented yet.</value>
       public object ToObject {
         get {
           return this.toObject;
@@ -112,8 +112,8 @@ namespace PeterO.Cbor {
 
       private object converter;
 
-    /// <summary>Gets or sets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+      /// <summary>Gets or sets a value not documented yet.</summary>
+      /// <value>A value not documented yet.</value>
       public object Converter {
         get {
           return this.converter;
@@ -1391,11 +1391,11 @@ namespace PeterO.Cbor {
         }
       }
 
-    /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not an array.</exception>
-    /// <exception cref='System.ArgumentNullException'>Value is null
-    /// (as opposed to CBORObject.Null).</exception>
+      /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not an array.</exception>
+      /// <exception cref='System.ArgumentNullException'>Value is null
+      /// (as opposed to CBORObject.Null).</exception>
       set {
         if (this.ItemType == CBORObjectTypeArray) {
           if (value == null) {
@@ -1470,12 +1470,12 @@ namespace PeterO.Cbor {
         }
       }
 
-    /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
-    /// as the key.</summary>
-    /// <exception cref='System.ArgumentNullException'>The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not a map.</exception>
+      /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
+      /// as the key.</summary>
+      /// <exception cref='System.ArgumentNullException'>The key or value
+      /// is null (as opposed to CBORObject.Null).</exception>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("key");
@@ -1508,12 +1508,12 @@ namespace PeterO.Cbor {
         return this[objkey];
       }
 
-    /// <summary>Sets the value of a CBOR object in this map, using a string
-    /// as the key.</summary>
-    /// <exception cref='System.ArgumentNullException'>The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not a map.</exception>
+      /// <summary>Sets the value of a CBOR object in this map, using a string
+      /// as the key.</summary>
+      /// <exception cref='System.ArgumentNullException'>The key or value
+      /// is null (as opposed to CBORObject.Null).</exception>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("key");
@@ -1940,7 +1940,7 @@ namespace PeterO.Cbor {
     /// or parsing the data.</exception>
     public static CBORObject Read(Stream stream) {
       try {
-        return Read(stream, 0, false, -1, null);
+        return Read(stream, 0, false, null, null);
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
       }
@@ -3948,6 +3948,8 @@ namespace PeterO.Cbor {
         AddTagHandler((BigInteger)2, new CBORTag2());
         AddTagHandler((BigInteger)3, new CBORTag3());
         AddTagHandler((BigInteger)5, new CBORTag5());
+        AddTagHandler((BigInteger)25, new CBORTag25());
+        AddTagHandler((BigInteger)256, new CBORTag256());
         AddTagHandler(BigInteger.Zero, new CBORTag0());
         AddTagHandler((BigInteger)32, new CBORTagGenericString());
         AddTagHandler((BigInteger)33, new CBORTagGenericString());
@@ -4066,7 +4068,7 @@ namespace PeterO.Cbor {
       if (ef.IsFinite && (ef.Exponent.CompareTo((BigInteger)1000) >0 || ef.Exponent.CompareTo((BigInteger)(-1000)) < 0)) {
         // It can take very long to convert a number with a very high
         // or very low exponent to a decimal string, so do this instead
-        return ef.Mantissa.ToString() +"p" + ef.Exponent.ToString();
+        return ef.Mantissa.ToString() + "p" + ef.Exponent.ToString();
       }
       return ef.ToString();
     }
@@ -4228,13 +4230,120 @@ namespace PeterO.Cbor {
     private static bool BigIntFits(BigInteger bigint) {
       return bigint.bitLength() <= 64;
     }
+    
+    private static long ReadDataLength(Stream s, int headByte, int expectedType){
+      if(headByte<0)
+        throw new CBORException("Unexpected data encountered");
+      if(((headByte>>5)&0x07)!=expectedType)
+        throw new CBORException("Unexpected data encountered");
+      headByte&=0x1F;
+      if(headByte<24)
+        return headByte;
+      byte[] data=new byte[8];
+      switch (headByte & 0x1F) {
+          case 24: {
+            int tmp = s.ReadByte();
+            if (tmp < 0) {
+              throw new CBORException("Premature end of data");
+            }
+            return tmp;
+          }
+          case 25: {
+            if (s.Read(data, 0, 2) != 2) {
+              throw new CBORException("Premature end of data");
+            }
+            int lowAdditional = ((int)(data[0] & (int)0xFF)) << 8;
+            lowAdditional |= (int)(data[1] & (int)0xFF);
+            return lowAdditional;
+          }
+          case 26: {
+            if (s.Read(data, 0, 4) != 4) {
+              throw new CBORException("Premature end of data");
+            }
+            long uadditional = ((long)(data[0] & (long)0xFF)) << 24;
+            uadditional |= ((long)(data[1] & (long)0xFF)) << 16;
+            uadditional |= ((long)(data[2] & (long)0xFF)) << 8;
+            uadditional |= (long)(data[3] & (long)0xFF);
+            return uadditional;
+          }
+          case 27: {
+            if (s.Read(data, 0, 8) != 8) {
+              throw new CBORException("Premature end of data");
+            }
+            // Treat return value as an unsigned integer
+            long uadditional = ((long)(data[0] & (long)0xFF)) << 56;
+            uadditional |= ((long)(data[1] & (long)0xFF)) << 48;
+            uadditional |= ((long)(data[2] & (long)0xFF)) << 40;
+            uadditional |= ((long)(data[3] & (long)0xFF)) << 32;
+            uadditional |= ((long)(data[4] & (long)0xFF)) << 24;
+            uadditional |= ((long)(data[5] & (long)0xFF)) << 16;
+            uadditional |= ((long)(data[6] & (long)0xFF)) << 8;
+            uadditional |= (long)(data[7] & (long)0xFF);
+            return uadditional;
+          }
+        case 28:
+        case 29:
+        case 30:
+          throw new CBORException("Unexpected data encountered");
+        case 31:
+          throw new CBORException("Indefinite-length data not allowed here");
+        default:
+          return headByte;
+      }
+    }
 
+    private static byte[] ReadByteData(Stream s, long uadditional, MemoryStream outputStream){
+      if((uadditional>>63)!=0 || uadditional>Int32.MaxValue){
+        // TODO: Display huge length in exception
+        throw new CBORException("Huge length is bigger than supported");
+      }
+      if (uadditional <= 0x10000) {
+        // Simple case: small size
+        byte[] data = new byte[(int)uadditional];
+        if (s.Read(data, 0, data.Length) != data.Length) {
+          throw new CBORException("Premature end of stream");
+        }
+        if(outputStream!=null){
+          outputStream.Write(data,0,data.Length);
+          return null;
+        } else {
+          return data;
+        }
+      } else {
+        byte[] tmpdata = new byte[0x10000];
+        int total = (int)uadditional;
+        if(outputStream!=null){
+          while (total > 0) {
+            int bufsize = Math.Min(tmpdata.Length, total);
+            if (s.Read(tmpdata, 0, bufsize) != bufsize) {
+              throw new CBORException("Premature end of stream");
+            }
+            outputStream.Write(tmpdata, 0, bufsize);
+            total -= bufsize;
+          }
+          return null;
+        } else {
+          using (var ms = new MemoryStream()) {
+            while (total > 0) {
+              int bufsize = Math.Min(tmpdata.Length, total);
+              if (s.Read(tmpdata, 0, bufsize) != bufsize) {
+                throw new CBORException("Premature end of stream");
+              }
+              ms.Write(tmpdata, 0, bufsize);
+              total -= bufsize;
+            }
+            return ms.ToArray();
+          }
+        }
+      }
+    }
+    
     private static CBORObject Read(
       Stream s,
       int depth,
       bool allowBreak,
-      int allowOnlyType,
-      CBORTypeFilter filter) {
+      CBORTypeFilter filter,
+      StringRefs srefs) {
       if (depth > 1000) {
         throw new CBORException("Too deeply nested");
       }
@@ -4255,20 +4364,6 @@ namespace PeterO.Cbor {
       if (expectedLength == -1) {
         // if the head byte is invalid
         throw new CBORException("Unexpected data encountered");
-      }
-      if (allowOnlyType >= 0) {
-        if (allowOnlyType != type) {
-          throw new CBORException("Expected major type " +
-                                  Convert.ToString((int)allowOnlyType, CultureInfo.InvariantCulture) +
-                                  ", instead got type " +
-                                  Convert.ToString((int)type, CultureInfo.InvariantCulture));
-        }
-        if (additional == 31) {
-          throw new CBORException("Indefinite-length data not allowed here");
-        }
-        if (additional >= 28) {
-          throw new CBORException("Unexpected data encountered");
-        }
       }
       if (filter != null) {
         // Check for valid major types if asked
@@ -4375,13 +4470,19 @@ namespace PeterO.Cbor {
           using (MemoryStream ms = new MemoryStream()) {
             // Requires same type as this one
             while (true) {
-              CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.ByteString);
-              // break if the "break" code was read
-              if (o == null) {
+              int nextByte=s.ReadByte();
+              if(nextByte==0xFF) {
+                // break if the "break" code was read
                 break;
               }
-              data = (byte[])o.ThisItem;
-              ms.Write(data, 0, data.Length);
+              long len=ReadDataLength(s,nextByte,2);
+              if((len>>63)!=0 || len>Int32.MaxValue){
+                // TODO: Display huge length in exception
+                throw new CBORException("Huge length is bigger than supported");
+              }
+              if(nextByte!=0x40){ // NOTE: 0x40 means the empty byte string
+                ReadByteData(s,len,ms);
+              }
             }
             if (ms.Position > Int32.MaxValue) {
               throw new CBORException("Length of bytes to be streamed is bigger than supported");
@@ -4401,43 +4502,40 @@ namespace PeterO.Cbor {
                                     Convert.ToString((long)uadditional, CultureInfo.InvariantCulture) +
                                     " is bigger than supported");
           }
-          data = null;
-          if (uadditional <= 0x10000) {
-            // Simple case: small size
-            data = new byte[(int)uadditional];
-            if (s.Read(data, 0, data.Length) != data.Length) {
-              throw new CBORException("Premature end of stream");
-            }
-          } else {
-            byte[] tmpdata = new byte[0x10000];
-            int total = (int)uadditional;
-            using (var ms = new MemoryStream()) {
-              while (total > 0) {
-                int bufsize = Math.Min(tmpdata.Length, total);
-                if (s.Read(tmpdata, 0, bufsize) != bufsize) {
-                  throw new CBORException("Premature end of stream");
-                }
-                ms.Write(tmpdata, 0, bufsize);
-                total -= bufsize;
-              }
-              data = ms.ToArray();
-            }
+          data = ReadByteData(s,uadditional,null);
+          CBORObject cbor=new CBORObject(CBORObjectTypeByteString, data);
+          if(srefs!=null){
+            int hint=(uadditional>Int32.MaxValue || hasBigAdditional) ? Int32.MaxValue :
+              (int)uadditional;
+            srefs.AddStringIfNeeded(cbor,hint);
           }
-          return new CBORObject(
-            CBORObjectTypeByteString,
-            data);
+          return cbor;
         }
       } else if (type == 3) {  // Text string
         if (additional == 31) {
           // Streaming text string
           StringBuilder builder = new StringBuilder();
           while (true) {
-            CBORObject o = Read(s, depth + 1, true, type, CBORTypeFilter.TextString);
-            if (o == null) {
+            int nextByte=s.ReadByte();
+            if(nextByte==0xFF) {
               // break if the "break" code was read
               break;
             }
-            builder.Append((string)o.ThisItem);
+            long len=ReadDataLength(s,nextByte,3);
+            if((len>>63)!=0 || len>Int32.MaxValue){
+              // TODO: Display huge length in exception
+              throw new CBORException("Huge length is bigger than supported");
+            }
+            if(nextByte!=0x60){ // NOTE: 0x60 means the empty string
+              switch (DataUtilities.ReadUtf8(s, (int)len, builder, false)) {
+                case -1:
+                  throw new CBORException("Invalid UTF-8");
+                case -2:
+                  throw new CBORException("Premature end of data");
+                default:
+                  break;  // No error
+              }
+            }
           }
           return new CBORObject(
             CBORObjectTypeTextString,
@@ -4461,7 +4559,13 @@ namespace PeterO.Cbor {
             default:
               break;  // No error
           }
-          return new CBORObject(CBORObjectTypeTextString, builder.ToString());
+          CBORObject cbor=new CBORObject(CBORObjectTypeTextString, builder.ToString());
+          if(srefs!=null){
+            int hint=(uadditional>Int32.MaxValue || hasBigAdditional) ? Int32.MaxValue :
+              (int)uadditional;
+            srefs.AddStringIfNeeded(cbor,hint);
+          }
+          return cbor;
         }
       } else if (type == 4) {  // Array
         CBORObject cbor = NewArray();
@@ -4475,8 +4579,8 @@ namespace PeterO.Cbor {
               s,
               depth + 1,
               true,
-              -1,
-              filter == null ? null : filter.GetSubFilter(vtindex));
+              filter == null ? null : filter.GetSubFilter(vtindex),
+              srefs);
             // break if the "break" code was read
             if (o == null) {
               break;
@@ -4499,7 +4603,13 @@ namespace PeterO.Cbor {
             throw new CBORException("Array is too long");
           }
           for (long i = 0; i < uadditional; ++i) {
-            cbor.Add(Read(s, depth + 1, false, -1, filter == null ? null : filter.GetSubFilter(i)));
+            cbor.Add(
+              Read(
+                s, 
+                depth + 1,
+                false,
+                filter == null ? null : filter.GetSubFilter(i), 
+                srefs));
             ++vtindex;
           }
           return cbor;
@@ -4508,12 +4618,12 @@ namespace PeterO.Cbor {
         CBORObject cbor = NewMap();
         if (additional == 31) {
           while (true) {
-            CBORObject key = Read(s, depth + 1, true, -1, null);
+            CBORObject key = Read(s, depth + 1, true, null, srefs);
             if (key == null) {
               // break if the "break" code was read
               break;
             }
-            CBORObject value = Read(s, depth + 1, false, -1, null);
+            CBORObject value = Read(s, depth + 1, false, null, srefs);
             cbor[key] = value;
           }
           return cbor;
@@ -4528,8 +4638,8 @@ namespace PeterO.Cbor {
                                     " is bigger than supported");
           }
           for (long i = 0; i < uadditional; ++i) {
-            CBORObject key = Read(s, depth + 1, false, -1, null);
-            CBORObject value = Read(s, depth + 1, false, -1, null);
+            CBORObject key = Read(s, depth + 1, false, null, srefs);
+            CBORObject value = Read(s, depth + 1, false, null, srefs);
             cbor[key] = value;
           }
           return cbor;
@@ -4541,6 +4651,18 @@ namespace PeterO.Cbor {
           if (filter != null && !filter.TagAllowed(uadditional)) {
             throw new CBORException("Unexpected tag encountered: " + uadditional);
           }
+          // Tag 256: String namespace
+          if (uadditional == 256) {
+            if (srefs == null) {
+              srefs = new StringRefs();
+            } else {
+              srefs.Push();
+            }
+          } else if (uadditional == 25) {
+            if (srefs == null) {
+              throw new CBORException("No stringref namespace");
+            }
+          }
           taginfo = FindTagConverter(uadditional);
         } else {
           if (filter != null && !filter.TagAllowed(bigintAdditional)) {
@@ -4548,10 +4670,19 @@ namespace PeterO.Cbor {
           }
           taginfo = FindTagConverter(bigintAdditional);
         }
-        o = Read(s, depth + 1, false, -1, taginfo == null ? null : taginfo.GetTypeFilter());
+        o = Read(
+          s, depth + 1, false,
+          taginfo == null ? null : taginfo.GetTypeFilter(), srefs);
         if (hasBigAdditional) {
           return FromObjectAndTag(o, bigintAdditional);
         } else if (uadditional < 65536) {
+          if (uadditional == 256) {
+            // string tag
+            srefs.Pop();
+          } else if (uadditional == 25) {
+            // stringref tag
+            return srefs.GetString(o.AsBigInteger());
+          }
           return FromObjectAndTag(
             o,
             (int)uadditional);

@@ -991,25 +991,24 @@ public int CompareToBinary(ExtendedFloat other) {
           // have a greater value in decimal than in binary
           return (signA > 0) ? 1 : -1;
         }
-        if(thisAdjExp.Sign>0 && 
-           thisAdjExp.CompareTo((BigInteger)1000)>=0 &&
-           otherAdjExp.CompareTo((BigInteger)1000)>=0
-          ){
-          thisAdjExp+=BigInteger.One;
-          otherAdjExp+=BigInteger.One;
-          BigInteger ratio=otherAdjExp/thisAdjExp;
+        if (thisAdjExp.Sign > 0 &&
+           thisAdjExp.CompareTo((BigInteger)1000) >= 0 &&
+           otherAdjExp.CompareTo((BigInteger)1000) >= 0) {
+          thisAdjExp += BigInteger.One;
+          otherAdjExp += BigInteger.One;
+          BigInteger ratio = otherAdjExp / thisAdjExp;
           // Check the ratio of the binary exponent to the decimal exponent.
           // If the ratio is less than 3, the decimal's absolute value is
-          // greater.  If it's 4 or greater, the binary's absolute value is greater.
+          // greater. If it's 4 or greater, the binary's absolute value is greater.
           // (If the two absolute values are equal, the ratio will approach
           // ln(10)/ln(2), or about 3.322, as the exponents get higher and
-          // higher.)  This check assumes that both exponents are 1000 or greater,
+          // higher.) This check assumes that both exponents are 1000 or greater,
           // when the ratio between exponents of equal values is close to
           // ln(10)/ln(2).
-          if(ratio<3){
+          if (ratio < 3) {
             // Decimal abs. value is greater
             return (signA > 0) ? 1 : -1;
-          } else if(ratio>=4){
+          } else if (ratio >= 4) {
             return (signA > 0) ? -1 : 1;
           }
         }
@@ -1044,7 +1043,7 @@ public int CompareToBinary(ExtendedFloat other) {
         BigInteger bigmantissa = this.Mantissa;
         BigInteger bigexponent = this.Exponent;
         bigexponent = -bigexponent;
-        if (bigexponent.CompareTo((BigInteger)1000) >0) {
+        if (bigexponent.CompareTo((BigInteger)1000) > 0) {
           int smallPrecision = this.UnsignedMantissa.getDigitCount();
           BigInteger bigPrecision = (BigInteger)smallPrecision;
           if (bigPrecision.CompareTo(bigexponent) <= 0) {
@@ -1175,7 +1174,7 @@ public int CompareToBinary(ExtendedFloat other) {
           BitConverter.ToSingle(BitConverter.GetBytes((int)1 << 31), 0) :
           0.0f;
       }
-      if (adjExp.CompareTo((BigInteger)39) >0) {
+      if (adjExp.CompareTo((BigInteger)39) > 0) {
         // Very high exponent, treat as infinity
         return this.IsNegative ?
           Single.NegativeInfinity : Single.PositiveInfinity;
@@ -1248,7 +1247,7 @@ public int CompareToBinary(ExtendedFloat other) {
                                   }) :
           0.0;
       }
-      if (adjExp.CompareTo((BigInteger)309) >0) {
+      if (adjExp.CompareTo((BigInteger)309) > 0) {
         // Very high exponent, treat as infinity
         return this.IsNegative ?
           Double.NegativeInfinity : Double.PositiveInfinity;
