@@ -2,7 +2,7 @@
  * Created by SharpDevelop.
  * User: Peter
  * Date: 3/6/2014
- * Time: 10:05 PM
+ * Time: 10:06 PM
  *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
@@ -10,13 +10,13 @@ using System;
 
 namespace PeterO.Cbor
 {
-    /// <summary>Description of CBORTag25.</summary>
-  public class CBORTag25 : ICBORTag
+    /// <summary>Description of CBORTag256.</summary>
+  public class CBORTagAny : ICBORTag
   {
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter GetTypeFilter() {
-      return CBORTypeFilter.UnsignedInteger;
+      return CBORTypeFilter.Any;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -29,9 +29,6 @@ namespace PeterO.Cbor
       }
       #endif
 
-      if (!obj.IsIntegral || !obj.CanFitInInt64() || obj.Sign < 0) {
-        throw new CBORException("Not a 64-bit unsigned integer");
-      }
       return obj;
     }
   }

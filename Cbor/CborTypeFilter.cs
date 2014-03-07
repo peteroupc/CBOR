@@ -11,7 +11,7 @@ using PeterO;
 
 namespace PeterO.Cbor
 {
-    /// <summary>Description of CBORTypeFilter.</summary>
+  /// <summary>Description of CBORTypeFilter.</summary>
   public class CBORTypeFilter
   {
     private bool any;
@@ -19,6 +19,7 @@ namespace PeterO.Cbor
     private bool floatingpoint;
     private int arrayLength;
     private bool anyArrayLength;
+    private bool arrayMinLength;
     private CBORTypeFilter[] elements;
     private BigInteger[] tags;
 
@@ -32,6 +33,7 @@ namespace PeterO.Cbor
       filter.floatingpoint = this.floatingpoint;
       filter.arrayLength = this.arrayLength;
       filter.anyArrayLength = this.anyArrayLength;
+      filter.arrayMinLength = this.arrayMinLength;
       filter.elements = this.elements;
       filter.tags = this.tags;
       return filter;
@@ -72,7 +74,7 @@ namespace PeterO.Cbor
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithByteString() {
-      return this.WithType(2);
+      return this.WithType(2).WithTags(25);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -84,7 +86,7 @@ namespace PeterO.Cbor
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithTextString() {
-      return this.WithType(3);
+      return this.WithType(3).WithTags(25);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -96,9 +98,17 @@ namespace PeterO.Cbor
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 6;
-      filter.tags = new BigInteger[tags.Length];
+      int startIndex = 0;
+      if (filter.tags != null) {
+        BigInteger[] newTags = new BigInteger[tags.Length + filter.tags.Length];
+        Array.Copy(filter.tags, newTags, filter.tags.Length);
+        startIndex = filter.tags.Length;
+        filter.tags = newTags;
+      } else {
+        filter.tags = new BigInteger[tags.Length];
+      }
       for (int i = 0; i < tags.Length; ++i) {
-        filter.tags[i] = (BigInteger)tags[i];
+        filter.tags[startIndex + i] = (BigInteger)tags[i];
       }
       return filter;
     }
@@ -117,16 +127,28 @@ namespace PeterO.Cbor
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 6;
-      filter.tags = new BigInteger[tags.Length];
-      Array.Copy(tags, filter.tags, tags.Length);
+      int startIndex = 0;
+      if (filter.tags != null) {
+        BigInteger[] newTags = new BigInteger[tags.Length + filter.tags.Length];
+        Array.Copy(filter.tags, newTags, filter.tags.Length);
+        startIndex = filter.tags.Length;
+        filter.tags = newTags;
+      } else {
+        filter.tags = new BigInteger[tags.Length];
+      }
+      Array.Copy(tags, 0, filter.tags, startIndex, tags.Length);
       return filter;
     }
-
+    
+    [Obsolete("Use WithArrayMaxLength instead.")]
+    public CBORTypeFilter WithArray(int arrayLength, params CBORTypeFilter[] elements) {
+      return WithArrayMaxLength(arrayLength,elements);
+    }
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     /// <param name='arrayLength'>A 32-bit signed integer.</param>
     /// <param name='elements'>An array of CBORTypeFilter.</param>
-    public CBORTypeFilter WithArray(int arrayLength, params CBORTypeFilter[] elements) {
+    public CBORTypeFilter WithArrayMaxLength(int arrayLength, params CBORTypeFilter[] elements) {
       if (this.any) {
         return this;
       }
@@ -139,6 +161,30 @@ namespace PeterO.Cbor
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
       filter.arrayLength = arrayLength;
+      filter.arrayMinLength=false;
+      filter.elements = new CBORTypeFilter[elements.Length];
+      Array.Copy(elements, filter.elements, elements.Length);
+      return filter;
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A CBORTypeFilter object.</returns>
+    /// <param name='arrayLength'>A 32-bit signed integer.</param>
+    /// <param name='elements'>An array of CBORTypeFilter.</param>
+    public CBORTypeFilter WithArrayMinLength(int arrayLength, params CBORTypeFilter[] elements) {
+      if (this.any) {
+        return this;
+      }
+      if (arrayLength < 0) {
+        throw new ArgumentException("arrayLength (" + Convert.ToString((long)arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+      }
+      if (arrayLength < elements.Length) {
+        throw new ArgumentException("arrayLength (" + Convert.ToString((long)arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)elements.Length, System.Globalization.CultureInfo.InvariantCulture));
+      }
+      CBORTypeFilter filter = this.Copy();
+      filter.types |= 1 << 4;
+      filter.arrayLength = arrayLength;
+      filter.arrayMinLength=true;
       filter.elements = new CBORTypeFilter[elements.Length];
       Array.Copy(elements, filter.elements, elements.Length);
       return filter;
@@ -194,14 +240,16 @@ namespace PeterO.Cbor
     /// <param name='length'>A 32-bit signed integer.</param>
     /// <returns>A Boolean object.</returns>
     public bool ArrayLengthMatches(int length) {
-      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength || this.arrayLength == length);
+      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
+                                              (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='length'>A 64-bit signed integer.</param>
     /// <returns>A Boolean object.</returns>
     public bool ArrayLengthMatches(long length) {
-      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength || this.arrayLength == length);
+      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
+                                              (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
     }
 
     /// <summary>Not documented yet.</summary>
@@ -211,7 +259,13 @@ namespace PeterO.Cbor
       if (bigLength == null) {
         throw new ArgumentNullException("bigLength");
       }
-      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength || bigLength.CompareTo((BigInteger)this.arrayLength) == 0);
+      if(this.types & (1 << 4)) != 0)return false;
+      if(this.anyArrayLength)return true;
+      if(!this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) == 0)
+        return true;
+      if(this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) => 0)
+        return true;
+      return false;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -262,7 +316,8 @@ namespace PeterO.Cbor
     /// <param name='index'>A 32-bit signed integer.</param>
     /// <returns>A Boolean object.</returns>
     public bool ArrayIndexAllowed(int index) {
-      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength || (index < this.arrayLength && index >= 0));
+      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
+                                              ((this.arrayMinLength || index < this.arrayLength) && index >= 0));
     }
 
     /// <summary>Not documented yet.</summary>
@@ -272,9 +327,10 @@ namespace PeterO.Cbor
       if (this.anyArrayLength || this.any) {
         return Any;
       }
-      if (index < 0 || index >= this.arrayLength) {
+      if (index < 0)return None;
+      if(index >= this.arrayLength) {
         // Index is out of bounds
-        return None;
+        return this.arrayMinLength ? Any : None;
       }
       if (this.elements == null) {
         return Any;
@@ -294,9 +350,10 @@ namespace PeterO.Cbor
       if (this.anyArrayLength || this.any) {
         return Any;
       }
-      if (index < 0 || index >= this.arrayLength) {
+      if (index < 0)return None;
+      if(index >= this.arrayLength) {
         // Index is out of bounds
-        return None;
+        return this.arrayMinLength ? Any : None;
       }
       if (this.elements == null) {
         return Any;

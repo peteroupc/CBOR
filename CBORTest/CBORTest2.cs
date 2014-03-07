@@ -388,26 +388,79 @@ namespace Test
                       CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x4a, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }).AsBigInteger());
     }
 
-    
     [Test]
-    public void TestStringRefs(){
-      CBORObject cbor=CBORObject.DecodeFromBytes(
-        new byte[]{
-          0xd9,1,0,
-          0x9F,
-          0x64,0x61,0x62,0x63,0x64,
-          0xd8,0x19,0x00,
-          0xd8,0x19,0x00,
-          0x64,0x62,0x62,0x63,0x64,
-          0xd8,0x19,0x01,
-          0xd8,0x19,0x00,
-          0xd8,0x19,0x01,
-          0xFF
-        });
+    public void TestStringRefs() {
+      CBORObject cbor = CBORObject.DecodeFromBytes(
+        new byte[] { 0xd9,
+        1,
+        0,
+        0x9F,
+        0x64,
+        0x61,
+        0x62,
+        0x63,
+        0x64,
+        0xd8,
+        0x19,
+        0x00,
+        0xd8,
+        0x19,
+        0x00,
+        0x64,
+        0x62,
+        0x62,
+        0x63,
+        0x64,
+        0xd8,
+        0x19,
+        0x01,
+        0xd8,
+        0x19,
+        0x00,
+        0xd8,
+        0x19,
+        0x01,
+        0xFF });
       string expected="[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
-      Assert.AreEqual(expected,cbor.ToJSONString());
+      Assert.AreEqual(expected, cbor.ToJSONString());
+      cbor = CBORObject.DecodeFromBytes(
+        new byte[] { 0xd9,
+        1,
+        0,
+        0x9F,
+        0x64,
+        0x61,
+        0x62,
+        0x63,
+        0x64,
+        0x62,
+        0x61,
+        0x61,
+        0xd8,
+        0x19,
+        0x00,
+        0xd8,
+        0x19,
+        0x00,
+        0x64,
+        0x62,
+        0x62,
+        0x63,
+        0x64,
+        0xd8,
+        0x19,
+        0x01,
+        0xd8,
+        0x19,
+        0x00,
+        0xd8,
+        0x19,
+        0x01,
+        0xFF });
+      expected="[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
+      Assert.AreEqual(expected, cbor.ToJSONString());
     }
-    
+
     [Test]
     public void TestExtendedNaNZero() {
       Assert.IsFalse(ExtendedDecimal.NaN.IsZero);

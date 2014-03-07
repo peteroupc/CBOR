@@ -7,12 +7,13 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using PeterO;
 using System.Collections.Generic;
+using PeterO;
 
 namespace PeterO.Cbor
 {
-  /// <summary>Description of StringRefs.</summary>
+  /// <summary>Implements CBOR string references, described
+  /// at <code>http://cbor.schmorp.de/stringref</code>.</summary>
   internal class StringRefs
   {
     private List<IList<CBORObject>> stack;
@@ -74,7 +75,7 @@ namespace PeterO.Cbor
           addStr = true;
         }
       }
-      //Console.WriteLine("addStr={0} lengthHint={1} str={2}",addStr,lengthHint,str);
+      // Console.WriteLine("addStr=" + addStr + " lengthHint=" + lengthHint + " str=" + (str));
       if (addStr) {
         lastList.Add(str);
       }
@@ -95,7 +96,13 @@ namespace PeterO.Cbor
       if (index >= lastList.Count) {
         throw new CBORException("Index " + index + " is not valid");
       }
-      return lastList[index];
+      CBORObject ret = lastList[index];
+      if (ret.Type == CBORType.ByteString) {
+        // Byte strings are mutable, so make a copy
+        return CBORObject.FromObject(ret.GetByteString());
+      } else {
+        return ret;
+      }
     }
 
     /// <summary>Not documented yet.</summary>
@@ -113,7 +120,13 @@ namespace PeterO.Cbor
       if (index >= lastList.Count) {
         throw new CBORException("Index " + index + " is not valid");
       }
-      return lastList[index];
+      CBORObject ret = lastList[index];
+      if (ret.Type == CBORType.ByteString) {
+        // Byte strings are mutable, so make a copy
+        return CBORObject.FromObject(ret.GetByteString());
+      } else {
+        return ret;
+      }
     }
   }
 }

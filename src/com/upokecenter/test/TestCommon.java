@@ -232,17 +232,17 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
         }
         try {
- o.AsSingle();
-} catch (Exception ex) {
-Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+          o.AsSingle();
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
         try {
- o.AsDouble();
-} catch (Exception ex) {
-Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+          o.AsDouble();
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
         try {
           o.AsBigInteger();
           Assert.fail("Should have failed");
@@ -251,12 +251,6 @@ throw new IllegalStateException("", ex);
           Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
         }
         return;
-      }
-      try {
-        // TODO: Limit exponents to be tested
-        //  o.AsBigInteger();
-      } catch (Exception ex) {
-        Assert.fail("Object: " + o + ",  " + ex.toString()); throw new IllegalStateException("", ex);
       }
       try {
         o.AsSingle();

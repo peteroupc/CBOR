@@ -390,6 +390,9 @@ at: http://peteroupc.github.io/CBOR/
      * @return A BigInteger object.
      */
     public BigInteger ToBigInteger() {
+      if (!this.isFinite()) {
+        throw new ArithmeticException("Value is infinity or NaN");
+      }
       return this.getNumerator().divide(this.denominator);
     }
 

@@ -16,7 +16,7 @@ namespace PeterO.Cbor
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter GetTypeFilter() {
-      return new CBORTypeFilter().WithArray(
+      return new CBORTypeFilter().WithArrayMaxLength(
         2,
         CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3),
         CBORTypeFilter.UnsignedInteger.WithTags(2));
