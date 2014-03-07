@@ -1063,7 +1063,7 @@ public int CompareToBinary(ExtendedFloat other) {
         BigInteger bigmantissa = this.getMantissa();
         BigInteger bigexponent = this.getExponent();
         bigexponent=bigexponent.negate();
-        if (bigexponent.compareTo(BigInteger.valueOf(1000)) >0) {
+        if (bigexponent.compareTo(BigInteger.valueOf(1000)) > 0) {
           int smallPrecision = this.getUnsignedMantissa().getDigitCount();
           BigInteger bigPrecision = BigInteger.valueOf(smallPrecision);
           if (bigPrecision.compareTo(bigexponent) <= 0) {
@@ -1201,7 +1201,7 @@ remainder=divrem[1]; }
           Float.intBitsToFloat(1 << 31) :
           0.0f;
       }
-      if (adjExp.compareTo(BigInteger.valueOf(39)) >0) {
+      if (adjExp.compareTo(BigInteger.valueOf(39)) > 0) {
         // Very high exponent, treat as infinity
         return this.isNegative() ?
           Float.NEGATIVE_INFINITY : Float.POSITIVE_INFINITY;

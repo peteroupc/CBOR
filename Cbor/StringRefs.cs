@@ -74,6 +74,7 @@ namespace PeterO.Cbor
           addStr = true;
         }
       }
+      //Console.WriteLine("addStr={0} lengthHint={1} str={2}",addStr,lengthHint,str);
       if (addStr) {
         lastList.Add(str);
       }
@@ -83,30 +84,34 @@ namespace PeterO.Cbor
     /// <param name='smallIndex'>A 64-bit signed integer.</param>
     /// <returns>A string object.</returns>
     public CBORObject GetString(long smallIndex) {
-      if(smallIndex<0)
+      if (smallIndex < 0) {
         throw new CBORException("Unexpected index");
-      if(smallIndex>Int32.MaxValue)
-        throw new CBORException("Index "+smallIndex+" is bigger than supported");
-      int index=(int)smallIndex;
+      }
+      if (smallIndex > Int32.MaxValue) {
+        throw new CBORException("Index " + smallIndex + " is bigger than supported");
+      }
+      int index = (int)smallIndex;
       IList<CBORObject> lastList = this.stack[this.stack.Count - 1];
-      if(index<lastList.Count){
-        throw new CBORException("Index "+index+" is not valid");
+      if (index >= lastList.Count) {
+        throw new CBORException("Index " + index + " is not valid");
       }
       return lastList[index];
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='smallIndex'>A BigInteger object.</param>
     /// <returns>A string object.</returns>
+    /// <param name='bigIndex'>A BigInteger object.</param>
     public CBORObject GetString(BigInteger bigIndex) {
-      if(bigIndex.Sign<0)
+      if (bigIndex.Sign < 0) {
         throw new CBORException("Unexpected index");
-      if(!bigIndex.canFitInInt())
-        throw new CBORException("Index "+bigIndex+" is bigger than supported");
-      int index=(int)bigIndex;
+      }
+      if (!bigIndex.canFitInInt()) {
+        throw new CBORException("Index " + bigIndex + " is bigger than supported");
+      }
+      int index = (int)bigIndex;
       IList<CBORObject> lastList = this.stack[this.stack.Count - 1];
-      if(index<lastList.Count){
-        throw new CBORException("Index "+index+" is not valid");
+      if (index >= lastList.Count) {
+        throw new CBORException("Index " + index + " is not valid");
       }
       return lastList[index];
     }

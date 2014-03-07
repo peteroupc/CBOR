@@ -8,11 +8,12 @@ package com.upokecenter.cbor;
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 
+import com.upokecenter.util.*;
 import java.util.*;
 
-  /**
-   * Description of StringRefs.
-   */
+    /**
+     * Description of StringRefs.
+     */
   class StringRefs
   {
     private ArrayList<List<CBORObject>> stack;
@@ -78,15 +79,37 @@ import java.util.*;
      * @return A string object.
      */
     public CBORObject GetString(long smallIndex) {
-      throw new UnsupportedOperationException();
+      if (smallIndex < 0) {
+ throw new CBORException("Unexpected index");
+}
+      if (smallIndex > Integer.MAX_VALUE) {
+ throw new CBORException("Index " + smallIndex + " is bigger than supported");
+}
+      int index = (int)smallIndex;
+      List<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
+      if (index < lastList.size()) {
+        throw new CBORException("Index " + index + " is not valid");
+      }
+      return lastList.get(index);
     }
 
     /**
      * Not documented yet.
-     * @param smallIndex A BigInteger object.
+     * @param bigIndex A BigInteger object.
      * @return A string object.
      */
-    public CBORObject GetString(BigInteger smallIndex) {
-      throw new UnsupportedOperationException();
+    public CBORObject GetString(BigInteger bigIndex) {
+      if (bigIndex.signum() < 0) {
+ throw new CBORException("Unexpected index");
+}
+      if (!bigIndex.canFitInInt()) {
+ throw new CBORException("Index " + bigIndex + " is bigger than supported");
+}
+      int index = bigIndex.intValue();
+      List<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
+      if (index < lastList.size()) {
+        throw new CBORException("Index " + index + " is not valid");
+      }
+      return lastList.get(index);
     }
   }
