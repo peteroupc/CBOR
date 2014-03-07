@@ -388,6 +388,14 @@ public void setConverter(Object value) {
     }
 
     /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+public boolean isFinite() {
+        return this.getType() == CBORType.Number && !IsInfinity() && !IsNaN();
+      }
+
+    /**
      * Gets a value indicating whether this CBOR object represents negative
      * infinity.
      * @return A Boolean object.
@@ -3994,8 +4002,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         AddTagHandler(BigInteger.valueOf(2), new CBORTag2());
         AddTagHandler(BigInteger.valueOf(3), new CBORTag3());
         AddTagHandler(BigInteger.valueOf(5), new CBORTag5());
-        AddTagHandler(BigInteger.valueOf(25), new CBORTag25());
-        AddTagHandler(BigInteger.valueOf(256), new CBORTag256());
+        AddTagHandler(BigInteger.valueOf(25), new CBORTagUnsigned());
+        AddTagHandler(BigInteger.valueOf(256), new CBORTagAny());
         AddTagHandler(BigInteger.ZERO, new CBORTag0());
         AddTagHandler(BigInteger.valueOf(32), new CBORTagGenericString());
         AddTagHandler(BigInteger.valueOf(33), new CBORTagGenericString());

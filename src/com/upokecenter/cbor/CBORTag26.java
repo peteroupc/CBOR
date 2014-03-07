@@ -1,3 +1,4 @@
+package com.upokecenter.cbor;
 /*
  * Created by SharpDevelop.
  * User: Peter
@@ -6,27 +7,29 @@
  *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
-using System;
 
-namespace PeterO.Cbor
-{
-    /// <summary>Description of CBORTag26.</summary>
-  public class CBORTag26 : ICBORTag
+    /**
+     * Description of CBORTag26.
+     */
+  public class CBORTag26 implements ICBORTag
   {
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORTypeFilter object.</returns>
+    /**
+     * Not documented yet.
+     * @return A CBORTypeFilter object.
+     */
 public CBORTypeFilter GetTypeFilter() {
       return new CBORTypeFilter().WithArrayMinLength(1, CBORTypeFilter.Any);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>A CBORObject object. (2).</param>
-    /// <returns>A CBORObject object.</returns>
+    /**
+     * Not documented yet.
+     * @param obj A CBORObject object. (2).
+     * @return A CBORObject object.
+     */
 public CBORObject ValidateObject(CBORObject obj) {
-      if (obj.Type != CBORType.Array || obj.Count< 1) {
+      if (obj.getType() != CBORType.Array || obj.size()< 1) {
  throw new CBORException("Not an array, or is an empty array.");
 }
       return obj;
     }
   }
-}

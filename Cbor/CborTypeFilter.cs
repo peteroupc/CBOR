@@ -11,7 +11,7 @@ using PeterO;
 
 namespace PeterO.Cbor
 {
-  /// <summary>Description of CBORTypeFilter.</summary>
+    /// <summary>Description of CBORTypeFilter.</summary>
   public class CBORTypeFilter
   {
     private bool any;
@@ -139,11 +139,16 @@ namespace PeterO.Cbor
       Array.Copy(tags, 0, filter.tags, startIndex, tags.Length);
       return filter;
     }
-    
-    [Obsolete("Use WithArrayMaxLength instead.")]
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='arrayLength'>A 32-bit signed integer.</param>
+    /// <param name='elements'>A params object.</param>
+    /// <returns>A CBORTypeFilter object.</returns>
+[Obsolete("Use WithArrayMaxLength instead.")]
     public CBORTypeFilter WithArray(int arrayLength, params CBORTypeFilter[] elements) {
-      return WithArrayMaxLength(arrayLength,elements);
+      return WithArrayMaxLength(arrayLength, elements);
     }
+
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     /// <param name='arrayLength'>A 32-bit signed integer.</param>
@@ -161,7 +166,7 @@ namespace PeterO.Cbor
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
       filter.arrayLength = arrayLength;
-      filter.arrayMinLength=false;
+      filter.arrayMinLength = false;
       filter.elements = new CBORTypeFilter[elements.Length];
       Array.Copy(elements, filter.elements, elements.Length);
       return filter;
@@ -184,7 +189,7 @@ namespace PeterO.Cbor
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
       filter.arrayLength = arrayLength;
-      filter.arrayMinLength=true;
+      filter.arrayMinLength = true;
       filter.elements = new CBORTypeFilter[elements.Length];
       Array.Copy(elements, filter.elements, elements.Length);
       return filter;
@@ -259,12 +264,18 @@ namespace PeterO.Cbor
       if (bigLength == null) {
         throw new ArgumentNullException("bigLength");
       }
-      if(this.types & (1 << 4)) != 0)return false;
-      if(this.anyArrayLength)return true;
-      if(!this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) == 0)
-        return true;
-      if(this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) => 0)
-        return true;
+      if (this.types & (1 << 4)) {
+ != 0)return false;
+}
+      if (this.anyArrayLength) {
+ return true;
+}
+      if (!this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) == 0) {
+ return true;
+}
+      if (this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) => 0) {
+ return true;
+}
       return false;
     }
 
@@ -327,8 +338,10 @@ namespace PeterO.Cbor
       if (this.anyArrayLength || this.any) {
         return Any;
       }
-      if (index < 0)return None;
-      if(index >= this.arrayLength) {
+      if (index < 0) {
+ return None;
+}
+      if (index >= this.arrayLength) {
         // Index is out of bounds
         return this.arrayMinLength ? Any : None;
       }
@@ -350,8 +363,10 @@ namespace PeterO.Cbor
       if (this.anyArrayLength || this.any) {
         return Any;
       }
-      if (index < 0)return None;
-      if(index >= this.arrayLength) {
+      if (index < 0) {
+ return None;
+}
+      if (index >= this.arrayLength) {
         // Index is out of bounds
         return this.arrayMinLength ? Any : None;
       }

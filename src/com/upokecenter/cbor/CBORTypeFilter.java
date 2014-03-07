@@ -20,6 +20,7 @@ import com.upokecenter.util.*;
     private boolean floatingpoint;
     private int arrayLength;
     private boolean anyArrayLength;
+    private boolean arrayMinLength;
     private CBORTypeFilter[] elements;
     private BigInteger[] tags;
 
@@ -33,6 +34,7 @@ import com.upokecenter.util.*;
       filter.floatingpoint = this.floatingpoint;
       filter.arrayLength = this.arrayLength;
       filter.anyArrayLength = this.anyArrayLength;
+      filter.arrayMinLength = this.arrayMinLength;
       filter.elements = this.elements;
       filter.tags = this.tags;
       return filter;
@@ -156,10 +158,22 @@ import com.upokecenter.util.*;
     /**
      * Not documented yet.
      * @param arrayLength A 32-bit signed integer.
+     * @param elements A params object.
+     * @return A CBORTypeFilter object.
+     * @deprecated Use WithArrayMaxLength instead.
+ */
+@Deprecated
+    public CBORTypeFilter WithArray(int arrayLength, CBORTypeFilter... elements) {
+      return WithArrayMaxLength(arrayLength, elements);
+    }
+
+    /**
+     * Not documented yet.
+     * @param arrayLength A 32-bit signed integer.
      * @param elements An array of CBORTypeFilter.
      * @return A CBORTypeFilter object.
      */
-    public CBORTypeFilter WithArray(int arrayLength, CBORTypeFilter... elements) {
+    public CBORTypeFilter WithArrayMaxLength(int arrayLength, CBORTypeFilter... elements) {
       if (this.any) {
         return this;
       }
@@ -172,6 +186,32 @@ import com.upokecenter.util.*;
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
       filter.arrayLength = arrayLength;
+      filter.arrayMinLength = false;
+      filter.elements = new CBORTypeFilter[elements.length];
+      System.arraycopy(elements, 0, filter.elements, 0, elements.length);
+      return filter;
+    }
+
+    /**
+     * Not documented yet.
+     * @param arrayLength A 32-bit signed integer.
+     * @param elements An array of CBORTypeFilter.
+     * @return A CBORTypeFilter object.
+     */
+    public CBORTypeFilter WithArrayMinLength(int arrayLength, CBORTypeFilter... elements) {
+      if (this.any) {
+        return this;
+      }
+      if (arrayLength < 0) {
+        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is not greater or equal to " + "0");
+      }
+      if (arrayLength < elements.length) {
+        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is not greater or equal to " + Long.toString((long)elements.length));
+      }
+      CBORTypeFilter filter = this.Copy();
+      filter.types |= 1 << 4;
+      filter.arrayLength = arrayLength;
+      filter.arrayMinLength = true;
       filter.elements = new CBORTypeFilter[elements.length];
       System.arraycopy(elements, 0, filter.elements, 0, elements.length);
       return filter;
@@ -227,7 +267,8 @@ import com.upokecenter.util.*;
      * @return A Boolean object.
      */
     public boolean ArrayLengthMatches(int length) {
-      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength || this.arrayLength == length);
+      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
+                                              (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
     }
 
     /**
@@ -236,7 +277,8 @@ import com.upokecenter.util.*;
      * @return A Boolean object.
      */
     public boolean ArrayLengthMatches(long length) {
-      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength || this.arrayLength == length);
+      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
+                                              (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
     }
 
     /**
@@ -248,7 +290,19 @@ import com.upokecenter.util.*;
       if (bigLength == null) {
         throw new NullPointerException("bigLength");
       }
-      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength || bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) == 0);
+      if (this.types & (1 << 4)) {
+ != 0)return false;
+}
+      if (this.anyArrayLength) {
+ return true;
+}
+      if (!this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) == 0) {
+ return true;
+}
+      if (this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) => 0) {
+ return true;
+}
+      return false;
     }
 
     /**
@@ -307,7 +361,8 @@ import com.upokecenter.util.*;
      * @return A Boolean object.
      */
     public boolean ArrayIndexAllowed(int index) {
-      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength || (index < this.arrayLength && index >= 0));
+      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
+                                              ((this.arrayMinLength || index < this.arrayLength) && index >= 0));
     }
 
     /**
@@ -319,9 +374,12 @@ import com.upokecenter.util.*;
       if (this.anyArrayLength || this.any) {
         return Any;
       }
-      if (index < 0 || index >= this.arrayLength) {
+      if (index < 0) {
+ return None;
+}
+      if (index >= this.arrayLength) {
         // Index is out of bounds
-        return None;
+        return this.arrayMinLength ? Any : None;
       }
       if (this.elements == null) {
         return Any;
@@ -343,9 +401,12 @@ import com.upokecenter.util.*;
       if (this.anyArrayLength || this.any) {
         return Any;
       }
-      if (index < 0 || index >= this.arrayLength) {
+      if (index < 0) {
+ return None;
+}
+      if (index >= this.arrayLength) {
         // Index is out of bounds
-        return None;
+        return this.arrayMinLength ? Any : None;
       }
       if (this.elements == null) {
         return Any;

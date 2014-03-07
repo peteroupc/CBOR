@@ -12,7 +12,7 @@ import java.util.*;
 import com.upokecenter.util.*;
 
     /**
-     * Description of StringRefs.
+     * Implements CBOR string references, described at <code>http://cbor.schmorp.de/stringref</code>
      */
   class StringRefs
   {
