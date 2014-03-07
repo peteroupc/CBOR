@@ -4278,15 +4278,15 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     private static long ReadDataLength(InputStream s, int headByte, int expectedType) throws IOException {
       if (headByte < 0) {
- throw new CBORException("Unexpected data encountered");
-}
+        throw new CBORException("Unexpected data encountered");
+      }
       if (((headByte >> 5) & 0x07) != expectedType) {
- throw new CBORException("Unexpected data encountered");
-}
+        throw new CBORException("Unexpected data encountered");
+      }
       headByte &= 0x1F;
       if (headByte < 24) {
- return headByte;
-}
+        return headByte;
+      }
       byte[] data = new byte[8];
       switch (headByte & 0x1F) {
           case 24: {
@@ -4340,10 +4340,18 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
+    private static BigInteger ToUnsignedBigInteger(long val) {
+      BigInteger lval = BigInteger.valueOf(val & ~(1L << 63));
+      if ((val >> 63) != 0) {
+        BigInteger bigintAdd = BigInteger.ONE.shiftLeft(63);
+        lval=lval.add(bigintAdd);
+      }
+      return lval;
+    }
+
     private static byte[] ReadByteData(InputStream s, long uadditional, MemoryStream outputStream) throws IOException {
       if ((uadditional >> 63) != 0 || uadditional > Integer.MAX_VALUE) {
-        // TODO: Display huge length in exception
-        throw new CBORException("Huge length is bigger than supported");
+        throw new CBORException("Length " + ToUnsignedBigInteger(uadditional) +" is bigger than supported");
       }
       if (uadditional <= 0x10000) {
         // Simple case: small size
@@ -4446,7 +4454,11 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             s.read(data, 1, expectedLength - 1) != expectedLength - 1) {
           throw new CBORException("Premature end of data");
         }
-        return GetFixedLengthObject(firstbyte, data);
+        CBORObject cbor = GetFixedLengthObject(firstbyte, data);
+        if (srefs != null && (type == 2 || type == 3)) {
+          srefs.AddStringIfNeeded(cbor, expectedLength - 1);
+        }
+        return cbor;
       }
       long uadditional = (long)additional;
       BigInteger bigintAdditional = BigInteger.ZERO;
@@ -4534,8 +4546,7 @@ ms=new ByteArrayOutputStream();
               }
               long len = ReadDataLength(s, nextByte, 2);
               if ((len >> 63) != 0 || len > Integer.MAX_VALUE) {
-                // TODO: Display huge length in exception
-                throw new CBORException("Huge length is bigger than supported");
+                throw new CBORException("Length " + ToUnsignedBigInteger(len) +" is bigger than supported");
               }
               if (nextByte != 0x40) {  // NOTE: 0x40 means the empty byte String
                 ReadByteData(s, len, ms);
@@ -4583,8 +4594,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             }
             long len = ReadDataLength(s, nextByte, 3);
             if ((len >> 63) != 0 || len > Integer.MAX_VALUE) {
-              // TODO: Display huge length in exception
-              throw new CBORException("Huge length is bigger than supported");
+              throw new CBORException("Length " + ToUnsignedBigInteger(len) +" is bigger than supported");
             }
             if (nextByte != 0x60) {  // NOTE: 0x60 means the empty String
               switch (DataUtilities.ReadUtf8(s, (int)len, builder, false)) {

@@ -159,6 +159,9 @@ import com.upokecenter.cbor.*;
       } else {
         tag = rand.NextValue(0x1000000);
       }
+      if (tag == 25) {
+        tag = 0;
+      }
       if (tag == 30) {
         return RandomCBORByteString(rand);
       }
@@ -661,7 +664,8 @@ import com.upokecenter.cbor.*;
     /**
      * Not documented yet.
      */
-    @Test(timeout=10000)
+    @Test
+    // [Timeout(10000)]
     public void TestCompare() {
       FastRandom r = new FastRandom();
       String badstr = null;
@@ -679,13 +683,13 @@ import com.upokecenter.cbor.*;
           String bas = ToByteArrayString(o1)+".compareTo("+ToByteArrayString(o2)+");";
           thread.Abort();
           if (bas.length() <= 2000) {
- System.out.println(bas);
-}
+            System.out.println(bas);
+          }
           if (badstr == null || bas.length()<badstr.length()) {
             badstr = bas;
           }
         }
-         */
+        */
         CompareTestReciprocal(o1, o2);
       }
       if (badstr != null) {
@@ -900,6 +904,59 @@ import com.upokecenter.cbor.*;
       Assert.assertEquals(
         ExtendedRational.NegativeInfinity,
         ExtendedRational.FromExtendedFloat(ExtendedFloat.NegativeInfinity));
+
+      Assert.assertEquals(Double.POSITIVE_INFINITY, ExtendedRational.PositiveInfinity.ToDouble());
+      Assert.assertEquals(Double.NEGATIVE_INFINITY, ExtendedRational.NegativeInfinity.ToDouble());
+      Assert.assertEquals(Float.POSITIVE_INFINITY, ExtendedRational.PositiveInfinity.ToSingle());
+      Assert.assertEquals(Float.NEGATIVE_INFINITY, ExtendedRational.NegativeInfinity.ToSingle());
+      try {
+        ExtendedDecimal.PositiveInfinity.ToBigInteger();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedDecimal.NegativeInfinity.ToBigInteger();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.PositiveInfinity.ToBigInteger();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.NegativeInfinity.ToBigInteger();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedRational.PositiveInfinity.ToBigInteger();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedRational.NegativeInfinity.ToBigInteger();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
 
     @Test
@@ -1107,6 +1164,8 @@ import com.upokecenter.cbor.*;
     public void TestCBORInfinity() {
       Assert.assertEquals("-Infinity",CBORObject.FromObject(ExtendedRational.NegativeInfinity).toString());
       Assert.assertEquals("Infinity",CBORObject.FromObject(ExtendedRational.PositiveInfinity).toString());
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.NegativeInfinity));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.PositiveInfinity));
       if(!(CBORObject.FromObject(ExtendedRational.NegativeInfinity).IsInfinity()))Assert.fail();
       if(!(CBORObject.FromObject(ExtendedRational.PositiveInfinity).IsInfinity()))Assert.fail();
       if(!(CBORObject.FromObject(ExtendedRational.NegativeInfinity).IsNegativeInfinity()))Assert.fail();
@@ -1118,12 +1177,10 @@ import com.upokecenter.cbor.*;
       if(!(CBORObject.NaN.IsNaN()))Assert.fail();
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.NegativeInfinity));
-      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.NEGATIVE_INFINITY));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Float.NEGATIVE_INFINITY));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.PositiveInfinity));
-      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.PositiveInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.POSITIVE_INFINITY));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Float.POSITIVE_INFINITY));
     }
@@ -2326,6 +2383,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       cbor = CBORObject.FromObject(new String[] { "a", "b", "c", "d", "e" });
       Assert.assertEquals("[\"a\",\"b\",\"c\",\"d\",\"e\"]", cbor.ToJSONString());
       TestCommon.AssertRoundTrip(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0x9F, 0, 1, 2, 3, 4, 5, 6, 7, (byte)0xFF  });
+      Assert.assertEquals("[0,1,2,3,4,5,6,7]",cbor.ToJSONString());
     }
 
     /**
@@ -2344,6 +2403,16 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals(2, cbor.get(CBORObject.FromObject("a")).AsInt32());
       Assert.assertEquals(4, cbor.get(CBORObject.FromObject("b")).AsInt32());
       Assert.assertEquals(0, CBORObject.True.size());
+      cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xBF, 0x61, 0x61, 2, 0x61, 0x62, 4, (byte)0xFF  });
+      Assert.assertEquals(2, cbor.size());
+      TestCommon.AssertEqualsHashCode(
+        CBORObject.FromObject(2),
+        cbor.get(CBORObject.FromObject("a")));
+      TestCommon.AssertEqualsHashCode(
+        CBORObject.FromObject(4),
+        cbor.get(CBORObject.FromObject("b")));
+      Assert.assertEquals(2, cbor.get(CBORObject.FromObject("a")).AsInt32());
+      Assert.assertEquals(4, cbor.get(CBORObject.FromObject("b")).AsInt32());
     }
 
     private static String Repeat(char c, int num) {

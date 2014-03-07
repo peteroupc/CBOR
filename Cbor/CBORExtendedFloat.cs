@@ -89,12 +89,9 @@ namespace PeterO.Cbor
     /// <returns>A 64-bit signed integer.</returns>
     public long AsInt64(object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
-      if (ef.IsFinite) {
+      if (this.CanTruncatedIntFitInInt64(obj)) {
         BigInteger bi = ef.ToBigInteger();
-        if (bi.CompareTo(CBORObject.Int64MaxValue) <= 0 &&
-            bi.CompareTo(CBORObject.Int64MinValue) >= 0) {
-          return (long)bi;
-        }
+        return (long)bi;
       }
       throw new OverflowException("This object's value is out of range");
     }
@@ -143,6 +140,12 @@ namespace PeterO.Cbor
       if (!ef.IsFinite) {
         return false;
       }
+      if (ef.IsZero) {
+        return true;
+      }
+      if (ef.Exponent.CompareTo((BigInteger)21) >= 0) {
+        return false;
+      }
       BigInteger bi = ef.ToBigInteger();
       return bi.bitLength() <= 63;
     }
@@ -153,6 +156,12 @@ namespace PeterO.Cbor
     public bool CanTruncatedIntFitInInt32(object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
       if (!ef.IsFinite) {
+        return false;
+      }
+      if (ef.IsZero) {
+        return true;
+      }
+      if (ef.Exponent.CompareTo((BigInteger)11) >= 0) {
         return false;
       }
       BigInteger bi = ef.ToBigInteger();
@@ -173,8 +182,8 @@ namespace PeterO.Cbor
     public int Sign(object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
       if (ef.IsNaN()) {
- return 2;
-}
+        return 2;
+      }
       return ef.Sign;
     }
 
@@ -200,13 +209,11 @@ namespace PeterO.Cbor
     /// <returns>A 32-bit signed integer.</returns>
     public int AsInt32(object obj, int minValue, int maxValue) {
       ExtendedFloat ef = (ExtendedFloat)obj;
-      if (ef.IsFinite) {
+      if (this.CanTruncatedIntFitInInt32(obj)) {
         BigInteger bi = ef.ToBigInteger();
-        if (bi.canFitInInt()) {
-          int ret = (int)bi;
-          if (ret >= minValue && ret <= maxValue) {
-            return ret;
-          }
+        int ret = (int)bi;
+        if (ret >= minValue && ret <= maxValue) {
+          return ret;
         }
       }
       throw new OverflowException("This object's value is out of range");
@@ -231,7 +238,7 @@ namespace PeterO.Cbor
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>An ExtendedRational object.</returns>
-public ExtendedRational AsExtendedRational(object obj) {
+    public ExtendedRational AsExtendedRational(object obj) {
       return ExtendedRational.FromExtendedFloat((ExtendedFloat)obj);
     }
   }

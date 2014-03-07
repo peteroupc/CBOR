@@ -44,7 +44,7 @@ import com.upokecenter.util.*;
       }
       CBORTypeFilter filter = this.Copy();
       filter.any = true;
-      filter.anyArrayLength = false;
+      filter.anyArrayLength = true;
       filter.types = 0xFF;
       return filter;
     }
@@ -79,7 +79,7 @@ import com.upokecenter.util.*;
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter WithByteString() {
-      return this.WithType(2);
+      return this.WithType(2).WithTags(25);
     }
 
     /**
@@ -95,7 +95,7 @@ import com.upokecenter.util.*;
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter WithTextString() {
-      return this.WithType(3);
+      return this.WithType(3).WithTags(25);
     }
 
     /**
@@ -109,9 +109,17 @@ import com.upokecenter.util.*;
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 6;
-      filter.tags = new BigInteger[tags.length];
+      int startIndex = 0;
+      if (filter.tags != null) {
+        BigInteger[] newTags = new BigInteger[tags.length + filter.tags.length];
+        System.arraycopy(filter.tags, 0, newTags, 0, filter.tags.length);
+        startIndex = filter.tags.length;
+        filter.tags = newTags;
+      } else {
+        filter.tags = new BigInteger[tags.length];
+      }
       for (int i = 0; i < tags.length; ++i) {
-        filter.tags[i] = BigInteger.valueOf(tags[i]);
+        filter.tags[startIndex + i] = BigInteger.valueOf(tags[i]);
       }
       return filter;
     }
@@ -132,8 +140,16 @@ import com.upokecenter.util.*;
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 6;
-      filter.tags = new BigInteger[tags.length];
-      System.arraycopy(tags, 0, filter.tags, 0, tags.length);
+      int startIndex = 0;
+      if (filter.tags != null) {
+        BigInteger[] newTags = new BigInteger[tags.length + filter.tags.length];
+        System.arraycopy(filter.tags, 0, newTags, 0, filter.tags.length);
+        startIndex = filter.tags.length;
+        filter.tags = newTags;
+      } else {
+        filter.tags = new BigInteger[tags.length];
+      }
+      System.arraycopy(tags, 0, filter.tags, startIndex, tags.length);
       return filter;
     }
 

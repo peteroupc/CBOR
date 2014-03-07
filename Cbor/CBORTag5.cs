@@ -13,7 +13,7 @@ namespace PeterO.Cbor
     /// <summary>Description of CBORTag5.</summary>
   internal class CBORTag5 : ICBORTag
   {
-    private static CBORTypeFilter valueFilter = new CBORTypeFilter().WithArray(
+    private static CBORTypeFilter valueFilter = new CBORTypeFilter().WithArrayMaxLength(
       2,
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger(),
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));

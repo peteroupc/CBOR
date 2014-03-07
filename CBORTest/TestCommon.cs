@@ -251,17 +251,17 @@ namespace Test {
           Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
         }
         try {
- o.AsSingle();
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+          o.AsSingle();
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
         try {
- o.AsDouble();
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+          o.AsDouble();
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
         try {
           o.AsBigInteger();
           Assert.Fail("Should have failed");
@@ -270,12 +270,6 @@ throw new InvalidOperationException(String.Empty, ex);
           Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
         }
         return;
-      }
-      try {
-        // TODO: Limit exponents to be tested
-        //  o.AsBigInteger();
-      } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ",  " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         o.AsSingle();

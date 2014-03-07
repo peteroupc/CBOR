@@ -157,6 +157,9 @@ namespace Test {
       } else {
         tag = rand.NextValue(0x1000000);
       }
+      if (tag == 25) {
+        tag = 0;
+      }
       if (tag == 30) {
         return RandomCBORByteString(rand);
       }
@@ -674,7 +677,7 @@ namespace Test {
 
     /// <summary>Not documented yet.</summary>
     [Test]
-    [Timeout(10000)]
+    // [Timeout(10000)]
     public void TestCompare() {
       FastRandom r = new FastRandom();
       string badstr = null;
@@ -692,13 +695,13 @@ namespace Test {
           String bas = ToByteArrayString(o1)+".CompareTo("+ToByteArrayString(o2)+");";
           thread.Abort();
           if (bas.Length <= 2000) {
- Console.WriteLine(bas);
-}
+            Console.WriteLine(bas);
+          }
           if (badstr == null || bas.Length<badstr.Length) {
             badstr = bas;
           }
         }
-         */
+        */
         CompareTestReciprocal(o1, o2);
       }
       if (badstr != null) {
@@ -911,17 +914,59 @@ namespace Test {
       Assert.AreEqual(
         ExtendedRational.NegativeInfinity,
         ExtendedRational.FromExtendedFloat(ExtendedFloat.NegativeInfinity));
-      
-      Assert.AreEqual(Double.PositiveInfinity,ExtendedRational.PositiveInfinity.ToDouble());
-      Assert.AreEqual(Double.NegativeInfinity,ExtendedRational.NegativeInfinity.ToDouble());
-      Assert.AreEqual(Single.PositiveInfinity,ExtendedRational.PositiveInfinity.ToSingle());
-      Assert.AreEqual(Single.NegativeInfinity,ExtendedRational.NegativeInfinity.ToSingle());
-      Assert.Throws(typeof(OverflowException),()=>ExtendedDecimal.PositiveInfinity.ToBigInteger());
-      Assert.Throws(typeof(OverflowException),()=>ExtendedDecimal.NegativeInfinity.ToBigInteger());
-      Assert.Throws(typeof(OverflowException),()=>ExtendedFloat.PositiveInfinity.ToBigInteger());
-      Assert.Throws(typeof(OverflowException),()=>ExtendedFloat.NegativeInfinity.ToBigInteger());
-      Assert.Throws(typeof(OverflowException),()=>ExtendedRational.PositiveInfinity.ToBigInteger());
-      Assert.Throws(typeof(OverflowException),()=>ExtendedRational.NegativeInfinity.ToBigInteger());
+
+      Assert.AreEqual(Double.PositiveInfinity, ExtendedRational.PositiveInfinity.ToDouble());
+      Assert.AreEqual(Double.NegativeInfinity, ExtendedRational.NegativeInfinity.ToDouble());
+      Assert.AreEqual(Single.PositiveInfinity, ExtendedRational.PositiveInfinity.ToSingle());
+      Assert.AreEqual(Single.NegativeInfinity, ExtendedRational.NegativeInfinity.ToSingle());
+      try {
+        ExtendedDecimal.PositiveInfinity.ToBigInteger();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.NegativeInfinity.ToBigInteger();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.PositiveInfinity.ToBigInteger();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.NegativeInfinity.ToBigInteger();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedRational.PositiveInfinity.ToBigInteger();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedRational.NegativeInfinity.ToBigInteger();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
 
     [Test]
@@ -2269,7 +2314,7 @@ namespace Test {
       cbor = CBORObject.FromObject(new String[] { "a", "b", "c", "d", "e" });
       Assert.AreEqual("[\"a\",\"b\",\"c\",\"d\",\"e\"]", cbor.ToJSONString());
       TestCommon.AssertRoundTrip(cbor);
-      cbor=CBORObject.DecodeFromBytes(new byte[]{0x9F,0,1,2,3,4,5,6,7,0xFF});
+      cbor = CBORObject.DecodeFromBytes(new byte[] { 0x9F, 0, 1, 2, 3, 4, 5, 6, 7, 0xFF });
       Assert.AreEqual("[0,1,2,3,4,5,6,7]",cbor.ToJSONString());
     }
 
@@ -2287,7 +2332,7 @@ namespace Test {
       Assert.AreEqual(2, cbor[CBORObject.FromObject("a")].AsInt32());
       Assert.AreEqual(4, cbor[CBORObject.FromObject("b")].AsInt32());
       Assert.AreEqual(0, CBORObject.True.Count);
-      cbor=CBORObject.DecodeFromBytes(new byte[]{0xBF,0x61,0x61,2,0x61,0x62,4,0xFF});
+      cbor = CBORObject.DecodeFromBytes(new byte[] { 0xBF, 0x61, 0x61, 2, 0x61, 0x62, 4, 0xFF });
       Assert.AreEqual(2, cbor.Count);
       TestCommon.AssertEqualsHashCode(
         CBORObject.FromObject(2),

@@ -45,8 +45,8 @@ import com.upokecenter.cbor.*;
         ExtendedRational er = CBORTest.RandomRational(fr);
         ExtendedRational er2 = CBORTest.RandomRational(fr);
         if (er2.signum()==0 || !er2.isFinite()) {
- continue;
-}
+          continue;
+        }
         ExtendedRational ermult = er.Multiply(er2);
         ExtendedRational erdiv = ermult.Divide(er);
         if (erdiv.compareTo(er2) != 0) {
@@ -68,8 +68,8 @@ import com.upokecenter.cbor.*;
         er = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.ONE);
         er2 = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.ONE);
         if (er2.signum()==0 || !er2.isFinite()) {
- continue;
-}
+          continue;
+        }
         ExtendedRational ermult = er.Multiply(er2);
         ExtendedRational erdiv = ermult.Divide(er);
         erdiv = ermult.Remainder(er);
@@ -382,6 +382,79 @@ import com.upokecenter.cbor.*;
                       CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x49, 1, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(72)),
                       CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x4a, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+    }
+
+    @Test
+    public void TestStringRefs() {
+      CBORObject cbor = CBORObject.DecodeFromBytes(
+        new byte[] {  (byte)0xd9,
+        1,
+        0,
+        (byte)0x9F,
+        0x64,
+        0x61,
+        0x62,
+        0x63,
+        0x64,
+        (byte)0xd8,
+        0x19,
+        0x00,
+        (byte)0xd8,
+        0x19,
+        0x00,
+        0x64,
+        0x62,
+        0x62,
+        0x63,
+        0x64,
+        (byte)0xd8,
+        0x19,
+        0x01,
+        (byte)0xd8,
+        0x19,
+        0x00,
+        (byte)0xd8,
+        0x19,
+        0x01,
+        (byte)0xFF  });
+      String expected="[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
+      Assert.assertEquals(expected, cbor.ToJSONString());
+      cbor = CBORObject.DecodeFromBytes(
+        new byte[] {  (byte)0xd9,
+        1,
+        0,
+        (byte)0x9F,
+        0x64,
+        0x61,
+        0x62,
+        0x63,
+        0x64,
+        0x62,
+        0x61,
+        0x61,
+        (byte)0xd8,
+        0x19,
+        0x00,
+        (byte)0xd8,
+        0x19,
+        0x00,
+        0x64,
+        0x62,
+        0x62,
+        0x63,
+        0x64,
+        (byte)0xd8,
+        0x19,
+        0x01,
+        (byte)0xd8,
+        0x19,
+        0x00,
+        (byte)0xd8,
+        0x19,
+        0x01,
+        (byte)0xFF  });
+      expected="[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
+      Assert.assertEquals(expected, cbor.ToJSONString());
     }
 
     @Test

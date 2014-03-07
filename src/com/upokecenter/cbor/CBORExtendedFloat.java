@@ -108,12 +108,9 @@ import com.upokecenter.util.*;
      */
     public long AsInt64(Object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
-      if (ef.isFinite()) {
+      if (this.CanTruncatedIntFitInInt64(obj)) {
         BigInteger bi = ef.ToBigInteger();
-        if (bi.compareTo(CBORObject.Int64MaxValue) <= 0 &&
-            bi.compareTo(CBORObject.Int64MinValue) >= 0) {
-          return bi.longValue();
-        }
+        return bi.longValue();
       }
       throw new ArithmeticException("This Object's value is out of range");
     }
@@ -172,6 +169,12 @@ import com.upokecenter.util.*;
       if (!ef.isFinite()) {
         return false;
       }
+      if (ef.signum()==0) {
+        return true;
+      }
+      if (ef.getExponent().compareTo(BigInteger.valueOf(21)) >= 0) {
+        return false;
+      }
       BigInteger bi = ef.ToBigInteger();
       return bi.bitLength() <= 63;
     }
@@ -184,6 +187,12 @@ import com.upokecenter.util.*;
     public boolean CanTruncatedIntFitInInt32(Object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
       if (!ef.isFinite()) {
+        return false;
+      }
+      if (ef.signum()==0) {
+        return true;
+      }
+      if (ef.getExponent().compareTo(BigInteger.valueOf(11)) >= 0) {
         return false;
       }
       BigInteger bi = ef.ToBigInteger();
@@ -208,8 +217,8 @@ import com.upokecenter.util.*;
     public int Sign(Object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
       if (ef.IsNaN()) {
- return 2;
-}
+        return 2;
+      }
       return ef.signum();
     }
 
@@ -239,13 +248,11 @@ import com.upokecenter.util.*;
      */
     public int AsInt32(Object obj, int minValue, int maxValue) {
       ExtendedFloat ef = (ExtendedFloat)obj;
-      if (ef.isFinite()) {
+      if (this.CanTruncatedIntFitInInt32(obj)) {
         BigInteger bi = ef.ToBigInteger();
-        if (bi.canFitInInt()) {
-          int ret = bi.intValue();
-          if (ret >= minValue && ret <= maxValue) {
-            return ret;
-          }
+        int ret = bi.intValue();
+        if (ret >= minValue && ret <= maxValue) {
+          return ret;
         }
       }
       throw new ArithmeticException("This Object's value is out of range");
@@ -276,7 +283,7 @@ import com.upokecenter.util.*;
      * @param obj An arbitrary object.
      * @return An ExtendedRational object.
      */
-public ExtendedRational AsExtendedRational(Object obj) {
+    public ExtendedRational AsExtendedRational(Object obj) {
       return ExtendedRational.FromExtendedFloat((ExtendedFloat)obj);
     }
   }

@@ -8,8 +8,8 @@ package com.upokecenter.cbor;
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 
-import com.upokecenter.util.*;
 import java.util.*;
+import com.upokecenter.util.*;
 
     /**
      * Description of StringRefs.
@@ -68,6 +68,7 @@ import java.util.*;
           addStr = true;
         }
       }
+      // System.out.println("addStr=" + addStr + " lengthHint=" + lengthHint + " str=" + (str));
       if (addStr) {
         lastList.add(str);
       }
@@ -80,17 +81,23 @@ import java.util.*;
      */
     public CBORObject GetString(long smallIndex) {
       if (smallIndex < 0) {
- throw new CBORException("Unexpected index");
-}
+        throw new CBORException("Unexpected index");
+      }
       if (smallIndex > Integer.MAX_VALUE) {
- throw new CBORException("Index " + smallIndex + " is bigger than supported");
-}
+        throw new CBORException("Index " + smallIndex + " is bigger than supported");
+      }
       int index = (int)smallIndex;
       List<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
-      if (index < lastList.size()) {
+      if (index >= lastList.size()) {
         throw new CBORException("Index " + index + " is not valid");
       }
-      return lastList.get(index);
+      CBORObject ret = lastList.get(index);
+      if (ret.getType() == CBORType.ByteString) {
+        // Byte strings are mutable, so make a copy
+        return CBORObject.FromObject(ret.GetByteString());
+      } else {
+        return ret;
+      }
     }
 
     /**
@@ -100,16 +107,22 @@ import java.util.*;
      */
     public CBORObject GetString(BigInteger bigIndex) {
       if (bigIndex.signum() < 0) {
- throw new CBORException("Unexpected index");
-}
+        throw new CBORException("Unexpected index");
+      }
       if (!bigIndex.canFitInInt()) {
- throw new CBORException("Index " + bigIndex + " is bigger than supported");
-}
+        throw new CBORException("Index " + bigIndex + " is bigger than supported");
+      }
       int index = bigIndex.intValue();
       List<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
-      if (index < lastList.size()) {
+      if (index >= lastList.size()) {
         throw new CBORException("Index " + index + " is not valid");
       }
-      return lastList.get(index);
+      CBORObject ret = lastList.get(index);
+      if (ret.getType() == CBORType.ByteString) {
+        // Byte strings are mutable, so make a copy
+        return CBORObject.FromObject(ret.GetByteString());
+      } else {
+        return ret;
+      }
     }
   }
