@@ -1,9 +1,9 @@
-﻿/*
+/*
  * Created by SharpDevelop.
  * User: Peter
  * Date: 3/7/2014
  * Time: 10:27 AM
- * 
+ *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
@@ -12,34 +12,34 @@ using PeterO;
 
 namespace PeterO.Cbor
 {
-  /// <summary>
-  /// Description of SharedRefs.
-  /// </summary>
+    /// <summary>Description of SharedRefs.</summary>
   internal class SharedRefs
   {
     private IList<CBORObject> sharedObjects;
     private int refCount;
-    
-    public SharedRefs()
-    {
-      sharedObjects=new List<CBORObject>();
+
+    public SharedRefs() {
+      sharedObjects = new List<CBORObject>();
     }
-    
-    public void FillRef(CBORObject obj){
-      if(refCount>0){
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='obj'>A CBORObject object.</param>
+public void FillRef(CBORObject obj) {
+      if (refCount>0) {
         sharedObjects.Add(obj);
         refCount-=1;
       }
     }
-    
-    public void AddRef()
-    {
-      if(refCount==Int32.MaxValue)
-        throw new CBORException("Shared ref nesting too deep");
+
+    /// <summary>Not documented yet.</summary>
+public void AddRef() {
+      if (refCount == Int32.MaxValue) {
+ throw new CBORException("Shared ref nesting too deep");
+}
       refCount+=1;
     }
-    
-        /// <summary>Not documented yet.</summary>
+
+    /// <summary>Not documented yet.</summary>
     /// <param name='smallIndex'>A 64-bit signed integer.</param>
     /// <returns>A string object.</returns>
     public CBORObject GetObject(long smallIndex) {
