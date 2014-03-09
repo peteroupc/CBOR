@@ -42,6 +42,11 @@ The following are some clarifications to RFC 7049.
   string has a length of 0.  This implementation treats a positive
   bignum with length 0 as having a value of 0 and a negative
   bignum with length 0 as having a value of -1.
+* Section 2.4.1 specifies the number of seconds since the start of 1970.  It is
+  based on the POSIX definition of "seconds since the Epoch", which
+  the RFC cites as a normative reference.  This definition does not
+  count leap seconds.  When this implementation supports date
+  conversion, it won't count leap seconds, either.
 
 About
 -----------
