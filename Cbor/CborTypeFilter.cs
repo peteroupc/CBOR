@@ -264,8 +264,8 @@ namespace PeterO.Cbor
       if (bigLength == null) {
         throw new ArgumentNullException("bigLength");
       }
-      if (this.types & (1 << 4)) {
- != 0)return false;
+      if ((this.types & (1 << 4)) != 0) {
+        return false;
 }
       if (this.anyArrayLength) {
  return true;
