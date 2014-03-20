@@ -1005,10 +1005,10 @@ public int CompareToBinary(ExtendedFloat other) {
           // higher.) This check assumes that both exponents are 1000 or greater,
           // when the ratio between exponents of equal values is close to
           // ln(10)/ln(2).
-          if (ratio < 3) {
+          if (ratio.CompareTo((BigInteger)3) < 0) {
             // Decimal abs. value is greater
             return (signA > 0) ? 1 : -1;
-          } else if (ratio >= 4) {
+          } else if (ratio.CompareTo((BigInteger)4) >= 0) {
             return (signA > 0) ? -1 : 1;
           }
         }

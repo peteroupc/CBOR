@@ -27,7 +27,7 @@ public CBORTypeFilter GetTypeFilter() {
      * @return A CBORObject object.
      */
 public CBORObject ValidateObject(CBORObject obj) {
-      if (obj.getType() != CBORType.Array || obj.size()< 1) {
+      if (obj.getType() != CBORType.Array || obj.size() < 1) {
  throw new CBORException("Not an array, or is an empty array.");
 }
       return obj;

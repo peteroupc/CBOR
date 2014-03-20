@@ -164,7 +164,7 @@ import com.upokecenter.util.*;
  */
 @Deprecated
     public CBORTypeFilter WithArray(int arrayLength, CBORTypeFilter... elements) {
-      return WithArrayMaxLength(arrayLength, elements);
+      return this.WithArrayMaxLength(arrayLength, elements);
     }
 
     /**
@@ -299,7 +299,7 @@ import com.upokecenter.util.*;
       if (!this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) == 0) {
  return true;
 }
-      if (this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) => 0) {
+      if (this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) >= 0) {
  return true;
 }
       return false;

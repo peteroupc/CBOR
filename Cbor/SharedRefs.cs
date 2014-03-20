@@ -19,24 +19,24 @@ namespace PeterO.Cbor
     private int refCount;
 
     public SharedRefs() {
-      sharedObjects = new List<CBORObject>();
+      this.sharedObjects = new List<CBORObject>();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>A CBORObject object.</param>
 public void FillRef(CBORObject obj) {
-      if (refCount>0) {
-        sharedObjects.Add(obj);
-        refCount-=1;
+      if (this.refCount > 0) {
+        this.sharedObjects.Add(obj);
+        --this.refCount;
       }
     }
 
     /// <summary>Not documented yet.</summary>
 public void AddRef() {
-      if (refCount == Int32.MaxValue) {
+      if (this.refCount == Int32.MaxValue) {
  throw new CBORException("Shared ref nesting too deep");
 }
-      refCount+=1;
+      ++this.refCount;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -49,11 +49,14 @@ public void AddRef() {
       if (smallIndex > Int32.MaxValue) {
         throw new CBORException("Index " + smallIndex + " is bigger than supported");
       }
+      throw new NotImplementedException();
+      /*
       int index = (int)smallIndex;
       if (index >= sharedObjects.Count) {
         throw new CBORException("Index " + index + " is not valid");
       }
       return sharedObjects[index];
+      */
     }
 
     /// <summary>Not documented yet.</summary>
@@ -66,12 +69,15 @@ public void AddRef() {
       if (!bigIndex.canFitInInt()) {
         throw new CBORException("Index " + bigIndex + " is bigger than supported");
       }
+      throw new NotImplementedException();
+      /*
       int index = (int)bigIndex;
       IList<CBORObject> sharedObjects = this.stack[this.stack.Count - 1];
       if (index >= sharedObjects.Count) {
         throw new CBORException("Index " + index + " is not valid");
       }
       return sharedObjects[index];
+      */
     }
   }
 }

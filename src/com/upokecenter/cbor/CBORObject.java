@@ -392,7 +392,7 @@ public void setConverter(Object value) {
      * @return A value not documented yet.
      */
 public boolean isFinite() {
-        return this.getType() == CBORType.Number && !IsInfinity() && !IsNaN();
+        return this.getType() == CBORType.Number && !this.IsInfinity() && !this.IsNaN();
       }
 
     /**
@@ -4357,7 +4357,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       return lval;
     }
 
-    private static byte[] ReadByteData(InputStream s, long uadditional, MemoryStream outputStream) throws IOException {
+    private static byte[] ReadByteData(InputStream s, long uadditional, OutputStream outputStream) throws IOException {
       if ((uadditional >> 63) != 0 || uadditional > Integer.MAX_VALUE) {
         throw new CBORException("Length " + ToUnsignedBigInteger(uadditional) +" is bigger than supported");
       }

@@ -146,7 +146,7 @@ namespace PeterO.Cbor
     /// <returns>A CBORTypeFilter object.</returns>
 [Obsolete("Use WithArrayMaxLength instead.")]
     public CBORTypeFilter WithArray(int arrayLength, params CBORTypeFilter[] elements) {
-      return WithArrayMaxLength(arrayLength, elements);
+      return this.WithArrayMaxLength(arrayLength, elements);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -273,7 +273,7 @@ namespace PeterO.Cbor
       if (!this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) == 0) {
  return true;
 }
-      if (this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) => 0) {
+      if (this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) >= 0) {
  return true;
 }
       return false;
