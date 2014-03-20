@@ -16,16 +16,18 @@ namespace PeterO.Cbor
     /// </summary>
   internal class StringRefs
   {
-    private List<IList<CBORObject>> stack;
+    private List<List<CBORObject>> stack;
 
     public StringRefs() {
-      this.stack = new List<IList<CBORObject>>();
-      this.stack.Add(new List<CBORObject>());
+      this.stack = new List<List<CBORObject>>();
+      var firstItem = new List<CBORObject>();
+      this.stack.Add(firstItem);
     }
 
     /// <summary>Not documented yet.</summary>
     public void Push() {
-      this.stack.Add(new List<CBORObject>());
+      var firstItem = new List<CBORObject>();
+      this.stack.Add(firstItem);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -53,7 +55,7 @@ namespace PeterO.Cbor
       #endif
 
       bool addStr = false;
-      IList<CBORObject> lastList = this.stack[this.stack.Count - 1];
+      List<CBORObject> lastList = this.stack[this.stack.Count - 1];
       if (lastList.Count < 24) {
         if (lengthHint >= 3) {
           addStr = true;
@@ -92,7 +94,7 @@ namespace PeterO.Cbor
         throw new CBORException("Index " + smallIndex + " is bigger than supported");
       }
       int index = (int)smallIndex;
-      IList<CBORObject> lastList = this.stack[this.stack.Count - 1];
+      List<CBORObject> lastList = this.stack[this.stack.Count - 1];
       if (index >= lastList.Count) {
         throw new CBORException("Index " + index + " is not valid");
       }
@@ -116,7 +118,7 @@ namespace PeterO.Cbor
         throw new CBORException("Index " + bigIndex + " is bigger than supported");
       }
       int index = (int)bigIndex;
-      IList<CBORObject> lastList = this.stack[this.stack.Count - 1];
+      List<CBORObject> lastList = this.stack[this.stack.Count - 1];
       if (index >= lastList.Count) {
         throw new CBORException("Index " + index + " is not valid");
       }

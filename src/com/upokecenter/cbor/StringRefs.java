@@ -16,18 +16,20 @@ import com.upokecenter.util.*;
      */
   class StringRefs
   {
-    private ArrayList<List<CBORObject>> stack;
+    private ArrayList<ArrayList<CBORObject>> stack;
 
     public StringRefs () {
-      this.stack = new ArrayList<List<CBORObject>>();
-      this.stack.Add(new ArrayList<CBORObject>());
+      this.stack = new ArrayList<ArrayList<CBORObject>>();
+      ArrayList<CBORObject> firstItem=new ArrayList<CBORObject>();
+      this.stack.add(firstItem);
     }
 
     /**
      * Not documented yet.
      */
     public void Push() {
-      this.stack.Add(new ArrayList<CBORObject>());
+      ArrayList<CBORObject> firstItem=new ArrayList<CBORObject>();
+      this.stack.add(firstItem);
     }
 
     /**
@@ -35,7 +37,7 @@ import com.upokecenter.util.*;
      */
     public void Pop() {
 
-      this.stack.RemoveAt(this.stack.size() - 1);
+      this.stack.remove(this.stack.size() - 1);
     }
 
     /**
@@ -46,7 +48,7 @@ import com.upokecenter.util.*;
     public void AddStringIfNeeded(CBORObject str, int lengthHint) {
 
       boolean addStr = false;
-      List<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
+      ArrayList<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
       if (lastList.size() < 24) {
         if (lengthHint >= 3) {
           addStr = true;
@@ -87,7 +89,7 @@ import com.upokecenter.util.*;
         throw new CBORException("Index " + smallIndex + " is bigger than supported");
       }
       int index = (int)smallIndex;
-      List<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
+      ArrayList<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
       if (index >= lastList.size()) {
         throw new CBORException("Index " + index + " is not valid");
       }
@@ -113,7 +115,7 @@ import com.upokecenter.util.*;
         throw new CBORException("Index " + bigIndex + " is bigger than supported");
       }
       int index = bigIndex.intValue();
-      List<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
+      ArrayList<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
       if (index >= lastList.size()) {
         throw new CBORException("Index " + index + " is not valid");
       }

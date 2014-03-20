@@ -432,7 +432,7 @@ namespace PeterO.Cbor {
     /// <value>A value not documented yet.</value>
 public bool IsFinite {
       get {
-        return this.Type == CBORType.Number && !IsInfinity() && !IsNaN();
+        return this.Type == CBORType.Number && !this.IsInfinity() && !this.IsNaN();
       }
     }
 
@@ -4312,7 +4312,7 @@ public bool IsFinite {
       return lval;
     }
 
-    private static byte[] ReadByteData(Stream s, long uadditional, MemoryStream outputStream) {
+    private static byte[] ReadByteData(Stream s, long uadditional, Stream outputStream) {
       if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
         throw new CBORException("Length " + ToUnsignedBigInteger(uadditional) +" is bigger than supported");
       }

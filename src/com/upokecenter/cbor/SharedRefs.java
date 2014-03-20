@@ -20,7 +20,7 @@ import com.upokecenter.util.*;
     private int refCount;
 
     public SharedRefs () {
-      sharedObjects = new ArrayList<CBORObject>();
+      this.sharedObjects = new ArrayList<CBORObject>();
     }
 
     /**
@@ -28,9 +28,9 @@ import com.upokecenter.util.*;
      * @param obj A CBORObject object.
      */
 public void FillRef(CBORObject obj) {
-      if (refCount>0) {
-        sharedObjects.add(obj);
-        refCount-=1;
+      if (this.refCount > 0) {
+        this.sharedObjects.add(obj);
+        --this.refCount;
       }
     }
 
@@ -38,10 +38,10 @@ public void FillRef(CBORObject obj) {
      * Not documented yet.
      */
 public void AddRef() {
-      if (refCount == Integer.MAX_VALUE) {
+      if (this.refCount == Integer.MAX_VALUE) {
  throw new CBORException("Shared ref nesting too deep");
 }
-      refCount+=1;
+      ++this.refCount;
     }
 
     /**
@@ -56,11 +56,14 @@ public void AddRef() {
       if (smallIndex > Integer.MAX_VALUE) {
         throw new CBORException("Index " + smallIndex + " is bigger than supported");
       }
+      throw new UnsupportedOperationException();
+      /*
       int index = (int)smallIndex;
       if (index >= sharedObjects.size()) {
         throw new CBORException("Index " + index + " is not valid");
       }
       return sharedObjects.get(index);
+      */
     }
 
     /**
@@ -75,11 +78,14 @@ public void AddRef() {
       if (!bigIndex.canFitInInt()) {
         throw new CBORException("Index " + bigIndex + " is bigger than supported");
       }
+      throw new UnsupportedOperationException();
+      /*
       int index = bigIndex.intValue();
       List<CBORObject> sharedObjects = this.stack.get(this.stack.size() - 1);
       if (index >= sharedObjects.size()) {
         throw new CBORException("Index " + index + " is not valid");
       }
       return sharedObjects.get(index);
+      */
     }
   }

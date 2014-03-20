@@ -23,7 +23,7 @@ public CBORTypeFilter GetTypeFilter() {
     /// <param name='obj'>A CBORObject object. (2).</param>
     /// <returns>A CBORObject object.</returns>
 public CBORObject ValidateObject(CBORObject obj) {
-      if (obj.Type != CBORType.Array || obj.Count< 1) {
+      if (obj.Type != CBORType.Array || obj.Count < 1) {
  throw new CBORException("Not an array, or is an empty array.");
 }
       return obj;
