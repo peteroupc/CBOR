@@ -290,8 +290,8 @@ import com.upokecenter.util.*;
       if (bigLength == null) {
         throw new NullPointerException("bigLength");
       }
-      if (this.types & (1 << 4)) {
- != 0)return false;
+      if ((this.types & (1 << 4)) != 0) {
+        return false;
 }
       if (this.anyArrayLength) {
  return true;
