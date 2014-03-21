@@ -4363,7 +4363,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       return lval;
     }
 
-    private static byte[] ReadByteData(InputStream s, long uadditional, InputStream outputStream) throws IOException {
+    private static byte[] ReadByteData(InputStream s, long uadditional, OutputStream outputStream) throws IOException {
       if ((uadditional >> 63) != 0 || uadditional > Integer.MAX_VALUE) {
         throw new CBORException("Length " + ToUnsignedBigInteger(uadditional) + " is bigger than supported");
       }

@@ -689,7 +689,8 @@ import com.upokecenter.cbor.*;
         CBORObject o1 = RandomCBORObject(r);
         CBORObject o2 = RandomCBORObject(r);
         /*
-        System.Threading.Thread thread=new Thread(new Runnable(){ public void run() { System.Threading. }});
+        System.Threading.Thread thread=new Thread(new Runnable(){ public void run() { CompareTestReciprocal(o1, o2)
+ }});
         thread.start();
         if (!thread.join(5000)) {
           String bas = ToByteArrayString(o1)+".compareTo("+ToByteArrayString(o2)+");";
@@ -1252,11 +1253,10 @@ import com.upokecenter.cbor.*;
       String badstr = null;
       int count = 1000;
       for (int i = 0; i < count; ++i) {
-        //if (i%200 == 0) {
-  //  System.out.println("=="+i+"==");
-}
-          obj = RandomCBORObject(rand);
-        System.Threading.Thread thread=new Thread(new Runnable(){ public void run() { System.Threading. }});
+        obj = RandomCBORObject(rand);
+        TestCommon.AssertRoundTrip(obj);
+        /*
+        System.Threading.Thread thread = new Thread(new Runnable(){ public void run() { TestCommon.AssertRoundTrip(obj) }});
         thread.start();
         if (!thread.join(5000)) {
           String bas = ToByteArrayString(obj);
@@ -1267,6 +1267,7 @@ import com.upokecenter.cbor.*;
             badstr = bas;
           }
         }
+        */
       }
       if (badstr != null) {
         if (badstr.length()>10000) {
