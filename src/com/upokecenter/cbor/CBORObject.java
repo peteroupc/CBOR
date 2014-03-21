@@ -4204,7 +4204,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         }
         sb.append(simvalue);
       } else if (type == CBORObjectTypeExtendedFloat) {
-        return ExtendedToString((ExtendedFloat)this.getThisItem());
+        simvalue = ExtendedToString((ExtendedFloat)this.getThisItem());
+        if (sb == null) {
+          return simvalue;
+        }
+        sb.append(simvalue);
       } else if (type == CBORObjectTypeInteger) {
         long v = (((Long)this.getThisItem()).longValue());
         simvalue = Long.toString((long)v);
@@ -4359,7 +4363,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       return lval;
     }
 
-    private static byte[] ReadByteData(InputStream s, long uadditional, OutputStream outputStream) throws IOException {
+    private static byte[] ReadByteData(InputStream s, long uadditional, InputStream outputStream) throws IOException {
       if ((uadditional >> 63) != 0 || uadditional > Integer.MAX_VALUE) {
         throw new CBORException("Length " + ToUnsignedBigInteger(uadditional) + " is bigger than supported");
       }

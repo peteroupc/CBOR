@@ -4159,7 +4159,11 @@ namespace PeterO.Cbor {
         }
         sb.Append(simvalue);
       } else if (type == CBORObjectTypeExtendedFloat) {
-        return ExtendedToString((ExtendedFloat)this.ThisItem);
+        simvalue = ExtendedToString((ExtendedFloat)this.ThisItem);
+        if (sb == null) {
+          return simvalue;
+        }
+        sb.Append(simvalue);
       } else if (type == CBORObjectTypeInteger) {
         long v = (long)this.ThisItem;
         simvalue = Convert.ToString((long)v, CultureInfo.InvariantCulture);
