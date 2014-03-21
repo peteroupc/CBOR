@@ -160,11 +160,11 @@ import com.upokecenter.util.*;
      * @param arrayLength A 32-bit signed integer.
      * @param elements An array of CBORTypeFilter.
      * @return A CBORTypeFilter object.
-     * @deprecated Use WithArrayMaxLength instead.
+     * @deprecated Use WithArrayExactLength instead.
  */
 @Deprecated
     public CBORTypeFilter WithArray(int arrayLength, CBORTypeFilter... elements) {
-      return this.WithArrayMaxLength(arrayLength, elements);
+      return this.WithArrayExactLength(arrayLength, elements);
     }
 
     /**
@@ -173,7 +173,7 @@ import com.upokecenter.util.*;
      * @param elements An array of CBORTypeFilter.
      * @return A CBORTypeFilter object.
      */
-    public CBORTypeFilter WithArrayMaxLength(int arrayLength, CBORTypeFilter... elements) {
+    public CBORTypeFilter WithArrayExactLength(int arrayLength, CBORTypeFilter... elements) {
       if (this.any) {
         return this;
       }

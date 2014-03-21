@@ -144,16 +144,16 @@ namespace PeterO.Cbor
     /// <param name='arrayLength'>A 32-bit signed integer.</param>
     /// <param name='elements'>An array of CBORTypeFilter.</param>
     /// <returns>A CBORTypeFilter object.</returns>
-    [Obsolete("Use WithArrayMaxLength instead.")]
+    [Obsolete("Use WithArrayExactLength instead.")]
     public CBORTypeFilter WithArray(int arrayLength, params CBORTypeFilter[] elements) {
-      return this.WithArrayMaxLength(arrayLength, elements);
+      return this.WithArrayExactLength(arrayLength, elements);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     /// <param name='arrayLength'>A 32-bit signed integer.</param>
     /// <param name='elements'>An array of CBORTypeFilter.</param>
-    public CBORTypeFilter WithArrayMaxLength(int arrayLength, params CBORTypeFilter[] elements) {
+    public CBORTypeFilter WithArrayExactLength(int arrayLength, params CBORTypeFilter[] elements) {
       if (this.any) {
         return this;
       }

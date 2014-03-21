@@ -4653,12 +4653,9 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         }
       } else if (type == 4) {  // Array
         CBORObject cbor = NewArray();
-        int vtindex = 1;
+        int vtindex = 0;
         if (additional == 31) {
           while (true) {
-            if (filter != null && !filter.ArrayIndexAllowed(vtindex)) {
-              throw new CBORException("Array is too long");
-            }
             CBORObject o = Read(
               s,
               depth + 1,
@@ -4669,8 +4666,14 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             if (o == null) {
               break;
             }
+            if (filter != null && !filter.ArrayIndexAllowed(vtindex)) {
+              throw new CBORException("Array is too long");
+            }
             cbor.Add(o);
             ++vtindex;
+          }
+          if (filter != null && !filter.ArrayLengthMatches(cbor.size())) {
+            throw new CBORException("Array has an invalid length");
           }
           return cbor;
         } else {
@@ -4684,7 +4687,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
                                     " is bigger than supported");
           }
           if (filter != null && !filter.ArrayLengthMatches(uadditional)) {
-            throw new CBORException("Array is too long");
+            throw new CBORException("Array has an invalid length");
           }
           for (long i = 0; i < uadditional; ++i) {
             cbor.Add(

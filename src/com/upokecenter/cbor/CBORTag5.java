@@ -14,7 +14,7 @@ import com.upokecenter.util.*;
      */
   class CBORTag5 implements ICBORTag
   {
-    private static CBORTypeFilter valueFilter = new CBORTypeFilter().WithArrayMaxLength(
+    private static CBORTypeFilter valueFilter = new CBORTypeFilter().WithArrayExactLength(
       2,
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger(),
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
