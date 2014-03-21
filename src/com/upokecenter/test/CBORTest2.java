@@ -267,6 +267,72 @@ import com.upokecenter.cbor.*;
         throw new IllegalStateException("", ex);
       }
       try {
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x9f, 0x01, 0x01, (byte)0xFF  });
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x9f, 0x01, (byte)0xFF  });
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x9f, (byte)0xFF  });
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x9f, 0x00, 0x00, (byte)0xFF  });
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x9f, 0x00, 0x00, (byte)0xFF  });
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x9f, 0x00, (byte)0xFF  });
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x9f, 0x00, (byte)0xFF  });
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x9f, (byte)0xFF  });
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x9f, (byte)0xFF  });
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
         CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x81, 0x00  });
         Assert.fail("Should have failed");
       } catch (CBORException ex) {

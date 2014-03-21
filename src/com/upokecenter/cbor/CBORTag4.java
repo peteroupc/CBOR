@@ -12,7 +12,7 @@ at: http://peteroupc.github.io/CBOR/
      */
   class CBORTag4 implements ICBORTag
   {
-    private static CBORTypeFilter valueFilter = new CBORTypeFilter().WithArrayMaxLength(
+    private static CBORTypeFilter valueFilter = new CBORTypeFilter().WithArrayExactLength(
       2,
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger(),
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
