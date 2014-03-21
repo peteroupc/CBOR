@@ -12,7 +12,7 @@ namespace PeterO
 {
     /// <summary>Represents an arbitrary-precision decimal floating-point
     /// number. Consists of an integer mantissa and an integer exponent,
-    /// both arbitrary-precision. The value of the number is equal to mantissa
+    /// both arbitrary-precision. The value of the number equals mantissa
     /// * 10^exponent. <para>The mantissa is the value of the digits that
     /// make up a number, ignoring the decimal point and exponent. For example,
     /// in the number 2356.78, the mantissa is 235678. The exponent is where
@@ -968,8 +968,8 @@ public int CompareToBinary(ExtendedFloat other) {
       if (other.Exponent.CompareTo((BigInteger)(-1000)) < 0) {
         // For very low exponents, the conversion to decimal can take
         // very long, so try this approach
-        if (other.Abs().CompareTo(ExtendedFloat.One) < 0) {  // Abs less than 1
-          if (this.Abs().CompareTo(ExtendedDecimal.One) >= 0) {  // Abs 1 or more
+        if (other.Abs(null).CompareTo(ExtendedFloat.One) < 0) {  // Abs less than 1
+          if (this.Abs(null).CompareTo(ExtendedDecimal.One) >= 0) {  // Abs 1 or more
             return (signA > 0) ? 1 : -1;
           }
         }
@@ -977,7 +977,7 @@ public int CompareToBinary(ExtendedFloat other) {
       if (other.Exponent.CompareTo((BigInteger)1000) > 0) {
         // Very high exponents
         BigInteger bignum = BigInteger.One << 999;
-        if (this.Abs().CompareTo(ExtendedDecimal.FromBigInteger(bignum)) <= 0) {
+        if (this.Abs(null).CompareTo(ExtendedDecimal.FromBigInteger(bignum)) <= 0) {
           // this object's absolute value is less
           return (signA > 0) ? -1 : 1;
         }

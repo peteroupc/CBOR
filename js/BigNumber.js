@@ -2345,7 +2345,7 @@ function() {
         }
         var sign = power.signum();
         if (sign < 0) {
-            throw new Error("sign (" + (JSInteropFactory.createLong(sign)) + ") is not greater or equal to " + "0");
+            throw new Error("sign (" + (JSInteropFactory.createLong(sign)) + ") is less than " + "0");
         }
         var thisVar = this;
         if (sign == 0) {
@@ -2372,7 +2372,7 @@ function() {
 
     prototype['pow'] = prototype.pow = function(powerSmall) {
         if (powerSmall < 0) {
-            throw new Error("powerSmall (" + (JSInteropFactory.createLong(powerSmall)) + ") is not greater or equal to " + "0");
+            throw new Error("powerSmall (" + (JSInteropFactory.createLong(powerSmall)) + ") is less than " + "0");
         }
         var thisVar = this;
         if (powerSmall == 0) {
@@ -2887,19 +2887,19 @@ function() {
             throw new Error("str");
         }
         if (index < 0) {
-            throw new Error("index (" + (JSInteropFactory.createLong(index)) + ") is not greater or equal to " + "0");
+            throw new Error("index (" + (JSInteropFactory.createLong(index)) + ") is less than " + "0");
         }
         if (index > str.length) {
-            throw new Error("index (" + (JSInteropFactory.createLong(index)) + ") is not less or equal to " + (JSInteropFactory.createLong(str.length)));
+            throw new Error("index (" + (JSInteropFactory.createLong(index)) + ") is more than " + (JSInteropFactory.createLong(str.length)));
         }
         if (endIndex < 0) {
-            throw new Error("endIndex (" + (JSInteropFactory.createLong(endIndex)) + ") is not greater or equal to " + "0");
+            throw new Error("endIndex (" + (JSInteropFactory.createLong(endIndex)) + ") is less than " + "0");
         }
         if (endIndex > str.length) {
-            throw new Error("endIndex (" + (JSInteropFactory.createLong(endIndex)) + ") is not less or equal to " + (JSInteropFactory.createLong(str.length)));
+            throw new Error("endIndex (" + (JSInteropFactory.createLong(endIndex)) + ") is more than " + (JSInteropFactory.createLong(str.length)));
         }
         if (endIndex < index) {
-            throw new Error("endIndex (" + (JSInteropFactory.createLong(endIndex)) + ") is not greater or equal to " + (JSInteropFactory.createLong(index)));
+            throw new Error("endIndex (" + (JSInteropFactory.createLong(endIndex)) + ") is less than " + (JSInteropFactory.createLong(index)));
         }
         if (index == endIndex) {
             throw new Error("No digits");
@@ -3077,7 +3077,7 @@ function() {
             throw new Error("pow");
         }
         if (pow.signum() < 0) {
-            throw new Error("pow (" + pow + ") is not greater or equal to 0");
+            throw new Error("pow (" + pow + ") is less than 0");
         }
         if (mod.signum() <= 0) {
             throw new Error("mod (" + mod + ") is not greater than 0");
@@ -3734,7 +3734,7 @@ function(value) {
     constructor.MutableNumber = function FastInteger$MutableNumber(val) {
 
         if (val < 0) {
-            throw new Error("val (" + (JSInteropFactory.createLong(val)) + ") is not greater or equal to " + "0");
+            throw new Error("val (" + (JSInteropFactory.createLong(val)) + ") is less than " + "0");
         }
         this.data = [0, 0, 0, 0];
         this.wordCount = (val == 0) ? 0 : 1;
@@ -3746,7 +3746,7 @@ function(value) {
         constructor.FromBigInteger = function(bigintVal) {
             var mnum = new FastInteger.MutableNumber(0);
             if (bigintVal.signum() < 0) {
-                throw new Error("bigintVal's sign (" + (JSInteropFactory.createLong(bigintVal).signum()) + ") is not greater or equal to " + "0");
+                throw new Error("bigintVal's sign (" + (JSInteropFactory.createLong(bigintVal).signum()) + ") is less than " + "0");
             }
             var bytes = bigintVal.toByteArray(true);
             var len = bytes.length;
@@ -3778,7 +3778,7 @@ function(value) {
         };
         prototype.SetInt = function(val) {
             if (val < 0) {
-                throw new Error("val (" + (JSInteropFactory.createLong(val)) + ") is not greater or equal to " + "0");
+                throw new Error("val (" + (JSInteropFactory.createLong(val)) + ") is less than " + "0");
             }
             this.wordCount = (val == 0) ? 0 : 1;
             this.data[0] = ((val & 0xFFFFFFFF)|0);
@@ -3823,7 +3823,7 @@ function(value) {
         };
         prototype.Multiply = function(multiplicand) {
             if (multiplicand < 0) {
-                throw new Error("multiplicand (" + (JSInteropFactory.createLong(multiplicand)) + ") is not greater or equal to " + "0");
+                throw new Error("multiplicand (" + (JSInteropFactory.createLong(multiplicand)) + ") is less than " + "0");
             } else if (multiplicand != 0) {
                 var carry = 0;
                 if (this.wordCount == 0) {
@@ -3942,7 +3942,7 @@ function(value) {
         };
         prototype.SubtractInt = function(other) {
             if (other < 0) {
-                throw new Error("other (" + (JSInteropFactory.createLong(other)) + ") is not greater or equal to " + "0");
+                throw new Error("other (" + (JSInteropFactory.createLong(other)) + ") is less than " + "0");
             } else if (other != 0) {
                 {
                     if (this.wordCount == 0) {
@@ -4024,7 +4024,7 @@ function(value) {
         };
         prototype.Add = function(augend) {
             if (augend < 0) {
-                throw new Error("augend (" + (JSInteropFactory.createLong(augend)) + ") is not greater or equal to " + "0");
+                throw new Error("augend (" + (JSInteropFactory.createLong(augend)) + ") is less than " + "0");
             } else if (augend != 0) {
                 var carry = 0;
                 if (this.wordCount == 0) {
@@ -4664,7 +4664,7 @@ var BitShiftAccumulator =
 function(bigint, lastDiscarded, olderDiscarded) {
 
     if (bigint.signum() < 0) {
-        throw new Error("bigint's sign (" + (JSInteropFactory.createLong(bigint).signum()) + ") is not greater or equal to " + "0");
+        throw new Error("bigint's sign (" + (JSInteropFactory.createLong(bigint).signum()) + ") is less than " + "0");
     }
     if (bigint.canFitInInt()) {
         this.isSmall = true;
@@ -4696,7 +4696,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
     };
     prototype.ShiftToDigits = function(bits) {
         if (bits.signum() < 0) {
-            throw new Error("bits's sign (" + (JSInteropFactory.createLong(bits).signum()) + ") is not greater or equal to " + "0");
+            throw new Error("bits's sign (" + (JSInteropFactory.createLong(bits).signum()) + ") is less than " + "0");
         }
         if (bits.CanFitInInt32()) {
             this.ShiftToDigitsInt(bits.AsInt32());
@@ -4732,7 +4732,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
     };
     constructor.FromInt32 = function(smallNumber) {
         if (smallNumber < 0) {
-            throw new Error("smallNumber (" + (JSInteropFactory.createLong(smallNumber)) + ") is not greater or equal to " + "0");
+            throw new Error("smallNumber (" + (JSInteropFactory.createLong(smallNumber)) + ") is less than " + "0");
         }
         var bsa = new BitShiftAccumulator(BigInteger.ZERO, 0, 0);
         bsa.shiftedSmall = smallNumber;
@@ -4951,7 +4951,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
 
     prototype.ShiftToDigitsInt = function(bits) {
         if (bits < 0) {
-            throw new Error("bits (" + (JSInteropFactory.createLong(bits)) + ") is not greater or equal to " + "0");
+            throw new Error("bits (" + (JSInteropFactory.createLong(bits)) + ") is less than " + "0");
         }
         if (this.isSmall) {
             this.ShiftSmallToBits(bits);
@@ -4998,7 +4998,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
     if (bigint.canFitInInt()) {
         this.shiftedSmall = bigint.intValue();
         if (this.shiftedSmall < 0) {
-            throw new Error("shiftedSmall (" + (JSInteropFactory.createLong(this.shiftedSmall)) + ") is not greater or equal to " + "0");
+            throw new Error("shiftedSmall (" + (JSInteropFactory.createLong(this.shiftedSmall)) + ") is less than " + "0");
         }
         this.isSmall = true;
     } else {
@@ -5045,7 +5045,7 @@ function(bigint, lastDiscarded, olderDiscarded) {
     constructor.FastParseLong = function(str, offset, length) {
 
         if (length > 9) {
-            throw new Error("length (" + (JSInteropFactory.createLong(length)) + ") is not less or equal to " + "9");
+            throw new Error("length (" + (JSInteropFactory.createLong(length)) + ") is more than " + "9");
         }
         var ret = 0;
         for (var i = 0; i < length; ++i) {
@@ -5432,12 +5432,12 @@ function(bigint, lastDiscarded, olderDiscarded) {
         if (bits.CanFitInInt32()) {
             var intval = bits.AsInt32();
             if (intval < 0) {
-                throw new Error("intval (" + (JSInteropFactory.createLong(intval)) + ") is not greater or equal to " + "0");
+                throw new Error("intval (" + (JSInteropFactory.createLong(intval)) + ") is less than " + "0");
             }
             this.ShiftToDigitsInt(intval);
         } else {
             if (bits.signum() < 0) {
-                throw new Error("bits's sign (" + (JSInteropFactory.createLong(bits).signum()) + ") is not greater or equal to " + "0");
+                throw new Error("bits's sign (" + (JSInteropFactory.createLong(bits).signum()) + ") is less than " + "0");
             }
             this.knownBitLength = this.CalcKnownDigitLength();
             var bigintDiff = this.knownBitLength.AsBigInteger();
@@ -6147,10 +6147,10 @@ var PrecisionContext =
 function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExponents) {
 
     if (precision < 0) {
-        throw new Error("precision (" + (JSInteropFactory.createLong(precision)) + ") is not greater or equal to " + "0");
+        throw new Error("precision (" + (JSInteropFactory.createLong(precision)) + ") is less than " + "0");
     }
     if (exponentMinSmall > exponentMaxSmall) {
-        throw new Error("exponentMinSmall (" + (JSInteropFactory.createLong(exponentMinSmall)) + ") is not less or equal to " + (JSInteropFactory.createLong(exponentMaxSmall)));
+        throw new Error("exponentMinSmall (" + (JSInteropFactory.createLong(exponentMinSmall)) + ") is more than " + (JSInteropFactory.createLong(exponentMaxSmall)));
     }
     this.bigintPrecision = precision == 0 ? BigInteger.ZERO : BigInteger.valueOf(precision);
     this.rounding = rounding;
@@ -6263,7 +6263,7 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
     };
     prototype['WithExponentRange'] = prototype.WithExponentRange = function(exponentMinSmall, exponentMaxSmall) {
         if (exponentMinSmall > exponentMaxSmall) {
-            throw new Error("exponentMinSmall (" + (JSInteropFactory.createLong(exponentMinSmall)) + ") is not less or equal to " + (JSInteropFactory.createLong(exponentMaxSmall)));
+            throw new Error("exponentMinSmall (" + (JSInteropFactory.createLong(exponentMinSmall)) + ") is more than " + (JSInteropFactory.createLong(exponentMaxSmall)));
         }
         var pc = this.Copy();
         pc.hasExponentRange = true;
@@ -6306,7 +6306,7 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
     };
     prototype['WithPrecision'] = prototype.WithPrecision = function(precision) {
         if (precision < 0) {
-            throw new Error("precision (" + (JSInteropFactory.createLong(precision)) + ") is not greater or equal to " + "0");
+            throw new Error("precision (" + (JSInteropFactory.createLong(precision)) + ") is less than " + "0");
         }
         var pc = this.Copy();
         pc.bigintPrecision = BigInteger.valueOf(precision);
@@ -6317,7 +6317,7 @@ function(precision, rounding, exponentMinSmall, exponentMaxSmall, clampNormalExp
             throw new Error("bigintPrecision");
         }
         if (bigintPrecision.signum() < 0) {
-            throw new Error("bigintPrecision's sign (" + (JSInteropFactory.createLong(bigintPrecision).signum()) + ") is not greater or equal to " + "0");
+            throw new Error("bigintPrecision's sign (" + (JSInteropFactory.createLong(bigintPrecision).signum()) + ") is less than " + "0");
         }
         var pc = this.Copy();
         pc.bigintPrecision = bigintPrecision;
@@ -8746,7 +8746,7 @@ var RadixMath = function(helper) {
 
         var fastPrecision = ctx.getPrecision().canFitInInt() ? new FastInteger(ctx.getPrecision().intValue()) : FastInteger.FromBig(ctx.getPrecision());
         if (fastPrecision.signum() < 0) {
-            return this.SignalInvalidWithMessage(ctx, "precision not greater or equal to 0 (" + fastPrecision + ")");
+            return this.SignalInvalidWithMessage(ctx, "precision less than 0 (" + fastPrecision + ")");
         }
         if (this.thisRadix == 2 || fastPrecision.isValueZero()) {
 
@@ -11337,6 +11337,77 @@ function() {
         }
     };
 
+    prototype['CompareToBinary'] = prototype.CompareToBinary = function(other) {
+        if (other == null) {
+            return 1;
+        }
+        if (this.IsNaN()) {
+            if (other.IsNaN()) {
+                return 0;
+            }
+            return 1;
+        }
+        var signA = this.signum();
+        var signB = other.signum();
+        if (signA != signB) {
+            return (signA < signB) ? -1 : 1;
+        }
+        if (signB == 0 || signA == 0) {
+
+            return 0;
+        }
+        if (this.IsInfinity()) {
+            if (other.IsInfinity()) {
+
+                return 0;
+            }
+            return this.isNegative() ? -1 : 1;
+        }
+        if (other.IsInfinity()) {
+            return other.isNegative() ? 1 : -1;
+        }
+
+        if (other.getExponent().compareTo(BigInteger.valueOf(-1000)) < 0) {
+
+            if (other.Abs(null).compareTo(ExtendedFloat.One) < 0) {
+
+                if (this.Abs(null).compareTo(ExtendedDecimal.One) >= 0) {
+
+                    return (signA > 0) ? 1 : -1;
+                }
+            }
+        }
+        if (other.getExponent().compareTo(BigInteger.valueOf(1000)) > 0) {
+
+            var bignum = BigInteger.ONE.shiftLeft(999);
+            if (this.Abs(null).compareTo(ExtendedDecimal.FromBigInteger(bignum)) <= 0) {
+
+                return (signA > 0) ? -1 : 1;
+            }
+
+            var thisAdjExp = this.GetAdjustedExponent();
+            var otherAdjExp = ExtendedDecimal.GetAdjustedExponentBinary(other);
+            if (thisAdjExp.signum() > 0 && thisAdjExp.compareTo(otherAdjExp) >= 0) {
+
+                return (signA > 0) ? 1 : -1;
+            }
+            if (thisAdjExp.signum() > 0 && thisAdjExp.compareTo(BigInteger.valueOf(1000)) >= 0 && otherAdjExp.compareTo(BigInteger.valueOf(1000)) >= 0) {
+                thisAdjExp = thisAdjExp.add(BigInteger.ONE);
+                otherAdjExp = otherAdjExp.add(BigInteger.ONE);
+                var ratio = otherAdjExp.divide(thisAdjExp);
+
+                if (ratio.compareTo(BigInteger.valueOf(3)) < 0) {
+
+                    return (signA > 0) ? 1 : -1;
+                } else if (ratio.compareTo(BigInteger.valueOf(4)) >= 0) {
+                    return (signA > 0) ? -1 : 1;
+                }
+            }
+        }
+        var otherDec = ExtendedDecimal.FromExtendedFloat(other);
+        return this.compareTo(otherDec);
+    };
+
     prototype['ToBigInteger'] = prototype.ToBigInteger = function() {
         if (!this.isFinite()) {
             throw new Error("Value is infinity or NaN");
@@ -11480,10 +11551,23 @@ function() {
             return BigInteger.ZERO;
         }
         if (this.signum() == 0) {
-            return this.getExponent();
+            return BigInteger.ZERO;
         }
         var ret = this.getExponent();
         var smallPrecision = this.getUnsignedMantissa().getDigitCount();
+        --smallPrecision;
+        ret = ret.add(BigInteger.valueOf(smallPrecision));
+        return ret;
+    };
+    constructor['GetAdjustedExponentBinary'] = constructor.GetAdjustedExponentBinary = function(ef) {
+        if (!ef.isFinite()) {
+            return BigInteger.ZERO;
+        }
+        if (ef.signum() == 0) {
+            return BigInteger.ZERO;
+        }
+        var ret = ef.getExponent();
+        var smallPrecision = ef.getUnsignedMantissa().bitLength();
         --smallPrecision;
         ret = ret.add(BigInteger.valueOf(smallPrecision));
         return ret;

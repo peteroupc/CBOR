@@ -40,7 +40,7 @@ at: http://peteroupc.github.io/CBOR/
      * Gets the traps that are set for each flag in the context. Whenever a
      * flag is signaled, even if HasFlags is false, and the flag's trap is
      * enabled, the operation will throw a TrapException. <p>For example,
-     * if Traps is equal to FlagInexact and FlagSubnormal, a TrapException
+     * if Traps equals FlagInexact and FlagSubnormal, a TrapException
      * will be thrown if an operation's return value is not the same as the
      * exact result (FlagInexact) or if the return value's exponent is lower
      * than the lowest allowed (FlagSubnormal).</p>
@@ -315,7 +315,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public PrecisionContext WithExponentRange(int exponentMinSmall, int exponentMaxSmall) {
       if (exponentMinSmall > exponentMaxSmall) {
- throw new IllegalArgumentException("exponentMinSmall (" + Long.toString((long)exponentMinSmall) + ") is not less or equal to " + Long.toString((long)exponentMaxSmall));
+ throw new IllegalArgumentException("exponentMinSmall (" + Long.toString((long)exponentMinSmall) + ") is more than " + Long.toString((long)exponentMaxSmall));
 }
       PrecisionContext pc = this.Copy();
       pc.hasExponentRange = true;
@@ -396,7 +396,7 @@ public PrecisionContext WithSimplified(boolean simplified) {
      */
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
- throw new IllegalArgumentException("precision (" + Long.toString((long)precision) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("precision (" + Long.toString((long)precision) + ") is less than " + "0");
 }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = BigInteger.valueOf(precision);
@@ -416,7 +416,7 @@ public PrecisionContext WithSimplified(boolean simplified) {
         throw new NullPointerException("bigintPrecision");
       }
       if (bigintPrecision.signum() < 0) {
- throw new IllegalArgumentException("bigintPrecision's sign (" + Long.toString((long)bigintPrecision.signum()) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("bigintPrecision's sign (" + Long.toString((long)bigintPrecision.signum()) + ") is less than " + "0");
 }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
@@ -469,10 +469,10 @@ public PrecisionContext WithSimplified(boolean simplified) {
      */
     public PrecisionContext (int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall, boolean clampNormalExponents) {
       if (precision < 0) {
- throw new IllegalArgumentException("precision (" + Long.toString((long)precision) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("precision (" + Long.toString((long)precision) + ") is less than " + "0");
 }
       if (exponentMinSmall > exponentMaxSmall) {
- throw new IllegalArgumentException("exponentMinSmall (" + Long.toString((long)exponentMinSmall) + ") is not less or equal to " + Long.toString((long)exponentMaxSmall));
+ throw new IllegalArgumentException("exponentMinSmall (" + Long.toString((long)exponentMinSmall) + ") is more than " + Long.toString((long)exponentMaxSmall));
 }
       this.bigintPrecision = precision == 0 ? BigInteger.ZERO : BigInteger.valueOf(precision);
       this.rounding = rounding;

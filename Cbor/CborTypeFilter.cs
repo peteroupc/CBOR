@@ -142,9 +142,9 @@ namespace PeterO.Cbor
 
     /// <summary>Not documented yet.</summary>
     /// <param name='arrayLength'>A 32-bit signed integer.</param>
-    /// <param name='elements'>A params object.</param>
+    /// <param name='elements'>An array of CBORTypeFilter.</param>
     /// <returns>A CBORTypeFilter object.</returns>
-[Obsolete("Use WithArrayMaxLength instead.")]
+    [Obsolete("Use WithArrayMaxLength instead.")]
     public CBORTypeFilter WithArray(int arrayLength, params CBORTypeFilter[] elements) {
       return this.WithArrayMaxLength(arrayLength, elements);
     }
@@ -158,10 +158,10 @@ namespace PeterO.Cbor
         return this;
       }
       if (arrayLength < 0) {
-        throw new ArgumentException("arrayLength (" + Convert.ToString((long)arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("arrayLength (" + Convert.ToString((long)arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (arrayLength < elements.Length) {
-        throw new ArgumentException("arrayLength (" + Convert.ToString((long)arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)elements.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("arrayLength (" + Convert.ToString((long)arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)elements.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -181,10 +181,10 @@ namespace PeterO.Cbor
         return this;
       }
       if (arrayLength < 0) {
-        throw new ArgumentException("arrayLength (" + Convert.ToString((long)arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("arrayLength (" + Convert.ToString((long)arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (arrayLength < elements.Length) {
-        throw new ArgumentException("arrayLength (" + Convert.ToString((long)arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)elements.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("arrayLength (" + Convert.ToString((long)arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)elements.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -202,10 +202,10 @@ namespace PeterO.Cbor
         return this;
       }
       if (this.arrayLength < 0) {
-        throw new ArgumentException("this.arrayLength (" + Convert.ToString((long)this.arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("this.arrayLength (" + Convert.ToString((long)this.arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (this.arrayLength < this.elements.Length) {
-        throw new ArgumentException("this.arrayLength (" + Convert.ToString((long)this.arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)this.elements.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("this.arrayLength (" + Convert.ToString((long)this.arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)this.elements.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -231,10 +231,10 @@ namespace PeterO.Cbor
     public bool MajorTypeMatches(int type) {
       #if DEBUG
       if (type < 0) {
-        throw new ArgumentException("type (" + Convert.ToString((long)type, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("type (" + Convert.ToString((long)type, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (type > 7) {
-        throw new ArgumentException("type (" + Convert.ToString((long)type, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + "7");
+        throw new ArgumentException("type (" + Convert.ToString((long)type, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + "7");
       }
       #endif
 
@@ -266,16 +266,16 @@ namespace PeterO.Cbor
       }
       if ((this.types & (1 << 4)) != 0) {
         return false;
-}
+      }
       if (this.anyArrayLength) {
- return true;
-}
+        return true;
+      }
       if (!this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) == 0) {
- return true;
-}
+        return true;
+      }
       if (this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) >= 0) {
- return true;
-}
+        return true;
+      }
       return false;
     }
 
@@ -339,8 +339,8 @@ namespace PeterO.Cbor
         return Any;
       }
       if (index < 0) {
- return None;
-}
+        return None;
+      }
       if (index >= this.arrayLength) {
         // Index is out of bounds
         return this.arrayMinLength ? Any : None;
@@ -364,8 +364,8 @@ namespace PeterO.Cbor
         return Any;
       }
       if (index < 0) {
- return None;
-}
+        return None;
+      }
       if (index >= this.arrayLength) {
         // Index is out of bounds
         return this.arrayMinLength ? Any : None;

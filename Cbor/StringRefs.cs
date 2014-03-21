@@ -52,6 +52,9 @@ namespace PeterO.Cbor
       if (!(str.Type == CBORType.ByteString || str.Type == CBORType.TextString)) {
         throw new ArgumentException("doesn't satisfy str.Type== CBORType.ByteString || str.Type== CBORType.TextString");
       }
+      if (lengthHint < 0) {
+        throw new ArgumentException("lengthHint (" + Convert.ToString((long)lengthHint, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
       #endif
 
       bool addStr = false;

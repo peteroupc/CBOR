@@ -1595,7 +1595,7 @@ namespace PeterO {
  throw new ArgumentException("root (" + Convert.ToString((long)root, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
 }
       if (value.Sign < 0) {
- throw new ArgumentException("value's sign (" + Convert.ToString((long)value.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("value's sign (" + Convert.ToString((long)value.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
       if (value.Sign == 0) {
         return new BigInteger[] { BigInteger.Zero, BigInteger.Zero };
@@ -2777,7 +2777,7 @@ namespace PeterO {
       // get the precision
       FastInteger fastPrecision = ctx.Precision.canFitInInt() ? new FastInteger(ctx.Precision.intValue()) : FastInteger.FromBig(ctx.Precision);
       if (fastPrecision.Sign < 0) {
-        return this.SignalInvalidWithMessage(ctx, "precision not greater or equal to 0 (" + fastPrecision + ")");
+        return this.SignalInvalidWithMessage(ctx, "precision less than 0 (" + fastPrecision + ")");
       }
       if (this.thisRadix == 2 || fastPrecision.IsValueZero) {
         // "binaryPrec" will have no special effect here

@@ -204,10 +204,10 @@ public void setConverter(Object value) {
         throw new NullPointerException("handler");
       }
       if (bigintTag.signum() < 0) {
-        throw new IllegalArgumentException("bigintTag.signum() (" + Long.toString((long)bigintTag.signum()) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("bigintTag.signum() (" + Long.toString((long)bigintTag.signum()) + ") is less than " + "0");
       }
       if (bigintTag.bitLength() > 64) {
-        throw new IllegalArgumentException("bigintTag.bitLength (" + Long.toString((long)bigintTag.bitLength()) + ") is not less or equal to " + "64");
+        throw new IllegalArgumentException("bigintTag.bitLength (" + Long.toString((long)bigintTag.bitLength()) + ") is more than " + "64");
       }
       synchronized(tagHandlers) {
         tagHandlers.put(bigintTag,handler);
@@ -388,10 +388,11 @@ public void setConverter(Object value) {
     }
 
     /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
+     * Gets a value indicating whether this CBOR object represents a finite
+     * number.
+     * @return Whether this CBOR object represents a finite number.
      */
-public boolean isFinite() {
+    public boolean isFinite() {
         return this.getType() == CBORType.Number && !this.IsInfinity() && !this.IsNaN();
       }
 
@@ -2004,7 +2005,7 @@ public void set(String key, CBORObject value) {
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
       if (value < 0) {
-        throw new IllegalArgumentException("value (" + Long.toString((long)value) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("value (" + Long.toString((long)value) + ") is less than " + "0");
       }
       if (value < 24) {
         return new byte[] {  (byte)((byte)value | (byte)(type << 5))  };
@@ -2031,7 +2032,7 @@ public void set(String key, CBORObject value) {
 
     private static byte[] GetPositiveInt64Bytes(int type, long value) {
       if (value < 0) {
-        throw new IllegalArgumentException("value (" + Long.toString((long)value) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("value (" + Long.toString((long)value) + ") is less than " + "0");
       }
       if (value < 24) {
         return new byte[] {  (byte)((byte)value | (byte)(type << 5))  };
@@ -3506,10 +3507,10 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      */
     public static CBORObject FromSimpleValue(int simpleValue) {
       if (simpleValue < 0) {
-        throw new IllegalArgumentException("simpleValue (" + Long.toString((long)simpleValue) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("simpleValue (" + Long.toString((long)simpleValue) + ") is less than " + "0");
       }
       if (simpleValue > 255) {
-        throw new IllegalArgumentException("simpleValue (" + Long.toString((long)simpleValue) + ") is not less or equal to " + "255");
+        throw new IllegalArgumentException("simpleValue (" + Long.toString((long)simpleValue) + ") is more than " + "255");
       }
       if (simpleValue >= 24 && simpleValue < 32) {
         throw new IllegalArgumentException("Simple value is from 24 to 31: " + simpleValue);
@@ -3959,10 +3960,10 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         throw new NullPointerException("bigintTag");
       }
       if (bigintTag.signum() < 0) {
-        throw new IllegalArgumentException("bigintTag's sign (" + Long.toString((long)bigintTag.signum()) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("bigintTag's sign (" + Long.toString((long)bigintTag.signum()) + ") is less than " + "0");
       }
       if (bigintTag.compareTo(UInt64MaxValue) > 0) {
-        throw new IllegalArgumentException("tag not less or equal to 18446744073709551615 (" + (bigintTag) + ")");
+        throw new IllegalArgumentException("tag more than 18446744073709551615 (" + (bigintTag) + ")");
       }
       CBORObject c = FromObject(valueOb);
       if (bigintTag.bitLength() <= 16) {
@@ -4041,7 +4042,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      */
     public static CBORObject FromObjectAndTag(Object valueObValue, int smallTag) {
       if (smallTag < 0) {
-        throw new IllegalArgumentException("smallTag (" + Long.toString((long)smallTag) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("smallTag (" + Long.toString((long)smallTag) + ") is less than " + "0");
       }
       ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);
@@ -4116,7 +4117,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     private static String ExtendedToString(ExtendedFloat ef) {
-      if (ef.isFinite() && (ef.getExponent().compareTo(BigInteger.valueOf(1000)) >0 || ef.getExponent().compareTo(BigInteger.valueOf(-1000)) < 0)) {
+      if (ef.isFinite() && (ef.getExponent().compareTo(BigInteger.valueOf(1000)) > 0 ||
+                          ef.getExponent().compareTo(BigInteger.valueOf(-1000)) < 0)) {
         // It can take very long to convert a number with a very high
         // or very low exponent to a decimal String, so do this instead
         return ef.getMantissa().toString() + "p" + ef.getExponent().toString();
@@ -4359,7 +4361,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     private static byte[] ReadByteData(InputStream s, long uadditional, OutputStream outputStream) throws IOException {
       if ((uadditional >> 63) != 0 || uadditional > Integer.MAX_VALUE) {
-        throw new CBORException("Length " + ToUnsignedBigInteger(uadditional) +" is bigger than supported");
+        throw new CBORException("Length " + ToUnsignedBigInteger(uadditional) + " is bigger than supported");
       }
       if (uadditional <= 0x10000) {
         // Simple case: small size
@@ -4554,7 +4556,7 @@ ms=new ByteArrayOutputStream();
               }
               long len = ReadDataLength(s, nextByte, 2);
               if ((len >> 63) != 0 || len > Integer.MAX_VALUE) {
-                throw new CBORException("Length " + ToUnsignedBigInteger(len) +" is bigger than supported");
+                throw new CBORException("Length " + ToUnsignedBigInteger(len) + " is bigger than supported");
               }
               if (nextByte != 0x40) {  // NOTE: 0x40 means the empty byte String
                 ReadByteData(s, len, ms);
@@ -4602,7 +4604,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             }
             long len = ReadDataLength(s, nextByte, 3);
             if ((len >> 63) != 0 || len > Integer.MAX_VALUE) {
-              throw new CBORException("Length " + ToUnsignedBigInteger(len) +" is bigger than supported");
+              throw new CBORException("Length " + ToUnsignedBigInteger(len) + " is bigger than supported");
             }
             if (nextByte != 0x60) {  // NOTE: 0x60 means the empty String
               switch (DataUtilities.ReadUtf8(s, (int)len, builder, false)) {
@@ -4749,9 +4751,11 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           taginfo = FindTagConverter(bigintAdditional);
         }
         o = Read(
-
-          s, depth + 1, false,
-          taginfo == null ? null : taginfo.GetTypeFilter(), srefs);
+          s,
+          depth + 1,
+          false,
+          taginfo == null ? null : taginfo.GetTypeFilter(),
+          srefs);
         if (hasBigAdditional) {
           return FromObjectAndTag(o, bigintAdditional);
         } else if (uadditional < 65536) {

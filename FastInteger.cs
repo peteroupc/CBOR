@@ -28,7 +28,7 @@ namespace PeterO {
       public static MutableNumber FromBigInteger(BigInteger bigintVal) {
         MutableNumber mnum = new MutableNumber(0);
         if (bigintVal.Sign < 0) {
- throw new ArgumentException("bigintVal's sign (" + Convert.ToString((long)bigintVal.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("bigintVal's sign (" + Convert.ToString((long)bigintVal.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
         byte[] bytes = bigintVal.ToByteArray();
         int len = bytes.Length;
@@ -61,7 +61,7 @@ namespace PeterO {
 
       public MutableNumber(int val) {
         if (val < 0) {
- throw new ArgumentException("val (" + Convert.ToString((long)val, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("val (" + Convert.ToString((long)val, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
         this.data = new int[4];
         this.wordCount = (val == 0) ? 0 : 1;
@@ -73,7 +73,7 @@ namespace PeterO {
     /// <returns>A MutableNumber object.</returns>
       public MutableNumber SetInt(int val) {
         if (val < 0) {
- throw new ArgumentException("val (" + Convert.ToString((long)val, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("val (" + Convert.ToString((long)val, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
         this.wordCount = (val == 0) ? 0 : 1;
         this.data[0] = unchecked((int)(val & 0xFFFFFFFFL));
@@ -133,7 +133,7 @@ namespace PeterO {
     /// <returns>The product of the two objects.</returns>
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
- throw new ArgumentException("multiplicand (" + Convert.ToString((long)multiplicand, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("multiplicand (" + Convert.ToString((long)multiplicand, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 } else if (multiplicand != 0) {
           int carry = 0;
           if (this.wordCount == 0) {
@@ -273,7 +273,7 @@ namespace PeterO {
       public MutableNumber SubtractInt(
         int other) {
         if (other < 0) {
- throw new ArgumentException("other (" + Convert.ToString((long)other, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("other (" + Convert.ToString((long)other, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 } else if (other != 0) {
           unchecked {
             // Ensure a length of at least 1
@@ -381,7 +381,7 @@ namespace PeterO {
     /// <returns>This instance.</returns>
       public MutableNumber Add(int augend) {
         if (augend < 0) {
- throw new ArgumentException("augend (" + Convert.ToString((long)augend, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("augend (" + Convert.ToString((long)augend, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 } else if (augend != 0) {
           int carry = 0;
           // Ensure a length of at least 1

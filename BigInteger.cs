@@ -312,7 +312,7 @@ namespace PeterO {
       int bcount) {
       #if DEBUG
       if (acount < bcount) {
-        throw new ArgumentException("acount (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("acount (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture));
       }
       #endif
       unchecked {
@@ -861,23 +861,23 @@ namespace PeterO {
       }
 
       if (resultStart < 0) {
-        throw new ArgumentException("resultStart (" + Convert.ToString((long)resultStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("resultStart (" + Convert.ToString((long)resultStart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (resultStart > resultArr.Length) {
-        throw new ArgumentException("resultStart (" + Convert.ToString((long)resultStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)resultArr.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("resultStart (" + Convert.ToString((long)resultStart, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)resultArr.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (count + count < 0) {
-        throw new ArgumentException("count plus count (" + Convert.ToString((long)count + count, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("count plus count (" + Convert.ToString((long)count + count, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (count + count > resultArr.Length) {
-        throw new ArgumentException("count plus count (" + Convert.ToString((long)count + count, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)resultArr.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("count plus count (" + Convert.ToString((long)count + count, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)resultArr.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (resultArr.Length - resultStart < count + count) {
-        throw new ArgumentException("resultArr.Length minus resultStart (" + Convert.ToString((long)resultArr.Length - resultStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)count + count, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("resultArr.Length minus resultStart (" + Convert.ToString((long)resultArr.Length - resultStart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)count + count, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (tempArr == null) {
@@ -885,23 +885,23 @@ namespace PeterO {
       }
 
       if (tempStart < 0) {
-        throw new ArgumentException("tempStart (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("tempStart (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (tempStart > tempArr.Length) {
-        throw new ArgumentException("tempStart (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("tempStart (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (count + count < 0) {
-        throw new ArgumentException("count plus count (" + Convert.ToString((long)count + count, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("count plus count (" + Convert.ToString((long)count + count, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (count + count > tempArr.Length) {
-        throw new ArgumentException("count plus count (" + Convert.ToString((long)count + count, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("count plus count (" + Convert.ToString((long)count + count, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (tempArr.Length - tempStart < count + count) {
-        throw new ArgumentException("tempArr.Length minus tempStart (" + Convert.ToString((long)tempArr.Length - tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)count + count, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("tempArr.Length minus tempStart (" + Convert.ToString((long)tempArr.Length - tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)count + count, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words1 == null) {
@@ -909,23 +909,23 @@ namespace PeterO {
       }
 
       if (words1Start < 0) {
-        throw new ArgumentException("words1Start (" + Convert.ToString((long)words1Start, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("words1Start (" + Convert.ToString((long)words1Start, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (words1Start > words1.Length) {
-        throw new ArgumentException("words1Start (" + Convert.ToString((long)words1Start, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words1Start (" + Convert.ToString((long)words1Start, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (count < 0) {
-        throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (count > words1.Length) {
-        throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words1.Length - words1Start < count) {
-        throw new ArgumentException("words1.Length minus words1Start (" + Convert.ToString((long)words1.Length - words1Start, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words1.Length minus words1Start (" + Convert.ToString((long)words1.Length - words1Start, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words2 == null) {
@@ -933,23 +933,23 @@ namespace PeterO {
       }
 
       if (words2Start < 0) {
-        throw new ArgumentException("words2Start (" + Convert.ToString((long)words2Start, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("words2Start (" + Convert.ToString((long)words2Start, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (words2Start > words2.Length) {
-        throw new ArgumentException("words2Start (" + Convert.ToString((long)words2Start, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words2Start (" + Convert.ToString((long)words2Start, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (count < 0) {
-        throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (count > words2.Length) {
-        throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words2.Length - words2Start < count) {
-        throw new ArgumentException("words2.Length minus words2Start (" + Convert.ToString((long)words2.Length - words2Start, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words2.Length minus words2Start (" + Convert.ToString((long)words2.Length - words2Start, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture));
       }
       #endif
 
@@ -1289,7 +1289,7 @@ namespace PeterO {
       int bcount) {
       #if DEBUG
       if (acount < bcount) {
-        throw new ArgumentException("acount (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("acount (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (productArr == null) {
@@ -1297,23 +1297,23 @@ namespace PeterO {
       }
 
       if (cstart < 0) {
-        throw new ArgumentException("cstart (" + Convert.ToString((long)cstart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("cstart (" + Convert.ToString((long)cstart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (cstart > productArr.Length) {
-        throw new ArgumentException("cstart (" + Convert.ToString((long)cstart, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)productArr.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("cstart (" + Convert.ToString((long)cstart, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)productArr.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (acount + bcount < 0) {
-        throw new ArgumentException("acount plus bcount (" + Convert.ToString((long)acount + bcount, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("acount plus bcount (" + Convert.ToString((long)acount + bcount, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (acount + bcount > productArr.Length) {
-        throw new ArgumentException("acount plus bcount (" + Convert.ToString((long)acount + bcount, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)productArr.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("acount plus bcount (" + Convert.ToString((long)acount + bcount, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)productArr.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (productArr.Length - cstart < acount + bcount) {
-        throw new ArgumentException("productArr.Length minus cstart (" + Convert.ToString((long)productArr.Length - cstart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)acount + bcount, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("productArr.Length minus cstart (" + Convert.ToString((long)productArr.Length - cstart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)acount + bcount, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (tempArr == null) {
@@ -1321,23 +1321,23 @@ namespace PeterO {
       }
 
       if (tempStart < 0) {
-        throw new ArgumentException("tempStart (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("tempStart (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (tempStart > tempArr.Length) {
-        throw new ArgumentException("tempStart (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("tempStart (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if ((bcount * 4) < 0) {
-        throw new ArgumentException("bcount * 4 not greater or equal to 0 (" + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("bcount * 4 less than 0 (" + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
       if ((bcount * 4) > tempArr.Length) {
-        throw new ArgumentException("bcount * 4 not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("bcount * 4 more than " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture) + " (" + Convert.ToString((long)(bcount * 4), System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
 
       if (tempArr.Length - tempStart < bcount * 4) {
-        throw new ArgumentException("tempArr.Length minus tempStart (" + Convert.ToString((long)tempArr.Length - tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)bcount * 4, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("tempArr.Length minus tempStart (" + Convert.ToString((long)tempArr.Length - tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)bcount * 4, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words1 == null) {
@@ -1345,23 +1345,23 @@ namespace PeterO {
       }
 
       if (astart < 0) {
-        throw new ArgumentException("astart (" + Convert.ToString((long)astart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("astart (" + Convert.ToString((long)astart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (astart > words1.Length) {
-        throw new ArgumentException("astart (" + Convert.ToString((long)astart, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("astart (" + Convert.ToString((long)astart, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (acount < 0) {
-        throw new ArgumentException("acount (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("acount (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (acount > words1.Length) {
-        throw new ArgumentException("acount (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("acount (" + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words1.Length - astart < acount) {
-        throw new ArgumentException("words1.Length minus astart (" + Convert.ToString((long)words1.Length - astart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words1.Length minus astart (" + Convert.ToString((long)words1.Length - astart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)acount, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words2 == null) {
@@ -1369,23 +1369,23 @@ namespace PeterO {
       }
 
       if (bstart < 0) {
-        throw new ArgumentException("bstart (" + Convert.ToString((long)bstart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("bstart (" + Convert.ToString((long)bstart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (bstart > words2.Length) {
-        throw new ArgumentException("bstart (" + Convert.ToString((long)bstart, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("bstart (" + Convert.ToString((long)bstart, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (bcount < 0) {
-        throw new ArgumentException("bcount (" + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("bcount (" + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (bcount > words2.Length) {
-        throw new ArgumentException("bcount (" + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("bcount (" + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words2.Length - bstart < bcount) {
-        throw new ArgumentException("words2.Length minus bstart (" + Convert.ToString((long)words2.Length - bstart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words2.Length minus bstart (" + Convert.ToString((long)words2.Length - bstart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)bcount, System.Globalization.CultureInfo.InvariantCulture));
       }
       #endif
 
@@ -1467,23 +1467,23 @@ namespace PeterO {
       }
 
       if (resultStart < 0) {
-        throw new ArgumentException("resultStart (" + Convert.ToString((long)resultStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("resultStart (" + Convert.ToString((long)resultStart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (resultStart > resultArr.Length) {
-        throw new ArgumentException("resultStart (" + Convert.ToString((long)resultStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)resultArr.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("resultStart (" + Convert.ToString((long)resultStart, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)resultArr.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words1Count + words2Count < 0) {
-        throw new ArgumentException("words1Count plus words2Count (" + Convert.ToString((long)words1Count + words2Count, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("words1Count plus words2Count (" + Convert.ToString((long)words1Count + words2Count, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (words1Count + words2Count > resultArr.Length) {
-        throw new ArgumentException("words1Count plus words2Count (" + Convert.ToString((long)words1Count + words2Count, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)resultArr.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words1Count plus words2Count (" + Convert.ToString((long)words1Count + words2Count, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)resultArr.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (resultArr.Length - resultStart < words1Count + words2Count) {
-        throw new ArgumentException("resultArr.Length minus resultStart (" + Convert.ToString((long)resultArr.Length - resultStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)words1Count + words2Count, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("resultArr.Length minus resultStart (" + Convert.ToString((long)resultArr.Length - resultStart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)words1Count + words2Count, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (tempArr == null) {
@@ -1491,23 +1491,23 @@ namespace PeterO {
       }
 
       if (tempStart < 0) {
-        throw new ArgumentException("tempStart (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("tempStart (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (tempStart > tempArr.Length) {
-        throw new ArgumentException("tempStart (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("tempStart (" + Convert.ToString((long)tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words1Count + words2Count < 0) {
-        throw new ArgumentException("words1Count plus words2Count (" + Convert.ToString((long)words1Count + words2Count, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("words1Count plus words2Count (" + Convert.ToString((long)words1Count + words2Count, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (words1Count + words2Count > tempArr.Length) {
-        throw new ArgumentException("words1Count plus words2Count (" + Convert.ToString((long)words1Count + words2Count, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words1Count plus words2Count (" + Convert.ToString((long)words1Count + words2Count, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)tempArr.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (tempArr.Length - tempStart < words1Count + words2Count) {
-        throw new ArgumentException("tempArr.Length minus tempStart (" + Convert.ToString((long)tempArr.Length - tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)words1Count + words2Count, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("tempArr.Length minus tempStart (" + Convert.ToString((long)tempArr.Length - tempStart, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)words1Count + words2Count, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words1 == null) {
@@ -1515,23 +1515,23 @@ namespace PeterO {
       }
 
       if (words1Start < 0) {
-        throw new ArgumentException("words1Start (" + Convert.ToString((long)words1Start, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("words1Start (" + Convert.ToString((long)words1Start, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (words1Start > words1.Length) {
-        throw new ArgumentException("words1Start (" + Convert.ToString((long)words1Start, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words1Start (" + Convert.ToString((long)words1Start, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words1Count < 0) {
-        throw new ArgumentException("words1Count (" + Convert.ToString((long)words1Count, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("words1Count (" + Convert.ToString((long)words1Count, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (words1Count > words1.Length) {
-        throw new ArgumentException("words1Count (" + Convert.ToString((long)words1Count, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words1Count (" + Convert.ToString((long)words1Count, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words1.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words1.Length - words1Start < words1Count) {
-        throw new ArgumentException("words1.Length minus words1Start (" + Convert.ToString((long)words1.Length - words1Start, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)words1Count, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words1.Length minus words1Start (" + Convert.ToString((long)words1.Length - words1Start, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)words1Count, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words2 == null) {
@@ -1539,23 +1539,23 @@ namespace PeterO {
       }
 
       if (words2Start < 0) {
-        throw new ArgumentException("words2Start (" + Convert.ToString((long)words2Start, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("words2Start (" + Convert.ToString((long)words2Start, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (words2Start > words2.Length) {
-        throw new ArgumentException("words2Start (" + Convert.ToString((long)words2Start, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words2Start (" + Convert.ToString((long)words2Start, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words2Count < 0) {
-        throw new ArgumentException("words2Count (" + Convert.ToString((long)words2Count, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("words2Count (" + Convert.ToString((long)words2Count, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
 
       if (words2Count > words2.Length) {
-        throw new ArgumentException("words2Count (" + Convert.ToString((long)words2Count, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words2Count (" + Convert.ToString((long)words2Count, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words2.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
 
       if (words2.Length - words2Start < words2Count) {
-        throw new ArgumentException("words2.Length minus words2Start (" + Convert.ToString((long)words2.Length - words2Start, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)words2Count, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("words2.Length minus words2Start (" + Convert.ToString((long)words2.Length - words2Start, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)words2Count, System.Globalization.CultureInfo.InvariantCulture));
       }
       #endif
 
@@ -2292,7 +2292,7 @@ if (bytes.Length <= 0) {
     private bool GetUnsignedBit(int n) {
       #if DEBUG
       if (n < 0) {
-        throw new ArgumentException("n (" + Convert.ToString((long)n, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("n (" + Convert.ToString((long)n, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       #endif
       if ((n >> 4) >= this.reg.Length) {
@@ -2634,7 +2634,7 @@ if (bytes.Length <= 0) {
       }
       int sign = power.Sign;
       if (sign < 0) {
-        throw new ArgumentException("sign (" + Convert.ToString((long)sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("sign (" + Convert.ToString((long)sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       BigInteger thisVar = this;
       if (sign == 0) {
@@ -2664,7 +2664,7 @@ if (bytes.Length <= 0) {
     /// <returns>A BigInteger object.</returns>
     public BigInteger pow(int powerSmall) {
       if (powerSmall < 0) {
-        throw new ArgumentException("powerSmall (" + Convert.ToString((long)powerSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("powerSmall (" + Convert.ToString((long)powerSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       BigInteger thisVar = this;
       if (powerSmall == 0) {
@@ -3207,19 +3207,19 @@ if (bytes.Length <= 0) {
         throw new ArgumentNullException("str");
       }
       if (index < 0) {
-        throw new ArgumentException("index (" + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("index (" + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (index > str.Length) {
-        throw new ArgumentException("index (" + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("index (" + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (endIndex < 0) {
-        throw new ArgumentException("endIndex (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("endIndex (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (endIndex > str.Length) {
-        throw new ArgumentException("endIndex (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("endIndex (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (endIndex < index) {
-        throw new ArgumentException("endIndex (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("endIndex (" + Convert.ToString((long)endIndex, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)index, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (index == endIndex) {
         throw new FormatException("No digits");
@@ -3412,7 +3412,7 @@ if (bytes.Length <= 0) {
         throw new ArgumentNullException("pow");
       }
       if (pow.Sign < 0) {
-        throw new ArgumentException("pow (" + pow + ") is not greater or equal to 0");
+        throw new ArgumentException("pow (" + pow + ") is less than 0");
       }
       if (mod.Sign <= 0) {
         throw new ArgumentException("mod (" + mod + ") is not greater than 0");
@@ -4191,19 +4191,19 @@ if (bytes.Length <= 0) {
         throw new ArgumentNullException("words");
       }
       if (start < 0) {
- throw new ArgumentException("start (" + Convert.ToString((long)start, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("start (" + Convert.ToString((long)start, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
       if (start > words.Length) {
- throw new ArgumentException("start (" + Convert.ToString((long)start, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words.Length, System.Globalization.CultureInfo.InvariantCulture));
+ throw new ArgumentException("start (" + Convert.ToString((long)start, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words.Length, System.Globalization.CultureInfo.InvariantCulture));
 }
       if (count < 0) {
- throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
       if (count > words.Length) {
- throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)words.Length, System.Globalization.CultureInfo.InvariantCulture));
+ throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words.Length, System.Globalization.CultureInfo.InvariantCulture));
 }
       if (words.Length - start < count) {
- throw new ArgumentException("words.Length minus start (" + Convert.ToString((long)words.Length - start, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture));
+ throw new ArgumentException("words.Length minus start (" + Convert.ToString((long)words.Length - start, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture));
 }
       #endif
 

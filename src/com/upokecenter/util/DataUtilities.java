@@ -63,19 +63,19 @@ private DataUtilities() {
         throw new NullPointerException("bytes");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
       }
       if (offset > bytes.length) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is not less or equal to " + Long.toString((long)bytes.length));
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)bytes.length));
       }
       if (bytesCount < 0) {
-        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is less than " + "0");
       }
       if (bytesCount > bytes.length) {
-        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is not less or equal to " + Long.toString((long)bytes.length));
+        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is more than " + Long.toString((long)bytes.length));
       }
       if (bytes.length - offset < bytesCount) {
-        throw new IllegalArgumentException("bytes's length minus " + offset + " (" + Long.toString((long)(bytes.length - offset)) + ") is not greater or equal to " + Long.toString((long)bytesCount));
+        throw new IllegalArgumentException("bytes's length minus " + offset + " (" + Long.toString((long)(bytes.length - offset)) + ") is less than " + Long.toString((long)bytesCount));
       }
       StringBuilder b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, offset, bytesCount, b, replace) != 0) {
@@ -263,19 +263,19 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         throw new NullPointerException("str");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
       }
       if (offset > str.length()) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is not less or equal to " + Long.toString((long)str.length()));
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)str.length()));
       }
       if (length < 0) {
-        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is less than " + "0");
       }
       if (length > str.length()) {
-        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is not less or equal to " + Long.toString((long)str.length()));
+        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is more than " + Long.toString((long)str.length()));
       }
       if (str.length() - offset < length) {
-        throw new IllegalArgumentException("str.length() minus offset (" + Long.toString((long)str.length() - offset) + ") is not greater or equal to " + Long.toString((long)length));
+        throw new IllegalArgumentException("str.length() minus offset (" + Long.toString((long)str.length() - offset) + ") is less than " + Long.toString((long)length));
       }
       byte[] bytes;
       int retval = 0;
@@ -387,19 +387,19 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         throw new NullPointerException("data");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
       }
       if (offset > data.length) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is not less or equal to " + Long.toString((long)data.length));
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)data.length));
       }
       if (bytesCount < 0) {
-        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is less than " + "0");
       }
       if (bytesCount > data.length) {
-        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is not less or equal to " + Long.toString((long)data.length));
+        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is more than " + Long.toString((long)data.length));
       }
       if (data.length - offset < bytesCount) {
-        throw new IllegalArgumentException("data.length minus offset (" + Long.toString((long)data.length - offset) + ") is not greater or equal to " + Long.toString((long)bytesCount));
+        throw new IllegalArgumentException("data.length minus offset (" + Long.toString((long)data.length - offset) + ") is less than " + Long.toString((long)bytesCount));
       }
       if (builder == null) {
         throw new NullPointerException("builder");
