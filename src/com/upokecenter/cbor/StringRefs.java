@@ -21,7 +21,7 @@ import com.upokecenter.util.*;
     public StringRefs () {
       this.stack = new ArrayList<ArrayList<CBORObject>>();
       ArrayList<CBORObject> firstItem=new ArrayList<CBORObject>();
-      this.stack.Add(firstItem);
+      this.stack.add(firstItem);
     }
 
     /**
@@ -29,7 +29,7 @@ import com.upokecenter.util.*;
      */
     public void Push() {
       ArrayList<CBORObject> firstItem=new ArrayList<CBORObject>();
-      this.stack.Add(firstItem);
+      this.stack.add(firstItem);
     }
 
     /**
@@ -37,7 +37,7 @@ import com.upokecenter.util.*;
      */
     public void Pop() {
 
-      this.stack.RemoveAt(this.stack.size() - 1);
+      this.stack.remove(this.stack.size() - 1);
     }
 
     /**
