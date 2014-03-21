@@ -11,7 +11,7 @@ using System.Text;
 namespace PeterO {
     /// <summary>Represents an arbitrary-precision binary floating-point
     /// number. Consists of an integer mantissa and an integer exponent,
-    /// both arbitrary-precision. The value of the number is equal to mantissa
+    /// both arbitrary-precision. The value of the number equals mantissa
     /// * 2^exponent. This class also supports values for negative zero,
     /// not-a-number (NaN) values, and infinity.<para>Passing a signaling
     /// NaN to any arithmetic operation shown here will signal the flag FlagInvalid

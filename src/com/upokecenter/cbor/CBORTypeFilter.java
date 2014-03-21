@@ -158,7 +158,7 @@ import com.upokecenter.util.*;
     /**
      * Not documented yet.
      * @param arrayLength A 32-bit signed integer.
-     * @param elements A params object.
+     * @param elements An array of CBORTypeFilter.
      * @return A CBORTypeFilter object.
      * @deprecated Use WithArrayMaxLength instead.
  */
@@ -178,10 +178,10 @@ import com.upokecenter.util.*;
         return this;
       }
       if (arrayLength < 0) {
-        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is less than " + "0");
       }
       if (arrayLength < elements.length) {
-        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is not greater or equal to " + Long.toString((long)elements.length));
+        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is less than " + Long.toString((long)elements.length));
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -203,10 +203,10 @@ import com.upokecenter.util.*;
         return this;
       }
       if (arrayLength < 0) {
-        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is less than " + "0");
       }
       if (arrayLength < elements.length) {
-        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is not greater or equal to " + Long.toString((long)elements.length));
+        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is less than " + Long.toString((long)elements.length));
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -226,10 +226,10 @@ import com.upokecenter.util.*;
         return this;
       }
       if (this.arrayLength < 0) {
-        throw new IllegalArgumentException("this.arrayLength (" + Long.toString((long)this.arrayLength) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("this.arrayLength (" + Long.toString((long)this.arrayLength) + ") is less than " + "0");
       }
       if (this.arrayLength < this.elements.length) {
-        throw new IllegalArgumentException("this.arrayLength (" + Long.toString((long)this.arrayLength) + ") is not greater or equal to " + Long.toString((long)this.elements.length));
+        throw new IllegalArgumentException("this.arrayLength (" + Long.toString((long)this.arrayLength) + ") is less than " + Long.toString((long)this.elements.length));
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -292,16 +292,16 @@ import com.upokecenter.util.*;
       }
       if ((this.types & (1 << 4)) != 0) {
         return false;
-}
+      }
       if (this.anyArrayLength) {
- return true;
-}
+        return true;
+      }
       if (!this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) == 0) {
- return true;
-}
+        return true;
+      }
       if (this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) >= 0) {
- return true;
-}
+        return true;
+      }
       return false;
     }
 
@@ -375,8 +375,8 @@ import com.upokecenter.util.*;
         return Any;
       }
       if (index < 0) {
- return None;
-}
+        return None;
+      }
       if (index >= this.arrayLength) {
         // Index is out of bounds
         return this.arrayMinLength ? Any : None;
@@ -402,8 +402,8 @@ import com.upokecenter.util.*;
         return Any;
       }
       if (index < 0) {
- return None;
-}
+        return None;
+      }
       if (index >= this.arrayLength) {
         // Index is out of bounds
         return this.arrayMinLength ? Any : None;

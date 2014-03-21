@@ -6102,6 +6102,9 @@ namespace Test {
       Assert.AreEqual(BigInteger.fromString("2217361768"),cbor.AsBigInteger());
       Assert.IsFalse(cbor.AsBigInteger().canFitInInt());
       Assert.IsFalse(cbor.CanTruncatedIntFitInInt32());
+      cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xC5, (byte)0x82, 0x18, 0x2F, 0x32 });  // -2674012278751232
+      Assert.AreEqual(52, cbor.AsBigInteger().bitLength());
+      Assert.IsTrue(cbor.CanFitInInt64());
       Assert.IsFalse(CBORObject.FromObject(2554895343L).CanFitInSingle());
     }
 

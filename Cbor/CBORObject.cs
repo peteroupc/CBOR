@@ -230,10 +230,10 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("handler");
       }
       if (bigintTag.Sign < 0) {
-        throw new ArgumentException("bigintTag.Sign (" + Convert.ToString((long)bigintTag.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("bigintTag.Sign (" + Convert.ToString((long)bigintTag.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (bigintTag.bitLength() > 64) {
-        throw new ArgumentException("bigintTag.bitLength (" + Convert.ToString((long)bigintTag.bitLength(), System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + "64");
+        throw new ArgumentException("bigintTag.bitLength (" + Convert.ToString((long)bigintTag.bitLength(), System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + "64");
       }
       lock (tagHandlers) {
         tagHandlers[bigintTag] = handler;
@@ -428,9 +428,10 @@ namespace PeterO.Cbor {
       return cn == null ? false : cn.IsInfinity(this.ThisItem);
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
-public bool IsFinite {
+    /// <summary>Gets a value indicating whether this CBOR object represents
+    /// a finite number.</summary>
+    /// <value>Whether this CBOR object represents a finite number.</value>
+    public bool IsFinite {
       get {
         return this.Type == CBORType.Number && !this.IsInfinity() && !this.IsNaN();
       }
@@ -1987,7 +1988,7 @@ public bool IsFinite {
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
       if (value < 0) {
-        throw new ArgumentException("value (" + Convert.ToString((long)value, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("value (" + Convert.ToString((long)value, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (value < 24) {
         return new byte[] { (byte)((byte)value | (byte)(type << 5)) };
@@ -2014,7 +2015,7 @@ public bool IsFinite {
 
     private static byte[] GetPositiveInt64Bytes(int type, long value) {
       if (value < 0) {
-        throw new ArgumentException("value (" + Convert.ToString((long)value, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("value (" + Convert.ToString((long)value, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (value < 24) {
         return new byte[] { (byte)((byte)value | (byte)(type << 5)) };
@@ -2419,7 +2420,7 @@ public bool IsFinite {
         } else {
           #if DEBUG
           if (value < 32) {
-            throw new ArgumentException("value (" + Convert.ToString((long)value, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "32");
+            throw new ArgumentException("value (" + Convert.ToString((long)value, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "32");
           }
           #endif
 
@@ -3460,10 +3461,10 @@ public bool IsFinite {
     /// through 31.</exception>
     public static CBORObject FromSimpleValue(int simpleValue) {
       if (simpleValue < 0) {
-        throw new ArgumentException("simpleValue (" + Convert.ToString((long)simpleValue, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("simpleValue (" + Convert.ToString((long)simpleValue, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (simpleValue > 255) {
-        throw new ArgumentException("simpleValue (" + Convert.ToString((long)simpleValue, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + "255");
+        throw new ArgumentException("simpleValue (" + Convert.ToString((long)simpleValue, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + "255");
       }
       if (simpleValue >= 24 && simpleValue < 32) {
         throw new ArgumentException("Simple value is from 24 to 31: " + simpleValue);
@@ -3913,10 +3914,10 @@ public bool IsFinite {
         throw new ArgumentNullException("bigintTag");
       }
       if (bigintTag.Sign < 0) {
-        throw new ArgumentException("bigintTag's sign (" + Convert.ToString((long)bigintTag.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("bigintTag's sign (" + Convert.ToString((long)bigintTag.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (bigintTag.CompareTo(UInt64MaxValue) > 0) {
-        throw new ArgumentException("tag not less or equal to 18446744073709551615 (" + Convert.ToString(bigintTag, System.Globalization.CultureInfo.InvariantCulture) + ")");
+        throw new ArgumentException("tag more than 18446744073709551615 (" + Convert.ToString(bigintTag, System.Globalization.CultureInfo.InvariantCulture) + ")");
       }
       CBORObject c = FromObject(valueOb);
       if (bigintTag.bitLength() <= 16) {
@@ -3998,7 +3999,7 @@ public bool IsFinite {
     /// 's type is unsupported.</exception>
     public static CBORObject FromObjectAndTag(object valueObValue, int smallTag) {
       if (smallTag < 0) {
-        throw new ArgumentException("smallTag (" + Convert.ToString((long)smallTag, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("smallTag (" + Convert.ToString((long)smallTag, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);
@@ -4073,7 +4074,8 @@ public bool IsFinite {
     }
 
     private static string ExtendedToString(ExtendedFloat ef) {
-      if (ef.IsFinite && (ef.Exponent.CompareTo((BigInteger)1000) >0 || ef.Exponent.CompareTo((BigInteger)(-1000)) < 0)) {
+      if (ef.IsFinite && (ef.Exponent.CompareTo((BigInteger)1000) > 0 ||
+                          ef.Exponent.CompareTo((BigInteger)(-1000)) < 0)) {
         // It can take very long to convert a number with a very high
         // or very low exponent to a decimal string, so do this instead
         return ef.Mantissa.ToString() + "p" + ef.Exponent.ToString();
@@ -4314,7 +4316,7 @@ public bool IsFinite {
 
     private static byte[] ReadByteData(Stream s, long uadditional, Stream outputStream) {
       if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
-        throw new CBORException("Length " + ToUnsignedBigInteger(uadditional) +" is bigger than supported");
+        throw new CBORException("Length " + ToUnsignedBigInteger(uadditional) + " is bigger than supported");
       }
       if (uadditional <= 0x10000) {
         // Simple case: small size
@@ -4500,7 +4502,7 @@ public bool IsFinite {
               }
               long len = ReadDataLength(s, nextByte, 2);
               if ((len >> 63) != 0 || len > Int32.MaxValue) {
-                throw new CBORException("Length " + ToUnsignedBigInteger(len) +" is bigger than supported");
+                throw new CBORException("Length " + ToUnsignedBigInteger(len) + " is bigger than supported");
               }
               if (nextByte != 0x40) {  // NOTE: 0x40 means the empty byte string
                 ReadByteData(s, len, ms);
@@ -4545,7 +4547,7 @@ public bool IsFinite {
             }
             long len = ReadDataLength(s, nextByte, 3);
             if ((len >> 63) != 0 || len > Int32.MaxValue) {
-              throw new CBORException("Length " + ToUnsignedBigInteger(len) +" is bigger than supported");
+              throw new CBORException("Length " + ToUnsignedBigInteger(len) + " is bigger than supported");
             }
             if (nextByte != 0x60) {  // NOTE: 0x60 means the empty string
               switch (DataUtilities.ReadUtf8(s, (int)len, builder, false)) {
@@ -4692,9 +4694,11 @@ public bool IsFinite {
           taginfo = FindTagConverter(bigintAdditional);
         }
         o = Read(
-
-          s, depth + 1, false,
-          taginfo == null ? null : taginfo.GetTypeFilter(), srefs);
+          s,
+          depth + 1,
+          false,
+          taginfo == null ? null : taginfo.GetTypeFilter(),
+          srefs);
         if (hasBigAdditional) {
           return FromObjectAndTag(o, bigintAdditional);
         } else if (uadditional < 65536) {

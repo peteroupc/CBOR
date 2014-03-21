@@ -10,9 +10,9 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Represents an arbitrary-precision binary floating-point number.
      * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
-     * The value of the number is equal to mantissa * 2^exponent. This class
-     * also supports values for negative zero, not-a-number (NaN) values,
-     * and infinity.<p>Passing a signaling NaN to any arithmetic operation
+     * The value of the number equals mantissa * 2^exponent. This class also
+     * supports values for negative zero, not-a-number (NaN) values, and
+     * infinity.<p>Passing a signaling NaN to any arithmetic operation
      * shown here will signal the flag FlagInvalid and return a quiet NaN,
      * even if another operand to that operation is a quiet NaN, unless noted
      * otherwise.</p> <p>Passing a quiet NaN to any arithmetic operation

@@ -28,7 +28,7 @@ at: http://peteroupc.github.io/CBOR/
       public static MutableNumber FromBigInteger(BigInteger bigintVal) {
         MutableNumber mnum = new MutableNumber(0);
         if (bigintVal.signum() < 0) {
- throw new IllegalArgumentException("bigintVal's sign (" + Long.toString((long)bigintVal.signum()) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("bigintVal's sign (" + Long.toString((long)bigintVal.signum()) + ") is less than " + "0");
 }
         byte[] bytes = bigintVal.toByteArray(true);
         int len = bytes.length;
@@ -61,7 +61,7 @@ at: http://peteroupc.github.io/CBOR/
 
       public MutableNumber (int val) {
         if (val < 0) {
- throw new IllegalArgumentException("val (" + Long.toString((long)val) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("val (" + Long.toString((long)val) + ") is less than " + "0");
 }
         this.data = new int[4];
         this.wordCount = (val == 0) ? 0 : 1;
@@ -75,7 +75,7 @@ at: http://peteroupc.github.io/CBOR/
      */
       public MutableNumber SetInt(int val) {
         if (val < 0) {
- throw new IllegalArgumentException("val (" + Long.toString((long)val) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("val (" + Long.toString((long)val) + ") is less than " + "0");
 }
         this.wordCount = (val == 0) ? 0 : 1;
         this.data[0] = ((int)(val & 0xFFFFFFFFL));
@@ -144,7 +144,7 @@ at: http://peteroupc.github.io/CBOR/
      */
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
- throw new IllegalArgumentException("multiplicand (" + Long.toString((long)multiplicand) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("multiplicand (" + Long.toString((long)multiplicand) + ") is less than " + "0");
 } else if (multiplicand != 0) {
           int carry = 0;
           if (this.wordCount == 0) {
@@ -288,7 +288,7 @@ at: http://peteroupc.github.io/CBOR/
       public MutableNumber SubtractInt(
         int other) {
         if (other < 0) {
- throw new IllegalArgumentException("other (" + Long.toString((long)other) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("other (" + Long.toString((long)other) + ") is less than " + "0");
 } else if (other != 0) {
           {
             // Ensure a length of at least 1
@@ -402,7 +402,7 @@ at: http://peteroupc.github.io/CBOR/
      */
       public MutableNumber Add(int augend) {
         if (augend < 0) {
- throw new IllegalArgumentException("augend (" + Long.toString((long)augend) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("augend (" + Long.toString((long)augend) + ") is less than " + "0");
 } else if (augend != 0) {
           int carry = 0;
           // Ensure a length of at least 1

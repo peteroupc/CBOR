@@ -143,7 +143,7 @@ namespace PeterO.Cbor
       if (ef.IsZero) {
         return true;
       }
-      if (ef.Exponent.CompareTo((BigInteger)21) >= 0) {
+      if (ef.Exponent.CompareTo((BigInteger)65) >= 0) {
         return false;
       }
       BigInteger bi = ef.ToBigInteger();

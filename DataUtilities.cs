@@ -58,19 +58,19 @@ namespace PeterO {
         throw new ArgumentNullException("bytes");
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (offset > bytes.Length) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)bytes.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)bytes.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (bytesCount < 0) {
-        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (bytesCount > bytes.Length) {
-        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)bytes.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)bytes.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (bytes.Length - offset < bytesCount) {
-        throw new ArgumentException("bytes's length minus " + offset + " (" + Convert.ToString((long)(bytes.Length - offset), System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("bytes's length minus " + offset + " (" + Convert.ToString((long)(bytes.Length - offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture));
       }
       StringBuilder b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, offset, bytesCount, b, replace) != 0) {
@@ -247,19 +247,19 @@ namespace PeterO {
         throw new ArgumentNullException("str");
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (offset > str.Length) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (length < 0) {
-        throw new ArgumentException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (length > str.Length) {
-        throw new ArgumentException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (str.Length - offset < length) {
-        throw new ArgumentException("str.Length minus offset (" + Convert.ToString((long)str.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("str.Length minus offset (" + Convert.ToString((long)str.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture));
       }
       byte[] bytes;
       int retval = 0;
@@ -371,19 +371,19 @@ namespace PeterO {
         throw new ArgumentNullException("data");
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (offset > data.Length) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)data.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)data.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (bytesCount < 0) {
-        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (bytesCount > data.Length) {
-        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)data.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)data.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (data.Length - offset < bytesCount) {
-        throw new ArgumentException("data.Length minus offset (" + Convert.ToString((long)data.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("data.Length minus offset (" + Convert.ToString((long)data.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (builder == null) {
         throw new ArgumentNullException("builder");

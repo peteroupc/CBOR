@@ -161,8 +161,8 @@ namespace PeterO
     /// or equal to another BigInteger instance.</summary>
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
-    /// <returns>True if 'thisValue' is less than or equal to ' otherValue';
-    /// otherwise, false.</returns>
+    /// <returns>True if 'thisValue' is up to ' otherValue'; otherwise,
+    /// false.</returns>
     public static bool operator <=(BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
         return true;
@@ -187,8 +187,8 @@ namespace PeterO
     /// another BigInteger value.</summary>
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
-    /// <returns>True if 'thisValue' is greater than or equal to ' otherValue';
-    /// otherwise, false.</returns>
+    /// <returns>True if 'thisValue' is at least ' otherValue'; otherwise,
+    /// false.</returns>
     public static bool operator >=(BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
         return otherValue == null;
@@ -304,7 +304,7 @@ namespace PeterO
         throw new ArgumentNullException("power");
       }
       if (power.Sign < 0) {
-        throw new ArgumentException("power's sign (" + Convert.ToString((long)power.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("power's sign (" + Convert.ToString((long)power.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       BigInteger val = BigInteger.One;
       while (power.Sign > 0) {
@@ -326,7 +326,7 @@ namespace PeterO
         throw new ArgumentNullException("bigValue");
       }
       if (power < 0) {
-        throw new ArgumentException("power (" + Convert.ToString((long)power, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("power (" + Convert.ToString((long)power, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       return bigValue.pow(power);
     }

@@ -172,7 +172,7 @@ import com.upokecenter.util.*;
       if (ef.signum()==0) {
         return true;
       }
-      if (ef.getExponent().compareTo(BigInteger.valueOf(21)) >= 0) {
+      if (ef.getExponent().compareTo(BigInteger.valueOf(65)) >= 0) {
         return false;
       }
       BigInteger bi = ef.ToBigInteger();

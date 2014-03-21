@@ -607,7 +607,7 @@ bigintRem=divrem[1]; }
 
     public static int ModPow(int x, int pow, int mod) {
       if (x < 0) {
-        throw new IllegalArgumentException("x (" + Long.toString((long)x) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("x (" + Long.toString((long)x) + ") is less than " + "0");
       }
       if (pow <= 0) {
         throw new IllegalArgumentException("pow (" + Long.toString((long)pow) + ") is not greater than " + "0");

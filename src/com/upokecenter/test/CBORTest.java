@@ -6187,6 +6187,9 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals(BigInteger.fromString("2217361768"),cbor.AsBigInteger());
       if(cbor.AsBigInteger().canFitInInt())Assert.fail();
       if(cbor.CanTruncatedIntFitInInt32())Assert.fail();
+      cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xC5, (byte)0x82, 0x18, 0x2F, 0x32  });  // -2674012278751232
+      Assert.assertEquals(52, cbor.AsBigInteger().bitLength());
+      if(!(cbor.CanFitInInt64()))Assert.fail();
       if(CBORObject.FromObject(2554895343L).CanFitInSingle())Assert.fail();
     }
 

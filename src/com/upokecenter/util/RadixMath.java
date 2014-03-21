@@ -1609,7 +1609,7 @@ bigrem=divrem[1]; }
  throw new IllegalArgumentException("root (" + Long.toString((long)root) + ") is not greater than " + "0");
 }
       if (value.signum() < 0) {
- throw new IllegalArgumentException("value's sign (" + Long.toString((long)value.signum()) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("value's sign (" + Long.toString((long)value.signum()) + ") is less than " + "0");
 }
       if (value.signum() == 0) {
         return new BigInteger[] { BigInteger.ZERO, BigInteger.ZERO };
@@ -2829,7 +2829,7 @@ rem=divrem[1]; }
       // get the precision
       FastInteger fastPrecision = ctx.getPrecision().canFitInInt() ? new FastInteger(ctx.getPrecision().intValue()) : FastInteger.FromBig(ctx.getPrecision());
       if (fastPrecision.signum() < 0) {
-        return this.SignalInvalidWithMessage(ctx, "precision not greater or equal to 0 (" + fastPrecision + ")");
+        return this.SignalInvalidWithMessage(ctx, "precision less than 0 (" + fastPrecision + ")");
       }
       if (this.thisRadix == 2 || fastPrecision.isValueZero()) {
         // "binaryPrec" will have no special effect here

@@ -10,28 +10,28 @@ at: http://peteroupc.github.io/CBOR/
     /**
      * Represents an arbitrary-precision decimal floating-point number.
      * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
-     * The value of the number is equal to mantissa * 10^exponent. <p>The
-     * mantissa is the value of the digits that make up a number, ignoring
-     * the decimal point and exponent. For example, in the number 2356.78,
-     * the mantissa is 235678. The exponent is where the "floating" decimal
-     * point of the number is located. A positive exponent means "move it
-     * to the right", and a negative exponent means "move it to the left."
-     * In the example 2,356.78, the exponent is -2, since it has 2 decimal
-     * places and the decimal point is "moved to the left by 2." Therefore,
-     * in the ExtendedDecimal representation, this number would be stored
-     * as 235678 * 10^-2.</p> <p>The mantissa and exponent format preserves
-     * trailing zeros in the number's value. This may give rise to multiple
-     * ways to store the same value. For example, 1.00 and 1 would be stored
-     * differently, even though they have the same value. In the first case,
-     * 100 * 10^-2 (100 with decimal point moved left by 2), and in the second
-     * case, 1 * 10^0 (1 with decimal point moved 0).</p> <p>This class also
-     * supports values for negative zero, not-a-number (NaN) values, and
-     * infinity. <b>Negative zero</b> is generally used when a negative
-     * number is rounded to 0; it has the same mathematical value as positive
-     * zero. <b>Infinity</b> is generally used when a non-zero number is
-     * divided by zero, or when a very high number can't be represented in
-     * a given exponent range. <b>Not-a-number</b> is generally used to
-     * signal errors. </p> <p>This class implements the <a href='http://speleotrove.com/decimal/decarith.html'>General
+     * The value of the number equals mantissa * 10^exponent. <p>The mantissa
+     * is the value of the digits that make up a number, ignoring the decimal
+     * point and exponent. For example, in the number 2356.78, the mantissa
+     * is 235678. The exponent is where the "floating" decimal point of the
+     * number is located. A positive exponent means "move it to the right",
+     * and a negative exponent means "move it to the left." In the example
+     * 2,356.78, the exponent is -2, since it has 2 decimal places and the
+     * decimal point is "moved to the left by 2." Therefore, in the ExtendedDecimal
+     * representation, this number would be stored as 235678 * 10^-2.</p>
+     * <p>The mantissa and exponent format preserves trailing zeros in
+     * the number's value. This may give rise to multiple ways to store the
+     * same value. For example, 1.00 and 1 would be stored differently, even
+     * though they have the same value. In the first case, 100 * 10^-2 (100
+     * with decimal point moved left by 2), and in the second case, 1 * 10^0
+     * (1 with decimal point moved 0).</p> <p>This class also supports values
+     * for negative zero, not-a-number (NaN) values, and infinity. <b>Negative
+     * zero</b> is generally used when a negative number is rounded to 0;
+     * it has the same mathematical value as positive zero. <b>Infinity</b>
+     * is generally used when a non-zero number is divided by zero, or when
+     * a very high number can't be represented in a given exponent range.
+     * <b>Not-a-number</b> is generally used to signal errors. </p> <p>This
+     * class implements the <a href='http://speleotrove.com/decimal/decarith.html'>General
      * Decimal Arithmetic Specification</a> version 1.70.</p> <p>Passing
      * a signaling NaN to any arithmetic operation shown here will signal
      * the flag FlagInvalid and return a quiet NaN, even if another operand
@@ -988,8 +988,8 @@ public int CompareToBinary(ExtendedFloat other) {
       if (other.getExponent().compareTo(BigInteger.valueOf(-1000)) < 0) {
         // For very low exponents, the conversion to decimal can take
         // very long, so try this approach
-        if (other.Abs().compareTo(ExtendedFloat.One) < 0) {  // Abs less than 1
-          if (this.Abs().compareTo(ExtendedDecimal.One) >= 0) {  // Abs 1 or more
+        if (other.Abs(null).compareTo(ExtendedFloat.One) < 0) {  // Abs less than 1
+          if (this.Abs(null).compareTo(ExtendedDecimal.One) >= 0) {  // Abs 1 or more
             return (signA > 0) ? 1 : -1;
           }
         }
@@ -997,7 +997,7 @@ public int CompareToBinary(ExtendedFloat other) {
       if (other.getExponent().compareTo(BigInteger.valueOf(1000)) > 0) {
         // Very high exponents
         BigInteger bignum = BigInteger.ONE.shiftLeft(999);
-        if (this.Abs().compareTo(ExtendedDecimal.FromBigInteger(bignum)) <= 0) {
+        if (this.Abs(null).compareTo(ExtendedDecimal.FromBigInteger(bignum)) <= 0) {
           // this object's absolute value is less
           return (signA > 0) ? -1 : 1;
         }
