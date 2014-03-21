@@ -17,7 +17,7 @@ package com.upokecenter.cbor;
      * Not documented yet.
      * @return A CBORTypeFilter object.
      */
-public CBORTypeFilter GetTypeFilter() {
+    public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithFloatingPoint();
     }
 
@@ -26,10 +26,10 @@ public CBORTypeFilter GetTypeFilter() {
      * @param obj A CBORObject object. (2).
      * @return A CBORObject object.
      */
-public CBORObject ValidateObject(CBORObject obj) {
+    public CBORObject ValidateObject(CBORObject obj) {
       if (!obj.isFinite()) {
- throw new CBORException("Not a valid date");
-}
+        throw new CBORException("Not a valid date");
+      }
       return obj;
     }
   }

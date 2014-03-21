@@ -46,7 +46,8 @@ The following are some clarifications to RFC 7049.
   based on the POSIX definition of "seconds since the Epoch", which
   the RFC cites as a normative reference.  This definition does not
   count leap seconds.  When this implementation supports date
-  conversion, it won't count leap seconds, either.
+  conversion, it won't count leap seconds, either.  This implementation
+  treats values of infinity and NaN as invalid.
 
 About
 -----------

@@ -15,17 +15,17 @@ namespace PeterO.Cbor
   {
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
-public CBORTypeFilter GetTypeFilter() {
+    public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithFloatingPoint();
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>A CBORObject object. (2).</param>
     /// <returns>A CBORObject object.</returns>
-public CBORObject ValidateObject(CBORObject obj) {
+    public CBORObject ValidateObject(CBORObject obj) {
       if (!obj.IsFinite) {
- throw new CBORException("Not a valid date");
-}
+        throw new CBORException("Not a valid date");
+      }
       return obj;
     }
   }
