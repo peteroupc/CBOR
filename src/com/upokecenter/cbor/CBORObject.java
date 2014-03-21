@@ -991,7 +991,7 @@ public boolean equals(CBORObject other) {
       int offset) {
       int length = data.length;
       if (length > offset) {
-        int nextbyte = (int)(data[offset] & (int)0xFF);
+        int nextbyte = (int)(data[offset] & (int)0xff);
         if (nextbyte >= 0x60 && nextbyte < 0x78) {
           int offsetp1 = 1 + offset;
           // Check for type 3 String of short length
@@ -1008,7 +1008,7 @@ public boolean equals(CBORObject other) {
           // convert from UTF-8 first
           char[] c = new char[length - offsetp1];
           for (int i = offsetp1; i < length; ++i) {
-            c[i - offsetp1] = (char)(data[i] & (int)0xFF);
+            c[i - offsetp1] = (char)(data[i] & (int)0xff);
           }
           return new String(c);
         }
@@ -1030,7 +1030,7 @@ public boolean equals(CBORObject other) {
           (long)(-1 - (i - 0x20)));
       }
       valueFixedObjects[0x60] = new CBORObject(CBORObjectTypeTextString, "");
-      for (int i = 0xE0; i < 0xf8; ++i) {
+      for (int i = 0xe0; i < 0xf8; ++i) {
         valueFixedObjects[i] = new CBORObject(CBORObjectTypeSimpleValue, (int)(i - 0xe0));
       }
       return valueFixedObjects;
@@ -1072,32 +1072,32 @@ public boolean equals(CBORObject other) {
           return new CBORObject(CBORObjectTypeTextString, s);
         }
       }
-      if ((firstbyte & 0x1C) == 0x18) {
+      if ((firstbyte & 0x1c) == 0x18) {
         // contains 1 to 8 extra bytes of additional information
         long uadditional = 0;
-        switch (firstbyte & 0x1F) {
+        switch (firstbyte & 0x1f) {
           case 24:
-            uadditional = (int)(data[1] & (int)0xFF);
+            uadditional = (int)(data[1] & (int)0xff);
             break;
           case 25:
-            uadditional = ((long)(data[1] & (long)0xFF)) << 8;
-            uadditional |= (long)(data[2] & (long)0xFF);
+            uadditional = ((long)(data[1] & (long)0xff)) << 8;
+            uadditional |= (long)(data[2] & (long)0xff);
             break;
           case 26:
-            uadditional = ((long)(data[1] & (long)0xFF)) << 24;
-            uadditional |= ((long)(data[2] & (long)0xFF)) << 16;
-            uadditional |= ((long)(data[3] & (long)0xFF)) << 8;
-            uadditional |= (long)(data[4] & (long)0xFF);
+            uadditional = ((long)(data[1] & (long)0xff)) << 24;
+            uadditional |= ((long)(data[2] & (long)0xff)) << 16;
+            uadditional |= ((long)(data[3] & (long)0xff)) << 8;
+            uadditional |= (long)(data[4] & (long)0xff);
             break;
           case 27:
-            uadditional = ((long)(data[1] & (long)0xFF)) << 56;
-            uadditional |= ((long)(data[2] & (long)0xFF)) << 48;
-            uadditional |= ((long)(data[3] & (long)0xFF)) << 40;
-            uadditional |= ((long)(data[4] & (long)0xFF)) << 32;
-            uadditional |= ((long)(data[5] & (long)0xFF)) << 24;
-            uadditional |= ((long)(data[6] & (long)0xFF)) << 16;
-            uadditional |= ((long)(data[7] & (long)0xFF)) << 8;
-            uadditional |= (long)(data[8] & (long)0xFF);
+            uadditional = ((long)(data[1] & (long)0xff)) << 56;
+            uadditional |= ((long)(data[2] & (long)0xff)) << 48;
+            uadditional |= ((long)(data[3] & (long)0xff)) << 40;
+            uadditional |= ((long)(data[4] & (long)0xff)) << 32;
+            uadditional |= ((long)(data[5] & (long)0xff)) << 24;
+            uadditional |= ((long)(data[6] & (long)0xff)) << 16;
+            uadditional |= ((long)(data[7] & (long)0xff)) << 8;
+            uadditional |= (long)(data[8] & (long)0xff);
             break;
           default:
             throw new CBORException("Unexpected data encountered");
@@ -1163,7 +1163,7 @@ public boolean equals(CBORObject other) {
       } else if (firstbyte == 0x80) {
         // empty array
         return FromObject(new ArrayList<CBORObject>());
-      } else if (firstbyte == 0xA0) {
+      } else if (firstbyte == 0xa0) {
         // empty map
         return FromObject(new HashMap<CBORObject, CBORObject>());
       } else {
@@ -1187,7 +1187,7 @@ public boolean equals(CBORObject other) {
       if (data.length == 0) {
         throw new IllegalArgumentException("data is empty.");
       }
-      int firstbyte = (int)(data[0] & (int)0xFF);
+      int firstbyte = (int)(data[0] & (int)0xff);
       int expectedLength = valueExpectedLengths[firstbyte];
       // if invalid
       if (expectedLength == -1) {
@@ -1277,22 +1277,22 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       byte[] uabytes = null;
       if (tagHigh != 0) {
         uabytes = new byte[9];
-        uabytes[7] = (byte)((tagHigh >> 24) & 0xFF);
-        uabytes[6] = (byte)((tagHigh >> 16) & 0xFF);
-        uabytes[5] = (byte)((tagHigh >> 8) & 0xFF);
-        uabytes[4] = (byte)(tagHigh & 0xFF);
-        uabytes[3] = (byte)((tagLow >> 24) & 0xFF);
-        uabytes[2] = (byte)((tagLow >> 16) & 0xFF);
-        uabytes[1] = (byte)((tagLow >> 8) & 0xFF);
-        uabytes[0] = (byte)(tagLow & 0xFF);
+        uabytes[7] = (byte)((tagHigh >> 24) & 0xff);
+        uabytes[6] = (byte)((tagHigh >> 16) & 0xff);
+        uabytes[5] = (byte)((tagHigh >> 8) & 0xff);
+        uabytes[4] = (byte)(tagHigh & 0xff);
+        uabytes[3] = (byte)((tagLow >> 24) & 0xff);
+        uabytes[2] = (byte)((tagLow >> 16) & 0xff);
+        uabytes[1] = (byte)((tagLow >> 8) & 0xff);
+        uabytes[0] = (byte)(tagLow & 0xff);
         uabytes[8] = 0;
         return BigInteger.fromByteArray((byte[])uabytes,true);
       } else if (tagLow != 0) {
         uabytes = new byte[5];
-        uabytes[3] = (byte)((tagLow >> 24) & 0xFF);
-        uabytes[2] = (byte)((tagLow >> 16) & 0xFF);
-        uabytes[1] = (byte)((tagLow >> 8) & 0xFF);
-        uabytes[0] = (byte)(tagLow & 0xFF);
+        uabytes[3] = (byte)((tagLow >> 24) & 0xff);
+        uabytes[2] = (byte)((tagLow >> 16) & 0xff);
+        uabytes[1] = (byte)((tagLow >> 8) & 0xff);
+        uabytes[0] = (byte)(tagLow & 0xff);
         uabytes[4] = 0;
         return BigInteger.fromByteArray((byte[])uabytes,true);
       } else {
@@ -2009,19 +2009,19 @@ public void set(String key, CBORObject value) {
       }
       if (value < 24) {
         return new byte[] {  (byte)((byte)value | (byte)(type << 5))  };
-      } else if (value <= 0xFF) {
+      } else if (value <= 0xff) {
         return new byte[] {  (byte)(24 | (type << 5)),
-          (byte)(value & 0xFF)  };
-      } else if (value <= 0xFFFF) {
+          (byte)(value & 0xff)  };
+      } else if (value <= 0xffff) {
         return new byte[] {  (byte)(25 | (type << 5)),
-          (byte)((value >> 8) & 0xFF),
-          (byte)(value & 0xFF)  };
+          (byte)((value >> 8) & 0xff),
+          (byte)(value & 0xff)  };
       } else {
         return new byte[] {  (byte)(26 | (type << 5)),
-          (byte)((value >> 24) & 0xFF),
-          (byte)((value >> 16) & 0xFF),
-          (byte)((value >> 8) & 0xFF),
-          (byte)(value & 0xFF)  };
+          (byte)((value >> 24) & 0xff),
+          (byte)((value >> 16) & 0xff),
+          (byte)((value >> 8) & 0xff),
+          (byte)(value & 0xff)  };
       }
     }
 
@@ -2038,27 +2038,27 @@ public void set(String key, CBORObject value) {
         return new byte[] {  (byte)((byte)value | (byte)(type << 5))  };
       } else if (value <= 0xFFL) {
         return new byte[] {  (byte)(24 | (type << 5)),
-          (byte)(value & 0xFF)  };
+          (byte)(value & 0xff)  };
       } else if (value <= 0xFFFFL) {
         return new byte[] {  (byte)(25 | (type << 5)),
-          (byte)((value >> 8) & 0xFF),
-          (byte)(value & 0xFF)  };
+          (byte)((value >> 8) & 0xff),
+          (byte)(value & 0xff)  };
       } else if (value <= 0xFFFFFFFFL) {
         return new byte[] {  (byte)(26 | (type << 5)),
-          (byte)((value >> 24) & 0xFF),
-          (byte)((value >> 16) & 0xFF),
-          (byte)((value >> 8) & 0xFF),
-          (byte)(value & 0xFF)  };
+          (byte)((value >> 24) & 0xff),
+          (byte)((value >> 16) & 0xff),
+          (byte)((value >> 8) & 0xff),
+          (byte)(value & 0xff)  };
       } else {
         return new byte[] {  (byte)(27 | (type << 5)),
-          (byte)((value >> 56) & 0xFF),
-          (byte)((value >> 48) & 0xFF),
-          (byte)((value >> 40) & 0xFF),
-          (byte)((value >> 32) & 0xFF),
-          (byte)((value >> 24) & 0xFF),
-          (byte)((value >> 16) & 0xFF),
-          (byte)((value >> 8) & 0xFF),
-          (byte)(value & 0xFF)  };
+          (byte)((value >> 56) & 0xff),
+          (byte)((value >> 48) & 0xff),
+          (byte)((value >> 40) & 0xff),
+          (byte)((value >> 32) & 0xff),
+          (byte)((value >> 24) & 0xff),
+          (byte)((value >> 16) & 0xff),
+          (byte)((value >> 8) & 0xff),
+          (byte)(value & 0xff)  };
       }
     }
 
@@ -2081,11 +2081,11 @@ public void set(String key, CBORObject value) {
       boolean streaming = false;
       for (int index = 0; index < str.length(); ++index) {
         int c = str.charAt(index);
-        if (c <= 0x7F) {
+        if (c <= 0x7f) {
           if (byteIndex >= StreamedStringBufferLength) {
             // Write bytes retrieved so far
             if (!streaming) {
-              stream.write((byte)0x7F);
+              stream.write((byte)0x7f);
             }
             WritePositiveInt(3, byteIndex, stream);
             stream.write(bytes,0,byteIndex);
@@ -2093,65 +2093,65 @@ public void set(String key, CBORObject value) {
             streaming = true;
           }
           bytes[byteIndex++] = (byte)c;
-        } else if (c <= 0x7FF) {
+        } else if (c <= 0x7ff) {
           if (byteIndex + 2 > StreamedStringBufferLength) {
             // Write bytes retrieved so far
             if (!streaming) {
-              stream.write((byte)0x7F);
+              stream.write((byte)0x7f);
             }
             WritePositiveInt(3, byteIndex, stream);
             stream.write(bytes,0,byteIndex);
             byteIndex = 0;
             streaming = true;
           }
-          bytes[byteIndex++] = (byte)(0xC0 | ((c >> 6) & 0x1F));
-          bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
+          bytes[byteIndex++] = (byte)(0xc0 | ((c >> 6) & 0x1f));
+          bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
         } else {
-          if (c >= 0xD800 && c <= 0xDBFF && index + 1 < str.length() &&
-              str.charAt(index + 1) >= 0xDC00 && str.charAt(index + 1) <= 0xDFFF) {
+          if (c >= 0xd800 && c <= 0xdbff && index + 1 < str.length() &&
+              str.charAt(index + 1) >= 0xdc00 && str.charAt(index + 1) <= 0xdfff) {
             // Get the Unicode code point for the surrogate pair
-            c = 0x10000 + ((c - 0xD800) * 0x400) + (str.charAt(index + 1) - 0xDC00);
+            c = 0x10000 + ((c - 0xd800) * 0x400) + (str.charAt(index + 1) - 0xdc00);
             ++index;
-          } else if (c >= 0xD800 && c <= 0xDFFF) {
+          } else if (c >= 0xd800 && c <= 0xdfff) {
             // unpaired surrogate, write U + FFFD instead
-            c = 0xFFFD;
+            c = 0xfffd;
           }
-          if (c <= 0xFFFF) {
+          if (c <= 0xffff) {
             if (byteIndex + 3 > StreamedStringBufferLength) {
               // Write bytes retrieved so far
               if (!streaming) {
-                stream.write((byte)0x7F);
+                stream.write((byte)0x7f);
               }
               WritePositiveInt(3, byteIndex, stream);
               stream.write(bytes,0,byteIndex);
               byteIndex = 0;
               streaming = true;
             }
-            bytes[byteIndex++] = (byte)(0xE0 | ((c >> 12) & 0x0F));
-            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3F));
-            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
+            bytes[byteIndex++] = (byte)(0xe0 | ((c >> 12) & 0x0f));
+            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3f));
+            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
           } else {
             if (byteIndex + 4 > StreamedStringBufferLength) {
               // Write bytes retrieved so far
               if (!streaming) {
-                stream.write((byte)0x7F);
+                stream.write((byte)0x7f);
               }
               WritePositiveInt(3, byteIndex, stream);
               stream.write(bytes,0,byteIndex);
               byteIndex = 0;
               streaming = true;
             }
-            bytes[byteIndex++] = (byte)(0xF0 | ((c >> 18) & 0x07));
-            bytes[byteIndex++] = (byte)(0x80 | ((c >> 12) & 0x3F));
-            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3F));
-            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
+            bytes[byteIndex++] = (byte)(0xf0 | ((c >> 18) & 0x07));
+            bytes[byteIndex++] = (byte)(0x80 | ((c >> 12) & 0x3f));
+            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3f));
+            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
           }
         }
       }
       WritePositiveInt(3, byteIndex, stream);
       stream.write(bytes,0,byteIndex);
       if (streaming) {
-        stream.write((byte)0xFF);
+        stream.write((byte)0xff);
       }
     }
 
@@ -2211,7 +2211,7 @@ public void set(String key, CBORObject value) {
         if (!BigIntFits(exponent)) {
           throw new IllegalArgumentException("Exponent is too low or too high");
         }
-        stream.write(0xC5);  // tag 5
+        stream.write(0xc5);  // tag 5
         stream.write(0x82);  // array, length 2
         Write(bignum.getExponent(), stream);
         Write(bignum.getMantissa(), stream);
@@ -2287,7 +2287,7 @@ public void set(String key, CBORObject value) {
         if (!BigIntFits(exponent)) {
           throw new IllegalArgumentException("Exponent is too low or too high");
         }
-        stream.write(0xC4);  // tag 4
+        stream.write(0xc4);  // tag 4
         stream.write(0x82);  // array, length 2
         Write(bignum.getExponent(), stream);
         Write(bignum.getMantissa(), stream);
@@ -2346,7 +2346,7 @@ public void set(String key, CBORObject value) {
             stream.write((byte)(datatype << 5));
             return;
           case 1:
-            WritePositiveInt(datatype, ((int)bytes[0]) & 0xFF, stream);
+            WritePositiveInt(datatype, ((int)bytes[0]) & 0xff, stream);
             break;
           case 2:
             stream.write((byte)((datatype << 5) | 25));
@@ -2385,8 +2385,8 @@ public void set(String key, CBORObject value) {
             break;
           default:
             stream.write((datatype == 0) ?
-                             (byte)0xC2 :
-                             (byte)0xC3);
+                             (byte)0xc2 :
+                             (byte)0xc3);
             WritePositiveInt(2, byteCount, stream);
             stream.write(bytes,0,byteCount);
             break;
@@ -2436,10 +2436,10 @@ public void set(String key, CBORObject value) {
       } else if (type == CBORObjectTypeSimpleValue) {
         int value = ((Integer)this.getThisItem()).intValue();
         if (value < 24) {
-          stream.write((byte)(0xE0 + value));
+          stream.write((byte)(0xe0 + value));
         } else {
 
-          stream.write(0xF8);
+          stream.write(0xf8);
           stream.write((byte)value);
         }
       } else if (type == CBORObjectTypeSingle) {
@@ -2542,7 +2542,7 @@ public void set(String key, CBORObject value) {
       if (stream == null) {
         throw new NullPointerException("stream");
       }
-      if ((((int)value) & 0xFF) < 24) {
+      if ((((int)value) & 0xff) < 24) {
         stream.write(value);
       } else {
         stream.write((byte)24);
@@ -2563,11 +2563,11 @@ public void set(String key, CBORObject value) {
         throw new NullPointerException("s");
       }
       int bits = Float.floatToRawIntBits(value);
-      byte[] data = new byte[] {  (byte)0xFA,
-        (byte)((bits >> 24) & 0xFF),
-        (byte)((bits >> 16) & 0xFF),
-        (byte)((bits >> 8) & 0xFF),
-        (byte)(bits & 0xFF)  };
+      byte[] data = new byte[] {  (byte)0xfa,
+        (byte)((bits >> 24) & 0xff),
+        (byte)((bits >> 16) & 0xff),
+        (byte)((bits >> 8) & 0xff),
+        (byte)(bits & 0xff)  };
       s.write(data,0,5);
     }
 
@@ -2584,15 +2584,15 @@ public void set(String key, CBORObject value) {
         throw new NullPointerException("stream");
       }
       long bits = Double.doubleToRawLongBits((double)value);
-      byte[] data = new byte[] {  (byte)0xFB,
-        (byte)((bits >> 56) & 0xFF),
-        (byte)((bits >> 48) & 0xFF),
-        (byte)((bits >> 40) & 0xFF),
-        (byte)((bits >> 32) & 0xFF),
-        (byte)((bits >> 24) & 0xFF),
-        (byte)((bits >> 16) & 0xFF),
-        (byte)((bits >> 8) & 0xFF),
-        (byte)(bits & 0xFF)  };
+      byte[] data = new byte[] {  (byte)0xfb,
+        (byte)((bits >> 56) & 0xff),
+        (byte)((bits >> 48) & 0xff),
+        (byte)((bits >> 40) & 0xff),
+        (byte)((bits >> 32) & 0xff),
+        (byte)((bits >> 24) & 0xff),
+        (byte)((bits >> 16) & 0xff),
+        (byte)((bits >> 8) & 0xff),
+        (byte)(bits & 0xff)  };
       stream.write(data,0,9);
     }
 
@@ -2655,14 +2655,14 @@ public void set(String key, CBORObject value) {
             this.tagLow >= 24) {
           hasComplexTag = true;
         } else {
-          tagbyte = (byte)(0xC0 + (int)this.tagLow);
+          tagbyte = (byte)(0xc0 + (int)this.tagLow);
         }
       }
       if (!hasComplexTag) {
         if (this.getItemType() == CBORObjectTypeTextString) {
           byte[] ret = GetOptimizedBytesIfShortAscii(
             this.AsString(),
-            tagged ? (((int)tagbyte) & 0xFF) : -1);
+            tagged ? (((int)tagbyte) & 0xff) : -1);
           if (ret != null) {
             return ret;
           }
@@ -2715,38 +2715,38 @@ public void set(String key, CBORObject value) {
           float value = ((Float)this.getThisItem()).floatValue();
           int bits = Float.floatToRawIntBits(value);
           return tagged ?
-            new byte[] {  tagbyte, (byte)0xFA,
-            (byte)((bits >> 24) & 0xFF),
-            (byte)((bits >> 16) & 0xFF),
-            (byte)((bits >> 8) & 0xFF),
-            (byte)(bits & 0xFF)  } :
-            new byte[] {  (byte)0xFA,
-            (byte)((bits >> 24) & 0xFF),
-            (byte)((bits >> 16) & 0xFF),
-            (byte)((bits >> 8) & 0xFF),
-            (byte)(bits & 0xFF)  };
+            new byte[] {  tagbyte, (byte)0xfa,
+            (byte)((bits >> 24) & 0xff),
+            (byte)((bits >> 16) & 0xff),
+            (byte)((bits >> 8) & 0xff),
+            (byte)(bits & 0xff)  } :
+            new byte[] {  (byte)0xfa,
+            (byte)((bits >> 24) & 0xff),
+            (byte)((bits >> 16) & 0xff),
+            (byte)((bits >> 8) & 0xff),
+            (byte)(bits & 0xff)  };
         } else if (this.getItemType() == CBORObjectTypeDouble) {
           double value = ((Double)this.getThisItem()).doubleValue();
           long bits = Double.doubleToRawLongBits(value);
           return tagged ?
-            new byte[] {  tagbyte, (byte)0xFB,
-            (byte)((bits >> 56) & 0xFF),
-            (byte)((bits >> 48) & 0xFF),
-            (byte)((bits >> 40) & 0xFF),
-            (byte)((bits >> 32) & 0xFF),
-            (byte)((bits >> 24) & 0xFF),
-            (byte)((bits >> 16) & 0xFF),
-            (byte)((bits >> 8) & 0xFF),
-            (byte)(bits & 0xFF)  } :
-            new byte[] {  (byte)0xFB,
-            (byte)((bits >> 56) & 0xFF),
-            (byte)((bits >> 48) & 0xFF),
-            (byte)((bits >> 40) & 0xFF),
-            (byte)((bits >> 32) & 0xFF),
-            (byte)((bits >> 24) & 0xFF),
-            (byte)((bits >> 16) & 0xFF),
-            (byte)((bits >> 8) & 0xFF),
-            (byte)(bits & 0xFF)  };
+            new byte[] {  tagbyte, (byte)0xfb,
+            (byte)((bits >> 56) & 0xff),
+            (byte)((bits >> 48) & 0xff),
+            (byte)((bits >> 40) & 0xff),
+            (byte)((bits >> 32) & 0xff),
+            (byte)((bits >> 24) & 0xff),
+            (byte)((bits >> 16) & 0xff),
+            (byte)((bits >> 8) & 0xff),
+            (byte)(bits & 0xff)  } :
+            new byte[] {  (byte)0xfb,
+            (byte)((bits >> 56) & 0xff),
+            (byte)((bits >> 48) & 0xff),
+            (byte)((bits >> 40) & 0xff),
+            (byte)((bits >> 32) & 0xff),
+            (byte)((bits >> 24) & 0xff),
+            (byte)((bits >> 16) & 0xff),
+            (byte)((bits >> 8) & 0xff),
+            (byte)(bits & 0xff)  };
         }
       }
       try {
@@ -2828,7 +2828,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       while (true) {
         int c = reader.NextChar();
         if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-          if (!allowBOM || c != 0xFEFF) {
+          if (!allowBOM || c != 0xfeff) {
             return c;
           }
         }
@@ -2906,7 +2906,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             break;
         }
         if (surrogate) {
-          if ((c & 0x1FFC00) != 0xDC00) {
+          if ((c & 0x1ffc00) != 0xdc00) {
             // Note: this includes the ending quote
             // and supplementary characters
             throw reader.NewError("Unpaired surrogate code point");
@@ -2915,10 +2915,10 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             throw reader.NewError("Pairing escaped surrogate with unescaped surrogate");
           }
           surrogate = false;
-        } else if ((c & 0x1FFC00) == 0xD800) {
+        } else if ((c & 0x1ffc00) == 0xd800) {
           surrogate = true;
           surrogateEscaped = escaped;
-        } else if ((c & 0x1FFC00) == 0xDC00) {
+        } else if ((c & 0x1ffc00) == 0xdc00) {
           throw reader.NewError("Unpaired surrogate code point");
         }
         if (c == quote && !escaped) {
@@ -2933,11 +2933,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         if (sb == null) {
           sb = new StringBuilder();
         }
-        if (c <= 0xFFFF) {
+        if (c <= 0xffff) {
           sb.append((char)c);
-        } else if (c <= 0x10FFFF) {
-          sb.append((char)((((c - 0x10000) >> 10) & 0x3FF) + 0xD800));
-          sb.append((char)(((c - 0x10000) & 0x3FF) + 0xDC00));
+        } else if (c <= 0x10ffff) {
+          sb.append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
+          sb.append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
         }
       }
     }
@@ -3027,7 +3027,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       c = skipByteOrderMark ?
         SkipWhitespaceOrByteOrderMarkJSON(reader) :
         SkipWhitespaceJSON(reader);
-      if (!skipByteOrderMark && c == (char)0xFEFF) {
+      if (!skipByteOrderMark && c == (char)0xfeff) {
         throw reader.NewError("JSON Object began with a byte order mark (U+FEFF)");
       }
       if (c == '[') {
@@ -3516,7 +3516,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         throw new IllegalArgumentException("Simple value is from 24 to 31: " + simpleValue);
       }
       if (simpleValue < 32) {
-        return valueFixedObjects[0xE0 + simpleValue];
+        return valueFixedObjects[0xe0 + simpleValue];
       } else {
         return new CBORObject(
           CBORObjectTypeSimpleValue,
@@ -3691,7 +3691,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * @return A CBORObject object.
      */
     public static CBORObject FromObject(byte value) {
-      return FromObject(((int)value) & 0xFF);
+      return FromObject(((int)value) & 0xff);
     }
 
     /**
@@ -3974,11 +3974,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         int tagHigh = 0;
         byte[] bytes = bigintTag.toByteArray(true);
         for (int i = 0; i < Math.min(4, bytes.length); ++i) {
-          int b = ((int)bytes[i]) & 0xFF;
+          int b = ((int)bytes[i]) & 0xff;
           tagLow = (tagLow | (((int)b) << (i * 8)));
         }
         for (int i = 4; i < Math.min(8, bytes.length); ++i) {
-          int b = ((int)bytes[i]) & 0xFF;
+          int b = ((int)bytes[i]) & 0xff;
           tagHigh = (tagHigh | (((int)b) << (i * 8)));
         }
         CBORObject c2 = new CBORObject(c, tagLow, tagHigh);
@@ -4078,15 +4078,15 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           value |= highValue << 32;
           WritePositiveInt64(6, value, s);
         } else {
-          byte[] arrayToWrite = new byte[] {  (byte)0xDB,
-            (byte)((high >> 24) & 0xFF),
-            (byte)((high >> 16) & 0xFF),
-            (byte)((high >> 8) & 0xFF),
-            (byte)(high & 0xFF),
-            (byte)((low >> 24) & 0xFF),
-            (byte)((low >> 16) & 0xFF),
-            (byte)((low >> 8) & 0xFF),
-            (byte)(low & 0xFF)  };
+          byte[] arrayToWrite = new byte[] {  (byte)0xdb,
+            (byte)((high >> 24) & 0xff),
+            (byte)((high >> 16) & 0xff),
+            (byte)((high >> 8) & 0xff),
+            (byte)(high & 0xff),
+            (byte)((low >> 24) & 0xff),
+            (byte)((low >> 16) & 0xff),
+            (byte)((low >> 8) & 0xff),
+            (byte)(low & 0xff)  };
           s.write(arrayToWrite,0,9);
         }
         curobject = (CBORObject)curobject.itemValue;
@@ -4297,12 +4297,12 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if (((headByte >> 5) & 0x07) != expectedType) {
         throw new CBORException("Unexpected data encountered");
       }
-      headByte &= 0x1F;
+      headByte &= 0x1f;
       if (headByte < 24) {
         return headByte;
       }
       byte[] data = new byte[8];
-      switch (headByte & 0x1F) {
+      switch (headByte & 0x1f) {
           case 24: {
             int tmp = s.read();
             if (tmp < 0) {
@@ -4314,18 +4314,18 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             if (s.read(data, 0, 2) != 2) {
               throw new CBORException("Premature end of data");
             }
-            int lowAdditional = ((int)(data[0] & (int)0xFF)) << 8;
-            lowAdditional |= (int)(data[1] & (int)0xFF);
+            int lowAdditional = ((int)(data[0] & (int)0xff)) << 8;
+            lowAdditional |= (int)(data[1] & (int)0xff);
             return lowAdditional;
           }
           case 26: {
             if (s.read(data, 0, 4) != 4) {
               throw new CBORException("Premature end of data");
             }
-            long uadditional = ((long)(data[0] & (long)0xFF)) << 24;
-            uadditional |= ((long)(data[1] & (long)0xFF)) << 16;
-            uadditional |= ((long)(data[2] & (long)0xFF)) << 8;
-            uadditional |= (long)(data[3] & (long)0xFF);
+            long uadditional = ((long)(data[0] & (long)0xff)) << 24;
+            uadditional |= ((long)(data[1] & (long)0xff)) << 16;
+            uadditional |= ((long)(data[2] & (long)0xff)) << 8;
+            uadditional |= (long)(data[3] & (long)0xff);
             return uadditional;
           }
           case 27: {
@@ -4333,14 +4333,14 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
               throw new CBORException("Premature end of data");
             }
             // Treat return value as an unsigned integer
-            long uadditional = ((long)(data[0] & (long)0xFF)) << 56;
-            uadditional |= ((long)(data[1] & (long)0xFF)) << 48;
-            uadditional |= ((long)(data[2] & (long)0xFF)) << 40;
-            uadditional |= ((long)(data[3] & (long)0xFF)) << 32;
-            uadditional |= ((long)(data[4] & (long)0xFF)) << 24;
-            uadditional |= ((long)(data[5] & (long)0xFF)) << 16;
-            uadditional |= ((long)(data[6] & (long)0xFF)) << 8;
-            uadditional |= (long)(data[7] & (long)0xFF);
+            long uadditional = ((long)(data[0] & (long)0xff)) << 56;
+            uadditional |= ((long)(data[1] & (long)0xff)) << 48;
+            uadditional |= ((long)(data[2] & (long)0xff)) << 40;
+            uadditional |= ((long)(data[3] & (long)0xff)) << 32;
+            uadditional |= ((long)(data[4] & (long)0xff)) << 24;
+            uadditional |= ((long)(data[5] & (long)0xff)) << 16;
+            uadditional |= ((long)(data[6] & (long)0xff)) << 8;
+            uadditional |= (long)(data[7] & (long)0xff);
             return uadditional;
           }
         case 28:
@@ -4427,14 +4427,14 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       if (firstbyte < 0) {
         throw new CBORException("Premature end of data");
       }
-      if (firstbyte == 0xFF) {
+      if (firstbyte == 0xff) {
         if (allowBreak) {
           return null;
         }
         throw new CBORException("Unexpected break code encountered");
       }
       int type = (firstbyte >> 5) & 0x07;
-      int additional = firstbyte & 0x1F;
+      int additional = firstbyte & 0x1f;
       int expectedLength = valueExpectedLengths[firstbyte];
       // Data checks
       if (expectedLength == -1) {
@@ -4446,7 +4446,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         if (!filter.MajorTypeMatches(type)) {
           throw new CBORException("Unexpected data type encountered");
         }
-        if (firstbyte >= 0xE0 && firstbyte <= 0xFF && firstbyte != 0xF9 && firstbyte != 0xFA && firstbyte != 0xFB) {
+        if (firstbyte >= 0xe0 && firstbyte <= 0xff && firstbyte != 0xf9 && firstbyte != 0xfa && firstbyte != 0xfb) {
           if (!filter.NonFPSimpleValueAllowed()) {
             throw new CBORException("Unexpected data type encountered");
           }
@@ -4479,7 +4479,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       boolean hasBigAdditional = false;
       data = new byte[8];
       int lowAdditional = 0;
-      switch (firstbyte & 0x1F) {
+      switch (firstbyte & 0x1f) {
           case 24: {
             int tmp = s.read();
             if (tmp < 0) {
@@ -4493,8 +4493,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             if (s.read(data, 0, 2) != 2) {
               throw new CBORException("Premature end of data");
             }
-            lowAdditional = ((int)(data[0] & (int)0xFF)) << 8;
-            lowAdditional |= (int)(data[1] & (int)0xFF);
+            lowAdditional = ((int)(data[0] & (int)0xff)) << 8;
+            lowAdditional |= (int)(data[1] & (int)0xff);
             uadditional = lowAdditional;
             break;
           }
@@ -4502,10 +4502,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             if (s.read(data, 0, 4) != 4) {
               throw new CBORException("Premature end of data");
             }
-            uadditional = ((long)(data[0] & (long)0xFF)) << 24;
-            uadditional |= ((long)(data[1] & (long)0xFF)) << 16;
-            uadditional |= ((long)(data[2] & (long)0xFF)) << 8;
-            uadditional |= (long)(data[3] & (long)0xFF);
+            uadditional = ((long)(data[0] & (long)0xff)) << 24;
+            uadditional |= ((long)(data[1] & (long)0xff)) << 16;
+            uadditional |= ((long)(data[2] & (long)0xff)) << 8;
+            uadditional |= (long)(data[3] & (long)0xff);
             break;
           }
           case 27: {
@@ -4527,14 +4527,14 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
               hasBigAdditional = true;
               bigintAdditional = BigInteger.fromByteArray((byte[])uabytes,true);
             } else {
-              uadditional = ((long)(data[0] & (long)0xFF)) << 56;
-              uadditional |= ((long)(data[1] & (long)0xFF)) << 48;
-              uadditional |= ((long)(data[2] & (long)0xFF)) << 40;
-              uadditional |= ((long)(data[3] & (long)0xFF)) << 32;
-              uadditional |= ((long)(data[4] & (long)0xFF)) << 24;
-              uadditional |= ((long)(data[5] & (long)0xFF)) << 16;
-              uadditional |= ((long)(data[6] & (long)0xFF)) << 8;
-              uadditional |= (long)(data[7] & (long)0xFF);
+              uadditional = ((long)(data[0] & (long)0xff)) << 56;
+              uadditional |= ((long)(data[1] & (long)0xff)) << 48;
+              uadditional |= ((long)(data[2] & (long)0xff)) << 40;
+              uadditional |= ((long)(data[3] & (long)0xff)) << 32;
+              uadditional |= ((long)(data[4] & (long)0xff)) << 24;
+              uadditional |= ((long)(data[5] & (long)0xff)) << 16;
+              uadditional |= ((long)(data[6] & (long)0xff)) << 8;
+              uadditional |= (long)(data[7] & (long)0xff);
             }
             break;
           }
@@ -4554,7 +4554,7 @@ ms=new ByteArrayOutputStream();
             // Requires same type as this one
             while (true) {
               int nextByte = s.read();
-              if (nextByte == 0xFF) {
+              if (nextByte == 0xff) {
                 // break if the "break" code was read
                 break;
               }
@@ -4602,7 +4602,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           StringBuilder builder = new StringBuilder();
           while (true) {
             int nextByte = s.read();
-            if (nextByte == 0xFF) {
+            if (nextByte == 0xff) {
               // break if the "break" code was read
               break;
             }

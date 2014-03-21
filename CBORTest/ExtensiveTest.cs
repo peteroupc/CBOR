@@ -405,8 +405,8 @@ namespace CBOR
         }
         if (words.Length == 1) {
           bool neg = (words[0] >> 31) != 0;
-          int exponent = (words[0] >> 23) & 0xFF;
-          int mantissa = words[0] & 0x7FFFFF;
+          int exponent = (words[0] >> 23) & 0xff;
+          int mantissa = words[0] & 0x7fffff;
           if (exponent == 255) {
             if (mantissa == 0) {
               return Create(neg ? ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity);
@@ -435,8 +435,8 @@ namespace CBOR
           return Create(ExtendedFloat.Create(bigmantissa, (BigInteger)exponent));
         } else if (words.Length == 2) {
           bool neg = (words[0] >> 31) != 0;
-          int exponent = (words[0] >> 20) & 0x7FF;
-          int mantissa = words[0] & 0xFFFFF;
+          int exponent = (words[0] >> 20) & 0x7ff;
+          int mantissa = words[0] & 0xfffff;
           int mantissaNonzero = mantissa | words[1];
           if (exponent == 2047) {
             if (mantissaNonzero == 0) {
@@ -459,13 +459,13 @@ namespace CBOR
             mantissa |= 0x100000;
           }
           BigInteger bigmantissa = BigInteger.Zero;
-          bigmantissa += (BigInteger)((mantissa >> 16) & 0xFFFF);
+          bigmantissa += (BigInteger)((mantissa >> 16) & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)(mantissa & 0xFFFF);
+          bigmantissa += (BigInteger)(mantissa & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)((words[1] >> 16) & 0xFFFF);
+          bigmantissa += (BigInteger)((words[1] >> 16) & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)(words[1] & 0xFFFF);
+          bigmantissa += (BigInteger)(words[1] & 0xffff);
           if (neg) {
             bigmantissa = -bigmantissa;
           }
@@ -473,10 +473,10 @@ namespace CBOR
           return Create(ExtendedFloat.Create(bigmantissa, (BigInteger)exponent));
         } else if (words.Length == 4) {
           bool neg = (words[0] >> 31) != 0;
-          int exponent = (words[0] >> 16) & 0x7FFF;
-          int mantissa = words[0] & 0xFFFF;
+          int exponent = (words[0] >> 16) & 0x7fff;
+          int mantissa = words[0] & 0xffff;
           int mantissaNonzero = mantissa | words[3] | words[1] | words[2];
-          if (exponent == 0x7FFF) {
+          if (exponent == 0x7fff) {
             if (mantissaNonzero == 0) {
               return Create(neg ? ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity);
             }
@@ -497,21 +497,21 @@ namespace CBOR
             mantissa |= 0x10000;
           }
           BigInteger bigmantissa = BigInteger.Zero;
-          bigmantissa += (BigInteger)((mantissa >> 16) & 0xFFFF);
+          bigmantissa += (BigInteger)((mantissa >> 16) & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)(mantissa & 0xFFFF);
+          bigmantissa += (BigInteger)(mantissa & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)((words[1] >> 16) & 0xFFFF);
+          bigmantissa += (BigInteger)((words[1] >> 16) & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)(words[1] & 0xFFFF);
+          bigmantissa += (BigInteger)(words[1] & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)((words[2] >> 16) & 0xFFFF);
+          bigmantissa += (BigInteger)((words[2] >> 16) & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)(words[2] & 0xFFFF);
+          bigmantissa += (BigInteger)(words[2] & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)((words[3] >> 16) & 0xFFFF);
+          bigmantissa += (BigInteger)((words[3] >> 16) & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)(words[3] & 0xFFFF);
+          bigmantissa += (BigInteger)(words[3] & 0xffff);
           if (neg) {
             bigmantissa = -bigmantissa;
           }

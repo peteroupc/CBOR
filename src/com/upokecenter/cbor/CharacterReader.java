@@ -65,7 +65,7 @@ import java.io.*;
               }
             }
             if (bytesNeeded == 0) {
-              if ((b & 0x7F) == b) {
+              if ((b & 0x7f) == b) {
                 ++this.offset;
                 return b;
               } else if (b >= 0xc2 && b <= 0xdf) {
@@ -111,12 +111,12 @@ import java.io.*;
         }
       } else {
         int c = (this.offset < this.str.length()) ? this.str.charAt(this.offset) : -1;
-        if (c >= 0xD800 && c <= 0xDBFF && this.offset + 1 < this.str.length() &&
-            this.str.charAt(this.offset + 1) >= 0xDC00 && this.str.charAt(this.offset + 1) <= 0xDFFF) {
+        if (c >= 0xd800 && c <= 0xdbff && this.offset + 1 < this.str.length() &&
+            this.str.charAt(this.offset + 1) >= 0xdc00 && this.str.charAt(this.offset + 1) <= 0xdfff) {
           // Get the Unicode code point for the surrogate pair
-          c = 0x10000 + ((c - 0xD800) * 0x400) + (this.str.charAt(this.offset + 1) - 0xDC00);
+          c = 0x10000 + ((c - 0xd800) * 0x400) + (this.str.charAt(this.offset + 1) - 0xdc00);
           ++this.offset;
-        } else if (c >= 0xD800 && c <= 0xDFFF) {
+        } else if (c >= 0xd800 && c <= 0xdfff) {
           // unpaired surrogate
           throw this.NewError("Unpaired surrogate code point");
         }

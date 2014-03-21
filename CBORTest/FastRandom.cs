@@ -32,9 +32,9 @@ namespace Test
       int w = this.w, z = this.z;
       // Use George Marsaglia's multiply-with-carry
       // algorithm.
-      this.z = z = unchecked((36969 * (z & 65535)) + ((z >> 16) & 0xFFFF));
-      this.w = w = unchecked((18000 * (w & 65535)) + ((z >> 16) & 0xFFFF));
-      return ((z << 16) | (w & 65535)) & 0x7FFFFFFF;
+      this.z = z = unchecked((36969 * (z & 65535)) + ((z >> 16) & 0xffff));
+      this.w = w = unchecked((18000 * (w & 65535)) + ((z >> 16) & 0xffff));
+      return ((z << 16) | (w & 65535)) & 0x7fffffff;
     }
 
     /// <summary>Not documented yet.</summary>

@@ -439,7 +439,7 @@ at: http://peteroupc.github.io/CBOR/
         return Float.NEGATIVE_INFINITY;
       }
       if (this.IsNaN()) {
-        int nan = 0x7F800000;
+        int nan = 0x7f800000;
         if (this.isNegative()) {
           nan |= ((int)(1 << 31));
         }
@@ -531,7 +531,7 @@ at: http://peteroupc.github.io/CBOR/
       } else {
         int smallexponent = bigexponent.AsInt32();
         smallexponent += 150;
-        int smallmantissa = ((int)fastSmallMant.AsInt32()) & 0x7FFFFF;
+        int smallmantissa = ((int)fastSmallMant.AsInt32()) & 0x7fffff;
         if (!subnormal) {
           smallmantissa |= smallexponent << 23;
         }
@@ -562,7 +562,7 @@ at: http://peteroupc.github.io/CBOR/
         return Double.NEGATIVE_INFINITY;
       }
       if (this.IsNaN()) {
-        int[] nan = new int[] { 0, 0x7FF00000 };
+        int[] nan = new int[] { 0, 0x7ff00000 };
         if (this.isNegative()) {
           nan[1] |= ((int)(1 << 31));
         }
@@ -577,7 +577,7 @@ at: http://peteroupc.github.io/CBOR/
           // Copy diagnostic information
           int[] words = FastInteger.GetLastWords(this.getUnsignedMantissa(), 2);
           nan[0] = words[0];
-          nan[1] = words[1] & 0x3FFFF;
+          nan[1] = words[1] & 0x3ffff;
         }
         return Extras.IntegersToDouble(nan);
       }
@@ -666,7 +666,7 @@ at: http://peteroupc.github.io/CBOR/
       } else {
         bigexponent.AddInt(1075);
         // Clear the high bits where the exponent and sign are
-        mantissaBits[1] &= 0xFFFFF;
+        mantissaBits[1] &= 0xfffff;
         if (!subnormal) {
           int smallexponent = bigexponent.AsInt32() << 20;
           mantissaBits[1] |= smallexponent;
@@ -689,8 +689,8 @@ at: http://peteroupc.github.io/CBOR/
     public static ExtendedFloat FromSingle(float flt) {
       int value = Float.floatToRawIntBits(flt);
       boolean neg = (value >> 31) != 0;
-      int floatExponent = (int)((value >> 23) & 0xFF);
-      int valueFpMantissa = value & 0x7FFFFF;
+      int floatExponent = (int)((value >> 23) & 0xff);
+      int valueFpMantissa = value & 0x7fffff;
       BigInteger bigmant;
       if (floatExponent == 255) {
         if (valueFpMantissa == 0) {
@@ -698,7 +698,7 @@ at: http://peteroupc.github.io/CBOR/
         }
         // Treat high bit of mantissa as quiet/signaling bit
         boolean quiet = (valueFpMantissa & 0x400000) != 0;
-        valueFpMantissa &= 0x1FFFFF;
+        valueFpMantissa &= 0x1fffff;
         bigmant = BigInteger.valueOf(valueFpMantissa);
         if (bigmant.signum()==0) {
           return quiet ? NaN : SignalingNaN;
@@ -762,12 +762,12 @@ at: http://peteroupc.github.io/CBOR/
       int floatExponent = (int)((value[1] >> 20) & 0x7ff);
       boolean neg = (value[1] >> 31) != 0;
       if (floatExponent == 2047) {
-        if ((value[1] & 0xFFFFF) == 0 && value[0] == 0) {
+        if ((value[1] & 0xfffff) == 0 && value[0] == 0) {
           return neg ? NegativeInfinity : PositiveInfinity;
         }
         // Treat high bit of mantissa as quiet/signaling bit
         boolean quiet = (value[1] & 0x80000) != 0;
-        value[1] &= 0x3FFFF;
+        value[1] &= 0x3ffff;
         BigInteger info = FastInteger.WordsToBigInteger(value);
         if (info.signum()==0) {
           return quiet ? NaN : SignalingNaN;
@@ -778,7 +778,7 @@ at: http://peteroupc.github.io/CBOR/
             (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
         }
       }
-      value[1] &= 0xFFFFF;  // Mask out the exponent and sign
+      value[1] &= 0xfffff;  // Mask out the exponent and sign
       if (floatExponent == 0) {
         ++floatExponent;
       } else {

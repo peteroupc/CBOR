@@ -124,11 +124,11 @@ private CBORUtilities() {
 
     public static BigInteger BigIntegerFromSingle(float flt) {
       int value = Float.floatToRawIntBits(flt);
-      int fpexponent = (int)((value >> 23) & 0xFF);
+      int fpexponent = (int)((value >> 23) & 0xff);
       if (fpexponent == 255) {
         throw new ArithmeticException("Value is infinity or NaN");
       }
-      int mantissa = value & 0x7FFFFF;
+      int mantissa = value & 0x7fffff;
       if (fpexponent == 0) {
         ++fpexponent;
       } else {
@@ -179,7 +179,7 @@ private CBORUtilities() {
       if (floatExponent == 2047) {
         throw new ArithmeticException("Value is infinity or NaN");
       }
-      value1 &= 0xFFFFF;  // Mask out the exponent and sign
+      value1 &= 0xfffff;  // Mask out the exponent and sign
       if (floatExponent == 0) {
         ++floatExponent;
       } else {
@@ -188,7 +188,7 @@ private CBORUtilities() {
       if ((value1 | value0) != 0) {
         while ((value0 & 1) == 0) {
           value0 >>= 1;
-          value0 &= 0x7FFFFFFF;
+          value0 &= 0x7fffffff;
           value0 = (value0 | (value1 << 31));
           value1 >>= 1;
           ++floatExponent;
@@ -196,14 +196,14 @@ private CBORUtilities() {
       }
       floatExponent -= 1075;
       byte[] bytes = new byte[9];
-      bytes[0] = (byte)(value0 & 0xFF);
-      bytes[1] = (byte)((value0 >> 8) & 0xFF);
-      bytes[2] = (byte)((value0 >> 16) & 0xFF);
-      bytes[3] = (byte)((value0 >> 24) & 0xFF);
-      bytes[4] = (byte)(value1 & 0xFF);
-      bytes[5] = (byte)((value1 >> 8) & 0xFF);
-      bytes[6] = (byte)((value1 >> 16) & 0xFF);
-      bytes[7] = (byte)((value1 >> 24) & 0xFF);
+      bytes[0] = (byte)(value0 & 0xff);
+      bytes[1] = (byte)((value0 >> 8) & 0xff);
+      bytes[2] = (byte)((value0 >> 16) & 0xff);
+      bytes[3] = (byte)((value0 >> 24) & 0xff);
+      bytes[4] = (byte)(value1 & 0xff);
+      bytes[5] = (byte)((value1 >> 8) & 0xff);
+      bytes[6] = (byte)((value1 >> 16) & 0xff);
+      bytes[7] = (byte)((value1 >> 24) & 0xff);
       bytes[8] = (byte)0;
       BigInteger bigmantissa = BigInteger.fromByteArray((byte[])bytes,true);
       if (floatExponent == 0) {
@@ -231,22 +231,22 @@ private CBORUtilities() {
 
     public static float HalfPrecisionToSingle(int value) {
       int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
-      value &= 0x7FFF;
-      if (value >= 0x7C00) {
-        return Float.intBitsToFloat((0x3FC00 | (value & 0x3FF)) << 13 | negvalue);
+      value &= 0x7fff;
+      if (value >= 0x7c00) {
+        return Float.intBitsToFloat((0x3fc00 | (value & 0x3ff)) << 13 | negvalue);
       } else if (value > 0x400) {
         return Float.intBitsToFloat(((value + 0x1c000) << 13) | negvalue);
       } else if ((value & 0x400) == value) {
         return Float.intBitsToFloat(((value == 0) ? 0 : 0x38800000) | negvalue);
       } else {
         // denormalized
-        int m = value & 0x3FF;
+        int m = value & 0x3ff;
         value = 0x1c400;
         while ((m >> 10) == 0) {
           value -= 0x400;
           m <<= 1;
         }
-        value = ((value | (m & 0x3FF)) << 13) | negvalue;
+        value = ((value | (m & 0x3ff)) << 13) | negvalue;
         return Float.intBitsToFloat(value);
       }
     }

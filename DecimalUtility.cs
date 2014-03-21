@@ -117,15 +117,15 @@ namespace PeterO
       unchecked {
         if (tz < 32) {
           int carry = a1 << (32 - tz);
-          arr[0] = (int)((a0 >> tz) & (0x7FFFFFFF >> (tz - 1))) | (int)carry;
-          arr[1] = (a1 >> tz) & (0x7FFFFFFF >> (tz - 1));
+          arr[0] = (int)((a0 >> tz) & (0x7fffffff >> (tz - 1))) | (int)carry;
+          arr[1] = (a1 >> tz) & (0x7fffffff >> (tz - 1));
           return tz;
         } else {
           tz = CountTrailingZeros(a1);
           if (tz == 32) {
             arr[0] = 0;
           } else if (tz > 0) {
-            arr[0] = (a1 >> tz) & (0x7FFFFFFF >> (tz - 1));
+            arr[0] = (a1 >> tz) & (0x7fffffff >> (tz - 1));
           } else {
             arr[0] = a1;
           }

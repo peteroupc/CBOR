@@ -4257,7 +4257,7 @@ namespace Test {
     private static short Divide32By16(int dividendLow, short divisor, bool returnRemainder) {
       int t;
       int dividendHigh = 0;
-      int intDivisor = ((int)divisor) & 0xFFFF;
+      int intDivisor = ((int)divisor) & 0xffff;
       for (int i = 0; i < 32; ++i) {
         t = dividendHigh >> 31;
         dividendHigh <<= 1;
@@ -4273,16 +4273,16 @@ namespace Test {
         }
       }
       return returnRemainder ?
-        unchecked((short)(((int)dividendHigh) & 0xFFFF)) :
-        unchecked((short)(((int)dividendLow) & 0xFFFF));
+        unchecked((short)(((int)dividendHigh) & 0xffff)) :
+        unchecked((short)(((int)dividendLow) & 0xffff));
     }
 
     private static short DivideUnsigned(int x, short y) {
       unchecked {
-        int iy = ((int)y) & 0xFFFF;
+        int iy = ((int)y) & 0xffff;
         if ((x >> 31) == 0) {
           // x is already nonnegative
-          return (short)(((int)x / iy) & 0xFFFF);
+          return (short)(((int)x / iy) & 0xffff);
         } else {
           return Divide32By16(x, y, false);
         }
@@ -4291,10 +4291,10 @@ namespace Test {
 
     private static short RemainderUnsigned(int x, short y) {
       unchecked {
-        int iy = ((int)y) & 0xFFFF;
+        int iy = ((int)y) & 0xffff;
         if ((x >> 31) == 0) {
           // x is already nonnegative
-          return (short)(((int)x % iy) & 0xFFFF);
+          return (short)(((int)x % iy) & 0xffff);
         } else {
           return Divide32By16(x, y, true);
         }

@@ -127,15 +127,15 @@ namespace PeterO {
       long size = 0;
       for (int i = 0; i < str.Length; ++i) {
         int c = str[i];
-        if (c <= 0x7F) {
+        if (c <= 0x7f) {
           ++size;
-        } else if (c <= 0x7FF) {
+        } else if (c <= 0x7ff) {
           size += 2;
-        } else if (c <= 0xD7FF || c >= 0xE000) {
+        } else if (c <= 0xd7ff || c >= 0xe000) {
           size += 3;
-        } else if (c <= 0xDBFF) {  // UTF-16 leading surrogate
+        } else if (c <= 0xdbff) {  // UTF-16 leading surrogate
           ++i;
-          if (i >= str.Length || str[i] < 0xDC00 || str[i] > 0xDFFF) {
+          if (i >= str.Length || str[i] < 0xdc00 || str[i] > 0xdfff) {
             if (replace) {
               size += 3;
               --i;
@@ -180,16 +180,16 @@ namespace PeterO {
         if (ca == cb) {
           // normal code units and illegal surrogates
           // are treated as single code points
-          if ((ca & 0xF800) != 0xD800) {
+          if ((ca & 0xf800) != 0xd800) {
             continue;
           }
           bool incindex = false;
-          if (i + 1 < strA.Length && strA[i + 1] >= 0xDC00 && strA[i + 1] <= 0xDFFF) {
-            ca = 0x10000 + ((ca - 0xD800) * 0x400) + (strA[i + 1] - 0xDC00);
+          if (i + 1 < strA.Length && strA[i + 1] >= 0xdc00 && strA[i + 1] <= 0xdfff) {
+            ca = 0x10000 + ((ca - 0xd800) * 0x400) + (strA[i + 1] - 0xdc00);
             incindex = true;
           }
-          if (i + 1 < strB.Length && strB[i + 1] >= 0xDC00 && strB[i + 1] <= 0xDFFF) {
-            cb = 0x10000 + ((cb - 0xD800) * 0x400) + (strB[i + 1] - 0xDC00);
+          if (i + 1 < strB.Length && strB[i + 1] >= 0xdc00 && strB[i + 1] <= 0xdfff) {
+            cb = 0x10000 + ((cb - 0xd800) * 0x400) + (strB[i + 1] - 0xdc00);
             incindex = true;
           }
           if (ca != cb) {
@@ -199,16 +199,16 @@ namespace PeterO {
             ++i;
           }
         } else {
-          if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800) {
+          if ((ca & 0xf800) != 0xd800 && (cb & 0xf800) != 0xd800) {
             return ca - cb;
           }
           if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.Length &&
-              strA[i + 1] >= 0xDC00 && strA[i + 1] <= 0xDFFF) {
-            ca = 0x10000 + ((ca - 0xD800) * 0x400) + (strA[i + 1] - 0xDC00);
+              strA[i + 1] >= 0xdc00 && strA[i + 1] <= 0xdfff) {
+            ca = 0x10000 + ((ca - 0xd800) * 0x400) + (strA[i + 1] - 0xdc00);
           }
           if (cb >= 0xd800 && cb <= 0xdbff && i + 1 < strB.Length &&
-              strB[i + 1] >= 0xDC00 && strB[i + 1] <= 0xDFFF) {
-            cb = 0x10000 + ((cb - 0xD800) * 0x400) + (strB[i + 1] - 0xDC00);
+              strB[i + 1] >= 0xdc00 && strB[i + 1] <= 0xdfff) {
+            cb = 0x10000 + ((cb - 0xd800) * 0x400) + (strB[i + 1] - 0xdc00);
           }
           return ca - cb;
         }
@@ -268,54 +268,54 @@ namespace PeterO {
       int endIndex = offset + length;
       for (int index = offset; index < endIndex; ++index) {
         int c = str[index];
-        if (c <= 0x7F) {
+        if (c <= 0x7f) {
           if (byteIndex >= valueStreamedStringBufferLength) {
             // Write bytes retrieved so far
             stream.Write(bytes, 0, byteIndex);
             byteIndex = 0;
           }
           bytes[byteIndex++] = (byte)c;
-        } else if (c <= 0x7FF) {
+        } else if (c <= 0x7ff) {
           if (byteIndex + 2 > valueStreamedStringBufferLength) {
             // Write bytes retrieved so far
             stream.Write(bytes, 0, byteIndex);
             byteIndex = 0;
           }
-          bytes[byteIndex++] = (byte)(0xC0 | ((c >> 6) & 0x1F));
-          bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
+          bytes[byteIndex++] = (byte)(0xc0 | ((c >> 6) & 0x1f));
+          bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
         } else {
-          if (c >= 0xD800 && c <= 0xDBFF && index + 1 < endIndex &&
-              str[index + 1] >= 0xDC00 && str[index + 1] <= 0xDFFF) {
+          if (c >= 0xd800 && c <= 0xdbff && index + 1 < endIndex &&
+              str[index + 1] >= 0xdc00 && str[index + 1] <= 0xdfff) {
             // Get the Unicode code point for the surrogate pair
-            c = 0x10000 + ((c - 0xD800) * 0x400) + (str[index + 1] - 0xDC00);
+            c = 0x10000 + ((c - 0xd800) * 0x400) + (str[index + 1] - 0xdc00);
             ++index;
-          } else if (c >= 0xD800 && c <= 0xDFFF) {
+          } else if (c >= 0xd800 && c <= 0xdfff) {
             // unpaired surrogate
             if (!replace) {
               retval = -1;
               break;  // write bytes read so far
             }
-            c = 0xFFFD;
+            c = 0xfffd;
           }
-          if (c <= 0xFFFF) {
+          if (c <= 0xffff) {
             if (byteIndex + 3 > valueStreamedStringBufferLength) {
               // Write bytes retrieved so far
               stream.Write(bytes, 0, byteIndex);
               byteIndex = 0;
             }
-            bytes[byteIndex++] = (byte)(0xE0 | ((c >> 12) & 0x0F));
-            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3F));
-            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
+            bytes[byteIndex++] = (byte)(0xe0 | ((c >> 12) & 0x0f));
+            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3f));
+            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
           } else {
             if (byteIndex + 4 > valueStreamedStringBufferLength) {
               // Write bytes retrieved so far
               stream.Write(bytes, 0, byteIndex);
               byteIndex = 0;
             }
-            bytes[byteIndex++] = (byte)(0xF0 | ((c >> 18) & 0x07));
-            bytes[byteIndex++] = (byte)(0x80 | ((c >> 12) & 0x3F));
-            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3F));
-            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
+            bytes[byteIndex++] = (byte)(0xf0 | ((c >> 18) & 0x07));
+            bytes[byteIndex++] = (byte)(0x80 | ((c >> 12) & 0x3f));
+            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3f));
+            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
           }
         }
       }
@@ -392,14 +392,14 @@ namespace PeterO {
       int bytesSeen = 0;
       int bytesNeeded = 0;
       int lower = 0x80;
-      int upper = 0xBF;
+      int upper = 0xbf;
       int pointer = offset;
       int endpointer = offset + bytesCount;
       while (pointer < endpointer) {
-        int b = data[pointer] & (int)0xFF;
+        int b = data[pointer] & (int)0xff;
         ++pointer;
         if (bytesNeeded == 0) {
-          if ((b & 0x7F) == b) {
+          if ((b & 0x7f) == b) {
             builder.Append((char)b);
           } else if (b >= 0xc2 && b <= 0xdf) {
             bytesNeeded = 1;
@@ -416,7 +416,7 @@ namespace PeterO {
             cp = (b - 0xf0) << 18;
           } else {
             if (replace) {
-              builder.Append((char)0xFFFD);
+              builder.Append((char)0xfffd);
             } else {
               return -1;
             }
@@ -428,7 +428,7 @@ namespace PeterO {
           upper = 0xbf;
           if (replace) {
             --pointer;
-            builder.Append((char)0xFFFD);
+            builder.Append((char)0xfffd);
             continue;
           } else {
             return -1;
@@ -445,12 +445,12 @@ namespace PeterO {
           cp = 0;
           bytesSeen = 0;
           bytesNeeded = 0;
-          if (ret <= 0xFFFF) {
+          if (ret <= 0xffff) {
             builder.Append((char)ret);
           } else {
             int ch = ret - 0x10000;
             int lead = (ch / 0x400) + 0xd800;
-            int trail = (ch & 0x3FF) + 0xdc00;
+            int trail = (ch & 0x3ff) + 0xdc00;
             builder.Append((char)lead);
             builder.Append((char)trail);
           }
@@ -458,7 +458,7 @@ namespace PeterO {
       }
       if (bytesNeeded != 0) {
         if (replace) {
-          builder.Append((char)0xFFFD);
+          builder.Append((char)0xfffd);
         } else {
           return -1;
         }
@@ -538,7 +538,7 @@ namespace PeterO {
       int bytesSeen = 0;
       int bytesNeeded = 0;
       int lower = 0x80;
-      int upper = 0xBF;
+      int upper = 0xbf;
       int pointer = 0;
       while (pointer < bytesCount || bytesCount < 0) {
         int b = stream.ReadByte();
@@ -546,7 +546,7 @@ namespace PeterO {
           if (bytesNeeded != 0) {
             bytesNeeded = 0;
             if (replace) {
-              builder.Append((char)0xFFFD);
+              builder.Append((char)0xfffd);
               if (bytesCount >= 0) {
                 return -2;
               }
@@ -564,7 +564,7 @@ namespace PeterO {
           ++pointer;
         }
         if (bytesNeeded == 0) {
-          if ((b & 0x7F) == b) {
+          if ((b & 0x7f) == b) {
             builder.Append((char)b);
           } else if (b >= 0xc2 && b <= 0xdf) {
             bytesNeeded = 1;
@@ -581,7 +581,7 @@ namespace PeterO {
             cp = (b - 0xf0) << 18;
           } else {
             if (replace) {
-              builder.Append((char)0xFFFD);
+              builder.Append((char)0xfffd);
             } else {
               return -1;
             }
@@ -592,7 +592,7 @@ namespace PeterO {
           lower = 0x80;
           upper = 0xbf;
           if (replace) {
-            builder.Append((char)0xFFFD);
+            builder.Append((char)0xfffd);
             // "Read" the last byte again
             if (b < 0x80) {
               builder.Append((char)b);
@@ -610,7 +610,7 @@ namespace PeterO {
               bytesNeeded = 3;
               cp = (b - 0xf0) << 18;
             } else {
-              builder.Append((char)0xFFFD);
+              builder.Append((char)0xfffd);
             }
             continue;
           } else {
@@ -628,12 +628,12 @@ namespace PeterO {
           cp = 0;
           bytesSeen = 0;
           bytesNeeded = 0;
-          if (ret <= 0xFFFF) {
+          if (ret <= 0xffff) {
             builder.Append((char)ret);
           } else {
             int ch = ret - 0x10000;
             int lead = (ch / 0x400) + 0xd800;
-            int trail = (ch & 0x3FF) + 0xdc00;
+            int trail = (ch & 0x3ff) + 0xdc00;
             builder.Append((char)lead);
             builder.Append((char)trail);
           }
@@ -641,7 +641,7 @@ namespace PeterO {
       }
       if (bytesNeeded != 0) {
         if (replace) {
-          builder.Append((char)0xFFFD);
+          builder.Append((char)0xfffd);
         } else {
           return -1;
         }
