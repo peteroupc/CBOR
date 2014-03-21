@@ -31,8 +31,8 @@ at: http://peteroupc.github.io/CBOR/
         if (shiftBits != 0) {
           for (int i = 0; i < n; ++i) {
             u = r[rstart + i];
-            r[rstart + i] = (short)((int)(u << (int)shiftBits) | (((int)carry) & 0xFFFF));
-            carry = (short)((((int)u) & 0xFFFF) >> (int)(16 - shiftBits));
+            r[rstart + i] = (short)((int)(u << (int)shiftBits) | (((int)carry) & 0xffff));
+            carry = (short)((((int)u) & 0xffff) >> (int)(16 - shiftBits));
           }
         }
         return carry;
@@ -46,8 +46,8 @@ at: http://peteroupc.github.io/CBOR/
         if (shiftBits != 0) {
           for (int i = n; i > 0; --i) {
             u = r[rstart + i - 1];
-            r[rstart + i - 1] = (short)((((((int)u) & 0xFFFF) >> (int)shiftBits) & 0xFFFF) | (((int)carry) & 0xFFFF));
-            carry = (short)((((int)u) & 0xFFFF) << (int)(16 - shiftBits));
+            r[rstart + i - 1] = (short)((((((int)u) & 0xffff) >> (int)shiftBits) & 0xffff) | (((int)carry) & 0xffff));
+            carry = (short)((((int)u) & 0xffff) << (int)(16 - shiftBits));
           }
         }
         return carry;
@@ -57,12 +57,12 @@ at: http://peteroupc.github.io/CBOR/
     private static short ShiftWordsRightByBitsSignExtend(short[] r, int rstart, int n, int shiftBits) {
       // Debugif(!(shiftBits<16))Assert.fail("{0} line {1}: shiftBits<16","words.h",67);
       {
-        short u, carry = (short)((int)0xFFFF << (int)(16 - shiftBits));
+        short u, carry = (short)((int)0xffff << (int)(16 - shiftBits));
         if (shiftBits != 0) {
           for (int i = n; i > 0; --i) {
             u = r[rstart + i - 1];
-            r[rstart + i - 1] = (short)(((((int)u) & 0xFFFF) >> (int)shiftBits) | (((int)carry) & 0xFFFF));
-            carry = (short)((((int)u) & 0xFFFF) << (int)(16 - shiftBits));
+            r[rstart + i - 1] = (short)(((((int)u) & 0xffff) >> (int)shiftBits) | (((int)carry) & 0xffff));
+            carry = (short)((((int)u) & 0xffff) << (int)(16 - shiftBits));
           }
         }
         return carry;
@@ -88,15 +88,15 @@ at: http://peteroupc.github.io/CBOR/
         rstart += n - shiftWords;
         // Sign extend
         for (int i = 0; i < shiftWords; ++i) {
-          r[rstart + i] = ((short)0xFFFF);
+          r[rstart + i] = ((short)0xffff);
         }
       }
     }
 
     private static int Compare(short[] words1, int astart, short[] words2, int bstart, int n) {
       while ((n--) != 0) {
-        int an = ((int)words1[astart + n]) & 0xFFFF;
-        int bn = ((int)words2[bstart + n]) & 0xFFFF;
+        int an = ((int)words1[astart + n]) & 0xffff;
+        int bn = ((int)words2[bstart + n]) & 0xffff;
         if (an > bn) {
           return 1;
         } else if (an < bn) {
@@ -131,8 +131,8 @@ at: http://peteroupc.github.io/CBOR/
         n = acount;
       }
       while ((n--) != 0) {
-        int an = ((int)words1[astart + n]) & 0xFFFF;
-        int bn = ((int)words2[bstart + n]) & 0xFFFF;
+        int an = ((int)words1[astart + n]) & 0xffff;
+        int bn = ((int)words2[bstart + n]) & 0xffff;
         if (an > bn) {
           return 1;
         } else if (an < bn) {
@@ -150,8 +150,8 @@ at: http://peteroupc.github.io/CBOR/
       }
       --words1Count;
       while ((words1Count--) != 0) {
-        int an = ((int)words1[astart + words1Count]) & 0xFFFF;
-        int bn = ((int)words2[bstart + words1Count]) & 0xFFFF;
+        int an = ((int)words1[astart + words1Count]) & 0xffff;
+        int bn = ((int)words2[bstart + words1Count]) & 0xffff;
         if (an > bn) {
           return 1;
         } else if (an < bn) {
@@ -166,7 +166,7 @@ at: http://peteroupc.github.io/CBOR/
         // Debugif(!(n!=0))Assert.fail("{0} line {1}: n","integer.cpp",63);
         short tmp = words1[words1Start];
         words1[words1Start] = (short)(tmp + words2);
-        if ((((int)words1[words1Start]) & 0xFFFF) >= (((int)tmp) & 0xFFFF)) {
+        if ((((int)words1[words1Start]) & 0xffff) >= (((int)tmp) & 0xffff)) {
           return 0;
         }
         for (int i = 1; i < n; ++i) {
@@ -184,7 +184,7 @@ at: http://peteroupc.github.io/CBOR/
       {
         short tmp = words1[words1Start];
         words1[words1Start] = (short)(tmp - words2);
-        if ((((int)words1[words1Start]) & 0xFFFF) <= (((int)tmp) & 0xFFFF)) {
+        if ((((int)words1[words1Start]) & 0xffff) <= (((int)tmp) & 0xffff)) {
           return 0;
         }
         for (int i = 1; i < n; ++i) {
@@ -218,12 +218,12 @@ at: http://peteroupc.github.io/CBOR/
         int u;
         u = 0;
         for (int i = 0; i < n; i += 2) {
-          u = (((int)words1[astart + i]) & 0xFFFF) + (((int)words2[bstart + i]) & 0xFFFF) + (short)(u >> 16);
+          u = (((int)words1[astart + i]) & 0xffff) + (((int)words2[bstart + i]) & 0xffff) + (short)(u >> 16);
           c[cstart + i] = (short)u;
-          u = (((int)words1[astart + i + 1]) & 0xFFFF) + (((int)words2[bstart + i + 1]) & 0xFFFF) + (short)(u >> 16);
+          u = (((int)words1[astart + i + 1]) & 0xffff) + (((int)words2[bstart + i + 1]) & 0xffff) + (short)(u >> 16);
           c[cstart + i + 1] = (short)u;
         }
-        return ((int)u >> 16) & 0xFFFF;
+        return ((int)u >> 16) & 0xffff;
       }
     }
 
@@ -240,10 +240,10 @@ at: http://peteroupc.github.io/CBOR/
         int u;
         u = 0;
         for (int i = 0; i < n; i += 1) {
-          u = (((int)words1[astart + i]) & 0xFFFF) + (((int)words2[bstart + i]) & 0xFFFF) + (short)(u >> 16);
+          u = (((int)words1[astart + i]) & 0xffff) + (((int)words2[bstart + i]) & 0xffff) + (short)(u >> 16);
           c[cstart + i] = (short)u;
         }
-        return ((int)u >> 16) & 0xFFFF;
+        return ((int)u >> 16) & 0xffff;
       }
     }
 
@@ -261,12 +261,12 @@ at: http://peteroupc.github.io/CBOR/
         u = 0;
         int cm1 = words1Count - 1;
         for (int i = 0; i < cm1; i += 1) {
-          u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
+          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) & 0xffff) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
           ++astart;
           ++bstart;
         }
-        u = (((int)words1[astart]) & 0xFFFF) - (int)((u >> 31) & 1);
+        u = (((int)words1[astart]) & 0xffff) - (int)((u >> 31) & 1);
         c[cstart++] = (short)u;
         return (int)((u >> 31) & 1);
       }
@@ -286,12 +286,12 @@ at: http://peteroupc.github.io/CBOR/
         u = 0;
         int cm1 = words2Count - 1;
         for (int i = 0; i < cm1; i += 1) {
-          u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
+          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) & 0xffff) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
           ++astart;
           ++bstart;
         }
-        u = 0 - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
+        u = 0 - (((int)words2[bstart]) & 0xffff) - (int)((u >> 31) & 1);
         c[cstart++] = (short)u;
         return (int)((u >> 31) & 1);
       }
@@ -311,14 +311,14 @@ at: http://peteroupc.github.io/CBOR/
         int u;
         u = 0;
         for (int i = 0; i < bcount; i += 1) {
-          u = (((int)wordsBigger[astart + i]) & 0xFFFF) + (((int)wordsSmaller[bstart + i]) & 0xFFFF) + (short)(u >> 16);
+          u = (((int)wordsBigger[astart + i]) & 0xffff) + (((int)wordsSmaller[bstart + i]) & 0xffff) + (short)(u >> 16);
           c[cstart + i] = (short)u;
         }
         for (int i = bcount; i < acount; i += 1) {
-          u = (((int)wordsBigger[astart + i]) & 0xFFFF) + (short)(u >> 16);
+          u = (((int)wordsBigger[astart + i]) & 0xffff) + (short)(u >> 16);
           c[cstart + i] = (short)u;
         }
-        return ((int)u >> 16) & 0xFFFF;
+        return ((int)u >> 16) & 0xffff;
       }
     }
 
@@ -335,11 +335,11 @@ at: http://peteroupc.github.io/CBOR/
         int u;
         u = 0;
         for (int i = 0; i < n; i += 2) {
-          u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
+          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) & 0xffff) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
           ++astart;
           ++bstart;
-          u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
+          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) & 0xffff) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
           ++astart;
           ++bstart;
@@ -361,7 +361,7 @@ at: http://peteroupc.github.io/CBOR/
         int u;
         u = 0;
         for (int i = 0; i < n; i += 1) {
-          u = (((int)words1[astart]) & 0xFFFF) - (((int)words2[bstart]) & 0xFFFF) - (int)((u >> 31) & 1);
+          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) & 0xffff) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
           ++astart;
           ++bstart;
@@ -379,12 +379,12 @@ at: http://peteroupc.github.io/CBOR/
       int n) {
       {
         short carry = 0;
-        int bint = ((int)words2) & 0xFFFF;
+        int bint = ((int)words2) & 0xffff;
         for (int i = 0; i < n; ++i) {
           int p;
-          p = (((int)words1[astart + i]) & 0xFFFF) * bint;
-          p += ((int)carry) & 0xFFFF;
-          p += ((int)productArr[cstart + i]) & 0xFFFF;
+          p = (((int)words1[astart + i]) & 0xffff) * bint;
+          p += ((int)carry) & 0xffff;
+          p += ((int)productArr[cstart + i]) & 0xffff;
           productArr[cstart + i] = (short)p;
           carry = (short)(p >> 16);
         }
@@ -401,11 +401,11 @@ at: http://peteroupc.github.io/CBOR/
       int n) {
       {
         short carry = 0;
-        int bint = ((int)words2) & 0xFFFF;
+        int bint = ((int)words2) & 0xffff;
         for (int i = 0; i < n; ++i) {
           int p;
-          p = (((int)words1[astart + i]) & 0xFFFF) * bint;
-          p += ((int)carry) & 0xFFFF;
+          p = (((int)words1[astart + i]) & 0xffff) * bint;
+          p += ((int)carry) & 0xffff;
           productArr[cstart + i] = (short)p;
           carry = (short)(p >> 16);
         }
@@ -419,10 +419,10 @@ at: http://peteroupc.github.io/CBOR/
     private static void Baseline_Square2(short[] result, int rstart, short[] words1, int astart) {
       {
         int p; short c; int d; int e;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart]) & 0xFFFF); result[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 1] = c;
-        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF);
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart]) & 0xffff); result[rstart] = (short)p; e = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 1]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 1] = c;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 1]) & 0xffff);
         p += e; result[rstart + 2] = (short)p; result[rstart + 3] = (short)(p >> 16);
       }
     }
@@ -430,27 +430,27 @@ at: http://peteroupc.github.io/CBOR/
     private static void Baseline_Square4(short[] result, int rstart, short[] words1, int astart) {
       {
         int p; short c; int d; int e;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart]) & 0xFFFF); result[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 1] = c;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 2] = c;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 3] = c;
-        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4] = c;
-        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + (2 * 4) - 3] = c;
-        p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF);
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart]) & 0xffff); result[rstart] = (short)p; e = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 1]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 1] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 2]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 1]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 2] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 2]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 3] = c;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 2]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 4] = c;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + (2 * 4) - 3] = c;
+        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff);
         p += e; result[rstart + 6] = (short)p; result[rstart + 7] = (short)(p >> 16);
       }
     }
@@ -458,97 +458,97 @@ at: http://peteroupc.github.io/CBOR/
     private static void Baseline_Square8(short[] result, int rstart, short[] words1, int astart) {
       {
         int p; short c; int d; int e;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart]) & 0xFFFF); result[rstart] = (short)p; e = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 1] = c;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 1]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 2] = c;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 3] = c;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 2]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 4] = c;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 5] = c;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 3]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 6] = c;
-        p = (((int)words1[astart]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 7] = c;
-        p = (((int)words1[astart + 1]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 4]) & 0xFFFF) * (((int)words1[astart + 4]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 8] = c;
-        p = (((int)words1[astart + 2]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 4]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 9] = c;
-        p = (((int)words1[astart + 3]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 4]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 5]) & 0xFFFF) * (((int)words1[astart + 5]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 10] = c;
-        p = (((int)words1[astart + 4]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF;
-        p = (((int)words1[astart + 5]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 11] = c;
-        p = (((int)words1[astart + 5]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 6]) & 0xFFFF) * (((int)words1[astart + 6]) & 0xFFFF);
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 12] = c;
-        p = (((int)words1[astart + 6]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF); c = (short)p; d = ((int)p >> 16) & 0xFFFF; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xFFFF; c = (short)e; e = d + (((int)e >> 16) & 0xFFFF); result[rstart + 13] = c;
-        p = (((int)words1[astart + 7]) & 0xFFFF) * (((int)words1[astart + 7]) & 0xFFFF);
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart]) & 0xffff); result[rstart] = (short)p; e = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 1]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 1] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 2]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 1]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 2] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 2]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 3] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 4]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 2]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 4] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 5]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 4]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 5] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 5]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 4]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 6] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 5]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart + 4]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 7] = c;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart + 5]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 4]) & 0xffff) * (((int)words1[astart + 4]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 8] = c;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 4]) & 0xffff) * (((int)words1[astart + 5]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 9] = c;
+        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 4]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 5]) & 0xffff) * (((int)words1[astart + 5]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 10] = c;
+        p = (((int)words1[astart + 4]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 5]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 11] = c;
+        p = (((int)words1[astart + 5]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 6]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 12] = c;
+        p = (((int)words1[astart + 6]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 13] = c;
+        p = (((int)words1[astart + 7]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff);
         p += e; result[rstart + 14] = (short)p; result[rstart + 15] = (short)(p >> 16);
       }
     }
@@ -560,24 +560,24 @@ at: http://peteroupc.github.io/CBOR/
     private static void Baseline_Multiply2(short[] result, int rstart, short[] words1, int astart, short[] words2, int bstart) {
       {
         int p; short c; int d;
-        int a0 = ((int)words1[astart]) & 0xFFFF;
-        int a1 = ((int)words1[astart + 1]) & 0xFFFF;
-        int b0 = ((int)words2[bstart]) & 0xFFFF;
-        int b1 = ((int)words2[bstart + 1]) & 0xFFFF;
-        p = a0 * b0; c = (short)p; d = ((int)p >> 16) & 0xFFFF; result[rstart] = c; c = (short)d; d = ((int)d >> 16) & 0xFFFF;
+        int a0 = ((int)words1[astart]) & 0xffff;
+        int a1 = ((int)words1[astart + 1]) & 0xffff;
+        int b0 = ((int)words2[bstart]) & 0xffff;
+        int b1 = ((int)words2[bstart + 1]) & 0xffff;
+        p = a0 * b0; c = (short)p; d = ((int)p >> 16) & 0xffff; result[rstart] = c; c = (short)d; d = ((int)d >> 16) & 0xffff;
         p = a0 * b1;
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
         p = a1 * b0;
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF; result[rstart + 1] = c;
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; result[rstart + 1] = c;
         p = a1 * b1;
         p += d; result[rstart + 2] = (short)p; result[rstart + 3] = (short)(p >> 16);
       }
     }
 
     private static void Baseline_Multiply4(short[] result, int rstart, short[] words1, int astart, short[] words2, int bstart) {
-      int mask = 0xFFFF;
+      int mask = 0xffff;
       {
         int p; short c; int d;
         int a0 = ((int)words1[astart]) & mask;
@@ -633,7 +633,7 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private static void Baseline_Multiply8(short[] result, int rstart, short[] words1, int astart, short[] words2, int bstart) {
-      int mask = 0xFFFF;
+      int mask = 0xffff;
       {
         int p; short c; int d;
         p = (((int)words1[astart]) & mask) * (((int)words2[bstart]) & mask); c = (short)p; d = ((int)p >> 16) & mask; result[rstart] = c; c = (short)d; d = ((int)d >> 16) & mask;
@@ -1084,13 +1084,13 @@ at: http://peteroupc.github.io/CBOR/
         cstart = resultStart + i;
         {
           short carry = 0;
-          int valueBint = ((int)words1[words1Start + i]) & 0xFFFF;
+          int valueBint = ((int)words1[words1Start + i]) & 0xffff;
           for (int j = 0; j < words1Count; ++j) {
             int p;
-            p = (((int)words1[words1Start + j]) & 0xFFFF) * valueBint;
-            p += ((int)carry) & 0xFFFF;
+            p = (((int)words1[words1Start + j]) & 0xffff) * valueBint;
+            p += ((int)carry) & 0xffff;
             if (i != 0) {
-              p += ((int)resultArr[cstart + j]) & 0xFFFF;
+              p += ((int)resultArr[cstart + j]) & 0xffff;
             }
             resultArr[cstart + j] = (short)p;
             carry = (short)(p >> 16);
@@ -1118,13 +1118,13 @@ at: http://peteroupc.github.io/CBOR/
           cstart = resultStart + i;
           {
             short carry = 0;
-            int valueBint = ((int)words1[words1Start + i]) & 0xFFFF;
+            int valueBint = ((int)words1[words1Start + i]) & 0xffff;
             for (int j = 0; j < words2Count; ++j) {
               int p;
-              p = (((int)words2[words2Start + j]) & 0xFFFF) * valueBint;
-              p += ((int)carry) & 0xFFFF;
+              p = (((int)words2[words2Start + j]) & 0xffff) * valueBint;
+              p += ((int)carry) & 0xffff;
               if (i != 0) {
-                p += ((int)resultArr[cstart + j]) & 0xFFFF;
+                p += ((int)resultArr[cstart + j]) & 0xffff;
               }
               resultArr[cstart + j] = (short)p;
               carry = (short)(p >> 16);
@@ -1138,13 +1138,13 @@ at: http://peteroupc.github.io/CBOR/
           cstart = resultStart + i;
           {
             short carry = 0;
-            int valueBint = ((int)words2[words2Start + i]) & 0xFFFF;
+            int valueBint = ((int)words2[words2Start + i]) & 0xffff;
             for (int j = 0; j < words1Count; ++j) {
               int p;
-              p = (((int)words1[words1Start + j]) & 0xFFFF) * valueBint;
-              p += ((int)carry) & 0xFFFF;
+              p = (((int)words1[words1Start + j]) & 0xffff) * valueBint;
+              p += ((int)carry) & 0xffff;
               if (i != 0) {
-                p += ((int)resultArr[cstart + j]) & 0xFFFF;
+                p += ((int)resultArr[cstart + j]) & 0xffff;
               }
               resultArr[cstart + j] = (short)p;
               carry = (short)(p >> 16);
@@ -1291,8 +1291,8 @@ at: http://peteroupc.github.io/CBOR/
             return;
         }
       } else if (words1Count == 2 && (words2Count & 1) == 0) {
-        int a0 = ((int)words1[words1Start]) & 0xFFFF;
-        int a1 = ((int)words1[words1Start + 1]) & 0xFFFF;
+        int a0 = ((int)words1[words1Start]) & 0xffff;
+        int a1 = ((int)words1[words1Start + 1]) & 0xffff;
         resultArr[resultStart + words2Count] = (short)0;
         resultArr[resultStart + words2Count + 1] = (short)0;
         AtomicMultiplyOpt(resultArr, resultStart, a0, a1, words2, words2Start, 0, words2Count);
@@ -1383,19 +1383,19 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private static int MakeUint(short first, short second) {
-      return ((int)((((int)first) & 0xFFFF) | ((int)second << 16)));
+      return ((int)((((int)first) & 0xffff) | ((int)second << 16)));
     }
 
     private static short GetLowHalf(int val) {
-      return ((short)(val & 0xFFFF));
+      return ((short)(val & 0xffff));
     }
 
     private static short GetHighHalf(int val) {
-      return ((short)((val >> 16) & 0xFFFF));
+      return ((short)((val >> 16) & 0xffff));
     }
 
     private static short GetHighHalfAsBorrow(int val) {
-      return ((short)(0 - ((val >> 16) & 0xFFFF)));
+      return ((short)(0 - ((val >> 16) & 0xffff)));
     }
 
     private static int BitPrecision(short numberValue) {
@@ -1429,7 +1429,7 @@ at: http://peteroupc.github.io/CBOR/
     private static short Divide32By16(int dividendLow, short divisorShort, boolean returnRemainder) {
       int tmpInt;
       int dividendHigh = 0;
-      int intDivisor = ((int)divisorShort) & 0xFFFF;
+      int intDivisor = ((int)divisorShort) & 0xffff;
       for (int i = 0; i < 32; ++i) {
         tmpInt = dividendHigh >> 31;
         dividendHigh <<= 1;
@@ -1445,16 +1445,16 @@ at: http://peteroupc.github.io/CBOR/
         }
       }
       return returnRemainder ?
-        ((short)(((int)dividendHigh) & 0xFFFF)) :
-        ((short)(((int)dividendLow) & 0xFFFF));
+        ((short)(((int)dividendHigh) & 0xffff)) :
+        ((short)(((int)dividendLow) & 0xffff));
     }
 
     private static short DivideUnsigned(int x, short y) {
       {
-        int iy = ((int)y) & 0xFFFF;
+        int iy = ((int)y) & 0xffff;
         if ((x >> 31) == 0) {
           // x is already nonnegative
-          return (short)(((int)x / iy) & 0xFFFF);
+          return (short)(((int)x / iy) & 0xffff);
         } else {
           return Divide32By16(x, y, false);
         }
@@ -1463,10 +1463,10 @@ at: http://peteroupc.github.io/CBOR/
 
     private static short RemainderUnsigned(int x, short y) {
       {
-        int iy = ((int)y) & 0xFFFF;
+        int iy = ((int)y) & 0xffff;
         if ((x >> 31) == 0) {
           // x is already nonnegative
-          return (short)(((int)x % iy) & 0xFFFF);
+          return (short)(((int)x % iy) & 0xffff);
         } else {
           return Divide32By16(x, y, true);
         }
@@ -1480,27 +1480,27 @@ at: http://peteroupc.github.io/CBOR/
         if ((short)(valueB1 + 1) == 0) {
           valueQ = words1[words1Start + 2];
         } else if (valueB1 != 0) {
-          valueQ = DivideUnsigned(MakeUint(words1[words1Start + 1], words1[words1Start + 2]), (short)(((int)valueB1 + 1) & 0xFFFF));
+          valueQ = DivideUnsigned(MakeUint(words1[words1Start + 1], words1[words1Start + 2]), (short)(((int)valueB1 + 1) & 0xffff));
         } else {
           valueQ = DivideUnsigned(MakeUint(words1[words1Start], words1[words1Start + 1]), valueB0);
         }
 
-        int valueQint = ((int)valueQ) & 0xFFFF;
-        int valueB0int = ((int)valueB0) & 0xFFFF;
-        int valueB1int = ((int)valueB1) & 0xFFFF;
+        int valueQint = ((int)valueQ) & 0xffff;
+        int valueB0int = ((int)valueB0) & 0xffff;
+        int valueB1int = ((int)valueB1) & 0xffff;
         int p = valueB0int * valueQint;
-        int u = (((int)words1[words1Start]) & 0xFFFF) - (p & 0xFFFF);
+        int u = (((int)words1[words1Start]) & 0xffff) - (p & 0xffff);
         words1[words1Start] = GetLowHalf(u);
-        u = (((int)words1[words1Start + 1]) & 0xFFFF) - ((p >> 16) & 0xFFFF) -
-          (((int)GetHighHalfAsBorrow(u)) & 0xFFFF) - (valueB1int * valueQint);
+        u = (((int)words1[words1Start + 1]) & 0xffff) - ((p >> 16) & 0xffff) -
+          (((int)GetHighHalfAsBorrow(u)) & 0xffff) - (valueB1int * valueQint);
         words1[words1Start + 1] = GetLowHalf(u);
         words1[words1Start + 2] += GetHighHalf(u);
         while (words1[words1Start + 2] != 0 ||
-               (((int)words1[words1Start + 1]) & 0xFFFF) > (((int)valueB1) & 0xFFFF) ||
-               (words1[words1Start + 1] == valueB1 && (((int)words1[words1Start]) & 0xFFFF) >= (((int)valueB0) & 0xFFFF))) {
-          u = (((int)words1[words1Start]) & 0xFFFF) - valueB0int;
+               (((int)words1[words1Start + 1]) & 0xffff) > (((int)valueB1) & 0xffff) ||
+               (words1[words1Start + 1] == valueB1 && (((int)words1[words1Start]) & 0xffff) >= (((int)valueB0) & 0xffff))) {
+          u = (((int)words1[words1Start]) & 0xffff) - valueB0int;
           words1[words1Start] = GetLowHalf(u);
-          u = (((int)words1[words1Start + 1]) & 0xFFFF) - valueB1int - (((int)GetHighHalfAsBorrow(u)) & 0xFFFF);
+          u = (((int)words1[words1Start + 1]) & 0xffff) - valueB1int - (((int)GetHighHalfAsBorrow(u)) & 0xffff);
           words1[words1Start + 1] = GetLowHalf(u);
           words1[words1Start + 2] += GetHighHalf(u);
           ++valueQ;
@@ -1536,66 +1536,66 @@ at: http://peteroupc.github.io/CBOR/
     private static void AtomicMultiplyOpt(short[] c, int valueCstart, int valueA0, int valueA1, short[] words2, int words2Start, int istart, int iend) {
       short s;
       int d;
-      int first1MinusFirst0 = ((int)valueA1 - valueA0) & 0xFFFF;
-      valueA1 &= 0xFFFF;
-      valueA0 &= 0xFFFF;
+      int first1MinusFirst0 = ((int)valueA1 - valueA0) & 0xffff;
+      valueA1 &= 0xffff;
+      valueA0 &= 0xffff;
       {
         if (valueA1 >= valueA0) {
           for (int i = istart; i < iend; i += 4) {
-            int valueB0 = ((int)words2[words2Start + i]) & 0xFFFF;
-            int valueB1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
+            int valueB0 = ((int)words2[words2Start + i]) & 0xffff;
+            int valueB1 = ((int)words2[words2Start + i + 1]) & 0xffff;
             int csi = valueCstart + i;
             if (valueB0 >= valueB1) {
               s = (short)0;
-              d = first1MinusFirst0 * (((int)valueB0 - valueB1) & 0xFFFF);
+              d = first1MinusFirst0 * (((int)valueB0 - valueB1) & 0xffff);
             } else {
               s = (short)first1MinusFirst0;
-              d = (((int)s) & 0xFFFF) * (((int)valueB0 - valueB1) & 0xFFFF);
+              d = (((int)s) & 0xffff) * (((int)valueB0 - valueB1) & 0xffff);
             }
             int valueA0B0 = valueA0 * valueB0;
-            c[csi] = (short)(((int)valueA0B0) & 0xFFFF);
-            int a0b0high = (valueA0B0 >> 16) & 0xFFFF;
+            c[csi] = (short)(((int)valueA0B0) & 0xffff);
+            int a0b0high = (valueA0B0 >> 16) & 0xffff;
             int valueA1B1 = valueA1 * valueB1;
             int tempInt;
             tempInt = a0b0high +
-              (((int)valueA0B0) & 0xFFFF) + (((int)d) & 0xFFFF) + (((int)valueA1B1) & 0xFFFF);
-            c[csi + 1] = (short)(((int)tempInt) & 0xFFFF);
+              (((int)valueA0B0) & 0xffff) + (((int)d) & 0xffff) + (((int)valueA1B1) & 0xffff);
+            c[csi + 1] = (short)(((int)tempInt) & 0xffff);
 
-            tempInt = valueA1B1 + (((int)(tempInt >> 16)) & 0xFFFF) +
-              a0b0high + (((int)(d >> 16)) & 0xFFFF) + (((int)(valueA1B1 >> 16)) & 0xFFFF) -
-              (((int)s) & 0xFFFF);
+            tempInt = valueA1B1 + (((int)(tempInt >> 16)) & 0xffff) +
+              a0b0high + (((int)(d >> 16)) & 0xffff) + (((int)(valueA1B1 >> 16)) & 0xffff) -
+              (((int)s) & 0xffff);
 
-            c[csi + 2] = (short)(((int)tempInt) & 0xFFFF);
-            c[csi + 3] = (short)(((int)(tempInt >> 16)) & 0xFFFF);
+            c[csi + 2] = (short)(((int)tempInt) & 0xffff);
+            c[csi + 3] = (short)(((int)(tempInt >> 16)) & 0xffff);
           }
         } else {
           for (int i = istart; i < iend; i += 4) {
-            int valueB0 = ((int)words2[words2Start + i]) & 0xFFFF;
-            int valueB1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
+            int valueB0 = ((int)words2[words2Start + i]) & 0xffff;
+            int valueB1 = ((int)words2[words2Start + i + 1]) & 0xffff;
             int csi = valueCstart + i;
             if (valueB0 > valueB1) {
-              s = (short)(((int)valueB0 - valueB1) & 0xFFFF);
-              d = first1MinusFirst0 * (((int)s) & 0xFFFF);
+              s = (short)(((int)valueB0 - valueB1) & 0xffff);
+              d = first1MinusFirst0 * (((int)s) & 0xffff);
             } else {
               s = (short)0;
-              d = (((int)valueA0 - valueA1) & 0xFFFF) * (((int)valueB1 - valueB0) & 0xFFFF);
+              d = (((int)valueA0 - valueA1) & 0xffff) * (((int)valueB1 - valueB0) & 0xffff);
             }
             int valueA0B0 = valueA0 * valueB0;
-            int a0b0high = (valueA0B0 >> 16) & 0xFFFF;
-            c[csi] = (short)(((int)valueA0B0) & 0xFFFF);
+            int a0b0high = (valueA0B0 >> 16) & 0xffff;
+            c[csi] = (short)(((int)valueA0B0) & 0xffff);
 
             int valueA1B1 = valueA1 * valueB1;
             int tempInt;
             tempInt = a0b0high +
-              (((int)valueA0B0) & 0xFFFF) + (((int)d) & 0xFFFF) + (((int)valueA1B1) & 0xFFFF);
-            c[csi + 1] = (short)(((int)tempInt) & 0xFFFF);
+              (((int)valueA0B0) & 0xffff) + (((int)d) & 0xffff) + (((int)valueA1B1) & 0xffff);
+            c[csi + 1] = (short)(((int)tempInt) & 0xffff);
 
-            tempInt = valueA1B1 + (((int)(tempInt >> 16)) & 0xFFFF) +
-              a0b0high + (((int)(d >> 16)) & 0xFFFF) + (((int)(valueA1B1 >> 16)) & 0xFFFF) -
-              (((int)s) & 0xFFFF);
+            tempInt = valueA1B1 + (((int)(tempInt >> 16)) & 0xffff) +
+              a0b0high + (((int)(d >> 16)) & 0xffff) + (((int)(valueA1B1 >> 16)) & 0xffff) -
+              (((int)s) & 0xffff);
 
-            c[csi + 2] = (short)(((int)tempInt) & 0xFFFF);
-            c[csi + 3] = (short)(((int)(tempInt >> 16)) & 0xFFFF);
+            c[csi + 2] = (short)(((int)tempInt) & 0xffff);
+            c[csi + 3] = (short)(((int)(tempInt >> 16)) & 0xffff);
           }
         }
       }
@@ -1604,40 +1604,40 @@ at: http://peteroupc.github.io/CBOR/
     private static void AtomicMultiplyAddOpt(short[] c, int valueCstart, int valueA0, int valueA1, short[] words2, int words2Start, int istart, int iend) {
       short s;
       int d;
-      int first1MinusFirst0 = ((int)valueA1 - valueA0) & 0xFFFF;
-      valueA1 &= 0xFFFF;
-      valueA0 &= 0xFFFF;
+      int first1MinusFirst0 = ((int)valueA1 - valueA0) & 0xffff;
+      valueA1 &= 0xffff;
+      valueA0 &= 0xffff;
       {
         if (valueA1 >= valueA0) {
           for (int i = istart; i < iend; i += 4) {
-            int b0 = ((int)words2[words2Start + i]) & 0xFFFF;
-            int b1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
+            int b0 = ((int)words2[words2Start + i]) & 0xffff;
+            int b1 = ((int)words2[words2Start + i + 1]) & 0xffff;
             int csi = valueCstart + i;
             if (b0 >= b1) {
               s = (short)0;
-              d = first1MinusFirst0 * (((int)b0 - b1) & 0xFFFF);
+              d = first1MinusFirst0 * (((int)b0 - b1) & 0xffff);
             } else {
               s = (short)first1MinusFirst0;
-              d = (((int)s) & 0xFFFF) * (((int)b0 - b1) & 0xFFFF);
+              d = (((int)s) & 0xffff) * (((int)b0 - b1) & 0xffff);
             }
             int valueA0B0 = valueA0 * b0;
-            int a0b0high = (valueA0B0 >> 16) & 0xFFFF;
+            int a0b0high = (valueA0B0 >> 16) & 0xffff;
             int tempInt;
-            tempInt = valueA0B0 + (((int)c[csi]) & 0xFFFF);
-            c[csi] = (short)(((int)tempInt) & 0xFFFF);
+            tempInt = valueA0B0 + (((int)c[csi]) & 0xffff);
+            c[csi] = (short)(((int)tempInt) & 0xffff);
 
             int valueA1B1 = valueA1 * b1;
-            int a1b1low = valueA1B1 & 0xFFFF;
-            int a1b1high = ((int)(valueA1B1 >> 16)) & 0xFFFF;
-            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + (((int)valueA0B0) & 0xFFFF) + (((int)d) & 0xFFFF) + a1b1low + (((int)c[csi + 1]) & 0xFFFF);
-            c[csi + 1] = (short)(((int)tempInt) & 0xFFFF);
+            int a1b1low = valueA1B1 & 0xffff;
+            int a1b1high = ((int)(valueA1B1 >> 16)) & 0xffff;
+            tempInt = (((int)(tempInt >> 16)) & 0xffff) + (((int)valueA0B0) & 0xffff) + (((int)d) & 0xffff) + a1b1low + (((int)c[csi + 1]) & 0xffff);
+            c[csi + 1] = (short)(((int)tempInt) & 0xffff);
 
-            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + a1b1low + a0b0high + (((int)(d >> 16)) & 0xFFFF) +
-              a1b1high - (((int)s) & 0xFFFF) + (((int)c[csi + 2]) & 0xFFFF);
-            c[csi + 2] = (short)(((int)tempInt) & 0xFFFF);
+            tempInt = (((int)(tempInt >> 16)) & 0xffff) + a1b1low + a0b0high + (((int)(d >> 16)) & 0xffff) +
+              a1b1high - (((int)s) & 0xffff) + (((int)c[csi + 2]) & 0xffff);
+            c[csi + 2] = (short)(((int)tempInt) & 0xffff);
 
-            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + a1b1high + (((int)c[csi + 3]) & 0xFFFF);
-            c[csi + 3] = (short)(((int)tempInt) & 0xFFFF);
+            tempInt = (((int)(tempInt >> 16)) & 0xffff) + a1b1high + (((int)c[csi + 3]) & 0xffff);
+            c[csi + 3] = (short)(((int)tempInt) & 0xffff);
             if ((tempInt >> 16) != 0) {
               ++c[csi + 4];
               c[csi + 5] += (short)((c[csi + 4] == 0) ? 1 : 0);
@@ -1645,34 +1645,34 @@ at: http://peteroupc.github.io/CBOR/
           }
         } else {
           for (int i = istart; i < iend; i += 4) {
-            int valueB0 = ((int)words2[words2Start + i]) & 0xFFFF;
-            int valueB1 = ((int)words2[words2Start + i + 1]) & 0xFFFF;
+            int valueB0 = ((int)words2[words2Start + i]) & 0xffff;
+            int valueB1 = ((int)words2[words2Start + i + 1]) & 0xffff;
             int csi = valueCstart + i;
             if (valueB0 > valueB1) {
-              s = (short)(((int)valueB0 - valueB1) & 0xFFFF);
-              d = first1MinusFirst0 * (((int)s) & 0xFFFF);
+              s = (short)(((int)valueB0 - valueB1) & 0xffff);
+              d = first1MinusFirst0 * (((int)s) & 0xffff);
             } else {
               s = (short)0;
-              d = (((int)valueA0 - valueA1) & 0xFFFF) * (((int)valueB1 - valueB0) & 0xFFFF);
+              d = (((int)valueA0 - valueA1) & 0xffff) * (((int)valueB1 - valueB0) & 0xffff);
             }
             int valueA0B0 = valueA0 * valueB0;
-            int a0b0high = (valueA0B0 >> 16) & 0xFFFF;
+            int a0b0high = (valueA0B0 >> 16) & 0xffff;
             int tempInt;
-            tempInt = valueA0B0 + (((int)c[csi]) & 0xFFFF);
-            c[csi] = (short)(((int)tempInt) & 0xFFFF);
+            tempInt = valueA0B0 + (((int)c[csi]) & 0xffff);
+            c[csi] = (short)(((int)tempInt) & 0xffff);
 
             int valueA1B1 = valueA1 * valueB1;
-            int a1b1low = valueA1B1 & 0xFFFF;
-            int a1b1high = (valueA1B1 >> 16) & 0xFFFF;
-            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + (((int)valueA0B0) & 0xFFFF) + (((int)d) & 0xFFFF) + a1b1low + (((int)c[csi + 1]) & 0xFFFF);
-            c[csi + 1] = (short)(((int)tempInt) & 0xFFFF);
+            int a1b1low = valueA1B1 & 0xffff;
+            int a1b1high = (valueA1B1 >> 16) & 0xffff;
+            tempInt = (((int)(tempInt >> 16)) & 0xffff) + (((int)valueA0B0) & 0xffff) + (((int)d) & 0xffff) + a1b1low + (((int)c[csi + 1]) & 0xffff);
+            c[csi + 1] = (short)(((int)tempInt) & 0xffff);
 
-            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + a1b1low + a0b0high + (((int)(d >> 16)) & 0xFFFF) +
-              a1b1high - (((int)s) & 0xFFFF) + (((int)c[csi + 2]) & 0xFFFF);
-            c[csi + 2] = (short)(((int)tempInt) & 0xFFFF);
+            tempInt = (((int)(tempInt >> 16)) & 0xffff) + a1b1low + a0b0high + (((int)(d >> 16)) & 0xffff) +
+              a1b1high - (((int)s) & 0xffff) + (((int)c[csi + 2]) & 0xffff);
+            c[csi + 2] = (short)(((int)tempInt) & 0xffff);
 
-            tempInt = (((int)(tempInt >> 16)) & 0xFFFF) + a1b1high + (((int)c[csi + 3]) & 0xFFFF);
-            c[csi + 3] = (short)(((int)tempInt) & 0xFFFF);
+            tempInt = (((int)(tempInt >> 16)) & 0xffff) + a1b1high + (((int)c[csi + 3]) & 0xffff);
+            c[csi + 3] = (short)(((int)tempInt) & 0xffff);
             if ((tempInt >> 16) != 0) {
               ++c[csi + 4];
               c[csi + 5] += (short)((c[csi + 4] == 0) ? 1 : 0);
@@ -1710,7 +1710,7 @@ at: http://peteroupc.github.io/CBOR/
           words1,
           words1Start,
           words1Count,
-          words2[words2Start])) & 0xFFFF;
+          words2[words2Start])) & 0xffff;
         remainderArr[remainderStart] = (short)smallRemainder;
         return;
       }
@@ -1744,7 +1744,7 @@ at: http://peteroupc.github.io/CBOR/
           words1Count + 2,
           shiftBits);
 
-        if (tempArr[tempStart + words1Count + 1] == 0 && (((int)tempArr[tempStart + words1Count]) & 0xFFFF) <= 1) {
+        if (tempArr[tempStart + words1Count + 1] == 0 && (((int)tempArr[tempStart + words1Count]) & 0xffff) <= 1) {
           if (quotientArr != null) {
             quotientArr[quotientStart + words1Count - words2Count + 1] = (short)0;
             quotientArr[quotientStart + words1Count - words2Count] = (short)0;
@@ -1795,8 +1795,8 @@ at: http://peteroupc.github.io/CBOR/
             } else {
               tempArr[valueTPstart + n] = (short)0;
               tempArr[valueTPstart + n + 1] = (short)0;
-              quotient0 &= 0xFFFF;
-              quotient1 &= 0xFFFF;
+              quotient0 &= 0xffff;
+              quotient1 &= 0xffff;
               AtomicMultiplyOpt(tempArr, valueTPstart, quotient0, quotient1, tempArr, valueTBstart, 0, n);
               AtomicMultiplyAddOpt(tempArr, valueTPstart, quotient0, quotient1, tempArr, valueTBstart, 2, n);
             }
@@ -1864,7 +1864,7 @@ at: http://peteroupc.github.io/CBOR/
         for (int i = 0; i < len; i += 2, j++) {
           int index = littleEndian ? i : len - 1 - i;
           int index2 = littleEndian ? i + 1 : len - 2 - i;
-          this.reg[j] = (short)(((int)bytes[index]) & 0xFF);
+          this.reg[j] = (short)(((int)bytes[index]) & 0xff);
           if (index2 >= 0 && index2 < len) {
             this.reg[j] |= ((short)(((short)bytes[index2]) << 8));
           }
@@ -1873,16 +1873,16 @@ at: http://peteroupc.github.io/CBOR/
         for (int i = 0; i < len; i += 2, j++) {
           int index = littleEndian ? i : len - 1 - i;
           int index2 = littleEndian ? i + 1 : len - 2 - i;
-          this.reg[j] = (short)(((int)bytes[index]) & 0xFF);
+          this.reg[j] = (short)(((int)bytes[index]) & 0xff);
           if (index2 >= 0 && index2 < len) {
             this.reg[j] |= ((short)(((short)bytes[index2]) << 8));
           } else {
             // sign extend the last byte
-            this.reg[j] |= ((short)0xFF00);
+            this.reg[j] |= ((short)0xff00);
           }
         }
         for (; j < this.reg.length; ++j) {
-          this.reg[j] = ((short)0xFFFF);  // sign extend remaining words
+          this.reg[j] = ((short)0xffff);  // sign extend remaining words
         }
         TwosComplement(this.reg, 0, (int)this.reg.length);
       }
@@ -2025,10 +2025,10 @@ at: http://peteroupc.github.io/CBOR/
         TwosComplement(regdata, 0, (int)regdata.length);
         int byteCount = regdata.length * 2;
         for (int i = regdata.length - 1; i >= 0; --i) {
-          if (regdata[i] == ((short)0xFFFF)) {
+          if (regdata[i] == ((short)0xffff)) {
             byteCount -= 2;
-          } else if ((regdata[i] & 0xFF80) == 0xFF80) {
-            // signed first byte, 0xFF second
+          } else if ((regdata[i] & 0xff80) == 0xff80) {
+            // signed first byte, 0xff second
             --byteCount;
             break;
           } else if ((regdata[i] & 0x8000) == 0x8000) {
@@ -2044,7 +2044,7 @@ at: http://peteroupc.github.io/CBOR/
           byteCount = 1;
         }
         byte[] bytes = new byte[byteCount];
-        bytes[littleEndian ? bytes.length - 1 : 0] = (byte)0xFF;
+        bytes[littleEndian ? bytes.length - 1 : 0] = (byte)0xff;
         byteCount = Math.min(byteCount, regdata.length * 2);
         int j = 0;
         for (int i = 0; i < byteCount; i += 2, j++) {
@@ -2182,13 +2182,13 @@ at: http://peteroupc.github.io/CBOR/
           if (ut < 0) {
             ut = -ut;
           }
-          ret.reg[0] = (short)(ut & 0xFFFF);
+          ret.reg[0] = (short)(ut & 0xffff);
           ut >>= 16;
-          ret.reg[1] = (short)(ut & 0xFFFF);
+          ret.reg[1] = (short)(ut & 0xffff);
           ut >>= 16;
-          ret.reg[2] = (short)(ut & 0xFFFF);
+          ret.reg[2] = (short)(ut & 0xffff);
           ut >>= 16;
-          ret.reg[3] = (short)(ut & 0xFFFF);
+          ret.reg[3] = (short)(ut & 0xffff);
           // at this point, the word count can't
           // be 0 (the check for 0 was already done above)
           ret.wordCount = 4;
@@ -2214,15 +2214,15 @@ at: http://peteroupc.github.io/CBOR/
         throw new ArithmeticException();
       }
       if (c == 2 && (this.reg[1] & 0x8000) != 0) {
-        if (((short)(this.reg[1] & (short)0x7FFF) | this.reg[0]) == 0 && this.negative) {
+        if (((short)(this.reg[1] & (short)0x7fff) | this.reg[0]) == 0 && this.negative) {
           return Integer.MIN_VALUE;
         } else {
           throw new ArithmeticException();
         }
       } else {
-        int ivv = ((int)this.reg[0]) & 0xFFFF;
+        int ivv = ((int)this.reg[0]) & 0xffff;
         if (c > 1) {
-          ivv |= (((int)this.reg[1]) & 0xFFFF) << 16;
+          ivv |= (((int)this.reg[1]) & 0xffff) << 16;
         }
         if (this.negative) {
           ivv = -ivv;
@@ -2283,18 +2283,18 @@ at: http://peteroupc.github.io/CBOR/
           throw new ArithmeticException();
         }
       } else {
-        int tmp = ((int)this.reg[0]) & 0xFFFF;
+        int tmp = ((int)this.reg[0]) & 0xffff;
         long vv = (long)tmp;
         if (count > 1) {
-          tmp = ((int)this.reg[1]) & 0xFFFF;
+          tmp = ((int)this.reg[1]) & 0xffff;
           vv |= (long)tmp << 16;
         }
         if (count > 2) {
-          tmp = ((int)this.reg[2]) & 0xFFFF;
+          tmp = ((int)this.reg[2]) & 0xffff;
           vv |= (long)tmp << 32;
         }
         if (count > 3) {
-          tmp = ((int)this.reg[3]) & 0xFFFF;
+          tmp = ((int)this.reg[3]) & 0xffff;
           vv |= (long)tmp << 48;
         }
         if (this.negative) {
@@ -2425,7 +2425,7 @@ at: http://peteroupc.github.io/CBOR/
     public int getUnsignedBitLength() {
       int wc = this.wordCount;
       if (wc != 0) {
-        int numberValue = ((int)this.reg[wc - 1]) & 0xFFFF;
+        int numberValue = ((int)this.reg[wc - 1]) & 0xffff;
         wc = (wc - 1) << 4;
         if (numberValue == 0) {
           return wc;
@@ -2498,7 +2498,7 @@ at: http://peteroupc.github.io/CBOR/
         if (this.negative && !(wc >= 2 && this.reg[0] != 0)) {
           return this.abs().subtract(BigInteger.ONE).bitLength();
         }
-        int numberValue = ((int)this.reg[wc - 1]) & 0xFFFF;
+        int numberValue = ((int)this.reg[wc - 1]) & 0xffff;
         wc = (wc - 1) << 4;
         if (numberValue == 0) {
           return wc;
@@ -2507,7 +2507,7 @@ at: http://peteroupc.github.io/CBOR/
         {
           if (this.negative) {
             --numberValue;
-            numberValue &= 0xFFFF;
+            numberValue &= 0xffff;
           }
           if ((numberValue >> 8) == 0) {
             numberValue <<= 8;
@@ -2567,32 +2567,32 @@ at: http://peteroupc.github.io/CBOR/
     }
 
     private static int ApproxLogTenOfTwo(int bitlen) {
-      int bitlenLow = bitlen & 0xFFFF;
-      int bitlenHigh = (bitlen >> 16) & 0xFFFF;
+      int bitlenLow = bitlen & 0xffff;
+      int bitlenHigh = (bitlen >> 16) & 0xffff;
       short resultLow = 0;
       short resultHigh = 0;
       {
         int p; short c; int d;
-        p = bitlenLow * 0x84FB; d = ((int)p >> 16) & 0xFFFF; c = (short)d; d = ((int)d >> 16) & 0xFFFF;
-        p = bitlenLow * 0x209A;
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        p = bitlenHigh * 0x84FB;
-        p += ((int)c) & 0xFFFF;
-        d += ((int)p >> 16) & 0xFFFF; c = (short)d; d = ((int)d >> 16) & 0xFFFF;
-        p = bitlenLow * 0x9A;
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        p = bitlenHigh * 0x209A;
-        p += ((int)c) & 0xFFFF; c = (short)p;
-        d += ((int)p >> 16) & 0xFFFF;
-        p = ((int)c) & 0xFFFF; c = (short)p; resultLow = c; c = (short)d; d = ((int)d >> 16) & 0xFFFF;
-        p = bitlenHigh * 0x9A;
-        p += ((int)c) & 0xFFFF;
+        p = bitlenLow * 0x84fb; d = ((int)p >> 16) & 0xffff; c = (short)d; d = ((int)d >> 16) & 0xffff;
+        p = bitlenLow * 0x209a;
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        p = bitlenHigh * 0x84fb;
+        p += ((int)c) & 0xffff;
+        d += ((int)p >> 16) & 0xffff; c = (short)d; d = ((int)d >> 16) & 0xffff;
+        p = bitlenLow * 0x9a;
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        p = bitlenHigh * 0x209a;
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        p = ((int)c) & 0xffff; c = (short)p; resultLow = c; c = (short)d; d = ((int)d >> 16) & 0xffff;
+        p = bitlenHigh * 0x9a;
+        p += ((int)c) & 0xffff;
         resultHigh = (short)p;
-        int result = ((int)resultLow) & 0xFFFF;
-        result |= (((int)resultHigh) & 0xFFFF) << 16;
-        return (result & 0x7FFFFFFF) >> 9;
+        int result = ((int)resultLow) & 0xffff;
+        result |= (((int)resultHigh) & 0xffff) << 16;
+        return (result & 0x7fffffff) >> 9;
       }
     }
 
@@ -2703,7 +2703,7 @@ at: http://peteroupc.github.io/CBOR/
       int i = 0;
       while (wordCount != 0) {
         if (wordCount == 1 || (wordCount == 2 && tempReg[1] == 0)) {
-          int rest = ((int)tempReg[0]) & 0xFFFF;
+          int rest = ((int)tempReg[0]) & 0xffff;
           if (rest >= 10000) {
             i += 5;
           } else if (rest >= 1000) {
@@ -2716,9 +2716,9 @@ at: http://peteroupc.github.io/CBOR/
             ++i;
           }
           break;
-        } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 0x7FFF) {
-          int rest = ((int)tempReg[0]) & 0xFFFF;
-          rest |= (((int)tempReg[1]) & 0xFFFF) << 16;
+        } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 0x7fff) {
+          int rest = ((int)tempReg[0]) & 0xffff;
+          rest |= (((int)tempReg[1]) & 0xffff) << 16;
           if (rest >= 1000000000) {
             i += 10;
           } else if (rest >= 100000000) {
@@ -2749,7 +2749,7 @@ at: http://peteroupc.github.io/CBOR/
           short[] dividend = (tempReg == null) ? this.reg : tempReg;
           // Divide by 10000
           while ((wci--) > 0) {
-            int curValue = ((int)dividend[wci]) & 0xFFFF;
+            int curValue = ((int)dividend[wci]) & 0xffff;
             int currentDividend = ((int)(curValue |
                                                   ((int)remainderShort << 16)));
             quo = currentDividend / 10000;
@@ -2829,7 +2829,7 @@ at: http://peteroupc.github.io/CBOR/
       int i = 0;
       char[] s = new char[(wordCount << 4) + 1];
       while (wordCount != 0) {
-        if (wordCount == 1 && tempReg[0] > 0 && tempReg[0] <= 0x7FFF) {
+        if (wordCount == 1 && tempReg[0] > 0 && tempReg[0] <= 0x7fff) {
           int rest = tempReg[0];
           while (rest != 0) {
             // accurate approximation to rest/10 up to 43698,
@@ -2839,9 +2839,9 @@ at: http://peteroupc.github.io/CBOR/
             rest = newrest;
           }
           break;
-        } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 0x7FFF) {
-          int rest = ((int)tempReg[0]) & 0xFFFF;
-          rest |= (((int)tempReg[1]) & 0xFFFF) << 16;
+        } else if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 0x7fff) {
+          int rest = ((int)tempReg[0]) & 0xffff;
+          rest |= (((int)tempReg[1]) & 0xffff) << 16;
           while (rest != 0) {
             int newrest = rest / 10;
             s[i++] = HexChars.charAt(rest - (newrest * 10));
@@ -2854,7 +2854,7 @@ at: http://peteroupc.github.io/CBOR/
           int quo, rem;
           // Divide by 10000
           while ((wci--) > 0) {
-            int currentDividend = ((int)((((int)tempReg[wci]) & 0xFFFF) |
+            int currentDividend = ((int)((((int)tempReg[wci]) & 0xffff) |
                                                   ((int)remainderShort << 16)));
             quo = currentDividend / 10000;
             tempReg[wci] = ((short)quo);
@@ -2948,8 +2948,8 @@ at: http://peteroupc.github.io/CBOR/
           smallInt += digit;
         } else {
           if (haveSmallInt) {
-            bigint.reg[0] = ((short)(smallInt & 0xFFFF));
-            bigint.reg[1] = ((short)((smallInt >> 16) & 0xFFFF));
+            bigint.reg[0] = ((short)(smallInt & 0xffff));
+            bigint.reg[1] = ((short)((smallInt >> 16) & 0xffff));
             haveSmallInt = false;
           }
           // Multiply by 10
@@ -2958,8 +2958,8 @@ at: http://peteroupc.github.io/CBOR/
           for (int j = 0; j < n; ++j) {
             int p;
             {
-              p = (((int)bigint.reg[j]) & 0xFFFF) * 10;
-              p += ((int)carry) & 0xFFFF;
+              p = (((int)bigint.reg[j]) & 0xffff) * 10;
+              p += ((int)carry) & 0xffff;
               bigint.reg[j] = (short)p;
               carry = (short)(p >> 16);
             }
@@ -2969,7 +2969,7 @@ at: http://peteroupc.github.io/CBOR/
           }
           // Add the parsed digit
           if (digit != 0) {
-            int d = bigint.reg[0] & 0xFFFF;
+            int d = bigint.reg[0] & 0xffff;
             if (d <= 65526) {
               bigint.reg[0] = ((short)(d + digit));
             } else if (Increment(bigint.reg, 0, bigint.reg.length, (short)digit) != 0) {
@@ -2982,8 +2982,8 @@ at: http://peteroupc.github.io/CBOR/
         throw new NumberFormatException("No digits");
       }
       if (haveSmallInt) {
-        bigint.reg[0] = ((short)(smallInt & 0xFFFF));
-        bigint.reg[1] = ((short)((smallInt >> 16) & 0xFFFF));
+        bigint.reg[0] = ((short)(smallInt & 0xffff));
+        bigint.reg[1] = ((short)((smallInt >> 16) & 0xffff));
       }
       bigint.wordCount = bigint.CalcWordCount();
       bigint.negative = bigint.wordCount != 0 && negative;
@@ -3001,49 +3001,49 @@ at: http://peteroupc.github.io/CBOR/
         if (c == (short)0) {
           retSetBit += 16;
         } else {
-          if (((c << 15) & 0xFFFF) != 0) {
+          if (((c << 15) & 0xffff) != 0) {
             return retSetBit + 0;
           }
-          if (((c << 14) & 0xFFFF) != 0) {
+          if (((c << 14) & 0xffff) != 0) {
             return retSetBit + 1;
           }
-          if (((c << 13) & 0xFFFF) != 0) {
+          if (((c << 13) & 0xffff) != 0) {
             return retSetBit + 2;
           }
-          if (((c << 12) & 0xFFFF) != 0) {
+          if (((c << 12) & 0xffff) != 0) {
             return retSetBit + 3;
           }
-          if (((c << 11) & 0xFFFF) != 0) {
+          if (((c << 11) & 0xffff) != 0) {
             return retSetBit + 4;
           }
-          if (((c << 10) & 0xFFFF) != 0) {
+          if (((c << 10) & 0xffff) != 0) {
             return retSetBit + 5;
           }
-          if (((c << 9) & 0xFFFF) != 0) {
+          if (((c << 9) & 0xffff) != 0) {
             return retSetBit + 6;
           }
-          if (((c << 8) & 0xFFFF) != 0) {
+          if (((c << 8) & 0xffff) != 0) {
             return retSetBit + 7;
           }
-          if (((c << 7) & 0xFFFF) != 0) {
+          if (((c << 7) & 0xffff) != 0) {
             return retSetBit + 8;
           }
-          if (((c << 6) & 0xFFFF) != 0) {
+          if (((c << 6) & 0xffff) != 0) {
             return retSetBit + 9;
           }
-          if (((c << 5) & 0xFFFF) != 0) {
+          if (((c << 5) & 0xffff) != 0) {
             return retSetBit + 10;
           }
-          if (((c << 4) & 0xFFFF) != 0) {
+          if (((c << 4) & 0xffff) != 0) {
             return retSetBit + 11;
           }
-          if (((c << 3) & 0xFFFF) != 0) {
+          if (((c << 3) & 0xffff) != 0) {
             return retSetBit + 12;
           }
-          if (((c << 2) & 0xFFFF) != 0) {
+          if (((c << 2) & 0xffff) != 0) {
             return retSetBit + 13;
           }
-          if (((c << 1) & 0xFFFF) != 0) {
+          if (((c << 1) & 0xffff) != 0) {
             return retSetBit + 14;
           }
           return retSetBit + 15;
@@ -3237,7 +3237,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       if (bigintAugend.wordCount == 1 && this.wordCount == 1) {
         if (this.negative == bigintAugend.negative) {
-          int intSum = (((int)this.reg[0]) & 0xFFFF) + (((int)bigintAugend.reg[0]) & 0xFFFF);
+          int intSum = (((int)this.reg[0]) & 0xffff) + (((int)bigintAugend.reg[0]) & 0xffff);
           sum = new BigInteger();
           sum.reg = new short[2];
           sum.reg[0] = ((short)intSum);
@@ -3246,8 +3246,8 @@ at: http://peteroupc.github.io/CBOR/
           sum.negative = this.negative;
           return sum;
         } else {
-          int a = ((int)this.reg[0]) & 0xFFFF;
-          int b = ((int)bigintAugend.reg[0]) & 0xFFFF;
+          int a = ((int)this.reg[0]) & 0xffff;
+          int b = ((int)bigintAugend.reg[0]) & 0xffff;
           if (a == b) {
             return BigInteger.ZERO;
           }
@@ -3498,10 +3498,10 @@ at: http://peteroupc.github.io/CBOR/
     private static void FastDivide(short[] quotientReg, short[] dividendReg, int count, short divisorSmall) {
       int i = count;
       short remainderShort = 0;
-      int idivisor = ((int)divisorSmall) & 0xFFFF;
+      int idivisor = ((int)divisorSmall) & 0xffff;
       int quo, rem;
       while ((i--) > 0) {
-        int currentDividend = ((int)((((int)dividendReg[i]) & 0xFFFF) |
+        int currentDividend = ((int)((((int)dividendReg[i]) & 0xffff) |
                                               ((int)remainderShort << 16)));
         if ((currentDividend >> 31) == 0) {
           quo = currentDividend / idivisor;
@@ -3528,10 +3528,10 @@ at: http://peteroupc.github.io/CBOR/
       short divisorSmall) {
       int i = count;
       short remainderShort = 0;
-      int idivisor = ((int)divisorSmall) & 0xFFFF;
+      int idivisor = ((int)divisorSmall) & 0xffff;
       int quo, rem;
       while ((i--) > 0) {
-        int currentDividend = ((int)((((int)dividendReg[dividendStart + i]) & 0xFFFF) |
+        int currentDividend = ((int)((((int)dividendReg[dividendStart + i]) & 0xffff) |
                                               ((int)remainderShort << 16)));
         if ((currentDividend >> 31) == 0) {
           quo = currentDividend / idivisor;
@@ -3659,7 +3659,7 @@ at: http://peteroupc.github.io/CBOR/
           this.reg,
           0,
           words1Size,
-          divisor.reg[0])) & 0xFFFF;
+          divisor.reg[0])) & 0xffff;
         while (quotient.wordCount != 0 &&
                quotient.reg[quotient.wordCount - 1] == 0) {
           --quotient.wordCount;
@@ -3678,11 +3678,11 @@ at: http://peteroupc.github.io/CBOR/
       if (this.wordCount == 2 && divisor.wordCount == 2 &&
           (this.reg[1] >> 15) != 0 &&
           (divisor.reg[1] >> 15) != 0) {
-        int a = ((int)this.reg[0]) & 0xFFFF;
-        int b = ((int)divisor.reg[0]) & 0xFFFF;
+        int a = ((int)this.reg[0]) & 0xffff;
+        int b = ((int)divisor.reg[0]) & 0xffff;
         {
-          a |= (((int)this.reg[1]) & 0xFFFF) << 16;
-          b |= (((int)divisor.reg[1]) & 0xFFFF) << 16;
+          a |= (((int)this.reg[1]) & 0xffff) << 16;
+          b |= (((int)divisor.reg[1]) & 0xffff) << 16;
           int quo = a / b;
           if (this.negative) {
             quo = -quo;
@@ -3780,7 +3780,7 @@ at: http://peteroupc.github.io/CBOR/
       }
       if (words2Size == 1) {
         short shortRemainder = FastRemainder(this.reg, this.wordCount, divisor.reg[0]);
-        int smallRemainder = ((int)shortRemainder) & 0xFFFF;
+        int smallRemainder = ((int)shortRemainder) & 0xffff;
         if (this.negative) {
           smallRemainder = -smallRemainder;
         }
@@ -3860,8 +3860,8 @@ at: http://peteroupc.github.io/CBOR/
           short[] words1 = this.reg;
           short[] words2 = other.reg;
           while ((size--) != 0) {
-            int an = ((int)words1[size]) & 0xFFFF;
-            int bn = ((int)words2[size]) & 0xFFFF;
+            int an = ((int)words1[size]) & 0xffff;
+            int bn = ((int)words2[size]) & 0xffff;
             if (an > bn) {
               return (sa > 0) ? 1 : -1;
             } else if (an < bn) {

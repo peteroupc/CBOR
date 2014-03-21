@@ -59,7 +59,7 @@ import com.upokecenter.util.*;
     public void TestShiftRight() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
-        int smallint = r.NextValue(0x7FFFFFFF);
+        int smallint = r.NextValue(0x7fffffff);
         BigInteger bigintA = BigInteger.valueOf(smallint);
         String str = bigintA.toString();
         for (int j = 32; j < 80; ++j) {
@@ -675,7 +675,7 @@ bigintRem=divrem[1]; }
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         while (true) {
-          prime = rand.NextValue(0x7FFFFFFF);
+          prime = rand.NextValue(0x7fffffff);
           prime |= 1;
           if (IsPrime(prime)) {
             break;

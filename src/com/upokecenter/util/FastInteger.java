@@ -39,15 +39,15 @@ at: http://peteroupc.github.io/CBOR/
         mnum.wordCount = newWordCount;
         {
           for (int i = 0; i < len; i += 4) {
-            int x = ((int)bytes[i]) & 0xFF;
+            int x = ((int)bytes[i]) & 0xff;
             if (i + 1 < len) {
-              x |= (((int)bytes[i + 1]) & 0xFF) << 8;
+              x |= (((int)bytes[i + 1]) & 0xff) << 8;
             }
             if (i + 2 < len) {
-              x |= (((int)bytes[i + 2]) & 0xFF) << 16;
+              x |= (((int)bytes[i + 2]) & 0xff) << 16;
             }
             if (i + 3 < len) {
-              x |= (((int)bytes[i + 3]) & 0xFF) << 24;
+              x |= (((int)bytes[i + 3]) & 0xff) << 24;
             }
             mnum.data[i >> 2] = x;
           }
@@ -92,10 +92,10 @@ at: http://peteroupc.github.io/CBOR/
         }
         byte[] bytes = new byte[(this.wordCount * 4) + 1];
         for (int i = 0; i < this.wordCount; ++i) {
-          bytes[i * 4] = (byte)(this.data[i] & 0xFF);
-          bytes[(i * 4) + 1] = (byte)((this.data[i] >> 8) & 0xFF);
-          bytes[(i * 4) + 2] = (byte)((this.data[i] >> 16) & 0xFF);
-          bytes[(i * 4) + 3] = (byte)((this.data[i] >> 24) & 0xFF);
+          bytes[i * 4] = (byte)(this.data[i] & 0xff);
+          bytes[(i * 4) + 1] = (byte)((this.data[i] >> 8) & 0xff);
+          bytes[(i * 4) + 2] = (byte)((this.data[i] >> 16) & 0xff);
+          bytes[(i * 4) + 3] = (byte)((this.data[i] >> 24) & 0xff);
         }
         bytes[bytes.length - 1] = (byte)0;
         return BigInteger.fromByteArray((byte[])bytes,true);
@@ -544,10 +544,10 @@ at: http://peteroupc.github.io/CBOR/
       }
       byte[] bytes = new byte[(wordCount * 4) + 1];
       for (int i = 0; i < wordCount; ++i) {
-        bytes[(i * 4) + 0] = (byte)(words[i] & 0xFF);
-        bytes[(i * 4) + 1] = (byte)((words[i] >> 8) & 0xFF);
-        bytes[(i * 4) + 2] = (byte)((words[i] >> 16) & 0xFF);
-        bytes[(i * 4) + 3] = (byte)((words[i] >> 24) & 0xFF);
+        bytes[(i * 4) + 0] = (byte)(words[i] & 0xff);
+        bytes[(i * 4) + 1] = (byte)((words[i] >> 8) & 0xff);
+        bytes[(i * 4) + 2] = (byte)((words[i] >> 16) & 0xff);
+        bytes[(i * 4) + 3] = (byte)((words[i] >> 24) & 0xff);
       }
       bytes[bytes.length - 1] = (byte)0;
       return BigInteger.fromByteArray((byte[])bytes,true);

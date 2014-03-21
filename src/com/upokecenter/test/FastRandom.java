@@ -32,9 +32,9 @@ package com.upokecenter.test;
       int w = this.w, z = this.z;
       // Use George Marsaglia's multiply-with-carry
       // algorithm.
-      this.z = z = ((36969 * (z & 65535)) + ((z >> 16) & 0xFFFF));
-      this.w = w = ((18000 * (w & 65535)) + ((z >> 16) & 0xFFFF));
-      return ((z << 16) | (w & 65535)) & 0x7FFFFFFF;
+      this.z = z = ((36969 * (z & 65535)) + ((z >> 16) & 0xffff));
+      this.w = w = ((18000 * (w & 65535)) + ((z >> 16) & 0xffff));
+      return ((z << 16) | (w & 65535)) & 0x7fffffff;
     }
 
     /**

@@ -44,7 +44,7 @@ namespace PeterO.Cbor
         long x = 0;
         for (int i = 0; i < data.Length; ++i) {
           x <<= 8;
-          x |= ((long)data[i]) & 0xFF;
+          x |= ((long)data[i]) & 0xff;
         }
         if (negative) {
           x = -x;
@@ -67,12 +67,12 @@ namespace PeterO.Cbor
       for (int i = 0; i < data.Length; ++i) {
         bytes[i] = data[data.Length - 1 - i];
         if (negative) {
-          bytes[i] = (byte)((~((int)bytes[i])) & 0xFF);
+          bytes[i] = (byte)((~((int)bytes[i])) & 0xff);
         }
       }
       if (extended) {
         if (negative) {
-          bytes[bytes.Length - 1] = (byte)0xFF;
+          bytes[bytes.Length - 1] = (byte)0xff;
         } else {
           bytes[bytes.Length - 1] = 0;
         }

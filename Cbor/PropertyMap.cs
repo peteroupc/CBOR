@@ -131,14 +131,14 @@ namespace PeterO.Cbor
       if (t.Equals(typeof(ulong))) {
         byte[] data = new byte[13];
         ulong uvalue = Convert.ToUInt64(value);
-        data[0] = (byte)(uvalue & 0xFF);
-        data[1] = (byte)((uvalue >> 8) & 0xFF);
-        data[2] = (byte)((uvalue >> 16) & 0xFF);
-        data[3] = (byte)((uvalue >> 24) & 0xFF);
-        data[4] = (byte)((uvalue >> 32) & 0xFF);
-        data[5] = (byte)((uvalue >> 40) & 0xFF);
-        data[6] = (byte)((uvalue >> 48) & 0xFF);
-        data[7] = (byte)((uvalue >> 56) & 0xFF);
+        data[0] = (byte)(uvalue & 0xff);
+        data[1] = (byte)((uvalue >> 8) & 0xff);
+        data[2] = (byte)((uvalue >> 16) & 0xff);
+        data[3] = (byte)((uvalue >> 24) & 0xff);
+        data[4] = (byte)((uvalue >> 32) & 0xff);
+        data[5] = (byte)((uvalue >> 40) & 0xff);
+        data[6] = (byte)((uvalue >> 48) & 0xff);
+        data[7] = (byte)((uvalue >> 56) & 0xff);
         data[8] = (byte)0;
         return BigInteger.fromByteArray(data, true);
       } else if (t.Equals(typeof(long))) {

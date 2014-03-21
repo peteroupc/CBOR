@@ -62,13 +62,13 @@ namespace PeterO.Cbor {
       int b = 0;
       int c = 0;
       for (int i = 0; i < Math.Min(4, data.Length); ++i) {
-        a |= (((int)data[i]) & 0xFF) << (i * 8);
+        a |= (((int)data[i]) & 0xff) << (i * 8);
       }
       for (int i = 4; i < Math.Min(8, data.Length); ++i) {
-        b |= (((int)data[i]) & 0xFF) << ((i - 4) * 8);
+        b |= (((int)data[i]) & 0xff) << ((i - 4) * 8);
       }
       for (int i = 8; i < Math.Min(12, data.Length); ++i) {
-        c |= (((int)data[i]) & 0xFF) << ((i - 8) * 8);
+        c |= (((int)data[i]) & 0xff) << ((i - 8) * 8);
       }
       int d = scale << 16;
       if (neg) {
@@ -97,20 +97,20 @@ namespace PeterO.Cbor {
     private static BigInteger DecimalToBigInteger(decimal dec) {
       int[] bits = Decimal.GetBits(dec);
       byte[] data = new byte[13];
-      data[0] = (byte)(bits[0] & 0xFF);
-      data[1] = (byte)((bits[0] >> 8) & 0xFF);
-      data[2] = (byte)((bits[0] >> 16) & 0xFF);
-      data[3] = (byte)((bits[0] >> 24) & 0xFF);
-      data[4] = (byte)(bits[1] & 0xFF);
-      data[5] = (byte)((bits[1] >> 8) & 0xFF);
-      data[6] = (byte)((bits[1] >> 16) & 0xFF);
-      data[7] = (byte)((bits[1] >> 24) & 0xFF);
-      data[8] = (byte)(bits[2] & 0xFF);
-      data[9] = (byte)((bits[2] >> 8) & 0xFF);
-      data[10] = (byte)((bits[2] >> 16) & 0xFF);
-      data[11] = (byte)((bits[2] >> 24) & 0xFF);
+      data[0] = (byte)(bits[0] & 0xff);
+      data[1] = (byte)((bits[0] >> 8) & 0xff);
+      data[2] = (byte)((bits[0] >> 16) & 0xff);
+      data[3] = (byte)((bits[0] >> 24) & 0xff);
+      data[4] = (byte)(bits[1] & 0xff);
+      data[5] = (byte)((bits[1] >> 8) & 0xff);
+      data[6] = (byte)((bits[1] >> 16) & 0xff);
+      data[7] = (byte)((bits[1] >> 24) & 0xff);
+      data[8] = (byte)(bits[2] & 0xff);
+      data[9] = (byte)((bits[2] >> 8) & 0xff);
+      data[10] = (byte)((bits[2] >> 16) & 0xff);
+      data[11] = (byte)((bits[2] >> 24) & 0xff);
       data[12] = 0;
-      int scale = (bits[3] >> 16) & 0xFF;
+      int scale = (bits[3] >> 16) & 0xff;
       BigInteger bigint = new BigInteger((byte[])data);
       for (int i = 0; i < scale; ++i) {
         bigint /= (BigInteger)10;
@@ -191,10 +191,10 @@ namespace PeterO.Cbor {
       int a = 0;
       int b = 0;
       for (int i = 0; i < Math.Min(4, data.Length); ++i) {
-        a |= (((int)data[i]) & 0xFF) << (i * 8);
+        a |= (((int)data[i]) & 0xff) << (i * 8);
       }
       for (int i = 4; i < Math.Min(8, data.Length); ++i) {
-        b |= (((int)data[i]) & 0xFF) << ((i - 4) * 8);
+        b |= (((int)data[i]) & 0xff) << ((i - 4) * 8);
       }
       unchecked {
         ulong ret = (ulong)a;
@@ -226,14 +226,14 @@ namespace PeterO.Cbor {
         Write((long)value, stream);
       } else {
         stream.WriteByte((byte)27);
-        stream.WriteByte((byte)((value >> 56) & 0xFF));
-        stream.WriteByte((byte)((value >> 48) & 0xFF));
-        stream.WriteByte((byte)((value >> 40) & 0xFF));
-        stream.WriteByte((byte)((value >> 32) & 0xFF));
-        stream.WriteByte((byte)((value >> 24) & 0xFF));
-        stream.WriteByte((byte)((value >> 16) & 0xFF));
-        stream.WriteByte((byte)((value >> 8) & 0xFF));
-        stream.WriteByte((byte)(value & 0xFF));
+        stream.WriteByte((byte)((value >> 56) & 0xff));
+        stream.WriteByte((byte)((value >> 48) & 0xff));
+        stream.WriteByte((byte)((value >> 40) & 0xff));
+        stream.WriteByte((byte)((value >> 32) & 0xff));
+        stream.WriteByte((byte)((value >> 24) & 0xff));
+        stream.WriteByte((byte)((value >> 16) & 0xff));
+        stream.WriteByte((byte)((value >> 8) & 0xff));
+        stream.WriteByte((byte)(value & 0xff));
       }
     }
 
@@ -253,22 +253,22 @@ namespace PeterO.Cbor {
       } else {
         int[] bits = Decimal.GetBits(value);
         byte[] data = new byte[13];
-        data[0] = (byte)(bits[0] & 0xFF);
-        data[1] = (byte)((bits[0] >> 8) & 0xFF);
-        data[2] = (byte)((bits[0] >> 16) & 0xFF);
-        data[3] = (byte)((bits[0] >> 24) & 0xFF);
-        data[4] = (byte)(bits[1] & 0xFF);
-        data[5] = (byte)((bits[1] >> 8) & 0xFF);
-        data[6] = (byte)((bits[1] >> 16) & 0xFF);
-        data[7] = (byte)((bits[1] >> 24) & 0xFF);
-        data[8] = (byte)(bits[2] & 0xFF);
-        data[9] = (byte)((bits[2] >> 8) & 0xFF);
-        data[10] = (byte)((bits[2] >> 16) & 0xFF);
-        data[11] = (byte)((bits[2] >> 24) & 0xFF);
+        data[0] = (byte)(bits[0] & 0xff);
+        data[1] = (byte)((bits[0] >> 8) & 0xff);
+        data[2] = (byte)((bits[0] >> 16) & 0xff);
+        data[3] = (byte)((bits[0] >> 24) & 0xff);
+        data[4] = (byte)(bits[1] & 0xff);
+        data[5] = (byte)((bits[1] >> 8) & 0xff);
+        data[6] = (byte)((bits[1] >> 16) & 0xff);
+        data[7] = (byte)((bits[1] >> 24) & 0xff);
+        data[8] = (byte)(bits[2] & 0xff);
+        data[9] = (byte)((bits[2] >> 8) & 0xff);
+        data[10] = (byte)((bits[2] >> 16) & 0xff);
+        data[11] = (byte)((bits[2] >> 24) & 0xff);
         data[12] = 0;
         BigInteger mantissa = new BigInteger((byte[])data);
         bool negative = (bits[3] >> 31) != 0;
-        int scale = (bits[3] >> 16) & 0xFF;
+        int scale = (bits[3] >> 16) & 0xff;
         if (negative) {
           mantissa = -mantissa;
         }
@@ -306,14 +306,14 @@ namespace PeterO.Cbor {
     private static BigInteger UInt64ToBigInteger(ulong value) {
       byte[] data = new byte[9];
       ulong uvalue = value;
-      data[0] = (byte)(uvalue & 0xFF);
-      data[1] = (byte)((uvalue >> 8) & 0xFF);
-      data[2] = (byte)((uvalue >> 16) & 0xFF);
-      data[3] = (byte)((uvalue >> 24) & 0xFF);
-      data[4] = (byte)((uvalue >> 32) & 0xFF);
-      data[5] = (byte)((uvalue >> 40) & 0xFF);
-      data[6] = (byte)((uvalue >> 48) & 0xFF);
-      data[7] = (byte)((uvalue >> 56) & 0xFF);
+      data[0] = (byte)(uvalue & 0xff);
+      data[1] = (byte)((uvalue >> 8) & 0xff);
+      data[2] = (byte)((uvalue >> 16) & 0xff);
+      data[3] = (byte)((uvalue >> 24) & 0xff);
+      data[4] = (byte)((uvalue >> 32) & 0xff);
+      data[5] = (byte)((uvalue >> 40) & 0xff);
+      data[6] = (byte)((uvalue >> 48) & 0xff);
+      data[7] = (byte)((uvalue >> 56) & 0xff);
       data[8] = (byte)0;
       return BigInteger.fromByteArray(data, true);
     }

@@ -47,7 +47,7 @@ import com.upokecenter.util.*;
         long x = 0;
         for (int i = 0; i < data.length; ++i) {
           x <<= 8;
-          x |= ((long)data[i]) & 0xFF;
+          x |= ((long)data[i]) & 0xff;
         }
         if (negative) {
           x = -x;
@@ -70,12 +70,12 @@ import com.upokecenter.util.*;
       for (int i = 0; i < data.length; ++i) {
         bytes[i] = data[data.length - 1 - i];
         if (negative) {
-          bytes[i] = (byte)((~((int)bytes[i])) & 0xFF);
+          bytes[i] = (byte)((~((int)bytes[i])) & 0xff);
         }
       }
       if (extended) {
         if (negative) {
-          bytes[bytes.length - 1] = (byte)0xFF;
+          bytes[bytes.length - 1] = (byte)0xff;
         } else {
           bytes[bytes.length - 1] = 0;
         }

@@ -165,7 +165,7 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0xA0 });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0xa0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -173,7 +173,7 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0xE0 });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0xe0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -214,7 +214,7 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0xA0 });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0xa0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -222,7 +222,7 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0xE0 });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0xe0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -271,13 +271,13 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0x01, 0x01, 0xFF });
+        CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0x01, 0x01, 0xff });
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0x01, 0xFF });
+        CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0x01, 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -285,7 +285,7 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0xFF });
+        CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -293,19 +293,19 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0x00, 0xFF });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0x00, 0xff });
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0x00, 0xFF });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0x00, 0xff });
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0xFF });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -313,7 +313,7 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0xFF });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -321,7 +321,7 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0xFF });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -329,7 +329,7 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0xFF });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0xff });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -345,7 +345,7 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0xA0 });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0xa0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -353,7 +353,7 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0xE0 });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0xe0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -410,7 +410,7 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0xA0 });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0xa0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -418,7 +418,7 @@ namespace Test
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0xE0 });
+        CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0xe0 });
         Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
@@ -460,7 +460,7 @@ namespace Test
         new byte[] { 0xd9,
         1,
         0,
-        0x9F,
+        0x9f,
         0x64,
         0x61,
         0x62,
@@ -486,14 +486,14 @@ namespace Test
         0xd8,
         0x19,
         0x01,
-        0xFF });
+        0xff });
       string expected="[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
       cbor = CBORObject.DecodeFromBytes(
         new byte[] { 0xd9,
         1,
         0,
-        0x9F,
+        0x9f,
         0x64,
         0x61,
         0x62,
@@ -522,7 +522,7 @@ namespace Test
         0xd8,
         0x19,
         0x01,
-        0xFF });
+        0xff });
       expected="[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
     }

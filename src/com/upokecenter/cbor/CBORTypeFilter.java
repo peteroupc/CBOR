@@ -47,7 +47,7 @@ import com.upokecenter.util.*;
       CBORTypeFilter filter = this.Copy();
       filter.any = true;
       filter.anyArrayLength = true;
-      filter.types = 0xFF;
+      filter.types = 0xff;
       return filter;
     }
 

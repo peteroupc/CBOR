@@ -60,7 +60,7 @@ namespace Test
     public void TestShiftRight() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
-        int smallint = r.NextValue(0x7FFFFFFF);
+        int smallint = r.NextValue(0x7fffffff);
         BigInteger bigintA = (BigInteger)smallint;
         string str = bigintA.ToString();
         for (int j = 32; j < 80; ++j) {
@@ -667,7 +667,7 @@ namespace Test
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         while (true) {
-          prime = rand.NextValue(0x7FFFFFFF);
+          prime = rand.NextValue(0x7fffffff);
           prime |= 1;
           if (IsPrime(prime)) {
             break;
