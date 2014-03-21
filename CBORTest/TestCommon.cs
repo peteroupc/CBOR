@@ -285,12 +285,8 @@ namespace Test {
 
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (o2.Type == CBORType.Map && o.Type == CBORType.Map) {
-        // Skip because key order may be different
-      } else {
-        if (!o.ToString().Equals(o2.ToString())) {
-          Assert.AreEqual(o.ToString(), o2.ToString(), "o2 is not equal to o");
-        }
+      if (!o.ToString().Equals(o2.ToString())) {
+        Assert.AreEqual(o.ToString(), o2.ToString(), "o2 is not equal to o");
       }
       TestNumber(o);
       AssertEqualsHashCode(o, o2);

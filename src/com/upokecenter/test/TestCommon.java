@@ -266,12 +266,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (o2.getType() == CBORType.Map && o.getType() == CBORType.Map) {
-        // Skip because key order may be different
-      } else {
-        if (!o.toString().equals(o2.toString())) {
-          Assert.assertEquals("o2 is not equal to o",o.toString(),o2.toString());
-        }
+      if (!o.toString().equals(o2.toString())) {
+        Assert.assertEquals("o2 is not equal to o",o.toString(),o2.toString());
       }
       TestNumber(o);
       AssertEqualsHashCode(o, o2);

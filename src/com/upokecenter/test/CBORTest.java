@@ -168,6 +168,9 @@ import com.upokecenter.cbor.*;
       for (int i = 0; i < 15; ++i) {
         CBORObject o;
         //        System.out.println("tag "+tag+" "+i);
+        if (tag == 0 || tag == 1) {
+          tag = 999;
+        }
         if (tag == 2 ||tag == 3) {
           o = RandomCBORByteStringShort(rand);
         } else if (tag == 4 || tag == 5) {
@@ -622,6 +625,18 @@ import com.upokecenter.cbor.*;
       AddSubCompare(
         CBORObject.DecodeFromBytes(new byte[] {  (byte)0xC5, (byte)0x82, 0x38, 0x7D, 0x3A, 0x06, (byte)0xBC, (byte)0xD5, (byte)0xB8  }),
         CBORObject.DecodeFromBytes(new byte[] {  0x38, 0x5C  }));
+      TestCommon.AssertRoundTrip(
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xDA, 0x00, 0x1D, (byte)0xDB, 0x03, (byte)0xFB, (byte)0xFF, (byte)0xF0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  }));
+      CBORObject cbor = CBORObject.FromObjectAndTag(Double.NEGATIVE_INFINITY, 1956611);
+      TestCommon.AssertRoundTrip(cbor);
+      cbor = CBORObject.FromObjectAndTag(CBORObject.FromObject(Double.NEGATIVE_INFINITY), 1956611);
+      TestCommon.AssertRoundTrip(cbor);
+      cbor = CBORObject.FromObjectAndTag(CBORObject.FromObject(ExtendedFloat.NegativeInfinity), 1956611);
+      TestCommon.AssertRoundTrip(cbor);
+      cbor = CBORObject.FromObjectAndTag(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity), 1956611);
+      TestCommon.AssertRoundTrip(cbor);
+      cbor = CBORObject.FromObjectAndTag(CBORObject.FromObject(ExtendedRational.NegativeInfinity), 1956611);
+      TestCommon.AssertRoundTrip(cbor);
     }
 
     @Test
@@ -674,14 +689,11 @@ import com.upokecenter.cbor.*;
         CBORObject o1 = RandomCBORObject(r);
         CBORObject o2 = RandomCBORObject(r);
         /*
-        System.Threading.Thread thread=new System.Threading.Thread(
-          ()=>
-          CompareTestReciprocal(o1, o2)
-);
-        thread.Start();
-        if (!thread.Join(5000)) {
+        System.Threading.Thread thread=new Thread(new Runnable(){ public void run() { System.Threading. }});
+        thread.start();
+        if (!thread.join(5000)) {
           String bas = ToByteArrayString(o1)+".compareTo("+ToByteArrayString(o2)+");";
-          thread.Abort();
+          @SuppressWarnings("deprecation") thread.stop();
           if (bas.length() <= 2000) {
             System.out.println(bas);
           }
@@ -689,7 +701,7 @@ import com.upokecenter.cbor.*;
             badstr = bas;
           }
         }
-        */
+         */
         CompareTestReciprocal(o1, o2);
       }
       if (badstr != null) {
@@ -1240,16 +1252,16 @@ import com.upokecenter.cbor.*;
       String badstr = null;
       int count = 1000;
       for (int i = 0; i < count; ++i) {
-        //System.out.println("=="+i+"==");
-        obj = RandomCBORObject(rand);
-        System.Threading.Thread thread=new System.Threading.Thread(
-          ()=>
-          TestCommon.AssertRoundTrip(obj)
-);
-        thread.Start();
-        if (!thread.Join(5000)) {
+        //if (i%200 == 0) {
+  //  System.out.println("=="+i+"==");
+}
+          obj = RandomCBORObject(rand);
+        System.Threading.Thread thread=new Thread(new Runnable(){ public void run() { System.Threading. }});
+        thread.start();
+        if (!thread.join(5000)) {
           String bas = ToByteArrayString(obj);
-          thread.Abort();
+          @SuppressWarnings("deprecation") thread.stop();
+          Assert.fail(bas);
           System.out.println(bas.length());
           if (badstr == null || bas.length()<badstr.length()) {
             badstr = bas;
