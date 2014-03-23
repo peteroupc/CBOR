@@ -2942,7 +2942,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
-    private static CBORObject NextJSONValue(CharacterReader reader, int firstChar, boolean noDuplicates, int[] nextChar) {
+    private static CBORObject NextJSONValue(CharacterReader reader, int firstChar, boolean noDuplicates, int[] nextChar, int depth) {
       String str;
       int c = firstChar;
       CBORObject obj = null;
@@ -2959,12 +2959,12 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         return obj;
       } else if (c == '{') {
         // Parse an object
-        obj = ParseJSONObject(reader, noDuplicates);
+        obj = ParseJSONObject(reader, noDuplicates, depth + 1);
         nextChar[0] = SkipWhitespaceJSON(reader);
         return obj;
       } else if (c == '[') {
         // Parse an array
-        obj = ParseJSONArray(reader, noDuplicates);
+        obj = ParseJSONArray(reader, noDuplicates, depth + 1);
         nextChar[0] = SkipWhitespaceJSON(reader);
         return obj;
       } else if (c == 't') {
@@ -3022,7 +3022,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       CharacterReader reader,
       boolean noDuplicates,
       boolean skipByteOrderMark,
-      boolean objectOrArrayOnly) {
+      boolean objectOrArrayOnly,
+      int depth) {
+      if (depth>1000) {
+        throw reader.NewError("Too deeply nested");
+      }
       int c;
       c = skipByteOrderMark ?
         SkipWhitespaceOrByteOrderMarkJSON(reader) :
@@ -3031,20 +3035,23 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         throw reader.NewError("JSON Object began with a byte order mark (U+FEFF)");
       }
       if (c == '[') {
-        return ParseJSONArray(reader, noDuplicates);
+        return ParseJSONArray(reader, noDuplicates, depth);
       }
       if (c == '{') {
-        return ParseJSONObject(reader, noDuplicates);
+        return ParseJSONObject(reader, noDuplicates, depth);
       }
       if (objectOrArrayOnly) {
         throw reader.NewError("A JSON Object must begin with '{' or '['");
       }
       int[] nextChar = new int[1];
-      return NextJSONValue(reader, c, noDuplicates, nextChar);
+      return NextJSONValue(reader, c, noDuplicates, nextChar, depth);
     }
 
-    private static CBORObject ParseJSONObject(CharacterReader reader, boolean noDuplicates) {
+    private static CBORObject ParseJSONObject(CharacterReader reader, boolean noDuplicates, int depth) {
       // Assumes that the last character read was '{'
+      if (depth>1000) {
+        throw reader.NewError("Too deeply nested");
+      }
       int c;
       CBORObject key;
       CBORObject obj;
@@ -3086,7 +3093,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           throw reader.NewError("Expected a ':' after a key");
         }
         // NOTE: Will overwrite existing value
-        myHashMap.put(key,NextJSONValue(reader, SkipWhitespaceJSON(reader), noDuplicates, nextchar));
+        myHashMap.put(key,NextJSONValue(reader, SkipWhitespaceJSON(reader), noDuplicates, nextchar, depth));
         switch (nextchar[0]) {
           case ',':
             seenComma = true;
@@ -3099,11 +3106,14 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
-    private static CBORObject ParseJSONArray(CharacterReader reader, boolean noDuplicates) {
+    private static CBORObject ParseJSONArray(CharacterReader reader, boolean noDuplicates, int depth) {
+      // Assumes that the last character read was '['
+      if (depth>1000) {
+        throw reader.NewError("Too deeply nested");
+      }
       ArrayList<CBORObject> myArrayList=new ArrayList<CBORObject>();
       boolean seenComma = false;
       int[] nextchar = new int[1];
-      // This method assumes that the last character read was '['
       while (true) {
         int c = SkipWhitespaceJSON(reader);
         if (c == ']') {
@@ -3116,7 +3126,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           // Situation like '[,0,1,2]' or '[0,,1]'
           throw reader.NewError("Empty array element");
         } else {
-          myArrayList.add(NextJSONValue(reader, c, noDuplicates, nextchar));
+          myArrayList.add(NextJSONValue(reader, c, noDuplicates, nextchar, depth));
           c = nextchar[0];
         }
         switch (c) {
@@ -3144,7 +3154,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      */
     public static CBORObject FromJSONString(String str) {
       CharacterReader reader = new CharacterReader(str);
-      CBORObject obj = ParseJSONValue(reader, false, false, false);
+      CBORObject obj = ParseJSONValue(reader, false, false, false, 0);
       if (SkipWhitespaceJSON(reader) != -1) {
         throw reader.NewError("End of String not reached");
       }
@@ -3170,7 +3180,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     public static CBORObject ReadJSON(InputStream stream) throws IOException {
       CharacterReader reader = new CharacterReader(stream);
       try {
-        CBORObject obj = ParseJSONValue(reader, false, true, false);
+        CBORObject obj = ParseJSONValue(reader, false, true, false, 0);
         if (SkipWhitespaceJSON(reader) != -1) {
           throw reader.NewError("End of data stream not reached");
         }
@@ -4653,9 +4663,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         }
       } else if (type == 4) {  // Array
         CBORObject cbor = NewArray();
-        int vtindex = 0;
+        int vtindex = 1;
         if (additional == 31) {
           while (true) {
+            if (filter != null && !filter.ArrayIndexAllowed(vtindex)) {
+              throw new CBORException("Array is too long");
+            }
             CBORObject o = Read(
               s,
               depth + 1,
@@ -4666,14 +4679,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             if (o == null) {
               break;
             }
-            if (filter != null && !filter.ArrayIndexAllowed(vtindex)) {
-              throw new CBORException("Array is too long");
-            }
             cbor.Add(o);
             ++vtindex;
-          }
-          if (filter != null && !filter.ArrayLengthMatches(cbor.size())) {
-            throw new CBORException("Array has an invalid length");
           }
           return cbor;
         } else {
@@ -4687,7 +4694,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
                                     " is bigger than supported");
           }
           if (filter != null && !filter.ArrayLengthMatches(uadditional)) {
-            throw new CBORException("Array has an invalid length");
+            throw new CBORException("Array is too long");
           }
           for (long i = 0; i < uadditional; ++i) {
             cbor.Add(
