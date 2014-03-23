@@ -2907,7 +2907,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static CBORObject NextJSONValue(CharacterReader reader, int firstChar, bool noDuplicates, int[] nextChar) {
+    private static CBORObject NextJSONValue(CharacterReader reader, int firstChar, bool noDuplicates, int[] nextChar, int depth) {
       string str;
       int c = firstChar;
       CBORObject obj = null;
@@ -2924,12 +2924,12 @@ namespace PeterO.Cbor {
         return obj;
       } else if (c == '{') {
         // Parse an object
-        obj = ParseJSONObject(reader, noDuplicates);
+        obj = ParseJSONObject(reader, noDuplicates, depth + 1);
         nextChar[0] = SkipWhitespaceJSON(reader);
         return obj;
       } else if (c == '[') {
         // Parse an array
-        obj = ParseJSONArray(reader, noDuplicates);
+        obj = ParseJSONArray(reader, noDuplicates, depth + 1);
         nextChar[0] = SkipWhitespaceJSON(reader);
         return obj;
       } else if (c == 't') {
@@ -2987,7 +2987,11 @@ namespace PeterO.Cbor {
       CharacterReader reader,
       bool noDuplicates,
       bool skipByteOrderMark,
-      bool objectOrArrayOnly) {
+      bool objectOrArrayOnly,
+      int depth) {
+      if (depth>1000) {
+        throw reader.NewError("Too deeply nested");
+      }
       int c;
       c = skipByteOrderMark ?
         SkipWhitespaceOrByteOrderMarkJSON(reader) :
@@ -2996,20 +3000,23 @@ namespace PeterO.Cbor {
         throw reader.NewError("JSON object began with a byte order mark (U+FEFF)");
       }
       if (c == '[') {
-        return ParseJSONArray(reader, noDuplicates);
+        return ParseJSONArray(reader, noDuplicates, depth);
       }
       if (c == '{') {
-        return ParseJSONObject(reader, noDuplicates);
+        return ParseJSONObject(reader, noDuplicates, depth);
       }
       if (objectOrArrayOnly) {
         throw reader.NewError("A JSON object must begin with '{' or '['");
       }
       int[] nextChar = new int[1];
-      return NextJSONValue(reader, c, noDuplicates, nextChar);
+      return NextJSONValue(reader, c, noDuplicates, nextChar, depth);
     }
 
-    private static CBORObject ParseJSONObject(CharacterReader reader, bool noDuplicates) {
+    private static CBORObject ParseJSONObject(CharacterReader reader, bool noDuplicates, int depth) {
       // Assumes that the last character read was '{'
+      if (depth>1000) {
+        throw reader.NewError("Too deeply nested");
+      }
       int c;
       CBORObject key;
       CBORObject obj;
@@ -3051,7 +3058,7 @@ namespace PeterO.Cbor {
           throw reader.NewError("Expected a ':' after a key");
         }
         // NOTE: Will overwrite existing value
-        myHashMap[key] = NextJSONValue(reader, SkipWhitespaceJSON(reader), noDuplicates, nextchar);
+        myHashMap[key] = NextJSONValue(reader, SkipWhitespaceJSON(reader), noDuplicates, nextchar, depth);
         switch (nextchar[0]) {
           case ',':
             seenComma = true;
@@ -3064,11 +3071,14 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static CBORObject ParseJSONArray(CharacterReader reader, bool noDuplicates) {
+    private static CBORObject ParseJSONArray(CharacterReader reader, bool noDuplicates, int depth) {
+      // Assumes that the last character read was '['
+      if (depth>1000) {
+        throw reader.NewError("Too deeply nested");
+      }
       var myArrayList = new List<CBORObject>();
       bool seenComma = false;
       int[] nextchar = new int[1];
-      // This method assumes that the last character read was '['
       while (true) {
         int c = SkipWhitespaceJSON(reader);
         if (c == ']') {
@@ -3081,7 +3091,7 @@ namespace PeterO.Cbor {
           // Situation like '[,0,1,2]' or '[0,,1]'
           throw reader.NewError("Empty array element");
         } else {
-          myArrayList.Add(NextJSONValue(reader, c, noDuplicates, nextchar));
+          myArrayList.Add(NextJSONValue(reader, c, noDuplicates, nextchar, depth));
           c = nextchar[0];
         }
         switch (c) {
@@ -3108,7 +3118,7 @@ namespace PeterO.Cbor {
     /// <returns>A CBORObject object.</returns>
     public static CBORObject FromJSONString(string str) {
       CharacterReader reader = new CharacterReader(str);
-      CBORObject obj = ParseJSONValue(reader, false, false, false);
+      CBORObject obj = ParseJSONValue(reader, false, false, false, 0);
       if (SkipWhitespaceJSON(reader) != -1) {
         throw reader.NewError("End of string not reached");
       }
@@ -3133,7 +3143,7 @@ namespace PeterO.Cbor {
     public static CBORObject ReadJSON(Stream stream) {
       CharacterReader reader = new CharacterReader(stream);
       try {
-        CBORObject obj = ParseJSONValue(reader, false, true, false);
+        CBORObject obj = ParseJSONValue(reader, false, true, false, 0);
         if (SkipWhitespaceJSON(reader) != -1) {
           throw reader.NewError("End of data stream not reached");
         }
@@ -4596,9 +4606,12 @@ namespace PeterO.Cbor {
         }
       } else if (type == 4) {  // Array
         CBORObject cbor = NewArray();
-        int vtindex = 0;
+        int vtindex = 1;
         if (additional == 31) {
           while (true) {
+            if (filter != null && !filter.ArrayIndexAllowed(vtindex)) {
+              throw new CBORException("Array is too long");
+            }
             CBORObject o = Read(
               s,
               depth + 1,
@@ -4609,14 +4622,8 @@ namespace PeterO.Cbor {
             if (o == null) {
               break;
             }
-            if (filter != null && !filter.ArrayIndexAllowed(vtindex)) {
-              throw new CBORException("Array is too long");
-            }
             cbor.Add(o);
             ++vtindex;
-          }
-          if (filter != null && !filter.ArrayLengthMatches(cbor.Count)) {
-            throw new CBORException("Array has an invalid length");
           }
           return cbor;
         } else {
@@ -4630,7 +4637,7 @@ namespace PeterO.Cbor {
                                     " is bigger than supported");
           }
           if (filter != null && !filter.ArrayLengthMatches(uadditional)) {
-            throw new CBORException("Array has an invalid length");
+            throw new CBORException("Array is too long");
           }
           for (long i = 0; i < uadditional; ++i) {
             cbor.Add(
