@@ -2989,7 +2989,7 @@ namespace PeterO.Cbor {
       bool skipByteOrderMark,
       bool objectOrArrayOnly,
       int depth) {
-      if (depth>1000) {
+      if (depth > 1000) {
         throw reader.NewError("Too deeply nested");
       }
       int c;
@@ -3014,7 +3014,7 @@ namespace PeterO.Cbor {
 
     private static CBORObject ParseJSONObject(CharacterReader reader, bool noDuplicates, int depth) {
       // Assumes that the last character read was '{'
-      if (depth>1000) {
+      if (depth > 1000) {
         throw reader.NewError("Too deeply nested");
       }
       int c;
@@ -3073,7 +3073,7 @@ namespace PeterO.Cbor {
 
     private static CBORObject ParseJSONArray(CharacterReader reader, bool noDuplicates, int depth) {
       // Assumes that the last character read was '['
-      if (depth>1000) {
+      if (depth > 1000) {
         throw reader.NewError("Too deeply nested");
       }
       var myArrayList = new List<CBORObject>();

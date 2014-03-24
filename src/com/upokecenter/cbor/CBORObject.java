@@ -3024,7 +3024,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       boolean skipByteOrderMark,
       boolean objectOrArrayOnly,
       int depth) {
-      if (depth>1000) {
+      if (depth > 1000) {
         throw reader.NewError("Too deeply nested");
       }
       int c;
@@ -3049,7 +3049,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     private static CBORObject ParseJSONObject(CharacterReader reader, boolean noDuplicates, int depth) {
       // Assumes that the last character read was '{'
-      if (depth>1000) {
+      if (depth > 1000) {
         throw reader.NewError("Too deeply nested");
       }
       int c;
@@ -3108,7 +3108,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     private static CBORObject ParseJSONArray(CharacterReader reader, boolean noDuplicates, int depth) {
       // Assumes that the last character read was '['
-      if (depth>1000) {
+      if (depth > 1000) {
         throw reader.NewError("Too deeply nested");
       }
       ArrayList<CBORObject> myArrayList=new ArrayList<CBORObject>();

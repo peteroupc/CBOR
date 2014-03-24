@@ -187,10 +187,6 @@ namespace Test {
           //          Console.WriteLine("done");
           return o;
         } catch(Exception ex) {
-          while (ex.InnerException != null) {
-            ex = ex.InnerException;
-          }
-          //          Console.WriteLine(ex.Message);
           continue;
         }
       }
@@ -695,7 +691,7 @@ namespace Test {
     // [Timeout(10000)]
     public void TestCompare() {
       FastRandom r = new FastRandom();
-      string badstr = null;
+//      string badstr = null;
       int count = 500;
       for (int i = 0; i < count; ++i) {
         CBORObject o1 = RandomCBORObject(r);
@@ -719,12 +715,14 @@ namespace Test {
          */
         CompareTestReciprocal(o1, o2);
       }
+      /*
       if (badstr != null) {
         if (badstr.Length>10000) {
           Assert.Fail("badstr "+badstr.Length);
         }
         Assert.Fail(badstr);
       }
+      */
       for (int i = 0; i < 5000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
@@ -930,10 +928,18 @@ namespace Test {
         ExtendedRational.NegativeInfinity,
         ExtendedRational.FromExtendedFloat(ExtendedFloat.NegativeInfinity));
 
-      Assert.AreEqual(Double.PositiveInfinity, ExtendedRational.PositiveInfinity.ToDouble());
-      Assert.AreEqual(Double.NegativeInfinity, ExtendedRational.NegativeInfinity.ToDouble());
-      Assert.AreEqual(Single.PositiveInfinity, ExtendedRational.PositiveInfinity.ToSingle());
-      Assert.AreEqual(Single.NegativeInfinity, ExtendedRational.NegativeInfinity.ToSingle());
+      if (Double.PositiveInfinity != ExtendedRational.PositiveInfinity.ToDouble()) {
+ Assert.Fail();
+}
+      if (Double.NegativeInfinity != ExtendedRational.NegativeInfinity.ToDouble()) {
+ Assert.Fail();
+}
+      if (Single.PositiveInfinity != ExtendedRational.PositiveInfinity.ToSingle()) {
+ Assert.Fail();
+}
+      if (Single.NegativeInfinity != ExtendedRational.NegativeInfinity.ToSingle()) {
+ Assert.Fail();
+}
       try {
         ExtendedDecimal.PositiveInfinity.ToBigInteger();
         Assert.Fail("Should have failed");
@@ -1262,7 +1268,7 @@ namespace Test {
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
       CBORObject obj;
-      String badstr = null;
+      //String badstr = null;
       int count = 1000;
       for (int i = 0; i < count; ++i) {
         obj = RandomCBORObject(rand);
@@ -1281,12 +1287,14 @@ namespace Test {
         }
         */
       }
+      /*
       if (badstr != null) {
         if (badstr.Length>10000) {
           Assert.Fail("badstr "+badstr.Length);
         }
         Assert.Fail(badstr);
       }
+      */
       // Test slightly modified objects
       for (int i = 0; i < 200; ++i) {
         byte[] array = RandomCBORObject(rand).EncodeToBytes();

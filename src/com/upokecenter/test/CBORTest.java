@@ -189,10 +189,6 @@ import com.upokecenter.cbor.*;
           //          System.out.println("done");
           return o;
         } catch(Exception ex) {
-          while (ex.getCause() != null) {
-            ex = ex.getCause();
-          }
-          //          System.out.println(ex.getMessage());
           continue;
         }
       }
@@ -683,7 +679,7 @@ import com.upokecenter.cbor.*;
     // [Timeout(10000)]
     public void TestCompare() {
       FastRandom r = new FastRandom();
-      String badstr = null;
+//      String badstr = null;
       int count = 500;
       for (int i = 0; i < count; ++i) {
         CBORObject o1 = RandomCBORObject(r);
@@ -705,12 +701,14 @@ import com.upokecenter.cbor.*;
          */
         CompareTestReciprocal(o1, o2);
       }
+      /*
       if (badstr != null) {
         if (badstr.length()>10000) {
           Assert.fail("badstr "+badstr.length());
         }
         Assert.fail(badstr);
       }
+      */
       for (int i = 0; i < 5000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
@@ -918,10 +916,18 @@ import com.upokecenter.cbor.*;
         ExtendedRational.NegativeInfinity,
         ExtendedRational.FromExtendedFloat(ExtendedFloat.NegativeInfinity));
 
-      Assert.assertEquals(Double.POSITIVE_INFINITY, ExtendedRational.PositiveInfinity.ToDouble());
-      Assert.assertEquals(Double.NEGATIVE_INFINITY, ExtendedRational.NegativeInfinity.ToDouble());
-      Assert.assertEquals(Float.POSITIVE_INFINITY, ExtendedRational.PositiveInfinity.ToSingle());
-      Assert.assertEquals(Float.NEGATIVE_INFINITY, ExtendedRational.NegativeInfinity.ToSingle());
+      if (Double.POSITIVE_INFINITY != ExtendedRational.PositiveInfinity.ToDouble()) {
+ Assert.fail();
+}
+      if (Double.NEGATIVE_INFINITY != ExtendedRational.NegativeInfinity.ToDouble()) {
+ Assert.fail();
+}
+      if (Float.POSITIVE_INFINITY != ExtendedRational.PositiveInfinity.ToSingle()) {
+ Assert.fail();
+}
+      if (Float.NEGATIVE_INFINITY != ExtendedRational.NegativeInfinity.ToSingle()) {
+ Assert.fail();
+}
       try {
         ExtendedDecimal.PositiveInfinity.ToBigInteger();
         Assert.fail("Should have failed");
@@ -1251,7 +1257,7 @@ import com.upokecenter.cbor.*;
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
       CBORObject obj;
-      String badstr = null;
+      //String badstr = null;
       int count = 1000;
       for (int i = 0; i < count; ++i) {
         obj = RandomCBORObject(rand);
@@ -1270,12 +1276,14 @@ import com.upokecenter.cbor.*;
         }
         */
       }
+      /*
       if (badstr != null) {
         if (badstr.length()>10000) {
           Assert.fail("badstr "+badstr.length());
         }
         Assert.fail(badstr);
       }
+      */
       // Test slightly modified objects
       for (int i = 0; i < 200; ++i) {
         byte[] array = RandomCBORObject(rand).EncodeToBytes();
