@@ -27,15 +27,15 @@ private CBORUtilities() {
      */
     public static void ToBase64(StringBuilder str, byte[] data, boolean padding) {
       if (data == null) {
- throw new NullPointerException("data");
-}
+        throw new NullPointerException("data");
+      }
       ToBase64(str, data, 0, data.length, Base64, padding);
     }
 
     public static void ToBase64URL(StringBuilder str, byte[] data, boolean padding) {
       if (data == null) {
- throw new NullPointerException("data");
-}
+        throw new NullPointerException("data");
+      }
       ToBase64(str, data, 0, data.length, Base64URL, padding);
     }
 
@@ -49,15 +49,15 @@ private CBORUtilities() {
 
     public static String ToBase64String(byte[] data, boolean padding) {
       if (data == null) {
- throw new NullPointerException("data");
-}
+        throw new NullPointerException("data");
+      }
       return ToBase64String(data, 0, data.length, padding);
     }
 
     public static String ToBase64URLString(byte[] data, boolean padding) {
       if (data == null) {
- throw new NullPointerException("data");
-}
+        throw new NullPointerException("data");
+      }
       return ToBase64String(data, 0, data.length, padding);
     }
 
@@ -75,23 +75,23 @@ private CBORUtilities() {
 
     private static void ToBase64(StringBuilder str, byte[] data, int offset, int count, String alphabet, boolean padding) {
       if (data == null) {
- throw new NullPointerException("data");
-}
-if (offset < 0) {
- throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
-}
-if (offset > data.length) {
- throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)data.length));
-}
-if (count < 0) {
- throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is less than " + "0");
-}
-if (count > data.length) {
- throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is more than " + Long.toString((long)data.length));
-}
-if (data.length - offset < count) {
- throw new IllegalArgumentException("data's length minus " + offset + " (" + Long.toString((long)(data.length - offset)) + ") is less than " + Long.toString((long)count));
-}
+        throw new NullPointerException("data");
+      }
+      if (offset < 0) {
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
+      }
+      if (offset > data.length) {
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)data.length));
+      }
+      if (count < 0) {
+        throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is less than " + "0");
+      }
+      if (count > data.length) {
+        throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is more than " + Long.toString((long)data.length));
+      }
+      if (data.length - offset < count) {
+        throw new IllegalArgumentException("data's length minus " + offset + " (" + Long.toString((long)(data.length - offset)) + ") is less than " + Long.toString((long)count));
+      }
       int length = offset + count;
       int i = offset;
       for (i = offset; i < (length - 2); i += 3) {
@@ -121,31 +121,29 @@ if (data.length - offset < count) {
 
     private static void ToQEncodingRfc2047(StringBuilder str, byte[] data, int offset, int count) {
       if (data == null) {
- throw new NullPointerException("data");
-}
-if (offset < 0) {
- throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
-}
-if (offset > data.length) {
- throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)data.length));
-}
-if (count < 0) {
- throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is less than " + "0");
-}
-if (count > data.length) {
- throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is more than " + Long.toString((long)data.length));
-}
-if (data.length - offset < count) {
- throw new IllegalArgumentException("data's length minus " + offset + " (" + Long.toString((long)(data.length - offset)) + ") is less than " + Long.toString((long)count));
-}
+        throw new NullPointerException("data");
+      }
+      if (offset < 0) {
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
+      }
+      if (offset > data.length) {
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)data.length));
+      }
+      if (count < 0) {
+        throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is less than " + "0");
+      }
+      if (count > data.length) {
+        throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is more than " + Long.toString((long)data.length));
+      }
+      if (data.length - offset < count) {
+        throw new IllegalArgumentException("data's length minus " + offset + " (" + Long.toString((long)(data.length - offset)) + ") is less than " + Long.toString((long)count));
+      }
       int length = offset + count;
       int i = offset;
       for (i = offset; i < length; i += 3) {
-        if (data[i] == 0x20) {
-          str.append('_');
-        } else if (data[i] == (byte)'(' || data[i] == (byte)')' || data[i]==(byte)'"' ||
-                       data[i] == (byte)'=' || data[i] == (byte)'?' || data[i]==(byte)'_' ||
-                       data[i] < 0x20 || data[i] >= 0x7f) {
+        if (data[i] == (byte)'(' || data[i] == (byte)')' || data[i]==(byte)'"' ||
+            data[i] == (byte)'=' || data[i] == (byte)'?' || data[i]==(byte)'_' ||
+            data[i] < 0x20 || data[i] >= 0x7f) {
           str.append('=');
           str.append(HexAlphabet.charAt((data[i] >> 4) & 15));
           str.append(HexAlphabet.charAt(data[i] & 15));
@@ -159,8 +157,8 @@ if (data.length - offset < count) {
 
     public static void ToBase16(StringBuilder str, byte[] data) {
       if (data == null) {
- throw new NullPointerException("data");
-}
+        throw new NullPointerException("data");
+      }
       int length = data.length;
       for (int i = 0; i < length; ++i) {
         str.append(HexAlphabet.charAt((data[i] >> 4) & 15));
