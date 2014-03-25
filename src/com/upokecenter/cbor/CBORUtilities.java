@@ -26,23 +26,81 @@ private CBORUtilities() {
      * @param padding A Boolean object.
      */
     public static void ToBase64(StringBuilder str, byte[] data, boolean padding) {
-      ToBase64(str, data, Base64, padding);
+      if (data == null) {
+ throw new NullPointerException("data");
+}
+      ToBase64(str, data, 0, data.length, Base64, padding);
     }
 
     public static void ToBase64URL(StringBuilder str, byte[] data, boolean padding) {
-      ToBase64(str, data, Base64URL, padding);
+      if (data == null) {
+ throw new NullPointerException("data");
+}
+      ToBase64(str, data, 0, data.length, Base64URL, padding);
     }
 
-    private static void ToBase64(StringBuilder str, byte[] data, String alphabet, boolean padding) {
-      int length = data.length;
-      int i = 0;
-      for (i = 0; i < (length - 2); i += 3) {
+    public static void ToBase64(StringBuilder str, byte[] data, int offset, int count, boolean padding) {
+      ToBase64(str, data, offset, count, Base64, padding);
+    }
+
+    public static void ToBase64URL(StringBuilder str, byte[] data, int offset, int count, boolean padding) {
+      ToBase64(str, data, offset, count, Base64URL, padding);
+    }
+
+    public static String ToBase64String(byte[] data, boolean padding) {
+      if (data == null) {
+ throw new NullPointerException("data");
+}
+      return ToBase64String(data, 0, data.length, padding);
+    }
+
+    public static String ToBase64URLString(byte[] data, boolean padding) {
+      if (data == null) {
+ throw new NullPointerException("data");
+}
+      return ToBase64String(data, 0, data.length, padding);
+    }
+
+    public static String ToBase64String(byte[] data, int offset, int count, boolean padding) {
+      StringBuilder builder = new StringBuilder();
+      ToBase64(builder, data, offset, count, Base64, padding);
+      return builder.toString();
+    }
+
+    public static String ToBase64URLString(byte[] data, int offset, int count, boolean padding) {
+      StringBuilder builder = new StringBuilder();
+      ToBase64(builder, data, offset, count, Base64, padding);
+      return builder.toString();
+    }
+
+    private static void ToBase64(StringBuilder str, byte[] data, int offset, int count, String alphabet, boolean padding) {
+      if (data == null) {
+ throw new NullPointerException("data");
+}
+if (offset < 0) {
+ throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
+}
+if (offset > data.length) {
+ throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)data.length));
+}
+if (count < 0) {
+ throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is less than " + "0");
+}
+if (count > data.length) {
+ throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is more than " + Long.toString((long)data.length));
+}
+if (data.length - offset < count) {
+ throw new IllegalArgumentException("data's length minus " + offset + " (" + Long.toString((long)(data.length - offset)) + ") is less than " + Long.toString((long)count));
+}
+      int length = offset + count;
+      int i = offset;
+      for (i = offset; i < (length - 2); i += 3) {
         str.append(alphabet.charAt((data[i] >> 2) & 63));
         str.append(alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 15)));
         str.append(alphabet.charAt(((data[i + 1] & 15) << 2) + ((data[i + 2] >> 6) & 3)));
         str.append(alphabet.charAt(data[i + 2] & 63));
       }
-      int lenmod3 = length % 3;
+      int lenmod3 = count % 3;
       if (lenmod3 != 0) {
         i = length - lenmod3;
         str.append(alphabet.charAt((data[i] >> 2) & 63));
@@ -61,9 +119,48 @@ private CBORUtilities() {
       }
     }
 
+    private static void ToQEncodingRfc2047(StringBuilder str, byte[] data, int offset, int count) {
+      if (data == null) {
+ throw new NullPointerException("data");
+}
+if (offset < 0) {
+ throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
+}
+if (offset > data.length) {
+ throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)data.length));
+}
+if (count < 0) {
+ throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is less than " + "0");
+}
+if (count > data.length) {
+ throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is more than " + Long.toString((long)data.length));
+}
+if (data.length - offset < count) {
+ throw new IllegalArgumentException("data's length minus " + offset + " (" + Long.toString((long)(data.length - offset)) + ") is less than " + Long.toString((long)count));
+}
+      int length = offset + count;
+      int i = offset;
+      for (i = offset; i < length; i += 3) {
+        if (data[i] == 0x20) {
+          str.append('_');
+        } else if (data[i] == (byte)'(' || data[i] == (byte)')' || data[i]==(byte)'"' ||
+                       data[i] == (byte)'=' || data[i] == (byte)'?' || data[i]==(byte)'_' ||
+                       data[i] < 0x20 || data[i] >= 0x7f) {
+          str.append('=');
+          str.append(HexAlphabet.charAt((data[i] >> 4) & 15));
+          str.append(HexAlphabet.charAt(data[i] & 15));
+        } else {
+          str.append((char)data[i]);
+        }
+      }
+    }
+
     private static final String HexAlphabet = "0123456789ABCDEF";
 
     public static void ToBase16(StringBuilder str, byte[] data) {
+      if (data == null) {
+ throw new NullPointerException("data");
+}
       int length = data.length;
       for (int i = 0; i < length; ++i) {
         str.append(HexAlphabet.charAt((data[i] >> 4) & 15));
