@@ -21,16 +21,16 @@ namespace PeterO.Cbor {
     /// <param name='data'>A byte array.</param>
     /// <param name='padding'>A Boolean object.</param>
     public static void ToBase64(StringBuilder str, byte[] data, bool padding) {
-      if ((data) == null) {
- throw new ArgumentNullException("data");
-}
+      if (data == null) {
+        throw new ArgumentNullException("data");
+      }
       ToBase64(str, data, 0, data.Length, Base64, padding);
     }
 
     public static void ToBase64URL(StringBuilder str, byte[] data, bool padding) {
-      if ((data) == null) {
- throw new ArgumentNullException("data");
-}
+      if (data == null) {
+        throw new ArgumentNullException("data");
+      }
       ToBase64(str, data, 0, data.Length, Base64URL, padding);
     }
 
@@ -43,16 +43,16 @@ namespace PeterO.Cbor {
     }
 
     public static string ToBase64String(byte[] data, bool padding) {
-      if ((data) == null) {
- throw new ArgumentNullException("data");
-}
+      if (data == null) {
+        throw new ArgumentNullException("data");
+      }
       return ToBase64String(data, 0, data.Length, padding);
     }
 
     public static string ToBase64URLString(byte[] data, bool padding) {
-      if ((data) == null) {
- throw new ArgumentNullException("data");
-}
+      if (data == null) {
+        throw new ArgumentNullException("data");
+      }
       return ToBase64String(data, 0, data.Length, padding);
     }
 
@@ -69,24 +69,24 @@ namespace PeterO.Cbor {
     }
 
     private static void ToBase64(StringBuilder str, byte[] data, int offset, int count, string alphabet, bool padding) {
-      if ((data) == null) {
- throw new ArgumentNullException("data");
-}
-if (offset < 0) {
- throw new ArgumentException("offset (" + Convert.ToString((long)(offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-}
-if (offset > data.Length) {
- throw new ArgumentException("offset (" + Convert.ToString((long)(offset), System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)(data.Length), System.Globalization.CultureInfo.InvariantCulture));
-}
-if (count < 0) {
- throw new ArgumentException("count (" + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-}
-if (count > data.Length) {
- throw new ArgumentException("count (" + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)(data.Length), System.Globalization.CultureInfo.InvariantCulture));
-}
-if (data.Length-offset < count) {
- throw new ArgumentException("data's length minus " + offset + " (" + Convert.ToString((long)(data.Length-offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture));
-}
+      if (data == null) {
+        throw new ArgumentNullException("data");
+      }
+      if (offset < 0) {
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
+      if (offset > data.Length) {
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)data.Length, System.Globalization.CultureInfo.InvariantCulture));
+      }
+      if (count < 0) {
+        throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
+      if (count > data.Length) {
+        throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)data.Length, System.Globalization.CultureInfo.InvariantCulture));
+      }
+      if (data.Length - offset < count) {
+        throw new ArgumentException("data's length minus " + offset + " (" + Convert.ToString((long)(data.Length - offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture));
+      }
       int length = offset + count;
       int i = offset;
       for (i = offset; i < (length - 2); i += 3) {
@@ -115,30 +115,30 @@ if (data.Length-offset < count) {
     }
 
     private static void ToQEncodingRfc2047(StringBuilder str, byte[] data, int offset, int count) {
-      if ((data) == null) {
- throw new ArgumentNullException("data");
-}
-if (offset < 0) {
- throw new ArgumentException("offset (" + Convert.ToString((long)(offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-}
-if (offset > data.Length) {
- throw new ArgumentException("offset (" + Convert.ToString((long)(offset), System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)(data.Length), System.Globalization.CultureInfo.InvariantCulture));
-}
-if (count < 0) {
- throw new ArgumentException("count (" + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-}
-if (count > data.Length) {
- throw new ArgumentException("count (" + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)(data.Length), System.Globalization.CultureInfo.InvariantCulture));
-}
-if (data.Length-offset < count) {
- throw new ArgumentException("data's length minus " + offset + " (" + Convert.ToString((long)(data.Length-offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture));
-}
+      if (data == null) {
+        throw new ArgumentNullException("data");
+      }
+      if (offset < 0) {
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
+      if (offset > data.Length) {
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)data.Length, System.Globalization.CultureInfo.InvariantCulture));
+      }
+      if (count < 0) {
+        throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
+      if (count > data.Length) {
+        throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)data.Length, System.Globalization.CultureInfo.InvariantCulture));
+      }
+      if (data.Length - offset < count) {
+        throw new ArgumentException("data's length minus " + offset + " (" + Convert.ToString((long)(data.Length - offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture));
+      }
       int length = offset + count;
       int i = offset;
       for (i = offset; i < length; i += 3) {
-        if (data[i]==(byte)'(' || data[i]==(byte)')' || data[i]==(byte)'"' ||
-                       data[i]==(byte)'=' || data[i]==(byte)'?' || data[i]==(byte)'_' ||
-                       data[i]<0x20 || data[i]>= 0x7f) {
+        if (data[i] == (byte)'(' || data[i] == (byte)')' || data[i] == (byte)'"' ||
+            data[i] == (byte)'=' || data[i] == (byte)'?' || data[i] == (byte)'_' ||
+            data[i] < 0x20 || data[i] >= 0x7f) {
           str.Append('=');
           str.Append(HexAlphabet[(data[i] >> 4) & 15]);
           str.Append(HexAlphabet[data[i] & 15]);
@@ -151,9 +151,9 @@ if (data.Length-offset < count) {
     private const string HexAlphabet = "0123456789ABCDEF";
 
     public static void ToBase16(StringBuilder str, byte[] data) {
-      if ((data) == null) {
- throw new ArgumentNullException("data");
-}
+      if (data == null) {
+        throw new ArgumentNullException("data");
+      }
       int length = data.Length;
       for (int i = 0; i < length; ++i) {
         str.Append(HexAlphabet[(data[i] >> 4) & 15]);

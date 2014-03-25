@@ -8,6 +8,8 @@ package com.upokecenter.test; import com.upokecenter.util.*;
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 
+import java.util.*;
+
 import java.io.*;
 
 import org.junit.Assert;
@@ -85,6 +87,11 @@ import com.upokecenter.cbor.*;
             str.append("=0A");
           }
         } else if (data[i]==9 || data[i]==32) {
+          if (i + 1 == length) {
+            IncrementLineCount(str, 3, lineCount);
+            str.append(data[i]==9 ? "=09" : "=20");
+            lineCount[0]=0;
+          }
           if (i + 2<length && lineBreakMode>0) {
             if (data[i + 1]==0x0d && data[i + 2]==0x0a) {
               IncrementLineCount(str, 3, lineCount);
@@ -126,10 +133,10 @@ import com.upokecenter.cbor.*;
 
     /**
      * Note: If lenientLineBreaks is true, treats CR, LF, and CRLF as line
-     * breaks writes CRLF when encountering these breaks. Doesn't check
-     * that no more than 76 characters are in each line. If an encoded line
-     * ends with spaces and/or tabs, those characters are deleted (RFC 2045,
-     * sec. 6.7, rule 3).
+     * breaks and writes CRLF when encountering these breaks. If unlimitedLineLength
+     * is true, doesn't check that no more than 76 characters are in each line.
+     * If an encoded line ends with spaces and/or tabs, those characters
+     * are deleted (RFC 2045, sec. 6.7, rule 3).
      * @param outputStream A readable data stream.
      * @param data A byte[] object.
      * @param offset A 32-bit signed integer.
@@ -202,14 +209,14 @@ import com.upokecenter.cbor.*;
                 throw new InvalidDataException("Expected LF after CR");
               }
               ++i;
-              lineStart=i+1;
+              lineStart = i + 1;
               continue;
             } else if (b1=='\n') {
               if (!lenientLineBreaks) {
                 throw new InvalidDataException("Bare LF not expected");
               }
               ++i;
-              lineStart=i+1;
+              lineStart = i + 1;
               continue;
             }
             int c = 0;
@@ -247,7 +254,7 @@ import com.upokecenter.cbor.*;
                 throw new InvalidDataException("Expected LF after CR");
               }
               ++i;
-              lineStart=i+1;
+              lineStart = i + 1;
               continue;
             } else if (b1=='\n') {
               // Soft line break
@@ -255,7 +262,7 @@ import com.upokecenter.cbor.*;
                 throw new InvalidDataException("Bare LF not expected");
               }
               ++i;
-              lineStart=i+1;
+              lineStart = i + 1;
               continue;
             } else {
               throw new InvalidDataException("Invalid data after equal sign");
@@ -277,6 +284,9 @@ import com.upokecenter.cbor.*;
               lastSpace = j;
             }
           }
+          if (lastSpace == length-1) {
+            endsWithLineBreak = true;
+          }
           // Ignore space/tab runs if the line ends in that run
           if (!endsWithLineBreak) {
             outputStream.write(data,i,(lastSpace-i)+1);
@@ -285,7 +295,7 @@ import com.upokecenter.cbor.*;
         } else {
           outputStream.write(data[i]);
         }
-        if (!unlimitedLineLength && i>lineStart && (lineStart-i)+1>76) {
+        if (!unlimitedLineLength && i>lineStart && (i-lineStart)+1>76) {
           throw new InvalidDataException("Encoded line too long");
         }
       }
@@ -370,9 +380,52 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       return sb.toString();
     }
     @Test
+    public void TestMessage() {
+      for(String s : Directory.GetFiles(
+        @"C:\Users\Peter\AppData\Local\Microsoft\Windows Live Mail",
+        "*.eml",
+        SearchOption.AllDirectories)) {
+        using(FileStream fs = new FileStream(s, FileMode.Open)) {
+          String msgstr = DataUtilities.ReadUtf8ToString(fs);
+          try {
+            Message msg = new Message(msgstr);
+          } catch (UnsupportedOperationException ex) {
+          } catch(InvalidDataException ex) {
+            System.out.println(s);
+            System.out.println(ex.getMessage());
+            //System.out.println(ex.getStackTrace());
+          }
+        }
+      }
+    }
+
+    @Test
+    public void testCharset() {
+      Assert.assertEquals("us-ascii",new MediaType("text/plain").GetCharset());
+      Assert.assertEquals("us-ascii",new MediaType("TEXT/PLAIN").GetCharset());
+      Assert.assertEquals("us-ascii",new MediaType("TeXt/PlAiN").GetCharset());
+      Assert.assertEquals("us-ascii",new MediaType("text/xml").GetCharset());
+      Assert.assertEquals("utf-8",new MediaType("text/plain; CHARSET=UTF-8").GetCharset());
+      Assert.assertEquals("utf-8",new MediaType("text/plain; ChArSeT=UTF-8").GetCharset());
+      Assert.assertEquals("utf-8",new MediaType("text/plain; charset=UTF-8").GetCharset());
+      Assert.assertEquals("us-ascii",new MediaType("text/plain; charset = UTF-8").GetCharset());
+      Assert.assertEquals("'utf-8'",new MediaType("text/plain; charset='UTF-8'").GetCharset());
+      Assert.assertEquals("utf-8",new MediaType("text/plain; charset=\"UTF-8\"").GetCharset());
+      Assert.assertEquals("utf-8",new MediaType("text/plain; foo=\"\\\"\"; charset=\"UTF-8\"").GetCharset());
+      Assert.assertEquals("us-ascii",new MediaType("text/plain; foo=\"; charset=\\\"UTF-8\\\"\"").GetCharset());
+      Assert.assertEquals("utf-8",new MediaType("text/plain; foo='; charset=\"UTF-8\"").GetCharset());
+      Assert.assertEquals("utf-8",new MediaType("text/plain; foo=bar; charset=\"UTF-8\"").GetCharset());
+      Assert.assertEquals("utf-8",new MediaType("text/plain; charset=\"UTF-\\8\"").GetCharset());
+    }
+
+    @Test
     public void TestDecode() {
       TestDecodeQuotedPrintable("test","test");
       TestDecodeQuotedPrintable("te \tst","te \tst");
+      TestDecodeQuotedPrintable("te=20","te ");
+      TestDecodeQuotedPrintable("te=09","te\t");
+      TestDecodeQuotedPrintable("te ","te");
+      TestDecodeQuotedPrintable("te\t","te");
       TestDecodeQuotedPrintable("te=61st","teast");
       TestDecodeQuotedPrintable("te=3dst","te=st");
       TestDecodeQuotedPrintable("te=c2=a0st","te\u00a0st");
@@ -419,10 +472,23 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     }
 
     @Test
+    public void TestStrip() {
+      Assert.assertEquals("xyz",Message.StripCommentsAndExtraSpace("(abc)xyz"));
+      Assert.assertEquals("xyz",Message.StripCommentsAndExtraSpace("(abc)xyz(def)"));
+      Assert.assertEquals("xyz",Message.StripCommentsAndExtraSpace("(a(b)c)xyz(def)"));
+      Assert.assertEquals("xyz",Message.StripCommentsAndExtraSpace("(abc)  xyz  "));
+      Assert.assertEquals("xy z",Message.StripCommentsAndExtraSpace("  xy(abc)z  "));
+      Assert.assertEquals("xyz",Message.StripCommentsAndExtraSpace("  xyz\t\t"));
+      Assert.assertEquals("xy z",Message.StripCommentsAndExtraSpace("  xy\tz  "));
+    }
+
+    @Test
     public void TestEncode() {
       TestQuotedPrintable("test","test");
       TestQuotedPrintable("te\u000cst","te=0Cst");
       TestQuotedPrintable("te\u007Fst","te=7Fst");
+      TestQuotedPrintable("te ","te=20");
+      TestQuotedPrintable("te\t","te=09");
       TestQuotedPrintable("te st","te st");
       TestQuotedPrintable("te=st","te=3Dst");
       TestQuotedPrintable("te\r\nst","te=0D=0Ast","te\r\nst","te\r\nst");
