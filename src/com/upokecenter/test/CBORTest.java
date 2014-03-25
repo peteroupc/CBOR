@@ -188,7 +188,7 @@ import com.upokecenter.cbor.*;
           o = CBORObject.FromObjectAndTag(o, tag);
           //          System.out.println("done");
           return o;
-        } catch(Exception ex) {
+        } catch (Exception ex) {
           continue;
         }
       }

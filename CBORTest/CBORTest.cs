@@ -186,7 +186,7 @@ namespace Test {
           o = CBORObject.FromObjectAndTag(o, tag);
           //          Console.WriteLine("done");
           return o;
-        } catch(Exception ex) {
+        } catch(Exception) {
           continue;
         }
       }
