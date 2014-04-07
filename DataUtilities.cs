@@ -472,7 +472,7 @@ namespace PeterO {
     /// <returns>The string read.</returns>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='stream'/> is null or "builder" is null.</exception>
+    /// <paramref name='stream'/> is null.</exception>
     /// <param name='stream'>A readable data stream.</param>
     public static string ReadUtf8ToString(
       Stream stream) {
@@ -492,7 +492,7 @@ namespace PeterO {
     /// or, the string is not valid UTF-8 and <paramref name='replace'/>
     /// is false.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='stream'/> is null or "builder" is null.</exception>
+    /// <paramref name='stream'/> is null.</exception>
     public static string ReadUtf8ToString(
       Stream stream,
       int bytesCount,

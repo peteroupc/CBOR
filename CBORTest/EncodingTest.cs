@@ -88,13 +88,29 @@ namespace CBORTest
             IncrementLineCount(str, 3, lineCount);
             str.Append("=0A");
           }
-        } else if (data[i]==9 || data[i]==32) {
+        } else if (data[i]==9) {
+          IncrementLineCount(str, 3, lineCount);
+          str.Append("=09");
+        } else if (lineCount[0]==0 &&
+                   data[i]==(byte)'.' && i+1<length && (data[i]=='\r' || data[i]=='\n')) {
+          IncrementLineCount(str, 3, lineCount);
+          str.Append("=2E");
+        } else if (lineCount[0]==0 && i + 4<length &&
+                   data[i]==(byte)'F' &&
+                   data[i+1]==(byte)'r' &&
+                   data[i+2]==(byte)'o' &&
+                   data[i+3]==(byte)'m' &&
+                   data[i+4]==(byte)' ') {
+          // See page 7-8 of RFC 2049
+          IncrementLineCount(str, 7, lineCount);
+          str.Append("=46rom ");
+          i+=4;
+        } else if (data[i]==32) {
           if (i + 1 == length) {
             IncrementLineCount(str, 3, lineCount);
             str.Append(data[i]==9 ? "=09" : "=20");
             lineCount[0]=0;
-          }
-          if (i + 2<length && lineBreakMode>0) {
+          } else if (i + 2<length && lineBreakMode>0) {
             if (data[i + 1]==0x0d && data[i + 2]==0x0a) {
               IncrementLineCount(str, 3, lineCount);
               str.Append(data[i]==9 ? "=09\r\n" : "=20\r\n");
@@ -121,7 +137,8 @@ namespace CBORTest
         } else if (data[i]==(byte)'=') {
           IncrementLineCount(str, 3, lineCount);
           str.Append("=3D");
-        } else if (data[i]>0x20 && data[i]<0x7f) {
+        } else if (data[i]>0x20 && data[i]<0x7f && data[i]!=',' &&
+                   "()'+-./?:".IndexOf((char)data[i])< 0) {
           IncrementLineCount(str, 1, lineCount);
           str.Append((char)data[i]);
         } else {
@@ -172,131 +189,17 @@ namespace CBORTest
       if (data.Length-offset < count) {
         throw new ArgumentException("data's length minus " + offset + " (" + Convert.ToString((long)(data.Length-offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)(count), System.Globalization.CultureInfo.InvariantCulture));
       }
-      int length = offset + count;
-      int lineStart = 0;
-      for (int i = offset; i < length; ++i) {
-        if (data[i]==0x0d) {
-          if (i + 1 >= length || data[i + 1]!=0x0a) {
-            // Treat as line break
-            if (!lenientLineBreaks) {
-              throw new InvalidDataException("Expected LF after CR");
-            }
-            outputStream.WriteByte(0x0d);
-            outputStream.WriteByte(0x0a);
-          } else {
-            outputStream.WriteByte(0x0d);
-            outputStream.WriteByte(0x0a);
-            ++i;
+      using(MemoryStream ms = new MemoryStream(data, offset, count)) {
+        Message.QuotedPrintableTransform t = new Message.QuotedPrintableTransform(
+          ms,
+          lenientLineBreaks,
+          unlimitedLineLength ? -1 : 76);
+        while (true) {
+          int c = t.ReadByte();
+          if (c< 0) {
+            return;
           }
-          lineStart = i + 1;
-        } else if (data[i]==0x0a) {
-          if (!lenientLineBreaks) {
-            throw new InvalidDataException("Bare LF not expected");
-          }
-          outputStream.WriteByte(0x0d);
-          outputStream.WriteByte(0x0a);
-          lineStart = i + 1;
-        } else if (data[i]=='=') {
-          if (i + 2 < length) {
-            int b1=((int)data[i + 1]) & 0xff;
-            int b2=((int)data[i + 2]) & 0xff;
-            if (b1=='\r' && b2=='\n') {
-              // Soft line break
-              i+=2;
-              continue;
-            } else if (b1=='\r') {
-              if (!lenientLineBreaks) {
-                throw new InvalidDataException("Expected LF after CR");
-              }
-              ++i;
-              lineStart = i + 1;
-              continue;
-            } else if (b1=='\n') {
-              if (!lenientLineBreaks) {
-                throw new InvalidDataException("Bare LF not expected");
-              }
-              ++i;
-              lineStart = i + 1;
-              continue;
-            }
-            int c = 0;
-            if (b1 >= '0' && b1 <= '9') {
-              c <<= 4;
-              c |= b1 - '0';
-            } else if (b1 >= 'A' && b1 <= 'F') {
-              c <<= 4;
-              c |= b1 + 10 - 'A';
-            } else if (b1 >= 'a' && b1 <= 'f') {
-              c <<= 4;
-              c |= b1 + 10 - 'a';
-            } else {
-              throw new InvalidDataException("Invalid hex character");
-            }
-            if (b2 >= '0' && b2 <= '9') {
-              c <<= 4;
-              c |= b2 - '0';
-            } else if (b2 >= 'A' && b2 <= 'F') {
-              c <<= 4;
-              c |= b2 + 10 - 'A';
-            } else if (b2 >= 'a' && b2 <= 'f') {
-              c <<= 4;
-              c |= b2 + 10 - 'a';
-            } else {
-              throw new InvalidDataException("Invalid hex character");
-            }
-            outputStream.WriteByte((byte)c);
-            i+=2;
-          } else if (i + 1<length) {
-            int b1=((int)data[i + 1]) & 0xff;
-            if (b1=='\r') {
-              // Soft line break
-              if (!lenientLineBreaks) {
-                throw new InvalidDataException("Expected LF after CR");
-              }
-              ++i;
-              lineStart = i + 1;
-              continue;
-            } else if (b1=='\n') {
-              // Soft line break
-              if (!lenientLineBreaks) {
-                throw new InvalidDataException("Bare LF not expected");
-              }
-              ++i;
-              lineStart = i + 1;
-              continue;
-            } else {
-              throw new InvalidDataException("Invalid data after equal sign");
-            }
-          } else {
-            throw new InvalidDataException("Equal sign at end");
-          }
-        } else if (data[i]!='\t' && (data[i]<0x20 || data[i]>= 0x7f)) {
-          throw new InvalidDataException("Invalid character in quoted-printable");
-        } else if (data[i]==' ' || data[i]=='\t') {
-          bool endsWithLineBreak = false;
-          int lastSpace = i;
-          for (int j = i + 1; j < length; ++j) {
-            if (data[j]=='\r' || data[j]=='\n') {
-              endsWithLineBreak = true;
-            } else if (data[j]!=' ' && data[j]!='\t') {
-              break;
-            } else {
-              lastSpace = j;
-            }
-          }
-          if (lastSpace == length-1) {
-            endsWithLineBreak = true;
-          }
-          // Ignore space/tab runs if the line ends in that run
-          if (!endsWithLineBreak) {
-            outputStream.Write(data, i, (lastSpace-i)+1);
-          }
-          i = lastSpace;
-        } else {
-          outputStream.WriteByte(data[i]);
-        }
-        if (!unlimitedLineLength && i>lineStart && (i-lineStart)+1>76) {
-          throw new InvalidDataException("Encoded line too long");
+          outputStream.WriteByte((byte)c);
         }
       }
     }
@@ -361,43 +264,100 @@ namespace CBORTest
       }
       return sb.ToString();
     }
+
     [Test]
-    public void TestMessage() {
-      foreach(string s in Directory.GetFiles(
-        @"C:\Users\Peter\AppData\Local\Microsoft\Windows Live Mail",
-        "*.eml",
-        SearchOption.AllDirectories)) {
-        using(FileStream fs = new FileStream(s, FileMode.Open)) {
-          string msgstr = DataUtilities.ReadUtf8ToString(fs);
-          try {
-            Message msg = new Message(msgstr);
-          } catch(NotSupportedException) {
-          } catch(InvalidDataException ex) {
-            Console.WriteLine(s);
-            Console.WriteLine(ex.Message);
-            //Console.WriteLine(ex.StackTrace);
-          }
-        }
+    public void TestWordWrapOne(string firstWord, string nextWords, string expected) {
+      var ww = new Message.WordWrapEncoder(firstWord);
+      ww.AddString(nextWords);
+      Console.WriteLine(ww.ToString());
+      Assert.AreEqual(expected, ww.ToString());
+    }
+
+    [Test]
+    public void TestWordWrap() {
+      TestWordWrapOne("Subject:",Repeat("xxxx ",10)+"y","Subject: "+Repeat("xxxx ",10)+"y");
+      TestWordWrapOne("Subject:",Repeat("xxxx ",10),"Subject: "+Repeat("xxxx ",9)+"xxxx");
+    }
+
+    [Test]
+    public void TestHeaderFields() {
+      string testString="Joe P Customer <customer@example.com>, Jane W Customer <jane@example.com>";
+      HeaderParser.ParseMailboxList(testString, 0, testString.Length, null);
+    }
+
+
+    [Test]
+    public void testCharset() {
+      Assert.AreEqual("us-ascii",MediaType.Parse("text/plain").GetCharset());
+      Assert.AreEqual("us-ascii",MediaType.Parse("TEXT/PLAIN").GetCharset());
+      Assert.AreEqual("us-ascii",MediaType.Parse("TeXt/PlAiN").GetCharset());
+      Assert.AreEqual("us-ascii",MediaType.Parse("text/xml").GetCharset());
+      Assert.AreEqual("utf-8",MediaType.Parse("text/plain; CHARSET=UTF-8").GetCharset());
+      Assert.AreEqual("utf-8",MediaType.Parse("text/plain; ChArSeT=UTF-8").GetCharset());
+      Assert.AreEqual("utf-8",MediaType.Parse("text/plain; charset=UTF-8").GetCharset());
+      // Note that MIME implicitly allows whitespace around the equal sign
+      Assert.AreEqual("utf-8",MediaType.Parse("text/plain; charset = UTF-8").GetCharset());
+      Assert.AreEqual("'utf-8'",MediaType.Parse("text/plain; charset='UTF-8'").GetCharset());
+      Assert.AreEqual("utf-8",MediaType.Parse("text/plain; charset=\"UTF-8\"").GetCharset());
+      Assert.AreEqual("utf-8",MediaType.Parse("text/plain; foo=\"\\\"\"; charset=\"UTF-8\"").GetCharset());
+      Assert.AreEqual("us-ascii",MediaType.Parse("text/plain; foo=\"; charset=\\\"UTF-8\\\"\"").GetCharset());
+      Assert.AreEqual("utf-8",MediaType.Parse("text/plain; foo='; charset=\"UTF-8\"").GetCharset());
+      Assert.AreEqual("utf-8",MediaType.Parse("text/plain; foo=bar; charset=\"UTF-8\"").GetCharset());
+      Assert.AreEqual("utf-8",MediaType.Parse("text/plain; charset=\"UTF-\\8\"").GetCharset());
+    }
+
+    public void TestRfc2231Extension(string mtype, string param, string expected) {
+      var mt = MediaType.Parse(mtype);
+      Assert.AreEqual(expected, mt.GetParameter(param));
+    }
+
+    public void SingleTestMediaTypeEncoding(string value, string expected) {
+      MediaType mt=new MediaTypeBuilder("x","y").SetParameter("z",value).ToMediaType();
+      string topLevel = mt.TopLevelType;
+      string sub = mt.SubType;
+      var mtstring="MIME-Version: 1.0\r\nContent-Type: "+mt.ToString()+"\r\nContent-Transfer-Encoding: base64\r\n\r\n";
+      using(MemoryStream ms = new MemoryStream(DataUtilities.GetUtf8Bytes(mtstring, true))) {
+        var msg = new Message(ms);
+        Assert.AreEqual(topLevel, msg.ContentType.TopLevelType);
+        Assert.AreEqual(sub, msg.ContentType.SubType);
+        Assert.AreEqual(value,msg.ContentType.GetParameter("z"),mt.ToString());
       }
     }
 
     [Test]
-    public void testCharset() {
-      Assert.AreEqual("us-ascii",new MediaType("text/plain").GetCharset());
-      Assert.AreEqual("us-ascii",new MediaType("TEXT/PLAIN").GetCharset());
-      Assert.AreEqual("us-ascii",new MediaType("TeXt/PlAiN").GetCharset());
-      Assert.AreEqual("us-ascii",new MediaType("text/xml").GetCharset());
-      Assert.AreEqual("utf-8",new MediaType("text/plain; CHARSET=UTF-8").GetCharset());
-      Assert.AreEqual("utf-8",new MediaType("text/plain; ChArSeT=UTF-8").GetCharset());
-      Assert.AreEqual("utf-8",new MediaType("text/plain; charset=UTF-8").GetCharset());
-      Assert.AreEqual("us-ascii",new MediaType("text/plain; charset = UTF-8").GetCharset());
-      Assert.AreEqual("'utf-8'",new MediaType("text/plain; charset='UTF-8'").GetCharset());
-      Assert.AreEqual("utf-8",new MediaType("text/plain; charset=\"UTF-8\"").GetCharset());
-      Assert.AreEqual("utf-8",new MediaType("text/plain; foo=\"\\\"\"; charset=\"UTF-8\"").GetCharset());
-      Assert.AreEqual("us-ascii",new MediaType("text/plain; foo=\"; charset=\\\"UTF-8\\\"\"").GetCharset());
-      Assert.AreEqual("utf-8",new MediaType("text/plain; foo='; charset=\"UTF-8\"").GetCharset());
-      Assert.AreEqual("utf-8",new MediaType("text/plain; foo=bar; charset=\"UTF-8\"").GetCharset());
-      Assert.AreEqual("utf-8",new MediaType("text/plain; charset=\"UTF-\\8\"").GetCharset());
+    public void TestMediaTypeEncoding() {
+      SingleTestMediaTypeEncoding("xyz","x/y;z=xyz");
+      SingleTestMediaTypeEncoding("xy z","x/y;z=\"xy z\"");
+      SingleTestMediaTypeEncoding("xy\u00a0z","x/y;z*=utf-8''xy%C2%A0z");
+      SingleTestMediaTypeEncoding("xy\ufffdz","x/y;z*=utf-8''xy%C2z");
+      SingleTestMediaTypeEncoding("xy"+Repeat("\ufffc",50)+"z","x/y;z*=utf-8''xy"+Repeat("%EF%BF%BD",50)+"z");
+      SingleTestMediaTypeEncoding("xy"+Repeat("\u00a0",50)+"z","x/y;z*=utf-8''xy"+Repeat("%C2%A0",50)+"z");
+    }
+
+    [Test]
+    public void TestRfc2231Extensions() {
+      TestRfc2231Extension("text/plain; charset=\"utf-8\"","charset","utf-8");
+      TestRfc2231Extension("text/plain; charset*=us-ascii'en'utf-8","charset","utf-8");
+      TestRfc2231Extension("text/plain; charset*=us-ascii''utf-8","charset","utf-8");
+      TestRfc2231Extension("text/plain; charset*='en'utf-8","charset","utf-8");
+      TestRfc2231Extension("text/plain; charset*=''utf-8","charset","utf-8");
+      TestRfc2231Extension("text/plain; charset*0=a;charset*1=b","charset","ab");
+      TestRfc2231Extension("text/plain; charset*=utf-8''a%20b","charset","a b");
+      TestRfc2231Extension("text/plain; charset*=iso-8859-1''a%a0b","charset","a\u00a0b");
+      TestRfc2231Extension("text/plain; charset*=utf-8''a%c2%a0b","charset","a\u00a0b");
+      TestRfc2231Extension("text/plain; charset*=iso-8859-1''a%a0b","charset","a\u00a0b");
+      TestRfc2231Extension("text/plain; charset*=utf-8''a%c2%a0b","charset","a\u00a0b");
+      TestRfc2231Extension("text/plain; charset*0=\"a\";charset*1=b","charset","ab");
+      TestRfc2231Extension("text/plain; charset*0*=utf-8''a%20b;charset*1*=c%20d","charset","a bc d");
+      TestRfc2231Extension("text/plain; charset*0=ab;charset*1*=iso-8859-1'en'xyz",
+                           "charset",
+                           "abiso-8859-1'en'xyz");
+      TestRfc2231Extension("text/plain; charset*0*=utf-8''a%20b;charset*1*=iso-8859-1'en'xyz",
+                           "charset",
+                           "a biso-8859-1'en'xyz");
+      TestRfc2231Extension("text/plain; charset*0*=utf-8''a%20b;charset*1=a%20b",
+                           "charset",
+                           "a ba%20b");
     }
 
     [Test]
@@ -431,6 +391,7 @@ namespace CBORTest
       TestFailQuotedPrintable("te\u007fst");
       TestFailQuotedPrintable("te\u00a0st");
       TestFailQuotedPrintable("te=3");
+      TestDecodeQuotedPrintable("te  \r\n","te\r\n");
       TestDecodeQuotedPrintable("te   \r\nst","te\r\nst");
       TestDecodeQuotedPrintable("te   w\r\nst","te   w\r\nst");
       TestDecodeQuotedPrintable("te   =\r\nst","te   st");
@@ -444,13 +405,82 @@ namespace CBORTest
       TestFailQuotedPrintableNonLenient("te=\rst");
       TestFailQuotedPrintableNonLenient("te=\nst");
       TestFailQuotedPrintableNonLenient("te=\r");
+      TestFailQuotedPrintableNonLenient("te=\n");
+      TestFailQuotedPrintableNonLenient("te   \rst");
+      TestFailQuotedPrintableNonLenient("te   \nst");
       TestFailQuotedPrintableNonLenient(Repeat("a",77));
       TestFailQuotedPrintableNonLenient(Repeat("=7F",26));
       TestFailQuotedPrintableNonLenient("aa\r\n"+Repeat("a",77));
       TestFailQuotedPrintableNonLenient("aa\r\n"+Repeat("=7F",26));
-      TestFailQuotedPrintableNonLenient("te=\n");
-      TestFailQuotedPrintableNonLenient("te   \rst");
-      TestFailQuotedPrintableNonLenient("te   \nst");
+    }
+    public void TestEncodedWordsPhrase(string expected, string input) {
+      Assert.AreEqual(expected+" <test@example.com>",HeaderFields.GetParser("from")
+                      .ReplaceEncodedWords(input+" <test@example.com>"));
+    }
+
+    public void TestEncodedWordsOne(string expected, string input) {
+      Assert.AreEqual(expected, Message.ReplaceEncodedWords(input));
+      Assert.AreEqual("("+expected+") en",HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords("("+input+") en"));
+      Assert.AreEqual("  ("+expected+") en",HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords("  ("+input+") en"));
+      Assert.AreEqual("  (comment (cmt "+expected+")comment) en",
+                      HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords("  (comment (cmt "+input+")comment) en"));
+      Assert.AreEqual("  (comment (=?bad?= "+expected+")comment) en",
+                      HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords("  (comment (=?bad?= "+input+")comment) en"));
+      Assert.AreEqual("  (comment ("+expected+")comment) en",
+                      HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords("  (comment ("+input+")comment) en"));
+      Assert.AreEqual("  ("+expected+"()) en",HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords("  ("+input+"()) en"));
+      Assert.AreEqual(" en ("+expected+")",HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords(" en ("+input+")"));
+      Assert.AreEqual(expected,HeaderFields.GetParser("subject")
+                      .ReplaceEncodedWords(input));
+    }
+
+    [Test]
+    public void TestEncodedWords() {
+      TestEncodedWordsPhrase("(sss) y","(sss) =?us-ascii?q?y?=");
+      TestEncodedWordsPhrase("xy","=?us-ascii?q?x?= =?us-ascii?q?y?=");
+      TestEncodedWordsPhrase("=?bad1?= =?bad2?= =?bad3?=","=?bad1?= =?bad2?= =?bad3?=");
+      TestEncodedWordsPhrase("y =?bad2?= =?bad3?=","=?us-ascii?q?y?= =?bad2?= =?bad3?=");
+      TestEncodedWordsPhrase("=?bad1?= y =?bad3?=","=?bad1?= =?us-ascii?q?y?= =?bad3?=");
+      TestEncodedWordsPhrase("xy","=?us-ascii?q?x?=    =?us-ascii?q?y?=");
+      TestEncodedWordsPhrase(" xy"," =?us-ascii?q?x?= =?us-ascii?q?y?=");
+      TestEncodedWordsPhrase("xy (sss)","=?us-ascii?q?x?= =?us-ascii?q?y?= (sss)");
+      TestEncodedWordsPhrase("x (sss) y","=?us-ascii?q?x?= (sss) =?us-ascii?q?y?=");
+      TestEncodedWordsPhrase("x (z) y","=?us-ascii?q?x?= (=?utf-8?q?z?=) =?us-ascii?q?y?=");
+      TestEncodedWordsPhrase("=?us-ascii?q?x?=(sss)=?us-ascii?q?y?=",
+                             "=?us-ascii?q?x?=(sss)=?us-ascii?q?y?=");
+      TestEncodedWordsPhrase("=?us-ascii?q?x?=(z)=?us-ascii?q?y?=",
+                             "=?us-ascii?q?x?=(=?utf-8?q?z?=)=?us-ascii?q?y?=");
+      TestEncodedWordsPhrase("=?us-ascii?q?x?=(z) y",
+                             "=?us-ascii?q?x?=(=?utf-8?q?z?=) =?us-ascii?q?y?=");
+      //
+      TestEncodedWordsOne("x y",("=?utf-8?q?x_?= =?utf-8?q?y?="));
+      TestEncodedWordsOne("abcde abcde",("abcde abcde"));
+      TestEncodedWordsOne("abcde",("abcde"));
+      TestEncodedWordsOne("abcde",("=?utf-8?q?abcde?="));
+      TestEncodedWordsOne("=?utf-8?q?abcde?=extra",("=?utf-8?q?abcde?=extra"));
+      TestEncodedWordsOne("abcde  ",("=?utf-8?q?abcde?=  "));
+      TestEncodedWordsOne(" abcde",(" =?utf-8?q?abcde?="));
+      TestEncodedWordsOne("  abcde",("  =?utf-8?q?abcde?="));
+      TestEncodedWordsOne("ab\u00a0de",("=?utf-8?q?ab=C2=A0de?="));
+      TestEncodedWordsOne("xy",("=?utf-8?q?x?= =?utf-8?q?y?="));
+      TestEncodedWordsOne("x y",("x =?utf-8?q?y?="));
+      TestEncodedWordsOne("x   y",("x   =?utf-8?q?y?="));
+      TestEncodedWordsOne("x y",("=?utf-8?q?x?= y"));
+      TestEncodedWordsOne("x   y",("=?utf-8?q?x?=   y"));
+      TestEncodedWordsOne("xy",("=?utf-8?q?x?=   =?utf-8?q?y?="));
+      TestEncodedWordsOne("abc de",("=?utf-8?q?abc=20de?="));
+      TestEncodedWordsOne("abc de",("=?utf-8?q?abc_de?="));
+      TestEncodedWordsOne("abc\ufffdde",("=?us-ascii?q?abc=90de?="));
+      TestEncodedWordsOne("=?x-undefined?q?abcde?=",("=?x-undefined?q?abcde?="));
+      TestEncodedWordsOne("=?utf-8?q?"+Repeat("x",200)+"?=",
+                          ("=?utf-8?q?"+Repeat("x",200)+"?="));
     }
 
     [Test]
@@ -478,8 +508,8 @@ namespace CBORTest
       TestQuotedPrintable("te\nst","te=0Ast","te=0Ast","te\r\nst");
       TestQuotedPrintable("te  \r\nst","te  =0D=0Ast","te =20\r\nst","te =20\r\nst");
       TestQuotedPrintable("te \r\nst","te =0D=0Ast","te=20\r\nst","te=20\r\nst");
-      TestQuotedPrintable("te \t\r\nst","te \t=0D=0Ast","te =09\r\nst","te =09\r\nst");
-      TestQuotedPrintable("te\t\r\nst","te\t=0D=0Ast","te=09\r\nst","te=09\r\nst");
+      TestQuotedPrintable("te \t\r\nst","te =09=0D=0Ast","te =09\r\nst","te =09\r\nst");
+      TestQuotedPrintable("te\t\r\nst","te=09=0D=0Ast","te=09\r\nst","te=09\r\nst");
       TestQuotedPrintable(Repeat("a",75),Repeat("a",75));
       TestQuotedPrintable(Repeat("a",76),Repeat("a",75)+"=\r\na");
       TestQuotedPrintable(Repeat("\u000c",30),Repeat("=0C",25)+"=\r\n"+Repeat("=0C",5));

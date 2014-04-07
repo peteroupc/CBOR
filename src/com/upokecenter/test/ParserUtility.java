@@ -1,3 +1,4 @@
+package com.upokecenter.test; import com.upokecenter.util.*;
 /*
  * Created by SharpDevelop.
  * User: Peter
@@ -6,22 +7,19 @@
  *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace CBORTest
-{
-  internal sealed class ParserUtility {
-    internal static string ToLowerCaseAscii(string str) {
+import java.util.*;
+
+  final class ParserUtility {
+    static String ToLowerCaseAscii(String str) {
       if (str == null) {
         return null;
       }
-      int len = str.Length;
+      int len = str.length();
       char c=(char)0;
-      bool hasUpperCase = false;
+      boolean hasUpperCase = false;
       for (int i = 0; i < len; ++i) {
-        c = str[i];
+        c = str.charAt(i);
         if (c>= 'A' && c<= 'Z') {
           hasUpperCase = true;
           break;
@@ -32,73 +30,73 @@ namespace CBORTest
       }
       StringBuilder builder = new StringBuilder();
       for (int i = 0; i < len; ++i) {
-        c = str[i];
+        c = str.charAt(i);
         if (c>= 'A' && c<= 'Z') {
-          builder.Append((char)(c + 0x20));
+          builder.append((char)(c + 0x20));
         } else {
-          builder.Append(c);
+          builder.append(c);
         }
       }
-      return builder.ToString();
+      return builder.toString();
     }
 
-    public static bool EndsWith(string str, string suffix, int index) {
-      if (str == null || suffix == null || index<0 || index >= str.Length) {
-        throw new ArgumentException();
+    public static boolean EndsWith(String str, String suffix, int index) {
+      if (str == null || suffix == null || index<0 || index >= str.length()) {
+        throw new IllegalArgumentException();
       }
-      int endpos = suffix.Length + index;
-      if (endpos>str.Length) {
+      int endpos = suffix.length() + index;
+      if (endpos>str.length()) {
         return false;
       }
-      return str.Substring(index, (endpos)-(index)).Equals(suffix);
+      return str.substring(index,endpos).equals(suffix);
     }
 
-    public static bool StartsWith(string str, string prefix) {
+    public static boolean StartsWith(String str, String prefix) {
       if (str == null || prefix == null) {
-        throw new ArgumentException();
+        throw new IllegalArgumentException();
       }
-      if (prefix.Length<str.Length) {
+      if (prefix.length()<str.length()) {
         return false;
       }
-      return str.Substring(0, prefix.Length).Equals(prefix);
+      return str.substring(0,prefix.length()).equals(prefix);
     }
 
-    public static string TrimSpaceAndTab(string s) {
-      if (s == null || s.Length == 0) {
+    public static String TrimSpaceAndTab(String s) {
+      if (s == null || s.length() == 0) {
         return s;
       }
       int index = 0;
-      int sLength = s.Length;
+      int sLength = s.length();
       while (index<sLength) {
-        char c = s[index];
+        char c = s.charAt(index);
         if (c != 0x09 && c != 0x20) {
           break;
         }
         ++index;
       }
       if (index == sLength) {
-        return String.Empty;
+        return "";
       }
       int startIndex = index;
       index = sLength-1;
       while (index >= 0) {
-        char c = s[index];
+        char c = s.charAt(index);
         if (c != 0x09 && c != 0x20) {
-          return s.Substring(startIndex, (index + 1)-(startIndex));
+          return s.substring(startIndex,index + 1);
         }
         --index;
       }
-      return String.Empty;
+      return "";
     }
 
-    public static bool IsNullEmptyOrWhitespace(string str) {
-      return String.IsNullOrEmpty(str) || SkipSpaceAndTab(str, 0, str.Length) == str.Length;
+    public static boolean IsNullEmptyOrWhitespace(String str) {
+      return ((str)==null || (str).length()==0) || SkipSpaceAndTab(str, 0, str.length()) == str.length();
     }
 
     // Wsp, a.k.a. 1*LWSP-char under RFC 822
-    public static int SkipSpaceAndTab(string str, int index, int endIndex) {
+    public static int SkipSpaceAndTab(String str, int index, int endIndex) {
       while (index<endIndex) {
-        if (str[index]==0x09 || str[index]==0x20) {
+        if (str.charAt(index)==0x09 || str.charAt(index)==0x20) {
           ++index;
         } else {
           break;
@@ -106,21 +104,21 @@ namespace CBORTest
       }
       return index;
     }
-    public static int SkipCrLf(string str, int index, int endIndex) {
-      if (index + 1<endIndex && str[index]==0x0d && str[index + 1]==0x0a) {
+    public static int SkipCrLf(String str, int index, int endIndex) {
+      if (index + 1<endIndex && str.charAt(index)==0x0d && str.charAt(index + 1)==0x0a) {
         return index + 2;
       } else {
         return index;
       }
     }
 
-    public static bool IsValidLanguageTag(string str) {
+    public static boolean IsValidLanguageTag(String str) {
       int index = 0;
-      int endIndex = str.Length;
+      int endIndex = str.length();
       int startIndex = index;
       if (index + 1<endIndex) {
-        char c1 = str[index];
-        char c2 = str[index + 1];
+        char c1 = str.charAt(index);
+        char c2 = str.charAt(index + 1);
         if (
           ((c1>= 'A' && c1<= 'Z') || (c1>= 'a' && c1<= 'z')) &&
           ((c2>= 'A' && c2<= 'Z') || (c2>= 'a' && c2<= 'z'))
@@ -133,7 +131,7 @@ namespace CBORTest
           // convert the language tag to lower case
           // to simplify handling
           str = ParserUtility.ToLowerCaseAscii(str);
-          c1 = str[index];
+          c1 = str.charAt(index);
           // Straightforward cases
           if (c1>= 'a' && c1<= 'z') {
             ++index;
@@ -141,31 +139,31 @@ namespace CBORTest
             if (index == endIndex) {
  return true;
 }
-            c1 = str[index];  // get the next character
+            c1 = str.charAt(index);  // get the next character
           }
           if (c1=='-') { // case AA- or AAA-
             ++index;
             if (index + 2 == endIndex) {  // case AA-?? or AAA-??
-              c1 = str[index];
-              c2 = str[index];
+              c1 = str.charAt(index);
+              c2 = str.charAt(index);
               if ((c1>= 'a' && c1<= 'z') && (c2>= 'a' && c2<= 'z')) {
  return true;  // case AA-BB or AAA-BB
 }
             }
           }
           // match grandfathered language tags
-          if (str.Equals("sgn-be-fr") || str.Equals("sgn-be-nl") || str.Equals("sgn-ch-de") ||
-             str.Equals("en-gb-oed")) {
+          if (str.equals("sgn-be-fr") || str.equals("sgn-be-nl") || str.equals("sgn-ch-de") ||
+             str.equals("en-gb-oed")) {
  return true;
 }
           // More complex cases
-          string[] splitString = null;  // TODO: Add splitAt
-          //StringUtility.splitAt(str.Substring(startIndex,(endIndex)-(startIndex)),"-");
-          if (splitString.Length == 0) {
+          String[] splitString = null;  // TODO: Add splitAt
+          //StringUtility.splitAt(str.substring(startIndex,endIndex),"-");
+          if (splitString.length == 0) {
  return false;
 }
           int splitIndex = 0;
-          int splitLength = splitString.Length;
+          int splitLength = splitString.length;
           int len = lengthIfAllAlpha(splitString[splitIndex]);
           if (len<2 || len>8) {
  return false;
@@ -196,26 +194,26 @@ namespace CBORTest
             ++splitIndex;
           }
           // variant, any number
-          IList<string> variants = null;
+          List<String> variants = null;
           while (splitIndex<splitLength) {
-            string curString = splitString[splitIndex];
+            String curString = splitString[splitIndex];
             len = lengthIfAllAlphaNum(curString);
             if (len >= 5 && len <= 8) {
               if (variants == null) {
-                variants = new List<string>();
+                variants = new ArrayList<String>();
               }
               if (!variants.Contains(curString)) {
-                variants.Add(curString);
+                variants.add(curString);
               } else {
  return false;  // variant already exists; see point 5 in section 2.2.5
 }
               ++splitIndex;
-            } else if (len==4 && (curString[0]>= '0' && curString[0]<= '9')) {
+            } else if (len==4 && (curString.charAt(0)>= '0' && curString.charAt(0)<= '9')) {
               if (variants == null) {
-                variants = new List<string>();
+                variants = new ArrayList<String>();
               }
               if (!variants.Contains(curString)) {
-                variants.Add(curString);
+                variants.add(curString);
               } else {
  return false;  // variant already exists; see point 5 in section 2.2.5
 }
@@ -229,20 +227,20 @@ namespace CBORTest
             variants.Clear();
           }
           while (splitIndex<splitLength) {
-            string curString = splitString[splitIndex];
+            String curString = splitString[splitIndex];
             int curIndex = splitIndex;
             if (lengthIfAllAlphaNum(curString) == 1 &&
-               !curString.Equals("x")) {
+               !curString.equals("x")) {
               if (variants == null) {
-                variants = new List<string>();
+                variants = new ArrayList<String>();
               }
               if (!variants.Contains(curString)) {
-                variants.Add(curString);
+                variants.add(curString);
               } else {
  return false;  // extension already exists
 }
               ++splitIndex;
-              bool havetoken = false;
+              boolean havetoken = false;
               while (splitIndex<splitLength) {
                 curString = splitString[splitIndex];
                 len = lengthIfAllAlphaNum(curString);
@@ -264,9 +262,9 @@ namespace CBORTest
           // optional private use
           if (splitIndex<splitLength) {
             int curIndex = splitIndex;
-            if (splitString[splitIndex].Equals("x")) {
+            if (splitString[splitIndex].equals("x")) {
               ++splitIndex;
-              bool havetoken = false;
+              boolean havetoken = false;
               while (splitIndex<splitLength) {
                 len = lengthIfAllAlphaNum(splitString[splitIndex]);
                 if (len >= 1 && len <= 8) {
@@ -288,12 +286,12 @@ namespace CBORTest
           ++index;
           while (index<endIndex) {
             int count = 0;
-            if (str[index]!='-') {
+            if (str.charAt(index)!='-') {
  return false;
 }
             ++index;
             while (index<endIndex) {
-              c1 = str[index];
+              c1 = str.charAt(index);
               if ((c1>= 'A' && c1<= 'Z') || (c1>= 'a' && c1<= 'z') || (c1>= '0' && c1<= '9')) {
                 ++count;
                 if (count>8) {
@@ -314,13 +312,13 @@ namespace CBORTest
         } else if (c2=='-' && (c1=='i' || c1=='I')) {
           // grandfathered language tags
           str = ToLowerCaseAscii(str);
-          return (str.Equals("i-ami") || str.Equals("i-bnn") ||
-                  str.Equals("i-default") || str.Equals("i-enochian") ||
-                  str.Equals("i-hak") || str.Equals("i-klingon") ||
-                  str.Equals("i-lux") || str.Equals("i-navajo") ||
-                  str.Equals("i-mingo") || str.Equals("i-pwn") ||
-                  str.Equals("i-tao") || str.Equals("i-tay") ||
-                  str.Equals("i-tsu"));
+          return (str.equals("i-ami") || str.equals("i-bnn") ||
+                  str.equals("i-default") || str.equals("i-enochian") ||
+                  str.equals("i-hak") || str.equals("i-klingon") ||
+                  str.equals("i-lux") || str.equals("i-navajo") ||
+                  str.equals("i-mingo") || str.equals("i-pwn") ||
+                  str.equals("i-tao") || str.equals("i-tay") ||
+                  str.equals("i-tsu"));
         } else {
  return false;
 }
@@ -329,10 +327,10 @@ namespace CBORTest
 }
     }
 
-    private static int lengthIfAllAlpha(string str) {
-      int len=(str == null) ? 0 : str.Length;
+    private static int lengthIfAllAlpha(String str) {
+      int len=(str == null) ? 0 : str.length();
       for (int i = 0; i < len; ++i) {
-        char c1 = str[i];
+        char c1 = str.charAt(i);
         if (!((c1>= 'A' && c1<= 'Z') || (c1>= 'a' && c1<= 'z'))) {
  return 0;
 }
@@ -340,10 +338,10 @@ namespace CBORTest
       return len;
     }
 
-    private static int lengthIfAllAlphaNum(string str) {
-      int len=(str == null) ? 0 : str.Length;
+    private static int lengthIfAllAlphaNum(String str) {
+      int len=(str == null) ? 0 : str.length();
       for (int i = 0; i < len; ++i) {
-        char c1 = str[i];
+        char c1 = str.charAt(i);
         if (!((c1>= 'A' && c1<= 'Z') || (c1>= 'a' && c1<= 'z') || (c1>= '0' && c1<= '9'))) {
  return 0;
 }
@@ -351,10 +349,10 @@ namespace CBORTest
       return len;
     }
 
-    private static int lengthIfAllDigit(string str) {
-      int len=(str == null) ? 0 : str.Length;
+    private static int lengthIfAllDigit(String str) {
+      int len=(str == null) ? 0 : str.length();
       for (int i = 0; i < len; ++i) {
-        char c1 = str[i];
+        char c1 = str.charAt(i);
         if (!(c1>= '0' && c1<= '9')) {
  return 0;
 }
@@ -362,4 +360,3 @@ namespace CBORTest
       return len;
     }
   }
-}
