@@ -490,7 +490,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * @return The string read.
      * @throws java.io.IOException An I/O error occurred.
      * @throws java.lang.NullPointerException The parameter {@code stream}
-     * is null or "builder" is null.
+     * is null.
      */
     public static String ReadUtf8ToString(
       InputStream stream) throws IOException {
@@ -510,7 +510,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * @throws java.io.IOException An I/O error occurred; or, the string
      * is not valid UTF-8 and {@code replace} is false.
      * @throws java.lang.NullPointerException The parameter {@code stream}
-     * is null or "builder" is null.
+     * is null.
      */
     public static String ReadUtf8ToString(
       InputStream stream,

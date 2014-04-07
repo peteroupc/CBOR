@@ -141,8 +141,8 @@ private CBORUtilities() {
       int length = offset + count;
       int i = offset;
       for (i = offset; i < length; i += 3) {
-        if (data[i] == (byte)'(' || data[i] == (byte)')' || data[i]==(byte)'"' ||
-            data[i] == (byte)'=' || data[i] == (byte)'?' || data[i]==(byte)'_' ||
+        if (data[i] == (byte)'(' || data[i] == (byte)')' || data[i] == (byte)'"' ||
+            data[i] == (byte)'=' || data[i] == (byte)'?' || data[i] == (byte)'_' ||
             data[i] < 0x20 || data[i] >= 0x7f) {
           str.append('=');
           str.append(HexAlphabet.charAt((data[i] >> 4) & 15));

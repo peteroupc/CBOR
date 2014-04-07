@@ -1,3 +1,4 @@
+package com.upokecenter.test; import com.upokecenter.util.*;
 /*
  * Created by SharpDevelop.
  * User: Peter
@@ -6,78 +7,79 @@
  *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Text;
 
-using NUnit.Framework;
-using PeterO;
-using PeterO.Cbor;
+import java.util.*;
 
-namespace CBORTest
-{
-  internal sealed class Message {
-    private IList<string> headers;
+import java.io.*;
 
-    private IList<Message> parts;
+import org.junit.Assert;
 
-    private const int EncodingSevenBit = 0;
-    private const int EncodingUnknown=-1;
-    private const int EncodingEightBit = 3;
-    private const int EncodingBinary = 4;
-    private const int EncodingQuotedPrintable = 1;
-    private const int EncodingBase64 = 2;
+import com.upokecenter.util.*;
+import com.upokecenter.cbor.*;
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
-    public IList<Message> Parts {
-      get {
+  final class Message {
+    private List<String> headers;
+
+    private List<Message> parts;
+
+    private static final int EncodingSevenBit = 0;
+    private static final int EncodingUnknown=-1;
+    private static final int EncodingEightBit = 3;
+    private static final int EncodingBinary = 4;
+    private static final int EncodingQuotedPrintable = 1;
+    private static final int EncodingBase64 = 2;
+
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+    public List<Message> getParts() {
         return parts;
       }
-    }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
-    public IList<string> Headers {
-      get {
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+    public List<String> getHeaders() {
         return headers;
       }
-    }
 
     private byte[] body;
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
-    /// <returns>A byte[] object.</returns>
+    /**
+     * Gets a value not documented yet.
+     * @return A byte[] object.
+     */
     public byte[] GetBody() {
       return body;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='str'>A string object.</param>
-    public void SetBody(string str) {
+    /**
+     * Not documented yet.
+     * @param str A string object.
+     */
+    public void SetBody(String str) {
       body = DataUtilities.GetUtf8Bytes(str, true);
       contentType=MediaType.Parse("text/plain; charset=utf-8");
     }
 
-    public Message(Stream stream) {
+    public Message (InputStream stream) {
       if ((stream) == null) {
-        throw new ArgumentNullException("stream");
+        throw new NullPointerException("stream");
       }
-      headers = new List<string>();
-      parts = new List<Message>();
+      headers = new ArrayList<String>();
+      parts = new ArrayList<Message>();
       ReadMessage(new WrappedStream(stream));
     }
-    public Message() {
-      headers = new List<string>();
-      parts = new List<Message>();
+    public Message () {
+      headers = new ArrayList<String>();
+      parts = new ArrayList<Message>();
     }
 
-    internal static int skipComment(string str, int index, int endIndex) {
+    static int skipComment(String str, int index, int endIndex) {
       int startIndex = index;
-      if (!(index<endIndex && str[index]=='('))
+      if (!(index<endIndex && str.charAt(index)=='('))
         return index;
       ++index;
       while (index<endIndex) {
@@ -85,14 +87,14 @@ namespace CBORTest
         // folding whitespace too, but this method assumes
         // unfolded values)
         index = ParserUtility.SkipSpaceAndTab(str, index, endIndex);
-        char c = str[index];
+        char c = str.charAt(index);
         if (c==')') {
           return index + 1;
         }
         int oldIndex = index;
         // skip comment character (RFC5322 sec. 3.2.1)
         if (index<endIndex) {
-          c = str[index];
+          c = str.charAt(index);
           if (c>= 33 && c<= 126 && c!='(' && c!=')' && c!='\\') {
             ++index;
           } else if ((c<0x20 && c != 0x00 && c != 0x09 && c != 0x0a && c != 0x0d)  || c == 0x7f) {
@@ -104,8 +106,8 @@ namespace CBORTest
           continue;
         }
         // skip quoted-pair (RFC5322 sec. 3.2.1)
-        if (index+1<endIndex && str[index]=='\\') {
-          c = str[index + 1];
+        if (index+1<endIndex && str.charAt(index)=='\\') {
+          c = str.charAt(index + 1);
           if (c == 0x20 || c == 0x09 || (c >= 0x21 && c <= 0x7e)) {
             index+=2;
           }
@@ -123,65 +125,48 @@ namespace CBORTest
       }
       return startIndex;
     }
-    internal static string ReplaceEncodedWords(string str) {
+    static String ReplaceEncodedWords(String str) {
       if ((str) == null) {
-        throw new ArgumentNullException("str");
+        throw new NullPointerException("str");
       }
-      return ReplaceEncodedWords(str, 0, str.Length, false);
+      return ReplaceEncodedWords(str, 0, str.length(), false);
     }
 
-    internal static string ReplaceEncodedWords(string str, int index, int endIndex, bool inComments) {
-      #if DEBUG
-      if ((str) == null) {
-        throw new ArgumentNullException("str");
-      }
-      if (index < 0) {
-        throw new ArgumentException("index (" + Convert.ToString((long)(index), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-      }
-      if (index > str.Length) {
-        throw new ArgumentException("index (" + Convert.ToString((long)(index), System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)(str.Length), System.Globalization.CultureInfo.InvariantCulture));
-      }
-      if (endIndex < 0) {
-        throw new ArgumentException("endIndex (" + Convert.ToString((long)(endIndex), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-      }
-      if (endIndex > str.Length) {
-        throw new ArgumentException("endIndex (" + Convert.ToString((long)(endIndex), System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)(str.Length), System.Globalization.CultureInfo.InvariantCulture));
-      }
-      #endif
+    static String ReplaceEncodedWords(String str, int index, int endIndex, boolean inComments) {
 
       if (endIndex-index< 9) {
-        return str.Substring(index, endIndex-index);
+        return str.substring(index,(index)+(endIndex-index));
       }
-      if (str.IndexOf('=')< 0) {
-        return str.Substring(index, endIndex-index);
+      if (str.indexOf('=')< 0) {
+        return str.substring(index,(index)+(endIndex-index));
       }
       StringBuilder builder = new StringBuilder();
-      bool lastWordWasEncodedWord = false;
+      boolean lastWordWasEncodedWord = false;
       int whitespaceStart=-1;
       int whitespaceEnd=-1;
       while (index<endIndex) {
         int charCount = 2;
-        bool acceptedEncodedWord = false;
-        string decodedWord = null;
+        boolean acceptedEncodedWord = false;
+        String decodedWord = null;
         int startIndex = 0;
-        bool havePossibleEncodedWord = false;
-        bool startParen = false;
-        if (index+1<endIndex && str[index]=='=' && str[index+1]=='?') {
+        boolean havePossibleEncodedWord = false;
+        boolean startParen = false;
+        if (index+1<endIndex && str.charAt(index)=='=' && str.charAt(index+1)=='?') {
           startIndex = index + 2;
           index+=2;
           havePossibleEncodedWord = true;
-        } else if (inComments && index+2<endIndex && str[index]=='(' &&
-                   str[index+1]=='=' && str[index+2]=='?') {
+        } else if (inComments && index+2<endIndex && str.charAt(index)=='(' &&
+                   str.charAt(index+1)=='=' && str.charAt(index+2)=='?') {
           startIndex = index + 3;
           index+=3;
           startParen = true;
           havePossibleEncodedWord = true;
         }
         if (havePossibleEncodedWord) {
-          bool maybeWord = true;
+          boolean maybeWord = true;
           int afterLast = endIndex;
           while (index<endIndex) {
-            char c = str[index];
+            char c = str.charAt(index);
             ++index;
             // Check for a run of printable ASCII characters (except space)
             // with length up to 75 (also exclude '(' and ')' if 'inComments'
@@ -200,7 +185,7 @@ namespace CBORTest
           }
           if (maybeWord) {
             // May be an encoded word
-            //Console.WriteLine("maybe "+str.Substring(startIndex-2,afterLast-(startIndex-2)));
+            //System.out.println("maybe "+str.substring(startIndex-2,(startIndex-2)+(afterLast-(startIndex-2))));
             index = startIndex;
             int i2;
             // Parse charset
@@ -209,16 +194,16 @@ namespace CBORTest
             // RFC 2047, which includes '*')
             int charsetEnd=-1;
             int encodedTextStart=-1;
-            bool base64 = false;
+            boolean base64 = false;
             i2 = MediaType.skipMimeTokenRfc2047(str, index, afterLast);
-            if (i2!=index && i2<endIndex && str[i2]=='?') {
+            if (i2!=index && i2<endIndex && str.charAt(i2)=='?') {
               // Parse encoding
               charsetEnd = i2;
               index = i2 + 1;
               i2 = MediaType.skipMimeTokenRfc2047(str, index, afterLast);
-              if (i2!=index && i2<endIndex && str[i2]=='?') {
+              if (i2!=index && i2<endIndex && str.charAt(i2)=='?') {
                 // check for supported encoding (B or Q)
-                char encodingChar = str[index];
+                char encodingChar = str.charAt(index);
                 if (i2-index==1 && (encodingChar=='b' || encodingChar=='B' ||
                                     encodingChar=='q' || encodingChar=='Q')) {
                   // Parse encoded text
@@ -226,7 +211,7 @@ namespace CBORTest
                   index = i2 + 1;
                   encodedTextStart = index;
                   i2 = MediaType.skipEncodedTextRfc2047(str, index, afterLast, inComments);
-                  if (i2!=index && i2+1<endIndex && str[i2]=='?' && str[i2+1]=='=' &&
+                  if (i2!=index && i2+1<endIndex && str.charAt(i2)=='?' && str.charAt(i2+1)=='=' &&
                       i2 + 2 == afterLast) {
                     acceptedEncodedWord = true;
                     i2+=2;
@@ -235,13 +220,13 @@ namespace CBORTest
               }
             }
             if (acceptedEncodedWord) {
-              string charset = str.Substring(startIndex, charsetEnd-startIndex);
-              string encodedText = str.Substring(encodedTextStart, (afterLast-2)-
-                                                 encodedTextStart);
-              int asterisk=charset.IndexOf('*');
+              String charset = str.substring(startIndex,(startIndex)+(charsetEnd-startIndex));
+              String encodedText = str.substring(encodedTextStart,(encodedTextStart)+((afterLast-2)-
+                                                 encodedTextStart));
+              int asterisk=charset.indexOf('*');
               if (asterisk >= 1) {
-                charset = str.Substring(0, asterisk);
-                string language = str.Substring(asterisk + 1, str.Length-(asterisk + 1));
+                charset = str.substring(0,asterisk);
+                String language = str.substring(asterisk + 1,(asterisk + 1)+(str.length()-(asterisk + 1)));
                 if (!ParserUtility.IsValidLanguageTag(language)) {
                   acceptedEncodedWord = false;
                 }
@@ -255,20 +240,20 @@ namespace CBORTest
                   (ITransform)new QEncodingStringTransform(encodedText);
                 Charsets.ICharset encoding = Charsets.GetCharset(charset);
                 if (encoding == null) {
-                  Console.WriteLine("Unknown charset "+charset);
-                  decodedWord = str.Substring(startIndex-2, afterLast-(startIndex-2));
+                  System.out.println("Unknown charset "+charset);
+                  decodedWord = str.substring(startIndex-2,(startIndex-2)+(afterLast-(startIndex-2)));
                 } else {
-                  //Console.WriteLine("Encoded " + (base64 ? "B" : "Q") + " to: " + (encoding.GetString(transform)));
+                  //System.out.println("Encoded " + (base64 ? "B" : "Q") + " to: " + (encoding.GetString(transform)));
                   decodedWord = encoding.GetString(transform);
                 }
                 // TODO: decodedWord may itself be part of an encoded word
                 // or contain ASCII control characters: encoded word decoding is
                 // not idempotent; if this is a comment it could also contain '(', ')', and '\'
               } else {
-                decodedWord = str.Substring(startIndex-2, afterLast-(startIndex-2));
+                decodedWord = str.substring(startIndex-2,(startIndex-2)+(afterLast-(startIndex-2)));
               }
             } else {
-              decodedWord = str.Substring(startIndex-2, afterLast-(startIndex-2));
+              decodedWord = str.substring(startIndex-2,(startIndex-2)+(afterLast-(startIndex-2)));
             }
             index = afterLast;
           }
@@ -277,30 +262,30 @@ namespace CBORTest
             (!acceptedEncodedWord || !lastWordWasEncodedWord)) {
           // Append whitespace as long as it doesn't occur between two
           // encoded words
-          builder.Append(str.Substring(whitespaceStart, whitespaceEnd-whitespaceStart));
+          builder.append(str.substring(whitespaceStart,(whitespaceStart)+(whitespaceEnd-whitespaceStart)));
         }
         if (startParen) {
-          builder.Append('(');
+          builder.append('(');
         }
         if (decodedWord != null) {
-          builder.Append(decodedWord);
+          builder.append(decodedWord);
         }
-        // Console.WriteLine("" + index + " " + endIndex + " [" + (index<endIndex ? str[index] : '~') + "]");
+        // System.out.println("" + index + " " + endIndex + " [" + (index<endIndex ? str.charAt(index) : '~') + "]");
         // Read to whitespace
         int oldIndex = index;
         while (index<endIndex) {
-          char c = str[index];
+          char c = str.charAt(index);
           if (c == 0x09 || c == 0x20) {
             break;
           } else {
             ++index;
           }
         }
-        bool hasNonWhitespace=(oldIndex != index);
+        boolean hasNonWhitespace=(oldIndex != index);
         whitespaceStart = index;
         // Read to nonwhitespace
         while (index<endIndex) {
-          char c = str[index];
+          char c = str.charAt(index);
           if (c == 0x09 || c == 0x20) {
             ++index;
           } else {
@@ -308,26 +293,26 @@ namespace CBORTest
           }
         }
         whitespaceEnd = index;
-        if (builder.Length == 0 && oldIndex == 0 && index == str.Length) {
-          // Nothing to replace, and the whole string
+        if (builder.length() == 0 && oldIndex == 0 && index == str.length()) {
+          // Nothing to replace, and the whole String
           // is being checked
           return str;
         }
         if (oldIndex != index) {
           // Append nonwhitespace only, unless this is the end
           if (index == endIndex) {
-            builder.Append(str.Substring(oldIndex, index-oldIndex));
+            builder.append(str.substring(oldIndex,(oldIndex)+(index-oldIndex)));
           } else {
-            builder.Append(str.Substring(oldIndex, whitespaceStart-oldIndex));
+            builder.append(str.substring(oldIndex,(oldIndex)+(whitespaceStart-oldIndex)));
           }
         }
         lastWordWasEncodedWord = acceptedEncodedWord;
       }
-      return builder.ToString();
+      return builder.toString();
     }
 
-    internal static int SkipCommentsAndWhitespace(
-      string str,
+    static int SkipCommentsAndWhitespace(
+      String str,
       int index,
       int endIndex) {
       int retIndex = index;
@@ -348,19 +333,19 @@ namespace CBORTest
       return retIndex;
     }
 
-    internal static string StripCommentsAndExtraSpace(string s) {
+    static String StripCommentsAndExtraSpace(String s) {
       StringBuilder sb = null;
       int index = 0;
-      while (index<s.Length) {
-        char c = s[index];
+      while (index<s.length()) {
+        char c = s.charAt(index);
         if (c=='(' || c==0x09 || c==0x20) {
-          int wsp = SkipCommentsAndWhitespace(s, index, s.Length);
+          int wsp = SkipCommentsAndWhitespace(s, index, s.length());
           if (sb == null) {
             sb = new StringBuilder();
-            sb.Append(s.Substring(0, index));
+            sb.append(s.substring(0,index));
           }
-          if (sb.Length>0) {
-            sb.Append(' ');
+          if (sb.length()>0) {
+            sb.append(' ');
           }
           if (index == wsp) {
             // Might not be a valid comment or whitespace
@@ -371,22 +356,22 @@ namespace CBORTest
           continue;
         } else {
           if (sb != null) {
-            sb.Append(c);
+            sb.append(c);
           }
         }
         ++index;
       }
-      string ret=(sb == null) ? s : sb.ToString();
-      int trimLen = ret.Length;
+      String ret=(sb == null) ? s : sb.toString();
+      int trimLen = ret.length();
       for (int i = trimLen-1;i >= 0; --i) {
-        if (ret[i]==' ') {
+        if (ret.charAt(i)==' ') {
           --trimLen;
         } else {
           break;
         }
       }
-      if (trimLen != ret.Length) {
-        return ret.Substring(0, trimLen);
+      if (trimLen != ret.length()) {
+        return ret.substring(0,trimLen);
       } else {
         return ret;
       }
@@ -395,99 +380,99 @@ namespace CBORTest
     private MediaType contentType;
     private int transferEncoding;
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
-    public MediaType ContentType {
-      get {
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+    public MediaType getContentType() {
         return contentType;
       }
-    }
 
-    private void ProcessHeaders(bool assumeMime, bool digest) {
-      bool haveContentType = false;
-      bool mime = assumeMime;
-      for (int i = 0;i<headers.Count;i+=2) {
-        string name = headers[i];
-        string value = headers[i + 1];
-        if (name.Equals("from")) {
-          if (HeaderParser.ParseHeaderFrom(value, 0, value.Length, null) == 0) {
-            Console.WriteLine(GetHeader("date"));
+    private void ProcessHeaders(boolean assumeMime, boolean digest) {
+      boolean haveContentType = false;
+      boolean mime = assumeMime;
+      for (int i = 0;i<headers.size();i+=2) {
+        String name = headers.get(i);
+        String value = headers.get(i + 1);
+        if (name.equals("from")) {
+          if (HeaderParser.ParseHeaderFrom(value, 0, value.length(), null) == 0) {
+            System.out.println(GetHeader("date"));
             // throw new InvalidDataException("Invalid From header: "+value);
           }
         }
-        if (name.Equals("to") && !ParserUtility.IsNullEmptyOrWhitespace(value)) {
-          if (HeaderParser.ParseHeaderTo(value, 0, value.Length, null) == 0) {
+        if (name.equals("to") && !ParserUtility.IsNullEmptyOrWhitespace(value)) {
+          if (HeaderParser.ParseHeaderTo(value, 0, value.length(), null) == 0) {
             throw new InvalidDataException("Invalid To header: "+value);
           }
         }
-        if (name.Equals("cc") && !ParserUtility.IsNullEmptyOrWhitespace(value)) {
-          if (HeaderParser.ParseHeaderCc(value, 0, value.Length, null) == 0) {
+        if (name.equals("cc") && !ParserUtility.IsNullEmptyOrWhitespace(value)) {
+          if (HeaderParser.ParseHeaderCc(value, 0, value.length(), null) == 0) {
             throw new InvalidDataException("Invalid Cc header: "+value);
           }
         }
-        if (name.Equals("bcc") && !ParserUtility.IsNullEmptyOrWhitespace(value)) {
-          if (HeaderParser.ParseHeaderBcc(value, 0, value.Length, null) == 0) {
+        if (name.equals("bcc") && !ParserUtility.IsNullEmptyOrWhitespace(value)) {
+          if (HeaderParser.ParseHeaderBcc(value, 0, value.length(), null) == 0) {
             throw new InvalidDataException("Invalid Bcc header: "+value);
           }
         }
         value = HeaderFields.GetParser(name).ReplaceEncodedWords(value);
-        if (name.Equals("content-transfer-encoding")) {
+        if (name.equals("content-transfer-encoding")) {
           value = StripCommentsAndExtraSpace(value);
         }
-        if (name.Equals("mime-version")) {
+        if (name.equals("mime-version")) {
           mime = true;
         }
-        headers[i + 1]=value;
+        headers.set(i + 1,value);
       }
-      bool haveFrom = false;
-      bool haveSubject = false;
-      bool haveTo = false;
+      boolean haveFrom = false;
+      boolean haveSubject = false;
+      boolean haveTo = false;
       // TODO: Treat message/rfc822 specially
       contentType = digest ? MediaType.MessageRfc822 : MediaType.TextPlainAscii;
-      for (int i = 0;i<headers.Count;i+=2) {
-        string name = headers[i];
-        string value = headers[i + 1];
-        if (mime && name.Equals("content-transfer-encoding")) {
+      for (int i = 0;i<headers.size();i+=2) {
+        String name = headers.get(i);
+        String value = headers.get(i + 1);
+        if (mime && name.equals("content-transfer-encoding")) {
           value = ParserUtility.ToLowerCaseAscii(value);
-          headers[i + 1]=value;
-          if (value.Equals("7bit")) {
+          headers.set(i + 1,value);
+          if (value.equals("7bit")) {
             transferEncoding = EncodingSevenBit;
-          } else if (value.Equals("8bit")) {
+          } else if (value.equals("8bit")) {
             transferEncoding = EncodingEightBit;
-          } else if (value.Equals("binary")) {
+          } else if (value.equals("binary")) {
             transferEncoding = EncodingBinary;
-          } else if (value.Equals("quoted-printable")) {
+          } else if (value.equals("quoted-printable")) {
             transferEncoding = EncodingQuotedPrintable;
-          } else if (value.Equals("base64")) {
+          } else if (value.equals("base64")) {
             transferEncoding = EncodingBase64;
           } else {
             // Unrecognized transfer encoding
             transferEncoding = EncodingUnknown;
           }
-          headers.RemoveAt(i);
-          headers.RemoveAt(i);
+          headers.remove(i);
+          headers.remove(i);
           i-=2;
-        } else if (mime && name.Equals("content-type")) {
+        } else if (mime && name.equals("content-type")) {
           if (haveContentType) {
             throw new InvalidDataException("Already have this header: "+name);
           }
           contentType = MediaType.Parse(value,
                                         digest ? MediaType.MessageRfc822 : MediaType.TextPlainAscii);
           haveContentType = true;
-          headers.RemoveAt(i);
-          headers.RemoveAt(i);
+          headers.remove(i);
+          headers.remove(i);
           i-=2;
-        } else if (name.Equals("from")) {
+        } else if (name.equals("from")) {
           if (haveFrom) {
             throw new InvalidDataException("Already have this header: "+name);
           }
           haveFrom = true;
-        } else if (name.Equals("to")) {
+        } else if (name.equals("to")) {
           if (haveTo) {
             throw new InvalidDataException("Already have this header: "+name);
           }
           haveTo = true;
-        } else if (name.Equals("subject")) {
+        } else if (name.equals("subject")) {
           if (haveSubject) {
             throw new InvalidDataException("Already have this header: "+name);
           }
@@ -500,90 +485,98 @@ namespace CBORTest
       if (transferEncoding == EncodingQuotedPrintable ||
           transferEncoding == EncodingBase64 ||
           transferEncoding == EncodingUnknown) {
-        if (contentType.TopLevelType.Equals("multipart") ||
-            contentType.TopLevelType.Equals("message")) {
+        if (contentType.getTopLevelType().equals("multipart") ||
+            contentType.getTopLevelType().equals("message")) {
           throw new InvalidDataException("Invalid content encoding for multipart or message");
         }
       }
     }
 
-    private static bool IsWellFormedBoundary(string str) {
-      if (str == null || str.Length<1 || str.Length>70) {
+    private static boolean IsWellFormedBoundary(String str) {
+      if (str == null || str.length()<1 || str.length()>70) {
         return false;
       }
-      for (int i = 0;i<str.Length; ++i) {
-        char c = str[i];
-        if (i == str.Length-1 && c == 0x20) {
+      for (int i = 0;i<str.length(); ++i) {
+        char c = str.charAt(i);
+        if (i == str.length()-1 && c == 0x20) {
           // Space not allowed at the end of a boundary
           return false;
         }
         if (!(
           (c>= 'A' && c<= 'Z') || (c>= 'a' && c<= 'z') || (c>= '0' && c<= '9') ||
-          c==0x20 || c==0x2c || "'()-./+_:=?".IndexOf(c)>= 0)) {
+          c==0x20 || c==0x2c || "'()-./+_:=?".indexOf(c)>= 0)) {
           return false;
         }
       }
       return true;
     }
 
-    private sealed class WrappedStream : ITransform {
-      Stream stream;
-      public WrappedStream(Stream stream) {
+    private static final class WrappedStream implements ITransform {
+      InputStream stream;
+      public WrappedStream (InputStream stream) {
         this.stream = stream;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int ReadByte() {
-        return stream.ReadByte();
+        return stream.read();
       }
     }
 
-    private sealed class StreamWithUnget : ITransform {
+    private static final class StreamWithUnget implements ITransform {
       ITransform stream;
       int lastByte;
-      bool unget;
-      public StreamWithUnget(Stream stream) {
+      boolean unget;
+      public StreamWithUnget (InputStream stream) {
         lastByte=-1;
         this.stream = new WrappedStream(stream);
       }
 
-      public StreamWithUnget(ITransform stream) {
+      public StreamWithUnget (ITransform stream) {
         lastByte=-1;
         this.stream = stream;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int ReadByte() {
         if (unget) {
           unget = false;
         } else {
-          lastByte = stream.ReadByte();
+          lastByte = stream.read();
         }
         return lastByte;
       }
 
-      /// <summary>Not documented yet.</summary>
+    /**
+     * Not documented yet.
+     */
       public void Unget() {
         unget = true;
       }
     }
 
-    internal interface ITransform {
+    interface ITransform {
       int ReadByte();
     }
 
-    private sealed class EightBitTransform : ITransform {
+    private static final class EightBitTransform implements ITransform {
       ITransform stream;
-      public EightBitTransform(ITransform stream) {
+      public EightBitTransform (ITransform stream) {
         this.stream = stream;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int ReadByte() {
-        int ret = this.stream.ReadByte();
+        int ret = this.stream.read();
         if (ret == 0) {
           throw new InvalidDataException("Invalid character in message body");
         }
@@ -591,30 +584,34 @@ namespace CBORTest
       }
     }
 
-    private sealed class BinaryTransform : ITransform {
+    private static final class BinaryTransform implements ITransform {
       ITransform stream;
-      public BinaryTransform(ITransform stream) {
+      public BinaryTransform (ITransform stream) {
         this.stream = stream;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int ReadByte() {
-        return this.stream.ReadByte();
+        return this.stream.read();
       }
     }
 
-    private sealed class SevenBitTransform : ITransform {
+    private static final class SevenBitTransform implements ITransform {
       ITransform stream;
 
-      public SevenBitTransform(ITransform stream) {
+      public SevenBitTransform (ITransform stream) {
         this.stream = stream;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int ReadByte() {
-        int ret = this.stream.ReadByte();
+        int ret = this.stream.read();
         if (ret>0x80 || ret == 0) {
           throw new InvalidDataException("Invalid character in message body");
         }
@@ -623,17 +620,19 @@ namespace CBORTest
     }
 
     // A seven-bit transform used for text/plain data
-    private sealed class LiberalSevenBitTransform : ITransform {
+    private static final class LiberalSevenBitTransform implements ITransform {
       ITransform stream;
 
-      public LiberalSevenBitTransform(ITransform stream) {
+      public LiberalSevenBitTransform (ITransform stream) {
         this.stream = stream;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int ReadByte() {
-        int ret = this.stream.ReadByte();
+        int ret = this.stream.read();
         if (ret>0x80 || ret == 0) {
           return '?';
         }
@@ -641,8 +640,8 @@ namespace CBORTest
       }
     }
 
-    private sealed class Base64Transform : ITransform {
-      internal static int[] Alphabet = new int[] {
+    private static final class Base64Transform implements ITransform {
+      static int[] Alphabet = new int[] {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
@@ -654,28 +653,32 @@ namespace CBORTest
       };
       StreamWithUnget input;
       int lineCharCount;
-      bool lenientLineBreaks;
+      boolean lenientLineBreaks;
       byte[] buffer;
       int bufferIndex;
       int bufferCount;
 
-      private const int MaxLineSize = 76;
+      private static final int MaxLineSize = 76;
 
-      public Base64Transform(ITransform input, bool lenientLineBreaks) {
+      public Base64Transform (ITransform input, boolean lenientLineBreaks) {
         this.input = new StreamWithUnget(input);
         this.lenientLineBreaks = lenientLineBreaks;
         this.buffer = new byte[4];
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <param name='size'>A 32-bit signed integer.</param>
+    /**
+     * Not documented yet.
+     * @param size A 32-bit signed integer.
+     */
       private void ResizeBuffer(int size) {
         bufferCount = size;
         bufferIndex = 0;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int ReadByte() {
         if (bufferIndex<bufferCount) {
           int ret = buffer[bufferIndex];
@@ -690,7 +693,7 @@ namespace CBORTest
         int value = 0;
         int count = 0;
         while (count< 4) {
-          int c = input.ReadByte();
+          int c = input.read();
           if (c< 0) {
             // End of stream
             if (count == 1) {
@@ -709,7 +712,7 @@ namespace CBORTest
             }
             return -1;
           } else if (c == 0x0d) {
-            c = input.ReadByte();
+            c = input.read();
             if (c == 0x0a) {
               lineCharCount = 0;
             } else {
@@ -747,29 +750,33 @@ namespace CBORTest
       }
     }
 
-    private sealed class BEncodingStringTransform : ITransform {
-      string input;
+    private static final class BEncodingStringTransform implements ITransform {
+      String input;
       int inputIndex;
       byte[] buffer;
       int bufferIndex;
       int bufferCount;
 
-      private const int MaxLineSize = 76;
+      private static final int MaxLineSize = 76;
 
-      public BEncodingStringTransform(String input) {
+      public BEncodingStringTransform (String input) {
         this.input = input;
         this.buffer = new byte[4];
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <param name='size'>A 32-bit signed integer.</param>
+    /**
+     * Not documented yet.
+     * @param size A 32-bit signed integer.
+     */
       private void ResizeBuffer(int size) {
         bufferCount = size;
         bufferIndex = 0;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int ReadByte() {
         if (bufferIndex<bufferCount) {
           int ret = buffer[bufferIndex];
@@ -784,7 +791,7 @@ namespace CBORTest
         int value = 0;
         int count = 0;
         while (count< 4) {
-          int c = (inputIndex<input.Length) ? input[inputIndex++] : -1;
+          int c = (inputIndex<input.length()) ? input.charAt(inputIndex++) : -1;
           if (c< 0) {
             // End of stream
             if (count == 1) {
@@ -821,34 +828,38 @@ namespace CBORTest
       }
     }
 
-    internal sealed class QEncodingStringTransform : ITransform {
+    final class QEncodingStringTransform implements ITransform {
       String input;
       int inputIndex;
       byte[] buffer;
       int bufferIndex;
       int bufferCount;
 
-      public QEncodingStringTransform(
+      public QEncodingStringTransform (
         String input) {
         this.input = input;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <param name='size'>A 32-bit signed integer.</param>
+    /**
+     * Not documented yet.
+     * @param size A 32-bit signed integer.
+     */
       private void ResizeBuffer(int size) {
         if (buffer == null) {
           buffer = new byte[size + 10];
-        } else if (size>buffer.Length) {
+        } else if (size>buffer.length) {
           byte[] newbuffer = new byte[size + 10];
-          Array.Copy(buffer, newbuffer, buffer.Length);
+          System.arraycopy(buffer, 0, newbuffer, 0, buffer.length);
           buffer = newbuffer;
         }
         bufferCount = size;
         bufferIndex = 0;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int ReadByte() {
         if (bufferIndex<bufferCount) {
           int ret = buffer[bufferIndex];
@@ -860,9 +871,9 @@ namespace CBORTest
           ret&=0xff;
           return ret;
         }
-        int endIndex = input.Length;
+        int endIndex = input.length();
         while (true) {
-          int c = (inputIndex<endIndex) ? input[inputIndex++] : -1;
+          int c = (inputIndex<endIndex) ? input.charAt(inputIndex++) : -1;
           if (c< 0) {
             // End of stream
             return -1;
@@ -873,7 +884,7 @@ namespace CBORTest
             // Can't occur in the Q-encoding; replace
             return '?';
           } else if (c=='=') {
-            int b1 = (inputIndex<endIndex) ? input[inputIndex++] : -1;
+            int b1 = (inputIndex<endIndex) ? input.charAt(inputIndex++) : -1;
             c = 0;
             if (b1 >= '0' && b1 <= '9') {
               c <<= 4;
@@ -888,7 +899,7 @@ namespace CBORTest
               --inputIndex;
               return '?';
             }
-            int b2 = (inputIndex<endIndex) ? input[inputIndex++] : -1;
+            int b2 = (inputIndex<endIndex) ? input.charAt(inputIndex++) : -1;
             if (b2 >= '0' && b2 <= '9') {
               c <<= 4;
               c |= b2 - '0';
@@ -919,34 +930,38 @@ namespace CBORTest
       }
     }
 
-    internal sealed class PercentEncodingStringTransform : ITransform {
+    final class PercentEncodingStringTransform implements ITransform {
       String input;
       int inputIndex;
       byte[] buffer;
       int bufferIndex;
       int bufferCount;
 
-      public PercentEncodingStringTransform(
+      public PercentEncodingStringTransform (
         String input) {
         this.input = input;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <param name='size'>A 32-bit signed integer.</param>
+    /**
+     * Not documented yet.
+     * @param size A 32-bit signed integer.
+     */
       private void ResizeBuffer(int size) {
         if (buffer == null) {
           buffer = new byte[size + 10];
-        } else if (size>buffer.Length) {
+        } else if (size>buffer.length) {
           byte[] newbuffer = new byte[size + 10];
-          Array.Copy(buffer, newbuffer, buffer.Length);
+          System.arraycopy(buffer, 0, newbuffer, 0, buffer.length);
           buffer = newbuffer;
         }
         bufferCount = size;
         bufferIndex = 0;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int ReadByte() {
         if (bufferIndex<bufferCount) {
           int ret = buffer[bufferIndex];
@@ -958,9 +973,9 @@ namespace CBORTest
           ret&=0xff;
           return ret;
         }
-        int endIndex = input.Length;
+        int endIndex = input.length();
         while (true) {
-          int c = (inputIndex<endIndex) ? input[inputIndex++] : -1;
+          int c = (inputIndex<endIndex) ? input.charAt(inputIndex++) : -1;
           if (c< 0) {
             // End of stream
             return -1;
@@ -971,7 +986,7 @@ namespace CBORTest
             // Can't occur in parameter value percent-encoding; replace
             return '?';
           } else if (c=='%') {
-            int b1 = (inputIndex<endIndex) ? input[inputIndex++] : -1;
+            int b1 = (inputIndex<endIndex) ? input.charAt(inputIndex++) : -1;
             c = 0;
             if (b1 >= '0' && b1 <= '9') {
               c <<= 4;
@@ -986,7 +1001,7 @@ namespace CBORTest
               --inputIndex;
               return '?';
             }
-            int b2 = (inputIndex<endIndex) ? input[inputIndex++] : -1;
+            int b2 = (inputIndex<endIndex) ? input.charAt(inputIndex++) : -1;
             if (b2 >= '0' && b2 <= '9') {
               c <<= 4;
               c |= b2 - '0';
@@ -1014,44 +1029,50 @@ namespace CBORTest
       }
     }
 
-    internal sealed class BoundaryCheckerTransform : ITransform {
+    final class BoundaryCheckerTransform implements ITransform {
       StreamWithUnget input;
       byte[] buffer;
       int bufferIndex;
       int bufferCount;
-      bool started;
-      bool readingHeaders;
-      bool hasNewBodyPart;
-      List<string> boundaries;
+      boolean started;
+      boolean readingHeaders;
+      boolean hasNewBodyPart;
+      ArrayList<String> boundaries;
 
-      /// <summary>Not documented yet.</summary>
-      /// <param name='size'>A 32-bit signed integer.</param>
+    /**
+     * Not documented yet.
+     * @param size A 32-bit signed integer.
+     */
       private void ResizeBuffer(int size) {
         if (buffer == null) {
           buffer = new byte[size + 10];
-        } else if (size>buffer.Length) {
+        } else if (size>buffer.length) {
           byte[] newbuffer = new byte[size + 10];
-          Array.Copy(buffer, newbuffer, buffer.Length);
+          System.arraycopy(buffer, 0, newbuffer, 0, buffer.length);
           buffer = newbuffer;
         }
         bufferCount = size;
         bufferIndex = 0;
       }
 
-      public BoundaryCheckerTransform(ITransform stream) {
+      public BoundaryCheckerTransform (ITransform stream) {
         this.input = new StreamWithUnget(stream);
-        this.boundaries = new List<string>();
+        this.boundaries = new ArrayList<String>();
         this.started = true;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <param name='boundary'>A string object.</param>
-      public void PushBoundary(string boundary) {
-        this.boundaries.Add(boundary);
+    /**
+     * Not documented yet.
+     * @param boundary A string object.
+     */
+      public void PushBoundary(String boundary) {
+        this.boundaries.add(boundary);
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int ReadByte() {
         if (bufferIndex<bufferCount) {
           int ret = buffer[bufferIndex];
@@ -1067,9 +1088,9 @@ namespace CBORTest
           return -1;
         }
         if (readingHeaders) {
-          return input.ReadByte();
+          return input.read();
         }
-        int c = input.ReadByte();
+        int c = input.read();
         if (c< 0) {
           started = false;
           return c;
@@ -1077,7 +1098,7 @@ namespace CBORTest
         if (c=='-' && started) {
           // Check for a boundary
           started = false;
-          c = input.ReadByte();
+          c = input.read();
           if (c=='-') {
             // Possible boundary candidate
             return CheckBoundaries(false);
@@ -1089,10 +1110,10 @@ namespace CBORTest
           started = false;
         }
         if (c == 0x0d) {
-          c = input.ReadByte();
+          c = input.read();
           if (c == 0x0a) {
             // Line break was read
-            c = input.ReadByte();
+            c = input.read();
             if (c==-1) {
               ResizeBuffer(1);
               buffer[0]=0x0a;
@@ -1109,7 +1130,7 @@ namespace CBORTest
               buffer[1]=(byte)c;
               return 0x0d;
             }
-            c = input.ReadByte();
+            c = input.read();
             if (c==-1) {
               ResizeBuffer(2);
               buffer[0]=0x0a;
@@ -1140,19 +1161,13 @@ namespace CBORTest
         }
       }
 
-      private int CheckBoundaries(bool includeCrLf) {
+      private int CheckBoundaries(boolean includeCrLf) {
         // Reached here when the "--" of a possible
         // boundary delimiter is read.  We need to
         // check boundaries here in order to find out
         // whether to emit the CRLF before the "--".
-        #if DEBUG
-        if (this.bufferCount != 0) {
-          throw new ArgumentException("this.bufferCount (" + Convert.ToString((long)(this.bufferCount),
-                                                                              System.Globalization.CultureInfo.InvariantCulture) + ") is not equal to " + "0");
-        }
-        #endif
 
-        bool done = false;
+        boolean done = false;
         while (!done) {
           done = true;
           int bufferStart = 0;
@@ -1176,7 +1191,7 @@ namespace CBORTest
           int c;
           int bytesRead = 0;
           for (int i = 0; i < 72; ++i) {
-            c = input.ReadByte();
+            c = input.read();
             if (c<0 || c >= 0x80 || c == 0x0d) {
               input.Unget();
               break;
@@ -1186,20 +1201,20 @@ namespace CBORTest
             ResizeBuffer(bytesRead + bufferStart);
             buffer[bytesRead + bufferStart-1]=(byte)c;
           }
-          //Console.WriteLine("--" + (bytesRead));
+          //System.out.println("--" + (bytesRead));
           // NOTE: All boundary strings are assumed to
           // have only ASCII characters (with values
           // less than 128).  Check boundaries from
           // top to bottom in the stack.
-          string matchingBoundary = null;
+          String matchingBoundary = null;
           int matchingIndex=-1;
-          for (int i = boundaries.Count-1;i >= 0; --i) {
-            string boundary = boundaries[i];
-            //Console.WriteLine("Check boundary " + (boundary));
-            if (!String.IsNullOrEmpty(boundary) && boundary.Length <= bytesRead) {
-              bool match = true;
-              for (int j = 0;j<boundary.Length; ++j) {
-                if ((boundary[j]&0xff) != (int)((buffer[j + bufferStart]) & 0xff)) {
+          for (int i = boundaries.size()-1;i >= 0; --i) {
+            String boundary = boundaries.get(i);
+            //System.out.println("Check boundary " + (boundary));
+            if (!((boundary)==null || (boundary).length()==0) && boundary.length() <= bytesRead) {
+              boolean match = true;
+              for (int j = 0;j<boundary.length(); ++j) {
+                if ((boundary.charAt(j)&0xff) != (int)((buffer[j + bufferStart]) & 0xff)) {
                   match = false;
                 }
               }
@@ -1211,16 +1226,16 @@ namespace CBORTest
             }
           }
           if (matchingBoundary != null) {
-            bool closingDelim = false;
+            boolean closingDelim = false;
             // Pop the stack until the matching body part
             // is on top
-            while (boundaries.Count>matchingIndex + 1) {
-              boundaries.RemoveAt(matchingIndex + 1);
+            while (boundaries.size()>matchingIndex + 1) {
+              boundaries.remove(matchingIndex + 1);
             }
             // Boundary line found
-            if (matchingBoundary.Length + 1<bytesRead) {
-              if (buffer[matchingBoundary.Length+bufferStart]=='-' &&
-                  buffer[matchingBoundary.Length+1+bufferStart]=='-') {
+            if (matchingBoundary.length() + 1<bytesRead) {
+              if (buffer[matchingBoundary.length()+bufferStart]=='-' &&
+                  buffer[matchingBoundary.length()+1+bufferStart]=='-') {
                 closingDelim = true;
               }
             }
@@ -1230,8 +1245,8 @@ namespace CBORTest
             bufferIndex = 0;
             if (closingDelim) {
               // Pop this entry, it's the top of the stack
-              boundaries.RemoveAt(boundaries.Count-1);
-              if (boundaries.Count == 0) {
+              boundaries.remove(boundaries.size()-1);
+              if (boundaries.size() == 0) {
                 // There's nothing else significant
                 // after this boundary,
                 // so return now
@@ -1241,18 +1256,18 @@ namespace CBORTest
               // part, the rest of the data before the next boundary
               // is insignificant
               while (true) {
-                c = input.ReadByte();
+                c = input.read();
                 if (c==-1) {
                   // The body higher up didn't end yet
                   throw new InvalidDataException("Premature end of message");
                 } else if (c == 0x0d) {
-                  c = input.ReadByte();
+                  c = input.read();
                   if (c==-1) {
                     // The body higher up didn't end yet
                     throw new InvalidDataException("Premature end of message");
                   } else if (c == 0x0a) {
                     // Start of new body part
-                    c = input.ReadByte();
+                    c = input.read();
                     if (c==-1) {
                       throw new InvalidDataException("Premature end of message");
                     } else if (c == 0x0d) {
@@ -1262,7 +1277,7 @@ namespace CBORTest
                       // Not a boundary delimiter
                       continue;
                     }
-                    c = input.ReadByte();
+                    c = input.read();
                     if (c==-1) {
                       throw new InvalidDataException("Premature end of message");
                     } else if (c == 0x0d) {
@@ -1289,11 +1304,11 @@ namespace CBORTest
               // next line will start the headers of the
               // next body part).
               while (true) {
-                c = input.ReadByte();
+                c = input.read();
                 if (c==-1) {
                   throw new InvalidDataException("Premature end of message");
                 } else if (c == 0x0d) {
-                  c = input.ReadByte();
+                  c = input.read();
                   if (c==-1) {
                     throw new InvalidDataException("Premature end of message");
                   } else if (c == 0x0a) {
@@ -1320,85 +1335,72 @@ namespace CBORTest
         return (includeCrLf) ? 0x0d : '-';
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int BoundaryCount() {
-        return boundaries.Count;
+        return boundaries.size();
       }
 
-      /// <summary>Not documented yet.</summary>
+    /**
+     * Not documented yet.
+     */
       public void StartBodyPartHeaders() {
-        #if DEBUG
-        if (!(this.hasNewBodyPart)) {
-          throw new ArgumentException("doesn't satisfy this.hasNewBodyPart");
-        }
-        if (this.readingHeaders) {
-          throw new ArgumentException("doesn't satisfy !this.hasNewBodyPart");
-        }
-        if (!(this.bufferCount).Equals(0)) {
-          throw new ArgumentException("this.bufferCount (" + Convert.ToString((long)(this.bufferCount), System.Globalization.CultureInfo.InvariantCulture) + ") is not equal to " + "0");
-        }
-        #endif
 
         this.readingHeaders = true;
         this.hasNewBodyPart = false;
       }
 
-      /// <summary>Not documented yet.</summary>
+    /**
+     * Not documented yet.
+     */
       public void EndBodyPartHeaders() {
-        #if DEBUG
-        if (!(this.readingHeaders)) {
-          throw new ArgumentException("doesn't satisfy this.readingHeaders");
-        }
-        if (!(this.bufferCount).Equals(0)) {
-          throw new ArgumentException("this.bufferCount (" + Convert.ToString((long)(this.bufferCount), System.Globalization.CultureInfo.InvariantCulture) + ") is not equal to " + "0");
-        }
-        #endif
 
         this.readingHeaders = false;
         this.hasNewBodyPart = false;
       }
 
-      /// <summary>Gets a value not documented yet.</summary>
-      /// <value>A value not documented yet.</value>
-      public bool HasNewBodyPart {
-        get {
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+      public boolean getHasNewBodyPart() {
           return hasNewBodyPart;
         }
-      }
     }
 
-    internal sealed class QuotedPrintableTransform : ITransform {
+    final class QuotedPrintableTransform implements ITransform {
       StreamWithUnget input;
       int lineCharCount;
-      bool lenientLineBreaks;
+      boolean lenientLineBreaks;
       byte[] buffer;
       int bufferIndex;
       int bufferCount;
 
       private int maxLineSize;
 
-      public QuotedPrintableTransform(
+      public QuotedPrintableTransform (
         ITransform input,
-        bool lenientLineBreaks,
+        boolean lenientLineBreaks,
         int maxLineSize) {
         this.maxLineSize = maxLineSize;
         this.input = new StreamWithUnget(input);
         this.lenientLineBreaks = lenientLineBreaks;
       }
 
-      public QuotedPrintableTransform(
-        Stream input,
-        bool lenientLineBreaks,
+      public QuotedPrintableTransform (
+        InputStream input,
+        boolean lenientLineBreaks,
         int maxLineSize) {
         this.maxLineSize = maxLineSize;
         this.input = new StreamWithUnget(new WrappedStream(input));
         this.lenientLineBreaks = lenientLineBreaks;
       }
 
-      public QuotedPrintableTransform(
+      public QuotedPrintableTransform (
         ITransform input,
-        bool lenientLineBreaks) {
+        boolean lenientLineBreaks) {
         // DEVIATION: The max line size is actually 76, but some emails
         // write lines that exceed this size
         this.maxLineSize = 200;
@@ -1406,22 +1408,26 @@ namespace CBORTest
         this.lenientLineBreaks = lenientLineBreaks;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <param name='size'>A 32-bit signed integer.</param>
+    /**
+     * Not documented yet.
+     * @param size A 32-bit signed integer.
+     */
       private void ResizeBuffer(int size) {
         if (buffer == null) {
           buffer = new byte[size + 10];
-        } else if (size>buffer.Length) {
+        } else if (size>buffer.length) {
           byte[] newbuffer = new byte[size + 10];
-          Array.Copy(buffer, newbuffer, buffer.Length);
+          System.arraycopy(buffer, 0, newbuffer, 0, buffer.length);
           buffer = newbuffer;
         }
         bufferCount = size;
         bufferIndex = 0;
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /**
+     * Not documented yet.
+     * @return A 32-bit signed integer.
+     */
       public int ReadByte() {
         if (bufferIndex<bufferCount) {
           int ret = buffer[bufferIndex];
@@ -1434,12 +1440,12 @@ namespace CBORTest
           return ret;
         }
         while (true) {
-          int c = input.ReadByte();
+          int c = input.read();
           if (c < 0) {
             // End of stream
             return -1;
           } else if (c == 0x0d) {
-            c = input.ReadByte();
+            c = input.read();
             if (c == 0x0a) {
               // CRLF
               ResizeBuffer(1);
@@ -1471,8 +1477,8 @@ namespace CBORTest
             if (maxLineSize >= 0 && lineCharCount>maxLineSize) {
               throw new InvalidDataException("Encoded quoted-printable line too long");
             }
-            int b1 = input.ReadByte();
-            int b2 = input.ReadByte();
+            int b1 = input.read();
+            int b2 = input.read();
             if (b2 >= 0 && b1 >= 0) {
               if (b1=='\r' && b2=='\n') {
                 // Soft line break
@@ -1561,14 +1567,14 @@ namespace CBORTest
             }
             // In most cases, though, there will only be
             // one space or tab
-            int c2 = input.ReadByte();
+            int c2 = input.read();
             if (c2!=' ' && c2!='\t' && c2!='\r' && c2!='\n' && c2>= 0) {
               // Simple: Space before a character other than
               // space, tab, CR, LF, or EOF
               input.Unget();
               return c;
             }
-            bool endsWithLineBreak = false;
+            boolean endsWithLineBreak = false;
             while (true) {
               if ((c2=='\n' && lenientLineBreaks) || c2 < 0) {
                 input.Unget();
@@ -1580,7 +1586,7 @@ namespace CBORTest
                 break;
               } else if (c2=='\r') {
                 // CR, may or may not be a line break
-                c2 = input.ReadByte();
+                c2 = input.read();
                 // Add the CR to the
                 // buffer, it won't be ignored
                 ResizeBuffer(spaceCount);
@@ -1593,10 +1599,9 @@ namespace CBORTest
                   endsWithLineBreak = true;
                   break;
                 } else {
-                  if (!lenientLineBreaks) {
-                    throw new InvalidDataException("Expected LF after CR");
-                  }
-                  input.Unget(); // it's something else
+                  // It's something else {
+ input.Unget();
+}
                   ++lineCharCount;
                   if (maxLineSize >= 0 && lineCharCount>maxLineSize) {
                     throw new InvalidDataException("Encoded quoted-printable line too long");
@@ -1617,7 +1622,7 @@ namespace CBORTest
                   throw new InvalidDataException("Encoded quoted-printable line too long");
                 }
               }
-              c2 = input.ReadByte();
+              c2 = input.read();
             }
             // Ignore space/tab runs if the line ends in that run
             if (!endsWithLineBreak) {
@@ -1637,27 +1642,29 @@ namespace CBORTest
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='name'>A string object. (2).</param>
-    /// <returns>A string object.</returns>
-    public string GetHeader(string name) {
+    /**
+     * Not documented yet.
+     * @param name A string object. (2).
+     * @return A string object.
+     */
+    public String GetHeader(String name) {
       name = ParserUtility.ToLowerCaseAscii(name);
-      if (name.Equals("content-type")) {
-        return ContentType.ToString();
+      if (name.equals("content-type")) {
+        return ContentType.toString();
       }
-      for (int i = 0;i<headers.Count;i+=2) {
-        if (headers[i].Equals(name)) {
-          return headers[i + 1];
+      for (int i = 0;i<headers.size();i+=2) {
+        if (headers.get(i).equals(name)) {
+          return headers.get(i + 1);
         }
       }
       return null;
     }
 
-    private static bool HasNonAsciiOrCtlOrTooLongWord(string s) {
-      int len = s.Length;
+    private static boolean HasNonAsciiOrCtlOrTooLongWord(String s) {
+      int len = s.length();
       int wordLength = 0;
       for (int i = 0; i < len; ++i) {
-        char c = s[i];
+        char c = s.charAt(i);
         if (c >= 0x7f || (c<0x20 && c != 0x09)) {
           return true;
         }
@@ -1674,16 +1681,16 @@ namespace CBORTest
     }
 
     private int TransferEncodingToUse() {
-      string topLevel = contentType.TopLevelType;
-      if (topLevel.Equals("message") || topLevel.Equals("multipart")) {
+      String topLevel = contentType.getTopLevelType();
+      if (topLevel.equals("message") || topLevel.equals("multipart")) {
         return EncodingSevenBit;
       }
-      if (topLevel.Equals("text")) {
-        int lengthCheck = Math.Min(this.body.Length, 4096);
+      if (topLevel.equals("text")) {
+        int lengthCheck = Math.min(this.body.length, 4096);
         int highBytes = 0;
         int lineLength = 0;
         // TODO: Check line lengths
-        bool allTextBytes = true;
+        boolean allTextBytes = true;
         for (int i = 0; i < lengthCheck; ++i) {
           if ((this.body[i]&0x80) != 0) {
             highBytes+=1;
@@ -1691,7 +1698,7 @@ namespace CBORTest
           } else if (this.body[i]==0) {
             allTextBytes = false;
           } else if (this.body[i]==(byte)'\r') {
-            if (i+1>= this.body.Length || this.body[i+1]!=(byte)'\n') {
+            if (i+1>= this.body.length || this.body[i+1]!=(byte)'\n') {
               // bare CR
               allTextBytes = false;
             } else if (i>0 && (this.body[i-1]==(byte)' ' || this.body[i-1]==(byte)'\t')) {
@@ -1711,7 +1718,7 @@ namespace CBORTest
             allTextBytes = false;
           }
         }
-        if (lengthCheck == this.body.Length && allTextBytes) {
+        if (lengthCheck == this.body.length && allTextBytes) {
           return EncodingSevenBit;
         } if (highBytes>(lengthCheck/3)) {
           return EncodingBase64;
@@ -1722,72 +1729,76 @@ namespace CBORTest
       return EncodingBase64;
     }
 
-    internal sealed class EncodedWordEncoder {
+    final class EncodedWordEncoder {
       StringBuilder currentWord;
       StringBuilder fullString;
       int lineLength;
 
-      private static string hex="0123456789ABCDEF";
+      private static String hex="0123456789ABCDEF";
 
-      public EncodedWordEncoder(string c) {
+      public EncodedWordEncoder (String c) {
         currentWord = new StringBuilder();
         fullString = new StringBuilder();
-        fullString.Append(c);
-        lineLength = c.Length;
+        fullString.append(c);
+        lineLength = c.length();
       }
 
       private void AppendChar(char ch) {
         PrepareToAppend(1);
-        currentWord.Append(ch);
+        currentWord.append(ch);
       }
 
       private void PrepareToAppend(int numChars) {
         // 1 for space and 2 for the ending "?="
-        if (lineLength + 1 + currentWord.Length + numChars + 2>76) {
+        if (lineLength + 1 + currentWord.length() + numChars + 2>76) {
           // Too big to fit the current line,
           // create a new line
-          fullString.Append("\r\n");
+          fullString.append("\r\n");
           lineLength = 0;
         }
-        if (lineLength + 1 + currentWord.Length + numChars + 2>76) {
+        if (lineLength + 1 + currentWord.length() + numChars + 2>76) {
           // Encoded word would be too big,
           // so output that word
-          fullString.Append(' ');
-          fullString.Append(currentWord);
-          fullString.Append("?=");
-          lineLength+=3 + currentWord.Length;
+          fullString.append(' ');
+          fullString.append(currentWord);
+          fullString.append("?=");
+          lineLength+=3 + currentWord.length();
           currentWord.Clear();
-          currentWord.Append("=?utf-8?q?");
+          currentWord.append("=?utf-8?q?");
         }
       }
 
-      /// <summary>Not documented yet.</summary>
+    /**
+     * Not documented yet.
+     */
       public void FinalizeEncoding() {
-        if (currentWord.Length>0) {
+        if (currentWord.length()>0) {
           // 1 for space
-          if (lineLength + 1 + currentWord.Length + 2>76) {
+          if (lineLength + 1 + currentWord.length() + 2>76) {
             // Too big to fit the current line,
             // create a new line
-            fullString.Append("\r\n");
+            fullString.append("\r\n");
             lineLength = 0;
           }
-          fullString.Append(' ');
-          fullString.Append(currentWord);
-          fullString.Append("?=");
-          lineLength+=3 + currentWord.Length;
+          fullString.append(' ');
+          fullString.append(currentWord);
+          fullString.append("?=");
+          lineLength+=3 + currentWord.length();
           currentWord.Clear();
         }
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <param name='str'>A string object.</param>
-      public void AddString(string str) {
-        for (int j = 0;j<str.Length; ++j) {
-          int c = str[j];
-          if (c >= 0xd800 && c <= 0xdbff && j + 1 < str.Length &&
-              str[j + 1] >= 0xdc00 && str[j + 1] <= 0xdfff) {
+    /**
+     * Not documented yet.
+     * @param str A string object.
+     */
+      public void AddString(String str) {
+        for (int j = 0;j<str.length(); ++j) {
+          int c = str.charAt(j);
+          if (c >= 0xd800 && c <= 0xdbff && j + 1 < str.length() &&
+              str.charAt(j + 1) >= 0xdc00 && str.charAt(j + 1) <= 0xdfff) {
             // Get the Unicode code point for the surrogate pair
-            c = 0x10000 + ((c - 0xd800) * 0x400) + (str[j + 1] - 0xdc00);
+            c = 0x10000 + ((c - 0xd800) * 0x400) + (str.charAt(j + 1) - 0xdc00);
             ++j;
           } else if (c >= 0xd800 && c <= 0xdfff) {
             // unpaired surrogate
@@ -1797,96 +1808,100 @@ namespace CBORTest
         }
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <param name='ch'>A 32-bit signed integer.</param>
+    /**
+     * Not documented yet.
+     * @param ch A 32-bit signed integer.
+     */
       public void AddChar(int ch) {
-        if (currentWord.Length == 0) {
-          currentWord.Append("=?utf-8?q?");
+        if (currentWord.length() == 0) {
+          currentWord.append("=?utf-8?q?");
         }
         if (ch == 0x20) {
           AppendChar('_');
         } else if (ch<0x80 && ch>0x20 && ch!=(char)'"' && ch!=(char)',' &&
-                   "?()<>[]:;@\\.=_".IndexOf((char)ch)< 0) {
+                   "?()<>[]:;@\\.=_".indexOf((char)ch)< 0) {
           AppendChar((char)ch);
         } else if (ch<0x80) {
           PrepareToAppend(3);
-          currentWord.Append('=');
-          currentWord.Append(hex[ch >> 4]);
-          currentWord.Append(hex[ch & 15]);
+          currentWord.append('=');
+          currentWord.append(hex.charAt(ch >> 4));
+          currentWord.append(hex.charAt(ch & 15));
         } else if (ch<0x800) {
           int w= (byte)(0xc0 | ((ch >> 6) & 0x1f));
           int x = (byte)(0x80 | (ch & 0x3f));
           PrepareToAppend(6);
-          currentWord.Append('=');
-          currentWord.Append(hex[w >> 4]);
-          currentWord.Append(hex[w & 15]);
-          currentWord.Append('=');
-          currentWord.Append(hex[x >> 4]);
-          currentWord.Append(hex[x & 15]);
+          currentWord.append('=');
+          currentWord.append(hex.charAt(w >> 4));
+          currentWord.append(hex.charAt(w & 15));
+          currentWord.append('=');
+          currentWord.append(hex.charAt(x >> 4));
+          currentWord.append(hex.charAt(x & 15));
         } else if (ch<0x10000) {
           PrepareToAppend(9);
           int w = (byte)(0xe0 | ((ch >> 12) & 0x0f));
           int x = (byte)(0x80 | ((ch >> 6) & 0x3f));
           int y = (byte)(0x80 | (ch & 0x3f));
-          currentWord.Append('=');
-          currentWord.Append(hex[w >> 4]);
-          currentWord.Append(hex[w & 15]);
-          currentWord.Append('=');
-          currentWord.Append(hex[x >> 4]);
-          currentWord.Append(hex[x & 15]);
-          currentWord.Append('=');
-          currentWord.Append(hex[y >> 4]);
-          currentWord.Append(hex[y & 15]);
+          currentWord.append('=');
+          currentWord.append(hex.charAt(w >> 4));
+          currentWord.append(hex.charAt(w & 15));
+          currentWord.append('=');
+          currentWord.append(hex.charAt(x >> 4));
+          currentWord.append(hex.charAt(x & 15));
+          currentWord.append('=');
+          currentWord.append(hex.charAt(y >> 4));
+          currentWord.append(hex.charAt(y & 15));
         } else {
           PrepareToAppend(12);
           int w = (byte)(0xf0 | ((ch >> 18) & 0x07));
           int x = (byte)(0x80 | ((ch >> 12) & 0x3f));
           int y = (byte)(0x80 | ((ch >> 6) & 0x3f));
           int z = (byte)(0x80 | (ch & 0x3f));
-          currentWord.Append('=');
-          currentWord.Append(hex[w >> 4]);
-          currentWord.Append(hex[w & 15]);
-          currentWord.Append('=');
-          currentWord.Append(hex[x >> 4]);
-          currentWord.Append(hex[x & 15]);
-          currentWord.Append('=');
-          currentWord.Append(hex[y >> 4]);
-          currentWord.Append(hex[y & 15]);
-          currentWord.Append('=');
-          currentWord.Append(hex[z >> 4]);
-          currentWord.Append(hex[z & 15]);
+          currentWord.append('=');
+          currentWord.append(hex.charAt(w >> 4));
+          currentWord.append(hex.charAt(w & 15));
+          currentWord.append('=');
+          currentWord.append(hex.charAt(x >> 4));
+          currentWord.append(hex.charAt(x & 15));
+          currentWord.append('=');
+          currentWord.append(hex.charAt(y >> 4));
+          currentWord.append(hex.charAt(y & 15));
+          currentWord.append('=');
+          currentWord.append(hex.charAt(z >> 4));
+          currentWord.append(hex.charAt(z & 15));
         }
       }
 
-      /// <summary>Converts this object to a text string.</summary>
-      /// <returns>A string representation of this object.</returns>
-      public override string ToString() {
-        return fullString.ToString();
+    /**
+     * Converts this object to a text string.
+     * @return A string representation of this object.
+     */
+      @Override public String toString() {
+        return fullString.toString();
       }
     }
 
-    internal sealed class WordWrapEncoder {
-      string lastSpaces;
+    final class WordWrapEncoder {
+      String lastSpaces;
       StringBuilder fullString;
       int lineLength;
 
-      private const int MaxLineLength = 76;
+      private static final int MaxLineLength = 76;
 
-      public WordWrapEncoder(string c) {
+      public WordWrapEncoder (String c) {
         fullString = new StringBuilder();
-        fullString.Append(c);
-        if (fullString.Length >= MaxLineLength) {
-          fullString.Append("\r\n");
+        fullString.append(c);
+        if (fullString.length() >= MaxLineLength) {
+          fullString.append("\r\n");
           lastSpaces=" ";
           lineLength = 0;
         } else {
           lastSpaces=" ";
-          lineLength = fullString.Length;
+          lineLength = fullString.length();
         }
       }
 
-      private void AppendSpaces(string str) {
-        if (lineLength + lastSpaces.Length + str.Length>MaxLineLength) {
+      private void AppendSpaces(String str) {
+        if (lineLength + lastSpaces.length() + str.length()>MaxLineLength) {
           // Too big to fit the current line
           lastSpaces=" ";
         } else {
@@ -1894,130 +1909,136 @@ namespace CBORTest
         }
       }
 
-      private void AppendWord(string str) {
-        if (lineLength + lastSpaces.Length + str.Length>MaxLineLength) {
+      private void AppendWord(String str) {
+        if (lineLength + lastSpaces.length() + str.length()>MaxLineLength) {
           // Too big to fit the current line,
           // create a new line
-          fullString.Append("\r\n");
+          fullString.append("\r\n");
           lastSpaces=" ";
           lineLength = 0;
         }
-        fullString.Append(lastSpaces);
-        fullString.Append(str);
-        lineLength+=lastSpaces.Length;
-        lineLength+=str.Length;
-        lastSpaces = String.Empty;
+        fullString.append(lastSpaces);
+        fullString.append(str);
+        lineLength+=lastSpaces.length();
+        lineLength+=str.length();
+        lastSpaces = "";
       }
 
-      /// <summary>Not documented yet.</summary>
-      /// <param name='str'>A string object.</param>
-      public void AddString(string str) {
+    /**
+     * Not documented yet.
+     * @param str A string object.
+     */
+      public void AddString(String str) {
         int wordStart = 0;
-        for (int j = 0;j<str.Length; ++j) {
-          int c = str[j];
+        for (int j = 0;j<str.length(); ++j) {
+          int c = str.charAt(j);
           if (c == 0x20 || c == 0x09) {
             int wordEnd = j;
             if (wordStart != wordEnd) {
-              AppendWord(str.Substring(wordStart, wordEnd-wordStart));
+              AppendWord(str.substring(wordStart,(wordStart)+(wordEnd-wordStart)));
             }
-            while (j<str.Length) {
-              if (str[j]==0x20 || str[j]==0x09) {
-                ++j;
-              } else {
-                break;
-              }
+            while (j<str.length()) {
+              if (str.charAt(j)==0x20 || str.charAt(j)==0x09) {
+ ++j;
+  } else {
+ break;
+}
             }
             wordStart = j;
-            AppendSpaces(str.Substring(wordEnd, wordStart-wordEnd));
+            AppendSpaces(str.substring(wordEnd,(wordEnd)+(wordStart-wordEnd)));
             --j;
           }
         }
-        if (wordStart != str.Length) {
-          AppendWord(str.Substring(wordStart, str.Length-wordStart));
+        if (wordStart != str.length()) {
+          AppendWord(str.substring(wordStart,(wordStart)+(str.length()-wordStart)));
         }
       }
 
-      /// <summary>Converts this object to a text string.</summary>
-      /// <returns>A string representation of this object.</returns>
-      public override string ToString() {
-        return fullString.ToString();
+    /**
+     * Converts this object to a text string.
+     * @return A string representation of this object.
+     */
+      @Override public String toString() {
+        return fullString.toString();
       }
     }
 
-    /// <summary>Converts this object to a text string.</summary>
-    /// <returns>A string representation of this object.</returns>
-    public override string ToString() {
+    /**
+     * Converts this object to a text string.
+     * @return A string representation of this object.
+     */
+    @Override public String toString() {
       StringBuilder sb = new StringBuilder();
-      for (int i = 0;i<headers.Count;i+=2) {
-        string name = headers[i];
-        string value = headers[i + 1];
+      for (int i = 0;i<headers.size();i+=2) {
+        String name = headers.get(i);
+        String value = headers.get(i + 1);
         IHeaderFieldParser parser = HeaderFields.GetParser(name);
         if (!parser.IsStructured()) {
           if (HasNonAsciiOrCtlOrTooLongWord(value)) {
-            var encoder=new EncodedWordEncoder(name+":");
+            EncodedWordEncoder encoder=new EncodedWordEncoder(name+":");
             encoder.AddString(value);
             encoder.FinalizeEncoding();
           } else {
-            var encoder=new WordWrapEncoder(name+":");
+            WordWrapEncoder encoder=new WordWrapEncoder(name+":");
             encoder.AddString(value);
           }
-        } else if (name.Equals("content-type") ||
-                   name.Equals("mime-version") ||
-                   name.Equals("content-transfer-encoding")) {
+        } else if (name.equals("content-type") ||
+                   name.equals("mime-version") ||
+                   name.equals("content-transfer-encoding")) {
           // don't write now
         } else {
-          if (HasNonAsciiOrCtlOrTooLongWord(value) || value.IndexOf("=?") >= 0) {
-            sb.Append(name);
-            sb.Append(':');
+          if (HasNonAsciiOrCtlOrTooLongWord(value) || value.indexOf("=?") >= 0) {
+            sb.append(name);
+            sb.append(':');
             // TODO: Not perfect yet
-            sb.Append(value);
+            sb.append(value);
           } else {
-            var encoder=new WordWrapEncoder(name+":");
+            WordWrapEncoder encoder=new WordWrapEncoder(name+":");
             encoder.AddString(value);
           }
         }
-        sb.Append("\r\n");
+        sb.append("\r\n");
       }
-      sb.Append("MIME-Version: 1.0\r\n");
+      sb.append("MIME-Version: 1.0\r\n");
       int transferEncoding = TransferEncodingToUse();
       switch(transferEncoding) {
         case EncodingBase64:
-          sb.Append("Content-Transfer-Encoding: base64\r\n");
+          sb.append("Content-Transfer-Encoding: base64\r\n");
           break;
         case EncodingQuotedPrintable:
-          sb.Append("Content-Transfer-Encoding: quoted-printable\r\n");
+          sb.append("Content-Transfer-Encoding: quoted-printable\r\n");
           break;
         default:
-          sb.Append("Content-Transfer-Encoding: 7bit\r\n");
+          sb.append("Content-Transfer-Encoding: 7bit\r\n");
           break;
       }
-      sb.Append("\r\n");
-      if (this.ContentType.TopLevelType.Equals("multipart")) {
-        string boundary=this.ContentType.GetParameter("boundary");
+      sb.append("\r\n");
+      if (this.getContentType().getTopLevelType().equals("multipart")) {
+        String boundary=this.getContentType().GetParameter("boundary");
       }
-      return sb.ToString();
+      return sb.toString();
     }
 
     private static void ReadHeaders(
       ITransform stream,
-      IList<string> headerList) {
+      List<String> headerList) {
       int lineCount = 0;
       StringBuilder sb = new StringBuilder();
       StreamWithUnget ungetStream = new StreamWithUnget(stream);
       while (true) {
-        sb.Clear();
-        bool first = true;
-        bool endOfHeaders = false;
-        bool wsp = false;
+        sb.setLength(0);
+        boolean first = true;
+        boolean endOfHeaders = false;
+        boolean wsp = false;
         lineCount = 0;
         while (true) {
-          int c = ungetStream.ReadByte();
+          int c = ungetStream.read();
           if (c==-1) {
             throw new InvalidDataException("Premature end before all headers were read");
           }
           ++lineCount;
           if (first && c=='\r') {
-            if (ungetStream.ReadByte()=='\n') {
+            if (ungetStream.read()=='\n') {
               endOfHeaders = true;
               break;
             } else {
@@ -2035,7 +2056,7 @@ namespace CBORTest
             if (c>= 'A' && c<= 'Z') {
               c+=0x20;
             }
-            sb.Append((char)c);
+            sb.append((char)c);
           } else if (!first && c==':') {
             break;
           } else if (c == 0x20 || c == 0x09) {
@@ -2048,32 +2069,32 @@ namespace CBORTest
         if (endOfHeaders) {
           break;
         }
-        if (sb.Length == 0) {
+        if (sb.length() == 0) {
           throw new InvalidDataException("Empty header field name");
         }
-        string fieldName = sb.ToString();
-        sb.Clear();
+        String fieldName = sb.toString();
+        sb.setLength(0);
         // Read the header field value
         while (true) {
-          int c = ungetStream.ReadByte();
+          int c = ungetStream.read();
           if (c==-1) {
             throw new InvalidDataException("Premature end before all headers were read");
           }
           if (c=='\r') {
-            c = ungetStream.ReadByte();
+            c = ungetStream.read();
             if (c=='\n') {
               lineCount = 0;
               // Parse obsolete folding whitespace (obs-fws) under RFC5322
               // (parsed according to errata), same as LWSP in RFC5234
-              bool fwsFirst = true;
-              bool haveFWS = false;
+              boolean fwsFirst = true;
+              boolean haveFWS = false;
               while (true) {
                 // Skip the CRLF pair, if any (except if iterating for
                 // the first time, since CRLF was already parsed)
                 if (!fwsFirst) {
-                  c = ungetStream.ReadByte();
+                  c = ungetStream.read();
                   if (c=='\r') {
-                    c = ungetStream.ReadByte();
+                    c = ungetStream.read();
                     if (c=='\n') {
                       // Skipping CRLF
                       lineCount = 0;
@@ -2088,10 +2109,10 @@ namespace CBORTest
                   }
                 }
                 fwsFirst = false;
-                int c2 = ungetStream.ReadByte();
+                int c2 = ungetStream.read();
                 if (c2 == 0x20 || c2 == 0x09) {
                   lineCount+=1;
-                  sb.Append((char)c2);
+                  sb.append((char)c2);
                   haveFWS = true;
                   if (lineCount>998) {
                     throw new InvalidDataException("Header field line too long");
@@ -2103,12 +2124,13 @@ namespace CBORTest
               }
               if (haveFWS) {
                 // We have folding whitespace, line
-                // count found as above
-                continue;
+                // count ((found instanceof above
+                continue) ? (above
+                continue)found : null);
               }
               break;
             } else {
-              sb.Append('\r');
+              sb.append('\r');
               ungetStream.Unget();
               ++lineCount;
             }
@@ -2117,55 +2139,50 @@ namespace CBORTest
             throw new InvalidDataException("Header field line too long");
           }
           if (c<0x80) {
-            sb.Append((char)c);
+            sb.append((char)c);
           } else {
             if (!HeaderFields.GetParser(fieldName).IsStructured()) {
               // DEVIATION: Some emails still have an unencoded subject line
               // or other unstructured header field
-              sb.Append('\ufffd');
+              sb.append('\ufffd');
             } else {
-              throw new InvalidDataException("Malformed header field value "+sb.ToString());
+              throw new InvalidDataException("Malformed header field value "+sb.toString());
             }
           }
         }
-        string fieldValue = sb.ToString();
-        headerList.Add(fieldName);
+        String fieldValue = sb.toString();
+        headerList.add(fieldName);
         // NOTE: Field value will no longer have folding whitespace
         // at this point
-        headerList.Add(fieldValue);
+        headerList.add(fieldValue);
       }
     }
 
     private class MessageStackEntry {
       Message message;
 
-      /// <summary>Gets a value not documented yet.</summary>
-      /// <value>A value not documented yet.</value>
-      public Message Message {
-        get {
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+      public Message getMessage() {
           return message;
         }
-      }
-      string boundary;
+      String boundary;
 
-      /// <summary>Gets a value not documented yet.</summary>
-      /// <value>A value not documented yet.</value>
-      public string Boundary {
-        get {
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+      public String getBoundary() {
           return boundary;
         }
-      }
 
-      public MessageStackEntry(Message msg) {
-        #if DEBUG
-        if ((msg) == null) {
-          throw new ArgumentNullException("msg");
-        }
-        #endif
+      public MessageStackEntry (Message msg) {
 
         this.message = msg;
-        MediaType mediaType = msg.ContentType;
-        if (mediaType.TopLevelType.Equals("multipart")) {
+        MediaType mediaType = msg.getContentType();
+        if (mediaType.getTopLevelType().equals("multipart")) {
           this.boundary=mediaType.GetParameter("boundary");
           if (this.boundary == null) {
             throw new InvalidDataException("Multipart message has no boundary defined");
@@ -2183,96 +2200,98 @@ namespace CBORTest
       ITransform currentTransform = MakeTransferEncoding(
         boundaryChecker,
         baseTransferEncoding,
-        this.ContentType.TypeAndSubType.Equals("text/plain"));
-      IList<MessageStackEntry> multipartStack = new List<MessageStackEntry>();
+        this.getContentType().getTypeAndSubType().equals("text/plain"));
+      List<MessageStackEntry> multipartStack = new ArrayList<MessageStackEntry>();
       MessageStackEntry entry = new Message.MessageStackEntry(this);
-      multipartStack.Add(entry);
-      boundaryChecker.PushBoundary(entry.Boundary);
+      multipartStack.add(entry);
+      boundaryChecker.PushBoundary(entry.getBoundary());
       Message leaf = null;
       byte[] buffer = new byte[8192];
       int bufferCount = 0;
-      int bufferLength = buffer.Length;
-      using(MemoryStream ms = new MemoryStream()) {
+      int bufferLength = buffer.length;
+      java.io.ByteArrayOutputStream ms=null;
+try {
+ms=new ByteArrayOutputStream();
+
         while (true) {
           int ch = 0;
           try {
-            ch = currentTransform.ReadByte();
-          } catch(InvalidDataException) {
-            ms.Write(buffer, 0, bufferCount);
-            buffer = ms.ToArray();
-            string ss = DataUtilities.GetUtf8String(buffer,
-                                                    Math.Max(buffer.Length-80, 0),
-                                                    Math.Min(buffer.Length, 80), true);
-            Console.WriteLine(ss);
-            throw;
+            ch = currentTransform.read();
+          } catch (InvalidDataException ex) {
+            ms.write(buffer,0,bufferCount);
+            buffer = ms.toByteArray();
+            String ss = DataUtilities.GetUtf8String(buffer,
+                                                    Math.max(buffer.length-80, 0),
+                                                    Math.min(buffer.length, 80), true);
+            System.out.println(ss);
+            throw ex;
           }
           if (ch < 0) {
-            if (boundaryChecker.HasNewBodyPart) {
+            if (boundaryChecker.getHasNewBodyPart()) {
               Message msg = new Message();
               int stackCount = boundaryChecker.BoundaryCount();
               // Pop entries if needed to match the stack
-              #if DEBUG
-              if (multipartStack.Count < stackCount) {
-                throw new ArgumentException("multipartStack.Count (" + Convert.ToString((long)(multipartStack.Count), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)(stackCount), System.Globalization.CultureInfo.InvariantCulture));
-              }
-              #endif
+
               if (leaf != null) {
                 if (bufferCount>0) {
-                  ms.Write(buffer, 0, bufferCount);
+                  ms.write(buffer,0,bufferCount);
                   bufferCount = 0;
                 }
-                leaf.body = ms.ToArray();
+                leaf.body = ms.toByteArray();
               }
-              while (multipartStack.Count>stackCount) {
-                multipartStack.RemoveAt(stackCount);
+              while (multipartStack.size()>stackCount) {
+                multipartStack.remove(stackCount);
               }
-              Message parentMessage = multipartStack[multipartStack.Count-1].Message;
+              Message parentMessage = multipartStack.get(multipartStack.size()-1).getMessage();
               boundaryChecker.StartBodyPartHeaders();
               ReadHeaders(stream, msg.headers);
-              bool parentIsDigest=parentMessage.ContentType.SubType.Equals("digest") &&
-                parentMessage.ContentType.TopLevelType.Equals("multipart");
+              boolean parentIsDigest=parentMessage.getContentType().SubType.equals("digest") &&
+                parentMessage.getContentType().TopLevelType.equals("multipart");
               msg.ProcessHeaders(true, parentIsDigest);
               entry = new MessageStackEntry(msg);
               // Add the body part to the multipart
               // message's list of parts
-              parentMessage.Parts.Add(msg);
-              multipartStack.Add(entry);
+              parentMessage.getParts().add(msg);
+              multipartStack.add(entry);
               ms.SetLength(0);
-              if (msg.ContentType.TopLevelType.Equals("multipart")) {
+              if (msg.getContentType().TopLevelType.equals("multipart")) {
                 leaf = null;
               } else {
                 leaf = msg;
               }
-              boundaryChecker.PushBoundary(entry.Boundary);
+              boundaryChecker.PushBoundary(entry.getBoundary());
               boundaryChecker.EndBodyPartHeaders();
               currentTransform = MakeTransferEncoding(
                 boundaryChecker,
                 msg.transferEncoding,
-                msg.ContentType.TypeAndSubType.Equals("text/plain"));
+                msg.getContentType().TypeAndSubType.equals("text/plain"));
             } else {
               // All body parts were read
               if (leaf != null) {
                 if (bufferCount>0) {
-                  ms.Write(buffer, 0, bufferCount);
+                  ms.write(buffer,0,bufferCount);
                   bufferCount = 0;
                 }
-                leaf.body = ms.ToArray();
+                leaf.body = ms.toByteArray();
               }
               return;
             }
           } else {
             buffer[bufferCount++]=(byte)ch;
             if (bufferCount >= bufferLength) {
-              ms.Write(buffer, 0, bufferCount);
+              ms.write(buffer,0,bufferCount);
               bufferCount = 0;
             }
           }
         }
-      }
+}
+finally {
+try { if(ms!=null)ms.close(); } catch (IOException ex){}
+}
     }
 
     private static ITransform MakeTransferEncoding(ITransform stream,
-                                                   int encoding, bool plain) {
+                                                   int encoding, boolean plain) {
       ITransform transform = new EightBitTransform(stream);
       if (encoding == EncodingQuotedPrintable) {
         transform = new QuotedPrintableTransform(stream, false);
@@ -2297,52 +2316,57 @@ namespace CBORTest
 
     private void ReadSimpleBody(ITransform stream) {
       ITransform transform = MakeTransferEncoding(stream, transferEncoding,
-                                                  this.ContentType.TypeAndSubType.Equals("text/plain"));
+                                                  this.getContentType().getTypeAndSubType().equals("text/plain"));
       byte[] buffer = new byte[8192];
       int bufferCount = 0;
-      int bufferLength = buffer.Length;
+      int bufferLength = buffer.length;
       // TODO: Support message/rfc822
-      using(MemoryStream ms = new MemoryStream()) {
+      java.io.ByteArrayOutputStream ms=null;
+try {
+ms=new ByteArrayOutputStream();
+
         while (true) {
           int ch = 0;
           try {
-            ch = transform.ReadByte();
-          } catch(InvalidDataException) {
-            ms.Write(buffer, 0, bufferCount);
-            buffer = ms.ToArray();
-            string ss = DataUtilities.GetUtf8String(buffer,
-                                                    Math.Max(buffer.Length-80, 0),
-                                                    Math.Min(buffer.Length, 80), true);
-            Console.WriteLine(ss);
-            throw;
+            ch = transform.read();
+          } catch (InvalidDataException ex) {
+            ms.write(buffer,0,bufferCount);
+            buffer = ms.toByteArray();
+            String ss = DataUtilities.GetUtf8String(buffer,
+                                                    Math.max(buffer.length-80, 0),
+                                                    Math.min(buffer.length, 80), true);
+            System.out.println(ss);
+            throw ex;
           }
           if (ch < 0) {
             break;
           }
           buffer[bufferCount++]=(byte)ch;
           if (bufferCount >= bufferLength) {
-            ms.Write(buffer, 0, bufferCount);
+            ms.write(buffer,0,bufferCount);
             bufferCount = 0;
           }
         }
         if (bufferCount>0) {
-          ms.Write(buffer, 0, bufferCount);
+          ms.write(buffer,0,bufferCount);
         }
-        this.body = ms.ToArray();
-      }
+        this.body = ms.toByteArray();
+}
+finally {
+try { if(ms!=null)ms.close(); } catch (IOException ex){}
+}
     }
 
     private void ReadMessage(ITransform stream) {
       ReadHeaders(stream, this.headers);
       ProcessHeaders(false, false);
-      if (contentType.TopLevelType.Equals("multipart")) {
+      if (contentType.getTopLevelType().equals("multipart")) {
         ReadMultipartBody(stream);
       } else {
-        if (contentType.TopLevelType.Equals("message")) {
-          Console.WriteLine(contentType);
+        if (contentType.getTopLevelType().equals("message")) {
+          System.out.println(contentType);
         }
         ReadSimpleBody(stream);
       }
     }
   }
-}

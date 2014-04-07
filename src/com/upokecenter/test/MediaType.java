@@ -1,3 +1,4 @@
+package com.upokecenter.test; import com.upokecenter.util.*;
 /*
  * Created by SharpDevelop.
  * User: Peter
@@ -6,58 +7,56 @@
  *
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 
-namespace CBORTest
-{
-  internal sealed class MediaType {
-    private string topLevelType;
+import java.util.*;
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
-    public string TopLevelType {
-      get {
+  final class MediaType {
+    private String topLevelType;
+
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+    public String getTopLevelType() {
         return topLevelType;
       }
-    }
-    private string subType;
+    private String subType;
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
-    public string SubType {
-      get {
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+    public String getSubType() {
         return subType;
       }
-    }
 
-    internal MediaType(string type, string subtype, IDictionary<string, string> parameters) {
-      this.topLevelType = type;
+    internal MediaType(String type, String subtype, Map<String, String> parameters) {
+      topLevelType = type;
       this.subType = subtype;
-      this.parameters = new SortedDictionary<string, string>(parameters);
+      parameters = new TreeMap<String, String>(parameters);
     }
 
-    SortedDictionary<string, string> parameters;
+    TreeMap<String, String> parameters;
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
-    public IDictionary<string, string> Parameters {
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+    public Map<String, String> Parameters {
       get {
         // TODO: Make read-only
         return parameters;
       }
     }
 
-    internal enum QuotedStringRule {
+    enum QuotedStringRule {
       Http,
       Rfc5322,
       Smtp  // RFC5321
     }
 
     private static int skipQtextOrQuotedPair(
-      string s,
+      String s,
       int index,
       int endIndex,
       QuotedStringRule rule) {
@@ -66,7 +65,7 @@ namespace CBORTest
       }
       int i2;
       if (rule == QuotedStringRule.Http) {
-        char c = s[index];
+        char c = s.charAt(index);
         if (c<0x100 && c>= 0x21 && c!='\\' && c!='"') {
           return index + 1;
         }
@@ -79,7 +78,7 @@ namespace CBORTest
         i2 = index;
         // qtext (RFC5322 sec. 3.2.1)
         if (i2<endIndex) {
-          char c = s[i2];
+          char c = s.charAt(i2);
           if (c>= 33 && c<= 126 && c!='\\' && c!='"') {
             ++i2;
           }
@@ -98,7 +97,7 @@ namespace CBORTest
         }
         return i2;
       } else if (rule == QuotedStringRule.Smtp) {
-        char c = s[index];
+        char c = s.charAt(index);
         if (c>= 0x20 && c<= 0x7E && c!='\\' && c!='"') {
           return index + 1;
         }
@@ -108,14 +107,14 @@ namespace CBORTest
         }
         return i2;
       } else {
-        throw new ArgumentException(rule.ToString());
+        throw new IllegalArgumentException(rule.toString());
       }
     }
 
     // quoted-pair (RFC5322 sec. 3.2.1)
-    internal static int skipQuotedPair(string s, int index, int endIndex) {
-      if (index+1<endIndex && s[index]=='\\') {
-        char c = s[index + 1];
+    static int skipQuotedPair(String s, int index, int endIndex) {
+      if (index+1<endIndex && s.charAt(index)=='\\') {
+        char c = s.charAt(index + 1);
         if (c == 0x20 || c == 0x09 || (c >= 0x21 && c <= 0x7e)) {
           return index + 2;
         }
@@ -127,36 +126,36 @@ namespace CBORTest
       return index;
     }
 
-    internal static int skipQuotedPairSMTP(string s, int index, int endIndex) {
-      if (index+1<endIndex && s[index]=='\\') {
-        char c = s[index + 1];
+    static int skipQuotedPairSMTP(String s, int index, int endIndex) {
+      if (index+1<endIndex && s.charAt(index)=='\\') {
+        char c = s.charAt(index + 1);
         if (c >= 0x20 && c <= 0x7e) {
           return index + 2;
         }
       }
       return index;
     }
-    // quoted-string (RFC5322 sec. 3.2.4)
-    internal static int skipQuotedString(string s, int index,
+    // quoted-String (RFC5322 sec. 3.2.4)
+    static int skipQuotedString(String s, int index,
                                          int endIndex, StringBuilder builder) {
       return skipQuotedString(s, index, endIndex, builder, QuotedStringRule.Rfc5322);
     }
 
-    internal static int skipQuotedString(
-      string str,
+    static int skipQuotedString(
+      String str,
       int index,
       int endIndex,
       StringBuilder builder,  // receives the unescaped version of the _string
       QuotedStringRule rule) {
       int startIndex = index;
-      int bLength=(builder == null) ? 0 : builder.Length;
+      int bLength=(builder == null) ? 0 : builder.length();
       index=(rule != QuotedStringRule.Rfc5322) ? index :
         Message.SkipCommentsAndWhitespace(str, index, endIndex);
-      if (!(index<endIndex && str[index]=='"')) {
+      if (!(index<endIndex && str.charAt(index)=='"')) {
         if (builder != null) {
-          builder.Length=(bLength);
+          builder.length()=(bLength);
         }
-        return startIndex;  // not a valid quoted-string
+        return startIndex;  // not a valid quoted-String
       }
       ++index;
       while (index<endIndex) {
@@ -164,7 +163,7 @@ namespace CBORTest
         if (rule == QuotedStringRule.Http) {
           i2 = skipLws(str, index, endIndex);
           if (i2 != index) {
-            builder.Append(' ');
+            builder.append(' ');
           }
         } else if (rule == QuotedStringRule.Rfc5322) {
           // Skip tabs and spaces (should skip
@@ -172,12 +171,12 @@ namespace CBORTest
           // unfolded values)
           i2 = ParserUtility.SkipSpaceAndTab(str, index, endIndex);
           if (i2 != index) {
-            builder.Append(' ');
+            builder.append(' ');
           }
         }
         index = i2;
-        char c = str[index];
-        if (c=='"') { // end of quoted-string
+        char c = str.charAt(index);
+        if (c=='"') { // end of quoted-String
           ++index;
           if (rule == QuotedStringRule.Rfc5322) {
             return Message.SkipCommentsAndWhitespace(str, index, endIndex);
@@ -189,163 +188,163 @@ namespace CBORTest
         index = skipQtextOrQuotedPair(str, index, endIndex, rule);
         if (index == oldIndex) {
           if (builder != null) {
-            builder.Remove(bLength, (builder.Length)-(bLength));
+            builder.delete(bLength,(bLength)+((builder.length())-(bLength)));
           }
           return startIndex;
         }
         if (builder != null) {
           // this is a qtext or quoted-pair, so
           // append the last character read
-          builder.Append(str[index-1]);
+          builder.append(str.charAt(index-1));
         }
       }
       if (builder != null) {
-        builder.Remove(bLength, (builder.Length)-(bLength));
+        builder.delete(bLength,(bLength)+((builder.length())-(bLength)));
       }
-      return startIndex;  // not a valid quoted-string
+      return startIndex;  // not a valid quoted-String
     }
 
-    private static int SafeSplit(string str, int index) {
+    private static int SafeSplit(String str, int index) {
       if (str == null) {
         return 0;
       }
       if (index< 0) {
         return 0;
       }
-      if (index>str.Length) {
-        return str.Length;
+      if (index>str.length()) {
+        return str.length();
       }
-      if (index>0 && str[index]>= 0xdc00  && str[index]<= 0xdfff &&
-          str[index-1]>= 0xd800 && str[index-1]<= 0xdbff) {
+      if (index>0 && str.charAt(index)>= 0xdc00  && str.charAt(index)<= 0xdfff &&
+          str.charAt(index-1)>= 0xd800 && str.charAt(index-1)<= 0xdbff) {
         // Avoid splitting legal surrogate pairs
         return index-1;
       }
       return index;
     }
 
-    private static void AppendComplexParamValue(string name, string str, StringBuilder sb) {
+    private static void AppendComplexParamValue(String name, String str, StringBuilder sb) {
       int length = 1;
       int contin = 0;
-      string hex="0123456789ABCDEF";
-      length+=name.Length + 12;
+      String hex="0123456789ABCDEF";
+      length+=name.length() + 12;
       int maxLength = 76;
-      if (sb.Length + name.Length + 9 + str.Length*3 <= maxLength) {
+      if (sb.length() + name.length() + 9 + str.length()*3 <= maxLength) {
         // Very short
-        length = sb.Length + name.Length + 9;
-        sb.Append(name+"*=utf-8''");
-      } else if (length + str.Length*3 <= maxLength) {
+        length = sb.length() + name.length() + 9;
+        sb.append(name+"*=utf-8''");
+      } else if (length + str.length()*3 <= maxLength) {
         // Short enough that no continuations
         // are needed
         length-=2;
-        sb.Append("\r\n ");
-        sb.Append(name+"*=utf-8''");
+        sb.append("\r\n ");
+        sb.append(name+"*=utf-8''");
       } else {
-        sb.Append("\r\n ");
-        sb.Append(name+"*0*=utf-8''");
+        sb.append("\r\n ");
+        sb.append(name+"*0*=utf-8''");
       }
-      bool first = true;
+      boolean first = true;
       int index = 0;
-      while (index<str.Length) {
-        int c = str[index];
-        if (c >= 0xd800 && c <= 0xdbff && index + 1 < str.Length &&
-            str[index + 1] >= 0xdc00 && str[index + 1] <= 0xdfff) {
+      while (index<str.length()) {
+        int c = str.charAt(index);
+        if (c >= 0xd800 && c <= 0xdbff && index + 1 < str.length() &&
+            str.charAt(index + 1) >= 0xdc00 && str.charAt(index + 1) <= 0xdfff) {
           // Get the Unicode code point for the surrogate pair
-          c = 0x10000 + ((c - 0xd800) * 0x400) + (str[index + 1] - 0xdc00);
+          c = 0x10000 + ((c - 0xd800) * 0x400) + (str.charAt(index + 1) - 0xdc00);
           ++index;
         } else if (c >= 0xd800 && c <= 0xdfff) {
           // unpaired surrogate
           c = 0xfffd;
         }
         ++index;
-        if ((c>= 33 && c<= 126 && "()<>,;[]:@\"\\/?=*%'".IndexOf((char)c) < 0)) {
+        if ((c>= 33 && c<= 126 && "()<>,;[]:@\"\\/?=*%'".indexOf((char)c) < 0)) {
           ++length;
           if (!first && length + 1>maxLength) {
-            sb.Append(";\r\n ");
+            sb.append(";\r\n ");
             first = true;
             ++contin;
-            string continString=name+"*"+
-              Convert.ToString((int)contin, System.Globalization.CultureInfo.InvariantCulture)+
+            String continString=name+"*"+
+              Integer.toString((int)contin)+
               "*=";
-            sb.Append(continString);
-            length = 1 + continString.Length;
+            sb.append(continString);
+            length = 1 + continString.length();
             ++length;
           }
           first = false;
-          sb.Append((char)c);
+          sb.append((char)c);
         } else if (c<0x80) {
           length+=3;
           if (!first && length + 1>maxLength) {
-            sb.Append(";\r\n ");
+            sb.append(";\r\n ");
             first = true;
             ++contin;
-            string continString=name+"*"+
-              Convert.ToString((int)contin, System.Globalization.CultureInfo.InvariantCulture)+
+            String continString=name+"*"+
+              Integer.toString((int)contin)+
               "*=";
-            sb.Append(continString);
-            length = 1 + continString.Length;
+            sb.append(continString);
+            length = 1 + continString.length();
             length+=3;
           }
           first = false;
-          sb.Append((char)c);
+          sb.append((char)c);
         } else if (c<0x800) {
           length+=6;
           if (!first && length + 1>maxLength) {
-            sb.Append(";\r\n ");
+            sb.append(";\r\n ");
             first = true;
             ++contin;
-            string continString=name+"*"+
-              Convert.ToString((int)contin, System.Globalization.CultureInfo.InvariantCulture)+
+            String continString=name+"*"+
+              Integer.toString((int)contin)+
               "*=";
-            sb.Append(continString);
-            length = 1 + continString.Length;
+            sb.append(continString);
+            length = 1 + continString.length();
             length+=6;
           }
           first = false;
           int w= (byte)(0xc0 | ((c >> 6) & 0x1f));
           int x = (byte)(0x80 | (c & 0x3f));
-          sb.Append('%');
-          sb.Append(hex[w >> 4]);
-          sb.Append(hex[w & 15]);
-          sb.Append('%');
-          sb.Append(hex[x >> 4]);
-          sb.Append(hex[x & 15]);
+          sb.append('%');
+          sb.append(hex.charAt(w >> 4));
+          sb.append(hex.charAt(w & 15));
+          sb.append('%');
+          sb.append(hex.charAt(x >> 4));
+          sb.append(hex.charAt(x & 15));
         } else if (c<0x10000) {
           length+=9;
           if (!first && length + 1>maxLength) {
-            sb.Append(";\r\n ");
+            sb.append(";\r\n ");
             first = true;
             ++contin;
-            string continString=name+"*"+
-              Convert.ToString((int)contin, System.Globalization.CultureInfo.InvariantCulture)+
+            String continString=name+"*"+
+              Integer.toString((int)contin)+
               "*=";
-            sb.Append(continString);
-            length = 1 + continString.Length;
+            sb.append(continString);
+            length = 1 + continString.length();
             length+=9;
           }
           first = false;
           int w = (byte)(0xe0 | ((c >> 12) & 0x0f));
           int x = (byte)(0x80 | ((c >> 6) & 0x3f));
           int y = (byte)(0x80 | (c & 0x3f));
-          sb.Append('%');
-          sb.Append(hex[w >> 4]);
-          sb.Append(hex[w & 15]);
-          sb.Append('%');
-          sb.Append(hex[x >> 4]);
-          sb.Append(hex[x & 15]);
-          sb.Append('%');
-          sb.Append(hex[y >> 4]);
-          sb.Append(hex[y & 15]);
+          sb.append('%');
+          sb.append(hex.charAt(w >> 4));
+          sb.append(hex.charAt(w & 15));
+          sb.append('%');
+          sb.append(hex.charAt(x >> 4));
+          sb.append(hex.charAt(x & 15));
+          sb.append('%');
+          sb.append(hex.charAt(y >> 4));
+          sb.append(hex.charAt(y & 15));
         } else {
           length+=12;
           if (!first && length + 1>maxLength) {
-            sb.Append(";\r\n ");
+            sb.append(";\r\n ");
             first = true;
             ++contin;
-            string continString=name+"*"+
-              Convert.ToString((int)contin, System.Globalization.CultureInfo.InvariantCulture)+
+            String continString=name+"*"+
+              Integer.toString((int)contin)+
               "*=";
-            sb.Append(continString);
-            length = 1 + continString.Length;
+            sb.append(continString);
+            length = 1 + continString.length();
             length+=12;
           }
           first = false;
@@ -353,181 +352,183 @@ namespace CBORTest
           int x = (byte)(0x80 | ((c >> 12) & 0x3f));
           int y = (byte)(0x80 | ((c >> 6) & 0x3f));
           int z = (byte)(0x80 | (c & 0x3f));
-          sb.Append('%');
-          sb.Append(hex[w >> 4]);
-          sb.Append(hex[w & 15]);
-          sb.Append('%');
-          sb.Append(hex[x >> 4]);
-          sb.Append(hex[x & 15]);
-          sb.Append('%');
-          sb.Append(hex[y >> 4]);
-          sb.Append(hex[y & 15]);
-          sb.Append('%');
-          sb.Append(hex[z >> 4]);
-          sb.Append(hex[z & 15]);
+          sb.append('%');
+          sb.append(hex.charAt(w >> 4));
+          sb.append(hex.charAt(w & 15));
+          sb.append('%');
+          sb.append(hex.charAt(x >> 4));
+          sb.append(hex.charAt(x & 15));
+          sb.append('%');
+          sb.append(hex.charAt(y >> 4));
+          sb.append(hex.charAt(y & 15));
+          sb.append('%');
+          sb.append(hex.charAt(z >> 4));
+          sb.append(hex.charAt(z & 15));
         }
       }
     }
 
-    private static bool AppendSimpleParamValue(string name, string str, StringBuilder sb) {
-      sb.Append(name);
-      sb.Append('=');
-      bool simple = true;
-      for (int i = 0;i<str.Length; ++i) {
-        char c = str[i];
-        if (!(c>= 33 && c<= 126 && "()<>,;[]:@\"\\/?=".IndexOf(c) < 0)) {
+    private static boolean AppendSimpleParamValue(String name, String str, StringBuilder sb) {
+      sb.append(name);
+      sb.append('=');
+      boolean simple = true;
+      for (int i = 0;i<str.length(); ++i) {
+        char c = str.charAt(i);
+        if (!(c>= 33 && c<= 126 && "()<>,;[]:@\"\\/?=".indexOf(c) < 0)) {
           simple = false;
         }
       }
       if (simple) {
-        sb.Append(str);
+        sb.append(str);
         return true;
       }
-      sb.Append('"');
-      for (int i = 0;i<str.Length; ++i) {
-        char c = str[i];
+      sb.append('"');
+      for (int i = 0;i<str.length(); ++i) {
+        char c = str.charAt(i);
         if (c >= 32 && c <= 126) {
-          sb.Append(c);
+          sb.append(c);
         } else if (c==0x20 || c==0x09 || c=='\\' || c=='"') {
-          sb.Append('\\');
-          sb.Append(c);
+          sb.append('\\');
+          sb.append(c);
         } else {
           // Requires complex encoding
           return false;
         }
       }
-      sb.Append('"');
+      sb.append('"');
       return true;
     }
 
-    private static void AppendParamValue(string name, string str, StringBuilder sb) {
-      int sbStart = sb.Length;
+    private static void AppendParamValue(String name, String str, StringBuilder sb) {
+      int sbStart = sb.length();
       if (!AppendSimpleParamValue(name, str, sb)) {
-        sb.Length = sbStart;
+        sb.length() = sbStart;
         AppendComplexParamValue(name, str, sb);
         return;
       }
-      if (sb.Length>76) {
-        sb.Length = sbStart;
-        sb.Append("\r\n ");
-        int sbStart2 = sb.Length-1;
+      if (sb.length()>76) {
+        sb.length() = sbStart;
+        sb.append("\r\n ");
+        int sbStart2 = sb.length()-1;
         AppendSimpleParamValue(name, str, sb);
-        if (sb.Length-sbStart2>76) {
-          sb.Length = sbStart;
+        if (sb.length()-sbStart2>76) {
+          sb.length() = sbStart;
           AppendComplexParamValue(name, str, sb);
         }
       }
     }
 
-    /// <summary>Converts this object to a text string.</summary>
-    /// <returns>A string representation of this object.</returns>
-    public override string ToString() {
+    /**
+     * Converts this object to a text string.
+     * @return A string representation of this object.
+     */
+    @Override public String toString() {
       StringBuilder sb = new StringBuilder();
-      sb.Append(topLevelType);
-      sb.Append('/');
-      sb.Append(subType);
-      foreach(string key in parameters.Keys) {
-        sb.Append(';');
-        AppendParamValue(key, parameters[key], sb);
+      sb.append(topLevelType);
+      sb.append('/');
+      sb.append(subType);
+      for(String key : parameters.keySet()) {
+        sb.append(';');
+        AppendParamValue(key, parameters.get(key), sb);
       }
-      return sb.ToString();
+      return sb.toString();
     }
 
-    internal static int skipMimeToken(string str, int index, int endIndex,
-                                      StringBuilder builder, bool httpRules) {
+    static int skipMimeToken(String str, int index, int endIndex,
+                                      StringBuilder builder, boolean httpRules) {
       int i = index;
       while (i<endIndex) {
-        char c = str[i];
-        if (c<= 0x20 || c>= 0x7F || ((c&0x7F)==c && "()<>@,;:\\\"/[]?=".IndexOf(c)>= 0)) {
+        char c = str.charAt(i);
+        if (c<= 0x20 || c>= 0x7F || ((c&0x7F)==c && "()<>@,;:\\\"/[]?=".indexOf(c)>= 0)) {
           break;
         }
         if (httpRules && (c=='{' || c=='}')) {
           break;
         }
         if (builder != null) {
-          builder.Append(c);
+          builder.append(c);
         }
         ++i;
       }
       return i;
     }
 
-    internal static int skipAttributeNameRfc2231(string str, int index, int endIndex,
-                                                 StringBuilder builder, bool httpRules) {
+    static int skipAttributeNameRfc2231(String str, int index, int endIndex,
+                                                 StringBuilder builder, boolean httpRules) {
       if (httpRules) {
         return skipMimeToken(str, index, endIndex, builder, httpRules);
       }
       int i = index;
       while (i<endIndex) {
-        char c = str[i];
+        char c = str.charAt(i);
         if (c <= 0x20 || c >= 0x7f ||
-            ((c&0x7F)==c && "()<>@,;:\\\"/[]?='%*".IndexOf(c)>= 0)) {
+            ((c&0x7F)==c && "()<>@,;:\\\"/[]?='%*".indexOf(c)>= 0)) {
           break;
         }
         if (builder != null) {
-          builder.Append(c);
+          builder.append(c);
         }
         ++i;
       }
-      if (i+1<endIndex && str[i]=='*' && str[i+1]=='0') {
+      if (i+1<endIndex && str.charAt(i)=='*' && str.charAt(i+1)=='0') {
         // initial-section
         i+=2;
         if (builder != null) {
-          builder.Append("*0");
+          builder.append("*0");
         }
-        if (i<endIndex && str[i]=='*') {
+        if (i<endIndex && str.charAt(i)=='*') {
           ++i;
           if (builder != null) {
-            builder.Append("*");
+            builder.append("*");
           }
         }
         return i;
       }
-      if (i+1<endIndex && str[i]=='*' && str[i+1]>= '1' && str[i+1]<= '9') {
+      if (i+1<endIndex && str.charAt(i)=='*' && str.charAt(i+1)>= '1' && str.charAt(i+1)<= '9') {
         // other-sections
         if (builder != null) {
-          builder.Append('*');
-          builder.Append(str[i + 1]);
+          builder.append('*');
+          builder.append(str.charAt(i + 1));
         }
         i+=2;
-        while (i<endIndex && str[i]>= '0' && str[i]<= '9') {
+        while (i<endIndex && str.charAt(i)>= '0' && str.charAt(i)<= '9') {
           if (builder != null) {
-            builder.Append(str[i]);
+            builder.append(str.charAt(i));
           }
           ++i;
         }
-        if (i<endIndex && str[i]=='*') {
+        if (i<endIndex && str.charAt(i)=='*') {
           if (builder != null) {
-            builder.Append(str[i]);
+            builder.append(str.charAt(i));
           }
           ++i;
         }
         return i;
       }
-      if (i<endIndex && str[i]=='*') {
+      if (i<endIndex && str.charAt(i)=='*') {
         if (builder != null) {
-          builder.Append(str[i]);
+          builder.append(str.charAt(i));
         }
         ++i;
       }
       return i;
     }
 
-    internal static int skipMimeTokenRfc2047(string str, int index, int endIndex) {
+    static int skipMimeTokenRfc2047(String str, int index, int endIndex) {
       int i = index;
       while (i<endIndex) {
-        char c = str[i];
-        if (c<= 0x20 || c>= 0x7F || ((c&0x7F)==c && "()<>@,;:\\\"/[]?=.".IndexOf(c)>= 0)) {
+        char c = str.charAt(i);
+        if (c<= 0x20 || c>= 0x7F || ((c&0x7F)==c && "()<>@,;:\\\"/[]?=.".indexOf(c)>= 0)) {
           break;
         }
         ++i;
       }
       return i;
     }
-    internal static int skipEncodedTextRfc2047(string str, int index, int endIndex, bool inComments) {
+    static int skipEncodedTextRfc2047(String str, int index, int endIndex, boolean inComments) {
       int i = index;
       while (i<endIndex) {
-        char c = str[i];
+        char c = str.charAt(i);
         if (c<= 0x20 || c>= 0x7F || c=='?') {
           break;
         }
@@ -538,21 +539,21 @@ namespace CBORTest
       }
       return i;
     }
-    internal static int skipMimeTypeSubtype(string str, int index, int endIndex, StringBuilder builder) {
+    static int skipMimeTypeSubtype(String str, int index, int endIndex, StringBuilder builder) {
       int i = index;
       int count = 0;
-      while (i<str.Length) {
-        char c = str[i];
+      while (i<str.length()) {
+        char c = str.charAt(i);
         // See RFC6838
         if ((c>= 'A' && c<= 'Z') || (c>= 'a' && c<= 'z') || (c>= '0' && c<= '9')) {
           if (builder != null) {
-            builder.Append(c);
+            builder.append(c);
           }
           ++i;
           ++count;
-        } else if (count>0 && ((c&0x7F)==c && "!#$&-^_.+".IndexOf(c)>= 0)) {
+        } else if (count>0 && ((c&0x7F)==c && "!#$&-^_.+".indexOf(c)>= 0)) {
           if (builder != null) {
-            builder.Append(c);
+            builder.append(c);
           }
           ++i;
           ++count;
@@ -567,26 +568,28 @@ namespace CBORTest
       return i;
     }
 
-    /// <summary>Returns the charset parameter, converted to ASCII lower-case,
-    /// if it exists, or "us-ascii" if the media type is ill-formed (RFC2045
-    /// sec. 5.2), or if the media type is "text/plain" or "text/xml" and doesn't
-    /// have a charset parameter (see RFC2046 and RFC3023, respectively),
-    /// or the empty string otherwise.</summary>
-    /// <returns>A string object.</returns>
-    public string GetCharset() {
-      string param=GetParameter("charset");
+    /**
+     * Returns the charset parameter, converted to ASCII lower-case, if
+     * it exists, or "us-ascii" if the media type is ill-formed (RFC2045
+     * sec. 5.2), or if the media type is "text/plain" or "text/xml" and doesn't
+     * have a charset parameter (see RFC2046 and RFC3023, respectively),
+     * or the empty string otherwise.
+     * @return A string object.
+     */
+    public String GetCharset() {
+      String param=GetParameter("charset");
       if (param != null) {
         return ParserUtility.ToLowerCaseAscii(param);
       }
-      if (topLevelType.Equals("text")) {
-        if (subType.Equals("xml") || subType.Equals("plain")) {
+      if (topLevelType.equals("text")) {
+        if (subType.equals("xml") || subType.equals("plain")) {
           return "us-ascii";
         }
-        if (subType.Equals("csv")) {
+        if (subType.equals("csv")) {
           // see RFC 7111 sec. 5.1
           return "utf-8";
         }
-        if (subType.Equals("vnd.graphviz")) {
+        if (subType.equals("vnd.graphviz")) {
           // see http://iana.org/assignments/media-types/text/vnd.graphviz
           return "utf-8";
         }
@@ -594,25 +597,27 @@ namespace CBORTest
       return "";
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='name'>A string object. (2).</param>
-    /// <returns>A string object.</returns>
-    public string GetParameter(string name) {
+    /**
+     * Not documented yet.
+     * @param name A string object. (2).
+     * @return A string object.
+     */
+    public String GetParameter(String name) {
       if ((name) == null) {
-        throw new ArgumentNullException("name");
+        throw new NullPointerException("name");
       }
-      if ((name).Length == 0) {
-        throw new ArgumentException("name is empty.");
+      if ((name).length == 0) {
+        throw new IllegalArgumentException("name is empty.");
       }
       name = ParserUtility.ToLowerCaseAscii(name);
-      if (parameters.ContainsKey(name)) {
-        return parameters[name];
+      if (parameters.containsKey(name)) {
+        return parameters.get(name);
       }
       return null;
     }
 
-    private static string DecodeRfc2231Extension(string value) {
-      int firstQuote=value.IndexOf('\'');
+    private static String DecodeRfc2231Extension(String value) {
+      int firstQuote=value.indexOf('\'');
       if (firstQuote< 0) {
         // not a valid encoded parameter
         return null;
@@ -622,10 +627,10 @@ namespace CBORTest
         // not a valid encoded parameter
         return null;
       }
-      string charset = value.Substring(0, firstQuote);
+      String charset = value.substring(0,firstQuote);
       // NOTE: Ignored
-      // string language = value.Substring(firstQuote + 1, secondQuote-(firstQuote + 1));
-      string paramValue = value.Substring(secondQuote + 1);
+      // String language = value.substring(firstQuote + 1,(firstQuote + 1)+(secondQuote-(firstQuote + 1)));
+      String paramValue = value.substring(secondQuote + 1);
       Charsets.ICharset cs = Charsets.GetCharset(charset);
       if (cs == null) {
         cs = Charsets.Ascii;
@@ -633,11 +638,11 @@ namespace CBORTest
       return DecodeRfc2231Encoding(paramValue, cs);
     }
 
-    private static Charsets.ICharset GetRfc2231Charset(string value) {
+    private static Charsets.ICharset GetRfc2231Charset(String value) {
       if (value == null) {
         return Charsets.Ascii;
       }
-      int firstQuote=value.IndexOf('\'');
+      int firstQuote=value.indexOf('\'');
       if (firstQuote< 0) {
         // not a valid encoded parameter
         return Charsets.Ascii;
@@ -647,9 +652,9 @@ namespace CBORTest
         // not a valid encoded parameter
         return Charsets.Ascii;
       }
-      string charset = value.Substring(0, firstQuote);
+      String charset = value.substring(0,firstQuote);
       // NOTE: Ignored
-      // string language = value.Substring(firstQuote + 1, secondQuote-(firstQuote + 1));
+      // String language = value.substring(firstQuote + 1,(firstQuote + 1)+(secondQuote-(firstQuote + 1)));
       Charsets.ICharset cs = Charsets.GetCharset(charset);
       if (cs == null) {
         cs = Charsets.Ascii;
@@ -657,43 +662,42 @@ namespace CBORTest
       return cs;
     }
 
-    private static string DecodeRfc2231Encoding(string value, Charsets.ICharset charset) {
+    private static String DecodeRfc2231Encoding(String value, Charsets.ICharset charset) {
       return charset.GetString(new Message.PercentEncodingStringTransform(value));
     }
 
-    private bool ExpandRfc2231Extensions() {
-      if (parameters.Count == 0) {
+    private boolean ExpandRfc2231Extensions() {
+      if (parameters.size() == 0) {
         return true;
       }
-      IList<string> keyList = new List<string>(parameters.Keys);
-      foreach(string name in keyList) {
-        if (!parameters.ContainsKey(name)) {
+      List<String> keyList = new ArrayList<String>(parameters.keySet());
+      for(String name : keyList) {
+        if (!parameters.containsKey(name)) {
           continue;
         }
-        string value = parameters[name];
-        int asterisk=name.IndexOf('*');
-        if (asterisk == name.Length-1 && asterisk>0) {
+        String value = parameters.get(name);
+        int asterisk=name.indexOf('*');
+        if (asterisk == name.length()-1 && asterisk>0) {
           // name*="value" (except when the parameter is just "*")
-          string realName = name.Substring(0, name.Length-1);
-          string realValue = DecodeRfc2231Extension(value);
+          String realName = name.substring(0,name.length()-1);
+          String realValue = DecodeRfc2231Extension(value);
           if (realValue == null) {
             continue;
           }
           parameters.Remove(name);
-          parameters[realName]=realValue;
+          parameters.put(realName,realValue);
           continue;
         }
         // name*0 or name*0*
         if (asterisk > 0 &&
-            ((asterisk==name.Length-2 && name[asterisk+1]=='0') ||
-             (asterisk==name.Length-3 && name[asterisk+1]=='0' && name[asterisk+2]=='*')
-            )) {
-          string realName = name.Substring(0, asterisk);
-          string realValue=(asterisk == name.Length-3) ? DecodeRfc2231Extension(value) :
+            ((asterisk==name.length()-2 && name.charAt(asterisk+1)=='0') ||
+             (asterisk==name.length()-3 && name.charAt(asterisk+1)=='0' && name.charAt(asterisk+2)=='*')
+)) {
+          String realName = name.substring(0,asterisk);
+          String realValue=(asterisk == name.length()-3) ? DecodeRfc2231Extension(value) :
             value;
           Charsets.ICharset charsetUsed = GetRfc2231Charset(
-            (asterisk == name.Length-3) ? value : null);
-          parameters.Remove(name);
+            (asterisk == name.length()-3) ? value : null);
           if (realValue == null) {
             realValue = value;
           }
@@ -701,29 +705,38 @@ namespace CBORTest
           // search for name*1 or name*1*, then name*2 or name*2*,
           // and so on
           while (true) {
-            string contin=realName+"*"+
-              Convert.ToString(pindex, CultureInfo.InvariantCulture);
-            string continEncoded=contin+"*";
-            if (parameters.ContainsKey(contin)) {
-              // Unencoded continuation
-              realValue+=parameters[contin];
-              parameters.Remove(contin);
-            } else if (parameters.ContainsKey(continEncoded)) {
-              // Encoded continuation
-              realValue+=DecodeRfc2231Encoding(parameters[continEncoded], charsetUsed);
-              parameters.Remove(continEncoded);
-            } else {
+            String contin=realName+"*"+
+              (pindex).toString();
+            String continEncoded=contin+"*";
+            boolean found = false;
+            for(String keyJ : new ArrayList<String>(parameters.keySet())) {
+              if (keyJ.equals(contin)) {
+                // Unencoded continuation
+                realValue+=parameters.get(keyJ);
+                parameters.Remove(keyJ);
+                found = true;
+                break;
+              }
+              if (keyJ.equals(continEncoded)) {
+                // Encoded continuation
+                realValue+=DecodeRfc2231Encoding(parameters.get(keyJ), charsetUsed);
+                parameters.Remove(keyJ);
+                found = true;
+                break;
+              }
+            }
+            if (!found) {
               break;
             }
             ++pindex;
           }
-          parameters[realName]=realValue;
+          parameters.put(realName,realValue);
         }
       }
-      foreach(string name in parameters.Keys) {
+      for(String name : parameters.keySet()) {
         // Check parameter names using stricter format
         // in RFC6838
-        if (skipMimeTypeSubtype(name, 0, name.Length, null) != name.Length) {
+        if (skipMimeTypeSubtype(name, 0, name.length(), null) != name.length()) {
           // Illegal parameter name, so use default media type
           return false;
         }
@@ -731,25 +744,25 @@ namespace CBORTest
       return true;
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
-    public string TypeAndSubType {
-      get {
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+    public String getTypeAndSubType() {
         return TopLevelType + "/" + SubType;
       }
-    }
 
-    internal static int skipLws(string s, int index, int endIndex) {
+    static int skipLws(String s, int index, int endIndex) {
       // While HTTP usually only allows CRLF, it also allows
       // us to be tolerant here
       int i2 = index;
-      if (i2 + 1<endIndex && s[i2]==0x0d && s[i2]==0x0a) {
+      if (i2 + 1<endIndex && s.charAt(i2)==0x0d && s.charAt(i2)==0x0a) {
         i2+=2;
-      } else if (i2<endIndex && (s[i2]==0x0d || s[i2]==0x0a)) {
+      } else if (i2<endIndex && (s.charAt(i2)==0x0d || s.charAt(i2)==0x0a)) {
         ++index;
       }
       while (i2<endIndex) {
-        if (s[i2]==0x09||s[i2]==0x20) {
+        if (s.charAt(i2)==0x09||s.charAt(i2)==0x20) {
           ++index;
         }
         break;
@@ -757,15 +770,17 @@ namespace CBORTest
       return index;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='str'>A string object.</param>
-    /// <returns>A Boolean object.</returns>
-    public bool ParseMediaType(string str) {
-      bool httpRules = false;
+    /**
+     * Not documented yet.
+     * @param str A string object.
+     * @return A Boolean object.
+     */
+    public boolean ParseMediaType(String str) {
+      boolean httpRules = false;
       int index = 0;
-      int endIndex = str.Length;
+      int endIndex = str.length();
       if (str == null) {
-        throw new ArgumentNullException("str");
+        throw new NullPointerException("str");
       }
       if (httpRules) {
         index = skipLws(str, index, endIndex);
@@ -773,20 +788,20 @@ namespace CBORTest
         index = Message.SkipCommentsAndWhitespace(str, index, endIndex);
       }
       int i = skipMimeTypeSubtype(str, index, endIndex, null);
-      if (i==index || i>= endIndex || str[i]!='/') {
+      if (i==index || i>= endIndex || str.charAt(i)!='/') {
         return false;
       }
-      this.topLevelType = ParserUtility.ToLowerCaseAscii(str.Substring(index, i-index));
+      this.topLevelType = ParserUtility.ToLowerCaseAscii(str.substring(index,(index)+(i-index)));
       ++i;
       int i2 = skipMimeTypeSubtype(str, i, endIndex, null);
       if (i == i2) {
         return false;
       }
-      this.subType = ParserUtility.ToLowerCaseAscii(str.Substring(i, i2-i));
+      this.subType = ParserUtility.ToLowerCaseAscii(str.substring(i,(i)+(i2-i)));
       if (i2<endIndex) {
         // if not at end
         int i3 = Message.SkipCommentsAndWhitespace(str, i2, endIndex);
-        if (i3==endIndex || (i3<endIndex && str[i3]!=';' && str[i3]!=',')) {
+        if (i3==endIndex || (i3<endIndex && str.charAt(i3)!=';' && str.charAt(i3)!=',')) {
           // at end, or not followed by ";" or ",", so not a media type
           return false;
         }
@@ -812,7 +827,7 @@ namespace CBORTest
           }
           return true;
         }
-        if (str[indexAfterTypeSubtype]!=';') {
+        if (str.charAt(indexAfterTypeSubtype)!=';') {
           return false;
         }
         ++indexAfterTypeSubtype;
@@ -826,7 +841,7 @@ namespace CBORTest
         }
         StringBuilder builder = new StringBuilder();
         // NOTE: RFC6838 restricts the format of parameter names to the same
-        // syntax as types and subtypes, but this syntax is incompatible with
+        // ((syntax instanceof types and subtypes) ? (types and subtypes)syntax : null), but this syntax is incompatible with
         // the RFC2231 format
         int afteratt = skipAttributeNameRfc2231(
           str,
@@ -837,7 +852,7 @@ namespace CBORTest
         if (afteratt == indexAfterTypeSubtype) {  // ill-formed attribute
           return false;
         }
-        string attribute = builder.ToString();
+        String attribute = builder.toString();
         indexAfterTypeSubtype = afteratt;
         if (!httpRules) {
           // NOTE: MIME implicitly doesn't restrict whether whitespace can appear
@@ -851,12 +866,12 @@ namespace CBORTest
         if (indexAfterTypeSubtype >= endIndex) {
           return false;
         }
-        if (str[indexAfterTypeSubtype]!='=') {
+        if (str.charAt(indexAfterTypeSubtype)!='=') {
           return false;
         }
         attribute = ParserUtility.ToLowerCaseAscii(attribute);
-        if (parameters.ContainsKey(attribute)) {
-          Console.WriteLine("Contains duplicate attribute "+attribute);
+        if (parameters.containsKey(attribute)) {
+          System.out.println("Contains duplicate attribute "+attribute);
           return false;
         }
         ++indexAfterTypeSubtype;
@@ -874,10 +889,10 @@ namespace CBORTest
           }
           return true;
         }
-        builder.Clear();
+        builder.setLength(0);
         int qs;
-        // If the attribute name ends with '*' the value may not be a quoted string
-        if (attribute[attribute.Length-1]!='*') {
+        // If the attribute name ends with '*' the value may not be a quoted String
+        if (attribute.charAt(attribute.length()-1)!='*') {
           // try getting the value quoted
           qs = skipQuotedString(
             str,
@@ -886,17 +901,17 @@ namespace CBORTest
             builder,
             httpRules ? QuotedStringRule.Http : QuotedStringRule.Rfc5322);
           if (qs != indexAfterTypeSubtype) {
-            parameters[attribute]=(builder.ToString());
+            parameters.put(attribute,(builder.toString()));
             indexAfterTypeSubtype = qs;
             continue;
           }
-          builder.Clear();
+          builder.setLength(0);
         }
         // try getting the value unquoted
         // Note we don't use getAtom
         qs = skipMimeToken(str, indexAfterTypeSubtype, endIndex, builder, httpRules);
         if (qs != indexAfterTypeSubtype) {
-          parameters[attribute]=(builder.ToString());
+          parameters.put(attribute,(builder.toString()));
           indexAfterTypeSubtype = qs;
           continue;
         }
@@ -917,27 +932,26 @@ namespace CBORTest
     private MediaType() {
     }
 
-    public static MediaType Parse(string str) {
+    public static MediaType Parse(String str) {
       return Parse(str, TextPlainAscii);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='str'>A string object.</param>
-    /// <param name='defaultValue'>Can be null.</param>
-    /// <returns>A MediaType object.</returns>
-    public static MediaType Parse(string str, MediaType defaultValue) {
+    /**
+     * Not documented yet.
+     * @param str A string object.
+     * @param defaultValue Can be null.
+     * @return A MediaType object.
+     */
+    public static MediaType Parse(String str, MediaType defaultValue) {
       if ((str) == null) {
-        throw new ArgumentNullException("str");
+        throw new NullPointerException("str");
       }
       MediaType mt = new MediaType();
-      mt.parameters = new SortedDictionary<string, string>();
+      mt.parameters = new TreeMap<String, String>();
       if (!mt.ParseMediaType(str)) {
-        #if DEBUG
-        Console.WriteLine("Unparsable: " + (str));
-        #endif
+
         return defaultValue;
       }
       return mt;
     }
   }
-}
