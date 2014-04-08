@@ -12,20 +12,27 @@ import java.util.*;
 
   interface IHeaderFieldParser {
     boolean IsStructured();
+
+    String DowngradeComments(String str);
+
     String ReplaceEncodedWords(String str);
   }
+
   interface ITokener {
     int GetState();
+
     void RestoreState(int state);
+
     void Commit(int token, int startIndex, int endIndex);
   }
 
   class HeaderFields
   {
     private static final class Tokener implements ITokener, IComparer<int[]> {
-      ArrayList<int[]> tokenStack = new ArrayList<int[]>();
+      internal ArrayList<int[]> tokenStack = new ArrayList<int[]>();
+
       public int GetState() {
-        return tokenStack.size();
+        return this.tokenStack.size();
       }
 
     /**
@@ -34,11 +41,11 @@ import java.util.*;
      */
       public void RestoreState(int state) {
 
-        //if (tokenStack.size() != state) {
-  //System.out.println("Rolling back from " + tokenStack.size() + " to " + (state));
-//}
-        while (state<tokenStack.size()) {
-          tokenStack.remove(state);
+        // if (tokenStack.size() != state) {
+        // System.out.println("Rolling back from " + tokenStack.size() + " to " + (state));
+        // }
+        while (state<this.tokenStack.size()) {
+          this.tokenStack.remove(state);
         }
       }
 
@@ -49,19 +56,20 @@ import java.util.*;
      * @param endIndex A 32-bit signed integer. (3).
      */
       public void Commit(int token, int startIndex, int endIndex) {
-        //System.out.println("Committing token " + token + ", size now " + (tokenStack.size()+1));
-        tokenStack.add(new int[] { token, startIndex, endIndex});
+        // System.out.println("Committing token " + token + ", size now " + (tokenStack.size()+1));
+        this.tokenStack.add(new int[] { token, startIndex, endIndex});
       }
 
     /**
      * Not documented yet.
      */
       public void Clear() {
-        tokenStack.Clear();
+        this.tokenStack.Clear();
       }
+
       public List<int[]> GetTokens() {
-        tokenStack.Sort(this);
-        return tokenStack;
+        this.tokenStack.Sort(this);
+        return this.tokenStack;
       }
 
     /**
@@ -71,17 +79,26 @@ import java.util.*;
      * @return Zero if both values are equal; a negative number if 'x' is less
      * than 'y', or a positive number if 'x' is greater than 'y'.
      */
-public int Compare(int[] x, int[] y) {
+      public int Compare(int[] x, int[] y) {
         // Sort by their start indexes
-        if (x[1]==y[1]) {
+        if (x[1] == y[1]) {
           // Sort by their token numbers
-          return (x[0]==y[0]) ? 0 : ((x[0]<y[0]) ? -1 : 1);
+          return (x[0] == y[0]) ? 0 : ((x[0]<y[0]) ? -1 : 1);
         }
-        return ((x[1]<y[1]) ? -1 : 1);
+        return (x[1]<y[1]) ? -1 : 1;
       }
     }
 
     private class UnstructuredHeaderField implements IHeaderFieldParser {
+    /**
+     * Not documented yet.
+     * @param str A string object. (2).
+     * @return A string object.
+     */
+      public String DowngradeComments(String str) {
+        return str;
+      }
+
     /**
      * Not documented yet.
      * @param str A string object. (2).
@@ -96,7 +113,7 @@ public int Compare(int[] x, int[] y) {
      * Not documented yet.
      * @return A Boolean object.
      */
-public boolean IsStructured() {
+      public boolean IsStructured() {
         return false;
       }
     }
@@ -114,9 +131,18 @@ public boolean IsStructured() {
 
     /**
      * Not documented yet.
+     * @param str A string object. (2).
+     * @return A string object.
+     */
+      public String DowngradeComments(String str) {
+        return str;
+      }
+
+    /**
+     * Not documented yet.
      * @return A Boolean object.
      */
-public boolean IsStructured() {
+      public boolean IsStructured() {
         return true;
       }
     }
@@ -127,11 +153,46 @@ public boolean IsStructured() {
      * @param str A string object. (2).
      * @return A string object.
      */
+      public String DowngradeComments(String str) {
+        if (str.indexOf('(') < 0) {
+          // No comments in the header field value, a common case
+          return str;
+        }
+        if (!Message.HasTextToEscape(str)) {
+          return str;
+        }
+        StringBuilder sb = new StringBuilder();
+        int lastIndex = 0;
+        for (int i = 0;i < str.length(); ++i) {
+          if (str.charAt(i) == '(') {
+            int endIndex = HeaderParser.ParseComment(str, i, str.length(), null);
+            if (endIndex != i) {
+              // This is a comment, so replace any encoded words
+              // in the comment
+              String newComment = Message.ConvertCommentsToEncodedWords(str, i, endIndex);
+              sb.append(str.substring(lastIndex,(lastIndex)+(i - lastIndex)));
+              sb.append(newComment);
+              lastIndex = endIndex;
+              // Set i to the end of the comment, since
+              // comments can nest
+              i = endIndex;
+            }
+          }
+        }
+        sb.append(str.substring(lastIndex,(lastIndex)+(str.length() - lastIndex)));
+        return sb.toString();
+      }
+
+    /**
+     * Not documented yet.
+     * @param str A string object. (2).
+     * @return A string object.
+     */
       public String ReplaceEncodedWords(String str) {
 
         // For structured header fields that allow comments only wherever whitespace
         // is allowed, and allow parentheses only for comments
-        if (str.length()< 9) {
+        if (str.length() < 9) {
           // too short for encoded words
           return str;
         }
@@ -145,23 +206,23 @@ public boolean IsStructured() {
         }
         StringBuilder sb = new StringBuilder();
         int lastIndex = 0;
-        for (int i = 0;i<str.length(); ++i) {
-          if (str.charAt(i)=='(') {
+        for (int i = 0;i < str.length(); ++i) {
+          if (str.charAt(i) == '(') {
             int endIndex = HeaderParser.ParseComment(str, i, str.length(), null);
             if (endIndex != i) {
               // This is a comment, so replace any encoded words
               // in the comment
-              String newComment = Message.ReplaceEncodedWords(str, i + 1, endIndex-1, true);
-              sb.append(str.substring(lastIndex,(lastIndex)+((i + 1)-lastIndex)));
+              String newComment = Message.ReplaceEncodedWords(str, i + 1, endIndex - 1, true);
+              sb.append(str.substring(lastIndex,(lastIndex)+((i + 1) -lastIndex)));
               sb.append(newComment);
-              lastIndex = endIndex-1;
+              lastIndex = endIndex - 1;
               // Set i to the end of the comment, since
               // comments can nest
               i = endIndex;
             }
           }
         }
-        sb.append(str.substring(lastIndex,(lastIndex)+(str.length()-lastIndex)));
+        sb.append(str.substring(lastIndex,(lastIndex)+(str.length() - lastIndex)));
         return sb.toString();
       }
 
@@ -169,7 +230,7 @@ public boolean IsStructured() {
      * Not documented yet.
      * @return A Boolean object.
      */
-public boolean IsStructured() {
+      public boolean IsStructured() {
         return true;
       }
     }
@@ -177,13 +238,47 @@ public boolean IsStructured() {
     private abstract class EncodedWordsInSyntax implements IHeaderFieldParser {
       protected abstract int Parse(String str, int index, int endIndex, ITokener tokener);
 
+      public String DowngradeComments(String str) {
+        if (str.indexOf('(') < 0) {
+          // No comments in the header field value, a common case
+          return str;
+        }
+        if (!Message.HasTextToEscape(str)) {
+          return str;
+        }
+        StringBuilder sb = new StringBuilder();
+        Tokener tokener = new Tokener();
+        int endIndex = this.Parse(str, 0, str.length(), tokener);
+        if (endIndex != str.length()) {
+          // The header field is syntactically invalid,
+          // so don't decode any encoded words
+          System.out.println("Invalid syntax: " + this.getClass().getName()+", "+str);
+          return str;
+        }
+        int lastIndex = 0;
+        // Get each relevant token sorted by starting index
+         foreach (int[] token in tokener.GetTokens()) {
+          if (token[0] == 1 && token[1]>= lastIndex) {
+            // This is a comment token
+            int startIndex = token[1];
+            endIndex = token[2];
+            String newComment = Message.ConvertCommentsToEncodedWords(str, startIndex, endIndex);
+            sb.append(str.substring(lastIndex,(lastIndex)+(startIndex - lastIndex)));
+            sb.append(newComment);
+            lastIndex = endIndex;
+          }
+        }
+        sb.append(str.substring(lastIndex,(lastIndex)+(str.length() - lastIndex)));
+        return sb.toString();
+      }
+
       private static boolean FollowedByEndOrLinearWhitespace(String str, int index, int endIndex) {
         if (index == endIndex) {
- return true;
-}
-        if (str.charAt(index)!=0x09 && str.charAt(index)!=0x20 && str.charAt(index)!=0x0d) {
- return false;
-}
+          return true;
+        }
+        if (str.charAt(index) != 0x09 && str.charAt(index)!=0x20 && str.charAt(index)!=0x0d) {
+          return false;
+        }
         int cws = HeaderParser.ParseCFWS(str, index, endIndex, null);
         if (cws == index) {
           // No linear whitespace
@@ -191,30 +286,32 @@ public boolean IsStructured() {
         }
         return true;
       }
+
       private static boolean PrecededByStartOrLinearWhitespace(String str, int index) {
         if (index == 0) {
- return true;
-}
-        if (index-1 >= 0 && (str.charAt(index-1)==0x09 || str.charAt(index-1)==0x20)) {
+          return true;
+        }
+        if (index - 1 >= 0 && (str.charAt(index-1)==0x09 || str.charAt(index-1)==0x20)) {
           return true;
         }
         return false;
       }
+
       private static int IndexOfNextPossibleEncodedWord(String str, int index, int endIndex) {
         int cws = HeaderParser.ParseCFWS(str, index, endIndex, null);
         if (cws == index) {
           // No linear whitespace
           return -1;
         }
-        while (index<cws) {
-          if (str.charAt(index)=='(') {
+        while (index < cws) {
+          if (str.charAt(index) == '(') {
             // Has a comment, so no encoded word
             // immediately follows
             return -1;
           }
           ++index;
         }
-        if (index+1<endIndex && str.charAt(index)=='=' && str.charAt(index+1)=='?') {
+        if (index + 1<endIndex && str.charAt(index)=='=' && str.charAt(index+1)=='?') {
           // Has a possible encoded word
           return index;
         }
@@ -240,42 +337,42 @@ public boolean IsStructured() {
         }
         StringBuilder sb = new StringBuilder();
         Tokener tokener = new Tokener();
-        int endIndex = Parse(str, 0, str.length(), tokener);
-        if (endIndex == 0) {
+        int endIndex = this.Parse(str, 0, str.length(), tokener);
+        if (endIndex != str.length()) {
           // The header field is syntactically invalid,
           // so don't decode any encoded words
           // TODO: Reenable this comment when ready
-          System.out.println("Invalid syntax: "+this.getClass().getName()+", "+str);
+          System.out.println("Invalid syntax: " + this.getClass().getName()+", "+str);
           return str;
         }
         int lastIndex = 0;
-        int lastPhraseStart=-1;
-        int lastPhraseEnd=-1;
+        int lastPhraseStart = -1;
+        int lastPhraseEnd = -1;
         // Get each relevant token sorted by starting index
-        foreach(int[] token in tokener.GetTokens()) {
-          if (token[0]==1) {
+         foreach (int[] token in tokener.GetTokens()) {
+          if (token[0] == 1) {
             // This is a comment token
             int startIndex = token[1];
             endIndex = token[2];
-            String newComment = Message.ReplaceEncodedWords(str, startIndex + 1, endIndex-1, true);
-            sb.append(str.substring(lastIndex,(lastIndex)+(startIndex + 1-lastIndex)));
+            String newComment = Message.ReplaceEncodedWords(str, startIndex + 1, endIndex - 1, true);
+            sb.append(str.substring(lastIndex,(lastIndex)+(startIndex + 1 - lastIndex)));
             sb.append(newComment);
-            lastIndex = endIndex-1;
-          } else if (token[0]==2) {
+            lastIndex = endIndex - 1;
+          } else if (token[0] == 2) {
             // This is a phrase token
             lastPhraseStart = token[1];
             lastPhraseEnd = token[2];
-          } else if (token[0]==3) {
+          } else if (token[0] == 3) {
             // This is an atom token; only words within
             // a phrase can be encoded words
-            if (token[1]>= lastIndex &&
-               token[1]>= lastPhraseStart && token[1]<= lastPhraseEnd &&
-               token[2]>= lastPhraseStart && token[2]<= lastPhraseEnd) {
+            if (token[1] >= lastIndex &&
+                token[1] >= lastPhraseStart && token[1]<= lastPhraseEnd &&
+                token[2] >= lastPhraseStart && token[2]<= lastPhraseEnd) {
               // This is an atom within a phrase
               int wordStart = HeaderParser.ParseCFWS(str, token[1], token[2], null);
               int wordEnd;
               int previousWord = wordStart;
-              if (wordStart>= token[2] || str.charAt(wordStart)!='=') {
+              if (wordStart >= token[2] || str.charAt(wordStart)!='=') {
                 // Not an encoded word
                 continue;
               }
@@ -301,7 +398,7 @@ public boolean IsStructured() {
                   break;
                 }
                 int nextWord = IndexOfNextPossibleEncodedWord(str, wordEnd, lastPhraseEnd);
-                if (nextWord< 0) {
+                if (nextWord < 0) {
                   // The next word isn't an encoded word
                   break;
                 }
@@ -309,13 +406,13 @@ public boolean IsStructured() {
                 wordEnd = nextWord;
               }
               String replacement = Message.ReplaceEncodedWords(str, wordStart, wordEnd, false);
-              sb.append(str.substring(lastIndex,(lastIndex)+(wordStart-lastIndex)));
+              sb.append(str.substring(lastIndex,(lastIndex)+(wordStart - lastIndex)));
               sb.append(replacement);
               lastIndex = wordEnd;
             }
           }
         }
-        sb.append(str.substring(lastIndex,(lastIndex)+(str.length()-lastIndex)));
+        sb.append(str.substring(lastIndex,(lastIndex)+(str.length() - lastIndex)));
         return sb.toString();
       }
 
@@ -323,7 +420,7 @@ public boolean IsStructured() {
      * Not documented yet.
      * @return A Boolean object.
      */
-public boolean IsStructured() {
+      public boolean IsStructured() {
         return true;
       }
     }
@@ -333,146 +430,175 @@ public boolean IsStructured() {
         return HeaderParser.ParseHeaderAuthenticationResults(str, index, endIndex, tokener);
       }
     }
+
     class HeaderAutoSubmitted : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderAutoSubmitted(str, index, endIndex, tokener);
       }
     }
+
     class HeaderBcc : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderBcc(str, index, endIndex, tokener);
       }
     }
+
     class HeaderContentBase : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderContentBase(str, index, endIndex, tokener);
       }
     }
+
     class HeaderContentDisposition : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderContentDisposition(str, index, endIndex, tokener);
       }
     }
+
     class HeaderContentId : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderContentId(str, index, endIndex, tokener);
       }
     }
+
     class HeaderContentType : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderContentType(str, index, endIndex, tokener);
       }
     }
+
     class HeaderDate : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderDate(str, index, endIndex, tokener);
       }
     }
+
     class HeaderDispositionNotificationOptions : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderDispositionNotificationOptions(str, index, endIndex, tokener);
       }
     }
+
     class HeaderDispositionNotificationTo : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderDispositionNotificationTo(str, index, endIndex, tokener);
       }
     }
+
     class HeaderEncrypted : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderEncrypted(str, index, endIndex, tokener);
       }
     }
+
     class HeaderFrom : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderFrom(str, index, endIndex, tokener);
       }
     }
+
     class HeaderInReplyTo : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderInReplyTo(str, index, endIndex, tokener);
       }
     }
+
     class HeaderKeywords : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderKeywords(str, index, endIndex, tokener);
       }
     }
+
     class HeaderLanguage : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderLanguage(str, index, endIndex, tokener);
       }
     }
+
     class HeaderListArchive : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderListArchive(str, index, endIndex, tokener);
       }
     }
+
     class HeaderListId : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderListId(str, index, endIndex, tokener);
       }
     }
+
     class HeaderListPost : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderListPost(str, index, endIndex, tokener);
       }
     }
+
     class HeaderMmhsCopyPrecedence : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderMmhsCopyPrecedence(str, index, endIndex, tokener);
       }
     }
+
     class HeaderMmhsExemptedAddress : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderMmhsExemptedAddress(str, index, endIndex, tokener);
       }
     }
+
     class HeaderMmhsExtendedAuthorisationInfo : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderMmhsExtendedAuthorisationInfo(str, index, endIndex, tokener);
       }
     }
+
     class HeaderMmhsMessageType : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderMmhsMessageType(str, index, endIndex, tokener);
       }
     }
+
     class HeaderObsoletes : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderObsoletes(str, index, endIndex, tokener);
       }
     }
+
     class HeaderOriginalRecipient : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderOriginalRecipient(str, index, endIndex, tokener);
       }
     }
+
     class HeaderReceived : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderReceived(str, index, endIndex, tokener);
       }
     }
+
     class HeaderReceivedSpf : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderReceivedSpf(str, index, endIndex, tokener);
       }
     }
+
     class HeaderReturnPath : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderReturnPath(str, index, endIndex, tokener);
       }
     }
+
     class HeaderSender : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderSender(str, index, endIndex, tokener);
       }
     }
+
     class HeaderTo : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderTo(str, index, endIndex, tokener);
       }
     }
+
     class Mailbox : EncodedWordsInSyntax {
       protected override int Parse(String str, int index, int endIndex, ITokener tokener) {
         return HeaderParser.ParseHeaderXMittente(str, index, endIndex, tokener);

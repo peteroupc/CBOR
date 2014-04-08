@@ -427,31 +427,40 @@ namespace Test
       }
 
       Assert.AreEqual(BigInteger.Zero, CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsBigInteger());
-      Assert.AreEqual(BigInteger.Zero-BigInteger.One, CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x41, 0x00 }).AsBigInteger());
-      Assert.AreEqual(BigInteger.Zero-BigInteger.One, CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsBigInteger());
+      Assert.AreEqual(BigInteger.Zero - BigInteger.One, CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x41, 0x00 }).AsBigInteger());
+      Assert.AreEqual(BigInteger.Zero - BigInteger.One, CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsBigInteger());
     }
 
     [Test]
     public void TestNegativeBigInts() {
-      BigInteger minusone = BigInteger.Zero-BigInteger.One;
-      Assert.AreEqual(minusone-(BigInteger.One << 8),
-                      CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x42, 1, 0 }).AsBigInteger());
-      Assert.AreEqual(minusone-(BigInteger.One << 16),
-                      CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
-      Assert.AreEqual(minusone-(BigInteger.One << 24),
-                      CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x44, 1, 0, 0, 0 }).AsBigInteger());
-      Assert.AreEqual(minusone-(BigInteger.One << 32),
-                      CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x45, 1, 0, 0, 0, 0 }).AsBigInteger());
-      Assert.AreEqual(minusone-(BigInteger.One << 40),
-                      CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x46, 1, 0, 0, 0, 0, 0 }).AsBigInteger());
-      Assert.AreEqual(minusone-(BigInteger.One << 48),
-                      CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x47, 1, 0, 0, 0, 0, 0, 0 }).AsBigInteger());
-      Assert.AreEqual(minusone-(BigInteger.One << 56),
-                      CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x48, 1, 0, 0, 0, 0, 0, 0, 0 }).AsBigInteger());
-      Assert.AreEqual(minusone-(BigInteger.One << 64),
-                      CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x49, 1, 0, 0, 0, 0, 0, 0, 0, 0 }).AsBigInteger());
-      Assert.AreEqual(minusone-(BigInteger.One << 72),
-                      CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x4a, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }).AsBigInteger());
+      BigInteger minusone = BigInteger.Zero - BigInteger.One;
+      Assert.AreEqual(
+minusone - (BigInteger.One << 8),
+CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x42, 1, 0 }).AsBigInteger());
+      Assert.AreEqual(
+minusone - (BigInteger.One << 16),
+CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
+      Assert.AreEqual(
+minusone - (BigInteger.One << 24),
+CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x44, 1, 0, 0, 0 }).AsBigInteger());
+      Assert.AreEqual(
+minusone - (BigInteger.One << 32),
+CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x45, 1, 0, 0, 0, 0 }).AsBigInteger());
+      Assert.AreEqual(
+minusone - (BigInteger.One << 40),
+CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x46, 1, 0, 0, 0, 0, 0 }).AsBigInteger());
+      Assert.AreEqual(
+minusone - (BigInteger.One << 48),
+CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x47, 1, 0, 0, 0, 0, 0, 0 }).AsBigInteger());
+      Assert.AreEqual(
+minusone - (BigInteger.One << 56),
+CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x48, 1, 0, 0, 0, 0, 0, 0, 0 }).AsBigInteger());
+      Assert.AreEqual(
+minusone - (BigInteger.One << 64),
+CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x49, 1, 0, 0, 0, 0, 0, 0, 0, 0 }).AsBigInteger());
+      Assert.AreEqual(
+minusone - (BigInteger.One << 72),
+CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x4a, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }).AsBigInteger());
     }
 
     [Test]
@@ -487,7 +496,7 @@ namespace Test
         0x19,
         0x01,
         0xff });
-      string expected="[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
+      string expected = "[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
       cbor = CBORObject.DecodeFromBytes(
         new byte[] { 0xd9,
@@ -523,7 +532,7 @@ namespace Test
         0x19,
         0x01,
         0xff });
-      expected="[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
+      expected = "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
     }
 

@@ -715,8 +715,7 @@ namespace CBOR
         }
         op1 = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[4]), this.HexInt(chunks[5]),
                                             this.HexInt(chunks[6]),
-                                            this.HexInt(chunks[7])
-                                          });
+                                            this.HexInt(chunks[7]) });
         op2 = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[8]), this.HexInt(chunks[9]),
                                             this.HexInt(chunks[10]),
                                             this.HexInt(chunks[11]) });

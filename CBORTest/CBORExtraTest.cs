@@ -4303,7 +4303,7 @@ namespace Test {
 
     [Test]
     public void TestOther() {
-      CBORObject       cbor = CBORObject.FromObject(new int[2, 3, 2]);
+      CBORObject cbor = CBORObject.FromObject(new int[2, 3, 2]);
       Assert.AreEqual("[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]", cbor.ToJSONString());
       TestCommon.AssertRoundTrip(cbor);
     }
@@ -4333,11 +4333,9 @@ namespace Test {
     /// <summary>Not documented yet.</summary>
     [Test]
     public void TestUInt() {
-      uint[] ranges = new uint[] {
-        0, 65539,
+      uint[] ranges = new uint[] { 0, 65539,
         0x7FFFF000U, 0x80000400U,
-        UInt32.MaxValue - 1000, UInt32.MaxValue
-      };
+        UInt32.MaxValue - 1000, UInt32.MaxValue };
       for (int i = 0; i < ranges.Length; i += 2) {
         uint j = ranges[i];
         while (true) {

@@ -1229,10 +1229,8 @@ public int CompareToBinary(ExtendedFloat other) {
         return Double.NegativeInfinity;
       }
       if (this.IsNegative && this.IsZero) {
-        return Extras.IntegersToDouble(new int[] {
-                                         unchecked((int)(1 << 31)),
-                                         0
-                                       });
+        return Extras.IntegersToDouble(new int[] { unchecked((int)(1 << 31)),
+                                         0 });
       }
       if (this.IsZero) {
         return 0.0;
@@ -1241,10 +1239,8 @@ public int CompareToBinary(ExtendedFloat other) {
       if (adjExp.CompareTo((BigInteger)(-326)) < 0) {
         // Very low exponent, treat as 0
         return this.IsNegative ?
-          Extras.IntegersToDouble(new int[] {
-                                    unchecked((int)(1 << 31)),
-                                    0
-                                  }) :
+          Extras.IntegersToDouble(new int[] { unchecked((int)(1 << 31)),
+                                    0 }) :
           0.0;
       }
       if (adjExp.CompareTo((BigInteger)309) > 0) {

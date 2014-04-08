@@ -19,14 +19,14 @@ import com.upokecenter.cbor.*;
 
   public class EncodingTest
   {
-    private static String HexAlphabet="0123456789ABCDEF";
+    private static String valueHexAlphabet = "0123456789ABCDEF";
 
     private static void IncrementLineCount(StringBuilder str, int length, int[] count) {
-      if (count[0]+length>75) { // 76 including the final '='
+      if (count[0] + length>75) { // 76 including the final '='
         str.append("=\r\n");
-        count[0]=length;
+        count[0] = length;
       } else {
-        count[0]+=length;
+        count[0] += length;
       }
     }
 
@@ -34,41 +34,45 @@ import com.upokecenter.cbor.*;
     // 0 - no line breaks
     // 1 - treat CRLF as a line break
     // 2 - treat CR, LF, and CRLF as a line break
-    private static void ToQuotedPrintableRfc2045(StringBuilder str, byte[] data,
-                                                 int offset, int count, int lineBreakMode) {
-      if ((str) == null) {
+    private static void ToQuotedPrintableRfc2045(
+StringBuilder str,
+byte[] data,
+int offset,
+int count,
+int lineBreakMode) {
+      if (str == null) {
         throw new NullPointerException("str");
       }
-      if ((data) == null) {
+      if (data == null) {
         throw new NullPointerException("data");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)(offset)) + ") is less than " + "0");
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
       }
       if (offset > data.length) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)(offset)) + ") is more than " + Long.toString((long)(data.length)));
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)(data.length)));
       }
       if (count < 0) {
-        throw new IllegalArgumentException("count (" + Long.toString((long)(count)) + ") is less than " + "0");
+        throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is less than " + "0");
       }
       if (count > data.length) {
-        throw new IllegalArgumentException("count (" + Long.toString((long)(count)) + ") is more than " + Long.toString((long)(data.length)));
+        throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is more than " + Long.toString((long)(data.length)));
       }
-      if (data.length-offset < count) {
-        throw new IllegalArgumentException("data's length minus " + offset + " (" + Long.toString((long)(data.length-offset)) + ") is less than " + Long.toString((long)(count)));
+      if (data.length - offset < count) {
+        throw new IllegalArgumentException("data's length minus " + offset + " (" + Long.toString((long)(data.length-offset)) + ") is less than " + Long.toString((long)count));
       }
       int length = offset + count;
       int[] lineCount = new int[] { 0};
       int i = offset;
       for (i = offset; i < length; ++i) {
-        if (data[i]==0x0d) {
+        if (data[i] == 0x0d) {
           if (lineBreakMode == 0) {
             IncrementLineCount(str, 3, lineCount);
             str.append("=0D");
-          } else if (i + 1 >= length || data[i + 1]!=0x0a) {
+          } else if (i + 1 >= length || data[i + 1] != 0x0a) {
             if (lineBreakMode == 2) {
               str.append("\r\n");
-              lineCount[0]=0;
+              lineCount[0] = 0;
             } else {
               IncrementLineCount(str, 3, lineCount);
               str.append("=0D");
@@ -76,38 +80,54 @@ import com.upokecenter.cbor.*;
           } else {
             ++i;
             str.append("\r\n");
-            lineCount[0]=0;
+            lineCount[0] = 0;
           }
-        } else if (data[i]==0x0a) {
+        } else if (data[i] == 0x0a) {
           if (lineBreakMode == 2) {
             str.append("\r\n");
-            lineCount[0]=0;
+            lineCount[0] = 0;
           } else {
             IncrementLineCount(str, 3, lineCount);
             str.append("=0A");
           }
-        } else if (data[i]==9 || data[i]==32) {
+        } else if (data[i] == 9) {
+          IncrementLineCount(str, 3, lineCount);
+          str.append("=09");
+        } else if (lineCount[0] == 0 &&
+                   data[i] == (byte)'.' && i+1<length && (data[i]=='\r' || data[i]=='\n')) {
+          IncrementLineCount(str, 3, lineCount);
+          str.append("=2E");
+        } else if (lineCount[0] == 0 && i + 4<length &&
+                   data[i] == (byte)'F' &&
+                   data[i + 1]==(byte)'r' &&
+                   data[i + 2]==(byte)'o' &&
+                   data[i + 3]==(byte)'m' &&
+                   data[i + 4]==(byte)' ') {
+          // See page 7-8 of RFC 2049
+          IncrementLineCount(str, 7, lineCount);
+          str.append("=46rom ");
+          i += 4;
+        } else if (data[i] == 32) {
           if (i + 1 == length) {
             IncrementLineCount(str, 3, lineCount);
-            str.append(data[i]==9 ? "=09" : "=20");
-            lineCount[0]=0;
-          }
-          if (i + 2<length && lineBreakMode>0) {
-            if (data[i + 1]==0x0d && data[i + 2]==0x0a) {
+            str.append(data[i] == 9 ? "=09" : "=20");
+            lineCount[0] = 0;
+          } else if (i + 2 < length && lineBreakMode>0) {
+            if (data[i + 1] == 0x0d && data[i + 2]==0x0a) {
               IncrementLineCount(str, 3, lineCount);
-              str.append(data[i]==9 ? "=09\r\n" : "=20\r\n");
-              lineCount[0]=0;
-              i+=2;
+              str.append(data[i] == 9 ? "=09\r\n" : "=20\r\n");
+              lineCount[0] = 0;
+              i += 2;
             } else {
               IncrementLineCount(str, 1, lineCount);
               str.append((char)data[i]);
             }
-          } else if (i + 1<length && lineBreakMode == 2) {
-            if (data[i + 1]==0x0d || data[i + 1]==0x0a) {
+          } else if (i + 1 < length && lineBreakMode == 2) {
+            if (data[i + 1] == 0x0d || data[i + 1]==0x0a) {
               IncrementLineCount(str, 3, lineCount);
-              str.append(data[i]==9 ? "=09\r\n" : "=20\r\n");
-              lineCount[0]=0;
-              i+=1;
+              str.append(data[i] == 9 ? "=09\r\n" : "=20\r\n");
+              lineCount[0] = 0;
+              ++i;
             } else {
               IncrementLineCount(str, 1, lineCount);
               str.append((char)data[i]);
@@ -116,17 +136,18 @@ import com.upokecenter.cbor.*;
             IncrementLineCount(str, 1, lineCount);
             str.append((char)data[i]);
           }
-        } else if (data[i]==(byte)'=') {
+        } else if (data[i] == (byte)'=') {
           IncrementLineCount(str, 3, lineCount);
           str.append("=3D");
-        } else if (data[i]>0x20 && data[i]<0x7f) {
+        } else if (data[i] > 0x20 && data[i]<0x7f && data[i]!=',' &&
+                   "()'+-./?:".indexOf((char)data[i]) < 0) {
           IncrementLineCount(str, 1, lineCount);
           str.append((char)data[i]);
         } else {
           IncrementLineCount(str, 3, lineCount);
           str.append('=');
-          str.append(HexAlphabet.charAt((data[i] >> 4) & 15));
-          str.append(HexAlphabet.charAt(data[i] & 15));
+          str.append(valueHexAlphabet.charAt((data[i] >> 4) & 15));
+          str.append(valueHexAlphabet.charAt(data[i] & 15));
         }
       }
     }
@@ -151,159 +172,45 @@ import com.upokecenter.cbor.*;
       int count,
       boolean lenientLineBreaks,
       boolean unlimitedLineLength) {
-      if ((outputStream) == null) {
+      if (outputStream == null) {
         throw new NullPointerException("outputStream");
       }
-      if ((data) == null) {
+      if (data == null) {
         throw new NullPointerException("data");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)(offset)) + ") is less than " + "0");
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
       }
       if (offset > data.length) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)(offset)) + ") is more than " + Long.toString((long)(data.length)));
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)(data.length)));
       }
       if (count < 0) {
-        throw new IllegalArgumentException("count (" + Long.toString((long)(count)) + ") is less than " + "0");
+        throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is less than " + "0");
       }
       if (count > data.length) {
-        throw new IllegalArgumentException("count (" + Long.toString((long)(count)) + ") is more than " + Long.toString((long)(data.length)));
+        throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is more than " + Long.toString((long)(data.length)));
       }
-      if (data.length-offset < count) {
-        throw new IllegalArgumentException("data's length minus " + offset + " (" + Long.toString((long)(data.length-offset)) + ") is less than " + Long.toString((long)(count)));
+      if (data.length - offset < count) {
+        throw new IllegalArgumentException("data's length minus " + offset + " (" + Long.toString((long)(data.length-offset)) + ") is less than " + Long.toString((long)count));
       }
-      int length = offset + count;
-      int lineStart = 0;
-      for (int i = offset; i < length; ++i) {
-        if (data[i]==0x0d) {
-          if (i + 1 >= length || data[i + 1]!=0x0a) {
-            // Treat as line break
-            if (!lenientLineBreaks) {
-              throw new InvalidDataException("Expected LF after CR");
-            }
-            outputStream.write(0x0d);
-            outputStream.write(0x0a);
-          } else {
-            outputStream.write(0x0d);
-            outputStream.write(0x0a);
-            ++i;
+       using (MemoryStream ms = new MemoryStream(data, offset, count)) {
+        Message.QuotedPrintableTransform t = new Message.QuotedPrintableTransform(
+          ms,
+          lenientLineBreaks,
+          unlimitedLineLength ? -1 : 76);
+        while (true) {
+          int c = t.read();
+          if (c < 0) {
+            return;
           }
-          lineStart = i + 1;
-        } else if (data[i]==0x0a) {
-          if (!lenientLineBreaks) {
-            throw new InvalidDataException("Bare LF not expected");
-          }
-          outputStream.write(0x0d);
-          outputStream.write(0x0a);
-          lineStart = i + 1;
-        } else if (data[i]=='=') {
-          if (i + 2 < length) {
-            int b1=((int)data[i + 1]) & 0xff;
-            int b2=((int)data[i + 2]) & 0xff;
-            if (b1=='\r' && b2=='\n') {
-              // Soft line break
-              i+=2;
-              continue;
-            } else if (b1=='\r') {
-              if (!lenientLineBreaks) {
-                throw new InvalidDataException("Expected LF after CR");
-              }
-              ++i;
-              lineStart = i + 1;
-              continue;
-            } else if (b1=='\n') {
-              if (!lenientLineBreaks) {
-                throw new InvalidDataException("Bare LF not expected");
-              }
-              ++i;
-              lineStart = i + 1;
-              continue;
-            }
-            int c = 0;
-            if (b1 >= '0' && b1 <= '9') {
-              c <<= 4;
-              c |= b1 - '0';
-            } else if (b1 >= 'A' && b1 <= 'F') {
-              c <<= 4;
-              c |= b1 + 10 - 'A';
-            } else if (b1 >= 'a' && b1 <= 'f') {
-              c <<= 4;
-              c |= b1 + 10 - 'a';
-            } else {
-              throw new InvalidDataException("Invalid hex character");
-            }
-            if (b2 >= '0' && b2 <= '9') {
-              c <<= 4;
-              c |= b2 - '0';
-            } else if (b2 >= 'A' && b2 <= 'F') {
-              c <<= 4;
-              c |= b2 + 10 - 'A';
-            } else if (b2 >= 'a' && b2 <= 'f') {
-              c <<= 4;
-              c |= b2 + 10 - 'a';
-            } else {
-              throw new InvalidDataException("Invalid hex character");
-            }
-            outputStream.write((byte)c);
-            i+=2;
-          } else if (i + 1<length) {
-            int b1=((int)data[i + 1]) & 0xff;
-            if (b1=='\r') {
-              // Soft line break
-              if (!lenientLineBreaks) {
-                throw new InvalidDataException("Expected LF after CR");
-              }
-              ++i;
-              lineStart = i + 1;
-              continue;
-            } else if (b1=='\n') {
-              // Soft line break
-              if (!lenientLineBreaks) {
-                throw new InvalidDataException("Bare LF not expected");
-              }
-              ++i;
-              lineStart = i + 1;
-              continue;
-            } else {
-              throw new InvalidDataException("Invalid data after equal sign");
-            }
-          } else {
-            throw new InvalidDataException("Equal sign at end");
-          }
-        } else if (data[i]!='\t' && (data[i]<0x20 || data[i]>= 0x7f)) {
-          throw new InvalidDataException("Invalid character in quoted-printable");
-        } else if (data[i]==' ' || data[i]=='\t') {
-          boolean endsWithLineBreak = false;
-          int lastSpace = i;
-          for (int j = i + 1; j < length; ++j) {
-            if (data[j]=='\r' || data[j]=='\n') {
-              endsWithLineBreak = true;
-            } else if (data[j]!=' ' && data[j]!='\t') {
-              break;
-            } else {
-              lastSpace = j;
-            }
-          }
-          if (lastSpace == length-1) {
-            endsWithLineBreak = true;
-          }
-          // Ignore space/tab runs if the line ends in that run
-          if (!endsWithLineBreak) {
-            outputStream.write(data,i,(lastSpace-i)+1);
-          }
-          i = lastSpace;
-        } else {
-          outputStream.write(data[i]);
-        }
-        if (!unlimitedLineLength && i>lineStart && (i-lineStart)+1>76) {
-          throw new InvalidDataException("Encoded line too long");
+          outputStream.write((byte)c);
         }
       }
     }
 
     public void TestDecodeQuotedPrintable(String input, String expectedOutput) {
       byte[] bytes = DataUtilities.GetUtf8Bytes(input, true);
-      java.io.ByteArrayOutputStream ms=null;
+       java.io.ByteArrayOutputStream ms=null;
 try {
 ms=new ByteArrayOutputStream();
 
@@ -314,9 +221,10 @@ finally {
 try { if(ms!=null)ms.close(); } catch (IOException ex){}
 }
     }
+
     public void TestFailQuotedPrintable(String input) {
       byte[] bytes = DataUtilities.GetUtf8Bytes(input, true);
-      java.io.ByteArrayOutputStream ms=null;
+       java.io.ByteArrayOutputStream ms=null;
 try {
 ms=new ByteArrayOutputStream();
 
@@ -336,7 +244,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     public void TestFailQuotedPrintableNonLenient(String input) {
       byte[] bytes = DataUtilities.GetUtf8Bytes(input, true);
-      java.io.ByteArrayOutputStream ms=null;
+       java.io.ByteArrayOutputStream ms=null;
 try {
 ms=new ByteArrayOutputStream();
 
@@ -353,6 +261,7 @@ finally {
 try { if(ms!=null)ms.close(); } catch (IOException ex){}
 }
     }
+
     public void TestQuotedPrintable(String input, int mode, String expectedOutput) {
       byte[] bytes = DataUtilities.GetUtf8Bytes(input, true);
       StringBuilder sb = new StringBuilder();
@@ -361,15 +270,15 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     }
 
     public void TestQuotedPrintable(String input, String a, String b, String c) {
-      TestQuotedPrintable(input, 0, a);
-      TestQuotedPrintable(input, 1, b);
-      TestQuotedPrintable(input, 2, c);
+      this.TestQuotedPrintable(input, 0, a);
+      this.TestQuotedPrintable(input, 1, b);
+      this.TestQuotedPrintable(input, 2, c);
     }
 
     public void TestQuotedPrintable(String input, String a) {
-      TestQuotedPrintable(input, 0, a);
-      TestQuotedPrintable(input, 1, a);
-      TestQuotedPrintable(input, 2, a);
+      this.TestQuotedPrintable(input, 0, a);
+      this.TestQuotedPrintable(input, 1, a);
+      this.TestQuotedPrintable(input, 2, a);
     }
 
     public String Repeat(String s, int count) {
@@ -379,127 +288,312 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       }
       return sb.toString();
     }
+
     @Test
-    public void TestMessage() {
-      for(String s : Directory.GetFiles(
-        @"C:\Users\Peter\AppData\Local\Microsoft\Windows Live Mail",
-        "*.eml",
-        SearchOption.AllDirectories)) {
-        using(FileStream fs = new FileStream(s, FileMode.Open)) {
-          String msgstr = DataUtilities.ReadUtf8ToString(fs);
-          try {
-            Message msg = new Message(msgstr);
-          } catch (UnsupportedOperationException ex) {
-          } catch(InvalidDataException ex) {
-            System.out.println(s);
-            System.out.println(ex.getMessage());
-            //System.out.println(ex.getStackTrace());
-          }
-        }
-      }
+    public void TestWordWrapOne(String firstWord, String nextWords, String expected) {
+      Message.WordWrapEncoder ww=new Message.WordWrapEncoder(firstWord);
+      ww.AddString(nextWords);
+      System.out.println(ww.toString());
+      Assert.assertEquals(expected, ww.toString());
+    }
+
+    @Test
+    public void TestWordWrap() {
+      this.TestWordWrapOne("Subject:",this.Repeat("xxxx ",10)+"y","Subject: "+this.Repeat("xxxx ",10)+"y");
+      this.TestWordWrapOne("Subject:",this.Repeat("xxxx ",10),"Subject: "+this.Repeat("xxxx ",9)+"xxxx");
+    }
+
+    @Test
+    public void TestHeaderFields() {
+      String testString = "Joe P Customer <customer@example.com>, Jane W Customer <jane@example.com>";
+      HeaderParser.ParseMailboxList(testString, 0, testString.length(), null);
     }
 
     @Test
     public void testCharset() {
-      Assert.assertEquals("us-ascii",new MediaType("text/plain").GetCharset());
-      Assert.assertEquals("us-ascii",new MediaType("TEXT/PLAIN").GetCharset());
-      Assert.assertEquals("us-ascii",new MediaType("TeXt/PlAiN").GetCharset());
-      Assert.assertEquals("us-ascii",new MediaType("text/xml").GetCharset());
-      Assert.assertEquals("utf-8",new MediaType("text/plain; CHARSET=UTF-8").GetCharset());
-      Assert.assertEquals("utf-8",new MediaType("text/plain; ChArSeT=UTF-8").GetCharset());
-      Assert.assertEquals("utf-8",new MediaType("text/plain; charset=UTF-8").GetCharset());
-      Assert.assertEquals("us-ascii",new MediaType("text/plain; charset = UTF-8").GetCharset());
-      Assert.assertEquals("'utf-8'",new MediaType("text/plain; charset='UTF-8'").GetCharset());
-      Assert.assertEquals("utf-8",new MediaType("text/plain; charset=\"UTF-8\"").GetCharset());
-      Assert.assertEquals("utf-8",new MediaType("text/plain; foo=\"\\\"\"; charset=\"UTF-8\"").GetCharset());
-      Assert.assertEquals("us-ascii",new MediaType("text/plain; foo=\"; charset=\\\"UTF-8\\\"\"").GetCharset());
-      Assert.assertEquals("utf-8",new MediaType("text/plain; foo='; charset=\"UTF-8\"").GetCharset());
-      Assert.assertEquals("utf-8",new MediaType("text/plain; foo=bar; charset=\"UTF-8\"").GetCharset());
-      Assert.assertEquals("utf-8",new MediaType("text/plain; charset=\"UTF-\\8\"").GetCharset());
+      Assert.assertEquals("us-ascii", MediaType.Parse("text/plain").GetCharset());
+      Assert.assertEquals("us-ascii", MediaType.Parse("TEXT/PLAIN").GetCharset());
+      Assert.assertEquals("us-ascii", MediaType.Parse("TeXt/PlAiN").GetCharset());
+      Assert.assertEquals("us-ascii", MediaType.Parse("text/xml").GetCharset());
+      Assert.assertEquals("utf-8", MediaType.Parse("text/plain; CHARSET=UTF-8").GetCharset());
+      Assert.assertEquals("utf-8", MediaType.Parse("text/plain; ChArSeT=UTF-8").GetCharset());
+      Assert.assertEquals("utf-8", MediaType.Parse("text/plain; charset=UTF-8").GetCharset());
+      // Note that MIME implicitly allows whitespace around the equal sign
+      Assert.assertEquals("utf-8", MediaType.Parse("text/plain; charset = UTF-8").GetCharset());
+      Assert.assertEquals("'utf-8'", MediaType.Parse("text/plain; charset='UTF-8'").GetCharset());
+      Assert.assertEquals("utf-8", MediaType.Parse("text/plain; charset=\"UTF-8\"").GetCharset());
+      Assert.assertEquals("utf-8", MediaType.Parse("text/plain; foo=\"\\\"\"; charset=\"UTF-8\"").GetCharset());
+      Assert.assertEquals("us-ascii", MediaType.Parse("text/plain; foo=\"; charset=\\\"UTF-8\\\"\"").GetCharset());
+      Assert.assertEquals("utf-8", MediaType.Parse("text/plain; foo='; charset=\"UTF-8\"").GetCharset());
+      Assert.assertEquals("utf-8", MediaType.Parse("text/plain; foo=bar; charset=\"UTF-8\"").GetCharset());
+      Assert.assertEquals("utf-8", MediaType.Parse("text/plain; charset=\"UTF-\\8\"").GetCharset());
+    }
+
+    public void TestRfc2231Extension(String mtype, String param, String expected) {
+      var mt = MediaType.Parse(mtype);
+      Assert.assertEquals(expected, mt.GetParameter(param));
+    }
+
+    public void SingleTestMediaTypeEncoding(String value, String expected) {
+      MediaType mt = new MediaTypeBuilder("x","y").SetParameter("z",value).ToMediaType();
+      String topLevel = mt.getTopLevelType();
+      String sub = mt.getSubType();
+      var mtstring = "MIME-Version: 1.0\r\nContent-Type: "+mt.toString()+"\r\nContent-Transfer-Encoding: base64\r\n\r\n";
+       java.io.ByteArrayInputStream ms=null;
+try {
+ms=new ByteArrayInputStream(DataUtilities.GetUtf8Bytes(mtstring, true));
+
+        Message msg=new Message(ms);
+        Assert.assertEquals(topLevel, msg.getContentType().TopLevelType);
+        Assert.assertEquals(sub, msg.getContentType().SubType);
+        Assert.assertEquals(mt.toString(),value,msg.getContentType().GetParameter("z"));
+}
+finally {
+try { if(ms!=null)ms.close(); } catch (IOException ex){}
+}
+    }
+
+    @Test
+    public void TestMediaTypeEncoding() {
+      this.SingleTestMediaTypeEncoding("xyz","x/y;z=xyz");
+      this.SingleTestMediaTypeEncoding("xy z","x/y;z=\"xy z\"");
+      this.SingleTestMediaTypeEncoding("xy\u00a0z","x/y;z*=utf-8''xy%C2%A0z");
+      this.SingleTestMediaTypeEncoding("xy\ufffdz","x/y;z*=utf-8''xy%C2z");
+      this.SingleTestMediaTypeEncoding("xy"+this.Repeat("\ufffc",50)+"z","x/y;z*=utf-8''xy"+this.Repeat("%EF%BF%BD",50)+"z");
+      this.SingleTestMediaTypeEncoding("xy"+this.Repeat("\u00a0",50)+"z","x/y;z*=utf-8''xy"+this.Repeat("%C2%A0",50)+"z");
+    }
+
+    @Test
+    public void TestRfc2231Extensions() {
+      this.TestRfc2231Extension("text/plain; charset=\"utf-8\"","charset","utf-8");
+      this.TestRfc2231Extension("text/plain; charset*=us-ascii'en'utf-8","charset","utf-8");
+      this.TestRfc2231Extension("text/plain; charset*=us-ascii''utf-8","charset","utf-8");
+      this.TestRfc2231Extension("text/plain; charset*='en'utf-8","charset","utf-8");
+      this.TestRfc2231Extension("text/plain; charset*=''utf-8","charset","utf-8");
+      this.TestRfc2231Extension("text/plain; charset*0=a;charset*1=b","charset","ab");
+      this.TestRfc2231Extension("text/plain; charset*=utf-8''a%20b","charset","a b");
+      this.TestRfc2231Extension("text/plain; charset*=iso-8859-1''a%a0b","charset","a\u00a0b");
+      this.TestRfc2231Extension("text/plain; charset*=utf-8''a%c2%a0b","charset","a\u00a0b");
+      this.TestRfc2231Extension("text/plain; charset*=iso-8859-1''a%a0b","charset","a\u00a0b");
+      this.TestRfc2231Extension("text/plain; charset*=utf-8''a%c2%a0b","charset","a\u00a0b");
+      this.TestRfc2231Extension("text/plain; charset*0=\"a\";charset*1=b","charset","ab");
+      this.TestRfc2231Extension("text/plain; charset*0*=utf-8''a%20b;charset*1*=c%20d","charset","a bc d");
+      this.TestRfc2231Extension(
+"text/plain; charset*0=ab;charset*1*=iso-8859-1'en'xyz",
+"charset",
+"abiso-8859-1'en'xyz");
+      this.TestRfc2231Extension(
+"text/plain; charset*0*=utf-8''a%20b;charset*1*=iso-8859-1'en'xyz",
+"charset",
+"a biso-8859-1'en'xyz");
+      this.TestRfc2231Extension(
+"text/plain; charset*0*=utf-8''a%20b;charset*1=a%20b",
+"charset",
+"a ba%20b");
     }
 
     @Test
     public void TestDecode() {
-      TestDecodeQuotedPrintable("test","test");
-      TestDecodeQuotedPrintable("te \tst","te \tst");
-      TestDecodeQuotedPrintable("te=20","te ");
-      TestDecodeQuotedPrintable("te=09","te\t");
-      TestDecodeQuotedPrintable("te ","te");
-      TestDecodeQuotedPrintable("te\t","te");
-      TestDecodeQuotedPrintable("te=61st","teast");
-      TestDecodeQuotedPrintable("te=3dst","te=st");
-      TestDecodeQuotedPrintable("te=c2=a0st","te\u00a0st");
-      TestDecodeQuotedPrintable("te=3Dst","te=st");
-      TestDecodeQuotedPrintable("te=0D=0Ast","te\r\nst");
-      TestDecodeQuotedPrintable("te=0Dst","te\rst");
-      TestDecodeQuotedPrintable("te=0Ast","te\nst");
-      TestDecodeQuotedPrintable("te=C2=A0st","te\u00a0st");
-      TestFailQuotedPrintable("te=3st");
-      TestDecodeQuotedPrintable(Repeat("a",100),Repeat("a",100));
-      TestDecodeQuotedPrintable("te\r\nst","te\r\nst");
-      TestDecodeQuotedPrintable("te\rst","te\r\nst");
-      TestDecodeQuotedPrintable("te\nst","te\r\nst");
-      TestDecodeQuotedPrintable("te=\r\nst","test");
-      TestDecodeQuotedPrintable("te=\rst","test");
-      TestDecodeQuotedPrintable("te=\nst","test");
-      TestDecodeQuotedPrintable("te=\r","te");
-      TestDecodeQuotedPrintable("te=\n","te");
-      TestFailQuotedPrintable("te=xy");
-      TestFailQuotedPrintable("te\u000cst");
-      TestFailQuotedPrintable("te\u007fst");
-      TestFailQuotedPrintable("te\u00a0st");
-      TestFailQuotedPrintable("te=3");
-      TestDecodeQuotedPrintable("te   \r\nst","te\r\nst");
-      TestDecodeQuotedPrintable("te   w\r\nst","te   w\r\nst");
-      TestDecodeQuotedPrintable("te   =\r\nst","te   st");
-      TestDecodeQuotedPrintable("te \t\r\nst","te\r\nst");
-      TestDecodeQuotedPrintable("te\t \r\nst","te\r\nst");
-      TestDecodeQuotedPrintable("te   \nst","te\r\nst");
-      TestDecodeQuotedPrintable("te \t\nst","te\r\nst");
-      TestDecodeQuotedPrintable("te\t \nst","te\r\nst");
-      TestFailQuotedPrintableNonLenient("te\rst");
-      TestFailQuotedPrintableNonLenient("te\nst");
-      TestFailQuotedPrintableNonLenient("te=\rst");
-      TestFailQuotedPrintableNonLenient("te=\nst");
-      TestFailQuotedPrintableNonLenient("te=\r");
-      TestFailQuotedPrintableNonLenient(Repeat("a",77));
-      TestFailQuotedPrintableNonLenient(Repeat("=7F",26));
-      TestFailQuotedPrintableNonLenient("aa\r\n"+Repeat("a",77));
-      TestFailQuotedPrintableNonLenient("aa\r\n"+Repeat("=7F",26));
-      TestFailQuotedPrintableNonLenient("te=\n");
-      TestFailQuotedPrintableNonLenient("te   \rst");
-      TestFailQuotedPrintableNonLenient("te   \nst");
+      this.TestDecodeQuotedPrintable("test","test");
+      this.TestDecodeQuotedPrintable("te \tst","te \tst");
+      this.TestDecodeQuotedPrintable("te=20","te ");
+      this.TestDecodeQuotedPrintable("te=09","te\t");
+      this.TestDecodeQuotedPrintable("te ","te");
+      this.TestDecodeQuotedPrintable("te\t","te");
+      this.TestDecodeQuotedPrintable("te=61st","teast");
+      this.TestDecodeQuotedPrintable("te=3dst","te=st");
+      this.TestDecodeQuotedPrintable("te=c2=a0st","te\u00a0st");
+      this.TestDecodeQuotedPrintable("te=3Dst","te=st");
+      this.TestDecodeQuotedPrintable("te=0D=0Ast","te\r\nst");
+      this.TestDecodeQuotedPrintable("te=0Dst","te\rst");
+      this.TestDecodeQuotedPrintable("te=0Ast","te\nst");
+      this.TestDecodeQuotedPrintable("te=C2=A0st","te\u00a0st");
+      this.TestFailQuotedPrintable("te=3st");
+      this.TestDecodeQuotedPrintable(this.Repeat("a",100),this.Repeat("a",100));
+      this.TestDecodeQuotedPrintable("te\r\nst","te\r\nst");
+      this.TestDecodeQuotedPrintable("te\rst","te\r\nst");
+      this.TestDecodeQuotedPrintable("te\nst","te\r\nst");
+      this.TestDecodeQuotedPrintable("te=\r\nst","test");
+      this.TestDecodeQuotedPrintable("te=\rst","test");
+      this.TestDecodeQuotedPrintable("te=\nst","test");
+      this.TestDecodeQuotedPrintable("te=\r","te");
+      this.TestDecodeQuotedPrintable("te=\n","te");
+      this.TestFailQuotedPrintable("te=xy");
+      this.TestFailQuotedPrintable("te\u000cst");
+      this.TestFailQuotedPrintable("te\u007fst");
+      this.TestFailQuotedPrintable("te\u00a0st");
+      this.TestFailQuotedPrintable("te=3");
+      this.TestDecodeQuotedPrintable("te \r\n","te\r\n");
+      this.TestDecodeQuotedPrintable("te \r\nst","te\r\nst");
+      this.TestDecodeQuotedPrintable("te w\r\nst","te w\r\nst");
+      this.TestDecodeQuotedPrintable("te =\r\nst","te st");
+      this.TestDecodeQuotedPrintable("te \t\r\nst","te\r\nst");
+      this.TestDecodeQuotedPrintable("te\t \r\nst","te\r\nst");
+      this.TestDecodeQuotedPrintable("te \nst","te\r\nst");
+      this.TestDecodeQuotedPrintable("te \t\nst","te\r\nst");
+      this.TestDecodeQuotedPrintable("te\t \nst","te\r\nst");
+      this.TestFailQuotedPrintableNonLenient("te\rst");
+      this.TestFailQuotedPrintableNonLenient("te\nst");
+      this.TestFailQuotedPrintableNonLenient("te=\rst");
+      this.TestFailQuotedPrintableNonLenient("te=\nst");
+      this.TestFailQuotedPrintableNonLenient("te=\r");
+      this.TestFailQuotedPrintableNonLenient("te=\n");
+      this.TestFailQuotedPrintableNonLenient("te \rst");
+      this.TestFailQuotedPrintableNonLenient("te \nst");
+      this.TestFailQuotedPrintableNonLenient(this.Repeat("a",77));
+      this.TestFailQuotedPrintableNonLenient(this.Repeat("=7F",26));
+      this.TestFailQuotedPrintableNonLenient("aa\r\n"+this.Repeat("a",77));
+      this.TestFailQuotedPrintableNonLenient("aa\r\n"+this.Repeat("=7F",26));
+    }
+
+    public void TestEncodedWordsPhrase(String expected, String input) {
+      Assert.assertEquals(
+expected+" <test@example.com>",
+HeaderFields.GetParser("from") .ReplaceEncodedWords(input + " <test@example.com>"));
+    }
+
+    public void TestEncodedWordsOne(String expected, String input) {
+      Assert.assertEquals(expected, Message.ReplaceEncodedWords(input));
+      Assert.assertEquals("("+expected+") en",HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords("(" + input+") en"));
+      Assert.assertEquals(" ("+expected+") en",HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords(" (" + input+") en"));
+      Assert.assertEquals(" (
+comment (cmt "+expected+")comment) en",
+                      HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords(" (comment (cmt " + input+")comment) en"));
+      Assert.assertEquals(" (
+comment (=?bad?= "+expected+")comment) en",
+                      HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords(" (comment (=?bad?= " + input+")comment) en"));
+      Assert.assertEquals(" (
+comment ("+expected+")comment) en",
+                      HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords(" (comment (" + input+")comment) en"));
+      Assert.assertEquals(" ("+expected+"()) en",HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords(" (" + input+"()) en"));
+      Assert.assertEquals(" en ("+expected+")",HeaderFields.GetParser("content-language")
+                      .ReplaceEncodedWords(" en (" + input+")"));
+      Assert.assertEquals(
+expected,
+HeaderFields.GetParser("subject") .ReplaceEncodedWords(input));
     }
 
     @Test
-    public void TestStrip() {
-      Assert.assertEquals("xyz",Message.StripCommentsAndExtraSpace("(abc)xyz"));
-      Assert.assertEquals("xyz",Message.StripCommentsAndExtraSpace("(abc)xyz(def)"));
-      Assert.assertEquals("xyz",Message.StripCommentsAndExtraSpace("(a(b)c)xyz(def)"));
-      Assert.assertEquals("xyz",Message.StripCommentsAndExtraSpace("(abc)  xyz  "));
-      Assert.assertEquals("xy z",Message.StripCommentsAndExtraSpace("  xy(abc)z  "));
-      Assert.assertEquals("xyz",Message.StripCommentsAndExtraSpace("  xyz\t\t"));
-      Assert.assertEquals("xy z",Message.StripCommentsAndExtraSpace("  xy\tz  "));
+    public void TestCommentsToWords() {
+      Assert.assertEquals("(=?utf-8?q?x?=)", Message.ConvertCommentsToEncodedWords("(x)"));
+      Assert.assertEquals("(=?utf-8?q?xy?=)", Message.ConvertCommentsToEncodedWords("(x\\y)"));
+      Assert.assertEquals("(=?utf-8?q?x_y?=)", Message.ConvertCommentsToEncodedWords("(x\r\n y)"));
+      Assert.assertEquals("(=?utf-8?q?x=C2=A0?=)", Message.ConvertCommentsToEncodedWords("(x\u00a0)"));
+      Assert.assertEquals("(=?utf-8?q?x=C2=A0?=)", Message.ConvertCommentsToEncodedWords("(x\\\u00a0)"));
+      Assert.assertEquals("(=?utf-8?q?x?=())", Message.ConvertCommentsToEncodedWords("(x())"));
+      Assert.assertEquals("(=?utf-8?q?x?=()=?utf-8?q?y?=)", Message.ConvertCommentsToEncodedWords("(x()y)"));
+      Assert.assertEquals("(=?utf-8?q?x?=(=?utf-8?q?ab?=)=?utf-8?q?y?=)", Message.ConvertCommentsToEncodedWords("(x(a\\b)y)"));
+      Assert.assertEquals("()", Message.ConvertCommentsToEncodedWords("()"));
+      Assert.assertEquals("(test) x@x.example", HeaderFields.GetParser("from").DowngradeComments("(test) x@x.example"));
+      Assert.assertEquals("(=?utf-8?q?tes=C2=BEt?=) x@x.example",HeaderFields.GetParser("from")
+                      .DowngradeComments("(tes\u00bet) x@x.example"));
+      Assert.assertEquals("(=?utf-8?q?tes=C2=BEt?=) en",HeaderFields.GetParser("content-language")
+                      .DowngradeComments("(tes\u00bet) en"));
+      Assert.assertEquals("(
+tes\u00bet) x@x.example",HeaderFields.GetParser("subject")
+                      .DowngradeComments("(tes\u00bet) x@x.example"));
+      Assert.assertEquals("(=?utf-8?q?tes=0Dt?=) x@x.example",HeaderFields.GetParser("from")
+                      .DowngradeComments("(tes\rt) x@x.example"));
+    }
+
+    @Test
+    public void TestEncodedWords() {
+      this.TestEncodedWordsPhrase("(sss) y","(sss) =?us-ascii?q?y?=");
+      this.TestEncodedWordsPhrase("xy","=?us-ascii?q?x?= =?us-ascii?q?y?=");
+      this.TestEncodedWordsPhrase("=?bad1?= =?bad2?= =?bad3?=","=?bad1?= =?bad2?= =?bad3?=");
+      this.TestEncodedWordsPhrase("y =?bad2?= =?bad3?=","=?us-ascii?q?y?= =?bad2?= =?bad3?=");
+      this.TestEncodedWordsPhrase("=?bad1?= y =?bad3?=","=?bad1?= =?us-ascii?q?y?= =?bad3?=");
+      this.TestEncodedWordsPhrase("xy","=?us-ascii?q?x?= =?us-ascii?q?y?=");
+      this.TestEncodedWordsPhrase(" xy"," =?us-ascii?q?x?= =?us-ascii?q?y?=");
+      this.TestEncodedWordsPhrase("xy (sss)","=?us-ascii?q?x?= =?us-ascii?q?y?= (sss)");
+      this.TestEncodedWordsPhrase("x (sss) y","=?us-ascii?q?x?= (sss) =?us-ascii?q?y?=");
+      this.TestEncodedWordsPhrase("x (z) y","=?us-ascii?q?x?= (=?utf-8?q?z?=) =?us-ascii?q?y?=");
+      this.TestEncodedWordsPhrase("=?us-ascii?q?x?=(
+sss)=?us-ascii?q?y?=",
+                             "=?us-ascii?q?x?=(sss)=?us-ascii?q?y?=");
+      this.TestEncodedWordsPhrase("=?us-ascii?q?x?=(
+z)=?us-ascii?q?y?=",
+                             "=?us-ascii?q?x?=(=?utf-8?q?z?=)=?us-ascii?q?y?=");
+      this.TestEncodedWordsPhrase("=?us-ascii?q?x?=(
+z) y",
+                             "=?us-ascii?q?x?=(=?utf-8?q?z?=) =?us-ascii?q?y?=");
+      //
+      this.TestEncodedWordsOne("x y","=?utf-8?q?x_?= =?utf-8?q?y?=");
+      this.TestEncodedWordsOne("abcde abcde","abcde abcde");
+      this.TestEncodedWordsOne("abcde","abcde");
+      this.TestEncodedWordsOne("abcde","=?utf-8?q?abcde?=");
+      this.TestEncodedWordsOne("=?utf-8?q?abcde?=extra","=?utf-8?q?abcde?=extra");
+      this.TestEncodedWordsOne("abcde ","=?utf-8?q?abcde?= ");
+      this.TestEncodedWordsOne(" abcde"," =?utf-8?q?abcde?=");
+      this.TestEncodedWordsOne(" abcde"," =?utf-8?q?abcde?=");
+      this.TestEncodedWordsOne("ab\u00a0de","=?utf-8?q?ab=C2=A0de?=");
+      this.TestEncodedWordsOne("xy","=?utf-8?q?x?= =?utf-8?q?y?=");
+      this.TestEncodedWordsOne("x y","x =?utf-8?q?y?=");
+      this.TestEncodedWordsOne("x y","x =?utf-8?q?y?=");
+      this.TestEncodedWordsOne("x y","=?utf-8?q?x?= y");
+      this.TestEncodedWordsOne("x y","=?utf-8?q?x?= y");
+      this.TestEncodedWordsOne("xy","=?utf-8?q?x?= =?utf-8?q?y?=");
+      this.TestEncodedWordsOne("abc de","=?utf-8?q?abc=20de?=");
+      this.TestEncodedWordsOne("abc de","=?utf-8?q?abc_de?=");
+      this.TestEncodedWordsOne("abc\ufffdde","=?us-ascii?q?abc=90de?=");
+      this.TestEncodedWordsOne("=?x-undefined?q?abcde?=","=?x-undefined?q?abcde?=");
+      this.TestEncodedWordsOne("=?utf-8?q?"+this.Repeat("x",200)+"?=",
+                          "=?utf-8?q?"+this.Repeat("x",200)+"?=");
     }
 
     @Test
     public void TestEncode() {
-      TestQuotedPrintable("test","test");
-      TestQuotedPrintable("te\u000cst","te=0Cst");
-      TestQuotedPrintable("te\u007Fst","te=7Fst");
-      TestQuotedPrintable("te ","te=20");
-      TestQuotedPrintable("te\t","te=09");
-      TestQuotedPrintable("te st","te st");
-      TestQuotedPrintable("te=st","te=3Dst");
-      TestQuotedPrintable("te\r\nst","te=0D=0Ast","te\r\nst","te\r\nst");
-      TestQuotedPrintable("te\rst","te=0Dst","te=0Dst","te\r\nst");
-      TestQuotedPrintable("te\nst","te=0Ast","te=0Ast","te\r\nst");
-      TestQuotedPrintable("te  \r\nst","te  =0D=0Ast","te =20\r\nst","te =20\r\nst");
-      TestQuotedPrintable("te \r\nst","te =0D=0Ast","te=20\r\nst","te=20\r\nst");
-      TestQuotedPrintable("te \t\r\nst","te \t=0D=0Ast","te =09\r\nst","te =09\r\nst");
-      TestQuotedPrintable("te\t\r\nst","te\t=0D=0Ast","te=09\r\nst","te=09\r\nst");
-      TestQuotedPrintable(Repeat("a",75),Repeat("a",75));
-      TestQuotedPrintable(Repeat("a",76),Repeat("a",75)+"=\r\na");
-      TestQuotedPrintable(Repeat("\u000c",30),Repeat("=0C",25)+"=\r\n"+Repeat("=0C",5));
+      this.TestQuotedPrintable("test","test");
+      this.TestQuotedPrintable("te\u000cst","te=0Cst");
+      this.TestQuotedPrintable("te\u007Fst","te=7Fst");
+      this.TestQuotedPrintable("te ","te=20");
+      this.TestQuotedPrintable("te\t","te=09");
+      this.TestQuotedPrintable("te st","te st");
+      this.TestQuotedPrintable("te=st","te=3Dst");
+      this.TestQuotedPrintable("te\r\nst","te=0D=0Ast","te\r\nst","te\r\nst");
+      this.TestQuotedPrintable("te\rst","te=0Dst","te=0Dst","te\r\nst");
+      this.TestQuotedPrintable("te\nst","te=0Ast","te=0Ast","te\r\nst");
+      this.TestQuotedPrintable("te \r\nst","te =0D=0Ast","te =20\r\nst","te =20\r\nst");
+      this.TestQuotedPrintable("te \r\nst","te =0D=0Ast","te=20\r\nst","te=20\r\nst");
+      this.TestQuotedPrintable("te \t\r\nst","te =09=0D=0Ast","te =09\r\nst","te =09\r\nst");
+      this.TestQuotedPrintable("te\t\r\nst","te=09=0D=0Ast","te=09\r\nst","te=09\r\nst");
+      this.TestQuotedPrintable(this.Repeat("a",75),this.Repeat("a",75));
+      this.TestQuotedPrintable(this.Repeat("a",76),this.Repeat("a",75)+"=\r\na");
+      this.TestQuotedPrintable(this.Repeat("\u000c",30),this.Repeat("=0C",25)+"=\r\n"+this.Repeat("=0C",5));
+    }
+
+    public static void Timeout(int duration, Action action) {
+      String stackTrace = null;
+      Object stackTraceLock = new Object();
+      System.Threading.Thread thread = new Thread(new Runnable(){ public void run() {  {
+          try {
+            action();
+          } catch (Exception ex) {
+             synchronized(stackTraceLock) {
+              stackTrace = ex.getClass().getFullName()+"\n"+ex.getMessage()+"\n"+ex.getStackTrace();
+              System.Threading.Monitor.PulseAll(stackTraceLock);
+            }
+          }
+        } }});
+      thread.start();
+      if (!thread.join(duration)) {
+        @SuppressWarnings("deprecation") thread.stop();
+        String trace = null;
+         synchronized(stackTraceLock) {
+          while (stackTrace == null) {
+            System.Threading.Monitor.Wait(stackTraceLock);
+          }
+          trace = stackTrace;
+        }
+        if (trace != null) {
+          Assert.fail(trace);
+        }
+      }
     }
   }

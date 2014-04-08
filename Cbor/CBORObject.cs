@@ -128,9 +128,7 @@ namespace PeterO.Cbor {
     private static IDictionary<Object, ConverterInfo> converters = new Dictionary<Object, ConverterInfo>();
     private static IDictionary<BigInteger, ICBORTag> tagHandlers = new Dictionary<BigInteger, ICBORTag>();
 
-    private static int[] valueNumberTypeOrder = new int[] {
-      0, 0, 2, 3, 4, 5, 1, 0, 0, 0, 0, 0, 0
-    };
+    private static int[] valueNumberTypeOrder = new int[] { 0, 0, 2, 3, 4, 5, 1, 0, 0, 0, 0, 0, 0 };
 
     internal static readonly ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
       new CBORInteger(),
@@ -1074,8 +1072,7 @@ namespace PeterO.Cbor {
     }
     // Expected lengths for each head byte.
     // 0 means length varies. -1 means invalid.
-    private static int[] valueExpectedLengths = new int[] {
-      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
+    private static int[] valueExpectedLengths = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 1
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
@@ -1090,8 +1087,7 @@ namespace PeterO.Cbor {
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  // major type 6
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 7
-      1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1
-    };
+      1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1 };
 
     // Generate a CBOR object for head bytes with fixed length.
     // Note that this function assumes that the length of the data
