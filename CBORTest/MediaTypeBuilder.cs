@@ -8,54 +8,71 @@
  */
 using System;
 using System.Collections.Generic;
+
 namespace CBORTest
 {
   internal sealed class MediaTypeBuilder
   {
-    string type;
-    string subtype;
-    IDictionary<string, string> parameters;
+    private string type;
+    private string subtype;
+    private IDictionary<string, string> parameters;
+
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+public string TopLevelType {
+      get {
+        return this.type;
+      }
+    }
+
+    /// <summary>Gets a value not documented yet.</summary>
+    /// <value>A value not documented yet.</value>
+public string SubType {
+      get {
+        return this.subtype;
+      }
+    }
 
     public MediaTypeBuilder() {
-      parameters = new Dictionary<string, string>();
-      type="application";
-      subtype="octet-stream";
+      this.parameters = new Dictionary<string, string>();
+      this.type = "application";
+      this.subtype = "octet-stream";
     }
 
     public MediaTypeBuilder(MediaType mt) {
-      if ((mt) == null) {
+      if (mt == null) {
         throw new ArgumentNullException("mt");
       }
-      parameters = new Dictionary<string, string>(mt.Parameters);
-      type = mt.TopLevelType;
-      subtype = mt.SubType;
+      this.parameters = new Dictionary<string, string>(mt.Parameters);
+      this.type = mt.TopLevelType;
+      this.subtype = mt.SubType;
     }
 
     public MediaTypeBuilder(string type, string subtype) {
-      parameters = new Dictionary<string, string>();
-      SetTopLevelType(type);
-      SetSubType(subtype);
+      this.parameters = new Dictionary<string, string>();
+      this.SetTopLevelType(type);
+      this.SetSubType(subtype);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A MediaType object.</returns>
     public MediaType ToMediaType() {
-      return new MediaType(type, subtype, parameters);
+      return new MediaType(this.type, this.subtype, this.parameters);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='str'>A string object.</param>
     /// <returns>A MediaTypeBuilder object.</returns>
     public MediaTypeBuilder SetTopLevelType(string str) {
-      if ((str) == null) {
+      if (str == null) {
         throw new ArgumentNullException("str");
-      }if ((str).Length == 0) {
+      }if (str.Length == 0) {
         throw new ArgumentException("str is empty.");
       }
       if (MediaType.skipMimeTypeSubtype(str, 0, str.Length, null) != str.Length) {
-        throw new ArgumentException("Not a well-formed top level type: "+str);
+        throw new ArgumentException("Not a well-formed top level type: " + str);
       }
-      type = ParserUtility.ToLowerCaseAscii(str);
+      this.type = ParserUtility.ToLowerCaseAscii(str);
       return this;
     }
 
@@ -63,10 +80,10 @@ namespace CBORTest
     /// <param name='name'>A string object.</param>
     /// <returns>A MediaTypeBuilder object.</returns>
     public MediaTypeBuilder RemoveParameter(string name) {
-      if ((name) == null) {
+      if (name == null) {
         throw new ArgumentNullException("name");
       }
-      parameters.Remove(ParserUtility.ToLowerCaseAscii(name));
+      this.parameters.Remove(ParserUtility.ToLowerCaseAscii(name));
       return this;
     }
 
@@ -75,22 +92,22 @@ namespace CBORTest
     /// <param name='value'>A string object. (2).</param>
     /// <returns>A MediaTypeBuilder object.</returns>
     public MediaTypeBuilder SetParameter(string name, string value) {
-      if ((value) == null) {
+      if (value == null) {
         throw new ArgumentNullException("value");
       }
-      if ((value).Length == 0) {
+      if (value.Length == 0) {
         throw new ArgumentException("value is empty.");
       }
-      if ((name) == null) {
+      if (name == null) {
         throw new ArgumentNullException("name");
       }
-      if ((name).Length == 0) {
+      if (name.Length == 0) {
         throw new ArgumentException("name is empty.");
       }
       if (MediaType.skipMimeTypeSubtype(name, 0, name.Length, null) != name.Length) {
-        throw new ArgumentException("Not a well-formed parameter name: "+name);
+        throw new ArgumentException("Not a well-formed parameter name: " + name);
       }
-      parameters[ParserUtility.ToLowerCaseAscii(name)]=value;
+      this.parameters[ParserUtility.ToLowerCaseAscii(name)] = value;
       return this;
     }
 
@@ -98,23 +115,23 @@ namespace CBORTest
     /// <param name='str'>A string object.</param>
     /// <returns>A MediaTypeBuilder object.</returns>
     public MediaTypeBuilder SetSubType(string str) {
-      if ((str) == null) {
+      if (str == null) {
         throw new ArgumentNullException("str");
       }
-      if ((str).Length == 0) {
+      if (str.Length == 0) {
         throw new ArgumentException("str is empty.");
       }
       if (MediaType.skipMimeTypeSubtype(str, 0, str.Length, null) != str.Length) {
-        throw new ArgumentException("Not a well-formed subtype: "+str);
+        throw new ArgumentException("Not a well-formed subtype: " + str);
       }
-      subtype = ParserUtility.ToLowerCaseAscii(str);
+      this.subtype = ParserUtility.ToLowerCaseAscii(str);
       return this;
     }
 
     /// <summary>Converts this object to a text string.</summary>
     /// <returns>A string representation of this object.</returns>
     public override string ToString() {
-      return ToMediaType().ToString();
+      return this.ToMediaType().ToString();
     }
   }
 }

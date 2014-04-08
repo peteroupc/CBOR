@@ -430,24 +430,33 @@ import com.upokecenter.cbor.*;
     @Test
     public void TestNegativeBigInts() {
       BigInteger minusone = BigInteger.ZERO.subtract(BigInteger.ONE);
-      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(8)),
-                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x42, 1, 0  }).AsBigInteger());
-      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(16)),
-                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x43, 1, 0, 0  }).AsBigInteger());
-      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(24)),
-                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x44, 1, 0, 0, 0  }).AsBigInteger());
-      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(32)),
-                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x45, 1, 0, 0, 0, 0  }).AsBigInteger());
-      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(40)),
-                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x46, 1, 0, 0, 0, 0, 0  }).AsBigInteger());
-      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(48)),
-                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x47, 1, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
-      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(56)),
-                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x48, 1, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
-      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(64)),
-                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x49, 1, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
-      Assert.assertEquals(minusone.subtract(BigInteger.ONE.shiftLeft(72)),
-                      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x4a, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(
+minusone.subtract(BigInteger.ONE.shiftLeft(8)),
+CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x42, 1, 0  }).AsBigInteger());
+      Assert.assertEquals(
+minusone.subtract(BigInteger.ONE.shiftLeft(16)),
+CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x43, 1, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(
+minusone.subtract(BigInteger.ONE.shiftLeft(24)),
+CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x44, 1, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(
+minusone.subtract(BigInteger.ONE.shiftLeft(32)),
+CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x45, 1, 0, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(
+minusone.subtract(BigInteger.ONE.shiftLeft(40)),
+CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x46, 1, 0, 0, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(
+minusone.subtract(BigInteger.ONE.shiftLeft(48)),
+CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x47, 1, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(
+minusone.subtract(BigInteger.ONE.shiftLeft(56)),
+CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x48, 1, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(
+minusone.subtract(BigInteger.ONE.shiftLeft(64)),
+CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x49, 1, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+      Assert.assertEquals(
+minusone.subtract(BigInteger.ONE.shiftLeft(72)),
+CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x4a, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
     }
 
     @Test
@@ -483,7 +492,7 @@ import com.upokecenter.cbor.*;
         0x19,
         0x01,
         (byte)0xff  });
-      String expected="[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
+      String expected = "[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.assertEquals(expected, cbor.ToJSONString());
       cbor = CBORObject.DecodeFromBytes(
         new byte[] {  (byte)0xd9,
@@ -519,7 +528,7 @@ import com.upokecenter.cbor.*;
         0x19,
         0x01,
         (byte)0xff  });
-      expected="[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
+      expected = "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.assertEquals(expected, cbor.ToJSONString());
     }
 

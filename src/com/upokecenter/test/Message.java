@@ -23,7 +23,7 @@ import com.upokecenter.cbor.*;
     private List<Message> parts;
 
     private static final int EncodingSevenBit = 0;
-    private static final int EncodingUnknown=-1;
+    private static final int EncodingUnknown = -1;
     private static final int EncodingEightBit = 3;
     private static final int EncodingBinary = 4;
     private static final int EncodingQuotedPrintable = 1;
@@ -34,7 +34,7 @@ import com.upokecenter.cbor.*;
      * @return A value not documented yet.
      */
     public List<Message> getParts() {
-        return parts;
+        return this.parts;
       }
 
     /**
@@ -42,7 +42,7 @@ import com.upokecenter.cbor.*;
      * @return A value not documented yet.
      */
     public List<String> getHeaders() {
-        return headers;
+        return this.headers;
       }
 
     private byte[] body;
@@ -52,7 +52,7 @@ import com.upokecenter.cbor.*;
      * @return A byte[] object.
      */
     public byte[] GetBody() {
-      return body;
+      return this.body;
     }
 
     /**
@@ -60,73 +60,26 @@ import com.upokecenter.cbor.*;
      * @param str A string object.
      */
     public void SetBody(String str) {
-      body = DataUtilities.GetUtf8Bytes(str, true);
-      contentType=MediaType.Parse("text/plain; charset=utf-8");
+      this.body = DataUtilities.GetUtf8Bytes(str, true);
+      this.contentType=MediaType.Parse("text/plain; charset=utf-8");
     }
 
     public Message (InputStream stream) {
-      if ((stream) == null) {
+      if (stream == null) {
         throw new NullPointerException("stream");
       }
-      headers = new ArrayList<String>();
-      parts = new ArrayList<Message>();
-      ReadMessage(new WrappedStream(stream));
-    }
-    public Message () {
-      headers = new ArrayList<String>();
-      parts = new ArrayList<Message>();
+      this.headers = new ArrayList<String>();
+      this.parts = new ArrayList<Message>();
+      this.ReadMessage(new WrappedStream(stream));
     }
 
-    static int skipComment(String str, int index, int endIndex) {
-      int startIndex = index;
-      if (!(index<endIndex && str.charAt(index)=='('))
-        return index;
-      ++index;
-      while (index<endIndex) {
-        // Skip tabs and spaces (should skip
-        // folding whitespace too, but this method assumes
-        // unfolded values)
-        index = ParserUtility.SkipSpaceAndTab(str, index, endIndex);
-        char c = str.charAt(index);
-        if (c==')') {
-          return index + 1;
-        }
-        int oldIndex = index;
-        // skip comment character (RFC5322 sec. 3.2.1)
-        if (index<endIndex) {
-          c = str.charAt(index);
-          if (c>= 33 && c<= 126 && c!='(' && c!=')' && c!='\\') {
-            ++index;
-          } else if ((c<0x20 && c != 0x00 && c != 0x09 && c != 0x0a && c != 0x0d)  || c == 0x7f) {
-            // obs-ctext
-            index+=2;
-          }
-        }
-        if (index != oldIndex) {
-          continue;
-        }
-        // skip quoted-pair (RFC5322 sec. 3.2.1)
-        if (index+1<endIndex && str.charAt(index)=='\\') {
-          c = str.charAt(index + 1);
-          if (c == 0x20 || c == 0x09 || (c >= 0x21 && c <= 0x7e)) {
-            index+=2;
-          }
-          // obs-qp
-          if ((c<0x20 && c != 0x09)  || c == 0x7f) {
-            index+=2;
-          }
-        }
-        // skip nested comment
-        index = skipComment(str, index, endIndex);
-        if (index != oldIndex) {
-          continue;
-        }
-        break;
-      }
-      return startIndex;
+    public Message () {
+      this.headers = new ArrayList<String>();
+      this.parts = new ArrayList<Message>();
     }
+
     static String ReplaceEncodedWords(String str) {
-      if ((str) == null) {
+      if (str == null) {
         throw new NullPointerException("str");
       }
       return ReplaceEncodedWords(str, 0, str.length(), false);
@@ -134,99 +87,100 @@ import com.upokecenter.cbor.*;
 
     static String ReplaceEncodedWords(String str, int index, int endIndex, boolean inComments) {
 
-      if (endIndex-index< 9) {
-        return str.substring(index,(index)+(endIndex-index));
+      if (endIndex - index< 9) {
+        return str.substring(index,(index)+(endIndex - index));
       }
-      if (str.indexOf('=')< 0) {
-        return str.substring(index,(index)+(endIndex-index));
+      if (str.indexOf('=') < 0) {
+        return str.substring(index,(index)+(endIndex - index));
       }
       StringBuilder builder = new StringBuilder();
       boolean lastWordWasEncodedWord = false;
-      int whitespaceStart=-1;
-      int whitespaceEnd=-1;
-      while (index<endIndex) {
+      int whitespaceStart = -1;
+      int whitespaceEnd = -1;
+      while (index < endIndex) {
         int charCount = 2;
         boolean acceptedEncodedWord = false;
         String decodedWord = null;
         int startIndex = 0;
         boolean havePossibleEncodedWord = false;
         boolean startParen = false;
-        if (index+1<endIndex && str.charAt(index)=='=' && str.charAt(index+1)=='?') {
+        if (index + 1<endIndex && str.charAt(index)=='=' && str.charAt(index+1)=='?') {
           startIndex = index + 2;
-          index+=2;
+          index += 2;
           havePossibleEncodedWord = true;
-        } else if (inComments && index+2<endIndex && str.charAt(index)=='(' &&
-                   str.charAt(index+1)=='=' && str.charAt(index+2)=='?') {
+        } else if (inComments && index + 2<endIndex && str.charAt(index)=='(' &&
+                   str.charAt(index + 1)=='=' && str.charAt(index+2)=='?') {
           startIndex = index + 3;
-          index+=3;
+          index += 3;
           startParen = true;
           havePossibleEncodedWord = true;
         }
         if (havePossibleEncodedWord) {
           boolean maybeWord = true;
           int afterLast = endIndex;
-          while (index<endIndex) {
+          while (index < endIndex) {
             char c = str.charAt(index);
             ++index;
             // Check for a run of printable ASCII characters (except space)
             // with length up to 75 (also exclude '(' and ')' if 'inComments'
             // is true)
-            if (c >= 0x21 && c<0x7e && (!inComments || (c!='(' && c!=')'))) {
+            if (c >= 0x21 && c < 0x7e && (!inComments || (c!='(' && c!=')'))) {
               ++charCount;
-              if (charCount>75) {
+              if (charCount > 75) {
                 maybeWord = false;
-                index = startIndex-2;
+                index = startIndex - 2;
                 break;
               }
             } else {
-              afterLast = index-1;
+              afterLast = index - 1;
               break;
             }
           }
           if (maybeWord) {
             // May be an encoded word
-            //System.out.println("maybe "+str.substring(startIndex-2,(startIndex-2)+(afterLast-(startIndex-2))));
+            // System.out.println("maybe "+str.substring(startIndex-2,(startIndex-2)+(afterLast-(startIndex-2))));
             index = startIndex;
             int i2;
             // Parse charset
             // (NOTE: Compatible with RFC 2231's addition of language
             // to charset, since charset is defined as a 'token' in
             // RFC 2047, which includes '*')
-            int charsetEnd=-1;
-            int encodedTextStart=-1;
+            int charsetEnd = -1;
+            int encodedTextStart = -1;
             boolean base64 = false;
             i2 = MediaType.skipMimeTokenRfc2047(str, index, afterLast);
-            if (i2!=index && i2<endIndex && str.charAt(i2)=='?') {
+            if (i2 != index && i2<endIndex && str.charAt(i2)=='?') {
               // Parse encoding
               charsetEnd = i2;
               index = i2 + 1;
               i2 = MediaType.skipMimeTokenRfc2047(str, index, afterLast);
-              if (i2!=index && i2<endIndex && str.charAt(i2)=='?') {
+              if (i2 != index && i2<endIndex && str.charAt(i2)=='?') {
                 // check for supported encoding (B or Q)
                 char encodingChar = str.charAt(index);
-                if (i2-index==1 && (encodingChar=='b' || encodingChar=='B' ||
-                                    encodingChar=='q' || encodingChar=='Q')) {
+                if (i2 - index==1 && (encodingChar=='b' || encodingChar=='B' ||
+                                    encodingChar == 'q' || encodingChar=='Q')) {
                   // Parse encoded text
-                  base64=(encodingChar=='b' || encodingChar=='B');
+                  base64=encodingChar=='b' || encodingChar=='B';
                   index = i2 + 1;
                   encodedTextStart = index;
                   i2 = MediaType.skipEncodedTextRfc2047(str, index, afterLast, inComments);
-                  if (i2!=index && i2+1<endIndex && str.charAt(i2)=='?' && str.charAt(i2+1)=='=' &&
+                  if (i2 != index && i2+1<endIndex && str.charAt(i2)=='?' && str.charAt(i2+1)=='=' &&
                       i2 + 2 == afterLast) {
                     acceptedEncodedWord = true;
-                    i2+=2;
+                    i2 += 2;
                   }
                 }
               }
             }
             if (acceptedEncodedWord) {
-              String charset = str.substring(startIndex,(startIndex)+(charsetEnd-startIndex));
-              String encodedText = str.substring(encodedTextStart,(encodedTextStart)+((afterLast-2)-
-                                                 encodedTextStart));
-              int asterisk=charset.indexOf('*');
+              String charset = str.substring(startIndex,(startIndex)+(charsetEnd - startIndex));
+              String encodedText = str.substring(
+encodedTextStart,(
+encodedTextStart)+((afterLast-2)- encodedTextStart));
+              int asterisk = charset.indexOf('*');
               if (asterisk >= 1) {
                 charset = str.substring(0,asterisk);
-                String language = str.substring(asterisk + 1,(asterisk + 1)+(str.length()-(asterisk + 1)));
+                String language = str.substring(asterisk + 1,(asterisk + 1)+(str.length() - (asterisk + 1)));
                 if (!ParserUtility.IsValidLanguageTag(language)) {
                   acceptedEncodedWord = false;
                 }
@@ -235,34 +189,34 @@ import com.upokecenter.cbor.*;
                 acceptedEncodedWord = false;
               }
               if (acceptedEncodedWord) {
-                ITransform transform=(base64) ?
+                ITransform transform = base64 ?
                   (ITransform)new BEncodingStringTransform(encodedText) :
                   (ITransform)new QEncodingStringTransform(encodedText);
                 Charsets.ICharset encoding = Charsets.GetCharset(charset);
                 if (encoding == null) {
-                  System.out.println("Unknown charset "+charset);
-                  decodedWord = str.substring(startIndex-2,(startIndex-2)+(afterLast-(startIndex-2)));
+                  System.out.println("Unknown charset " + charset);
+                  decodedWord = str.substring(startIndex - 2,(startIndex - 2)+(afterLast-(startIndex-2)));
                 } else {
-                  //System.out.println("Encoded " + (base64 ? "B" : "Q") + " to: " + (encoding.GetString(transform)));
+                  // System.out.println("Encoded " + (base64 ? "B" : "Q") + " to: " + (encoding.GetString(transform)));
                   decodedWord = encoding.GetString(transform);
                 }
                 // TODO: decodedWord may itself be part of an encoded word
                 // or contain ASCII control characters: encoded word decoding is
                 // not idempotent; if this is a comment it could also contain '(', ')', and '\'
               } else {
-                decodedWord = str.substring(startIndex-2,(startIndex-2)+(afterLast-(startIndex-2)));
+                decodedWord = str.substring(startIndex - 2,(startIndex - 2)+(afterLast-(startIndex-2)));
               }
             } else {
-              decodedWord = str.substring(startIndex-2,(startIndex-2)+(afterLast-(startIndex-2)));
+              decodedWord = str.substring(startIndex - 2,(startIndex - 2)+(afterLast-(startIndex-2)));
             }
             index = afterLast;
           }
         }
-        if (whitespaceStart >= 0 && whitespaceStart<whitespaceEnd &&
+        if (whitespaceStart >= 0 && whitespaceStart < whitespaceEnd &&
             (!acceptedEncodedWord || !lastWordWasEncodedWord)) {
           // Append whitespace as long as it doesn't occur between two
           // encoded words
-          builder.append(str.substring(whitespaceStart,(whitespaceStart)+(whitespaceEnd-whitespaceStart)));
+          builder.append(str.substring(whitespaceStart,(whitespaceStart)+(whitespaceEnd - whitespaceStart)));
         }
         if (startParen) {
           builder.append('(');
@@ -273,25 +227,20 @@ import com.upokecenter.cbor.*;
         // System.out.println("" + index + " " + endIndex + " [" + (index<endIndex ? str.charAt(index) : '~') + "]");
         // Read to whitespace
         int oldIndex = index;
-        while (index<endIndex) {
+        while (index < endIndex) {
           char c = str.charAt(index);
-          if (c == 0x09 || c == 0x20) {
+          if (c == 0x0d && index + 1 < endIndex && str.charAt(index + 1)==0x0a) {
+            break;
+          } else if (c == 0x09 || c == 0x20) {
             break;
           } else {
             ++index;
           }
         }
-        boolean hasNonWhitespace=(oldIndex != index);
+        boolean hasNonWhitespace = oldIndex != index;
         whitespaceStart = index;
         // Read to nonwhitespace
-        while (index<endIndex) {
-          char c = str.charAt(index);
-          if (c == 0x09 || c == 0x20) {
-            ++index;
-          } else {
-            break;
-          }
-        }
+        index = HeaderParser.ParseFWS(str, index, endIndex, null);
         whitespaceEnd = index;
         if (builder.length() == 0 && oldIndex == 0 && index == str.length()) {
           // Nothing to replace, and the whole String
@@ -301,80 +250,14 @@ import com.upokecenter.cbor.*;
         if (oldIndex != index) {
           // Append nonwhitespace only, unless this is the end
           if (index == endIndex) {
-            builder.append(str.substring(oldIndex,(oldIndex)+(index-oldIndex)));
+            builder.append(str.substring(oldIndex,(oldIndex)+(index - oldIndex)));
           } else {
-            builder.append(str.substring(oldIndex,(oldIndex)+(whitespaceStart-oldIndex)));
+            builder.append(str.substring(oldIndex,(oldIndex)+(whitespaceStart - oldIndex)));
           }
         }
         lastWordWasEncodedWord = acceptedEncodedWord;
       }
       return builder.toString();
-    }
-
-    static int SkipCommentsAndWhitespace(
-      String str,
-      int index,
-      int endIndex) {
-      int retIndex = index;
-      int startIndex = index;
-      while (index<endIndex) {
-        int oldIndex = index;
-        // Skip tabs and spaces (should skip
-        // folding whitespace too, but this method assumes
-        // unfolded values)
-        index = ParserUtility.SkipSpaceAndTab(str, index, endIndex);
-        // Skip comments
-        index = skipComment(str, index, endIndex);
-        retIndex = index;
-        if (oldIndex == index) {
-          break;
-        }
-      }
-      return retIndex;
-    }
-
-    static String StripCommentsAndExtraSpace(String s) {
-      StringBuilder sb = null;
-      int index = 0;
-      while (index<s.length()) {
-        char c = s.charAt(index);
-        if (c=='(' || c==0x09 || c==0x20) {
-          int wsp = SkipCommentsAndWhitespace(s, index, s.length());
-          if (sb == null) {
-            sb = new StringBuilder();
-            sb.append(s.substring(0,index));
-          }
-          if (sb.length()>0) {
-            sb.append(' ');
-          }
-          if (index == wsp) {
-            // Might not be a valid comment or whitespace
-            ++index;
-          } else {
-            index = wsp;
-          }
-          continue;
-        } else {
-          if (sb != null) {
-            sb.append(c);
-          }
-        }
-        ++index;
-      }
-      String ret=(sb == null) ? s : sb.toString();
-      int trimLen = ret.length();
-      for (int i = trimLen-1;i >= 0; --i) {
-        if (ret.charAt(i)==' ') {
-          --trimLen;
-        } else {
-          break;
-        }
-      }
-      if (trimLen != ret.length()) {
-        return ret.substring(0,trimLen);
-      } else {
-        return ret;
-      }
     }
 
     private MediaType contentType;
@@ -385,126 +268,129 @@ import com.upokecenter.cbor.*;
      * @return A value not documented yet.
      */
     public MediaType getContentType() {
-        return contentType;
+        return this.contentType;
       }
 
     private void ProcessHeaders(boolean assumeMime, boolean digest) {
       boolean haveContentType = false;
       boolean mime = assumeMime;
-      for (int i = 0;i<headers.size();i+=2) {
-        String name = headers.get(i);
-        String value = headers.get(i + 1);
+      String transferEncodingValue = "";
+      for (int i = 0;i<this.headers.size();i+=2) {
+        String name = this.headers.get(i);
+        String value = this.headers.get(i + 1);
         if (name.equals("from")) {
           if (HeaderParser.ParseHeaderFrom(value, 0, value.length(), null) == 0) {
-            System.out.println(GetHeader("date"));
+            System.out.println(this.GetHeader("date"));
             // throw new InvalidDataException("Invalid From header: "+value);
           }
         }
         if (name.equals("to") && !ParserUtility.IsNullEmptyOrWhitespace(value)) {
           if (HeaderParser.ParseHeaderTo(value, 0, value.length(), null) == 0) {
-            throw new InvalidDataException("Invalid To header: "+value);
+            throw new InvalidDataException("Invalid To header: " + value);
           }
         }
         if (name.equals("cc") && !ParserUtility.IsNullEmptyOrWhitespace(value)) {
           if (HeaderParser.ParseHeaderCc(value, 0, value.length(), null) == 0) {
-            throw new InvalidDataException("Invalid Cc header: "+value);
+            throw new InvalidDataException("Invalid Cc header: " + value);
           }
         }
         if (name.equals("bcc") && !ParserUtility.IsNullEmptyOrWhitespace(value)) {
           if (HeaderParser.ParseHeaderBcc(value, 0, value.length(), null) == 0) {
-            throw new InvalidDataException("Invalid Bcc header: "+value);
+            throw new InvalidDataException("Invalid Bcc header: " + value);
           }
         }
-        value = HeaderFields.GetParser(name).ReplaceEncodedWords(value);
         if (name.equals("content-transfer-encoding")) {
-          value = StripCommentsAndExtraSpace(value);
+          int startIndex = HeaderParser.ParseCFWS(value, 0, value.length(), null);
+          int endIndex = HeaderParser.ParseToken(value, startIndex, value.length(), null);
+          if (HeaderParser.ParseCFWS(value, endIndex, value.length(), null) == value.length()) {
+            transferEncodingValue = value.substring(startIndex,(startIndex)+(endIndex - startIndex));
+          } else {
+            transferEncodingValue = "";
+          }
         }
         if (name.equals("mime-version")) {
           mime = true;
         }
-        headers.set(i + 1,value);
       }
       boolean haveFrom = false;
       boolean haveSubject = false;
       boolean haveTo = false;
       // TODO: Treat message/rfc822 specially
-      contentType = digest ? MediaType.MessageRfc822 : MediaType.TextPlainAscii;
-      for (int i = 0;i<headers.size();i+=2) {
-        String name = headers.get(i);
-        String value = headers.get(i + 1);
+      this.contentType = digest ? MediaType.MessageRfc822 : MediaType.TextPlainAscii;
+      for (int i = 0;i<this.headers.size();i+=2) {
+        String name = this.headers.get(i);
+        String value = this.headers.get(i + 1);
         if (mime && name.equals("content-transfer-encoding")) {
-          value = ParserUtility.ToLowerCaseAscii(value);
-          headers.set(i + 1,value);
+          value = ParserUtility.ToLowerCaseAscii(transferEncodingValue);
+          this.headers.set(i + 1,value);
           if (value.equals("7bit")) {
-            transferEncoding = EncodingSevenBit;
+            this.transferEncoding = EncodingSevenBit;
           } else if (value.equals("8bit")) {
-            transferEncoding = EncodingEightBit;
+            this.transferEncoding = EncodingEightBit;
           } else if (value.equals("binary")) {
-            transferEncoding = EncodingBinary;
+            this.transferEncoding = EncodingBinary;
           } else if (value.equals("quoted-printable")) {
-            transferEncoding = EncodingQuotedPrintable;
+            this.transferEncoding = EncodingQuotedPrintable;
           } else if (value.equals("base64")) {
-            transferEncoding = EncodingBase64;
+            this.transferEncoding = EncodingBase64;
           } else {
             // Unrecognized transfer encoding
-            transferEncoding = EncodingUnknown;
+            this.transferEncoding = EncodingUnknown;
           }
-          headers.remove(i);
-          headers.remove(i);
-          i-=2;
+          this.headers.remove(i);
+          this.headers.remove(i);
+          i -= 2;
         } else if (mime && name.equals("content-type")) {
           if (haveContentType) {
-            throw new InvalidDataException("Already have this header: "+name);
+            throw new InvalidDataException("Already have this header: " + name);
           }
-          contentType = MediaType.Parse(value,
-                                        digest ? MediaType.MessageRfc822 : MediaType.TextPlainAscii);
+          this.contentType = MediaType.Parse(
+value,
+digest ? MediaType.MessageRfc822 : MediaType.TextPlainAscii);
           haveContentType = true;
-          headers.remove(i);
-          headers.remove(i);
-          i-=2;
         } else if (name.equals("from")) {
           if (haveFrom) {
-            throw new InvalidDataException("Already have this header: "+name);
+            throw new InvalidDataException("Already have this header: " + name);
           }
           haveFrom = true;
         } else if (name.equals("to")) {
           if (haveTo) {
-            throw new InvalidDataException("Already have this header: "+name);
+            throw new InvalidDataException("Already have this header: " + name);
           }
           haveTo = true;
         } else if (name.equals("subject")) {
           if (haveSubject) {
-            throw new InvalidDataException("Already have this header: "+name);
+            throw new InvalidDataException("Already have this header: " + name);
           }
           haveSubject = true;
         }
       }
-      if (transferEncoding == EncodingUnknown) {
-        contentType=MediaType.Parse("application/octet-stream");
+      if (this.transferEncoding == EncodingUnknown) {
+        this.contentType=MediaType.Parse("application/octet-stream");
       }
-      if (transferEncoding == EncodingQuotedPrintable ||
-          transferEncoding == EncodingBase64 ||
-          transferEncoding == EncodingUnknown) {
-        if (contentType.getTopLevelType().equals("multipart") ||
-            contentType.getTopLevelType().equals("message")) {
+      if (this.transferEncoding == EncodingQuotedPrintable ||
+          this.transferEncoding == EncodingBase64 ||
+          this.transferEncoding == EncodingUnknown) {
+        if (this.contentType.getTopLevelType().equals("multipart") ||
+            this.contentType.getTopLevelType().equals("message")) {
           throw new InvalidDataException("Invalid content encoding for multipart or message");
         }
       }
     }
 
     private static boolean IsWellFormedBoundary(String str) {
-      if (str == null || str.length()<1 || str.length()>70) {
+      if (str == null || str.length() < 1 || str.length()>70) {
         return false;
       }
-      for (int i = 0;i<str.length(); ++i) {
+      for (int i = 0;i < str.length(); ++i) {
         char c = str.charAt(i);
-        if (i == str.length()-1 && c == 0x20) {
+        if (i == str.length() - 1 && c == 0x20) {
           // Space not allowed at the end of a boundary
           return false;
         }
         if (!(
-          (c>= 'A' && c<= 'Z') || (c>= 'a' && c<= 'z') || (c>= '0' && c<= '9') ||
-          c==0x20 || c==0x2c || "'()-./+_:=?".indexOf(c)>= 0)) {
+          (c >= 'A' && c<= 'Z') || (c>= 'a' && c<= 'z') || (c>= '0' && c<= '9') ||
+          c == 0x20 || c==0x2c || "'()-./+_:=?".indexOf(c)>= 0)) {
           return false;
         }
       }
@@ -512,7 +398,8 @@ import com.upokecenter.cbor.*;
     }
 
     private static final class WrappedStream implements ITransform {
-      InputStream stream;
+      internal InputStream stream;
+
       public WrappedStream (InputStream stream) {
         this.stream = stream;
       }
@@ -522,21 +409,22 @@ import com.upokecenter.cbor.*;
      * @return A 32-bit signed integer.
      */
       public int ReadByte() {
-        return stream.read();
+        return this.stream.read();
       }
     }
 
     private static final class StreamWithUnget implements ITransform {
-      ITransform stream;
+      internal ITransform stream;
       int lastByte;
-      boolean unget;
+      internal boolean unget;
+
       public StreamWithUnget (InputStream stream) {
-        lastByte=-1;
+        this.lastByte=-1;
         this.stream = new WrappedStream(stream);
       }
 
       public StreamWithUnget (ITransform stream) {
-        lastByte=-1;
+        this.lastByte=-1;
         this.stream = stream;
       }
 
@@ -545,19 +433,19 @@ import com.upokecenter.cbor.*;
      * @return A 32-bit signed integer.
      */
       public int ReadByte() {
-        if (unget) {
-          unget = false;
+        if (this.unget) {
+          this.unget = false;
         } else {
-          lastByte = stream.read();
+          this.lastByte = this.stream.read();
         }
-        return lastByte;
+        return this.lastByte;
       }
 
     /**
      * Not documented yet.
      */
       public void Unget() {
-        unget = true;
+        this.unget = true;
       }
     }
 
@@ -566,7 +454,8 @@ import com.upokecenter.cbor.*;
     }
 
     private static final class EightBitTransform implements ITransform {
-      ITransform stream;
+      internal ITransform stream;
+
       public EightBitTransform (ITransform stream) {
         this.stream = stream;
       }
@@ -585,7 +474,8 @@ import com.upokecenter.cbor.*;
     }
 
     private static final class BinaryTransform implements ITransform {
-      ITransform stream;
+      internal ITransform stream;
+
       public BinaryTransform (ITransform stream) {
         this.stream = stream;
       }
@@ -600,7 +490,7 @@ import com.upokecenter.cbor.*;
     }
 
     private static final class SevenBitTransform implements ITransform {
-      ITransform stream;
+      internal ITransform stream;
 
       public SevenBitTransform (ITransform stream) {
         this.stream = stream;
@@ -612,7 +502,7 @@ import com.upokecenter.cbor.*;
      */
       public int ReadByte() {
         int ret = this.stream.read();
-        if (ret>0x80 || ret == 0) {
+        if (ret > 0x80 || ret == 0) {
           throw new InvalidDataException("Invalid character in message body");
         }
         return ret;
@@ -621,7 +511,7 @@ import com.upokecenter.cbor.*;
 
     // A seven-bit transform used for text/plain data
     private static final class LiberalSevenBitTransform implements ITransform {
-      ITransform stream;
+      internal ITransform stream;
 
       public LiberalSevenBitTransform (ITransform stream) {
         this.stream = stream;
@@ -633,7 +523,7 @@ import com.upokecenter.cbor.*;
      */
       public int ReadByte() {
         int ret = this.stream.read();
-        if (ret>0x80 || ret == 0) {
+        if (ret > 0x80 || ret == 0) {
           return '?';
         }
         return ret;
@@ -641,7 +531,7 @@ import com.upokecenter.cbor.*;
     }
 
     private static final class Base64Transform implements ITransform {
-      static int[] Alphabet = new int[] {
+      private static int[] Alphabet = new int[] {
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
         -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
@@ -651,10 +541,11 @@ import com.upokecenter.cbor.*;
         -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
         41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1
       };
-      StreamWithUnget input;
+
+      internal StreamWithUnget input;
       int lineCharCount;
-      boolean lenientLineBreaks;
-      byte[] buffer;
+      internal boolean lenientLineBreaks;
+      internal byte[] buffer;
       int bufferIndex;
       int bufferCount;
 
@@ -671,8 +562,8 @@ import com.upokecenter.cbor.*;
      * @param size A 32-bit signed integer.
      */
       private void ResizeBuffer(int size) {
-        bufferCount = size;
-        bufferIndex = 0;
+        this.bufferCount = size;
+        this.bufferIndex = 0;
       }
 
     /**
@@ -680,80 +571,80 @@ import com.upokecenter.cbor.*;
      * @return A 32-bit signed integer.
      */
       public int ReadByte() {
-        if (bufferIndex<bufferCount) {
-          int ret = buffer[bufferIndex];
-          ++bufferIndex;
-          if (bufferIndex == bufferCount) {
-            bufferCount = 0;
-            bufferIndex = 0;
+        if (this.bufferIndex<this.bufferCount) {
+          int ret = this.buffer[this.bufferIndex];
+          ++this.bufferIndex;
+          if (this.bufferIndex == this.bufferCount) {
+            this.bufferCount = 0;
+            this.bufferIndex = 0;
           }
-          ret&=0xff;
+          ret &= 0xff;
           return ret;
         }
         int value = 0;
         int count = 0;
-        while (count< 4) {
-          int c = input.read();
-          if (c< 0) {
+        while (count < 4) {
+          int c = this.input.read();
+          if (c < 0) {
             // End of stream
             if (count == 1) {
               // Not supposed to happen
               throw new InvalidDataException("Invalid number of base64 characters");
             } else if (count == 2) {
-              input.Unget();
+              this.input.Unget();
               value <<= 12;
               return (byte)((value >> 16) & 0xff);
             } else if (count == 3) {
-              input.Unget();
+              this.input.Unget();
               value <<= 18;
-              ResizeBuffer(1);
-              buffer[0]=(byte)((value >> 8) & 0xff);
+              this.ResizeBuffer(1);
+              this.buffer[0]=(byte)((value >> 8) & 0xff);
               return (byte)((value >> 16) & 0xff);
             }
             return -1;
           } else if (c == 0x0d) {
-            c = input.read();
+            c = this.input.read();
             if (c == 0x0a) {
-              lineCharCount = 0;
+              this.lineCharCount = 0;
             } else {
-              input.Unget();
-              if (lenientLineBreaks) {
-                lineCharCount = 0;
+              this.input.Unget();
+              if (this.lenientLineBreaks) {
+                this.lineCharCount = 0;
               }
             }
           } else if (c == 0x0a) {
-            if (lenientLineBreaks) {
-              lineCharCount = 0;
+            if (this.lenientLineBreaks) {
+              this.lineCharCount = 0;
             }
           } else if (c >= 0x80) {
-            ++lineCharCount;
-            if (lineCharCount>MaxLineSize) {
+            ++this.lineCharCount;
+            if (this.lineCharCount>MaxLineSize) {
               throw new InvalidDataException("Encoded base64 line too long");
             }
           } else {
-            ++lineCharCount;
-            if (lineCharCount>MaxLineSize) {
+            ++this.lineCharCount;
+            if (this.lineCharCount>MaxLineSize) {
               throw new InvalidDataException("Encoded base64 line too long");
             }
             c = Alphabet[c];
             if (c >= 0) {
               value <<= 6;
-              value|=c;
+              value |= c;
               ++count;
             }
           }
         }
-        ResizeBuffer(2);
-        buffer[0]=(byte)((value >> 8) & 0xff);
-        buffer[1]=(byte)((value) & 0xff);
+        this.ResizeBuffer(2);
+        this.buffer[0]=(byte)((value >> 8) & 0xff);
+        this.buffer[1]=(byte)(value & 0xff);
         return (byte)((value >> 16) & 0xff);
       }
     }
 
     private static final class BEncodingStringTransform implements ITransform {
-      String input;
+      internal String input;
       int inputIndex;
-      byte[] buffer;
+      internal byte[] buffer;
       int bufferIndex;
       int bufferCount;
 
@@ -769,8 +660,8 @@ import com.upokecenter.cbor.*;
      * @param size A 32-bit signed integer.
      */
       private void ResizeBuffer(int size) {
-        bufferCount = size;
-        bufferIndex = 0;
+        this.bufferCount = size;
+        this.bufferIndex = 0;
       }
 
     /**
@@ -778,35 +669,35 @@ import com.upokecenter.cbor.*;
      * @return A 32-bit signed integer.
      */
       public int ReadByte() {
-        if (bufferIndex<bufferCount) {
-          int ret = buffer[bufferIndex];
-          ++bufferIndex;
-          if (bufferIndex == bufferCount) {
-            bufferCount = 0;
-            bufferIndex = 0;
+        if (this.bufferIndex<this.bufferCount) {
+          int ret = this.buffer[this.bufferIndex];
+          ++this.bufferIndex;
+          if (this.bufferIndex == this.bufferCount) {
+            this.bufferCount = 0;
+            this.bufferIndex = 0;
           }
-          ret&=0xff;
+          ret &= 0xff;
           return ret;
         }
         int value = 0;
         int count = 0;
-        while (count< 4) {
-          int c = (inputIndex<input.length()) ? input.charAt(inputIndex++) : -1;
-          if (c< 0) {
+        while (count < 4) {
+          int c = (this.inputIndex<this.input.length()) ? this.input.charAt(this.inputIndex++) : -1;
+          if (c < 0) {
             // End of stream
             if (count == 1) {
               // Not supposed to happen;
               // invalid number of base64 characters
               return '?';
             } else if (count == 2) {
-              --inputIndex;
+              --this.inputIndex;
               value <<= 12;
               return (byte)((value >> 16) & 0xff);
             } else if (count == 3) {
-              --inputIndex;
+              --this.inputIndex;
               value <<= 18;
-              ResizeBuffer(1);
-              buffer[0]=(byte)((value >> 8) & 0xff);
+              this.ResizeBuffer(1);
+              this.buffer[0]=(byte)((value >> 8) & 0xff);
               return (byte)((value >> 16) & 0xff);
             }
             return -1;
@@ -816,22 +707,22 @@ import com.upokecenter.cbor.*;
             c = Base64Transform.Alphabet[c];
             if (c >= 0) {
               value <<= 6;
-              value|=c;
+              value |= c;
               ++count;
             }
           }
         }
-        ResizeBuffer(2);
-        buffer[0]=(byte)((value >> 8) & 0xff);
-        buffer[1]=(byte)((value) & 0xff);
+        this.ResizeBuffer(2);
+        this.buffer[0]=(byte)((value >> 8) & 0xff);
+        this.buffer[1]=(byte)(value & 0xff);
         return (byte)((value >> 16) & 0xff);
       }
     }
 
     final class QEncodingStringTransform implements ITransform {
-      String input;
+      internal String input;
       int inputIndex;
-      byte[] buffer;
+      internal byte[] buffer;
       int bufferIndex;
       int bufferCount;
 
@@ -845,15 +736,15 @@ import com.upokecenter.cbor.*;
      * @param size A 32-bit signed integer.
      */
       private void ResizeBuffer(int size) {
-        if (buffer == null) {
-          buffer = new byte[size + 10];
-        } else if (size>buffer.length) {
+        if (this.buffer == null) {
+          this.buffer = new byte[size + 10];
+        } else if (size>this.buffer.length) {
           byte[] newbuffer = new byte[size + 10];
-          System.arraycopy(buffer, 0, newbuffer, 0, buffer.length);
-          buffer = newbuffer;
+          System.arraycopy(this.buffer, 0, newbuffer, 0, this.buffer.length);
+          this.buffer = newbuffer;
         }
-        bufferCount = size;
-        bufferIndex = 0;
+        this.bufferCount = size;
+        this.bufferIndex = 0;
       }
 
     /**
@@ -861,20 +752,20 @@ import com.upokecenter.cbor.*;
      * @return A 32-bit signed integer.
      */
       public int ReadByte() {
-        if (bufferIndex<bufferCount) {
-          int ret = buffer[bufferIndex];
-          ++bufferIndex;
-          if (bufferIndex == bufferCount) {
-            bufferCount = 0;
-            bufferIndex = 0;
+        if (this.bufferIndex<this.bufferCount) {
+          int ret = this.buffer[this.bufferIndex];
+          ++this.bufferIndex;
+          if (this.bufferIndex == this.bufferCount) {
+            this.bufferCount = 0;
+            this.bufferIndex = 0;
           }
-          ret&=0xff;
+          ret &= 0xff;
           return ret;
         }
-        int endIndex = input.length();
+        int endIndex = this.input.length();
         while (true) {
-          int c = (inputIndex<endIndex) ? input.charAt(inputIndex++) : -1;
-          if (c< 0) {
+          int c = (this.inputIndex<endIndex) ? this.input.charAt(this.inputIndex++) : -1;
+          if (c < 0) {
             // End of stream
             return -1;
           } else if (c == 0x0d) {
@@ -883,8 +774,8 @@ import com.upokecenter.cbor.*;
           } else if (c == 0x0a) {
             // Can't occur in the Q-encoding; replace
             return '?';
-          } else if (c=='=') {
-            int b1 = (inputIndex<endIndex) ? input.charAt(inputIndex++) : -1;
+          } else if (c == '=') {
+            int b1 = (this.inputIndex<endIndex) ? this.input.charAt(this.inputIndex++) : -1;
             c = 0;
             if (b1 >= '0' && b1 <= '9') {
               c <<= 4;
@@ -896,10 +787,10 @@ import com.upokecenter.cbor.*;
               c <<= 4;
               c |= b1 + 10 - 'a';
             } else {
-              --inputIndex;
+              --this.inputIndex;
               return '?';
             }
-            int b2 = (inputIndex<endIndex) ? input.charAt(inputIndex++) : -1;
+            int b2 = (this.inputIndex<endIndex) ? this.input.charAt(this.inputIndex++) : -1;
             if (b2 >= '0' && b2 <= '9') {
               c <<= 4;
               c |= b2 - '0';
@@ -910,16 +801,16 @@ import com.upokecenter.cbor.*;
               c <<= 4;
               c |= b2 + 10 - 'a';
             } else {
-              --inputIndex;
-              ResizeBuffer(1);
-              buffer[0]=(byte)b1;  // will be 0-9 or a-f or A-F
+              --this.inputIndex;
+              this.ResizeBuffer(1);
+              this.buffer[0]=(byte)b1;  // will be 0-9 or a-f or A-F
               return '?';
             }
             return c;
           } else if (c <= 0x20 || c >= 0x7f) {
             // Can't occur in the Q-encoding; replace
             return '?';
-          } else if (c=='_') {
+          } else if (c == '_') {
             // Underscore, use space
             return ' ';
           } else {
@@ -931,9 +822,9 @@ import com.upokecenter.cbor.*;
     }
 
     final class PercentEncodingStringTransform implements ITransform {
-      String input;
+      internal String input;
       int inputIndex;
-      byte[] buffer;
+      internal byte[] buffer;
       int bufferIndex;
       int bufferCount;
 
@@ -947,15 +838,15 @@ import com.upokecenter.cbor.*;
      * @param size A 32-bit signed integer.
      */
       private void ResizeBuffer(int size) {
-        if (buffer == null) {
-          buffer = new byte[size + 10];
-        } else if (size>buffer.length) {
+        if (this.buffer == null) {
+          this.buffer = new byte[size + 10];
+        } else if (size>this.buffer.length) {
           byte[] newbuffer = new byte[size + 10];
-          System.arraycopy(buffer, 0, newbuffer, 0, buffer.length);
-          buffer = newbuffer;
+          System.arraycopy(this.buffer, 0, newbuffer, 0, this.buffer.length);
+          this.buffer = newbuffer;
         }
-        bufferCount = size;
-        bufferIndex = 0;
+        this.bufferCount = size;
+        this.bufferIndex = 0;
       }
 
     /**
@@ -963,20 +854,20 @@ import com.upokecenter.cbor.*;
      * @return A 32-bit signed integer.
      */
       public int ReadByte() {
-        if (bufferIndex<bufferCount) {
-          int ret = buffer[bufferIndex];
-          ++bufferIndex;
-          if (bufferIndex == bufferCount) {
-            bufferCount = 0;
-            bufferIndex = 0;
+        if (this.bufferIndex<this.bufferCount) {
+          int ret = this.buffer[this.bufferIndex];
+          ++this.bufferIndex;
+          if (this.bufferIndex == this.bufferCount) {
+            this.bufferCount = 0;
+            this.bufferIndex = 0;
           }
-          ret&=0xff;
+          ret &= 0xff;
           return ret;
         }
-        int endIndex = input.length();
+        int endIndex = this.input.length();
         while (true) {
-          int c = (inputIndex<endIndex) ? input.charAt(inputIndex++) : -1;
-          if (c< 0) {
+          int c = (this.inputIndex<endIndex) ? this.input.charAt(this.inputIndex++) : -1;
+          if (c < 0) {
             // End of stream
             return -1;
           } else if (c == 0x0d) {
@@ -985,8 +876,8 @@ import com.upokecenter.cbor.*;
           } else if (c == 0x0a) {
             // Can't occur in parameter value percent-encoding; replace
             return '?';
-          } else if (c=='%') {
-            int b1 = (inputIndex<endIndex) ? input.charAt(inputIndex++) : -1;
+          } else if (c == '%') {
+            int b1 = (this.inputIndex<endIndex) ? this.input.charAt(this.inputIndex++) : -1;
             c = 0;
             if (b1 >= '0' && b1 <= '9') {
               c <<= 4;
@@ -998,10 +889,10 @@ import com.upokecenter.cbor.*;
               c <<= 4;
               c |= b1 + 10 - 'a';
             } else {
-              --inputIndex;
+              --this.inputIndex;
               return '?';
             }
-            int b2 = (inputIndex<endIndex) ? input.charAt(inputIndex++) : -1;
+            int b2 = (this.inputIndex<endIndex) ? this.input.charAt(this.inputIndex++) : -1;
             if (b2 >= '0' && b2 <= '9') {
               c <<= 4;
               c |= b2 - '0';
@@ -1012,13 +903,13 @@ import com.upokecenter.cbor.*;
               c <<= 4;
               c |= b2 + 10 - 'a';
             } else {
-              --inputIndex;
-              ResizeBuffer(1);
-              buffer[0]=(byte)b1;  // will be 0-9 or a-f or A-F
+              --this.inputIndex;
+              this.ResizeBuffer(1);
+              this.buffer[0]=(byte)b1;  // will be 0-9 or a-f or A-F
               return '?';
             }
             return c;
-          } else if ((c<0x20 || c>= 0x7f) && c!='\t') {
+          } else if ((c < 0x20 || c>= 0x7f) && c!='\t') {
             // Can't occur in parameter value percent-encoding; replace
             return '?';
           } else {
@@ -1030,29 +921,29 @@ import com.upokecenter.cbor.*;
     }
 
     final class BoundaryCheckerTransform implements ITransform {
-      StreamWithUnget input;
-      byte[] buffer;
+      internal StreamWithUnget input;
+      internal byte[] buffer;
       int bufferIndex;
       int bufferCount;
-      boolean started;
-      boolean readingHeaders;
-      boolean hasNewBodyPart;
-      ArrayList<String> boundaries;
+      internal boolean started;
+      internal boolean readingHeaders;
+      internal boolean hasNewBodyPart;
+      internal ArrayList<String> boundaries;
 
     /**
      * Not documented yet.
      * @param size A 32-bit signed integer.
      */
       private void ResizeBuffer(int size) {
-        if (buffer == null) {
-          buffer = new byte[size + 10];
-        } else if (size>buffer.length) {
+        if (this.buffer == null) {
+          this.buffer = new byte[size + 10];
+        } else if (size>this.buffer.length) {
           byte[] newbuffer = new byte[size + 10];
-          System.arraycopy(buffer, 0, newbuffer, 0, buffer.length);
-          buffer = newbuffer;
+          System.arraycopy(this.buffer, 0, newbuffer, 0, this.buffer.length);
+          this.buffer = newbuffer;
         }
-        bufferCount = size;
-        bufferIndex = 0;
+        this.bufferCount = size;
+        this.bufferIndex = 0;
       }
 
       public BoundaryCheckerTransform (ITransform stream) {
@@ -1074,86 +965,86 @@ import com.upokecenter.cbor.*;
      * @return A 32-bit signed integer.
      */
       public int ReadByte() {
-        if (bufferIndex<bufferCount) {
-          int ret = buffer[bufferIndex];
-          ++bufferIndex;
-          if (bufferIndex == bufferCount) {
-            bufferCount = 0;
-            bufferIndex = 0;
+        if (this.bufferIndex<this.bufferCount) {
+          int ret = this.buffer[this.bufferIndex];
+          ++this.bufferIndex;
+          if (this.bufferIndex == this.bufferCount) {
+            this.bufferCount = 0;
+            this.bufferIndex = 0;
           }
-          ret&=0xff;
+          ret &= 0xff;
           return ret;
         }
-        if (hasNewBodyPart) {
+        if (this.hasNewBodyPart) {
           return -1;
         }
-        if (readingHeaders) {
-          return input.read();
+        if (this.readingHeaders) {
+          return this.input.read();
         }
-        int c = input.read();
-        if (c< 0) {
-          started = false;
+        int c = this.input.read();
+        if (c < 0) {
+          this.started = false;
           return c;
         }
-        if (c=='-' && started) {
+        if (c=='-' && this.started) {
           // Check for a boundary
-          started = false;
-          c = input.read();
-          if (c=='-') {
+          this.started = false;
+          c = this.input.read();
+          if (c == '-') {
             // Possible boundary candidate
-            return CheckBoundaries(false);
+            return this.CheckBoundaries(false);
           } else {
-            input.Unget();
+            this.input.Unget();
             return '-';
           }
         } else {
-          started = false;
+          this.started = false;
         }
         if (c == 0x0d) {
-          c = input.read();
+          c = this.input.read();
           if (c == 0x0a) {
             // Line break was read
-            c = input.read();
-            if (c==-1) {
-              ResizeBuffer(1);
-              buffer[0]=0x0a;
+            c = this.input.read();
+            if (c == -1) {
+              this.ResizeBuffer(1);
+              this.buffer[0]=0x0a;
               return 0x0d;
             } else if (c == 0x0d) {
               // Unget the CR, in case the next line is a boundary line
-              input.Unget();
-              ResizeBuffer(1);
-              buffer[0]=0x0a;
+              this.input.Unget();
+              this.ResizeBuffer(1);
+              this.buffer[0]=0x0a;
               return 0x0d;
-            } else if (c!='-') {
-              ResizeBuffer(2);
-              buffer[0]=0x0a;
-              buffer[1]=(byte)c;
+            } else if (c != '-') {
+              this.ResizeBuffer(2);
+              this.buffer[0]=0x0a;
+              this.buffer[1]=(byte)c;
               return 0x0d;
             }
-            c = input.read();
-            if (c==-1) {
-              ResizeBuffer(2);
-              buffer[0]=0x0a;
-              buffer[1]=(byte)'-';
+            c = this.input.read();
+            if (c == -1) {
+              this.ResizeBuffer(2);
+              this.buffer[0]=0x0a;
+              this.buffer[1]=(byte)'-';
               return 0x0d;
             } else if (c == 0x0d) {
               // Unget the CR, in case the next line is a boundary line
-              input.Unget();
-              ResizeBuffer(2);
-              buffer[0]=0x0a;
-              buffer[1]=(byte)'-';
+              this.input.Unget();
+              this.ResizeBuffer(2);
+              this.buffer[0]=0x0a;
+              this.buffer[1]=(byte)'-';
               return 0x0d;
-            } else if (c!='-') {
-              ResizeBuffer(3);
-              buffer[0]=0x0a;
-              buffer[1]=(byte)'-';
-              buffer[2]=(byte)c;
+            } else if (c != '-') {
+              this.ResizeBuffer(3);
+              this.buffer[0]=0x0a;
+              this.buffer[1]=(byte)'-';
+              this.buffer[2]=(byte)c;
               return 0x0d;
             }
             // Possible boundary candidate
-            return CheckBoundaries(true);
+            return this.CheckBoundaries(true);
           } else {
-            input.Unget();
+            this.input.Unget();
             return 0x0d;
           }
         } else {
@@ -1163,7 +1054,7 @@ import com.upokecenter.cbor.*;
 
       private int CheckBoundaries(boolean includeCrLf) {
         // Reached here when the "--" of a possible
-        // boundary delimiter is read.  We need to
+        // boundary delimiter is read. We need to
         // check boundaries here in order to find out
         // whether to emit the CRLF before the "--".
 
@@ -1172,18 +1063,18 @@ import com.upokecenter.cbor.*;
           done = true;
           int bufferStart = 0;
           if (includeCrLf) {
-            ResizeBuffer(3);
+            this.ResizeBuffer(3);
             bufferStart = 3;
             // store LF, '-', and '-' in the buffer in case
             // the boundary check fails, in which case
             // this method will return CR
-            buffer[0]=0x0a;
-            buffer[1]=(byte)'-';
-            buffer[2]=(byte)'-';
+            this.buffer[0]=0x0a;
+            this.buffer[1]=(byte)'-';
+            this.buffer[2]=(byte)'-';
           } else {
             bufferStart = 1;
-            ResizeBuffer(1);
-            buffer[0]=(byte)'-';
+            this.ResizeBuffer(1);
+            this.buffer[0]=(byte)'-';
           }
           // Check up to 72 bytes (the maximum size
           // of a boundary plus 2 bytes for the closing
@@ -1191,30 +1082,30 @@ import com.upokecenter.cbor.*;
           int c;
           int bytesRead = 0;
           for (int i = 0; i < 72; ++i) {
-            c = input.read();
-            if (c<0 || c >= 0x80 || c == 0x0d) {
-              input.Unget();
+            c = this.input.read();
+            if (c < 0 || c >= 0x80 || c == 0x0d) {
+              this.input.Unget();
               break;
             }
             ++bytesRead;
-            //Console.Write("" + ((char)c));
-            ResizeBuffer(bytesRead + bufferStart);
-            buffer[bytesRead + bufferStart-1]=(byte)c;
+            // Console.Write("" + ((char)c));
+            this.ResizeBuffer(bytesRead + bufferStart);
+            this.buffer[bytesRead + bufferStart-1]=(byte)c;
           }
-          //System.out.println("--" + (bytesRead));
+          // System.out.println("--" + (bytesRead));
           // NOTE: All boundary strings are assumed to
           // have only ASCII characters (with values
-          // less than 128).  Check boundaries from
+          // less than 128). Check boundaries from
           // top to bottom in the stack.
           String matchingBoundary = null;
-          int matchingIndex=-1;
-          for (int i = boundaries.size()-1;i >= 0; --i) {
-            String boundary = boundaries.get(i);
-            //System.out.println("Check boundary " + (boundary));
+          int matchingIndex = -1;
+          for (int i = this.boundaries.size()-1;i >= 0; --i) {
+            String boundary = this.boundaries.get(i);
+            // System.out.println("Check boundary " + (boundary));
             if (!((boundary)==null || (boundary).length()==0) && boundary.length() <= bytesRead) {
               boolean match = true;
-              for (int j = 0;j<boundary.length(); ++j) {
-                if ((boundary.charAt(j)&0xff) != (int)((buffer[j + bufferStart]) & 0xff)) {
+              for (int j = 0;j < boundary.length(); ++j) {
+                if ((boundary.charAt(j)&0xff) != (int)(this.buffer[j + bufferStart] & 0xff)) {
                   match = false;
                 }
               }
@@ -1229,61 +1120,61 @@ import com.upokecenter.cbor.*;
             boolean closingDelim = false;
             // Pop the stack until the matching body part
             // is on top
-            while (boundaries.size()>matchingIndex + 1) {
-              boundaries.remove(matchingIndex + 1);
+            while (this.boundaries.size()>matchingIndex + 1) {
+              this.boundaries.remove(matchingIndex + 1);
             }
             // Boundary line found
-            if (matchingBoundary.length() + 1<bytesRead) {
-              if (buffer[matchingBoundary.length()+bufferStart]=='-' &&
-                  buffer[matchingBoundary.length()+1+bufferStart]=='-') {
+            if (matchingBoundary.length() + 1 < bytesRead) {
+              if (this.buffer[matchingBoundary.length()+bufferStart]=='-' &&
+                  this.buffer[matchingBoundary.length()+1+bufferStart]=='-') {
                 closingDelim = true;
               }
             }
             // Clear the buffer, the boundary line
             // isn't part of any body data
-            bufferCount = 0;
-            bufferIndex = 0;
+            this.bufferCount = 0;
+            this.bufferIndex = 0;
             if (closingDelim) {
               // Pop this entry, it's the top of the stack
-              boundaries.remove(boundaries.size()-1);
-              if (boundaries.size() == 0) {
+              this.boundaries.remove(this.boundaries.size()-1);
+              if (this.boundaries.size() == 0) {
                 // There's nothing else significant
                 // after this boundary,
                 // so return now
                 return -1;
               }
-              // Read to end of line.  Since this is the last body
+              // Read to end of line. Since this is the last body
               // part, the rest of the data before the next boundary
               // is insignificant
               while (true) {
-                c = input.read();
-                if (c==-1) {
+                c = this.input.read();
+                if (c == -1) {
                   // The body higher up didn't end yet
                   throw new InvalidDataException("Premature end of message");
                 } else if (c == 0x0d) {
-                  c = input.read();
-                  if (c==-1) {
+                  c = this.input.read();
+                  if (c == -1) {
                     // The body higher up didn't end yet
                     throw new InvalidDataException("Premature end of message");
                   } else if (c == 0x0a) {
                     // Start of new body part
-                    c = input.read();
-                    if (c==-1) {
+                    c = this.input.read();
+                    if (c == -1) {
                       throw new InvalidDataException("Premature end of message");
                     } else if (c == 0x0d) {
                       // Unget the CR, in case the next line is a boundary line
-                      input.Unget();
-                    } else if (c!='-') {
+                      this.input.Unget();
+                    } else if (c != '-') {
                       // Not a boundary delimiter
                       continue;
                     }
-                    c = input.read();
-                    if (c==-1) {
+                    c = this.input.read();
+                    if (c == -1) {
                       throw new InvalidDataException("Premature end of message");
                     } else if (c == 0x0d) {
                       // Unget the CR, in case the next line is a boundary line
-                      input.Unget();
-                    } else if (c!='-') {
+                      this.input.Unget();
+                    } else if (c != '-') {
                       // Not a boundary delimiter
                       continue;
                     }
@@ -1291,7 +1182,7 @@ import com.upokecenter.cbor.*;
                     done = false;
                     break;
                   } else {
-                    input.Unget();
+                    this.input.Unget();
                   }
                 }
               }
@@ -1304,19 +1195,19 @@ import com.upokecenter.cbor.*;
               // next line will start the headers of the
               // next body part).
               while (true) {
-                c = input.read();
-                if (c==-1) {
+                c = this.input.read();
+                if (c == -1) {
                   throw new InvalidDataException("Premature end of message");
                 } else if (c == 0x0d) {
-                  c = input.read();
-                  if (c==-1) {
+                  c = this.input.read();
+                  if (c == -1) {
                     throw new InvalidDataException("Premature end of message");
                   } else if (c == 0x0a) {
                     // Start of new body part
-                    hasNewBodyPart = true;
+                    this.hasNewBodyPart = true;
                     return -1;
                   } else {
-                    input.Unget();
+                    this.input.Unget();
                   }
                 }
               }
@@ -1326,13 +1217,13 @@ import com.upokecenter.cbor.*;
           // ReadByte method will then return LF,
           // the hyphens, and the other bytes
           // already read)
-          return (includeCrLf) ? 0x0d : '-';
+          return includeCrLf ? 0x0d : '-';
         }
         // Not a boundary, return CR (the
         // ReadByte method will then return LF,
         // the hyphens, and the other bytes
         // already read)
-        return (includeCrLf) ? 0x0d : '-';
+        return includeCrLf ? 0x0d : '-';
       }
 
     /**
@@ -1340,7 +1231,7 @@ import com.upokecenter.cbor.*;
      * @return A 32-bit signed integer.
      */
       public int BoundaryCount() {
-        return boundaries.size();
+        return this.boundaries.size();
       }
 
     /**
@@ -1366,15 +1257,15 @@ import com.upokecenter.cbor.*;
      * @return A value not documented yet.
      */
       public boolean getHasNewBodyPart() {
-          return hasNewBodyPart;
+          return this.hasNewBodyPart;
         }
     }
 
     final class QuotedPrintableTransform implements ITransform {
-      StreamWithUnget input;
+      internal StreamWithUnget input;
       int lineCharCount;
-      boolean lenientLineBreaks;
-      byte[] buffer;
+      internal boolean lenientLineBreaks;
+      internal byte[] buffer;
       int bufferIndex;
       int bufferCount;
 
@@ -1413,15 +1304,15 @@ import com.upokecenter.cbor.*;
      * @param size A 32-bit signed integer.
      */
       private void ResizeBuffer(int size) {
-        if (buffer == null) {
-          buffer = new byte[size + 10];
-        } else if (size>buffer.length) {
+        if (this.buffer == null) {
+          this.buffer = new byte[size + 10];
+        } else if (size>this.buffer.length) {
           byte[] newbuffer = new byte[size + 10];
-          System.arraycopy(buffer, 0, newbuffer, 0, buffer.length);
-          buffer = newbuffer;
+          System.arraycopy(this.buffer, 0, newbuffer, 0, this.buffer.length);
+          this.buffer = newbuffer;
         }
-        bufferCount = size;
-        bufferIndex = 0;
+        this.bufferCount = size;
+        this.bufferIndex = 0;
       }
 
     /**
@@ -1429,74 +1320,74 @@ import com.upokecenter.cbor.*;
      * @return A 32-bit signed integer.
      */
       public int ReadByte() {
-        if (bufferIndex<bufferCount) {
-          int ret = buffer[bufferIndex];
-          ++bufferIndex;
-          if (bufferIndex == bufferCount) {
-            bufferCount = 0;
-            bufferIndex = 0;
+        if (this.bufferIndex<this.bufferCount) {
+          int ret = this.buffer[this.bufferIndex];
+          ++this.bufferIndex;
+          if (this.bufferIndex == this.bufferCount) {
+            this.bufferCount = 0;
+            this.bufferIndex = 0;
           }
-          ret&=0xff;
+          ret &= 0xff;
           return ret;
         }
         while (true) {
-          int c = input.read();
+          int c = this.input.read();
           if (c < 0) {
             // End of stream
             return -1;
           } else if (c == 0x0d) {
-            c = input.read();
+            c = this.input.read();
             if (c == 0x0a) {
               // CRLF
-              ResizeBuffer(1);
-              buffer[0]=0x0a;
-              lineCharCount = 0;
+              this.ResizeBuffer(1);
+              this.buffer[0]=0x0a;
+              this.lineCharCount = 0;
               return 0x0d;
             } else {
-              input.Unget();
-              if (!lenientLineBreaks) {
+              this.input.Unget();
+              if (!this.lenientLineBreaks) {
                 throw new InvalidDataException("Expected LF after CR");
               }
               // CR, so write CRLF
-              ResizeBuffer(1);
-              buffer[0]=0x0a;
-              lineCharCount = 0;
+              this.ResizeBuffer(1);
+              this.buffer[0]=0x0a;
+              this.lineCharCount = 0;
               return 0x0d;
             }
           } else if (c == 0x0a) {
-            if (!lenientLineBreaks) {
+            if (!this.lenientLineBreaks) {
               throw new InvalidDataException("Expected LF after CR");
             }
             // LF, so write CRLF
-            ResizeBuffer(1);
-            buffer[0]=0x0a;
-            lineCharCount = 0;
+            this.ResizeBuffer(1);
+            this.buffer[0]=0x0a;
+            this.lineCharCount = 0;
             return 0x0d;
-          } else if (c=='=') {
-            ++lineCharCount;
-            if (maxLineSize >= 0 && lineCharCount>maxLineSize) {
+          } else if (c == '=') {
+            ++this.lineCharCount;
+            if (this.maxLineSize >= 0 && this.lineCharCount>this.maxLineSize) {
               throw new InvalidDataException("Encoded quoted-printable line too long");
             }
-            int b1 = input.read();
-            int b2 = input.read();
+            int b1 = this.input.read();
+            int b2 = this.input.read();
             if (b2 >= 0 && b1 >= 0) {
-              if (b1=='\r' && b2=='\n') {
+              if (b1 == '\r' && b2=='\n') {
                 // Soft line break
-                lineCharCount = 0;
+                this.lineCharCount = 0;
                 continue;
-              } else if (b1=='\r') {
-                if (!lenientLineBreaks) {
+              } else if (b1 == '\r') {
+                if (!this.lenientLineBreaks) {
                   throw new InvalidDataException("Expected LF after CR");
                 }
-                lineCharCount = 0;
-                input.Unget();
+                this.lineCharCount = 0;
+                this.input.Unget();
                 continue;
-              } else if (b1=='\n') {
-                if (!lenientLineBreaks) {
+              } else if (b1 == '\n') {
+                if (!this.lenientLineBreaks) {
                   throw new InvalidDataException("Bare LF not expected");
                 }
-                lineCharCount = 0;
-                input.Unget();
+                this.lineCharCount = 0;
+                this.input.Unget();
                 continue;
               }
               c = 0;
@@ -1524,27 +1415,27 @@ import com.upokecenter.cbor.*;
               } else {
                 throw new InvalidDataException(String.Format("Invalid hex character"));
               }
-              lineCharCount+=2;
-              if (maxLineSize >= 0 && lineCharCount>maxLineSize) {
+              this.lineCharCount+=2;
+              if (this.maxLineSize >= 0 && this.lineCharCount>this.maxLineSize) {
                 throw new InvalidDataException("Encoded quoted-printable line too long");
               }
               return c;
             } else if (b1 >= 0) {
-              if (b1=='\r') {
+              if (b1 == '\r') {
                 // Soft line break
-                if (!lenientLineBreaks) {
+                if (!this.lenientLineBreaks) {
                   throw new InvalidDataException("Expected LF after CR");
                 }
-                lineCharCount = 0;
-                input.Unget();
+                this.lineCharCount = 0;
+                this.input.Unget();
                 continue;
-              } else if (b1=='\n') {
+              } else if (b1 == '\n') {
                 // Soft line break
-                if (!lenientLineBreaks) {
+                if (!this.lenientLineBreaks) {
                   throw new InvalidDataException("Bare LF not expected");
                 }
-                lineCharCount = 0;
-                input.Unget();
+                this.lineCharCount = 0;
+                this.input.Unget();
                 continue;
               } else {
                 throw new InvalidDataException("Invalid data after equal sign");
@@ -1553,87 +1444,88 @@ import com.upokecenter.cbor.*;
               // Equal sign at end; ignore
               return -1;
             }
-          } else if (c!='\t' && (c<0x20 || c>= 0x7f)) {
+          } else if (c != '\t' && (c<0x20 || c>= 0x7f)) {
             throw new InvalidDataException("Invalid character in quoted-printable");
-          } else if (c==' ' || c=='\t') {
-            // Space or tab.  Since the quoted-printable spec
+          } else if (c == ' ' || c=='\t') {
+            // Space or tab. Since the quoted-printable spec
             // requires decoders to delete spaces and tabs before
             // CRLF, we need to create a lookahead buffer for
             // tabs and spaces read to see if they precede CRLF.
             int spaceCount = 1;
-            ++lineCharCount;
-            if (maxLineSize >= 0 && lineCharCount>maxLineSize) {
+            ++this.lineCharCount;
+            if (this.maxLineSize >= 0 && this.lineCharCount>this.maxLineSize) {
               throw new InvalidDataException("Encoded quoted-printable line too long");
             }
             // In most cases, though, there will only be
             // one space or tab
-            int c2 = input.read();
-            if (c2!=' ' && c2!='\t' && c2!='\r' && c2!='\n' && c2>= 0) {
+            int c2 = this.input.read();
+            if (c2 != ' ' && c2!='\t' && c2!='\r' && c2!='\n' && c2>= 0) {
               // Simple: Space before a character other than
               // space, tab, CR, LF, or EOF
-              input.Unget();
+              this.input.Unget();
               return c;
             }
             boolean endsWithLineBreak = false;
             while (true) {
-              if ((c2=='\n' && lenientLineBreaks) || c2 < 0) {
-                input.Unget();
+              if ((c2=='\n' && this.lenientLineBreaks) || c2 < 0) {
+                this.input.Unget();
                 endsWithLineBreak = true;
                 break;
-              } else if (c2=='\r' && lenientLineBreaks) {
-                input.Unget();
+              } else if (c2=='\r' && this.lenientLineBreaks) {
+                this.input.Unget();
                 endsWithLineBreak = true;
                 break;
-              } else if (c2=='\r') {
+              } else if (c2 == '\r') {
                 // CR, may or may not be a line break
-                c2 = input.read();
+                c2 = this.input.read();
                 // Add the CR to the
                 // buffer, it won't be ignored
-                ResizeBuffer(spaceCount);
-                buffer[spaceCount-1]=(byte)'\r';
-                if (c2=='\n') {
+                this.ResizeBuffer(spaceCount);
+                this.buffer[spaceCount-1]=(byte)'\r';
+                if (c2 == '\n') {
                   // LF, so it's a line break
-                  lineCharCount = 0;
-                  ResizeBuffer(spaceCount + 1);
-                  buffer[spaceCount]=(byte)'\n';
+                  this.lineCharCount = 0;
+                  this.ResizeBuffer(spaceCount + 1);
+                  this.buffer[spaceCount]=(byte)'\n';
                   endsWithLineBreak = true;
                   break;
                 } else {
-                  // It's something else {
- input.Unget();
-}
-                  ++lineCharCount;
-                  if (maxLineSize >= 0 && lineCharCount>maxLineSize) {
+                  if (!this.lenientLineBreaks) {
+                    throw new InvalidDataException("Expected LF after CR");
+                  }
+                  this.input.Unget();  // it's something else
+                  ++this.lineCharCount;
+                  if (this.maxLineSize >= 0 && this.lineCharCount>this.maxLineSize) {
                     throw new InvalidDataException("Encoded quoted-printable line too long");
                   }
                   break;
                 }
-              } else if (c2!=' ' && c2!='\t') {
+              } else if (c2 != ' ' && c2!='\t') {
                 // Not a space or tab
-                input.Unget();
+                this.input.Unget();
                 break;
               } else {
                 // An additional space or tab
-                ResizeBuffer(spaceCount);
-                buffer[spaceCount-1]=(byte)c2;
+                this.ResizeBuffer(spaceCount);
+                this.buffer[spaceCount-1]=(byte)c2;
                 ++spaceCount;
-                ++lineCharCount;
-                if (maxLineSize >= 0 && lineCharCount>maxLineSize) {
+                ++this.lineCharCount;
+                if (this.maxLineSize >= 0 && this.lineCharCount>this.maxLineSize) {
                   throw new InvalidDataException("Encoded quoted-printable line too long");
                 }
               }
-              c2 = input.read();
+              c2 = this.input.read();
             }
             // Ignore space/tab runs if the line ends in that run
             if (!endsWithLineBreak) {
               return c;
             } else {
-              bufferCount = 0;
+              this.bufferCount = 0;
               continue;
             }
           } else {
-            ++lineCharCount;
-            if (maxLineSize >= 0 && lineCharCount>maxLineSize) {
+            ++this.lineCharCount;
+            if (this.maxLineSize >= 0 && this.lineCharCount>this.maxLineSize) {
               throw new InvalidDataException("Encoded quoted-printable line too long");
             }
             return c;
@@ -1649,30 +1541,75 @@ import com.upokecenter.cbor.*;
      */
     public String GetHeader(String name) {
       name = ParserUtility.ToLowerCaseAscii(name);
-      if (name.equals("content-type")) {
-        return ContentType.toString();
-      }
-      for (int i = 0;i<headers.size();i+=2) {
-        if (headers.get(i).equals(name)) {
-          return headers.get(i + 1);
+      for (int i = 0;i<this.headers.size();i+=2) {
+        if (this.headers.get(i).equals(name)) {
+          return this.headers.get(i + 1);
         }
       }
       return null;
     }
 
-    private static boolean HasNonAsciiOrCtlOrTooLongWord(String s) {
+    static boolean CanOutputRaw(String s) {
       int len = s.length();
-      int wordLength = 0;
+      int chunkLength = 0;
       for (int i = 0; i < len; ++i) {
         char c = s.charAt(i);
-        if (c >= 0x7f || (c<0x20 && c != 0x09)) {
+        if (c == 0x0d) {
+          if (i + 1 >= len || s.charAt(i + 1) != 0x0a) {
+            // bare CR
+            return false;
+          } else if (i + 2 >= len || (s.charAt(i + 2) != 0x09 && s.charAt(i + 2)!=0x20)) {
+            // CRLF not followed by whitespace
+            return false;
+          }
+          chunkLength = 0;
+          continue;
+        }
+        if (c >= 0x7f || (c < 0x20 && c != 0x09 && c != 0x0d)) {
+          // CTLs (except TAB, SPACE, and CR) and non-ASCII
+          // characters
+          return false;
+        }
+        ++chunkLength;
+        if (chunkLength > 75) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    // Has non-ASCII characters, "=?", CTLs other than tab,
+    // or a word longer than 75 characters
+    static boolean HasTextToEscape(String s) {
+      int len = s.length();
+      int chunkLength = 0;
+      for (int i = 0; i < len; ++i) {
+        char c = s.charAt(i);
+        if (c == '=' && i+1<len && c=='?') {
+          // "=?" (start of an encoded word)
+          return true;
+        }
+        if (c == 0x0d) {
+          if (i + 1 >= len || s.charAt(i + 1) != 0x0a) {
+            // bare CR
+            return true;
+          } else if (i + 2 >= len || (s.charAt(i + 2) != 0x09 && s.charAt(i + 2)!=0x20)) {
+            // CRLF not followed by whitespace
+            return true;
+          }
+          chunkLength = 0;
+          continue;
+        }
+        if (c >= 0x7f || (c < 0x20 && c != 0x09 && c != 0x0d)) {
+          // CTLs (except TAB, SPACE, and CR) and non-ASCII
+          // characters
           return true;
         }
         if (c == 0x20 || c == 0x09) {
-          wordLength = 0;
+          chunkLength = 0;
         } else {
-          ++wordLength;
-          if (wordLength>75) {
+          ++chunkLength;
+          if (chunkLength > 75) {
             return true;
           }
         }
@@ -1680,8 +1617,189 @@ import com.upokecenter.cbor.*;
       return false;
     }
 
+    private static int CharLength(String str, int index) {
+      if (str == null || index < 0 || index >= str.length()) {
+        return 1;
+      }
+      int c = str.charAt(index);
+      if (c >= 0xd800 && c <= 0xdbff && index + 1 < str.length() &&
+          str.charAt(index + 1) >= 0xdc00 && str.charAt(index + 1) <= 0xdfff) {
+        return 2;
+      }
+      return 1;
+    }
+
+    public static String ConvertCommentsToEncodedWords(String str) {
+      return ConvertCommentsToEncodedWords(str, 0, str.length());
+    }
+
+    public static String ConvertCommentsToEncodedWords(String str, int index, int length) {
+      // NOTE: Assumes that the comment is syntactically valid
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
+      if (index < 0) {
+        throw new IllegalArgumentException("index (" + Long.toString((long)index) + ") is less than " + "0");
+      }
+      if (index > str.length()) {
+        throw new IllegalArgumentException("index (" + Long.toString((long)index) + ") is more than " + Long.toString((long)(str.length())));
+      }
+      if (length < 0) {
+        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is less than " + "0");
+      }
+      if (length > str.length()) {
+        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is more than " + Long.toString((long)(str.length())));
+      }
+      if (str.length() - index < length) {
+        throw new IllegalArgumentException("str's length minus " + index + " (" + Long.toString((long)(str.length()-index)) + ") is less than " + Long.toString((long)length));
+      }
+      int endIndex = index + length;
+      if (length < 2 || str.charAt(index)!='(' || str.charAt(endIndex-1)!=')') {
+        return str.substring(index,(index)+(length));
+      }
+      Message.EncodedWordEncoder encoder;
+      int nextComment = str.IndexOf('(',index+1);
+      int nextBackslash = str.IndexOf('\\',index+1);
+      // don't count comments or backslashes beyond
+      // the desired portion
+      if (nextComment >= endIndex) {
+        nextComment = -1;
+      }
+      if (nextBackslash >= endIndex) {
+        nextBackslash = -1;
+      }
+      boolean haveEscape = nextBackslash >= 0;
+      if (!haveEscape) {
+        // Check for possible folding whitespace
+        nextBackslash = str.IndexOf('\n',index+1);
+        if (nextBackslash >= endIndex) {
+          nextBackslash = -1;
+        }
+        haveEscape = nextBackslash >= 0;
+      }
+      if (nextComment < 0 && nextBackslash< 0) {
+        // No escapes or nested comments, so it's relatively easy
+        if (length == 2) {
+          return "()";
+        }
+        encoder = new Message.EncodedWordEncoder("");
+        encoder.AddPrefix("(");
+        encoder.AddString(str, index + 1, length - 2);
+        encoder.FinalizeEncoding(")");
+        return encoder.toString();
+      }
+      if (nextBackslash < 0) {
+        // No escapes; just look for '(' and ')'
+        encoder = new Message.EncodedWordEncoder("");
+        while (true) {
+          int parenStart = index;
+          // Get the next run of parentheses
+          while (index < endIndex) {
+            if (str.charAt(index) == '(' || str.charAt(index)==')') {
+              ++index;
+            } else {
+              break;
+            }
+          }
+          // Get the next run of non-parentheses
+          int parenEnd = index;
+          while (index < endIndex) {
+            if (str.charAt(index) == '(' || str.charAt(index)==')') {
+              break;
+            } else {
+              ++index;
+            }
+          }
+          if (parenEnd == index) {
+            encoder.FinalizeEncoding(str.substring(parenStart,(parenStart)+(parenEnd - parenStart)));
+            break;
+          } else {
+            encoder.AddPrefix(str.substring(parenStart,(parenStart)+(parenEnd - parenStart)));
+            encoder.AddString(str, parenEnd, index - parenEnd);
+          }
+        }
+        return encoder.toString();
+      }
+      StringBuilder builder = new StringBuilder();
+      // escapes, but no nested comments
+      if (nextComment < 0) {
+        ++index;  // skip the first parenthesis
+        while (index < endIndex) {
+          if (str.charAt(index) == ')') {
+            // End of the comment
+            break;
+          } else if (str.charAt(index) == '\r' && index+2<endIndex &&
+                     str.charAt(index + 1)=='\n' && str.charAt(index+2)==0x20 || str.charAt(index+2)==0x09) {
+            // Folding whitespace
+            builder.append(str.charAt(index + 2));
+            index += 3;
+          } else if (str.charAt(index) == '\\' && index+1<endIndex) {
+            // Quoted pair
+            int charLen = CharLength(str, index + 1);
+            builder.append(str.substring(index + 1,(index + 1)+(charLen)));
+            index += 1 + charLen;
+          } else {
+            // Other comment text
+            builder.append(str.charAt(index));
+            ++index;
+          }
+        }
+        if (builder.length() == 0) {
+          return "()";
+        }
+        encoder = new Message.EncodedWordEncoder("");
+        encoder.AddPrefix("(");
+        encoder.AddString(builder.toString());
+        encoder.FinalizeEncoding(")");
+        return encoder.toString();
+      }
+      // escapes and nested comments
+      encoder = new Message.EncodedWordEncoder("");
+      while (true) {
+        int parenStart = index;
+        // Get the next run of parentheses
+        while (index < endIndex) {
+          if (str.charAt(index) == '(' || str.charAt(index)==')') {
+            ++index;
+          } else {
+            break;
+          }
+        }
+        // Get the next run of non-parentheses
+        int parenEnd = index;
+        builder.setLength(0);
+        while (index < endIndex) {
+          if (str.charAt(index) == '(' || str.charAt(index)==')') {
+            break;
+          } else if (str.charAt(index) == '\r' && index+2<endIndex &&
+                     str.charAt(index + 1)=='\n' && str.charAt(index+2)==0x20 || str.charAt(index+2)==0x09) {
+            // Folding whitespace
+            builder.append(str.charAt(index + 2));
+            index += 3;
+          } else if (str.charAt(index) == '\\' && index+1<endIndex) {
+            // Quoted pair
+            int charLen = CharLength(str, index + 1);
+            builder.append(str.substring(index + 1,(index + 1)+(charLen)));
+            index += 1 + charLen;
+          } else {
+            // Other comment text
+            builder.append(str.charAt(index));
+            ++index;
+          }
+        }
+        if (builder.length() == 0) {
+          encoder.FinalizeEncoding(str.substring(parenStart,(parenStart)+(parenEnd - parenStart)));
+          break;
+        } else {
+          encoder.AddPrefix(str.substring(parenStart,(parenStart)+(parenEnd - parenStart)));
+          encoder.AddString(builder.toString());
+        }
+      }
+      return encoder.toString();
+    }
+
     private int TransferEncodingToUse() {
-      String topLevel = contentType.getTopLevelType();
+      String topLevel = this.contentType.getTopLevelType();
       if (topLevel.equals("message") || topLevel.equals("multipart")) {
         return EncodingSevenBit;
       }
@@ -1689,38 +1807,38 @@ import com.upokecenter.cbor.*;
         int lengthCheck = Math.min(this.body.length, 4096);
         int highBytes = 0;
         int lineLength = 0;
-        // TODO: Check line lengths
+        // TODO: Don't use sevenbit if text contains "=_"
         boolean allTextBytes = true;
         for (int i = 0; i < lengthCheck; ++i) {
-          if ((this.body[i]&0x80) != 0) {
-            highBytes+=1;
+          if ((this.body[i] & 0x80) != 0) {
+            ++highBytes;
             allTextBytes = false;
-          } else if (this.body[i]==0) {
+          } else if (this.body[i] == 0) {
             allTextBytes = false;
-          } else if (this.body[i]==(byte)'\r') {
-            if (i+1>= this.body.length || this.body[i+1]!=(byte)'\n') {
+          } else if (this.body[i] == (byte)'\r') {
+            if (i + 1>= this.body.length || this.body[i+1]!=(byte)'\n') {
               // bare CR
               allTextBytes = false;
-            } else if (i>0 && (this.body[i-1]==(byte)' ' || this.body[i-1]==(byte)'\t')) {
+            } else if (i > 0 && (this.body[i-1]==(byte)' ' || this.body[i-1]==(byte)'\t')) {
               // Space followed immediately by CRLF
               allTextBytes = false;
             } else {
-              i+=1;
+              ++i;
               lineLength = 0;
               continue;
             }
-          } else if (this.body[i]==(byte)'\n') {
+          } else if (this.body[i] == (byte)'\n') {
             // bare LF
             allTextBytes = false;
           }
           ++lineLength;
-          if (lineLength>76) {
+          if (lineLength > 76) {
             allTextBytes = false;
           }
         }
         if (lengthCheck == this.body.length && allTextBytes) {
           return EncodingSevenBit;
-        } if (highBytes>(lengthCheck/3)) {
+        } if (highBytes > (lengthCheck/3)) {
           return EncodingBase64;
         } else {
           return EncodingQuotedPrintable;
@@ -1730,70 +1848,119 @@ import com.upokecenter.cbor.*;
     }
 
     final class EncodedWordEncoder {
-      StringBuilder currentWord;
-      StringBuilder fullString;
-      int lineLength;
+      internal StringBuilder currentWord;
+      internal StringBuilder fullString;
+      int spaceCount;
 
-      private static String hex="0123456789ABCDEF";
+      private static String hex = "0123456789ABCDEF";
 
       public EncodedWordEncoder (String c) {
-        currentWord = new StringBuilder();
-        fullString = new StringBuilder();
-        fullString.append(c);
-        lineLength = c.length();
+        this.currentWord = new StringBuilder();
+        this.fullString = new StringBuilder();
+        this.fullString.append(c);
+        this.spaceCount = (c.length()>0) ? 1 : 0;
       }
 
       private void AppendChar(char ch) {
-        PrepareToAppend(1);
-        currentWord.append(ch);
+        this.PrepareToAppend(1);
+        this.currentWord.append(ch);
       }
 
       private void PrepareToAppend(int numChars) {
-        // 1 for space and 2 for the ending "?="
-        if (lineLength + 1 + currentWord.length() + numChars + 2>76) {
-          // Too big to fit the current line,
-          // create a new line
-          fullString.append("\r\n");
-          lineLength = 0;
+        // 2 for the ending "?="
+        if (this.currentWord.length() + numChars + 2>75) {
+          this.spaceCount = 1;
         }
-        if (lineLength + 1 + currentWord.length() + numChars + 2>76) {
+        if (this.currentWord.length() + numChars + 2>75) {
           // Encoded word would be too big,
           // so output that word
-          fullString.append(' ');
-          fullString.append(currentWord);
-          fullString.append("?=");
-          lineLength+=3 + currentWord.length();
-          currentWord.Clear();
-          currentWord.append("=?utf-8?q?");
+          if (this.spaceCount>0) {
+            this.fullString.append(' ');
+          }
+          this.fullString.append(this.currentWord);
+          this.fullString.append("?=");
+          this.currentWord.Clear();
+          this.currentWord.append("=?utf-8?q?");
+          this.spaceCount = 1;
         }
       }
 
     /**
      * Not documented yet.
+     * @param suffix A string object.
+     * @return An EncodedWordEncoder object.
      */
-      public void FinalizeEncoding() {
-        if (currentWord.length()>0) {
-          // 1 for space
-          if (lineLength + 1 + currentWord.length() + 2>76) {
+      public EncodedWordEncoder FinalizeEncoding(String suffix) {
+        if (this.currentWord.length()>0) {
+          if (this.currentWord.length() + 2 + suffix.length()>75) {
             // Too big to fit the current line,
             // create a new line
-            fullString.append("\r\n");
-            lineLength = 0;
+            this.spaceCount = 1;
           }
-          fullString.append(' ');
-          fullString.append(currentWord);
-          fullString.append("?=");
-          lineLength+=3 + currentWord.length();
-          currentWord.Clear();
+          if (this.spaceCount>0) {
+            this.fullString.append(' ');
+          }
+          this.fullString.append(this.currentWord);
+          this.fullString.append("?=");
+          if (suffix.length() > 0) {
+            this.fullString.append(suffix);
+          }
+          this.spaceCount = 1;
+          this.currentWord.Clear();
         }
+        return this;
+      }
+
+    /**
+     * Not documented yet.
+     * @return An EncodedWordEncoder object.
+     */
+      public EncodedWordEncoder FinalizeEncoding() {
+        return this.FinalizeEncoding("");
       }
 
     /**
      * Not documented yet.
      * @param str A string object.
+     * @return An EncodedWordEncoder object.
      */
-      public void AddString(String str) {
-        for (int j = 0;j<str.length(); ++j) {
+      public EncodedWordEncoder AddPrefix(String str) {
+        if (!((str)==null || (str).length()==0)) {
+          this.FinalizeEncoding();
+          this.currentWord.append(str);
+          this.currentWord.append("=?utf-8?q?");
+          this.spaceCount = 0;
+        }
+        return this;
+      }
+
+    /**
+     * Not documented yet.
+     * @param str A string object.
+     * @param index A 32-bit signed integer.
+     * @param length A 32-bit signed integer. (2).
+     * @return An EncodedWordEncoder object.
+     */
+      public EncodedWordEncoder AddString(String str, int index, int length) {
+        if (str == null) {
+          throw new NullPointerException("str");
+        }
+        if (index < 0) {
+          throw new IllegalArgumentException("index (" + Long.toString((long)index) + ") is less than " + "0");
+        }
+        if (index > str.length()) {
+          throw new IllegalArgumentException("index (" + Long.toString((long)index) + ") is more than " + Long.toString((long)(str.length())));
+        }
+        if (length < 0) {
+          throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is less than " + "0");
+        }
+        if (length > str.length()) {
+          throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is more than " + Long.toString((long)(str.length())));
+        }
+        if (str.length() - index < length) {
+          throw new IllegalArgumentException("str's length minus " + index + " (" + Long.toString((long)(str.length()-index)) + ") is less than " + Long.toString((long)length));
+        }
+        for (int j = index;j < index + length; ++j) {
           int c = str.charAt(j);
           if (c >= 0xd800 && c <= 0xdbff && j + 1 < str.length() &&
               str.charAt(j + 1) >= 0xdc00 && str.charAt(j + 1) <= 0xdfff) {
@@ -1804,8 +1971,18 @@ import com.upokecenter.cbor.*;
             // unpaired surrogate
             c = 0xfffd;
           }
-          AddChar(c);
+          this.AddChar(c);
         }
+        return this;
+      }
+
+    /**
+     * Not documented yet.
+     * @param str A string object.
+     * @return An EncodedWordEncoder object.
+     */
+      public EncodedWordEncoder AddString(String str) {
+        return this.AddString(str, 0, str.length());
       }
 
     /**
@@ -1813,61 +1990,62 @@ import com.upokecenter.cbor.*;
      * @param ch A 32-bit signed integer.
      */
       public void AddChar(int ch) {
-        if (currentWord.length() == 0) {
-          currentWord.append("=?utf-8?q?");
+        if (this.currentWord.length() == 0) {
+          this.currentWord.append("=?utf-8?q?");
+          this.spaceCount = 1;
         }
         if (ch == 0x20) {
-          AppendChar('_');
-        } else if (ch<0x80 && ch>0x20 && ch!=(char)'"' && ch!=(char)',' &&
-                   "?()<>[]:;@\\.=_".indexOf((char)ch)< 0) {
-          AppendChar((char)ch);
-        } else if (ch<0x80) {
-          PrepareToAppend(3);
-          currentWord.append('=');
-          currentWord.append(hex.charAt(ch >> 4));
-          currentWord.append(hex.charAt(ch & 15));
-        } else if (ch<0x800) {
-          int w= (byte)(0xc0 | ((ch >> 6) & 0x1f));
+          this.AppendChar('_');
+        } else if (ch < 0x80 && ch>0x20 && ch!=(char)'"' && ch!=(char)',' &&
+                   "?()<>[]:;@\\.=_".indexOf((char)ch) < 0) {
+          this.AppendChar((char)ch);
+        } else if (ch < 0x80) {
+          this.PrepareToAppend(3);
+          this.currentWord.append('=');
+          this.currentWord.append(hex.charAt(ch >> 4));
+          this.currentWord.append(hex.charAt(ch & 15));
+        } else if (ch < 0x800) {
+          int w = (byte)(0xc0 | ((ch >> 6) & 0x1f));
           int x = (byte)(0x80 | (ch & 0x3f));
-          PrepareToAppend(6);
-          currentWord.append('=');
-          currentWord.append(hex.charAt(w >> 4));
-          currentWord.append(hex.charAt(w & 15));
-          currentWord.append('=');
-          currentWord.append(hex.charAt(x >> 4));
-          currentWord.append(hex.charAt(x & 15));
-        } else if (ch<0x10000) {
-          PrepareToAppend(9);
+          this.PrepareToAppend(6);
+          this.currentWord.append('=');
+          this.currentWord.append(hex.charAt(w >> 4));
+          this.currentWord.append(hex.charAt(w & 15));
+          this.currentWord.append('=');
+          this.currentWord.append(hex.charAt(x >> 4));
+          this.currentWord.append(hex.charAt(x & 15));
+        } else if (ch < 0x10000) {
+          this.PrepareToAppend(9);
           int w = (byte)(0xe0 | ((ch >> 12) & 0x0f));
           int x = (byte)(0x80 | ((ch >> 6) & 0x3f));
           int y = (byte)(0x80 | (ch & 0x3f));
-          currentWord.append('=');
-          currentWord.append(hex.charAt(w >> 4));
-          currentWord.append(hex.charAt(w & 15));
-          currentWord.append('=');
-          currentWord.append(hex.charAt(x >> 4));
-          currentWord.append(hex.charAt(x & 15));
-          currentWord.append('=');
-          currentWord.append(hex.charAt(y >> 4));
-          currentWord.append(hex.charAt(y & 15));
+          this.currentWord.append('=');
+          this.currentWord.append(hex.charAt(w >> 4));
+          this.currentWord.append(hex.charAt(w & 15));
+          this.currentWord.append('=');
+          this.currentWord.append(hex.charAt(x >> 4));
+          this.currentWord.append(hex.charAt(x & 15));
+          this.currentWord.append('=');
+          this.currentWord.append(hex.charAt(y >> 4));
+          this.currentWord.append(hex.charAt(y & 15));
         } else {
-          PrepareToAppend(12);
+          this.PrepareToAppend(12);
           int w = (byte)(0xf0 | ((ch >> 18) & 0x07));
           int x = (byte)(0x80 | ((ch >> 12) & 0x3f));
           int y = (byte)(0x80 | ((ch >> 6) & 0x3f));
           int z = (byte)(0x80 | (ch & 0x3f));
-          currentWord.append('=');
-          currentWord.append(hex.charAt(w >> 4));
-          currentWord.append(hex.charAt(w & 15));
-          currentWord.append('=');
-          currentWord.append(hex.charAt(x >> 4));
-          currentWord.append(hex.charAt(x & 15));
-          currentWord.append('=');
-          currentWord.append(hex.charAt(y >> 4));
-          currentWord.append(hex.charAt(y & 15));
-          currentWord.append('=');
-          currentWord.append(hex.charAt(z >> 4));
-          currentWord.append(hex.charAt(z & 15));
+          this.currentWord.append('=');
+          this.currentWord.append(hex.charAt(w >> 4));
+          this.currentWord.append(hex.charAt(w & 15));
+          this.currentWord.append('=');
+          this.currentWord.append(hex.charAt(x >> 4));
+          this.currentWord.append(hex.charAt(x & 15));
+          this.currentWord.append('=');
+          this.currentWord.append(hex.charAt(y >> 4));
+          this.currentWord.append(hex.charAt(y & 15));
+          this.currentWord.append('=');
+          this.currentWord.append(hex.charAt(z >> 4));
+          this.currentWord.append(hex.charAt(z & 15));
         }
       }
 
@@ -1876,52 +2054,52 @@ import com.upokecenter.cbor.*;
      * @return A string representation of this object.
      */
       @Override public String toString() {
-        return fullString.toString();
+        return this.fullString.toString();
       }
     }
 
     final class WordWrapEncoder {
-      String lastSpaces;
-      StringBuilder fullString;
+      internal String lastSpaces;
+      internal StringBuilder fullString;
       int lineLength;
 
       private static final int MaxLineLength = 76;
 
       public WordWrapEncoder (String c) {
-        fullString = new StringBuilder();
-        fullString.append(c);
-        if (fullString.length() >= MaxLineLength) {
-          fullString.append("\r\n");
-          lastSpaces=" ";
-          lineLength = 0;
+        this.fullString = new StringBuilder();
+        this.fullString.append(c);
+        if (this.fullString.length() >= MaxLineLength) {
+          this.fullString.append("\r\n");
+          this.lastSpaces=" ";
+          this.lineLength = 0;
         } else {
-          lastSpaces=" ";
-          lineLength = fullString.length();
+          this.lastSpaces=" ";
+          this.lineLength = this.fullString.length();
         }
       }
 
       private void AppendSpaces(String str) {
-        if (lineLength + lastSpaces.length() + str.length()>MaxLineLength) {
+        if (this.lineLength + this.lastSpaces.length() + str.length()>MaxLineLength) {
           // Too big to fit the current line
-          lastSpaces=" ";
+          this.lastSpaces=" ";
         } else {
-          lastSpaces = str;
+          this.lastSpaces = str;
         }
       }
 
       private void AppendWord(String str) {
-        if (lineLength + lastSpaces.length() + str.length()>MaxLineLength) {
+        if (this.lineLength + this.lastSpaces.length() + str.length()>MaxLineLength) {
           // Too big to fit the current line,
           // create a new line
-          fullString.append("\r\n");
-          lastSpaces=" ";
-          lineLength = 0;
+          this.fullString.append("\r\n");
+          this.lastSpaces=" ";
+          this.lineLength = 0;
         }
-        fullString.append(lastSpaces);
-        fullString.append(str);
-        lineLength+=lastSpaces.length();
-        lineLength+=str.length();
-        lastSpaces = "";
+        this.fullString.append(this.lastSpaces);
+        this.fullString.append(str);
+        this.lineLength+=this.lastSpaces.length();
+        this.lineLength+=str.length();
+        this.lastSpaces = "";
       }
 
     /**
@@ -1930,27 +2108,27 @@ import com.upokecenter.cbor.*;
      */
       public void AddString(String str) {
         int wordStart = 0;
-        for (int j = 0;j<str.length(); ++j) {
+        for (int j = 0;j < str.length(); ++j) {
           int c = str.charAt(j);
           if (c == 0x20 || c == 0x09) {
             int wordEnd = j;
             if (wordStart != wordEnd) {
-              AppendWord(str.substring(wordStart,(wordStart)+(wordEnd-wordStart)));
+              this.AppendWord(str.substring(wordStart,(wordStart)+(wordEnd-wordStart)));
             }
-            while (j<str.length()) {
-              if (str.charAt(j)==0x20 || str.charAt(j)==0x09) {
- ++j;
-  } else {
- break;
-}
+            while (j < str.length()) {
+              if (str.charAt(j) == 0x20 || str.charAt(j)==0x09) {
+                ++j;
+              } else {
+                break;
+              }
             }
             wordStart = j;
-            AppendSpaces(str.substring(wordEnd,(wordEnd)+(wordStart-wordEnd)));
+            this.AppendSpaces(str.substring(wordEnd,(wordEnd)+(wordStart-wordEnd)));
             --j;
           }
         }
         if (wordStart != str.length()) {
-          AppendWord(str.substring(wordStart,(wordStart)+(str.length()-wordStart)));
+          this.AppendWord(str.substring(wordStart,(wordStart)+(str.length()-wordStart)));
         }
       }
 
@@ -1959,35 +2137,51 @@ import com.upokecenter.cbor.*;
      * @return A string representation of this object.
      */
       @Override public String toString() {
-        return fullString.toString();
+        return this.fullString.toString();
       }
     }
 
     /**
-     * Converts this object to a text string.
-     * @return A string representation of this object.
+     * Not documented yet.
+     * @return A string object.
      */
-    @Override public String toString() {
+    public String GenerateHeaders() {
       StringBuilder sb = new StringBuilder();
-      for (int i = 0;i<headers.size();i+=2) {
-        String name = headers.get(i);
-        String value = headers.get(i + 1);
+      boolean haveMimeVersion = false;
+      for (int i = 0;i<this.headers.size();i+=2) {
+        String name = this.headers.get(i);
+        String value = this.headers.get(i + 1);
+        if (name.equals("mime-version")) {
+          haveMimeVersion = true;
+        }
         IHeaderFieldParser parser = HeaderFields.GetParser(name);
         if (!parser.IsStructured()) {
-          if (HasNonAsciiOrCtlOrTooLongWord(value)) {
-            EncodedWordEncoder encoder=new EncodedWordEncoder(name+":");
-            encoder.AddString(value);
-            encoder.FinalizeEncoding();
+          if (CanOutputRaw(name + ":"+value)) {
+            // TODO: Try to preserve header field name (before the colon)
+            sb.append(name);
+            sb.append(":");
+            sb.append(value);
           } else {
             WordWrapEncoder encoder=new WordWrapEncoder(name+":");
-            encoder.AddString(value);
+            if (HasTextToEscape(value)) {
+              // Convert the entire header field value to encoded
+              // words
+              encoder.AddString(
+                new EncodedWordEncoder("")
+                .AddString(value)
+                .FinalizeEncoding()
+                .toString());
+            } else {
+              encoder.AddString(value);
+            }
+            sb.append(encoder.toString());
+            sb.append("\r\n");
           }
         } else if (name.equals("content-type") ||
-                   name.equals("mime-version") ||
                    name.equals("content-transfer-encoding")) {
           // don't write now
         } else {
-          if (HasNonAsciiOrCtlOrTooLongWord(value) || value.indexOf("=?") >= 0) {
+          if (HasTextToEscape(value)) {
             sb.append(name);
             sb.append(':');
             // TODO: Not perfect yet
@@ -1995,13 +2189,16 @@ import com.upokecenter.cbor.*;
           } else {
             WordWrapEncoder encoder=new WordWrapEncoder(name+":");
             encoder.AddString(value);
+            sb.append(encoder.toString());
           }
+          sb.append("\r\n");
         }
-        sb.append("\r\n");
       }
-      sb.append("MIME-Version: 1.0\r\n");
-      int transferEncoding = TransferEncodingToUse();
-      switch(transferEncoding) {
+      if (!haveMimeVersion) {
+        sb.append("MIME-Version: 1.0\r\n");
+      }
+      int transferEncoding = this.TransferEncodingToUse();
+       switch (transferEncoding) {
         case EncodingBase64:
           sb.append("Content-Transfer-Encoding: base64\r\n");
           break;
@@ -2012,10 +2209,20 @@ import com.upokecenter.cbor.*;
           sb.append("Content-Transfer-Encoding: 7bit\r\n");
           break;
       }
-      sb.append("\r\n");
-      if (this.getContentType().getTopLevelType().equals("multipart")) {
-        String boundary=this.getContentType().GetParameter("boundary");
+      MediaTypeBuilder builder = new MediaTypeBuilder(this.getContentType());
+      int index = 0;
+      if (builder.getTopLevelType().equals("multipart")) {
+        String boundary = "=_"+Integer.toString((int)index,System.Globalization.CultureInfo.CurrentCulture);
+        builder.SetParameter("boundary", boundary);
+      } else if (builder.getTopLevelType().equals("text")) {
+        if (transferEncoding == EncodingSevenBit) {
+          builder.SetParameter("charset", "us-ascii");
+        } else {
+          builder.SetParameter("charset", "utf-8");
+        }
       }
+      sb.append("Content-Type: " + builder.ToMediaType().toString()+"\r\n");
+      sb.append("\r\n");
       return sb.toString();
     }
 
@@ -2033,12 +2240,12 @@ import com.upokecenter.cbor.*;
         lineCount = 0;
         while (true) {
           int c = ungetStream.read();
-          if (c==-1) {
+          if (c == -1) {
             throw new InvalidDataException("Premature end before all headers were read");
           }
           ++lineCount;
-          if (first && c=='\r') {
-            if (ungetStream.read()=='\n') {
+          if (first && c == '\r') {
+            if (ungetStream.read() =='\n') {
               endOfHeaders = true;
               break;
             } else {
@@ -2053,11 +2260,11 @@ import com.upokecenter.cbor.*;
               throw new InvalidDataException("Whitespace within header field");
             }
             first = false;
-            if (c>= 'A' && c<= 'Z') {
-              c+=0x20;
+            if (c >= 'A' && c<= 'Z') {
+              c += 0x20;
             }
             sb.append((char)c);
-          } else if (!first && c==':') {
+          } else if (!first && c == ':') {
             break;
           } else if (c == 0x20 || c == 0x09) {
             wsp = true;
@@ -2077,12 +2284,12 @@ import com.upokecenter.cbor.*;
         // Read the header field value
         while (true) {
           int c = ungetStream.read();
-          if (c==-1) {
+          if (c == -1) {
             throw new InvalidDataException("Premature end before all headers were read");
           }
-          if (c=='\r') {
+          if (c == '\r') {
             c = ungetStream.read();
-            if (c=='\n') {
+            if (c == '\n') {
               lineCount = 0;
               // Parse obsolete folding whitespace (obs-fws) under RFC5322
               // (parsed according to errata), same as LWSP in RFC5234
@@ -2093,10 +2300,11 @@ import com.upokecenter.cbor.*;
                 // the first time, since CRLF was already parsed)
                 if (!fwsFirst) {
                   c = ungetStream.read();
-                  if (c=='\r') {
+                  if (c == '\r') {
                     c = ungetStream.read();
-                    if (c=='\n') {
-                      // Skipping CRLF
+                    if (c == '\n') {
+                      // CRLF was read
+                      sb.append("\r\n");
                       lineCount = 0;
                     } else {
                       // It's the first part of the line, where the header name
@@ -2111,10 +2319,10 @@ import com.upokecenter.cbor.*;
                 fwsFirst = false;
                 int c2 = ungetStream.read();
                 if (c2 == 0x20 || c2 == 0x09) {
-                  lineCount+=1;
+                  ++lineCount;
                   sb.append((char)c2);
                   haveFWS = true;
-                  if (lineCount>998) {
+                  if (lineCount > 998) {
                     throw new InvalidDataException("Header field line too long");
                   }
                 } else {
@@ -2135,10 +2343,10 @@ import com.upokecenter.cbor.*;
               ++lineCount;
             }
           }
-          if (lineCount>998) {
+          if (lineCount > 998) {
             throw new InvalidDataException("Header field line too long");
           }
-          if (c<0x80) {
+          if (c < 0x80) {
             sb.append((char)c);
           } else {
             if (!HeaderFields.GetParser(fieldName).IsStructured()) {
@@ -2146,36 +2354,35 @@ import com.upokecenter.cbor.*;
               // or other unstructured header field
               sb.append('\ufffd');
             } else {
-              throw new InvalidDataException("Malformed header field value "+sb.toString());
+              throw new InvalidDataException("Malformed header field value " + sb.toString());
             }
           }
         }
         String fieldValue = sb.toString();
         headerList.add(fieldName);
-        // NOTE: Field value will no longer have folding whitespace
-        // at this point
         headerList.add(fieldValue);
       }
     }
 
     private class MessageStackEntry {
-      Message message;
+      internal Message message;
 
     /**
      * Gets a value not documented yet.
      * @return A value not documented yet.
      */
       public Message getMessage() {
-          return message;
+          return this.message;
         }
-      String boundary;
+
+      internal String boundary;
 
     /**
      * Gets a value not documented yet.
      * @return A value not documented yet.
      */
       public String getBoundary() {
-          return boundary;
+          return this.boundary;
         }
 
       public MessageStackEntry (Message msg) {
@@ -2183,7 +2390,7 @@ import com.upokecenter.cbor.*;
         this.message = msg;
         MediaType mediaType = msg.getContentType();
         if (mediaType.getTopLevelType().equals("multipart")) {
-          this.boundary=mediaType.GetParameter("boundary");
+          this.boundary = mediaType.GetParameter("boundary");
           if (this.boundary == null) {
             throw new InvalidDataException("Multipart message has no boundary defined");
           }
@@ -2195,7 +2402,7 @@ import com.upokecenter.cbor.*;
     }
 
     private void ReadMultipartBody(ITransform stream) {
-      int baseTransferEncoding = transferEncoding;
+      int baseTransferEncoding = this.transferEncoding;
       BoundaryCheckerTransform boundaryChecker = new Message.BoundaryCheckerTransform(stream);
       ITransform currentTransform = MakeTransferEncoding(
         boundaryChecker,
@@ -2209,7 +2416,7 @@ import com.upokecenter.cbor.*;
       byte[] buffer = new byte[8192];
       int bufferCount = 0;
       int bufferLength = buffer.length;
-      java.io.ByteArrayOutputStream ms=null;
+       java.io.ByteArrayOutputStream ms=null;
 try {
 ms=new ByteArrayOutputStream();
 
@@ -2220,9 +2427,11 @@ ms=new ByteArrayOutputStream();
           } catch (InvalidDataException ex) {
             ms.write(buffer,0,bufferCount);
             buffer = ms.toByteArray();
-            String ss = DataUtilities.GetUtf8String(buffer,
-                                                    Math.max(buffer.length-80, 0),
-                                                    Math.min(buffer.length, 80), true);
+            String ss = DataUtilities.GetUtf8String(
+buffer,
+Math.max(buffer.length-80, 0),
+Math.min(buffer.length, 80),
+true);
             System.out.println(ss);
             throw ex;
           }
@@ -2233,19 +2442,19 @@ ms=new ByteArrayOutputStream();
               // Pop entries if needed to match the stack
 
               if (leaf != null) {
-                if (bufferCount>0) {
+                if (bufferCount > 0) {
                   ms.write(buffer,0,bufferCount);
                   bufferCount = 0;
                 }
                 leaf.body = ms.toByteArray();
               }
-              while (multipartStack.size()>stackCount) {
+              while (multipartStack.size() > stackCount) {
                 multipartStack.remove(stackCount);
               }
-              Message parentMessage = multipartStack.get(multipartStack.size()-1).getMessage();
+              Message parentMessage = multipartStack.get(multipartStack.size() - 1).getMessage();
               boundaryChecker.StartBodyPartHeaders();
               ReadHeaders(stream, msg.headers);
-              boolean parentIsDigest=parentMessage.getContentType().SubType.equals("digest") &&
+              boolean parentIsDigest = parentMessage.getContentType().SubType.equals("digest") &&
                 parentMessage.getContentType().TopLevelType.equals("multipart");
               msg.ProcessHeaders(true, parentIsDigest);
               entry = new MessageStackEntry(msg);
@@ -2268,7 +2477,7 @@ ms=new ByteArrayOutputStream();
             } else {
               // All body parts were read
               if (leaf != null) {
-                if (bufferCount>0) {
+                if (bufferCount > 0) {
                   ms.write(buffer,0,bufferCount);
                   bufferCount = 0;
                 }
@@ -2277,7 +2486,7 @@ ms=new ByteArrayOutputStream();
               return;
             }
           } else {
-            buffer[bufferCount++]=(byte)ch;
+            buffer[bufferCount++] = (byte)ch;
             if (bufferCount >= bufferLength) {
               ms.write(buffer,0,bufferCount);
               bufferCount = 0;
@@ -2290,8 +2499,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 }
     }
 
-    private static ITransform MakeTransferEncoding(ITransform stream,
-                                                   int encoding, boolean plain) {
+    private static ITransform MakeTransferEncoding(
+ITransform stream,
+int encoding,
+boolean plain) {
       ITransform transform = new EightBitTransform(stream);
       if (encoding == EncodingQuotedPrintable) {
         transform = new QuotedPrintableTransform(stream, false);
@@ -2315,13 +2526,15 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     }
 
     private void ReadSimpleBody(ITransform stream) {
-      ITransform transform = MakeTransferEncoding(stream, transferEncoding,
-                                                  this.getContentType().getTypeAndSubType().equals("text/plain"));
+      ITransform transform = MakeTransferEncoding(
+stream,
+transferEncoding,
+this.getContentType().getTypeAndSubType().equals("text/plain"));
       byte[] buffer = new byte[8192];
       int bufferCount = 0;
       int bufferLength = buffer.length;
       // TODO: Support message/rfc822
-      java.io.ByteArrayOutputStream ms=null;
+       java.io.ByteArrayOutputStream ms=null;
 try {
 ms=new ByteArrayOutputStream();
 
@@ -2332,22 +2545,24 @@ ms=new ByteArrayOutputStream();
           } catch (InvalidDataException ex) {
             ms.write(buffer,0,bufferCount);
             buffer = ms.toByteArray();
-            String ss = DataUtilities.GetUtf8String(buffer,
-                                                    Math.max(buffer.length-80, 0),
-                                                    Math.min(buffer.length, 80), true);
+            String ss = DataUtilities.GetUtf8String(
+buffer,
+Math.max(buffer.length-80, 0),
+Math.min(buffer.length, 80),
+true);
             System.out.println(ss);
             throw ex;
           }
           if (ch < 0) {
             break;
           }
-          buffer[bufferCount++]=(byte)ch;
+          buffer[bufferCount++] = (byte)ch;
           if (bufferCount >= bufferLength) {
             ms.write(buffer,0,bufferCount);
             bufferCount = 0;
           }
         }
-        if (bufferCount>0) {
+        if (bufferCount > 0) {
           ms.write(buffer,0,bufferCount);
         }
         this.body = ms.toByteArray();
@@ -2359,14 +2574,14 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     private void ReadMessage(ITransform stream) {
       ReadHeaders(stream, this.headers);
-      ProcessHeaders(false, false);
-      if (contentType.getTopLevelType().equals("multipart")) {
-        ReadMultipartBody(stream);
+      this.ProcessHeaders(false, false);
+      if (this.contentType.getTopLevelType().equals("multipart")) {
+        this.ReadMultipartBody(stream);
       } else {
-        if (contentType.getTopLevelType().equals("message")) {
-          System.out.println(contentType);
+        if (this.contentType.getTopLevelType().equals("message")) {
+          System.out.println(this.contentType);
         }
-        ReadSimpleBody(stream);
+        this.ReadSimpleBody(stream);
       }
     }
   }

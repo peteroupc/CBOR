@@ -12,29 +12,45 @@ import java.util.*;
 
   final class MediaTypeBuilder
   {
-    String type;
-    String subtype;
-    Map<String, String> parameters;
+    internal String type;
+    internal String subtype;
+    internal Map<String, String> parameters;
+
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+public String getTopLevelType() {
+        return this.type;
+      }
+
+    /**
+     * Gets a value not documented yet.
+     * @return A value not documented yet.
+     */
+public String getSubType() {
+        return this.subtype;
+      }
 
     public MediaTypeBuilder () {
-      parameters = new HashMap<String, String>();
-      type="application";
-      subtype="octet-stream";
+      this.parameters = new HashMap<String, String>();
+      this.type="application";
+      this.subtype="octet-stream";
     }
 
     public MediaTypeBuilder (MediaType mt) {
-      if ((mt) == null) {
+      if (mt == null) {
         throw new NullPointerException("mt");
       }
-      parameters = new HashMap<String, String>(mt.getParameters());
-      type = mt.getTopLevelType();
-      subtype = mt.getSubType();
+      this.parameters = new HashMap<String, String>(mt.getParameters());
+      this.type = mt.getTopLevelType();
+      this.subtype = mt.getSubType();
     }
 
     public MediaTypeBuilder (String type, String subtype) {
-      parameters = new HashMap<String, String>();
-      SetTopLevelType(type);
-      SetSubType(subtype);
+      this.parameters = new HashMap<String, String>();
+      this.SetTopLevelType(type);
+      this.SetSubType(subtype);
     }
 
     /**
@@ -42,7 +58,7 @@ import java.util.*;
      * @return A MediaType object.
      */
     public MediaType ToMediaType() {
-      return new MediaType(type, subtype, parameters);
+      return new MediaType(this.type, this.subtype, this.parameters);
     }
 
     /**
@@ -51,15 +67,15 @@ import java.util.*;
      * @return A MediaTypeBuilder object.
      */
     public MediaTypeBuilder SetTopLevelType(String str) {
-      if ((str) == null) {
+      if (str == null) {
         throw new NullPointerException("str");
-      }if ((str).length == 0) {
+      }if (str.length() == 0) {
         throw new IllegalArgumentException("str is empty.");
       }
       if (MediaType.skipMimeTypeSubtype(str, 0, str.length(), null) != str.length()) {
-        throw new IllegalArgumentException("Not a well-formed top level type: "+str);
+        throw new IllegalArgumentException("Not a well-formed top level type: " + str);
       }
-      type = ParserUtility.ToLowerCaseAscii(str);
+      this.type = ParserUtility.ToLowerCaseAscii(str);
       return this;
     }
 
@@ -69,10 +85,10 @@ import java.util.*;
      * @return A MediaTypeBuilder object.
      */
     public MediaTypeBuilder RemoveParameter(String name) {
-      if ((name) == null) {
+      if (name == null) {
         throw new NullPointerException("name");
       }
-      parameters.Remove(ParserUtility.ToLowerCaseAscii(name));
+      this.parameters.Remove(ParserUtility.ToLowerCaseAscii(name));
       return this;
     }
 
@@ -83,22 +99,22 @@ import java.util.*;
      * @return A MediaTypeBuilder object.
      */
     public MediaTypeBuilder SetParameter(String name, String value) {
-      if ((value) == null) {
+      if (value == null) {
         throw new NullPointerException("value");
       }
-      if ((value).length == 0) {
+      if (value.length() == 0) {
         throw new IllegalArgumentException("value is empty.");
       }
-      if ((name) == null) {
+      if (name == null) {
         throw new NullPointerException("name");
       }
-      if ((name).length == 0) {
+      if (name.length() == 0) {
         throw new IllegalArgumentException("name is empty.");
       }
       if (MediaType.skipMimeTypeSubtype(name, 0, name.length(), null) != name.length()) {
-        throw new IllegalArgumentException("Not a well-formed parameter name: "+name);
+        throw new IllegalArgumentException("Not a well-formed parameter name: " + name);
       }
-      parameters.put(ParserUtility.ToLowerCaseAscii(name),value);
+      this.parameters.put(ParserUtility.ToLowerCaseAscii(name),value);
       return this;
     }
 
@@ -108,16 +124,16 @@ import java.util.*;
      * @return A MediaTypeBuilder object.
      */
     public MediaTypeBuilder SetSubType(String str) {
-      if ((str) == null) {
+      if (str == null) {
         throw new NullPointerException("str");
       }
-      if ((str).length == 0) {
+      if (str.length() == 0) {
         throw new IllegalArgumentException("str is empty.");
       }
       if (MediaType.skipMimeTypeSubtype(str, 0, str.length(), null) != str.length()) {
-        throw new IllegalArgumentException("Not a well-formed subtype: "+str);
+        throw new IllegalArgumentException("Not a well-formed subtype: " + str);
       }
-      subtype = ParserUtility.ToLowerCaseAscii(str);
+      this.subtype = ParserUtility.ToLowerCaseAscii(str);
       return this;
     }
 
@@ -126,6 +142,6 @@ import java.util.*;
      * @return A string representation of this object.
      */
     @Override public String toString() {
-      return ToMediaType().toString();
+      return this.ToMediaType().toString();
     }
   }
