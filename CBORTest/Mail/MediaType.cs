@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
-namespace CBORTest
+namespace PeterO.Mail
 {
   internal sealed class MediaType {
     private string topLevelType;
@@ -67,7 +67,7 @@ namespace CBORTest
       int i2;
       if (rule == QuotedStringRule.Http) {
         char c = s[index];
-        if (c < 0x100 && c >= 0x21 && c!='\\' && c!='"') {
+        if (c < 0x100 && c >= 0x21 && c != '\\' && c != '"') {
           return index + 1;
         }
         i2 = skipQuotedPair(s, index, endIndex);
@@ -80,7 +80,15 @@ namespace CBORTest
         // qtext (RFC5322 sec. 3.2.1)
         if (i2 < endIndex) {
           char c = s[i2];
-          if (c >= 33 && c <= 126 && c!='\\' && c!='"') {
+          // Non-ASCII (allowed in internationalized email headers under RFC6532)
+          if (c >= 0xd800 && c <= 0xdbff && i2 + 1 < endIndex && s[i2 + 1]>= 0xdc00 && s[i2 + 1]<= 0xdfff) {
+            i2 += 2;
+          } else if (c >= 0xd800 && c <= 0xdfff) {
+            // unchanged; it's a bare surrogate
+          } else if (c >= 0x80) {
+            ++i2;
+          }
+          if (c >= 33 && c <= 126 && c != '\\' && c != '"') {
             ++i2;
           }
           // obs-qtext (same as obs-ctext)
@@ -104,8 +112,16 @@ namespace CBORTest
 
     // quoted-pair (RFC5322 sec. 3.2.1)
     internal static int skipQuotedPair(string s, int index, int endIndex) {
-      if (index + 1 < endIndex && s[index]=='\\') {
+      if (index + 1 < endIndex && s[index] == '\\') {
         char c = s[index + 1];
+        // Non-ASCII (allowed in internationalized email headers under RFC6532)
+        if (c >= 0xd800 && c <= 0xdbff && index + 2 < endIndex && s[index + 2]>= 0xdc00 && s[index + 2]<= 0xdfff) {
+          return index + 3;
+        } else if (c >= 0xd800 && c <= 0xdfff) {
+          return index;
+        } else if (c >= 0x80) {
+          return index + 2;
+        }
         if (c == 0x20 || c == 0x09 || (c >= 0x21 && c <= 0x7e)) {
           return index + 2;
         }
@@ -152,10 +168,7 @@ namespace CBORTest
           }
         } else if (rule == QuotedStringRule.Rfc5322) {
           // Skip tabs, spaces, and folding whitespace
-          i2 = HeaderParser.ParseFWS(str, index, endIndex, null);
-          if (i2 != index) {
-            builder.Append(' ');
-          }
+          i2 = ParserUtility.ParseFWS(str, index, endIndex, builder);
         }
         index = i2;
         char c = str[index];
@@ -197,8 +210,8 @@ namespace CBORTest
       if (index > str.Length) {
         return str.Length;
       }
-      if (index > 0 && str[index] >= 0xdc00 && str[index]<= 0xdfff &&
-          str[index - 1] >= 0xd800 && str[index-1]<= 0xdbff) {
+      if (index > 0 && str[index] >= 0xdc00 && str[index] <= 0xdfff &&
+          str[index - 1] >= 0xd800 && str[index - 1] <= 0xdbff) {
         // Avoid splitting legal surrogate pairs
         return index - 1;
       }
@@ -211,11 +224,11 @@ namespace CBORTest
       string hex = "0123456789ABCDEF";
       length += name.Length + 12;
       int maxLength = 76;
-      if (sb.Length + name.Length + 9 + str.Length * 3 <= maxLength) {
+      if (sb.Length + name.Length + 9 + (str.Length * 3) <= maxLength) {
         // Very short
         length = sb.Length + name.Length + 9;
         sb.Append(name + "*=utf-8''");
-      } else if (length + str.Length * 3 <= maxLength) {
+      } else if (length + (str.Length * 3) <= maxLength) {
         // Short enough that no continuations
         // are needed
         length -= 2;
@@ -239,13 +252,13 @@ namespace CBORTest
           c = 0xfffd;
         }
         ++index;
-        if (c >= 33 && c<= 126 && "()<>,;[]:@\"\\/?=*%'".IndexOf((char)c) < 0) {
+        if (c >= 33 && c <= 126 && "()<>,;[]:@\"\\/?=*%'".IndexOf((char)c) < 0) {
           ++length;
           if (!first && length + 1 > maxLength) {
             sb.Append(";\r\n ");
             first = true;
             ++contin;
-            string continString = name + "*"+
+            string continString = name + "*" +
               Convert.ToString((int)contin, System.Globalization.CultureInfo.InvariantCulture) +
               "*=";
             sb.Append(continString);
@@ -260,7 +273,7 @@ namespace CBORTest
             sb.Append(";\r\n ");
             first = true;
             ++contin;
-            string continString = name + "*"+
+            string continString = name + "*" +
               Convert.ToString((int)contin, System.Globalization.CultureInfo.InvariantCulture) +
               "*=";
             sb.Append(continString);
@@ -275,7 +288,7 @@ namespace CBORTest
             sb.Append(";\r\n ");
             first = true;
             ++contin;
-            string continString = name + "*"+
+            string continString = name + "*" +
               Convert.ToString((int)contin, System.Globalization.CultureInfo.InvariantCulture) +
               "*=";
             sb.Append(continString);
@@ -297,7 +310,7 @@ namespace CBORTest
             sb.Append(";\r\n ");
             first = true;
             ++contin;
-            string continString = name + "*"+
+            string continString = name + "*" +
               Convert.ToString((int)contin, System.Globalization.CultureInfo.InvariantCulture) +
               "*=";
             sb.Append(continString);
@@ -323,7 +336,7 @@ namespace CBORTest
             sb.Append(";\r\n ");
             first = true;
             ++contin;
-            string continString = name + "*"+
+            string continString = name + "*" +
               Convert.ToString((int)contin, System.Globalization.CultureInfo.InvariantCulture) +
               "*=";
             sb.Append(continString);
@@ -355,7 +368,7 @@ namespace CBORTest
       sb.Append(name);
       sb.Append('=');
       bool simple = true;
-      for (int i = 0;i < str.Length; ++i) {
+      for (int i = 0; i < str.Length; ++i) {
         char c = str[i];
         if (!(c >= 33 && c <= 126 && "()<>,;[]:@\"\\/?=".IndexOf(c) < 0)) {
           simple = false;
@@ -366,11 +379,11 @@ namespace CBORTest
         return true;
       }
       sb.Append('"');
-      for (int i = 0;i < str.Length; ++i) {
+      for (int i = 0; i < str.Length; ++i) {
         char c = str[i];
         if (c >= 32 && c <= 126) {
           sb.Append(c);
-        } else if (c == 0x20 || c == 0x09 || c=='\\' || c=='"') {
+        } else if (c == 0x20 || c == 0x09 || c == '\\' || c == '"') {
           sb.Append('\\');
           sb.Append(c);
         } else {
@@ -424,7 +437,7 @@ namespace CBORTest
       int i = index;
       while (i < endIndex) {
         char c = str[i];
-        if (c <= 0x20 || c >= 0x7F || ((c&0x7F)==c && "()<>@,;:\\\"/[]?=".IndexOf(c)>= 0)) {
+        if (c <= 0x20 || c >= 0x7F || ((c & 0x7F) ==c && "()<>@,;:\\\"/[]?=".IndexOf(c) >= 0)) {
           break;
         }
         if (httpRules && (c == '{' || c == '}')) {
@@ -451,7 +464,7 @@ namespace CBORTest
       while (i < endIndex) {
         char c = str[i];
         if (c <= 0x20 || c >= 0x7f ||
-            ((c & 0x7F) ==c && "()<>@,;:\\\"/[]?='%*".IndexOf(c)>= 0)) {
+            ((c & 0x7F) ==c && "()<>@,;:\\\"/[]?='%*".IndexOf(c) >= 0)) {
           break;
         }
         if (builder != null) {
@@ -459,7 +472,7 @@ namespace CBORTest
         }
         ++i;
       }
-      if (i + 1 < endIndex && str[i]=='*' && str[i+1]=='0') {
+      if (i + 1 < endIndex && str[i] == '*' && str[i + 1] == '0') {
         // initial-section
         i += 2;
         if (builder != null) {
@@ -473,14 +486,14 @@ namespace CBORTest
         }
         return i;
       }
-      if (i + 1 < endIndex && str[i]=='*' && str[i+1]>= '1' && str[i+1]<= '9') {
+      if (i + 1 < endIndex && str[i] == '*' && str[i + 1] >= '1' && str[i + 1]<= '9') {
         // other-sections
         if (builder != null) {
           builder.Append('*');
           builder.Append(str[i + 1]);
         }
         i += 2;
-        while (i < endIndex && str[i] >= '0' && str[i]<= '9') {
+        while (i < endIndex && str[i] >= '0' && str[i] <= '9') {
           if (builder != null) {
             builder.Append(str[i]);
           }
@@ -507,7 +520,7 @@ namespace CBORTest
       int i = index;
       while (i < endIndex) {
         char c = str[i];
-        if (c <= 0x20 || c >= 0x7F || ((c&0x7F)==c && "()<>@,;:\\\"/[]?=.".IndexOf(c)>= 0)) {
+        if (c <= 0x20 || c >= 0x7F || ((c & 0x7F) == c && "()<>@,;:\\\"/[]?=.".IndexOf(c) >= 0)) {
           break;
         }
         ++i;
@@ -519,10 +532,10 @@ namespace CBORTest
       int i = index;
       while (i < endIndex) {
         char c = str[i];
-        if (c <= 0x20 || c >= 0x7F || c=='?') {
+        if (c <= 0x20 || c >= 0x7F || c == '?') {
           break;
         }
-        if (inComments && (c == '(' || c == ')' || c=='\\')) {
+        if (inComments && (c == '(' || c == ')' || c == '\\')) {
           break;
         }
         ++i;
@@ -536,13 +549,13 @@ namespace CBORTest
       while (i < str.Length) {
         char c = str[i];
         // See RFC6838
-        if ((c >= 'A' && c <= 'Z') || (c>= 'a' && c<= 'z') || (c>= '0' && c<= '9')) {
+        if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')) {
           if (builder != null) {
             builder.Append(c);
           }
           ++i;
           ++count;
-        } else if (count > 0 && ((c & 0x7F)==c && "!#$&-^_.+".IndexOf(c)>= 0)) {
+        } else if (count > 0 && ((c & 0x7F) ==c && "!#$&-^_.+".IndexOf(c) >= 0)) {
           if (builder != null) {
             builder.Append(c);
           }
@@ -560,10 +573,10 @@ namespace CBORTest
     }
 
     /// <summary>Returns the charset parameter, converted to ASCII lower-case,
-    /// if it exists, or "us-ascii" if the media type is ill-formed (RFC2045
-    /// sec. 5.2), or if the media type is "text/plain" or "text/xml" and doesn't
-    /// have a charset parameter (see RFC2046 and RFC3023, respectively),
-    /// or the empty string otherwise.</summary>
+    /// if it exists, or <code>"us-ascii"</code>
+    /// if the media type is ill-formed (RFC2045 sec. 5.2), or if the media
+    /// type is "text/plain" or "text/xml" and doesn't have a charset parameter
+    /// (see RFC2046 and RFC3023, respectively), or the empty string otherwise.</summary>
     /// <returns>A string object.</returns>
     public string GetCharset() {
       string param = this.GetParameter("charset");
@@ -609,7 +622,7 @@ namespace CBORTest
         // not a valid encoded parameter
         return null;
       }
-      int secondQuote = value.IndexOf('\'', firstQuote+1);
+      int secondQuote = value.IndexOf('\'', firstQuote + 1);
       if (secondQuote < 0) {
         // not a valid encoded parameter
         return null;
@@ -634,7 +647,7 @@ namespace CBORTest
         // not a valid encoded parameter
         return Charsets.Ascii;
       }
-      int secondQuote = value.IndexOf('\'', firstQuote+1);
+      int secondQuote = value.IndexOf('\'', firstQuote + 1);
       if (secondQuote < 0) {
         // not a valid encoded parameter
         return Charsets.Ascii;
@@ -650,7 +663,7 @@ namespace CBORTest
     }
 
     private static string DecodeRfc2231Encoding(string value, Charsets.ICharset charset) {
-      return charset.GetString(new Message.PercentEncodingStringTransform(value));
+      return charset.GetString(new PercentEncodingStringTransform(value));
     }
 
     private bool ExpandRfc2231Extensions() {
@@ -677,9 +690,9 @@ namespace CBORTest
         }
         // name*0 or name*0*
         if (asterisk > 0 &&
-            ((asterisk == name.Length - 2 && name[asterisk+1]=='0') ||
-             (asterisk == name.Length - 3 && name[asterisk+1]=='0' && name[asterisk+2]=='*')
-)) {
+            ((asterisk == name.Length - 2 && name[asterisk + 1] == '0') ||
+             (asterisk == name.Length - 3 && name[asterisk + 1] == '0' &&
+              name[asterisk + 2] == '*'))) {
           string realName = name.Substring(0, asterisk);
           string realValue = (asterisk == name.Length - 3) ? DecodeRfc2231Extension(value) :
             value;
@@ -693,7 +706,7 @@ namespace CBORTest
           // search for name*1 or name*1*, then name*2 or name*2*,
           // and so on
           while (true) {
-            string contin = realName + "*"+
+            string contin = realName + "*" +
               Convert.ToString(pindex, CultureInfo.InvariantCulture);
             string continEncoded = contin + "*";
             if (this.parameters.ContainsKey(contin)) {
@@ -735,13 +748,13 @@ namespace CBORTest
       // While HTTP usually only allows CRLF, it also allows
       // us to be tolerant here
       int i2 = index;
-      if (i2 + 1 < endIndex && s[i2] == 0x0d && s[i2]==0x0a) {
+      if (i2 + 1 < endIndex && s[i2] == 0x0d && s[i2] == 0x0a) {
         i2 += 2;
-      } else if (i2 < endIndex && (s[i2] == 0x0d || s[i2]==0x0a)) {
+      } else if (i2 < endIndex && (s[i2] == 0x0d || s[i2] == 0x0a)) {
         ++index;
       }
       while (i2 < endIndex) {
-        if (s[i2] == 0x09 || s[i2]==0x20) {
+        if (s[i2] == 0x09 || s[i2] == 0x20) {
           ++index;
         }
         break;
@@ -765,7 +778,7 @@ namespace CBORTest
         index = HeaderParser.ParseCFWS(str, index, endIndex, null);
       }
       int i = skipMimeTypeSubtype(str, index, endIndex, null);
-      if (i == index || i >= endIndex || str[i]!='/') {
+      if (i == index || i >= endIndex || str[i] != '/') {
         return false;
       }
       this.topLevelType = ParserUtility.ToLowerCaseAscii(str.Substring(index, i - index));
@@ -778,7 +791,7 @@ namespace CBORTest
       if (i2 < endIndex) {
         // if not at end
         int i3 = HeaderParser.ParseCFWS(str, i2, endIndex, null);
-        if (i3 == endIndex || (i3 < endIndex && str[i3]!=';' && str[i3]!=',')) {
+        if (i3 == endIndex || (i3 < endIndex && str[i3] != ';' && str[i3] != ',')) {
           // at end, or not followed by ";" or ",", so not a media type
           return false;
         }

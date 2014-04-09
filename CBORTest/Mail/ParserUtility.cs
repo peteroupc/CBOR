@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CBORTest
+namespace PeterO.Mail
 {
   internal sealed class ParserUtility {
     internal static string ToLowerCaseAscii(string str) {
@@ -84,7 +84,7 @@ namespace CBORTest
       while (index >= 0) {
         char c = s[index];
         if (c != 0x09 && c != 0x20) {
-          return s.Substring(startIndex, (index + 1) -startIndex);
+          return s.Substring(startIndex, index + 1 -startIndex);
         }
         --index;
       }
@@ -93,6 +93,26 @@ namespace CBORTest
 
     public static bool IsNullEmptyOrWhitespace(string str) {
       return String.IsNullOrEmpty(str) || SkipSpaceAndTab(str, 0, str.Length) == str.Length;
+    }
+
+    public static int ParseFWS(string str, int index, int endIndex, StringBuilder sb) {
+      while (index < endIndex) {
+        int tmp = index;
+        // Skip CRLF
+        if (index + 1 < endIndex && str[index] == 13 && str[index + 1] == 10) {
+          index += 2;
+        }
+        // Add WSP
+        if (index < endIndex && ((str[index] == 32) || (str[index] == 9))) {
+          if (sb != null) {
+ sb.Append(str[index]);
+}
+          ++index;
+        } else {
+ return tmp;
+}
+      }
+      return index;
     }
 
     // Wsp, a.k.a. 1*LWSP-char under RFC 822
@@ -108,7 +128,7 @@ namespace CBORTest
     }
 
     public static int SkipCrLf(string str, int index, int endIndex) {
-      if (index + 1 < endIndex && str[index] == 0x0d && str[index + 1]==0x0a) {
+      if (index + 1 < endIndex && str[index] == 0x0d && str[index + 1] == 0x0a) {
         return index + 2;
       } else {
         return index;
@@ -123,8 +143,8 @@ namespace CBORTest
         char c1 = str[index];
         char c2 = str[index + 1];
         if (
-          ((c1 >= 'A' && c1 <= 'Z') || (c1>= 'a' && c1<= 'z')) &&
-          ((c2 >= 'A' && c2 <= 'Z') || (c2>= 'a' && c2<= 'z'))
+          ((c1 >= 'A' && c1 <= 'Z') || (c1 >= 'a' && c1 <= 'z')) &&
+          ((c2 >= 'A' && c2 <= 'Z') || (c2 >= 'a' && c2 <= 'z'))
 ) {
           index += 2;
           if (index == endIndex) {
@@ -149,7 +169,7 @@ namespace CBORTest
             if (index + 2 == endIndex) {  // case AA-?? or AAA-??
               c1 = str[index];
               c2 = str[index];
-              if ((c1 >= 'a' && c1 <= 'z') && (c2>= 'a' && c2<= 'z')) {
+              if ((c1 >= 'a' && c1 <= 'z') && (c2 >= 'a' && c2 <= 'z')) {
                 return true;  // case AA-BB or AAA-BB
               }
             }
@@ -176,10 +196,11 @@ namespace CBORTest
             // skip optional extended language subtags
             for (int i = 0; i < 3; ++i) {
               if (splitIndex < splitLength && lengthIfAllAlpha(splitString[splitIndex]) == 3) {
-                if (i >= 1)
+                if (i >= 1) {
                   // point 4 in section 2.2.2 renders two or
                   // more extended language subtags invalid
                   return false;
+                }
                 ++splitIndex;
               } else {
                 break;
@@ -211,7 +232,7 @@ namespace CBORTest
                 return false;  // variant already exists; see point 5 in section 2.2.5
               }
               ++splitIndex;
-            } else if (len == 4 && (curString[0] >= '0' && curString[0]<= '9')) {
+            } else if (len == 4 && (curString[0] >= '0' && curString[0] <= '9')) {
               if (variants == null) {
                 variants = new List<string>();
               }
@@ -284,7 +305,7 @@ namespace CBORTest
           }
           // check if all the tokens were used
           return splitIndex == splitLength;
-        } else if (c2 == '-' && (c1 == 'x' || c1=='X')) {
+        } else if (c2 == '-' && (c1 == 'x' || c1 == 'X')) {
           // private use
           ++index;
           while (index < endIndex) {
@@ -295,7 +316,7 @@ namespace CBORTest
             ++index;
             while (index < endIndex) {
               c1 = str[index];
-              if ((c1 >= 'A' && c1 <= 'Z') || (c1>= 'a' && c1<= 'z') || (c1>= '0' && c1<= '9')) {
+              if ((c1 >= 'A' && c1 <= 'Z') || (c1 >= 'a' && c1 <= 'z') || (c1 >= '0' && c1 <= '9')) {
                 ++count;
                 if (count > 8) {
                   return false;
@@ -312,16 +333,16 @@ namespace CBORTest
             }
           }
           return true;
-        } else if (c2 == '-' && (c1 == 'i' || c1=='I')) {
+        } else if (c2 == '-' && (c1 == 'i' || c1 == 'I')) {
           // grandfathered language tags
           str = ToLowerCaseAscii(str);
-          return (str.Equals("i-ami") || str.Equals("i-bnn") ||
+          return str.Equals("i-ami") || str.Equals("i-bnn") ||
                   str.Equals("i-default") || str.Equals("i-enochian") ||
                   str.Equals("i-hak") || str.Equals("i-klingon") ||
                   str.Equals("i-lux") || str.Equals("i-navajo") ||
                   str.Equals("i-mingo") || str.Equals("i-pwn") ||
                   str.Equals("i-tao") || str.Equals("i-tay") ||
-                  str.Equals("i-tsu"));
+                  str.Equals("i-tsu");
         } else {
           return false;
         }
@@ -334,7 +355,7 @@ namespace CBORTest
       int len = (str == null) ? 0 : str.Length;
       for (int i = 0; i < len; ++i) {
         char c1 = str[i];
-        if (!((c1 >= 'A' && c1 <= 'Z') || (c1>= 'a' && c1<= 'z'))) {
+        if (!((c1 >= 'A' && c1 <= 'Z') || (c1 >= 'a' && c1 <= 'z'))) {
           return 0;
         }
       }
@@ -345,7 +366,7 @@ namespace CBORTest
       int len = (str == null) ? 0 : str.Length;
       for (int i = 0; i < len; ++i) {
         char c1 = str[i];
-        if (!((c1 >= 'A' && c1 <= 'Z') || (c1>= 'a' && c1<= 'z') || (c1>= '0' && c1<= '9'))) {
+        if (!((c1 >= 'A' && c1 <= 'Z') || (c1 >= 'a' && c1 <= 'z') || (c1 >= '0' && c1 <= '9'))) {
           return 0;
         }
       }

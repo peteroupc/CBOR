@@ -1,6 +1,6 @@
 using System;
 
-namespace CBORTest {
+namespace PeterO.Mail {
   internal class HeaderParser {
     public static int ParseAddrSpec(string str, int index, int endIndex, ITokener tokener) {
       int indexStart = index;
@@ -9,23 +9,26 @@ namespace CBORTest {
       do {
         indexTemp = ParseLocalPart(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         if (index < endIndex && (str[index] == 64)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = ParseDomain(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -34,27 +37,102 @@ namespace CBORTest {
       int state = (tokener != null) ? tokener.GetState() : 0;
       int indexTemp = index;
       do {
-        int indexTemp2 = ParseGroup(str, index, endIndex, tokener);
+        int indexTemp2 = ParseMailbox(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseAddrSpec(str, index, endIndex, tokener);
+          indexTemp = indexTemp2; break;
+        }
+        indexTemp2 = ParseGroup(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseNameAddr(str, index, endIndex, tokener);
-        if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
     public static int ParseAddressList(string str, int index, int endIndex, ITokener tokener) {
-      return ParseObsAddrList(str, index, endIndex, tokener);
+      int indexStart = index;
+      int state = (tokener != null) ? tokener.GetState() : 0;
+      int indexTemp = index;
+      do {
+        while (true) {
+          int indexTemp2;
+          int state2 = (tokener != null) ? tokener.GetState() : 0;
+          indexTemp2 = index;
+          do {
+            int indexStart2 = index;
+            index = ParseCFWS(str, index, endIndex, tokener);
+            if (index < endIndex && (str[index] == 44)) {
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
+            indexTemp2 = index;
+            index = indexStart2;
+          } while (false);
+          if (indexTemp2 != index) {
+            index = indexTemp2;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
+          } else {
+ break;
+}
+        }
+        indexTemp = ParseAddress(str, index, endIndex, tokener);
+        if (indexTemp == index) {
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
+        while (true) {
+          int indexTemp2;
+          int state2 = (tokener != null) ? tokener.GetState() : 0;
+          indexTemp2 = index;
+          do {
+            int indexStart2 = index;
+            if (index < endIndex && (str[index] == 44)) {
+              ++index;
+            } else {
+              break;
+            }
+            do {
+              int indexTemp3 = index;
+              do {
+                int indexStart3 = index;
+                int indexTemp4;
+                indexTemp4 = ParseAddress(str, index, endIndex, tokener);
+                if (indexTemp4 != index) {
+                  indexTemp3 = indexTemp4; break;
+                }
+                indexTemp4 = ParseCFWS(str, index, endIndex, tokener);
+                if (indexTemp4 != index) {
+                  indexTemp3 = indexTemp4; break;
+                }
+              } while (false);
+              if (indexTemp3 != index) {
+                index = indexTemp3;
+              } else { break;
+              }
+            } while (false);
+            indexTemp2 = index;
+            index = indexStart2;
+          } while (false);
+          if (indexTemp2 != index) {
+            index = indexTemp2;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
+          } else {
+ break;
+}
+        }
+        indexTemp = index;
+      } while (false);
+      if (tokener != null && indexTemp == indexStart) {
+ tokener.RestoreState(state);
+}
+      return indexTemp;
     }
 
     public static int ParseAngleAddr(string str, int index, int endIndex, ITokener tokener) {
@@ -64,25 +142,61 @@ namespace CBORTest {
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 60)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseObsRoute(str, index, endIndex, tokener);
         indexTemp = ParseAddrSpec(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         if (index < endIndex && (str[index] == 62)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
+      return indexTemp;
+    }
+
+    public static int ParseAtext(string str, int index, int endIndex, ITokener tokener) {
+      int indexStart = index;
+      int indexTemp = index;
+      do {
+        if (index < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index] == 33) || (str[index] == 35) || (str[index] == 36) || (str[index] == 37) || (str[index] == 38) || (str[index] == 39) || (str[index] == 42) || (str[index] == 43) || (str[index] == 45) || (str[index] == 47) || (str[index] == 61) || (str[index] == 63) || (str[index] == 94) || (str[index] == 95) || (str[index] == 96) || (str[index] == 123) || (str[index] == 124) || (str[index] == 125) || (str[index] >= 128 && str[index] <= 55295) || (str[index] >= 57344 && str[index] <= 65535))) {
+          ++indexTemp; break;
+        }
+        int indexTemp2 = index;
+        do {
+          int indexStart2 = index;
+          if (index < endIndex && (str[index] >= 55296 && str[index] <= 56319)) {
+            ++index;
+          } else {
+            break;
+          }
+          if (index < endIndex && (str[index] >= 56320 && str[index] <= 57343)) {
+            ++index;
+          } else {
+            index = indexStart2; break;
+          }
+          indexTemp2 = index;
+          index = indexStart2;
+        } while (false);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
+        if (index < endIndex && ((str[index] == 126) || (str[index] >= 97 && str[index] <= 122) || (str[index] >= 65 && str[index] <= 90))) {
+          ++indexTemp; break;
+        }
+      } while (false);
       return indexTemp;
     }
 
@@ -92,18 +206,25 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
-        if (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 39) || (str[index] >= 42 && str[index] <= 43) || (str[index] == 45) || (str[index] >= 47 && str[index] <= 57) || (str[index] == 61) || (str[index] == 63) || (str[index] >= 128 && str[index] <= 65535) || (str[index] >= 94 && str[index] <= 126) || (str[index] >= 65 && str[index] <= 90))) {
-          ++index;
-          while (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 39) || (str[index] >= 42 && str[index] <= 43) || (str[index] == 45) || (str[index] >= 47 && str[index] <= 57) || (str[index] == 61) || (str[index] == 63) || (str[index] >= 128 && str[index] <= 65535) || (str[index] >= 94 && str[index] <= 126) || (str[index] >= 65 && str[index] <= 90))) {
-            ++index;
+        for (int i = 0;; ++i) {
+          int indexTemp2 = ParseAtext(str, index, endIndex, tokener);
+          if (indexTemp2 != index) {
+            index = indexTemp2;
+          } else {
+            if (i < 1) {
+              index = indexStart;
+            } break;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        }
+        if (index == indexStart) {
+          break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -117,13 +238,15 @@ namespace CBORTest {
           while (index < endIndex && (str[index] >= 48 && str[index] <= 57)) {
             ++index;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } else {
+          break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -148,15 +271,15 @@ namespace CBORTest {
               index = ParseFWS(str, index, endIndex, tokener);
               indexTemp3 = ParseComment(str, index, endIndex, tokener);
               if (indexTemp3 == index) {
-                { indexTemp3 = indexStart3;
-                } index = indexStart3; break;
-              } else { index = indexTemp3; }
+                indexTemp3 = indexStart3; index = indexStart3; break;
+              } else {
+                index = indexTemp3;
+              }
               indexTemp3 = index;
               index = indexStart3;
             } while (false);
             if (indexTemp3 != index) {
-              { index = indexTemp3;
-              }
+              index = indexTemp3;
             } else {
               if (i2 < 1) {
                 index = indexStart2;
@@ -164,37 +287,35 @@ namespace CBORTest {
             }
           }
           if (index == indexStart2) {
-            { indexTemp2 = indexStart2;
-            } break; }
+            break;
+          }
           index = ParseFWS(str, index, endIndex, tokener);
           indexTemp2 = index;
           index = indexStart2;
         } while (false);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        if (tokener != null) {
-          tokener.RestoreState(state2);
+          indexTemp = indexTemp2; break;
         }
+        if (tokener != null) {
+ tokener.RestoreState(state2);
+}
         for (int i = 0;; ++i) {
           indexTemp2 = ParseFWS(str, index, endIndex, tokener);
-          if (indexTemp2 == index) {
-            { if (i < 1) {
-                { indexTemp = indexStart;
-                }
-              } } break;
+          if (indexTemp2 == index) { if (i < 1) {
+              indexTemp = indexStart;
+            } break;
           } else {
-            index = indexTemp2;
-          }
+ index = indexTemp2;
+}
         }
         if (indexTemp2 != indexStart) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
         index = indexStart;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -205,40 +326,44 @@ namespace CBORTest {
       do {
         int indexTemp2 = ParseQuotedPair(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
+        if (index < endIndex && ((str[index] >= 128 && str[index] <= 55295) || (str[index] >= 57344 && str[index] <= 65535))) {
+          ++indexTemp; break;
+        }
+        indexTemp2 = index;
+        do {
+          int indexStart2 = index;
+          if (index < endIndex && (str[index] >= 55296 && str[index] <= 56319)) {
+            ++index;
+          } else {
+            break;
+          }
+          if (index < endIndex && (str[index] >= 56320 && str[index] <= 57343)) {
+            ++index;
+          } else {
+            index = indexStart2; break;
+          }
+          indexTemp2 = index;
+          index = indexStart2;
+        } while (false);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
+        if (index < endIndex && ((str[index] >= 1 && str[index] <= 8) || (str[index] >= 11 && str[index] <= 12) || (str[index] >= 14 && str[index] <= 31) || (str[index] == 127))) {
+          ++indexTemp; break;
+        }
         indexTemp2 = ParseComment(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        if (index < endIndex && (str[index] >= 1 && str[index] <= 8)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 11 && str[index] <= 12)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 14 && str[index] <= 31)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] == 127)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 128 && str[index] <= 65535)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 93 && str[index] <= 126)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 42 && str[index] <= 91)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 33 && str[index] <= 39)) {
-          { indexTemp++;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
+        if (index < endIndex && ((str[index] >= 93 && str[index] <= 126) || (str[index] >= 42 && str[index] <= 91) || (str[index] >= 33 && str[index] <= 39))) {
+          ++indexTemp; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -251,7 +376,9 @@ namespace CBORTest {
           while (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 36) || (str[index] == 38) || (str[index] == 43) || (str[index] == 45) || (str[index] >= 65 && str[index] <= 90) || (str[index] >= 48 && str[index] <= 57) || (str[index] >= 94 && str[index] <= 126) || (str[index] == 63))) {
             ++index;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } else {
+          break;
+        }
         indexTemp = index;
       } while (false);
       return indexTemp;
@@ -263,9 +390,10 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index < endIndex && (str[index] == 40)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          break;
+        }
         while (true) {
           int indexTemp2;
           int state2 = (tokener != null) ? tokener.GetState() : 0;
@@ -275,34 +403,35 @@ namespace CBORTest {
             index = ParseFWS(str, index, endIndex, tokener);
             indexTemp2 = ParseCcontent(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         index = ParseFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 41)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null) {
         if (indexTemp == indexStart) {
-          tokener.RestoreState(state);
-        } else {
-          tokener.Commit(1, indexStart, indexTemp);
-        }
+ tokener.RestoreState(state);
+} else {
+ tokener.Commit(1, indexStart, indexTemp);
+}
       }
       return indexTemp;
     }
@@ -314,21 +443,26 @@ namespace CBORTest {
       do {
         indexTemp = ParseDay(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
-        if (index + 2 < endIndex && (((str[index] & ~32) == 74 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 78) || ((str[index] & ~32) == 70 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 66) || ((str[index] & ~32) == 77 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 82) || ((str[index] & ~32) == 65 && (str[index + 1] & ~32) == 80 && (str[index + 2] & ~32) == 82) || ((str[index] & ~32) == 77 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 89) || ((str[index] & ~32) == 74 && (str[index + 1] & ~32) == 85 && (str[index + 2] & ~32) == 78) || ((str[index] & ~32) == 74 && (str[index + 1] & ~32) == 85 && (str[index + 2] & ~32) == 76) || ((str[index] & ~32) == 65 && (str[index + 1] & ~32) == 85 && (str[index + 2] & ~32) == 71) || ((str[index] & ~32) == 83 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 80) || ((str[index] & ~32) == 79 && (str[index + 1] & ~32) == 67 && (str[index + 2] & ~32) == 84) || ((str[index] & ~32) == 78 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 86) || ((str[index] & ~32) == 68 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 67))) { index+=3;
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
+        if (index + 2 < endIndex && (((str[index] & ~32) == 74 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 78) || ((str[index] & ~32) == 70 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 66) || ((str[index] & ~32) == 77 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 82) || ((str[index] & ~32) == 65 && (str[index + 1] & ~32) == 80 && (str[index + 2] & ~32) == 82) || ((str[index] & ~32) == 77 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 89) || ((str[index] & ~32) == 74 && (str[index + 1] & ~32) == 85 && (str[index + 2] & ~32) == 78) || ((str[index] & ~32) == 74 && (str[index + 1] & ~32) == 85 && (str[index + 2] & ~32) == 76) || ((str[index] & ~32) == 65 && (str[index + 1] & ~32) == 85 && (str[index + 2] & ~32) == 71) || ((str[index] & ~32) == 83 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 80) || ((str[index] & ~32) == 79 && (str[index + 1] & ~32) == 67 && (str[index + 2] & ~32) == 84) || ((str[index] & ~32) == 78 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 86) || ((str[index] & ~32) == 68 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 67))) {
+          index += 3;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = ParseYear(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -343,39 +477,41 @@ namespace CBORTest {
             int indexStart2 = index;
             indexTemp2 = ParseDayOfWeek(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             if (index < endIndex && (str[index] == 44)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else {
-            break;
+            index = indexTemp2;
+          } else { break;
           }
         } while (false);
         indexTemp = ParseDate(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = ParseTime(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -389,20 +525,20 @@ namespace CBORTest {
           if (index < endIndex && (str[index] >= 48 && str[index] <= 57)) {
             ++index;
           } else if (i < 1) {
-            indexTemp = indexStart; index = indexStart; break;
+            index = indexStart; break;
           } else {
-            break;
-          }
+ break;
+}
         }
         if (index == indexStart) {
-          break;
-        }
+ break;
+}
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -412,14 +548,17 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
-        if (index + 2 < endIndex && (((str[index] & ~32) == 77 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 78) || ((str[index] & ~32) == 84 && (str[index + 1] & ~32) == 85 && (str[index + 2] & ~32) == 69) || ((str[index] & ~32) == 87 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 68) || ((str[index] & ~32) == 84 && (str[index + 1] & ~32) == 72 && (str[index + 2] & ~32) == 85) || ((str[index] & ~32) == 70 && (str[index + 1] & ~32) == 82 && (str[index + 2] & ~32) == 73) || ((str[index] & ~32) == 83 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 84) || ((str[index] & ~32) == 83 && (str[index + 1] & ~32) == 85 && (str[index + 2] & ~32) == 78))) { index+=3;
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        if (index + 2 < endIndex && (((str[index] & ~32) == 77 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 78) || ((str[index] & ~32) == 84 && (str[index + 1] & ~32) == 85 && (str[index + 2] & ~32) == 69) || ((str[index] & ~32) == 87 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 68) || ((str[index] & ~32) == 84 && (str[index + 1] & ~32) == 72 && (str[index + 2] & ~32) == 85) || ((str[index] & ~32) == 70 && (str[index + 1] & ~32) == 82 && (str[index + 2] & ~32) == 73) || ((str[index] & ~32) == 83 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 84) || ((str[index] & ~32) == 83 && (str[index + 1] & ~32) == 85 && (str[index + 2] & ~32) == 78))) {
+          index += 3;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -434,18 +573,25 @@ namespace CBORTest {
           while (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 36) || (str[index] == 38) || (str[index] == 43) || (str[index] >= 45 && str[index] <= 46) || (str[index] >= 65 && str[index] <= 90) || (str[index] >= 48 && str[index] <= 57) || (str[index] >= 94 && str[index] <= 126))) {
             ++index;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
-        if (index + 8 < endIndex && (str[index] == 61) && (((str[index + 1] & ~32) == 82 && (str[index + 2] & ~32) == 69 && (str[index + 3] & ~32) == 81 && (str[index + 4] & ~32) == 85 && (str[index + 5] & ~32) == 73 && (str[index + 6] & ~32) == 82 && (str[index + 7] & ~32) == 69 && (str[index + 8] & ~32) == 68) || ((str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 80 && (str[index + 3] & ~32) == 84 && (str[index + 4] & ~32) == 73 && (str[index + 5] & ~32) == 79 && (str[index + 6] & ~32) == 78 && (str[index + 7] & ~32) == 65 && (str[index + 8] & ~32) == 76))) { index+=9;
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } else {
+          index = indexStart; break;
+        }
+        if (index + 8 < endIndex && (str[index] == 61) && (((str[index + 1] & ~32) == 82 && (str[index + 2] & ~32) == 69 && (str[index + 3] & ~32) == 81 && (str[index + 4] & ~32) == 85 && (str[index + 5] & ~32) == 73 && (str[index + 6] & ~32) == 82 && (str[index + 7] & ~32) == 69 && (str[index + 8] & ~32) == 68) || ((str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 80 && (str[index + 3] & ~32) == 84 && (str[index + 4] & ~32) == 73 && (str[index + 5] & ~32) == 79 && (str[index + 6] & ~32) == 78 && (str[index + 7] & ~32) == 65 && (str[index + 8] & ~32) == 76))) {
+          index += 9;
+        } else {
+          index = indexStart; break;
+        }
         if (index < endIndex && (str[index] == 44)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = ParseValue(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         while (true) {
           int indexTemp2;
           int state2 = (tokener != null) ? tokener.GetState() : 0;
@@ -453,31 +599,32 @@ namespace CBORTest {
           do {
             int indexStart2 = index;
             if (index < endIndex && (str[index] == 44)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              break;
+            }
             indexTemp2 = ParseValue(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -498,21 +645,64 @@ namespace CBORTest {
       int state = (tokener != null) ? tokener.GetState() : 0;
       int indexTemp = index;
       do {
-        int indexTemp2 = ParseDotAtom(str, index, endIndex, tokener);
+        int indexTemp2 = ParseDomainLiteral(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseDomainLiteral(str, index, endIndex, tokener);
+          indexTemp = indexTemp2; break;
+        }
+        int state2 = (tokener != null) ? tokener.GetState() : 0;
+        indexTemp2 = index;
+        do {
+          int indexStart2 = index;
+          indexTemp2 = ParseAtom(str, index, endIndex, tokener);
+          if (indexTemp2 == index) {
+            indexTemp2 = indexStart2; break;
+          } else {
+            index = indexTemp2;
+          }
+          while (true) {
+            int indexTemp3;
+            int state3 = (tokener != null) ? tokener.GetState() : 0;
+            indexTemp3 = index;
+            do {
+              int indexStart3 = index;
+              if (index < endIndex && (str[index] == 46)) {
+                ++index;
+              } else {
+                break;
+              }
+              indexTemp3 = ParseAtom(str, index, endIndex, tokener);
+              if (indexTemp3 == index) {
+                indexTemp3 = indexStart3; index = indexStart3; break;
+              } else {
+                index = indexTemp3;
+              }
+              indexTemp3 = index;
+              index = indexStart3;
+            } while (false);
+            if (indexTemp3 != index) {
+              index = indexTemp3;
+  } else if (tokener != null) {
+              tokener.RestoreState(state3); break;
+            } else {
+ break;
+}
+          }
+          indexTemp2 = index;
+          index = indexStart2;
+        } while (false);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseObsDomain(str, index, endIndex, tokener);
-        if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
+        if (tokener != null) {
+ tokener.RestoreState(state2);
+}
       } while (false);
-      if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
+      if (tokener != null) {
+        if (indexTemp == indexStart) {
+ tokener.RestoreState(state);
+} else {
+ tokener.Commit(9, indexStart, indexTemp);
+}
       }
       return indexTemp;
     }
@@ -524,9 +714,10 @@ namespace CBORTest {
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 91)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         while (true) {
           int indexTemp2;
           int state2 = (tokener != null) ? tokener.GetState() : 0;
@@ -536,32 +727,33 @@ namespace CBORTest {
             index = ParseFWS(str, index, endIndex, tokener);
             indexTemp2 = ParseDtext(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         index = ParseFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 93)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -571,25 +763,26 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index] >= 97 && str[index] <= 122) || (str[index] >= 65 && str[index] <= 90))) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          break;
+        }
         index = ParseLdhStr(str, index, endIndex, tokener);
         for (int i = 0;; ++i) {
           int indexTemp2 = index;
           do {
             int indexStart2 = index;
             if (index + 1 < endIndex && (str[index] == 46) && ((str[index + 1] >= 48 && str[index + 1] <= 57) || (str[index + 1] >= 97 && str[index + 1] <= 122) || (str[index + 1] >= 65 && str[index + 1] <= 90))) {
-              { index += 2;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              index += 2;
+            } else {
+              break;
+            }
             index = ParseLdhStr(str, index, endIndex, tokener);
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
+            index = indexTemp2;
           } else {
             if (i < 1) {
               index = indexStart;
@@ -597,13 +790,93 @@ namespace CBORTest {
           }
         }
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
+      return indexTemp;
+    }
+
+    public static int ParseDomainNoCfws(string str, int index, int endIndex, ITokener tokener) {
+      int indexStart = index;
+      int state = (tokener != null) ? tokener.GetState() : 0;
+      int indexTemp = index;
+      do {
+        int indexTemp2 = ParseDotAtomText(str, index, endIndex, tokener);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
+        indexTemp2 = index;
+        do {
+          int indexStart2 = index;
+          if (index < endIndex && (str[index] == 91)) {
+            ++index;
+          } else {
+            break;
+          }
+          while (true) {
+            int indexTemp3 = index;
+            do {
+              int indexStart3 = index;
+              if (index < endIndex && ((str[index] >= 33 && str[index] <= 90) || (str[index] >= 94 && str[index] <= 126))) {
+                ++indexTemp3; break;
+              }
+              int indexTemp4;
+              indexTemp4 = index;
+              do {
+                int indexStart4 = index;
+                if (index < endIndex && ((str[index] >= 128 && str[index] <= 55295) || (str[index] >= 57344 && str[index] <= 65535))) {
+                  ++indexTemp4; break;
+                }
+                int indexTemp5;
+                indexTemp5 = index;
+                do {
+                  int indexStart5 = index;
+                  if (index < endIndex && (str[index] >= 55296 && str[index] <= 56319)) {
+                    ++index;
+                  } else {
+                    break;
+                  }
+                  if (index < endIndex && (str[index] >= 56320 && str[index] <= 57343)) {
+                    ++index;
+                  } else {
+                    index = indexStart5; break;
+                  }
+                  indexTemp5 = index;
+                  index = indexStart5;
+                } while (false);
+                if (indexTemp5 != index) {
+                  indexTemp4 = indexTemp5; break;
+                }
+              } while (false);
+              if (indexTemp4 != index) {
+                indexTemp3 = indexTemp4; break;
+              }
+            } while (false);
+            if (indexTemp3 != index) {
+              index = indexTemp3;
+            } else {
+ break;
+}
+          }
+          if (index < endIndex && (str[index] == 93)) {
+            ++index;
+          } else {
+            index = indexStart2; break;
+          }
+          indexTemp2 = index;
+          index = indexStart2;
+        } while (false);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
+      } while (false);
+      if (tokener != null && indexTemp == indexStart) {
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -615,53 +888,77 @@ namespace CBORTest {
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = ParseDotAtomText(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
     public static int ParseDotAtomText(string str, int index, int endIndex, ITokener tokener) {
       int indexStart = index;
+      int state = (tokener != null) ? tokener.GetState() : 0;
       int indexTemp = index;
       do {
-        if (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 39) || (str[index] >= 42 && str[index] <= 43) || (str[index] == 45) || (str[index] >= 47 && str[index] <= 57) || (str[index] == 61) || (str[index] == 63) || (str[index] >= 128 && str[index] <= 65535) || (str[index] >= 94 && str[index] <= 126) || (str[index] >= 65 && str[index] <= 90))) {
-          ++index;
-          while (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 39) || (str[index] >= 42 && str[index] <= 43) || (str[index] == 45) || (str[index] >= 47 && str[index] <= 57) || (str[index] == 61) || (str[index] == 63) || (str[index] >= 128 && str[index] <= 65535) || (str[index] >= 94 && str[index] <= 126) || (str[index] >= 65 && str[index] <= 90))) {
-            ++index;
+        for (int i = 0;; ++i) {
+          int indexTemp2 = ParseAtext(str, index, endIndex, tokener);
+          if (indexTemp2 != index) {
+            index = indexTemp2;
+          } else {
+            if (i < 1) {
+              index = indexStart;
+            } break;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        }
+        if (index == indexStart) {
+          break;
+        }
         while (true) {
-          int indexTemp2 = index;
+          int indexTemp2;
+          int state2 = (tokener != null) ? tokener.GetState() : 0;
+          indexTemp2 = index;
           do {
             int indexStart2 = index;
             if (index < endIndex && (str[index] == 46)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
-            if (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 39) || (str[index] >= 42 && str[index] <= 43) || (str[index] == 45) || (str[index] >= 47 && str[index] <= 57) || (str[index] == 61) || (str[index] == 63) || (str[index] >= 128 && str[index] <= 65535) || (str[index] >= 94 && str[index] <= 126) || (str[index] >= 65 && str[index] <= 90))) {
               ++index;
-              while (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 39) || (str[index] >= 42 && str[index] <= 43) || (str[index] == 45) || (str[index] >= 47 && str[index] <= 57) || (str[index] == 61) || (str[index] == 63) || (str[index] >= 128 && str[index] <= 65535) || (str[index] >= 94 && str[index] <= 126) || (str[index] >= 65 && str[index] <= 90))) {
-                ++index;
+            } else {
+              break;
+            }
+            for (int i2 = 0;; ++i2) {
+              int indexTemp3 = ParseAtext(str, index, endIndex, tokener);
+              if (indexTemp3 != index) {
+                index = indexTemp3;
+              } else {
+                if (i2 < 1) {
+                  index = indexStart2;
+                } break;
               }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+            }
+            if (index == indexStart2) {
+              break;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
+      if (tokener != null && indexTemp == indexStart) {
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -670,35 +967,36 @@ namespace CBORTest {
       int state = (tokener != null) ? tokener.GetState() : 0;
       int indexTemp = index;
       do {
-        if (index < endIndex && (str[index] >= 33 && str[index] <= 90)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 1 && str[index] <= 8)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 11 && str[index] <= 12)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 14 && str[index] <= 31)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] == 127)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 94 && str[index] <= 126)) {
-          { indexTemp++;
-          } break; }
-        int indexTemp2 = ParseQuotedPair(str, index, endIndex, tokener);
+        if (index < endIndex && ((str[index] >= 33 && str[index] <= 90) || (str[index] >= 1 && str[index] <= 8) || (str[index] >= 11 && str[index] <= 12) || (str[index] >= 14 && str[index] <= 31) || (str[index] == 127) || (str[index] >= 94 && str[index] <= 126) || (str[index] >= 128 && str[index] <= 55295) || (str[index] >= 57344 && str[index] <= 65535))) {
+          ++indexTemp; break;
+        }
+        int indexTemp2 = index;
+        do {
+          int indexStart2 = index;
+          if (index < endIndex && (str[index] >= 55296 && str[index] <= 56319)) {
+            ++index;
+          } else {
+            break;
+          }
+          if (index < endIndex && (str[index] >= 56320 && str[index] <= 57343)) {
+            ++index;
+          } else {
+            index = indexStart2; break;
+          }
+          indexTemp2 = index;
+          index = indexStart2;
+        } while (false);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        if (index < endIndex && (str[index] >= 128 && str[index] <= 65535)) {
-          { indexTemp++;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
+        indexTemp2 = ParseQuotedPair(str, index, endIndex, tokener);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -706,8 +1004,11 @@ namespace CBORTest {
       int indexStart = index;
       int indexTemp = index;
       do {
-        if (index + 2 < endIndex && (str[index] == 37) && (((str[index + 1] >= 65 && str[index + 1] <= 70) && (str[index + 2] >= 65 && str[index + 2] <= 70)) || ((str[index + 1] >= 97 && str[index + 1] <= 102) && (str[index + 2] >= 97 && str[index + 2] <= 102)) || ((str[index + 1] >= 48 && str[index + 1] <= 57) && (str[index + 2] >= 48 && str[index + 2] <= 57)))) { index += 3;
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        if (index + 2 < endIndex && (str[index] == 37) && (((str[index + 1] >= 65 && str[index + 1] <= 70) && (str[index + 2] >= 65 && str[index + 2] <= 70)) || ((str[index + 1] >= 97 && str[index + 1] <= 102) && (str[index + 2] >= 97 && str[index + 2] <= 102)) || ((str[index + 1] >= 48 && str[index + 1] <= 57) && (str[index + 2] >= 48 && str[index + 2] <= 57)))) {
+          index += 3;
+        } else {
+          break;
+        }
         indexTemp = index;
       } while (false);
       return indexTemp;
@@ -722,14 +1023,17 @@ namespace CBORTest {
           while (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 36) || (str[index] == 38) || (str[index] == 43) || (str[index] >= 45 && str[index] <= 46) || (str[index] >= 65 && str[index] <= 90) || (str[index] >= 48 && str[index] <= 57) || (str[index] >= 94 && str[index] <= 126))) {
             ++index;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } else {
+          break;
+        }
         if (index + 1 < endIndex && str[index] == 42 && str[index + 1] == 48) {
-          { index += 2;
-          } }
+          index += 2;
+        }
         if (index < endIndex && (str[index] == 42)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = index;
       } while (false);
       return indexTemp;
@@ -742,27 +1046,29 @@ namespace CBORTest {
       do {
         index = ParseCharset(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 39)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseLanguageTag(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 39)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         while (true) {
           int indexTemp2 = ParseExtendedOtherValues(str, index, endIndex, tokener);
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -776,21 +1082,25 @@ namespace CBORTest {
           while (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 36) || (str[index] == 38) || (str[index] == 43) || (str[index] >= 45 && str[index] <= 46) || (str[index] >= 65 && str[index] <= 90) || (str[index] >= 48 && str[index] <= 57) || (str[index] >= 94 && str[index] <= 126))) {
             ++index;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } else {
+          break;
+        }
         indexTemp = ParseOtherSections(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         if (index < endIndex && (str[index] == 42)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -807,26 +1117,25 @@ namespace CBORTest {
             int indexStart2 = index;
             int indexTemp3 = ParseExtOctet(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
             if (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 36) || (str[index] == 38) || (str[index] == 43) || (str[index] >= 45 && str[index] <= 46) || (str[index] >= 65 && str[index] <= 90) || (str[index] >= 48 && str[index] <= 57) || (str[index] >= 94 && str[index] <= 126))) {
-              { indexTemp2++;
-              } break; }
+              ++indexTemp2; break;
+            }
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -839,18 +1148,18 @@ namespace CBORTest {
           do {
             int indexStart2 = index;
             if (index + 1 < endIndex && str[index] == 13 && str[index + 1] == 10) {
-              { index += 2;
-              } }
+              index += 2;
+            }
             if (index < endIndex && ((str[index] == 32) || (str[index] == 9))) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
+            index = indexTemp2;
           } else {
             if (i < 1) {
               index = indexStart;
@@ -858,8 +1167,8 @@ namespace CBORTest {
           }
         }
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         indexTemp = index;
       } while (false);
       return indexTemp;
@@ -872,23 +1181,30 @@ namespace CBORTest {
       do {
         indexTemp = ParseDisplayName(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         if (index < endIndex && (str[index] == 58)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseGroupList(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 59)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
-      if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
+      if (tokener != null) {
+        if (indexTemp == indexStart) {
+ tokener.RestoreState(state);
+} else {
+ tokener.Commit(5, indexStart, indexTemp);
+}
       }
       return indexTemp;
     }
@@ -910,15 +1226,15 @@ namespace CBORTest {
               index = ParseFWS(str, index, endIndex, tokener);
               indexTemp3 = ParseComment(str, index, endIndex, tokener);
               if (indexTemp3 == index) {
-                { indexTemp3 = indexStart3;
-                } index = indexStart3; break;
-              } else { index = indexTemp3; }
+                indexTemp3 = indexStart3; index = indexStart3; break;
+              } else {
+                index = indexTemp3;
+              }
               indexTemp3 = index;
               index = indexStart3;
             } while (false);
             if (indexTemp3 != index) {
-              { index = indexTemp3;
-              }
+              index = indexTemp3;
             } else {
               if (i2 < 1) {
                 index = indexStart2;
@@ -926,45 +1242,43 @@ namespace CBORTest {
             }
           }
           if (index == indexStart2) {
-            { indexTemp2 = indexStart2;
-            } break; }
+            break;
+          }
           index = ParseFWS(str, index, endIndex, tokener);
           indexTemp2 = index;
           index = indexStart2;
         } while (false);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        if (tokener != null) {
-          tokener.RestoreState(state2);
+          indexTemp = indexTemp2; break;
         }
+        if (tokener != null) {
+ tokener.RestoreState(state2);
+}
         for (int i = 0;; ++i) {
           indexTemp2 = ParseFWS(str, index, endIndex, tokener);
-          if (indexTemp2 == index) {
-            { if (i < 1) {
-                { indexTemp = indexStart;
-                }
-              } } break;
+          if (indexTemp2 == index) { if (i < 1) {
+              indexTemp = indexStart;
+            } break;
           } else {
-            index = indexTemp2;
-          }
+ index = indexTemp2;
+}
         }
         if (indexTemp2 != indexStart) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
         index = indexStart;
         indexTemp2 = ParseMailboxList(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
         indexTemp2 = ParseObsGroupList(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -976,31 +1290,32 @@ namespace CBORTest {
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = ParseAuthservId(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         do {
           int indexTemp2 = index;
           do {
             int indexStart2 = index;
             indexTemp2 = ParseCFWS(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = ParseAuthresVersion(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else {
-            break;
+            index = indexTemp2;
+          } else { break;
           }
         } while (false);
         do {
@@ -1009,38 +1324,37 @@ namespace CBORTest {
             int indexStart2 = index;
             int indexTemp3 = ParseNoResult(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
             for (int i2 = 0;; ++i2) {
               indexTemp3 = ParseResinfo(str, index, endIndex, tokener);
-              if (indexTemp3 == index) {
-                { if (i2 < 1) {
-                    { indexTemp2 = indexStart2;
-                    }
-                  } } break;
+              if (indexTemp3 == index) { if (i2 < 1) {
+                  indexTemp2 = indexStart2;
+                } break;
               } else {
-                index = indexTemp3;
-              }
+ index = indexTemp3;
+}
             }
             if (indexTemp3 != indexStart) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else { index = indexStart; break; }
+            index = indexTemp2;
+          } else {
+            index = indexStart; break;
+          }
         } while (false);
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1055,21 +1369,23 @@ namespace CBORTest {
           while (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 36) || (str[index] >= 45 && str[index] <= 46) || (str[index] >= 65 && str[index] <= 90) || (str[index] >= 48 && str[index] <= 57) || (str[index] >= 94 && str[index] <= 126) || (str[index] >= 42 && str[index] <= 43) || (str[index] >= 38 && str[index] <= 39) || (str[index] == 63))) {
             ++index;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } else {
+          index = indexStart; break;
+        }
         while (true) {
           int indexTemp2 = ParseOptParameterList(str, index, endIndex, tokener);
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
-            break;
-          }
+ break;
+}
         }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1088,25 +1404,23 @@ namespace CBORTest {
             int indexStart2 = index;
             int indexTemp3 = ParseAddressList(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
             indexTemp3 = ParseCFWS(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else {
-            break;
+            index = indexTemp2;
+          } else { break;
           }
         } while (false);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1125,13 +1439,15 @@ namespace CBORTest {
           while (index < endIndex && ((str[index] >= 33 && str[index] <= 59) || (str[index] == 61) || (str[index] >= 63 && str[index] <= 126))) {
             ++index;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1143,9 +1459,10 @@ namespace CBORTest {
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = ParseDispositionType(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         while (true) {
           int indexTemp2;
@@ -1154,31 +1471,32 @@ namespace CBORTest {
           do {
             int indexStart2 = index;
             if (index < endIndex && (str[index] == 59)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              break;
+            }
             indexTemp2 = ParseDispositionParm(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1197,13 +1515,15 @@ namespace CBORTest {
           while (index < endIndex && ((str[index] >= 33 && str[index] <= 59) || (str[index] == 61) || (str[index] >= 63 && str[index] <= 126))) {
             ++index;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1215,18 +1535,21 @@ namespace CBORTest {
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = ParseRestrictedName(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         if (index < endIndex && (str[index] == 47)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = ParseRestrictedName(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         while (true) {
           int indexTemp2;
           int state2 = (tokener != null) ? tokener.GetState() : 0;
@@ -1235,32 +1558,33 @@ namespace CBORTest {
             int indexStart2 = index;
             index = ParseCFWS(str, index, endIndex, tokener);
             if (index < endIndex && (str[index] == 59)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
             index = ParseCFWS(str, index, endIndex, tokener);
             indexTemp2 = ParseParameter(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1284,9 +1608,10 @@ namespace CBORTest {
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = ParseDispNotParam(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         while (true) {
           int indexTemp2;
           int state2 = (tokener != null) ? tokener.GetState() : 0;
@@ -1294,32 +1619,33 @@ namespace CBORTest {
           do {
             int indexStart2 = index;
             if (index < endIndex && (str[index] == 59)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              break;
+            }
             indexTemp2 = ParseDispNotParam(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1335,39 +1661,40 @@ namespace CBORTest {
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = ParseWord(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         do {
           int indexTemp2 = index;
           do {
             int indexStart2 = index;
             index = ParseCFWS(str, index, endIndex, tokener);
             if (index < endIndex && (str[index] == 44)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
             indexTemp2 = ParseWord(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else {
-            break;
+            index = indexTemp2;
+          } else { break;
           }
         } while (false);
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1386,16 +1713,16 @@ namespace CBORTest {
       do {
         int indexTemp2 = ParseMailboxList(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
         indexTemp2 = ParseAddressList(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1410,34 +1737,38 @@ namespace CBORTest {
             int indexStart2 = index;
             index = ParseCFWS(str, index, endIndex, tokener);
             if (index < endIndex && (str[index] == 60)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
             indexTemp2 = ParseIdLeft(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             if (index < endIndex && (str[index] == 64)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
             indexTemp2 = ParseIdRight(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             if (index < endIndex && (str[index] == 62)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
             index = ParseCFWS(str, index, endIndex, tokener);
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
+            index = indexTemp2;
           } else {
             if (i < 1) {
               index = indexStart;
@@ -1445,13 +1776,13 @@ namespace CBORTest {
           }
         }
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1462,9 +1793,10 @@ namespace CBORTest {
       do {
         indexTemp = ParsePhrase(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         while (true) {
           int indexTemp2;
           int state2 = (tokener != null) ? tokener.GetState() : 0;
@@ -1472,31 +1804,32 @@ namespace CBORTest {
           do {
             int indexStart2 = index;
             if (index < endIndex && (str[index] == 44)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              break;
+            }
             indexTemp2 = ParsePhrase(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1510,55 +1843,60 @@ namespace CBORTest {
           int indexTemp2 = index;
           do {
             int indexStart2 = index;
-            if (index + 1 < endIndex && (((str[index] >= 65 && str[index] <= 90) && (str[index + 1] >= 65 && str[index + 1] <= 90)) || ((str[index] >= 97 && str[index] <= 122) && (str[index + 1] >= 97 && str[index + 1] <= 122)))) { index += 2;
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+            if (index + 1 < endIndex && (((str[index] >= 65 && str[index] <= 90) && (str[index + 1] >= 65 && str[index + 1] <= 90)) || ((str[index] >= 97 && str[index] <= 122) && (str[index + 1] >= 97 && str[index + 1] <= 122)))) {
+              index += 2;
+            } else {
+              break;
+            }
             while (index < endIndex && ((str[index] >= 65 && str[index] <= 90) || (str[index] >= 97 && str[index] <= 122))) {
-              { index++;
-              } }
+              ++index;
+            }
             do {
               int indexTemp3 = index;
               do {
                 int indexStart3 = index;
                 if (index < endIndex && (str[index] == 40)) {
-                  { index++;
-                  }
-                } else { indexTemp3 = indexStart3; index = indexStart3; break; }
+                  ++index;
+                } else {
+                  break;
+                }
                 indexTemp3 = ParseLanguageDescription(str, index, endIndex, tokener);
                 if (indexTemp3 == index) {
-                  { indexTemp3 = indexStart3;
-                  } index = indexStart3; break;
-                } else { index = indexTemp3; }
+                  indexTemp3 = indexStart3; index = indexStart3; break;
+                } else {
+                  index = indexTemp3;
+                }
                 if (index < endIndex && (str[index] == 41)) {
-                  { index++;
-                  }
-                } else { indexTemp3 = indexStart3; index = indexStart3; break; }
+                  ++index;
+                } else {
+                  index = indexStart3; break;
+                }
                 indexTemp3 = index;
                 index = indexStart3;
               } while (false);
               if (indexTemp3 != index) {
-                { index = indexTemp3;
-                }
-              } else {
-                break;
+                index = indexTemp3;
+              } else { break;
               }
             } while (false);
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else { index = indexStart; break; }
+            index = indexTemp2;
+          } else {
+            index = indexStart; break;
+          }
         } while (false);
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         index = ParseFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1585,24 +1923,23 @@ namespace CBORTest {
             int indexStart2 = index;
             int indexTemp3 = ParsePhrase(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
             indexTemp3 = ParseCFWS(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else {
-            break;
+            index = indexTemp2;
+          } else { break;
           }
         } while (false);
         if (index < endIndex && (str[index] == 60)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         do {
           int indexTemp2 = index;
           do {
@@ -1610,14 +1947,16 @@ namespace CBORTest {
             index = ParseFWS(str, index, endIndex, tokener);
             indexTemp2 = ParseDotAtomText(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             index = ParseFWS(str, index, endIndex, tokener);
             if (index < endIndex && (str[index] == 46)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
             index = ParseFWS(str, index, endIndex, tokener);
             do {
               int indexTemp3 = index;
@@ -1626,41 +1965,44 @@ namespace CBORTest {
                 int indexTemp4;
                 indexTemp4 = ParseDotAtomText(str, index, endIndex, tokener);
                 if (indexTemp4 != index) {
-                  { indexTemp3 = indexTemp4;
-                  } break; }
+                  indexTemp3 = indexTemp4; break;
+                }
                 if (index + 8 < endIndex && (str[index] & ~32) == 76 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 67 && (str[index + 3] & ~32) == 65 && (str[index + 4] & ~32) == 76 && (str[index + 5] & ~32) == 72 && (str[index + 6] & ~32) == 79 && (str[index + 7] & ~32) == 83 && (str[index + 8] & ~32) == 84) {
-                  { indexTemp3 += 9;
-                  } break; }
+                  indexTemp3 += 9; break;
+                }
               } while (false);
               if (indexTemp3 != index) {
-                { index = indexTemp3;
-                }
-              } else { index = indexStart2; break; }
+                index = indexTemp3;
+              } else {
+                index = indexStart2; break;
+              }
             } while (false);
             if (index == indexStart2) {
-              { indexTemp2 = indexStart2;
-              } break; }
+              break;
+            }
             index = ParseFWS(str, index, endIndex, tokener);
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else { index = indexStart; break; }
+            index = indexTemp2;
+          } else {
+            index = indexStart; break;
+          }
         } while (false);
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         if (index < endIndex && (str[index] == 62)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1680,27 +2022,28 @@ namespace CBORTest {
           int indexStart2 = index;
           index = ParseCFWS(str, index, endIndex, tokener);
           if (index + 1 < endIndex && (str[index] & ~32) == 78 && (str[index + 1] & ~32) == 79) {
-            { index += 2;
-            }
-          } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+            index += 2;
+          } else {
+            index = indexStart2; break;
+          }
           index = ParseCFWS(str, index, endIndex, tokener);
           indexTemp2 = index;
           index = indexStart2;
         } while (false);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        if (tokener != null) {
-          tokener.RestoreState(state2);
+          indexTemp = indexTemp2; break;
         }
+        if (tokener != null) {
+ tokener.RestoreState(state2);
+}
         indexTemp2 = ParseListHeaderUrlList(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1724,14 +2067,15 @@ namespace CBORTest {
         index = ParseFWS(str, index, endIndex, tokener);
         indexTemp = ParsePrecedence(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1743,15 +2087,16 @@ namespace CBORTest {
         index = ParseFWS(str, index, endIndex, tokener);
         indexTemp = ParseAddressList(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         index = ParseFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1763,14 +2108,15 @@ namespace CBORTest {
         index = ParseFWS(str, index, endIndex, tokener);
         indexTemp = ParseDateTime(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1788,73 +2134,75 @@ namespace CBORTest {
             do {
               int indexStart3 = index;
               if (index < endIndex && (str[index] >= 49 && str[index] <= 57)) {
-                { index++;
-                }
-              } else { indexTemp3 = indexStart3; index = indexStart3; break; }
+                ++index;
+              } else {
+                break;
+              }
               while (index < endIndex && (str[index] >= 48 && str[index] <= 57)) {
-                { index++;
-                } }
+                ++index;
+              }
               indexTemp3 = index;
               index = indexStart3;
             } while (false);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
             if (index < endIndex && (str[index] == 48)) {
-              { indexTemp2++;
-              } break; }
+              ++indexTemp2; break;
+            }
             if (index + 4 < endIndex && (str[index] & ~32) == 68 && (str[index + 1] & ~32) == 82 && (str[index + 2] & ~32) == 73 && (str[index + 3] & ~32) == 76 && (str[index + 4] & ~32) == 76) {
-              { indexTemp2 += 5;
-              } break; }
+              indexTemp2 += 5; break;
+            }
             if (index + 6 < endIndex && (str[index] & ~32) == 80 && (str[index + 1] & ~32) == 82 && (str[index + 2] & ~32) == 79 && (str[index + 3] & ~32) == 74 && (str[index + 4] & ~32) == 69 && (str[index + 5] & ~32) == 67 && (str[index + 6] & ~32) == 84) {
-              { indexTemp2 += 7;
-              } break; }
+              indexTemp2 += 7; break;
+            }
             if (index + 8 < endIndex && (str[index] & ~32) == 79 && (str[index + 1] & ~32) == 80 && (str[index + 2] & ~32) == 69 && (str[index + 3] & ~32) == 82 && (str[index + 4] & ~32) == 65 && (str[index + 5] & ~32) == 84 && (str[index + 6] & ~32) == 73 && (str[index + 7] & ~32) == 79 && (str[index + 8] & ~32) == 78) {
-              { indexTemp2 += 9;
-              } break; }
+              indexTemp2 += 9; break;
+            }
             if (index + 7 < endIndex && (str[index] & ~32) == 69 && (str[index + 1] & ~32) == 88 && (str[index + 2] & ~32) == 69 && (str[index + 3] & ~32) == 82 && (str[index + 4] & ~32) == 67 && (str[index + 5] & ~32) == 73 && (str[index + 6] & ~32) == 83 && (str[index + 7] & ~32) == 69) {
-              { indexTemp2 += 8;
-              } break; }
+              indexTemp2 += 8; break;
+            }
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else { index = indexStart; break; }
+            index = indexTemp2;
+          } else {
+            index = indexStart; break;
+          }
         } while (false);
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         do {
           int indexTemp2 = index;
           do {
             int indexStart2 = index;
             if (index < endIndex && (str[index] == 59)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              break;
+            }
             index = ParseFWS(str, index, endIndex, tokener);
             indexTemp2 = ParseMessageTypeParam(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             index = ParseFWS(str, index, endIndex, tokener);
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else {
-            break;
+            index = indexTemp2;
+          } else { break;
           }
         } while (false);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1866,14 +2214,15 @@ namespace CBORTest {
         index = ParseFWS(str, index, endIndex, tokener);
         indexTemp = ParsePrecedence(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1884,9 +2233,10 @@ namespace CBORTest {
       do {
         indexTemp = ParseMsgId(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         while (true) {
           int indexTemp2;
           int state2 = (tokener != null) ? tokener.GetState() : 0;
@@ -1894,31 +2244,32 @@ namespace CBORTest {
           do {
             int indexStart2 = index;
             if (index < endIndex && (str[index] == 44)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              break;
+            }
             indexTemp2 = ParseMsgId(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1938,22 +2289,29 @@ namespace CBORTest {
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = ParseAtom(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 59)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
-        while (index < endIndex && ((str[index] >= 1 && str[index] <= 9) || (str[index] >= 11 && str[index] <= 12) || (str[index] >= 14 && str[index] <= 65535))) {
-          { index++;
-          } }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
+        while (true) {
+          int indexTemp2 = ParseText(str, index, endIndex, tokener);
+          if (indexTemp2 != index) {
+            index = indexTemp2;
+          } else {
+ break;
+}
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1967,23 +2325,25 @@ namespace CBORTest {
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
-            break;
-          }
+ break;
+}
         }
         if (index < endIndex && (str[index] == 59)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = ParseDateTime(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -1998,40 +2358,40 @@ namespace CBORTest {
           do {
             int indexStart2 = index;
             if (index + 3 < endIndex && (str[index] & ~32) == 80 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 83 && (str[index + 3] & ~32) == 83) {
-              { indexTemp2 += 4;
-              } break; }
+              indexTemp2 += 4; break;
+            }
             if (index + 3 < endIndex && (str[index] & ~32) == 70 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 73 && (str[index + 3] & ~32) == 76) {
-              { indexTemp2 += 4;
-              } break; }
+              indexTemp2 += 4; break;
+            }
             if (index + 7 < endIndex && (str[index] & ~32) == 83 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 70 && (str[index + 3] & ~32) == 84 && (str[index + 4] & ~32) == 70 && (str[index + 5] & ~32) == 65 && (str[index + 6] & ~32) == 73 && (str[index + 7] & ~32) == 76) {
-              { indexTemp2 += 8;
-              } break; }
+              indexTemp2 += 8; break;
+            }
             if (index + 6 < endIndex && (str[index] & ~32) == 78 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 85 && (str[index + 3] & ~32) == 84 && (str[index + 4] & ~32) == 82 && (str[index + 5] & ~32) == 65 && (str[index + 6] & ~32) == 76) {
-              { indexTemp2 += 7;
-              } break; }
+              indexTemp2 += 7; break;
+            }
             if (index + 3 < endIndex && (str[index] & ~32) == 78 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 78 && (str[index + 3] & ~32) == 69) {
-              { indexTemp2 += 4;
-              } break; }
+              indexTemp2 += 4; break;
+            }
             if (index + 8 < endIndex && (str[index] & ~32) == 84 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 77 && (str[index + 3] & ~32) == 80 && (str[index + 4] & ~32) == 69 && (str[index + 5] & ~32) == 82 && (str[index + 6] & ~32) == 82 && (str[index + 7] & ~32) == 79 && (str[index + 8] & ~32) == 82) {
-              { indexTemp2 += 9;
-              } break; }
+              indexTemp2 += 9; break;
+            }
             if (index + 8 < endIndex && (str[index] & ~32) == 80 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 82 && (str[index + 3] & ~32) == 77 && (str[index + 4] & ~32) == 69 && (str[index + 5] & ~32) == 82 && (str[index + 6] & ~32) == 82 && (str[index + 7] & ~32) == 79 && (str[index + 8] & ~32) == 82) {
-              { indexTemp2 += 9;
-              } break; }
+              indexTemp2 += 9; break;
+            }
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else { index = indexStart; break; }
+            index = indexTemp2;
+          } else {
+            index = indexStart; break;
+          }
         } while (false);
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         for (int i = 0;; ++i) {
-          int indexTemp2 = ParseFWS(str, index, endIndex, tokener);  // SEQUENCE FWS 1 -1
+          int indexTemp2 = ParseFWS(str, index, endIndex, tokener);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
+            index = indexTemp2;
           } else {
             if (i < 1) {
               index = indexStart;
@@ -2039,22 +2399,22 @@ namespace CBORTest {
           }
         }
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         do {
           int indexTemp2 = index;
           do {
             int indexStart2 = index;
             indexTemp2 = ParseComment(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             for (int i2 = 0;; ++i2) {
-              int indexTemp3 = ParseFWS(str, index, endIndex, tokener);  // SEQUENCE FWS 1 -1
+              int indexTemp3 = ParseFWS(str, index, endIndex, tokener);
               if (indexTemp3 != index) {
-                { index = indexTemp3;
-                }
+                index = indexTemp3;
               } else {
                 if (i2 < 1) {
                   index = indexStart2;
@@ -2062,28 +2422,27 @@ namespace CBORTest {
               }
             }
             if (index == indexStart2) {
-              { indexTemp2 = indexStart2;
-              } break; }
+              break;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else {
-            break;
+            index = indexTemp2;
+          } else { break;
           }
         } while (false);
         index = ParseKeyValueList(str, index, endIndex, tokener);
         if (index + 1 < endIndex && str[index] == 13 && str[index + 1] == 10) {
-          { index += 2;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          index += 2;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2140,30 +2499,22 @@ namespace CBORTest {
       int state = (tokener != null) ? tokener.GetState() : 0;
       int indexTemp = index;
       do {
-        int indexTemp2 = ParseAddrSpec(str, index, endIndex, tokener);
+        int indexTemp2 = ParseMailbox(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseNameAddr(str, index, endIndex, tokener);
-        if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseNameAddr(str, index, endIndex, tokener);
-        if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseAddrSpec(str, index, endIndex, tokener);
-        if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
         indexTemp2 = ParseGroup(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
+        indexTemp2 = ParseMailbox(str, index, endIndex, tokener);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2194,15 +2545,16 @@ namespace CBORTest {
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index + 1 < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index + 1] >= 48 && str[index + 1] <= 57))) {
-          { index += 2;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          index += 2;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2211,64 +2563,18 @@ namespace CBORTest {
       int state = (tokener != null) ? tokener.GetState() : 0;
       int indexTemp = index;
       do {
-        int indexTemp2;
-        int state2 = (tokener != null) ? tokener.GetState() : 0;
-        indexTemp2 = index;
-        do {
-          int indexStart2 = index;
-          indexTemp2 = ParseWord(str, index, endIndex, tokener);
-          if (indexTemp2 == index) {
-            { indexTemp2 = indexStart2;
-            } index = indexStart2; break;
-          } else { index = indexTemp2; }
-          while (true) {
-            int indexTemp3;
-            int state3 = (tokener != null) ? tokener.GetState() : 0;
-            indexTemp3 = index;
-            do {
-              int indexStart3 = index;
-              if (index < endIndex && (str[index] == 46)) {
-                { index++;
-                }
-              } else { indexTemp3 = indexStart3; index = indexStart3; break; }
-              indexTemp3 = ParseWord(str, index, endIndex, tokener);
-              if (indexTemp3 == index) {
-                { indexTemp3 = indexStart3;
-                } index = indexStart3; break;
-              } else { index = indexTemp3; }
-              indexTemp3 = index;
-              index = indexStart3;
-            } while (false);
-            if (indexTemp3 != index) {
-              index = indexTemp3;
-            } else if (tokener != null) {
-              { tokener.RestoreState(state3);
-              } break;
-            } else {
-              break;
-            }
-          }
-          indexTemp2 = index;
-          index = indexStart2;
-        } while (false);
+        int indexTemp2 = ParseDotAtomText(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        if (tokener != null) {
-          tokener.RestoreState(state2);
+          indexTemp = indexTemp2; break;
         }
-        indexTemp2 = ParseQuotedString(str, index, endIndex, tokener);
+        indexTemp2 = ParseLocalPart(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseDotAtomText(str, index, endIndex, tokener);
-        if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2279,28 +2585,20 @@ namespace CBORTest {
       do {
         int indexTemp2 = ParseDotAtomText(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseDotAtom(str, index, endIndex, tokener);
-        if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseDomainLiteral(str, index, endIndex, tokener);
-        if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseObsDomain(str, index, endIndex, tokener);
-        if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
         indexTemp2 = ParseNoFoldLiteral(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
+        indexTemp2 = ParseDomain(str, index, endIndex, tokener);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2309,12 +2607,13 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index < endIndex && ((str[index] >= 65 && str[index] <= 90) || (str[index] >= 97 && str[index] <= 122))) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          break;
+        }
         while (index < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index] == 95) || (str[index] >= 45 && str[index] <= 46) || (str[index] >= 97 && str[index] <= 122) || (str[index] >= 65 && str[index] <= 90))) {
-          { index++;
-          } }
+          ++index;
+        }
         indexTemp = index;
       } while (false);
       return indexTemp;
@@ -2327,9 +2626,10 @@ namespace CBORTest {
       do {
         indexTemp = ParseKeyValuePair(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         while (true) {
           int indexTemp2;
           int state2 = (tokener != null) ? tokener.GetState() : 0;
@@ -2337,35 +2637,36 @@ namespace CBORTest {
           do {
             int indexStart2 = index;
             if (index < endIndex && (str[index] == 59)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              break;
+            }
             index = ParseCFWS(str, index, endIndex, tokener);
             indexTemp2 = ParseKeyValuePair(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         if (index < endIndex && (str[index] == 59)) {
-          { index++;
-          } }
+          ++index;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2376,40 +2677,43 @@ namespace CBORTest {
       do {
         indexTemp = ParseKey(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 61)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         do {
           int indexTemp2 = index;
           do {
             int indexStart2 = index;
             int indexTemp3 = ParseDotAtom(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
             indexTemp3 = ParseQuotedString(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else { index = indexStart; break; }
+            index = indexTemp2;
+          } else {
+            index = indexStart; break;
+          }
         } while (false);
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2422,12 +2726,13 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index < endIndex && ((str[index] >= 65 && str[index] <= 90) || (str[index] >= 97 && str[index] <= 122))) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          break;
+        }
         while (index < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index] == 45) || (str[index] >= 97 && str[index] <= 122) || (str[index] >= 65 && str[index] <= 90))) {
-          { index++;
-          } }
+          ++index;
+        }
         indexTemp = index;
       } while (false);
       return indexTemp;
@@ -2438,12 +2743,13 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         while (index < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index] == 45) || (str[index] >= 97 && str[index] <= 122) || (str[index] >= 65 && str[index] <= 90))) {
-          { index++;
-          } }
+          ++index;
+        }
         if (index < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index] >= 97 && str[index] <= 122) || (str[index] >= 65 && str[index] <= 90))) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = index;
       } while (false);
       return indexTemp;
@@ -2456,25 +2762,29 @@ namespace CBORTest {
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 60)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         if (index < endIndex && ((str[index] >= 33 && str[index] <= 59) || (str[index] == 61) || (str[index] >= 63 && str[index] <= 126))) {
           ++index;
           while (index < endIndex && ((str[index] >= 33 && str[index] <= 59) || (str[index] == 61) || (str[index] >= 63 && str[index] <= 126))) {
             ++index;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } else {
+          index = indexStart; break;
+        }
         if (index < endIndex && (str[index] == 62)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2485,9 +2795,10 @@ namespace CBORTest {
       do {
         indexTemp = ParseListHeaderUrl(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         while (true) {
           int indexTemp2;
           int state2 = (tokener != null) ? tokener.GetState() : 0;
@@ -2495,31 +2806,32 @@ namespace CBORTest {
           do {
             int indexStart2 = index;
             if (index < endIndex && (str[index] == 44)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              break;
+            }
             indexTemp2 = ParseListHeaderUrl(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2535,9 +2847,10 @@ namespace CBORTest {
           int indexStart2 = index;
           indexTemp2 = ParseWord(str, index, endIndex, tokener);
           if (indexTemp2 == index) {
-            { indexTemp2 = indexStart2;
-            } index = indexStart2; break;
-          } else { index = indexTemp2; }
+            indexTemp2 = indexStart2; break;
+          } else {
+            index = indexTemp2;
+          }
           while (true) {
             int indexTemp3;
             int state3 = (tokener != null) ? tokener.GetState() : 0;
@@ -2545,43 +2858,165 @@ namespace CBORTest {
             do {
               int indexStart3 = index;
               if (index < endIndex && (str[index] == 46)) {
-                { index++;
-                }
-              } else { indexTemp3 = indexStart3; index = indexStart3; break; }
+                ++index;
+              } else {
+                break;
+              }
               indexTemp3 = ParseWord(str, index, endIndex, tokener);
               if (indexTemp3 == index) {
-                { indexTemp3 = indexStart3;
-                } index = indexStart3; break;
-              } else { index = indexTemp3; }
+                indexTemp3 = indexStart3; index = indexStart3; break;
+              } else {
+                index = indexTemp3;
+              }
               indexTemp3 = index;
               index = indexStart3;
             } while (false);
             if (indexTemp3 != index) {
               index = indexTemp3;
-            } else if (tokener != null) {
-              { tokener.RestoreState(state3);
-              } break;
+  } else if (tokener != null) {
+              tokener.RestoreState(state3); break;
             } else {
-              break;
-            }
+ break;
+}
           }
           indexTemp2 = index;
           index = indexStart2;
         } while (false);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        if (tokener != null) {
-          tokener.RestoreState(state2);
+          indexTemp = indexTemp2; break;
         }
+        if (tokener != null) {
+ tokener.RestoreState(state2);
+}
         indexTemp2 = ParseQuotedString(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
+      } while (false);
+      if (tokener != null) {
+        if (indexTemp == indexStart) {
+ tokener.RestoreState(state);
+} else {
+ tokener.Commit(8, indexStart, indexTemp);
+}
+      }
+      return indexTemp;
+    }
+
+    public static int ParseLocalPartNoCfws(string str, int index, int endIndex, ITokener tokener) {
+      int indexStart = index;
+      int state = (tokener != null) ? tokener.GetState() : 0;
+      int indexTemp = index;
+      do {
+        int indexTemp2 = ParseDotAtomText(str, index, endIndex, tokener);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
+        indexTemp2 = index;
+        do {
+          int indexStart2 = index;
+          if (index < endIndex && (str[index] == 34)) {
+            ++index;
+          } else {
+            break;
+          }
+          while (true) {
+            int indexTemp3 = index;
+            do {
+              int indexStart3 = index;
+              if (index < endIndex && ((str[index] == 32) || (str[index] == 9))) {
+                ++indexTemp3; break;
+              }
+              if (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 91) || (str[index] >= 93 && str[index] <= 126))) {
+                ++indexTemp3; break;
+              }
+              int indexTemp4;
+              indexTemp4 = index;
+              do {
+                int indexStart4 = index;
+                if (index < endIndex && (str[index] == 92)) {
+                  ++index;
+                }
+                do {
+                  int indexTemp5;
+                  indexTemp5 = index;
+                  do {
+                    int indexStart5 = index;
+                    if (index < endIndex && ((str[index] >= 128 && str[index] <= 55295) || (str[index] >= 57344 && str[index] <= 65535))) {
+                      ++indexTemp5; break;
+                    }
+                    int indexTemp6;
+                    indexTemp6 = index;
+                    do {
+                      int indexStart6 = index;
+                      if (index < endIndex && (str[index] >= 55296 && str[index] <= 56319)) {
+                        ++index;
+                      } else {
+                        break;
+                      }
+                      if (index < endIndex && (str[index] >= 56320 && str[index] <= 57343)) {
+                        ++index;
+                      } else {
+                        index = indexStart6; break;
+                      }
+                      indexTemp6 = index;
+                      index = indexStart6;
+                    } while (false);
+                    if (indexTemp6 != index) {
+                      indexTemp5 = indexTemp6; break;
+                    }
+                  } while (false);
+                  if (indexTemp5 != index) {
+                    index = indexTemp5;
+                  } else {
+                    index = indexStart4; break;
+                  }
+                } while (false);
+                if (index == indexStart4) {
+                  break;
+                }
+                indexTemp4 = index;
+                index = indexStart4;
+              } while (false);
+              if (indexTemp4 != index) {
+                indexTemp3 = indexTemp4; break;
+              }
+              indexTemp4 = index;
+              do {
+                int indexStart4 = index;
+                if (index + 1 < endIndex && (str[index] == 92) && ((str[index + 1] == 9) || (str[index + 1] >= 32 && str[index + 1] <= 126))) {
+                  index += 2;
+                } else {
+                  break;
+                }
+                indexTemp4 = index;
+                index = indexStart4;
+              } while (false);
+              if (indexTemp4 != index) {
+                indexTemp3 = indexTemp4; break;
+              }
+            } while (false);
+            if (indexTemp3 != index) {
+              index = indexTemp3;
+            } else {
+ break;
+}
+          }
+          if (index < endIndex && (str[index] == 34)) {
+            ++index;
+          } else {
+            index = indexStart2; break;
+          }
+          indexTemp2 = index;
+          index = indexStart2;
+        } while (false);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2592,15 +3027,19 @@ namespace CBORTest {
       do {
         int indexTemp2 = ParseNameAddr(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
         indexTemp2 = ParseAddrSpec(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
-      if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
+      if (tokener != null) {
+        if (indexTemp == indexStart) {
+ tokener.RestoreState(state);
+} else {
+ tokener.Commit(6, indexStart, indexTemp);
+}
       }
       return indexTemp;
     }
@@ -2618,26 +3057,27 @@ namespace CBORTest {
             int indexStart2 = index;
             index = ParseCFWS(str, index, endIndex, tokener);
             if (index < endIndex && (str[index] == 44)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = ParseMailbox(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         while (true) {
           int indexTemp2;
           int state2 = (tokener != null) ? tokener.GetState() : 0;
@@ -2645,9 +3085,10 @@ namespace CBORTest {
           do {
             int indexStart2 = index;
             if (index < endIndex && (str[index] == 44)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              break;
+            }
             do {
               int indexTemp3 = index;
               do {
@@ -2655,18 +3096,16 @@ namespace CBORTest {
                 int indexTemp4;
                 indexTemp4 = ParseMailbox(str, index, endIndex, tokener);
                 if (indexTemp4 != index) {
-                  { indexTemp3 = indexTemp4;
-                  } break; }
+                  indexTemp3 = indexTemp4; break;
+                }
                 indexTemp4 = ParseCFWS(str, index, endIndex, tokener);
                 if (indexTemp4 != index) {
-                  { indexTemp3 = indexTemp4;
-                  } break; }
+                  indexTemp3 = indexTemp4; break;
+                }
               } while (false);
               if (indexTemp3 != index) {
-                { index = indexTemp3;
-                }
-              } else {
-                break;
+                index = indexTemp3;
+              } else { break;
               }
             } while (false);
             indexTemp2 = index;
@@ -2674,18 +3113,17 @@ namespace CBORTest {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2695,25 +3133,28 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index + 9 < endIndex && (str[index] & ~32) == 73 && (str[index + 1] & ~32) == 68 && (str[index + 2] & ~32) == 69 && (str[index + 3] & ~32) == 78 && (str[index + 4] & ~32) == 84 && (str[index + 5] & ~32) == 73 && (str[index + 6] & ~32) == 70 && (str[index + 7] & ~32) == 73 && (str[index + 8] & ~32) == 69 && (str[index + 9] & ~32) == 82) {
-          { index += 10;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          index += 10;
+        } else {
+          break;
+        }
         index = ParseFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 61)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseFWS(str, index, endIndex, tokener);
         indexTemp = ParseQuotedMilitaryString(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2724,39 +3165,40 @@ namespace CBORTest {
       do {
         indexTemp = ParseLdhStr(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         do {
           int indexTemp2 = index;
           do {
             int indexStart2 = index;
             index = ParseCFWS(str, index, endIndex, tokener);
             if (index < endIndex && (str[index] == 47)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
             index = ParseCFWS(str, index, endIndex, tokener);
             indexTemp2 = ParseMethodVersion(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else {
-            break;
+            index = indexTemp2;
+          } else { break;
           }
         } while (false);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2770,13 +3212,15 @@ namespace CBORTest {
           while (index < endIndex && (str[index] >= 48 && str[index] <= 57)) {
             ++index;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } else {
+          break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2788,25 +3232,28 @@ namespace CBORTest {
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = ParseMethod(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 61)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = ParseResult(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2817,15 +3264,16 @@ namespace CBORTest {
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index + 1 < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index + 1] >= 48 && str[index + 1] <= 57))) {
-          { index += 2;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          index += 2;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2836,33 +3284,38 @@ namespace CBORTest {
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 60)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = ParseIdLeft(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         if (index < endIndex && (str[index] == 64)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = ParseIdRight(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         if (index < endIndex && (str[index] == 62)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2874,14 +3327,15 @@ namespace CBORTest {
         index = ParseDisplayName(str, index, endIndex, tokener);
         indexTemp = ParseAngleAddr(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2891,26 +3345,28 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index < endIndex && (str[index] == 91)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          break;
+        }
         while (true) {
           int indexTemp2 = ParseDtext(str, index, endIndex, tokener);
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
-            break;
-          }
+ break;
+}
         }
         if (index < endIndex && (str[index] == 93)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -2921,148 +3377,21 @@ namespace CBORTest {
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 59)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index + 3 < endIndex && (str[index] & ~32) == 78 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 78 && (str[index + 3] & ~32) == 69) {
-          { index += 4;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
-        indexTemp = index;
-      } while (false);
-      if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
-      return indexTemp;
-    }
-
-    public static int ParseObsAddrList(string str, int index, int endIndex, ITokener tokener) {
-      int indexStart = index;
-      int state = (tokener != null) ? tokener.GetState() : 0;
-      int indexTemp = index;
-      do {
-        while (true) {
-          int indexTemp2;
-          int state2 = (tokener != null) ? tokener.GetState() : 0;
-          indexTemp2 = index;
-          do {
-            int indexStart2 = index;
-            index = ParseCFWS(str, index, endIndex, tokener);
-            if (index < endIndex && (str[index] == 44)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
-            indexTemp2 = index;
-            index = indexStart2;
-          } while (false);
-          if (indexTemp2 != index) {
-            index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
-          } else {
-            break;
-          }
-        }
-        indexTemp = ParseAddress(str, index, endIndex, tokener);
-        if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
-        while (true) {
-          int indexTemp2;
-          int state2 = (tokener != null) ? tokener.GetState() : 0;
-          indexTemp2 = index;
-          do {
-            int indexStart2 = index;
-            if (index < endIndex && (str[index] == 44)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
-            do {
-              int indexTemp3 = index;
-              do {
-                int indexStart3 = index;
-                int indexTemp4;
-                indexTemp4 = ParseAddress(str, index, endIndex, tokener);
-                if (indexTemp4 != index) {
-                  { indexTemp3 = indexTemp4;
-                  } break; }
-                indexTemp4 = ParseCFWS(str, index, endIndex, tokener);
-                if (indexTemp4 != index) {
-                  { indexTemp3 = indexTemp4;
-                  } break; }
-              } while (false);
-              if (indexTemp3 != index) {
-                { index = indexTemp3;
-                }
-              } else {
-                break;
-              }
-            } while (false);
-            indexTemp2 = index;
-            index = indexStart2;
-          } while (false);
-          if (indexTemp2 != index) {
-            index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
-          } else {
-            break;
-          }
+          index += 4;
+        } else {
+          index = indexStart; break;
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
-      return indexTemp;
-    }
-
-    public static int ParseObsDomain(string str, int index, int endIndex, ITokener tokener) {
-      int indexStart = index;
-      int state = (tokener != null) ? tokener.GetState() : 0;
-      int indexTemp = index;
-      do {
-        indexTemp = ParseAtom(str, index, endIndex, tokener);
-        if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
-        while (true) {
-          int indexTemp2;
-          int state2 = (tokener != null) ? tokener.GetState() : 0;
-          indexTemp2 = index;
-          do {
-            int indexStart2 = index;
-            if (index < endIndex && (str[index] == 46)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
-            indexTemp2 = ParseAtom(str, index, endIndex, tokener);
-            if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
-            indexTemp2 = index;
-            index = indexStart2;
-          } while (false);
-          if (indexTemp2 != index) {
-            index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
-          } else {
-            break;
-          }
-        }
-        indexTemp = index;
-      } while (false);
-      if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3079,30 +3408,31 @@ namespace CBORTest {
             int indexStart2 = index;
             int indexTemp3 = ParseCFWS(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
             if (index < endIndex && (str[index] == 44)) {
-              { indexTemp2++;
-              } break; }
+              ++indexTemp2; break;
+            }
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         if (index < endIndex && (str[index] == 64)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = ParseDomain(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         while (true) {
           int indexTemp2;
           int state2 = (tokener != null) ? tokener.GetState() : 0;
@@ -3110,31 +3440,32 @@ namespace CBORTest {
           do {
             int indexStart2 = index;
             if (index < endIndex && (str[index] == 44)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              break;
+            }
             index = ParseCFWS(str, index, endIndex, tokener);
             do {
               int indexTemp3 = index;
               do {
                 int indexStart3 = index;
                 if (index < endIndex && (str[index] == 64)) {
-                  { index++;
-                  }
-                } else { indexTemp3 = indexStart3; index = indexStart3; break; }
+                  ++index;
+                } else {
+                  break;
+                }
                 indexTemp3 = ParseDomain(str, index, endIndex, tokener);
                 if (indexTemp3 == index) {
-                  { indexTemp3 = indexStart3;
-                  } index = indexStart3; break;
-                } else { index = indexTemp3; }
+                  indexTemp3 = indexStart3; index = indexStart3; break;
+                } else {
+                  index = indexTemp3;
+                }
                 indexTemp3 = index;
                 index = indexStart3;
               } while (false);
               if (indexTemp3 != index) {
-                { index = indexTemp3;
-                }
-              } else {
-                break;
+                index = indexTemp3;
+              } else { break;
               }
             } while (false);
             indexTemp2 = index;
@@ -3142,18 +3473,17 @@ namespace CBORTest {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3168,15 +3498,15 @@ namespace CBORTest {
             int indexStart2 = index;
             index = ParseCFWS(str, index, endIndex, tokener);
             if (index < endIndex && (str[index] == 44)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
+            index = indexTemp2;
           } else {
             if (i < 1) {
               index = indexStart;
@@ -3184,14 +3514,14 @@ namespace CBORTest {
           }
         }
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3202,18 +3532,20 @@ namespace CBORTest {
       do {
         indexTemp = ParseObsDomainList(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         if (index < endIndex && (str[index] == 58)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3230,32 +3562,33 @@ namespace CBORTest {
             int indexStart2 = index;
             index = ParseCFWS(str, index, endIndex, tokener);
             if (index < endIndex && (str[index] == 59)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              index = indexStart2; break;
+            }
             index = ParseCFWS(str, index, endIndex, tokener);
             indexTemp2 = ParseParameter(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3264,12 +3597,13 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index + 1 < endIndex && (str[index] == 42) && (str[index + 1] >= 49 && str[index + 1] <= 57)) {
-          { index += 2;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          index += 2;
+        } else {
+          break;
+        }
         while (index < endIndex && (str[index] >= 48 && str[index] <= 57)) {
-          { index++;
-          } }
+          ++index;
+        }
         indexTemp = index;
       } while (false);
       return indexTemp;
@@ -3292,77 +3626,83 @@ namespace CBORTest {
               int indexStart3 = index;
               indexTemp3 = ParseExtendedInitialName(str, index, endIndex, tokener);
               if (indexTemp3 == index) {
-                { indexTemp3 = indexStart3;
-                } index = indexStart3; break;
-              } else { index = indexTemp3; }
+                indexTemp3 = indexStart3; break;
+              } else {
+                index = indexTemp3;
+              }
               if (index < endIndex && (str[index] == 61)) {
-                { index++;
-                }
-              } else { indexTemp3 = indexStart3; index = indexStart3; break; }
+                ++index;
+              } else {
+                index = indexStart3; break;
+              }
               indexTemp3 = ParseExtendedInitialValue(str, index, endIndex, tokener);
               if (indexTemp3 == index) {
-                { indexTemp3 = indexStart3;
-                } index = indexStart3; break;
-              } else { index = indexTemp3; }
+                indexTemp3 = indexStart3; index = indexStart3; break;
+              } else {
+                index = indexTemp3;
+              }
               indexTemp3 = index;
               index = indexStart3;
             } while (false);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
-            if (tokener != null) {
-              tokener.RestoreState(state3);
+              indexTemp2 = indexTemp3; break;
             }
+            if (tokener != null) {
+ tokener.RestoreState(state3);
+}
             state3 = (tokener != null) ? tokener.GetState() : 0;
             indexTemp3 = index;
             do {
               int indexStart3 = index;
               indexTemp3 = ParseExtendedOtherNames(str, index, endIndex, tokener);
               if (indexTemp3 == index) {
-                { indexTemp3 = indexStart3;
-                } index = indexStart3; break;
-              } else { index = indexTemp3; }
+                indexTemp3 = indexStart3; break;
+              } else {
+                index = indexTemp3;
+              }
               if (index < endIndex && (str[index] == 61)) {
-                { index++;
-                }
-              } else { indexTemp3 = indexStart3; index = indexStart3; break; }
+                ++index;
+              } else {
+                index = indexStart3; break;
+              }
               while (true) {
                 int indexTemp4;
                 indexTemp4 = ParseExtendedOtherValues(str, index, endIndex, tokener);
                 if (indexTemp4 != index) {
                   index = indexTemp4;
                 } else {
-                  break;
-                }
+ break;
+}
               }
               indexTemp3 = index;
               index = indexStart3;
             } while (false);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
-            if (tokener != null) {
-              tokener.RestoreState(state3);
+              indexTemp2 = indexTemp3; break;
             }
+            if (tokener != null) {
+ tokener.RestoreState(state3);
+}
             indexTemp3 = ParseRegularParameter(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else { index = indexStart; break; }
+            index = indexTemp2;
+          } else {
+            index = indexStart; break;
+          }
         } while (false);
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3373,36 +3713,38 @@ namespace CBORTest {
       do {
         int indexTemp2 = ParseAngleAddr(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
         int state2 = (tokener != null) ? tokener.GetState() : 0;
         indexTemp2 = index;
         do {
           int indexStart2 = index;
           index = ParseCFWS(str, index, endIndex, tokener);
           if (index < endIndex && (str[index] == 60)) {
-            { index++;
-            }
-          } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+            ++index;
+          } else {
+            index = indexStart2; break;
+          }
           index = ParseCFWS(str, index, endIndex, tokener);
           if (index < endIndex && (str[index] == 62)) {
-            { index++;
-            }
-          } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+            ++index;
+          } else {
+            index = indexStart2; break;
+          }
           index = ParseCFWS(str, index, endIndex, tokener);
           indexTemp2 = index;
           index = indexStart2;
         } while (false);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        if (tokener != null) {
-          tokener.RestoreState(state2);
+          indexTemp = indexTemp2; break;
         }
+        if (tokener != null) {
+ tokener.RestoreState(state2);
+}
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3413,44 +3755,26 @@ namespace CBORTest {
       do {
         indexTemp = ParsePhraseWord(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         while (true) {
-          int indexTemp2;
-          int state2 = (tokener != null) ? tokener.GetState() : 0;
-          indexTemp2 = index;
-          do {
-            int indexStart2 = index;
-            int indexTemp3 = ParsePhraseWord(str, index, endIndex, tokener);
-            if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
-            if (index < endIndex && (str[index] == 46)) {
-              { indexTemp2++;
-              } break; }
-            indexTemp3 = ParseCFWS(str, index, endIndex, tokener);
-            if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
-          } while (false);
+          int indexTemp2 = ParsePhraseWordOrDot(str, index, endIndex, tokener);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null) {
         if (indexTemp == indexStart) {
-          tokener.RestoreState(state);
-        } else {
-          tokener.Commit(2, indexStart, indexTemp);
-        }
+ tokener.RestoreState(state);
+} else {
+ tokener.Commit(2, indexStart, indexTemp);
+}
       }
       return indexTemp;
     }
@@ -3460,20 +3784,99 @@ namespace CBORTest {
       int state = (tokener != null) ? tokener.GetState() : 0;
       int indexTemp = index;
       do {
-        if (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 39) || (str[index] >= 42 && str[index] <= 43) || (str[index] == 45) || (str[index] >= 47 && str[index] <= 57) || (str[index] == 61) || (str[index] == 63) || (str[index] >= 128 && str[index] <= 65535) || (str[index] >= 94 && str[index] <= 126) || (str[index] >= 65 && str[index] <= 90))) {
-          ++index;
-          while (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 39) || (str[index] >= 42 && str[index] <= 43) || (str[index] == 45) || (str[index] >= 47 && str[index] <= 57) || (str[index] == 61) || (str[index] == 63) || (str[index] >= 128 && str[index] <= 65535) || (str[index] >= 94 && str[index] <= 126) || (str[index] >= 65 && str[index] <= 90))) {
-            ++index;
+        for (int i = 0;; ++i) {
+          int indexTemp2 = index;
+          do {
+            int indexStart2 = index;
+            if (index < endIndex && ((str[index] >= 65 && str[index] <= 90) || (str[index] >= 97 && str[index] <= 122))) {
+              ++indexTemp2; break;
+            }
+            if (index < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index] == 33) || (str[index] == 35) || (str[index] == 36) || (str[index] == 37) || (str[index] == 38) || (str[index] == 39) || (str[index] == 42) || (str[index] == 43) || (str[index] == 45) || (str[index] == 47) || (str[index] == 61) || (str[index] == 63) || (str[index] == 94) || (str[index] == 95) || (str[index] == 96) || (str[index] == 123) || (str[index] == 124) || (str[index] == 125) || (str[index] == 126))) {
+              ++indexTemp2; break;
+            }
+            int indexTemp3 = index;
+            do {
+              int indexStart3 = index;
+              if (index < endIndex && ((str[index] >= 128 && str[index] <= 55295) || (str[index] >= 57344 && str[index] <= 65535))) {
+                ++indexTemp3; break;
+              }
+              int indexTemp4;
+              indexTemp4 = index;
+              do {
+                int indexStart4 = index;
+                if (index < endIndex && (str[index] >= 55296 && str[index] <= 56319)) {
+                  ++index;
+                } else {
+                  break;
+                }
+                if (index < endIndex && (str[index] >= 56320 && str[index] <= 57343)) {
+                  ++index;
+                } else {
+                  index = indexStart4; break;
+                }
+                indexTemp4 = index;
+                index = indexStart4;
+              } while (false);
+              if (indexTemp4 != index) {
+                indexTemp3 = indexTemp4; break;
+              }
+            } while (false);
+            if (indexTemp3 != index) {
+              indexTemp2 = indexTemp3; break;
+            }
+          } while (false);
+          if (indexTemp2 != index) {
+            index = indexTemp2;
+          } else {
+            if (i < 1) {
+              index = indexStart;
+            } break;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        }
+        if (index == indexStart) {
+          break;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null) {
         if (indexTemp == indexStart) {
-          tokener.RestoreState(state);
-        } else {
-          tokener.Commit(3, indexStart, indexTemp);
+ tokener.RestoreState(state);
+} else {
+ tokener.Commit(3, indexStart, indexTemp);
+}
+      }
+      return indexTemp;
+    }
+
+    public static int ParsePhraseAtomOrDot(string str, int index, int endIndex, ITokener tokener) {
+      int indexStart = index;
+      int state = (tokener != null) ? tokener.GetState() : 0;
+      int indexTemp = index;
+      do {
+        int indexTemp2 = index;
+        for (int i = 0;; ++i) {
+          indexTemp2 = ParseAtext(str, index, endIndex, tokener);
+          if (indexTemp2 == index) { if (i < 1) {
+              indexTemp = indexStart;
+            } break;
+          } else {
+ index = indexTemp2;
+}
         }
+        if (indexTemp2 != indexStart) {
+          indexTemp = indexTemp2; break;
+        }
+        index = indexStart;
+        if (index < endIndex && (str[index] == 46)) {
+          ++indexTemp; break;
+        }
+      } while (false);
+      if (tokener != null) {
+        if (indexTemp == indexStart) {
+ tokener.RestoreState(state);
+} else {
+ tokener.Commit(4, indexStart, indexTemp);
+}
       }
       return indexTemp;
     }
@@ -3491,27 +3894,66 @@ namespace CBORTest {
           index = ParseCFWS(str, index, endIndex, tokener);
           indexTemp2 = ParsePhraseAtom(str, index, endIndex, tokener);
           if (indexTemp2 == index) {
-            { indexTemp2 = indexStart2;
-            } index = indexStart2; break;
-          } else { index = indexTemp2; }
+            indexTemp2 = indexStart2; index = indexStart2; break;
+          } else {
+            index = indexTemp2;
+          }
           index = ParseCFWS(str, index, endIndex, tokener);
           indexTemp2 = index;
           index = indexStart2;
         } while (false);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        if (tokener != null) {
-          tokener.RestoreState(state2);
+          indexTemp = indexTemp2; break;
         }
+        if (tokener != null) {
+ tokener.RestoreState(state2);
+}
         indexTemp2 = ParseQuotedString(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
+      return indexTemp;
+    }
+
+    public static int ParsePhraseWordOrDot(string str, int index, int endIndex, ITokener tokener) {
+      int indexStart = index;
+      int state = (tokener != null) ? tokener.GetState() : 0;
+      int indexTemp = index;
+      do {
+        int indexTemp2;
+        int state2 = (tokener != null) ? tokener.GetState() : 0;
+        indexTemp2 = index;
+        do {
+          int indexStart2 = index;
+          index = ParseCFWS(str, index, endIndex, tokener);
+          indexTemp2 = ParsePhraseAtomOrDot(str, index, endIndex, tokener);
+          if (indexTemp2 == index) {
+            indexTemp2 = indexStart2; index = indexStart2; break;
+          } else {
+            index = indexTemp2;
+          }
+          index = ParseCFWS(str, index, endIndex, tokener);
+          indexTemp2 = index;
+          index = indexStart2;
+        } while (false);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
+        if (tokener != null) {
+ tokener.RestoreState(state2);
+}
+        indexTemp2 = ParseQuotedString(str, index, endIndex, tokener);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
+      } while (false);
+      if (tokener != null && indexTemp == indexStart) {
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3528,54 +3970,56 @@ namespace CBORTest {
             do {
               int indexStart3 = index;
               if (index < endIndex && (str[index] >= 49 && str[index] <= 57)) {
-                { index++;
-                }
-              } else { indexTemp3 = indexStart3; index = indexStart3; break; }
+                ++index;
+              } else {
+                break;
+              }
               while (index < endIndex && (str[index] >= 48 && str[index] <= 57)) {
-                { index++;
-                } }
+                ++index;
+              }
               indexTemp3 = index;
               index = indexStart3;
             } while (false);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
             if (index < endIndex && (str[index] == 48)) {
-              { indexTemp2++;
-              } break; }
+              ++indexTemp2; break;
+            }
             if (index + 7 < endIndex && (str[index] & ~32) == 79 && (str[index + 1] & ~32) == 86 && (str[index + 2] & ~32) == 69 && (str[index + 3] & ~32) == 82 && (str[index + 4] & ~32) == 82 && (str[index + 5] & ~32) == 73 && (str[index + 6] & ~32) == 68 && (str[index + 7] & ~32) == 69) {
-              { indexTemp2 += 8;
-              } break; }
+              indexTemp2 += 8; break;
+            }
             if (index + 4 < endIndex && (str[index] & ~32) == 70 && (str[index + 1] & ~32) == 76 && (str[index + 2] & ~32) == 65 && (str[index + 3] & ~32) == 83 && (str[index + 4] & ~32) == 72) {
-              { indexTemp2 += 5;
-              } break; }
+              indexTemp2 += 5; break;
+            }
             if (index + 8 < endIndex && (str[index] & ~32) == 73 && (str[index + 1] & ~32) == 77 && (str[index + 2] & ~32) == 77 && (str[index + 3] & ~32) == 69 && (str[index + 4] & ~32) == 68 && (str[index + 5] & ~32) == 73 && (str[index + 6] & ~32) == 65 && (str[index + 7] & ~32) == 84 && (str[index + 8] & ~32) == 69) {
-              { indexTemp2 += 9;
-              } break; }
+              indexTemp2 += 9; break;
+            }
             if (index + 7 < endIndex && (str[index] & ~32) == 80 && (str[index + 1] & ~32) == 82 && (str[index + 2] & ~32) == 73 && (str[index + 3] & ~32) == 79 && (str[index + 4] & ~32) == 82 && (str[index + 5] & ~32) == 73 && (str[index + 6] & ~32) == 84 && (str[index + 7] & ~32) == 89) {
-              { indexTemp2 += 8;
-              } break; }
+              indexTemp2 += 8; break;
+            }
             if (index + 6 < endIndex && (str[index] & ~32) == 82 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 85 && (str[index + 3] & ~32) == 84 && (str[index + 4] & ~32) == 73 && (str[index + 5] & ~32) == 78 && (str[index + 6] & ~32) == 69) {
-              { indexTemp2 += 7;
-              } break; }
+              indexTemp2 += 7; break;
+            }
             if (index + 7 < endIndex && (str[index] & ~32) == 68 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 70 && (str[index + 3] & ~32) == 69 && (str[index + 4] & ~32) == 82 && (str[index + 5] & ~32) == 82 && (str[index + 6] & ~32) == 69 && (str[index + 7] & ~32) == 68) {
-              { indexTemp2 += 8;
-              } break; }
+              indexTemp2 += 8; break;
+            }
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else { index = indexStart; break; }
+            index = indexTemp2;
+          } else {
+            index = indexStart; break;
+          }
         } while (false);
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3587,36 +4031,18 @@ namespace CBORTest {
           int indexTemp2 = index;
           do {
             int indexStart2 = index;
-            if (index < endIndex && (str[index] >= 65 && str[index] <= 90)) {
-              { indexTemp2++;
-              } break; }
-            if (index < endIndex && (str[index] >= 97 && str[index] <= 122)) {
-              { indexTemp2++;
-              } break; }
-            if (index < endIndex && (str[index] == 32)) {
-              { indexTemp2++;
-              } break; }
-            if (index < endIndex && (str[index] == 39)) {
-              { indexTemp2++;
-              } break; }
-            if (index < endIndex && (str[index] >= 43 && str[index] <= 58)) {
-              { indexTemp2++;
-              } break; }
-            if (index < endIndex && (str[index] == 61)) {
-              { indexTemp2++;
-              } break; }
-            if (index < endIndex && (str[index] == 63)) {
-              { indexTemp2++;
-              } break; }
+            if (index < endIndex && ((str[index] >= 65 && str[index] <= 90) || (str[index] >= 97 && str[index] <= 122) || (str[index] == 32) || (str[index] == 39) || (str[index] >= 43 && str[index] <= 58) || (str[index] == 61) || (str[index] == 63))) {
+              ++indexTemp2; break;
+            }
             if (index < endIndex && (str[index] >= 40 && str[index] <= 41)) {
-              { indexTemp2++;
-              } break; }
+              ++indexTemp2; break;
+            }
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
@@ -3630,18 +4056,18 @@ namespace CBORTest {
       do {
         int indexTemp2 = ParseLdhStr(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
         if (index + 5 < endIndex && (str[index] & ~32) == 82 && (str[index + 1] & ~32) == 67 && (str[index + 2] & ~32) == 80 && (str[index + 3] & ~32) == 84 && (str[index + 4] & ~32) == 84 && (str[index + 5] & ~32) == 79) {
-          { indexTemp += 6;
-          } break; }
+          indexTemp += 6; break;
+        }
         if (index + 7 < endIndex && (str[index] & ~32) == 77 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 73 && (str[index + 3] & ~32) == 76 && (str[index + 4] & ~32) == 70 && (str[index + 5] & ~32) == 82 && (str[index + 6] & ~32) == 79 && (str[index + 7] & ~32) == 77) {
-          { indexTemp += 8;
-          } break; }
+          indexTemp += 8; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3652,35 +4078,40 @@ namespace CBORTest {
       do {
         indexTemp = ParsePtype(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 46)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = ParseProperty(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 61)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = ParsePvalue(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3688,30 +4119,12 @@ namespace CBORTest {
       int indexStart = index;
       int indexTemp = index;
       do {
-        if (index < endIndex && (str[index] >= 65 && str[index] <= 90)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 97 && str[index] <= 122)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] == 32)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] == 39)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 43 && str[index] <= 58)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] == 61)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] == 63)) {
-          { indexTemp++;
-          } break; }
+        if (index < endIndex && ((str[index] >= 65 && str[index] <= 90) || (str[index] >= 97 && str[index] <= 122) || (str[index] == 32) || (str[index] == 39) || (str[index] >= 43 && str[index] <= 58) || (str[index] == 61) || (str[index] == 63))) {
+          ++indexTemp; break;
+        }
         if (index < endIndex && (str[index] >= 40 && str[index] <= 41)) {
-          { indexTemp++;
-          } break; }
+          ++indexTemp; break;
+        }
       } while (false);
       return indexTemp;
     }
@@ -3721,17 +4134,17 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index + 3 < endIndex && (str[index] & ~32) == 83 && (str[index + 1] & ~32) == 77 && (str[index + 2] & ~32) == 84 && (str[index + 3] & ~32) == 80) {
-          { indexTemp += 4;
-          } break; }
+          indexTemp += 4; break;
+        }
         if (index + 5 < endIndex && (str[index] & ~32) == 72 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 65 && (str[index + 3] & ~32) == 68 && (str[index + 4] & ~32) == 69 && (str[index + 5] & ~32) == 82) {
-          { indexTemp += 6;
-          } break; }
+          indexTemp += 6; break;
+        }
         if (index + 3 < endIndex && (str[index] & ~32) == 66 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 68 && (str[index + 3] & ~32) == 89) {
-          { indexTemp += 4;
-          } break; }
+          indexTemp += 4; break;
+        }
         if (index + 5 < endIndex && (str[index] & ~32) == 80 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 76 && (str[index + 3] & ~32) == 73 && (str[index + 4] & ~32) == 67 && (str[index + 5] & ~32) == 89) {
-          { indexTemp += 6;
-          } break; }
+          indexTemp += 6; break;
+        }
       } while (false);
       return indexTemp;
     }
@@ -3760,48 +4173,49 @@ namespace CBORTest {
                   int indexStart4 = index;
                   index = ParseLocalPart(str, index, endIndex, tokener);
                   if (index < endIndex && (str[index] == 64)) {
-                    { index++;
-                    }
-                  } else { indexTemp4 = indexStart4; index = indexStart4; break; }
+                    ++index;
+                  } else {
+                    index = indexStart4; break;
+                  }
                   indexTemp4 = index;
                   index = indexStart4;
                 } while (false);
                 if (indexTemp4 != index) {
-                  { index = indexTemp4;
-                  }
-                } else {
-                  break;
+                  index = indexTemp4;
+                } else { break;
                 }
               } while (false);
               indexTemp3 = ParseDomainName(str, index, endIndex, tokener);
               if (indexTemp3 == index) {
-                { indexTemp3 = indexStart3;
-                } index = indexStart3; break;
-              } else { index = indexTemp3; }
+                indexTemp3 = indexStart3; index = indexStart3; break;
+              } else {
+                index = indexTemp3;
+              }
               indexTemp3 = index;
               index = indexStart3;
             } while (false);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
-            if (tokener != null) {
-              tokener.RestoreState(state3);
+              indexTemp2 = indexTemp3; break;
             }
+            if (tokener != null) {
+ tokener.RestoreState(state3);
+}
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else { index = indexStart; break; }
+            index = indexTemp2;
+          } else {
+            index = indexStart; break;
+          }
         } while (false);
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3810,38 +4224,42 @@ namespace CBORTest {
       int state = (tokener != null) ? tokener.GetState() : 0;
       int indexTemp = index;
       do {
-        int indexTemp2 = ParseQuotedPair(str, index, endIndex, tokener);
+        if (index < endIndex && ((str[index] >= 128 && str[index] <= 55295) || (str[index] >= 57344 && str[index] <= 65535))) {
+          ++indexTemp; break;
+        }
+        int indexTemp2 = index;
+        do {
+          int indexStart2 = index;
+          if (index < endIndex && (str[index] >= 55296 && str[index] <= 56319)) {
+            ++index;
+          } else {
+            break;
+          }
+          if (index < endIndex && (str[index] >= 56320 && str[index] <= 57343)) {
+            ++index;
+          } else {
+            index = indexStart2; break;
+          }
+          indexTemp2 = index;
+          index = indexStart2;
+        } while (false);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        if (index < endIndex && (str[index] >= 1 && str[index] <= 8)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 11 && str[index] <= 12)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 14 && str[index] <= 31)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] == 127)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 128 && str[index] <= 65535)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 93 && str[index] <= 126)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 35 && str[index] <= 91)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] == 33)) {
-          { indexTemp++;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
+        if (index < endIndex && ((str[index] >= 1 && str[index] <= 8) || (str[index] >= 11 && str[index] <= 12) || (str[index] >= 14 && str[index] <= 31) || (str[index] == 127))) {
+          ++indexTemp; break;
+        }
+        indexTemp2 = ParseQuotedPair(str, index, endIndex, tokener);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
+        if (index < endIndex && ((str[index] >= 93 && str[index] <= 126) || (str[index] >= 35 && str[index] <= 91) || (str[index] == 33))) {
+          ++indexTemp; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3851,14 +4269,14 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index < endIndex && (str[index] == 34)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          break;
+        }
         for (int i = 0; i < 69; ++i) {
-          int indexTemp2 = ParsePsChar(str, index, endIndex, tokener);  // CHOICE ps-char 1 69
+          int indexTemp2 = ParsePsChar(str, index, endIndex, tokener);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
+            index = indexTemp2;
           } else {
             if (i < 1) {
               index = indexStart;
@@ -3866,17 +4284,18 @@ namespace CBORTest {
           }
         }
         if (index == indexStart) {
-          { indexTemp = indexStart;
-          } break; }
+          break;
+        }
         if (index < endIndex && (str[index] == 34)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3884,10 +4303,50 @@ namespace CBORTest {
       int indexStart = index;
       int indexTemp = index;
       do {
-        if (index + 1 < endIndex && (str[index] == 92) && (str[index + 1] >= 0 && str[index + 1] <= 65535)) {
-          { index += 2;
+        if (index < endIndex && (str[index] == 92)) {
+          ++index;
+        } else {
+          break;
+        }
+        do {
+          int indexTemp2 = index;
+          do {
+            int indexStart2 = index;
+            if (index < endIndex && ((str[index] >= 1 && str[index] <= 8) || (str[index] >= 11 && str[index] <= 12) || (str[index] >= 14 && str[index] <= 31) || (str[index] == 127) || (str[index] == 0) || (str[index] == 10) || (str[index] >= 128 && str[index] <= 55295) || (str[index] >= 57344 && str[index] <= 65535))) {
+              ++indexTemp2; break;
+            }
+            int indexTemp3 = index;
+            do {
+              int indexStart3 = index;
+              if (index < endIndex && (str[index] >= 55296 && str[index] <= 56319)) {
+                ++index;
+              } else {
+                break;
+              }
+              if (index < endIndex && (str[index] >= 56320 && str[index] <= 57343)) {
+                ++index;
+              } else {
+                index = indexStart3; break;
+              }
+              indexTemp3 = index;
+              index = indexStart3;
+            } while (false);
+            if (indexTemp3 != index) {
+              indexTemp2 = indexTemp3; break;
+            }
+            if (index < endIndex && ((str[index] == 13) || (str[index] >= 33 && str[index] <= 126) || (str[index] == 9) || (str[index] == 32))) {
+              ++indexTemp2; break;
+            }
+          } while (false);
+          if (indexTemp2 != index) {
+            index = indexTemp2;
+          } else {
+            index = indexStart; break;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } while (false);
+        if (index == indexStart) {
+          break;
+        }
         indexTemp = index;
       } while (false);
       return indexTemp;
@@ -3900,9 +4359,10 @@ namespace CBORTest {
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 34)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         while (true) {
           int indexTemp2;
           int state2 = (tokener != null) ? tokener.GetState() : 0;
@@ -3912,31 +4372,36 @@ namespace CBORTest {
             index = ParseFWS(str, index, endIndex, tokener);
             indexTemp2 = ParseQcontent(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         index = ParseFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 34)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
-      if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
+      if (tokener != null) {
+        if (indexTemp == indexStart) {
+ tokener.RestoreState(state);
+} else {
+ tokener.Commit(7, indexStart, indexTemp);
+}
       }
       return indexTemp;
     }
@@ -3947,28 +4412,30 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index + 5 < endIndex && (str[index] & ~32) == 82 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 65 && (str[index + 3] & ~32) == 83 && (str[index + 4] & ~32) == 79 && (str[index + 5] & ~32) == 78) {
-          { index += 6;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          index += 6;
+        } else {
+          break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 61)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         while (true) {
           int indexTemp2 = ParseStdPrintablestring(str, index, endIndex, tokener);
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -3979,36 +4446,28 @@ namespace CBORTest {
       do {
         int indexTemp2 = ParseAngleAddr(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseDotAtom(str, index, endIndex, tokener);
-        if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseDomainLiteral(str, index, endIndex, tokener);
-        if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        indexTemp2 = ParseObsDomain(str, index, endIndex, tokener);
-        if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
         indexTemp2 = ParseAddrSpec(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
+        indexTemp2 = ParseDomain(str, index, endIndex, tokener);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
         indexTemp2 = ParseQuotedString(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
         indexTemp2 = ParseAtom(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -4019,23 +4478,26 @@ namespace CBORTest {
       do {
         indexTemp = ParseRegularParameterName(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         if (index < endIndex && (str[index] == 61)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = ParseValue(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -4049,13 +4511,15 @@ namespace CBORTest {
           while (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 36) || (str[index] == 38) || (str[index] == 43) || (str[index] >= 45 && str[index] <= 46) || (str[index] >= 65 && str[index] <= 90) || (str[index] >= 48 && str[index] <= 57) || (str[index] >= 94 && str[index] <= 126))) {
             ++index;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } else {
+          break;
+        }
         index = ParseSection(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -4066,36 +4530,38 @@ namespace CBORTest {
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 59)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = ParseMethodspec(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         do {
           int indexTemp2 = index;
           do {
             int indexStart2 = index;
             indexTemp2 = ParseCFWS(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = ParseReasonspec(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else {
-            break;
+            index = indexTemp2;
+          } else { break;
           }
         } while (false);
         while (true) {
@@ -4106,31 +4572,32 @@ namespace CBORTest {
             int indexStart2 = index;
             indexTemp2 = ParseCFWS(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = ParsePropspec(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -4139,15 +4606,16 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index] >= 97 && str[index] <= 122) || (str[index] >= 65 && str[index] <= 90))) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          break;
+        }
         for (int i = 0; i < 126; ++i) {
           if (index < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index] == 33) || (str[index] >= 35 && str[index] <= 36) || (str[index] == 38) || (str[index] >= 94 && str[index] <= 95) || (str[index] >= 45 && str[index] <= 46) || (str[index] == 43) || (str[index] >= 97 && str[index] <= 122) || (str[index] >= 65 && str[index] <= 90))) {
             ++index;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
@@ -4159,26 +4627,26 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index + 3 < endIndex && (str[index] & ~32) == 80 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 83 && (str[index + 3] & ~32) == 83) {
-          { indexTemp += 4;
-          } break; }
+          indexTemp += 4; break;
+        }
         if (index + 3 < endIndex && (str[index] & ~32) == 70 && (str[index + 1] & ~32) == 65 && (str[index + 2] & ~32) == 73 && (str[index + 3] & ~32) == 76) {
-          { indexTemp += 4;
-          } break; }
+          indexTemp += 4; break;
+        }
         if (index + 7 < endIndex && (str[index] & ~32) == 83 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 70 && (str[index + 3] & ~32) == 84 && (str[index + 4] & ~32) == 70 && (str[index + 5] & ~32) == 65 && (str[index + 6] & ~32) == 73 && (str[index + 7] & ~32) == 76) {
-          { indexTemp += 8;
-          } break; }
+          indexTemp += 8; break;
+        }
         if (index + 6 < endIndex && (str[index] & ~32) == 78 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 85 && (str[index + 3] & ~32) == 84 && (str[index + 4] & ~32) == 82 && (str[index + 5] & ~32) == 65 && (str[index + 6] & ~32) == 76) {
-          { indexTemp += 7;
-          } break; }
+          indexTemp += 7; break;
+        }
         if (index + 3 < endIndex && (str[index] & ~32) == 78 && (str[index + 1] & ~32) == 79 && (str[index + 2] & ~32) == 78 && (str[index + 3] & ~32) == 69) {
-          { indexTemp += 4;
-          } break; }
+          indexTemp += 4; break;
+        }
         if (index + 8 < endIndex && (str[index] & ~32) == 84 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 77 && (str[index + 3] & ~32) == 80 && (str[index + 4] & ~32) == 69 && (str[index + 5] & ~32) == 82 && (str[index + 6] & ~32) == 82 && (str[index + 7] & ~32) == 79 && (str[index + 8] & ~32) == 82) {
-          { indexTemp += 9;
-          } break; }
+          indexTemp += 9; break;
+        }
         if (index + 8 < endIndex && (str[index] & ~32) == 80 && (str[index + 1] & ~32) == 69 && (str[index + 2] & ~32) == 82 && (str[index + 3] & ~32) == 77 && (str[index + 4] & ~32) == 69 && (str[index + 5] & ~32) == 82 && (str[index + 6] & ~32) == 82 && (str[index + 7] & ~32) == 79 && (str[index + 8] & ~32) == 82) {
-          { indexTemp += 9;
-          } break; }
+          indexTemp += 9; break;
+        }
       } while (false);
       return indexTemp;
     }
@@ -4190,15 +4658,16 @@ namespace CBORTest {
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index + 1 < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index + 1] >= 48 && str[index + 1] <= 57))) {
-          { index += 2;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          index += 2;
+        } else {
+          index = indexStart; break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -4208,16 +4677,16 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index + 1 < endIndex && str[index] == 42 && str[index + 1] == 48) {
-          { indexTemp += 2;
-          } break; }
+          indexTemp += 2; break;
+        }
         int indexTemp2 = ParseOtherSections(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -4226,32 +4695,14 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index < endIndex && (str[index] >= 65 && str[index] <= 90)) {
-          { indexTemp++;
-          } break; }
+          ++indexTemp; break;
+        }
         if (index < endIndex && (str[index] >= 40 && str[index] <= 41)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] == 32)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] == 39)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 97 && str[index] <= 123)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 48 && str[index] <= 58)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] == 125)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] == 63)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 42 && str[index] <= 46)) {
-          { indexTemp++;
-          } break; }
+          ++indexTemp; break;
+        }
+        if (index < endIndex && ((str[index] == 32) || (str[index] == 39) || (str[index] >= 97 && str[index] <= 123) || (str[index] >= 48 && str[index] <= 58) || (str[index] == 125) || (str[index] == 63) || (str[index] >= 42 && str[index] <= 46))) {
+          ++indexTemp; break;
+        }
       } while (false);
       return indexTemp;
     }
@@ -4262,19 +4713,21 @@ namespace CBORTest {
       int indexTemp = index;
       do {
         if (index < endIndex && (str[index] == 36)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          break;
+        }
         indexTemp = ParsePsChar(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -4291,27 +4744,59 @@ namespace CBORTest {
             int indexStart2 = index;
             int indexTemp3 = ParseStdChar(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
             indexTemp3 = ParseStdPair(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { indexTemp2 = indexTemp3;
-              } break; }
+              indexTemp2 = indexTemp3; break;
+            }
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-          } else if (tokener != null) {
-            { tokener.RestoreState(state2);
-            } break;
+  } else if (tokener != null) {
+            tokener.RestoreState(state2); break;
           } else {
-            break;
-          }
+ break;
+}
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
+      return indexTemp;
+    }
+
+    public static int ParseText(string str, int index, int endIndex, ITokener tokener) {
+      int indexStart = index;
+      int indexTemp = index;
+      do {
+        if (index < endIndex && ((str[index] >= 1 && str[index] <= 9) || (str[index] == 11) || (str[index] == 12) || (str[index] >= 128 && str[index] <= 55295) || (str[index] >= 57344 && str[index] <= 65535))) {
+          ++indexTemp; break;
+        }
+        int indexTemp2 = index;
+        do {
+          int indexStart2 = index;
+          if (index < endIndex && (str[index] >= 55296 && str[index] <= 56319)) {
+            ++index;
+          } else {
+            break;
+          }
+          if (index < endIndex && (str[index] >= 56320 && str[index] <= 57343)) {
+            ++index;
+          } else {
+            index = indexStart2; break;
+          }
+          indexTemp2 = index;
+          index = indexStart2;
+        } while (false);
+        if (indexTemp2 != index) {
+          indexTemp = indexTemp2; break;
+        }
+        if (index < endIndex && (str[index] >= 14 && str[index] <= 127)) {
+          ++indexTemp; break;
+        }
+      } while (false);
       return indexTemp;
     }
 
@@ -4322,19 +4807,21 @@ namespace CBORTest {
       do {
         indexTemp = ParseTimeOfDay(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = ParseZone(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -4345,46 +4832,49 @@ namespace CBORTest {
       do {
         indexTemp = ParseHour(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         if (index < endIndex && (str[index] == 58)) {
-          { index++;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          ++index;
+        } else {
+          index = indexStart; break;
+        }
         indexTemp = ParseMinute(str, index, endIndex, tokener);
         if (indexTemp == index) {
-          { indexTemp = indexStart;
-          } index = indexStart; break;
-        } else { index = indexTemp; }
+          indexTemp = indexStart; index = indexStart; break;
+        } else {
+          index = indexTemp;
+        }
         do {
           int indexTemp2 = index;
           do {
             int indexStart2 = index;
             if (index < endIndex && (str[index] == 58)) {
-              { index++;
-              }
-            } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+              ++index;
+            } else {
+              break;
+            }
             indexTemp2 = ParseSecond(str, index, endIndex, tokener);
             if (indexTemp2 == index) {
-              { indexTemp2 = indexStart2;
-              } index = indexStart2; break;
-            } else { index = indexTemp2; }
+              indexTemp2 = indexStart2; index = indexStart2; break;
+            } else {
+              index = indexTemp2;
+            }
             indexTemp2 = index;
             index = indexStart2;
           } while (false);
           if (indexTemp2 != index) {
-            { index = indexTemp2;
-            }
-          } else {
-            break;
+            index = indexTemp2;
+          } else { break;
           }
         } while (false);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -4397,7 +4887,9 @@ namespace CBORTest {
           while (index < endIndex && ((str[index] == 33) || (str[index] >= 35 && str[index] <= 36) || (str[index] >= 45 && str[index] <= 46) || (str[index] >= 65 && str[index] <= 90) || (str[index] >= 48 && str[index] <= 57) || (str[index] >= 94 && str[index] <= 126) || (str[index] >= 42 && str[index] <= 43) || (str[index] >= 38 && str[index] <= 39) || (str[index] == 63))) {
             ++index;
           }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+        } else {
+          break;
+        }
         indexTemp = index;
       } while (false);
       return indexTemp;
@@ -4417,12 +4909,12 @@ namespace CBORTest {
         }
         int indexTemp2 = ParseQuotedString(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -4433,16 +4925,16 @@ namespace CBORTest {
       do {
         int indexTemp2 = ParseAtom(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
         indexTemp2 = ParseQuotedString(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
+          indexTemp = indexTemp2; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -4457,18 +4949,19 @@ namespace CBORTest {
       do {
         index = ParseCFWS(str, index, endIndex, tokener);
         if (index + 1 < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index + 1] >= 48 && str[index + 1] <= 57))) {
-          { index += 2;
-          }
-        } else { indexTemp = indexStart; index = indexStart; break; }
+          index += 2;
+        } else {
+          index = indexStart; break;
+        }
         while (index < endIndex && (str[index] >= 48 && str[index] <= 57)) {
-          { index++;
-          } }
+          ++index;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
 
@@ -4483,10 +4976,9 @@ namespace CBORTest {
         do {
           int indexStart2 = index;
           for (int i2 = 0;; ++i2) {
-            int indexTemp3 = ParseFWS(str, index, endIndex, tokener);  // SEQUENCE FWS 1 -1
+            int indexTemp3 = ParseFWS(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
-              { index = indexTemp3;
-              }
+              index = indexTemp3;
             } else {
               if (i2 < 1) {
                 index = indexStart2;
@@ -4494,71 +4986,64 @@ namespace CBORTest {
             }
           }
           if (index == indexStart2) {
-            { indexTemp2 = indexStart2;
-            } break; }
+            break;
+          }
           if (index < endIndex && ((str[index] == 43) || (str[index] == 45))) {
-            { index++;
-            }
-          } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+            ++index;
+          } else {
+            index = indexStart2; break;
+          }
           if (index + 3 < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index + 1] >= 48 && str[index + 1] <= 57) || (str[index + 2] >= 48 && str[index + 2] <= 57) || (str[index + 3] >= 48 && str[index + 3] <= 57))) {
-            { index += 4;
-            }
-          } else { indexTemp2 = indexStart2; index = indexStart2; break; }
+            index += 4;
+          } else {
+            index = indexStart2; break;
+          }
           indexTemp2 = index;
           index = indexStart2;
         } while (false);
         if (indexTemp2 != index) {
-          { indexTemp = indexTemp2;
-          } break; }
-        if (tokener != null) {
-          tokener.RestoreState(state2);
+          indexTemp = indexTemp2; break;
         }
+        if (tokener != null) {
+ tokener.RestoreState(state2);
+}
         if (index + 1 < endIndex && (str[index] & ~32) == 85 && (str[index + 1] & ~32) == 84) {
-          { indexTemp += 2;
-          } break; }
+          indexTemp += 2; break;
+        }
         if (index + 2 < endIndex && (str[index] & ~32) == 71 && (str[index + 1] & ~32) == 77 && (str[index + 2] & ~32) == 84) {
-          { indexTemp += 3;
-          } break; }
+          indexTemp += 3; break;
+        }
         if (index + 2 < endIndex && (str[index] & ~32) == 69 && (str[index + 1] & ~32) == 83 && (str[index + 2] & ~32) == 84) {
-          { indexTemp += 3;
-          } break; }
+          indexTemp += 3; break;
+        }
         if (index + 2 < endIndex && (str[index] & ~32) == 69 && (str[index + 1] & ~32) == 68 && (str[index + 2] & ~32) == 84) {
-          { indexTemp += 3;
-          } break; }
+          indexTemp += 3; break;
+        }
         if (index + 2 < endIndex && (str[index] & ~32) == 67 && (str[index + 1] & ~32) == 83 && (str[index + 2] & ~32) == 84) {
-          { indexTemp += 3;
-          } break; }
+          indexTemp += 3; break;
+        }
         if (index + 2 < endIndex && (str[index] & ~32) == 67 && (str[index + 1] & ~32) == 68 && (str[index + 2] & ~32) == 84) {
-          { indexTemp += 3;
-          } break; }
+          indexTemp += 3; break;
+        }
         if (index + 2 < endIndex && (str[index] & ~32) == 77 && (str[index + 1] & ~32) == 83 && (str[index + 2] & ~32) == 84) {
-          { indexTemp += 3;
-          } break; }
+          indexTemp += 3; break;
+        }
         if (index + 2 < endIndex && (str[index] & ~32) == 77 && (str[index + 1] & ~32) == 68 && (str[index + 2] & ~32) == 84) {
-          { indexTemp += 3;
-          } break; }
+          indexTemp += 3; break;
+        }
         if (index + 2 < endIndex && (str[index] & ~32) == 80 && (str[index + 1] & ~32) == 83 && (str[index + 2] & ~32) == 84) {
-          { indexTemp += 3;
-          } break; }
+          indexTemp += 3; break;
+        }
         if (index + 2 < endIndex && (str[index] & ~32) == 80 && (str[index + 1] & ~32) == 68 && (str[index + 2] & ~32) == 84) {
-          { indexTemp += 3;
-          } break; }
-        if (index < endIndex && (str[index] >= 65 && str[index] <= 73)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 75 && str[index] <= 90)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 97 && str[index] <= 105)) {
-          { indexTemp++;
-          } break; }
-        if (index < endIndex && (str[index] >= 107 && str[index] <= 122)) {
-          { indexTemp++;
-          } break; }
+          indexTemp += 3; break;
+        }
+        if (index < endIndex && ((str[index] >= 65 && str[index] <= 73) || (str[index] >= 75 && str[index] <= 90) || (str[index] >= 97 && str[index] <= 105) || (str[index] >= 107 && str[index] <= 122))) {
+          ++indexTemp; break;
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
-        tokener.RestoreState(state);
-      }
+ tokener.RestoreState(state);
+}
       return indexTemp;
     }
   }

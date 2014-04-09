@@ -12,10 +12,8 @@ private Extras() {
 }
     public static int[] DoubleToIntegers(double dbl) {
       long value = Double.doubleToRawLongBits(dbl);
-      return new int[] {
-        ((int)(value & 0xFFFFFFFFL)),
-        ((int)((value >> 32) & 0xFFFFFFFFL))
-      };
+      return new int[] { ((int)(value & 0xFFFFFFFFL)),
+        ((int)((value >> 32) & 0xFFFFFFFFL)) };
     }
 
     public static double IntegersToDouble(int[] integers) {
