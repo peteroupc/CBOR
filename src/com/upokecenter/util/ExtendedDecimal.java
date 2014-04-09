@@ -1257,10 +1257,8 @@ remainder=divrem[1]; }
         return Double.NEGATIVE_INFINITY;
       }
       if (this.isNegative() && this.signum()==0) {
-        return Extras.IntegersToDouble(new int[] {
-                                         ((int)(1 << 31)),
-                                         0
-                                       });
+        return Extras.IntegersToDouble(new int[] { ((int)(1 << 31)),
+                                         0 });
       }
       if (this.signum()==0) {
         return 0.0;
@@ -1269,10 +1267,8 @@ remainder=divrem[1]; }
       if (adjExp.compareTo(BigInteger.valueOf(-326)) < 0) {
         // Very low exponent, treat as 0
         return this.isNegative() ?
-          Extras.IntegersToDouble(new int[] {
-                                    ((int)(1 << 31)),
-                                    0
-                                  }) :
+          Extras.IntegersToDouble(new int[] { ((int)(1 << 31)),
+                                    0 }) :
           0.0;
       }
       if (adjExp.compareTo(BigInteger.valueOf(309)) > 0) {

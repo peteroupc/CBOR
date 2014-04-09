@@ -7,10 +7,10 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Text;
 
-namespace CBORTest
+namespace PeterO.Mail
 {
   internal interface IHeaderFieldParser {
     bool IsStructured();
@@ -20,76 +20,11 @@ namespace CBORTest
     string ReplaceEncodedWords(string str);
   }
 
-  internal interface ITokener {
-    int GetState();
 
-    void RestoreState(int state);
 
-    void Commit(int token, int startIndex, int endIndex);
-  }
 
   internal class HeaderFields
   {
-    private sealed class Tokener : ITokener, IComparer<int[]> {
-      private List<int[]> tokenStack = new List<int[]>();
-
-      public int GetState() {
-        return this.tokenStack.Count;
-      }
-
-    /// <summary>Not documented yet.</summary>
-    /// <param name='state'>A 32-bit signed integer.</param>
-      public void RestoreState(int state) {
-        #if DEBUG
-        if (state > this.tokenStack.Count) {
-          throw new ArgumentException("state (" + Convert.ToString((long)state, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)this.tokenStack.Count, System.Globalization.CultureInfo.InvariantCulture));
-        }
-        if (state < 0) {
-          throw new ArgumentException("state (" + Convert.ToString((long)state, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-        }
-        #endif
-        // if (tokenStack.Count != state) {
-        // Console.WriteLine("Rolling back from " + tokenStack.Count + " to " + (state));
-        // }
-        while (state < this.tokenStack.Count) {
-          this.tokenStack.RemoveAt(state);
-        }
-      }
-
-    /// <summary>Not documented yet.</summary>
-    /// <param name='token'>A 32-bit signed integer.</param>
-    /// <param name='startIndex'>A 32-bit signed integer. (2).</param>
-    /// <param name='endIndex'>A 32-bit signed integer. (3).</param>
-      public void Commit(int token, int startIndex, int endIndex) {
-        // Console.WriteLine("Committing token " + token + ", size now " + (tokenStack.Count+1));
-        this.tokenStack.Add(new int[] { token, startIndex, endIndex });
-      }
-
-    /// <summary>Not documented yet.</summary>
-      public void Clear() {
-        this.tokenStack.Clear();
-      }
-
-      public IList<int[]> GetTokens() {
-        this.tokenStack.Sort(this);
-        return this.tokenStack;
-      }
-
-    /// <summary>Compares a int[] object with a int[].</summary>
-    /// <param name='x'>A int[] object.</param>
-    /// <param name='y'>A int[] object. (2).</param>
-    /// <returns>Zero if both values are equal; a negative number if 'x' is
-    /// less than 'y', or a positive number if 'x' is greater than 'y'.</returns>
-      public int Compare(int[] x, int[] y) {
-        // Sort by their start indexes
-        if (x[1] == y[1]) {
-          // Sort by their token numbers
-          return (x[0] == y[0]) ? 0 : ((x[0] < y[0]) ? -1 : 1);
-        }
-        return (x[1] < y[1]) ? -1 : 1;
-      }
-    }
-
     private class UnstructuredHeaderField : IHeaderFieldParser {
     /// <summary>Not documented yet.</summary>
     /// <param name='str'>A string object. (2).</param>
@@ -150,7 +85,7 @@ namespace CBORTest
         }
         StringBuilder sb = new StringBuilder();
         int lastIndex = 0;
-        for (int i = 0;i < str.Length; ++i) {
+        for (int i = 0; i < str.Length; ++i) {
           if (str[i] == '(') {
             int endIndex = HeaderParser.ParseComment(str, i, str.Length, null);
             if (endIndex != i) {
@@ -196,7 +131,7 @@ namespace CBORTest
         }
         StringBuilder sb = new StringBuilder();
         int lastIndex = 0;
-        for (int i = 0;i < str.Length; ++i) {
+        for (int i = 0; i < str.Length; ++i) {
           if (str[i] == '(') {
             int endIndex = HeaderParser.ParseComment(str, i, str.Length, null);
             if (endIndex != i) {
@@ -240,12 +175,12 @@ namespace CBORTest
         if (endIndex != str.Length) {
           // The header field is syntactically invalid,
           // so don't decode any encoded words
-          Console.WriteLine("Invalid syntax: " + this.GetType().Name + ", "+str);
+          Console.WriteLine("Invalid syntax: " + this.GetType().Name + ", " + str);
           return str;
         }
         int lastIndex = 0;
         // Get each relevant token sorted by starting index
-         foreach (int[] token in tokener.GetTokens()) {
+        foreach (int[] token in tokener.GetTokens()) {
           if (token[0] == 1 && token[1] >= lastIndex) {
             // This is a comment token
             int startIndex = token[1];
@@ -264,7 +199,7 @@ namespace CBORTest
         if (index == endIndex) {
           return true;
         }
-        if (str[index] != 0x09 && str[index] != 0x20 && str[index]!=0x0d) {
+        if (str[index] != 0x09 && str[index] != 0x20 && str[index] != 0x0d) {
           return false;
         }
         int cws = HeaderParser.ParseCFWS(str, index, endIndex, null);
@@ -279,7 +214,7 @@ namespace CBORTest
         if (index == 0) {
           return true;
         }
-        if (index - 1 >= 0 && (str[index - 1]==0x09 || str[index-1]==0x20)) {
+        if (index - 1 >= 0 && (str[index - 1] == 0x09 || str[index - 1] == 0x20)) {
           return true;
         }
         return false;
@@ -299,7 +234,7 @@ namespace CBORTest
           }
           ++index;
         }
-        if (index + 1 < endIndex && str[index]=='=' && str[index+1]=='?') {
+        if (index + 1 < endIndex && str[index] == '=' && str[index + 1] == '?') {
           // Has a possible encoded word
           return index;
         }
@@ -332,14 +267,14 @@ namespace CBORTest
         if (endIndex != str.Length) {
           // The header field is syntactically invalid,
           // so don't decode any encoded words
-          Console.WriteLine("Invalid syntax: " + this.GetType().Name + ", "+str);
+          Console.WriteLine("Invalid syntax: " + this.GetType().Name + ", " + str);
           return str;
         }
         int lastIndex = 0;
         int lastPhraseStart = -1;
         int lastPhraseEnd = -1;
         // Get each relevant token sorted by starting index
-         foreach (int[] token in tokener.GetTokens()) {
+        foreach (int[] token in tokener.GetTokens()) {
           if (token[0] == 1) {
             // This is a comment token
             int startIndex = token[1];
@@ -352,7 +287,8 @@ namespace CBORTest
             // This is a phrase token
             lastPhraseStart = token[1];
             lastPhraseEnd = token[2];
-          } else if (token[0] == 3) {
+          } else if (token[0] == HeaderParserUtility.TokenPhraseAtom ||
+                     token[0] == HeaderParserUtility.TokenPhraseAtomOrDot) {
             // This is an atom token; only words within
             // a phrase can be encoded words
             if (token[1] >= lastIndex &&
@@ -372,16 +308,7 @@ namespace CBORTest
                   break;
                 }
                 // Find the end of the atom
-                while (wordEnd < lastPhraseEnd && ((str[wordEnd] >= 47 && str[wordEnd] <= 57) ||
-                                                   (str[wordEnd] == 33) ||
-                                                   (str[wordEnd] >= 35 && str[wordEnd] <= 39) ||
-                                                   (str[wordEnd] == 42) || (str[wordEnd] == 43) ||
-                                                   (str[wordEnd] == 45) ||
-                                                   (str[wordEnd] == 61) || (str[wordEnd] == 63) ||
-                                                   (str[wordEnd] >= 94 && str[wordEnd] <= 126) ||
-                                                   (str[wordEnd] >= 65 && str[wordEnd] <= 90))) {
-                  ++wordEnd;
-                }
+                wordEnd = HeaderParser.ParsePhraseAtom(str, wordEnd, lastPhraseEnd, null);
                 if (!FollowedByEndOrLinearWhitespace(str, wordEnd, lastPhraseEnd)) {
                   // The encoded word is not followed by whitespace, so it's not valid
                   wordEnd = previousWord;

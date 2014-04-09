@@ -9,7 +9,7 @@
 using System;
 using System.Text;
 
-namespace CBORTest
+namespace PeterO.Mail
 {
     /// <summary>Description of Charsets.</summary>
   internal static class Charsets
@@ -18,7 +18,7 @@ namespace CBORTest
     public static readonly ICharset Utf8 = new Utf8Encoding();
 
     internal interface ICharset {
-      string GetString(Message.ITransform transform);
+      string GetString(ITransform transform);
     }
 
     public static ICharset GetCharset(string name) {
@@ -218,16 +218,16 @@ namespace CBORTest
 
     private sealed class Utf8Encoding : ICharset {
     /// <summary>Not documented yet.</summary>
-    /// <param name='transform'>A Message.ITransform object.</param>
+    /// <param name='transform'>An ITransform object.</param>
     /// <returns>A string object.</returns>
-      public string GetString(Message.ITransform transform) {
+      public string GetString(ITransform transform) {
         StringBuilder builder = new StringBuilder();
         ReadUtf8(transform, -1, builder, true);
         return builder.ToString();
       }
 
       private static int ReadUtf8(
-        Message.ITransform stream,
+        ITransform stream,
         int bytesCount,
         StringBuilder builder,
         bool replace) {
@@ -361,9 +361,9 @@ namespace CBORTest
       }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='transform'>A Message.ITransform object.</param>
+    /// <param name='transform'>An ITransform object.</param>
     /// <returns>A string object.</returns>
-      public string GetString(Message.ITransform transform) {
+      public string GetString(ITransform transform) {
         StringBuilder builder = new StringBuilder();
         while (true) {
           int b = transform.ReadByte();
@@ -382,9 +382,9 @@ namespace CBORTest
 
     private sealed class LatinOneEncoding : ICharset {
     /// <summary>Not documented yet.</summary>
-    /// <param name='transform'>A Message.ITransform object.</param>
+    /// <param name='transform'>An ITransform object.</param>
     /// <returns>A string object.</returns>
-      public string GetString(Message.ITransform transform) {
+      public string GetString(ITransform transform) {
         StringBuilder builder = new StringBuilder();
         while (true) {
           int b = transform.ReadByte();
@@ -399,9 +399,9 @@ namespace CBORTest
 
     private sealed class AsciiEncoding : ICharset {
     /// <summary>Not documented yet.</summary>
-    /// <param name='transform'>A Message.ITransform object.</param>
+    /// <param name='transform'>An ITransform object.</param>
     /// <returns>A string object.</returns>
-      public string GetString(Message.ITransform transform) {
+      public string GetString(ITransform transform) {
         StringBuilder builder = new StringBuilder();
         while (true) {
           int b = transform.ReadByte();

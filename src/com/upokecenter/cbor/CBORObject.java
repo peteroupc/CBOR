@@ -118,9 +118,7 @@ public void setConverter(Object value) {
     private static Map<Object, ConverterInfo> converters = new HashMap<Object, ConverterInfo>();
     private static Map<BigInteger, ICBORTag> tagHandlers = new HashMap<BigInteger, ICBORTag>();
 
-    private static int[] valueNumberTypeOrder = new int[] {
-      0, 0, 2, 3, 4, 5, 1, 0, 0, 0, 0, 0, 0
-    };
+    private static int[] valueNumberTypeOrder = new int[] { 0, 0, 2, 3, 4, 5, 1, 0, 0, 0, 0, 0, 0 };
 
     static final ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
       new CBORInteger(),
@@ -1037,8 +1035,7 @@ public boolean equals(CBORObject other) {
     }
     // Expected lengths for each head byte.
     // 0 means length varies. -1 means invalid.
-    private static int[] valueExpectedLengths = new int[] {
-      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
+    private static int[] valueExpectedLengths = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 1
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
@@ -1053,8 +1050,7 @@ public boolean equals(CBORObject other) {
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,  // major type 6
       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 7
-      1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1
-    };
+      1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1 };
 
     // Generate a CBOR Object for head bytes with fixed length.
     // Note that this function assumes that the length of the data

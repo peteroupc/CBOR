@@ -431,31 +431,31 @@ import com.upokecenter.cbor.*;
     public void TestNegativeBigInts() {
       BigInteger minusone = BigInteger.ZERO.subtract(BigInteger.ONE);
       Assert.assertEquals(
-minusone.subtract(BigInteger.ONE.shiftLeft(8)),
+minusone .subtract(BigInteger.ONE.shiftLeft(8)),
 CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x42, 1, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone.subtract(BigInteger.ONE.shiftLeft(16)),
+minusone .subtract(BigInteger.ONE.shiftLeft(16)),
 CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x43, 1, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone.subtract(BigInteger.ONE.shiftLeft(24)),
+minusone .subtract(BigInteger.ONE.shiftLeft(24)),
 CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x44, 1, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone.subtract(BigInteger.ONE.shiftLeft(32)),
+minusone .subtract(BigInteger.ONE.shiftLeft(32)),
 CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x45, 1, 0, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone.subtract(BigInteger.ONE.shiftLeft(40)),
+minusone .subtract(BigInteger.ONE.shiftLeft(40)),
 CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x46, 1, 0, 0, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone.subtract(BigInteger.ONE.shiftLeft(48)),
+minusone .subtract(BigInteger.ONE.shiftLeft(48)),
 CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x47, 1, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone.subtract(BigInteger.ONE.shiftLeft(56)),
+minusone .subtract(BigInteger.ONE.shiftLeft(56)),
 CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x48, 1, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone.subtract(BigInteger.ONE.shiftLeft(64)),
+minusone .subtract(BigInteger.ONE.shiftLeft(64)),
 CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x49, 1, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone.subtract(BigInteger.ONE.shiftLeft(72)),
+minusone .subtract(BigInteger.ONE.shiftLeft(72)),
 CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x4a, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
     }
 

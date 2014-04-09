@@ -7,14 +7,12 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Text;
 
 using NUnit.Framework;
 using PeterO;
-using PeterO.Cbor;
+using PeterO.Mail;
 
 namespace CBORTest
 {
@@ -96,7 +94,7 @@ namespace CBORTest
           IncrementLineCount(str, 3, lineCount);
           str.Append("=09");
         } else if (lineCount[0] == 0 &&
-                   data[i] == (byte)'.' && i + 1<length && (data[i]=='\r' || data[i]=='\n')) {
+                   data[i] == (byte)'.' && i + 1 < length && (data[i] == '\r' || data[i] == '\n')) {
           IncrementLineCount(str, 3, lineCount);
           str.Append("=2E");
         } else if (lineCount[0] == 0 && i + 4 < length &&
@@ -141,7 +139,7 @@ namespace CBORTest
         } else if (data[i] == (byte)'=') {
           IncrementLineCount(str, 3, lineCount);
           str.Append("=3D");
-        } else if (data[i] > 0x20 && data[i] < 0x7f && data[i]!=',' &&
+        } else if (data[i] > 0x20 && data[i] < 0x7f && data[i] != ',' &&
                    "()'+-./?:".IndexOf((char)data[i]) < 0) {
           IncrementLineCount(str, 1, lineCount);
           str.Append((char)data[i]);
@@ -194,7 +192,7 @@ namespace CBORTest
         throw new ArgumentException("data's length minus " + offset + " (" + Convert.ToString((long)(data.Length - offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture));
       }
       using (MemoryStream ms = new MemoryStream(data, offset, count)) {
-        Message.QuotedPrintableTransform t = new Message.QuotedPrintableTransform(
+        QuotedPrintableTransform t = new QuotedPrintableTransform(
           ms,
           lenientLineBreaks,
           unlimitedLineLength ? -1 : 76);
@@ -271,9 +269,40 @@ namespace CBORTest
       return sb.ToString();
     }
 
+    private void TestParseDomain(string str, string expected) {
+      Assert.AreEqual(str.Length, HeaderParser.ParseDomain(str, 0, str.Length, null));
+      Assert.AreEqual(expected, HeaderParserUtility.ParseDomain(str, 0, str.Length));
+    }
+
+    private void TestParseLocalPart(string str, string expected) {
+      Assert.AreEqual(str.Length, HeaderParser.ParseLocalPart(str, 0, str.Length, null));
+      Assert.AreEqual(expected, HeaderParserUtility.ParseLocalPart(str, 0, str.Length));
+    }
+
     [Test]
+    public void TestParseDomainAndLocalPart() {
+      this.TestParseDomain("x","x");
+      this.TestParseLocalPart("x","x");
+      this.TestParseLocalPart("\"" + "\"",String.Empty);
+      this.TestParseDomain("x.example","x.example");
+      this.TestParseLocalPart("x.example","x.example");
+      this.TestParseLocalPart("x.example\ud800\udc00.example.com","x.example\ud800\udc00.example.com");
+      this.TestParseDomain("x.example\ud800\udc00.example.com","x.example\ud800\udc00.example.com");
+      this.TestParseDomain("x.example.com","x.example.com");
+      this.TestParseLocalPart("x.example.com","x.example.com");
+      this.TestParseLocalPart("\"(not a comment)\"","(not a comment)");
+      this.TestParseLocalPart("(comment1) x (comment2)","x");
+      this.TestParseLocalPart("(comment1) example (comment2) . (comment3) com","example.com");
+      this.TestParseDomain("(comment1) x (comment2)","x");
+      this.TestParseDomain("(comment1) example (comment2) . (comment3) com","example.com");
+      this.TestParseDomain("(comment1) [x] (comment2)","[x]");
+      this.TestParseDomain("(comment1) [a.b.c.d] (comment2)","[a.b.c.d]");
+      this.TestParseDomain("[]","[]");
+      this.TestParseDomain("[a .\r\n b. c.d ]","[a.b.c.d]");
+    }
+
     public void TestWordWrapOne(string firstWord, string nextWords, string expected) {
-      var ww = new Message.WordWrapEncoder(firstWord);
+      var ww = new WordWrapEncoder(firstWord);
       ww.AddString(nextWords);
       Console.WriteLine(ww.ToString());
       Assert.AreEqual(expected, ww.ToString());
@@ -281,8 +310,8 @@ namespace CBORTest
 
     [Test]
     public void TestWordWrap() {
-      this.TestWordWrapOne("Subject:", this.Repeat("xxxx ",10)+"y","Subject: "+this.Repeat("xxxx ",10)+"y");
-      this.TestWordWrapOne("Subject:", this.Repeat("xxxx ",10),"Subject: "+this.Repeat("xxxx ",9)+"xxxx");
+      this.TestWordWrapOne("Subject:", this.Repeat("xxxx ", 10) +"y", "Subject: " + this.Repeat("xxxx ",10)+"y");
+      this.TestWordWrapOne("Subject:", this.Repeat("xxxx ", 10), "Subject: " + this.Repeat("xxxx ", 9)+"xxxx");
     }
 
     [Test]
@@ -317,10 +346,10 @@ namespace CBORTest
     }
 
     public void SingleTestMediaTypeEncoding(string value, string expected) {
-      MediaType mt = new MediaTypeBuilder("x", "y").SetParameter("z",value).ToMediaType();
+      MediaType mt = new MediaTypeBuilder("x", "y").SetParameter("z", value).ToMediaType();
       string topLevel = mt.TopLevelType;
       string sub = mt.SubType;
-      var mtstring = "MIME-Version: 1.0\r\nContent-Type: " + mt.ToString()+"\r\nContent-Transfer-Encoding: base64\r\n\r\n";
+      var mtstring = "MIME-Version: 1.0\r\nContent-Type: " + mt.ToString() +"\r\nContent-Transfer-Encoding: base64\r\n\r\n";
       using (MemoryStream ms = new MemoryStream(DataUtilities.GetUtf8Bytes(mtstring, true))) {
         var msg = new Message(ms);
         Assert.AreEqual(topLevel, msg.ContentType.TopLevelType);
@@ -335,25 +364,25 @@ namespace CBORTest
       this.SingleTestMediaTypeEncoding("xy z", "x/y;z=\"xy z\"");
       this.SingleTestMediaTypeEncoding("xy\u00a0z", "x/y;z*=utf-8''xy%C2%A0z");
       this.SingleTestMediaTypeEncoding("xy\ufffdz", "x/y;z*=utf-8''xy%C2z");
-      this.SingleTestMediaTypeEncoding("xy" + this.Repeat("\ufffc",50)+"z","x/y;z*=utf-8''xy"+this.Repeat("%EF%BF%BD",50)+"z");
-      this.SingleTestMediaTypeEncoding("xy" + this.Repeat("\u00a0",50)+"z","x/y;z*=utf-8''xy"+this.Repeat("%C2%A0",50)+"z");
+      this.SingleTestMediaTypeEncoding("xy" + this.Repeat("\ufffc", 50) + "z", "x/y;z*=utf-8''xy" + this.Repeat("%EF%BF%BD",50) + "z");
+      this.SingleTestMediaTypeEncoding("xy" + this.Repeat("\u00a0", 50) + "z", "x/y;z*=utf-8''xy" + this.Repeat("%C2%A0",50) + "z");
     }
 
     [Test]
     public void TestRfc2231Extensions() {
-      this.TestRfc2231Extension("text/plain; charset=\"utf-8\"", "charset","utf-8");
-      this.TestRfc2231Extension("text/plain; charset*=us-ascii'en'utf-8", "charset","utf-8");
-      this.TestRfc2231Extension("text/plain; charset*=us-ascii''utf-8", "charset","utf-8");
-      this.TestRfc2231Extension("text/plain; charset*='en'utf-8", "charset","utf-8");
-      this.TestRfc2231Extension("text/plain; charset*=''utf-8", "charset","utf-8");
-      this.TestRfc2231Extension("text/plain; charset*0=a;charset*1=b", "charset","ab");
-      this.TestRfc2231Extension("text/plain; charset*=utf-8''a%20b", "charset","a b");
-      this.TestRfc2231Extension("text/plain; charset*=iso-8859-1''a%a0b", "charset","a\u00a0b");
-      this.TestRfc2231Extension("text/plain; charset*=utf-8''a%c2%a0b", "charset","a\u00a0b");
-      this.TestRfc2231Extension("text/plain; charset*=iso-8859-1''a%a0b", "charset","a\u00a0b");
-      this.TestRfc2231Extension("text/plain; charset*=utf-8''a%c2%a0b", "charset","a\u00a0b");
-      this.TestRfc2231Extension("text/plain; charset*0=\"a\";charset*1=b", "charset","ab");
-      this.TestRfc2231Extension("text/plain; charset*0*=utf-8''a%20b;charset*1*=c%20d", "charset","a bc d");
+      this.TestRfc2231Extension("text/plain; charset=\"utf-8\"", "charset", "utf-8");
+      this.TestRfc2231Extension("text/plain; charset*=us-ascii'en'utf-8", "charset", "utf-8");
+      this.TestRfc2231Extension("text/plain; charset*=us-ascii''utf-8", "charset", "utf-8");
+      this.TestRfc2231Extension("text/plain; charset*='en'utf-8", "charset", "utf-8");
+      this.TestRfc2231Extension("text/plain; charset*=''utf-8", "charset", "utf-8");
+      this.TestRfc2231Extension("text/plain; charset*0=a;charset*1=b", "charset", "ab");
+      this.TestRfc2231Extension("text/plain; charset*=utf-8''a%20b", "charset", "a b");
+      this.TestRfc2231Extension("text/plain; charset*=iso-8859-1''a%a0b", "charset", "a\u00a0b");
+      this.TestRfc2231Extension("text/plain; charset*=utf-8''a%c2%a0b", "charset", "a\u00a0b");
+      this.TestRfc2231Extension("text/plain; charset*=iso-8859-1''a%a0b", "charset", "a\u00a0b");
+      this.TestRfc2231Extension("text/plain; charset*=utf-8''a%c2%a0b", "charset", "a\u00a0b");
+      this.TestRfc2231Extension("text/plain; charset*0=\"a\";charset*1=b", "charset", "ab");
+      this.TestRfc2231Extension("text/plain; charset*0*=utf-8''a%20b;charset*1*=c%20d", "charset", "a bc d");
       this.TestRfc2231Extension(
         "text/plain; charset*0=ab;charset*1*=iso-8859-1'en'xyz",
         "charset",
@@ -385,7 +414,7 @@ namespace CBORTest
       this.TestDecodeQuotedPrintable("te=0Ast", "te\nst");
       this.TestDecodeQuotedPrintable("te=C2=A0st", "te\u00a0st");
       this.TestFailQuotedPrintable("te=3st");
-      this.TestDecodeQuotedPrintable(this.Repeat("a", 100),this.Repeat("a",100));
+      this.TestDecodeQuotedPrintable(this.Repeat("a", 100), this.Repeat("a", 100));
       this.TestDecodeQuotedPrintable("te\r\nst", "te\r\nst");
       this.TestDecodeQuotedPrintable("te\rst", "te\r\nst");
       this.TestDecodeQuotedPrintable("te\nst", "te\r\nst");
@@ -418,46 +447,46 @@ namespace CBORTest
       this.TestFailQuotedPrintableNonLenient("te \nst");
       this.TestFailQuotedPrintableNonLenient(this.Repeat("a", 77));
       this.TestFailQuotedPrintableNonLenient(this.Repeat("=7F", 26));
-      this.TestFailQuotedPrintableNonLenient("aa\r\n" + this.Repeat("a",77));
-      this.TestFailQuotedPrintableNonLenient("aa\r\n" + this.Repeat("=7F",26));
+      this.TestFailQuotedPrintableNonLenient("aa\r\n" + this.Repeat("a", 77));
+      this.TestFailQuotedPrintableNonLenient("aa\r\n" + this.Repeat("=7F", 26));
     }
 
     public void TestEncodedWordsPhrase(string expected, string input) {
       Assert.AreEqual(
         expected + " <test@example.com>",
-        HeaderFields.GetParser("from") .ReplaceEncodedWords(input + " <test@example.com>"));
+        HeaderFields.GetParser("from").ReplaceEncodedWords(input + " <test@example.com>"));
     }
 
     public void TestEncodedWordsOne(string expected, string input) {
       string par = "(";
       Assert.AreEqual(expected, Message.ReplaceEncodedWords(input));
       Assert.AreEqual(
-        "("+expected+") en",
-        HeaderFields.GetParser("content-language") .ReplaceEncodedWords("(" + input + ") en"));
+        "(" + expected + ") en",
+        HeaderFields.GetParser("content-language").ReplaceEncodedWords("(" + input + ") en"));
       Assert.AreEqual(
-        " ("+expected+") en",
-        HeaderFields.GetParser("content-language") .ReplaceEncodedWords(" (" + input + ") en"));
+        " (" + expected + ") en",
+        HeaderFields.GetParser("content-language").ReplaceEncodedWords(" (" + input + ") en"));
       Assert.AreEqual(
-        " "+par+"comment "+par+"cmt "+expected+")comment) en",
-                      HeaderFields.GetParser("content-language")
-                      .ReplaceEncodedWords(" (comment (cmt " + input + ")comment) en"));
+        " " + par + "comment " + par + "cmt "+expected+")comment) en",
+        HeaderFields.GetParser("content-language")
+        .ReplaceEncodedWords(" (comment (cmt " + input + ")comment) en"));
       Assert.AreEqual(
-        " "+par+"comment "+par+"=?bad?= "+expected+")comment) en",
-                      HeaderFields.GetParser("content-language")
-                      .ReplaceEncodedWords(" (comment (=?bad?= " + input + ")comment) en"));
+        " " + par + "comment " + par + "=?bad?= "+expected+")comment) en",
+        HeaderFields.GetParser("content-language")
+        .ReplaceEncodedWords(" (comment (=?bad?= " + input + ")comment) en"));
       Assert.AreEqual(
-        " "+par+"comment "+par+""+expected+")comment) en",
-                      HeaderFields.GetParser("content-language")
-                      .ReplaceEncodedWords(" (comment (" + input + ")comment) en"));
+        " " + par + "comment " + par + String.Empty+expected+")comment) en",
+        HeaderFields.GetParser("content-language")
+        .ReplaceEncodedWords(" (comment (" + input + ")comment) en"));
       Assert.AreEqual(
-        " ("+expected+"()) en",
+        " (" + expected + "()) en",
         HeaderFields.GetParser("content-language").ReplaceEncodedWords(" (" + input + "()) en"));
       Assert.AreEqual(
-        " en ("+expected+")",
+        " en (" + expected + ")",
         HeaderFields.GetParser("content-language").ReplaceEncodedWords(" en (" + input + ")"));
       Assert.AreEqual(
         expected,
-        HeaderFields.GetParser("subject") .ReplaceEncodedWords(input));
+        HeaderFields.GetParser("subject").ReplaceEncodedWords(input));
     }
 
     [Test]
@@ -473,15 +502,18 @@ namespace CBORTest
       Assert.AreEqual("(=?utf-8?q?x?=(=?utf-8?q?ab?=)=?utf-8?q?y?=)", Message.ConvertCommentsToEncodedWords("(x(a\\b)y)"));
       Assert.AreEqual("()", Message.ConvertCommentsToEncodedWords("()"));
       Assert.AreEqual("(test) x@x.example", HeaderFields.GetParser("from").DowngradeComments("(test) x@x.example"));
-      Assert.AreEqual("(=?utf-8?q?tes=C2=BEt?=) x@x.example",HeaderFields.GetParser("from")
-                      .DowngradeComments("(tes\u00bet) x@x.example"));
-      Assert.AreEqual("(=?utf-8?q?tes=C2=BEt?=) en",HeaderFields.GetParser("content-language")
-                      .DowngradeComments("(tes\u00bet) en"));
       Assert.AreEqual(
-        par+"tes\u00bet) x@x.example",HeaderFields.GetParser("subject")
-        .DowngradeComments("(tes\u00bet) x@x.example"));
-      Assert.AreEqual("(=?utf-8?q?tes=0Dt?=) x@x.example",HeaderFields.GetParser("from")
-                      .DowngradeComments("(tes\rt) x@x.example"));
+        "(=?utf-8?q?tes=C2=BEt?=) x@x.example",
+        HeaderFields.GetParser("from").DowngradeComments("(tes\u00bet) x@x.example"));
+      Assert.AreEqual(
+        "(=?utf-8?q?tes=C2=BEt?=) en",
+        HeaderFields.GetParser("content-language").DowngradeComments("(tes\u00bet) en"));
+      Assert.AreEqual(
+        par + "tes\u00bet) x@x.example",
+        HeaderFields.GetParser("subject").DowngradeComments("(tes\u00bet) x@x.example"));
+      Assert.AreEqual(
+        "(=?utf-8?q?tes=0Dt?=) x@x.example",
+        HeaderFields.GetParser("from").DowngradeComments("(tes\rt) x@x.example"));
     }
 
     [Test]
@@ -498,13 +530,13 @@ namespace CBORTest
       this.TestEncodedWordsPhrase("x (sss) y", "=?us-ascii?q?x?= (sss) =?us-ascii?q?y?=");
       this.TestEncodedWordsPhrase("x (z) y", "=?us-ascii?q?x?= (=?utf-8?q?z?=) =?us-ascii?q?y?=");
       this.TestEncodedWordsPhrase(
-        "=?us-ascii?q?x?="+par+"sss)=?us-ascii?q?y?=",
+        "=?us-ascii?q?x?=" + par + "sss)=?us-ascii?q?y?=",
         "=?us-ascii?q?x?=(sss)=?us-ascii?q?y?=");
       this.TestEncodedWordsPhrase(
-        "=?us-ascii?q?x?="+par+"z)=?us-ascii?q?y?=",
+        "=?us-ascii?q?x?=" + par + "z)=?us-ascii?q?y?=",
         "=?us-ascii?q?x?=(=?utf-8?q?z?=)=?us-ascii?q?y?=");
       this.TestEncodedWordsPhrase(
-        "=?us-ascii?q?x?="+par+"z) y",
+        "=?us-ascii?q?x?=" + par + "z) y",
         "=?us-ascii?q?x?=(=?utf-8?q?z?=) =?us-ascii?q?y?=");
       //
       this.TestEncodedWordsOne("x y", "=?utf-8?q?x_?= =?utf-8?q?y?=");
@@ -527,7 +559,7 @@ namespace CBORTest
       this.TestEncodedWordsOne("abc\ufffdde", "=?us-ascii?q?abc=90de?=");
       this.TestEncodedWordsOne("=?x-undefined?q?abcde?=", "=?x-undefined?q?abcde?=");
       this.TestEncodedWordsOne("=?utf-8?q?"+this.Repeat("x",200)+"?=",
-                               "=?utf-8?q?" + this.Repeat("x",200)+"?=");
+                               "=?utf-8?q?" + this.Repeat("x", 200) +"?=");
     }
 
     [Test]
@@ -539,16 +571,16 @@ namespace CBORTest
       this.TestQuotedPrintable("te\t", "te=09");
       this.TestQuotedPrintable("te st", "te st");
       this.TestQuotedPrintable("te=st", "te=3Dst");
-      this.TestQuotedPrintable("te\r\nst", "te=0D=0Ast","te\r\nst","te\r\nst");
-      this.TestQuotedPrintable("te\rst", "te=0Dst","te=0Dst","te\r\nst");
-      this.TestQuotedPrintable("te\nst", "te=0Ast","te=0Ast","te\r\nst");
-      this.TestQuotedPrintable("te \r\nst", "te =0D=0Ast","te =20\r\nst","te =20\r\nst");
-      this.TestQuotedPrintable("te \r\nst", "te =0D=0Ast","te=20\r\nst","te=20\r\nst");
-      this.TestQuotedPrintable("te \t\r\nst", "te =09=0D=0Ast","te =09\r\nst","te =09\r\nst");
-      this.TestQuotedPrintable("te\t\r\nst", "te=09=0D=0Ast","te=09\r\nst","te=09\r\nst");
-      this.TestQuotedPrintable(this.Repeat("a", 75),this.Repeat("a",75));
-      this.TestQuotedPrintable(this.Repeat("a", 76),this.Repeat("a",75)+"=\r\na");
-      this.TestQuotedPrintable(this.Repeat("\u000c", 30),this.Repeat("=0C",25)+"=\r\n"+this.Repeat("=0C",5));
+      this.TestQuotedPrintable("te\r\nst", "te=0D=0Ast", "te\r\nst", "te\r\nst");
+      this.TestQuotedPrintable("te\rst", "te=0Dst", "te=0Dst", "te\r\nst");
+      this.TestQuotedPrintable("te\nst", "te=0Ast", "te=0Ast", "te\r\nst");
+      this.TestQuotedPrintable("te \r\nst", "te =0D=0Ast", "te =20\r\nst", "te =20\r\nst");
+      this.TestQuotedPrintable("te \r\nst", "te =0D=0Ast", "te=20\r\nst", "te=20\r\nst");
+      this.TestQuotedPrintable("te \t\r\nst", "te =09=0D=0Ast", "te =09\r\nst", "te =09\r\nst");
+      this.TestQuotedPrintable("te\t\r\nst", "te=09=0D=0Ast", "te=09\r\nst", "te=09\r\nst");
+      this.TestQuotedPrintable(this.Repeat("a", 75), this.Repeat("a", 75));
+      this.TestQuotedPrintable(this.Repeat("a", 76), this.Repeat("a", 75) +"=\r\na");
+      this.TestQuotedPrintable(this.Repeat("\u000c", 30), this.Repeat("=0C", 25) +"=\r\n" + this.Repeat("=0C",5));
     }
 
     public static void Timeout(int duration, Action action) {
@@ -560,7 +592,7 @@ namespace CBORTest
             action();
           } catch (Exception ex) {
             lock (stackTraceLock) {
-              stackTrace = ex.GetType().FullName + "\n"+ex.Message+"\n"+ex.StackTrace;
+              stackTrace = ex.GetType().FullName + "\n" + ex.Message + "\n" + ex.StackTrace;
               System.Threading.Monitor.PulseAll(stackTraceLock);
             }
           }

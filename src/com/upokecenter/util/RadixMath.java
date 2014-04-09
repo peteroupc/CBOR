@@ -2014,10 +2014,8 @@ bigrem=divrem[1]; }
           olderDiscarded = 1;
         }
       }
-      return new int[] {
-        lastDiscarded,
-        olderDiscarded
-      };
+      return new int[] { lastDiscarded,
+        olderDiscarded };
     }
 
     private T RoundToScale(

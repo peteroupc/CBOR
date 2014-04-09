@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CBORTest
+namespace PeterO.Mail
 {
   internal sealed class MediaTypeBuilder
   {
@@ -19,7 +19,7 @@ namespace CBORTest
 
     /// <summary>Gets a value not documented yet.</summary>
     /// <value>A value not documented yet.</value>
-public string TopLevelType {
+    public string TopLevelType {
       get {
         return this.type;
       }
@@ -27,7 +27,7 @@ public string TopLevelType {
 
     /// <summary>Gets a value not documented yet.</summary>
     /// <value>A value not documented yet.</value>
-public string SubType {
+    public string SubType {
       get {
         return this.subtype;
       }
