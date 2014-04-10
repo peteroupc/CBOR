@@ -12,6 +12,8 @@ using System.IO;
 namespace PeterO.Mail
 {
   internal sealed class Base64Transform : ITransform {
+    private const int MaxLineSize = 76;
+
     internal static readonly int[] Alphabet = new int[] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
       -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
       -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63,
@@ -27,8 +29,6 @@ namespace PeterO.Mail
     private byte[] buffer;
     private int bufferIndex;
     private int bufferCount;
-
-    private const int MaxLineSize = 76;
 
     public Base64Transform(ITransform input, bool lenientLineBreaks) {
       this.input = new StreamWithUnget(input);

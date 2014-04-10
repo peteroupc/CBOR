@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Created by SharpDevelop.
  * User: Peter
  * Date: 3/31/2014
@@ -14,11 +14,11 @@ namespace PeterO.Mail
 {
   internal sealed class Tokener : ITokener, IComparer<int[]> {
     private List<int[]> tokenStack = new List<int[]>();
-    
+
     public int GetState() {
       return this.tokenStack.Count;
     }
-    
+
     /// <summary>Not documented yet.</summary>
     /// <param name='state'>A 32-bit signed integer.</param>
     public void RestoreState(int state) {
@@ -37,7 +37,7 @@ namespace PeterO.Mail
         this.tokenStack.RemoveAt(state);
       }
     }
-    
+
     /// <summary>Not documented yet.</summary>
     /// <param name='token'>A 32-bit signed integer.</param>
     /// <param name='startIndex'>A 32-bit signed integer. (2).</param>
@@ -46,22 +46,23 @@ namespace PeterO.Mail
       // Console.WriteLine("Committing token " + token + ", size now " + (tokenStack.Count+1));
       this.tokenStack.Add(new int[] { token, startIndex, endIndex });
     }
-    
+
     /// <summary>Not documented yet.</summary>
     public void Clear() {
       this.tokenStack.Clear();
     }
-    
+
     public IList<int[]> GetTokens() {
       this.tokenStack.Sort(this);
       return this.tokenStack;
     }
-    
-    /// <summary>Compares a int[] object with a int[].</summary>
-    /// <param name='x'>A int[] object.</param>
-    /// <param name='y'>A int[] object. (2).</param>
-    /// <returns>Zero if both values are equal; a negative number if 'x' is
-    /// less than 'y', or a positive number if 'x' is greater than 'y'.</returns>
+
+    /// <summary>Compares one integer array with another.</summary>
+    /// <param name='x'>An integer array.</param>
+    /// <param name='y'>An integer array. (2).</param>
+    /// <returns>Zero if both values are equal; a negative number if <paramref
+    /// name='x'/> is less than <paramref name='y'/>, or a positive number
+    /// if <paramref name='x'/> is greater than <paramref name='y'/>.</returns>
     public int Compare(int[] x, int[] y) {
       // Sort by their start indexes
       if (x[1] == y[1]) {

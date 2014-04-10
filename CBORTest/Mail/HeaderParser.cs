@@ -27,8 +27,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -47,8 +47,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -74,11 +74,11 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = ParseAddress(str, index, endIndex, tokener);
         if (indexTemp == index) {
@@ -121,17 +121,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -162,8 +162,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -223,8 +223,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -245,8 +245,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -297,16 +297,16 @@ namespace PeterO.Mail {
           indexTemp = indexTemp2; break;
         }
         if (tokener != null) {
- tokener.RestoreState(state2);
-}
+          tokener.RestoreState(state2);
+        }
         for (int i = 0;; ++i) {
           indexTemp2 = ParseFWS(str, index, endIndex, tokener);
           if (indexTemp2 == index) { if (i < 1) {
               indexTemp = indexStart;
             } break;
           } else {
- index = indexTemp2;
-}
+            index = indexTemp2;
+          }
         }
         if (indexTemp2 != indexStart) {
           indexTemp = indexTemp2; break;
@@ -314,8 +314,8 @@ namespace PeterO.Mail {
         index = indexStart;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -362,8 +362,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -412,11 +412,11 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         index = ParseFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 41)) {
@@ -428,10 +428,10 @@ namespace PeterO.Mail {
       } while (false);
       if (tokener != null) {
         if (indexTemp == indexStart) {
- tokener.RestoreState(state);
-} else {
- tokener.Commit(1, indexStart, indexTemp);
-}
+          tokener.RestoreState(state);
+        } else {
+          tokener.Commit(1, indexStart, indexTemp);
+        }
       }
       return indexTemp;
     }
@@ -461,8 +461,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -510,8 +510,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -527,18 +527,18 @@ namespace PeterO.Mail {
           } else if (i < 1) {
             index = indexStart; break;
           } else {
- break;
-}
+            break;
+          }
         }
         if (index == indexStart) {
- break;
-}
+          break;
+        }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -557,8 +557,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -614,17 +614,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -681,11 +681,11 @@ namespace PeterO.Mail {
             } while (false);
             if (indexTemp3 != index) {
               index = indexTemp3;
-  } else if (tokener != null) {
+            } else if (tokener != null) {
               tokener.RestoreState(state3); break;
             } else {
- break;
-}
+              break;
+            }
           }
           indexTemp2 = index;
           index = indexStart2;
@@ -694,15 +694,15 @@ namespace PeterO.Mail {
           indexTemp = indexTemp2; break;
         }
         if (tokener != null) {
- tokener.RestoreState(state2);
-}
+          tokener.RestoreState(state2);
+        }
       } while (false);
       if (tokener != null) {
         if (indexTemp == indexStart) {
- tokener.RestoreState(state);
-} else {
- tokener.Commit(9, indexStart, indexTemp);
-}
+          tokener.RestoreState(state);
+        } else {
+          tokener.Commit(9, indexStart, indexTemp);
+        }
       }
       return indexTemp;
     }
@@ -736,11 +736,11 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         index = ParseFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 93)) {
@@ -752,8 +752,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -795,8 +795,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -859,8 +859,8 @@ namespace PeterO.Mail {
             if (indexTemp3 != index) {
               index = indexTemp3;
             } else {
- break;
-}
+              break;
+            }
           }
           if (index < endIndex && (str[index] == 93)) {
             ++index;
@@ -875,8 +875,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -896,8 +896,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -948,17 +948,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -995,8 +995,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1061,14 +1061,14 @@ namespace PeterO.Mail {
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1099,8 +1099,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1125,17 +1125,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1201,10 +1201,10 @@ namespace PeterO.Mail {
       } while (false);
       if (tokener != null) {
         if (indexTemp == indexStart) {
- tokener.RestoreState(state);
-} else {
- tokener.Commit(5, indexStart, indexTemp);
-}
+          tokener.RestoreState(state);
+        } else {
+          tokener.Commit(5, indexStart, indexTemp);
+        }
       }
       return indexTemp;
     }
@@ -1252,16 +1252,16 @@ namespace PeterO.Mail {
           indexTemp = indexTemp2; break;
         }
         if (tokener != null) {
- tokener.RestoreState(state2);
-}
+          tokener.RestoreState(state2);
+        }
         for (int i = 0;; ++i) {
           indexTemp2 = ParseFWS(str, index, endIndex, tokener);
           if (indexTemp2 == index) { if (i < 1) {
               indexTemp = indexStart;
             } break;
           } else {
- index = indexTemp2;
-}
+            index = indexTemp2;
+          }
         }
         if (indexTemp2 != indexStart) {
           indexTemp = indexTemp2; break;
@@ -1277,8 +1277,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1332,8 +1332,8 @@ namespace PeterO.Mail {
                   indexTemp2 = indexStart2;
                 } break;
               } else {
- index = indexTemp3;
-}
+                index = indexTemp3;
+              }
             }
             if (indexTemp3 != indexStart) {
               indexTemp2 = indexTemp3; break;
@@ -1353,8 +1353,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1377,15 +1377,15 @@ namespace PeterO.Mail {
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
- break;
-}
+            break;
+          }
         }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1419,8 +1419,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1446,8 +1446,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1486,17 +1486,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1522,8 +1522,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1574,17 +1574,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1634,18 +1634,18 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         index = ParseCFWS(str, index, endIndex, tokener);
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1693,8 +1693,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1721,8 +1721,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1781,8 +1781,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1819,17 +1819,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -1895,8 +1895,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2001,8 +2001,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2034,16 +2034,16 @@ namespace PeterO.Mail {
           indexTemp = indexTemp2; break;
         }
         if (tokener != null) {
- tokener.RestoreState(state2);
-}
+          tokener.RestoreState(state2);
+        }
         indexTemp2 = ParseListHeaderUrlList(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
           indexTemp = indexTemp2; break;
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2074,8 +2074,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2095,8 +2095,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2115,8 +2115,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2201,8 +2201,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2221,8 +2221,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2259,17 +2259,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2304,14 +2304,14 @@ namespace PeterO.Mail {
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2325,8 +2325,8 @@ namespace PeterO.Mail {
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
- break;
-}
+            break;
+          }
         }
         if (index < endIndex && (str[index] == 59)) {
           ++index;
@@ -2342,8 +2342,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2441,8 +2441,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2513,8 +2513,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2553,8 +2553,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2573,8 +2573,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2597,8 +2597,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2653,11 +2653,11 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         if (index < endIndex && (str[index] == 59)) {
           ++index;
@@ -2665,8 +2665,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2712,8 +2712,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2783,8 +2783,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2821,17 +2821,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -2873,11 +2873,11 @@ namespace PeterO.Mail {
             } while (false);
             if (indexTemp3 != index) {
               index = indexTemp3;
-  } else if (tokener != null) {
+            } else if (tokener != null) {
               tokener.RestoreState(state3); break;
             } else {
- break;
-}
+              break;
+            }
           }
           indexTemp2 = index;
           index = indexStart2;
@@ -2886,8 +2886,8 @@ namespace PeterO.Mail {
           indexTemp = indexTemp2; break;
         }
         if (tokener != null) {
- tokener.RestoreState(state2);
-}
+          tokener.RestoreState(state2);
+        }
         indexTemp2 = ParseQuotedString(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
           indexTemp = indexTemp2; break;
@@ -2895,10 +2895,10 @@ namespace PeterO.Mail {
       } while (false);
       if (tokener != null) {
         if (indexTemp == indexStart) {
- tokener.RestoreState(state);
-} else {
- tokener.Commit(8, indexStart, indexTemp);
-}
+          tokener.RestoreState(state);
+        } else {
+          tokener.Commit(8, indexStart, indexTemp);
+        }
       }
       return indexTemp;
     }
@@ -2999,8 +2999,8 @@ namespace PeterO.Mail {
             if (indexTemp3 != index) {
               index = indexTemp3;
             } else {
- break;
-}
+              break;
+            }
           }
           if (index < endIndex && (str[index] == 34)) {
             ++index;
@@ -3015,8 +3015,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3036,10 +3036,10 @@ namespace PeterO.Mail {
       } while (false);
       if (tokener != null) {
         if (indexTemp == indexStart) {
- tokener.RestoreState(state);
-} else {
- tokener.Commit(6, indexStart, indexTemp);
-}
+          tokener.RestoreState(state);
+        } else {
+          tokener.Commit(6, indexStart, indexTemp);
+        }
       }
       return indexTemp;
     }
@@ -3066,11 +3066,11 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = ParseMailbox(str, index, endIndex, tokener);
         if (indexTemp == index) {
@@ -3113,17 +3113,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3153,8 +3153,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3197,8 +3197,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3219,8 +3219,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3252,8 +3252,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3272,8 +3272,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3314,8 +3314,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3334,8 +3334,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3354,8 +3354,8 @@ namespace PeterO.Mail {
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
- break;
-}
+            break;
+          }
         }
         if (index < endIndex && (str[index] == 93)) {
           ++index;
@@ -3365,8 +3365,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3390,8 +3390,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3416,11 +3416,11 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         if (index < endIndex && (str[index] == 64)) {
           ++index;
@@ -3473,17 +3473,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3520,8 +3520,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3544,8 +3544,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3578,17 +3578,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3648,8 +3648,8 @@ namespace PeterO.Mail {
               indexTemp2 = indexTemp3; break;
             }
             if (tokener != null) {
- tokener.RestoreState(state3);
-}
+              tokener.RestoreState(state3);
+            }
             state3 = (tokener != null) ? tokener.GetState() : 0;
             indexTemp3 = index;
             do {
@@ -3671,8 +3671,8 @@ namespace PeterO.Mail {
                 if (indexTemp4 != index) {
                   index = indexTemp4;
                 } else {
- break;
-}
+                  break;
+                }
               }
               indexTemp3 = index;
               index = indexStart3;
@@ -3681,8 +3681,8 @@ namespace PeterO.Mail {
               indexTemp2 = indexTemp3; break;
             }
             if (tokener != null) {
- tokener.RestoreState(state3);
-}
+              tokener.RestoreState(state3);
+            }
             indexTemp3 = ParseRegularParameter(str, index, endIndex, tokener);
             if (indexTemp3 != index) {
               indexTemp2 = indexTemp3; break;
@@ -3701,8 +3701,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3739,12 +3739,12 @@ namespace PeterO.Mail {
           indexTemp = indexTemp2; break;
         }
         if (tokener != null) {
- tokener.RestoreState(state2);
-}
+          tokener.RestoreState(state2);
+        }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3764,17 +3764,17 @@ namespace PeterO.Mail {
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null) {
         if (indexTemp == indexStart) {
- tokener.RestoreState(state);
-} else {
- tokener.Commit(2, indexStart, indexTemp);
-}
+          tokener.RestoreState(state);
+        } else {
+          tokener.Commit(2, indexStart, indexTemp);
+        }
       }
       return indexTemp;
     }
@@ -3840,10 +3840,10 @@ namespace PeterO.Mail {
       } while (false);
       if (tokener != null) {
         if (indexTemp == indexStart) {
- tokener.RestoreState(state);
-} else {
- tokener.Commit(3, indexStart, indexTemp);
-}
+          tokener.RestoreState(state);
+        } else {
+          tokener.Commit(3, indexStart, indexTemp);
+        }
       }
       return indexTemp;
     }
@@ -3860,8 +3860,8 @@ namespace PeterO.Mail {
               indexTemp = indexStart;
             } break;
           } else {
- index = indexTemp2;
-}
+            index = indexTemp2;
+          }
         }
         if (indexTemp2 != indexStart) {
           indexTemp = indexTemp2; break;
@@ -3873,10 +3873,10 @@ namespace PeterO.Mail {
       } while (false);
       if (tokener != null) {
         if (indexTemp == indexStart) {
- tokener.RestoreState(state);
-} else {
- tokener.Commit(4, indexStart, indexTemp);
-}
+          tokener.RestoreState(state);
+        } else {
+          tokener.Commit(4, indexStart, indexTemp);
+        }
       }
       return indexTemp;
     }
@@ -3906,16 +3906,16 @@ namespace PeterO.Mail {
           indexTemp = indexTemp2; break;
         }
         if (tokener != null) {
- tokener.RestoreState(state2);
-}
+          tokener.RestoreState(state2);
+        }
         indexTemp2 = ParseQuotedString(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
           indexTemp = indexTemp2; break;
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -3944,16 +3944,16 @@ namespace PeterO.Mail {
           indexTemp = indexTemp2; break;
         }
         if (tokener != null) {
- tokener.RestoreState(state2);
-}
+          tokener.RestoreState(state2);
+        }
         indexTemp2 = ParseQuotedString(str, index, endIndex, tokener);
         if (indexTemp2 != index) {
           indexTemp = indexTemp2; break;
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4018,8 +4018,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4041,8 +4041,8 @@ namespace PeterO.Mail {
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
@@ -4066,8 +4066,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4110,8 +4110,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4198,8 +4198,8 @@ namespace PeterO.Mail {
               indexTemp2 = indexTemp3; break;
             }
             if (tokener != null) {
- tokener.RestoreState(state3);
-}
+              tokener.RestoreState(state3);
+            }
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
@@ -4214,8 +4214,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4258,8 +4258,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4294,8 +4294,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4381,11 +4381,11 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         index = ParseFWS(str, index, endIndex, tokener);
         if (index < endIndex && (str[index] == 34)) {
@@ -4398,10 +4398,10 @@ namespace PeterO.Mail {
       } while (false);
       if (tokener != null) {
         if (indexTemp == indexStart) {
- tokener.RestoreState(state);
-} else {
- tokener.Commit(7, indexStart, indexTemp);
-}
+          tokener.RestoreState(state);
+        } else {
+          tokener.Commit(7, indexStart, indexTemp);
+        }
       }
       return indexTemp;
     }
@@ -4428,14 +4428,14 @@ namespace PeterO.Mail {
           if (indexTemp2 != index) {
             index = indexTemp2;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4466,8 +4466,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4496,8 +4496,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4518,8 +4518,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4587,17 +4587,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4614,8 +4614,8 @@ namespace PeterO.Mail {
           if (index < endIndex && ((str[index] >= 48 && str[index] <= 57) || (str[index] == 33) || (str[index] >= 35 && str[index] <= 36) || (str[index] == 38) || (str[index] >= 94 && str[index] <= 95) || (str[index] >= 45 && str[index] <= 46) || (str[index] == 43) || (str[index] >= 97 && str[index] <= 122) || (str[index] >= 65 && str[index] <= 90))) {
             ++index;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
@@ -4666,8 +4666,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4685,8 +4685,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4726,8 +4726,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4753,17 +4753,17 @@ namespace PeterO.Mail {
           } while (false);
           if (indexTemp2 != index) {
             index = indexTemp2;
-  } else if (tokener != null) {
+          } else if (tokener != null) {
             tokener.RestoreState(state2); break;
           } else {
- break;
-}
+            break;
+          }
         }
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4820,8 +4820,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4873,8 +4873,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4913,8 +4913,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4933,8 +4933,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -4960,8 +4960,8 @@ namespace PeterO.Mail {
         indexTemp = index;
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
 
@@ -5005,8 +5005,8 @@ namespace PeterO.Mail {
           indexTemp = indexTemp2; break;
         }
         if (tokener != null) {
- tokener.RestoreState(state2);
-}
+          tokener.RestoreState(state2);
+        }
         if (index + 1 < endIndex && (str[index] & ~32) == 85 && (str[index + 1] & ~32) == 84) {
           indexTemp += 2; break;
         }
@@ -5042,8 +5042,8 @@ namespace PeterO.Mail {
         }
       } while (false);
       if (tokener != null && indexTemp == indexStart) {
- tokener.RestoreState(state);
-}
+        tokener.RestoreState(state);
+      }
       return indexTemp;
     }
   }

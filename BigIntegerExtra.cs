@@ -148,8 +148,8 @@ namespace PeterO
     /// another BigInteger instance.</summary>
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
-    /// <returns>True if 'thisValue' is less than ' otherValue'; otherwise,
-    /// false.</returns>
+    /// <returns>True if <paramref name='thisValue'/> is less than <paramref
+    /// name='otherValue'/>; otherwise, false.</returns>
     public static bool operator <(BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
         return otherValue != null;
@@ -161,8 +161,8 @@ namespace PeterO
     /// or equal to another BigInteger instance.</summary>
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
-    /// <returns>True if 'thisValue' is up to ' otherValue'; otherwise,
-    /// false.</returns>
+    /// <returns>True if <paramref name='thisValue'/> is up to <paramref
+    /// name='otherValue'/>; otherwise, false.</returns>
     public static bool operator <=(BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
         return true;
@@ -174,8 +174,8 @@ namespace PeterO
     /// another BigInteger instance.</summary>
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
-    /// <returns>True if 'thisValue' is greater than ' otherValue'; otherwise,
-    /// false.</returns>
+    /// <returns>True if <paramref name='thisValue'/> is greater than
+    /// <paramref name='otherValue'/>; otherwise, false.</returns>
     public static bool operator >(BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
         return false;
@@ -187,8 +187,8 @@ namespace PeterO
     /// another BigInteger value.</summary>
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
-    /// <returns>True if 'thisValue' is at least ' otherValue'; otherwise,
-    /// false.</returns>
+    /// <returns>True if <paramref name='thisValue'/> is at least <paramref
+    /// name='otherValue'/>; otherwise, false.</returns>
     public static bool operator >=(BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
         return otherValue == null;

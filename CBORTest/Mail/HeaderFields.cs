@@ -20,9 +20,6 @@ namespace PeterO.Mail
     string ReplaceEncodedWords(string str);
   }
 
-
-
-
   internal class HeaderFields
   {
     private class UnstructuredHeaderField : IHeaderFieldParser {
@@ -138,7 +135,7 @@ namespace PeterO.Mail
               // This is a comment, so replace any encoded words
               // in the comment
               string newComment = Message.ReplaceEncodedWords(str, i + 1, endIndex - 1, true);
-              sb.Append(str.Substring(lastIndex, (i + 1) -lastIndex));
+              sb.Append(str.Substring(lastIndex, i + 1 - lastIndex));
               sb.Append(newComment);
               lastIndex = endIndex - 1;
               // Set i to the end of the comment, since
@@ -169,6 +166,7 @@ namespace PeterO.Mail
         if (!Message.HasTextToEscape(str)) {
           return str;
         }
+
         StringBuilder sb = new StringBuilder();
         Tokener tokener = new Tokener();
         int endIndex = this.Parse(str, 0, str.Length, tokener);

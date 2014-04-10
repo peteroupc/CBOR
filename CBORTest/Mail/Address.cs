@@ -7,8 +7,6 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-using System.Text;
-using System.Collections.Generic;
 
 namespace PeterO.Mail
 {
@@ -48,7 +46,7 @@ namespace PeterO.Mail
       if (localPartEnd == 0) {
         throw new ArgumentException("Invalid local part");
       }
-      if (localPartEnd >= addressString.Length || addressString[localPartEnd]!='@') {
+      if (localPartEnd >= addressString.Length || addressString[localPartEnd] != '@') {
         throw new ArgumentException("Expected '@' sign after local part");
       }
       int domainEnd = HeaderParser.ParseDomainNoCfws(addressString, localPartEnd + 1, addressString.Length, null);

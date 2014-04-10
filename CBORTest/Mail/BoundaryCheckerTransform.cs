@@ -359,8 +359,8 @@ namespace PeterO.Mail
       this.hasNewBodyPart = false;
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets a value indicating whether a new body part was detected.</summary>
+    /// <value>Whether a new body part was detected.</value>
     public bool HasNewBodyPart {
       get {
         return this.hasNewBodyPart;

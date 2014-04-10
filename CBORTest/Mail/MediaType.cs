@@ -46,13 +46,15 @@ namespace PeterO.Mail
     /// <value>A value not documented yet.</value>
     public IDictionary<string, string> Parameters {
       get {
-        // TODO: Make read-only
-        return this.parameters;
+        return new ReadOnlyMap<string, string>(this.parameters);
       }
     }
 
     internal enum QuotedStringRule {
+    /// <summary>Not documented yet.</summary>
       Http,
+
+    /// <summary>Not documented yet.</summary>
       Rfc5322
     }
 
@@ -81,7 +83,7 @@ namespace PeterO.Mail
         if (i2 < endIndex) {
           char c = s[i2];
           // Non-ASCII (allowed in internationalized email headers under RFC6532)
-          if (c >= 0xd800 && c <= 0xdbff && i2 + 1 < endIndex && s[i2 + 1]>= 0xdc00 && s[i2 + 1]<= 0xdfff) {
+          if (c >= 0xd800 && c <= 0xdbff && i2 + 1 < endIndex && s[i2 + 1] >= 0xdc00 && s[i2 + 1] <= 0xdfff) {
             i2 += 2;
           } else if (c >= 0xd800 && c <= 0xdfff) {
             // unchanged; it's a bare surrogate
@@ -115,7 +117,7 @@ namespace PeterO.Mail
       if (index + 1 < endIndex && s[index] == '\\') {
         char c = s[index + 1];
         // Non-ASCII (allowed in internationalized email headers under RFC6532)
-        if (c >= 0xd800 && c <= 0xdbff && index + 2 < endIndex && s[index + 2]>= 0xdc00 && s[index + 2]<= 0xdfff) {
+        if (c >= 0xd800 && c <= 0xdbff && index + 2 < endIndex && s[index + 2] >= 0xdc00 && s[index + 2] <= 0xdfff) {
           return index + 3;
         } else if (c >= 0xd800 && c <= 0xdfff) {
           return index;
@@ -421,7 +423,7 @@ namespace PeterO.Mail
       sb.Append(this.topLevelType);
       sb.Append('/');
       sb.Append(this.subType);
-       foreach (string key in this.parameters.Keys) {
+      foreach (string key in this.parameters.Keys) {
         sb.Append(';');
         AppendParamValue(key, this.parameters[key], sb);
       }
@@ -437,7 +439,7 @@ namespace PeterO.Mail
       int i = index;
       while (i < endIndex) {
         char c = str[i];
-        if (c <= 0x20 || c >= 0x7F || ((c & 0x7F) ==c && "()<>@,;:\\\"/[]?=".IndexOf(c) >= 0)) {
+        if (c <= 0x20 || c >= 0x7F || (c == (c & 0x7F) && "()<>@,;:\\\"/[]?=".IndexOf(c) >= 0)) {
           break;
         }
         if (httpRules && (c == '{' || c == '}')) {
@@ -463,8 +465,7 @@ namespace PeterO.Mail
       int i = index;
       while (i < endIndex) {
         char c = str[i];
-        if (c <= 0x20 || c >= 0x7f ||
-            ((c & 0x7F) ==c && "()<>@,;:\\\"/[]?='%*".IndexOf(c) >= 0)) {
+        if (c <= 0x20 || c >= 0x7f || ((c & 0x7F) == c && "()<>@,;:\\\"/[]?='%*".IndexOf(c) >= 0)) {
           break;
         }
         if (builder != null) {
@@ -486,7 +487,7 @@ namespace PeterO.Mail
         }
         return i;
       }
-      if (i + 1 < endIndex && str[i] == '*' && str[i + 1] >= '1' && str[i + 1]<= '9') {
+      if (i + 1 < endIndex && str[i] == '*' && str[i + 1] >= '1' && str[i + 1] <= '9') {
         // other-sections
         if (builder != null) {
           builder.Append('*');
@@ -555,7 +556,7 @@ namespace PeterO.Mail
           }
           ++i;
           ++count;
-        } else if (count > 0 && ((c & 0x7F) ==c && "!#$&-^_.+".IndexOf(c) >= 0)) {
+        } else if (count > 0 && (c == (c & 0x7F) && "!#$&-^_.+".IndexOf(c) >= 0)) {
           if (builder != null) {
             builder.Append(c);
           }
@@ -725,7 +726,7 @@ namespace PeterO.Mail
           this.parameters[realName] = realValue;
         }
       }
-       foreach (string name in this.parameters.Keys) {
+      foreach (string name in this.parameters.Keys) {
         // Check parameter names using stricter format
         // in RFC6838
         if (skipMimeTypeSubtype(name, 0, name.Length, null) != name.Length) {
