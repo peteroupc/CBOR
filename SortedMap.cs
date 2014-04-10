@@ -27,6 +27,10 @@ namespace PeterO {
       }
     }
 
+    public SortedMap() {
+      this.tree = new RedBlackTree<KeyValuePair<T1, T2>>(comp);
+    }
+
     public SortedMap(IDictionary<T1, T2> mapA) {
       this.tree = new RedBlackTree<KeyValuePair<T1, T2>>(comp);
       foreach (var item in mapA) {
