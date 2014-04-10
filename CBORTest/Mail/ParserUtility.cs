@@ -84,7 +84,7 @@ namespace PeterO.Mail
       while (index >= 0) {
         char c = s[index];
         if (c != 0x09 && c != 0x20) {
-          return s.Substring(startIndex, index + 1 -startIndex);
+          return s.Substring(startIndex, index - startIndex + 1);
         }
         --index;
       }
@@ -105,12 +105,12 @@ namespace PeterO.Mail
         // Add WSP
         if (index < endIndex && ((str[index] == 32) || (str[index] == 9))) {
           if (sb != null) {
- sb.Append(str[index]);
-}
+            sb.Append(str[index]);
+          }
           ++index;
         } else {
- return tmp;
-}
+          return tmp;
+        }
       }
       return index;
     }
@@ -127,6 +127,52 @@ namespace PeterO.Mail
       return index;
     }
 
+    /// <summary>* Splits a _string by a delimiter. If the _string ends with
+    /// the delimiter, the result will end with an empty _string. If the _string
+    /// begins with the delimiter, the result will start with an empty _string.
+    /// If the delimiter is null or empty, exception. @param s a _string to
+    /// split. @param delimiter a _string to signal where each substring
+    /// begins and ends. @return An array containing strings that are split
+    /// by the delimiter. If s is null or empty, returns an array whose sole
+    /// element is the empty _string.</summary>
+    /// <returns>A string[] object.</returns>
+    /// <param name='s'>A string object.</param>
+    /// <param name='delimiter'>A string object. (2).</param>
+    public static string[] SplitAt(string s, string delimiter) {
+      if (delimiter == null) {
+        throw new ArgumentNullException("delimiter");
+      }
+      if (delimiter.Length == 0) {
+        throw new ArgumentException("delimiter is empty.");
+      }
+      if (s == null || s.Length == 0) {
+        return new string[] { String.Empty};
+      }
+      int index = 0;
+      bool first = true;
+      List<string> strings = null;
+      int delimLength = delimiter.Length;
+      while (true) {
+        int index2 = s.IndexOf(delimiter, index, StringComparison.Ordinal);
+        if (index2 < 0) {
+          if (first) {
+            return new string[] { s};
+          }
+          strings.Add(s.Substring(index));
+          break;
+        } else {
+          if (first) {
+            strings = new List<string>();
+            first = false;
+          }
+          string newstr = s.Substring(index, (index2)-index);
+          strings.Add(newstr);
+          index = index2 + delimLength;
+        }
+      }
+      return strings.ToArray();
+    }
+
     public static int SkipCrLf(string str, int index, int endIndex) {
       if (index + 1 < endIndex && str[index] == 0x0d && str[index + 1] == 0x0a) {
         return index + 2;
@@ -136,16 +182,16 @@ namespace PeterO.Mail
     }
 
     public static bool IsValidLanguageTag(string str) {
+      if (String.IsNullOrEmpty(str)) {
+        return false;
+      }
       int index = 0;
       int endIndex = str.Length;
       int startIndex = index;
       if (index + 1 < endIndex) {
         char c1 = str[index];
         char c2 = str[index + 1];
-        if (
-          ((c1 >= 'A' && c1 <= 'Z') || (c1 >= 'a' && c1 <= 'z')) &&
-          ((c2 >= 'A' && c2 <= 'Z') || (c2 >= 'a' && c2 <= 'z'))
-) {
+        if (((c1 >= 'A' && c1 <= 'Z') || (c1 >= 'a' && c1 <= 'z')) && ((c2 >= 'A' && c2 <= 'Z') || (c2 >= 'a' && c2 <= 'z'))) {
           index += 2;
           if (index == endIndex) {
             return true;  // case AA
@@ -180,8 +226,7 @@ namespace PeterO.Mail
             return true;
           }
           // More complex cases
-          string[] splitString = null;  // TODO: Add splitAt
-          // StringUtility.splitAt(str.Substring(startIndex,(endIndex)-(startIndex)),"-");
+          string[] splitString = SplitAt(str.Substring(startIndex, (endIndex)-startIndex),"-");
           if (splitString.Length == 0) {
             return false;
           }
@@ -337,12 +382,12 @@ namespace PeterO.Mail
           // grandfathered language tags
           str = ToLowerCaseAscii(str);
           return str.Equals("i-ami") || str.Equals("i-bnn") ||
-                  str.Equals("i-default") || str.Equals("i-enochian") ||
-                  str.Equals("i-hak") || str.Equals("i-klingon") ||
-                  str.Equals("i-lux") || str.Equals("i-navajo") ||
-                  str.Equals("i-mingo") || str.Equals("i-pwn") ||
-                  str.Equals("i-tao") || str.Equals("i-tay") ||
-                  str.Equals("i-tsu");
+            str.Equals("i-default") || str.Equals("i-enochian") ||
+            str.Equals("i-hak") || str.Equals("i-klingon") ||
+            str.Equals("i-lux") || str.Equals("i-navajo") ||
+            str.Equals("i-mingo") || str.Equals("i-pwn") ||
+            str.Equals("i-tao") || str.Equals("i-tay") ||
+            str.Equals("i-tsu");
         } else {
           return false;
         }

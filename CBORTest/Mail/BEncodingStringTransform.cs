@@ -11,13 +11,13 @@ using System;
 namespace PeterO.Mail
 {
   internal sealed class BEncodingStringTransform : ITransform {
+    private const int MaxLineSize = 76;
+
     private string input;
     private int inputIndex;
     private byte[] buffer;
     private int bufferIndex;
     private int bufferCount;
-
-    private const int MaxLineSize = 76;
 
     public BEncodingStringTransform(String input) {
       this.input = input;

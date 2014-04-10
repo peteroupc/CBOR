@@ -157,7 +157,7 @@ using PeterO.Mail;
      * If an encoded line ends with spaces and/or tabs, those characters
      * are deleted (RFC 2045, sec. 6.7, rule 3).
      * @param outputStream A readable data stream.
-     * @param data A byte[] object.
+     * @param data A byte array.
      * @param offset A 32-bit signed integer.
      * @param count A 32-bit signed integer. (2).
      * @param lenientLineBreaks A Boolean object.
@@ -299,28 +299,26 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     @Test
     public void TestParseDomainAndLocalPart() {
-      this.TestParseDomain("x","x");
-      this.TestParseLocalPart("x","x");
-      this.TestParseLocalPart("\"\"","");
-      this.TestParseDomain("x.example","x.example");
-      this.TestParseLocalPart("x.example","x.example");
-      this.TestParseLocalPart("x.example\ud800\udc00.example.com","x.example\ud800\udc00.example.com");
-      this.TestParseDomain("x.example\ud800\udc00.example.com","x.example\ud800\udc00.example.com");
-      this.TestParseDomain("x.example.com","x.example.com");
-      this.TestParseLocalPart("x.example.com","x.example.com");
-      this.TestParseLocalPart("\"\"","");
-      this.TestParseLocalPart("\"(not a comment)\"","(not a comment)");
-      this.TestParseLocalPart("(comment1) x (comment2)","x");
-      this.TestParseLocalPart("(comment1) example (comment2) . (comment3) com","example.com");
-      this.TestParseDomain("(comment1) x (comment2)","x");
-      this.TestParseDomain("(comment1) example (comment2) . (comment3) com","example.com");
-      this.TestParseDomain("(comment1) [x] (comment2)","[x]");
-      this.TestParseDomain("(comment1) [a.b.c.d] (comment2)","[a.b.c.d]");
-      this.TestParseDomain("[]","[]");
-      this.TestParseDomain("[a .\r\n b. c.d ]","[a.b.c.d]");
+      this.TestParseDomain("x", "x");
+      this.TestParseLocalPart("x", "x");
+      this.TestParseLocalPart("\"" + "\"", "");
+      this.TestParseDomain("x.example", "x.example");
+      this.TestParseLocalPart("x.example", "x.example");
+      this.TestParseLocalPart("x.example\ud800\udc00.example.com", "x.example\ud800\udc00.example.com");
+      this.TestParseDomain("x.example\ud800\udc00.example.com", "x.example\ud800\udc00.example.com");
+      this.TestParseDomain("x.example.com", "x.example.com");
+      this.TestParseLocalPart("x.example.com", "x.example.com");
+      this.TestParseLocalPart("\"(not a comment)\"", "(not a comment)");
+      this.TestParseLocalPart("(comment1) x (comment2)", "x");
+      this.TestParseLocalPart("(comment1) example (comment2) . (comment3) com", "example.com");
+      this.TestParseDomain("(comment1) x (comment2)", "x");
+      this.TestParseDomain("(comment1) example (comment2) . (comment3) com", "example.com");
+      this.TestParseDomain("(comment1) [x] (comment2)", "[x]");
+      this.TestParseDomain("(comment1) [a.b.c.d] (comment2)", "[a.b.c.d]");
+      this.TestParseDomain("[]", "[]");
+      this.TestParseDomain("[a .\r\n b. c.d ]", "[a.b.c.d]");
     }
 
-    @Test
     public void TestWordWrapOne(String firstWord, String nextWords, String expected) {
       WordWrapEncoder ww=new WordWrapEncoder(firstWord);
       ww.AddString(nextWords);
@@ -330,8 +328,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     @Test
     public void TestWordWrap() {
-      this.TestWordWrapOne("Subject:", this.Repeat("xxxx ", 10) +"y", "Subject: " + this.Repeat("xxxx ",10)+"y");
-      this.TestWordWrapOne("Subject:", this.Repeat("xxxx ", 10), "Subject: " + this.Repeat("xxxx ", 9)+"xxxx");
+      this.TestWordWrapOne("Subject:", this.Repeat("xxxx ", 10) + "y", "Subject: " + this.Repeat("xxxx ", 10) + "y");
+      this.TestWordWrapOne("Subject:", this.Repeat("xxxx ", 10), "Subject: " + this.Repeat("xxxx ", 9) + "xxxx");
     }
 
     @Test
@@ -369,7 +367,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       MediaType mt = new MediaTypeBuilder("x", "y").SetParameter("z", value).ToMediaType();
       String topLevel = mt.getTopLevelType();
       String sub = mt.getSubType();
-      var mtstring = "MIME-Version: 1.0\r\nContent-Type: " + mt.toString() +"\r\nContent-Transfer-Encoding: base64\r\n\r\n";
+      var mtstring = "MIME-Version: 1.0\r\nContent-Type: " + mt.toString() +
+        "\r\nContent-Transfer-Encoding: base64\r\n\r\n";
       java.io.ByteArrayInputStream ms=null;
 try {
 ms=new ByteArrayInputStream(DataUtilities.GetUtf8Bytes(mtstring, true));
@@ -390,8 +389,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       this.SingleTestMediaTypeEncoding("xy z", "x/y;z=\"xy z\"");
       this.SingleTestMediaTypeEncoding("xy\u00a0z", "x/y;z*=utf-8''xy%C2%A0z");
       this.SingleTestMediaTypeEncoding("xy\ufffdz", "x/y;z*=utf-8''xy%C2z");
-      this.SingleTestMediaTypeEncoding("xy" + this.Repeat("\ufffc", 50) +"z", "x/y;z*=utf-8''xy" + this.Repeat("%EF%BF%BD",50)+"z");
-      this.SingleTestMediaTypeEncoding("xy" + this.Repeat("\u00a0", 50) +"z", "x/y;z*=utf-8''xy" + this.Repeat("%C2%A0",50)+"z");
+      this.SingleTestMediaTypeEncoding("xy" + this.Repeat("\ufffc", 50) + "z", "x/y;z*=utf-8''xy" + this.Repeat("%EF%BF%BD", 50) + "z");
+      this.SingleTestMediaTypeEncoding("xy" + this.Repeat("\u00a0", 50) + "z", "x/y;z*=utf-8''xy" + this.Repeat("%C2%A0", 50) + "z");
     }
 
     @Test
@@ -480,7 +479,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     public void TestEncodedWordsPhrase(String expected, String input) {
       Assert.assertEquals(
         expected + " <test@example.com>",
-        HeaderFields.GetParser("from") .ReplaceEncodedWords(input + " <test@example.com>"));
+        HeaderFields.GetParser("from").ReplaceEncodedWords(input + " <test@example.com>"));
     }
 
     public void TestEncodedWordsOne(String expected, String input) {
@@ -488,22 +487,19 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals(expected, Message.ReplaceEncodedWords(input));
       Assert.assertEquals(
         "(" + expected + ") en",
-        HeaderFields.GetParser("content-language") .ReplaceEncodedWords("(" + input + ") en"));
+        HeaderFields.GetParser("content-language").ReplaceEncodedWords("(" + input + ") en"));
       Assert.assertEquals(
         " (" + expected + ") en",
-        HeaderFields.GetParser("content-language") .ReplaceEncodedWords(" (" + input + ") en"));
+        HeaderFields.GetParser("content-language").ReplaceEncodedWords(" (" + input + ") en"));
       Assert.assertEquals(
-        " " + par + "comment " + par + "cmt "+expected+")comment) en",
-        HeaderFields.GetParser("content-language")
-        .ReplaceEncodedWords(" (comment (cmt " + input + ")comment) en"));
+        " " + par + "comment " + par + "cmt " + expected + ")comment) en",
+        HeaderFields.GetParser("content-language").ReplaceEncodedWords(" (comment (cmt " + input + ")comment) en"));
       Assert.assertEquals(
-        " " + par + "comment " + par + "=?bad?= "+expected+")comment) en",
-        HeaderFields.GetParser("content-language")
-        .ReplaceEncodedWords(" (comment (=?bad?= " + input + ")comment) en"));
+        " " + par + "comment " + par + "=?bad?= " + expected + ")comment) en",
+        HeaderFields.GetParser("content-language").ReplaceEncodedWords(" (comment (=?bad?= " + input + ")comment) en"));
       Assert.assertEquals(
-        " " + par + "comment " + par+""+expected+")comment) en",
-        HeaderFields.GetParser("content-language")
-        .ReplaceEncodedWords(" (comment (" + input + ")comment) en"));
+        " " + par + "comment " + par + "" + expected + ")comment) en",
+        HeaderFields.GetParser("content-language").ReplaceEncodedWords(" (comment (" + input + ")comment) en"));
       Assert.assertEquals(
         " (" + expected + "()) en",
         HeaderFields.GetParser("content-language").ReplaceEncodedWords(" (" + input + "()) en"));
@@ -512,7 +508,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         HeaderFields.GetParser("content-language").ReplaceEncodedWords(" en (" + input + ")"));
       Assert.assertEquals(
         expected,
-        HeaderFields.GetParser("subject") .ReplaceEncodedWords(input));
+        HeaderFields.GetParser("subject").ReplaceEncodedWords(input));
     }
 
     @Test
@@ -537,8 +533,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals(
         par + "tes\u00bet) x@x.example",
         HeaderFields.GetParser("subject").DowngradeComments("(tes\u00bet) x@x.example"));
-      Assert.assertEquals("(=?utf-8?q?tes=0Dt?=) x@x.example",HeaderFields.GetParser("from")
-                      .DowngradeComments("(tes\rt) x@x.example"));
+      Assert.assertEquals(
+        "(=?utf-8?q?tes=0Dt?=) x@x.example",
+        HeaderFields.GetParser("from").DowngradeComments("(tes\rt) x@x.example"));
+      Assert.assertEquals(
+        "(=?utf-8?q?tes=0At?=) x@x.example",
+        HeaderFields.GetParser("from").DowngradeComments("(tes\nt) x@x.example"));
     }
 
     @Test
@@ -563,7 +563,6 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       this.TestEncodedWordsPhrase(
         "=?us-ascii?q?x?=" + par + "z) y",
         "=?us-ascii?q?x?=(=?utf-8?q?z?=) =?us-ascii?q?y?=");
-      //
       this.TestEncodedWordsOne("x y", "=?utf-8?q?x_?= =?utf-8?q?y?=");
       this.TestEncodedWordsOne("abcde abcde", "abcde abcde");
       this.TestEncodedWordsOne("abcde", "abcde");
@@ -583,8 +582,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       this.TestEncodedWordsOne("abc de", "=?utf-8?q?abc_de?=");
       this.TestEncodedWordsOne("abc\ufffdde", "=?us-ascii?q?abc=90de?=");
       this.TestEncodedWordsOne("=?x-undefined?q?abcde?=", "=?x-undefined?q?abcde?=");
-      this.TestEncodedWordsOne("=?utf-8?q?"+this.Repeat("x",200)+"?=",
-                               "=?utf-8?q?" + this.Repeat("x", 200) +"?=");
+      this.TestEncodedWordsOne("=?utf-8?q?" + this.Repeat("x", 200) + "?=", "=?utf-8?q?" + this.Repeat("x", 200) + "?=");
     }
 
     @Test
@@ -599,13 +597,13 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       this.TestQuotedPrintable("te\r\nst", "te=0D=0Ast", "te\r\nst", "te\r\nst");
       this.TestQuotedPrintable("te\rst", "te=0Dst", "te=0Dst", "te\r\nst");
       this.TestQuotedPrintable("te\nst", "te=0Ast", "te=0Ast", "te\r\nst");
-      this.TestQuotedPrintable("te \r\nst", "te =0D=0Ast", "te =20\r\nst", "te =20\r\nst");
+      this.TestQuotedPrintable("te " + " " + "\r\nst", "te " + " " + "=0D=0Ast", "te =20\r\nst", "te =20\r\nst");
       this.TestQuotedPrintable("te \r\nst", "te =0D=0Ast", "te=20\r\nst", "te=20\r\nst");
       this.TestQuotedPrintable("te \t\r\nst", "te =09=0D=0Ast", "te =09\r\nst", "te =09\r\nst");
       this.TestQuotedPrintable("te\t\r\nst", "te=09=0D=0Ast", "te=09\r\nst", "te=09\r\nst");
       this.TestQuotedPrintable(this.Repeat("a", 75), this.Repeat("a", 75));
-      this.TestQuotedPrintable(this.Repeat("a", 76), this.Repeat("a", 75) +"=\r\na");
-      this.TestQuotedPrintable(this.Repeat("\u000c", 30), this.Repeat("=0C", 25) +"=\r\n" + this.Repeat("=0C",5));
+      this.TestQuotedPrintable(this.Repeat("a", 76), this.Repeat("a", 75) + "=\r\na");
+      this.TestQuotedPrintable(this.Repeat("\u000c", 30), this.Repeat("=0C", 25) + "=\r\n" + this.Repeat("=0C", 5));
     }
 
     public static void Timeout(int duration, Action action) {

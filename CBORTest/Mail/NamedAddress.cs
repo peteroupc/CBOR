@@ -34,14 +34,17 @@ namespace PeterO.Mail
 
     private bool isGroup;
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets a value indicating whether this represents a group
+    /// of addresses.</summary>
+    /// <value>Whether this represents a group of addresses.</value>
     public bool IsGroup {
       get {
         return this.isGroup;
       }
     }
-    public NamedAddress(string address) : this(address,address){}
+
+    public NamedAddress(string address) : this(address, address) {
+    }
 
     public NamedAddress(string displayName, string address) {
       if (String.IsNullOrEmpty(displayName)) {

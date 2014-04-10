@@ -66,7 +66,8 @@ namespace PeterO.Mail
     public MediaTypeBuilder SetTopLevelType(string str) {
       if (str == null) {
         throw new ArgumentNullException("str");
-      }if (str.Length == 0) {
+      }
+      if (str.Length == 0) {
         throw new ArgumentException("str is empty.");
       }
       if (MediaType.skipMimeTypeSubtype(str, 0, str.Length, null) != str.Length) {
