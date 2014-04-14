@@ -11,7 +11,7 @@ package com.upokecenter.cbor;
     /**
      * Description of CBORTag26.
      */
-  public class CBORTag26 implements ICBORTag
+  class CBORTag26 implements ICBORTag
   {
     /**
      * Not documented yet.
