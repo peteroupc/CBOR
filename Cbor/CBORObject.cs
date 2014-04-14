@@ -3291,11 +3291,11 @@ namespace PeterO.Cbor {
           case CBORObjectTypeByteString: {
             sb.Append('\"');
             if (this.HasTag(22)) {
-              CBORUtilities.ToBase64(sb, (byte[])this.ThisItem, false);
+              Base64.ToBase64(sb, (byte[])this.ThisItem, false);
             } else if (this.HasTag(23)) {
               CBORUtilities.ToBase16(sb, (byte[])this.ThisItem);
             } else {
-              CBORUtilities.ToBase64URL(sb, (byte[])this.ThisItem, false);
+              Base64.ToBase64URL(sb, (byte[])this.ThisItem, false);
             }
             sb.Append('\"');
             break;

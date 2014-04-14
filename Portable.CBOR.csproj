@@ -59,6 +59,7 @@
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include='Base64.cs'/>
     <Compile Include='BigInteger.cs'/>
     <Compile Include='BigIntegerExtra.cs'/>
     <Compile Include='BigNumberFlags.cs'/>
@@ -119,6 +120,9 @@
     <Compile Include='SortedMap.cs'/>
     <Compile Include='TrapException.cs'/>
     <Compile Include='TrappableRadixMath.cs'/>
+    
+    
+    
   </ItemGroup>
   <ItemGroup>
     <Folder Include='Cbor'/>
@@ -140,6 +144,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-<Import Project='$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets'/>
-
-</Project>
+<Import Project='$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets'/></Project>
