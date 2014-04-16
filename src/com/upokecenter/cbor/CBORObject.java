@@ -4,7 +4,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 
 import java.util.*;
@@ -3326,11 +3326,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           case CBORObjectTypeByteString: {
             sb.append('\"');
             if (this.HasTag(22)) {
-              CBORUtilities.ToBase64(sb, (byte[])this.getThisItem(), false);
+              Base64.ToBase64(sb, (byte[])this.getThisItem(), false);
             } else if (this.HasTag(23)) {
               CBORUtilities.ToBase16(sb, (byte[])this.getThisItem());
             } else {
-              CBORUtilities.ToBase64URL(sb, (byte[])this.getThisItem(), false);
+              Base64.ToBase64URL(sb, (byte[])this.getThisItem(), false);
             }
             sb.append('\"');
             break;

@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
@@ -13,7 +13,6 @@ namespace PeterO.Cbor {
     /// <summary>Contains utility methods that may have use outside of the
     /// CBORObject class.</summary>
   internal static class CBORUtilities {
-    
     private const string HexAlphabet = "0123456789ABCDEF";
 
     public static void ToBase16(StringBuilder str, byte[] data) {
