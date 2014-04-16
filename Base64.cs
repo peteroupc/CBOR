@@ -1,19 +1,16 @@
-﻿/*
- * Created by SharpDevelop.
- * User: Peter
- * Date: 4/14/2014
- * Time: 12:00 AM
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+/*
+Written by Peter O. in 2014.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
 
 namespace PeterO
 {
-  /// <summary>
-  /// Description of Base64.
-  /// </summary>
+    /// <summary>Description of Base64.</summary>
   internal static class Base64
   {
     private const string Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";

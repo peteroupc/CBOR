@@ -1,11 +1,10 @@
 package com.upokecenter.test;
 /*
- * Created by SharpDevelop.
- * User: Peter
- * Date: 12/1/2013
- * Time: 11:22 PM
- *
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+Written by Peter O. in 2013.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://upokecenter.com/d/
  */
 
 import org.junit.Assert;

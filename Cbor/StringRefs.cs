@@ -1,10 +1,9 @@
 /*
- * Created by SharpDevelop.
- * User: Peter
- * Date: 3/6/2014
- * Time: 9:54 PM
- *
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+Written by Peter O. in 2014.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Collections.Generic;
