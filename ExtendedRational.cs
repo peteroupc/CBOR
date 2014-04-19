@@ -7,8 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO
-{
+namespace PeterO {
     /// <summary>Arbitrary-precision rational number.</summary>
   public class ExtendedRational : IComparable<ExtendedRational>, IEquatable<ExtendedRational> {
     private BigInteger unsignedNumerator;

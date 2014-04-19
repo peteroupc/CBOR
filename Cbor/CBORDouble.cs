@@ -8,8 +8,7 @@ at: http://upokecenter.com/d/
 using System;
 using PeterO;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
   internal class CBORDouble : ICBORNumber
   {
     /// <summary>Not documented yet.</summary>

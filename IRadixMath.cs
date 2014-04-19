@@ -8,8 +8,7 @@ at: http://upokecenter.com/d/
 using System;
 using System.Text;
 
-namespace PeterO
-{
+namespace PeterO {
   internal interface IRadixMath<T>
   {
     IRadixMathHelper<T> GetHelper();

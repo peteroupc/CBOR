@@ -8,8 +8,7 @@ at: http://upokecenter.com/d/
 using System;
 using System.IO;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
     /// <summary>Description of CharacterReader.</summary>
   internal class CharacterReader
   {

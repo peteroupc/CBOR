@@ -7,8 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
     /// <summary>Implements CBOR tag 3.</summary>
   internal class CBORTag3 : ICBORTag
   {

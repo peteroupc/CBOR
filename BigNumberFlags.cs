@@ -7,8 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO
-{
+namespace PeterO {
     /// <summary>Description of BigNumberFlags.</summary>
   internal static class BigNumberFlags
   {

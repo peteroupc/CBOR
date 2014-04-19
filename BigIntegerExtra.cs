@@ -7,8 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO
-{
+namespace PeterO {
     /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger
   {

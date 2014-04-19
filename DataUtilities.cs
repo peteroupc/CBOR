@@ -10,9 +10,9 @@ using System.IO;
 using System.Text;
 
 namespace PeterO {
-  /// <summary>Contains methods useful for reading and writing strings.
-  /// It is designed to have no dependencies other than the basic runtime
-  /// class library.</summary>
+    /// <summary>Contains methods useful for reading and writing strings.
+    /// It is designed to have no dependencies other than the basic runtime
+    /// class library.</summary>
   public static class DataUtilities {
     private static int valueStreamedStringBufferLength = 4096;
 
@@ -220,8 +220,9 @@ namespace PeterO {
     }
 
     public static int WriteUtf8(String str, int offset, int length, Stream stream, bool replace) {
-      return WriteUtf8(str,offset,length,stream,replace,false);
+      return WriteUtf8(str, offset, length, stream, replace, false);
     }
+
     /// <summary>Writes a portion of a string in UTF-8 encoding to a data stream.</summary>
     /// <param name='str'>A string to write.</param>
     /// <param name='offset'>The zero-based index where the string portion
@@ -231,8 +232,9 @@ namespace PeterO {
     /// <param name='replace'>If true, replaces unpaired surrogate code
     /// points with the replacement character (U + FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
-    /// <param name='lenientLineBreaks'>If true, replaces carriage return (CR)
-    /// not followed by line feed (LF) and LF not preceded by CR with CR-LF pairs.</param>
+    /// <param name='lenientLineBreaks'>If true, replaces carriage return
+    /// (CR) not followed by line feed (LF) and LF not preceded by CR with CR-LF
+    /// pairs.</param>
     /// <returns>0 if the entire string portion was written; or -1 if the string
     /// portion contains an unpaired surrogate code point and <paramref
     /// name='replace'/> is false.</returns>
@@ -274,26 +276,26 @@ namespace PeterO {
       for (int index = offset; index < endIndex; ++index) {
         int c = str[index];
         if (c <= 0x7f) {
-          if(lenientLineBreaks){
-            if(c==0x0d && (index+1 >= endIndex || str[index+1]!=0x0a)){
+          if (lenientLineBreaks) {
+            if (c == 0x0d && (index + 1 >= endIndex || str[index + 1] != 0x0a)) {
               // bare CR, convert to CRLF
               if (byteIndex + 2 > valueStreamedStringBufferLength) {
                 // Write bytes retrieved so far
                 stream.Write(bytes, 0, byteIndex);
                 byteIndex = 0;
               }
-              bytes[byteIndex++]=0x0d;
-              bytes[byteIndex++]=0x0a;
+              bytes[byteIndex++] = 0x0d;
+              bytes[byteIndex++] = 0x0a;
               continue;
-            } else if(c==0x0a){
+            } else if (c == 0x0a) {
               // bare LF, convert to CRLF
               if (byteIndex + 2 > valueStreamedStringBufferLength) {
                 // Write bytes retrieved so far
                 stream.Write(bytes, 0, byteIndex);
                 byteIndex = 0;
               }
-              bytes[byteIndex++]=0x0d;
-              bytes[byteIndex++]=0x0a;
+              bytes[byteIndex++] = 0x0d;
+              bytes[byteIndex++] = 0x0a;
               continue;
             }
           }

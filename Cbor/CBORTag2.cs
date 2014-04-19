@@ -8,8 +8,7 @@ at: http://upokecenter.com/d/
 using System;
 using PeterO;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
     /// <summary>Description of CBORTag2.</summary>
   internal class CBORTag2 : ICBORTag
   {

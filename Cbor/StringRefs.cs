@@ -9,8 +9,7 @@ using System;
 using System.Collections.Generic;
 using PeterO;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
     /// <summary>Implements CBOR string references, described at <code>http://cbor.schmorp.de/stringref</code>
     /// </summary>
   internal class StringRefs

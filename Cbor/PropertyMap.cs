@@ -10,8 +10,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using PeterO;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
     /// <summary>Description of PropertyMap.</summary>
   internal class PropertyMap
   {

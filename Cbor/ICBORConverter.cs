@@ -7,8 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
     /// <summary>Description of ICBORConverter.</summary>
     /// <typeparam name='T'>Type to convert to a CBOR object.</typeparam>
   public interface ICBORConverter<T>

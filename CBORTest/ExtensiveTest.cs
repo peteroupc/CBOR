@@ -13,8 +13,7 @@ using NUnit.Framework;
 using PeterO;
 using Test;
 
-namespace CBOR
-{
+namespace CBOR {
     /// <summary>Description of ExtensiveTest.</summary>
   [TestFixture]
   public class ExtensiveTest
