@@ -7,8 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 
-namespace Test
-{
+namespace Test {
     /// <summary>The system&apos;s random number generator will be called
     /// many times during testing. Unfortunately it can be very slow. So we
     /// use this wrapper class.</summary>

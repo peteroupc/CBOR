@@ -7,8 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO
-{
+namespace PeterO {
     /// <summary>Exception thrown for arithmetic trap errors.</summary>
   public partial class TrapException : ArithmeticException {
     private Object result;

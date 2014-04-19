@@ -7,8 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO
-{
+namespace PeterO {
     /// <summary>Description of ExtendedOrSimpleRadixMath.</summary>
     /// <typeparam name='T'>Number data type.</typeparam>
   internal class ExtendedOrSimpleRadixMath<T> : IRadixMath<T>

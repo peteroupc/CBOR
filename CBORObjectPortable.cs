@@ -11,8 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Numerics;
 using System.Text;
-namespace PeterO
-{
+namespace PeterO {
     /// <summary>Not documented yet.</summary>
  sealed class CBORObjectPortable
   {

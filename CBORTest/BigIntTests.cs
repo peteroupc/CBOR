@@ -9,8 +9,7 @@ using System;
 using NUnit.Framework;
 using PeterO;
 
-namespace Test
-{
+namespace Test {
   [TestFixture]
   public class BigIntTests
   {

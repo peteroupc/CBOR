@@ -9,8 +9,7 @@ at: http://upokecenter.com/d/
 using System;
 using PeterO;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
   internal class CBORExtendedRational : ICBORNumber
   {
     /// <summary>Not documented yet.</summary>

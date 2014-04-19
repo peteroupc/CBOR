@@ -9,8 +9,7 @@ using System;
 using System.Collections.Generic;
 using PeterO;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
     /// <summary>Description of SharedRefs.</summary>
   internal class SharedRefs
   {

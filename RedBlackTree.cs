@@ -7,8 +7,7 @@ at: http://upokecenter.com/d/
 using System;
 using System.Collections.Generic;
 
-namespace PeterO
-{
+namespace PeterO {
     /// <summary>Red-black tree, modified by Peter O. from public-domain
     /// Java code originally written by Doug Lea.</summary>
     /// <typeparam name='T'>Type of each element in the tree.</typeparam>

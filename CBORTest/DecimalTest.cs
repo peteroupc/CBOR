@@ -12,8 +12,7 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 using PeterO;
 
-namespace Test
-{
+namespace Test {
     /// <summary>Description of DecTest.</summary>
   [TestFixture]
   public class DecimalTest

@@ -7,8 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO.Cbor
-{
+namespace PeterO.Cbor {
     /// <summary>A generic CBOR tag class for strings.</summary>
   internal class CBORTagGenericString : ICBORTag
   {

@@ -235,6 +235,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       return (strA.length() < strB.length()) ? -1 : 1;
     }
 
+    public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
+      return WriteUtf8(str, offset, length, stream, replace, false);
+    }
+
     /**
      * Writes a portion of a string in UTF-8 encoding to a data stream.
      * @param str A string to write.
@@ -245,6 +249,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * @param replace If true, replaces unpaired surrogate code points
      * with the replacement character (U + FFFD). If false, stops processing
      * when an unpaired surrogate code point is seen.
+     * @param lenientLineBreaks If true, replaces carriage return (CR)
+     * not followed by line feed (LF) and LF not preceded by CR with CR-LF pairs.
      * @return 0 if the entire string portion was written; or -1 if the string
      * portion contains an unpaired surrogate code point and {@code replace}
      * is false.
@@ -255,7 +261,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * {@code length} is greater than the string's length.
      * @throws java.io.IOException An I/O error occurred.
      */
-    public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
+    public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace, boolean lenientLineBreaks) throws IOException {
       if (stream == null) {
         throw new NullPointerException("stream");
       }
@@ -285,6 +291,29 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       for (int index = offset; index < endIndex; ++index) {
         int c = str.charAt(index);
         if (c <= 0x7f) {
+          if (lenientLineBreaks) {
+            if (c == 0x0d && (index + 1 >= endIndex || str.charAt(index + 1) != 0x0a)) {
+              // bare CR, convert to CRLF
+              if (byteIndex + 2 > valueStreamedStringBufferLength) {
+                // Write bytes retrieved so far
+                stream.write(bytes,0,byteIndex);
+                byteIndex = 0;
+              }
+              bytes[byteIndex++] = 0x0d;
+              bytes[byteIndex++] = 0x0a;
+              continue;
+            } else if (c == 0x0a) {
+              // bare LF, convert to CRLF
+              if (byteIndex + 2 > valueStreamedStringBufferLength) {
+                // Write bytes retrieved so far
+                stream.write(bytes,0,byteIndex);
+                byteIndex = 0;
+              }
+              bytes[byteIndex++] = 0x0d;
+              bytes[byteIndex++] = 0x0a;
+              continue;
+            }
+          }
           if (byteIndex >= valueStreamedStringBufferLength) {
             // Write bytes retrieved so far
             stream.write(bytes,0,byteIndex);

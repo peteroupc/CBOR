@@ -7,8 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO
-{
+namespace PeterO {
   internal static class Extras
   {
     public static int[] DoubleToIntegers(double dbl) {
