@@ -20,18 +20,13 @@ See the [Wiki](https://github.com/peteroupc/CBOR/wiki) for API documentation.
 The Different Versions
 -----------
 
-This repository contains code in three languages: C#, Java, and JavaScript.
+This repository contains code in two languages: C# and Java.
 C# is the main language of the project, and has the most features.  The Java
-and JavaScript versions are translations from the C# version. 
+version is a translation from the C# version. 
 
 The Java version contains almost as many features as the C# version
 and has all the important ones, such as reading and writing CBOR objects,
 CBOR/JSON conversion, and support for decimal fractions and bigfloats.
-
-The JavaScript version currently only contains the code for big integers,
-decimal fractions, and bigfloats.  It currently doesn't support converting
-singles and doubles to big numbers and its support for converting other
-objects, except strings, to big numbers is limited. 
 
 Clarifications
 ------------------
