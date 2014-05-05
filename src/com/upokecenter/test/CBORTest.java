@@ -1294,7 +1294,7 @@ import com.upokecenter.cbor.*;
         }
         java.io.ByteArrayInputStream ms=null;
 try {
-ms=new ByteArrayInputStream(array);
+ms=new java.io.ByteArrayInputStream(array);
 int startingAvailable=ms.available();
 
           while ((startingAvailable-ms.available()) != startingAvailable) {
@@ -1327,7 +1327,7 @@ int startingAvailable=ms.available();
           }
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       }
       // Test random nonsense data
@@ -1346,7 +1346,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         }
         java.io.ByteArrayInputStream ms=null;
 try {
-ms=new ByteArrayInputStream(array);
+ms=new java.io.ByteArrayInputStream(array);
 int startingAvailable=ms.available();
 
           while ((startingAvailable-ms.available()) != startingAvailable) {
@@ -1377,7 +1377,7 @@ int startingAvailable=ms.available();
           }
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       }
     }
@@ -1803,7 +1803,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       }
       java.io.ByteArrayInputStream ms=null;
 try {
-ms=new ByteArrayInputStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
+ms=new java.io.ByteArrayInputStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
 
         try {
           CBORObject.ReadJSON(ms);
@@ -1813,12 +1813,12 @@ ms=new ByteArrayInputStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, 0x
         }
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       // whitespace followed by BOM
       java.io.ByteArrayInputStream ms2=null;
 try {
-ms2=new ByteArrayInputStream(new byte[] {  0x20, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
+ms2=new java.io.ByteArrayInputStream(new byte[] {  0x20, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
 
         try {
           CBORObject.ReadJSON(ms2);
@@ -1830,12 +1830,12 @@ ms2=new ByteArrayInputStream(new byte[] {  0x20, (byte)0xef, (byte)0xbb, (byte)0
         }
 }
 finally {
-try { if(ms2!=null)ms2.close(); } catch (IOException ex){}
+try { if(ms2!=null)ms2.close(); } catch (java.io.IOException ex){}
 }
       // two BOMs
       java.io.ByteArrayInputStream ms3=null;
 try {
-ms3=new ByteArrayInputStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
+ms3=new java.io.ByteArrayInputStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
 
         try {
           CBORObject.ReadJSON(ms3);
@@ -1847,7 +1847,7 @@ ms3=new ByteArrayInputStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, (
         }
 }
 finally {
-try { if(ms3!=null)ms3.close(); } catch (IOException ex){}
+try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
 }
       try {
         CBORObject.FromJSONString("\ufeff\u0020 {}");
@@ -1859,7 +1859,7 @@ try { if(ms3!=null)ms3.close(); } catch (IOException ex){}
       }
       java.io.ByteArrayInputStream ms2a=null;
 try {
-ms2a=new ByteArrayInputStream(new byte[] {   });
+ms2a=new java.io.ByteArrayInputStream(new byte[] {   });
 
         try {
           CBORObject.ReadJSON(ms2a);
@@ -1871,11 +1871,11 @@ ms2a=new ByteArrayInputStream(new byte[] {   });
         }
 }
 finally {
-try { if(ms2a!=null)ms2a.close(); } catch (IOException ex){}
+try { if(ms2a!=null)ms2a.close(); } catch (java.io.IOException ex){}
 }
       java.io.ByteArrayInputStream ms2b=null;
 try {
-ms2b=new ByteArrayInputStream(new byte[] {  0x20  });
+ms2b=new java.io.ByteArrayInputStream(new byte[] {  0x20  });
 
         try {
           CBORObject.ReadJSON(ms2b);
@@ -1887,7 +1887,7 @@ ms2b=new ByteArrayInputStream(new byte[] {  0x20  });
         }
 }
 finally {
-try { if(ms2b!=null)ms2b.close(); } catch (IOException ex){}
+try { if(ms2b!=null)ms2b.close(); } catch (java.io.IOException ex){}
 }
       try {
         CBORObject.FromJSONString("");
@@ -1992,7 +1992,7 @@ try { if(ms2b!=null)ms2b.close(); } catch (IOException ex){}
         int ret = 0;
         java.io.ByteArrayInputStream ms=null;
 try {
-ms=new ByteArrayInputStream(bytes);
+ms=new java.io.ByteArrayInputStream(bytes);
 
           ret = DataUtilities.ReadUtf8(ms, length, builder, true);
           Assert.assertEquals(expectedRet, ret);
@@ -2008,7 +2008,7 @@ ms=new ByteArrayInputStream(bytes);
           }
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
         if (bytes.length >= length) {
           builder.setLength(0);

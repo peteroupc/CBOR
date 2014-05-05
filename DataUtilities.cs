@@ -156,6 +156,152 @@ namespace PeterO {
       return size;
     }
 
+    /// <summary>Gets the Unicode code point just before the given index
+    /// of the string.</summary>
+    /// <param name='str'>A string.</param>
+    /// <param name='index'>Index of the current position into the string.</param>
+    /// <returns>The Unicode code point at the previous position. Returns
+    /// -1 if <paramref name='index'/> is 0 or less, or is greater than the
+    /// string's length. Returns the replacement character (U + FFFD) if
+    /// the previous character is an unpaired surrogate code point.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    public static int CodePointBefore(string str, int index) {
+      return CodePointBefore(str, index, 0);
+    }
+
+    /// <summary>Gets the Unicode code point just before the given index
+    /// of the string.</summary>
+    /// <param name='str'>A string.</param>
+    /// <param name='index'>Index of the current position into the string.</param>
+    /// <param name='surrogateBehavior'>Specifies what kind of value
+    /// to return if the previous character is an unpaired surrogate code
+    /// point: if 0, return the replacement character (U + FFFD); if 1, return
+    /// the value of the surrogate code point; if neither 0 nor 1, return -1.</param>
+    /// <returns>The Unicode code point at the previous position. Returns
+    /// -1 if <paramref name='index'/> is 0 or less, or is greater than the
+    /// string's length. Returns a value as specified under <paramref name='surrogateBehavior'/>
+    /// if the previous character is an unpaired surrogate code point.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    public static int CodePointBefore(string str, int index, int surrogateBehavior) {
+      if (str == null) {
+        throw new ArgumentNullException("str");
+      }
+      if (index <= 0) {
+        return -1;
+      }
+      if (index > str.Length) {
+        return -1;
+      }
+      int c = str[index - 1];
+      if (c >= 0xdc00 && c <= 0xdfff && index - 2 >= 0 &&
+          str[index - 2] >= 0xd800 && str[index - 2] <= 0xdbff) {
+        // Get the Unicode code point for the surrogate pair
+        return 0x10000 + ((str[index - 2] - 0xd800) * 0x400) + (c - 0xdc00);
+      } else if (c >= 0xd800 && c <= 0xdfff) {
+        // unpaired surrogate
+        if (surrogateBehavior == 0) {
+          return 0xfffd;
+        }
+        if (surrogateBehavior == 1) {
+          return c;
+        }
+        return -1;
+      } else {
+        return c;
+      }
+    }
+
+    /// <summary>Gets the Unicode code point at the given index of the string.</summary>
+    /// <param name='str'>A string.</param>
+    /// <param name='index'>Index of the current position into the string.</param>
+    /// <returns>The Unicode code point at the given position. Returns -1
+    /// if <paramref name='index'/> is less than 0, or is the string's length
+    /// or greater. Returns the replacement character (U + FFFD) if the current
+    /// character is an unpaired surrogate code point.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    public static int CodePointAt(string str, int index) {
+      return CodePointAt(str, index, 0);
+    }
+
+    /// <summary>Gets the Unicode code point at the given index of the string.</summary>
+    /// <param name='str'>A string.</param>
+    /// <param name='index'>Index of the current position into the string.</param>
+    /// <param name='surrogateBehavior'>Specifies what kind of value
+    /// to return if the previous character is an unpaired surrogate code
+    /// point: if 0, return the replacement character (U + FFFD); if 1, return
+    /// the value of the surrogate code point; if neither 0 nor 1, return -1.</param>
+    /// <returns>The Unicode code point at the current position. Returns
+    /// -1 if <paramref name='index'/> is less than 0, or is the string's length
+    /// or greater. Returns a value as specified under <paramref name='surrogateBehavior'/>
+    /// if the previous character is an unpaired surrogate code point.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    public static int CodePointAt(string str, int index, int surrogateBehavior) {
+      if (str == null) {
+        throw new ArgumentNullException("str");
+      }
+      if (index >= str.Length) {
+        return -1;
+      }
+      if (index < 0) {
+        return -1;
+      }
+      int c = str[index];
+      if (c >= 0xd800 && c <= 0xdbff && index + 1 < str.Length &&
+          str[index + 1] >= 0xdc00 && str[index + 1] <= 0xdfff) {
+        // Get the Unicode code point for the surrogate pair
+        c = 0x10000 + ((c - 0xd800) * 0x400) + (str[index + 1] - 0xdc00);
+        ++index;
+      } else if (c >= 0xd800 && c <= 0xdfff) {
+        // unpaired surrogate
+        if (surrogateBehavior == 0) {
+          return 0xfffd;
+        }
+        if (surrogateBehavior == 1) {
+          return c;
+        }
+        return -1;
+      }
+      return c;
+    }
+
+    /// <summary>Returns a string with upper-case ASCII letters (A to Z)
+    /// converted to lower-case. Other characters remain unchanged.</summary>
+    /// <param name='str'>A string.</param>
+    /// <returns>The converted string, or null if <paramref name='str'/>
+    /// is null.</returns>
+    public static string ToLowerCaseAscii(string str) {
+      if (str == null) {
+        return null;
+      }
+      int len = str.Length;
+      char c = (char)0;
+      bool hasUpperCase = false;
+      for (int i = 0; i < len; ++i) {
+        c = str[i];
+        if (c >= 'A' && c <= 'Z') {
+          hasUpperCase = true;
+          break;
+        }
+      }
+      if (!hasUpperCase) {
+        return str;
+      }
+      StringBuilder builder = new StringBuilder();
+      for (int i = 0; i < len; ++i) {
+        c = str[i];
+        if (c >= 'A' && c <= 'Z') {
+          builder.Append((char)(c + 0x20));
+        } else {
+          builder.Append(c);
+        }
+      }
+      return builder.ToString();
+    }
+
     /// <summary>Compares two strings in Unicode code point order. Unpaired
     /// surrogates are treated as individual code points.</summary>
     /// <returns>A value indicating which string is " less" or " greater"

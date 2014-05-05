@@ -12,12 +12,12 @@ import com.upokecenter.cbor.*;
       try {
         java.io.ByteArrayInputStream s=null;
 try {
-s=new ByteArrayInputStream(b);
+s=new java.io.ByteArrayInputStream(b);
 
           return BEncoding.Read(s);
 }
 finally {
-try { if(s!=null)s.close(); } catch (IOException ex){}
+try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
 }
       } catch (IOException ex) {
         throw new CBORException("", ex);
@@ -28,13 +28,13 @@ try { if(s!=null)s.close(); } catch (IOException ex){}
       try {
         java.io.ByteArrayOutputStream s=null;
 try {
-s=new ByteArrayOutputStream();
+s=new java.io.ByteArrayOutputStream();
 
           BEncoding.Write(b, s);
           return s.toByteArray();
 }
 finally {
-try { if(s!=null)s.close(); } catch (IOException ex){}
+try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
 }
       } catch (IOException ex) {
         throw new CBORException("", ex);
@@ -47,9 +47,9 @@ try { if(s!=null)s.close(); } catch (IOException ex){}
      */
 public void doTestLong(long value) {
       String b = "i" + value + "e";
-      CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,true));
+      CBORObject beo = EncodingFromBytes(com.upokecenter.util.DataUtilities.GetUtf8Bytes(b,true));
       Assert.assertEquals(value, beo.AsInt64());
-      String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo),true);
+      String newb = com.upokecenter.util.DataUtilities.GetUtf8String(EncodingToBytes(beo),true);
       Assert.assertEquals(b, newb);
     }
 
@@ -59,9 +59,9 @@ public void doTestLong(long value) {
      */
 public void doTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
-      CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b,true));
+      CBORObject beo = EncodingFromBytes(com.upokecenter.util.DataUtilities.GetUtf8Bytes(b,true));
       Assert.assertEquals(value, beo.AsString());
-      String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo),true);
+      String newb = com.upokecenter.util.DataUtilities.GetUtf8String(EncodingToBytes(beo),true);
       Assert.assertEquals(b, newb);
     }
 

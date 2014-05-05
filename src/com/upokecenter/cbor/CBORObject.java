@@ -1207,7 +1207,7 @@ public boolean equals(CBORObject other) {
       // the byte array were a stream
       java.io.ByteArrayInputStream ms=null;
 try {
-ms=new ByteArrayInputStream(data);
+ms=new java.io.ByteArrayInputStream(data);
 int startingAvailable=ms.available();
 
         CBORObject o = Read(ms);
@@ -1215,7 +1215,7 @@ int startingAvailable=ms.available();
         return o;
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
     }
 
@@ -1421,7 +1421,7 @@ public void set(int index, CBORObject value) {
           return dict.values();
         } else if (this.getItemType() == CBORObjectTypeArray) {
           List<CBORObject> list = this.AsList();
-          return java.util.Collections.unmodifiableCollection(list);
+          return java.util.Collections.unmodifiableList(list);
         } else {
           throw new IllegalStateException("Not a map or array");
         }
@@ -1591,6 +1591,21 @@ public void set(String key, CBORObject value) {
     }
 
     /**
+     * Determines whether a value of the given key exists in this object.
+     * @param key A string that serves as the key.
+     * @return True if the given key (as a CBOR object) is found, or false if
+     * the given key is not found or this object is not a map.
+     * @throws java.lang.NullPointerException Key is null (as opposed to
+     * CBORObject.Null).
+     */
+    public boolean ContainsKey(String key) {
+      if (key == null) {
+        throw new NullPointerException("key");
+      }
+      return this.containsKey(CBORObject.FromObject(key));
+    }
+
+    /**
      * Adds a new object to the end of this array.
      * @param obj A CBOR object.
      * @return This object.
@@ -1694,10 +1709,8 @@ public void set(String key, CBORObject value) {
     }
 
     /**
-     * Converts this object to a decimal number.
-     * @return A decimal number for this object's value. If this object is
-     * a rational number with a nonterminating decimal expansion, returns
-     * a decimal number rounded to 34 digits.
+     * Converts this object to a rational number.
+     * @return A rational number for this object's value.
      * @throws java.lang.IllegalStateException This object's type is
      * not a number type.
      */
@@ -2748,13 +2761,13 @@ public void set(String key, CBORObject value) {
       try {
         java.io.ByteArrayOutputStream ms=null;
 try {
-ms=new ByteArrayOutputStream(16);
+ms=new java.io.ByteArrayOutputStream(16);
 
           this.WriteTo(ms);
           return ms.toByteArray();
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       } catch (IOException ex) {
         throw new CBORException("I/O Error occurred", ex);
@@ -4401,7 +4414,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         } else {
           java.io.ByteArrayOutputStream ms=null;
 try {
-ms=new ByteArrayOutputStream();
+ms=new java.io.ByteArrayOutputStream();
 
             while (total > 0) {
               int bufsize = Math.min(tmpdata.length, total);
@@ -4414,7 +4427,7 @@ ms=new ByteArrayOutputStream();
             return ms.toByteArray();
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
         }
       }
@@ -4555,7 +4568,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           // Streaming byte String
           java.io.ByteArrayOutputStream ms=null;
 try {
-ms=new ByteArrayOutputStream();
+ms=new java.io.ByteArrayOutputStream();
 
             // Requires same type as this one
             while (true) {
@@ -4581,7 +4594,7 @@ ms=new ByteArrayOutputStream();
               data);
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
         } else {
           if (hasBigAdditional) {

@@ -107,7 +107,7 @@ private DataUtilities() {
       try {
         java.io.ByteArrayOutputStream ms=null;
 try {
-ms=new ByteArrayOutputStream();
+ms=new java.io.ByteArrayOutputStream();
 
           if (WriteUtf8(str, ms, replace) != 0) {
             throw new IllegalArgumentException("Unpaired surrogate code point");
@@ -115,7 +115,7 @@ ms=new ByteArrayOutputStream();
           return ms.toByteArray();
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       } catch (IOException ex) {
         throw new IllegalArgumentException("I/O error occurred", ex);
@@ -168,6 +168,159 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         }
       }
       return size;
+    }
+
+    /**
+     * Gets the Unicode code point just before the given index of the string.
+     * @param str A string.
+     * @param index Index of the current position into the string.
+     * @return The Unicode code point at the previous position. Returns
+     * -1 if {@code index} is 0 or less, or is greater than the string's length.
+     * Returns the replacement character (U + FFFD) if the previous character
+     * is an unpaired surrogate code point.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     */
+    public static int CodePointBefore(String str, int index) {
+      return CodePointBefore(str, index, 0);
+    }
+
+    /**
+     * Gets the Unicode code point just before the given index of the string.
+     * @param str A string.
+     * @param index Index of the current position into the string.
+     * @param surrogateBehavior Specifies what kind of value to return
+     * if the previous character is an unpaired surrogate code point: if
+     * 0, return the replacement character (U + FFFD); if 1, return the value
+     * of the surrogate code point; if neither 0 nor 1, return -1.
+     * @return The Unicode code point at the previous position. Returns
+     * -1 if {@code index} is 0 or less, or is greater than the string's length.
+     * Returns a value as specified under {@code surrogateBehavior} if
+     * the previous character is an unpaired surrogate code point.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     */
+    public static int CodePointBefore(String str, int index, int surrogateBehavior) {
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
+      if (index <= 0) {
+        return -1;
+      }
+      if (index > str.length()) {
+        return -1;
+      }
+      int c = str.charAt(index - 1);
+      if (c >= 0xdc00 && c <= 0xdfff && index - 2 >= 0 &&
+          str.charAt(index - 2) >= 0xd800 && str.charAt(index - 2) <= 0xdbff) {
+        // Get the Unicode code point for the surrogate pair
+        return 0x10000 + ((str.charAt(index - 2) - 0xd800) * 0x400) + (c - 0xdc00);
+      } else if (c >= 0xd800 && c <= 0xdfff) {
+        // unpaired surrogate
+        if (surrogateBehavior == 0) {
+          return 0xfffd;
+        }
+        if (surrogateBehavior == 1) {
+          return c;
+        }
+        return -1;
+      } else {
+        return c;
+      }
+    }
+
+    /**
+     * Gets the Unicode code point at the given index of the string.
+     * @param str A string.
+     * @param index Index of the current position into the string.
+     * @return The Unicode code point at the given position. Returns -1 if
+     * {@code index} is less than 0, or is the string's length or greater.
+     * Returns the replacement character (U + FFFD) if the current character
+     * is an unpaired surrogate code point.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     */
+    public static int CodePointAt(String str, int index) {
+      return CodePointAt(str, index, 0);
+    }
+
+    /**
+     * Gets the Unicode code point at the given index of the string.
+     * @param str A string.
+     * @param index Index of the current position into the string.
+     * @param surrogateBehavior Specifies what kind of value to return
+     * if the previous character is an unpaired surrogate code point: if
+     * 0, return the replacement character (U + FFFD); if 1, return the value
+     * of the surrogate code point; if neither 0 nor 1, return -1.
+     * @return The Unicode code point at the current position. Returns -1
+     * if {@code index} is less than 0, or is the string's length or greater.
+     * Returns a value as specified under {@code surrogateBehavior} if
+     * the previous character is an unpaired surrogate code point.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     */
+    public static int CodePointAt(String str, int index, int surrogateBehavior) {
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
+      if (index >= str.length()) {
+        return -1;
+      }
+      if (index < 0) {
+        return -1;
+      }
+      int c = str.charAt(index);
+      if (c >= 0xd800 && c <= 0xdbff && index + 1 < str.length() &&
+          str.charAt(index + 1) >= 0xdc00 && str.charAt(index + 1) <= 0xdfff) {
+        // Get the Unicode code point for the surrogate pair
+        c = 0x10000 + ((c - 0xd800) * 0x400) + (str.charAt(index + 1) - 0xdc00);
+        ++index;
+      } else if (c >= 0xd800 && c <= 0xdfff) {
+        // unpaired surrogate
+        if (surrogateBehavior == 0) {
+          return 0xfffd;
+        }
+        if (surrogateBehavior == 1) {
+          return c;
+        }
+        return -1;
+      }
+      return c;
+    }
+
+    /**
+     * Returns a string with upper-case ASCII letters (A to Z) converted
+     * to lower-case. Other characters remain unchanged.
+     * @param str A string.
+     * @return The converted string, or null if {@code str} is null.
+     */
+    public static String ToLowerCaseAscii(String str) {
+      if (str == null) {
+        return null;
+      }
+      int len = str.length();
+      char c = (char)0;
+      boolean hasUpperCase = false;
+      for (int i = 0; i < len; ++i) {
+        c = str.charAt(i);
+        if (c >= 'A' && c <= 'Z') {
+          hasUpperCase = true;
+          break;
+        }
+      }
+      if (!hasUpperCase) {
+        return str;
+      }
+      StringBuilder builder = new StringBuilder();
+      for (int i = 0; i < len; ++i) {
+        c = str.charAt(i);
+        if (c >= 'A' && c <= 'Z') {
+          builder.append((char)(c + 0x20));
+        } else {
+          builder.append(c);
+        }
+      }
+      return builder.toString();
     }
 
     /**
