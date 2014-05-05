@@ -167,7 +167,8 @@ namespace Test {
       for (int i = 0; i < 15; ++i) {
         CBORObject o;
         // Console.WriteLine("tag "+tag+" "+i);
-        if (tag == 0 || tag == 1) {
+        // TODO: Test tag 29
+        if (tag == 0 || tag == 1 || tag == 29) {
           tag = 999;
         }
         if (tag == 2 || tag == 3) {

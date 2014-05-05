@@ -26,21 +26,11 @@ import com.upokecenter.util.*;
      * Not documented yet.
      * @param obj A CBORObject object.
      */
-public void FillRef(CBORObject obj) {
+    public void AddObject(CBORObject obj) {
       if (this.refCount > 0) {
         this.sharedObjects.add(obj);
         --this.refCount;
       }
-    }
-
-    /**
-     * Not documented yet.
-     */
-public void AddRef() {
-      if (this.refCount == Integer.MAX_VALUE) {
- throw new CBORException("Shared ref nesting too deep");
-}
-      ++this.refCount;
     }
 
     /**
@@ -55,14 +45,11 @@ public void AddRef() {
       if (smallIndex > Integer.MAX_VALUE) {
         throw new CBORException("Index " + smallIndex + " is bigger than supported");
       }
-      throw new UnsupportedOperationException();
-      /*
       int index = (int)smallIndex;
-      if (index >= sharedObjects.size()) {
+      if (index >= this.sharedObjects.size()) {
         throw new CBORException("Index " + index + " is not valid");
       }
-      return sharedObjects.get(index);
-      */
+      return this.sharedObjects.get(index);
     }
 
     /**
@@ -77,14 +64,10 @@ public void AddRef() {
       if (!bigIndex.canFitInInt()) {
         throw new CBORException("Index " + bigIndex + " is bigger than supported");
       }
-      throw new UnsupportedOperationException();
-      /*
       int index = bigIndex.intValue();
-      List<CBORObject> sharedObjects = this.stack.get(this.stack.size() - 1);
-      if (index >= sharedObjects.size()) {
+      if (index >= this.sharedObjects.size()) {
         throw new CBORException("Index " + index + " is not valid");
       }
-      return sharedObjects.get(index);
-      */
+      return this.sharedObjects.get(index);
     }
   }
