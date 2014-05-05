@@ -1013,7 +1013,7 @@ bigrem=divrem[1]; }
             return this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, 0), ctx);
           }
         } else if (cmp == 0) {
-          // Extend the precision of the ((mantissa instanceof much as possible) ? (much as possible)mantissa : null),
+          // Extend the precision of the mantissa as much as possible,
           // in the special case that this value is 1
           return this.ExtendPrecision(this.helper.ValueOf(1), ctx);
         } else {

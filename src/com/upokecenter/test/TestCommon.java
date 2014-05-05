@@ -146,7 +146,7 @@ rembi=divrem[1]; }
     private static CBORObject FromBytesB(byte[] b) {
       java.io.ByteArrayInputStream ms=null;
 try {
-ms=new ByteArrayInputStream(b);
+ms=new java.io.ByteArrayInputStream(b);
 int startingAvailable=ms.available();
 
         CBORObject o = CBORObject.Read(ms);
@@ -156,7 +156,7 @@ int startingAvailable=ms.available();
         return o;
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
     }
     // Tests the equivalence of the FromBytes and Read methods.

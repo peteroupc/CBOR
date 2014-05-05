@@ -1614,6 +1614,20 @@ namespace PeterO.Cbor {
       }
     }
 
+    /// <summary>Determines whether a value of the given key exists in this
+    /// object.</summary>
+    /// <param name='key'>A string that serves as the key.</param>
+    /// <returns>True if the given key (as a CBOR object) is found, or false
+    /// if the given key is not found or this object is not a map.</returns>
+    /// <exception cref='System.ArgumentNullException'>Key is null
+    /// (as opposed to CBORObject.Null).</exception>
+    public bool ContainsKey(string key) {
+      if (key == null) {
+        throw new ArgumentNullException("key");
+      }
+      return this.ContainsKey(CBORObject.FromObject(key));
+    }
+
     /// <summary>Adds a new object to the end of this array.</summary>
     /// <param name='obj'>A CBOR object.</param>
     /// <exception cref='System.InvalidOperationException'>This object
@@ -1709,10 +1723,8 @@ namespace PeterO.Cbor {
       return cn.AsExtendedDecimal(this.ThisItem);
     }
 
-    /// <summary>Converts this object to a decimal number.</summary>
-    /// <returns>A decimal number for this object's value. If this object
-    /// is a rational number with a nonterminating decimal expansion, returns
-    /// a decimal number rounded to 34 digits.</returns>
+    /// <summary>Converts this object to a rational number.</summary>
+    /// <returns>A rational number for this object's value.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
     public ExtendedRational AsExtendedRational() {
