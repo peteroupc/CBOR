@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO.Cbor {
-  internal class CBORTagAny : ICBORTag
+  internal class CBORTag28 : ICBORTag
   {
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
@@ -25,8 +25,8 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("obj");
       }
       #endif
-
-      return obj;
+      // Return this object without tag 28
+      return obj.UntagOne();
     }
   }
 }

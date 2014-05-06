@@ -7,7 +7,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-  class CBORTagAny implements ICBORTag
+  class CBORTag28 implements ICBORTag
   {
     /**
      * Not documented yet.
@@ -24,6 +24,7 @@ at: http://upokecenter.com/d/
      */
     public CBORObject ValidateObject(CBORObject obj) {
 
-      return obj;
+      // Return this object without tag 28
+      return obj.UntagOne();
     }
   }

@@ -11,14 +11,14 @@ using System.IO;
 using System.Text;
 
 namespace PeterO.Cbor {
-  /// <summary>Description of CBORReader.</summary>
+    /// <summary>Description of CBORReader.</summary>
   internal class CBORReader
   {
-    internal SharedRefs sharedRefs;
-    internal StringRefs stringRefs;
-    internal Stream stream;
-    internal bool addSharedRef;
-    internal int depth;
+    private SharedRefs sharedRefs;
+    private StringRefs stringRefs;
+    private Stream stream;
+    private bool addSharedRef;
+    private int depth;
 
     public CBORReader(Stream stream) {
       this.stream = stream;
@@ -528,7 +528,7 @@ namespace PeterO.Cbor {
               throw new NotImplementedException();
             } else {
               // All other major types
-              unnestedObject=true;
+              unnestedObject = true;
             }
           }
           taginfo = CBORObject.FindTagConverter(uadditional);
@@ -557,7 +557,7 @@ namespace PeterO.Cbor {
           } else if (uadditional == 28) {
             // shareable object
             this.addSharedRef = false;
-            if(unnestedObject){
+            if (unnestedObject) {
               this.sharedRefs.AddObject(o);
             }
           } else if (uadditional == 29) {

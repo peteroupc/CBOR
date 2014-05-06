@@ -14,11 +14,11 @@ import java.io.*;
      */
   class CBORReader
   {
-    internal SharedRefs sharedRefs;
-    internal StringRefs stringRefs;
-    internal InputStream stream;
-    internal boolean addSharedRef;
-    int depth;
+    private SharedRefs sharedRefs;
+    private StringRefs stringRefs;
+    private InputStream stream;
+    private boolean addSharedRef;
+    private int depth;
 
     public CBORReader (InputStream stream) {
       this.stream = stream;
@@ -154,7 +154,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
      * @param filter A CBORTypeFilter object.
      * @return A CBORObject object.
      */
-public CBORObject Read(
+    public CBORObject Read(
       CBORTypeFilter filter) {
       if (this.depth > 1000) {
         throw new CBORException("Too deeply nested");
@@ -172,7 +172,7 @@ public CBORObject Read(
      * @param filter A CBORTypeFilter object.
      * @return A CBORObject object.
      */
-public CBORObject ReadForFirstByte(
+    public CBORObject ReadForFirstByte(
       int firstbyte,
       CBORTypeFilter filter) {
       if (this.depth > 1000) {
@@ -186,7 +186,7 @@ public CBORObject ReadForFirstByte(
       }
       int type = (firstbyte >> 5) & 0x07;
       int additional = firstbyte & 0x1f;
-      int expectedLength = CBORObject.valueExpectedLengths.get(firstbyte);
+      int expectedLength = CBORObject.ExpectedLengths.get(firstbyte);
       // Data checks
       if (expectedLength == -1) {
         // if the head byte is invalid
@@ -204,7 +204,7 @@ public CBORObject ReadForFirstByte(
         }
       }
       // Check if this represents a fixed Object
-      CBORObject fixedObject = CBORObject.valueFixedObjects.get(firstbyte);
+      CBORObject fixedObject = CBORObject.GetFixedObject(firstbyte);
       if (fixedObject != null) {
         return fixedObject;
       }
@@ -411,19 +411,19 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           this.sharedRefs.AddObject(cbor);
           this.addSharedRef = false;
         }
-        int vtindex = 1;
         if (additional == 31) {
+          int vtindex = 0;
           // Indefinite-length array
           while (true) {
-            if (filter != null && !filter.ArrayIndexAllowed(vtindex)) {
-              throw new CBORException("Array is too long");
-            }
             int headByte = this.stream.read();
             if (headByte < 0) {
               throw new CBORException("Premature end of data");
             } else if (headByte == 0xff) {
               // Break code was read
               break;
+            }
+            if (filter != null && !filter.ArrayIndexAllowed(vtindex)) {
+              throw new CBORException("Array is too long");
             }
             ++this.depth;
             CBORObject o = this.ReadForFirstByte(
@@ -455,7 +455,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           for (long i = 0; i < uadditional; ++i) {
             cbor.Add(
               this.Read(filter == null ? null : filter.GetSubFilter(i)));
-            ++vtindex;
           }
           --this.depth;
           return cbor;
@@ -513,6 +512,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         ICBORTag taginfo = null;
         boolean haveFirstByte = false;
         int newFirstByte = -1;
+        boolean unnestedObject = false;
         if (!hasBigAdditional) {
           if (filter != null && !filter.TagAllowed(uadditional)) {
             throw new CBORException("Unexpected tag encountered: " + uadditional);
@@ -542,8 +542,10 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             } else if ((newFirstByte & 0xe0) == 0xc0) {
               // Major type 6 (tagged Object)
               throw new UnsupportedOperationException();
+            } else {
+              // All other major types
+              unnestedObject = true;
             }
-            throw new UnsupportedOperationException();
           }
           taginfo = CBORObject.FindTagConverter(uadditional);
         } else {
@@ -569,7 +571,11 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             // stringref tag
             return this.stringRefs.GetString(o.AsBigInteger());
           } else if (uadditional == 28) {
+            // shareable Object
             this.addSharedRef = false;
+            if (unnestedObject) {
+              this.sharedRefs.AddObject(o);
+            }
           } else if (uadditional == 29) {
             // shared Object reference
             return this.sharedRefs.GetObject(o.AsBigInteger());
