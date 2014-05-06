@@ -80,6 +80,7 @@
     <Compile Include="Cbor\CBORTag0.cs" />
     <Compile Include="Cbor\CBORTag1.cs" />
     <Compile Include="Cbor\CBORTag2.cs" />
+    <Compile Include="Cbor\CBORTag28.cs" />
     <Compile Include="Cbor\CBORTagUnsigned.cs" />
     <Compile Include="Cbor\CBORTagAny.cs" />
     <Compile Include="Cbor\CBORTag26.cs" />

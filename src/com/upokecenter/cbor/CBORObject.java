@@ -1014,28 +1014,33 @@ public boolean equals(CBORObject other) {
       return null;
     }
 
-    private static CBORObject[] valueFixedObjects = InitializeFixedObjects();
+    private static CBORObject[] FixedObjects = InitializeFixedObjects();
     // Initialize fixed values for certain
     // head bytes
     private static CBORObject[] InitializeFixedObjects() {
-      valueFixedObjects = new CBORObject[256];
+      FixedObjects = new CBORObject[256];
       for (int i = 0; i < 0x18; ++i) {
-        valueFixedObjects[i] = new CBORObject(CBORObjectTypeInteger, (long)i);
+        FixedObjects[i] = new CBORObject(CBORObjectTypeInteger, (long)i);
       }
       for (int i = 0x20; i < 0x38; ++i) {
-        valueFixedObjects[i] = new CBORObject(
+        FixedObjects[i] = new CBORObject(
           CBORObjectTypeInteger,
           (long)(-1 - (i - 0x20)));
       }
-      valueFixedObjects[0x60] = new CBORObject(CBORObjectTypeTextString, "");
+      FixedObjects[0x60] = new CBORObject(CBORObjectTypeTextString, "");
       for (int i = 0xe0; i < 0xf8; ++i) {
-        valueFixedObjects[i] = new CBORObject(CBORObjectTypeSimpleValue, (int)(i - 0xe0));
+        FixedObjects[i] = new CBORObject(CBORObjectTypeSimpleValue, (int)(i - 0xe0));
       }
-      return valueFixedObjects;
+      return FixedObjects;
     }
+
+    static CBORObject GetFixedObject(int value) {
+      return FixedObjects[value];
+    }
+
     // Expected lengths for each head byte.
     // 0 means length varies. -1 means invalid.
-    private static int[] valueExpectedLengths = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
+    private static int[] ExpectedLengths = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 1
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
@@ -1056,7 +1061,7 @@ public boolean equals(CBORObject other) {
     // Note that this function assumes that the length of the data
     // was already checked.
     static CBORObject GetFixedLengthObject(int firstbyte, byte[] data) {
-      CBORObject fixedObj = valueFixedObjects[firstbyte];
+      CBORObject fixedObj = FixedObjects[firstbyte];
       if (fixedObj != null) {
         return fixedObj;
       }
@@ -1184,7 +1189,7 @@ public boolean equals(CBORObject other) {
         throw new IllegalArgumentException("data is empty.");
       }
       int firstbyte = (int)(data[0] & (int)0xff);
-      int expectedLength = valueExpectedLengths[firstbyte];
+      int expectedLength = ExpectedLengths[firstbyte];
       // if invalid
       if (expectedLength == -1) {
         throw new CBORException("Unexpected data encountered");
@@ -1310,7 +1315,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       if (curitem.isTagged()) {
         ArrayList<BigInteger> list=new ArrayList<BigInteger>();
         while (curitem.isTagged()) {
-          list.add(LowHighToBigInteger(
+          list.put(LowHighToBigInteger(
             curitem.tagLow,
             curitem.tagHigh));
           curitem = (CBORObject)curitem.itemValue;
@@ -1625,7 +1630,7 @@ public void set(String key, CBORObject value) {
       }
       if (this.getItemType() == CBORObjectTypeArray) {
         List<CBORObject> list = this.AsList();
-        list.add(obj);
+        list.put(obj);
         return this;
       } else {
         throw new IllegalStateException("Not an array");
@@ -1643,7 +1648,7 @@ public void set(String key, CBORObject value) {
     public CBORObject Add(Object obj) {
       if (this.getItemType() == CBORObjectTypeArray) {
         List<CBORObject> list = this.AsList();
-        list.add(CBORObject.FromObject(obj));
+        list.put(CBORObject.FromObject(obj));
         return this;
       } else {
         throw new IllegalStateException("Not an array");
@@ -1988,32 +1993,76 @@ public void set(String key, CBORObject value) {
 
     private static void WriteObjectArray(
       List<CBORObject> list,
-      OutputStream s) throws IOException {
-      WritePositiveInt(4, list.size(), s);
-      for(CBORObject i : list) {
-        if (i == null) {
-          s.write(0xf6);
-        } else {
-          i.WriteTo(s);
+      OutputStream outputStream) {
+      WriteObjectArray(list, outputStream, null);
+    }
+
+    private static void WriteObjectMap(
+      Map<CBORObject,
+      CBORObject> list,
+      OutputStream outputStream) {
+      WriteObjectMap(list, outputStream, null);
+    }
+
+    private static List<Object> PushObject(List<Object> stack, Object parent, Object child) {
+      if (stack == null) {
+        stack = new ArrayList<Object>();
+        stack.add(parent);
+      }
+       for(Object o : stack) {
+        if (o == child) {
+          throw new IllegalArgumentException("Circular reference in data structure");
         }
+      }
+      stack.add(child);
+      return stack;
+    }
+
+    private static List<Object> WriteChildObject(
+      Object parentThisItem,
+      CBORObject child,
+      OutputStream outputStream,
+      List<Object> stack) {
+      if (child == null) {
+        outputStream.write(0xf6);
+      } else {
+        int type = child.getItemType();
+        if (type == CBORObjectTypeArray) {
+          stack = PushObject(stack, parentThisItem, child.getThisItem());
+          child.WriteTags(outputStream);
+          WriteObjectArray(child.AsList(), outputStream, stack);
+          stack.remove(stack.size() - 1);
+        } else if (type == CBORObjectTypeMap) {
+          stack = PushObject(stack, parentThisItem, child.getThisItem());
+          child.WriteTags(outputStream);
+          WriteObjectMap(child.AsMap(), outputStream, stack);
+          stack.remove(stack.size() - 1);
+        } else {
+          child.WriteTo(outputStream);
+        }
+      }
+      return stack;
+    }
+
+    private static void WriteObjectArray(
+      List<CBORObject> list,
+      OutputStream outputStream,
+      List<Object> stack) {
+      Object thisObj = list;
+      WritePositiveInt(4, list.size(), outputStream);
+      for(CBORObject i : list) {
+        stack = WriteChildObject(thisObj, i, outputStream, stack);
       }
     }
 
-    private static void WriteObjectMap(Map<CBORObject, CBORObject> map, OutputStream s) throws IOException {
-      WritePositiveInt(5, map.size(), s);
+    private static void WriteObjectMap(Map<CBORObject, CBORObject> map, OutputStream outputStream, List<Object> stack) {
+      Object thisObj = map;
+      WritePositiveInt(5, map.size(), outputStream);
       for(Map.Entry<CBORObject, CBORObject> entry : map.entrySet()) {
         CBORObject key = entry.getKey();
         CBORObject value = entry.getValue();
-        if (key == null) {
-          s.write(0xf6);
-        } else {
-          key.WriteTo(s);
-        }
-        if (value == null) {
-          s.write(0xf6);
-        } else {
-          value.WriteTo(s);
-        }
+        stack = WriteChildObject(thisObj, key, outputStream, stack);
+        stack = WriteChildObject(thisObj, value, outputStream, stack);
       }
     }
 
@@ -3540,7 +3589,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         throw new IllegalArgumentException("Simple value is from 24 to 31: " + simpleValue);
       }
       if (simpleValue < 32) {
-        return valueFixedObjects[0xe0 + simpleValue];
+        return FixedObjects[0xe0 + simpleValue];
       } else {
         return new CBORObject(
           CBORObjectTypeSimpleValue,
@@ -3765,7 +3814,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
       List<CBORObject> list = new ArrayList<CBORObject>();
       for(CBORObject i : array) {
-        list.add(FromObject(i));
+        list.put(FromObject(i));
       }
       return new CBORObject(CBORObjectTypeArray, list);
     }
@@ -3782,7 +3831,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
       List<CBORObject> list = new ArrayList<CBORObject>();
       for(int i : array) {
-        list.add(FromObject(i));
+        list.put(FromObject(i));
       }
       return new CBORObject(CBORObjectTypeArray, list);
     }
@@ -3800,7 +3849,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       List<CBORObject> list = new ArrayList<CBORObject>();
       for(long i : array) {
         // System.out.println(i);
-        list.add(FromObject(i));
+        list.put(FromObject(i));
       }
       return new CBORObject(CBORObjectTypeArray, list);
     }
@@ -4028,7 +4077,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         AddTagHandler(BigInteger.valueOf(3), new CBORTag3());
         AddTagHandler(BigInteger.valueOf(5), new CBORTag5());
         AddTagHandler(BigInteger.valueOf(25), new CBORTagUnsigned());
-        AddTagHandler(BigInteger.valueOf(28), new CBORTagAny());
+        AddTagHandler(BigInteger.valueOf(28), new CBORTag28());
         AddTagHandler(BigInteger.valueOf(29), new CBORTagUnsigned());
         AddTagHandler(BigInteger.valueOf(256), new CBORTagAny());
         AddTagHandler(BigInteger.ZERO, new CBORTag0());

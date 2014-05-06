@@ -1051,7 +1051,7 @@ namespace PeterO.Cbor {
       return null;
     }
 
-    internal static CBORObject[] FixedObjects = InitializeFixedObjects();
+    private static CBORObject[] FixedObjects = InitializeFixedObjects();
     // Initialize fixed values for certain
     // head bytes
     private static CBORObject[] InitializeFixedObjects() {
@@ -1070,13 +1070,14 @@ namespace PeterO.Cbor {
       }
       return FixedObjects;
     }
-    internal static CBORObject GetFixedObject(int value){
+
+    internal static CBORObject GetFixedObject(int value) {
       return FixedObjects[value];
     }
-    
+
     // Expected lengths for each head byte.
     // 0 means length varies. -1 means invalid.
-    internal static int[] ExpectedLengths = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
+    private static int[] ExpectedLengths = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 1
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
@@ -1974,32 +1975,76 @@ namespace PeterO.Cbor {
 
     private static void WriteObjectArray(
       IList<CBORObject> list,
-      Stream s) {
-      WritePositiveInt(4, list.Count, s);
-      foreach (CBORObject i in list) {
-        if (i == null) {
-          s.WriteByte(0xf6);
-        } else {
-          i.WriteTo(s);
+      Stream outputStream) {
+      WriteObjectArray(list, outputStream, null);
+    }
+
+    private static void WriteObjectMap(
+      IDictionary<CBORObject,
+      CBORObject> list,
+      Stream outputStream) {
+      WriteObjectMap(list, outputStream, null);
+    }
+
+    private static IList<object> PushObject(IList<object> stack, object parent, object child) {
+      if (stack == null) {
+        stack = new List<object>();
+        stack.Add(parent);
+      }
+       foreach (object o in stack) {
+        if (o == child) {
+          throw new ArgumentException("Circular reference in data structure");
         }
+      }
+      stack.Add(child);
+      return stack;
+    }
+
+    private static IList<object> WriteChildObject(
+      object parentThisItem,
+      CBORObject child,
+      Stream outputStream,
+      IList<object> stack) {
+      if (child == null) {
+        outputStream.WriteByte(0xf6);
+      } else {
+        int type = child.ItemType;
+        if (type == CBORObjectTypeArray) {
+          stack = PushObject(stack, parentThisItem, child.ThisItem);
+          child.WriteTags(outputStream);
+          WriteObjectArray(child.AsList(), outputStream, stack);
+          stack.RemoveAt(stack.Count - 1);
+        } else if (type == CBORObjectTypeMap) {
+          stack = PushObject(stack, parentThisItem, child.ThisItem);
+          child.WriteTags(outputStream);
+          WriteObjectMap(child.AsMap(), outputStream, stack);
+          stack.RemoveAt(stack.Count - 1);
+        } else {
+          child.WriteTo(outputStream);
+        }
+      }
+      return stack;
+    }
+
+    private static void WriteObjectArray(
+      IList<CBORObject> list,
+      Stream outputStream,
+      IList<object> stack) {
+      object thisObj = list;
+      WritePositiveInt(4, list.Count, outputStream);
+      foreach (CBORObject i in list) {
+        stack = WriteChildObject(thisObj, i, outputStream, stack);
       }
     }
 
-    private static void WriteObjectMap(IDictionary<CBORObject, CBORObject> map, Stream s) {
-      WritePositiveInt(5, map.Count, s);
+    private static void WriteObjectMap(IDictionary<CBORObject, CBORObject> map, Stream outputStream, IList<object> stack) {
+      object thisObj = map;
+      WritePositiveInt(5, map.Count, outputStream);
       foreach (KeyValuePair<CBORObject, CBORObject> entry in map) {
         CBORObject key = entry.Key;
         CBORObject value = entry.Value;
-        if (key == null) {
-          s.WriteByte(0xf6);
-        } else {
-          key.WriteTo(s);
-        }
-        if (value == null) {
-          s.WriteByte(0xf6);
-        } else {
-          value.WriteTo(s);
-        }
+        stack = WriteChildObject(thisObj, key, outputStream, stack);
+        stack = WriteChildObject(thisObj, value, outputStream, stack);
       }
     }
 
@@ -3985,7 +4030,7 @@ namespace PeterO.Cbor {
         AddTagHandler((BigInteger)3, new CBORTag3());
         AddTagHandler((BigInteger)5, new CBORTag5());
         AddTagHandler((BigInteger)25, new CBORTagUnsigned());
-        AddTagHandler((BigInteger)28, new CBORTagAny());
+        AddTagHandler((BigInteger)28, new CBORTag28());
         AddTagHandler((BigInteger)29, new CBORTagUnsigned());
         AddTagHandler((BigInteger)256, new CBORTagAny());
         AddTagHandler(BigInteger.Zero, new CBORTag0());

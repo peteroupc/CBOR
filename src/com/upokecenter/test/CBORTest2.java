@@ -7,6 +7,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
+import java.io.*;
 import org.junit.Assert;
 import org.junit.Test;
 import com.upokecenter.util.*;
@@ -14,6 +15,22 @@ import com.upokecenter.cbor.*;
 
   public class CBORTest2
   {
+    @Test
+    public void TestCyclicRefs() {
+      CBORObject cbor = CBORObject.NewArray();
+      cbor.Add(CBORObject.NewArray());
+      cbor.Add(cbor);
+      cbor.get(0).Add(cbor);
+      try {
+ cbor.WriteTo(new MemoryStream());
+Assert.fail("Should have failed");
+} catch (IllegalArgumentException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+    }
+
     @Test
     public void TestRationalCompareDecimal() {
       FastRandom fr = new FastRandom();
