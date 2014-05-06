@@ -211,11 +211,11 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         return -1;
       }
       int c = str.charAt(index - 1);
-      if (c >= 0xdc00 && c <= 0xdfff && index - 2 >= 0 &&
+      if ((c & 0xfc00) == 0xdc00 && index - 2 >= 0 &&
           str.charAt(index - 2) >= 0xd800 && str.charAt(index - 2) <= 0xdbff) {
         // Get the Unicode code point for the surrogate pair
-        return 0x10000 + ((str.charAt(index - 2) - 0xd800) * 0x400) + (c - 0xdc00);
-      } else if (c >= 0xd800 && c <= 0xdfff) {
+        return 0x10000 + ((str.charAt(index - 2) - 0xd800) << 10) + (c - 0xdc00);
+      } else if ((c & 0xf800) == 0xd800) {
         // unpaired surrogate
         if (surrogateBehavior == 0) {
           return 0xfffd;
@@ -270,12 +270,12 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         return -1;
       }
       int c = str.charAt(index);
-      if (c >= 0xd800 && c <= 0xdbff && index + 1 < str.length() &&
+      if ((c & 0xfc00) == 0xd800 && index + 1 < str.length() &&
           str.charAt(index + 1) >= 0xdc00 && str.charAt(index + 1) <= 0xdfff) {
         // Get the Unicode code point for the surrogate pair
-        c = 0x10000 + ((c - 0xd800) * 0x400) + (str.charAt(index + 1) - 0xdc00);
+        c = 0x10000 + ((c - 0xd800) << 10) + (str.charAt(index + 1) - 0xdc00);
         ++index;
-      } else if (c >= 0xd800 && c <= 0xdfff) {
+      } else if ((c & 0xf800) == 0xd800) {
         // unpaired surrogate
         if (surrogateBehavior == 0) {
           return 0xfffd;
@@ -354,11 +354,11 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           }
           boolean incindex = false;
           if (i + 1 < strA.length() && strA.charAt(i + 1) >= 0xdc00 && strA.charAt(i + 1) <= 0xdfff) {
-            ca = 0x10000 + ((ca - 0xd800) * 0x400) + (strA.charAt(i + 1) - 0xdc00);
+            ca = 0x10000 + ((ca - 0xd800) << 10) + (strA.charAt(i + 1) - 0xdc00);
             incindex = true;
           }
           if (i + 1 < strB.length() && strB.charAt(i + 1) >= 0xdc00 && strB.charAt(i + 1) <= 0xdfff) {
-            cb = 0x10000 + ((cb - 0xd800) * 0x400) + (strB.charAt(i + 1) - 0xdc00);
+            cb = 0x10000 + ((cb - 0xd800) << 10) + (strB.charAt(i + 1) - 0xdc00);
             incindex = true;
           }
           if (ca != cb) {
@@ -371,13 +371,13 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           if ((ca & 0xf800) != 0xd800 && (cb & 0xf800) != 0xd800) {
             return ca - cb;
           }
-          if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.length() &&
+          if ((ca & 0xfc00) == 0xd800 && i + 1 < strA.length() &&
               strA.charAt(i + 1) >= 0xdc00 && strA.charAt(i + 1) <= 0xdfff) {
-            ca = 0x10000 + ((ca - 0xd800) * 0x400) + (strA.charAt(i + 1) - 0xdc00);
+            ca = 0x10000 + ((ca - 0xd800) << 10) + (strA.charAt(i + 1) - 0xdc00);
           }
-          if (cb >= 0xd800 && cb <= 0xdbff && i + 1 < strB.length() &&
+          if ((cb & 0xfc00) == 0xd800 && i + 1 < strB.length() &&
               strB.charAt(i + 1) >= 0xdc00 && strB.charAt(i + 1) <= 0xdfff) {
-            cb = 0x10000 + ((cb - 0xd800) * 0x400) + (strB.charAt(i + 1) - 0xdc00);
+            cb = 0x10000 + ((cb - 0xd800) << 10) + (strB.charAt(i + 1) - 0xdc00);
           }
           return ca - cb;
         }
@@ -482,12 +482,12 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           bytes[byteIndex++] = (byte)(0xc0 | ((c >> 6) & 0x1f));
           bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
         } else {
-          if (c >= 0xd800 && c <= 0xdbff && index + 1 < endIndex &&
+          if ((c & 0xfc00) == 0xd800 && index + 1 < endIndex &&
               str.charAt(index + 1) >= 0xdc00 && str.charAt(index + 1) <= 0xdfff) {
             // Get the Unicode code point for the surrogate pair
-            c = 0x10000 + ((c - 0xd800) * 0x400) + (str.charAt(index + 1) - 0xdc00);
+            c = 0x10000 + ((c - 0xd800) << 10) + (str.charAt(index + 1) - 0xdc00);
             ++index;
-          } else if (c >= 0xd800 && c <= 0xdfff) {
+          } else if ((c & 0xf800) == 0xd800) {
             // unpaired surrogate
             if (!replace) {
               retval = -1;

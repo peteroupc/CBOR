@@ -287,7 +287,7 @@ namespace PeterO {
     /// <param name='exponentMaxSmall'>A 32-bit signed integer. (2).</param>
     public PrecisionContext WithExponentRange(int exponentMinSmall, int exponentMaxSmall) {
       if (exponentMinSmall > exponentMaxSmall) {
- throw new ArgumentException("exponentMinSmall (" + Convert.ToString((long)exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture));
+ throw new ArgumentException("exponentMinSmall (" + Convert.ToString((int)exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((int)exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture));
 }
       PrecisionContext pc = this.Copy();
       pc.hasExponentRange = true;
@@ -360,7 +360,7 @@ public PrecisionContext WithSimplified(bool simplified) {
     /// precision.</param>
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
- throw new ArgumentException("precision (" + Convert.ToString((long)precision, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+ throw new ArgumentException("precision (" + Convert.ToString((int)precision, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = (BigInteger)precision;
@@ -378,7 +378,7 @@ public PrecisionContext WithSimplified(bool simplified) {
         throw new ArgumentNullException("bigintPrecision");
       }
       if (bigintPrecision.Sign < 0) {
- throw new ArgumentException("bigintPrecision's sign (" + Convert.ToString((long)bigintPrecision.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+ throw new ArgumentException("bigintPrecision's sign (" + Convert.ToString((int)bigintPrecision.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
@@ -428,10 +428,10 @@ public PrecisionContext WithSimplified(bool simplified) {
     /// <param name='clampNormalExponents'>A Boolean object.</param>
     public PrecisionContext(int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall, bool clampNormalExponents) {
       if (precision < 0) {
- throw new ArgumentException("precision (" + Convert.ToString((long)precision, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+ throw new ArgumentException("precision (" + Convert.ToString((int)precision, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
       if (exponentMinSmall > exponentMaxSmall) {
- throw new ArgumentException("exponentMinSmall (" + Convert.ToString((long)exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture));
+ throw new ArgumentException("exponentMinSmall (" + Convert.ToString((int)exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((int)exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture));
 }
       this.bigintPrecision = precision == 0 ? BigInteger.Zero : (BigInteger)precision;
       this.rounding = rounding;

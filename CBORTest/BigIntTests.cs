@@ -597,13 +597,13 @@ namespace Test {
 
     public static int ModPow(int x, int pow, int mod) {
       if (x < 0) {
-        throw new ArgumentException("x (" + Convert.ToString((long)x, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        throw new ArgumentException("x (" + Convert.ToString((int)x, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (pow <= 0) {
-        throw new ArgumentException("pow (" + Convert.ToString((long)pow, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
+        throw new ArgumentException("pow (" + Convert.ToString((int)pow, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
       }
       if (mod <= 0) {
-        throw new ArgumentException("mod (" + Convert.ToString((long)mod, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
+        throw new ArgumentException("mod (" + Convert.ToString((int)mod, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
       }
       int r = 1;
       int v = x;

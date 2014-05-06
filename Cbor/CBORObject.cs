@@ -2152,12 +2152,12 @@ namespace PeterO.Cbor {
           bytes[byteIndex++] = (byte)(0xc0 | ((c >> 6) & 0x1f));
           bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
         } else {
-          if (c >= 0xd800 && c <= 0xdbff && index + 1 < str.Length &&
+          if ((c & 0xfc00) == 0xd800 && index + 1 < str.Length &&
               str[index + 1] >= 0xdc00 && str[index + 1] <= 0xdfff) {
             // Get the Unicode code point for the surrogate pair
-            c = 0x10000 + ((c - 0xd800) * 0x400) + (str[index + 1] - 0xdc00);
+            c = 0x10000 + ((c - 0xd800) << 10) + (str[index + 1] - 0xdc00);
             ++index;
-          } else if (c >= 0xd800 && c <= 0xdfff) {
+          } else if ((c & 0xf800) == 0xd800) {
             // unpaired surrogate, write U + FFFD instead
             c = 0xfffd;
           }

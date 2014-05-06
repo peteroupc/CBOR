@@ -1592,10 +1592,10 @@ namespace PeterO {
     /*
     private static BigInteger[] NthRootWithRemainder(BigInteger value, int root) {
       if (root <= 0) {
- throw new ArgumentException("root (" + Convert.ToString((long)root, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
+ throw new ArgumentException("root (" + Convert.ToString((int)root, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
 }
       if (value.Sign < 0) {
- throw new ArgumentException("value's sign (" + Convert.ToString((long)value.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+ throw new ArgumentException("value's sign (" + Convert.ToString((int)value.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
       if (value.Sign == 0) {
         return new BigInteger[] { BigInteger.Zero, BigInteger.Zero };

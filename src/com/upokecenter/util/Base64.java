@@ -75,19 +75,19 @@ private Base64() {
         throw new NullPointerException("data");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
+        throw new IllegalArgumentException("offset (" + Integer.toString((int)offset) + ") is less than " + "0");
       }
       if (offset > data.length) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)data.length));
+        throw new IllegalArgumentException("offset (" + Integer.toString((int)offset) + ") is more than " + Integer.toString((int)data.length));
       }
       if (count < 0) {
-        throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is less than " + "0");
+        throw new IllegalArgumentException("count (" + Integer.toString((int)count) + ") is less than " + "0");
       }
       if (count > data.length) {
-        throw new IllegalArgumentException("count (" + Long.toString((long)count) + ") is more than " + Long.toString((long)data.length));
+        throw new IllegalArgumentException("count (" + Integer.toString((int)count) + ") is more than " + Integer.toString((int)data.length));
       }
       if (data.length - offset < count) {
-        throw new IllegalArgumentException("data's length minus " + offset + " (" + Long.toString((long)(data.length - offset)) + ") is less than " + Long.toString((long)count));
+        throw new IllegalArgumentException("data's length minus " + offset + " (" + Integer.toString((int)(data.length - offset)) + ") is less than " + Integer.toString((int)count));
       }
       int length = offset + count;
       int i = offset;
