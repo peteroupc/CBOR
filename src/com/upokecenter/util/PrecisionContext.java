@@ -315,7 +315,7 @@ at: http://upokecenter.com/d/
      */
     public PrecisionContext WithExponentRange(int exponentMinSmall, int exponentMaxSmall) {
       if (exponentMinSmall > exponentMaxSmall) {
- throw new IllegalArgumentException("exponentMinSmall (" + Long.toString((long)exponentMinSmall) + ") is more than " + Long.toString((long)exponentMaxSmall));
+ throw new IllegalArgumentException("exponentMinSmall (" + Integer.toString((int)exponentMinSmall) + ") is more than " + Integer.toString((int)exponentMaxSmall));
 }
       PrecisionContext pc = this.Copy();
       pc.hasExponentRange = true;
@@ -396,7 +396,7 @@ public PrecisionContext WithSimplified(boolean simplified) {
      */
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
- throw new IllegalArgumentException("precision (" + Long.toString((long)precision) + ") is less than " + "0");
+ throw new IllegalArgumentException("precision (" + Integer.toString((int)precision) + ") is less than " + "0");
 }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = BigInteger.valueOf(precision);
@@ -416,7 +416,7 @@ public PrecisionContext WithSimplified(boolean simplified) {
         throw new NullPointerException("bigintPrecision");
       }
       if (bigintPrecision.signum() < 0) {
- throw new IllegalArgumentException("bigintPrecision's sign (" + Long.toString((long)bigintPrecision.signum()) + ") is less than " + "0");
+ throw new IllegalArgumentException("bigintPrecision's sign (" + Integer.toString((int)bigintPrecision.signum()) + ") is less than " + "0");
 }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
@@ -469,10 +469,10 @@ public PrecisionContext WithSimplified(boolean simplified) {
      */
     public PrecisionContext (int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall, boolean clampNormalExponents) {
       if (precision < 0) {
- throw new IllegalArgumentException("precision (" + Long.toString((long)precision) + ") is less than " + "0");
+ throw new IllegalArgumentException("precision (" + Integer.toString((int)precision) + ") is less than " + "0");
 }
       if (exponentMinSmall > exponentMaxSmall) {
- throw new IllegalArgumentException("exponentMinSmall (" + Long.toString((long)exponentMinSmall) + ") is more than " + Long.toString((long)exponentMaxSmall));
+ throw new IllegalArgumentException("exponentMinSmall (" + Integer.toString((int)exponentMinSmall) + ") is more than " + Integer.toString((int)exponentMaxSmall));
 }
       this.bigintPrecision = precision == 0 ? BigInteger.ZERO : BigInteger.valueOf(precision);
       this.rounding = rounding;

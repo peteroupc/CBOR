@@ -195,11 +195,11 @@ namespace PeterO {
         return -1;
       }
       int c = str[index - 1];
-      if (c >= 0xdc00 && c <= 0xdfff && index - 2 >= 0 &&
+      if ((c & 0xfc00) == 0xdc00 && index - 2 >= 0 &&
           str[index - 2] >= 0xd800 && str[index - 2] <= 0xdbff) {
         // Get the Unicode code point for the surrogate pair
-        return 0x10000 + ((str[index - 2] - 0xd800) * 0x400) + (c - 0xdc00);
-      } else if (c >= 0xd800 && c <= 0xdfff) {
+        return 0x10000 + ((str[index - 2] - 0xd800) << 10) + (c - 0xdc00);
+      } else if ((c & 0xf800) == 0xd800) {
         // unpaired surrogate
         if (surrogateBehavior == 0) {
           return 0xfffd;
@@ -250,12 +250,12 @@ namespace PeterO {
         return -1;
       }
       int c = str[index];
-      if (c >= 0xd800 && c <= 0xdbff && index + 1 < str.Length &&
+      if ((c & 0xfc00) == 0xd800 && index + 1 < str.Length &&
           str[index + 1] >= 0xdc00 && str[index + 1] <= 0xdfff) {
         // Get the Unicode code point for the surrogate pair
-        c = 0x10000 + ((c - 0xd800) * 0x400) + (str[index + 1] - 0xdc00);
+        c = 0x10000 + ((c - 0xd800) << 10) + (str[index + 1] - 0xdc00);
         ++index;
-      } else if (c >= 0xd800 && c <= 0xdfff) {
+      } else if ((c & 0xf800) == 0xd800) {
         // unpaired surrogate
         if (surrogateBehavior == 0) {
           return 0xfffd;
@@ -331,11 +331,11 @@ namespace PeterO {
           }
           bool incindex = false;
           if (i + 1 < strA.Length && strA[i + 1] >= 0xdc00 && strA[i + 1] <= 0xdfff) {
-            ca = 0x10000 + ((ca - 0xd800) * 0x400) + (strA[i + 1] - 0xdc00);
+            ca = 0x10000 + ((ca - 0xd800) << 10) + (strA[i + 1] - 0xdc00);
             incindex = true;
           }
           if (i + 1 < strB.Length && strB[i + 1] >= 0xdc00 && strB[i + 1] <= 0xdfff) {
-            cb = 0x10000 + ((cb - 0xd800) * 0x400) + (strB[i + 1] - 0xdc00);
+            cb = 0x10000 + ((cb - 0xd800) << 10) + (strB[i + 1] - 0xdc00);
             incindex = true;
           }
           if (ca != cb) {
@@ -348,13 +348,13 @@ namespace PeterO {
           if ((ca & 0xf800) != 0xd800 && (cb & 0xf800) != 0xd800) {
             return ca - cb;
           }
-          if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.Length &&
+          if ((ca & 0xfc00) == 0xd800 && i + 1 < strA.Length &&
               strA[i + 1] >= 0xdc00 && strA[i + 1] <= 0xdfff) {
-            ca = 0x10000 + ((ca - 0xd800) * 0x400) + (strA[i + 1] - 0xdc00);
+            ca = 0x10000 + ((ca - 0xd800) << 10) + (strA[i + 1] - 0xdc00);
           }
-          if (cb >= 0xd800 && cb <= 0xdbff && i + 1 < strB.Length &&
+          if ((cb & 0xfc00) == 0xd800 && i + 1 < strB.Length &&
               strB[i + 1] >= 0xdc00 && strB[i + 1] <= 0xdfff) {
-            cb = 0x10000 + ((cb - 0xd800) * 0x400) + (strB[i + 1] - 0xdc00);
+            cb = 0x10000 + ((cb - 0xd800) << 10) + (strB[i + 1] - 0xdc00);
           }
           return ca - cb;
         }
@@ -460,12 +460,12 @@ namespace PeterO {
           bytes[byteIndex++] = (byte)(0xc0 | ((c >> 6) & 0x1f));
           bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
         } else {
-          if (c >= 0xd800 && c <= 0xdbff && index + 1 < endIndex &&
+          if ((c & 0xfc00) == 0xd800 && index + 1 < endIndex &&
               str[index + 1] >= 0xdc00 && str[index + 1] <= 0xdfff) {
             // Get the Unicode code point for the surrogate pair
-            c = 0x10000 + ((c - 0xd800) * 0x400) + (str[index + 1] - 0xdc00);
+            c = 0x10000 + ((c - 0xd800) << 10) + (str[index + 1] - 0xdc00);
             ++index;
-          } else if (c >= 0xd800 && c <= 0xdfff) {
+          } else if ((c & 0xf800) == 0xd800) {
             // unpaired surrogate
             if (!replace) {
               retval = -1;

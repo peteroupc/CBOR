@@ -83,7 +83,7 @@ at: http://upokecenter.com/d/
       if (bigint.canFitInInt()) {
         this.shiftedSmall = bigint.intValue();
         if (this.shiftedSmall < 0) {
-          throw new IllegalArgumentException("shiftedSmall (" + Long.toString((long)this.shiftedSmall) + ") is less than " + "0");
+          throw new IllegalArgumentException("shiftedSmall (" + Integer.toString((int)this.shiftedSmall) + ") is less than " + "0");
         }
         this.isSmall = true;
       } else {
@@ -98,7 +98,7 @@ at: http://upokecenter.com/d/
       // Assumes the String is length 9 or less and contains
       // only the digits '0' through '9'
       if (length > 9) {
-        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is more than " + "9");
+        throw new IllegalArgumentException("length (" + Integer.toString((int)length) + ") is more than " + "9");
       }
       int ret = 0;
       for (int i = 0; i < length; ++i) {
@@ -504,12 +504,12 @@ bigrem=divrem[1]; }
       if (bits.CanFitInInt32()) {
         int intval = bits.AsInt32();
         if (intval < 0) {
-          throw new IllegalArgumentException("intval (" + Long.toString((long)intval) + ") is less than " + "0");
+          throw new IllegalArgumentException("intval (" + Integer.toString((int)intval) + ") is less than " + "0");
         }
         this.ShiftToDigitsInt(intval);
       } else {
         if (bits.signum() < 0) {
-          throw new IllegalArgumentException("bits's sign (" + Long.toString((long)bits.signum()) + ") is less than " + "0");
+          throw new IllegalArgumentException("bits's sign (" + Integer.toString((int)bits.signum()) + ") is less than " + "0");
         }
         this.knownBitLength = this.CalcKnownDigitLength();
         BigInteger bigintDiff = this.knownBitLength.AsBigInteger();

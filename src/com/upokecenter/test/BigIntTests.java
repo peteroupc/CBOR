@@ -606,13 +606,13 @@ bigintRem=divrem[1]; }
 
     public static int ModPow(int x, int pow, int mod) {
       if (x < 0) {
-        throw new IllegalArgumentException("x (" + Long.toString((long)x) + ") is less than " + "0");
+        throw new IllegalArgumentException("x (" + Integer.toString((int)x) + ") is less than " + "0");
       }
       if (pow <= 0) {
-        throw new IllegalArgumentException("pow (" + Long.toString((long)pow) + ") is not greater than " + "0");
+        throw new IllegalArgumentException("pow (" + Integer.toString((int)pow) + ") is not greater than " + "0");
       }
       if (mod <= 0) {
-        throw new IllegalArgumentException("mod (" + Long.toString((long)mod) + ") is not greater than " + "0");
+        throw new IllegalArgumentException("mod (" + Integer.toString((int)mod) + ") is not greater than " + "0");
       }
       int r = 1;
       int v = x;
