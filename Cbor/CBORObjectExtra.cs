@@ -52,10 +52,10 @@ namespace PeterO.Cbor {
       int scale,
       bool neg) {
       if (scale < 0) {
-        throw new ArgumentException("scale (" + Convert.ToString((long)scale, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        throw new ArgumentException("scale (" + Convert.ToString((int)scale, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (scale > 28) {
-        throw new ArgumentException("scale (" + Convert.ToString((long)scale, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + "28");
+        throw new ArgumentException("scale (" + Convert.ToString((int)scale, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + "28");
       }
       byte[] data = bigmant.ToByteArray();
       int a = 0;

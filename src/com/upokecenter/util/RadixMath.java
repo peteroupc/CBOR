@@ -1606,10 +1606,10 @@ bigrem=divrem[1]; }
     /*
     private static BigInteger[] NthRootWithRemainder(BigInteger value, int root) {
       if (root <= 0) {
- throw new IllegalArgumentException("root (" + Long.toString((long)root) + ") is not greater than " + "0");
+ throw new IllegalArgumentException("root (" + Integer.toString((int)root) + ") is not greater than " + "0");
 }
       if (value.signum() < 0) {
- throw new IllegalArgumentException("value's sign (" + Long.toString((long)value.signum()) + ") is less than " + "0");
+ throw new IllegalArgumentException("value's sign (" + Integer.toString((int)value.signum()) + ") is less than " + "0");
 }
       if (value.signum() == 0) {
         return new BigInteger[] { BigInteger.ZERO, BigInteger.ZERO };

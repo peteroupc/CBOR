@@ -43,7 +43,7 @@ at: http://upokecenter.com/d/
      */
     public int NextValue(int v) {
       if (v <= 0) {
- throw new IllegalArgumentException("v (" + Long.toString((long)v) + ") is not greater than " + "0");
+ throw new IllegalArgumentException("v (" + Integer.toString((int)v) + ") is not greater than " + "0");
 }
       if (v <= 1) {
         return 0;

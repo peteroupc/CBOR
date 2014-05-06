@@ -22,13 +22,13 @@ import com.upokecenter.cbor.*;
       cbor.Add(cbor);
       cbor.get(0).Add(cbor);
       try {
- cbor.WriteTo(new MemoryStream());
-Assert.fail("Should have failed");
-} catch (IllegalArgumentException ex) {
-} catch (Exception ex) {
- Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        cbor.WriteTo(new MemoryStream());
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
 
     @Test
@@ -447,32 +447,32 @@ throw new IllegalStateException("", ex);
     public void TestNegativeBigInts() {
       BigInteger minusone = BigInteger.ZERO.subtract(BigInteger.ONE);
       Assert.assertEquals(
-minusone .subtract(BigInteger.ONE.shiftLeft(8)),
-CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x42, 1, 0  }).AsBigInteger());
+        minusone .subtract(BigInteger.ONE.shiftLeft(8)),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x42, 1, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone .subtract(BigInteger.ONE.shiftLeft(16)),
-CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x43, 1, 0, 0  }).AsBigInteger());
+        minusone .subtract(BigInteger.ONE.shiftLeft(16)),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x43, 1, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone .subtract(BigInteger.ONE.shiftLeft(24)),
-CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x44, 1, 0, 0, 0  }).AsBigInteger());
+        minusone .subtract(BigInteger.ONE.shiftLeft(24)),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x44, 1, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone .subtract(BigInteger.ONE.shiftLeft(32)),
-CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x45, 1, 0, 0, 0, 0  }).AsBigInteger());
+        minusone .subtract(BigInteger.ONE.shiftLeft(32)),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x45, 1, 0, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone .subtract(BigInteger.ONE.shiftLeft(40)),
-CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x46, 1, 0, 0, 0, 0, 0  }).AsBigInteger());
+        minusone .subtract(BigInteger.ONE.shiftLeft(40)),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x46, 1, 0, 0, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone .subtract(BigInteger.ONE.shiftLeft(48)),
-CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x47, 1, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+        minusone .subtract(BigInteger.ONE.shiftLeft(48)),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x47, 1, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone .subtract(BigInteger.ONE.shiftLeft(56)),
-CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x48, 1, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+        minusone .subtract(BigInteger.ONE.shiftLeft(56)),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x48, 1, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone .subtract(BigInteger.ONE.shiftLeft(64)),
-CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x49, 1, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+        minusone .subtract(BigInteger.ONE.shiftLeft(64)),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x49, 1, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
       Assert.assertEquals(
-minusone .subtract(BigInteger.ONE.shiftLeft(72)),
-CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x4a, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
+        minusone .subtract(BigInteger.ONE.shiftLeft(72)),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc3, 0x4a, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0  }).AsBigInteger());
     }
 
     @Test
