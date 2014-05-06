@@ -82,7 +82,7 @@ namespace PeterO {
       if (bigint.canFitInInt()) {
         this.shiftedSmall = (int)bigint;
         if (this.shiftedSmall < 0) {
-          throw new ArgumentException("shiftedSmall (" + Convert.ToString((long)this.shiftedSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+          throw new ArgumentException("shiftedSmall (" + Convert.ToString((int)this.shiftedSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
         }
         this.isSmall = true;
       } else {
@@ -97,7 +97,7 @@ namespace PeterO {
       // Assumes the string is length 9 or less and contains
       // only the digits '0' through '9'
       if (length > 9) {
-        throw new ArgumentException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + "9");
+        throw new ArgumentException("length (" + Convert.ToString((int)length, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + "9");
       }
       int ret = 0;
       for (int i = 0; i < length; ++i) {
@@ -481,12 +481,12 @@ namespace PeterO {
       if (bits.CanFitInInt32()) {
         int intval = bits.AsInt32();
         if (intval < 0) {
-          throw new ArgumentException("intval (" + Convert.ToString((long)intval, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+          throw new ArgumentException("intval (" + Convert.ToString((int)intval, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
         }
         this.ShiftToDigitsInt(intval);
       } else {
         if (bits.Sign < 0) {
-          throw new ArgumentException("bits's sign (" + Convert.ToString((long)bits.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+          throw new ArgumentException("bits's sign (" + Convert.ToString((int)bits.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
         }
         this.knownBitLength = this.CalcKnownDigitLength();
         BigInteger bigintDiff = this.knownBitLength.AsBigInteger();
