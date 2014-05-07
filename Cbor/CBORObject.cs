@@ -189,7 +189,7 @@ namespace PeterO.Cbor {
     private CBORObject() {
     }
 
-    private CBORObject(CBORObject obj, int tagLow, int tagHigh) :
+    internal CBORObject(CBORObject obj, int tagLow, int tagHigh) :
       this(CBORObjectTypeTagged, obj) {
       this.tagLow = tagLow;
       this.tagHigh = tagHigh;
@@ -798,6 +798,16 @@ namespace PeterO.Cbor {
       return this;
     }
 
+    internal void Redefine(CBORObject cbor) {
+      if (this.itemtypeValue != CBORObjectTypeTagged ||
+          cbor == null || cbor.itemtypeValue != CBORObjectTypeTagged) {
+        throw new InvalidOperationException();
+      }
+      this.tagLow = cbor.tagLow;
+      this.tagHigh = cbor.tagHigh;
+      this.itemValue = cbor.itemValue;
+    }
+
     private static int MapCompare(IDictionary<CBORObject, CBORObject> mapA, IDictionary<CBORObject, CBORObject> mapB) {
       if (mapA == null) {
         return (mapB == null) ? 0 : -1;
@@ -1051,33 +1061,36 @@ namespace PeterO.Cbor {
       return null;
     }
 
-    private static CBORObject[] FixedObjects = InitializeFixedObjects();
+    private static CBORObject[] valueFixedObjects = InitializeFixedObjects();
     // Initialize fixed values for certain
     // head bytes
     private static CBORObject[] InitializeFixedObjects() {
-      FixedObjects = new CBORObject[256];
+      valueFixedObjects = new CBORObject[256];
       for (int i = 0; i < 0x18; ++i) {
-        FixedObjects[i] = new CBORObject(CBORObjectTypeInteger, (long)i);
+        valueFixedObjects[i] = new CBORObject(CBORObjectTypeInteger, (long)i);
       }
       for (int i = 0x20; i < 0x38; ++i) {
-        FixedObjects[i] = new CBORObject(
+        valueFixedObjects[i] = new CBORObject(
           CBORObjectTypeInteger,
           (long)(-1 - (i - 0x20)));
       }
-      FixedObjects[0x60] = new CBORObject(CBORObjectTypeTextString, String.Empty);
+      valueFixedObjects[0x60] = new CBORObject(CBORObjectTypeTextString, String.Empty);
       for (int i = 0xe0; i < 0xf8; ++i) {
-        FixedObjects[i] = new CBORObject(CBORObjectTypeSimpleValue, (int)(i - 0xe0));
+        valueFixedObjects[i] = new CBORObject(CBORObjectTypeSimpleValue, (int)(i - 0xe0));
       }
-      return FixedObjects;
+      return valueFixedObjects;
     }
 
     internal static CBORObject GetFixedObject(int value) {
-      return FixedObjects[value];
+      return valueFixedObjects[value];
     }
 
+    internal static int GetExpectedLength(int value) {
+      return valueExpectedLengths[value];
+    }
     // Expected lengths for each head byte.
     // 0 means length varies. -1 means invalid.
-    private static int[] ExpectedLengths = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
+    private static int[] valueExpectedLengths = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 1
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
@@ -1098,7 +1111,7 @@ namespace PeterO.Cbor {
     // Note that this function assumes that the length of the data
     // was already checked.
     internal static CBORObject GetFixedLengthObject(int firstbyte, byte[] data) {
-      CBORObject fixedObj = FixedObjects[firstbyte];
+      CBORObject fixedObj = valueFixedObjects[firstbyte];
       if (fixedObj != null) {
         return fixedObj;
       }
@@ -1224,7 +1237,7 @@ namespace PeterO.Cbor {
         throw new ArgumentException("data is empty.");
       }
       int firstbyte = (int)(data[0] & (int)0xff);
-      int expectedLength = ExpectedLengths[firstbyte];
+      int expectedLength = valueExpectedLengths[firstbyte];
       // if invalid
       if (expectedLength == -1) {
         throw new CBORException("Unexpected data encountered");
@@ -1292,14 +1305,47 @@ namespace PeterO.Cbor {
       }
     }
 
-    private bool HasTag(int tagValue) {
-      if (!this.IsTagged) {
-        return false;
+    /// <summary>Not documented yet.</summary>
+    /// <param name='tagValue'>A 32-bit signed integer.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool HasTag(int tagValue) {
+      if (tagValue < 0) {
+        throw new ArgumentException("tagValue (" + Convert.ToString((long)tagValue, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
-      if (this.tagHigh == 0 && tagValue == this.tagLow) {
-        return true;
+      CBORObject obj = this;
+      while (true) {
+        if (!obj.IsTagged) {
+          return false;
+        }
+        if (obj.tagHigh == 0 && tagValue == obj.tagLow) {
+          return true;
+        }
+        obj = (CBORObject)obj.itemValue;
+        #if DEBUG
+        if (obj == null) {
+          throw new ArgumentNullException("obj");
+        }
+        #endif
       }
-      return ((CBORObject)this.itemValue).HasTag(tagValue);
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='bigTagValue'>A BigInteger object.</param>
+    /// <returns>A Boolean object.</returns>
+    public bool HasTag(BigInteger bigTagValue) {
+      if (bigTagValue == null) {
+        throw new ArgumentNullException("bigTagValue");
+      }
+      if (!(bigTagValue.Sign >= 0)) {
+        throw new ArgumentException("doesn't satisfy bigTagValue.Sign>= 0");
+      }
+      BigInteger[] bigTags = this.GetTags();
+      foreach (BigInteger bigTag in bigTags) {
+        if (bigTagValue.Equals(bigTag)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     private static BigInteger LowHighToBigInteger(int tagLow, int tagHigh) {
@@ -1332,7 +1378,7 @@ namespace PeterO.Cbor {
     private static BigInteger[] valueEmptyTags = new BigInteger[0];
 
     /// <summary>Gets a list of all tags, from outermost to innermost.</summary>
-    /// <returns>A BigInteger[] object.</returns>
+    /// <returns>An array of tags, or the empty string if this object is untagged.</returns>
     public BigInteger[] GetTags() {
       if (!this.IsTagged) {
         return valueEmptyTags;
@@ -1352,14 +1398,34 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Gets the last defined tag for this CBOR data item, or 0 if
+    /// <summary>Gets the outermost tag for this CBOR data item, or -1 if the
+    /// item is untagged.</summary>
+    /// <value>The outermost tag for this CBOR data item, or -1 if the item
+    /// is untagged.</value>
+    public BigInteger OutermostTag {
+      get {
+        if (!this.IsTagged) {
+          return BigInteger.Zero;
+        }
+        if (this.tagHigh == 0 &&
+            this.tagLow >= 0 &&
+            this.tagLow < 0x10000) {
+          return (BigInteger)this.tagLow;
+        }
+        return LowHighToBigInteger(
+          this.tagLow,
+          this.tagHigh);
+      }
+    }
+
+    /// <summary>Gets the last defined tag for this CBOR data item, or -1 if
     /// the item is untagged.</summary>
-    /// <value>The last defined tag for this CBOR data item, or 0 if the item
+    /// <value>The last defined tag for this CBOR data item, or -1 if the item
     /// is untagged.</value>
     public BigInteger InnermostTag {
       get {
         if (!this.IsTagged) {
-          return BigInteger.Zero;
+          return BigInteger.Zero - BigInteger.One;
         }
         CBORObject previtem = this;
         CBORObject curitem = (CBORObject)this.itemValue;
@@ -1979,10 +2045,7 @@ namespace PeterO.Cbor {
       WriteObjectArray(list, outputStream, null);
     }
 
-    private static void WriteObjectMap(
-      IDictionary<CBORObject,
-      CBORObject> list,
-      Stream outputStream) {
+    private static void WriteObjectMap(IDictionary<CBORObject, CBORObject> list, Stream outputStream) {
       WriteObjectMap(list, outputStream, null);
     }
 
@@ -1991,7 +2054,7 @@ namespace PeterO.Cbor {
         stack = new List<object>();
         stack.Add(parent);
       }
-       foreach (object o in stack) {
+      foreach (object o in stack) {
         if (o == child) {
           throw new ArgumentException("Circular reference in data structure");
         }
@@ -3542,7 +3605,7 @@ namespace PeterO.Cbor {
         throw new ArgumentException("Simple value is from 24 to 31: " + simpleValue);
       }
       if (simpleValue < 32) {
-        return FixedObjects[0xe0 + simpleValue];
+        return valueFixedObjects[0xe0 + simpleValue];
       } else {
         return new CBORObject(
           CBORObjectTypeSimpleValue,

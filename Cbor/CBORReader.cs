@@ -176,7 +176,7 @@ namespace PeterO.Cbor {
       }
       int type = (firstbyte >> 5) & 0x07;
       int additional = firstbyte & 0x1f;
-      int expectedLength = CBORObject.ExpectedLengths[firstbyte];
+      int expectedLength = CBORObject.GetExpectedLength(firstbyte);
       // Data checks
       if (expectedLength == -1) {
         // if the head byte is invalid
@@ -497,6 +497,7 @@ namespace PeterO.Cbor {
         bool haveFirstByte = false;
         int newFirstByte = -1;
         bool unnestedObject = false;
+        CBORObject tagObject = null;
         if (!hasBigAdditional) {
           if (filter != null && !filter.TagAllowed(uadditional)) {
             throw new CBORException("Unexpected tag encountered: " + uadditional);
@@ -522,14 +523,15 @@ namespace PeterO.Cbor {
             if (newFirstByte >= 0x80 && newFirstByte < 0xc0) {
               // Major types 4 and 5 (array and map)
               this.addSharedRef = true;
-              haveFirstByte = true;
             } else if ((newFirstByte & 0xe0) == 0xc0) {
               // Major type 6 (tagged object)
-              throw new NotImplementedException();
+              tagObject = new CBORObject(CBORObject.Undefined, 28, 0);
+              this.sharedRefs.AddObject(tagObject);
             } else {
               // All other major types
               unnestedObject = true;
             }
+            haveFirstByte = true;
           }
           taginfo = CBORObject.FindTagConverter(uadditional);
         } else {
@@ -559,6 +561,10 @@ namespace PeterO.Cbor {
             this.addSharedRef = false;
             if (unnestedObject) {
               this.sharedRefs.AddObject(o);
+            }
+            if (tagObject != null) {
+              tagObject.Redefine(o);
+              o = tagObject;
             }
           } else if (uadditional == 29) {
             // shared object reference

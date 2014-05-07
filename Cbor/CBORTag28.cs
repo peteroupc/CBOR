@@ -26,6 +26,12 @@ namespace PeterO.Cbor {
       }
       #endif
       // Return this object without tag 28
+      #if DEBUG
+      if (!obj.HasTag(28)) {
+        throw new ArgumentException("doesn't satisfy obj.HasTag(28)");
+      }
+      #endif
+
       return obj.UntagOne();
     }
   }

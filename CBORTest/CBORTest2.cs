@@ -32,6 +32,29 @@ namespace Test {
     }
 
     [Test]
+    public void TestSharedRefs() {
+      byte[] bytes;
+      CBORObject cbor;
+      string expected;
+      bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
+      cbor = CBORObject.DecodeFromBytes(bytes);
+      expected = "[1,1,3,3,1]";
+      Assert.AreEqual(expected, cbor.ToJSONString());
+      bytes = new byte[] { 0x9f, 0xd8, 28, 0x81, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
+      cbor = CBORObject.DecodeFromBytes(bytes);
+      expected = "[[1],[1],3,3,[1]]";
+      Assert.AreEqual(expected, cbor.ToJSONString());
+      // Checks if both objects are the same reference, not just equal
+      Assert.IsTrue(cbor[0] == cbor[1], "cbor[0] not same as cbor[1]");
+      Assert.IsTrue(cbor[0] == cbor[4], "cbor[0] not same as cbor[4]");
+      bytes = new byte[] { 0xd8, 28, 0x82, 1, 0xd8, 29, 0 };
+      cbor = CBORObject.DecodeFromBytes(bytes);
+      Assert.AreEqual(2, cbor.Count);
+      // Checks if both objects are the same reference, not just equal
+      Assert.IsTrue(cbor == cbor[1], "objects not the same");
+    }
+
+    [Test]
     public void TestRationalCompareDecimal() {
       FastRandom fr = new FastRandom();
       // System.Diagnostics.Stopwatch sw1 = new System.Diagnostics.Stopwatch();

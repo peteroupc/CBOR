@@ -169,8 +169,7 @@ import com.upokecenter.cbor.*;
       for (int i = 0; i < 15; ++i) {
         CBORObject o;
         // System.out.println("tag "+tag+" "+i);
-        // TODO: Test tag 29
-        if (tag == 0 || tag == 1 || tag == 29) {
+        if (tag == 0 || tag == 1 || tag == 28 || tag == 29) {
           tag = 999;
         }
         if (tag == 2 || tag == 3) {
@@ -6757,7 +6756,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         maxuint,
       };
       if(CBORObject.True.isTagged())Assert.fail();
-      Assert.assertEquals(BigInteger.ZERO, CBORObject.True.getInnermostTag());
+      Assert.assertEquals(BigInteger.ZERO.subtract(BigInteger.ONE), CBORObject.True.getInnermostTag());
       BigInteger[] tagstmp = CBORObject.True.GetTags();
       Assert.assertEquals(0, tagstmp.length);
       for (int i = 0; i < ranges.length; i += 2) {
