@@ -25,6 +25,7 @@ at: http://upokecenter.com/d/
     public CBORObject ValidateObject(CBORObject obj) {
 
       // Return this object without tag 28
+
       return obj.UntagOne();
     }
   }

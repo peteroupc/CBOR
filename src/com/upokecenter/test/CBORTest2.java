@@ -32,6 +32,29 @@ import com.upokecenter.cbor.*;
     }
 
     @Test
+    public void TestSharedRefs() {
+      byte[] bytes;
+      CBORObject cbor;
+      String expected;
+      bytes = new byte[] {  (byte)0x9f, (byte)0xd8, 28, 1, (byte)0xd8, 29, 0, 3, 3, (byte)0xd8, 29, 0, (byte)0xff  };
+      cbor = CBORObject.DecodeFromBytes(bytes);
+      expected = "[1,1,3,3,1]";
+      Assert.assertEquals(expected, cbor.ToJSONString());
+      bytes = new byte[] {  (byte)0x9f, (byte)0xd8, 28, (byte)0x81, 1, (byte)0xd8, 29, 0, 3, 3, (byte)0xd8, 29, 0, (byte)0xff  };
+      cbor = CBORObject.DecodeFromBytes(bytes);
+      expected = "[[1],[1],3,3,[1]]";
+      Assert.assertEquals(expected, cbor.ToJSONString());
+      // Checks if both objects are the same reference, not just equal
+      if(!(cbor.get(0) == cbor.get(1)))Assert.fail( "cbor.get(0) not same as cbor.get(1)");
+      if(!(cbor.get(0) == cbor.get(4)))Assert.fail( "cbor.get(0) not same as cbor.get(4)");
+      bytes = new byte[] {  (byte)0xd8, 28, (byte)0x82, 1, (byte)0xd8, 29, 0  };
+      cbor = CBORObject.DecodeFromBytes(bytes);
+      Assert.assertEquals(2, cbor.size());
+      // Checks if both objects are the same reference, not just equal
+      if(!(cbor == cbor.get(1)))Assert.fail( "objects not the same");
+    }
+
+    @Test
     public void TestRationalCompareDecimal() {
       FastRandom fr = new FastRandom();
       // System.Diagnostics.Stopwatch sw1 = new System.Diagnostics.Stopwatch();

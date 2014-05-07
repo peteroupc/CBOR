@@ -14,7 +14,6 @@ namespace PeterO.Cbor {
   internal class SharedRefs
   {
     private IList<CBORObject> sharedObjects;
-    private int refCount;
 
     public SharedRefs() {
       this.sharedObjects = new List<CBORObject>();
@@ -23,10 +22,7 @@ namespace PeterO.Cbor {
     /// <summary>Not documented yet.</summary>
     /// <param name='obj'>A CBORObject object.</param>
     public void AddObject(CBORObject obj) {
-      if (this.refCount > 0) {
         this.sharedObjects.Add(obj);
-        --this.refCount;
-      }
     }
 
     /// <summary>Not documented yet.</summary>

@@ -16,7 +16,6 @@ import com.upokecenter.util.*;
   class SharedRefs
   {
     private List<CBORObject> sharedObjects;
-    private int refCount;
 
     public SharedRefs () {
       this.sharedObjects = new ArrayList<CBORObject>();
@@ -27,10 +26,7 @@ import com.upokecenter.util.*;
      * @param obj A CBORObject object.
      */
     public void AddObject(CBORObject obj) {
-      if (this.refCount > 0) {
         this.sharedObjects.add(obj);
-        --this.refCount;
-      }
     }
 
     /**

@@ -167,8 +167,7 @@ namespace Test {
       for (int i = 0; i < 15; ++i) {
         CBORObject o;
         // Console.WriteLine("tag "+tag+" "+i);
-        // TODO: Test tag 29
-        if (tag == 0 || tag == 1 || tag == 29) {
+        if (tag == 0 || tag == 1 || tag == 28 || tag == 29) {
           tag = 999;
         }
         if (tag == 2 || tag == 3) {
@@ -6643,7 +6642,7 @@ namespace Test {
         maxuint,
       };
       Assert.IsFalse(CBORObject.True.IsTagged);
-      Assert.AreEqual(BigInteger.Zero, CBORObject.True.InnermostTag);
+      Assert.AreEqual(BigInteger.Zero - BigInteger.One, CBORObject.True.InnermostTag);
       BigInteger[] tagstmp = CBORObject.True.GetTags();
       Assert.AreEqual(0, tagstmp.Length);
       for (int i = 0; i < ranges.Length; i += 2) {

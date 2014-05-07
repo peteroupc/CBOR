@@ -186,7 +186,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
       int type = (firstbyte >> 5) & 0x07;
       int additional = firstbyte & 0x1f;
-      int expectedLength = CBORObject.ExpectedLengths.get(firstbyte);
+      int expectedLength = CBORObject.GetExpectedLength(firstbyte);
       // Data checks
       if (expectedLength == -1) {
         // if the head byte is invalid
@@ -513,6 +513,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         boolean haveFirstByte = false;
         int newFirstByte = -1;
         boolean unnestedObject = false;
+        CBORObject tagObject = null;
         if (!hasBigAdditional) {
           if (filter != null && !filter.TagAllowed(uadditional)) {
             throw new CBORException("Unexpected tag encountered: " + uadditional);
@@ -538,14 +539,15 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             if (newFirstByte >= 0x80 && newFirstByte < 0xc0) {
               // Major types 4 and 5 (array and map)
               this.addSharedRef = true;
-              haveFirstByte = true;
             } else if ((newFirstByte & 0xe0) == 0xc0) {
               // Major type 6 (tagged Object)
-              throw new UnsupportedOperationException();
+              tagObject = new CBORObject(CBORObject.Undefined, 28, 0);
+              this.sharedRefs.AddObject(tagObject);
             } else {
               // All other major types
               unnestedObject = true;
             }
+            haveFirstByte = true;
           }
           taginfo = CBORObject.FindTagConverter(uadditional);
         } else {
@@ -575,6 +577,10 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             this.addSharedRef = false;
             if (unnestedObject) {
               this.sharedRefs.AddObject(o);
+            }
+            if (tagObject != null) {
+              tagObject.Redefine(o);
+              o = tagObject;
             }
           } else if (uadditional == 29) {
             // shared Object reference

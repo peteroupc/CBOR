@@ -163,7 +163,7 @@ public void setConverter(Object value) {
     private CBORObject() {
     }
 
-    private CBORObject(CBORObject obj, int tagLow, int tagHigh){
+    CBORObject(CBORObject obj, int tagLow, int tagHigh){
  this(CBORObjectTypeTagged,obj);
       this.tagLow = tagLow;
       this.tagHigh = tagHigh;
@@ -753,6 +753,16 @@ public int compareTo(CBORObject other) {
       return this;
     }
 
+    void Redefine(CBORObject cbor) {
+      if (this.itemtypeValue != CBORObjectTypeTagged ||
+          cbor == null || cbor.itemtypeValue != CBORObjectTypeTagged) {
+        throw new IllegalStateException();
+      }
+      this.tagLow = cbor.tagLow;
+      this.tagHigh = cbor.tagHigh;
+      this.itemValue = cbor.itemValue;
+    }
+
     private static int MapCompare(Map<CBORObject, CBORObject> mapA, Map<CBORObject, CBORObject> mapB) {
       if (mapA == null) {
         return (mapB == null) ? 0 : -1;
@@ -1014,33 +1024,36 @@ public boolean equals(CBORObject other) {
       return null;
     }
 
-    private static CBORObject[] FixedObjects = InitializeFixedObjects();
+    private static CBORObject[] valueFixedObjects = InitializeFixedObjects();
     // Initialize fixed values for certain
     // head bytes
     private static CBORObject[] InitializeFixedObjects() {
-      FixedObjects = new CBORObject[256];
+      valueFixedObjects = new CBORObject[256];
       for (int i = 0; i < 0x18; ++i) {
-        FixedObjects[i] = new CBORObject(CBORObjectTypeInteger, (long)i);
+        valueFixedObjects[i] = new CBORObject(CBORObjectTypeInteger, (long)i);
       }
       for (int i = 0x20; i < 0x38; ++i) {
-        FixedObjects[i] = new CBORObject(
+        valueFixedObjects[i] = new CBORObject(
           CBORObjectTypeInteger,
           (long)(-1 - (i - 0x20)));
       }
-      FixedObjects[0x60] = new CBORObject(CBORObjectTypeTextString, "");
+      valueFixedObjects[0x60] = new CBORObject(CBORObjectTypeTextString, "");
       for (int i = 0xe0; i < 0xf8; ++i) {
-        FixedObjects[i] = new CBORObject(CBORObjectTypeSimpleValue, (int)(i - 0xe0));
+        valueFixedObjects[i] = new CBORObject(CBORObjectTypeSimpleValue, (int)(i - 0xe0));
       }
-      return FixedObjects;
+      return valueFixedObjects;
     }
 
     static CBORObject GetFixedObject(int value) {
-      return FixedObjects[value];
+      return valueFixedObjects[value];
     }
 
+    static int GetExpectedLength(int value) {
+      return valueExpectedLengths[value];
+    }
     // Expected lengths for each head byte.
     // 0 means length varies. -1 means invalid.
-    private static int[] ExpectedLengths = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
+    private static int[] valueExpectedLengths = new int[] { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 0
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  // major type 1
       1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 5, 9, -1, -1, -1, -1,
@@ -1061,7 +1074,7 @@ public boolean equals(CBORObject other) {
     // Note that this function assumes that the length of the data
     // was already checked.
     static CBORObject GetFixedLengthObject(int firstbyte, byte[] data) {
-      CBORObject fixedObj = FixedObjects[firstbyte];
+      CBORObject fixedObj = valueFixedObjects[firstbyte];
       if (fixedObj != null) {
         return fixedObj;
       }
@@ -1189,7 +1202,7 @@ public boolean equals(CBORObject other) {
         throw new IllegalArgumentException("data is empty.");
       }
       int firstbyte = (int)(data[0] & (int)0xff);
-      int expectedLength = ExpectedLengths[firstbyte];
+      int expectedLength = valueExpectedLengths[firstbyte];
       // if invalid
       if (expectedLength == -1) {
         throw new CBORException("Unexpected data encountered");
@@ -1264,14 +1277,47 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    private boolean HasTag(int tagValue) {
-      if (!this.isTagged()) {
-        return false;
+    /**
+     * Not documented yet.
+     * @param tagValue A 32-bit signed integer.
+     * @return A Boolean object.
+     */
+    public boolean HasTag(int tagValue) {
+      if (tagValue < 0) {
+        throw new IllegalArgumentException("tagValue (" + Long.toString((long)tagValue) + ") is less than " + "0");
       }
-      if (this.tagHigh == 0 && tagValue == this.tagLow) {
-        return true;
+      CBORObject obj = this;
+      while (true) {
+        if (!obj.isTagged()) {
+          return false;
+        }
+        if (obj.tagHigh == 0 && tagValue == obj.tagLow) {
+          return true;
+        }
+        obj = (CBORObject)obj.itemValue;
+
       }
-      return ((CBORObject)this.itemValue).HasTag(tagValue);
+    }
+
+    /**
+     * Not documented yet.
+     * @param bigTagValue A BigInteger object.
+     * @return A Boolean object.
+     */
+    public boolean HasTag(BigInteger bigTagValue) {
+      if (bigTagValue == null) {
+        throw new NullPointerException("bigTagValue");
+      }
+      if (!(bigTagValue.signum() >= 0)) {
+        throw new IllegalArgumentException("doesn't satisfy bigTagValue.signum()>= 0");
+      }
+      BigInteger[] bigTags = this.GetTags();
+      for(BigInteger bigTag : bigTags) {
+        if (bigTagValue.equals(bigTag)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     private static BigInteger LowHighToBigInteger(int tagLow, int tagHigh) {
@@ -1305,7 +1351,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 
     /**
      * Gets a list of all tags, from outermost to innermost.
-     * @return A BigInteger[] object.
+     * @return An array of tags, or the empty string if this object is untagged.
      */
     public BigInteger[] GetTags() {
       if (!this.isTagged()) {
@@ -1327,14 +1373,33 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     }
 
     /**
-     * Gets the last defined tag for this CBOR data item, or 0 if the item is
+     * Gets the outermost tag for this CBOR data item, or -1 if the item is untagged.
+     * @return The outermost tag for this CBOR data item, or -1 if the item
+     * is untagged.
+     */
+    public BigInteger getOutermostTag() {
+        if (!this.isTagged()) {
+          return BigInteger.ZERO;
+        }
+        if (this.tagHigh == 0 &&
+            this.tagLow >= 0 &&
+            this.tagLow < 0x10000) {
+          return BigInteger.valueOf(this.tagLow);
+        }
+        return LowHighToBigInteger(
+          this.tagLow,
+          this.tagHigh);
+      }
+
+    /**
+     * Gets the last defined tag for this CBOR data item, or -1 if the item is
      * untagged.
-     * @return The last defined tag for this CBOR data item, or 0 if the item
+     * @return The last defined tag for this CBOR data item, or -1 if the item
      * is untagged.
      */
     public BigInteger getInnermostTag() {
         if (!this.isTagged()) {
-          return BigInteger.ZERO;
+          return BigInteger.ZERO.subtract(BigInteger.ONE);
         }
         CBORObject previtem = this;
         CBORObject curitem = (CBORObject)this.itemValue;
@@ -1997,10 +2062,7 @@ public void set(String key, CBORObject value) {
       WriteObjectArray(list, outputStream, null);
     }
 
-    private static void WriteObjectMap(
-      Map<CBORObject,
-      CBORObject> list,
-      OutputStream outputStream) {
+    private static void WriteObjectMap(Map<CBORObject, CBORObject> list, OutputStream outputStream) {
       WriteObjectMap(list, outputStream, null);
     }
 
@@ -2009,7 +2071,7 @@ public void set(String key, CBORObject value) {
         stack = new ArrayList<Object>();
         stack.add(parent);
       }
-       for(Object o : stack) {
+      for(Object o : stack) {
         if (o == child) {
           throw new IllegalArgumentException("Circular reference in data structure");
         }
@@ -3589,7 +3651,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         throw new IllegalArgumentException("Simple value is from 24 to 31: " + simpleValue);
       }
       if (simpleValue < 32) {
-        return FixedObjects[0xe0 + simpleValue];
+        return valueFixedObjects[0xe0 + simpleValue];
       } else {
         return new CBORObject(
           CBORObjectTypeSimpleValue,
