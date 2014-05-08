@@ -685,31 +685,8 @@ import com.upokecenter.cbor.*;
       for (int i = 0; i < count; ++i) {
         CBORObject o1 = RandomCBORObject(r);
         CBORObject o2 = RandomCBORObject(r);
-        /*
-        System.Threading.Thread thread=new Thread(new Runnable(){ public void run() { CompareTestReciprocal(o1, o2)
- }});
-        thread.start();
-        if (!thread.join(5000)) {
-          String bas = ToByteArrayString(o1)+".compareTo("+ToByteArrayString(o2)+");";
-          @SuppressWarnings("deprecation") thread.stop();
-          if (bas.length() <= 2000) {
-            System.out.println(bas);
-          }
-          if (badstr == null || bas.length()<badstr.length()) {
-            badstr = bas;
-          }
-        }
-         */
         CompareTestReciprocal(o1, o2);
       }
-      /*
-      if (badstr != null) {
-        if (badstr.length()>10000) {
-          Assert.fail("badstr "+badstr.length());
-        }
-        Assert.fail(badstr);
-      }
-       */
       for (int i = 0; i < 5000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
@@ -1262,7 +1239,7 @@ import com.upokecenter.cbor.*;
       for (int i = 0; i < count; ++i) {
         obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
-        /*
+         /*
         System.Threading.Thread thread = new Thread(new Runnable(){ public void run() { TestCommon.AssertRoundTrip(obj) }});
         thread.start();
         if (!thread.join(5000)) {
@@ -1274,16 +1251,17 @@ import com.upokecenter.cbor.*;
             badstr = bas;
           }
         }
-         */
+         // */
       }
-      /*
+       /*
       if (badstr != null) {
         if (badstr.length()>10000) {
           Assert.fail("badstr "+badstr.length());
         }
         Assert.fail(badstr);
       }
-       */
+       // */
+      // System.out.println("Testing slightly modified objects");
       // Test slightly modified objects
       for (int i = 0; i < 200; ++i) {
         byte[] array = RandomCBORObject(rand).EncodeToBytes();
@@ -1330,7 +1308,9 @@ finally {
 try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       }
+      /*
       // Test random nonsense data
+      System.out.println("Testing random nonsense");
       for (int i = 0; i < 200; ++i) {
         byte[] array = new byte[rand.NextValue(1000000) + 1];
         for (int j = 0; j < array.length; ++j) {
@@ -1380,6 +1360,7 @@ finally {
 try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       }
+        */
     }
 
     /**
