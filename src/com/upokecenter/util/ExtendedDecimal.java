@@ -227,9 +227,10 @@ at: http://upokecenter.com/d/
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
      * @return An ExtendedDecimal object.
-     * @java.lang.NullPointerException The parameter {@code str} is null.
-     * @NumberFormatException The parameter {@code str} is not a correctly formatted
-     * number string.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     * @throws NumberFormatException The parameter {@code str} is not a correctly
+     * formatted number string.
      */
     public static ExtendedDecimal FromString(String str, PrecisionContext ctx) {
       if (str == null) {
@@ -1040,7 +1041,7 @@ public int CompareToBinary(ExtendedFloat other) {
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
      * @return A BigInteger object.
-     * @ArithmeticException This object's value is infinity or NaN.
+     * @throws ArithmeticException This object's value is infinity or NaN.
      */
     public BigInteger ToBigInteger() {
       if (!this.isFinite()) {
