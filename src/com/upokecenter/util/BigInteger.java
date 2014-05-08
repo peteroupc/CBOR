@@ -3554,7 +3554,7 @@ at: http://upokecenter.com/d/
      * or both are negative.
      * @param bigintDivisor A BigInteger object.
      * @return The quotient of the two objects.
-     * @throws ArithmeticException The divisor is zero.
+     * @ArithmeticException The divisor is zero.
      */
     public BigInteger divide(BigInteger bigintDivisor) {
       if (bigintDivisor == null) {
@@ -3740,7 +3740,7 @@ at: http://upokecenter.com/d/
      * divisor plus normal remainder if the normal remainder is negative.
      * @param divisor A divisor greater than 0 (the modulus).
      * @return A BigInteger object.
-     * @throws ArithmeticException The parameter {@code divisor} is negative.
+     * @ArithmeticException The parameter {@code divisor} is negative.
      */
     public BigInteger mod(BigInteger divisor) {
       if (divisor == null) {

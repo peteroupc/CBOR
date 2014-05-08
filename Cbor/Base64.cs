@@ -8,7 +8,9 @@ at: http://upokecenter.com/d/
 using System;
 using System.Text;
 
-namespace PeterO {
+using PeterO;
+
+namespace PeterO.Cbor {
     /// <summary>Description of Base64.</summary>
   internal static class Base64
   {

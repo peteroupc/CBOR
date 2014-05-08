@@ -363,7 +363,7 @@ at: http://upokecenter.com/d/
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
      * @return A BigInteger object.
-     * @throws ArithmeticException This object's value is infinity or NaN.
+     * @ArithmeticException This object's value is infinity or NaN.
      */
     public BigInteger ToBigInteger() {
       if (!this.isFinite()) {
@@ -1003,8 +1003,8 @@ at: http://upokecenter.com/d/
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0.
-     * @throws ArithmeticException The result can't be exact because it
-     * would have a nonterminating binary expansion.
+     * @ArithmeticException The result can't be exact because it would
+     * have a nonterminating binary expansion.
      */
     public ExtendedFloat Divide(ExtendedFloat divisor) {
       return this.Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
@@ -1020,7 +1020,7 @@ at: http://upokecenter.com/d/
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0.
-     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * @ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
     public ExtendedFloat DivideToSameExponent(ExtendedFloat divisor, Rounding rounding) {
@@ -1103,7 +1103,7 @@ at: http://upokecenter.com/d/
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0. Signals FlagInvalid and returns NaN if the context defines
      * an exponent range and the desired exponent is outside that range.
-     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * @ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
     public ExtendedFloat DivideToExponent(
@@ -1126,10 +1126,10 @@ at: http://upokecenter.com/d/
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0.
-     * @throws ArithmeticException Either {@code ctx} is null or {@code
-     * ctx}'s precision is 0, and the result would have a nonterminating
-     * binary expansion; or, the rounding mode is Rounding.Unnecessary
-     * and the result is not exact.
+     * @ArithmeticException Either {@code ctx} is null or {@code ctx}'s
+     * precision is 0, and the result would have a nonterminating binary
+     * expansion; or, the rounding mode is Rounding.Unnecessary and the
+     * result is not exact.
      */
     public ExtendedFloat Divide(
       ExtendedFloat divisor,
@@ -1150,7 +1150,7 @@ at: http://upokecenter.com/d/
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0.
-     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * @ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
     public ExtendedFloat DivideToExponent(
@@ -1181,7 +1181,7 @@ at: http://upokecenter.com/d/
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0. Signals FlagInvalid and returns NaN if the context defines
      * an exponent range and the desired exponent is outside that range.
-     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * @ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
     public ExtendedFloat DivideToExponent(
@@ -1204,7 +1204,7 @@ at: http://upokecenter.com/d/
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0.
-     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * @ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
     public ExtendedFloat DivideToExponent(
@@ -1322,7 +1322,7 @@ at: http://upokecenter.com/d/
      * operands have different signs. Signals FlagDivideByZero and returns
      * infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid
      * and returns NaN if the divisor and the dividend are 0.
-     * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
+     * @ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the integer part of the result is not exact.
      */
     public ExtendedFloat DivideToIntegerNaturalScale(
@@ -1407,9 +1407,8 @@ at: http://upokecenter.com/d/
      * pre-existing flags).
      * @return Returns the largest value that's less than the given value.
      * Returns negative infinity if the result is negative infinity.
-     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null, the precision is 0, or {@code ctx} has an unlimited exponent
-     * range.
+     * @java.lang.IllegalArgumentException The parameter {@code ctx} is null, the
+     * precision is 0, or {@code ctx} has an unlimited exponent range.
      */
     public ExtendedFloat NextMinus(
       PrecisionContext ctx) {
@@ -1425,9 +1424,8 @@ at: http://upokecenter.com/d/
      * pre-existing flags).
      * @return Returns the smallest value that's greater than the given
      * value.
-     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null, the precision is 0, or {@code ctx} has an unlimited exponent
-     * range.
+     * @java.lang.IllegalArgumentException The parameter {@code ctx} is null, the
+     * precision is 0, or {@code ctx} has an unlimited exponent range.
      */
     public ExtendedFloat NextPlus(
       PrecisionContext ctx) {
@@ -1445,9 +1443,8 @@ at: http://upokecenter.com/d/
      * pre-existing flags).
      * @return Returns the next value that is closer to the other object'
      * s value than this object's value.
-     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null, the precision is 0, or {@code ctx} has an unlimited exponent
-     * range.
+     * @java.lang.IllegalArgumentException The parameter {@code ctx} is null, the
+     * precision is 0, or {@code ctx} has an unlimited exponent range.
      */
     public ExtendedFloat NextToward(
       ExtendedFloat otherValue,
@@ -1915,9 +1912,9 @@ at: http://upokecenter.com/d/
      * @return The square root. Signals the flag FlagInvalid and returns
      * NaN if this object is less than 0 (the square root would be a complex
      * number, but the return value is still NaN).
-     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null or the precision is unlimited (the context's Precision property
-     * is 0).
+     * @java.lang.IllegalArgumentException The parameter {@code ctx} is null or
+     * the precision is unlimited (the context's Precision property is
+     * 0).
      */
     public ExtendedFloat SquareRoot(PrecisionContext ctx) {
       return math.SquareRoot(this, ctx);
@@ -1934,9 +1931,9 @@ at: http://upokecenter.com/d/
      * not exact.--.
      * @return Exponential of this object. If this object's value is 1, returns
      * an approximation to " e" within the given precision.
-     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null or the precision is unlimited (the context's Precision property
-     * is 0).
+     * @java.lang.IllegalArgumentException The parameter {@code ctx} is null or
+     * the precision is unlimited (the context's Precision property is
+     * 0).
      */
     public ExtendedFloat Exp(PrecisionContext ctx) {
       return math.Exp(this, ctx);
@@ -1955,9 +1952,9 @@ at: http://upokecenter.com/d/
      * NaN if this object is less than 0 (the result would be a complex number
      * with a real part equal to Ln of this object's absolute value and an imaginary
      * part equal to pi, but the return value is still NaN.).
-     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null or the precision is unlimited (the context's Precision property
-     * is 0).
+     * @java.lang.IllegalArgumentException The parameter {@code ctx} is null or
+     * the precision is unlimited (the context's Precision property is
+     * 0).
      */
     public ExtendedFloat Log(PrecisionContext ctx) {
       return math.Ln(this, ctx);
@@ -1988,9 +1985,9 @@ at: http://upokecenter.com/d/
      * @return This^exponent. Signals the flag FlagInvalid and returns
      * NaN if this object and exponent are both 0; or if this value is less than
      * 0 and the exponent either has a fractional part or is infinity.
-     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null or the precision is unlimited (the context's Precision property
-     * is 0), and the exponent has a fractional part.
+     * @java.lang.IllegalArgumentException The parameter {@code ctx} is null or
+     * the precision is unlimited (the context's Precision property is
+     * 0), and the exponent has a fractional part.
      */
     public ExtendedFloat Pow(ExtendedFloat exponent, PrecisionContext ctx) {
       return math.Power(this, exponent, ctx);
@@ -2028,9 +2025,9 @@ at: http://upokecenter.com/d/
      * addition to the pre-existing flags). --This parameter cannot be
      * null, as pi can never be represented exactly.--.
      * @return Pi rounded to the given precision.
-     * @throws java.lang.IllegalArgumentException The parameter {@code ctx} is
-     * null or the precision is unlimited (the context's Precision property
-     * is 0).
+     * @java.lang.IllegalArgumentException The parameter {@code ctx} is null or
+     * the precision is unlimited (the context's Precision property is
+     * 0).
      */
     public static ExtendedFloat PI(PrecisionContext ctx) {
       return math.Pi(ctx);

@@ -10,6 +10,8 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
+using PeterO;
+
 namespace PeterO.Cbor {
     /// <summary>Description of CBORReader.</summary>
   internal class CBORReader
@@ -25,7 +27,7 @@ namespace PeterO.Cbor {
       this.sharedRefs = new SharedRefs();
     }
 
-    private static long ReadDataLength(Stream s, int headByte, int expectedType) {
+    private static long ReadDataLength(Stream stream, int headByte, int expectedType) {
       if (headByte < 0) {
         throw new CBORException("Unexpected data encountered");
       }
@@ -39,14 +41,14 @@ namespace PeterO.Cbor {
       byte[] data = new byte[8];
       switch (headByte & 0x1f) {
           case 24: {
-            int tmp = s.ReadByte();
+            int tmp = stream.ReadByte();
             if (tmp < 0) {
               throw new CBORException("Premature end of data");
             }
             return tmp;
           }
           case 25: {
-            if (s.Read(data, 0, 2) != 2) {
+            if (stream.Read(data, 0, 2) != 2) {
               throw new CBORException("Premature end of data");
             }
             int lowAdditional = ((int)(data[0] & (int)0xff)) << 8;
@@ -54,7 +56,7 @@ namespace PeterO.Cbor {
             return lowAdditional;
           }
           case 26: {
-            if (s.Read(data, 0, 4) != 4) {
+            if (stream.Read(data, 0, 4) != 4) {
               throw new CBORException("Premature end of data");
             }
             long uadditional = ((long)(data[0] & (long)0xff)) << 24;
@@ -64,7 +66,7 @@ namespace PeterO.Cbor {
             return uadditional;
           }
           case 27: {
-            if (s.Read(data, 0, 8) != 8) {
+            if (stream.Read(data, 0, 8) != 8) {
               throw new CBORException("Premature end of data");
             }
             // Treat return value as an unsigned integer
@@ -98,14 +100,14 @@ namespace PeterO.Cbor {
       return lval;
     }
 
-    private static byte[] ReadByteData(Stream s, long uadditional, Stream outputStream) {
+    private static byte[] ReadByteData(Stream stream, long uadditional, Stream outputStream) {
       if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
         throw new CBORException("Length " + ToUnsignedBigInteger(uadditional) + " is bigger than supported");
       }
       if (uadditional <= 0x10000) {
         // Simple case: small size
         byte[] data = new byte[(int)uadditional];
-        if (s.Read(data, 0, data.Length) != data.Length) {
+        if (stream.Read(data, 0, data.Length) != data.Length) {
           throw new CBORException("Premature end of stream");
         }
         if (outputStream != null) {
@@ -120,7 +122,7 @@ namespace PeterO.Cbor {
         if (outputStream != null) {
           while (total > 0) {
             int bufsize = Math.Min(tmpdata.Length, total);
-            if (s.Read(tmpdata, 0, bufsize) != bufsize) {
+            if (stream.Read(tmpdata, 0, bufsize) != bufsize) {
               throw new CBORException("Premature end of stream");
             }
             outputStream.Write(tmpdata, 0, bufsize);
@@ -131,7 +133,7 @@ namespace PeterO.Cbor {
           using (var ms = new MemoryStream()) {
             while (total > 0) {
               int bufsize = Math.Min(tmpdata.Length, total);
-              if (s.Read(tmpdata, 0, bufsize) != bufsize) {
+              if (stream.Read(tmpdata, 0, bufsize) != bufsize) {
                 throw new CBORException("Premature end of stream");
               }
               ms.Write(tmpdata, 0, bufsize);

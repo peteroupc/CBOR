@@ -9,6 +9,8 @@ at: http://upokecenter.com/d/
 
 import java.io.*;
 
+import com.upokecenter.util.*;
+
     /**
      * Description of CBORReader.
      */
@@ -25,7 +27,7 @@ import java.io.*;
       this.sharedRefs = new SharedRefs();
     }
 
-    private static long ReadDataLength(InputStream s, int headByte, int expectedType) throws IOException {
+    private static long ReadDataLength(InputStream stream, int headByte, int expectedType) throws IOException {
       if (headByte < 0) {
         throw new CBORException("Unexpected data encountered");
       }
@@ -39,14 +41,14 @@ import java.io.*;
       byte[] data = new byte[8];
       switch (headByte & 0x1f) {
           case 24: {
-            int tmp = s.read();
+            int tmp = stream.read();
             if (tmp < 0) {
               throw new CBORException("Premature end of data");
             }
             return tmp;
           }
           case 25: {
-            if (s.read(data, 0, 2) != 2) {
+            if (stream.read(data, 0, 2) != 2) {
               throw new CBORException("Premature end of data");
             }
             int lowAdditional = ((int)(data[0] & (int)0xff)) << 8;
@@ -54,7 +56,7 @@ import java.io.*;
             return lowAdditional;
           }
           case 26: {
-            if (s.read(data, 0, 4) != 4) {
+            if (stream.read(data, 0, 4) != 4) {
               throw new CBORException("Premature end of data");
             }
             long uadditional = ((long)(data[0] & (long)0xff)) << 24;
@@ -64,7 +66,7 @@ import java.io.*;
             return uadditional;
           }
           case 27: {
-            if (s.read(data, 0, 8) != 8) {
+            if (stream.read(data, 0, 8) != 8) {
               throw new CBORException("Premature end of data");
             }
             // Treat return value as an unsigned integer
@@ -98,14 +100,14 @@ import java.io.*;
       return lval;
     }
 
-    private static byte[] ReadByteData(InputStream s, long uadditional, OutputStream outputStream) throws IOException {
+    private static byte[] ReadByteData(InputStream stream, long uadditional, OutputStream outputStream) throws IOException {
       if ((uadditional >> 63) != 0 || uadditional > Integer.MAX_VALUE) {
         throw new CBORException("Length " + ToUnsignedBigInteger(uadditional) + " is bigger than supported");
       }
       if (uadditional <= 0x10000) {
         // Simple case: small size
         byte[] data = new byte[(int)uadditional];
-        if (s.read(data, 0, data.length) != data.length) {
+        if (stream.read(data, 0, data.length) != data.length) {
           throw new CBORException("Premature end of stream");
         }
         if (outputStream != null) {
@@ -120,7 +122,7 @@ import java.io.*;
         if (outputStream != null) {
           while (total > 0) {
             int bufsize = Math.min(tmpdata.length, total);
-            if (s.read(tmpdata, 0, bufsize) != bufsize) {
+            if (stream.read(tmpdata, 0, bufsize) != bufsize) {
               throw new CBORException("Premature end of stream");
             }
             outputStream.write(tmpdata,0,bufsize);
@@ -134,7 +136,7 @@ ms=new java.io.ByteArrayOutputStream();
 
             while (total > 0) {
               int bufsize = Math.min(tmpdata.length, total);
-              if (s.read(tmpdata, 0, bufsize) != bufsize) {
+              if (stream.read(tmpdata, 0, bufsize) != bufsize) {
                 throw new CBORException("Premature end of stream");
               }
               ms.write(tmpdata,0,bufsize);
@@ -155,7 +157,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
      * @return A CBORObject object.
      */
     public CBORObject Read(
-      CBORTypeFilter filter) {
+      CBORTypeFilter filter) throws IOException {
       if (this.depth > 1000) {
         throw new CBORException("Too deeply nested");
       }
@@ -174,7 +176,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
      */
     public CBORObject ReadForFirstByte(
       int firstbyte,
-      CBORTypeFilter filter) {
+      CBORTypeFilter filter) throws IOException {
       if (this.depth > 1000) {
         throw new CBORException("Too deeply nested");
       }
@@ -216,7 +218,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         // will assume it exists for some head bytes
         data[0] = ((byte)firstbyte);
         if (expectedLength > 1 &&
-            this.stream.Read(data, 1, expectedLength - 1) != expectedLength - 1) {
+            this.stream.read(data, 1, expectedLength - 1) != expectedLength - 1) {
           throw new CBORException("Premature end of data");
         }
         CBORObject cbor = CBORObject.GetFixedLengthObject(firstbyte, data);
@@ -244,7 +246,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             break;
           }
           case 25: {
-            if (this.stream.Read(data, 0, 2) != 2) {
+            if (this.stream.read(data, 0, 2) != 2) {
               throw new CBORException("Premature end of data");
             }
             lowAdditional = ((int)(data[0] & (int)0xff)) << 8;
@@ -253,7 +255,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             break;
           }
           case 26: {
-            if (this.stream.Read(data, 0, 4) != 4) {
+            if (this.stream.read(data, 0, 4) != 4) {
               throw new CBORException("Premature end of data");
             }
             uadditional = ((long)(data[0] & (long)0xff)) << 24;
@@ -263,7 +265,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             break;
           }
           case 27: {
-            if (this.stream.Read(data, 0, 8) != 8) {
+            if (this.stream.read(data, 0, 8) != 8) {
               throw new CBORException("Premature end of data");
             }
             if ((((int)data[0]) & 0x80) != 0) {
