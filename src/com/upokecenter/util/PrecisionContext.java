@@ -209,7 +209,7 @@ at: http://upokecenter.com/d/
     /**
      * Sets the flags that occur from converting numbers according to this
      * precision context.
-     * @IllegalStateException HasFlags is false.
+     * @throws IllegalStateException HasFlags is false.
      */
       public void setFlags(int value) {
         if (!this.getHasFlags()) {
@@ -408,7 +408,7 @@ at: http://upokecenter.com/d/
      * value.
      * @param bigintPrecision A BigInteger object.
      * @return A PrecisionContext object.
-     * @java.lang.NullPointerException The parameter {@code bigintPrecision}
+     * @throws java.lang.NullPointerException The parameter {@code bigintPrecision}
      * is null.
      */
     public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
