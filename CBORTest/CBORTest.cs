@@ -697,33 +697,8 @@ namespace Test {
       for (int i = 0; i < count; ++i) {
         CBORObject o1 = RandomCBORObject(r);
         CBORObject o2 = RandomCBORObject(r);
-        /*
-        var thread = new System.Threading.Thread(
-          ()=>
-          CompareTestReciprocal(o1, o2)
-);
-        thread.Start();
-        if (!thread.Join(5000)) {
-          String bas = ToByteArrayString(o1)+".CompareTo("+ToByteArrayString(o2)+");";
-          thread.Abort();
-          if (bas.Length <= 2000) {
-            Console.WriteLine(bas);
-          }
-          if (badstr == null || bas.Length<badstr.Length) {
-            badstr = bas;
-          }
-        }
-         */
         CompareTestReciprocal(o1, o2);
       }
-      /*
-      if (badstr != null) {
-        if (badstr.Length>10000) {
-          Assert.Fail("badstr "+badstr.Length);
-        }
-        Assert.Fail(badstr);
-      }
-       */
       for (int i = 0; i < 5000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
@@ -1273,7 +1248,7 @@ namespace Test {
       for (int i = 0; i < count; ++i) {
         obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
-        /*
+         /*
         System.Threading.Thread thread = new System.Threading.Thread(()=>TestCommon.AssertRoundTrip(obj));
         thread.Start();
         if (!thread.Join(5000)) {
@@ -1285,16 +1260,17 @@ namespace Test {
             badstr = bas;
           }
         }
-         */
+         // */
       }
-      /*
+       /*
       if (badstr != null) {
         if (badstr.Length>10000) {
           Assert.Fail("badstr "+badstr.Length);
         }
         Assert.Fail(badstr);
       }
-       */
+       // */
+      // Console.WriteLine("Testing slightly modified objects");
       // Test slightly modified objects
       for (int i = 0; i < 200; ++i) {
         byte[] array = RandomCBORObject(rand).EncodeToBytes();
@@ -1334,7 +1310,9 @@ namespace Test {
           }
         }
       }
+      /*
       // Test random nonsense data
+      Console.WriteLine("Testing random nonsense");
       for (int i = 0; i < 200; ++i) {
         byte[] array = new byte[rand.NextValue(1000000) + 1];
         for (int j = 0; j < array.Length; ++j) {
@@ -1377,6 +1355,7 @@ namespace Test {
           }
         }
       }
+        */
     }
 
     /// <summary>Not documented yet.</summary>
