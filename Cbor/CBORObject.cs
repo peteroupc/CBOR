@@ -2045,8 +2045,8 @@ namespace PeterO.Cbor {
       WriteObjectArray(list, outputStream, null);
     }
 
-    private static void WriteObjectMap(IDictionary<CBORObject, CBORObject> list, Stream outputStream) {
-      WriteObjectMap(list, outputStream, null);
+    private static void WriteObjectMap(IDictionary<CBORObject, CBORObject> map, Stream outputStream) {
+      WriteObjectMap(map, outputStream, null);
     }
 
     private static IList<object> PushObject(IList<object> stack, object parent, object child) {
