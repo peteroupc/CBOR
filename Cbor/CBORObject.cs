@@ -244,12 +244,12 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("obj");
       }
       #endif
-
       Object type = obj.GetType();
       ConverterInfo convinfo = null;
       lock (converters) {
         if (converters.Count == 0) {
           CBORTag0.AddConverter();
+          CBORTag37.AddConverter();
         }
         if (converters.ContainsKey(type)) {
           convinfo = converters[type];
@@ -4102,6 +4102,7 @@ namespace PeterO.Cbor {
         AddTagHandler((BigInteger)34, new CBORTagGenericString());
         AddTagHandler((BigInteger)35, new CBORTagGenericString());
         AddTagHandler((BigInteger)36, new CBORTagGenericString());
+        AddTagHandler((BigInteger)37, new CBORTag37());
         AddTagHandler((BigInteger)4, new CBORTag4());
         AddTagHandler((BigInteger)30, new CBORTag30());
       }
