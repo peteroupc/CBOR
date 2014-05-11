@@ -9,10 +9,7 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-
-
-
-  /// <summary>Description of CBORTag30.</summary>
+    /// <summary>Description of CBORTag30.</summary>
   internal class CBORTag30 : ICBORTag
   {
     /// <summary>Not documented yet.</summary>

@@ -468,29 +468,29 @@ namespace Test {
       Assert.AreEqual(BigInteger.Zero - BigInteger.One, CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x41, 0x00 }).AsBigInteger());
       Assert.AreEqual(BigInteger.Zero - BigInteger.One, CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsBigInteger());
     }
-    
+
     [Test]
-    public void TestUUID(){
-      CBORObject obj=CBORObject.FromObject(Guid.Parse("00112233-4455-6677-8899-AABBCCDDEEFF"));
-      Assert.AreEqual(CBORType.ByteString,obj.Type);
-      byte[] bytes=obj.GetByteString();
-      Assert.AreEqual(16,bytes.Length);
-      Assert.AreEqual(0x00,bytes[0]);
-      Assert.AreEqual(0x11,bytes[1]);
-      Assert.AreEqual(0x22,bytes[2]);
-      Assert.AreEqual(0x33,bytes[3]);
-      Assert.AreEqual(0x44,bytes[4]);
-      Assert.AreEqual(0x55,bytes[5]);
-      Assert.AreEqual(0x66,bytes[6]);
-      Assert.AreEqual(0x77,bytes[7]);
-      Assert.AreEqual((byte)0x88,bytes[8]);
-      Assert.AreEqual((byte)0x99,bytes[9]);
-      Assert.AreEqual((byte)0xaa,bytes[10]);
-      Assert.AreEqual((byte)0xbb,bytes[11]);
-      Assert.AreEqual((byte)0xcc,bytes[12]);
-      Assert.AreEqual((byte)0xdd,bytes[13]);
-      Assert.AreEqual((byte)0xee,bytes[14]);
-      Assert.AreEqual((byte)0xff,bytes[15]);
+    public void TestUUID() {
+      CBORObject obj = CBORObject.FromObject(Guid.Parse("00112233-4455-6677-8899-AABBCCDDEEFF"));
+      Assert.AreEqual(CBORType.ByteString, obj.Type);
+      byte[] bytes = obj.GetByteString();
+      Assert.AreEqual(16, bytes.Length);
+      Assert.AreEqual(0x00, bytes[0]);
+      Assert.AreEqual(0x11, bytes[1]);
+      Assert.AreEqual(0x22, bytes[2]);
+      Assert.AreEqual(0x33, bytes[3]);
+      Assert.AreEqual(0x44, bytes[4]);
+      Assert.AreEqual(0x55, bytes[5]);
+      Assert.AreEqual(0x66, bytes[6]);
+      Assert.AreEqual(0x77, bytes[7]);
+      Assert.AreEqual((byte)0x88, bytes[8]);
+      Assert.AreEqual((byte)0x99, bytes[9]);
+      Assert.AreEqual((byte)0xaa, bytes[10]);
+      Assert.AreEqual((byte)0xbb, bytes[11]);
+      Assert.AreEqual((byte)0xcc, bytes[12]);
+      Assert.AreEqual((byte)0xdd, bytes[13]);
+      Assert.AreEqual((byte)0xee, bytes[14]);
+      Assert.AreEqual((byte)0xff, bytes[15]);
     }
 
     [Test]

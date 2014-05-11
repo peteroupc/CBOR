@@ -28,8 +28,8 @@ at: http://upokecenter.com/d/
       public static MutableNumber FromBigInteger(BigInteger bigintVal) {
         MutableNumber mnum = new MutableNumber(0);
         if (bigintVal.signum() < 0) {
- throw new IllegalArgumentException("bigintVal's sign (" + Integer.toString((int)bigintVal.signum()) + ") is less than " + "0");
-}
+          throw new IllegalArgumentException("bigintVal's sign (" + Integer.toString((int)bigintVal.signum()) + ") is less than " + "0");
+        }
         byte[] bytes = bigintVal.toByteArray(true);
         int len = bytes.length;
         int newWordCount = Math.max(4, (len / 4) + 1);
@@ -61,8 +61,8 @@ at: http://upokecenter.com/d/
 
       public MutableNumber (int val) {
         if (val < 0) {
- throw new IllegalArgumentException("val (" + Integer.toString((int)val) + ") is less than " + "0");
-}
+          throw new IllegalArgumentException("val (" + Integer.toString((int)val) + ") is less than " + "0");
+        }
         this.data = new int[4];
         this.wordCount = (val == 0) ? 0 : 1;
         this.data[0] = ((int)(val & 0xFFFFFFFFL));
@@ -75,8 +75,8 @@ at: http://upokecenter.com/d/
      */
       public MutableNumber SetInt(int val) {
         if (val < 0) {
- throw new IllegalArgumentException("val (" + Integer.toString((int)val) + ") is less than " + "0");
-}
+          throw new IllegalArgumentException("val (" + Integer.toString((int)val) + ") is less than " + "0");
+        }
         this.wordCount = (val == 0) ? 0 : 1;
         this.data[0] = ((int)(val & 0xFFFFFFFFL));
         return this;
@@ -144,8 +144,8 @@ at: http://upokecenter.com/d/
      */
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
- throw new IllegalArgumentException("multiplicand (" + Integer.toString((int)multiplicand) + ") is less than " + "0");
-} else if (multiplicand != 0) {
+          throw new IllegalArgumentException("multiplicand (" + Integer.toString((int)multiplicand) + ") is less than " + "0");
+        } else if (multiplicand != 0) {
           int carry = 0;
           if (this.wordCount == 0) {
             if (this.data.length == 0) {
@@ -288,8 +288,8 @@ at: http://upokecenter.com/d/
       public MutableNumber SubtractInt(
         int other) {
         if (other < 0) {
- throw new IllegalArgumentException("other (" + Integer.toString((int)other) + ") is less than " + "0");
-} else if (other != 0) {
+          throw new IllegalArgumentException("other (" + Integer.toString((int)other) + ") is less than " + "0");
+        } else if (other != 0) {
           {
             // Ensure a length of at least 1
             if (this.wordCount == 0) {
@@ -402,8 +402,8 @@ at: http://upokecenter.com/d/
      */
       public MutableNumber Add(int augend) {
         if (augend < 0) {
- throw new IllegalArgumentException("augend (" + Integer.toString((int)augend) + ") is less than " + "0");
-} else if (augend != 0) {
+          throw new IllegalArgumentException("augend (" + Integer.toString((int)augend) + ") is less than " + "0");
+        } else if (augend != 0) {
           int carry = 0;
           // Ensure a length of at least 1
           if (this.wordCount == 0) {

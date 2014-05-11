@@ -219,6 +219,7 @@ public void setConverter(Object value) {
       synchronized(converters) {
         if (converters.size() == 0) {
           CBORTag0.AddConverter();
+          CBORTag37.AddConverter();
         }
         if (converters.containsKey(type)) {
           convinfo = converters.get(type);
@@ -4148,6 +4149,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         AddTagHandler(BigInteger.valueOf(34), new CBORTagGenericString());
         AddTagHandler(BigInteger.valueOf(35), new CBORTagGenericString());
         AddTagHandler(BigInteger.valueOf(36), new CBORTagGenericString());
+        AddTagHandler(BigInteger.valueOf(37), new CBORTag37());
         AddTagHandler(BigInteger.valueOf(4), new CBORTag4());
         AddTagHandler(BigInteger.valueOf(30), new CBORTag30());
       }

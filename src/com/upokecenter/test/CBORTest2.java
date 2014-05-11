@@ -467,6 +467,30 @@ import com.upokecenter.cbor.*;
     }
 
     @Test
+    public void TestUUID() {
+      CBORObject obj = CBORObject.FromObject(java.util.UUID.fromString("00112233-4455-6677-8899-AABBCCDDEEFF"));
+      Assert.assertEquals(CBORType.ByteString, obj.getType());
+      byte[] bytes = obj.GetByteString();
+      Assert.assertEquals(16, bytes.length);
+      Assert.assertEquals(0x00, bytes[0]);
+      Assert.assertEquals(0x11, bytes[1]);
+      Assert.assertEquals(0x22, bytes[2]);
+      Assert.assertEquals(0x33, bytes[3]);
+      Assert.assertEquals(0x44, bytes[4]);
+      Assert.assertEquals(0x55, bytes[5]);
+      Assert.assertEquals(0x66, bytes[6]);
+      Assert.assertEquals(0x77, bytes[7]);
+      Assert.assertEquals((byte)0x88, bytes[8]);
+      Assert.assertEquals((byte)0x99, bytes[9]);
+      Assert.assertEquals((byte)0xaa, bytes[10]);
+      Assert.assertEquals((byte)0xbb, bytes[11]);
+      Assert.assertEquals((byte)0xcc, bytes[12]);
+      Assert.assertEquals((byte)0xdd, bytes[13]);
+      Assert.assertEquals((byte)0xee, bytes[14]);
+      Assert.assertEquals((byte)0xff, bytes[15]);
+    }
+
+    @Test
     public void TestNegativeBigInts() {
       BigInteger minusone = BigInteger.ZERO.subtract(BigInteger.ONE);
       Assert.assertEquals(
