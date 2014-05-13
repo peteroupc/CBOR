@@ -13,7 +13,7 @@ import java.util.UUID;
     /**
      * Description of CBORTag37.
      */
-  class CBORTag37 implements ICBORTag
+  class CBORTag37 implements ICBORTag, ICBORConverter<UUID>
   {
     /**
      * Not documented yet.
