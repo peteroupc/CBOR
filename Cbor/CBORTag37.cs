@@ -9,7 +9,7 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Description of CBORTag37.</summary>
+  /// <summary>Description of CBORTag37.</summary>
   internal class CBORTag37 : ICBORTag, ICBORConverter<Guid>
   {
     /// <summary>Not documented yet.</summary>
@@ -36,22 +36,22 @@ namespace PeterO.Cbor {
       CBORObject.AddConverter(typeof(Guid), new CBORTag37());
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>A Guid object.</param>
+    /// <summary>Converts a UUID to a CBOR object.</summary>
+    /// <param name='obj'>A UUID.</param>
     /// <returns>A CBORObject object.</returns>
-public CBORObject ToCBORObject(Guid obj) {
+    public CBORObject ToCBORObject(Guid obj) {
       byte[] bytes = obj.ToByteArray();
       byte[] bytes2 = new byte[16];
       Array.Copy(bytes, bytes2, 16);
       // Swap the bytes to conform with the UUID RFC
-      bytes2[0]=bytes[3];
-      bytes2[1]=bytes[2];
-      bytes2[2]=bytes[1];
-      bytes2[3]=bytes[0];
-      bytes2[4]=bytes[5];
-      bytes2[5]=bytes[4];
-      bytes2[6]=bytes[7];
-      bytes2[7]=bytes[6];
+      bytes2[0] = bytes[3];
+      bytes2[1] = bytes[2];
+      bytes2[2] = bytes[1];
+      bytes2[3] = bytes[0];
+      bytes2[4] = bytes[5];
+      bytes2[5] = bytes[4];
+      bytes2[6] = bytes[7];
+      bytes2[7] = bytes[6];
       return CBORObject.FromObjectAndTag(bytes2, (int)37);
     }
   }
