@@ -127,6 +127,11 @@ namespace Test {
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
         BigInteger num = CBORTest.RandomBigInteger(fr);
+        if (num.IsZero) {
+          // Skip if number is 0; 0/1 and 0/2 are
+          // equal in that case
+          continue;
+        }
         num = BigInteger.Abs(num);
         ExtendedRational rat = new ExtendedRational(num, BigInteger.One);
         ExtendedRational rat2 = new ExtendedRational(num, (BigInteger)2);

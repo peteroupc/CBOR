@@ -3463,10 +3463,6 @@ namespace PeterO.Cbor {
             bool first = true;
             bool hasNonStringKeys = false;
             IDictionary<CBORObject, CBORObject> objMap = this.AsMap();
-            // Sort the items by key for consistent results
-            if (objMap.Count >= 2) {
-              objMap = new SortedMap<CBORObject, CBORObject>(objMap);
-            }
             sb.Append('{');
             int oldLength = sb.Length;
             foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
@@ -3498,9 +3494,6 @@ namespace PeterO.Cbor {
                 string str = (key.ItemType == CBORObjectTypeTextString) ?
                   ((string)key.ThisItem) : key.ToJSONString();
                 stringMap[str] = value;
-              }
-              if (stringMap.Count >= 2) {
-                stringMap = new SortedMap<string, CBORObject>(stringMap);
               }
               first = true;
               foreach (KeyValuePair<string, CBORObject> entry in stringMap) {
@@ -4352,9 +4345,6 @@ namespace PeterO.Cbor {
         bool first = true;
         sb.Append("{");
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
-        if (map.Count >= 2) {
-          map = new SortedMap<CBORObject, CBORObject>(map);
-        }
         foreach (KeyValuePair<CBORObject, CBORObject> entry in map) {
           CBORObject key = entry.Key;
           CBORObject value = entry.Value;

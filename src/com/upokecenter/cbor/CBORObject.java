@@ -3499,10 +3499,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             boolean first = true;
             boolean hasNonStringKeys = false;
             Map<CBORObject, CBORObject> objMap = this.AsMap();
-            // Sort the items by key for consistent results
-            if (objMap.size() >= 2) {
-              objMap = new TreeMap<CBORObject, CBORObject>(objMap);
-            }
             sb.append('{');
             int oldLength = sb.length();
             for(Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
@@ -3534,9 +3530,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
                 String str = (key.getItemType() == CBORObjectTypeTextString) ?
                   ((String)key.getThisItem()) : key.ToJSONString();
                 stringMap.put(str,value);
-              }
-              if (stringMap.size() >= 2) {
-                stringMap = new TreeMap<String, CBORObject>(stringMap);
               }
               first = true;
               for(Map.Entry<String, CBORObject> entry : stringMap.entrySet()) {
@@ -4398,9 +4391,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         boolean first = true;
         sb.append("{");
         Map<CBORObject, CBORObject> map = this.AsMap();
-        if (map.size() >= 2) {
-          map = new TreeMap<CBORObject, CBORObject>(map);
-        }
         for(Map.Entry<CBORObject, CBORObject> entry : map.entrySet()) {
           CBORObject key = entry.getKey();
           CBORObject value = entry.getValue();
