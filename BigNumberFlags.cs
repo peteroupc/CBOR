@@ -1,15 +1,13 @@
 /*
- * Created by SharpDevelop.
- * User: Peter
- * Date: 12/22/2013
- * Time: 7:45 PM
- *
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+Written in 2013 by Peter O.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO
-{
+namespace PeterO {
     /// <summary>Description of BigNumberFlags.</summary>
   internal static class BigNumberFlags
   {

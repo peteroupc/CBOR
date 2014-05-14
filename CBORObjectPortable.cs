@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Collections.Generic;
@@ -11,8 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Numerics;
 using System.Text;
-namespace PeterO
-{
+namespace PeterO {
     /// <summary>Not documented yet.</summary>
  sealed class CBORObjectPortable
   {
@@ -25,7 +24,7 @@ namespace PeterO
         return;
       }
       int datatype = 0;
-      if (bigint.Sign<0) {
+      if (bigint.Sign< 0) {
         datatype = 1;
         bigint+=(BigInteger)BigInteger.One;
         bigint=-(BigInteger)bigint;
@@ -50,7 +49,7 @@ namespace PeterO
             bool isNowZero=(bigint.IsZero);
             int bufferindex = 0;
             for (int i = 0; i<7 && (!isNowZero || tmp>0); ++i) {
-              buffer[bufferindex]=(byte)(tmp & 0xFF);
+              buffer[bufferindex]=(byte)(tmp & 0xff);
               tmp>>= 8;
               ++bufferindex;
             }
@@ -95,8 +94,8 @@ namespace PeterO
               break;
             default:
               s.WriteByte((datatype == 0) ?
-                          (byte)0xC2 :
-                          (byte)0xC3);
+                          (byte)0xc2 :
+                          (byte)0xc3);
               WritePositiveInt(2, bytes.Length, s);
               for (int i = bytes.Length-1; i >= 0; --i) {
                 s.WriteByte(bytes[i]);
@@ -149,25 +148,25 @@ namespace PeterO
       if (data.Length <= 7) {
         long x = 0;
         if (data.Length>0) {
- x|=(((long)data[0]) & 0xFF) << 48;
+ x|=(((long)data[0]) & 0xff) << 48;
 }
         if (data.Length>1) {
- x|=(((long)data[1]) & 0xFF) << 40;
+ x|=(((long)data[1]) & 0xff) << 40;
 }
         if (data.Length>2) {
- x|=(((long)data[2]) & 0xFF) << 32;
+ x|=(((long)data[2]) & 0xff) << 32;
 }
         if (data.Length>3) {
- x|=(((long)data[3]) & 0xFF) << 24;
+ x|=(((long)data[3]) & 0xff) << 24;
 }
         if (data.Length>4) {
- x|=(((long)data[4]) & 0xFF) << 16;
+ x|=(((long)data[4]) & 0xff) << 16;
 }
         if (data.Length>5) {
- x|=(((long)data[5]) & 0xFF) << 8;
+ x|=(((long)data[5]) & 0xff) << 8;
 }
         if (data.Length>6) {
- x|=(((long)data[6]) & 0xFF);
+ x|=(((long)data[6]) & 0xff);
 }
         if (negative) {
  x=-x;
@@ -177,19 +176,19 @@ namespace PeterO
       BigInteger bi = BigInteger.Zero;
       for (int i = 0; i<data.Length; ++i) {
         if (i + 7 <= data.Length) {
-          long x=(((long)data[i]) & 0xFF) << 48;
-          x|=(((long)data[i + 1]) & 0xFF) << 40;
-          x|=(((long)data[i + 2]) & 0xFF) << 32;
-          x|=(((long)data[i + 3]) & 0xFF) << 24;
-          x|=(((long)data[i + 4]) & 0xFF) << 16;
-          x|=(((long)data[i + 5]) & 0xFF) << 8;
-          x|=(((long)data[i + 6]) & 0xFF);
+          long x=(((long)data[i]) & 0xff) << 48;
+          x|=(((long)data[i + 1]) & 0xff) << 40;
+          x|=(((long)data[i + 2]) & 0xff) << 32;
+          x|=(((long)data[i + 3]) & 0xff) << 24;
+          x|=(((long)data[i + 4]) & 0xff) << 16;
+          x|=(((long)data[i + 5]) & 0xff) << 8;
+          x|=(((long)data[i + 6]) & 0xff);
           bi <<= 56;
           bi|=(BigInteger)x;
           i+=6;
         } else {
           bi <<= 8;
-          int x=((int)data[i]) & 0xFF;
+          int x=((int)data[i]) & 0xff;
           bi|=(BigInteger)x;
         }
       }

@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 using System.IO;
@@ -58,19 +58,19 @@ namespace PeterO {
         throw new ArgumentNullException("bytes");
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (offset > bytes.Length) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)bytes.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)bytes.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (bytesCount < 0) {
-        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (bytesCount > bytes.Length) {
-        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)bytes.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)bytes.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (bytes.Length - offset < bytesCount) {
-        throw new ArgumentException("bytes's length minus " + offset + " (" + Convert.ToString((long)(bytes.Length - offset), System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("bytes's length minus " + offset + " (" + Convert.ToString((long)(bytes.Length - offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture));
       }
       StringBuilder b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, offset, bytesCount, b, replace) != 0) {
@@ -127,15 +127,15 @@ namespace PeterO {
       long size = 0;
       for (int i = 0; i < str.Length; ++i) {
         int c = str[i];
-        if (c <= 0x7F) {
+        if (c <= 0x7f) {
           ++size;
-        } else if (c <= 0x7FF) {
+        } else if (c <= 0x7ff) {
           size += 2;
-        } else if (c <= 0xD7FF || c >= 0xE000) {
+        } else if (c <= 0xd7ff || c >= 0xe000) {
           size += 3;
-        } else if (c <= 0xDBFF) {  // UTF-16 leading surrogate
+        } else if (c <= 0xdbff) {  // UTF-16 leading surrogate
           ++i;
-          if (i >= str.Length || str[i] < 0xDC00 || str[i] > 0xDFFF) {
+          if (i >= str.Length || str[i] < 0xdc00 || str[i] > 0xdfff) {
             if (replace) {
               size += 3;
               --i;
@@ -154,6 +154,152 @@ namespace PeterO {
         }
       }
       return size;
+    }
+
+    /// <summary>Gets the Unicode code point just before the given index
+    /// of the string.</summary>
+    /// <param name='str'>A string.</param>
+    /// <param name='index'>Index of the current position into the string.</param>
+    /// <returns>The Unicode code point at the previous position. Returns
+    /// -1 if <paramref name='index'/> is 0 or less, or is greater than the
+    /// string's length. Returns the replacement character (U + FFFD) if
+    /// the previous character is an unpaired surrogate code point.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    public static int CodePointBefore(string str, int index) {
+      return CodePointBefore(str, index, 0);
+    }
+
+    /// <summary>Gets the Unicode code point just before the given index
+    /// of the string.</summary>
+    /// <param name='str'>A string.</param>
+    /// <param name='index'>Index of the current position into the string.</param>
+    /// <param name='surrogateBehavior'>Specifies what kind of value
+    /// to return if the previous character is an unpaired surrogate code
+    /// point: if 0, return the replacement character (U + FFFD); if 1, return
+    /// the value of the surrogate code point; if neither 0 nor 1, return -1.</param>
+    /// <returns>The Unicode code point at the previous position. Returns
+    /// -1 if <paramref name='index'/> is 0 or less, or is greater than the
+    /// string's length. Returns a value as specified under <paramref name='surrogateBehavior'/>
+    /// if the previous character is an unpaired surrogate code point.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    public static int CodePointBefore(string str, int index, int surrogateBehavior) {
+      if (str == null) {
+        throw new ArgumentNullException("str");
+      }
+      if (index <= 0) {
+        return -1;
+      }
+      if (index > str.Length) {
+        return -1;
+      }
+      int c = str[index - 1];
+      if ((c & 0xfc00) == 0xdc00 && index - 2 >= 0 &&
+          str[index - 2] >= 0xd800 && str[index - 2] <= 0xdbff) {
+        // Get the Unicode code point for the surrogate pair
+        return 0x10000 + ((str[index - 2] - 0xd800) << 10) + (c - 0xdc00);
+      } else if ((c & 0xf800) == 0xd800) {
+        // unpaired surrogate
+        if (surrogateBehavior == 0) {
+          return 0xfffd;
+        }
+        if (surrogateBehavior == 1) {
+          return c;
+        }
+        return -1;
+      } else {
+        return c;
+      }
+    }
+
+    /// <summary>Gets the Unicode code point at the given index of the string.</summary>
+    /// <param name='str'>A string.</param>
+    /// <param name='index'>Index of the current position into the string.</param>
+    /// <returns>The Unicode code point at the given position. Returns -1
+    /// if <paramref name='index'/> is less than 0, or is the string's length
+    /// or greater. Returns the replacement character (U + FFFD) if the current
+    /// character is an unpaired surrogate code point.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    public static int CodePointAt(string str, int index) {
+      return CodePointAt(str, index, 0);
+    }
+
+    /// <summary>Gets the Unicode code point at the given index of the string.</summary>
+    /// <param name='str'>A string.</param>
+    /// <param name='index'>Index of the current position into the string.</param>
+    /// <param name='surrogateBehavior'>Specifies what kind of value
+    /// to return if the previous character is an unpaired surrogate code
+    /// point: if 0, return the replacement character (U + FFFD); if 1, return
+    /// the value of the surrogate code point; if neither 0 nor 1, return -1.</param>
+    /// <returns>The Unicode code point at the current position. Returns
+    /// -1 if <paramref name='index'/> is less than 0, or is the string's length
+    /// or greater. Returns a value as specified under <paramref name='surrogateBehavior'/>
+    /// if the previous character is an unpaired surrogate code point.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    public static int CodePointAt(string str, int index, int surrogateBehavior) {
+      if (str == null) {
+        throw new ArgumentNullException("str");
+      }
+      if (index >= str.Length) {
+        return -1;
+      }
+      if (index < 0) {
+        return -1;
+      }
+      int c = str[index];
+      if ((c & 0xfc00) == 0xd800 && index + 1 < str.Length &&
+          str[index + 1] >= 0xdc00 && str[index + 1] <= 0xdfff) {
+        // Get the Unicode code point for the surrogate pair
+        c = 0x10000 + ((c - 0xd800) << 10) + (str[index + 1] - 0xdc00);
+        ++index;
+      } else if ((c & 0xf800) == 0xd800) {
+        // unpaired surrogate
+        if (surrogateBehavior == 0) {
+          return 0xfffd;
+        }
+        if (surrogateBehavior == 1) {
+          return c;
+        }
+        return -1;
+      }
+      return c;
+    }
+
+    /// <summary>Returns a string with upper-case ASCII letters (A to Z)
+    /// converted to lower-case. Other characters remain unchanged.</summary>
+    /// <param name='str'>A string.</param>
+    /// <returns>The converted string, or null if <paramref name='str'/>
+    /// is null.</returns>
+    public static string ToLowerCaseAscii(string str) {
+      if (str == null) {
+        return null;
+      }
+      int len = str.Length;
+      char c = (char)0;
+      bool hasUpperCase = false;
+      for (int i = 0; i < len; ++i) {
+        c = str[i];
+        if (c >= 'A' && c <= 'Z') {
+          hasUpperCase = true;
+          break;
+        }
+      }
+      if (!hasUpperCase) {
+        return str;
+      }
+      StringBuilder builder = new StringBuilder();
+      for (int i = 0; i < len; ++i) {
+        c = str[i];
+        if (c >= 'A' && c <= 'Z') {
+          builder.Append((char)(c + 0x20));
+        } else {
+          builder.Append(c);
+        }
+      }
+      return builder.ToString();
     }
 
     /// <summary>Compares two strings in Unicode code point order. Unpaired
@@ -180,16 +326,16 @@ namespace PeterO {
         if (ca == cb) {
           // normal code units and illegal surrogates
           // are treated as single code points
-          if ((ca & 0xF800) != 0xD800) {
+          if ((ca & 0xf800) != 0xd800) {
             continue;
           }
           bool incindex = false;
-          if (i + 1 < strA.Length && strA[i + 1] >= 0xDC00 && strA[i + 1] <= 0xDFFF) {
-            ca = 0x10000 + ((ca - 0xD800) * 0x400) + (strA[i + 1] - 0xDC00);
+          if (i + 1 < strA.Length && strA[i + 1] >= 0xdc00 && strA[i + 1] <= 0xdfff) {
+            ca = 0x10000 + ((ca - 0xd800) << 10) + (strA[i + 1] - 0xdc00);
             incindex = true;
           }
-          if (i + 1 < strB.Length && strB[i + 1] >= 0xDC00 && strB[i + 1] <= 0xDFFF) {
-            cb = 0x10000 + ((cb - 0xD800) * 0x400) + (strB[i + 1] - 0xDC00);
+          if (i + 1 < strB.Length && strB[i + 1] >= 0xdc00 && strB[i + 1] <= 0xdfff) {
+            cb = 0x10000 + ((cb - 0xd800) << 10) + (strB[i + 1] - 0xdc00);
             incindex = true;
           }
           if (ca != cb) {
@@ -199,16 +345,16 @@ namespace PeterO {
             ++i;
           }
         } else {
-          if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800) {
+          if ((ca & 0xf800) != 0xd800 && (cb & 0xf800) != 0xd800) {
             return ca - cb;
           }
-          if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.Length &&
-              strA[i + 1] >= 0xDC00 && strA[i + 1] <= 0xDFFF) {
-            ca = 0x10000 + ((ca - 0xD800) * 0x400) + (strA[i + 1] - 0xDC00);
+          if ((ca & 0xfc00) == 0xd800 && i + 1 < strA.Length &&
+              strA[i + 1] >= 0xdc00 && strA[i + 1] <= 0xdfff) {
+            ca = 0x10000 + ((ca - 0xd800) << 10) + (strA[i + 1] - 0xdc00);
           }
-          if (cb >= 0xd800 && cb <= 0xdbff && i + 1 < strB.Length &&
-              strB[i + 1] >= 0xDC00 && strB[i + 1] <= 0xDFFF) {
-            cb = 0x10000 + ((cb - 0xD800) * 0x400) + (strB[i + 1] - 0xDC00);
+          if ((cb & 0xfc00) == 0xd800 && i + 1 < strB.Length &&
+              strB[i + 1] >= 0xdc00 && strB[i + 1] <= 0xdfff) {
+            cb = 0x10000 + ((cb - 0xd800) << 10) + (strB[i + 1] - 0xdc00);
           }
           return ca - cb;
         }
@@ -217,6 +363,10 @@ namespace PeterO {
         return 0;
       }
       return (strA.Length < strB.Length) ? -1 : 1;
+    }
+
+    public static int WriteUtf8(String str, int offset, int length, Stream stream, bool replace) {
+      return WriteUtf8(str, offset, length, stream, replace, false);
     }
 
     /// <summary>Writes a portion of a string in UTF-8 encoding to a data stream.</summary>
@@ -228,6 +378,9 @@ namespace PeterO {
     /// <param name='replace'>If true, replaces unpaired surrogate code
     /// points with the replacement character (U + FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
+    /// <param name='lenientLineBreaks'>If true, replaces carriage return
+    /// (CR) not followed by line feed (LF) and LF not preceded by CR with CR-LF
+    /// pairs.</param>
     /// <returns>0 if the entire string portion was written; or -1 if the string
     /// portion contains an unpaired surrogate code point and <paramref
     /// name='replace'/> is false.</returns>
@@ -239,7 +392,7 @@ namespace PeterO {
     /// than 0, or <paramref name='offset'/> plus <paramref name='length'/>
     /// is greater than the string's length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
-    public static int WriteUtf8(String str, int offset, int length, Stream stream, bool replace) {
+    public static int WriteUtf8(String str, int offset, int length, Stream stream, bool replace, bool lenientLineBreaks) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
@@ -247,19 +400,19 @@ namespace PeterO {
         throw new ArgumentNullException("str");
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (offset > str.Length) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (length < 0) {
-        throw new ArgumentException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (length > str.Length) {
-        throw new ArgumentException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (str.Length - offset < length) {
-        throw new ArgumentException("str.Length minus offset (" + Convert.ToString((long)str.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("str.Length minus offset (" + Convert.ToString((long)str.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture));
       }
       byte[] bytes;
       int retval = 0;
@@ -268,54 +421,77 @@ namespace PeterO {
       int endIndex = offset + length;
       for (int index = offset; index < endIndex; ++index) {
         int c = str[index];
-        if (c <= 0x7F) {
+        if (c <= 0x7f) {
+          if (lenientLineBreaks) {
+            if (c == 0x0d && (index + 1 >= endIndex || str[index + 1] != 0x0a)) {
+              // bare CR, convert to CRLF
+              if (byteIndex + 2 > valueStreamedStringBufferLength) {
+                // Write bytes retrieved so far
+                stream.Write(bytes, 0, byteIndex);
+                byteIndex = 0;
+              }
+              bytes[byteIndex++] = 0x0d;
+              bytes[byteIndex++] = 0x0a;
+              continue;
+            } else if (c == 0x0a) {
+              // bare LF, convert to CRLF
+              if (byteIndex + 2 > valueStreamedStringBufferLength) {
+                // Write bytes retrieved so far
+                stream.Write(bytes, 0, byteIndex);
+                byteIndex = 0;
+              }
+              bytes[byteIndex++] = 0x0d;
+              bytes[byteIndex++] = 0x0a;
+              continue;
+            }
+          }
           if (byteIndex >= valueStreamedStringBufferLength) {
             // Write bytes retrieved so far
             stream.Write(bytes, 0, byteIndex);
             byteIndex = 0;
           }
           bytes[byteIndex++] = (byte)c;
-        } else if (c <= 0x7FF) {
+        } else if (c <= 0x7ff) {
           if (byteIndex + 2 > valueStreamedStringBufferLength) {
             // Write bytes retrieved so far
             stream.Write(bytes, 0, byteIndex);
             byteIndex = 0;
           }
-          bytes[byteIndex++] = (byte)(0xC0 | ((c >> 6) & 0x1F));
-          bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
+          bytes[byteIndex++] = (byte)(0xc0 | ((c >> 6) & 0x1f));
+          bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
         } else {
-          if (c >= 0xD800 && c <= 0xDBFF && index + 1 < endIndex &&
-              str[index + 1] >= 0xDC00 && str[index + 1] <= 0xDFFF) {
+          if ((c & 0xfc00) == 0xd800 && index + 1 < endIndex &&
+              str[index + 1] >= 0xdc00 && str[index + 1] <= 0xdfff) {
             // Get the Unicode code point for the surrogate pair
-            c = 0x10000 + ((c - 0xD800) * 0x400) + (str[index + 1] - 0xDC00);
+            c = 0x10000 + ((c - 0xd800) << 10) + (str[index + 1] - 0xdc00);
             ++index;
-          } else if (c >= 0xD800 && c <= 0xDFFF) {
+          } else if ((c & 0xf800) == 0xd800) {
             // unpaired surrogate
             if (!replace) {
               retval = -1;
               break;  // write bytes read so far
             }
-            c = 0xFFFD;
+            c = 0xfffd;
           }
-          if (c <= 0xFFFF) {
+          if (c <= 0xffff) {
             if (byteIndex + 3 > valueStreamedStringBufferLength) {
               // Write bytes retrieved so far
               stream.Write(bytes, 0, byteIndex);
               byteIndex = 0;
             }
-            bytes[byteIndex++] = (byte)(0xE0 | ((c >> 12) & 0x0F));
-            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3F));
-            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
+            bytes[byteIndex++] = (byte)(0xe0 | ((c >> 12) & 0x0f));
+            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3f));
+            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
           } else {
             if (byteIndex + 4 > valueStreamedStringBufferLength) {
               // Write bytes retrieved so far
               stream.Write(bytes, 0, byteIndex);
               byteIndex = 0;
             }
-            bytes[byteIndex++] = (byte)(0xF0 | ((c >> 18) & 0x07));
-            bytes[byteIndex++] = (byte)(0x80 | ((c >> 12) & 0x3F));
-            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3F));
-            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
+            bytes[byteIndex++] = (byte)(0xf0 | ((c >> 18) & 0x07));
+            bytes[byteIndex++] = (byte)(0x80 | ((c >> 12) & 0x3f));
+            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3f));
+            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
           }
         }
       }
@@ -371,19 +547,19 @@ namespace PeterO {
         throw new ArgumentNullException("data");
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (offset > data.Length) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)data.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)data.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (bytesCount < 0) {
-        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (bytesCount > data.Length) {
-        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)data.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("bytesCount (" + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)data.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (data.Length - offset < bytesCount) {
-        throw new ArgumentException("data.Length minus offset (" + Convert.ToString((long)data.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("data.Length minus offset (" + Convert.ToString((long)data.Length - offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (builder == null) {
         throw new ArgumentNullException("builder");
@@ -392,14 +568,14 @@ namespace PeterO {
       int bytesSeen = 0;
       int bytesNeeded = 0;
       int lower = 0x80;
-      int upper = 0xBF;
+      int upper = 0xbf;
       int pointer = offset;
       int endpointer = offset + bytesCount;
       while (pointer < endpointer) {
-        int b = data[pointer] & (int)0xFF;
+        int b = data[pointer] & (int)0xff;
         ++pointer;
         if (bytesNeeded == 0) {
-          if ((b & 0x7F) == b) {
+          if ((b & 0x7f) == b) {
             builder.Append((char)b);
           } else if (b >= 0xc2 && b <= 0xdf) {
             bytesNeeded = 1;
@@ -416,7 +592,7 @@ namespace PeterO {
             cp = (b - 0xf0) << 18;
           } else {
             if (replace) {
-              builder.Append((char)0xFFFD);
+              builder.Append((char)0xfffd);
             } else {
               return -1;
             }
@@ -428,7 +604,7 @@ namespace PeterO {
           upper = 0xbf;
           if (replace) {
             --pointer;
-            builder.Append((char)0xFFFD);
+            builder.Append((char)0xfffd);
             continue;
           } else {
             return -1;
@@ -445,12 +621,12 @@ namespace PeterO {
           cp = 0;
           bytesSeen = 0;
           bytesNeeded = 0;
-          if (ret <= 0xFFFF) {
+          if (ret <= 0xffff) {
             builder.Append((char)ret);
           } else {
             int ch = ret - 0x10000;
             int lead = (ch / 0x400) + 0xd800;
-            int trail = (ch & 0x3FF) + 0xdc00;
+            int trail = (ch & 0x3ff) + 0xdc00;
             builder.Append((char)lead);
             builder.Append((char)trail);
           }
@@ -458,7 +634,7 @@ namespace PeterO {
       }
       if (bytesNeeded != 0) {
         if (replace) {
-          builder.Append((char)0xFFFD);
+          builder.Append((char)0xfffd);
         } else {
           return -1;
         }
@@ -472,7 +648,7 @@ namespace PeterO {
     /// <returns>The string read.</returns>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='stream'/> is null or "builder" is null.</exception>
+    /// <paramref name='stream'/> is null.</exception>
     /// <param name='stream'>A readable data stream.</param>
     public static string ReadUtf8ToString(
       Stream stream) {
@@ -492,7 +668,7 @@ namespace PeterO {
     /// or, the string is not valid UTF-8 and <paramref name='replace'/>
     /// is false.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='stream'/> is null or "builder" is null.</exception>
+    /// <paramref name='stream'/> is null.</exception>
     public static string ReadUtf8ToString(
       Stream stream,
       int bytesCount,
@@ -538,7 +714,7 @@ namespace PeterO {
       int bytesSeen = 0;
       int bytesNeeded = 0;
       int lower = 0x80;
-      int upper = 0xBF;
+      int upper = 0xbf;
       int pointer = 0;
       while (pointer < bytesCount || bytesCount < 0) {
         int b = stream.ReadByte();
@@ -546,7 +722,7 @@ namespace PeterO {
           if (bytesNeeded != 0) {
             bytesNeeded = 0;
             if (replace) {
-              builder.Append((char)0xFFFD);
+              builder.Append((char)0xfffd);
               if (bytesCount >= 0) {
                 return -2;
               }
@@ -564,7 +740,7 @@ namespace PeterO {
           ++pointer;
         }
         if (bytesNeeded == 0) {
-          if ((b & 0x7F) == b) {
+          if ((b & 0x7f) == b) {
             builder.Append((char)b);
           } else if (b >= 0xc2 && b <= 0xdf) {
             bytesNeeded = 1;
@@ -581,7 +757,7 @@ namespace PeterO {
             cp = (b - 0xf0) << 18;
           } else {
             if (replace) {
-              builder.Append((char)0xFFFD);
+              builder.Append((char)0xfffd);
             } else {
               return -1;
             }
@@ -592,7 +768,7 @@ namespace PeterO {
           lower = 0x80;
           upper = 0xbf;
           if (replace) {
-            builder.Append((char)0xFFFD);
+            builder.Append((char)0xfffd);
             // "Read" the last byte again
             if (b < 0x80) {
               builder.Append((char)b);
@@ -610,7 +786,7 @@ namespace PeterO {
               bytesNeeded = 3;
               cp = (b - 0xf0) << 18;
             } else {
-              builder.Append((char)0xFFFD);
+              builder.Append((char)0xfffd);
             }
             continue;
           } else {
@@ -628,12 +804,12 @@ namespace PeterO {
           cp = 0;
           bytesSeen = 0;
           bytesNeeded = 0;
-          if (ret <= 0xFFFF) {
+          if (ret <= 0xffff) {
             builder.Append((char)ret);
           } else {
             int ch = ret - 0x10000;
             int lead = (ch / 0x400) + 0xd800;
-            int trail = (ch & 0x3FF) + 0xdc00;
+            int trail = (ch & 0x3ff) + 0xdc00;
             builder.Append((char)lead);
             builder.Append((char)trail);
           }
@@ -641,7 +817,7 @@ namespace PeterO {
       }
       if (bytesNeeded != 0) {
         if (replace) {
-          builder.Append((char)0xFFFD);
+          builder.Append((char)0xfffd);
         } else {
           return -1;
         }

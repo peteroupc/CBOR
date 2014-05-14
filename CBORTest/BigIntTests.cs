@@ -1,17 +1,15 @@
 /*
- * Created by SharpDevelop.
- * User: Peter
- * Date: 12/1/2013
- * Time: 11:22 PM
- *
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+Written by Peter O. in 2013.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://upokecenter.com/d/
  */
 using System;
 using NUnit.Framework;
 using PeterO;
 
-namespace Test
-{
+namespace Test {
   [TestFixture]
   public class BigIntTests
   {
@@ -44,9 +42,13 @@ namespace Test
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
-          Assert.AreEqual(bigintB, bigintA << j);
+          BigInteger ba = bigintA;
+          ba <<= j;
+          Assert.AreEqual(bigintB, ba);
           int negj = -j;
-          Assert.AreEqual(bigintB, bigintA >> negj);
+          ba = bigintA;
+          ba >>= negj;
+          Assert.AreEqual(bigintB, ba);
           bigintB *= (BigInteger)2;
         }
       }
@@ -56,7 +58,7 @@ namespace Test
     public void TestShiftRight() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
-        int smallint = r.NextValue(0x7FFFFFFF);
+        int smallint = r.NextValue(0x7fffffff);
         BigInteger bigintA = (BigInteger)smallint;
         string str = bigintA.ToString();
         for (int j = 32; j < 80; ++j) {
@@ -69,9 +71,13 @@ namespace Test
         bigintA = BigInteger.Abs(bigintA);
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
-          Assert.AreEqual(bigintB, bigintA >> j);
+          BigInteger ba = bigintA;
+          ba >>= j;
+          Assert.AreEqual(bigintB, ba);
           int negj = -j;
-          Assert.AreEqual(bigintB, bigintA << negj);
+          ba = bigintA;
+          ba <<= negj;
+          Assert.AreEqual(bigintB, ba);
           bigintB /= (BigInteger)2;
         }
       }
@@ -583,19 +589,21 @@ namespace Test
       Assert.AreEqual(16, BigInteger.valueOf(-65535).bitLength());
       Assert.AreEqual(17, BigInteger.valueOf(65536).bitLength());
       Assert.AreEqual(16, BigInteger.valueOf(-65536).bitLength());
+      Assert.AreEqual(65, BigInteger.fromString("19084941898444092059").bitLength());
+      Assert.AreEqual(65, BigInteger.fromString("-19084941898444092059").bitLength());
       Assert.AreEqual(0, BigInteger.valueOf(-1).bitLength());
       Assert.AreEqual(1, BigInteger.valueOf(-2).bitLength());
     }
 
     public static int ModPow(int x, int pow, int mod) {
       if (x < 0) {
-        throw new ArgumentException("x (" + Convert.ToString((long)x, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+        throw new ArgumentException("x (" + Convert.ToString((int)x, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (pow <= 0) {
-        throw new ArgumentException("pow (" + Convert.ToString((long)pow, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
+        throw new ArgumentException("pow (" + Convert.ToString((int)pow, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
       }
       if (mod <= 0) {
-        throw new ArgumentException("mod (" + Convert.ToString((long)mod, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
+        throw new ArgumentException("mod (" + Convert.ToString((int)mod, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
       }
       int r = 1;
       int v = x;
@@ -657,7 +665,7 @@ namespace Test
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         while (true) {
-          prime = rand.NextValue(0x7FFFFFFF);
+          prime = rand.NextValue(0x7fffffff);
           prime |= 1;
           if (IsPrime(prime)) {
             break;

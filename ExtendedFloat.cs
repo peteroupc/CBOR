@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
@@ -11,7 +11,7 @@ using System.Text;
 namespace PeterO {
     /// <summary>Represents an arbitrary-precision binary floating-point
     /// number. Consists of an integer mantissa and an integer exponent,
-    /// both arbitrary-precision. The value of the number is equal to mantissa
+    /// both arbitrary-precision. The value of the number equals mantissa
     /// * 2^exponent. This class also supports values for negative zero,
     /// not-a-number (NaN) values, and infinity.<para>Passing a signaling
     /// NaN to any arithmetic operation shown here will signal the flag FlagInvalid
@@ -62,7 +62,8 @@ namespace PeterO {
     }
 
     /// <summary>Gets this object&apos;s un-scaled value.</summary>
-    /// <value>This object&apos;s un-scaled value.</value>
+    /// <value>This object&apos;s un-scaled value. Will be negative if
+    /// this object&apos;s value is negative (including a negative NaN).</value>
     public BigInteger Mantissa {
       get {
         return this.IsNegative ? (-(BigInteger)this.unsignedMantissa) : this.unsignedMantissa;
@@ -102,15 +103,45 @@ namespace PeterO {
     /// <summary>Calculates this object&apos;s hash code.</summary>
     /// <returns>This object's hash code.</returns>
     public override int GetHashCode() {
-      int hashCode = 0;
+      int hashCode = 403796923;
       unchecked {
-        hashCode += 1000000007 * this.exponent.GetHashCode();
-        hashCode += 1000000009 * this.unsignedMantissa.GetHashCode();
-        hashCode += 1000000009 * this.flags;
+        hashCode += 403797019 * this.exponent.GetHashCode();
+        hashCode += 403797059 * this.unsignedMantissa.GetHashCode();
+        hashCode += 403797127 * this.flags;
       }
       return hashCode;
     }
     #endregion
+
+    public static ExtendedFloat CreateNaN(BigInteger diag) {
+      return CreateNaN(diag, false, false, null);
+    }
+
+    public static ExtendedFloat CreateNaN(BigInteger diag, bool signaling, bool negative, PrecisionContext ctx) {
+      if (diag == null) {
+        throw new ArgumentNullException("diag");
+      }
+      if (diag.Sign < 0) {
+        throw new ArgumentException("Diagnostic information must be 0 or greater, was: " + diag);
+      }
+      if (diag.IsZero && !negative) {
+        return signaling ? SignalingNaN : NaN;
+      }
+      int flags = 0;
+      if (negative) {
+        flags |= BigNumberFlags.FlagNegative;
+      }
+      if (ctx != null && ctx.HasMaxPrecision) {
+        flags |= BigNumberFlags.FlagQuietNaN;
+        ExtendedFloat ef = CreateWithFlags(diag, BigInteger.Zero, flags).RoundToPrecision(ctx);
+        ef.flags &= ~BigNumberFlags.FlagQuietNaN;
+        ef.flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+        return ef;
+      } else {
+        flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+        return CreateWithFlags(diag, BigInteger.Zero, flags);
+      }
+    }
 
     /// <summary>Creates a number with the value exponent*2^mantissa.</summary>
     /// <param name='mantissaSmall'>The un-scaled value.</param>
@@ -185,35 +216,6 @@ namespace PeterO {
       return FromString(str, null);
     }
 
-    private static BigInteger valueBigShiftIteration = (BigInteger)1000000;
-    private static int valueShiftIteration = 1000000;
-
-    private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
-      if (val.IsZero) {
-        return val;
-      }
-      while (bigShift.CompareTo(valueBigShiftIteration) > 0) {
-        val <<= 1000000;
-        bigShift -= (BigInteger)valueBigShiftIteration;
-      }
-      int lastshift = (int)bigShift;
-      val <<= lastshift;
-      return val;
-    }
-
-    private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
-      if (val.IsZero) {
-        return val;
-      }
-      while (shift > valueShiftIteration) {
-        val <<= 1000000;
-        shift -= valueShiftIteration;
-      }
-      int lastshift = (int)shift;
-      val <<= lastshift;
-      return val;
-    }
-
     private sealed class BinaryMathHelper : IRadixMathHelper<ExtendedFloat> {
     /// <summary>Not documented yet.</summary>
     /// <returns>A 32-bit signed integer.</returns>
@@ -285,18 +287,18 @@ namespace PeterO {
         if (bigint.Sign < 0) {
           bigint = -bigint;
           if (power.CanFitInInt32()) {
-            bigint = ShiftLeftInt(bigint, power.AsInt32());
+            bigint = DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
             bigint = -bigint;
           } else {
-            bigint = ShiftLeft(bigint, power.AsBigInteger());
+            bigint = DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
             bigint = -bigint;
           }
           return bigint;
         } else {
           if (power.CanFitInInt32()) {
-            return ShiftLeftInt(bigint, power.AsInt32());
+            return DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
           } else {
-            return ShiftLeft(bigint, power.AsBigInteger());
+            return DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
           }
         }
       }
@@ -335,7 +337,12 @@ namespace PeterO {
     /// Any fractional part in this value will be discarded when converting
     /// to a big integer.</summary>
     /// <returns>A BigInteger object.</returns>
+    /// <exception cref='OverflowException'>This object's value is infinity
+    /// or NaN.</exception>
     public BigInteger ToBigInteger() {
+      if (!this.IsFinite) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
       int expsign = this.Exponent.Sign;
       if (expsign == 0) {
         // Integer
@@ -351,7 +358,7 @@ namespace PeterO {
         if (neg) {
           bigmantissa = -bigmantissa;
         }
-        bigmantissa = ShiftLeft(bigmantissa, curexp);
+        bigmantissa = DecimalUtility.ShiftLeft(bigmantissa, curexp);
         if (neg) {
           bigmantissa = -bigmantissa;
         }
@@ -405,7 +412,7 @@ namespace PeterO {
         return Single.NegativeInfinity;
       }
       if (this.IsNaN()) {
-        int nan = 0x7F800000;
+        int nan = 0x7f800000;
         if (this.IsNegative) {
           nan |= unchecked((int)(1 << 31));
         }
@@ -497,7 +504,7 @@ namespace PeterO {
       } else {
         int smallexponent = bigexponent.AsInt32();
         smallexponent += 150;
-        int smallmantissa = ((int)fastSmallMant.AsInt32()) & 0x7FFFFF;
+        int smallmantissa = ((int)fastSmallMant.AsInt32()) & 0x7fffff;
         if (!subnormal) {
           smallmantissa |= smallexponent << 23;
         }
@@ -527,7 +534,7 @@ namespace PeterO {
         return Double.NegativeInfinity;
       }
       if (this.IsNaN()) {
-        int[] nan = new int[] { 0, 0x7FF00000 };
+        int[] nan = new int[] { 0, 0x7ff00000 };
         if (this.IsNegative) {
           nan[1] |= unchecked((int)(1 << 31));
         }
@@ -542,7 +549,7 @@ namespace PeterO {
           // Copy diagnostic information
           int[] words = FastInteger.GetLastWords(this.UnsignedMantissa, 2);
           nan[0] = words[0];
-          nan[1] = words[1] & 0x3FFFF;
+          nan[1] = words[1] & 0x3ffff;
         }
         return Extras.IntegersToDouble(nan);
       }
@@ -631,7 +638,7 @@ namespace PeterO {
       } else {
         bigexponent.AddInt(1075);
         // Clear the high bits where the exponent and sign are
-        mantissaBits[1] &= 0xFFFFF;
+        mantissaBits[1] &= 0xfffff;
         if (!subnormal) {
           int smallexponent = bigexponent.AsInt32() << 20;
           mantissaBits[1] |= smallexponent;
@@ -652,8 +659,8 @@ namespace PeterO {
     public static ExtendedFloat FromSingle(float flt) {
       int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt), 0);
       bool neg = (value >> 31) != 0;
-      int floatExponent = (int)((value >> 23) & 0xFF);
-      int valueFpMantissa = value & 0x7FFFFF;
+      int floatExponent = (int)((value >> 23) & 0xff);
+      int valueFpMantissa = value & 0x7fffff;
       BigInteger bigmant;
       if (floatExponent == 255) {
         if (valueFpMantissa == 0) {
@@ -661,7 +668,7 @@ namespace PeterO {
         }
         // Treat high bit of mantissa as quiet/signaling bit
         bool quiet = (valueFpMantissa & 0x400000) != 0;
-        valueFpMantissa &= 0x1FFFFF;
+        valueFpMantissa &= 0x1fffff;
         bigmant = (BigInteger)valueFpMantissa;
         if (bigmant.IsZero) {
           return quiet ? NaN : SignalingNaN;
@@ -721,12 +728,12 @@ namespace PeterO {
       int floatExponent = (int)((value[1] >> 20) & 0x7ff);
       bool neg = (value[1] >> 31) != 0;
       if (floatExponent == 2047) {
-        if ((value[1] & 0xFFFFF) == 0 && value[0] == 0) {
+        if ((value[1] & 0xfffff) == 0 && value[0] == 0) {
           return neg ? NegativeInfinity : PositiveInfinity;
         }
         // Treat high bit of mantissa as quiet/signaling bit
         bool quiet = (value[1] & 0x80000) != 0;
-        value[1] &= 0x3FFFF;
+        value[1] &= 0x3ffff;
         BigInteger info = FastInteger.WordsToBigInteger(value);
         if (info.IsZero) {
           return quiet ? NaN : SignalingNaN;
@@ -737,7 +744,7 @@ namespace PeterO {
             (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
         }
       }
-      value[1] &= 0xFFFFF;  // Mask out the exponent and sign
+      value[1] &= 0xfffff;  // Mask out the exponent and sign
       if (floatExponent == 0) {
         ++floatExponent;
       } else {
@@ -1218,7 +1225,7 @@ namespace PeterO {
     }
     //----------------------------------------------------------------
     private static IRadixMath<ExtendedFloat> math = new TrappableRadixMath<ExtendedFloat>(
-      new RadixMath<ExtendedFloat>(new BinaryMathHelper()));
+      new ExtendedOrSimpleRadixMath<ExtendedFloat>(new BinaryMathHelper()));
 
     /// <summary>Divides this object by another object, and returns the
     /// integer part of the result, with the preferred exponent set to this

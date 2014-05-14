@@ -3,13 +3,14 @@ Written in 2013 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using PeterO.Cbor;
 
 namespace PeterO {
     /// <summary>Contains methods for reading and writing objects represented

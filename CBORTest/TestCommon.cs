@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Globalization;
@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using NUnit.Framework;
 using PeterO;
+using PeterO.Cbor;
 
 namespace Test {
   internal static class TestCommon {
@@ -223,74 +224,69 @@ namespace Test {
           o.IsNaN()) {
         try {
           o.AsByte();
+          Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt16();
+          Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt32();
+          Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt64();
+          Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsSingle();
-        } catch (OverflowException) {
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsDouble();
-        } catch (OverflowException) {
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsBigInteger();
+          Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
         }
         return;
       }
-      BigInteger df = o.AsExtendedDecimal().ToBigInteger();
-      try {
-        o.AsBigInteger();
-      } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", int: " + df + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
       try {
         o.AsSingle();
       } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", int: " + df + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail("Object: " + o + ",  " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         o.AsDouble();
       } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", int: " + df + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail("Object: " + o + ",  " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
     }
 
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (o2.Type == CBORType.Map && o.Type == CBORType.Map) {
-        // Skip because key order may be different
-      } else {
-        if (!o.ToString().Equals(o2.ToString())) {
-          Assert.AreEqual(o.ToString(), o2.ToString(), "o2 is not equal to o");
-        }
+      if (!o.ToString().Equals(o2.ToString())) {
+        Assert.AreEqual(o.ToString(), o2.ToString(), "o2 is not equal to o");
       }
       TestNumber(o);
       AssertEqualsHashCode(o, o2);

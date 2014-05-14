@@ -3,12 +3,11 @@ Written in 2014 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO
-{
+namespace PeterO {
     /// <summary>Description of TrappableRadixMath.</summary>
     /// <typeparam name='T'>Data type for a numeric value in a particular
     /// radix.</typeparam>
@@ -449,9 +448,9 @@ namespace PeterO
     /// <param name='thisValue'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-    public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
+    public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
-      T result = this.math.RoundToPrecisionRaw(thisValue, tctx);
+      T result = this.math.RoundAfterConversion(thisValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 

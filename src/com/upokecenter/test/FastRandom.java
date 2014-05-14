@@ -1,11 +1,10 @@
 package com.upokecenter.test;
 /*
- * Created by SharpDevelop.
- * User: Peter
- * Date: 11/11/2013
- * Time: 1:13 PM
- *
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+Written by Peter O. in 2013.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://upokecenter.com/d/
  */
 
     /**
@@ -32,9 +31,9 @@ package com.upokecenter.test;
       int w = this.w, z = this.z;
       // Use George Marsaglia's multiply-with-carry
       // algorithm.
-      this.z = z = ((36969 * (z & 65535)) + ((z >> 16) & 0xFFFF));
-      this.w = w = ((18000 * (w & 65535)) + ((z >> 16) & 0xFFFF));
-      return ((z << 16) | (w & 65535)) & 0x7FFFFFFF;
+      this.z = z = ((36969 * (z & 65535)) + ((z >> 16) & 0xffff));
+      this.w = w = ((18000 * (w & 65535)) + ((z >> 16) & 0xffff));
+      return ((z << 16) | (w & 65535)) & 0x7fffffff;
     }
 
     /**
@@ -44,7 +43,7 @@ package com.upokecenter.test;
      */
     public int NextValue(int v) {
       if (v <= 0) {
- throw new IllegalArgumentException("v (" + Long.toString((long)v) + ") is not greater than " + "0");
+ throw new IllegalArgumentException("v (" + Integer.toString((int)v) + ") is not greater than " + "0");
 }
       if (v <= 1) {
         return 0;

@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Collections.Generic;
@@ -25,6 +25,10 @@ namespace PeterO {
       public int Compare(KeyValuePair<T1, T2> x, KeyValuePair<T1, T2> y) {
         return keyComp.Compare(x.Key, y.Key);
       }
+    }
+
+    public SortedMap() {
+      this.tree = new RedBlackTree<KeyValuePair<T1, T2>>(comp);
     }
 
     public SortedMap(IDictionary<T1, T2> mapA) {

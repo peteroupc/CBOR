@@ -3,22 +3,19 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO
-{
+namespace PeterO {
   internal static class Extras
   {
     public static int[] DoubleToIntegers(double dbl) {
       long value = BitConverter.ToInt64(
         BitConverter.GetBytes((double)dbl),
         0);
-      return new int[] {
-        unchecked((int)(value & 0xFFFFFFFFL)),
-        unchecked((int)((value >> 32) & 0xFFFFFFFFL))
-      };
+      return new int[] { unchecked((int)(value & 0xFFFFFFFFL)),
+        unchecked((int)((value >> 32) & 0xFFFFFFFFL)) };
     }
 
     public static double IntegersToDouble(int[] integers) {

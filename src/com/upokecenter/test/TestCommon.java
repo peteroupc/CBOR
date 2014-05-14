@@ -4,7 +4,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 
 // import java.math.*;
@@ -12,6 +12,7 @@ import java.io.*;
 import org.junit.Assert;
 
 import com.upokecenter.util.*;
+import com.upokecenter.cbor.*;
 
   final class TestCommon {
 private TestCommon() {
@@ -145,7 +146,7 @@ rembi=divrem[1]; }
     private static CBORObject FromBytesB(byte[] b) {
       java.io.ByteArrayInputStream ms=null;
 try {
-ms=new ByteArrayInputStream(b);
+ms=new java.io.ByteArrayInputStream(b);
 int startingAvailable=ms.available();
 
         CBORObject o = CBORObject.Read(ms);
@@ -155,7 +156,7 @@ int startingAvailable=ms.available();
         return o;
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
     }
     // Tests the equivalence of the FromBytes and Read methods.
@@ -204,74 +205,69 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           o.IsNaN()) {
         try {
           o.AsByte();
+          Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
           Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
         }
         try {
           o.AsInt16();
+          Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
           Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
         }
         try {
           o.AsInt32();
+          Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
           Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
         }
         try {
           o.AsInt64();
+          Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
           Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
         }
         try {
           o.AsSingle();
-        } catch (ArithmeticException ex) {
         } catch (Exception ex) {
-          Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
         }
         try {
           o.AsDouble();
-        } catch (ArithmeticException ex) {
         } catch (Exception ex) {
-          Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
         }
         try {
           o.AsBigInteger();
+          Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
           Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
         }
         return;
       }
-      BigInteger df = o.AsExtendedDecimal().ToBigInteger();
-      try {
-        o.AsBigInteger();
-      } catch (Exception ex) {
-        Assert.fail("Object: " + o + ", int: " + df + ", " + ex.toString()); throw new IllegalStateException("", ex);
-      }
       try {
         o.AsSingle();
       } catch (Exception ex) {
-        Assert.fail("Object: " + o + ", int: " + df + ", " + ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail("Object: " + o + ",  " + ex.toString()); throw new IllegalStateException("", ex);
       }
       try {
         o.AsDouble();
       } catch (Exception ex) {
-        Assert.fail("Object: " + o + ", int: " + df + ", " + ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail("Object: " + o + ",  " + ex.toString()); throw new IllegalStateException("", ex);
       }
     }
 
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (o2.getType() == CBORType.Map && o.getType() == CBORType.Map) {
-        // Skip because key order may be different
-      } else {
-        if (!o.toString().equals(o2.toString())) {
-          Assert.assertEquals("o2 is not equal to o",o.toString(),o2.toString());
-        }
+      if (!o.toString().equals(o2.toString())) {
+        Assert.assertEquals("o2 is not equal to o",o.toString(),o2.toString());
       }
       TestNumber(o);
       AssertEqualsHashCode(o, o2);

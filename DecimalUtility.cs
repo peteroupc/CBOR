@@ -3,12 +3,11 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 
-namespace PeterO
-{
+namespace PeterO {
     /// <summary>Description of DecimalUtility.</summary>
   internal static class DecimalUtility
   {
@@ -117,15 +116,15 @@ namespace PeterO
       unchecked {
         if (tz < 32) {
           int carry = a1 << (32 - tz);
-          arr[0] = (int)((a0 >> tz) & (0x7FFFFFFF >> (tz - 1))) | (int)carry;
-          arr[1] = (a1 >> tz) & (0x7FFFFFFF >> (tz - 1));
+          arr[0] = (int)((a0 >> tz) & (0x7fffffff >> (tz - 1))) | (int)carry;
+          arr[1] = (a1 >> tz) & (0x7fffffff >> (tz - 1));
           return tz;
         } else {
           tz = CountTrailingZeros(a1);
           if (tz == 32) {
             arr[0] = 0;
           } else if (tz > 0) {
-            arr[0] = (a1 >> tz) & (0x7FFFFFFF >> (tz - 1));
+            arr[0] = (a1 >> tz) & (0x7fffffff >> (tz - 1));
           } else {
             arr[0] = a1;
           }
@@ -133,6 +132,49 @@ namespace PeterO
           return 32 + tz;
         }
       }
+    }
+
+    private static BigInteger valueBigShiftIteration = (BigInteger)1000000;
+
+    internal static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
+      #if DEBUG
+      if (val == null) {
+        throw new ArgumentNullException("val");
+      }
+      if (bigShift == null) {
+        throw new ArgumentNullException("bigShift");
+      }
+      #endif
+
+      if (val.IsZero) {
+        return val;
+      }
+      while (bigShift.CompareTo(valueBigShiftIteration) > 0) {
+        val <<= 1000000;
+        bigShift -= (BigInteger)valueBigShiftIteration;
+      }
+      int lastshift = (int)bigShift;
+      val <<= lastshift;
+      return val;
+    }
+
+    internal static BigInteger ShiftLeftInt(BigInteger val, int shift) {
+      #if DEBUG
+      if (val == null) {
+        throw new ArgumentNullException("val");
+      }
+      #endif
+
+      if (val.IsZero) {
+        return val;
+      }
+      while (shift > 1000000) {
+        val <<= 1000000;
+        shift -= 1000000;
+      }
+      int lastshift = (int)shift;
+      val <<= lastshift;
+      return val;
     }
 
     internal static bool HasBitSet(int[] arr, int bit) {

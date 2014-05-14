@@ -3,13 +3,12 @@ Written in 2014 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
 
-namespace PeterO
-{
+namespace PeterO {
   internal interface IRadixMath<T>
   {
     IRadixMathHelper<T> GetHelper();
@@ -66,7 +65,7 @@ namespace PeterO
 
     T RoundToPrecision(T thisValue, PrecisionContext ctx);
 
-    T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx);
+    T RoundAfterConversion(T thisValue, PrecisionContext ctx);
 
     T Quantize(T thisValue, T otherValue, PrecisionContext ctx);
 

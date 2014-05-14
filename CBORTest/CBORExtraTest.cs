@@ -1,18 +1,18 @@
 /*
- * Created by SharpDevelop.
- * User: Peter
- * Date: 11/2/2013
- * Time: 3:26 PM
- *
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+Written by Peter O. in 2013.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://upokecenter.com/d/
  */
 using System;
-// using System.Numerics;
 using System.Collections.Generic;
-using System.Linq;
 using System.Globalization;
+using System.Linq;
+
 using NUnit.Framework;
 using PeterO;
+using PeterO.Cbor;
 
 namespace Test {
   [TestFixture]
@@ -155,15 +155,43 @@ namespace Test {
       }
     }
 
+    private enum AByte : byte {
+    /// <summary>Not documented yet.</summary>
+      A = 254,
+
+    /// <summary>Not documented yet.</summary>
+      B
+    }
+
+    private enum AInt : int {
+    /// <summary>Not documented yet.</summary>
+      A = 256,
+
+    /// <summary>Not documented yet.</summary>
+      B
+    }
+
+    private enum AULong : ulong {
+    /// <summary>Not documented yet.</summary>
+      A = 999999,
+
+    /// <summary>Not documented yet.</summary>
+      B
+    }
+
     [Test]
-    public void TestAnonymousTypes() {
-      CBORObject obj = CBORObject.FromObject(new { A = "a", B = "b" });
-      Assert.AreEqual("a", obj["A"].AsString());
-      Assert.AreEqual("b", obj["B"].AsString());
+    public void TestArbitraryTypes() {
+      CBORObject obj = CBORObject.FromObject(new { A = AByte.A, B = AInt.A, C = AULong.A });
+      Assert.AreEqual(254, obj["a"].AsInt32());
+      Assert.AreEqual(256, obj["b"].AsInt32());
+      Assert.AreEqual(999999, obj["c"].AsInt32());
+      obj = CBORObject.FromObject(new { A = "a", B = "b" });
+      Assert.AreEqual("a", obj["a"].AsString());
+      Assert.AreEqual("b", obj["b"].AsString());
       TestCommon.AssertRoundTrip(obj);
       obj = CBORObject.FromObject(new { A = "c", B = "b" });
-      Assert.AreEqual("c", obj["A"].AsString());
-      Assert.AreEqual("b", obj["B"].AsString());
+      Assert.AreEqual("c", obj["a"].AsString());
+      Assert.AreEqual("b", obj["b"].AsString());
       TestCommon.AssertRoundTrip(obj);
       obj = CBORObject.FromObject(RangeExclusive(0, 10));
       Assert.AreEqual(10, obj.Count);
@@ -183,8 +211,8 @@ namespace Test {
       // Select all even numbers
       obj = CBORObject.FromObject(from i in RangeExclusive(0, 10) where i % 2 == 0 select new { A = i, B = i + 1 });
       Assert.AreEqual(5, obj.Count);
-      Assert.AreEqual(0, obj[0]["A"].AsInt32());
-      Assert.AreEqual(3, obj[1]["B"].AsInt32());
+      Assert.AreEqual(0, obj[0]["a"].AsInt32());
+      Assert.AreEqual(3, obj[1]["b"].AsInt32());
       TestCommon.AssertRoundTrip(obj);
     }
 
@@ -4228,7 +4256,7 @@ namespace Test {
     private static short Divide32By16(int dividendLow, short divisor, bool returnRemainder) {
       int t;
       int dividendHigh = 0;
-      int intDivisor = ((int)divisor) & 0xFFFF;
+      int intDivisor = ((int)divisor) & 0xffff;
       for (int i = 0; i < 32; ++i) {
         t = dividendHigh >> 31;
         dividendHigh <<= 1;
@@ -4244,16 +4272,16 @@ namespace Test {
         }
       }
       return returnRemainder ?
-        unchecked((short)(((int)dividendHigh) & 0xFFFF)) :
-        unchecked((short)(((int)dividendLow) & 0xFFFF));
+        unchecked((short)(((int)dividendHigh) & 0xffff)) :
+        unchecked((short)(((int)dividendLow) & 0xffff));
     }
 
     private static short DivideUnsigned(int x, short y) {
       unchecked {
-        int iy = ((int)y) & 0xFFFF;
+        int iy = ((int)y) & 0xffff;
         if ((x >> 31) == 0) {
           // x is already nonnegative
-          return (short)(((int)x / iy) & 0xFFFF);
+          return (short)(((int)x / iy) & 0xffff);
         } else {
           return Divide32By16(x, y, false);
         }
@@ -4262,14 +4290,21 @@ namespace Test {
 
     private static short RemainderUnsigned(int x, short y) {
       unchecked {
-        int iy = ((int)y) & 0xFFFF;
+        int iy = ((int)y) & 0xffff;
         if ((x >> 31) == 0) {
           // x is already nonnegative
-          return (short)(((int)x % iy) & 0xFFFF);
+          return (short)(((int)x % iy) & 0xffff);
         } else {
           return Divide32By16(x, y, true);
         }
       }
+    }
+
+    [Test]
+    public void TestOther() {
+      CBORObject cbor = CBORObject.FromObject(new int[2, 3, 2]);
+      Assert.AreEqual("[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]", cbor.ToJSONString());
+      TestCommon.AssertRoundTrip(cbor);
     }
 
     [Test]
@@ -4291,41 +4326,15 @@ namespace Test {
             Assert.AreEqual(expected, actual, "Dividing " + x + " by " + y);
           }
         }
-        /*
-        for (int i = 0; i < 20; ++i) {
-          ulong x=(ulong)fr.NextValue(0x10000);
-          x|=((ulong)fr.NextValue(0x10000)) << 16;
-          x|=((ulong)fr.NextValue(0x10000)) << 32;
-          x|=((ulong)fr.NextValue(0x10000)) << 48;
-          long dx=(long)x;
-          uint y=(uint)fr.NextValue(0x10000);
-          y|=((uint)fr.NextValue(0x10000)) << 16;
-          y&=~(1U << 31);
-          int dy=(int)y;
-          if (dy == 0) {
- continue;
-}
-          long dxrem = dx/dy;
-          ulong udxrem=(ulong)dxrem;
-          Console.WriteLine(
-            "result=new ILong("+((uint)x) + ","+((uint)(x>>32)) + ").divideUnsigned("+y+");\n"+
-            "if (result.lo!="+((uint)dxrem) + " || result.hi!="+((uint)(dxrem>>32)) + ")\n"+
-            "console.log(\""+dx+"/"+dy+", expected: "+
-            ((uint)dxrem) + ", "+(dxrem>>32) + ", was \"+[result.lo,result.hi]+\","+
-            " remainder="+((ulong)(dx%dy)) + "\");");
-        }
-         */
       }
     }
 
     /// <summary>Not documented yet.</summary>
     [Test]
     public void TestUInt() {
-      uint[] ranges = new uint[] {
-        0, 65539,
+      uint[] ranges = new uint[] { 0, 65539,
         0x7FFFF000U, 0x80000400U,
-        UInt32.MaxValue - 1000, UInt32.MaxValue
-      };
+        UInt32.MaxValue - 1000, UInt32.MaxValue };
       for (int i = 0; i < ranges.Length; i += 2) {
         uint j = ranges[i];
         while (true) {

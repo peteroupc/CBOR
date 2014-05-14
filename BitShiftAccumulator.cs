@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
@@ -51,7 +51,7 @@ namespace PeterO {
     /// <param name='bits'>A FastInteger object.</param>
     public void ShiftToDigits(FastInteger bits) {
       if (bits.Sign < 0) {
- throw new ArgumentException("bits's sign (" + Convert.ToString((long)bits.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("bits's sign (" + Convert.ToString((int)bits.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
       if (bits.CanFitInInt32()) {
         this.ShiftToDigitsInt(bits.AsInt32());
@@ -110,7 +110,7 @@ namespace PeterO {
       int lastDiscarded,
       int olderDiscarded) {
       if (bigint.Sign < 0) {
- throw new ArgumentException("bigint's sign (" + Convert.ToString((long)bigint.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("bigint's sign (" + Convert.ToString((int)bigint.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
       if (bigint.canFitInInt()) {
         this.isSmall = true;
@@ -125,7 +125,7 @@ namespace PeterO {
 
     public static BitShiftAccumulator FromInt32(int smallNumber) {
       if (smallNumber < 0) {
- throw new ArgumentException("smallNumber (" + Convert.ToString((long)smallNumber, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("smallNumber (" + Convert.ToString((int)smallNumber, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
       BitShiftAccumulator bsa = new BitShiftAccumulator(BigInteger.Zero, 0, 0);
       bsa.shiftedSmall = smallNumber;
@@ -367,7 +367,7 @@ namespace PeterO {
     /// <param name='bits'>A 32-bit signed integer.</param>
     public void ShiftToDigitsInt(int bits) {
       if (bits < 0) {
- throw new ArgumentException("bits (" + Convert.ToString((long)bits, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
+ throw new ArgumentException("bits (" + Convert.ToString((int)bits, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
 }
       if (this.isSmall) {
         this.ShiftSmallToBits(bits);

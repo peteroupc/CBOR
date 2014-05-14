@@ -4,7 +4,7 @@ Written in 2014 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 
     /**
@@ -515,9 +515,9 @@ at: http://peteroupc.github.io/CBOR/
      * @param ctx A PrecisionContext object.
      * @return A T object.
      */
-    public T RoundToPrecisionRaw(T thisValue, PrecisionContext ctx) {
+    public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
-      T result = this.math.RoundToPrecisionRaw(thisValue, tctx);
+      T result = this.math.RoundAfterConversion(thisValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 

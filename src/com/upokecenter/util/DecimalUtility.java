@@ -4,7 +4,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 
     /**
@@ -118,15 +118,15 @@ private DecimalUtility() {
       {
         if (tz < 32) {
           int carry = a1 << (32 - tz);
-          arr[0] = (int)((a0 >> tz) & (0x7FFFFFFF >> (tz - 1))) | (int)carry;
-          arr[1] = (a1 >> tz) & (0x7FFFFFFF >> (tz - 1));
+          arr[0] = (int)((a0 >> tz) & (0x7fffffff >> (tz - 1))) | (int)carry;
+          arr[1] = (a1 >> tz) & (0x7fffffff >> (tz - 1));
           return tz;
         } else {
           tz = CountTrailingZeros(a1);
           if (tz == 32) {
             arr[0] = 0;
           } else if (tz > 0) {
-            arr[0] = (a1 >> tz) & (0x7FFFFFFF >> (tz - 1));
+            arr[0] = (a1 >> tz) & (0x7fffffff >> (tz - 1));
           } else {
             arr[0] = a1;
           }
@@ -134,6 +134,36 @@ private DecimalUtility() {
           return 32 + tz;
         }
       }
+    }
+
+    private static BigInteger valueBigShiftIteration = BigInteger.valueOf(1000000);
+
+    static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
+
+      if (val.signum()==0) {
+        return val;
+      }
+      while (bigShift.compareTo(valueBigShiftIteration) > 0) {
+        val=val.shiftLeft(1000000);
+        bigShift=bigShift.subtract(valueBigShiftIteration);
+      }
+      int lastshift = bigShift.intValue();
+      val=val.shiftLeft(lastshift);
+      return val;
+    }
+
+    static BigInteger ShiftLeftInt(BigInteger val, int shift) {
+
+      if (val.signum()==0) {
+        return val;
+      }
+      while (shift > 1000000) {
+        val=val.shiftLeft(1000000);
+        shift -= 1000000;
+      }
+      int lastshift = (int)shift;
+      val=val.shiftLeft(lastshift);
+      return val;
     }
 
     static boolean HasBitSet(int[] arr, int bit) {

@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 // using System.Numerics;
@@ -36,7 +36,7 @@ namespace PeterO {
     /// <summary>Gets the traps that are set for each flag in the context.
     /// Whenever a flag is signaled, even if HasFlags is false, and the flag's
     /// trap is enabled, the operation will throw a TrapException. <para>For
-    /// example, if Traps is equal to FlagInexact and FlagSubnormal, a TrapException
+    /// example, if Traps equals FlagInexact and FlagSubnormal, a TrapException
     /// will be thrown if an operation's return value is not the same as the
     /// exact result (FlagInexact) or if the return value's exponent is lower
     /// than the lowest allowed (FlagSubnormal).</para>
@@ -287,8 +287,8 @@ namespace PeterO {
     /// <param name='exponentMaxSmall'>A 32-bit signed integer. (2).</param>
     public PrecisionContext WithExponentRange(int exponentMinSmall, int exponentMaxSmall) {
       if (exponentMinSmall > exponentMaxSmall) {
- throw new ArgumentException("exponentMinSmall (" + Convert.ToString((long)exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture));
-}
+        throw new ArgumentException("exponentMinSmall (" + Convert.ToString((int)exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((int)exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture));
+      }
       PrecisionContext pc = this.Copy();
       pc.hasExponentRange = true;
       pc.exponentMin = (BigInteger)exponentMinSmall;
@@ -325,6 +325,25 @@ namespace PeterO {
       return pc;
     }
 
+    private bool simplified;
+
+    /// <summary>Gets a value indicating whether to use a "simplified" arithmetic.</summary>
+    /// <value>Whether to use a &quot;simplified&quot; arithmetic.</value>
+    public bool IsSimplified {
+      get {
+        return this.simplified;
+      }
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <param name='simplified'>A Boolean object.</param>
+    /// <returns>A PrecisionContext object.</returns>
+    public PrecisionContext WithSimplified(bool simplified) {
+      PrecisionContext pc = this.Copy();
+      pc.simplified = simplified;
+      return pc;
+    }
+
     /// <summary>Copies this PrecisionContext with an unlimited exponent
     /// range.</summary>
     /// <returns>A PrecisionContext object.</returns>
@@ -341,8 +360,8 @@ namespace PeterO {
     /// precision.</param>
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
- throw new ArgumentException("precision (" + Convert.ToString((long)precision, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
-}
+        throw new ArgumentException("precision (" + Convert.ToString((int)precision, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = (BigInteger)precision;
       return pc;
@@ -359,8 +378,8 @@ namespace PeterO {
         throw new ArgumentNullException("bigintPrecision");
       }
       if (bigintPrecision.Sign < 0) {
- throw new ArgumentException("bigintPrecision's sign (" + Convert.ToString((long)bigintPrecision.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
-}
+        throw new ArgumentException("bigintPrecision's sign (" + Convert.ToString((int)bigintPrecision.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
       return pc;
@@ -377,6 +396,7 @@ namespace PeterO {
         0,
         this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
+      pcnew.simplified = this.simplified;
       pcnew.flags = this.flags;
       pcnew.exponentMax = this.exponentMax;
       pcnew.exponentMin = this.exponentMin;
@@ -408,11 +428,11 @@ namespace PeterO {
     /// <param name='clampNormalExponents'>A Boolean object.</param>
     public PrecisionContext(int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall, bool clampNormalExponents) {
       if (precision < 0) {
- throw new ArgumentException("precision (" + Convert.ToString((long)precision, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
-}
+        throw new ArgumentException("precision (" + Convert.ToString((int)precision, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
       if (exponentMinSmall > exponentMaxSmall) {
- throw new ArgumentException("exponentMinSmall (" + Convert.ToString((long)exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is not less or equal to " + Convert.ToString((long)exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture));
-}
+        throw new ArgumentException("exponentMinSmall (" + Convert.ToString((int)exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((int)exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture));
+      }
       this.bigintPrecision = precision == 0 ? BigInteger.Zero : (BigInteger)precision;
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;
