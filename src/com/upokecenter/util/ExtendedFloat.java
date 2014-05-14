@@ -4,15 +4,15 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 
     /**
      * Represents an arbitrary-precision binary floating-point number.
      * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
-     * The value of the number is equal to mantissa * 2^exponent. This class
-     * also supports values for negative zero, not-a-number (NaN) values,
-     * and infinity.<p>Passing a signaling NaN to any arithmetic operation
+     * The value of the number equals mantissa * 2^exponent. This class also
+     * supports values for negative zero, not-a-number (NaN) values, and
+     * infinity.<p>Passing a signaling NaN to any arithmetic operation
      * shown here will signal the flag FlagInvalid and return a quiet NaN,
      * even if another operand to that operation is a quiet NaN, unless noted
      * otherwise.</p> <p>Passing a quiet NaN to any arithmetic operation
@@ -57,7 +57,8 @@ at: http://peteroupc.github.io/CBOR/
 
     /**
      * Gets this object&apos;s un-scaled value.
-     * @return This object's un-scaled value.
+     * @return This object's un-scaled value. Will be negative if this object's
+     * value is negative (including a negative NaN).
      */
     public BigInteger getMantissa() {
         return this.isNegative() ? ((this.unsignedMantissa).negate()) : this.unsignedMantissa;
@@ -103,13 +104,43 @@ at: http://peteroupc.github.io/CBOR/
      * @return This object's hash code.
      */
     @Override public int hashCode() {
-      int hashCode_ = 0;
+      int valueHashCode = 403796923;
       {
-        hashCode_ += 1000000007 * this.exponent.hashCode();
-        hashCode_ += 1000000009 * this.unsignedMantissa.hashCode();
-        hashCode_ += 1000000009 * this.flags;
+        valueHashCode += 403797019 * this.exponent.hashCode();
+        valueHashCode += 403797059 * this.unsignedMantissa.hashCode();
+        valueHashCode += 403797127 * this.flags;
       }
-      return hashCode_;
+      return valueHashCode;
+    }
+
+    public static ExtendedFloat CreateNaN(BigInteger diag) {
+      return CreateNaN(diag, false, false, null);
+    }
+
+    public static ExtendedFloat CreateNaN(BigInteger diag, boolean signaling, boolean negative, PrecisionContext ctx) {
+      if (diag == null) {
+        throw new NullPointerException("diag");
+      }
+      if (diag.signum() < 0) {
+        throw new IllegalArgumentException("Diagnostic information must be 0 or greater, was: " + diag);
+      }
+      if (diag.signum()==0 && !negative) {
+        return signaling ? SignalingNaN : NaN;
+      }
+      int flags = 0;
+      if (negative) {
+        flags |= BigNumberFlags.FlagNegative;
+      }
+      if (ctx != null && ctx.getHasMaxPrecision()) {
+        flags |= BigNumberFlags.FlagQuietNaN;
+        ExtendedFloat ef = CreateWithFlags(diag, BigInteger.ZERO, flags).RoundToPrecision(ctx);
+        ef.flags &= ~BigNumberFlags.FlagQuietNaN;
+        ef.flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+        return ef;
+      } else {
+        flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+        return CreateWithFlags(diag, BigInteger.ZERO, flags);
+      }
     }
 
     /**
@@ -185,35 +216,6 @@ at: http://peteroupc.github.io/CBOR/
 
     public static ExtendedFloat FromString(String str) {
       return FromString(str, null);
-    }
-
-    private static BigInteger valueBigShiftIteration = BigInteger.valueOf(1000000);
-    private static int valueShiftIteration = 1000000;
-
-    private static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
-      if (val.signum()==0) {
-        return val;
-      }
-      while (bigShift.compareTo(valueBigShiftIteration) > 0) {
-        val=val.shiftLeft(1000000);
-        bigShift=bigShift.subtract(valueBigShiftIteration);
-      }
-      int lastshift = bigShift.intValue();
-      val=val.shiftLeft(lastshift);
-      return val;
-    }
-
-    private static BigInteger ShiftLeftInt(BigInteger val, int shift) {
-      if (val.signum()==0) {
-        return val;
-      }
-      while (shift > valueShiftIteration) {
-        val=val.shiftLeft(1000000);
-        shift -= valueShiftIteration;
-      }
-      int lastshift = (int)shift;
-      val=val.shiftLeft(lastshift);
-      return val;
     }
 
     private static final class BinaryMathHelper implements IRadixMathHelper<ExtendedFloat> {
@@ -303,18 +305,18 @@ at: http://peteroupc.github.io/CBOR/
         if (bigint.signum() < 0) {
           bigint=bigint.negate();
           if (power.CanFitInInt32()) {
-            bigint = ShiftLeftInt(bigint, power.AsInt32());
+            bigint = DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
             bigint=bigint.negate();
           } else {
-            bigint = ShiftLeft(bigint, power.AsBigInteger());
+            bigint = DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
             bigint=bigint.negate();
           }
           return bigint;
         } else {
           if (power.CanFitInInt32()) {
-            return ShiftLeftInt(bigint, power.AsInt32());
+            return DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
           } else {
-            return ShiftLeft(bigint, power.AsBigInteger());
+            return DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
           }
         }
       }
@@ -361,8 +363,12 @@ at: http://peteroupc.github.io/CBOR/
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
      * @return A BigInteger object.
+     * @throws ArithmeticException This object's value is infinity or NaN.
      */
     public BigInteger ToBigInteger() {
+      if (!this.isFinite()) {
+        throw new ArithmeticException("Value is infinity or NaN");
+      }
       int expsign = this.getExponent().signum();
       if (expsign == 0) {
         // Integer
@@ -378,7 +384,7 @@ at: http://peteroupc.github.io/CBOR/
         if (neg) {
           bigmantissa=bigmantissa.negate();
         }
-        bigmantissa = ShiftLeft(bigmantissa, curexp);
+        bigmantissa = DecimalUtility.ShiftLeft(bigmantissa, curexp);
         if (neg) {
           bigmantissa=bigmantissa.negate();
         }
@@ -433,7 +439,7 @@ at: http://peteroupc.github.io/CBOR/
         return Float.NEGATIVE_INFINITY;
       }
       if (this.IsNaN()) {
-        int nan = 0x7F800000;
+        int nan = 0x7f800000;
         if (this.isNegative()) {
           nan |= ((int)(1 << 31));
         }
@@ -525,7 +531,7 @@ at: http://peteroupc.github.io/CBOR/
       } else {
         int smallexponent = bigexponent.AsInt32();
         smallexponent += 150;
-        int smallmantissa = ((int)fastSmallMant.AsInt32()) & 0x7FFFFF;
+        int smallmantissa = ((int)fastSmallMant.AsInt32()) & 0x7fffff;
         if (!subnormal) {
           smallmantissa |= smallexponent << 23;
         }
@@ -556,7 +562,7 @@ at: http://peteroupc.github.io/CBOR/
         return Double.NEGATIVE_INFINITY;
       }
       if (this.IsNaN()) {
-        int[] nan = new int[] { 0, 0x7FF00000 };
+        int[] nan = new int[] { 0, 0x7ff00000 };
         if (this.isNegative()) {
           nan[1] |= ((int)(1 << 31));
         }
@@ -571,7 +577,7 @@ at: http://peteroupc.github.io/CBOR/
           // Copy diagnostic information
           int[] words = FastInteger.GetLastWords(this.getUnsignedMantissa(), 2);
           nan[0] = words[0];
-          nan[1] = words[1] & 0x3FFFF;
+          nan[1] = words[1] & 0x3ffff;
         }
         return Extras.IntegersToDouble(nan);
       }
@@ -660,7 +666,7 @@ at: http://peteroupc.github.io/CBOR/
       } else {
         bigexponent.AddInt(1075);
         // Clear the high bits where the exponent and sign are
-        mantissaBits[1] &= 0xFFFFF;
+        mantissaBits[1] &= 0xfffff;
         if (!subnormal) {
           int smallexponent = bigexponent.AsInt32() << 20;
           mantissaBits[1] |= smallexponent;
@@ -683,8 +689,8 @@ at: http://peteroupc.github.io/CBOR/
     public static ExtendedFloat FromSingle(float flt) {
       int value = Float.floatToRawIntBits(flt);
       boolean neg = (value >> 31) != 0;
-      int floatExponent = (int)((value >> 23) & 0xFF);
-      int valueFpMantissa = value & 0x7FFFFF;
+      int floatExponent = (int)((value >> 23) & 0xff);
+      int valueFpMantissa = value & 0x7fffff;
       BigInteger bigmant;
       if (floatExponent == 255) {
         if (valueFpMantissa == 0) {
@@ -692,7 +698,7 @@ at: http://peteroupc.github.io/CBOR/
         }
         // Treat high bit of mantissa as quiet/signaling bit
         boolean quiet = (valueFpMantissa & 0x400000) != 0;
-        valueFpMantissa &= 0x1FFFFF;
+        valueFpMantissa &= 0x1fffff;
         bigmant = BigInteger.valueOf(valueFpMantissa);
         if (bigmant.signum()==0) {
           return quiet ? NaN : SignalingNaN;
@@ -756,12 +762,12 @@ at: http://peteroupc.github.io/CBOR/
       int floatExponent = (int)((value[1] >> 20) & 0x7ff);
       boolean neg = (value[1] >> 31) != 0;
       if (floatExponent == 2047) {
-        if ((value[1] & 0xFFFFF) == 0 && value[0] == 0) {
+        if ((value[1] & 0xfffff) == 0 && value[0] == 0) {
           return neg ? NegativeInfinity : PositiveInfinity;
         }
         // Treat high bit of mantissa as quiet/signaling bit
         boolean quiet = (value[1] & 0x80000) != 0;
-        value[1] &= 0x3FFFF;
+        value[1] &= 0x3ffff;
         BigInteger info = FastInteger.WordsToBigInteger(value);
         if (info.signum()==0) {
           return quiet ? NaN : SignalingNaN;
@@ -772,7 +778,7 @@ at: http://peteroupc.github.io/CBOR/
             (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
         }
       }
-      value[1] &= 0xFFFFF;  // Mask out the exponent and sign
+      value[1] &= 0xfffff;  // Mask out the exponent and sign
       if (floatExponent == 0) {
         ++floatExponent;
       } else {
@@ -1297,7 +1303,7 @@ at: http://peteroupc.github.io/CBOR/
     }
     //----------------------------------------------------------------
     private static IRadixMath<ExtendedFloat> math = new TrappableRadixMath<ExtendedFloat>(
-      new RadixMath<ExtendedFloat>(new BinaryMathHelper()));
+      new ExtendedOrSimpleRadixMath<ExtendedFloat>(new BinaryMathHelper()));
 
     /**
      * Divides this object by another object, and returns the integer part

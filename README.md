@@ -20,18 +20,29 @@ See the [Wiki](https://github.com/peteroupc/CBOR/wiki) for API documentation.
 The Different Versions
 -----------
 
-This repository contains code in three languages: C#, Java, and JavaScript.
+This repository contains code in two languages: C# and Java.
 C# is the main language of the project, and has the most features.  The Java
-and JavaScript versions are translations from the C# version. 
+version is a translation from the C# version. 
 
 The Java version contains almost as many features as the C# version
 and has all the important ones, such as reading and writing CBOR objects,
 CBOR/JSON conversion, and support for decimal fractions and bigfloats.
 
-The JavaScript version currently only contains the code for big integers,
-decimal fractions, and bigfloats.  It currently doesn't support converting
-singles and doubles to big numbers and its support for converting other
-objects, except strings, to big numbers is limited. 
+Clarifications
+------------------
+
+The following are some clarifications to RFC 7049.
+
+* Section 2.4.2 doesn't specify what happens if a bignum's byte
+  string has a length of 0.  This implementation treats a positive
+  bignum with length 0 as having a value of 0 and a negative
+  bignum with length 0 as having a value of -1.
+* Section 2.4.1 specifies the number of seconds since the start of 1970.  It is
+  based on the POSIX definition of "seconds since the Epoch", which
+  the RFC cites as a normative reference.  This definition does not
+  count leap seconds.  When this implementation supports date
+  conversion, it won't count leap seconds, either.  This implementation
+  treats values of infinity and NaN as invalid.
 
 About
 -----------

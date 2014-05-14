@@ -4,7 +4,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 
 import java.io.*;
@@ -63,19 +63,19 @@ private DataUtilities() {
         throw new NullPointerException("bytes");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
       }
       if (offset > bytes.length) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is not less or equal to " + Long.toString((long)bytes.length));
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)bytes.length));
       }
       if (bytesCount < 0) {
-        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is less than " + "0");
       }
       if (bytesCount > bytes.length) {
-        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is not less or equal to " + Long.toString((long)bytes.length));
+        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is more than " + Long.toString((long)bytes.length));
       }
       if (bytes.length - offset < bytesCount) {
-        throw new IllegalArgumentException("bytes's length minus " + offset + " (" + Long.toString((long)(bytes.length - offset)) + ") is not greater or equal to " + Long.toString((long)bytesCount));
+        throw new IllegalArgumentException("bytes's length minus " + offset + " (" + Long.toString((long)(bytes.length - offset)) + ") is less than " + Long.toString((long)bytesCount));
       }
       StringBuilder b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, offset, bytesCount, b, replace) != 0) {
@@ -107,7 +107,7 @@ private DataUtilities() {
       try {
         java.io.ByteArrayOutputStream ms=null;
 try {
-ms=new ByteArrayOutputStream();
+ms=new java.io.ByteArrayOutputStream();
 
           if (WriteUtf8(str, ms, replace) != 0) {
             throw new IllegalArgumentException("Unpaired surrogate code point");
@@ -115,7 +115,7 @@ ms=new ByteArrayOutputStream();
           return ms.toByteArray();
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       } catch (IOException ex) {
         throw new IllegalArgumentException("I/O error occurred", ex);
@@ -141,15 +141,15 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       long size = 0;
       for (int i = 0; i < str.length(); ++i) {
         int c = str.charAt(i);
-        if (c <= 0x7F) {
+        if (c <= 0x7f) {
           ++size;
-        } else if (c <= 0x7FF) {
+        } else if (c <= 0x7ff) {
           size += 2;
-        } else if (c <= 0xD7FF || c >= 0xE000) {
+        } else if (c <= 0xd7ff || c >= 0xe000) {
           size += 3;
-        } else if (c <= 0xDBFF) {  // UTF-16 leading surrogate
+        } else if (c <= 0xdbff) {  // UTF-16 leading surrogate
           ++i;
-          if (i >= str.length() || str.charAt(i) < 0xDC00 || str.charAt(i) > 0xDFFF) {
+          if (i >= str.length() || str.charAt(i) < 0xdc00 || str.charAt(i) > 0xdfff) {
             if (replace) {
               size += 3;
               --i;
@@ -168,6 +168,159 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         }
       }
       return size;
+    }
+
+    /**
+     * Gets the Unicode code point just before the given index of the string.
+     * @param str A string.
+     * @param index Index of the current position into the string.
+     * @return The Unicode code point at the previous position. Returns
+     * -1 if {@code index} is 0 or less, or is greater than the string's length.
+     * Returns the replacement character (U + FFFD) if the previous character
+     * is an unpaired surrogate code point.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     */
+    public static int CodePointBefore(String str, int index) {
+      return CodePointBefore(str, index, 0);
+    }
+
+    /**
+     * Gets the Unicode code point just before the given index of the string.
+     * @param str A string.
+     * @param index Index of the current position into the string.
+     * @param surrogateBehavior Specifies what kind of value to return
+     * if the previous character is an unpaired surrogate code point: if
+     * 0, return the replacement character (U + FFFD); if 1, return the value
+     * of the surrogate code point; if neither 0 nor 1, return -1.
+     * @return The Unicode code point at the previous position. Returns
+     * -1 if {@code index} is 0 or less, or is greater than the string's length.
+     * Returns a value as specified under {@code surrogateBehavior} if
+     * the previous character is an unpaired surrogate code point.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     */
+    public static int CodePointBefore(String str, int index, int surrogateBehavior) {
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
+      if (index <= 0) {
+        return -1;
+      }
+      if (index > str.length()) {
+        return -1;
+      }
+      int c = str.charAt(index - 1);
+      if ((c & 0xfc00) == 0xdc00 && index - 2 >= 0 &&
+          str.charAt(index - 2) >= 0xd800 && str.charAt(index - 2) <= 0xdbff) {
+        // Get the Unicode code point for the surrogate pair
+        return 0x10000 + ((str.charAt(index - 2) - 0xd800) << 10) + (c - 0xdc00);
+      } else if ((c & 0xf800) == 0xd800) {
+        // unpaired surrogate
+        if (surrogateBehavior == 0) {
+          return 0xfffd;
+        }
+        if (surrogateBehavior == 1) {
+          return c;
+        }
+        return -1;
+      } else {
+        return c;
+      }
+    }
+
+    /**
+     * Gets the Unicode code point at the given index of the string.
+     * @param str A string.
+     * @param index Index of the current position into the string.
+     * @return The Unicode code point at the given position. Returns -1 if
+     * {@code index} is less than 0, or is the string's length or greater.
+     * Returns the replacement character (U + FFFD) if the current character
+     * is an unpaired surrogate code point.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     */
+    public static int CodePointAt(String str, int index) {
+      return CodePointAt(str, index, 0);
+    }
+
+    /**
+     * Gets the Unicode code point at the given index of the string.
+     * @param str A string.
+     * @param index Index of the current position into the string.
+     * @param surrogateBehavior Specifies what kind of value to return
+     * if the previous character is an unpaired surrogate code point: if
+     * 0, return the replacement character (U + FFFD); if 1, return the value
+     * of the surrogate code point; if neither 0 nor 1, return -1.
+     * @return The Unicode code point at the current position. Returns -1
+     * if {@code index} is less than 0, or is the string's length or greater.
+     * Returns a value as specified under {@code surrogateBehavior} if
+     * the previous character is an unpaired surrogate code point.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     */
+    public static int CodePointAt(String str, int index, int surrogateBehavior) {
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
+      if (index >= str.length()) {
+        return -1;
+      }
+      if (index < 0) {
+        return -1;
+      }
+      int c = str.charAt(index);
+      if ((c & 0xfc00) == 0xd800 && index + 1 < str.length() &&
+          str.charAt(index + 1) >= 0xdc00 && str.charAt(index + 1) <= 0xdfff) {
+        // Get the Unicode code point for the surrogate pair
+        c = 0x10000 + ((c - 0xd800) << 10) + (str.charAt(index + 1) - 0xdc00);
+        ++index;
+      } else if ((c & 0xf800) == 0xd800) {
+        // unpaired surrogate
+        if (surrogateBehavior == 0) {
+          return 0xfffd;
+        }
+        if (surrogateBehavior == 1) {
+          return c;
+        }
+        return -1;
+      }
+      return c;
+    }
+
+    /**
+     * Returns a string with upper-case ASCII letters (A to Z) converted
+     * to lower-case. Other characters remain unchanged.
+     * @param str A string.
+     * @return The converted string, or null if {@code str} is null.
+     */
+    public static String ToLowerCaseAscii(String str) {
+      if (str == null) {
+        return null;
+      }
+      int len = str.length();
+      char c = (char)0;
+      boolean hasUpperCase = false;
+      for (int i = 0; i < len; ++i) {
+        c = str.charAt(i);
+        if (c >= 'A' && c <= 'Z') {
+          hasUpperCase = true;
+          break;
+        }
+      }
+      if (!hasUpperCase) {
+        return str;
+      }
+      StringBuilder builder = new StringBuilder();
+      for (int i = 0; i < len; ++i) {
+        c = str.charAt(i);
+        if (c >= 'A' && c <= 'Z') {
+          builder.append((char)(c + 0x20));
+        } else {
+          builder.append(c);
+        }
+      }
+      return builder.toString();
     }
 
     /**
@@ -196,16 +349,16 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         if (ca == cb) {
           // normal code units and illegal surrogates
           // are treated as single code points
-          if ((ca & 0xF800) != 0xD800) {
+          if ((ca & 0xf800) != 0xd800) {
             continue;
           }
           boolean incindex = false;
-          if (i + 1 < strA.length() && strA.charAt(i + 1) >= 0xDC00 && strA.charAt(i + 1) <= 0xDFFF) {
-            ca = 0x10000 + ((ca - 0xD800) * 0x400) + (strA.charAt(i + 1) - 0xDC00);
+          if (i + 1 < strA.length() && strA.charAt(i + 1) >= 0xdc00 && strA.charAt(i + 1) <= 0xdfff) {
+            ca = 0x10000 + ((ca - 0xd800) << 10) + (strA.charAt(i + 1) - 0xdc00);
             incindex = true;
           }
-          if (i + 1 < strB.length() && strB.charAt(i + 1) >= 0xDC00 && strB.charAt(i + 1) <= 0xDFFF) {
-            cb = 0x10000 + ((cb - 0xD800) * 0x400) + (strB.charAt(i + 1) - 0xDC00);
+          if (i + 1 < strB.length() && strB.charAt(i + 1) >= 0xdc00 && strB.charAt(i + 1) <= 0xdfff) {
+            cb = 0x10000 + ((cb - 0xd800) << 10) + (strB.charAt(i + 1) - 0xdc00);
             incindex = true;
           }
           if (ca != cb) {
@@ -215,16 +368,16 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             ++i;
           }
         } else {
-          if ((ca & 0xF800) != 0xD800 && (cb & 0xF800) != 0xD800) {
+          if ((ca & 0xf800) != 0xd800 && (cb & 0xf800) != 0xd800) {
             return ca - cb;
           }
-          if (ca >= 0xd800 && ca <= 0xdbff && i + 1 < strA.length() &&
-              strA.charAt(i + 1) >= 0xDC00 && strA.charAt(i + 1) <= 0xDFFF) {
-            ca = 0x10000 + ((ca - 0xD800) * 0x400) + (strA.charAt(i + 1) - 0xDC00);
+          if ((ca & 0xfc00) == 0xd800 && i + 1 < strA.length() &&
+              strA.charAt(i + 1) >= 0xdc00 && strA.charAt(i + 1) <= 0xdfff) {
+            ca = 0x10000 + ((ca - 0xd800) << 10) + (strA.charAt(i + 1) - 0xdc00);
           }
-          if (cb >= 0xd800 && cb <= 0xdbff && i + 1 < strB.length() &&
-              strB.charAt(i + 1) >= 0xDC00 && strB.charAt(i + 1) <= 0xDFFF) {
-            cb = 0x10000 + ((cb - 0xD800) * 0x400) + (strB.charAt(i + 1) - 0xDC00);
+          if ((cb & 0xfc00) == 0xd800 && i + 1 < strB.length() &&
+              strB.charAt(i + 1) >= 0xdc00 && strB.charAt(i + 1) <= 0xdfff) {
+            cb = 0x10000 + ((cb - 0xd800) << 10) + (strB.charAt(i + 1) - 0xdc00);
           }
           return ca - cb;
         }
@@ -233,6 +386,10 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         return 0;
       }
       return (strA.length() < strB.length()) ? -1 : 1;
+    }
+
+    public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
+      return WriteUtf8(str, offset, length, stream, replace, false);
     }
 
     /**
@@ -245,6 +402,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * @param replace If true, replaces unpaired surrogate code points
      * with the replacement character (U + FFFD). If false, stops processing
      * when an unpaired surrogate code point is seen.
+     * @param lenientLineBreaks If true, replaces carriage return (CR)
+     * not followed by line feed (LF) and LF not preceded by CR with CR-LF pairs.
      * @return 0 if the entire string portion was written; or -1 if the string
      * portion contains an unpaired surrogate code point and {@code replace}
      * is false.
@@ -255,7 +414,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * {@code length} is greater than the string's length.
      * @throws java.io.IOException An I/O error occurred.
      */
-    public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
+    public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace, boolean lenientLineBreaks) throws IOException {
       if (stream == null) {
         throw new NullPointerException("stream");
       }
@@ -263,19 +422,19 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         throw new NullPointerException("str");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
       }
       if (offset > str.length()) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is not less or equal to " + Long.toString((long)str.length()));
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)str.length()));
       }
       if (length < 0) {
-        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is less than " + "0");
       }
       if (length > str.length()) {
-        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is not less or equal to " + Long.toString((long)str.length()));
+        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is more than " + Long.toString((long)str.length()));
       }
       if (str.length() - offset < length) {
-        throw new IllegalArgumentException("str.length() minus offset (" + Long.toString((long)str.length() - offset) + ") is not greater or equal to " + Long.toString((long)length));
+        throw new IllegalArgumentException("str.length() minus offset (" + Long.toString((long)str.length() - offset) + ") is less than " + Long.toString((long)length));
       }
       byte[] bytes;
       int retval = 0;
@@ -284,54 +443,77 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       int endIndex = offset + length;
       for (int index = offset; index < endIndex; ++index) {
         int c = str.charAt(index);
-        if (c <= 0x7F) {
+        if (c <= 0x7f) {
+          if (lenientLineBreaks) {
+            if (c == 0x0d && (index + 1 >= endIndex || str.charAt(index + 1) != 0x0a)) {
+              // bare CR, convert to CRLF
+              if (byteIndex + 2 > valueStreamedStringBufferLength) {
+                // Write bytes retrieved so far
+                stream.write(bytes,0,byteIndex);
+                byteIndex = 0;
+              }
+              bytes[byteIndex++] = 0x0d;
+              bytes[byteIndex++] = 0x0a;
+              continue;
+            } else if (c == 0x0a) {
+              // bare LF, convert to CRLF
+              if (byteIndex + 2 > valueStreamedStringBufferLength) {
+                // Write bytes retrieved so far
+                stream.write(bytes,0,byteIndex);
+                byteIndex = 0;
+              }
+              bytes[byteIndex++] = 0x0d;
+              bytes[byteIndex++] = 0x0a;
+              continue;
+            }
+          }
           if (byteIndex >= valueStreamedStringBufferLength) {
             // Write bytes retrieved so far
             stream.write(bytes,0,byteIndex);
             byteIndex = 0;
           }
           bytes[byteIndex++] = (byte)c;
-        } else if (c <= 0x7FF) {
+        } else if (c <= 0x7ff) {
           if (byteIndex + 2 > valueStreamedStringBufferLength) {
             // Write bytes retrieved so far
             stream.write(bytes,0,byteIndex);
             byteIndex = 0;
           }
-          bytes[byteIndex++] = (byte)(0xC0 | ((c >> 6) & 0x1F));
-          bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
+          bytes[byteIndex++] = (byte)(0xc0 | ((c >> 6) & 0x1f));
+          bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
         } else {
-          if (c >= 0xD800 && c <= 0xDBFF && index + 1 < endIndex &&
-              str.charAt(index + 1) >= 0xDC00 && str.charAt(index + 1) <= 0xDFFF) {
+          if ((c & 0xfc00) == 0xd800 && index + 1 < endIndex &&
+              str.charAt(index + 1) >= 0xdc00 && str.charAt(index + 1) <= 0xdfff) {
             // Get the Unicode code point for the surrogate pair
-            c = 0x10000 + ((c - 0xD800) * 0x400) + (str.charAt(index + 1) - 0xDC00);
+            c = 0x10000 + ((c - 0xd800) << 10) + (str.charAt(index + 1) - 0xdc00);
             ++index;
-          } else if (c >= 0xD800 && c <= 0xDFFF) {
+          } else if ((c & 0xf800) == 0xd800) {
             // unpaired surrogate
             if (!replace) {
               retval = -1;
               break;  // write bytes read so far
             }
-            c = 0xFFFD;
+            c = 0xfffd;
           }
-          if (c <= 0xFFFF) {
+          if (c <= 0xffff) {
             if (byteIndex + 3 > valueStreamedStringBufferLength) {
               // Write bytes retrieved so far
               stream.write(bytes,0,byteIndex);
               byteIndex = 0;
             }
-            bytes[byteIndex++] = (byte)(0xE0 | ((c >> 12) & 0x0F));
-            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3F));
-            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
+            bytes[byteIndex++] = (byte)(0xe0 | ((c >> 12) & 0x0f));
+            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3f));
+            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
           } else {
             if (byteIndex + 4 > valueStreamedStringBufferLength) {
               // Write bytes retrieved so far
               stream.write(bytes,0,byteIndex);
               byteIndex = 0;
             }
-            bytes[byteIndex++] = (byte)(0xF0 | ((c >> 18) & 0x07));
-            bytes[byteIndex++] = (byte)(0x80 | ((c >> 12) & 0x3F));
-            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3F));
-            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3F));
+            bytes[byteIndex++] = (byte)(0xf0 | ((c >> 18) & 0x07));
+            bytes[byteIndex++] = (byte)(0x80 | ((c >> 12) & 0x3f));
+            bytes[byteIndex++] = (byte)(0x80 | ((c >> 6) & 0x3f));
+            bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
           }
         }
       }
@@ -387,19 +569,19 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         throw new NullPointerException("data");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
       }
       if (offset > data.length) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is not less or equal to " + Long.toString((long)data.length));
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)data.length));
       }
       if (bytesCount < 0) {
-        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is less than " + "0");
       }
       if (bytesCount > data.length) {
-        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is not less or equal to " + Long.toString((long)data.length));
+        throw new IllegalArgumentException("bytesCount (" + Long.toString((long)bytesCount) + ") is more than " + Long.toString((long)data.length));
       }
       if (data.length - offset < bytesCount) {
-        throw new IllegalArgumentException("data.length minus offset (" + Long.toString((long)data.length - offset) + ") is not greater or equal to " + Long.toString((long)bytesCount));
+        throw new IllegalArgumentException("data.length minus offset (" + Long.toString((long)data.length - offset) + ") is less than " + Long.toString((long)bytesCount));
       }
       if (builder == null) {
         throw new NullPointerException("builder");
@@ -408,14 +590,14 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       int bytesSeen = 0;
       int bytesNeeded = 0;
       int lower = 0x80;
-      int upper = 0xBF;
+      int upper = 0xbf;
       int pointer = offset;
       int endpointer = offset + bytesCount;
       while (pointer < endpointer) {
-        int b = data[pointer] & (int)0xFF;
+        int b = data[pointer] & (int)0xff;
         ++pointer;
         if (bytesNeeded == 0) {
-          if ((b & 0x7F) == b) {
+          if ((b & 0x7f) == b) {
             builder.append((char)b);
           } else if (b >= 0xc2 && b <= 0xdf) {
             bytesNeeded = 1;
@@ -432,7 +614,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             cp = (b - 0xf0) << 18;
           } else {
             if (replace) {
-              builder.append((char)0xFFFD);
+              builder.append((char)0xfffd);
             } else {
               return -1;
             }
@@ -444,7 +626,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           upper = 0xbf;
           if (replace) {
             --pointer;
-            builder.append((char)0xFFFD);
+            builder.append((char)0xfffd);
             continue;
           } else {
             return -1;
@@ -461,12 +643,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           cp = 0;
           bytesSeen = 0;
           bytesNeeded = 0;
-          if (ret <= 0xFFFF) {
+          if (ret <= 0xffff) {
             builder.append((char)ret);
           } else {
             int ch = ret - 0x10000;
             int lead = (ch / 0x400) + 0xd800;
-            int trail = (ch & 0x3FF) + 0xdc00;
+            int trail = (ch & 0x3ff) + 0xdc00;
             builder.append((char)lead);
             builder.append((char)trail);
           }
@@ -474,7 +656,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       }
       if (bytesNeeded != 0) {
         if (replace) {
-          builder.append((char)0xFFFD);
+          builder.append((char)0xfffd);
         } else {
           return -1;
         }
@@ -490,7 +672,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * @return The string read.
      * @throws java.io.IOException An I/O error occurred.
      * @throws java.lang.NullPointerException The parameter {@code stream}
-     * is null or "builder" is null.
+     * is null.
      */
     public static String ReadUtf8ToString(
       InputStream stream) throws IOException {
@@ -510,7 +692,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
      * @throws java.io.IOException An I/O error occurred; or, the string
      * is not valid UTF-8 and {@code replace} is false.
      * @throws java.lang.NullPointerException The parameter {@code stream}
-     * is null or "builder" is null.
+     * is null.
      */
     public static String ReadUtf8ToString(
       InputStream stream,
@@ -557,7 +739,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       int bytesSeen = 0;
       int bytesNeeded = 0;
       int lower = 0x80;
-      int upper = 0xBF;
+      int upper = 0xbf;
       int pointer = 0;
       while (pointer < bytesCount || bytesCount < 0) {
         int b = stream.read();
@@ -565,7 +747,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           if (bytesNeeded != 0) {
             bytesNeeded = 0;
             if (replace) {
-              builder.append((char)0xFFFD);
+              builder.append((char)0xfffd);
               if (bytesCount >= 0) {
                 return -2;
               }
@@ -583,7 +765,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           ++pointer;
         }
         if (bytesNeeded == 0) {
-          if ((b & 0x7F) == b) {
+          if ((b & 0x7f) == b) {
             builder.append((char)b);
           } else if (b >= 0xc2 && b <= 0xdf) {
             bytesNeeded = 1;
@@ -600,7 +782,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
             cp = (b - 0xf0) << 18;
           } else {
             if (replace) {
-              builder.append((char)0xFFFD);
+              builder.append((char)0xfffd);
             } else {
               return -1;
             }
@@ -611,7 +793,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           lower = 0x80;
           upper = 0xbf;
           if (replace) {
-            builder.append((char)0xFFFD);
+            builder.append((char)0xfffd);
             // "Read" the last byte again
             if (b < 0x80) {
               builder.append((char)b);
@@ -629,7 +811,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
               bytesNeeded = 3;
               cp = (b - 0xf0) << 18;
             } else {
-              builder.append((char)0xFFFD);
+              builder.append((char)0xfffd);
             }
             continue;
           } else {
@@ -647,12 +829,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
           cp = 0;
           bytesSeen = 0;
           bytesNeeded = 0;
-          if (ret <= 0xFFFF) {
+          if (ret <= 0xffff) {
             builder.append((char)ret);
           } else {
             int ch = ret - 0x10000;
             int lead = (ch / 0x400) + 0xd800;
-            int trail = (ch & 0x3FF) + 0xdc00;
+            int trail = (ch & 0x3ff) + 0xdc00;
             builder.append((char)lead);
             builder.append((char)trail);
           }
@@ -660,7 +842,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       }
       if (bytesNeeded != 0) {
         if (replace) {
-          builder.append((char)0xFFFD);
+          builder.append((char)0xfffd);
         } else {
           return -1;
         }

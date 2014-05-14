@@ -1,10 +1,9 @@
 /*
- * Created by SharpDevelop.
- * User: Peter
- * Date: 11/30/2013
- * Time: 10:11 PM
- *
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+Written by Peter O. in 2013.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Collections.Generic;
@@ -14,8 +13,7 @@ using NUnit.Framework;
 using PeterO;
 using Test;
 
-namespace CBOR
-{
+namespace CBOR {
     /// <summary>Description of ExtensiveTest.</summary>
   [TestFixture]
   public class ExtensiveTest
@@ -154,10 +152,10 @@ namespace CBOR
       }
 
       public override int GetHashCode() {
-        int hashCode = 0;
+        int hashCode = 703582279;
         unchecked {
           if (this.ed != null) {
-            hashCode += 1000000007 * this.ed.GetHashCode();
+            hashCode += 703582387 * this.ed.GetHashCode();
           }
         }
         return hashCode;
@@ -405,8 +403,8 @@ namespace CBOR
         }
         if (words.Length == 1) {
           bool neg = (words[0] >> 31) != 0;
-          int exponent = (words[0] >> 23) & 0xFF;
-          int mantissa = words[0] & 0x7FFFFF;
+          int exponent = (words[0] >> 23) & 0xff;
+          int mantissa = words[0] & 0x7fffff;
           if (exponent == 255) {
             if (mantissa == 0) {
               return Create(neg ? ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity);
@@ -435,8 +433,8 @@ namespace CBOR
           return Create(ExtendedFloat.Create(bigmantissa, (BigInteger)exponent));
         } else if (words.Length == 2) {
           bool neg = (words[0] >> 31) != 0;
-          int exponent = (words[0] >> 20) & 0x7FF;
-          int mantissa = words[0] & 0xFFFFF;
+          int exponent = (words[0] >> 20) & 0x7ff;
+          int mantissa = words[0] & 0xfffff;
           int mantissaNonzero = mantissa | words[1];
           if (exponent == 2047) {
             if (mantissaNonzero == 0) {
@@ -459,13 +457,13 @@ namespace CBOR
             mantissa |= 0x100000;
           }
           BigInteger bigmantissa = BigInteger.Zero;
-          bigmantissa += (BigInteger)((mantissa >> 16) & 0xFFFF);
+          bigmantissa += (BigInteger)((mantissa >> 16) & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)(mantissa & 0xFFFF);
+          bigmantissa += (BigInteger)(mantissa & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)((words[1] >> 16) & 0xFFFF);
+          bigmantissa += (BigInteger)((words[1] >> 16) & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)(words[1] & 0xFFFF);
+          bigmantissa += (BigInteger)(words[1] & 0xffff);
           if (neg) {
             bigmantissa = -bigmantissa;
           }
@@ -473,10 +471,10 @@ namespace CBOR
           return Create(ExtendedFloat.Create(bigmantissa, (BigInteger)exponent));
         } else if (words.Length == 4) {
           bool neg = (words[0] >> 31) != 0;
-          int exponent = (words[0] >> 16) & 0x7FFF;
-          int mantissa = words[0] & 0xFFFF;
+          int exponent = (words[0] >> 16) & 0x7fff;
+          int mantissa = words[0] & 0xffff;
           int mantissaNonzero = mantissa | words[3] | words[1] | words[2];
-          if (exponent == 0x7FFF) {
+          if (exponent == 0x7fff) {
             if (mantissaNonzero == 0) {
               return Create(neg ? ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity);
             }
@@ -497,21 +495,21 @@ namespace CBOR
             mantissa |= 0x10000;
           }
           BigInteger bigmantissa = BigInteger.Zero;
-          bigmantissa += (BigInteger)((mantissa >> 16) & 0xFFFF);
+          bigmantissa += (BigInteger)((mantissa >> 16) & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)(mantissa & 0xFFFF);
+          bigmantissa += (BigInteger)(mantissa & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)((words[1] >> 16) & 0xFFFF);
+          bigmantissa += (BigInteger)((words[1] >> 16) & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)(words[1] & 0xFFFF);
+          bigmantissa += (BigInteger)(words[1] & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)((words[2] >> 16) & 0xFFFF);
+          bigmantissa += (BigInteger)((words[2] >> 16) & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)(words[2] & 0xFFFF);
+          bigmantissa += (BigInteger)(words[2] & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)((words[3] >> 16) & 0xFFFF);
+          bigmantissa += (BigInteger)((words[3] >> 16) & 0xffff);
           bigmantissa <<= 16;
-          bigmantissa += (BigInteger)(words[3] & 0xFFFF);
+          bigmantissa += (BigInteger)(words[3] & 0xffff);
           if (neg) {
             bigmantissa = -bigmantissa;
           }
@@ -532,10 +530,10 @@ namespace CBOR
       }
 
       public override int GetHashCode() {
-        int hashCode = 0;
+        int hashCode = 703582379;
         unchecked {
           if (this.ef != null) {
-            hashCode += 1000000007 * this.ef.GetHashCode();
+            hashCode += 703582447 * this.ef.GetHashCode();
           }
         }
         return hashCode;
@@ -715,8 +713,7 @@ namespace CBOR
         }
         op1 = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[4]), this.HexInt(chunks[5]),
                                             this.HexInt(chunks[6]),
-                                            this.HexInt(chunks[7])
-                                          });
+                                            this.HexInt(chunks[7]) });
         op2 = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[8]), this.HexInt(chunks[9]),
                                             this.HexInt(chunks[10]),
                                             this.HexInt(chunks[11]) });

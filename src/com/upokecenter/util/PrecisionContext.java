@@ -4,7 +4,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 
 // import java.math.*;
@@ -40,7 +40,7 @@ at: http://peteroupc.github.io/CBOR/
      * Gets the traps that are set for each flag in the context. Whenever a
      * flag is signaled, even if HasFlags is false, and the flag's trap is
      * enabled, the operation will throw a TrapException. <p>For example,
-     * if Traps is equal to FlagInexact and FlagSubnormal, a TrapException
+     * if Traps equals FlagInexact and FlagSubnormal, a TrapException
      * will be thrown if an operation's return value is not the same as the
      * exact result (FlagInexact) or if the return value's exponent is lower
      * than the lowest allowed (FlagSubnormal).</p>
@@ -315,8 +315,8 @@ at: http://peteroupc.github.io/CBOR/
      */
     public PrecisionContext WithExponentRange(int exponentMinSmall, int exponentMaxSmall) {
       if (exponentMinSmall > exponentMaxSmall) {
- throw new IllegalArgumentException("exponentMinSmall (" + Long.toString((long)exponentMinSmall) + ") is not less or equal to " + Long.toString((long)exponentMaxSmall));
-}
+        throw new IllegalArgumentException("exponentMinSmall (" + Integer.toString((int)exponentMinSmall) + ") is more than " + Integer.toString((int)exponentMaxSmall));
+      }
       PrecisionContext pc = this.Copy();
       pc.hasExponentRange = true;
       pc.exponentMin = BigInteger.valueOf(exponentMinSmall);
@@ -357,6 +357,27 @@ at: http://peteroupc.github.io/CBOR/
       return pc;
     }
 
+    private boolean simplified;
+
+    /**
+     * Gets a value indicating whether to use a "simplified" arithmetic.
+     * @return Whether to use a "simplified" arithmetic.
+     */
+    public boolean isSimplified() {
+        return this.simplified;
+      }
+
+    /**
+     * Not documented yet.
+     * @param simplified A Boolean object.
+     * @return A PrecisionContext object.
+     */
+    public PrecisionContext WithSimplified(boolean simplified) {
+      PrecisionContext pc = this.Copy();
+      pc.simplified = simplified;
+      return pc;
+    }
+
     /**
      * Copies this PrecisionContext with an unlimited exponent range.
      * @return A PrecisionContext object.
@@ -375,8 +396,8 @@ at: http://peteroupc.github.io/CBOR/
      */
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
- throw new IllegalArgumentException("precision (" + Long.toString((long)precision) + ") is not greater or equal to " + "0");
-}
+        throw new IllegalArgumentException("precision (" + Integer.toString((int)precision) + ") is less than " + "0");
+      }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = BigInteger.valueOf(precision);
       return pc;
@@ -395,8 +416,8 @@ at: http://peteroupc.github.io/CBOR/
         throw new NullPointerException("bigintPrecision");
       }
       if (bigintPrecision.signum() < 0) {
- throw new IllegalArgumentException("bigintPrecision's sign (" + Long.toString((long)bigintPrecision.signum()) + ") is not greater or equal to " + "0");
-}
+        throw new IllegalArgumentException("bigintPrecision's sign (" + Integer.toString((int)bigintPrecision.signum()) + ") is less than " + "0");
+      }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
       return pc;
@@ -414,6 +435,7 @@ at: http://peteroupc.github.io/CBOR/
         0,
         this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
+      pcnew.simplified = this.simplified;
       pcnew.flags = this.flags;
       pcnew.exponentMax = this.exponentMax;
       pcnew.exponentMin = this.exponentMin;
@@ -447,11 +469,11 @@ at: http://peteroupc.github.io/CBOR/
      */
     public PrecisionContext (int precision, Rounding rounding, int exponentMinSmall, int exponentMaxSmall, boolean clampNormalExponents) {
       if (precision < 0) {
- throw new IllegalArgumentException("precision (" + Long.toString((long)precision) + ") is not greater or equal to " + "0");
-}
+        throw new IllegalArgumentException("precision (" + Integer.toString((int)precision) + ") is less than " + "0");
+      }
       if (exponentMinSmall > exponentMaxSmall) {
- throw new IllegalArgumentException("exponentMinSmall (" + Long.toString((long)exponentMinSmall) + ") is not less or equal to " + Long.toString((long)exponentMaxSmall));
-}
+        throw new IllegalArgumentException("exponentMinSmall (" + Integer.toString((int)exponentMinSmall) + ") is more than " + Integer.toString((int)exponentMaxSmall));
+      }
       this.bigintPrecision = precision == 0 ? BigInteger.ZERO : BigInteger.valueOf(precision);
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;

@@ -2,13 +2,12 @@
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Collections.Generic;
 
-namespace PeterO
-{
+namespace PeterO {
     /// <summary>Red-black tree, modified by Peter O. from public-domain
     /// Java code originally written by Doug Lea.</summary>
     /// <typeparam name='T'>Type of each element in the tree.</typeparam>

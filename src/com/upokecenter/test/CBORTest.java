@@ -4,7 +4,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 
 import java.io.*;
@@ -12,6 +12,7 @@ import java.io.*;
 import org.junit.Assert;
 import org.junit.Test;
 import com.upokecenter.util.*;
+import com.upokecenter.cbor.*;
 
     /**
      * Contains CBOR tests.
@@ -64,8 +65,38 @@ import com.upokecenter.util.*;
       }
     }
 
+    public static CBORObject RandomNumberOrRational(FastRandom rand) {
+      switch (rand.NextValue(7)) {
+        case 0:
+          return CBORObject.FromObject(RandomDouble(rand, Integer.MAX_VALUE));
+        case 1:
+          return CBORObject.FromObject(RandomSingle(rand, Integer.MAX_VALUE));
+        case 2:
+          return CBORObject.FromObject(RandomBigInteger(rand));
+        case 3:
+          return CBORObject.FromObject(RandomExtendedFloat(rand));
+        case 4:
+          return CBORObject.FromObject(RandomExtendedDecimal(rand));
+        case 5:
+          return CBORObject.FromObject(RandomInt64(rand));
+        case 6:
+          return CBORObject.FromObject(RandomRational(rand));
+        default:
+          throw new IllegalArgumentException();
+      }
+    }
+
     private static CBORObject RandomCBORByteString(FastRandom rand) {
       int x = rand.NextValue(0x2000);
+      byte[] bytes = new byte[x];
+      for (int i = 0; i < x; ++i) {
+        bytes[i] = ((byte)rand.NextValue(256));
+      }
+      return CBORObject.FromObject(bytes);
+    }
+
+    private static CBORObject RandomCBORByteStringShort(FastRandom rand) {
+      int x = rand.NextValue(50);
       byte[] bytes = new byte[x];
       for (int i = 0; i < x; ++i) {
         bytes[i] = ((byte)rand.NextValue(256));
@@ -83,14 +114,14 @@ import com.upokecenter.util.*;
           sb.append((char)(0x20 + rand.NextValue(0x60)));
         } else if (x < 98) {
           // Supplementary character
-          x = rand.NextValue(0x400) + 0xD800;
+          x = rand.NextValue(0x400) + 0xd800;
           sb.append((char)x);
-          x = rand.NextValue(0x400) + 0xDC00;
+          x = rand.NextValue(0x400) + 0xdc00;
           sb.append((char)x);
         } else {
           // BMP character
-          x = 0x20 + rand.NextValue(0xFFE0);
-          if (x >= 0xD800 && x < 0xE000) {
+          x = 0x20 + rand.NextValue(0xffe0);
+          if (x >= 0xd800 && x < 0xe000) {
             // surrogate code unit, generate ASCII instead
             x = 0x20 + rand.NextValue(0x60);
           }
@@ -122,11 +153,48 @@ import com.upokecenter.util.*;
     }
 
     private static CBORObject RandomCBORTaggedObject(FastRandom rand, int depth) {
-      int tag = rand.NextValue(0x1000000);
-      if (tag == 2 || tag == 3 || tag == 4 || tag == 5) {
+      int tag = 0;
+      if (rand.NextValue(2) == 0) {
+        int[] tagselection = new int[] { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30, 30, 0, 1, 25, 26, 27 };
+        tag = tagselection[rand.NextValue(tagselection.length)];
+      } else {
+        tag = rand.NextValue(0x1000000);
+      }
+      if (tag == 25) {
         tag = 0;
       }
-      return CBORObject.FromObjectAndTag(RandomCBORObject(rand, depth + 1), tag);
+      if (tag == 30) {
+        return RandomCBORByteString(rand);
+      }
+      for (int i = 0; i < 15; ++i) {
+        CBORObject o;
+        // System.out.println("tag "+tag+" "+i);
+        if (tag == 0 || tag == 1 || tag == 28 || tag == 29) {
+          tag = 999;
+        }
+        if (tag == 2 || tag == 3) {
+          o = RandomCBORByteStringShort(rand);
+        } else if (tag == 4 || tag == 5) {
+          o = CBORObject.NewArray();
+          o.Add(RandomSmallIntegral(rand));
+          o.Add(CBORObject.FromObject(RandomBigInteger(rand)));
+        } else if (tag == 30) {
+          o = CBORObject.NewArray();
+          o.Add(RandomSmallIntegral(rand));
+          o.Add(CBORObject.FromObject(RandomBigInteger(rand)));
+        } else {
+          o = RandomCBORObject(rand, depth + 1);
+        }
+        try {
+          o = CBORObject.FromObjectAndTag(o, tag);
+          // System.out.println("done");
+          return o;
+        } catch (Exception ex) {
+          continue;
+        }
+      }
+      // System.out.println("Failed "+tag);
+      return CBORObject.Null;
     }
 
     private static CBORObject RandomCBORArray(FastRandom rand, int depth) {
@@ -148,6 +216,15 @@ import com.upokecenter.util.*;
       return cborRet;
     }
 
+    public static ExtendedRational RandomRational(FastRandom rand) {
+      BigInteger bigintA = RandomBigInteger(rand);
+      BigInteger bigintB = RandomBigInteger(rand);
+      if (bigintB.signum()==0) {
+        bigintB = BigInteger.ONE;
+      }
+      return new ExtendedRational(bigintA, bigintB);
+    }
+
     private static CBORObject RandomCBORObject(FastRandom rand) {
       return RandomCBORObject(rand, 0);
     }
@@ -159,7 +236,7 @@ import com.upokecenter.util.*;
         case 1:
         case 2:
         case 3:
-          return RandomNumber(rand);
+          return RandomNumberOrRational(rand);
         case 4:
           return rand.NextValue(2) == 0 ? CBORObject.True : CBORObject.False;
         case 5:
@@ -216,7 +293,7 @@ import com.upokecenter.util.*;
       if (rand.NextValue(2) == 0) {
         r |= ((int)rand.NextValue(0x10000)) << 16;
       }
-      r &= ~0x7F800000;  // clear exponent
+      r &= ~0x7f800000;  // clear exponent
       r |= ((int)exponent) << 23;  // set exponent
       return Float.intBitsToFloat(r);
     }
@@ -280,6 +357,22 @@ import com.upokecenter.util.*;
       return sb.toString();
     }
 
+    public static CBORObject RandomSmallIntegral(FastRandom r) {
+      int count = r.NextValue(20) + 1;
+      StringBuilder sb = new StringBuilder();
+      if (r.NextValue(2) == 0) {
+        sb.append('-');
+      }
+      for (int i = 0; i < count; ++i) {
+        if (i == 0) {
+          sb.append((char)('1' + r.NextValue(9)));
+        } else {
+          sb.append((char)('0' + r.NextValue(10)));
+        }
+      }
+      return CBORObject.FromObject(BigInteger.fromString(sb.toString()));
+    }
+
     public static String RandomDecimalString(FastRandom r) {
       int count = r.NextValue(20) + 1;
       StringBuilder sb = new StringBuilder();
@@ -328,6 +421,45 @@ import com.upokecenter.util.*;
         CBORObject o2 = RandomNumber(r);
         ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
         ExtendedDecimal cmpCobj = CBORObject.Addition(o1, o2).AsExtendedDecimal();
+        if (cmpDecFrac.compareTo(cmpCobj) != 0) {
+          Assert.assertEquals(ObjectMessages(o1, o2, "Results don't match"),0,cmpDecFrac.compareTo(cmpCobj));
+        }
+        TestCommon.AssertRoundTrip(o1);
+        TestCommon.AssertRoundTrip(o2);
+      }
+    }
+
+    @Test
+    public void TestDivide() {
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 3000; ++i) {
+        CBORObject o1 = CBORObject.FromObject(RandomBigInteger(r));
+        CBORObject o2 = CBORObject.FromObject(RandomBigInteger(r));
+        if (o2.signum()==0) {
+          continue;
+        }
+        ExtendedRational er = new ExtendedRational(o1.AsBigInteger(), o2.AsBigInteger());
+        if (er.compareTo(CBORObject.Divide(o1, o2).AsExtendedRational()) != 0) {
+          Assert.fail(ObjectMessages(o1, o2, "Results don't match"));
+        }
+      }
+      for (int i = 0; i < 3000; ++i) {
+        CBORObject o1 = RandomNumber(r);
+        CBORObject o2 = RandomNumber(r);
+        ExtendedRational er = o1.AsExtendedRational().Divide(o2.AsExtendedRational());
+        if (er.compareTo(CBORObject.Divide(o1, o2).AsExtendedRational()) != 0) {
+          Assert.fail(ObjectMessages(o1, o2, "Results don't match"));
+        }
+      }
+    }
+    @Test
+    public void TestMultiply() {
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 3000; ++i) {
+        CBORObject o1 = RandomNumber(r);
+        CBORObject o2 = RandomNumber(r);
+        ExtendedDecimal cmpDecFrac = o1.AsExtendedDecimal().Multiply(o2.AsExtendedDecimal());
+        ExtendedDecimal cmpCobj = CBORObject.Multiply(o1, o2).AsExtendedDecimal();
         if (cmpDecFrac.compareTo(cmpCobj) != 0) {
           Assert.assertEquals(ObjectMessages(o1, o2, "Results don't match"),0,cmpDecFrac.compareTo(cmpCobj));
         }
@@ -400,18 +532,24 @@ import com.upokecenter.util.*;
       sb.append("CBORObject.DecodeFromBytes(new byte[] {  ");
       for (int i = 0; i < bytes.length; ++i) {
         if (i > 0) {
-          sb.append(",");
-         }
+          sb.append(",");  }
         if ((bytes[i] & 0x80) != 0) {
           sb.append("(byte)0x");
         } else {
           sb.append("0x");
         }
-        sb.append(hex.charAt((bytes[i] >> 4) & 0xF));
-        sb.append(hex.charAt(bytes[i] & 0xF));
+        sb.append(hex.charAt((bytes[i] >> 4) & 0xf));
+        sb.append(hex.charAt(bytes[i] & 0xf));
       }
       sb.append("})");
       return sb.toString();
+    }
+
+    @Test
+    public void TestExtendedCompare() {
+      Assert.assertEquals(-1, ExtendedRational.Zero.compareTo(ExtendedRational.NaN));
+      Assert.assertEquals(-1, ExtendedFloat.Zero.compareTo(ExtendedFloat.NaN));
+      Assert.assertEquals(-1, ExtendedDecimal.Zero.compareTo(ExtendedDecimal.NaN));
     }
 
     @Test
@@ -422,10 +560,10 @@ import com.upokecenter.util.*;
       Assert.assertEquals(-1, b.compareTo(a));
       CBORObject o1 = null;
       CBORObject o2 = null;
-      o1 = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFB, (byte)0x8B, 0x44, (byte)0xF2, (byte)0xA9, 0x0C, 0x27, 0x42, 0x28  });
-      o2 = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xC5, (byte)0x82, 0x38, (byte)0xA4, (byte)0xC3, 0x50, 0x02, (byte)0x98,
-                                        (byte)0xC5, (byte)0xA8, 0x02, (byte)0xC1, (byte)0xF6, (byte)0xC0, 0x1A, (byte)0xBE, 0x08,
-                                        0x04, (byte)0x86, (byte)0x99, 0x3E, (byte)0xF1  });
+      o1 = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfb, (byte)0x8b, 0x44, (byte)0xf2, (byte)0xa9, 0x0c, 0x27, 0x42, 0x28  });
+      o2 = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x38, (byte)0xa4, (byte)0xc3, 0x50, 0x02, (byte)0x98,
+                                        (byte)0xc5, (byte)0xa8, 0x02, (byte)0xc1, (byte)0xf6, (byte)0xc0, 0x1a, (byte)0xbe, 0x08,
+                                        0x04, (byte)0x86, (byte)0x99, 0x3e, (byte)0xf1  });
       AddSubCompare(o1, o2);
     }
 
@@ -455,24 +593,47 @@ import com.upokecenter.util.*;
 
     @Test
     public void TestCompareB() {
+      if(!(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfa, 0x7f, (byte)0x80, 0x00, 0x00  }).IsInfinity()))Assert.fail();
+      if(!(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfa, 0x7f, (byte)0x80, 0x00, 0x00  }).AsExtendedRational().IsInfinity()))Assert.fail();
       AddSubCompare(
-        CBORObject.DecodeFromBytes(new byte[] {  0x1A, (byte)0xFC, 0x1A, (byte)0xB0, 0x52  }),
-        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xC5, (byte)0x82, 0x38, 0x5F, (byte)0xC2, 0x50, 0x08, 0x70, (byte)0xF3, (byte)0xC4, (byte)0x90, 0x4C, 0x14, (byte)0xBA, 0x59, (byte)0xF0, (byte)0xC6, (byte)0xCB, (byte)0x8C, (byte)0x8D, 0x40, (byte)0x80  }));
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x58, 0x28, 0x77, 0x24, 0x73, (byte)0x84, (byte)0xbd, 0x72, (byte)0x82, 0x7c, (byte)0xd6, (byte)0x93, 0x18, 0x44, (byte)0x8a, (byte)0x88, 0x43, 0x67, (byte)0xa2, (byte)0xeb, 0x11, 0x00, 0x15, 0x1b, 0x1d, 0x5d, (byte)0xdc, (byte)0xeb, 0x39, 0x17, 0x72, 0x11, 0x5b, 0x03, (byte)0xfa, (byte)0xa8, 0x3f, (byte)0xd2, 0x75, (byte)0xf8, 0x36, (byte)0xc8, 0x1a, 0x00, 0x2e, (byte)0x8c, (byte)0x8d  }),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfa, 0x7f, (byte)0x80, 0x00, 0x00  }));
+      CompareTestLess(
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x58, 0x28, 0x77, 0x24, 0x73, (byte)0x84, (byte)0xbd, 0x72, (byte)0x82, 0x7c, (byte)0xd6, (byte)0x93, 0x18, 0x44, (byte)0x8a, (byte)0x88, 0x43, 0x67, (byte)0xa2, (byte)0xeb, 0x11, 0x00, 0x15, 0x1b, 0x1d, 0x5d, (byte)0xdc, (byte)0xeb, 0x39, 0x17, 0x72, 0x11, 0x5b, 0x03, (byte)0xfa, (byte)0xa8, 0x3f, (byte)0xd2, 0x75, (byte)0xf8, 0x36, (byte)0xc8, 0x1a, 0x00, 0x2e, (byte)0x8c, (byte)0x8d  }),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfa, 0x7f, (byte)0x80, 0x00, 0x00  }));
       AddSubCompare(
-        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xC5, (byte)0x82, 0x38, (byte)0xC7, 0x3B, 0x00, 0x00, 0x08, (byte)0xBF, (byte)0xDA, (byte)0xAF, 0x73, 0x46  }),
-        CBORObject.DecodeFromBytes(new byte[] {  0x3B, 0x5A, (byte)0x9B, (byte)0x9A, (byte)0x9C, (byte)0xB4, (byte)0x95, (byte)0xBF, 0x71  }));
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfb, 0x7f, (byte)0xf8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  }),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfa, 0x7f, (byte)0x80, 0x00, 0x00  }));
       AddSubCompare(
-        CBORObject.DecodeFromBytes(new byte[] {  0x1A, (byte)0xBB, 0x0C, (byte)0xF7, 0x52  }),
-        CBORObject.DecodeFromBytes(new byte[] {  0x1A, (byte)0x82, 0x00, (byte)0xBF, (byte)0xF9  }));
+        CBORObject.DecodeFromBytes(new byte[] {  0x1a, (byte)0xfc, 0x1a, (byte)0xb0, 0x52  }),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x38, 0x5f, (byte)0xc2, 0x50, 0x08, 0x70, (byte)0xf3, (byte)0xc4, (byte)0x90, 0x4c, 0x14, (byte)0xba, 0x59, (byte)0xf0, (byte)0xc6, (byte)0xcb, (byte)0x8c, (byte)0x8d, 0x40, (byte)0x80  }));
       AddSubCompare(
-        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFA, 0x1F, (byte)0x80, (byte)0xDB, (byte)0x9B  }),
-        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFB, 0x31, (byte)0x90, (byte)0xEA, 0x16, (byte)0xBE, (byte)0x80, 0x0B, 0x37  }));
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x38, (byte)0xc7, 0x3b, 0x00, 0x00, 0x08, (byte)0xbf, (byte)0xda, (byte)0xaf, 0x73, 0x46  }),
+        CBORObject.DecodeFromBytes(new byte[] {  0x3b, 0x5a, (byte)0x9b, (byte)0x9a, (byte)0x9c, (byte)0xb4, (byte)0x95, (byte)0xbf, 0x71  }));
       AddSubCompare(
-        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFB, 0x3C, 0x00, (byte)0xCF, (byte)0xB6, (byte)0xBD, (byte)0xFF, 0x37, 0x38  }),
-        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xFA, 0x30, (byte)0x80, 0x75, 0x63  }));
+        CBORObject.DecodeFromBytes(new byte[] {  0x1a, (byte)0xbb, 0x0c, (byte)0xf7, 0x52  }),
+        CBORObject.DecodeFromBytes(new byte[] {  0x1a, (byte)0x82, 0x00, (byte)0xbf, (byte)0xf9  }));
       AddSubCompare(
-        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xC5, (byte)0x82, 0x38, 0x7D, 0x3A, 0x06, (byte)0xBC, (byte)0xD5, (byte)0xB8  }),
-        CBORObject.DecodeFromBytes(new byte[] {  0x38, 0x5C  }));
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfa, 0x1f, (byte)0x80, (byte)0xdb, (byte)0x9b  }),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfb, 0x31, (byte)0x90, (byte)0xea, 0x16, (byte)0xbe, (byte)0x80, 0x0b, 0x37  }));
+      AddSubCompare(
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfb, 0x3c, 0x00, (byte)0xcf, (byte)0xb6, (byte)0xbd, (byte)0xff, 0x37, 0x38  }),
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfa, 0x30, (byte)0x80, 0x75, 0x63  }));
+      AddSubCompare(
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x38, 0x7d, 0x3a, 0x06, (byte)0xbc, (byte)0xd5, (byte)0xb8  }),
+        CBORObject.DecodeFromBytes(new byte[] {  0x38, 0x5c  }));
+      TestCommon.AssertRoundTrip(
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xda, 0x00, 0x1d, (byte)0xdb, 0x03, (byte)0xfb, (byte)0xff, (byte)0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  }));
+      CBORObject cbor = CBORObject.FromObjectAndTag(Double.NEGATIVE_INFINITY, 1956611);
+      TestCommon.AssertRoundTrip(cbor);
+      cbor = CBORObject.FromObjectAndTag(CBORObject.FromObject(Double.NEGATIVE_INFINITY), 1956611);
+      TestCommon.AssertRoundTrip(cbor);
+      cbor = CBORObject.FromObjectAndTag(CBORObject.FromObject(ExtendedFloat.NegativeInfinity), 1956611);
+      TestCommon.AssertRoundTrip(cbor);
+      cbor = CBORObject.FromObjectAndTag(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity), 1956611);
+      TestCommon.AssertRoundTrip(cbor);
+      cbor = CBORObject.FromObjectAndTag(CBORObject.FromObject(ExtendedRational.NegativeInfinity), 1956611);
+      TestCommon.AssertRoundTrip(cbor);
     }
 
     @Test
@@ -516,21 +677,27 @@ import com.upokecenter.util.*;
      * Not documented yet.
      */
     @Test
+    // [Timeout(10000)]
     public void TestCompare() {
       FastRandom r = new FastRandom();
+      // String badstr = null;
+      int count = 500;
+      for (int i = 0; i < count; ++i) {
+        CBORObject o1 = RandomCBORObject(r);
+        CBORObject o2 = RandomCBORObject(r);
+        CompareTestReciprocal(o1, o2);
+      }
       for (int i = 0; i < 5000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
         CompareDecimals(o1, o2);
       }
-      for (int i = 0; i < 500; ++i) {
-        CBORObject o1 = RandomCBORObject(r);
-        CBORObject o2 = RandomCBORObject(r);
-        CompareTestReciprocal(o1, o2);
-      }
       for (int i = 0; i < 50; ++i) {
         CBORObject o1 = CBORObject.FromObject(Float.NEGATIVE_INFINITY);
-        CBORObject o2 = RandomNumber(r);
+        CBORObject o2 = RandomNumberOrRational(r);
+        if (o2.IsInfinity() || o2.IsNaN()) {
+          continue;
+        }
         CompareTestLess(o1, o2);
         o1 = CBORObject.FromObject(Double.NEGATIVE_INFINITY);
         CompareTestLess(o1, o2);
@@ -542,6 +709,52 @@ import com.upokecenter.util.*;
         CompareTestLess(o2, o1);
         o1 = CBORObject.FromObject(Double.NaN);
         CompareTestLess(o2, o1);
+      }
+      CBORObject[] sortedObjects = new CBORObject[] {
+        CBORObject.Undefined,
+        CBORObject.Null,
+        CBORObject.False,
+        CBORObject.True,
+        CBORObject.FromObject(Double.NEGATIVE_INFINITY),
+        CBORObject.FromObject(ExtendedDecimal.FromString("-1E+5000")),
+        CBORObject.FromObject(Long.MIN_VALUE),
+        CBORObject.FromObject(Integer.MIN_VALUE),
+        CBORObject.FromObject(-2),
+        CBORObject.FromObject(-1),
+        CBORObject.FromObject(0),
+        CBORObject.FromObject(1),
+        CBORObject.FromObject(2),
+        CBORObject.FromObject(Long.MAX_VALUE),
+        CBORObject.FromObject(ExtendedDecimal.FromString("1E+5000")),
+        CBORObject.FromObject(Double.POSITIVE_INFINITY),
+        CBORObject.FromObject(Double.NaN),
+        CBORObject.FromSimpleValue(0),
+        CBORObject.FromSimpleValue(19),
+        CBORObject.FromSimpleValue(32),
+        CBORObject.FromSimpleValue(255),
+        CBORObject.FromObject(new byte[] {  0, 1  }),
+        CBORObject.FromObject(new byte[] {  0, 2  }),
+        CBORObject.FromObject(new byte[] {  0, 2, 0  }),
+        CBORObject.FromObject(new byte[] {  1, 1  }),
+        CBORObject.FromObject(new byte[] {  1, 1, 4  }),
+        CBORObject.FromObject(new byte[] {  1, 2  }),
+        CBORObject.FromObject(new byte[] {  1, 2, 6  }),
+        CBORObject.FromObject("aa"),
+        CBORObject.FromObject("ab"),
+        CBORObject.FromObject("abc"),
+        CBORObject.FromObject("ba"),
+        CBORObject.FromObject(CBORObject.NewArray()),
+        CBORObject.FromObject(CBORObject.NewMap()),
+      };
+      for (int i = 0; i < sortedObjects.length; ++i) {
+        for (int j = i; j < sortedObjects.length; ++j) {
+          if (i == j) {
+            CompareTestEqual(sortedObjects[i], sortedObjects[j]);
+          } else {
+            CompareTestLess(sortedObjects[i], sortedObjects[j]);
+          }
+        }
+        Assert.assertEquals(1, sortedObjects[i].compareTo(null));
       }
       CBORObject sp = CBORObject.FromObject(Float.POSITIVE_INFINITY);
       CBORObject sn = CBORObject.FromObject(Float.NEGATIVE_INFINITY);
@@ -577,6 +790,8 @@ import com.upokecenter.util.*;
       }
       if((CBORDataUtilities.ParseJSONNumber("", false, false, false))!=null)Assert.fail();
       if((CBORDataUtilities.ParseJSONNumber("xyz", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("true", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber(".1", false, false, false))!=null)Assert.fail();
       if((CBORDataUtilities.ParseJSONNumber("0..1", false, false, false))!=null)Assert.fail();
       if((CBORDataUtilities.ParseJSONNumber("0xyz", false, false, false))!=null)Assert.fail();
       if((CBORDataUtilities.ParseJSONNumber("0.1xyz", false, false, false))!=null)Assert.fail();
@@ -618,6 +833,127 @@ import com.upokecenter.util.*;
       if(ExtendedFloat.NegativeInfinity.IsPositiveInfinity())Assert.fail();
       if(!(ExtendedFloat.NegativeInfinity.IsNegativeInfinity()))Assert.fail();
       if(!(ExtendedFloat.NegativeInfinity.isNegative()))Assert.fail();
+      if(!(ExtendedRational.PositiveInfinity.IsInfinity()))Assert.fail();
+      if(!(ExtendedRational.PositiveInfinity.IsPositiveInfinity()))Assert.fail();
+      if(ExtendedRational.PositiveInfinity.IsNegativeInfinity())Assert.fail();
+      if(ExtendedRational.PositiveInfinity.isNegative())Assert.fail();
+      if(!(ExtendedRational.NegativeInfinity.IsInfinity()))Assert.fail();
+      if(ExtendedRational.NegativeInfinity.IsPositiveInfinity())Assert.fail();
+      if(!(ExtendedRational.NegativeInfinity.IsNegativeInfinity()))Assert.fail();
+      if(!(ExtendedRational.NegativeInfinity.isNegative()))Assert.fail();
+
+      Assert.assertEquals(
+        ExtendedDecimal.PositiveInfinity,
+        ExtendedDecimal.FromDouble(Double.POSITIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedDecimal.NegativeInfinity,
+        ExtendedDecimal.FromDouble(Double.NEGATIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedDecimal.PositiveInfinity,
+        ExtendedDecimal.FromSingle(Float.POSITIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedDecimal.NegativeInfinity,
+        ExtendedDecimal.FromSingle(Float.NEGATIVE_INFINITY));
+
+      Assert.assertEquals(
+        ExtendedFloat.PositiveInfinity,
+        ExtendedFloat.FromDouble(Double.POSITIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedFloat.NegativeInfinity,
+        ExtendedFloat.FromDouble(Double.NEGATIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedFloat.PositiveInfinity,
+        ExtendedFloat.FromSingle(Float.POSITIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedFloat.NegativeInfinity,
+        ExtendedFloat.FromSingle(Float.NEGATIVE_INFINITY));
+
+      Assert.assertEquals(
+        ExtendedRational.PositiveInfinity,
+        ExtendedRational.FromDouble(Double.POSITIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedRational.NegativeInfinity,
+        ExtendedRational.FromDouble(Double.NEGATIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedRational.PositiveInfinity,
+        ExtendedRational.FromSingle(Float.POSITIVE_INFINITY));
+      Assert.assertEquals(
+        ExtendedRational.NegativeInfinity,
+        ExtendedRational.FromSingle(Float.NEGATIVE_INFINITY));
+
+      Assert.assertEquals(
+        ExtendedRational.PositiveInfinity,
+        ExtendedRational.FromExtendedDecimal(ExtendedDecimal.PositiveInfinity));
+      Assert.assertEquals(
+        ExtendedRational.NegativeInfinity,
+        ExtendedRational.FromExtendedDecimal(ExtendedDecimal.NegativeInfinity));
+      Assert.assertEquals(
+        ExtendedRational.PositiveInfinity,
+        ExtendedRational.FromExtendedFloat(ExtendedFloat.PositiveInfinity));
+      Assert.assertEquals(
+        ExtendedRational.NegativeInfinity,
+        ExtendedRational.FromExtendedFloat(ExtendedFloat.NegativeInfinity));
+
+      if (Double.POSITIVE_INFINITY != ExtendedRational.PositiveInfinity.ToDouble()) {
+        Assert.fail();
+      }
+      if (Double.NEGATIVE_INFINITY != ExtendedRational.NegativeInfinity.ToDouble()) {
+        Assert.fail();
+      }
+      if (Float.POSITIVE_INFINITY != ExtendedRational.PositiveInfinity.ToSingle()) {
+        Assert.fail();
+      }
+      if (Float.NEGATIVE_INFINITY != ExtendedRational.NegativeInfinity.ToSingle()) {
+        Assert.fail();
+      }
+      try {
+        ExtendedDecimal.PositiveInfinity.ToBigInteger();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedDecimal.NegativeInfinity.ToBigInteger();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.PositiveInfinity.ToBigInteger();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.NegativeInfinity.ToBigInteger();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedRational.PositiveInfinity.ToBigInteger();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedRational.NegativeInfinity.ToBigInteger();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
 
     @Test
@@ -670,7 +1006,7 @@ import com.upokecenter.util.*;
         throw new IllegalStateException("", ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] {  0x1C  });
+        CBORObject.DecodeFromBytes(new byte[] {  0x1c  });
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
@@ -823,6 +1159,19 @@ import com.upokecenter.util.*;
 
     @Test
     public void TestCBORInfinity() {
+      Assert.assertEquals("-Infinity", CBORObject.FromObject(ExtendedRational.NegativeInfinity).toString());
+      Assert.assertEquals("Infinity", CBORObject.FromObject(ExtendedRational.PositiveInfinity).toString());
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.NegativeInfinity));
+      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.PositiveInfinity));
+      if(!(CBORObject.FromObject(ExtendedRational.NegativeInfinity).IsInfinity()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedRational.PositiveInfinity).IsInfinity()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedRational.NegativeInfinity).IsNegativeInfinity()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedRational.PositiveInfinity).IsPositiveInfinity()))Assert.fail();
+      if(!(CBORObject.PositiveInfinity.IsInfinity()))Assert.fail();
+      if(!(CBORObject.PositiveInfinity.IsPositiveInfinity()))Assert.fail();
+      if(!(CBORObject.NegativeInfinity.IsInfinity()))Assert.fail();
+      if(!(CBORObject.NegativeInfinity.IsNegativeInfinity()))Assert.fail();
+      if(!(CBORObject.NaN.IsNaN()))Assert.fail();
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.NegativeInfinity));
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.NEGATIVE_INFINITY));
@@ -833,27 +1182,96 @@ import com.upokecenter.util.*;
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Float.POSITIVE_INFINITY));
     }
 
+    @Test(timeout=5000)
+    public void TestExtendedExtremeExponent() {
+      // Values with extremely high or extremely low exponents;
+      // we just check whether this test method runs reasonably fast
+      // for all these test cases
+      CBORObject obj;
+      obj = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x3a, 0x00, 0x1c, 0x2d, 0x0d, 0x1a, 0x13, 0x6c, (byte)0xa1, (byte)0x97  });
+      TestCommon.AssertRoundTrip(obj);
+      obj = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xda, 0x00, 0x14, 0x57, (byte)0xce, (byte)0xc5, (byte)0x82, 0x1a, 0x46, 0x5a, 0x37, (byte)0x87, (byte)0xc3, 0x50, 0x5e, (byte)0xec, (byte)0xfd, 0x73, 0x50, 0x64, (byte)0xa1, 0x1f, 0x10, (byte)0xc4, (byte)0xff, (byte)0xf2, (byte)0xc4, (byte)0xc9, 0x65, 0x12  });
+      TestCommon.AssertRoundTrip(obj);
+      int actual = CBORObject.FromObject(
+        ExtendedDecimal.Create(BigInteger.valueOf(333333), BigInteger.valueOf(-2))).compareTo(CBORObject.FromObject(ExtendedFloat.Create(BigInteger.valueOf(5234222), BigInteger.valueOf(-24936668661488L))));
+      Assert.assertEquals(1, actual);
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x31, 0x19, 0x03, 0x43  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xda, 0x00, (byte)0xa3, 0x35, (byte)0xc8, (byte)0xc5, (byte)0x82, 0x1b, 0x00, 0x01, (byte)0xe0, (byte)0xb2, (byte)0x83, 0x32, 0x0f, (byte)0x8b, (byte)0xc2, 0x58, 0x27, 0x2a, 0x65, 0x4a, (byte)0xbd, 0x67, 0x00, 0x15, (byte)0x94, (byte)0xb3, (byte)0xdd, (byte)0x80, 0x49, 0x7c, 0x16, (byte)0x9f, (byte)0x83, 0x05, (byte)0xd0, (byte)0x80, (byte)0xf8, (byte)0x8d, (byte)0xe3, 0x26, 0x14, (byte)0xd6, 0x2d, (byte)0xab, 0x53, (byte)0xd1, 0x79, (byte)0xe7, (byte)0xb5, (byte)0xc0, 0x73, (byte)0xf0, 0x1d, (byte)0xbd, 0x45, (byte)0xfa  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x1b, 0x01, 0x58, 0x0a, (byte)0xc0, (byte)0xc8, 0x66, 0x47, (byte)0xc0, (byte)0xc3, 0x58, 0x19, 0x50, 0x4d, (byte)0x89, 0x04, (byte)0x8a, (byte)0xc4, (byte)0xb7, 0x3a, 0x49, (byte)0xcc, 0x13, 0x4c, 0x33, (byte)0x80, 0x0c, 0x60, (byte)0xe7, (byte)0xd4, 0x5b, (byte)0x89, (byte)0xdb, (byte)0xc8, (byte)0x81, 0x0a, (byte)0x85  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc3, 0x58, 0x28, 0x3b, 0x1f, 0x60, (byte)0xa0, 0x4a, (byte)0xd3, (byte)0x94, 0x20, (byte)0xe9, (byte)0xfa, (byte)0xd2, 0x03, (byte)0xb5, (byte)0xd2, 0x0f, 0x7b, 0x7c, (byte)0x8d, 0x50, 0x4b, (byte)0x93, 0x5d, 0x6a, (byte)0xc6, (byte)0xdf, 0x01, (byte)0xa9, (byte)0xa6, 0x3c, (byte)0xf4, (byte)0xf8, (byte)0xb2, 0x41, (byte)0xc3, (byte)0xfd, 0x5d, (byte)0xc8, (byte)0x86, 0x2b, (byte)0xf3, (byte)0xc2, 0x52, 0x58, 0x3a, (byte)0xaf, 0x69, (byte)0x89, (byte)0xc0, (byte)0xa4, (byte)0xe1, 0x51, (byte)0x9f, 0x09, (byte)0xcb, (byte)0xbb, 0x15, 0x35, (byte)0xcf, 0x2b, 0x52  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x23, 0x3b, 0x00, 0x1b, (byte)0xda, (byte)0xb3, 0x03, 0x15, 0x28, (byte)0xd8  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x1b, 0x00, 0x6f, 0x25, 0x52, (byte)0xc2, 0x11, (byte)0xe1, (byte)0xe7, (byte)0xc3, 0x58, 0x3a, 0x64, (byte)0xc7, 0x29, (byte)0xdd, (byte)0x94, 0x6c, 0x4b, 0x09, (byte)0xa3, (byte)0xdf, 0x28, (byte)0xaf, 0x0f, (byte)0xbf, (byte)0xdf, (byte)0xd7, 0x73, (byte)0xac, 0x20, 0x40, (byte)0xaf, (byte)0x94, 0x6d, (byte)0xd7, (byte)0xd2, 0x38, (byte)0xd6, 0x14, 0x0a, 0x58, (byte)0xa2, 0x18, 0x12, 0x19, 0x2d, 0x40, (byte)0x99, (byte)0xca, (byte)0xb6, (byte)0x98, 0x61, (byte)0x91, 0x5d, 0x49, 0x68, (byte)0xac, 0x1b, 0x32, 0x57, (byte)0xca, (byte)0x85, 0x0a, (byte)0xea, 0x48, (byte)0xf8, 0x09, (byte)0xc2, 0x7e  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x1b, 0x00, 0x00, 0x00, 0x01, (byte)0xec, (byte)0xb5, 0x38, (byte)0xdf, (byte)0xc2, 0x58, 0x37, 0x58, (byte)0xd6, 0x14, (byte)0xc8, (byte)0x95, 0x03, 0x44, (byte)0xf3, (byte)0xd4, 0x34, (byte)0x9a, (byte)0xdd, (byte)0xf9, (byte)0xca, (byte)0xfb, (byte)0xa3, 0x6d, 0x19, (byte)0xe7, 0x2a, 0x41, (byte)0xf8, (byte)0xad, (byte)0x9f, (byte)0xee, 0x5b, 0x4b, (byte)0xd7, 0x12, 0x16, (byte)0xeb, (byte)0x80, (byte)0x83, 0x6e, 0x20, (byte)0xe1, 0x68, 0x4e, (byte)0x8d, (byte)0x83, (byte)0x9d, (byte)0xaf, 0x4c, 0x04, 0x6c, (byte)0xf4, (byte)0x96, 0x35, (byte)0xa4, 0x75, (byte)0x81, 0x45, (byte)0x88, (byte)0xf4, (byte)0xeb  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x3b, 0x0d, (byte)0xd0, 0x71, (byte)0xbc, 0x37, 0x65, 0x0d, (byte)0xa4, (byte)0xc2, 0x58, 0x21, 0x15, 0x67, (byte)0xce, (byte)0xb0, 0x03, 0x10, (byte)0xc2, (byte)0xf6, 0x0d, (byte)0x86, 0x6d, 0x19, 0x29, (byte)0xa3, 0x41, 0x77, 0x0e, (byte)0xe7, (byte)0xe7, 0x3d, 0x42, 0x67, 0x2d, (byte)0xe4, 0x0e, (byte)0xfd, (byte)0x95, (byte)0xdc, (byte)0xb1, (byte)0xc7, 0x6c, 0x08, 0x40  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc3, 0x58, 0x1d, 0x20, 0x04, (byte)0x9d, (byte)0xbf, 0x72, 0x2b, 0x43, 0x1c, (byte)0x8d, 0x19, (byte)0x83, (byte)0xfd, (byte)0xf3, (byte)0xef, (byte)0xb3, (byte)0xaf, (byte)0x93, (byte)0xe2, (byte)0xc5, (byte)0xb6, (byte)0x95, (byte)0xed, (byte)0xcc, 0x68, (byte)0xd8, 0x01, 0x22, (byte)0xbe, 0x11, (byte)0xc2, 0x58, 0x18, 0x44, (byte)0x99, (byte)0xfe, (byte)0xb7, 0x23, 0x36, (byte)0xe6, (byte)0xca, 0x36, 0x36, (byte)0xe3, 0x17, (byte)0xbe, 0x44, (byte)0xb1, 0x14, 0x51, 0x22, 0x56, (byte)0x90, 0x57, (byte)0xa3, (byte)0xba, (byte)0xeb  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x3a, 0x30, (byte)0xa2, 0x34, (byte)0xe6, (byte)0xc3, 0x58, 0x39, 0x6a, 0x07, 0x25, (byte)0x81, (byte)0xe5, 0x29, (byte)0xf0, 0x42, (byte)0x95, (byte)0xfd, 0x18, (byte)0x95, (byte)0xc5, 0x25, 0x56, (byte)0xd4, (byte)0x89, 0x0b, (byte)0x8c, (byte)0xad, 0x45, 0x3e, (byte)0xdb, (byte)0xc9, 0x39, (byte)0xc8, (byte)0xfd, 0x41, 0x02, (byte)0xad, (byte)0xdf, 0x21, (byte)0xd6, 0x04, 0x24, (byte)0xf6, 0x55, (byte)0x8d, 0x79, (byte)0xde, 0x08, (byte)0x9b, (byte)0xce, 0x26, (byte)0xb3, (byte)0xf3, 0x47, (byte)0x8f, 0x4b, 0x38, 0x51, 0x20, 0x66, (byte)0x82, (byte)0xd6, (byte)0x94, (byte)0xa8  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1b, 0x00, 0x00, 0x27, 0x37, (byte)0xf6, (byte)0x91, 0x48, (byte)0xe5, (byte)0xc3, 0x58, 0x18, 0x58, (byte)0xfb, 0x1d, 0x37, (byte)0xfb, (byte)0x95, 0x13, (byte)0xdc, 0x11, 0x57, 0x55, 0x46, 0x58, (byte)0xc6, 0x01, 0x2a, (byte)0xef, (byte)0x9c, 0x4c, (byte)0xab, 0x23, 0x72, (byte)0x95, 0x5b  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc3, 0x58, 0x25, 0x52, (byte)0x82, (byte)0xf2, (byte)0xe2, (byte)0xb2, (byte)0xad, (byte)0x81, (byte)0xb1, (byte)0xe7, (byte)0x86, 0x21, (byte)0xc3, 0x0d, 0x23, (byte)0x92, (byte)0x91, 0x0d, 0x15, (byte)0xc6, (byte)0xcf, 0x6b, (byte)0xdf, 0x2d, (byte)0xcc, (byte)0x8f, (byte)0x94, (byte)0xab, (byte)0xfb, (byte)0xf1, (byte)0xae, 0x7d, (byte)0x99, 0x5e, 0x6a, 0x6a, (byte)0xd7, (byte)0xbe, (byte)0xc2, 0x4f, 0x16, 0x0a, (byte)0x9d, 0x47, 0x34, 0x4b, (byte)0xfb, 0x62, 0x57, 0x02, 0x07, (byte)0x84, 0x77, 0x5c, 0x33  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x51, 0x42, 0x63, (byte)0x9c, (byte)0xa0, (byte)0xcc, (byte)0xd0, 0x7d, (byte)0xfd, (byte)0xab, (byte)0x98, 0x07, (byte)0xf3, (byte)0xac, (byte)0xd1, (byte)0xb4, 0x54, (byte)0x8a, (byte)0xc2, 0x58, 0x20, 0x14, (byte)0xb6, 0x42, 0x55, (byte)0xed, (byte)0xe3, 0x4b, 0x0c, 0x4e, (byte)0xf4, 0x3d, 0x55, 0x60, (byte)0xac, (byte)0xf6, (byte)0xdb, 0x3b, (byte)0xe3, (byte)0xec, (byte)0x81, (byte)0x93, 0x6d, (byte)0xa8, (byte)0x9f, 0x58, (byte)0xc2, 0x4f, 0x4e, 0x1c, (byte)0xda, 0x68, (byte)0x8a  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1a, 0x00, 0x4f, 0x01, 0x53, 0x1a, 0x14, (byte)0xe4, 0x07, (byte)0x88  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1a, 0x06, (byte)0x93, 0x34, 0x2c, (byte)0xc2, 0x58, 0x31, 0x42, 0x0e, (byte)0xfa, 0x5c, (byte)0xb4, (byte)0xe6, (byte)0xed, (byte)0x8c, (byte)0xf4, 0x23, 0x76, (byte)0xe6, 0x46, (byte)0xfe, 0x4f, 0x6f, (byte)0xed, 0x0c, 0x54, (byte)0xce, 0x28, 0x2d, (byte)0x93, (byte)0xd9, (byte)0x85, (byte)0x91, 0x04, (byte)0x90, 0x48, 0x69, (byte)0xb1, (byte)0xea, 0x00, (byte)0x9f, 0x1e, (byte)0xf4, 0x7d, 0x0b, 0x5d, (byte)0xf6, 0x2e, (byte)0xef, 0x0b, 0x35, 0x37, (byte)0xf5, 0x5f, 0x4b, (byte)0xa8  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x58, 0x3b, 0x45, 0x4f, 0x0a, 0x18, (byte)0xca, 0x6f, (byte)0xa3, 0x01, 0x38, 0x01, 0x63, 0x7b, 0x50, (byte)0xf6, 0x12, (byte)0x8b, (byte)0xbd, 0x5d, (byte)0xac, 0x58, (byte)0x9d, (byte)0xde, 0x27, 0x59, (byte)0xea, 0x11, 0x12, (byte)0x88, (byte)0x81, (byte)0xe0, (byte)0xd3, (byte)0xe5, (byte)0xfc, (byte)0xb4, (byte)0x8b, (byte)0x9b, (byte)0x9f, (byte)0xa5, 0x65, 0x32, 0x75, 0x2a, 0x2f, (byte)0xd2, 0x04, (byte)0x9d, (byte)0xf6, 0x4d, 0x75, 0x77, (byte)0xf2, 0x21, 0x3e, 0x19, (byte)0xb2, (byte)0x94, (byte)0xa5, (byte)0xa7, (byte)0x94, (byte)0xc2, 0x58, 0x2e, 0x19, (byte)0x8e, (byte)0xa7, (byte)0xb2, (byte)0x98, (byte)0xb3, (byte)0xbc, (byte)0xa5, (byte)0xc4, 0x50, (byte)0xed, 0x49, (byte)0x9a, 0x27, 0x03, (byte)0xfc, 0x0a, (byte)0xf3, 0x70, (byte)0x8e, 0x2e, 0x61, 0x18, (byte)0xcd, (byte)0xd5, (byte)0xc8, (byte)0xfd, (byte)0xa6, (byte)0x8d, 0x3b, (byte)0xc5, (byte)0xa7, 0x40, (byte)0xd7, 0x5c, (byte)0xd6, 0x1a, (byte)0xf6, (byte)0xee, 0x10, 0x72, (byte)0xf7, (byte)0x8e, (byte)0xc0, (byte)0x80, (byte)0x94  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc3, 0x58, 0x3a, 0x2f, (byte)0xae, (byte)0x80, (byte)0x9f, 0x14, (byte)0xcd, (byte)0xca, (byte)0xf7, (byte)0xd6, (byte)0xc9, (byte)0xaa, 0x02, (byte)0x85, 0x2f, 0x28, 0x14, 0x7b, 0x1e, 0x68, 0x79, 0x17, 0x40, 0x6b, (byte)0xde, 0x4a, (byte)0xe2, (byte)0x83, (byte)0xab, (byte)0xb1, (byte)0x84, (byte)0xe0, (byte)0x85, (byte)0xd0, (byte)0xd7, 0x72, 0x58, 0x5c, (byte)0x8c, (byte)0xef, (byte)0xd5, (byte)0xef, 0x28, 0x4a, (byte)0xe9, 0x13, 0x40, 0x73, (byte)0xe5, 0x2a, 0x70, 0x00, 0x7f, (byte)0xc7, 0x70, (byte)0xb0, (byte)0xac, 0x13, 0x14, (byte)0xc2, 0x58, 0x19, 0x14, 0x15, (byte)0xbb, (byte)0xbf, 0x06, 0x67, 0x46, 0x1e, (byte)0x98, (byte)0xa4, (byte)0xb6, 0x27, (byte)0xd8, 0x4a, 0x3f, 0x69, (byte)0xe2, 0x79, (byte)0xd9, (byte)0xd7, (byte)0xed, (byte)0xe7, (byte)0xc9, (byte)0xe2, 0x34  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x3b, 0x00, 0x00, 0x00, 0x01, 0x1c, (byte)0x8f, 0x5d, 0x3d, (byte)0xc3, 0x4c, 0x6c, 0x77, 0x44, 0x6f, (byte)0xcc, 0x57, (byte)0xad, (byte)0x99, 0x1c, (byte)0xbc, (byte)0xca, (byte)0x8a  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, 0x3b, 0x00, 0x2a, 0x4e, (byte)0xf7, (byte)0x87, 0x4c, 0x14, 0x50, (byte)0xc2, 0x58, 0x3a, 0x48, (byte)0xed, 0x45, 0x49, (byte)0xa1, 0x4d, 0x48, (byte)0x80, (byte)0xfc, (byte)0xa4, (byte)0x96, (byte)0xce, (byte)0xc0, (byte)0xfb, 0x23, (byte)0x81, (byte)0xc4, (byte)0xfe, 0x56, (byte)0x9b, 0x55, (byte)0xac, 0x74, 0x77, 0x39, 0x00, 0x1a, 0x37, (byte)0xe5, (byte)0xfe, 0x42, 0x63, (byte)0x9b, 0x6f, 0x15, 0x21, (byte)0x98, (byte)0xb8, 0x29, (byte)0xf5, (byte)0x85, (byte)0xda, 0x20, (byte)0xe5, 0x3b, 0x0f, (byte)0xa9, 0x3d, 0x10, 0x3c, (byte)0xe9, (byte)0xce, (byte)0x9c, (byte)0xd6, 0x5e, (byte)0xa6, 0x16, 0x55  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x3a, 0x00, (byte)0x8d, 0x14, (byte)0x9b, (byte)0xc3, 0x58, 0x25, 0x43, 0x65, 0x68, 0x79, (byte)0x9c, 0x24, (byte)0x95, 0x56, 0x37, (byte)0xaa, (byte)0xd2, 0x3e, 0x46, 0x18, (byte)0xf4, (byte)0xef, 0x31, 0x1b, 0x3e, (byte)0xa7, (byte)0xce, 0x18, (byte)0xbe, (byte)0xdf, (byte)0xd4, 0x12, (byte)0x94, (byte)0x97, 0x47, (byte)0xb7, 0x14, (byte)0xc0, (byte)0x8e, 0x07, (byte)0xc3, 0x00, (byte)0xae  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc3, 0x54, 0x4e, 0x49, 0x4b, (byte)0xeb, 0x09, (byte)0xcc, (byte)0xd6, 0x7d, (byte)0x95, (byte)0x8c, (byte)0xc8, 0x34, (byte)0xc4, 0x69, (byte)0x9b, (byte)0xc5, (byte)0x9a, 0x5a, (byte)0xa4, 0x72, (byte)0xc2, 0x58, 0x34, 0x6f, (byte)0xb1, 0x4c, (byte)0x9b, 0x74, (byte)0x8f, (byte)0xf0, (byte)0x9a, 0x56, 0x39, (byte)0x91, (byte)0xe6, (byte)0xbd, (byte)0xca, (byte)0x91, 0x38, 0x4f, 0x2f, (byte)0xf9, (byte)0x92, (byte)0xfe, (byte)0x85, (byte)0xe4, 0x06, 0x59, (byte)0xb8, (byte)0x84, 0x1a, (byte)0x83, (byte)0x9b, 0x0e, 0x73, 0x30, (byte)0xfe, (byte)0xdf, 0x2d, 0x6c, 0x3b, (byte)0xfd, 0x0a, 0x64, 0x56, (byte)0xab, 0x6f, (byte)0xd6, (byte)0x8c, 0x60, (byte)0x90, 0x1b, 0x7d, (byte)0xc7, (byte)0xef  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1b, 0x00, 0x00, 0x00, 0x24, (byte)0x86, (byte)0xe1, (byte)0x8e, (byte)0xfd, (byte)0xc3, 0x4f, 0x50, 0x71, (byte)0xea, (byte)0xb9, 0x16, 0x4f, 0x3e, 0x0a, 0x66, (byte)0xda, 0x12, (byte)0xf5, (byte)0xbd, (byte)0xf0, 0x14  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x58, 0x3a, 0x6b, 0x72, 0x30, (byte)0xe4, (byte)0xeb, (byte)0xbd, 0x3d, (byte)0xa9, (byte)0xca, (byte)0xee, 0x03, (byte)0xbb, (byte)0xb1, (byte)0xcb, (byte)0xe8, (byte)0xd8, (byte)0xc5, (byte)0xbc, (byte)0xfe, (byte)0xa2, (byte)0xa1, 0x58, (byte)0xce, (byte)0xfd, (byte)0xd2, (byte)0xf9, 0x7f, (byte)0xc2, 0x39, 0x49, (byte)0xd8, 0x52, 0x41, 0x06, 0x61, 0x41, (byte)0xbc, 0x7e, (byte)0x9b, 0x68, (byte)0xa7, (byte)0xf4, (byte)0xc3, 0x58, (byte)0xf0, 0x7e, 0x73, 0x77, (byte)0xf8, (byte)0x81, 0x09, (byte)0x88, 0x48, (byte)0x80, (byte)0xa5, 0x79, 0x22, 0x23, (byte)0xc2, 0x58, 0x1e, 0x6c, (byte)0xc7, 0x0a, 0x54, 0x26, (byte)0xe1, (byte)0x84, 0x6a, 0x6a, 0x5b, 0x0a, 0x5f, 0x41, 0x3b, 0x6d, 0x66, (byte)0xf5, 0x47, 0x19, (byte)0xe5, 0x71, 0x0f, (byte)0xcb, 0x1b, (byte)0xf0, (byte)0xb4, (byte)0xbe, 0x3b, (byte)0x9a, 0x03  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1a, 0x00, 0x07, (byte)0xbb, 0x62, 0x1b, 0x00, 0x00, 0x00, 0x29, 0x43, 0x5d, 0x7b, (byte)0xe8  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x3b, 0x00, 0x00, 0x00, 0x0f, (byte)0x93, (byte)0xd8, (byte)0xb1, 0x6a, (byte)0xc3, 0x58, 0x25, 0x25, 0x54, 0x48, (byte)0x8f, 0x4c, 0x2a, 0x2e, 0x09, 0x65, 0x52, 0x1b, (byte)0x8b, (byte)0xcf, (byte)0xbb, 0x13, (byte)0xf3, (byte)0xc7, (byte)0xf1, (byte)0x93, (byte)0xc6, (byte)0xc2, 0x4f, 0x6c, 0x54, 0x2b, 0x00, 0x5c, (byte)0xab, 0x35, 0x75, 0x2f, (byte)0x98, 0x71, 0x51, 0x75, 0x4b, (byte)0xf5  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc3, 0x58, 0x1d, 0x7b, (byte)0xaf, 0x6d, (byte)0xd7, (byte)0xb5, (byte)0xa1, (byte)0xb8, (byte)0xba, (byte)0xef, (byte)0xd7, (byte)0x92, (byte)0xba, 0x6d, 0x0a, 0x62, (byte)0xd5, (byte)0x98, 0x7d, 0x3f, (byte)0xcb, (byte)0xab, 0x6c, 0x1d, 0x35, 0x59, 0x24, 0x46, 0x40, (byte)0x90, (byte)0xc2, 0x58, 0x20, 0x16, (byte)0xd0, 0x18, (byte)0xc6, (byte)0xd7, (byte)0xb1, (byte)0xce, (byte)0xdd, (byte)0xf3, (byte)0xc1, 0x48, 0x75, 0x0c, 0x1d, 0x0c, (byte)0x9a, 0x2f, 0x05, (byte)0x8b, 0x0f, (byte)0xde, 0x23, (byte)0x88, 0x59, (byte)0x8c, 0x42, (byte)0xb5, 0x72, (byte)0x97, 0x44, (byte)0xfb, (byte)0x86  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1a, (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x58, 0x1f, 0x03, (byte)0x9f, 0x5d, (byte)0x81, (byte)0x96, (byte)0xff, (byte)0xcb, 0x19, (byte)0x8f, 0x07, 0x25, (byte)0xe9, (byte)0xf1, (byte)0xe9, 0x6b, 0x0a, (byte)0xb3, 0x67, (byte)0xfc, (byte)0xb1, (byte)0xe4, 0x2c, (byte)0xd6, (byte)0xef, (byte)0xce, (byte)0xfb, 0x0d, 0x25, 0x78, 0x1d, (byte)0xf0, (byte)0xc2, 0x58, 0x31, 0x77, 0x40, (byte)0xea, 0x07, (byte)0x8e, (byte)0x8d, 0x02, (byte)0xda, 0x24, (byte)0xb7, (byte)0xb3, 0x14, (byte)0xa0, (byte)0x8f, 0x07, 0x7a, 0x5f, (byte)0xe2, 0x1d, 0x4d, 0x4f, 0x5c, 0x24, 0x37, (byte)0xc7, 0x64, (byte)0xb0, 0x36, 0x22, (byte)0xa3, 0x66, (byte)0xec, (byte)0xe2, (byte)0xb0, 0x3a, 0x58, (byte)0xbc, 0x56, 0x58, 0x74, (byte)0xca, (byte)0xb2, 0x09, 0x28, (byte)0xcb, 0x57, (byte)0xd0, (byte)0xf0, (byte)0xfc  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1b, 0x00, 0x1b, (byte)0xd3, 0x64, 0x45, (byte)0xce, 0x21, 0x46, (byte)0xc2, 0x58, 0x1d, 0x47, 0x3d, (byte)0xdb, (byte)0xb3, 0x46, 0x57, 0x1f, (byte)0xee, (byte)0xa3, (byte)0x84, 0x5c, 0x01, (byte)0xd6, (byte)0xa0, 0x5a, (byte)0xaa, 0x71, 0x21, 0x65, 0x48, (byte)0xbe, 0x26, 0x07, (byte)0x86, (byte)0xae, 0x29, 0x2a, (byte)0xd5, 0x37  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1b, 0x00, 0x00, 0x08, (byte)0xd6, 0x39, (byte)0xec, 0x14, 0x07, (byte)0xc3, 0x58, 0x2d, 0x38, 0x68, 0x32, (byte)0xe5, (byte)0xdf, (byte)0xf3, (byte)0xb4, (byte)0x84, (byte)0xbe, (byte)0xf8, 0x72, (byte)0xa9, 0x68, (byte)0xcd, 0x0c, 0x13, 0x62, 0x43, 0x19, (byte)0xff, 0x77, (byte)0xe7, 0x70, (byte)0xf5, (byte)0x85, 0x22, 0x23, 0x1c, 0x72, 0x0b, (byte)0x9e, 0x43, (byte)0xa6, (byte)0xee, (byte)0x81, 0x18, 0x76, 0x0b, (byte)0xb4, 0x4f, (byte)0x97, 0x27, 0x39, 0x13, 0x78  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xda, 0x00, (byte)0xef, 0x7f, 0x16, (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc3, 0x58, 0x2a, 0x49, 0x3c, (byte)0xb2, (byte)0x89, (byte)0xa2, 0x37, (byte)0xc4, 0x5d, (byte)0xbf, 0x0b, 0x4c, 0x77, 0x2c, 0x05, 0x32, (byte)0xa7, (byte)0x85, (byte)0xe2, 0x31, 0x20, 0x61, (byte)0xa8, 0x06, (byte)0xd3, (byte)0xe2, 0x71, 0x06, 0x05, (byte)0xe6, (byte)0x8a, (byte)0xa1, 0x03, (byte)0xce, 0x2c, (byte)0xb6, (byte)0xba, 0x28, (byte)0xfb, (byte)0xb1, 0x5c, (byte)0x97, (byte)0x85, (byte)0xc2, 0x58, 0x29, 0x5b, 0x73, 0x34, 0x0f, (byte)0x9f, (byte)0xa4, (byte)0x81, (byte)0x82, 0x63, 0x6b, 0x16, 0x4e, 0x62, (byte)0x9d, (byte)0xcc, (byte)0xe4, 0x06, 0x17, 0x35, (byte)0xc7, 0x52, (byte)0xf4, (byte)0xe2, 0x28, (byte)0xe7, 0x12, 0x4b, 0x7b, 0x06, 0x77, (byte)0xa3, (byte)0xdd, (byte)0xeb, 0x70, 0x76, (byte)0xe6, (byte)0xa9, 0x16, 0x74, 0x29, (byte)0x86  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1b, 0x00, 0x00, 0x00, 0x01, (byte)0x84, (byte)0xfa, (byte)0xb7, (byte)0xe1, (byte)0xc3, 0x57, 0x54, (byte)0xe6, 0x76, 0x1b, (byte)0xe8, 0x78, (byte)0x92, 0x28, 0x39, 0x57, (byte)0x8f, (byte)0xbb, (byte)0xab, (byte)0xb8, (byte)0x8e, 0x42, 0x56, (byte)0xe1, (byte)0x82, (byte)0x82, 0x51, 0x07, (byte)0xa9  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x1b, (byte)0x80, (byte)0xbc, 0x30, (byte)0xc1, 0x2b, 0x01, 0x37, (byte)0x90, (byte)0xc3, 0x51, 0x21, (byte)0x8b, (byte)0xa8, (byte)0xda, (byte)0xf7, 0x15, 0x4a, (byte)0x95, (byte)0x87, 0x79, 0x1e, 0x49, (byte)0xad, 0x3c, (byte)0xba, 0x41, 0x2d  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x3a, 0x00, 0x0e, 0x31, (byte)0xb4, 0x3b, 0x00, 0x00, 0x00, 0x0e, 0x2d, (byte)0xbf, (byte)0xb4, (byte)0xcb  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc3, 0x58, 0x38, 0x77, (byte)0x9d, (byte)0x81, 0x19, 0x13, 0x4a, 0x2e, 0x58, 0x71, 0x70, (byte)0x90, (byte)0xc2, (byte)0xb9, (byte)0xd1, 0x0a, (byte)0xd6, (byte)0xfb, 0x6b, 0x3d, 0x68, (byte)0xf2, 0x68, (byte)0x84, 0x06, 0x0b, 0x5a, (byte)0xdf, (byte)0xe6, (byte)0xac, 0x51, 0x7e, (byte)0xf4, 0x29, (byte)0xe9, 0x17, 0x05, 0x79, (byte)0xe7, 0x4c, 0x72, 0x04, (byte)0xcc, 0x71, (byte)0xa6, (byte)0xad, (byte)0xc5, (byte)0xc7, 0x05, (byte)0x91, (byte)0xa3, 0x3c, (byte)0x98, 0x18, 0x72, 0x49, (byte)0xa1, (byte)0xc2, 0x58, 0x22, 0x65, 0x60, 0x0a, (byte)0xe6, (byte)0x9a, (byte)0xdb, 0x00, (byte)0xb0, (byte)0xce, 0x65, 0x72, 0x11, (byte)0x89, 0x0b, (byte)0xbd, (byte)0xbb, 0x33, (byte)0xab, (byte)0x9b, (byte)0xa9, 0x48, (byte)0xe3, 0x60, (byte)0xad, (byte)0xaa, (byte)0x99, (byte)0xe5, 0x72, (byte)0xd2, (byte)0xfd, 0x41, (byte)0x96, (byte)0xa7, (byte)0x82  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1a, 0x01, (byte)0xea, 0x05, (byte)0x8b, (byte)0xc2, 0x58, 0x2b, 0x47, (byte)0x81, 0x70, 0x43, (byte)0x97, (byte)0xf4, (byte)0x91, 0x2f, 0x67, 0x3e, 0x7a, (byte)0xa6, 0x15, (byte)0x9e, (byte)0x9f, (byte)0x97, 0x40, (byte)0xea, (byte)0xd1, (byte)0xc0, (byte)0xda, 0x25, (byte)0x8d, (byte)0xa2, 0x2e, (byte)0xc3, (byte)0xe1, (byte)0xc9, 0x15, 0x43, 0x71, (byte)0xd3, (byte)0xa5, 0x55, (byte)0x86, 0x7d, 0x05, 0x5d, (byte)0xdc, 0x48, (byte)0xdb, (byte)0xc1, 0x6c  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x58, 0x2e, 0x3c, (byte)0xc5, 0x71, (byte)0xe2, 0x4c, 0x69, 0x25, (byte)0xce, (byte)0xb0, 0x70, 0x77, 0x2e, (byte)0xa3, 0x1f, 0x55, (byte)0xe3, 0x1f, (byte)0xb1, (byte)0xb9, 0x4e, (byte)0xa9, (byte)0xe5, 0x35, (byte)0xa3, (byte)0xb6, 0x3a, 0x7c, (byte)0x94, (byte)0xd7, (byte)0xe4, 0x0c, 0x57, (byte)0xe0, (byte)0xf4, 0x03, (byte)0x93, 0x5a, (byte)0x80, 0x25, 0x28, (byte)0x84, 0x10, (byte)0x83, 0x0a, (byte)0xf0, (byte)0xc9, (byte)0xc2, 0x58, 0x2a, 0x67, (byte)0xd6, 0x33, (byte)0xd6, 0x79, 0x38, (byte)0xbd, 0x6d, 0x71, 0x53, 0x3f, (byte)0xc3, 0x31, 0x6e, (byte)0xa6, 0x4c, (byte)0xe7, 0x1a, (byte)0xbe, (byte)0xaf, (byte)0xeb, 0x7e, (byte)0xcc, (byte)0xe7, 0x40, 0x59, (byte)0xbc, (byte)0xd7, (byte)0xf8, (byte)0x93, (byte)0xab, (byte)0xce, 0x2e, 0x58, (byte)0x9c, (byte)0xf2, 0x10, 0x4e, 0x59, (byte)0xe0, 0x26, 0x74  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x3b, 0x00, 0x00, 0x00, 0x58, 0x30, (byte)0xd2, 0x37, (byte)0xd7, (byte)0xc2, 0x58, 0x1c, 0x2d, 0x10, (byte)0xe5, 0x04, 0x75, (byte)0x8a, 0x75, (byte)0xf1, 0x2c, 0x28, (byte)0xab, (byte)0xeb, (byte)0xcd, 0x47, (byte)0xf1, (byte)0x8c, 0x3b, (byte)0xf8, (byte)0x93, 0x2b, (byte)0xee, (byte)0xd9, (byte)0x9b, (byte)0xe6, (byte)0xba, (byte)0xde, (byte)0xc4, (byte)0x99  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x58, 0x3c, 0x71, (byte)0xb3, 0x06, (byte)0xa3, 0x1c, 0x29, (byte)0xcd, 0x4c, 0x52, 0x0c, 0x0c, 0x3a, (byte)0xe8, 0x35, 0x08, (byte)0xcc, 0x46, 0x77, 0x78, (byte)0x94, (byte)0xe6, (byte)0x83, 0x73, 0x74, 0x1a, (byte)0xc5, 0x34, 0x70, (byte)0x83, 0x5c, 0x48, 0x65, (byte)0xe0, 0x68, (byte)0xb6, (byte)0xab, 0x12, 0x29, 0x11, 0x03, 0x4c, (byte)0xdd, (byte)0x99, (byte)0xe7, (byte)0x97, (byte)0xa0, (byte)0x88, 0x19, 0x6a, 0x00, (byte)0xb1, 0x0e, (byte)0xa8, 0x09, (byte)0xfd, (byte)0x93, 0x16, 0x60, 0x28, (byte)0xce, (byte)0xc2, 0x58, 0x2c, 0x71, 0x11, (byte)0x95, (byte)0xf9, (byte)0xfe, 0x24, (byte)0xc7, (byte)0xab, 0x36, 0x4e, (byte)0x82, 0x32, (byte)0xfc, (byte)0x8b, (byte)0xd2, (byte)0xc7, 0x45, 0x58, 0x36, 0x0a, 0x1b, (byte)0x82, (byte)0xe5, (byte)0xba, (byte)0xba, (byte)0xc7, 0x0d, (byte)0xc6, 0x53, 0x0b, 0x6c, (byte)0xdf, (byte)0xf2, (byte)0x8e, (byte)0xd9, (byte)0x94, 0x3c, 0x08, 0x15, 0x07, (byte)0xac, 0x5e, 0x56, 0x16  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc3, 0x58, 0x33, 0x58, 0x36, 0x69, (byte)0xa1, 0x1c, (byte)0xd4, (byte)0xa2, 0x66, 0x7e, (byte)0xed, (byte)0xcf, (byte)0xe1, 0x19, 0x11, 0x47, 0x5e, 0x38, 0x35, (byte)0xc4, (byte)0xf6, 0x65, (byte)0xff, 0x53, 0x1f, 0x14, 0x25, 0x7c, (byte)0x84, (byte)0xb4, 0x32, 0x72, (byte)0xe6, (byte)0xa1, (byte)0xba, 0x63, 0x2f, 0x5f, 0x26, 0x20, (byte)0xd4, 0x4b, 0x2e, (byte)0xfe, 0x59, 0x09, 0x2a, 0x21, 0x49, 0x3d, 0x32, (byte)0xc5, (byte)0xc2, 0x58, 0x1e, 0x4e, 0x69, 0x29, (byte)0xe0, 0x27, 0x09, 0x36, 0x50, 0x61, 0x72, 0x57, 0x15, 0x6a, 0x1f, 0x70, 0x54, (byte)0xdf, 0x14, 0x3f, 0x04, 0x51, 0x48, (byte)0xba, 0x5c, 0x09, 0x32, (byte)0xf4, 0x54, (byte)0xee, 0x4c  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1a, 0x03, 0x48, (byte)0xc6, (byte)0x86, (byte)0xc3, 0x58, 0x32, 0x6c, 0x7f, (byte)0xcb, (byte)0xcc, (byte)0xfb, 0x42, (byte)0xb3, 0x5e, 0x4f, (byte)0x90, (byte)0xc7, 0x2c, (byte)0xa5, (byte)0xd1, (byte)0xa9, (byte)0xcc, 0x34, 0x1b, (byte)0xa4, (byte)0xab, 0x01, (byte)0xe1, (byte)0xb4, 0x1a, 0x1b, 0x20, (byte)0xc2, 0x60, (byte)0xe2, (byte)0xb1, (byte)0xd0, (byte)0xd8, 0x09, (byte)0xe6, 0x06, 0x7e, 0x03, 0x1b, 0x63, (byte)0x99, (byte)0x96, 0x4e, 0x29, 0x2a, 0x41, 0x24, (byte)0x99, 0x29, (byte)0xdd, 0x11  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x3b, 0x00, 0x01, (byte)0x97, (byte)0xcf, 0x67, 0x3d, (byte)0xeb, 0x15, (byte)0xc2, 0x58, 0x25, 0x26, (byte)0xe2, (byte)0x87, 0x03, (byte)0xe4, (byte)0xb2, (byte)0xaa, 0x68, (byte)0x91, 0x2f, (byte)0xbf, (byte)0xc6, (byte)0xf5, (byte)0xf6, 0x24, (byte)0xc6, 0x5b, (byte)0xaa, 0x29, (byte)0xdb, (byte)0xda, 0x2e, (byte)0x93, (byte)0x96, 0x49, (byte)0xfd, 0x3e, 0x2d, 0x47, 0x46, (byte)0xb6, (byte)0xe9, (byte)0xb9, 0x0b, (byte)0x9b, (byte)0x83, (byte)0xce  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x49, 0x18, 0x6f, 0x19, (byte)0xf9, 0x72, 0x4d, (byte)0x82, 0x4b, (byte)0xf0, (byte)0xc2, 0x4d, 0x18, (byte)0xc6, 0x07, (byte)0x81, 0x5c, (byte)0xe7, (byte)0xc6, 0x41, 0x1b, (byte)0xc9, (byte)0xba, (byte)0xf6, 0x75  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1b, 0x00, 0x00, 0x00, 0x05, 0x59, 0x47, (byte)0xdc, 0x6c, (byte)0xc2, 0x58, 0x22, 0x7e, (byte)0xd8, 0x2d, 0x59, 0x0b, (byte)0x8e, 0x0b, 0x33, 0x4f, (byte)0xae, 0x6c, (byte)0xbc, 0x23, 0x43, 0x49, 0x18, (byte)0xca, 0x53, (byte)0x85, (byte)0xc8, (byte)0xc0, 0x5a, 0x39, 0x01, 0x01, 0x73, (byte)0xcc, 0x57, 0x51, (byte)0x88, (byte)0xa1, 0x74, 0x29, 0x10  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, 0x1a, 0x00, 0x31, (byte)0x8d, 0x53, 0x19, 0x24, 0x1d  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x58, 0x34, 0x47, 0x21, 0x59, (byte)0x88, (byte)0xb3, (byte)0xb9, (byte)0x85, 0x6b, 0x0d, 0x39, (byte)0x97, 0x17, (byte)0xd0, 0x10, (byte)0xd9, 0x62, (byte)0xd8, (byte)0xf4, 0x3a, (byte)0xfa, 0x3f, (byte)0x97, (byte)0xf5, (byte)0xaf, 0x47, 0x72, (byte)0xf8, (byte)0xd3, 0x36, (byte)0x9a, 0x79, (byte)0xdd, (byte)0x8f, 0x5b, (byte)0xfe, 0x19, (byte)0xee, (byte)0x9e, (byte)0xe4, (byte)0x8a, 0x74, 0x3e, (byte)0x90, (byte)0xe7, (byte)0x94, 0x66, 0x36, 0x7a, (byte)0xca, (byte)0xea, 0x3d, 0x61, (byte)0xc2, 0x58, 0x19, 0x73, (byte)0xe4, (byte)0xa8, 0x56, (byte)0xd5, 0x30, 0x4f, (byte)0xc0, 0x4e, (byte)0xd1, 0x35, 0x69, (byte)0x9a, (byte)0xb0, (byte)0x91, 0x01, (byte)0x9f, 0x56, (byte)0xb8, 0x6f, 0x2d, (byte)0xda, 0x5b, (byte)0xa0, 0x38  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1b, 0x00, 0x00, 0x08, (byte)0xed, 0x21, 0x0e, (byte)0x83, (byte)0x9e, (byte)0xc2, 0x58, 0x1c, 0x46, 0x67, 0x31, (byte)0xb3, (byte)0xd1, 0x4e, (byte)0xf9, 0x54, 0x08, 0x34, 0x7e, 0x43, (byte)0xce, 0x13, 0x3c, (byte)0xc0, (byte)0xb5, 0x54, 0x1a, (byte)0xd9, (byte)0xb2, (byte)0x8f, 0x2f, (byte)0xfe, 0x54, (byte)0x8c, (byte)0xd3, 0x73  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1b, 0x00, 0x00, 0x00, 0x01, 0x60, 0x1e, (byte)0xc1, (byte)0xcd, 0x39, 0x58, 0x73  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc3, 0x4e, 0x70, 0x08, (byte)0x91, (byte)0xcc, 0x08, (byte)0x90, (byte)0x8e, (byte)0xc9, (byte)0xe0, (byte)0xaf, (byte)0xae, (byte)0xbb, 0x77, (byte)0x83, (byte)0xc2, 0x58, 0x2d, 0x19, 0x7e, (byte)0x9a, (byte)0xe6, 0x65, 0x7d, (byte)0xe7, 0x01, 0x7a, (byte)0xae, (byte)0x9f, (byte)0x92, 0x19, (byte)0xe6, (byte)0xc3, (byte)0xed, (byte)0xb8, 0x1f, 0x7b, 0x7a, (byte)0x90, (byte)0xe9, 0x1a, 0x3d, 0x6a, (byte)0x82, 0x1c, (byte)0xe4, (byte)0x8f, 0x1e, (byte)0xc9, (byte)0x87, 0x2f, (byte)0xbf, 0x3f, 0x47, (byte)0xaa, (byte)0xe4, (byte)0xc8, 0x20, 0x1e, 0x03, (byte)0xa5, 0x3c, 0x23  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x3b, 0x00, 0x63, (byte)0x93, (byte)0xb7, 0x75, 0x43, (byte)0xf2, 0x68, (byte)0xc3, 0x58, 0x1f, 0x02, 0x17, 0x38, (byte)0xee, 0x0e, 0x2a, 0x45, 0x58, 0x5c, 0x79, 0x75, (byte)0x88, 0x18, (byte)0xa6, (byte)0xc5, (byte)0xcf, 0x02, 0x08, 0x29, 0x76, (byte)0x89, (byte)0xe8, (byte)0xfb, 0x40, (byte)0xf3, (byte)0x84, (byte)0xc4, 0x11, (byte)0xbe, 0x57, (byte)0xaf  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc3, 0x58, 0x24, 0x3a, (byte)0xb3, 0x22, (byte)0x92, 0x6a, (byte)0xde, (byte)0xe2, 0x2d, (byte)0x98, (byte)0xe4, 0x04, 0x5f, (byte)0xb7, 0x19, (byte)0xab, 0x4e, (byte)0xc1, 0x28, (byte)0xad, (byte)0xe6, 0x2a, (byte)0xda, 0x43, 0x40, 0x46, 0x03, 0x63, 0x20, 0x44, (byte)0xdc, (byte)0xee, (byte)0xc1, 0x06, 0x3b, (byte)0x87, 0x04, (byte)0xc2, 0x58, 0x30, 0x5f, 0x2d, 0x43, 0x03, (byte)0x88, 0x45, (byte)0xc6, 0x23, (byte)0xd8, 0x04, 0x68, 0x35, (byte)0xef, (byte)0xd0, 0x5a, 0x78, (byte)0xac, 0x23, 0x29, (byte)0xf2, 0x78, (byte)0xf1, 0x7d, (byte)0xa6, 0x4f, 0x4c, (byte)0xf3, 0x03, 0x44, (byte)0xf7, (byte)0xe4, 0x77, 0x21, 0x08, 0x38, (byte)0x9a, 0x70, (byte)0xa2, 0x60, 0x53, (byte)0xc7, (byte)0x80, (byte)0xef, (byte)0x89, 0x09, (byte)0xc2, (byte)0x9e, (byte)0xb6  }));
+      CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc4, (byte)0x82, 0x1a, 0x37, (byte)0xe1, 0x17, (byte)0xbe, (byte)0xc2, 0x58, 0x25, 0x1f, (byte)0xa9, (byte)0xe2, 0x1e, 0x77, (byte)0xd1, 0x70, (byte)0xea, 0x7e, (byte)0xcc, 0x31, 0x76, (byte)0x8b, (byte)0xe0, 0x3f, 0x02, (byte)0xaa, (byte)0xac, (byte)0xc7, (byte)0xe1, 0x43, 0x43, 0x73, 0x60, (byte)0x87, (byte)0xfc, 0x7f, (byte)0xfd, 0x4c, (byte)0xba, (byte)0x94, 0x7e, 0x17, (byte)0xec, (byte)0xd1, (byte)0xae, 0x5b  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, 0x1b, 0x00, 0x00, 0x4a, 0x32, (byte)0x84, 0x37, (byte)0x90, (byte)0x8a, (byte)0xc2, 0x58, 0x28, 0x35, 0x12, 0x3f, 0x2b, (byte)0xf4, 0x29, (byte)0xbd, 0x12, (byte)0xc9, (byte)0xfa, (byte)0x89, 0x7b, (byte)0x91, (byte)0x9e, 0x4f, 0x13, (byte)0xdb, (byte)0xd7, (byte)0xdb, (byte)0x9a, (byte)0xe7, 0x10, 0x5d, 0x47, 0x5d, (byte)0xad, 0x15, 0x5c, (byte)0xbe, 0x30, (byte)0xf7, (byte)0xef, (byte)0xe8, (byte)0xe0, 0x4a, (byte)0xe5, (byte)0xca, (byte)0xea, (byte)0xb9, (byte)0x89  }));
+      Assert.assertEquals(
+        -1,
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x58, 0x1e, 0x0e, 0x53, 0x4f, (byte)0xfe, 0x4d, 0x54, (byte)0xbb, 0x21, 0x3f, (byte)0xd5, (byte)0xea, 0x61, (byte)0x90, 0x68, (byte)0x8a, 0x14, (byte)0xfd, (byte)0x8d, 0x19, (byte)0xba, (byte)0xaf, (byte)0xbf, 0x3a, 0x67, 0x5e, 0x2d, 0x52, 0x41, (byte)0x93, (byte)0xa7, 0x18, 0x41  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x1b, 0x00, 0x00, 0x4b, 0x3e, (byte)0xcb, (byte)0xe8, (byte)0xc4, (byte)0xa3, (byte)0xc2, 0x58, 0x2a, 0x17, 0x0a, 0x4d, (byte)0x88, 0x40, (byte)0xe7, (byte)0xe9, (byte)0xe1, (byte)0x95, (byte)0xdc, (byte)0xad, (byte)0x97, (byte)0x87, 0x66, (byte)0x8c, 0x77, 0x4b, (byte)0xd6, 0x46, 0x52, 0x00, (byte)0xf0, (byte)0xdd, 0x77, 0x16, (byte)0xa5, (byte)0xca, 0x71, 0x5d, (byte)0xf5, 0x7c, 0x6b, (byte)0x82, (byte)0x85, 0x47, 0x2d, (byte)0x90, (byte)0x89, 0x12, (byte)0x93, 0x0b, 0x1e  })));
+    }
+
     /**
      * Not documented yet.
      */
-    @Test
+    @Test(timeout=20000)
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
-      for (int i = 0; i < 2000; ++i) {
-        CBORObject obj = RandomCBORObject(rand);
+      CBORObject obj;
+      // String badstr = null;
+      int count = 1000;
+      for (int i = 0; i < count; ++i) {
+        obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
+         /*
+        System.Threading.Thread thread = new Thread(new Runnable(){ public void run() { TestCommon.AssertRoundTrip(obj) }});
+        thread.start();
+        if (!thread.join(5000)) {
+          String bas = ToByteArrayString(obj);
+          @SuppressWarnings("deprecation") thread.stop();
+          Assert.fail(bas);
+          System.out.println(bas.length());
+          if (badstr == null || bas.length()<badstr.length()) {
+            badstr = bas;
+          }
+        }
+         // */
       }
+       /*
+      if (badstr != null) {
+        if (badstr.length()>10000) {
+          Assert.fail("badstr "+badstr.length());
+        }
+        Assert.fail(badstr);
+      }
+       // */
+      // System.out.println("Testing slightly modified objects");
       // Test slightly modified objects
       for (int i = 0; i < 200; ++i) {
         byte[] array = RandomCBORObject(rand).EncodeToBytes();
-        int count = rand.NextValue(10) + 1;
-        for (int j = 0; j < count; ++j) {
+        int count2 = rand.NextValue(10) + 1;
+        for (int j = 0; j < count2; ++j) {
           int index = rand.NextValue(array.length);
           array[index] = ((byte)rand.NextValue(256));
         }
         java.io.ByteArrayInputStream ms=null;
 try {
-ms=new ByteArrayInputStream(array);
+ms=new java.io.ByteArrayInputStream(array);
 int startingAvailable=ms.available();
 
           while ((startingAvailable-ms.available()) != startingAvailable) {
@@ -873,6 +1291,7 @@ int startingAvailable=ms.available();
               try {
                 if (o.getType() == CBORType.Array || o.getType() == CBORType.Map) {
                   jsonString = o.ToJSONString();
+                  // reread JSON String to test validity
                   CBORObject.FromJSONString(jsonString);
                 }
               } catch (Exception ex) {
@@ -885,18 +1304,20 @@ int startingAvailable=ms.available();
           }
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       }
+      /*
       // Test random nonsense data
+      System.out.println("Testing random nonsense");
       for (int i = 0; i < 200; ++i) {
         byte[] array = new byte[rand.NextValue(1000000) + 1];
         for (int j = 0; j < array.length; ++j) {
           if (j + 3 <= array.length) {
             int r = rand.NextValue(0x1000000);
-            array[j] = (byte)(r & 0xFF);
-            array[j + 1] = (byte)((r >> 8) & 0xFF);
-            array[j + 2] = (byte)((r >> 16) & 0xFF);
+            array[j] = (byte)(r & 0xff);
+            array[j + 1] = (byte)((r >> 8) & 0xff);
+            array[j + 2] = (byte)((r >> 16) & 0xff);
             j += 2;
           } else {
             array[j] = (byte)rand.NextValue(256);
@@ -904,7 +1325,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         }
         java.io.ByteArrayInputStream ms=null;
 try {
-ms=new ByteArrayInputStream(array);
+ms=new java.io.ByteArrayInputStream(array);
 int startingAvailable=ms.available();
 
           while ((startingAvailable-ms.available()) != startingAvailable) {
@@ -935,9 +1356,10 @@ int startingAvailable=ms.available();
           }
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       }
+        */
     }
 
     /**
@@ -963,6 +1385,8 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       TestExtendedFloatDoubleCore(7, "7");
       TestExtendedFloatDoubleCore(1.75, "1.75");
       TestExtendedFloatDoubleCore(3.5, "3.5");
+      TestExtendedFloatDoubleCore((double)Integer.MIN_VALUE, "-2147483648");
+      TestExtendedFloatDoubleCore((double)Long.MIN_VALUE, "-9223372036854775808");
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 2047; ++i) {  // Try a random double with a given exponent
         TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
@@ -973,7 +1397,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     }
     @Test(expected=CBORException.class)
     public void TestTagThenBreak() {
-      TestCommon.FromBytesTestAB(new byte[] {  (byte)0xD1, (byte)0xFF  });
+      TestCommon.FromBytesTestAB(new byte[] {  (byte)0xd1, (byte)0xff  });
     }
 
     /**
@@ -1060,7 +1484,6 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     @Test
     public void TestJSON() {
       CBORObject o;
-      o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       try {
         CBORObject.FromJSONString("[\"\\ud800\"]"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
@@ -1080,18 +1503,18 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
       try {
-        CBORObject.FromJSONString("{,\"0\"=>0,\"1\"=>1}");
+        CBORObject.FromJSONString("{,\"0\":0,\"1\":1}");
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
-      try { CBORObject.FromJSONString("{\"0\"=>0,,\"1\"=>1}"); Assert.fail("Should have failed");
+      try { CBORObject.FromJSONString("{\"0\":0,,\"1\":1}"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
-      try { CBORObject.FromJSONString("{\"0\"=>0,\"1\"=>1,}"); Assert.fail("Should have failed");
+      try { CBORObject.FromJSONString("{\"0\":0,\"1\":1,}"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
@@ -1120,6 +1543,159 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       } catch (Exception ex) {
         Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
       }
+      try {
+        CBORObject.FromJSONString("[0001]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{a:true}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\"://comment\ntrue}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":/*comment*/true}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{'a':true}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":'b'}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\t\":true}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\r\":true}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\n\":true}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("['a']");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":\"a\t\"}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[\"a\\'\"]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[NaN]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[+Infinity]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[-Infinity]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[Infinity]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":\"a\r\"}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("{\"a\":\"a\n\"}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[\"a\t\"]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       Assert.assertEquals(6, o.size());
       Assert.assertEquals(1, o.get(0).AsInt32());
       Assert.assertEquals(2, o.get(1).AsInt32());
@@ -1133,6 +1709,203 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals("true", CBORObject.True.ToJSONString());
       Assert.assertEquals("false", CBORObject.False.ToJSONString());
       Assert.assertEquals("null", CBORObject.Null.ToJSONString());
+      Assert.assertEquals("null", CBORObject.FromObject(Float.POSITIVE_INFINITY).ToJSONString());
+      Assert.assertEquals("null", CBORObject.FromObject(Float.NEGATIVE_INFINITY).ToJSONString());
+      Assert.assertEquals("null", CBORObject.FromObject(Float.NaN).ToJSONString());
+      Assert.assertEquals("null", CBORObject.FromObject(Double.POSITIVE_INFINITY).ToJSONString());
+      Assert.assertEquals("null", CBORObject.FromObject(Double.NEGATIVE_INFINITY).ToJSONString());
+      Assert.assertEquals("null", CBORObject.FromObject(Double.NaN).ToJSONString());
+      try {
+        CBORObject.FromJSONString("[0]");
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[0.1]");
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[0.1001]");
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[0.0]");
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[0.00]");
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[0.000]");
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[0.01]");
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[0.001]");
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[0.5]");
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[0E5]");
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[0E+6]");
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      java.io.ByteArrayInputStream ms=null;
+try {
+ms=new java.io.ByteArrayInputStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
+
+        try {
+          CBORObject.ReadJSON(ms);
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
+}
+finally {
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
+}
+      // whitespace followed by BOM
+      java.io.ByteArrayInputStream ms2=null;
+try {
+ms2=new java.io.ByteArrayInputStream(new byte[] {  0x20, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
+
+        try {
+          CBORObject.ReadJSON(ms2);
+          Assert.fail("Should have failed");
+        } catch (CBORException ex) {
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
+}
+finally {
+try { if(ms2!=null)ms2.close(); } catch (java.io.IOException ex){}
+}
+      // two BOMs
+      java.io.ByteArrayInputStream ms3=null;
+try {
+ms3=new java.io.ByteArrayInputStream(new byte[] {  (byte)0xef, (byte)0xbb, (byte)0xbf, (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
+
+        try {
+          CBORObject.ReadJSON(ms3);
+          Assert.fail("Should have failed");
+        } catch (CBORException ex) {
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
+}
+finally {
+try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
+}
+      try {
+        CBORObject.FromJSONString("\ufeff\u0020 {}");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      java.io.ByteArrayInputStream ms2a=null;
+try {
+ms2a=new java.io.ByteArrayInputStream(new byte[] {   });
+
+        try {
+          CBORObject.ReadJSON(ms2a);
+          Assert.fail("Should have failed");
+        } catch (CBORException ex) {
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
+}
+finally {
+try { if(ms2a!=null)ms2a.close(); } catch (java.io.IOException ex){}
+}
+      java.io.ByteArrayInputStream ms2b=null;
+try {
+ms2b=new java.io.ByteArrayInputStream(new byte[] {  0x20  });
+
+        try {
+          CBORObject.ReadJSON(ms2b);
+          Assert.fail("Should have failed");
+        } catch (CBORException ex) {
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
+}
+finally {
+try { if(ms2b!=null)ms2b.close(); } catch (java.io.IOException ex){}
+}
+      try {
+        CBORObject.FromJSONString("");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[.1]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("[-.1]");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromJSONString("\u0020");
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      Assert.assertEquals("true", CBORObject.FromJSONString("true").ToJSONString());
+      Assert.assertEquals("true", CBORObject.FromJSONString(" true ").ToJSONString());
+      Assert.assertEquals("false", CBORObject.FromJSONString("false").ToJSONString());
+      Assert.assertEquals("null", CBORObject.FromJSONString("null").ToJSONString());
+      Assert.assertEquals("5", CBORObject.FromJSONString("5").ToJSONString());
     }
 
     @Test
@@ -1199,7 +1972,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         int ret = 0;
         java.io.ByteArrayInputStream ms=null;
 try {
-ms=new ByteArrayInputStream(bytes);
+ms=new java.io.ByteArrayInputStream(bytes);
 
           ret = DataUtilities.ReadUtf8(ms, length, builder, true);
           Assert.assertEquals(expectedRet, ret);
@@ -1215,7 +1988,7 @@ ms=new ByteArrayInputStream(bytes);
           }
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (IOException ex){}
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
         if (bytes.length >= length) {
           builder.setLength(0);
@@ -1609,6 +2382,11 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       byte[] bytes = cbor.EncodeToBytes();
       boolean isequal = ByteArrayEquals(new byte[] {  (byte)(0x80 | 2), 3, 4  }, bytes);
       if(!(isequal))Assert.fail( "array not equal");
+      cbor = CBORObject.FromObject(new String[] { "a", "b", "c", "d", "e" });
+      Assert.assertEquals("[\"a\",\"b\",\"c\",\"d\",\"e\"]", cbor.ToJSONString());
+      TestCommon.AssertRoundTrip(cbor);
+      cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0x9f, 0, 1, 2, 3, 4, 5, 6, 7, (byte)0xff  });
+      Assert.assertEquals("[0,1,2,3,4,5,6,7]", cbor.ToJSONString());
     }
 
     /**
@@ -1627,6 +2405,16 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       Assert.assertEquals(2, cbor.get(CBORObject.FromObject("a")).AsInt32());
       Assert.assertEquals(4, cbor.get(CBORObject.FromObject("b")).AsInt32());
       Assert.assertEquals(0, CBORObject.True.size());
+      cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xbf, 0x61, 0x61, 2, 0x61, 0x62, 4, (byte)0xff  });
+      Assert.assertEquals(2, cbor.size());
+      TestCommon.AssertEqualsHashCode(
+        CBORObject.FromObject(2),
+        cbor.get(CBORObject.FromObject("a")));
+      TestCommon.AssertEqualsHashCode(
+        CBORObject.FromObject(4),
+        cbor.get(CBORObject.FromObject("b")));
+      Assert.assertEquals(2, cbor.get(CBORObject.FromObject("a")).AsInt32());
+      Assert.assertEquals(4, cbor.get(CBORObject.FromObject("b")).AsInt32());
     }
 
     private static String Repeat(char c, int num) {
@@ -1651,12 +2439,12 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     @Test
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
-        new byte[] {  0x7F,
+        new byte[] {  0x7f,
         0x61,
         0x2e,
         0x61,
         0x2e,
-        (byte)0xFF  });
+        (byte)0xff  });
       Assert.assertEquals("..", cbor.AsString());
       // Test streaming of long strings
       String longString = Repeat('x', 200000);
@@ -1684,25 +2472,25 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     @Test(expected=CBORException.class)
     public void TestTextStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
-        new byte[] {  0x7F,
+        new byte[] {  0x7f,
         0x61,
         0x20,
-        (byte)0xC0,
+        (byte)0xc0,
         0x61,
         0x20,
-        (byte)0xFF  });
+        (byte)0xff  });
     }
     @Test(expected=CBORException.class)
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
-        new byte[] {  0x7F,
+        new byte[] {  0x7f,
         0x61,
         0x20,
-        0x7F,
+        0x7f,
         0x61,
         0x20,
-        (byte)0xFF,
-        (byte)0xFF  });
+        (byte)0xff,
+        (byte)0xff  });
     }
 
     /**
@@ -1711,23 +2499,23 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     @Test
     public void TestByteStringStream() {
       TestCommon.FromBytesTestAB(
-        new byte[] {  0x5F,
+        new byte[] {  0x5f,
         0x41,
         0x20,
         0x41,
         0x20,
-        (byte)0xFF  });
+        (byte)0xff  });
     }
     @Test(expected=CBORException.class)
     public void TestByteStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
-        new byte[] {  0x5F,
+        new byte[] {  0x5f,
         0x41,
         0x20,
-        (byte)0xC2,
+        (byte)0xc2,
         0x41,
         0x20,
-        (byte)0xFF  });
+        (byte)0xff  });
     }
 
     public static void AssertDecimalsEquivalent(String a, String b) {
@@ -4815,14 +5603,14 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     @Test(expected=CBORException.class)
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
-        new byte[] {  0x5F,
+        new byte[] {  0x5f,
         0x41,
         0x20,
-        0x5F,
+        0x5f,
         0x41,
         0x20,
-        (byte)0xFF,
-        (byte)0xFF  });
+        (byte)0xff,
+        (byte)0xff  });
     }
 
     @Test
@@ -4931,6 +5719,163 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
+    }
+
+    @Test
+    public void TestExtendedMiscellaneous() {
+      Assert.assertEquals(ExtendedDecimal.Zero, ExtendedDecimal.FromExtendedFloat(ExtendedFloat.Zero));
+      Assert.assertEquals(ExtendedDecimal.NegativeZero, ExtendedDecimal.FromExtendedFloat(ExtendedFloat.NegativeZero));
+      Assert.assertEquals(ExtendedDecimal.Zero, ExtendedDecimal.FromInt32(0));
+      Assert.assertEquals(ExtendedDecimal.One, ExtendedDecimal.FromInt32(1));
+      Assert.assertEquals("sNaN", ExtendedDecimal.SignalingNaN.toString());
+      Assert.assertEquals("sNaN", ExtendedDecimal.SignalingNaN.ToEngineeringString());
+      Assert.assertEquals("sNaN", ExtendedDecimal.SignalingNaN.ToPlainString());
+      Assert.assertEquals(ExtendedFloat.Zero, ExtendedDecimal.Zero.ToExtendedFloat());
+      Assert.assertEquals(ExtendedFloat.NegativeZero, ExtendedDecimal.NegativeZero.ToExtendedFloat());
+      if (0.0 != ExtendedDecimal.Zero.ToSingle()) {
+        Assert.fail("Failed " + ExtendedDecimal.Zero.ToSingle());
+      }
+      if (0.0 != ExtendedDecimal.Zero.ToDouble()) {
+        Assert.fail("Failed " + ExtendedDecimal.Zero.ToDouble());
+      }
+      if (0.0f != ExtendedFloat.Zero.ToSingle()) {
+        Assert.fail("Failed " + ExtendedFloat.Zero.ToDouble());
+      }
+      if (0.0f != ExtendedFloat.Zero.ToDouble()) {
+        Assert.fail("Failed " + ExtendedFloat.Zero.ToDouble());
+      }
+      try {
+        CBORObject.FromSimpleValue(-1);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromSimpleValue(256);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromSimpleValue(24);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromSimpleValue(31);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromObjectAndTag(2, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromObjectAndTag(2, BigInteger.ZERO.subtract(BigInteger.ONE));
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      BigInteger bigvalue = BigInteger.ONE.shiftLeft(100);
+      try {
+        CBORObject.FromObjectAndTag(2, bigvalue);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromObjectAndTag(2, -1);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      Assert.assertEquals("simple(50)", CBORObject.FromSimpleValue(50).toString());
+      try {
+        CBORObject.FromObject(CBORObject.FromObject(Double.NaN).signum());
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      CBORObject cbor = CBORObject.True;
+      try {
+        CBORObject.FromObject(cbor.get(0));
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        cbor.set(0,CBORObject.False);
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        cbor = CBORObject.False;
+        CBORObject.FromObject(cbor.getKeys());
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromObject(CBORObject.NewArray().getKeys());
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromObject(CBORObject.NewArray().signum());
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromObject(CBORObject.NewMap().signum());
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      Assert.assertEquals(CBORObject.FromObject(0.1), CBORObject.FromObjectAndTag(0.1, 999999).Untag());
+      Assert.assertEquals(-1, CBORObject.NewArray().getSimpleValue());
+      Assert.assertEquals(0, CBORObject.FromObject(0.1).compareTo(CBORObject.FromObject(0.1)));
+      Assert.assertEquals(0, CBORObject.FromObject(0.1f).compareTo(CBORObject.FromObject(0.1f)));
+      Assert.assertEquals(CBORObject.FromObject(2), CBORObject.FromObject(-2).Negate());
+      Assert.assertEquals(CBORObject.FromObject(-2), CBORObject.FromObject(2).Negate());
+      Assert.assertEquals(CBORObject.FromObject(2), CBORObject.FromObject(-2).Abs());
+      Assert.assertEquals(CBORObject.FromObject(2), CBORObject.FromObject(2).Abs());
     }
 
     @Test
@@ -5070,6 +6015,62 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
+      try {
+        ExtendedDecimal.Zero.Subtract(null, PrecisionContext.Unlimited);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.Zero.Subtract(null, PrecisionContext.Unlimited);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedDecimal.Zero.Add(null, PrecisionContext.Unlimited);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.Zero.Add(null, PrecisionContext.Unlimited);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedDecimal.FromExtendedFloat(null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedDecimal.FromString("");
+        Assert.fail("Should have failed");
+      } catch (NumberFormatException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.FromString("");
+        Assert.fail("Should have failed");
+      } catch (NumberFormatException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
 
     /**
@@ -5180,1735 +6181,59 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
       if (-36.0d != ExtendedDecimal.FromString("-36").ToDouble()) {
         Assert.fail("otherValue double -36\nExpected: -36.0d\nWas: " + ExtendedDecimal.FromString("-36").ToDouble());
       }
-      if (0.0f != ExtendedDecimal.FromString("653060307988076E-230").ToSingle()) {
-        Assert.fail("otherValue single 653060307988076E-230\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("653060307988076E-230").ToSingle());
-      }
-      if (6.53060307988076E-216d != ExtendedDecimal.FromString("653060307988076E-230").ToDouble()) {
-        Assert.fail("otherValue double 653060307988076E-230\nExpected: 6.53060307988076E-216d\nWas: " + ExtendedDecimal.FromString("653060307988076E-230").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-4446345.5911E+316").ToSingle()) {
-        Assert.fail("otherValue single -4446345.5911E+316\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-4446345.5911E+316").ToSingle());
-      }
-      if (Double.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-4446345.5911E+316").ToDouble()) {
-        Assert.fail("otherValue double -4446345.5911E+316\nExpected: Double.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-4446345.5911E+316").ToDouble());
-      }
-      if (-5.3940226E15f != ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToSingle()) {
-        Assert.fail("otherValue single -5394022706804125.84338479899885\nExpected: -5.3940226E15f\nWas: " + ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToSingle());
-      }
-      if (-5.394022706804126E15d != ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToDouble()) {
-        Assert.fail("otherValue double -5394022706804125.84338479899885\nExpected: -5.394022706804126E15d\nWas: " + ExtendedDecimal.FromString("-5394022706804125.84338479899885").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("310504020304E+181").ToSingle()) {
-        Assert.fail("otherValue single 310504020304E+181\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("310504020304E+181").ToSingle());
-      }
-      if (3.10504020304E192d != ExtendedDecimal.FromString("310504020304E+181").ToDouble()) {
-        Assert.fail("otherValue double 310504020304E+181\nExpected: 3.10504020304E192d\nWas: " + ExtendedDecimal.FromString("310504020304E+181").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToSingle()) {
-        Assert.fail("otherValue single -164609450222646.21988340572652533E+317\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToSingle());
-      }
-      if (Double.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToDouble()) {
-        Assert.fail("otherValue double -164609450222646.21988340572652533E+317\nExpected: Double.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-164609450222646.21988340572652533E+317").ToDouble());
-      }
-      if (7.1524661E18f != ExtendedDecimal.FromString("7152466127871812565.075310").ToSingle()) {
-        Assert.fail("otherValue single 7152466127871812565.075310\nExpected: 7.1524661E18f\nWas: " + ExtendedDecimal.FromString("7152466127871812565.075310").ToSingle());
-      }
-      if (7.1524661278718126E18d != ExtendedDecimal.FromString("7152466127871812565.075310").ToDouble()) {
-        Assert.fail("otherValue double 7152466127871812565.075310\nExpected: 7.1524661278718126E18d\nWas: " + ExtendedDecimal.FromString("7152466127871812565.075310").ToDouble());
-      }
-      if (925.0f != ExtendedDecimal.FromString("925").ToSingle()) {
-        Assert.fail("otherValue single 925\nExpected: 925.0f\nWas: " + ExtendedDecimal.FromString("925").ToSingle());
-      }
-      if (925.0d != ExtendedDecimal.FromString("925").ToDouble()) {
-        Assert.fail("otherValue double 925\nExpected: 925.0d\nWas: " + ExtendedDecimal.FromString("925").ToDouble());
-      }
-      if (34794.0f != ExtendedDecimal.FromString("34794").ToSingle()) {
-        Assert.fail("otherValue single 34794\nExpected: 34794.0f\nWas: " + ExtendedDecimal.FromString("34794").ToSingle());
-      }
-      if (34794.0d != ExtendedDecimal.FromString("34794").ToDouble()) {
-        Assert.fail("otherValue double 34794\nExpected: 34794.0d\nWas: " + ExtendedDecimal.FromString("34794").ToDouble());
-      }
-      if (-0.0f != ExtendedDecimal.FromString("-337655705333269E-276").ToSingle()) {
-        Assert.fail("otherValue single -337655705333269E-276\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-337655705333269E-276").ToSingle());
-      }
-      if (-3.37655705333269E-262d != ExtendedDecimal.FromString("-337655705333269E-276").ToDouble()) {
-        Assert.fail("otherValue double -337655705333269E-276\nExpected: -3.37655705333269E-262d\nWas: " + ExtendedDecimal.FromString("-337655705333269E-276").ToDouble());
-      }
-      if (-0.0f != ExtendedDecimal.FromString("-564484627E-81").ToSingle()) {
-        Assert.fail("otherValue single -564484627E-81\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-564484627E-81").ToSingle());
-      }
-      if (-5.64484627E-73d != ExtendedDecimal.FromString("-564484627E-81").ToDouble()) {
-        Assert.fail("otherValue double -564484627E-81\nExpected: -5.64484627E-73d\nWas: " + ExtendedDecimal.FromString("-564484627E-81").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToSingle()) {
-        Assert.fail("otherValue single -249095219081.80985049618E+175\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToSingle());
-      }
-      if (-2.4909521908180986E186d != ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToDouble()) {
-        Assert.fail("otherValue double -249095219081.80985049618E+175\nExpected: -2.4909521908180986E186d\nWas: " + ExtendedDecimal.FromString("-249095219081.80985049618E+175").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-1696361380616078392E+221").ToSingle()) {
-        Assert.fail("otherValue single -1696361380616078392E+221\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-1696361380616078392E+221").ToSingle());
-      }
-      if (-1.6963613806160784E239d != ExtendedDecimal.FromString("-1696361380616078392E+221").ToDouble()) {
-        Assert.fail("otherValue double -1696361380616078392E+221\nExpected: -1.6963613806160784E239d\nWas: " + ExtendedDecimal.FromString("-1696361380616078392E+221").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToSingle()) {
-        Assert.fail("otherValue single 61520501993928105481.8536829047214988E+205\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToSingle());
-      }
-      if (6.15205019939281E224d != ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToDouble()) {
-        Assert.fail("otherValue double 61520501993928105481.8536829047214988E+205\nExpected: 6.15205019939281E224d\nWas: " + ExtendedDecimal.FromString("61520501993928105481.8536829047214988E+205").ToDouble());
-      }
-      if (2.08756651E14f != ExtendedDecimal.FromString("208756654290770").ToSingle()) {
-        Assert.fail("otherValue single 208756654290770\nExpected: 2.08756651E14f\nWas: " + ExtendedDecimal.FromString("208756654290770").ToSingle());
-      }
-      if (2.0875665429077E14d != ExtendedDecimal.FromString("208756654290770").ToDouble()) {
-        Assert.fail("otherValue double 208756654290770\nExpected: 2.0875665429077E14d\nWas: " + ExtendedDecimal.FromString("208756654290770").ToDouble());
-      }
-      if (-1.31098592E13f != ExtendedDecimal.FromString("-13109858687380").ToSingle()) {
-        Assert.fail("otherValue single -13109858687380\nExpected: -1.31098592E13f\nWas: " + ExtendedDecimal.FromString("-13109858687380").ToSingle());
-      }
-      if (-1.310985868738E13d != ExtendedDecimal.FromString("-13109858687380").ToDouble()) {
-        Assert.fail("otherValue double -13109858687380\nExpected: -1.310985868738E13d\nWas: " + ExtendedDecimal.FromString("-13109858687380").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("6650596004E+280").ToSingle()) {
-        Assert.fail("otherValue single 6650596004E+280\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("6650596004E+280").ToSingle());
-      }
-      if (6.650596004E289d != ExtendedDecimal.FromString("6650596004E+280").ToDouble()) {
-        Assert.fail("otherValue double 6650596004E+280\nExpected: 6.650596004E289d\nWas: " + ExtendedDecimal.FromString("6650596004E+280").ToDouble());
-      }
-      if (-9.2917935E13f != ExtendedDecimal.FromString("-92917937534357E0").ToSingle()) {
-        Assert.fail("otherValue single -92917937534357E0\nExpected: -9.2917935E13f\nWas: " + ExtendedDecimal.FromString("-92917937534357E0").ToSingle());
-      }
-      if (-9.2917937534357E13d != ExtendedDecimal.FromString("-92917937534357E0").ToDouble()) {
-        Assert.fail("otherValue double -92917937534357E0\nExpected: -9.2917937534357E13d\nWas: " + ExtendedDecimal.FromString("-92917937534357E0").ToDouble());
-      }
-      if (-0.0f != ExtendedDecimal.FromString("-46E-153").ToSingle()) {
-        Assert.fail("otherValue single -46E-153\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-46E-153").ToSingle());
-      }
-      if (-4.6E-152d != ExtendedDecimal.FromString("-46E-153").ToDouble()) {
-        Assert.fail("otherValue double -46E-153\nExpected: -4.6E-152d\nWas: " + ExtendedDecimal.FromString("-46E-153").ToDouble());
-      }
-      if (1.05161414E13f != ExtendedDecimal.FromString("10516141645281.77872161523035480").ToSingle()) {
-        Assert.fail("otherValue single 10516141645281.77872161523035480\nExpected: 1.05161414E13f\nWas: " + ExtendedDecimal.FromString("10516141645281.77872161523035480").ToSingle());
-      }
-      if (1.051614164528178E13d != ExtendedDecimal.FromString("10516141645281.77872161523035480").ToDouble()) {
-        Assert.fail("otherValue double 10516141645281.77872161523035480\nExpected: 1.051614164528178E13d\nWas: " + ExtendedDecimal.FromString("10516141645281.77872161523035480").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-8312147094254E+299").ToSingle()) {
-        Assert.fail("otherValue single -8312147094254E+299\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-8312147094254E+299").ToSingle());
-      }
-      if (Double.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-8312147094254E+299").ToDouble()) {
-        Assert.fail("otherValue double -8312147094254E+299\nExpected: Double.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-8312147094254E+299").ToDouble());
-      }
-      if (5.10270368E8f != ExtendedDecimal.FromString("510270376.1879").ToSingle()) {
-        Assert.fail("otherValue single 510270376.1879\nExpected: 5.10270368E8f\nWas: " + ExtendedDecimal.FromString("510270376.1879").ToSingle());
-      }
-      if (5.102703761879E8d != ExtendedDecimal.FromString("510270376.1879").ToDouble()) {
-        Assert.fail("otherValue double 510270376.1879\nExpected: 5.102703761879E8d\nWas: " + ExtendedDecimal.FromString("510270376.1879").ToDouble());
-      }
-      if (-0.0f != ExtendedDecimal.FromString("-693696E-143").ToSingle()) {
-        Assert.fail("otherValue single -693696E-143\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-693696E-143").ToSingle());
-      }
-      if (-6.93696E-138d != ExtendedDecimal.FromString("-693696E-143").ToDouble()) {
-        Assert.fail("otherValue double -693696E-143\nExpected: -6.93696E-138d\nWas: " + ExtendedDecimal.FromString("-693696E-143").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-91.43E+139").ToSingle()) {
-        Assert.fail("otherValue single -91.43E+139\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-91.43E+139").ToSingle());
-      }
-      if (-9.143E140d != ExtendedDecimal.FromString("-91.43E+139").ToDouble()) {
-        Assert.fail("otherValue double -91.43E+139\nExpected: -9.143E140d\nWas: " + ExtendedDecimal.FromString("-91.43E+139").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToSingle()) {
-        Assert.fail("otherValue single -4103819741762400.45807953367286162E+235\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToSingle());
-      }
-      if (-4.1038197417624E250d != ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToDouble()) {
-        Assert.fail("otherValue double -4103819741762400.45807953367286162E+235\nExpected: -4.1038197417624E250d\nWas: " + ExtendedDecimal.FromString("-4103819741762400.45807953367286162E+235").ToDouble());
-      }
-      if (-1.44700998E11f != ExtendedDecimal.FromString("-144701002301.18954542331279957").ToSingle()) {
-        Assert.fail("otherValue single -144701002301.18954542331279957\nExpected: -1.44700998E11f\nWas: " + ExtendedDecimal.FromString("-144701002301.18954542331279957").ToSingle());
-      }
-      if (-1.4470100230118954E11d != ExtendedDecimal.FromString("-144701002301.18954542331279957").ToDouble()) {
-        Assert.fail("otherValue double -144701002301.18954542331279957\nExpected: -1.4470100230118954E11d\nWas: " + ExtendedDecimal.FromString("-144701002301.18954542331279957").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("73.01E+211").ToSingle()) {
-        Assert.fail("otherValue single 73.01E+211\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("73.01E+211").ToSingle());
-      }
-      if (7.301E212d != ExtendedDecimal.FromString("73.01E+211").ToDouble()) {
-        Assert.fail("otherValue double 73.01E+211\nExpected: 7.301E212d\nWas: " + ExtendedDecimal.FromString("73.01E+211").ToDouble());
-      }
-      if (-4.4030403E9f != ExtendedDecimal.FromString("-4403040441").ToSingle()) {
-        Assert.fail("otherValue single -4403040441\nExpected: -4.4030403E9f\nWas: " + ExtendedDecimal.FromString("-4403040441").ToSingle());
-      }
-      if (-4.403040441E9d != ExtendedDecimal.FromString("-4403040441").ToDouble()) {
-        Assert.fail("otherValue double -4403040441\nExpected: -4.403040441E9d\nWas: " + ExtendedDecimal.FromString("-4403040441").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-19E+64").ToSingle()) {
-        Assert.fail("otherValue single -19E+64\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-19E+64").ToSingle());
-      }
-      if (-1.9E65d != ExtendedDecimal.FromString("-19E+64").ToDouble()) {
-        Assert.fail("otherValue double -19E+64\nExpected: -1.9E65d\nWas: " + ExtendedDecimal.FromString("-19E+64").ToDouble());
-      }
-      if (0.0f != ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToSingle()) {
-        Assert.fail("otherValue single 6454087684516815.5353496080253E-144\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToSingle());
-      }
-      if (6.454087684516816E-129d != ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToDouble()) {
-        Assert.fail("otherValue double 6454087684516815.5353496080253E-144\nExpected: 6.454087684516816E-129d\nWas: " + ExtendedDecimal.FromString("6454087684516815.5353496080253E-144").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToSingle()) {
-        Assert.fail("otherValue single 1051852710343668.522107559786846776E+278\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToSingle());
-      }
-      if (1.0518527103436685E293d != ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToDouble()) {
-        Assert.fail("otherValue double 1051852710343668.522107559786846776E+278\nExpected: 1.0518527103436685E293d\nWas: " + ExtendedDecimal.FromString("1051852710343668.522107559786846776E+278").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("86077128802.374518623891E+218").ToSingle()) {
-        Assert.fail("otherValue single 86077128802.374518623891E+218\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("86077128802.374518623891E+218").ToSingle());
-      }
-      if (8.607712880237452E228d != ExtendedDecimal.FromString("86077128802.374518623891E+218").ToDouble()) {
-        Assert.fail("otherValue double 86077128802.374518623891E+218\nExpected: 8.607712880237452E228d\nWas: " + ExtendedDecimal.FromString("86077128802.374518623891E+218").ToDouble());
-      }
-      if (0.0f != ExtendedDecimal.FromString("367820230207102E-199").ToSingle()) {
-        Assert.fail("otherValue single 367820230207102E-199\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("367820230207102E-199").ToSingle());
-      }
-      if (3.67820230207102E-185d != ExtendedDecimal.FromString("367820230207102E-199").ToDouble()) {
-        Assert.fail("otherValue double 367820230207102E-199\nExpected: 3.67820230207102E-185d\nWas: " + ExtendedDecimal.FromString("367820230207102E-199").ToDouble());
-      }
-      if (9.105086E-27f != ExtendedDecimal.FromString("91050857573912688994E-46").ToSingle()) {
-        Assert.fail("otherValue single 91050857573912688994E-46\nExpected: 9.105086E-27f\nWas: " + ExtendedDecimal.FromString("91050857573912688994E-46").ToSingle());
-      }
-      if (9.105085757391269E-27d != ExtendedDecimal.FromString("91050857573912688994E-46").ToDouble()) {
-        Assert.fail("otherValue double 91050857573912688994E-46\nExpected: 9.105085757391269E-27d\nWas: " + ExtendedDecimal.FromString("91050857573912688994E-46").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("73.895899E+102").ToSingle()) {
-        Assert.fail("otherValue single 73.895899E+102\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("73.895899E+102").ToSingle());
-      }
-      if (7.3895899E103d != ExtendedDecimal.FromString("73.895899E+102").ToDouble()) {
-        Assert.fail("otherValue double 73.895899E+102\nExpected: 7.3895899E103d\nWas: " + ExtendedDecimal.FromString("73.895899E+102").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToSingle()) {
-        Assert.fail("otherValue single -796808893178.891470585829021E+330\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToSingle());
-      }
-      if (Double.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToDouble()) {
-        Assert.fail("otherValue double -796808893178.891470585829021E+330\nExpected: Double.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-796808893178.891470585829021E+330").ToDouble());
-      }
-      if (0.0f != ExtendedDecimal.FromString("275081E-206").ToSingle()) {
-        Assert.fail("otherValue single 275081E-206\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("275081E-206").ToSingle());
-      }
-      if (2.75081E-201d != ExtendedDecimal.FromString("275081E-206").ToDouble()) {
-        Assert.fail("otherValue double 275081E-206\nExpected: 2.75081E-201d\nWas: " + ExtendedDecimal.FromString("275081E-206").ToDouble());
-      }
-      if (-0.0f != ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToSingle()) {
-        Assert.fail("otherValue single -4322898910615499.82096E-95\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToSingle());
-      }
-      if (-4.3228989106155E-80d != ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToDouble()) {
-        Assert.fail("otherValue double -4322898910615499.82096E-95\nExpected: -4.3228989106155E-80d\nWas: " + ExtendedDecimal.FromString("-4322898910615499.82096E-95").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("143343913109764E+63").ToSingle()) {
-        Assert.fail("otherValue single 143343913109764E+63\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("143343913109764E+63").ToSingle());
-      }
-      if (1.43343913109764E77d != ExtendedDecimal.FromString("143343913109764E+63").ToDouble()) {
-        Assert.fail("otherValue double 143343913109764E+63\nExpected: 1.43343913109764E77d\nWas: " + ExtendedDecimal.FromString("143343913109764E+63").ToDouble());
-      }
-      if (-7.9102981E16f != ExtendedDecimal.FromString("-79102983237104015").ToSingle()) {
-        Assert.fail("otherValue single -79102983237104015\nExpected: -7.9102981E16f\nWas: " + ExtendedDecimal.FromString("-79102983237104015").ToSingle());
-      }
-      if (-7.9102983237104016E16d != ExtendedDecimal.FromString("-79102983237104015").ToDouble()) {
-        Assert.fail("otherValue double -79102983237104015\nExpected: -7.9102983237104016E16d\nWas: " + ExtendedDecimal.FromString("-79102983237104015").ToDouble());
-      }
-      if (-9.07E-10f != ExtendedDecimal.FromString("-907E-12").ToSingle()) {
-        Assert.fail("otherValue single -907E-12\nExpected: -9.07E-10f\nWas: " + ExtendedDecimal.FromString("-907E-12").ToSingle());
-      }
-      if (-9.07E-10d != ExtendedDecimal.FromString("-907E-12").ToDouble()) {
-        Assert.fail("otherValue double -907E-12\nExpected: -9.07E-10d\nWas: " + ExtendedDecimal.FromString("-907E-12").ToDouble());
-      }
-      if (0.0f != ExtendedDecimal.FromString("191682103431.217475E-84").ToSingle()) {
-        Assert.fail("otherValue single 191682103431.217475E-84\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("191682103431.217475E-84").ToSingle());
-      }
-      if (1.9168210343121748E-73d != ExtendedDecimal.FromString("191682103431.217475E-84").ToDouble()) {
-        Assert.fail("otherValue double 191682103431.217475E-84\nExpected: 1.9168210343121748E-73d\nWas: " + ExtendedDecimal.FromString("191682103431.217475E-84").ToDouble());
-      }
-      if (-5.6E-45f != ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToSingle()) {
-        Assert.fail("otherValue single -492913.1840948615992120438E-50\nExpected: -5.6E-45f\nWas: " + ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToSingle());
-      }
-      if (-4.929131840948616E-45d != ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToDouble()) {
-        Assert.fail("otherValue double -492913.1840948615992120438E-50\nExpected: -4.929131840948616E-45d\nWas: " + ExtendedDecimal.FromString("-492913.1840948615992120438E-50").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-752873150058767E+272").ToSingle()) {
-        Assert.fail("otherValue single -752873150058767E+272\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-752873150058767E+272").ToSingle());
-      }
-      if (-7.52873150058767E286d != ExtendedDecimal.FromString("-752873150058767E+272").ToDouble()) {
-        Assert.fail("otherValue double -752873150058767E+272\nExpected: -7.52873150058767E286d\nWas: " + ExtendedDecimal.FromString("-752873150058767E+272").ToDouble());
-      }
-      if (27.311937f != ExtendedDecimal.FromString("27.311937404").ToSingle()) {
-        Assert.fail("otherValue single 27.311937404\nExpected: 27.311937f\nWas: " + ExtendedDecimal.FromString("27.311937404").ToSingle());
-      }
-      if (27.311937404d != ExtendedDecimal.FromString("27.311937404").ToDouble()) {
-        Assert.fail("otherValue double 27.311937404\nExpected: 27.311937404d\nWas: " + ExtendedDecimal.FromString("27.311937404").ToDouble());
-      }
-      if (0.0f != ExtendedDecimal.FromString("39147083343918E-143").ToSingle()) {
-        Assert.fail("otherValue single 39147083343918E-143\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("39147083343918E-143").ToSingle());
-      }
-      if (3.9147083343918E-130d != ExtendedDecimal.FromString("39147083343918E-143").ToDouble()) {
-        Assert.fail("otherValue double 39147083343918E-143\nExpected: 3.9147083343918E-130d\nWas: " + ExtendedDecimal.FromString("39147083343918E-143").ToDouble());
-      }
-      if (-1.97684019E11f != ExtendedDecimal.FromString("-197684018253").ToSingle()) {
-        Assert.fail("otherValue single -197684018253\nExpected: -1.97684019E11f\nWas: " + ExtendedDecimal.FromString("-197684018253").ToSingle());
-      }
-      if (-1.97684018253E11d != ExtendedDecimal.FromString("-197684018253").ToDouble()) {
-        Assert.fail("otherValue double -197684018253\nExpected: -1.97684018253E11d\nWas: " + ExtendedDecimal.FromString("-197684018253").ToDouble());
-      }
-      if (6.400822E14f != ExtendedDecimal.FromString("640082188903507").ToSingle()) {
-        Assert.fail("otherValue single 640082188903507\nExpected: 6.400822E14f\nWas: " + ExtendedDecimal.FromString("640082188903507").ToSingle());
-      }
-      if (6.40082188903507E14d != ExtendedDecimal.FromString("640082188903507").ToDouble()) {
-        Assert.fail("otherValue double 640082188903507\nExpected: 6.40082188903507E14d\nWas: " + ExtendedDecimal.FromString("640082188903507").ToDouble());
-      }
-      if (-0.0f != ExtendedDecimal.FromString("-913144352720144E-312").ToSingle()) {
-        Assert.fail("otherValue single -913144352720144E-312\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-913144352720144E-312").ToSingle());
-      }
-      if (-9.13144352720144E-298d != ExtendedDecimal.FromString("-913144352720144E-312").ToDouble()) {
-        Assert.fail("otherValue double -913144352720144E-312\nExpected: -9.13144352720144E-298d\nWas: " + ExtendedDecimal.FromString("-913144352720144E-312").ToDouble());
-      }
-      if (-3.68781005E15f != ExtendedDecimal.FromString("-3687809947210631").ToSingle()) {
-        Assert.fail("otherValue single -3687809947210631\nExpected: -3.68781005E15f\nWas: " + ExtendedDecimal.FromString("-3687809947210631").ToSingle());
-      }
-      if (-3.687809947210631E15d != ExtendedDecimal.FromString("-3687809947210631").ToDouble()) {
-        Assert.fail("otherValue double -3687809947210631\nExpected: -3.687809947210631E15d\nWas: " + ExtendedDecimal.FromString("-3687809947210631").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToSingle()) {
-        Assert.fail("otherValue single 53083788630724917310.06236692262351E+169\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToSingle());
-      }
-      if (5.3083788630724916E188d != ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToDouble()) {
-        Assert.fail("otherValue double 53083788630724917310.06236692262351E+169\nExpected: 5.3083788630724916E188d\nWas: " + ExtendedDecimal.FromString("53083788630724917310.06236692262351E+169").ToDouble());
-      }
-      if (-7.0943446E19f != ExtendedDecimal.FromString("-70943446332471357958").ToSingle()) {
-        Assert.fail("otherValue single -70943446332471357958\nExpected: -7.0943446E19f\nWas: " + ExtendedDecimal.FromString("-70943446332471357958").ToSingle());
-      }
-      if (-7.094344633247136E19d != ExtendedDecimal.FromString("-70943446332471357958").ToDouble()) {
-        Assert.fail("otherValue double -70943446332471357958\nExpected: -7.094344633247136E19d\nWas: " + ExtendedDecimal.FromString("-70943446332471357958").ToDouble());
-      }
-      if (63367.23f != ExtendedDecimal.FromString("63367.23157744207").ToSingle()) {
-        Assert.fail("otherValue single 63367.23157744207\nExpected: 63367.23f\nWas: " + ExtendedDecimal.FromString("63367.23157744207").ToSingle());
-      }
-      if (63367.23157744207d != ExtendedDecimal.FromString("63367.23157744207").ToDouble()) {
-        Assert.fail("otherValue double 63367.23157744207\nExpected: 63367.23157744207d\nWas: " + ExtendedDecimal.FromString("63367.23157744207").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("2100535E+120").ToSingle()) {
-        Assert.fail("otherValue single 2100535E+120\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("2100535E+120").ToSingle());
-      }
-      if (2.100535E126d != ExtendedDecimal.FromString("2100535E+120").ToDouble()) {
-        Assert.fail("otherValue double 2100535E+120\nExpected: 2.100535E126d\nWas: " + ExtendedDecimal.FromString("2100535E+120").ToDouble());
-      }
-      if (0.0f != ExtendedDecimal.FromString("914534543212037911E-174").ToSingle()) {
-        Assert.fail("otherValue single 914534543212037911E-174\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("914534543212037911E-174").ToSingle());
-      }
-      if (9.14534543212038E-157d != ExtendedDecimal.FromString("914534543212037911E-174").ToDouble()) {
-        Assert.fail("otherValue double 914534543212037911E-174\nExpected: 9.14534543212038E-157d\nWas: " + ExtendedDecimal.FromString("914534543212037911E-174").ToDouble());
-      }
-      if (-0.0f != ExtendedDecimal.FromString("-12437185743660570E-180").ToSingle()) {
-        Assert.fail("otherValue single -12437185743660570E-180\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-12437185743660570E-180").ToSingle());
-      }
-      if (-1.243718574366057E-164d != ExtendedDecimal.FromString("-12437185743660570E-180").ToDouble()) {
-        Assert.fail("otherValue double -12437185743660570E-180\nExpected: -1.243718574366057E-164d\nWas: " + ExtendedDecimal.FromString("-12437185743660570E-180").ToDouble());
-      }
-      if (-3.3723915E19f != ExtendedDecimal.FromString("-33723915695913879E+3").ToSingle()) {
-        Assert.fail("otherValue single -33723915695913879E+3\nExpected: -3.3723915E19f\nWas: " + ExtendedDecimal.FromString("-33723915695913879E+3").ToSingle());
-      }
-      if (-3.3723915695913878E19d != ExtendedDecimal.FromString("-33723915695913879E+3").ToDouble()) {
-        Assert.fail("otherValue double -33723915695913879E+3\nExpected: -3.3723915695913878E19d\nWas: " + ExtendedDecimal.FromString("-33723915695913879E+3").ToDouble());
-      }
-      if (6.3664833E10f != ExtendedDecimal.FromString("63664831787").ToSingle()) {
-        Assert.fail("otherValue single 63664831787\nExpected: 6.3664833E10f\nWas: " + ExtendedDecimal.FromString("63664831787").ToSingle());
-      }
-      if (6.3664831787E10d != ExtendedDecimal.FromString("63664831787").ToDouble()) {
-        Assert.fail("otherValue double 63664831787\nExpected: 6.3664831787E10d\nWas: " + ExtendedDecimal.FromString("63664831787").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToSingle()) {
-        Assert.fail("otherValue single 432187105445201137.3321724908E+97\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToSingle());
-      }
-      if (4.321871054452011E114d != ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToDouble()) {
-        Assert.fail("otherValue double 432187105445201137.3321724908E+97\nExpected: 4.321871054452011E114d\nWas: " + ExtendedDecimal.FromString("432187105445201137.3321724908E+97").ToDouble());
-      }
-      if (-5.1953271E13f != ExtendedDecimal.FromString("-51953270775979").ToSingle()) {
-        Assert.fail("otherValue single -51953270775979\nExpected: -5.1953271E13f\nWas: " + ExtendedDecimal.FromString("-51953270775979").ToSingle());
-      }
-      if (-5.1953270775979E13d != ExtendedDecimal.FromString("-51953270775979").ToDouble()) {
-        Assert.fail("otherValue double -51953270775979\nExpected: -5.1953270775979E13d\nWas: " + ExtendedDecimal.FromString("-51953270775979").ToDouble());
-      }
-      if (2.14953088E9f != ExtendedDecimal.FromString("2149530805").ToSingle()) {
-        Assert.fail("otherValue single 2149530805\nExpected: 2.14953088E9f\nWas: " + ExtendedDecimal.FromString("2149530805").ToSingle());
-      }
-      if (2.149530805E9d != ExtendedDecimal.FromString("2149530805").ToDouble()) {
-        Assert.fail("otherValue double 2149530805\nExpected: 2.149530805E9d\nWas: " + ExtendedDecimal.FromString("2149530805").ToDouble());
-      }
-      if (-0.0f != ExtendedDecimal.FromString("-4672759140.6362E-223").ToSingle()) {
-        Assert.fail("otherValue single -4672759140.6362E-223\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-4672759140.6362E-223").ToSingle());
-      }
-      if (-4.6727591406362E-214d != ExtendedDecimal.FromString("-4672759140.6362E-223").ToDouble()) {
-        Assert.fail("otherValue double -4672759140.6362E-223\nExpected: -4.6727591406362E-214d\nWas: " + ExtendedDecimal.FromString("-4672759140.6362E-223").ToDouble());
-      }
-      if (-9.0f != ExtendedDecimal.FromString("-9").ToSingle()) {
-        Assert.fail("otherValue single -9\nExpected: -9.0f\nWas: " + ExtendedDecimal.FromString("-9").ToSingle());
-      }
-      if (-9.0d != ExtendedDecimal.FromString("-9").ToDouble()) {
-        Assert.fail("otherValue double -9\nExpected: -9.0d\nWas: " + ExtendedDecimal.FromString("-9").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-1903960322936E+304").ToSingle()) {
-        Assert.fail("otherValue single -1903960322936E+304\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-1903960322936E+304").ToSingle());
-      }
-      if (Double.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-1903960322936E+304").ToDouble()) {
-        Assert.fail("otherValue double -1903960322936E+304\nExpected: Double.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-1903960322936E+304").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("405766405417980707E+316").ToSingle()) {
-        Assert.fail("otherValue single 405766405417980707E+316\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("405766405417980707E+316").ToSingle());
-      }
-      if (Double.POSITIVE_INFINITY != ExtendedDecimal.FromString("405766405417980707E+316").ToDouble()) {
-        Assert.fail("otherValue double 405766405417980707E+316\nExpected: Double.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("405766405417980707E+316").ToDouble());
-      }
-      if (-166174.94f != ExtendedDecimal.FromString("-1661749343992047E-10").ToSingle()) {
-        Assert.fail("otherValue single -1661749343992047E-10\nExpected: -166174.94f\nWas: " + ExtendedDecimal.FromString("-1661749343992047E-10").ToSingle());
-      }
-      if (-166174.9343992047d != ExtendedDecimal.FromString("-1661749343992047E-10").ToDouble()) {
-        Assert.fail("otherValue double -1661749343992047E-10\nExpected: -166174.9343992047d\nWas: " + ExtendedDecimal.FromString("-1661749343992047E-10").ToDouble());
-      }
-      if (5893094.0f != ExtendedDecimal.FromString("5893094.099969899224047667").ToSingle()) {
-        Assert.fail("otherValue single 5893094.099969899224047667\nExpected: 5893094.0f\nWas: " + ExtendedDecimal.FromString("5893094.099969899224047667").ToSingle());
-      }
-      if (5893094.099969899d != ExtendedDecimal.FromString("5893094.099969899224047667").ToDouble()) {
-        Assert.fail("otherValue double 5893094.099969899224047667\nExpected: 5893094.099969899d\nWas: " + ExtendedDecimal.FromString("5893094.099969899224047667").ToDouble());
-      }
-      if (-3.4023195E17f != ExtendedDecimal.FromString("-340231946762317122").ToSingle()) {
-        Assert.fail("otherValue single -340231946762317122\nExpected: -3.4023195E17f\nWas: " + ExtendedDecimal.FromString("-340231946762317122").ToSingle());
-      }
-      if (-3.4023194676231712E17d != ExtendedDecimal.FromString("-340231946762317122").ToDouble()) {
-        Assert.fail("otherValue double -340231946762317122\nExpected: -3.4023194676231712E17d\nWas: " + ExtendedDecimal.FromString("-340231946762317122").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("3.10041643978E+236").ToSingle()) {
-        Assert.fail("otherValue single 3.10041643978E+236\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("3.10041643978E+236").ToSingle());
-      }
-      if (3.10041643978E236d != ExtendedDecimal.FromString("3.10041643978E+236").ToDouble()) {
-        Assert.fail("otherValue double 3.10041643978E+236\nExpected: 3.10041643978E236d\nWas: " + ExtendedDecimal.FromString("3.10041643978E+236").ToDouble());
-      }
-      if (1.43429217E13f != ExtendedDecimal.FromString("14342921940186").ToSingle()) {
-        Assert.fail("otherValue single 14342921940186\nExpected: 1.43429217E13f\nWas: " + ExtendedDecimal.FromString("14342921940186").ToSingle());
-      }
-      if (1.4342921940186E13d != ExtendedDecimal.FromString("14342921940186").ToDouble()) {
-        Assert.fail("otherValue double 14342921940186\nExpected: 1.4342921940186E13d\nWas: " + ExtendedDecimal.FromString("14342921940186").ToDouble());
-      }
-      if (1.97766234E9f != ExtendedDecimal.FromString("1977662368").ToSingle()) {
-        Assert.fail("otherValue single 1977662368\nExpected: 1.97766234E9f\nWas: " + ExtendedDecimal.FromString("1977662368").ToSingle());
-      }
-      if (1.977662368E9d != ExtendedDecimal.FromString("1977662368").ToDouble()) {
-        Assert.fail("otherValue double 1977662368\nExpected: 1.977662368E9d\nWas: " + ExtendedDecimal.FromString("1977662368").ToDouble());
-      }
-      if (0.0f != ExtendedDecimal.FromString("891.32009975058011674E-268").ToSingle()) {
-        Assert.fail("otherValue single 891.32009975058011674E-268\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("891.32009975058011674E-268").ToSingle());
-      }
-      if (8.913200997505801E-266d != ExtendedDecimal.FromString("891.32009975058011674E-268").ToDouble()) {
-        Assert.fail("otherValue double 891.32009975058011674E-268\nExpected: 8.913200997505801E-266d\nWas: " + ExtendedDecimal.FromString("891.32009975058011674E-268").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToSingle()) {
-        Assert.fail("otherValue single -895468936291.471679344983419E+316\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToSingle());
-      }
-      if (Double.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToDouble()) {
-        Assert.fail("otherValue double -895468936291.471679344983419E+316\nExpected: Double.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-895468936291.471679344983419E+316").ToDouble());
-      }
-      if (0.0f != ExtendedDecimal.FromString("61308E-104").ToSingle()) {
-        Assert.fail("otherValue single 61308E-104\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("61308E-104").ToSingle());
-      }
-      if (6.1308E-100d != ExtendedDecimal.FromString("61308E-104").ToDouble()) {
-        Assert.fail("otherValue double 61308E-104\nExpected: 6.1308E-100d\nWas: " + ExtendedDecimal.FromString("61308E-104").ToDouble());
-      }
-      if (-5362.791f != ExtendedDecimal.FromString("-5362.79122778669072").ToSingle()) {
-        Assert.fail("otherValue single -5362.79122778669072\nExpected: -5362.791f\nWas: " + ExtendedDecimal.FromString("-5362.79122778669072").ToSingle());
-      }
-      if (-5362.791227786691d != ExtendedDecimal.FromString("-5362.79122778669072").ToDouble()) {
-        Assert.fail("otherValue double -5362.79122778669072\nExpected: -5362.791227786691d\nWas: " + ExtendedDecimal.FromString("-5362.79122778669072").ToDouble());
-      }
-      if (0.0f != ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToSingle()) {
-        Assert.fail("otherValue single 861664379590901308.23330613776542261919E-101\nExpected: 0.0f\nWas: " + ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToSingle());
-      }
-      if (8.616643795909013E-84d != ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToDouble()) {
-        Assert.fail("otherValue double 861664379590901308.23330613776542261919E-101\nExpected: 8.616643795909013E-84d\nWas: " + ExtendedDecimal.FromString("861664379590901308.23330613776542261919E-101").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToSingle()) {
-        Assert.fail("otherValue single -1884773180.50192918329237967651E+204\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToSingle());
-      }
-      if (-1.884773180501929E213d != ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToDouble()) {
-        Assert.fail("otherValue double -1884773180.50192918329237967651E+204\nExpected: -1.884773180501929E213d\nWas: " + ExtendedDecimal.FromString("-1884773180.50192918329237967651E+204").ToDouble());
-      }
-      if (1.89187207E13f != ExtendedDecimal.FromString("18918720095123.6152").ToSingle()) {
-        Assert.fail("otherValue single 18918720095123.6152\nExpected: 1.89187207E13f\nWas: " + ExtendedDecimal.FromString("18918720095123.6152").ToSingle());
-      }
-      if (1.8918720095123613E13d != ExtendedDecimal.FromString("18918720095123.6152").ToDouble()) {
-        Assert.fail("otherValue double 18918720095123.6152\nExpected: 1.8918720095123613E13d\nWas: " + ExtendedDecimal.FromString("18918720095123.6152").ToDouble());
-      }
-      if (94667.95f != ExtendedDecimal.FromString("94667.95264211741602").ToSingle()) {
-        Assert.fail("otherValue single 94667.95264211741602\nExpected: 94667.95f\nWas: " + ExtendedDecimal.FromString("94667.95264211741602").ToSingle());
-      }
-      if (94667.95264211742d != ExtendedDecimal.FromString("94667.95264211741602").ToDouble()) {
-        Assert.fail("otherValue double 94667.95264211741602\nExpected: 94667.95264211742d\nWas: " + ExtendedDecimal.FromString("94667.95264211741602").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("1230618521424E+134").ToSingle()) {
-        Assert.fail("otherValue single 1230618521424E+134\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("1230618521424E+134").ToSingle());
-      }
-      if (1.230618521424E146d != ExtendedDecimal.FromString("1230618521424E+134").ToDouble()) {
-        Assert.fail("otherValue double 1230618521424E+134\nExpected: 1.230618521424E146d\nWas: " + ExtendedDecimal.FromString("1230618521424E+134").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("3022403935588782E+85").ToSingle()) {
-        Assert.fail("otherValue single 3022403935588782E+85\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("3022403935588782E+85").ToSingle());
-      }
-      if (3.022403935588782E100d != ExtendedDecimal.FromString("3022403935588782E+85").ToDouble()) {
-        Assert.fail("otherValue double 3022403935588782E+85\nExpected: 3.022403935588782E100d\nWas: " + ExtendedDecimal.FromString("3022403935588782E+85").ToDouble());
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedDecimal.FromString("64543E+274").ToSingle()) {
-        Assert.fail("otherValue single 64543E+274\nExpected: Float.POSITIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("64543E+274").ToSingle());
-      }
-      if (6.4543E278d != ExtendedDecimal.FromString("64543E+274").ToDouble()) {
-        Assert.fail("otherValue double 64543E+274\nExpected: 6.4543E278d\nWas: " + ExtendedDecimal.FromString("64543E+274").ToDouble());
-      }
-      if (6.7181355E10f != ExtendedDecimal.FromString("67181356837.903551518080873954").ToSingle()) {
-        Assert.fail("otherValue single 67181356837.903551518080873954\nExpected: 6.7181355E10f\nWas: " + ExtendedDecimal.FromString("67181356837.903551518080873954").ToSingle());
-      }
-      if (6.718135683790355E10d != ExtendedDecimal.FromString("67181356837.903551518080873954").ToDouble()) {
-        Assert.fail("otherValue double 67181356837.903551518080873954\nExpected: 6.718135683790355E10d\nWas: " + ExtendedDecimal.FromString("67181356837.903551518080873954").ToDouble());
-      }
-      if (-0.0f != ExtendedDecimal.FromString("-4508016E-321").ToSingle()) {
-        Assert.fail("otherValue single -4508016E-321\nExpected: -0.0f\nWas: " + ExtendedDecimal.FromString("-4508016E-321").ToSingle());
-      }
-      if (-4.508016E-315d != ExtendedDecimal.FromString("-4508016E-321").ToDouble()) {
-        Assert.fail("otherValue double -4508016E-321\nExpected: -4.508016E-315d\nWas: " + ExtendedDecimal.FromString("-4508016E-321").ToDouble());
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToSingle()) {
-        Assert.fail("otherValue single -62855032520.512452348497E+39\nExpected: Float.NEGATIVE_INFINITY\nWas: " + ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToSingle());
-      }
-      if (-6.285503252051245E49d != ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToDouble()) {
-        Assert.fail("otherValue double -62855032520.512452348497E+39\nExpected: -6.285503252051245E49d\nWas: " + ExtendedDecimal.FromString("-62855032520.512452348497E+39").ToDouble());
-      }
-      if (3177.2236f != ExtendedDecimal.FromString("3177.2237286").ToSingle()) {
-        Assert.fail("otherValue single 3177.2237286\nExpected: 3177.2236f\nWas: " + ExtendedDecimal.FromString("3177.2237286").ToSingle());
-      }
-      if (3177.2237286d != ExtendedDecimal.FromString("3177.2237286").ToDouble()) {
-        Assert.fail("otherValue double 3177.2237286\nExpected: 3177.2237286d\nWas: " + ExtendedDecimal.FromString("3177.2237286").ToDouble());
-      }
-      if (-7.950583E8f != ExtendedDecimal.FromString("-795058316.9186492185346968").ToSingle()) {
-        Assert.fail("otherValue single -795058316.9186492185346968\nExpected: -7.950583E8f\nWas: " + ExtendedDecimal.FromString("-795058316.9186492185346968").ToSingle());
-      }
-      if (-7.950583169186492E8d != ExtendedDecimal.FromString("-795058316.9186492185346968").ToDouble()) {
-        Assert.fail("otherValue double -795058316.9186492185346968\nExpected: -7.950583169186492E8d\nWas: " + ExtendedDecimal.FromString("-795058316.9186492185346968").ToDouble());
-      }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
-    public void TestDecFracIntegersToSingleDouble() {
-      if (-5.7703064E7f != ExtendedDecimal.FromString("-57703066").ToSingle()) {
-        Assert.fail("otherValue single -57703066\nExpected: -5.7703064E7f\nWas: " + ExtendedDecimal.FromString("-57703066").ToSingle());
-      }
-      if (-5.7703066E7d != ExtendedDecimal.FromString("-57703066").ToDouble()) {
-        Assert.fail("otherValue double -57703066\nExpected: -5.7703066E7d\nWas: " + ExtendedDecimal.FromString("-57703066").ToDouble());
-      }
-      if (1590432.0f != ExtendedDecimal.FromString("1590432").ToSingle()) {
-        Assert.fail("otherValue single 1590432\nExpected: 1590432.0f\nWas: " + ExtendedDecimal.FromString("1590432").ToSingle());
-      }
-      if (1590432.0d != ExtendedDecimal.FromString("1590432").ToDouble()) {
-        Assert.fail("otherValue double 1590432\nExpected: 1590432.0d\nWas: " + ExtendedDecimal.FromString("1590432").ToDouble());
-      }
-      if (9.5464253E9f != ExtendedDecimal.FromString("9546425267").ToSingle()) {
-        Assert.fail("otherValue single 9546425267\nExpected: 9.5464253E9f\nWas: " + ExtendedDecimal.FromString("9546425267").ToSingle());
-      }
-      if (9.546425267E9d != ExtendedDecimal.FromString("9546425267").ToDouble()) {
-        Assert.fail("otherValue double 9546425267\nExpected: 9.546425267E9d\nWas: " + ExtendedDecimal.FromString("9546425267").ToDouble());
-      }
-      if (7.3227311E16f != ExtendedDecimal.FromString("73227309698439247").ToSingle()) {
-        Assert.fail("otherValue single 73227309698439247\nExpected: 7.3227311E16f\nWas: " + ExtendedDecimal.FromString("73227309698439247").ToSingle());
-      }
-      if (7.3227309698439248E16d != ExtendedDecimal.FromString("73227309698439247").ToDouble()) {
-        Assert.fail("otherValue double 73227309698439247\nExpected: 7.3227309698439248E16d\nWas: " + ExtendedDecimal.FromString("73227309698439247").ToDouble());
-      }
-      if (75114.0f != ExtendedDecimal.FromString("75114").ToSingle()) {
-        Assert.fail("otherValue single 75114\nExpected: 75114.0f\nWas: " + ExtendedDecimal.FromString("75114").ToSingle());
-      }
-      if (75114.0d != ExtendedDecimal.FromString("75114").ToDouble()) {
-        Assert.fail("otherValue double 75114\nExpected: 75114.0d\nWas: " + ExtendedDecimal.FromString("75114").ToDouble());
-      }
-      if (64.0f != ExtendedDecimal.FromString("64").ToSingle()) {
-        Assert.fail("otherValue single 64\nExpected: 64.0f\nWas: " + ExtendedDecimal.FromString("64").ToSingle());
-      }
-      if (64.0d != ExtendedDecimal.FromString("64").ToDouble()) {
-        Assert.fail("otherValue double 64\nExpected: 64.0d\nWas: " + ExtendedDecimal.FromString("64").ToDouble());
-      }
-      if (8.6352293E15f != ExtendedDecimal.FromString("8635229353951207").ToSingle()) {
-        Assert.fail("otherValue single 8635229353951207\nExpected: 8.6352293E15f\nWas: " + ExtendedDecimal.FromString("8635229353951207").ToSingle());
-      }
-      if (8.635229353951207E15d != ExtendedDecimal.FromString("8635229353951207").ToDouble()) {
-        Assert.fail("otherValue double 8635229353951207\nExpected: 8.635229353951207E15d\nWas: " + ExtendedDecimal.FromString("8635229353951207").ToDouble());
-      }
-      if (-8.056573E19f != ExtendedDecimal.FromString("-80565729661447979457").ToSingle()) {
-        Assert.fail("otherValue single -80565729661447979457\nExpected: -8.056573E19f\nWas: " + ExtendedDecimal.FromString("-80565729661447979457").ToSingle());
-      }
-      if (-8.056572966144798E19d != ExtendedDecimal.FromString("-80565729661447979457").ToDouble()) {
-        Assert.fail("otherValue double -80565729661447979457\nExpected: -8.056572966144798E19d\nWas: " + ExtendedDecimal.FromString("-80565729661447979457").ToDouble());
-      }
-      if (8.1540558E14f != ExtendedDecimal.FromString("815405565228754").ToSingle()) {
-        Assert.fail("otherValue single 815405565228754\nExpected: 8.1540558E14f\nWas: " + ExtendedDecimal.FromString("815405565228754").ToSingle());
-      }
-      if (8.15405565228754E14d != ExtendedDecimal.FromString("815405565228754").ToDouble()) {
-        Assert.fail("otherValue double 815405565228754\nExpected: 8.15405565228754E14d\nWas: " + ExtendedDecimal.FromString("815405565228754").ToDouble());
-      }
-      if (-6.1008438E16f != ExtendedDecimal.FromString("-61008438357089231").ToSingle()) {
-        Assert.fail("otherValue single -61008438357089231\nExpected: -6.1008438E16f\nWas: " + ExtendedDecimal.FromString("-61008438357089231").ToSingle());
-      }
-      if (-6.1008438357089232E16d != ExtendedDecimal.FromString("-61008438357089231").ToDouble()) {
-        Assert.fail("otherValue double -61008438357089231\nExpected: -6.1008438357089232E16d\nWas: " + ExtendedDecimal.FromString("-61008438357089231").ToDouble());
-      }
-      if (-46526.0f != ExtendedDecimal.FromString("-46526").ToSingle()) {
-        Assert.fail("otherValue single -46526\nExpected: -46526.0f\nWas: " + ExtendedDecimal.FromString("-46526").ToSingle());
-      }
-      if (-46526.0d != ExtendedDecimal.FromString("-46526").ToDouble()) {
-        Assert.fail("otherValue double -46526\nExpected: -46526.0d\nWas: " + ExtendedDecimal.FromString("-46526").ToDouble());
-      }
-      if (5.1199847E18f != ExtendedDecimal.FromString("5119984668352258853").ToSingle()) {
-        Assert.fail("otherValue single 5119984668352258853\nExpected: 5.1199847E18f\nWas: " + ExtendedDecimal.FromString("5119984668352258853").ToSingle());
-      }
-      if (5.1199846683522591E18d != ExtendedDecimal.FromString("5119984668352258853").ToDouble()) {
-        Assert.fail("otherValue double 5119984668352258853\nExpected: 5.1199846683522591E18d\nWas: " + ExtendedDecimal.FromString("5119984668352258853").ToDouble());
-      }
-      if (1851.0f != ExtendedDecimal.FromString("1851").ToSingle()) {
-        Assert.fail("otherValue single 1851\nExpected: 1851.0f\nWas: " + ExtendedDecimal.FromString("1851").ToSingle());
-      }
-      if (1851.0d != ExtendedDecimal.FromString("1851").ToDouble()) {
-        Assert.fail("otherValue double 1851\nExpected: 1851.0d\nWas: " + ExtendedDecimal.FromString("1851").ToDouble());
-      }
-      if (8.7587332E15f != ExtendedDecimal.FromString("8758733009763848").ToSingle()) {
-        Assert.fail("otherValue single 8758733009763848\nExpected: 8.7587332E15f\nWas: " + ExtendedDecimal.FromString("8758733009763848").ToSingle());
-      }
-      if (8.758733009763848E15d != ExtendedDecimal.FromString("8758733009763848").ToDouble()) {
-        Assert.fail("otherValue double 8758733009763848\nExpected: 8.758733009763848E15d\nWas: " + ExtendedDecimal.FromString("8758733009763848").ToDouble());
-      }
-      if (51.0f != ExtendedDecimal.FromString("51").ToSingle()) {
-        Assert.fail("otherValue single 51\nExpected: 51.0f\nWas: " + ExtendedDecimal.FromString("51").ToSingle());
-      }
-      if (51.0d != ExtendedDecimal.FromString("51").ToDouble()) {
-        Assert.fail("otherValue double 51\nExpected: 51.0d\nWas: " + ExtendedDecimal.FromString("51").ToDouble());
-      }
-      if (9.4281774E11f != ExtendedDecimal.FromString("942817726107").ToSingle()) {
-        Assert.fail("otherValue single 942817726107\nExpected: 9.4281774E11f\nWas: " + ExtendedDecimal.FromString("942817726107").ToSingle());
-      }
-      if (9.42817726107E11d != ExtendedDecimal.FromString("942817726107").ToDouble()) {
-        Assert.fail("otherValue double 942817726107\nExpected: 9.42817726107E11d\nWas: " + ExtendedDecimal.FromString("942817726107").ToDouble());
-      }
-      if (186575.0f != ExtendedDecimal.FromString("186575").ToSingle()) {
-        Assert.fail("otherValue single 186575\nExpected: 186575.0f\nWas: " + ExtendedDecimal.FromString("186575").ToSingle());
-      }
-      if (186575.0d != ExtendedDecimal.FromString("186575").ToDouble()) {
-        Assert.fail("otherValue double 186575\nExpected: 186575.0d\nWas: " + ExtendedDecimal.FromString("186575").ToDouble());
-      }
-      if (-3.47313997E9f != ExtendedDecimal.FromString("-3473140020").ToSingle()) {
-        Assert.fail("otherValue single -3473140020\nExpected: -3.47313997E9f\nWas: " + ExtendedDecimal.FromString("-3473140020").ToSingle());
-      }
-      if (-3.47314002E9d != ExtendedDecimal.FromString("-3473140020").ToDouble()) {
-        Assert.fail("otherValue double -3473140020\nExpected: -3.47314002E9d\nWas: " + ExtendedDecimal.FromString("-3473140020").ToDouble());
-      }
-      if (2.66134912E8f != ExtendedDecimal.FromString("266134912").ToSingle()) {
-        Assert.fail("otherValue single 266134912\nExpected: 2.66134912E8f\nWas: " + ExtendedDecimal.FromString("266134912").ToSingle());
-      }
-      if (2.66134912E8d != ExtendedDecimal.FromString("266134912").ToDouble()) {
-        Assert.fail("otherValue double 266134912\nExpected: 2.66134912E8d\nWas: " + ExtendedDecimal.FromString("266134912").ToDouble());
-      }
-      if (5209.0f != ExtendedDecimal.FromString("5209").ToSingle()) {
-        Assert.fail("otherValue single 5209\nExpected: 5209.0f\nWas: " + ExtendedDecimal.FromString("5209").ToSingle());
-      }
-      if (5209.0d != ExtendedDecimal.FromString("5209").ToDouble()) {
-        Assert.fail("otherValue double 5209\nExpected: 5209.0d\nWas: " + ExtendedDecimal.FromString("5209").ToDouble());
-      }
-      if (70489.0f != ExtendedDecimal.FromString("70489").ToSingle()) {
-        Assert.fail("otherValue single 70489\nExpected: 70489.0f\nWas: " + ExtendedDecimal.FromString("70489").ToSingle());
-      }
-      if (70489.0d != ExtendedDecimal.FromString("70489").ToDouble()) {
-        Assert.fail("otherValue double 70489\nExpected: 70489.0d\nWas: " + ExtendedDecimal.FromString("70489").ToDouble());
-      }
-      if (-6.1383652E14f != ExtendedDecimal.FromString("-613836517344428").ToSingle()) {
-        Assert.fail("otherValue single -613836517344428\nExpected: -6.1383652E14f\nWas: " + ExtendedDecimal.FromString("-613836517344428").ToSingle());
-      }
-      if (-6.13836517344428E14d != ExtendedDecimal.FromString("-613836517344428").ToDouble()) {
-        Assert.fail("otherValue double -613836517344428\nExpected: -6.13836517344428E14d\nWas: " + ExtendedDecimal.FromString("-613836517344428").ToDouble());
-      }
-      if (-3.47896388E16f != ExtendedDecimal.FromString("-34789639317051875E0").ToSingle()) {
-        Assert.fail("otherValue single -34789639317051875E0\nExpected: -3.47896388E16f\nWas: " + ExtendedDecimal.FromString("-34789639317051875E0").ToSingle());
-      }
-      if (-3.4789639317051876E16d != ExtendedDecimal.FromString("-34789639317051875E0").ToDouble()) {
-        Assert.fail("otherValue double -34789639317051875E0\nExpected: -3.4789639317051876E16d\nWas: " + ExtendedDecimal.FromString("-34789639317051875E0").ToDouble());
-      }
-      if (-8.4833942E13f != ExtendedDecimal.FromString("-84833938642058").ToSingle()) {
-        Assert.fail("otherValue single -84833938642058\nExpected: -8.4833942E13f\nWas: " + ExtendedDecimal.FromString("-84833938642058").ToSingle());
-      }
-      if (-8.4833938642058E13d != ExtendedDecimal.FromString("-84833938642058").ToDouble()) {
-        Assert.fail("otherValue double -84833938642058\nExpected: -8.4833938642058E13d\nWas: " + ExtendedDecimal.FromString("-84833938642058").ToDouble());
-      }
-      if (-359.0f != ExtendedDecimal.FromString("-359").ToSingle()) {
-        Assert.fail("otherValue single -359\nExpected: -359.0f\nWas: " + ExtendedDecimal.FromString("-359").ToSingle());
-      }
-      if (-359.0d != ExtendedDecimal.FromString("-359").ToDouble()) {
-        Assert.fail("otherValue double -359\nExpected: -359.0d\nWas: " + ExtendedDecimal.FromString("-359").ToDouble());
-      }
-      if (365981.0f != ExtendedDecimal.FromString("365981").ToSingle()) {
-        Assert.fail("otherValue single 365981\nExpected: 365981.0f\nWas: " + ExtendedDecimal.FromString("365981").ToSingle());
-      }
-      if (365981.0d != ExtendedDecimal.FromString("365981").ToDouble()) {
-        Assert.fail("otherValue double 365981\nExpected: 365981.0d\nWas: " + ExtendedDecimal.FromString("365981").ToDouble());
-      }
-      if (9103.0f != ExtendedDecimal.FromString("9103").ToSingle()) {
-        Assert.fail("otherValue single 9103\nExpected: 9103.0f\nWas: " + ExtendedDecimal.FromString("9103").ToSingle());
-      }
-      if (9103.0d != ExtendedDecimal.FromString("9103").ToDouble()) {
-        Assert.fail("otherValue double 9103\nExpected: 9103.0d\nWas: " + ExtendedDecimal.FromString("9103").ToDouble());
-      }
-      if (9.822906E11f != ExtendedDecimal.FromString("982290625898").ToSingle()) {
-        Assert.fail("otherValue single 982290625898\nExpected: 9.822906E11f\nWas: " + ExtendedDecimal.FromString("982290625898").ToSingle());
-      }
-      if (9.82290625898E11d != ExtendedDecimal.FromString("982290625898").ToDouble()) {
-        Assert.fail("otherValue double 982290625898\nExpected: 9.82290625898E11d\nWas: " + ExtendedDecimal.FromString("982290625898").ToDouble());
-      }
-      if (11.0f != ExtendedDecimal.FromString("11").ToSingle()) {
-        Assert.fail("otherValue single 11\nExpected: 11.0f\nWas: " + ExtendedDecimal.FromString("11").ToSingle());
-      }
-      if (11.0d != ExtendedDecimal.FromString("11").ToDouble()) {
-        Assert.fail("otherValue double 11\nExpected: 11.0d\nWas: " + ExtendedDecimal.FromString("11").ToDouble());
-      }
-      if (-2823.0f != ExtendedDecimal.FromString("-2823").ToSingle()) {
-        Assert.fail("otherValue single -2823\nExpected: -2823.0f\nWas: " + ExtendedDecimal.FromString("-2823").ToSingle());
-      }
-      if (-2823.0d != ExtendedDecimal.FromString("-2823").ToDouble()) {
-        Assert.fail("otherValue double -2823\nExpected: -2823.0d\nWas: " + ExtendedDecimal.FromString("-2823").ToDouble());
-      }
-      if (1.5945044E10f != ExtendedDecimal.FromString("15945044029").ToSingle()) {
-        Assert.fail("otherValue single 15945044029\nExpected: 1.5945044E10f\nWas: " + ExtendedDecimal.FromString("15945044029").ToSingle());
-      }
-      if (1.5945044029E10d != ExtendedDecimal.FromString("15945044029").ToDouble()) {
-        Assert.fail("otherValue double 15945044029\nExpected: 1.5945044029E10d\nWas: " + ExtendedDecimal.FromString("15945044029").ToDouble());
-      }
-      if (-1.69193578E18f != ExtendedDecimal.FromString("-1691935711084975329").ToSingle()) {
-        Assert.fail("otherValue single -1691935711084975329\nExpected: -1.69193578E18f\nWas: " + ExtendedDecimal.FromString("-1691935711084975329").ToSingle());
-      }
-      if (-1.69193571108497536E18d != ExtendedDecimal.FromString("-1691935711084975329").ToDouble()) {
-        Assert.fail("otherValue double -1691935711084975329\nExpected: -1.69193571108497536E18d\nWas: " + ExtendedDecimal.FromString("-1691935711084975329").ToDouble());
-      }
-      if (611.0f != ExtendedDecimal.FromString("611").ToSingle()) {
-        Assert.fail("otherValue single 611\nExpected: 611.0f\nWas: " + ExtendedDecimal.FromString("611").ToSingle());
-      }
-      if (611.0d != ExtendedDecimal.FromString("611").ToDouble()) {
-        Assert.fail("otherValue double 611\nExpected: 611.0d\nWas: " + ExtendedDecimal.FromString("611").ToDouble());
-      }
-      if (8.1338793E9f != ExtendedDecimal.FromString("8133879260").ToSingle()) {
-        Assert.fail("otherValue single 8133879260\nExpected: 8.1338793E9f\nWas: " + ExtendedDecimal.FromString("8133879260").ToSingle());
-      }
-      if (8.13387926E9d != ExtendedDecimal.FromString("8133879260").ToDouble()) {
-        Assert.fail("otherValue double 8133879260\nExpected: 8.13387926E9d\nWas: " + ExtendedDecimal.FromString("8133879260").ToDouble());
-      }
-      if (7.8632614E13f != ExtendedDecimal.FromString("78632613962905").ToSingle()) {
-        Assert.fail("otherValue single 78632613962905\nExpected: 7.8632614E13f\nWas: " + ExtendedDecimal.FromString("78632613962905").ToSingle());
-      }
-      if (7.8632613962905E13d != ExtendedDecimal.FromString("78632613962905").ToDouble()) {
-        Assert.fail("otherValue double 78632613962905\nExpected: 7.8632613962905E13d\nWas: " + ExtendedDecimal.FromString("78632613962905").ToDouble());
-      }
-      if (8.686342E19f != ExtendedDecimal.FromString("86863421212032782386").ToSingle()) {
-        Assert.fail("otherValue single 86863421212032782386\nExpected: 8.686342E19f\nWas: " + ExtendedDecimal.FromString("86863421212032782386").ToSingle());
-      }
-      if (8.686342121203278E19d != ExtendedDecimal.FromString("86863421212032782386").ToDouble()) {
-        Assert.fail("otherValue double 86863421212032782386\nExpected: 8.686342121203278E19d\nWas: " + ExtendedDecimal.FromString("86863421212032782386").ToDouble());
-      }
-      if (2.46595376E8f != ExtendedDecimal.FromString("246595381").ToSingle()) {
-        Assert.fail("otherValue single 246595381\nExpected: 2.46595376E8f\nWas: " + ExtendedDecimal.FromString("246595381").ToSingle());
-      }
-      if (2.46595381E8d != ExtendedDecimal.FromString("246595381").ToDouble()) {
-        Assert.fail("otherValue double 246595381\nExpected: 2.46595381E8d\nWas: " + ExtendedDecimal.FromString("246595381").ToDouble());
-      }
-      if (5.128928E16f != ExtendedDecimal.FromString("51289277641921518E0").ToSingle()) {
-        Assert.fail("otherValue single 51289277641921518E0\nExpected: 5.128928E16f\nWas: " + ExtendedDecimal.FromString("51289277641921518E0").ToSingle());
-      }
-      if (5.128927764192152E16d != ExtendedDecimal.FromString("51289277641921518E0").ToDouble()) {
-        Assert.fail("otherValue double 51289277641921518E0\nExpected: 5.128927764192152E16d\nWas: " + ExtendedDecimal.FromString("51289277641921518E0").ToDouble());
-      }
-      if (41105.0f != ExtendedDecimal.FromString("41105").ToSingle()) {
-        Assert.fail("otherValue single 41105\nExpected: 41105.0f\nWas: " + ExtendedDecimal.FromString("41105").ToSingle());
-      }
-      if (41105.0d != ExtendedDecimal.FromString("41105").ToDouble()) {
-        Assert.fail("otherValue double 41105\nExpected: 41105.0d\nWas: " + ExtendedDecimal.FromString("41105").ToDouble());
-      }
-      if (4.5854699E16f != ExtendedDecimal.FromString("45854697039925162E0").ToSingle()) {
-        Assert.fail("otherValue single 45854697039925162E0\nExpected: 4.5854699E16f\nWas: " + ExtendedDecimal.FromString("45854697039925162E0").ToSingle());
-      }
-      if (4.585469703992516E16d != ExtendedDecimal.FromString("45854697039925162E0").ToDouble()) {
-        Assert.fail("otherValue double 45854697039925162E0\nExpected: 4.585469703992516E16d\nWas: " + ExtendedDecimal.FromString("45854697039925162E0").ToDouble());
-      }
-      if (357.0f != ExtendedDecimal.FromString("357").ToSingle()) {
-        Assert.fail("otherValue single 357\nExpected: 357.0f\nWas: " + ExtendedDecimal.FromString("357").ToSingle());
-      }
-      if (357.0d != ExtendedDecimal.FromString("357").ToDouble()) {
-        Assert.fail("otherValue double 357\nExpected: 357.0d\nWas: " + ExtendedDecimal.FromString("357").ToDouble());
-      }
-      if (4055.0f != ExtendedDecimal.FromString("4055").ToSingle()) {
-        Assert.fail("otherValue single 4055\nExpected: 4055.0f\nWas: " + ExtendedDecimal.FromString("4055").ToSingle());
-      }
-      if (4055.0d != ExtendedDecimal.FromString("4055").ToDouble()) {
-        Assert.fail("otherValue double 4055\nExpected: 4055.0d\nWas: " + ExtendedDecimal.FromString("4055").ToDouble());
-      }
-      if (-75211.0f != ExtendedDecimal.FromString("-75211").ToSingle()) {
-        Assert.fail("otherValue single -75211\nExpected: -75211.0f\nWas: " + ExtendedDecimal.FromString("-75211").ToSingle());
-      }
-      if (-75211.0d != ExtendedDecimal.FromString("-75211").ToDouble()) {
-        Assert.fail("otherValue double -75211\nExpected: -75211.0d\nWas: " + ExtendedDecimal.FromString("-75211").ToDouble());
-      }
-      if (-8.718763E19f != ExtendedDecimal.FromString("-87187631416675804676").ToSingle()) {
-        Assert.fail("otherValue single -87187631416675804676\nExpected: -8.718763E19f\nWas: " + ExtendedDecimal.FromString("-87187631416675804676").ToSingle());
-      }
-      if (-8.718763141667581E19d != ExtendedDecimal.FromString("-87187631416675804676").ToDouble()) {
-        Assert.fail("otherValue double -87187631416675804676\nExpected: -8.718763141667581E19d\nWas: " + ExtendedDecimal.FromString("-87187631416675804676").ToDouble());
-      }
-      if (-5.6423271E13f != ExtendedDecimal.FromString("-56423269820314").ToSingle()) {
-        Assert.fail("otherValue single -56423269820314\nExpected: -5.6423271E13f\nWas: " + ExtendedDecimal.FromString("-56423269820314").ToSingle());
-      }
-      if (-5.6423269820314E13d != ExtendedDecimal.FromString("-56423269820314").ToDouble()) {
-        Assert.fail("otherValue double -56423269820314\nExpected: -5.6423269820314E13d\nWas: " + ExtendedDecimal.FromString("-56423269820314").ToDouble());
-      }
-      if (-884958.0f != ExtendedDecimal.FromString("-884958").ToSingle()) {
-        Assert.fail("otherValue single -884958\nExpected: -884958.0f\nWas: " + ExtendedDecimal.FromString("-884958").ToSingle());
-      }
-      if (-884958.0d != ExtendedDecimal.FromString("-884958").ToDouble()) {
-        Assert.fail("otherValue double -884958\nExpected: -884958.0d\nWas: " + ExtendedDecimal.FromString("-884958").ToDouble());
-      }
-      if (-9.5231607E11f != ExtendedDecimal.FromString("-952316071356").ToSingle()) {
-        Assert.fail("otherValue single -952316071356\nExpected: -9.5231607E11f\nWas: " + ExtendedDecimal.FromString("-952316071356").ToSingle());
-      }
-      if (-9.52316071356E11d != ExtendedDecimal.FromString("-952316071356").ToDouble()) {
-        Assert.fail("otherValue double -952316071356\nExpected: -9.52316071356E11d\nWas: " + ExtendedDecimal.FromString("-952316071356").ToDouble());
-      }
-      if (1.07800844E17f != ExtendedDecimal.FromString("107800846902684870").ToSingle()) {
-        Assert.fail("otherValue single 107800846902684870\nExpected: 1.07800844E17f\nWas: " + ExtendedDecimal.FromString("107800846902684870").ToSingle());
-      }
-      if (1.07800846902684864E17d != ExtendedDecimal.FromString("107800846902684870").ToDouble()) {
-        Assert.fail("otherValue double 107800846902684870\nExpected: 1.07800846902684864E17d\nWas: " + ExtendedDecimal.FromString("107800846902684870").ToDouble());
-      }
-      if (-8.1588551E18f != ExtendedDecimal.FromString("-8158855313340166027").ToSingle()) {
-        Assert.fail("otherValue single -8158855313340166027\nExpected: -8.1588551E18f\nWas: " + ExtendedDecimal.FromString("-8158855313340166027").ToSingle());
-      }
-      if (-8.1588553133401661E18d != ExtendedDecimal.FromString("-8158855313340166027").ToDouble()) {
-        Assert.fail("otherValue double -8158855313340166027\nExpected: -8.1588553133401661E18d\nWas: " + ExtendedDecimal.FromString("-8158855313340166027").ToDouble());
-      }
-      if (1.52743454E18f != ExtendedDecimal.FromString("1527434477600178421").ToSingle()) {
-        Assert.fail("otherValue single 1527434477600178421\nExpected: 1.52743454E18f\nWas: " + ExtendedDecimal.FromString("1527434477600178421").ToSingle());
-      }
-      if (1.52743447760017843E18d != ExtendedDecimal.FromString("1527434477600178421").ToDouble()) {
-        Assert.fail("otherValue double 1527434477600178421\nExpected: 1.52743447760017843E18d\nWas: " + ExtendedDecimal.FromString("1527434477600178421").ToDouble());
-      }
-      if (-1.25374015E15f != ExtendedDecimal.FromString("-1253740164504924").ToSingle()) {
-        Assert.fail("otherValue single -1253740164504924\nExpected: -1.25374015E15f\nWas: " + ExtendedDecimal.FromString("-1253740164504924").ToSingle());
-      }
-      if (-1.253740164504924E15d != ExtendedDecimal.FromString("-1253740164504924").ToDouble()) {
-        Assert.fail("otherValue double -1253740164504924\nExpected: -1.253740164504924E15d\nWas: " + ExtendedDecimal.FromString("-1253740164504924").ToDouble());
-      }
-      if (9.333153E10f != ExtendedDecimal.FromString("93331529453").ToSingle()) {
-        Assert.fail("otherValue single 93331529453\nExpected: 9.333153E10f\nWas: " + ExtendedDecimal.FromString("93331529453").ToSingle());
-      }
-      if (9.3331529453E10d != ExtendedDecimal.FromString("93331529453").ToDouble()) {
-        Assert.fail("otherValue double 93331529453\nExpected: 9.3331529453E10d\nWas: " + ExtendedDecimal.FromString("93331529453").ToDouble());
-      }
-      if (-26195.0f != ExtendedDecimal.FromString("-26195").ToSingle()) {
-        Assert.fail("otherValue single -26195\nExpected: -26195.0f\nWas: " + ExtendedDecimal.FromString("-26195").ToSingle());
-      }
-      if (-26195.0d != ExtendedDecimal.FromString("-26195").ToDouble()) {
-        Assert.fail("otherValue double -26195\nExpected: -26195.0d\nWas: " + ExtendedDecimal.FromString("-26195").ToDouble());
-      }
-      if (-369.0f != ExtendedDecimal.FromString("-369").ToSingle()) {
-        Assert.fail("otherValue single -369\nExpected: -369.0f\nWas: " + ExtendedDecimal.FromString("-369").ToSingle());
-      }
-      if (-369.0d != ExtendedDecimal.FromString("-369").ToDouble()) {
-        Assert.fail("otherValue double -369\nExpected: -369.0d\nWas: " + ExtendedDecimal.FromString("-369").ToDouble());
-      }
-      if (-831.0f != ExtendedDecimal.FromString("-831").ToSingle()) {
-        Assert.fail("otherValue single -831\nExpected: -831.0f\nWas: " + ExtendedDecimal.FromString("-831").ToSingle());
-      }
-      if (-831.0d != ExtendedDecimal.FromString("-831").ToDouble()) {
-        Assert.fail("otherValue double -831\nExpected: -831.0d\nWas: " + ExtendedDecimal.FromString("-831").ToDouble());
-      }
-      if (4.11190218E12f != ExtendedDecimal.FromString("4111902130704").ToSingle()) {
-        Assert.fail("otherValue single 4111902130704\nExpected: 4.11190218E12f\nWas: " + ExtendedDecimal.FromString("4111902130704").ToSingle());
-      }
-      if (4.111902130704E12d != ExtendedDecimal.FromString("4111902130704").ToDouble()) {
-        Assert.fail("otherValue double 4111902130704\nExpected: 4.111902130704E12d\nWas: " + ExtendedDecimal.FromString("4111902130704").ToDouble());
-      }
-      if (-7.419975E34f != ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToSingle()) {
-        Assert.fail("otherValue single -7419975014712636689.1578027201500774E+16\nExpected: -7.419975E34f\nWas: " + ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToSingle());
-      }
-      if (-7.419975014712636E34d != ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToDouble()) {
-        Assert.fail("otherValue double -7419975014712636689.1578027201500774E+16\nExpected: -7.419975014712636E34d\nWas: " + ExtendedDecimal.FromString("-7419975014712636689.1578027201500774E+16").ToDouble());
-      }
-      if (-1.7915818E7f != ExtendedDecimal.FromString("-17915818").ToSingle()) {
-        Assert.fail("otherValue single -17915818\nExpected: -1.7915818E7f\nWas: " + ExtendedDecimal.FromString("-17915818").ToSingle());
-      }
-      if (-1.7915818E7d != ExtendedDecimal.FromString("-17915818").ToDouble()) {
-        Assert.fail("otherValue double -17915818\nExpected: -1.7915818E7d\nWas: " + ExtendedDecimal.FromString("-17915818").ToDouble());
-      }
-      if (-122.0f != ExtendedDecimal.FromString("-122").ToSingle()) {
-        Assert.fail("otherValue single -122\nExpected: -122.0f\nWas: " + ExtendedDecimal.FromString("-122").ToSingle());
-      }
-      if (-122.0d != ExtendedDecimal.FromString("-122").ToDouble()) {
-        Assert.fail("otherValue double -122\nExpected: -122.0d\nWas: " + ExtendedDecimal.FromString("-122").ToDouble());
-      }
-      if (-363975.0f != ExtendedDecimal.FromString("-363975").ToSingle()) {
-        Assert.fail("otherValue single -363975\nExpected: -363975.0f\nWas: " + ExtendedDecimal.FromString("-363975").ToSingle());
-      }
-      if (-363975.0d != ExtendedDecimal.FromString("-363975").ToDouble()) {
-        Assert.fail("otherValue double -363975\nExpected: -363975.0d\nWas: " + ExtendedDecimal.FromString("-363975").ToDouble());
-      }
-      if (3.22466716E12f != ExtendedDecimal.FromString("3224667065103").ToSingle()) {
-        Assert.fail("otherValue single 3224667065103\nExpected: 3.22466716E12f\nWas: " + ExtendedDecimal.FromString("3224667065103").ToSingle());
-      }
-      if (3.224667065103E12d != ExtendedDecimal.FromString("3224667065103").ToDouble()) {
-        Assert.fail("otherValue double 3224667065103\nExpected: 3.224667065103E12d\nWas: " + ExtendedDecimal.FromString("3224667065103").ToDouble());
-      }
-      if (-9.6666224E7f != ExtendedDecimal.FromString("-96666228").ToSingle()) {
-        Assert.fail("otherValue single -96666228\nExpected: -9.6666224E7f\nWas: " + ExtendedDecimal.FromString("-96666228").ToSingle());
-      }
-      if (-9.6666228E7d != ExtendedDecimal.FromString("-96666228").ToDouble()) {
-        Assert.fail("otherValue double -96666228\nExpected: -9.6666228E7d\nWas: " + ExtendedDecimal.FromString("-96666228").ToDouble());
-      }
-      if (-6.3737765E19f != ExtendedDecimal.FromString("-63737764614634686933").ToSingle()) {
-        Assert.fail("otherValue single -63737764614634686933\nExpected: -6.3737765E19f\nWas: " + ExtendedDecimal.FromString("-63737764614634686933").ToSingle());
-      }
-      if (-6.3737764614634684E19d != ExtendedDecimal.FromString("-63737764614634686933").ToDouble()) {
-        Assert.fail("otherValue double -63737764614634686933\nExpected: -6.3737764614634684E19d\nWas: " + ExtendedDecimal.FromString("-63737764614634686933").ToDouble());
-      }
-      if (-45065.0f != ExtendedDecimal.FromString("-45065").ToSingle()) {
-        Assert.fail("otherValue single -45065\nExpected: -45065.0f\nWas: " + ExtendedDecimal.FromString("-45065").ToSingle());
-      }
-      if (-45065.0d != ExtendedDecimal.FromString("-45065").ToDouble()) {
-        Assert.fail("otherValue double -45065\nExpected: -45065.0d\nWas: " + ExtendedDecimal.FromString("-45065").ToDouble());
-      }
-      if (18463.0f != ExtendedDecimal.FromString("18463").ToSingle()) {
-        Assert.fail("otherValue single 18463\nExpected: 18463.0f\nWas: " + ExtendedDecimal.FromString("18463").ToSingle());
-      }
-      if (18463.0d != ExtendedDecimal.FromString("18463").ToDouble()) {
-        Assert.fail("otherValue double 18463\nExpected: 18463.0d\nWas: " + ExtendedDecimal.FromString("18463").ToDouble());
-      }
-      if (-5.2669409E15f != ExtendedDecimal.FromString("-5266940927335870").ToSingle()) {
-        Assert.fail("otherValue single -5266940927335870\nExpected: -5.2669409E15f\nWas: " + ExtendedDecimal.FromString("-5266940927335870").ToSingle());
-      }
-      if (-5.26694092733587E15d != ExtendedDecimal.FromString("-5266940927335870").ToDouble()) {
-        Assert.fail("otherValue double -5266940927335870\nExpected: -5.26694092733587E15d\nWas: " + ExtendedDecimal.FromString("-5266940927335870").ToDouble());
-      }
-      if (-3.61275925E15f != ExtendedDecimal.FromString("-3612759343074710").ToSingle()) {
-        Assert.fail("otherValue single -3612759343074710\nExpected: -3.61275925E15f\nWas: " + ExtendedDecimal.FromString("-3612759343074710").ToSingle());
-      }
-      if (-3.61275934307471E15d != ExtendedDecimal.FromString("-3612759343074710").ToDouble()) {
-        Assert.fail("otherValue double -3612759343074710\nExpected: -3.61275934307471E15d\nWas: " + ExtendedDecimal.FromString("-3612759343074710").ToDouble());
-      }
-      if (-1.49784412E11f != ExtendedDecimal.FromString("-149784410976").ToSingle()) {
-        Assert.fail("otherValue single -149784410976\nExpected: -1.49784412E11f\nWas: " + ExtendedDecimal.FromString("-149784410976").ToSingle());
-      }
-      if (-1.49784410976E11d != ExtendedDecimal.FromString("-149784410976").ToDouble()) {
-        Assert.fail("otherValue double -149784410976\nExpected: -1.49784410976E11d\nWas: " + ExtendedDecimal.FromString("-149784410976").ToDouble());
-      }
-      if (-1.01285276E17f != ExtendedDecimal.FromString("-101285275020696035").ToSingle()) {
-        Assert.fail("otherValue single -101285275020696035\nExpected: -1.01285276E17f\nWas: " + ExtendedDecimal.FromString("-101285275020696035").ToSingle());
-      }
-      if (-1.01285275020696032E17d != ExtendedDecimal.FromString("-101285275020696035").ToDouble()) {
-        Assert.fail("otherValue double -101285275020696035\nExpected: -1.01285275020696032E17d\nWas: " + ExtendedDecimal.FromString("-101285275020696035").ToDouble());
-      }
-      if (-34.0f != ExtendedDecimal.FromString("-34").ToSingle()) {
-        Assert.fail("otherValue single -34\nExpected: -34.0f\nWas: " + ExtendedDecimal.FromString("-34").ToSingle());
-      }
-      if (-34.0d != ExtendedDecimal.FromString("-34").ToDouble()) {
-        Assert.fail("otherValue double -34\nExpected: -34.0d\nWas: " + ExtendedDecimal.FromString("-34").ToDouble());
-      }
-      if (-6.9963739E17f != ExtendedDecimal.FromString("-699637360432542026").ToSingle()) {
-        Assert.fail("otherValue single -699637360432542026\nExpected: -6.9963739E17f\nWas: " + ExtendedDecimal.FromString("-699637360432542026").ToSingle());
-      }
-      if (-6.9963736043254208E17d != ExtendedDecimal.FromString("-699637360432542026").ToDouble()) {
-        Assert.fail("otherValue double -699637360432542026\nExpected: -6.9963736043254208E17d\nWas: " + ExtendedDecimal.FromString("-699637360432542026").ToDouble());
-      }
-      if (-8131.0f != ExtendedDecimal.FromString("-8131").ToSingle()) {
-        Assert.fail("otherValue single -8131\nExpected: -8131.0f\nWas: " + ExtendedDecimal.FromString("-8131").ToSingle());
-      }
-      if (-8131.0d != ExtendedDecimal.FromString("-8131").ToDouble()) {
-        Assert.fail("otherValue double -8131\nExpected: -8131.0d\nWas: " + ExtendedDecimal.FromString("-8131").ToDouble());
-      }
-      if (6.1692147E8f != ExtendedDecimal.FromString("616921472").ToSingle()) {
-        Assert.fail("otherValue single 616921472\nExpected: 6.1692147E8f\nWas: " + ExtendedDecimal.FromString("616921472").ToSingle());
-      }
-      if (6.16921472E8d != ExtendedDecimal.FromString("616921472").ToDouble()) {
-        Assert.fail("otherValue double 616921472\nExpected: 6.16921472E8d\nWas: " + ExtendedDecimal.FromString("616921472").ToDouble());
-      }
-      if (447272.0f != ExtendedDecimal.FromString("447272").ToSingle()) {
-        Assert.fail("otherValue single 447272\nExpected: 447272.0f\nWas: " + ExtendedDecimal.FromString("447272").ToSingle());
-      }
-      if (447272.0d != ExtendedDecimal.FromString("447272").ToDouble()) {
-        Assert.fail("otherValue double 447272\nExpected: 447272.0d\nWas: " + ExtendedDecimal.FromString("447272").ToDouble());
-      }
-      if (9.719524E17f != ExtendedDecimal.FromString("971952376640924713").ToSingle()) {
-        Assert.fail("otherValue single 971952376640924713\nExpected: 9.719524E17f\nWas: " + ExtendedDecimal.FromString("971952376640924713").ToSingle());
-      }
-      if (9.7195237664092467E17d != ExtendedDecimal.FromString("971952376640924713").ToDouble()) {
-        Assert.fail("otherValue double 971952376640924713\nExpected: 9.7195237664092467E17d\nWas: " + ExtendedDecimal.FromString("971952376640924713").ToDouble());
-      }
-      if (-8622.0f != ExtendedDecimal.FromString("-8622").ToSingle()) {
-        Assert.fail("otherValue single -8622\nExpected: -8622.0f\nWas: " + ExtendedDecimal.FromString("-8622").ToSingle());
-      }
-      if (-8622.0d != ExtendedDecimal.FromString("-8622").ToDouble()) {
-        Assert.fail("otherValue double -8622\nExpected: -8622.0d\nWas: " + ExtendedDecimal.FromString("-8622").ToDouble());
-      }
-      if (-9.8425534E13f != ExtendedDecimal.FromString("-98425536547570").ToSingle()) {
-        Assert.fail("otherValue single -98425536547570\nExpected: -9.8425534E13f\nWas: " + ExtendedDecimal.FromString("-98425536547570").ToSingle());
-      }
-      if (-9.842553654757E13d != ExtendedDecimal.FromString("-98425536547570").ToDouble()) {
-        Assert.fail("otherValue double -98425536547570\nExpected: -9.842553654757E13d\nWas: " + ExtendedDecimal.FromString("-98425536547570").ToDouble());
-      }
-      if (-1.3578545E14f != ExtendedDecimal.FromString("-135785450228746").ToSingle()) {
-        Assert.fail("otherValue single -135785450228746\nExpected: -1.3578545E14f\nWas: " + ExtendedDecimal.FromString("-135785450228746").ToSingle());
-      }
-      if (-1.35785450228746E14d != ExtendedDecimal.FromString("-135785450228746").ToDouble()) {
-        Assert.fail("otherValue double -135785450228746\nExpected: -1.35785450228746E14d\nWas: " + ExtendedDecimal.FromString("-135785450228746").ToDouble());
-      }
-      if (935.0f != ExtendedDecimal.FromString("935").ToSingle()) {
-        Assert.fail("otherValue single 935\nExpected: 935.0f\nWas: " + ExtendedDecimal.FromString("935").ToSingle());
-      }
-      if (935.0d != ExtendedDecimal.FromString("935").ToDouble()) {
-        Assert.fail("otherValue double 935\nExpected: 935.0d\nWas: " + ExtendedDecimal.FromString("935").ToDouble());
-      }
-      if (-7890.0f != ExtendedDecimal.FromString("-7890E0").ToSingle()) {
-        Assert.fail("otherValue single -7890E0\nExpected: -7890.0f\nWas: " + ExtendedDecimal.FromString("-7890E0").ToSingle());
-      }
-      if (-7890.0d != ExtendedDecimal.FromString("-7890E0").ToDouble()) {
-        Assert.fail("otherValue double -7890E0\nExpected: -7890.0d\nWas: " + ExtendedDecimal.FromString("-7890E0").ToDouble());
-      }
-      if (4.5492643E12f != ExtendedDecimal.FromString("45.49264316782E+11").ToSingle()) {
-        Assert.fail("otherValue single 45.49264316782E+11\nExpected: 4.5492643E12f\nWas: " + ExtendedDecimal.FromString("45.49264316782E+11").ToSingle());
-      }
-      if (4.549264316782E12d != ExtendedDecimal.FromString("45.49264316782E+11").ToDouble()) {
-        Assert.fail("otherValue double 45.49264316782E+11\nExpected: 4.549264316782E12d\nWas: " + ExtendedDecimal.FromString("45.49264316782E+11").ToDouble());
-      }
-      if (-7684.0f != ExtendedDecimal.FromString("-7684").ToSingle()) {
-        Assert.fail("otherValue single -7684\nExpected: -7684.0f\nWas: " + ExtendedDecimal.FromString("-7684").ToSingle());
-      }
-      if (-7684.0d != ExtendedDecimal.FromString("-7684").ToDouble()) {
-        Assert.fail("otherValue double -7684\nExpected: -7684.0d\nWas: " + ExtendedDecimal.FromString("-7684").ToDouble());
-      }
-      if (734069.0f != ExtendedDecimal.FromString("734069").ToSingle()) {
-        Assert.fail("otherValue single 734069\nExpected: 734069.0f\nWas: " + ExtendedDecimal.FromString("734069").ToSingle());
-      }
-      if (734069.0d != ExtendedDecimal.FromString("734069").ToDouble()) {
-        Assert.fail("otherValue double 734069\nExpected: 734069.0d\nWas: " + ExtendedDecimal.FromString("734069").ToDouble());
-      }
-      if (-3.51801573E12f != ExtendedDecimal.FromString("-3518015796477").ToSingle()) {
-        Assert.fail("otherValue single -3518015796477\nExpected: -3.51801573E12f\nWas: " + ExtendedDecimal.FromString("-3518015796477").ToSingle());
-      }
-      if (-3.518015796477E12d != ExtendedDecimal.FromString("-3518015796477").ToDouble()) {
-        Assert.fail("otherValue double -3518015796477\nExpected: -3.518015796477E12d\nWas: " + ExtendedDecimal.FromString("-3518015796477").ToDouble());
-      }
-      if (-411720.0f != ExtendedDecimal.FromString("-411720").ToSingle()) {
-        Assert.fail("otherValue single -411720\nExpected: -411720.0f\nWas: " + ExtendedDecimal.FromString("-411720").ToSingle());
-      }
-      if (-411720.0d != ExtendedDecimal.FromString("-411720").ToDouble()) {
-        Assert.fail("otherValue double -411720\nExpected: -411720.0d\nWas: " + ExtendedDecimal.FromString("-411720").ToDouble());
-      }
-      if (5.14432512E8f != ExtendedDecimal.FromString("514432504").ToSingle()) {
-        Assert.fail("otherValue single 514432504\nExpected: 5.14432512E8f\nWas: " + ExtendedDecimal.FromString("514432504").ToSingle());
-      }
-      if (5.14432504E8d != ExtendedDecimal.FromString("514432504").ToDouble()) {
-        Assert.fail("otherValue double 514432504\nExpected: 5.14432504E8d\nWas: " + ExtendedDecimal.FromString("514432504").ToDouble());
-      }
-      if (3970.0f != ExtendedDecimal.FromString("3970").ToSingle()) {
-        Assert.fail("otherValue single 3970\nExpected: 3970.0f\nWas: " + ExtendedDecimal.FromString("3970").ToSingle());
-      }
-      if (3970.0d != ExtendedDecimal.FromString("3970").ToDouble()) {
-        Assert.fail("otherValue double 3970\nExpected: 3970.0d\nWas: " + ExtendedDecimal.FromString("3970").ToDouble());
-      }
-      if (-1.89642527E10f != ExtendedDecimal.FromString("-18964252847").ToSingle()) {
-        Assert.fail("otherValue single -18964252847\nExpected: -1.89642527E10f\nWas: " + ExtendedDecimal.FromString("-18964252847").ToSingle());
-      }
-      if (-1.8964252847E10d != ExtendedDecimal.FromString("-18964252847").ToDouble()) {
-        Assert.fail("otherValue double -18964252847\nExpected: -1.8964252847E10d\nWas: " + ExtendedDecimal.FromString("-18964252847").ToDouble());
-      }
-      if (-9.5766118E10f != ExtendedDecimal.FromString("-95766116842").ToSingle()) {
-        Assert.fail("otherValue single -95766116842\nExpected: -9.5766118E10f\nWas: " + ExtendedDecimal.FromString("-95766116842").ToSingle());
-      }
-      if (-9.5766116842E10d != ExtendedDecimal.FromString("-95766116842").ToDouble()) {
-        Assert.fail("otherValue double -95766116842\nExpected: -9.5766116842E10d\nWas: " + ExtendedDecimal.FromString("-95766116842").ToDouble());
-      }
-      if (-4.5759559E15f != ExtendedDecimal.FromString("-4575956051893063").ToSingle()) {
-        Assert.fail("otherValue single -4575956051893063\nExpected: -4.5759559E15f\nWas: " + ExtendedDecimal.FromString("-4575956051893063").ToSingle());
-      }
-      if (-4.575956051893063E15d != ExtendedDecimal.FromString("-4575956051893063").ToDouble()) {
-        Assert.fail("otherValue double -4575956051893063\nExpected: -4.575956051893063E15d\nWas: " + ExtendedDecimal.FromString("-4575956051893063").ToDouble());
-      }
-      if (5.2050934E9f != ExtendedDecimal.FromString("5205093392").ToSingle()) {
-        Assert.fail("otherValue single 5205093392\nExpected: 5.2050934E9f\nWas: " + ExtendedDecimal.FromString("5205093392").ToSingle());
-      }
-      if (5.205093392E9d != ExtendedDecimal.FromString("5205093392").ToDouble()) {
-        Assert.fail("otherValue double 5205093392\nExpected: 5.205093392E9d\nWas: " + ExtendedDecimal.FromString("5205093392").ToDouble());
-      }
-      if (-7.0079627E12f != ExtendedDecimal.FromString("-7007962583042").ToSingle()) {
-        Assert.fail("otherValue single -7007962583042\nExpected: -7.0079627E12f\nWas: " + ExtendedDecimal.FromString("-7007962583042").ToSingle());
-      }
-      if (-7.007962583042E12d != ExtendedDecimal.FromString("-7007962583042").ToDouble()) {
-        Assert.fail("otherValue double -7007962583042\nExpected: -7.007962583042E12d\nWas: " + ExtendedDecimal.FromString("-7007962583042").ToDouble());
-      }
-      if (59.0f != ExtendedDecimal.FromString("59").ToSingle()) {
-        Assert.fail("otherValue single 59\nExpected: 59.0f\nWas: " + ExtendedDecimal.FromString("59").ToSingle());
-      }
-      if (59.0d != ExtendedDecimal.FromString("59").ToDouble()) {
-        Assert.fail("otherValue double 59\nExpected: 59.0d\nWas: " + ExtendedDecimal.FromString("59").ToDouble());
-      }
-      if (-5.5095849E16f != ExtendedDecimal.FromString("-55095850956259910").ToSingle()) {
-        Assert.fail("otherValue single -55095850956259910\nExpected: -5.5095849E16f\nWas: " + ExtendedDecimal.FromString("-55095850956259910").ToSingle());
-      }
-      if (-5.5095850956259912E16d != ExtendedDecimal.FromString("-55095850956259910").ToDouble()) {
-        Assert.fail("otherValue double -55095850956259910\nExpected: -5.5095850956259912E16d\nWas: " + ExtendedDecimal.FromString("-55095850956259910").ToDouble());
-      }
-      if (1.0f != ExtendedDecimal.FromString("1").ToSingle()) {
-        Assert.fail("otherValue single 1\nExpected: 1.0f\nWas: " + ExtendedDecimal.FromString("1").ToSingle());
-      }
-      if (1.0d != ExtendedDecimal.FromString("1").ToDouble()) {
-        Assert.fail("otherValue double 1\nExpected: 1.0d\nWas: " + ExtendedDecimal.FromString("1").ToDouble());
-      }
-      if (598.0f != ExtendedDecimal.FromString("598").ToSingle()) {
-        Assert.fail("otherValue single 598\nExpected: 598.0f\nWas: " + ExtendedDecimal.FromString("598").ToSingle());
-      }
-      if (598.0d != ExtendedDecimal.FromString("598").ToDouble()) {
-        Assert.fail("otherValue double 598\nExpected: 598.0d\nWas: " + ExtendedDecimal.FromString("598").ToDouble());
-      }
-      if (957.0f != ExtendedDecimal.FromString("957").ToSingle()) {
-        Assert.fail("otherValue single 957\nExpected: 957.0f\nWas: " + ExtendedDecimal.FromString("957").ToSingle());
-      }
-      if (957.0d != ExtendedDecimal.FromString("957").ToDouble()) {
-        Assert.fail("otherValue double 957\nExpected: 957.0d\nWas: " + ExtendedDecimal.FromString("957").ToDouble());
-      }
-      if (-1.4772274E7f != ExtendedDecimal.FromString("-14772274").ToSingle()) {
-        Assert.fail("otherValue single -14772274\nExpected: -1.4772274E7f\nWas: " + ExtendedDecimal.FromString("-14772274").ToSingle());
-      }
-      if (-1.4772274E7d != ExtendedDecimal.FromString("-14772274").ToDouble()) {
-        Assert.fail("otherValue double -14772274\nExpected: -1.4772274E7d\nWas: " + ExtendedDecimal.FromString("-14772274").ToDouble());
-      }
-      if (-3006.0f != ExtendedDecimal.FromString("-3006").ToSingle()) {
-        Assert.fail("otherValue single -3006\nExpected: -3006.0f\nWas: " + ExtendedDecimal.FromString("-3006").ToSingle());
-      }
-      if (-3006.0d != ExtendedDecimal.FromString("-3006").ToDouble()) {
-        Assert.fail("otherValue double -3006\nExpected: -3006.0d\nWas: " + ExtendedDecimal.FromString("-3006").ToDouble());
-      }
-      if (3.07120343E18f != ExtendedDecimal.FromString("3071203450148698328").ToSingle()) {
-        Assert.fail("otherValue single 3071203450148698328\nExpected: 3.07120343E18f\nWas: " + ExtendedDecimal.FromString("3071203450148698328").ToSingle());
-      }
-      if (3.0712034501486981E18d != ExtendedDecimal.FromString("3071203450148698328").ToDouble()) {
-        Assert.fail("otherValue double 3071203450148698328\nExpected: 3.0712034501486981E18d\nWas: " + ExtendedDecimal.FromString("3071203450148698328").ToDouble());
-      }
+    public void TestCanFitInSpecificCases() {
+      CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfb, 0x41, (byte)0xe0, (byte)0x85, 0x48, 0x2d, 0x14, 0x47, 0x7a  });  // 2217361768.63373
+      Assert.assertEquals(BigInteger.fromString("2217361768"), cbor.AsBigInteger());
+      if(cbor.AsBigInteger().canFitInInt())Assert.fail();
+      if(cbor.CanTruncatedIntFitInInt32())Assert.fail();
+      cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x18, 0x2f, 0x32  });  // -2674012278751232
+      Assert.assertEquals(52, cbor.AsBigInteger().bitLength());
+      if(!(cbor.CanFitInInt64()))Assert.fail();
+      if(CBORObject.FromObject(2554895343L).CanFitInSingle())Assert.fail();
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
-    public void TestDecFracToSingleDouble() {
-      if (-4348.0f != ExtendedDecimal.FromString("-4348").ToSingle()) {
-        Assert.fail("otherValue single -4348\nExpected: -4348.0f\nWas: " + ExtendedDecimal.FromString("-4348").ToSingle());
-      }
-      if (-4348.0d != ExtendedDecimal.FromString("-4348").ToDouble()) {
-        Assert.fail("otherValue double -4348\nExpected: -4348.0d\nWas: " + ExtendedDecimal.FromString("-4348").ToDouble());
-      }
-      if (-9.85323f != ExtendedDecimal.FromString("-9.85323086293411065").ToSingle()) {
-        Assert.fail("otherValue single -9.85323086293411065\nExpected: -9.85323f\nWas: " + ExtendedDecimal.FromString("-9.85323086293411065").ToSingle());
-      }
-      if (-9.85323086293411d != ExtendedDecimal.FromString("-9.85323086293411065").ToDouble()) {
-        Assert.fail("otherValue double -9.85323086293411065\nExpected: -9.85323086293411d\nWas: " + ExtendedDecimal.FromString("-9.85323086293411065").ToDouble());
-      }
-      if (-5.2317E9f != ExtendedDecimal.FromString("-5231.7E+6").ToSingle()) {
-        Assert.fail("otherValue single -5231.7E+6\nExpected: -5.2317E9f\nWas: " + ExtendedDecimal.FromString("-5231.7E+6").ToSingle());
-      }
-      if (-5.2317E9d != ExtendedDecimal.FromString("-5231.7E+6").ToDouble()) {
-        Assert.fail("otherValue double -5231.7E+6\nExpected: -5.2317E9d\nWas: " + ExtendedDecimal.FromString("-5231.7E+6").ToDouble());
-      }
-      if (5.7991604E7f != ExtendedDecimal.FromString("579916024.449917729730457E-1").ToSingle()) {
-        Assert.fail("otherValue single 579916024.449917729730457E-1\nExpected: 5.7991604E7f\nWas: " + ExtendedDecimal.FromString("579916024.449917729730457E-1").ToSingle());
-      }
-      if (5.7991602444991775E7d != ExtendedDecimal.FromString("579916024.449917729730457E-1").ToDouble()) {
-        Assert.fail("otherValue double 579916024.449917729730457E-1\nExpected: 5.7991602444991775E7d\nWas: " + ExtendedDecimal.FromString("579916024.449917729730457E-1").ToDouble());
-      }
-      if (-515.02563f != ExtendedDecimal.FromString("-515025607547098618E-15").ToSingle()) {
-        Assert.fail("otherValue single -515025607547098618E-15\nExpected: -515.02563f\nWas: " + ExtendedDecimal.FromString("-515025607547098618E-15").ToSingle());
-      }
-      if (-515.0256075470986d != ExtendedDecimal.FromString("-515025607547098618E-15").ToDouble()) {
-        Assert.fail("otherValue double -515025607547098618E-15\nExpected: -515.0256075470986d\nWas: " + ExtendedDecimal.FromString("-515025607547098618E-15").ToDouble());
-      }
-      if (-9.3541843E10f != ExtendedDecimal.FromString("-93541840706").ToSingle()) {
-        Assert.fail("otherValue single -93541840706\nExpected: -9.3541843E10f\nWas: " + ExtendedDecimal.FromString("-93541840706").ToSingle());
-      }
-      if (-9.3541840706E10d != ExtendedDecimal.FromString("-93541840706").ToDouble()) {
-        Assert.fail("otherValue double -93541840706\nExpected: -9.3541840706E10d\nWas: " + ExtendedDecimal.FromString("-93541840706").ToDouble());
-      }
-      if (3.8568078E23f != ExtendedDecimal.FromString("38568076767380659.6E+7").ToSingle()) {
-        Assert.fail("otherValue single 38568076767380659.6E+7\nExpected: 3.8568078E23f\nWas: " + ExtendedDecimal.FromString("38568076767380659.6E+7").ToSingle());
-      }
-      if (3.8568076767380657E23d != ExtendedDecimal.FromString("38568076767380659.6E+7").ToDouble()) {
-        Assert.fail("otherValue double 38568076767380659.6E+7\nExpected: 3.8568076767380657E23d\nWas: " + ExtendedDecimal.FromString("38568076767380659.6E+7").ToDouble());
-      }
-      if (4682.1987f != ExtendedDecimal.FromString("468219867826E-8").ToSingle()) {
-        Assert.fail("otherValue single 468219867826E-8\nExpected: 4682.1987f\nWas: " + ExtendedDecimal.FromString("468219867826E-8").ToSingle());
-      }
-      if (4682.19867826d != ExtendedDecimal.FromString("468219867826E-8").ToDouble()) {
-        Assert.fail("otherValue double 468219867826E-8\nExpected: 4682.19867826d\nWas: " + ExtendedDecimal.FromString("468219867826E-8").ToDouble());
-      }
-      if (7.3869363E-4f != ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToSingle()) {
-        Assert.fail("otherValue single 73869365.3859328709200790828E-11\nExpected: 7.3869363E-4f\nWas: " + ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToSingle());
-      }
-      if (7.386936538593287E-4d != ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToDouble()) {
-        Assert.fail("otherValue double 73869365.3859328709200790828E-11\nExpected: 7.386936538593287E-4d\nWas: " + ExtendedDecimal.FromString("73869365.3859328709200790828E-11").ToDouble());
-      }
-      if (2.3f != ExtendedDecimal.FromString("2.3E0").ToSingle()) {
-        Assert.fail("otherValue single 2.3E0\nExpected: 2.3f\nWas: " + ExtendedDecimal.FromString("2.3E0").ToSingle());
-      }
-      if (2.3d != ExtendedDecimal.FromString("2.3E0").ToDouble()) {
-        Assert.fail("otherValue double 2.3E0\nExpected: 2.3d\nWas: " + ExtendedDecimal.FromString("2.3E0").ToDouble());
-      }
-      if (3.3713182E15f != ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToSingle()) {
-        Assert.fail("otherValue single 3371318258253373.59498533176159560\nExpected: 3.3713182E15f\nWas: " + ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToSingle());
-      }
-      if (3.3713182582533735E15d != ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToDouble()) {
-        Assert.fail("otherValue double 3371318258253373.59498533176159560\nExpected: 3.3713182582533735E15d\nWas: " + ExtendedDecimal.FromString("3371318258253373.59498533176159560").ToDouble());
-      }
-      if (0.08044683f != ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToSingle()) {
-        Assert.fail("otherValue single 804468350612974.6118902086132089233E-16\nExpected: 0.08044683f\nWas: " + ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToSingle());
-      }
-      if (0.08044683506129746d != ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToDouble()) {
-        Assert.fail("otherValue double 804468350612974.6118902086132089233E-16\nExpected: 0.08044683506129746d\nWas: " + ExtendedDecimal.FromString("804468350612974.6118902086132089233E-16").ToDouble());
-      }
-      if (-7.222071E19f != ExtendedDecimal.FromString("-72220708347127407337.28").ToSingle()) {
-        Assert.fail("otherValue single -72220708347127407337.28\nExpected: -7.222071E19f\nWas: " + ExtendedDecimal.FromString("-72220708347127407337.28").ToSingle());
-      }
-      if (-7.222070834712741E19d != ExtendedDecimal.FromString("-72220708347127407337.28").ToDouble()) {
-        Assert.fail("otherValue double -72220708347127407337.28\nExpected: -7.222070834712741E19d\nWas: " + ExtendedDecimal.FromString("-72220708347127407337.28").ToDouble());
-      }
-      if (9715796.0f != ExtendedDecimal.FromString("9715796.4299331966870989").ToSingle()) {
-        Assert.fail("otherValue single 9715796.4299331966870989\nExpected: 9715796.0f\nWas: " + ExtendedDecimal.FromString("9715796.4299331966870989").ToSingle());
-      }
-      if (9715796.429933196d != ExtendedDecimal.FromString("9715796.4299331966870989").ToDouble()) {
-        Assert.fail("otherValue double 9715796.4299331966870989\nExpected: 9715796.429933196d\nWas: " + ExtendedDecimal.FromString("9715796.4299331966870989").ToDouble());
-      }
-      if (9.3596612E14f != ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToSingle()) {
-        Assert.fail("otherValue single 93596609961883873.8463754373628236E-2\nExpected: 9.3596612E14f\nWas: " + ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToSingle());
-      }
-      if (9.359660996188388E14d != ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToDouble()) {
-        Assert.fail("otherValue double 93596609961883873.8463754373628236E-2\nExpected: 9.359660996188388E14d\nWas: " + ExtendedDecimal.FromString("93596609961883873.8463754373628236E-2").ToDouble());
-      }
-      if (4.82799354E14f != ExtendedDecimal.FromString("482799357899450").ToSingle()) {
-        Assert.fail("otherValue single 482799357899450\nExpected: 4.82799354E14f\nWas: " + ExtendedDecimal.FromString("482799357899450").ToSingle());
-      }
-      if (4.8279935789945E14d != ExtendedDecimal.FromString("482799357899450").ToDouble()) {
-        Assert.fail("otherValue double 482799357899450\nExpected: 4.8279935789945E14d\nWas: " + ExtendedDecimal.FromString("482799357899450").ToDouble());
-      }
-      if (3.8193924E25f != ExtendedDecimal.FromString("381939236989E+14").ToSingle()) {
-        Assert.fail("otherValue single 381939236989E+14\nExpected: 3.8193924E25f\nWas: " + ExtendedDecimal.FromString("381939236989E+14").ToSingle());
-      }
-      if (3.81939236989E25d != ExtendedDecimal.FromString("381939236989E+14").ToDouble()) {
-        Assert.fail("otherValue double 381939236989E+14\nExpected: 3.81939236989E25d\nWas: " + ExtendedDecimal.FromString("381939236989E+14").ToDouble());
-      }
-      if (-3.1092332E27f != ExtendedDecimal.FromString("-3109233371824024E+12").ToSingle()) {
-        Assert.fail("otherValue single -3109233371824024E+12\nExpected: -3.1092332E27f\nWas: " + ExtendedDecimal.FromString("-3109233371824024E+12").ToSingle());
-      }
-      if (-3.109233371824024E27d != ExtendedDecimal.FromString("-3109233371824024E+12").ToDouble()) {
-        Assert.fail("otherValue double -3109233371824024E+12\nExpected: -3.109233371824024E27d\nWas: " + ExtendedDecimal.FromString("-3109233371824024E+12").ToDouble());
-      }
-      if (-0.006658507f != ExtendedDecimal.FromString("-66585.07E-7").ToSingle()) {
-        Assert.fail("otherValue single -66585.07E-7\nExpected: -0.006658507f\nWas: " + ExtendedDecimal.FromString("-66585.07E-7").ToSingle());
-      }
-      if (-0.006658507d != ExtendedDecimal.FromString("-66585.07E-7").ToDouble()) {
-        Assert.fail("otherValue double -66585.07E-7\nExpected: -0.006658507d\nWas: " + ExtendedDecimal.FromString("-66585.07E-7").ToDouble());
-      }
-      if (17.276796f != ExtendedDecimal.FromString("17.276795549708").ToSingle()) {
-        Assert.fail("otherValue single 17.276795549708\nExpected: 17.276796f\nWas: " + ExtendedDecimal.FromString("17.276795549708").ToSingle());
-      }
-      if (17.276795549708d != ExtendedDecimal.FromString("17.276795549708").ToDouble()) {
-        Assert.fail("otherValue double 17.276795549708\nExpected: 17.276795549708d\nWas: " + ExtendedDecimal.FromString("17.276795549708").ToDouble());
-      }
-      if (-3210939.5f != ExtendedDecimal.FromString("-321093943510192.3307E-8").ToSingle()) {
-        Assert.fail("otherValue single -321093943510192.3307E-8\nExpected: -3210939.5f\nWas: " + ExtendedDecimal.FromString("-321093943510192.3307E-8").ToSingle());
-      }
-      if (-3210939.4351019235d != ExtendedDecimal.FromString("-321093943510192.3307E-8").ToDouble()) {
-        Assert.fail("otherValue double -321093943510192.3307E-8\nExpected: -3210939.4351019235d\nWas: " + ExtendedDecimal.FromString("-321093943510192.3307E-8").ToDouble());
-      }
-      if (-976.9676f != ExtendedDecimal.FromString("-976.967597776185553735").ToSingle()) {
-        Assert.fail("otherValue single -976.967597776185553735\nExpected: -976.9676f\nWas: " + ExtendedDecimal.FromString("-976.967597776185553735").ToSingle());
-      }
-      if (-976.9675977761856d != ExtendedDecimal.FromString("-976.967597776185553735").ToDouble()) {
-        Assert.fail("otherValue double -976.967597776185553735\nExpected: -976.9675977761856d\nWas: " + ExtendedDecimal.FromString("-976.967597776185553735").ToDouble());
-      }
-      if (-3.49712614E9f != ExtendedDecimal.FromString("-3497126138").ToSingle()) {
-        Assert.fail("otherValue single -3497126138\nExpected: -3.49712614E9f\nWas: " + ExtendedDecimal.FromString("-3497126138").ToSingle());
-      }
-      if (-3.497126138E9d != ExtendedDecimal.FromString("-3497126138").ToDouble()) {
-        Assert.fail("otherValue double -3497126138\nExpected: -3.497126138E9d\nWas: " + ExtendedDecimal.FromString("-3497126138").ToDouble());
-      }
-      if (-2.63418028E14f != ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToSingle()) {
-        Assert.fail("otherValue single -2634180.2455697965376217503E+8\nExpected: -2.63418028E14f\nWas: " + ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToSingle());
-      }
-      if (-2.6341802455697966E14d != ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToDouble()) {
-        Assert.fail("otherValue double -2634180.2455697965376217503E+8\nExpected: -2.6341802455697966E14d\nWas: " + ExtendedDecimal.FromString("-2634180.2455697965376217503E+8").ToDouble());
-      }
-      if (3.25314253E10f != ExtendedDecimal.FromString("32531426161").ToSingle()) {
-        Assert.fail("otherValue single 32531426161\nExpected: 3.25314253E10f\nWas: " + ExtendedDecimal.FromString("32531426161").ToSingle());
-      }
-      if (3.2531426161E10d != ExtendedDecimal.FromString("32531426161").ToDouble()) {
-        Assert.fail("otherValue double 32531426161\nExpected: 3.2531426161E10d\nWas: " + ExtendedDecimal.FromString("32531426161").ToDouble());
-      }
-      if (-83825.7f != ExtendedDecimal.FromString("-83825.7").ToSingle()) {
-        Assert.fail("otherValue single -83825.7\nExpected: -83825.7f\nWas: " + ExtendedDecimal.FromString("-83825.7").ToSingle());
-      }
-      if (-83825.7d != ExtendedDecimal.FromString("-83825.7").ToDouble()) {
-        Assert.fail("otherValue double -83825.7\nExpected: -83825.7d\nWas: " + ExtendedDecimal.FromString("-83825.7").ToDouble());
-      }
-      if (9347.0f != ExtendedDecimal.FromString("9347").ToSingle()) {
-        Assert.fail("otherValue single 9347\nExpected: 9347.0f\nWas: " + ExtendedDecimal.FromString("9347").ToSingle());
-      }
-      if (9347.0d != ExtendedDecimal.FromString("9347").ToDouble()) {
-        Assert.fail("otherValue double 9347\nExpected: 9347.0d\nWas: " + ExtendedDecimal.FromString("9347").ToDouble());
-      }
-      if (4039.426f != ExtendedDecimal.FromString("403942604431E-8").ToSingle()) {
-        Assert.fail("otherValue single 403942604431E-8\nExpected: 4039.426f\nWas: " + ExtendedDecimal.FromString("403942604431E-8").ToSingle());
-      }
-      if (4039.42604431d != ExtendedDecimal.FromString("403942604431E-8").ToDouble()) {
-        Assert.fail("otherValue double 403942604431E-8\nExpected: 4039.42604431d\nWas: " + ExtendedDecimal.FromString("403942604431E-8").ToDouble());
-      }
-      if (9.821772E-8f != ExtendedDecimal.FromString("9821771729.481512E-17").ToSingle()) {
-        Assert.fail("otherValue single 9821771729.481512E-17\nExpected: 9.821772E-8f\nWas: " + ExtendedDecimal.FromString("9821771729.481512E-17").ToSingle());
-      }
-      if (9.821771729481512E-8d != ExtendedDecimal.FromString("9821771729.481512E-17").ToDouble()) {
-        Assert.fail("otherValue double 9821771729.481512E-17\nExpected: 9.821771729481512E-8d\nWas: " + ExtendedDecimal.FromString("9821771729.481512E-17").ToDouble());
-      }
-      if (1.47027E24f != ExtendedDecimal.FromString("1470270E+18").ToSingle()) {
-        Assert.fail("otherValue single 1470270E+18\nExpected: 1.47027E24f\nWas: " + ExtendedDecimal.FromString("1470270E+18").ToSingle());
-      }
-      if (1.47027E24d != ExtendedDecimal.FromString("1470270E+18").ToDouble()) {
-        Assert.fail("otherValue double 1470270E+18\nExpected: 1.47027E24d\nWas: " + ExtendedDecimal.FromString("1470270E+18").ToDouble());
-      }
-      if (504.07468f != ExtendedDecimal.FromString("504.074687047275").ToSingle()) {
-        Assert.fail("otherValue single 504.074687047275\nExpected: 504.07468f\nWas: " + ExtendedDecimal.FromString("504.074687047275").ToSingle());
-      }
-      if (504.074687047275d != ExtendedDecimal.FromString("504.074687047275").ToDouble()) {
-        Assert.fail("otherValue double 504.074687047275\nExpected: 504.074687047275d\nWas: " + ExtendedDecimal.FromString("504.074687047275").ToDouble());
-      }
-      if (8.051101E-11f != ExtendedDecimal.FromString("8051.10083245768396604E-14").ToSingle()) {
-        Assert.fail("otherValue single 8051.10083245768396604E-14\nExpected: 8.051101E-11f\nWas: " + ExtendedDecimal.FromString("8051.10083245768396604E-14").ToSingle());
-      }
-      if (8.051100832457683E-11d != ExtendedDecimal.FromString("8051.10083245768396604E-14").ToDouble()) {
-        Assert.fail("otherValue double 8051.10083245768396604E-14\nExpected: 8.051100832457683E-11d\nWas: " + ExtendedDecimal.FromString("8051.10083245768396604E-14").ToDouble());
-      }
-      if (-9789.0f != ExtendedDecimal.FromString("-9789").ToSingle()) {
-        Assert.fail("otherValue single -9789\nExpected: -9789.0f\nWas: " + ExtendedDecimal.FromString("-9789").ToSingle());
-      }
-      if (-9789.0d != ExtendedDecimal.FromString("-9789").ToDouble()) {
-        Assert.fail("otherValue double -9789\nExpected: -9789.0d\nWas: " + ExtendedDecimal.FromString("-9789").ToDouble());
-      }
-      if (-2.95046595E10f != ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToSingle()) {
-        Assert.fail("otherValue single -295046585154199748.8456E-7\nExpected: -2.95046595E10f\nWas: " + ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToSingle());
-      }
-      if (-2.9504658515419975E10d != ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToDouble()) {
-        Assert.fail("otherValue double -295046585154199748.8456E-7\nExpected: -2.9504658515419975E10d\nWas: " + ExtendedDecimal.FromString("-295046585154199748.8456E-7").ToDouble());
-      }
-      if (5.8642877E23f != ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToSingle()) {
-        Assert.fail("otherValue single 58642877210005207.915393764393974811E+7\nExpected: 5.8642877E23f\nWas: " + ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToSingle());
-      }
-      if (5.864287721000521E23d != ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToDouble()) {
-        Assert.fail("otherValue double 58642877210005207.915393764393974811E+7\nExpected: 5.864287721000521E23d\nWas: " + ExtendedDecimal.FromString("58642877210005207.915393764393974811E+7").ToDouble());
-      }
-      if (-5.13554645E11f != ExtendedDecimal.FromString("-513554652569").ToSingle()) {
-        Assert.fail("otherValue single -513554652569\nExpected: -5.13554645E11f\nWas: " + ExtendedDecimal.FromString("-513554652569").ToSingle());
-      }
-      if (-5.13554652569E11d != ExtendedDecimal.FromString("-513554652569").ToDouble()) {
-        Assert.fail("otherValue double -513554652569\nExpected: -5.13554652569E11d\nWas: " + ExtendedDecimal.FromString("-513554652569").ToDouble());
-      }
-      if (-1.66059725E10f != ExtendedDecimal.FromString("-166059726561900E-4").ToSingle()) {
-        Assert.fail("otherValue single -166059726561900E-4\nExpected: -1.66059725E10f\nWas: " + ExtendedDecimal.FromString("-166059726561900E-4").ToSingle());
-      }
-      if (-1.660597265619E10d != ExtendedDecimal.FromString("-166059726561900E-4").ToDouble()) {
-        Assert.fail("otherValue double -166059726561900E-4\nExpected: -1.660597265619E10d\nWas: " + ExtendedDecimal.FromString("-166059726561900E-4").ToDouble());
-      }
-      if (-3.66681318E9f != ExtendedDecimal.FromString("-3666813090").ToSingle()) {
-        Assert.fail("otherValue single -3666813090\nExpected: -3.66681318E9f\nWas: " + ExtendedDecimal.FromString("-3666813090").ToSingle());
-      }
-      if (-3.66681309E9d != ExtendedDecimal.FromString("-3666813090").ToDouble()) {
-        Assert.fail("otherValue double -3666813090\nExpected: -3.66681309E9d\nWas: " + ExtendedDecimal.FromString("-3666813090").ToDouble());
-      }
-      if (-741.0616f != ExtendedDecimal.FromString("-741.061579731811").ToSingle()) {
-        Assert.fail("otherValue single -741.061579731811\nExpected: -741.0616f\nWas: " + ExtendedDecimal.FromString("-741.061579731811").ToSingle());
-      }
-      if (-741.061579731811d != ExtendedDecimal.FromString("-741.061579731811").ToDouble()) {
-        Assert.fail("otherValue double -741.061579731811\nExpected: -741.061579731811d\nWas: " + ExtendedDecimal.FromString("-741.061579731811").ToDouble());
-      }
-      if (-2264.0f != ExtendedDecimal.FromString("-2264").ToSingle()) {
-        Assert.fail("otherValue single -2264\nExpected: -2264.0f\nWas: " + ExtendedDecimal.FromString("-2264").ToSingle());
-      }
-      if (-2264.0d != ExtendedDecimal.FromString("-2264").ToDouble()) {
-        Assert.fail("otherValue double -2264\nExpected: -2264.0d\nWas: " + ExtendedDecimal.FromString("-2264").ToDouble());
-      }
-      if (9.2388336E10f != ExtendedDecimal.FromString("92388332924").ToSingle()) {
-        Assert.fail("otherValue single 92388332924\nExpected: 9.2388336E10f\nWas: " + ExtendedDecimal.FromString("92388332924").ToSingle());
-      }
-      if (9.2388332924E10d != ExtendedDecimal.FromString("92388332924").ToDouble()) {
-        Assert.fail("otherValue double 92388332924\nExpected: 9.2388332924E10d\nWas: " + ExtendedDecimal.FromString("92388332924").ToDouble());
-      }
-      if (4991.7646f != ExtendedDecimal.FromString("4991.764823290772791").ToSingle()) {
-        Assert.fail("otherValue single 4991.764823290772791\nExpected: 4991.7646f\nWas: " + ExtendedDecimal.FromString("4991.764823290772791").ToSingle());
-      }
-      if (4991.764823290773d != ExtendedDecimal.FromString("4991.764823290772791").ToDouble()) {
-        Assert.fail("otherValue double 4991.764823290772791\nExpected: 4991.764823290773d\nWas: " + ExtendedDecimal.FromString("4991.764823290772791").ToDouble());
-      }
-      if (-31529.82f != ExtendedDecimal.FromString("-3152982E-2").ToSingle()) {
-        Assert.fail("otherValue single -3152982E-2\nExpected: -31529.82f\nWas: " + ExtendedDecimal.FromString("-3152982E-2").ToSingle());
-      }
-      if (-31529.82d != ExtendedDecimal.FromString("-3152982E-2").ToDouble()) {
-        Assert.fail("otherValue double -3152982E-2\nExpected: -31529.82d\nWas: " + ExtendedDecimal.FromString("-3152982E-2").ToDouble());
-      }
-      if (-2.96352045E15f != ExtendedDecimal.FromString("-2963520450661169.515038656").ToSingle()) {
-        Assert.fail("otherValue single -2963520450661169.515038656\nExpected: -2.96352045E15f\nWas: " + ExtendedDecimal.FromString("-2963520450661169.515038656").ToSingle());
-      }
-      if (-2.9635204506611695E15d != ExtendedDecimal.FromString("-2963520450661169.515038656").ToDouble()) {
-        Assert.fail("otherValue double -2963520450661169.515038656\nExpected: -2.9635204506611695E15d\nWas: " + ExtendedDecimal.FromString("-2963520450661169.515038656").ToDouble());
-      }
-      if (-9.0629749E13f != ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToSingle()) {
-        Assert.fail("otherValue single -9062974752750092585.8070204683471E-5\nExpected: -9.0629749E13f\nWas: " + ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToSingle());
-      }
-      if (-9.062974752750092E13d != ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToDouble()) {
-        Assert.fail("otherValue double -9062974752750092585.8070204683471E-5\nExpected: -9.062974752750092E13d\nWas: " + ExtendedDecimal.FromString("-9062974752750092585.8070204683471E-5").ToDouble());
-      }
-      if (1.32708426E11f != ExtendedDecimal.FromString("1327.08423724267788662E+8").ToSingle()) {
-        Assert.fail("otherValue single 1327.08423724267788662E+8\nExpected: 1.32708426E11f\nWas: " + ExtendedDecimal.FromString("1327.08423724267788662E+8").ToSingle());
-      }
-      if (1.3270842372426779E11d != ExtendedDecimal.FromString("1327.08423724267788662E+8").ToDouble()) {
-        Assert.fail("otherValue double 1327.08423724267788662E+8\nExpected: 1.3270842372426779E11d\nWas: " + ExtendedDecimal.FromString("1327.08423724267788662E+8").ToDouble());
-      }
-      if (3.03766274E11f != ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToSingle()) {
-        Assert.fail("otherValue single 3037662626861314743.2222785E-7\nExpected: 3.03766274E11f\nWas: " + ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToSingle());
-      }
-      if (3.037662626861315E11d != ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToDouble()) {
-        Assert.fail("otherValue double 3037662626861314743.2222785E-7\nExpected: 3.037662626861315E11d\nWas: " + ExtendedDecimal.FromString("3037662626861314743.2222785E-7").ToDouble());
-      }
-      if (5.3666539E12f != ExtendedDecimal.FromString("5366653818787.5E0").ToSingle()) {
-        Assert.fail("otherValue single 5366653818787.5E0\nExpected: 5.3666539E12f\nWas: " + ExtendedDecimal.FromString("5366653818787.5E0").ToSingle());
-      }
-      if (5.3666538187875E12d != ExtendedDecimal.FromString("5366653818787.5E0").ToDouble()) {
-        Assert.fail("otherValue double 5366653818787.5E0\nExpected: 5.3666538187875E12d\nWas: " + ExtendedDecimal.FromString("5366653818787.5E0").ToDouble());
-      }
-      if (-0.09572517f != ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToSingle()) {
-        Assert.fail("otherValue single -957251.70125291697919424260E-7\nExpected: -0.09572517f\nWas: " + ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToSingle());
-      }
-      if (-0.09572517012529169d != ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToDouble()) {
-        Assert.fail("otherValue double -957251.70125291697919424260E-7\nExpected: -0.09572517012529169d\nWas: " + ExtendedDecimal.FromString("-957251.70125291697919424260E-7").ToDouble());
-      }
-      if (8.4375632E7f != ExtendedDecimal.FromString("8437563497492.8514E-5").ToSingle()) {
-        Assert.fail("otherValue single 8437563497492.8514E-5\nExpected: 8.4375632E7f\nWas: " + ExtendedDecimal.FromString("8437563497492.8514E-5").ToSingle());
-      }
-      if (8.437563497492851E7d != ExtendedDecimal.FromString("8437563497492.8514E-5").ToDouble()) {
-        Assert.fail("otherValue double 8437563497492.8514E-5\nExpected: 8.437563497492851E7d\nWas: " + ExtendedDecimal.FromString("8437563497492.8514E-5").ToDouble());
-      }
-      if (7.7747428E15f != ExtendedDecimal.FromString("7774742890322348.749566199224594").ToSingle()) {
-        Assert.fail("otherValue single 7774742890322348.749566199224594\nExpected: 7.7747428E15f\nWas: " + ExtendedDecimal.FromString("7774742890322348.749566199224594").ToSingle());
-      }
-      if (7.774742890322349E15d != ExtendedDecimal.FromString("7774742890322348.749566199224594").ToDouble()) {
-        Assert.fail("otherValue double 7774742890322348.749566199224594\nExpected: 7.774742890322349E15d\nWas: " + ExtendedDecimal.FromString("7774742890322348.749566199224594").ToDouble());
-      }
-      if (-6.3523806E18f != ExtendedDecimal.FromString("-6352380631468114E+3").ToSingle()) {
-        Assert.fail("otherValue single -6352380631468114E+3\nExpected: -6.3523806E18f\nWas: " + ExtendedDecimal.FromString("-6352380631468114E+3").ToSingle());
-      }
-      if (-6.3523806314681139E18d != ExtendedDecimal.FromString("-6352380631468114E+3").ToDouble()) {
-        Assert.fail("otherValue double -6352380631468114E+3\nExpected: -6.3523806314681139E18d\nWas: " + ExtendedDecimal.FromString("-6352380631468114E+3").ToDouble());
-      }
-      if (-8.1199685E23f != ExtendedDecimal.FromString("-8119968851439E+11").ToSingle()) {
-        Assert.fail("otherValue single -8119968851439E+11\nExpected: -8.1199685E23f\nWas: " + ExtendedDecimal.FromString("-8119968851439E+11").ToSingle());
-      }
-      if (-8.119968851439E23d != ExtendedDecimal.FromString("-8119968851439E+11").ToDouble()) {
-        Assert.fail("otherValue double -8119968851439E+11\nExpected: -8.119968851439E23d\nWas: " + ExtendedDecimal.FromString("-8119968851439E+11").ToDouble());
-      }
-      if (-3.201959E23f != ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToSingle()) {
-        Assert.fail("otherValue single -3201959209367.08531737604446E+11\nExpected: -3.201959E23f\nWas: " + ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToSingle());
-      }
-      if (-3.201959209367085E23d != ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToDouble()) {
-        Assert.fail("otherValue double -3201959209367.08531737604446E+11\nExpected: -3.201959209367085E23d\nWas: " + ExtendedDecimal.FromString("-3201959209367.08531737604446E+11").ToDouble());
-      }
-      if (-6.0171188E7f != ExtendedDecimal.FromString("-60171187").ToSingle()) {
-        Assert.fail("otherValue single -60171187\nExpected: -6.0171188E7f\nWas: " + ExtendedDecimal.FromString("-60171187").ToSingle());
-      }
-      if (-6.0171187E7d != ExtendedDecimal.FromString("-60171187").ToDouble()) {
-        Assert.fail("otherValue double -60171187\nExpected: -6.0171187E7d\nWas: " + ExtendedDecimal.FromString("-60171187").ToDouble());
-      }
-      if (-6.6884155E-7f != ExtendedDecimal.FromString("-66.884154716131E-8").ToSingle()) {
-        Assert.fail("otherValue single -66.884154716131E-8\nExpected: -6.6884155E-7f\nWas: " + ExtendedDecimal.FromString("-66.884154716131E-8").ToSingle());
-      }
-      if (-6.6884154716131E-7d != ExtendedDecimal.FromString("-66.884154716131E-8").ToDouble()) {
-        Assert.fail("otherValue double -66.884154716131E-8\nExpected: -6.6884154716131E-7d\nWas: " + ExtendedDecimal.FromString("-66.884154716131E-8").ToDouble());
-      }
-      if (923595.4f != ExtendedDecimal.FromString("923595.376427445").ToSingle()) {
-        Assert.fail("otherValue single 923595.376427445\nExpected: 923595.4f\nWas: " + ExtendedDecimal.FromString("923595.376427445").ToSingle());
-      }
-      if (923595.376427445d != ExtendedDecimal.FromString("923595.376427445").ToDouble()) {
-        Assert.fail("otherValue double 923595.376427445\nExpected: 923595.376427445d\nWas: " + ExtendedDecimal.FromString("923595.376427445").ToDouble());
-      }
-      if (-5.0f != ExtendedDecimal.FromString("-5").ToSingle()) {
-        Assert.fail("otherValue single -5\nExpected: -5.0f\nWas: " + ExtendedDecimal.FromString("-5").ToSingle());
-      }
-      if (-5.0d != ExtendedDecimal.FromString("-5").ToDouble()) {
-        Assert.fail("otherValue double -5\nExpected: -5.0d\nWas: " + ExtendedDecimal.FromString("-5").ToDouble());
-      }
-      if (4.7380017E10f != ExtendedDecimal.FromString("47380017776.35").ToSingle()) {
-        Assert.fail("otherValue single 47380017776.35\nExpected: 4.7380017E10f\nWas: " + ExtendedDecimal.FromString("47380017776.35").ToSingle());
-      }
-      if (4.738001777635E10d != ExtendedDecimal.FromString("47380017776.35").ToDouble()) {
-        Assert.fail("otherValue double 47380017776.35\nExpected: 4.738001777635E10d\nWas: " + ExtendedDecimal.FromString("47380017776.35").ToDouble());
-      }
-      if (8139584.0f != ExtendedDecimal.FromString("8139584.242987").ToSingle()) {
-        Assert.fail("otherValue single 8139584.242987\nExpected: 8139584.0f\nWas: " + ExtendedDecimal.FromString("8139584.242987").ToSingle());
-      }
-      if (8139584.242987d != ExtendedDecimal.FromString("8139584.242987").ToDouble()) {
-        Assert.fail("otherValue double 8139584.242987\nExpected: 8139584.242987d\nWas: " + ExtendedDecimal.FromString("8139584.242987").ToDouble());
-      }
-      if (5.0f != ExtendedDecimal.FromString("5").ToSingle()) {
-        Assert.fail("otherValue single 5\nExpected: 5.0f\nWas: " + ExtendedDecimal.FromString("5").ToSingle());
-      }
-      if (5.0d != ExtendedDecimal.FromString("5").ToDouble()) {
-        Assert.fail("otherValue double 5\nExpected: 5.0d\nWas: " + ExtendedDecimal.FromString("5").ToDouble());
-      }
-      if (-3.6578223E27f != ExtendedDecimal.FromString("-365782224812843E+13").ToSingle()) {
-        Assert.fail("otherValue single -365782224812843E+13\nExpected: -3.6578223E27f\nWas: " + ExtendedDecimal.FromString("-365782224812843E+13").ToSingle());
-      }
-      if (-3.65782224812843E27d != ExtendedDecimal.FromString("-365782224812843E+13").ToDouble()) {
-        Assert.fail("otherValue double -365782224812843E+13\nExpected: -3.65782224812843E27d\nWas: " + ExtendedDecimal.FromString("-365782224812843E+13").ToDouble());
-      }
-      if (6.263606E23f != ExtendedDecimal.FromString("626360584867890223E+6").ToSingle()) {
-        Assert.fail("otherValue single 626360584867890223E+6\nExpected: 6.263606E23f\nWas: " + ExtendedDecimal.FromString("626360584867890223E+6").ToSingle());
-      }
-      if (6.263605848678903E23d != ExtendedDecimal.FromString("626360584867890223E+6").ToDouble()) {
-        Assert.fail("otherValue double 626360584867890223E+6\nExpected: 6.263605848678903E23d\nWas: " + ExtendedDecimal.FromString("626360584867890223E+6").ToDouble());
-      }
-      if (-1.26830412E18f != ExtendedDecimal.FromString("-12683040859E+8").ToSingle()) {
-        Assert.fail("otherValue single -12683040859E+8\nExpected: -1.26830412E18f\nWas: " + ExtendedDecimal.FromString("-12683040859E+8").ToSingle());
-      }
-      if (-1.2683040859E18d != ExtendedDecimal.FromString("-12683040859E+8").ToDouble()) {
-        Assert.fail("otherValue double -12683040859E+8\nExpected: -1.2683040859E18d\nWas: " + ExtendedDecimal.FromString("-12683040859E+8").ToDouble());
-      }
-      if (8.9906433E13f != ExtendedDecimal.FromString("89906433733052.14691421345561385").ToSingle()) {
-        Assert.fail("otherValue single 89906433733052.14691421345561385\nExpected: 8.9906433E13f\nWas: " + ExtendedDecimal.FromString("89906433733052.14691421345561385").ToSingle());
-      }
-      if (8.990643373305214E13d != ExtendedDecimal.FromString("89906433733052.14691421345561385").ToDouble()) {
-        Assert.fail("otherValue double 89906433733052.14691421345561385\nExpected: 8.990643373305214E13d\nWas: " + ExtendedDecimal.FromString("89906433733052.14691421345561385").ToDouble());
-      }
-      if (82.0f != ExtendedDecimal.FromString("82").ToSingle()) {
-        Assert.fail("otherValue single 82\nExpected: 82.0f\nWas: " + ExtendedDecimal.FromString("82").ToSingle());
-      }
-      if (82.0d != ExtendedDecimal.FromString("82").ToDouble()) {
-        Assert.fail("otherValue double 82\nExpected: 82.0d\nWas: " + ExtendedDecimal.FromString("82").ToDouble());
-      }
-      if (9.5523543E16f != ExtendedDecimal.FromString("95523541216159667").ToSingle()) {
-        Assert.fail("otherValue single 95523541216159667\nExpected: 9.5523543E16f\nWas: " + ExtendedDecimal.FromString("95523541216159667").ToSingle());
-      }
-      if (9.5523541216159664E16d != ExtendedDecimal.FromString("95523541216159667").ToDouble()) {
-        Assert.fail("otherValue double 95523541216159667\nExpected: 9.5523541216159664E16d\nWas: " + ExtendedDecimal.FromString("95523541216159667").ToDouble());
-      }
-      if (-0.040098447f != ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToSingle()) {
-        Assert.fail("otherValue single -400984.46498769274346390686E-7\nExpected: -0.040098447f\nWas: " + ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToSingle());
-      }
-      if (-0.04009844649876927d != ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToDouble()) {
-        Assert.fail("otherValue double -400984.46498769274346390686E-7\nExpected: -0.04009844649876927d\nWas: " + ExtendedDecimal.FromString("-400984.46498769274346390686E-7").ToDouble());
-      }
-      if (9.9082332E14f != ExtendedDecimal.FromString("990823307532E+3").ToSingle()) {
-        Assert.fail("otherValue single 990823307532E+3\nExpected: 9.9082332E14f\nWas: " + ExtendedDecimal.FromString("990823307532E+3").ToSingle());
-      }
-      if (9.90823307532E14d != ExtendedDecimal.FromString("990823307532E+3").ToDouble()) {
-        Assert.fail("otherValue double 990823307532E+3\nExpected: 9.90823307532E14d\nWas: " + ExtendedDecimal.FromString("990823307532E+3").ToDouble());
-      }
-      if (-8.969879E8f != ExtendedDecimal.FromString("-896987890").ToSingle()) {
-        Assert.fail("otherValue single -896987890\nExpected: -8.969879E8f\nWas: " + ExtendedDecimal.FromString("-896987890").ToSingle());
-      }
-      if (-8.9698789E8d != ExtendedDecimal.FromString("-896987890").ToDouble()) {
-        Assert.fail("otherValue double -896987890\nExpected: -8.9698789E8d\nWas: " + ExtendedDecimal.FromString("-896987890").ToDouble());
-      }
-      if (-5.1842734E9f != ExtendedDecimal.FromString("-5184273642.760").ToSingle()) {
-        Assert.fail("otherValue single -5184273642.760\nExpected: -5.1842734E9f\nWas: " + ExtendedDecimal.FromString("-5184273642.760").ToSingle());
-      }
-      if (-5.18427364276E9d != ExtendedDecimal.FromString("-5184273642.760").ToDouble()) {
-        Assert.fail("otherValue double -5184273642.760\nExpected: -5.18427364276E9d\nWas: " + ExtendedDecimal.FromString("-5184273642.760").ToDouble());
-      }
-      if (5.03393772E17f != ExtendedDecimal.FromString("503393788336283974").ToSingle()) {
-        Assert.fail("otherValue single 503393788336283974\nExpected: 5.03393772E17f\nWas: " + ExtendedDecimal.FromString("503393788336283974").ToSingle());
-      }
-      if (5.0339378833628397E17d != ExtendedDecimal.FromString("503393788336283974").ToDouble()) {
-        Assert.fail("otherValue double 503393788336283974\nExpected: 5.0339378833628397E17d\nWas: " + ExtendedDecimal.FromString("503393788336283974").ToDouble());
-      }
-      if (-5.50587E15f != ExtendedDecimal.FromString("-550587E+10").ToSingle()) {
-        Assert.fail("otherValue single -550587E+10\nExpected: -5.50587E15f\nWas: " + ExtendedDecimal.FromString("-550587E+10").ToSingle());
-      }
-      if (-5.50587E15d != ExtendedDecimal.FromString("-550587E+10").ToDouble()) {
-        Assert.fail("otherValue double -550587E+10\nExpected: -5.50587E15d\nWas: " + ExtendedDecimal.FromString("-550587E+10").ToDouble());
-      }
-      if (-4.0559753E-5f != ExtendedDecimal.FromString("-405597523930.814E-16").ToSingle()) {
-        Assert.fail("otherValue single -405597523930.814E-16\nExpected: -4.0559753E-5f\nWas: " + ExtendedDecimal.FromString("-405597523930.814E-16").ToSingle());
-      }
-      if (-4.05597523930814E-5d != ExtendedDecimal.FromString("-405597523930.814E-16").ToDouble()) {
-        Assert.fail("otherValue double -405597523930.814E-16\nExpected: -4.05597523930814E-5d\nWas: " + ExtendedDecimal.FromString("-405597523930.814E-16").ToDouble());
-      }
-      if (-5.326398E9f != ExtendedDecimal.FromString("-5326397977").ToSingle()) {
-        Assert.fail("otherValue single -5326397977\nExpected: -5.326398E9f\nWas: " + ExtendedDecimal.FromString("-5326397977").ToSingle());
-      }
-      if (-5.326397977E9d != ExtendedDecimal.FromString("-5326397977").ToDouble()) {
-        Assert.fail("otherValue double -5326397977\nExpected: -5.326397977E9d\nWas: " + ExtendedDecimal.FromString("-5326397977").ToDouble());
-      }
-      if (-9997.447f != ExtendedDecimal.FromString("-9997.44701170").ToSingle()) {
-        Assert.fail("otherValue single -9997.44701170\nExpected: -9997.447f\nWas: " + ExtendedDecimal.FromString("-9997.44701170").ToSingle());
-      }
-      if (-9997.4470117d != ExtendedDecimal.FromString("-9997.44701170").ToDouble()) {
-        Assert.fail("otherValue double -9997.44701170\nExpected: -9997.4470117d\nWas: " + ExtendedDecimal.FromString("-9997.44701170").ToDouble());
-      }
-      if (7.3258664E7f != ExtendedDecimal.FromString("73258664.23970751611061").ToSingle()) {
-        Assert.fail("otherValue single 73258664.23970751611061\nExpected: 7.3258664E7f\nWas: " + ExtendedDecimal.FromString("73258664.23970751611061").ToSingle());
-      }
-      if (7.325866423970751E7d != ExtendedDecimal.FromString("73258664.23970751611061").ToDouble()) {
-        Assert.fail("otherValue double 73258664.23970751611061\nExpected: 7.325866423970751E7d\nWas: " + ExtendedDecimal.FromString("73258664.23970751611061").ToDouble());
-      }
-      if (-7.9944785E13f != ExtendedDecimal.FromString("-79944788804361.667255656660").ToSingle()) {
-        Assert.fail("otherValue single -79944788804361.667255656660\nExpected: -7.9944785E13f\nWas: " + ExtendedDecimal.FromString("-79944788804361.667255656660").ToSingle());
-      }
-      if (-7.994478880436167E13d != ExtendedDecimal.FromString("-79944788804361.667255656660").ToDouble()) {
-        Assert.fail("otherValue double -79944788804361.667255656660\nExpected: -7.994478880436167E13d\nWas: " + ExtendedDecimal.FromString("-79944788804361.667255656660").ToDouble());
-      }
-      if (9.852337E19f != ExtendedDecimal.FromString("98523363000987953313E0").ToSingle()) {
-        Assert.fail("otherValue single 98523363000987953313E0\nExpected: 9.852337E19f\nWas: " + ExtendedDecimal.FromString("98523363000987953313E0").ToSingle());
-      }
-      if (9.852336300098796E19d != ExtendedDecimal.FromString("98523363000987953313E0").ToDouble()) {
-        Assert.fail("otherValue double 98523363000987953313E0\nExpected: 9.852336300098796E19d\nWas: " + ExtendedDecimal.FromString("98523363000987953313E0").ToDouble());
-      }
-      if (5.981638E15f != ExtendedDecimal.FromString("5981637941716431.55749471240993").ToSingle()) {
-        Assert.fail("otherValue single 5981637941716431.55749471240993\nExpected: 5.981638E15f\nWas: " + ExtendedDecimal.FromString("5981637941716431.55749471240993").ToSingle());
-      }
-      if (5.981637941716432E15d != ExtendedDecimal.FromString("5981637941716431.55749471240993").ToDouble()) {
-        Assert.fail("otherValue double 5981637941716431.55749471240993\nExpected: 5.981637941716432E15d\nWas: " + ExtendedDecimal.FromString("5981637941716431.55749471240993").ToDouble());
-      }
-      if (-1.995E-9f != ExtendedDecimal.FromString("-1995E-12").ToSingle()) {
-        Assert.fail("otherValue single -1995E-12\nExpected: -1.995E-9f\nWas: " + ExtendedDecimal.FromString("-1995E-12").ToSingle());
-      }
-      if (-1.995E-9d != ExtendedDecimal.FromString("-1995E-12").ToDouble()) {
-        Assert.fail("otherValue double -1995E-12\nExpected: -1.995E-9d\nWas: " + ExtendedDecimal.FromString("-1995E-12").ToDouble());
-      }
-      if (2.59017677E9f != ExtendedDecimal.FromString("2590176810").ToSingle()) {
-        Assert.fail("otherValue single 2590176810\nExpected: 2.59017677E9f\nWas: " + ExtendedDecimal.FromString("2590176810").ToSingle());
-      }
-      if (2.59017681E9d != ExtendedDecimal.FromString("2590176810").ToDouble()) {
-        Assert.fail("otherValue double 2590176810\nExpected: 2.59017681E9d\nWas: " + ExtendedDecimal.FromString("2590176810").ToDouble());
-      }
-      if (2.9604614f != ExtendedDecimal.FromString("2.960461297").ToSingle()) {
-        Assert.fail("otherValue single 2.960461297\nExpected: 2.9604614f\nWas: " + ExtendedDecimal.FromString("2.960461297").ToSingle());
-      }
-      if (2.960461297d != ExtendedDecimal.FromString("2.960461297").ToDouble()) {
-        Assert.fail("otherValue double 2.960461297\nExpected: 2.960461297d\nWas: " + ExtendedDecimal.FromString("2.960461297").ToDouble());
-      }
-      if (768802.0f != ExtendedDecimal.FromString("768802").ToSingle()) {
-        Assert.fail("otherValue single 768802\nExpected: 768802.0f\nWas: " + ExtendedDecimal.FromString("768802").ToSingle());
-      }
-      if (768802.0d != ExtendedDecimal.FromString("768802").ToDouble()) {
-        Assert.fail("otherValue double 768802\nExpected: 768802.0d\nWas: " + ExtendedDecimal.FromString("768802").ToDouble());
-      }
-      if (145417.38f != ExtendedDecimal.FromString("145417.373").ToSingle()) {
-        Assert.fail("otherValue single 145417.373\nExpected: 145417.38f\nWas: " + ExtendedDecimal.FromString("145417.373").ToSingle());
-      }
-      if (145417.373d != ExtendedDecimal.FromString("145417.373").ToDouble()) {
-        Assert.fail("otherValue double 145417.373\nExpected: 145417.373d\nWas: " + ExtendedDecimal.FromString("145417.373").ToDouble());
-      }
-      if (540905.0f != ExtendedDecimal.FromString("540905").ToSingle()) {
-        Assert.fail("otherValue single 540905\nExpected: 540905.0f\nWas: " + ExtendedDecimal.FromString("540905").ToSingle());
-      }
-      if (540905.0d != ExtendedDecimal.FromString("540905").ToDouble()) {
-        Assert.fail("otherValue double 540905\nExpected: 540905.0d\nWas: " + ExtendedDecimal.FromString("540905").ToDouble());
-      }
-      if (-6.811958E20f != ExtendedDecimal.FromString("-681.1958019894E+18").ToSingle()) {
-        Assert.fail("otherValue single -681.1958019894E+18\nExpected: -6.811958E20f\nWas: " + ExtendedDecimal.FromString("-681.1958019894E+18").ToSingle());
-      }
-      if (-6.811958019894E20d != ExtendedDecimal.FromString("-681.1958019894E+18").ToDouble()) {
-        Assert.fail("otherValue double -681.1958019894E+18\nExpected: -6.811958019894E20d\nWas: " + ExtendedDecimal.FromString("-681.1958019894E+18").ToDouble());
-      }
-      if (54846.0f != ExtendedDecimal.FromString("54846.0").ToSingle()) {
-        Assert.fail("otherValue single 54846.0\nExpected: 54846.0f\nWas: " + ExtendedDecimal.FromString("54846.0").ToSingle());
-      }
-      if (54846.0d != ExtendedDecimal.FromString("54846.0").ToDouble()) {
-        Assert.fail("otherValue double 54846.0\nExpected: 54846.0d\nWas: " + ExtendedDecimal.FromString("54846.0").ToDouble());
-      }
-      if (9.7245E9f != ExtendedDecimal.FromString("97245E+5").ToSingle()) {
-        Assert.fail("otherValue single 97245E+5\nExpected: 9.7245E9f\nWas: " + ExtendedDecimal.FromString("97245E+5").ToSingle());
-      }
-      if (9.7245E9d != ExtendedDecimal.FromString("97245E+5").ToDouble()) {
-        Assert.fail("otherValue double 97245E+5\nExpected: 9.7245E9d\nWas: " + ExtendedDecimal.FromString("97245E+5").ToDouble());
-      }
-      if (-26.0f != ExtendedDecimal.FromString("-26").ToSingle()) {
-        Assert.fail("otherValue single -26\nExpected: -26.0f\nWas: " + ExtendedDecimal.FromString("-26").ToSingle());
-      }
-      if (-26.0d != ExtendedDecimal.FromString("-26").ToDouble()) {
-        Assert.fail("otherValue double -26\nExpected: -26.0d\nWas: " + ExtendedDecimal.FromString("-26").ToDouble());
-      }
-      if (4.15749164E12f != ExtendedDecimal.FromString("4157491532482.05").ToSingle()) {
-        Assert.fail("otherValue single 4157491532482.05\nExpected: 4.15749164E12f\nWas: " + ExtendedDecimal.FromString("4157491532482.05").ToSingle());
-      }
-      if (4.15749153248205E12d != ExtendedDecimal.FromString("4157491532482.05").ToDouble()) {
-        Assert.fail("otherValue double 4157491532482.05\nExpected: 4.15749153248205E12d\nWas: " + ExtendedDecimal.FromString("4157491532482.05").ToDouble());
-      }
-      if (4.7747967E15f != ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToSingle()) {
-        Assert.fail("otherValue single 4774796769101.23808389660855287E+3\nExpected: 4.7747967E15f\nWas: " + ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToSingle());
-      }
-      if (4.774796769101238E15d != ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToDouble()) {
-        Assert.fail("otherValue double 4774796769101.23808389660855287E+3\nExpected: 4.774796769101238E15d\nWas: " + ExtendedDecimal.FromString("4774796769101.23808389660855287E+3").ToDouble());
-      }
-      if (-9.8263879E14f != ExtendedDecimal.FromString("-982638781021905").ToSingle()) {
-        Assert.fail("otherValue single -982638781021905\nExpected: -9.8263879E14f\nWas: " + ExtendedDecimal.FromString("-982638781021905").ToSingle());
-      }
-      if (-9.82638781021905E14d != ExtendedDecimal.FromString("-982638781021905").ToDouble()) {
-        Assert.fail("otherValue double -982638781021905\nExpected: -9.82638781021905E14d\nWas: " + ExtendedDecimal.FromString("-982638781021905").ToDouble());
-      }
-      if (8.8043432E18f != ExtendedDecimal.FromString("8804343287262864743").ToSingle()) {
-        Assert.fail("otherValue single 8804343287262864743\nExpected: 8.8043432E18f\nWas: " + ExtendedDecimal.FromString("8804343287262864743").ToSingle());
-      }
-      if (8.8043432872628644E18d != ExtendedDecimal.FromString("8804343287262864743").ToDouble()) {
-        Assert.fail("otherValue double 8804343287262864743\nExpected: 8.8043432872628644E18d\nWas: " + ExtendedDecimal.FromString("8804343287262864743").ToDouble());
-      }
-      if (-6.5138669E13f != ExtendedDecimal.FromString("-65138668135711").ToSingle()) {
-        Assert.fail("otherValue single -65138668135711\nExpected: -6.5138669E13f\nWas: " + ExtendedDecimal.FromString("-65138668135711").ToSingle());
-      }
-      if (-6.5138668135711E13d != ExtendedDecimal.FromString("-65138668135711").ToDouble()) {
-        Assert.fail("otherValue double -65138668135711\nExpected: -6.5138668135711E13d\nWas: " + ExtendedDecimal.FromString("-65138668135711").ToDouble());
-      }
-      if (-5.9235733E15f != ExtendedDecimal.FromString("-5923573055061163").ToSingle()) {
-        Assert.fail("otherValue single -5923573055061163\nExpected: -5.9235733E15f\nWas: " + ExtendedDecimal.FromString("-5923573055061163").ToSingle());
-      }
-      if (-5.923573055061163E15d != ExtendedDecimal.FromString("-5923573055061163").ToDouble()) {
-        Assert.fail("otherValue double -5923573055061163\nExpected: -5.923573055061163E15d\nWas: " + ExtendedDecimal.FromString("-5923573055061163").ToDouble());
-      }
-      if (-8.6853E-8f != ExtendedDecimal.FromString("-8.6853E-8").ToSingle()) {
-        Assert.fail("otherValue single -8.6853E-8\nExpected: -8.6853E-8f\nWas: " + ExtendedDecimal.FromString("-8.6853E-8").ToSingle());
-      }
-      if (-8.6853E-8d != ExtendedDecimal.FromString("-8.6853E-8").ToDouble()) {
-        Assert.fail("otherValue double -8.6853E-8\nExpected: -8.6853E-8d\nWas: " + ExtendedDecimal.FromString("-8.6853E-8").ToDouble());
-      }
-      if (19707.0f != ExtendedDecimal.FromString("19707").ToSingle()) {
-        Assert.fail("otherValue single 19707\nExpected: 19707.0f\nWas: " + ExtendedDecimal.FromString("19707").ToSingle());
-      }
-      if (19707.0d != ExtendedDecimal.FromString("19707").ToDouble()) {
-        Assert.fail("otherValue double 19707\nExpected: 19707.0d\nWas: " + ExtendedDecimal.FromString("19707").ToDouble());
-      }
-      if (-8.8478554E14f != ExtendedDecimal.FromString("-884785536200446.1859332080").ToSingle()) {
-        Assert.fail("otherValue single -884785536200446.1859332080\nExpected: -8.8478554E14f\nWas: " + ExtendedDecimal.FromString("-884785536200446.1859332080").ToSingle());
-      }
-      if (-8.847855362004461E14d != ExtendedDecimal.FromString("-884785536200446.1859332080").ToDouble()) {
-        Assert.fail("otherValue double -884785536200446.1859332080\nExpected: -8.847855362004461E14d\nWas: " + ExtendedDecimal.FromString("-884785536200446.1859332080").ToDouble());
-      }
-      if (-1.0f != ExtendedDecimal.FromString("-1").ToSingle()) {
-        Assert.fail("otherValue single -1\nExpected: -1.0f\nWas: " + ExtendedDecimal.FromString("-1").ToSingle());
-      }
-      if (-1.0d != ExtendedDecimal.FromString("-1").ToDouble()) {
-        Assert.fail("otherValue double -1\nExpected: -1.0d\nWas: " + ExtendedDecimal.FromString("-1").ToDouble());
+    public void TestCanFitIn() {
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 1000; ++i) {
+        CBORObject ed = RandomNumber(r);
+        ExtendedDecimal ed2;
+        ed2 = ExtendedDecimal.FromDouble(ed.AsExtendedDecimal().ToDouble());
+        if ((ed.AsExtendedDecimal().compareTo(ed2) == 0) != ed.CanFitInDouble()) {
+          Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
+        }
+        ed2 = ExtendedDecimal.FromSingle(ed.AsExtendedDecimal().ToSingle());
+        if ((ed.AsExtendedDecimal().compareTo(ed2) == 0) != ed.CanFitInSingle()) {
+          Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
+        }
+        if (!ed.IsInfinity() && !ed.IsNaN()) {
+          ed2 = ExtendedDecimal.FromBigInteger(ed.AsExtendedDecimal().ToBigInteger());
+          if ((ed.AsExtendedDecimal().compareTo(ed2) == 0) != ed.isIntegral()) {
+            Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
+          }
+        }
+        if (!ed.IsInfinity() && !ed.IsNaN()) {
+          BigInteger bi = ed.AsBigInteger();
+          if (ed.isIntegral()) {
+            if (bi.canFitInInt() != ed.CanFitInInt32()) {
+              Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
+            }
+          }
+          if (bi.canFitInInt() != ed.CanTruncatedIntFitInInt32()) {
+            Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
+          }
+          if (ed.isIntegral()) {
+            if ((bi.bitLength() <= 63) != ed.CanFitInInt64()) {
+              Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
+            }
+          }
+          if ((bi.bitLength() <= 63) != ed.CanTruncatedIntFitInInt64()) {
+            Assert.fail(ToByteArrayString(ed) + "; /" + "/ " + ed.ToJSONString());
+          }
+        }
       }
     }
 
@@ -7081,7 +6406,16 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     @Test
     public void TestMapInMap() {
-      CBORObject oo = CBORObject.NewArray();
+      CBORObject oo;
+      oo = CBORObject.NewArray()
+        .Add(CBORObject.NewMap()
+             .Add(
+               new ExtendedRational(BigInteger.ONE, BigInteger.valueOf(2)),
+               3)
+             .Add(4, false))
+        .Add(true);
+      TestCommon.AssertRoundTrip(oo);
+      oo = CBORObject.NewArray();
       oo.Add(CBORObject.FromObject(0));
       CBORObject oo2 = CBORObject.NewMap();
       oo2.Add(CBORObject.FromObject(1), CBORObject.FromObject(1368));
@@ -7166,7 +6500,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
 
     @Test
     public void TestCBORBigInteger() {
-      CBORObject o = CBORObject.DecodeFromBytes(new byte[] {  0x3B, (byte)0xCE, (byte)0xE2, 0x5A, 0x57, (byte)0xD8, 0x21, (byte)0xB9, (byte)0xA7  });
+      CBORObject o = CBORObject.DecodeFromBytes(new byte[] {  0x3b, (byte)0xce, (byte)0xe2, 0x5a, 0x57, (byte)0xd8, 0x21, (byte)0xb9, (byte)0xa7  });
       Assert.assertEquals(BigInteger.fromString("-14907577049884506536"), o.AsBigInteger());
     }
 
@@ -7433,7 +6767,7 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
     public void TestTags() {
       BigInteger maxuint = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
       BigInteger[] ranges = new BigInteger[] {
-        BigInteger.valueOf(6),
+        BigInteger.valueOf(37),
         BigInteger.valueOf(65539),
         BigInteger.valueOf(Integer.MAX_VALUE).subtract(BigInteger.valueOf(500)),
         BigInteger.valueOf(Integer.MAX_VALUE).add(BigInteger.valueOf(500)),
@@ -7443,12 +6777,17 @@ try { if(ms!=null)ms.close(); } catch (IOException ex){}
         maxuint,
       };
       if(CBORObject.True.isTagged())Assert.fail();
-      Assert.assertEquals(BigInteger.ZERO, CBORObject.True.getInnermostTag());
+      Assert.assertEquals(BigInteger.ZERO.subtract(BigInteger.ONE), CBORObject.True.getInnermostTag());
       BigInteger[] tagstmp = CBORObject.True.GetTags();
       Assert.assertEquals(0, tagstmp.length);
       for (int i = 0; i < ranges.length; i += 2) {
         BigInteger bigintTemp = ranges[i];
         while (true) {
+          if (bigintTemp.compareTo(BigInteger.valueOf(-1)) >= 0 &&
+              bigintTemp.compareTo(BigInteger.valueOf(37)) <= 0) {
+            bigintTemp=bigintTemp.add(BigInteger.ONE);
+            continue;
+          }
           CBORObject obj = CBORObject.FromObjectAndTag(0, bigintTemp);
           if(!(obj.isTagged()))Assert.fail( "obj not tagged");
           BigInteger[] tags = obj.GetTags();

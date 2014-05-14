@@ -1,15 +1,13 @@
 /*
- * Created by SharpDevelop.
- * User: Peter
- * Date: 11/11/2013
- * Time: 1:13 PM
- *
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+Written by Peter O. in 2013.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://upokecenter.com/d/
  */
 using System;
 
-namespace Test
-{
+namespace Test {
     /// <summary>The system&apos;s random number generator will be called
     /// many times during testing. Unfortunately it can be very slow. So we
     /// use this wrapper class.</summary>
@@ -32,9 +30,9 @@ namespace Test
       int w = this.w, z = this.z;
       // Use George Marsaglia's multiply-with-carry
       // algorithm.
-      this.z = z = unchecked((36969 * (z & 65535)) + ((z >> 16) & 0xFFFF));
-      this.w = w = unchecked((18000 * (w & 65535)) + ((z >> 16) & 0xFFFF));
-      return ((z << 16) | (w & 65535)) & 0x7FFFFFFF;
+      this.z = z = unchecked((36969 * (z & 65535)) + ((z >> 16) & 0xffff));
+      this.w = w = unchecked((18000 * (w & 65535)) + ((z >> 16) & 0xffff));
+      return ((z << 16) | (w & 65535)) & 0x7fffffff;
     }
 
     /// <summary>Not documented yet.</summary>
@@ -42,7 +40,7 @@ namespace Test
     /// <returns>A 32-bit signed integer.</returns>
     public int NextValue(int v) {
       if (v <= 0) {
- throw new ArgumentException("v (" + Convert.ToString((long)v, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
+ throw new ArgumentException("v (" + Convert.ToString((int)v, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
 }
       if (v <= 1) {
         return 0;

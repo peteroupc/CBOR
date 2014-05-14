@@ -11,7 +11,7 @@
     <RootNamespace>PeterO</RootNamespace>
     <AssemblyName>CBOR</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Profile1</TargetFrameworkProfile>
+    <TargetFrameworkProfile/>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <NoWin32Manifest>False</NoWin32Manifest>
@@ -45,7 +45,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=' &apos;$(Platform)&apos; == &apos;AnyCPU&apos; '>
     <BaseAddress>4194304</BaseAddress>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
   </PropertyGroup>
@@ -63,19 +63,52 @@
     <Compile Include='BigIntegerExtra.cs'/>
     <Compile Include='BigNumberFlags.cs'/>
     <Compile Include='BitShiftAccumulator.cs'/>
-    <Compile Include='CBORDataUtilities.cs'/>
-    <Compile Include='CBORException.cs'/>
-    <Compile Include='CBORObject.cs'/>
-    <Compile Include='CBORObjectExtra.cs'/>
-    <Compile Include='CBORObjectMath.cs'/>
-    <Compile Include='CBORType.cs'/>
-    <Compile Include='CBORUtilities.cs'/>
-    <Compile Include='CharacterReader.cs'/>
+    <Compile Include='Cbor\Base64.cs'/>
+    <Compile Include='Cbor\CBORBigInteger.cs'/>
+    <Compile Include='Cbor\CBORDataUtilities.cs'/>
+    <Compile Include='Cbor\CBORDouble.cs'/>
+    <Compile Include='Cbor\CBORException.cs'/>
+    <Compile Include='Cbor\CBORExtendedDecimal.cs'/>
+    <Compile Include='Cbor\CBORExtendedFloat.cs'/>
+    <Compile Include='Cbor\CBORExtendedRational.cs'/>
+    <Compile Include='Cbor\CBORInteger.cs'/>
+    <Compile Include='Cbor\CBORObject.cs'/>
+    <Compile Include='Cbor\CBORObjectExtra.cs'/>
+    <Compile Include='Cbor\CBORObjectMath.cs'/>
+    <Compile Include='Cbor\CBORReader.cs'/>
+    <Compile Include='Cbor\CBORSingle.cs'/>
+    <Compile Include='Cbor\CBORTag0.cs'/>
+    <Compile Include='Cbor\CBORTag1.cs'/>
+    <Compile Include='Cbor\CBORTag2.cs'/>
+    <Compile Include='Cbor\CBORTag28.cs'/>
+    <Compile Include='Cbor\CBORTag37.cs'/>
+    <Compile Include='Cbor\CBORTagUnsigned.cs'/>
+    <Compile Include='Cbor\CBORTagAny.cs'/>
+    <Compile Include='Cbor\CBORTag26.cs'/>
+    <Compile Include='Cbor\CBORTag27.cs'/>
+    <Compile Include='Cbor\CBORTag3.cs'/>
+    <Compile Include='Cbor\CBORTag30.cs'/>
+    <Compile Include='Cbor\CBORTagGenericString.cs'/>
+    <Compile Include='Cbor\CBORTag5.cs'/>
+    <Compile Include='Cbor\CBORTag4.cs'>
+    </Compile>
+    <Compile Include='Cbor\CBORType.cs'/>
+    <Compile Include='Cbor\CBORTypeFilter.cs'/>
+    <Compile Include='Cbor\CBORUtilities.cs'/>
+    <Compile Include='Cbor\CharacterReader.cs'/>
+    <Compile Include='Cbor\ICBORConverter.cs'/>
+    <Compile Include='Cbor\ICBORNumber.cs'/>
+    <Compile Include='Cbor\ICBORTag.cs'/>
+    <Compile Include='Cbor\PropertyMap.cs'/>
+    <Compile Include='Cbor\SharedRefs.cs'/>
+    <Compile Include='Cbor\StringRefs.cs'/>
     <Compile Include='DataUtilities.cs'/>
     <Compile Include='DecimalUtility.cs'/>
     <Compile Include='DigitShiftAccumulator.cs'/>
     <Compile Include='ExtendedDecimal.cs'/>
     <Compile Include='ExtendedFloat.cs'/>
+    <Compile Include='ExtendedOrSimpleRadixMath.cs'/>
+    <Compile Include='ExtendedRational.cs'/>
     <Compile Include='FastInteger.cs'/>
     <Compile Include='Extras.cs'/>
     <Compile Include='IRadixMath.cs'/>
@@ -83,7 +116,6 @@
     <Compile Include='IShiftAccumulator.cs'/>
     <Compile Include='PrecisionContext.cs'/>
     <Compile Include='Properties\AssemblyInfo.cs'/>
-    <Compile Include='PropertyMap.cs'/>
     <Compile Include='RadixMath.cs'/>
     <Compile Include='RedBlackTree.cs'/>
     <Compile Include='Rounding.cs'/>
@@ -94,28 +126,20 @@
     
     
     
+  <Reference Include='System'/><Reference Include='System.Core'/><Reference Include='System.Xml'/></ItemGroup>
+  <ItemGroup>
+    <Folder Include='Cbor'/>
   </ItemGroup>
   <ItemGroup>
-    <Content Include='ProfilingSessions\Session20140201_092443.sdps'/>
-    <Content Include='ProfilingSessions\Session20140201_104915.sdps'/>
-    <Content Include='ProfilingSessions\Session20140202_032502.sdps'/>
-    <Content Include='ProfilingSessions\Session20140202_034517.sdps'/>
-    <Content Include='ProfilingSessions\Session20140202_035101.sdps'/>
-    <Content Include='ProfilingSessions\Session20140202_043441.sdps'/>
-    <Content Include='ProfilingSessions\Session20140202_170102.sdps'/>
-    <Content Include='ProfilingSessions\Session20140204_205517.sdps'/>
-    <Content Include='ProfilingSessions\Session20140204_215554.sdps'/>
-    <Content Include='ProfilingSessions\Session20140204_220606.sdps'/>
-    <Content Include='ProfilingSessions\Session20140204_222108.sdps'/>
-    <Content Include='ProfilingSessions\Session20140204_224619.sdps'/>
-    <Content Include='ProfilingSessions\Session20140204_231241.sdps'/>
-    <Content Include='ProfilingSessions\Session20140204_232445.sdps'/>
-    <Content Include='ProfilingSessions\Session20140205_074140.sdps'/>
-    <Content Include='ProfilingSessions\Session20140205_074218.sdps'/>
-    <Content Include='ProfilingSessions\Session20140205_075534.sdps'/>
+    <Content Include='ProfilingSessions\Session20140305_234452.sdps'/>
+    <Content Include='ProfilingSessions\Session20140305_234953.sdps'/>
+    <Content Include='ProfilingSessions\Session20140305_235146.sdps'/>
+    <Content Include='ProfilingSessions\Session20140306_061053.sdps'/>
+    <Content Include='ProfilingSessions\Session20140306_062234.sdps'/>
+    <Content Include='ProfilingSessions\Session20140306_063811.sdps'/>
+    <Content Include='ProfilingSessions\Session20140306_133043.sdps'/>
   </ItemGroup>
-  <Import Project='$(MSBuildExtensionsPath)\Microsoft\Portable\v4.0\Microsoft.Portable.CSharp.targets'/>
-  <Import Project='$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets'/>
+  <Import Project='$(MSBuildToolsPath)\Microsoft.CSharp.targets'/>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

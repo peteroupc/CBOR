@@ -4,7 +4,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 
 // import java.math.*;
@@ -54,7 +54,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public void ShiftToDigits(FastInteger bits) {
       if (bits.signum() < 0) {
- throw new IllegalArgumentException("bits's sign (" + Long.toString((long)bits.signum()) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("bits's sign (" + Integer.toString((int)bits.signum()) + ") is less than " + "0");
 }
       if (bits.CanFitInInt32()) {
         this.ShiftToDigitsInt(bits.AsInt32());
@@ -113,7 +113,7 @@ at: http://peteroupc.github.io/CBOR/
       int lastDiscarded,
       int olderDiscarded) {
       if (bigint.signum() < 0) {
- throw new IllegalArgumentException("bigint's sign (" + Long.toString((long)bigint.signum()) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("bigint's sign (" + Integer.toString((int)bigint.signum()) + ") is less than " + "0");
 }
       if (bigint.canFitInInt()) {
         this.isSmall = true;
@@ -128,7 +128,7 @@ at: http://peteroupc.github.io/CBOR/
 
     public static BitShiftAccumulator FromInt32(int smallNumber) {
       if (smallNumber < 0) {
- throw new IllegalArgumentException("smallNumber (" + Long.toString((long)smallNumber) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("smallNumber (" + Integer.toString((int)smallNumber) + ") is less than " + "0");
 }
       BitShiftAccumulator bsa = new BitShiftAccumulator(BigInteger.ZERO, 0, 0);
       bsa.shiftedSmall = smallNumber;
@@ -375,7 +375,7 @@ at: http://peteroupc.github.io/CBOR/
      */
     public void ShiftToDigitsInt(int bits) {
       if (bits < 0) {
- throw new IllegalArgumentException("bits (" + Long.toString((long)bits) + ") is not greater or equal to " + "0");
+ throw new IllegalArgumentException("bits (" + Integer.toString((int)bits) + ") is less than " + "0");
 }
       if (this.isSmall) {
         this.ShiftSmallToBits(bits);

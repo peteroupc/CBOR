@@ -3,7 +3,7 @@ Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
@@ -28,8 +28,8 @@ namespace PeterO {
       public static MutableNumber FromBigInteger(BigInteger bigintVal) {
         MutableNumber mnum = new MutableNumber(0);
         if (bigintVal.Sign < 0) {
- throw new ArgumentException("bigintVal's sign (" + Convert.ToString((long)bigintVal.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
-}
+          throw new ArgumentException("bigintVal's sign (" + Convert.ToString((int)bigintVal.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        }
         byte[] bytes = bigintVal.ToByteArray();
         int len = bytes.Length;
         int newWordCount = Math.Max(4, (len / 4) + 1);
@@ -39,15 +39,15 @@ namespace PeterO {
         mnum.wordCount = newWordCount;
         unchecked {
           for (int i = 0; i < len; i += 4) {
-            int x = ((int)bytes[i]) & 0xFF;
+            int x = ((int)bytes[i]) & 0xff;
             if (i + 1 < len) {
-              x |= (((int)bytes[i + 1]) & 0xFF) << 8;
+              x |= (((int)bytes[i + 1]) & 0xff) << 8;
             }
             if (i + 2 < len) {
-              x |= (((int)bytes[i + 2]) & 0xFF) << 16;
+              x |= (((int)bytes[i + 2]) & 0xff) << 16;
             }
             if (i + 3 < len) {
-              x |= (((int)bytes[i + 3]) & 0xFF) << 24;
+              x |= (((int)bytes[i + 3]) & 0xff) << 24;
             }
             mnum.data[i >> 2] = x;
           }
@@ -61,8 +61,8 @@ namespace PeterO {
 
       public MutableNumber(int val) {
         if (val < 0) {
- throw new ArgumentException("val (" + Convert.ToString((long)val, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
-}
+          throw new ArgumentException("val (" + Convert.ToString((int)val, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        }
         this.data = new int[4];
         this.wordCount = (val == 0) ? 0 : 1;
         this.data[0] = unchecked((int)(val & 0xFFFFFFFFL));
@@ -73,8 +73,8 @@ namespace PeterO {
     /// <returns>A MutableNumber object.</returns>
       public MutableNumber SetInt(int val) {
         if (val < 0) {
- throw new ArgumentException("val (" + Convert.ToString((long)val, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
-}
+          throw new ArgumentException("val (" + Convert.ToString((int)val, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        }
         this.wordCount = (val == 0) ? 0 : 1;
         this.data[0] = unchecked((int)(val & 0xFFFFFFFFL));
         return this;
@@ -88,10 +88,10 @@ namespace PeterO {
         }
         byte[] bytes = new byte[(this.wordCount * 4) + 1];
         for (int i = 0; i < this.wordCount; ++i) {
-          bytes[i * 4] = (byte)(this.data[i] & 0xFF);
-          bytes[(i * 4) + 1] = (byte)((this.data[i] >> 8) & 0xFF);
-          bytes[(i * 4) + 2] = (byte)((this.data[i] >> 16) & 0xFF);
-          bytes[(i * 4) + 3] = (byte)((this.data[i] >> 24) & 0xFF);
+          bytes[i * 4] = (byte)(this.data[i] & 0xff);
+          bytes[(i * 4) + 1] = (byte)((this.data[i] >> 8) & 0xff);
+          bytes[(i * 4) + 2] = (byte)((this.data[i] >> 16) & 0xff);
+          bytes[(i * 4) + 3] = (byte)((this.data[i] >> 24) & 0xff);
         }
         bytes[bytes.Length - 1] = (byte)0;
         return new BigInteger((byte[])bytes);
@@ -133,8 +133,8 @@ namespace PeterO {
     /// <returns>The product of the two objects.</returns>
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
- throw new ArgumentException("multiplicand (" + Convert.ToString((long)multiplicand, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
-} else if (multiplicand != 0) {
+          throw new ArgumentException("multiplicand (" + Convert.ToString((int)multiplicand, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        } else if (multiplicand != 0) {
           int carry = 0;
           if (this.wordCount == 0) {
             if (this.data.Length == 0) {
@@ -273,8 +273,8 @@ namespace PeterO {
       public MutableNumber SubtractInt(
         int other) {
         if (other < 0) {
- throw new ArgumentException("other (" + Convert.ToString((long)other, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
-} else if (other != 0) {
+          throw new ArgumentException("other (" + Convert.ToString((int)other, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        } else if (other != 0) {
           unchecked {
             // Ensure a length of at least 1
             if (this.wordCount == 0) {
@@ -381,8 +381,8 @@ namespace PeterO {
     /// <returns>This instance.</returns>
       public MutableNumber Add(int augend) {
         if (augend < 0) {
- throw new ArgumentException("augend (" + Convert.ToString((long)augend, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater or equal to " + "0");
-} else if (augend != 0) {
+          throw new ArgumentException("augend (" + Convert.ToString((int)augend, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        } else if (augend != 0) {
           int carry = 0;
           // Ensure a length of at least 1
           if (this.wordCount == 0) {
@@ -517,10 +517,10 @@ namespace PeterO {
       }
       byte[] bytes = new byte[(wordCount * 4) + 1];
       for (int i = 0; i < wordCount; ++i) {
-        bytes[(i * 4) + 0] = (byte)(words[i] & 0xFF);
-        bytes[(i * 4) + 1] = (byte)((words[i] >> 8) & 0xFF);
-        bytes[(i * 4) + 2] = (byte)((words[i] >> 16) & 0xFF);
-        bytes[(i * 4) + 3] = (byte)((words[i] >> 24) & 0xFF);
+        bytes[(i * 4) + 0] = (byte)(words[i] & 0xff);
+        bytes[(i * 4) + 1] = (byte)((words[i] >> 8) & 0xff);
+        bytes[(i * 4) + 2] = (byte)((words[i] >> 16) & 0xff);
+        bytes[(i * 4) + 3] = (byte)((words[i] >> 24) & 0xff);
       }
       bytes[bytes.Length - 1] = (byte)0;
       return new BigInteger((byte[])bytes);

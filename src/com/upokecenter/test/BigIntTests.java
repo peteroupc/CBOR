@@ -1,11 +1,10 @@
 package com.upokecenter.test;
 /*
- * Created by SharpDevelop.
- * User: Peter
- * Date: 12/1/2013
- * Time: 11:22 PM
- *
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
+Written by Peter O. in 2013.
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+If you like this, you should donate to Peter O.
+at: http://upokecenter.com/d/
  */
 
 import org.junit.Assert;
@@ -43,9 +42,13 @@ import com.upokecenter.util.*;
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
-          Assert.assertEquals(bigintB, bigintA << j);
+          BigInteger ba = bigintA;
+          ba=ba.shiftLeft(j);
+          Assert.assertEquals(bigintB, ba);
           int negj = -j;
-          Assert.assertEquals(bigintB, bigintA >> negj);
+          ba = bigintA;
+          ba=ba.shiftRight(negj);
+          Assert.assertEquals(bigintB, ba);
           bigintB=bigintB.multiply(BigInteger.valueOf(2));
         }
       }
@@ -55,7 +58,7 @@ import com.upokecenter.util.*;
     public void TestShiftRight() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
-        int smallint = r.NextValue(0x7FFFFFFF);
+        int smallint = r.NextValue(0x7fffffff);
         BigInteger bigintA = BigInteger.valueOf(smallint);
         String str = bigintA.toString();
         for (int j = 32; j < 80; ++j) {
@@ -68,9 +71,13 @@ import com.upokecenter.util.*;
         bigintA = (bigintA).abs();
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
-          Assert.assertEquals(bigintB, bigintA >> j);
+          BigInteger ba = bigintA;
+          ba=ba.shiftRight(j);
+          Assert.assertEquals(bigintB, ba);
           int negj = -j;
-          Assert.assertEquals(bigintB, bigintA << negj);
+          ba = bigintA;
+          ba=ba.shiftLeft(negj);
+          Assert.assertEquals(bigintB, ba);
           bigintB=bigintB.divide(BigInteger.valueOf(2));
         }
       }
@@ -591,19 +598,21 @@ bigintRem=divrem[1]; }
       Assert.assertEquals(16, BigInteger.valueOf(-65535).bitLength());
       Assert.assertEquals(17, BigInteger.valueOf(65536).bitLength());
       Assert.assertEquals(16, BigInteger.valueOf(-65536).bitLength());
+      Assert.assertEquals(65, BigInteger.fromString("19084941898444092059").bitLength());
+      Assert.assertEquals(65, BigInteger.fromString("-19084941898444092059").bitLength());
       Assert.assertEquals(0, BigInteger.valueOf(-1).bitLength());
       Assert.assertEquals(1, BigInteger.valueOf(-2).bitLength());
     }
 
     public static int ModPow(int x, int pow, int mod) {
       if (x < 0) {
-        throw new IllegalArgumentException("x (" + Long.toString((long)x) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("x (" + Integer.toString((int)x) + ") is less than " + "0");
       }
       if (pow <= 0) {
-        throw new IllegalArgumentException("pow (" + Long.toString((long)pow) + ") is not greater than " + "0");
+        throw new IllegalArgumentException("pow (" + Integer.toString((int)pow) + ") is not greater than " + "0");
       }
       if (mod <= 0) {
-        throw new IllegalArgumentException("mod (" + Long.toString((long)mod) + ") is not greater than " + "0");
+        throw new IllegalArgumentException("mod (" + Integer.toString((int)mod) + ") is not greater than " + "0");
       }
       int r = 1;
       int v = x;
@@ -665,7 +674,7 @@ bigintRem=divrem[1]; }
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         while (true) {
-          prime = rand.NextValue(0x7FFFFFFF);
+          prime = rand.NextValue(0x7fffffff);
           prime |= 1;
           if (IsPrime(prime)) {
             break;
