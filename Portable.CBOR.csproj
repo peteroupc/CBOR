@@ -1,146 +1,108 @@
-<?xml version='1.0' encoding='UTF-8'?>
-<Project DefaultTargets='Build' ToolsVersion='4.0' xmlns='http://schemas.microsoft.com/developer/msbuild/2003'>
-  <Import Condition='Exists(&apos;$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props&apos;)' Project='$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props'/>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <Configuration Condition=' &apos;$(Configuration)&apos; == &apos;&apos; '>Debug</Configuration>
-    <Platform Condition=' &apos;$(Platform)&apos; == &apos;&apos; '>AnyCPU</Platform>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{23A1B70C-F064-47B6-8B7E-E2042CDAD8C7}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PeterO</RootNamespace>
     <AssemblyName>CBOR</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile/>
+    <TargetFrameworkProfile>Profile136</TargetFrameworkProfile>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <NoWin32Manifest>False</NoWin32Manifest>
-    <RunCodeAnalysis>False</RunCodeAnalysis>
-    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
-    <NoStdLib>False</NoStdLib>
-    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
-    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
-    <SignAssembly>False</SignAssembly>
-    <DelaySign>False</DelaySign>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <CodeAnalysisRules>-Microsoft.Design#CA1017;-Microsoft.Globalization#CA1303;-Microsoft.Naming#CA1705;-Microsoft.Naming#CA1708;-Microsoft.Naming#CA1709;-Microsoft.Usage#CA2225</CodeAnalysisRules>
-    <SourceAnalysisOverrideSettingsFile>Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
-  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Debug|AnyCPU&apos; '>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=' &apos;$(Configuration)|$(Platform)&apos; == &apos;Release|AnyCPU&apos; '>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=' &apos;$(Configuration)&apos; == &apos;Debug&apos; '>
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <Optimize>False</Optimize>
-    <DebugType>Full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=' &apos;$(Platform)&apos; == &apos;AnyCPU&apos; '>
-    <BaseAddress>4194304</BaseAddress>
-    <PlatformTarget>x86</PlatformTarget>
-    <RegisterForComInterop>False</RegisterForComInterop>
-    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
-  </PropertyGroup>
-  <PropertyGroup Condition=' &apos;$(Configuration)&apos; == &apos;Release&apos; '>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <Optimize>True</Optimize>
-    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
-    <DebugType>None</DebugType>
-    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
-    <StartAction>Project</StartAction>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include='BigInteger.cs'/>
-    <Compile Include='BigIntegerExtra.cs'/>
-    <Compile Include='BigNumberFlags.cs'/>
-    <Compile Include='BitShiftAccumulator.cs'/>
-    <Compile Include='Cbor\Base64.cs'/>
-    <Compile Include='Cbor\CBORBigInteger.cs'/>
-    <Compile Include='Cbor\CBORDataUtilities.cs'/>
-    <Compile Include='Cbor\CBORDouble.cs'/>
-    <Compile Include='Cbor\CBORException.cs'/>
-    <Compile Include='Cbor\CBORExtendedDecimal.cs'/>
-    <Compile Include='Cbor\CBORExtendedFloat.cs'/>
-    <Compile Include='Cbor\CBORExtendedRational.cs'/>
-    <Compile Include='Cbor\CBORInteger.cs'/>
-    <Compile Include='Cbor\CBORObject.cs'/>
-    <Compile Include='Cbor\CBORObjectExtra.cs'/>
-    <Compile Include='Cbor\CBORObjectMath.cs'/>
-    <Compile Include='Cbor\CBORReader.cs'/>
-    <Compile Include='Cbor\CBORSingle.cs'/>
-    <Compile Include='Cbor\CBORTag0.cs'/>
-    <Compile Include='Cbor\CBORTag1.cs'/>
-    <Compile Include='Cbor\CBORTag2.cs'/>
-    <Compile Include='Cbor\CBORTag28.cs'/>
-    <Compile Include='Cbor\CBORTag37.cs'/>
-    <Compile Include='Cbor\CBORTagUnsigned.cs'/>
-    <Compile Include='Cbor\CBORTagAny.cs'/>
-    <Compile Include='Cbor\CBORTag26.cs'/>
-    <Compile Include='Cbor\CBORTag27.cs'/>
-    <Compile Include='Cbor\CBORTag3.cs'/>
-    <Compile Include='Cbor\CBORTag30.cs'/>
-    <Compile Include='Cbor\CBORTagGenericString.cs'/>
-    <Compile Include='Cbor\CBORTag5.cs'/>
-    <Compile Include='Cbor\CBORTag4.cs'>
-    </Compile>
-    <Compile Include='Cbor\CBORType.cs'/>
-    <Compile Include='Cbor\CBORTypeFilter.cs'/>
-    <Compile Include='Cbor\CBORUtilities.cs'/>
-    <Compile Include='Cbor\CharacterReader.cs'/>
-    <Compile Include='Cbor\ICBORConverter.cs'/>
-    <Compile Include='Cbor\ICBORNumber.cs'/>
-    <Compile Include='Cbor\ICBORTag.cs'/>
-    <Compile Include='Cbor\PropertyMap.cs'/>
-    <Compile Include='Cbor\SharedRefs.cs'/>
-    <Compile Include='Cbor\StringRefs.cs'/>
-    <Compile Include='DataUtilities.cs'/>
-    <Compile Include='DecimalUtility.cs'/>
-    <Compile Include='DigitShiftAccumulator.cs'/>
-    <Compile Include='ExtendedDecimal.cs'/>
-    <Compile Include='ExtendedFloat.cs'/>
-    <Compile Include='ExtendedOrSimpleRadixMath.cs'/>
-    <Compile Include='ExtendedRational.cs'/>
-    <Compile Include='FastInteger.cs'/>
-    <Compile Include='Extras.cs'/>
-    <Compile Include='IRadixMath.cs'/>
-    <Compile Include='IRadixMathHelper.cs'/>
-    <Compile Include='IShiftAccumulator.cs'/>
-    <Compile Include='PrecisionContext.cs'/>
-    <Compile Include='Properties\AssemblyInfo.cs'/>
-    <Compile Include='RadixMath.cs'/>
-    <Compile Include='RedBlackTree.cs'/>
-    <Compile Include='Rounding.cs'/>
-    <Compile Include='SimpleRadixMath.cs'/>
-    <Compile Include='SortedMap.cs'/>
-    <Compile Include='TrapException.cs'/>
-    <Compile Include='TrappableRadixMath.cs'/>
-    
-    
-    
-  <Reference Include='System'/><Reference Include='System.Core'/><Reference Include='System.Xml'/></ItemGroup>
-  <ItemGroup>
-    <Folder Include='Cbor'/>
+    <!-- A reference to the entire .NET Framework is automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Content Include='ProfilingSessions\Session20140305_234452.sdps'/>
-    <Content Include='ProfilingSessions\Session20140305_234953.sdps'/>
-    <Content Include='ProfilingSessions\Session20140305_235146.sdps'/>
-    <Content Include='ProfilingSessions\Session20140306_061053.sdps'/>
-    <Content Include='ProfilingSessions\Session20140306_062234.sdps'/>
-    <Content Include='ProfilingSessions\Session20140306_063811.sdps'/>
-    <Content Include='ProfilingSessions\Session20140306_133043.sdps'/>
+    <Compile Include="BigInteger.cs" />
+    <Compile Include="BigIntegerExtra.cs" />
+    <Compile Include="BigNumberFlags.cs" />
+    <Compile Include="BitShiftAccumulator.cs" />
+    <Compile Include="Cbor\Base64.cs" />
+    <Compile Include="Cbor\CBORBigInteger.cs" />
+    <Compile Include="Cbor\CBORDataUtilities.cs" />
+    <Compile Include="Cbor\CBORDouble.cs" />
+    <Compile Include="Cbor\CBORException.cs" />
+    <Compile Include="Cbor\CBORExtendedDecimal.cs" />
+    <Compile Include="Cbor\CBORExtendedFloat.cs" />
+    <Compile Include="Cbor\CBORExtendedRational.cs" />
+    <Compile Include="Cbor\CBORInteger.cs" />
+    <Compile Include="Cbor\CBORObject.cs" />
+    <Compile Include="Cbor\CBORObjectExtra.cs" />
+    <Compile Include="Cbor\CBORObjectMath.cs" />
+    <Compile Include="Cbor\CBORReader.cs" />
+    <Compile Include="Cbor\CBORSingle.cs" />
+    <Compile Include="Cbor\CBORTag0.cs" />
+    <Compile Include="Cbor\CBORTag1.cs" />
+    <Compile Include="Cbor\CBORTag2.cs" />
+    <Compile Include="Cbor\CBORTag26.cs" />
+    <Compile Include="Cbor\CBORTag27.cs" />
+    <Compile Include="Cbor\CBORTag28.cs" />
+    <Compile Include="Cbor\CBORTag3.cs" />
+    <Compile Include="Cbor\CBORTag30.cs" />
+    <Compile Include="Cbor\CBORTag37.cs" />
+    <Compile Include="Cbor\CBORTag4.cs" />
+    <Compile Include="Cbor\CBORTag5.cs" />
+    <Compile Include="Cbor\CBORTagAny.cs" />
+    <Compile Include="Cbor\CBORTagGenericString.cs" />
+    <Compile Include="Cbor\CBORTagUnsigned.cs" />
+    <Compile Include="Cbor\CBORType.cs" />
+    <Compile Include="Cbor\CborTypeFilter.cs" />
+    <Compile Include="Cbor\CBORUtilities.cs" />
+    <Compile Include="Cbor\CharacterReader.cs" />
+    <Compile Include="Cbor\ICBORConverter.cs" />
+    <Compile Include="Cbor\ICBORNumber.cs" />
+    <Compile Include="Cbor\ICBORTag.cs" />
+    <Compile Include="Cbor\PropertyMap.cs" />
+    <Compile Include="Cbor\SharedRefs.cs" />
+    <Compile Include="Cbor\StringRefs.cs" />
+    <Compile Include="DataUtilities.cs" />
+    <Compile Include="DecimalUtility.cs" />
+    <Compile Include="DigitShiftAccumulator.cs" />
+    <Compile Include="ExtendedDecimal.cs" />
+    <Compile Include="ExtendedFloat.cs" />
+    <Compile Include="ExtendedOrSimpleRadixMath.cs" />
+    <Compile Include="ExtendedRational.cs" />
+    <Compile Include="Extras.cs" />
+    <Compile Include="FastInteger.cs" />
+    <Compile Include="IRadixMath.cs" />
+    <Compile Include="IRadixMathHelper.cs" />
+    <Compile Include="IShiftAccumulator.cs" />
+    <Compile Include="PrecisionContext.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RadixMath.cs" />
+    <Compile Include="RedBlackTree.cs" />
+    <Compile Include="Rounding.cs" />
+    <Compile Include="SimpleRadixMath.cs" />
+    <Compile Include="SortedMap.cs" />
+    <Compile Include="TrapException.cs" />
+    <Compile Include="TrappableRadixMath.cs" />
   </ItemGroup>
-  <Import Project='$(MSBuildToolsPath)\Microsoft.CSharp.targets'/>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
