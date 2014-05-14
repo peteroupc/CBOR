@@ -6577,47 +6577,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    public static class User {
-    	public enum Gender { MALE, FEMALE };
-       public static class Name {
-          private String _first, _last;
-     
-           public String getFirst() { return _first; }
-           public String getLast() { return _last; }
-     
-          public void setFirst(String s) { _first = s; }
-          public void setLast(String s) { _last = s; }
-        }
-    
-        private Gender _gender;
-        private Name _name;
-       private boolean _isVerified;
-       private byte[] _userImage;
-    
-       public Name getName() { return _name; }
-        public boolean isVerified() { return _isVerified; }
-        public Gender getGender() { return _gender; }
-        public byte[] getUserImage() { return _userImage; }
-    
-        public void setName(Name n) { _name = n; }
-        public void setVerified(boolean b) { _isVerified = b; }
-        public void setGender(Gender g) { _gender = g; }
-        public void setUserImage(byte[] b) { _userImage = b; }
-    }
-    
-    @Test
-    public void TestPojo(){
-    	User u=new User();
-    	User.Name un=new User.Name();
-    	un.setFirst("Joe");
-    	un.setLast("Sixpack");
-    	u.setName(un);
-    	u.setGender(User.Gender.MALE);
-    	u.setVerified(false);
-    	u.setUserImage(new byte[]{2,3,4,5});
-    	System.out.println(CBORObject.FromObject(u).ToJSONString());
-    }
-    
     /**
      * Not documented yet.
      */

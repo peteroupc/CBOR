@@ -79,7 +79,6 @@
     <Compile Include="FastRandom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner.cs" />
-    <Compile Include="SmileEncoding.cs" />
     <Compile Include="TestCommon.cs" />
   </ItemGroup>
   <ItemGroup>
