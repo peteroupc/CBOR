@@ -1239,7 +1239,7 @@ namespace Test {
 
     /// <summary>Not documented yet.</summary>
     [Test]
-    // [Timeout(20000)]
+    [Timeout(20000)]
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
       CBORObject obj;

@@ -127,6 +127,11 @@ import com.upokecenter.cbor.*;
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
         BigInteger num = CBORTest.RandomBigInteger(fr);
+        if (num.signum()==0) {
+          // Skip if number is 0; 0/1 and 0/2 are
+          // equal in that case
+          continue;
+        }
         num = (num).abs();
         ExtendedRational rat = new ExtendedRational(num, BigInteger.ONE);
         ExtendedRational rat2 = new ExtendedRational(num, BigInteger.valueOf(2));

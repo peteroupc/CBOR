@@ -1229,8 +1229,7 @@ import com.upokecenter.cbor.*;
     /**
      * Not documented yet.
      */
-    @Test
-    // [Timeout(20000)]
+    @Test(timeout=20000)
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
       CBORObject obj;
