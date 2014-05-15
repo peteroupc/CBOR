@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-# SharpDevelop 4.3
+# SharpDevelop 4.4
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBORTest", "CBORTest\CBORTest.csproj", "{8FE63143-541E-448D-8337-A98D1FA51541}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portable.CBOR", "Portable.CBOR.csproj", "{23A1B70C-F064-47B6-8B7E-E2042CDAD8C7}"
