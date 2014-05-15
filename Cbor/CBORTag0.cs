@@ -13,7 +13,7 @@ namespace PeterO.Cbor {
   internal class CBORTag0 : ICBORTag, ICBORConverter<DateTime>
   {
     private static string DateTimeToString(DateTime bi) {
-      DateTime dt = bi.ToUniversalTime();
+      DateTime dt = TimeZoneInfo.ConvertTime(bi,TimeZoneInfo.Utc);
       int year = dt.Year;
       int month = dt.Month;
       int day = dt.Day;
