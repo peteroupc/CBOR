@@ -478,6 +478,7 @@ namespace Test {
     public void TestUUID() {
       CBORObject obj = CBORObject.FromObject(Guid.Parse("00112233-4455-6677-8899-AABBCCDDEEFF"));
       Assert.AreEqual(CBORType.ByteString, obj.Type);
+      Assert.AreEqual((BigInteger)37, obj.InnermostTag);
       byte[] bytes = obj.GetByteString();
       Assert.AreEqual(16, bytes.Length);
       Assert.AreEqual(0x00, bytes[0]);

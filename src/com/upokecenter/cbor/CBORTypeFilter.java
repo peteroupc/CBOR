@@ -109,7 +109,7 @@ import com.upokecenter.util.*;
         return this;
       }
       CBORTypeFilter filter = this.Copy();
-      filter.types |= 1 << 6;
+      filter.types |= 1 << 6;  // Always include the "tag" major type
       int startIndex = 0;
       if (filter.tags != null) {
         BigInteger[] newTags = new BigInteger[tags.length + filter.tags.length];
@@ -140,7 +140,7 @@ import com.upokecenter.util.*;
         }
       }
       CBORTypeFilter filter = this.Copy();
-      filter.types |= 1 << 6;
+      filter.types |= 1 << 6;  // Always include the "tag" major type
       int startIndex = 0;
       if (filter.tags != null) {
         BigInteger[] newTags = new BigInteger[tags.length + filter.tags.length];

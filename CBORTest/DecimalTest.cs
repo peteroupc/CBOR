@@ -294,7 +294,7 @@ namespace Test {
         // Don't check flags for five simplified arithmetic
         // test cases that say to set the rounded flag; the
         // extended arithmetic counterparts for at least
-        // some of them have no flags in teir
+        // some of them have no flags in their
         // result.
         if (!name.Equals("pow118") &&
             !name.Equals("pow119") &&

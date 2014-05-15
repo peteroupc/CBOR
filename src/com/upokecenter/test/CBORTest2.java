@@ -475,6 +475,7 @@ import com.upokecenter.cbor.*;
     public void TestUUID() {
       CBORObject obj = CBORObject.FromObject(java.util.UUID.fromString("00112233-4455-6677-8899-AABBCCDDEEFF"));
       Assert.assertEquals(CBORType.ByteString, obj.getType());
+      Assert.assertEquals(BigInteger.valueOf(37), obj.getInnermostTag());
       byte[] bytes = obj.GetByteString();
       Assert.assertEquals(16, bytes.length);
       Assert.assertEquals(0x00, bytes[0]);

@@ -45,7 +45,7 @@ try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
      * Not documented yet.
      * @param value A 64-bit signed integer.
      */
-public void doTestLong(long value) {
+    public void doTestLong(long value) {
       String b = "i" + value + "e";
       CBORObject beo = EncodingFromBytes(com.upokecenter.util.DataUtilities.GetUtf8Bytes(b,true));
       Assert.assertEquals(value, beo.AsInt64());
@@ -57,7 +57,7 @@ public void doTestLong(long value) {
      * Not documented yet.
      * @param value A string object.
      */
-public void doTestString(String value) {
+    public void doTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(com.upokecenter.util.DataUtilities.GetUtf8Bytes(b,true));
       Assert.assertEquals(value, beo.AsString());
@@ -68,7 +68,7 @@ public void doTestString(String value) {
     /**
      * Not documented yet.
      */
-@Test
+    @Test
     public void testLong() {
       this.doTestLong(0);
       this.doTestLong(-1);
@@ -81,7 +81,7 @@ public void doTestString(String value) {
     /**
      * Not documented yet.
      */
-@Test
+    @Test
     public void testList() {
       CBORObject beo = CBORObject.NewArray();
       beo.Add(CBORObject.FromObject(1));
@@ -105,7 +105,7 @@ public void doTestString(String value) {
     /**
      * Not documented yet.
      */
-@Test
+    @Test
     public void testDictionary() {
       CBORObject beo = CBORObject.NewMap();
       beo.set("zero",CBORObject.FromObject(1));
@@ -129,7 +129,7 @@ public void doTestString(String value) {
     /**
      * Not documented yet.
      */
-@Test
+    @Test
     public void testString() {
       this.doTestString("");
       this.doTestString(" ");

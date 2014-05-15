@@ -7,7 +7,7 @@ using PeterO;
 using PeterO.Cbor;
 
 namespace Test {
-[TestFixture]
+  [TestFixture]
   public class BEncodingTest {
     private static CBORObject EncodingFromBytes(byte[] b) {
       try {
@@ -32,7 +32,7 @@ namespace Test {
 
     /// <summary>Not documented yet.</summary>
     /// <param name='value'>A 64-bit signed integer.</param>
-public void doTestLong(long value) {
+    public void doTestLong(long value) {
       String b = "i" + value + "e";
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
       Assert.AreEqual(value, beo.AsInt64());
@@ -42,7 +42,7 @@ public void doTestLong(long value) {
 
     /// <summary>Not documented yet.</summary>
     /// <param name='value'>A String object.</param>
-public void doTestString(String value) {
+    public void doTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
       Assert.AreEqual(value, beo.AsString());
@@ -51,7 +51,7 @@ public void doTestString(String value) {
     }
 
     /// <summary>Not documented yet.</summary>
-[Test]
+    [Test]
     public void testLong() {
       this.doTestLong(0);
       this.doTestLong(-1);
@@ -62,7 +62,7 @@ public void doTestString(String value) {
     }
 
     /// <summary>Not documented yet.</summary>
-[Test]
+    [Test]
     public void testList() {
       CBORObject beo = CBORObject.NewArray();
       beo.Add(CBORObject.FromObject(1));
@@ -84,7 +84,7 @@ public void doTestString(String value) {
     }
 
     /// <summary>Not documented yet.</summary>
-[Test]
+    [Test]
     public void testDictionary() {
       CBORObject beo = CBORObject.NewMap();
       beo["zero"] = CBORObject.FromObject(1);
@@ -106,7 +106,7 @@ public void doTestString(String value) {
     }
 
     /// <summary>Not documented yet.</summary>
-[Test]
+    [Test]
     public void testString() {
       this.doTestString(String.Empty);
       this.doTestString(" ");
