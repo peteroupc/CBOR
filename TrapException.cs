@@ -30,7 +30,6 @@ namespace PeterO {
     /// <value>The defined result of the operation that caused the trap.</value>
     public Object Result {
       get {
-        
         return this.result;
       }
     }

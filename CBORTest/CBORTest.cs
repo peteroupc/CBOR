@@ -1168,6 +1168,24 @@ namespace Test {
     }
 
     [Test]
+    public void TestReadWriteInt() {
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 1000; ++i) {
+        int val = unchecked((int)RandomInt64(r));
+        using(var ms = new MemoryStream()) {
+          MiniCBOR.WriteInt32(val, ms);
+          var ms2 = new MemoryStream(ms.ToArray());
+          Assert.AreEqual(val, MiniCBOR.ReadInt32(ms2));
+        }
+        using(var ms3 = new MemoryStream()) {
+          CBORObject.Write(val, ms3);
+          var ms2 = new MemoryStream(ms3.ToArray());
+          Assert.AreEqual(val, CBORObject.Read(ms2).AsInt32());
+        }
+      }
+    }
+
+    [Test]
     public void TestCBORInfinity() {
       Assert.AreEqual("-Infinity", CBORObject.FromObject(ExtendedRational.NegativeInfinity).ToString());
       Assert.AreEqual("Infinity", CBORObject.FromObject(ExtendedRational.PositiveInfinity).ToString());
@@ -1248,7 +1266,7 @@ namespace Test {
       for (int i = 0; i < count; ++i) {
         obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
-         /*
+        /*
         System.Threading.Thread thread = new System.Threading.Thread(()=>TestCommon.AssertRoundTrip(obj));
         thread.Start();
         if (!thread.Join(5000)) {
@@ -1262,7 +1280,7 @@ namespace Test {
         }
          // */
       }
-       /*
+      /*
       if (badstr != null) {
         if (badstr.Length>10000) {
           Assert.Fail("badstr "+badstr.Length);
@@ -1355,7 +1373,7 @@ namespace Test {
           }
         }
       }
-        */
+       */
     }
 
     /// <summary>Not documented yet.</summary>

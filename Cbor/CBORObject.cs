@@ -13,44 +13,44 @@ using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Represents an object in Concise Binary Object Representation
-    /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
-    /// is defined in RFC 7049. <para>There are many ways to get a CBOR object,
-    /// including from bytes, objects, streams and JSON, as described below.</para>
-    /// <para> <b>To and from byte arrays:</b>
-    /// The CBORObject.DecodeToBytes method converts a byte array in CBOR
-    /// format to a CBOR object. The EncodeToBytes method converts a CBOR
-    /// object to its corresponding byte array in CBOR format. </para>
-    /// <para> <b>To and from data streams:</b>
-    /// The CBORObject.Write methods write many kinds of objects to a data
-    /// stream, including numbers, CBOR objects, strings, and arrays of
-    /// numbers and strings. The CBORObject.Read method reads a CBOR object
-    /// from a data stream. </para>
-    /// <para> <b>To and from other objects:</b>
-    /// The CBORObject.FromObject methods converts many kinds of objects
-    /// to a CBOR object, including numbers, strings, and arrays and maps
-    /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
-    /// convert a CBOR object to different types of object. </para>
-    /// <para> <b>To and from JSON:</b>
-    /// This class also doubles as a reader and writer of JavaScript Object
-    /// Notation (JSON). The CBORObject.FromJSONString method converts
-    /// JSON to a CBOR object, and the ToJSONString method converts a CBOR
-    /// object to a JSON string. </para>
-    /// <para> Thread Safety: CBOR objects that are numbers, "simple values",
-    /// and text strings are immutable (their values can't be changed), so
-    /// they are inherently safe for use by multiple threads. CBOR objects
-    /// that are arrays, maps, and byte strings are mutable, but this class
-    /// doesn't attempt to synchronize reads and writes to those objects
-    /// by multiple threads, so those objects are not thread safe without
-    /// such synchronization. </para>
-    /// <para> One kind of CBOR object is called a map, or a list of key-value
-    /// pairs. Keys can be any kind of CBOR object, including numbers, strings,
-    /// arrays, and maps. However, since byte strings, arrays, and maps are
-    /// mutable, it is not advisable to use these three kinds of object as keys;
-    /// they are much better used as map values instead, keeping in mind that
-    /// they are not thread safe without synchronizing reads and writes to
-    /// them. </para>
-    /// </summary>
+  /// <summary>Represents an object in Concise Binary Object Representation
+  /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
+  /// is defined in RFC 7049. <para>There are many ways to get a CBOR object,
+  /// including from bytes, objects, streams and JSON, as described below.</para>
+  /// <para> <b>To and from byte arrays:</b>
+  /// The CBORObject.DecodeToBytes method converts a byte array in CBOR
+  /// format to a CBOR object. The EncodeToBytes method converts a CBOR
+  /// object to its corresponding byte array in CBOR format. </para>
+  /// <para> <b>To and from data streams:</b>
+  /// The CBORObject.Write methods write many kinds of objects to a data
+  /// stream, including numbers, CBOR objects, strings, and arrays of
+  /// numbers and strings. The CBORObject.Read method reads a CBOR object
+  /// from a data stream. </para>
+  /// <para> <b>To and from other objects:</b>
+  /// The CBORObject.FromObject methods converts many kinds of objects
+  /// to a CBOR object, including numbers, strings, and arrays and maps
+  /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
+  /// convert a CBOR object to different types of object. </para>
+  /// <para> <b>To and from JSON:</b>
+  /// This class also doubles as a reader and writer of JavaScript Object
+  /// Notation (JSON). The CBORObject.FromJSONString method converts
+  /// JSON to a CBOR object, and the ToJSONString method converts a CBOR
+  /// object to a JSON string. </para>
+  /// <para> Thread Safety: CBOR objects that are numbers, "simple values",
+  /// and text strings are immutable (their values can't be changed), so
+  /// they are inherently safe for use by multiple threads. CBOR objects
+  /// that are arrays, maps, and byte strings are mutable, but this class
+  /// doesn't attempt to synchronize reads and writes to those objects
+  /// by multiple threads, so those objects are not thread safe without
+  /// such synchronization. </para>
+  /// <para> One kind of CBOR object is called a map, or a list of key-value
+  /// pairs. Keys can be any kind of CBOR object, including numbers, strings,
+  /// arrays, and maps. However, since byte strings, arrays, and maps are
+  /// mutable, it is not advisable to use these three kinds of object as keys;
+  /// they are much better used as map values instead, keeping in mind that
+  /// they are not thread safe without synchronizing reads and writes to
+  /// them. </para>
+  /// </summary>
   public sealed partial class CBORObject : IComparable<CBORObject>, IEquatable<CBORObject> {
     internal int ItemType {
       get {
@@ -98,8 +98,8 @@ namespace PeterO.Cbor {
     private sealed class ConverterInfo {
       private object toObject;
 
-    /// <summary>Gets or sets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+      /// <summary>Gets or sets a value not documented yet.</summary>
+      /// <value>A value not documented yet.</value>
       public object ToObject {
         get {
           return this.toObject;
@@ -112,8 +112,8 @@ namespace PeterO.Cbor {
 
       private object converter;
 
-    /// <summary>Gets or sets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+      /// <summary>Gets or sets a value not documented yet.</summary>
+      /// <value>A value not documented yet.</value>
       public object Converter {
         get {
           return this.converter;
@@ -250,6 +250,7 @@ namespace PeterO.Cbor {
         if (converters.Count == 0) {
           CBORTag0.AddConverter();
           CBORTag37.AddConverter();
+          CBORTag32.AddConverter();
         }
         if (converters.ContainsKey(type)) {
           convinfo = converters[type];
@@ -1467,11 +1468,11 @@ namespace PeterO.Cbor {
         }
       }
 
-    /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not an array.</exception>
-    /// <exception cref='System.ArgumentNullException'>Value is null
-    /// (as opposed to CBORObject.Null).</exception>
+      /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not an array.</exception>
+      /// <exception cref='System.ArgumentNullException'>Value is null
+      /// (as opposed to CBORObject.Null).</exception>
       set {
         if (this.ItemType == CBORObjectTypeArray) {
           if (value == null) {
@@ -1546,12 +1547,12 @@ namespace PeterO.Cbor {
         }
       }
 
-    /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
-    /// as the key.</summary>
-    /// <exception cref='System.ArgumentNullException'>The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not a map.</exception>
+      /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
+      /// as the key.</summary>
+      /// <exception cref='System.ArgumentNullException'>The key or value
+      /// is null (as opposed to CBORObject.Null).</exception>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("key");
@@ -1584,12 +1585,12 @@ namespace PeterO.Cbor {
         return this[objkey];
       }
 
-    /// <summary>Sets the value of a CBOR object in this map, using a string
-    /// as the key.</summary>
-    /// <exception cref='System.ArgumentNullException'>The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not a map.</exception>
+      /// <summary>Sets the value of a CBOR object in this map, using a string
+      /// as the key.</summary>
+      /// <exception cref='System.ArgumentNullException'>The key or value
+      /// is null (as opposed to CBORObject.Null).</exception>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("key");
@@ -2203,7 +2204,9 @@ namespace PeterO.Cbor {
           bytes[byteIndex++] = (byte)c;
         } else if (c <= 0x7ff) {
           if (byteIndex + 2 > StreamedStringBufferLength) {
-            // Write bytes retrieved so far
+            // Write bytes retrieved so far, the next three bytes
+            // would exceed the length, and the CBOR spec forbids
+            // splitting characters when generating text strings
             if (!streaming) {
               stream.WriteByte((byte)0x7f);
             }
@@ -2226,7 +2229,9 @@ namespace PeterO.Cbor {
           }
           if (c <= 0xffff) {
             if (byteIndex + 3 > StreamedStringBufferLength) {
-              // Write bytes retrieved so far
+              // Write bytes retrieved so far, the next three bytes
+              // would exceed the length, and the CBOR spec forbids
+              // splitting characters when generating text strings
               if (!streaming) {
                 stream.WriteByte((byte)0x7f);
               }
@@ -2240,7 +2245,9 @@ namespace PeterO.Cbor {
             bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
           } else {
             if (byteIndex + 4 > StreamedStringBufferLength) {
-              // Write bytes retrieved so far
+              // Write bytes retrieved so far, the next four bytes
+              // would exceed the length, and the CBOR spec forbids
+              // splitting characters when generating text strings
               if (!streaming) {
                 stream.WriteByte((byte)0x7f);
               }
@@ -2588,7 +2595,27 @@ namespace PeterO.Cbor {
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <param name='stream'>A writable data stream.</param>
     public static void Write(int value, Stream stream) {
-      Write((long)value, stream);
+      if (stream == null) {
+        throw new ArgumentNullException("stream");
+      }
+      int type = 0;
+      if (value < 0) {
+        ++value;
+        value = -value;
+        type = 0x20;
+      }
+      if (value < 24) {
+        stream.WriteByte((byte)(value | type));
+      } else if (value <= 0xff) {
+        stream.Write(
+          new byte[] { (byte)(24 | type), (byte)(value & 0xff) },
+          0,
+          2);
+      } else if (value <= 0xffff) {
+        stream.Write(new byte[] { (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)}, 0, 3);
+      } else {
+        stream.Write(new byte[] { (byte)(26 | type), (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff), (byte)(value & 0xff) }, 0, 5);
+      }
     }
 
     /// <summary>Writes a 16-bit signed integer in CBOR format to a data stream.</summary>
@@ -4090,7 +4117,7 @@ namespace PeterO.Cbor {
         AddTagHandler((BigInteger)29, new CBORTagUnsigned());
         AddTagHandler((BigInteger)256, new CBORTagAny());
         AddTagHandler(BigInteger.Zero, new CBORTag0());
-        AddTagHandler((BigInteger)32, new CBORTagGenericString());
+        AddTagHandler((BigInteger)32, new CBORTag32());
         AddTagHandler((BigInteger)33, new CBORTagGenericString());
         AddTagHandler((BigInteger)34, new CBORTagGenericString());
         AddTagHandler((BigInteger)35, new CBORTagGenericString());
