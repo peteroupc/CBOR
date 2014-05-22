@@ -220,6 +220,7 @@ public void setConverter(Object value) {
         if (converters.size() == 0) {
           CBORTag0.AddConverter();
           CBORTag37.AddConverter();
+          CBORTag32.AddConverter();
         }
         if (converters.containsKey(type)) {
           convinfo = converters.get(type);
@@ -2221,7 +2222,9 @@ public void set(String key, CBORObject value) {
           bytes[byteIndex++] = (byte)c;
         } else if (c <= 0x7ff) {
           if (byteIndex + 2 > StreamedStringBufferLength) {
-            // Write bytes retrieved so far
+            // Write bytes retrieved so far, the next three bytes
+            // would exceed the length, and the CBOR spec forbids
+            // splitting characters when generating text strings
             if (!streaming) {
               stream.write((byte)0x7f);
             }
@@ -2244,7 +2247,9 @@ public void set(String key, CBORObject value) {
           }
           if (c <= 0xffff) {
             if (byteIndex + 3 > StreamedStringBufferLength) {
-              // Write bytes retrieved so far
+              // Write bytes retrieved so far, the next three bytes
+              // would exceed the length, and the CBOR spec forbids
+              // splitting characters when generating text strings
               if (!streaming) {
                 stream.write((byte)0x7f);
               }
@@ -2258,7 +2263,9 @@ public void set(String key, CBORObject value) {
             bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
           } else {
             if (byteIndex + 4 > StreamedStringBufferLength) {
-              // Write bytes retrieved so far
+              // Write bytes retrieved so far, the next four bytes
+              // would exceed the length, and the CBOR spec forbids
+              // splitting characters when generating text strings
               if (!streaming) {
                 stream.write((byte)0x7f);
               }
@@ -2607,7 +2614,40 @@ public void set(String key, CBORObject value) {
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(int value, OutputStream stream) throws IOException {
-      Write((long)value, stream);
+      if (stream == null) {
+ throw new NullPointerException("stream");
+}
+      int type = 0;
+      if (value < 0) {
+        --value;
+        value = -value;
+        type = 0x20;
+      }
+      if (value < 24) {
+        stream.write((byte)(value | type));
+      } else if (value <= 0xff) {
+        stream.Write(
+new byte[] {  (byte)(24 | type),
+(byte)(value & 0xff)  },
+0,
+2);
+      } else if (value <= 0xffff) {
+        stream.Write(
+
+new byte[] {  (
+ byte)(25 | type),
+                       (byte)((value >> 8) & 0xff),
+                       (byte)(value & 0xff)  }, 0, 4);
+      } else {
+        stream.Write(
+
+new byte[] {  (
+ byte)(26 | type),
+                       (byte)((value >> 24) & 0xff),
+                       (byte)((value >> 16) & 0xff),
+                       (byte)((value >> 8) & 0xff),
+                       (byte)(value & 0xff)  }, 0, 8);
+      }
     }
 
     /**
@@ -4137,7 +4177,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         AddTagHandler(BigInteger.valueOf(29), new CBORTagUnsigned());
         AddTagHandler(BigInteger.valueOf(256), new CBORTagAny());
         AddTagHandler(BigInteger.ZERO, new CBORTag0());
-        AddTagHandler(BigInteger.valueOf(32), new CBORTagGenericString());
+        AddTagHandler(BigInteger.valueOf(32), new CBORTag32());
         AddTagHandler(BigInteger.valueOf(33), new CBORTagGenericString());
         AddTagHandler(BigInteger.valueOf(34), new CBORTagGenericString());
         AddTagHandler(BigInteger.valueOf(35), new CBORTagGenericString());

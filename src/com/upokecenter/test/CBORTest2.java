@@ -497,6 +497,68 @@ import com.upokecenter.cbor.*;
     }
 
     @Test
+    public void TestMiniCBOR() {
+      byte[] bytes;
+      bytes = new byte[] {  0  };
+      Assert.assertEquals(0, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
+      bytes = new byte[] {  0x17  };
+      Assert.assertEquals(0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
+      bytes = new byte[] {  0x18, 2  };
+      Assert.assertEquals(2, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
+      bytes = new byte[] {  0x19, 2  };
+      try {
+ MiniCBOR.ReadInt32(new MemoryStream(bytes));
+Assert.fail("Should have failed");
+} catch (IOException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      bytes = new byte[] {  0x1a, 2  };
+      try {
+ MiniCBOR.ReadInt32(new MemoryStream(bytes));
+Assert.fail("Should have failed");
+} catch (IOException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      bytes = new byte[] {  0x1b, 2  };
+      try {
+ MiniCBOR.ReadInt32(new MemoryStream(bytes));
+Assert.fail("Should have failed");
+} catch (IOException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      bytes = new byte[] {  0x1b, 2, 2, 2, 2, 2, 2, 2, 2  };
+      try {
+ MiniCBOR.ReadInt32(new MemoryStream(bytes));
+Assert.fail("Should have failed");
+} catch (IOException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      bytes = new byte[] {  0x1c, 2  };
+      try {
+ MiniCBOR.ReadInt32(new MemoryStream(bytes));
+Assert.fail("Should have failed");
+} catch (IOException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      bytes = new byte[] {  0x19, 0, 2  };
+      Assert.assertEquals(0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
+      bytes = new byte[] {  0x27  };
+      Assert.assertEquals(-1-7, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
+      bytes = new byte[] {  0x37  };
+      Assert.assertEquals(-1-0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
+    }
+
+    @Test
     public void TestNegativeBigInts() {
       BigInteger minusone = BigInteger.ZERO.subtract(BigInteger.ONE);
       Assert.assertEquals(

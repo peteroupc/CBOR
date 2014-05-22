@@ -1158,6 +1158,36 @@ import com.upokecenter.cbor.*;
     }
 
     @Test
+    public void TestReadWriteInt() {
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 1000; ++i) {
+        int val = ((int)RandomInt64(r));
+        java.io.ByteArrayOutputStream ms=null;
+try {
+ms=new java.io.ByteArrayOutputStream();
+
+          MiniCBOR.WriteInt32(val, ms);
+          MemoryStream ms2=new MemoryStream(ms.toByteArray());
+          Assert.assertEquals(val, MiniCBOR.ReadInt32(ms2));
+}
+finally {
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
+}
+        java.io.ByteArrayOutputStream ms3=null;
+try {
+ms3=new java.io.ByteArrayOutputStream();
+
+          CBORObject.Write(val, ms3);
+          MemoryStream ms2=new MemoryStream(ms3.toByteArray());
+          Assert.assertEquals(val, CBORObject.Read(ms2).AsInt32());
+}
+finally {
+try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
+}
+      }
+    }
+
+    @Test
     public void TestCBORInfinity() {
       Assert.assertEquals("-Infinity", CBORObject.FromObject(ExtendedRational.NegativeInfinity).toString());
       Assert.assertEquals("Infinity", CBORObject.FromObject(ExtendedRational.PositiveInfinity).toString());
@@ -1238,7 +1268,7 @@ import com.upokecenter.cbor.*;
       for (int i = 0; i < count; ++i) {
         obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
-         /*
+        /*
         System.Threading.Thread thread = new Thread(new Runnable(){ public void run() { TestCommon.AssertRoundTrip(obj) }});
         thread.start();
         if (!thread.join(5000)) {
@@ -1252,7 +1282,7 @@ import com.upokecenter.cbor.*;
         }
          // */
       }
-       /*
+      /*
       if (badstr != null) {
         if (badstr.length()>10000) {
           Assert.fail("badstr "+badstr.length());
@@ -1359,7 +1389,7 @@ finally {
 try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       }
-        */
+       */
     }
 
     /**

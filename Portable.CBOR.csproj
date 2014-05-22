@@ -63,6 +63,7 @@
     <Compile Include="Cbor\CBORTag28.cs" />
     <Compile Include="Cbor\CBORTag3.cs" />
     <Compile Include="Cbor\CBORTag30.cs" />
+    <Compile Include="Cbor\CBORTag32.cs" />
     <Compile Include="Cbor\CBORTag37.cs" />
     <Compile Include="Cbor\CBORTag4.cs" />
     <Compile Include="Cbor\CBORTag5.cs" />

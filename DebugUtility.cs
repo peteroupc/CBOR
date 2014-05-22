@@ -14,8 +14,8 @@ namespace PeterO {
   {
     [System.Diagnostics.Conditional("DEBUG")]
     public static void Log(string str) {
-      Type type=Type.GetType("System.Console");
-      type.GetMethod("WriteLine",new Type[] { typeof(String) }).Invoke(type,str);
+      Type type = Type.GetType("System.Console");
+      type.GetMethod("WriteLine", new Type[] { typeof(String) }).Invoke(type, new object[] { str });
     }
     [System.Diagnostics.Conditional("DEBUG")]
     public static void Log(string format, params object[] args) {
