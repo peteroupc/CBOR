@@ -1162,7 +1162,7 @@ import com.upokecenter.cbor.*;
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         int val = ((int)RandomInt64(r));
-        java.io.ByteArrayOutputStream ms=null;
+         java.io.ByteArrayOutputStream ms=null;
 try {
 ms=new java.io.ByteArrayOutputStream();
 
@@ -1173,7 +1173,7 @@ ms=new java.io.ByteArrayOutputStream();
 finally {
 try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
-        java.io.ByteArrayOutputStream ms3=null;
+         java.io.ByteArrayOutputStream ms3=null;
 try {
 ms3=new java.io.ByteArrayOutputStream();
 

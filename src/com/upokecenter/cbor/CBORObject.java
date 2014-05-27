@@ -2615,11 +2615,11 @@ public void set(String key, CBORObject value) {
      */
     public static void Write(int value, OutputStream stream) throws IOException {
       if (stream == null) {
- throw new NullPointerException("stream");
-}
+        throw new NullPointerException("stream");
+      }
       int type = 0;
       if (value < 0) {
-        --value;
+        ++value;
         value = -value;
         type = 0x20;
       }
@@ -2627,26 +2627,14 @@ public void set(String key, CBORObject value) {
         stream.write((byte)(value | type));
       } else if (value <= 0xff) {
         stream.Write(
-new byte[] {  (byte)(24 | type),
-(byte)(value & 0xff)  },
-0,
-2);
+          new byte[] {  (byte)(24 | type),
+          (byte)(value & 0xff)  },
+          0,
+          2);
       } else if (value <= 0xffff) {
-        stream.Write(
-
-new byte[] {  (
- byte)(25 | type),
-                       (byte)((value >> 8) & 0xff),
-                       (byte)(value & 0xff)  }, 0, 4);
+        stream.Write(new byte[] {  (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  }, 0, 3);
       } else {
-        stream.Write(
-
-new byte[] {  (
- byte)(26 | type),
-                       (byte)((value >> 24) & 0xff),
-                       (byte)((value >> 16) & 0xff),
-                       (byte)((value >> 8) & 0xff),
-                       (byte)(value & 0xff)  }, 0, 8);
+        stream.Write(new byte[] {  (byte)(26 | type), (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  }, 0, 5);
       }
     }
 
