@@ -1172,12 +1172,12 @@ namespace Test {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         int val = unchecked((int)RandomInt64(r));
-        using(var ms = new MemoryStream()) {
+         using (var ms = new MemoryStream()) {
           MiniCBOR.WriteInt32(val, ms);
           var ms2 = new MemoryStream(ms.ToArray());
           Assert.AreEqual(val, MiniCBOR.ReadInt32(ms2));
         }
-        using(var ms3 = new MemoryStream()) {
+         using (var ms3 = new MemoryStream()) {
           CBORObject.Write(val, ms3);
           var ms2 = new MemoryStream(ms3.ToArray());
           Assert.AreEqual(val, CBORObject.Read(ms2).AsInt32());

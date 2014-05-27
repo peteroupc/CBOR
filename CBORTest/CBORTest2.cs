@@ -499,7 +499,7 @@ namespace Test {
       Assert.AreEqual((byte)0xff, bytes[15]);
     }
 
-    //[Test]
+    // [Test]
     public void TestMiniCBOR() {
       byte[] bytes;
       bytes = new byte[] { 0 };
@@ -556,9 +556,9 @@ namespace Test {
       bytes = new byte[] { 0x19, 0, 2 };
       Assert.AreEqual(0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
       bytes = new byte[] { 0x27 };
-      Assert.AreEqual(-1-7, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
+      Assert.AreEqual(-1 - 7, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
       bytes = new byte[] { 0x37 };
-      Assert.AreEqual(-1-0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
+      Assert.AreEqual(-1 - 0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
     }
 
     [Test]
@@ -597,71 +597,71 @@ namespace Test {
     public void TestStringRefs() {
       CBORObject cbor = CBORObject.DecodeFromBytes(
         new byte[] { 0xd9,
-          1,
-          0,
-          0x9f,
-          0x64,
-          0x61,
-          0x62,
-          0x63,
-          0x64,
-          0xd8,
-          0x19,
-          0x00,
-          0xd8,
-          0x19,
-          0x00,
-          0x64,
-          0x62,
-          0x62,
-          0x63,
-          0x64,
-          0xd8,
-          0x19,
-          0x01,
-          0xd8,
-          0x19,
-          0x00,
-          0xd8,
-          0x19,
-          0x01,
-          0xff });
+        1,
+        0,
+        0x9f,
+        0x64,
+        0x61,
+        0x62,
+        0x63,
+        0x64,
+        0xd8,
+        0x19,
+        0x00,
+        0xd8,
+        0x19,
+        0x00,
+        0x64,
+        0x62,
+        0x62,
+        0x63,
+        0x64,
+        0xd8,
+        0x19,
+        0x01,
+        0xd8,
+        0x19,
+        0x00,
+        0xd8,
+        0x19,
+        0x01,
+        0xff });
       string expected = "[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
       cbor = CBORObject.DecodeFromBytes(
         new byte[] { 0xd9,
-          1,
-          0,
-          0x9f,
-          0x64,
-          0x61,
-          0x62,
-          0x63,
-          0x64,
-          0x62,
-          0x61,
-          0x61,
-          0xd8,
-          0x19,
-          0x00,
-          0xd8,
-          0x19,
-          0x00,
-          0x64,
-          0x62,
-          0x62,
-          0x63,
-          0x64,
-          0xd8,
-          0x19,
-          0x01,
-          0xd8,
-          0x19,
-          0x00,
-          0xd8,
-          0x19,
-          0x01,
-          0xff });
+        1,
+        0,
+        0x9f,
+        0x64,
+        0x61,
+        0x62,
+        0x63,
+        0x64,
+        0x62,
+        0x61,
+        0x61,
+        0xd8,
+        0x19,
+        0x00,
+        0xd8,
+        0x19,
+        0x00,
+        0x64,
+        0x62,
+        0x62,
+        0x63,
+        0x64,
+        0xd8,
+        0x19,
+        0x01,
+        0xd8,
+        0x19,
+        0x00,
+        0xd8,
+        0x19,
+        0x01,
+        0xff });
       expected = "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
     }

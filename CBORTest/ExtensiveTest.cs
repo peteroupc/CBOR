@@ -1194,15 +1194,30 @@ namespace CBOR {
     public void TestParser() {
       long failures = 0;
       List<string> errors = new List<string>();
+      List<string> dirfiles = new List<string>();
       System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
       sw.Start();
       TextWriter nullWriter = TextWriter.Null;
       TextWriter standardOut = Console.Out;
       int x = 0;
-      foreach (var f in Directory.GetFiles(".")) {
+      dirfiles.AddRange(Directory.GetFiles("."));
+      if (Directory.Exists("../../../.settings")) {
+        dirfiles.AddRange(Directory.GetFiles("../../../.settings"));
+      }
+      if (Directory.Exists("../../../.settings")) {
+        dirfiles.AddRange(Directory.GetFiles("../../../.settings/test"));
+      }
+      foreach (var f in dirfiles) {
         Console.WriteLine(f);
-        bool isinput = f.Contains(".input");
         ++x;
+        string lowerF = f.ToLowerInvariant();
+        bool isinput = lowerF.Contains(".input");
+        if (!lowerF.Contains(".input") &&
+           !lowerF.Contains(".txt") &&
+           !lowerF.Contains(".dectest") &&
+           !lowerF.Contains(".fptest")) {
+          continue;
+        }
         using (StreamReader w = new StreamReader(f)) {
           while (!w.EndOfStream) {
             var ln = w.ReadLine();
