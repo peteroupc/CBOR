@@ -2607,15 +2607,14 @@ namespace PeterO.Cbor {
       if (value < 24) {
         stream.WriteByte((byte)(value | type));
       } else if (value <= 0xff) {
-        stream.Write(
-          new byte[] { (byte)(24 | type),
-          (byte)(value & 0xff) },
-          0,
-          2);
+        byte[] bytes = new byte[] { (byte)(24 | type), (byte)(value & 0xff) };
+        stream.Write(bytes, 0, 2);
       } else if (value <= 0xffff) {
-        stream.Write(new byte[] { (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff) }, 0, 3);
+        byte[] bytes = new byte[] { (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff) };
+        stream.Write(bytes, 0, 3);
       } else {
-        stream.Write(new byte[] { (byte)(26 | type), (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff), (byte)(value & 0xff) }, 0, 5);
+        byte[] bytes = new byte[] { (byte)(26 | type), (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff), (byte)(value & 0xff) };
+        stream.Write(bytes, 0, 5);
       }
     }
 
@@ -2800,7 +2799,7 @@ namespace PeterO.Cbor {
             }
             if (this.IsNull) {
               return new byte[] { tagbyte, (byte)0xf6 };
-            }
+          }
             if (this.IsUndefined) {
               return new byte[] { tagbyte, (byte)0xf7 };
             }

@@ -22,7 +22,7 @@ import com.upokecenter.cbor.*;
       cbor.Add(cbor);
       cbor.get(0).Add(cbor);
       try {
-        cbor.WriteTo(new MemoryStream());
+        cbor.WriteTo(new java.io.ByteArrayOutputStream());
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -499,15 +499,9 @@ import com.upokecenter.cbor.*;
     // @Test
     public void TestMiniCBOR() {
       byte[] bytes;
-      bytes = new byte[] {  0  };
-      Assert.assertEquals(0, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
-      bytes = new byte[] {  0x17  };
-      Assert.assertEquals(0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
-      bytes = new byte[] {  0x18, 2  };
-      Assert.assertEquals(2, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
       bytes = new byte[] {  0x19, 2  };
       try {
-        MiniCBOR.ReadInt32(new MemoryStream(bytes));
+        MiniCBOR.ReadInt32(new java.io.ByteArrayInputStream(bytes));
         Assert.fail("Should have failed");
       } catch (IOException ex) {
       } catch (Exception ex) {
@@ -516,7 +510,7 @@ import com.upokecenter.cbor.*;
       }
       bytes = new byte[] {  0x1a, 2  };
       try {
-        MiniCBOR.ReadInt32(new MemoryStream(bytes));
+        MiniCBOR.ReadInt32(new java.io.ByteArrayInputStream(bytes));
         Assert.fail("Should have failed");
       } catch (IOException ex) {
       } catch (Exception ex) {
@@ -525,7 +519,7 @@ import com.upokecenter.cbor.*;
       }
       bytes = new byte[] {  0x1b, 2  };
       try {
-        MiniCBOR.ReadInt32(new MemoryStream(bytes));
+        MiniCBOR.ReadInt32(new java.io.ByteArrayInputStream(bytes));
         Assert.fail("Should have failed");
       } catch (IOException ex) {
       } catch (Exception ex) {
@@ -534,7 +528,7 @@ import com.upokecenter.cbor.*;
       }
       bytes = new byte[] {  0x1b, 2, 2, 2, 2, 2, 2, 2, 2  };
       try {
-        MiniCBOR.ReadInt32(new MemoryStream(bytes));
+        MiniCBOR.ReadInt32(new java.io.ByteArrayInputStream(bytes));
         Assert.fail("Should have failed");
       } catch (IOException ex) {
       } catch (Exception ex) {
@@ -543,19 +537,78 @@ import com.upokecenter.cbor.*;
       }
       bytes = new byte[] {  0x1c, 2  };
       try {
-        MiniCBOR.ReadInt32(new MemoryStream(bytes));
+        MiniCBOR.ReadInt32(new java.io.ByteArrayInputStream(bytes));
         Assert.fail("Should have failed");
       } catch (IOException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
-      bytes = new byte[] {  0x19, 0, 2  };
-      Assert.assertEquals(0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
-      bytes = new byte[] {  0x27  };
-      Assert.assertEquals(-1 - 7, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
-      bytes = new byte[] {  0x37  };
-      Assert.assertEquals(-1 - 0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
+      try {
+        bytes = new byte[] {  0  };
+        java.io.ByteArrayInputStream ms=null;
+try {
+ms=new java.io.ByteArrayInputStream(bytes);
+
+          Assert.assertEquals(0, MiniCBOR.ReadInt32(ms));
+}
+finally {
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
+}
+        bytes = new byte[] {  0x17  };
+        java.io.ByteArrayInputStream ms2=null;
+try {
+ms2=new java.io.ByteArrayInputStream(bytes);
+
+          Assert.assertEquals(0x17, MiniCBOR.ReadInt32(ms2));
+}
+finally {
+try { if(ms2!=null)ms2.close(); } catch (java.io.IOException ex){}
+}
+        bytes = new byte[] {  0x18, 2  };
+        java.io.ByteArrayInputStream ms3=null;
+try {
+ms3=new java.io.ByteArrayInputStream(bytes);
+
+          Assert.assertEquals(2, MiniCBOR.ReadInt32(ms3));
+}
+finally {
+try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
+}
+        bytes = new byte[] {  0x19, 0, 2  };
+        java.io.ByteArrayInputStream ms4=null;
+try {
+ms4=new java.io.ByteArrayInputStream(bytes);
+
+          Assert.assertEquals(2, MiniCBOR.ReadInt32(ms4));
+}
+finally {
+try { if(ms4!=null)ms4.close(); } catch (java.io.IOException ex){}
+}
+        bytes = new byte[] {  0x27  };
+        java.io.ByteArrayInputStream ms5=null;
+try {
+ms5=new java.io.ByteArrayInputStream(bytes);
+
+          Assert.assertEquals(-1 - 7, MiniCBOR.ReadInt32(ms5));
+}
+finally {
+try { if(ms5!=null)ms5.close(); } catch (java.io.IOException ex){}
+}
+        bytes = new byte[] {  0x37  };
+        java.io.ByteArrayInputStream ms6=null;
+try {
+ms6=new java.io.ByteArrayInputStream(bytes);
+
+          Assert.assertEquals(-1 - 0x17, MiniCBOR.ReadInt32(ms6));
+}
+finally {
+try { if(ms6!=null)ms6.close(); } catch (java.io.IOException ex){}
+}
+      }
+      catch (IOException ioex) {
+        Assert.fail(ioex.getMessage());
+      }
     }
 
     @Test

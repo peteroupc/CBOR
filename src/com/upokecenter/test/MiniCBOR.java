@@ -60,11 +60,11 @@ import java.io.*;
         if (b == 0xd8) {
           stream.read();
         } else if (b == 0xd9) {
-          stream.getPosition() += 2;
+          stream.skip(2);
         } else if (b == 0xda) {
-          stream.getPosition() += 4;
+          stream.skip(4);
         } else if (b == 0xdb) {
-          stream.getPosition() += 8;
+          stream.skip(8);
         } else if (b > 0xdb) {
           throw new IOException("Not a boolean");
         }
@@ -99,15 +99,14 @@ import java.io.*;
       if (value < 24) {
         stream.write((byte)(value | type));
       } else if (value <= 0xff) {
-        stream.Write(
-          new byte[] {  (byte)(24 | type),
-          (byte)(value & 0xff)  },
-          0,
-          2);
-      } else if (value <= 0xffff) {
-        stream.Write(new byte[] {  (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  }, 0, 3);
+        byte[] bytes = new byte[] {  (byte)(24 | type), (byte)(value & 0xff)  };
+        stream.write(bytes,0,2);
+  } else if (value <= 0xffff) {
+        byte[] bytes = new byte[] {  (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  };
+        stream.write(bytes,0,3);
       } else {
-        stream.Write(new byte[] {  (byte)(26 | type), (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  }, 0, 5);
+        byte[] bytes = new byte[] {  (byte)(26 | type), (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  };
+        stream.write(bytes,0,5);
       }
     }
 
@@ -257,11 +256,11 @@ import java.io.*;
         if (b == 0xd8) {
           stream.read();
         } else if (b == 0xd9) {
-          stream.getPosition() += 2;
+          stream.skip(2);
         } else if (b == 0xda) {
-          stream.getPosition() += 4;
+          stream.skip(4);
         } else if (b == 0xdb) {
-          stream.getPosition() += 8;
+          stream.skip(8);
         } else if (b > 0xdb) {
           throw new IOException("Not a 32-bit integer");
         }
@@ -309,11 +308,11 @@ import java.io.*;
         if (b == 0xd8) {
           stream.read();
         } else if (b == 0xd9) {
-          stream.getPosition() += 2;
+          stream.skip(2);
         } else if (b == 0xda) {
-          stream.getPosition() += 4;
+          stream.skip(4);
         } else if (b == 0xdb) {
-          stream.getPosition() += 8;
+          stream.skip(8);
         } else if (b > 0xdb) {
           throw new IOException("Not a 32-bit integer");
         }

@@ -502,12 +502,6 @@ namespace Test {
     // [TestMethod]
     public void TestMiniCBOR() {
       byte[] bytes;
-      bytes = new byte[] { 0 };
-      Assert.AreEqual(0, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
-      bytes = new byte[] { 0x17 };
-      Assert.AreEqual(0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
-      bytes = new byte[] { 0x18, 2 };
-      Assert.AreEqual(2, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
       bytes = new byte[] { 0x19, 2 };
       try {
         MiniCBOR.ReadInt32(new MemoryStream(bytes));
@@ -553,12 +547,35 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      bytes = new byte[] { 0x19, 0, 2 };
-      Assert.AreEqual(0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
-      bytes = new byte[] { 0x27 };
-      Assert.AreEqual(-1 - 7, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
-      bytes = new byte[] { 0x37 };
-      Assert.AreEqual(-1 - 0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
+      try {
+        bytes = new byte[] { 0 };
+        using (var ms = new MemoryStream(bytes)) {
+          Assert.AreEqual(0, MiniCBOR.ReadInt32(ms));
+        }
+        bytes = new byte[] { 0x17 };
+        using (var ms2 = new MemoryStream(bytes)) {
+          Assert.AreEqual(0x17, MiniCBOR.ReadInt32(ms2));
+        }
+        bytes = new byte[] { 0x18, 2 };
+        using (var ms3 = new MemoryStream(bytes)) {
+          Assert.AreEqual(2, MiniCBOR.ReadInt32(ms3));
+        }
+        bytes = new byte[] { 0x19, 0, 2 };
+        using (var ms4 = new MemoryStream(bytes)) {
+          Assert.AreEqual(2, MiniCBOR.ReadInt32(ms4));
+        }
+        bytes = new byte[] { 0x27 };
+        using (var ms5 = new MemoryStream(bytes)) {
+          Assert.AreEqual(-1 - 7, MiniCBOR.ReadInt32(ms5));
+        }
+        bytes = new byte[] { 0x37 };
+        using (var ms6 = new MemoryStream(bytes)) {
+          Assert.AreEqual(-1 - 0x17, MiniCBOR.ReadInt32(ms6));
+        }
+      }
+      catch (IOException ioex) {
+        Assert.Fail(ioex.Message);
+      }
     }
 
     [TestMethod]

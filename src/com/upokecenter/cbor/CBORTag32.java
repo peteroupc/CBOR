@@ -12,7 +12,7 @@ import com.upokecenter.util.*;
     /**
      * Description of CBORTag32.
      */
-  class CBORTag32 implements ICBORTag, ICBORConverter<java.net.Uri>
+  class CBORTag32 implements ICBORTag, ICBORConverter<java.net.URI>
   {
     /**
      * Not documented yet.
@@ -36,15 +36,15 @@ import com.upokecenter.util.*;
     }
 
     static void AddConverter() {
-      CBORObject.AddConverter(typeof(java.net.Uri), new CBORTag32());
+      CBORObject.AddConverter(java.net.URI.class, new CBORTag32());
     }
 
     /**
      * Converts a UUID to a CBOR object.
-     * @param uri A java.net.Uri object.
+     * @param uri A java.net.URI object.
      * @return A CBORObject object.
      */
-    public CBORObject ToCBORObject(java.net.Uri uri) {
+    public CBORObject ToCBORObject(java.net.URI uri) {
       if (uri == null) {
         throw new NullPointerException("uri");
       }

@@ -1160,30 +1160,49 @@ import com.upokecenter.cbor.*;
     @Test
     public void TestReadWriteInt() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
-        int val = ((int)RandomInt64(r));
-         java.io.ByteArrayOutputStream ms=null;
+      try {
+        for (int i = 0; i < 1000; ++i) {
+          int val = ((int)RandomInt64(r));
+          java.io.ByteArrayOutputStream ms=null;
 try {
 ms=new java.io.ByteArrayOutputStream();
 
-          MiniCBOR.WriteInt32(val, ms);
-          MemoryStream ms2=new MemoryStream(ms.toByteArray());
-          Assert.assertEquals(val, MiniCBOR.ReadInt32(ms2));
+            MiniCBOR.WriteInt32(val, ms);
+            java.io.ByteArrayInputStream ms2=null;
+try {
+ms2=new java.io.ByteArrayInputStream(ms.toByteArray());
+
+              Assert.assertEquals(val, MiniCBOR.ReadInt32(ms2));
+}
+finally {
+try { if(ms2!=null)ms2.close(); } catch (java.io.IOException ex){}
+}
 }
 finally {
 try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
-         java.io.ByteArrayOutputStream ms3=null;
+          java.io.ByteArrayOutputStream ms3=null;
 try {
 ms3=new java.io.ByteArrayOutputStream();
 
-          CBORObject.Write(val, ms3);
-          MemoryStream ms2=new MemoryStream(ms3.toByteArray());
-          Assert.assertEquals(val, CBORObject.Read(ms2).AsInt32());
+            CBORObject.Write(val, ms3);
+            java.io.ByteArrayInputStream ms2=null;
+try {
+ms2=new java.io.ByteArrayInputStream(ms3.toByteArray());
+
+              Assert.assertEquals(val, MiniCBOR.ReadInt32(ms2));
+}
+finally {
+try { if(ms2!=null)ms2.close(); } catch (java.io.IOException ex){}
+}
 }
 finally {
 try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
 }
+        }
+      }
+      catch (IOException ioex) {
+        Assert.fail(ioex.getMessage());
       }
     }
 
