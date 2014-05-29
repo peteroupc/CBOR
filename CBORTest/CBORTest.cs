@@ -1170,18 +1170,25 @@ namespace Test {
     [TestMethod]
     public void TestReadWriteInt() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
-        int val = unchecked((int)RandomInt64(r));
-         using (var ms = new MemoryStream()) {
-          MiniCBOR.WriteInt32(val, ms);
-          var ms2 = new MemoryStream(ms.ToArray());
-          Assert.AreEqual(val, MiniCBOR.ReadInt32(ms2));
+      try {
+        for (int i = 0; i < 1000; ++i) {
+          int val = unchecked((int)RandomInt64(r));
+          using (var ms = new MemoryStream()) {
+            MiniCBOR.WriteInt32(val, ms);
+            using (var ms2 = new MemoryStream(ms.ToArray())) {
+              Assert.AreEqual(val, MiniCBOR.ReadInt32(ms2));
+            }
+          }
+          using (var ms3 = new MemoryStream()) {
+            CBORObject.Write(val, ms3);
+            using (var ms2 = new MemoryStream(ms3.ToArray())) {
+              Assert.AreEqual(val, MiniCBOR.ReadInt32(ms2));
+            }
+          }
         }
-         using (var ms3 = new MemoryStream()) {
-          CBORObject.Write(val, ms3);
-          var ms2 = new MemoryStream(ms3.ToArray());
-          Assert.AreEqual(val, CBORObject.Read(ms2).AsInt32());
-        }
+      }
+      catch (IOException ioex) {
+        Assert.Fail(ioex.Message);
       }
     }
 

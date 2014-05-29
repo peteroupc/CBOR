@@ -2626,15 +2626,14 @@ public void set(String key, CBORObject value) {
       if (value < 24) {
         stream.write((byte)(value | type));
       } else if (value <= 0xff) {
-        stream.Write(
-          new byte[] {  (byte)(24 | type),
-          (byte)(value & 0xff)  },
-          0,
-          2);
+        byte[] bytes = new byte[] {  (byte)(24 | type), (byte)(value & 0xff)  };
+        stream.write(bytes,0,2);
       } else if (value <= 0xffff) {
-        stream.Write(new byte[] {  (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  }, 0, 3);
+        byte[] bytes = new byte[] {  (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  };
+        stream.write(bytes,0,3);
       } else {
-        stream.Write(new byte[] {  (byte)(26 | type), (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  }, 0, 5);
+        byte[] bytes = new byte[] {  (byte)(26 | type), (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  };
+        stream.write(bytes,0,5);
       }
     }
 
@@ -2830,7 +2829,7 @@ public void set(String key, CBORObject value) {
             }
             if (this.isNull()) {
               return new byte[] {  tagbyte, (byte)0xf6  };
-            }
+          }
             if (this.isUndefined()) {
               return new byte[] {  tagbyte, (byte)0xf7  };
             }
