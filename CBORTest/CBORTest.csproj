@@ -62,7 +62,7 @@
     <StartArguments>Test.</StartArguments>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -92,29 +92,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ProfilingSessions\Session20140107_153658.sdps" />
-    <Content Include="ProfilingSessions\Session20140108_050705.sdps" />
-    <Content Include="ProfilingSessions\Session20140108_051758.sdps" />
-    <Content Include="ProfilingSessions\Session20140110_220325.sdps" />
-    <Content Include="ProfilingSessions\Session20140114_150647.sdps" />
-    <Content Include="ProfilingSessions\Session20140130_083113.sdps" />
-    <Content Include="ProfilingSessions\Session20140201_085001.sdps" />
-    <Content Include="ProfilingSessions\Session20140201_101308.sdps" />
-    <Content Include="ProfilingSessions\Session20140201_103020.sdps" />
-    <Content Include="ProfilingSessions\Session20140202_144455.sdps" />
-    <Content Include="ProfilingSessions\Session20140202_172907.sdps" />
-    <Content Include="ProfilingSessions\Session20140202_175543.sdps" />
-    <Content Include="ProfilingSessions\Session20140204_130123.sdps" />
-    <Content Include="ProfilingSessions\Session20140204_204731.sdps" />
-    <Content Include="ProfilingSessions\Session20140205_131343.sdps" />
-    <Content Include="ProfilingSessions\Session20140205_131805.sdps" />
-    <Content Include="ProfilingSessions\Session20140205_161255.sdps" />
-    <Content Include="ProfilingSessions\Session20140224_214225.sdps" />
-    <Content Include="ProfilingSessions\Session20140305_230316.sdps" />
-    <Content Include="ProfilingSessions\Session20140306_003646.sdps" />
-    <Content Include="ProfilingSessions\Session20140306_083009.sdps" />
-    <Content Include="ProfilingSessions\Session20140306_171839.sdps" />
-    <Content Include="ProfilingSessions\Session20140406_013314.sdps" />
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets" />

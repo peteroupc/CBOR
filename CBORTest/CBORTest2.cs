@@ -7,15 +7,15 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.IO;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 using PeterO.Cbor;
 
 namespace Test {
-  [TestFixture]
+  [TestClass]
   public class CBORTest2
   {
-    [Test]
+    [TestMethod]
     public void TestCyclicRefs() {
       CBORObject cbor = CBORObject.NewArray();
       cbor.Add(CBORObject.NewArray());
@@ -31,7 +31,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestSharedRefs() {
       byte[] bytes;
       CBORObject cbor;
@@ -54,7 +54,7 @@ namespace Test {
       Assert.IsTrue(cbor == cbor[1], "objects not the same");
     }
 
-    [Test]
+    [TestMethod]
     public void TestRationalCompareDecimal() {
       FastRandom fr = new FastRandom();
       // System.Diagnostics.Stopwatch sw1 = new System.Diagnostics.Stopwatch();
@@ -77,7 +77,7 @@ namespace Test {
       // Console.WriteLine("CompareToDecimal: " + (sw2.ElapsedMilliseconds/1000.0) + " s");
     }
 
-    [Test]
+    [TestMethod]
     public void TestRationalDivide() {
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
@@ -98,7 +98,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestRationalRemainder() {
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
@@ -122,7 +122,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestRationalCompare() {
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
@@ -173,7 +173,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestBuiltInTags() {
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x00 });
@@ -474,7 +474,7 @@ namespace Test {
       Assert.AreEqual(BigInteger.Zero - BigInteger.One, CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsBigInteger());
     }
 
-    [Test]
+    [TestMethod]
     public void TestUUID() {
       CBORObject obj = CBORObject.FromObject(Guid.Parse("00112233-4455-6677-8899-AABBCCDDEEFF"));
       Assert.AreEqual(CBORType.ByteString, obj.Type);
@@ -499,7 +499,7 @@ namespace Test {
       Assert.AreEqual((byte)0xff, bytes[15]);
     }
 
-    // [Test]
+    // [TestMethod]
     public void TestMiniCBOR() {
       byte[] bytes;
       bytes = new byte[] { 0 };
@@ -561,7 +561,7 @@ namespace Test {
       Assert.AreEqual(-1 - 0x17, MiniCBOR.ReadInt32(new MemoryStream(bytes)));
     }
 
-    [Test]
+    [TestMethod]
     public void TestNegativeBigInts() {
       BigInteger minusone = BigInteger.Zero - BigInteger.One;
       Assert.AreEqual(
@@ -593,7 +593,7 @@ namespace Test {
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x4a, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 }).AsBigInteger());
     }
 
-    [Test]
+    [TestMethod]
     public void TestStringRefs() {
       CBORObject cbor = CBORObject.DecodeFromBytes(
         new byte[] { 0xd9,
@@ -666,7 +666,7 @@ namespace Test {
       Assert.AreEqual(expected, cbor.ToJSONString());
     }
 
-    [Test]
+    [TestMethod]
     public void TestExtendedNaNZero() {
       Assert.IsFalse(ExtendedDecimal.NaN.IsZero);
       Assert.IsFalse(ExtendedDecimal.SignalingNaN.IsZero);
@@ -676,7 +676,7 @@ namespace Test {
       Assert.IsFalse(ExtendedRational.SignalingNaN.IsZero);
     }
 
-    [Test]
+    [TestMethod]
     public void TestToBigIntegerNonFinite() {
       try {
         ExtendedDecimal.PositiveInfinity.ToBigInteger();

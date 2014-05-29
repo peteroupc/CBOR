@@ -62,6 +62,7 @@ Dir.glob("*.cs"){|f|
     data=data.gsub(/\[TestMethod\]/,"[Test]")
     data=data.gsub(/\[TestClass\]/,"[TestFixture]")
     data=data.gsub(/\.ExceptionType/,".ExpectedException")
+    data=data.gsub(/\bAssertFailedException\b/,"AssertionException")
     data=data.gsub(/\bTestMethodAttribute\b/,"TestAttribute")
     data=data.gsub(/\bTestClassAttribute\b/,"TestFixtureAttribute")
     data=data.gsub(/using\s+Microsoft\.VisualStudio\.TestTools\.UnitTesting\;/,"using NUnit.Framework;")

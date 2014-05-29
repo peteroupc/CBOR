@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>petero-cbor</id>
+    <version>$version$</version>
+    <title>CBOR</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</licenseUrl>
+    <projectUrl>https://github.com/peteroupc/CBOR</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A C# implementation of Concise Binary Object Representation (CBOR).</description>
+    <releaseNotes>First version as a NuGet package.</releaseNotes>
+    <copyright>Written by Peter O. in 2013-2014.  Any copyright is released to the Public Domain.</copyright>
+    <tags>cbor data serialization</tags>
+  </metadata>
+</package>

@@ -11,14 +11,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 using PeterO.Cbor;
 
 namespace Test {
-  [TestFixture]
+  [TestClass]
   public class CBORExtraTest {
-    // [Test]
+    // [TestMethod]
     public void GenerateDecimalTests() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 5000; ++i) {
@@ -79,7 +79,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestCBORObjectDecimal() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i <= 28; ++i) {  // Try a random decimal with a given exponent
@@ -141,7 +141,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestSByte() {
       for (int i = SByte.MinValue; i <= SByte.MaxValue; ++i) {
         TestCommon.AssertSer(
@@ -180,7 +180,7 @@ namespace Test {
       B
     }
 
-    [Test]
+    [TestMethod]
     public void TestArbitraryTypes() {
       CBORObject obj = CBORObject.FromObject(new { A = AByte.A, B = AInt.A, C = AULong.A });
       Assert.AreEqual(254, obj["a"].AsInt32());
@@ -259,7 +259,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestFloatCloseToEdge() {
       try {
         CBORObject.FromObject(2.147483647E9d).AsUInt32();
@@ -4232,7 +4232,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestULong() {
       ulong[] ranges = new ulong[] {
         0, 65539,
@@ -4301,14 +4301,14 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestOther() {
       CBORObject cbor = CBORObject.FromObject(new int[2, 3, 2]);
       Assert.AreEqual("[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]", cbor.ToJSONString());
       TestCommon.AssertRoundTrip(cbor);
     }
 
-    [Test]
+    [TestMethod]
     public void TestDivideUnsigned() {
       FastRandom fr = new FastRandom();
       unchecked {
@@ -4331,7 +4331,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestUInt() {
       uint[] ranges = new uint[] { 0, 65539,
         0x7FFFF000U, 0x80000400U,
@@ -4354,7 +4354,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestDecimal() {
       TestCommon.AssertSer(
         CBORObject.FromObject(Decimal.MinValue),
@@ -4376,7 +4376,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestUShort() {
       for (int i = UInt16.MinValue; i <= UInt16.MaxValue; ++i) {
         TestCommon.AssertSer(
@@ -4386,7 +4386,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestDoubleToOther() {
       CBORObject dbl1 = CBORObject.FromObject((double)Int32.MinValue);
       CBORObject dbl2 = CBORObject.FromObject((double)Int32.MaxValue);
@@ -4439,7 +4439,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestDateTime() {
       DateTime[] ranges = new DateTime[] {
         new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc),

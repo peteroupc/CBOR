@@ -9,7 +9,7 @@ using System;
 using System.Globalization;
 // using System.Numerics;
 using System.IO;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 using PeterO.Cbor;
 

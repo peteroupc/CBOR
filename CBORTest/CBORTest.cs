@@ -9,14 +9,14 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 using PeterO.Cbor;
 
 namespace Test {
     /// <summary>Contains CBOR tests.</summary>
     /// <returns/><param name='r'> A FastRandom object.</param>
-  [TestFixture]
+  [TestClass]
   public class CBORTest {
     private static void TestExtendedFloatDoubleCore(double d, string s) {
       double oldd = d;
@@ -411,7 +411,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestAdd() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
@@ -430,7 +430,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestDivide() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
@@ -453,7 +453,7 @@ namespace Test {
         }
       }
     }
-    [Test]
+    [TestMethod]
     public void TestMultiply() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
@@ -473,7 +473,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestSubtract() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
@@ -550,14 +550,14 @@ namespace Test {
       return sb.ToString();
     }
 
-    [Test]
+    [TestMethod]
     public void TestExtendedCompare() {
       Assert.AreEqual(-1, ExtendedRational.Zero.CompareTo(ExtendedRational.NaN));
       Assert.AreEqual(-1, ExtendedFloat.Zero.CompareTo(ExtendedFloat.NaN));
       Assert.AreEqual(-1, ExtendedDecimal.Zero.CompareTo(ExtendedDecimal.NaN));
     }
 
-    [Test]
+    [TestMethod]
     public void TestDecFracCompareIntegerVsBigFraction() {
       ExtendedDecimal a = ExtendedDecimal.FromString("7.004689238424764477580371752455515117709288087566222056632084784688080253355047487262563521426272927783429622650146484375");
       ExtendedDecimal b = ExtendedDecimal.FromString("5");
@@ -602,7 +602,7 @@ namespace Test {
       CompareDecimals(o1, o2);
     }
 
-    [Test]
+    [TestMethod]
     public void TestCompareB() {
       Assert.IsTrue(CBORObject.DecodeFromBytes(new byte[] { (byte)0xfa, 0x7f, (byte)0x80, 0x00, 0x00 }).IsInfinity());
       Assert.IsTrue(CBORObject.DecodeFromBytes(new byte[] { (byte)0xfa, 0x7f, (byte)0x80, 0x00, 0x00 }).AsExtendedRational().IsInfinity());
@@ -647,7 +647,7 @@ namespace Test {
       TestCommon.AssertRoundTrip(cbor);
     }
 
-    [Test]
+    [TestMethod]
     public void ExtraDecimalTests() {
       Assert.AreEqual(
         ExtendedDecimal.NegativeInfinity,
@@ -669,7 +669,7 @@ namespace Test {
         ExtendedDecimal.FromString("90246605365627217170000000000").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
     }
 
-    [Test]
+    [TestMethod]
     public void TestFloatDecimalRoundTrip() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 5000; ++i) {
@@ -688,7 +688,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     // [Timeout(10000)]
     public void TestCompare() {
       FastRandom r = new FastRandom();
@@ -793,7 +793,7 @@ namespace Test {
       CompareTestLess(dp, dnan);
     }
 
-    [Test]
+    [TestMethod]
     public void TestParseJSONNumber() {
       Assert.IsNull(CBORDataUtilities.ParseJSONNumber(null, false, false, false));
       Assert.IsNull(CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false, true));
@@ -816,7 +816,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestParseDecimalStrings() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
@@ -825,7 +825,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestExtendedInfinity() {
       Assert.IsTrue(ExtendedDecimal.PositiveInfinity.IsInfinity());
       Assert.IsTrue(ExtendedDecimal.PositiveInfinity.IsPositiveInfinity());
@@ -966,7 +966,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestJSONBase64() {
       CBORObject o;
       o = CBORObject.FromObjectAndTag(new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 }, 22);
@@ -981,7 +981,7 @@ namespace Test {
       Assert.AreEqual("\"mtb/6A\"", o.ToJSONString());  // Encode with Base64
     }
 
-    [Test]
+    [TestMethod]
     public void TestCBORExceptions() {
       try {
         CBORObject.NewArray().AsExtendedDecimal();
@@ -1167,7 +1167,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestReadWriteInt() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
@@ -1185,7 +1185,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestCBORInfinity() {
       Assert.AreEqual("-Infinity", CBORObject.FromObject(ExtendedRational.NegativeInfinity).ToString());
       Assert.AreEqual("Infinity", CBORObject.FromObject(ExtendedRational.PositiveInfinity).ToString());
@@ -1210,7 +1210,7 @@ namespace Test {
       TestCommon.AssertRoundTrip(CBORObject.FromObject(Single.PositiveInfinity));
     }
 
-    [Test]
+    [TestMethod]
     [Timeout(5000)]
     public void TestExtendedExtremeExponent() {
       // Values with extremely high or extremely low exponents;
@@ -1256,7 +1256,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     [Timeout(20000)]
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
@@ -1377,7 +1377,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestExtendedFloatSingle() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 255; ++i) {  // Try a random float with a given exponent
@@ -1389,7 +1389,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestExtendedFloatDouble() {
       TestExtendedFloatDoubleCore(3.5, "3.5");
       TestExtendedFloatDoubleCore(7, "7");
@@ -1405,14 +1405,14 @@ namespace Test {
         TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
       }
     }
-    [Test]
+    [TestMethod]
     [ExpectedException(typeof(CBORException))]
     public void TestTagThenBreak() {
       TestCommon.FromBytesTestAB(new byte[] { 0xd1, 0xff });
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestJSONSurrogates() {
       try {
         CBORObject.FromJSONString("[\"\ud800\udc00\"]");
@@ -1460,7 +1460,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestJSONEscapedChars() {
       CBORObject o = CBORObject.FromJSONString(
         "[\"\\r\\n\\u0006\\u000E\\u001A\\\\\\\"\"]");
@@ -1473,7 +1473,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestCBORFromArray() {
       CBORObject o = CBORObject.FromObject(new int[] { 1, 2, 3 });
       Assert.AreEqual(3, o.Count);
@@ -1484,7 +1484,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestJSON() {
       CBORObject o;
       try {
@@ -1881,7 +1881,7 @@ namespace Test {
       Assert.AreEqual("5", CBORObject.FromJSONString("5").ToJSONString());
     }
 
-    [Test]
+    [TestMethod]
     public void TestBoolean() {
       TestCommon.AssertSer(CBORObject.True, "true");
       TestCommon.AssertSer(CBORObject.False, "false");
@@ -1890,7 +1890,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestByte() {
       for (int i = 0; i <= 255; ++i) {
         TestCommon.AssertSer(
@@ -1971,7 +1971,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestDecFracOverflow() {
       Assert.AreEqual(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Single.PositiveInfinity).AsExtendedDecimal());
       Assert.AreEqual(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Single.NegativeInfinity).AsExtendedDecimal());
@@ -1982,7 +1982,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestFPToBigInteger() {
       Assert.AreEqual("0", CBORObject.FromObject((float)0.75).AsBigInteger().ToString());
       Assert.AreEqual("0", CBORObject.FromObject((float)0.99).AsBigInteger().ToString());
@@ -2037,7 +2037,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestDecFracFP() {
       Assert.AreEqual("0.75", ExtendedDecimal.FromDouble(0.75).ToString());
       Assert.AreEqual("0.5", ExtendedDecimal.FromDouble(0.5).ToString());
@@ -2052,7 +2052,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void ScaleTest() {
       Assert.AreEqual(-(BigInteger)7, ExtendedDecimal.FromString("1.265e-4").Exponent);
       Assert.AreEqual(-(BigInteger)4, ExtendedDecimal.FromString("0.000E-1").Exponent);
@@ -2107,7 +2107,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestReadUtf8() {
       this.DoTestReadUtf8(
         new byte[] { 0x21,
@@ -2323,7 +2323,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestArray() {
       CBORObject cbor = CBORObject.FromJSONString("[]");
       cbor.Add(CBORObject.FromObject(3));
@@ -2339,7 +2339,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestMap() {
       CBORObject cbor = CBORObject.FromJSONString("{\"a\":2,\"b\":4}");
       Assert.AreEqual(2, cbor.Count);
@@ -2381,7 +2381,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
         new byte[] { 0x7f,
@@ -2414,7 +2414,7 @@ namespace Test {
       TestCommon.AssertEqualsHashCode(cbor, cbor2);
       Assert.AreEqual(longString, cbor2.AsString());
     }
-    [Test]
+    [TestMethod]
     [ExpectedException(typeof(CBORException))]
     public void TestTextStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
@@ -2426,7 +2426,7 @@ namespace Test {
         0x20,
         0xff });
     }
-    [Test]
+    [TestMethod]
     [ExpectedException(typeof(CBORException))]
     public void TestTextStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
@@ -2441,7 +2441,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestByteStringStream() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0x5f,
@@ -2451,7 +2451,7 @@ namespace Test {
         0x20,
         0xff });
     }
-    [Test]
+    [TestMethod]
     [ExpectedException(typeof(CBORException))]
     public void TestByteStringStreamNoTagsBeforeDefinite() {
       TestCommon.FromBytesTestAB(
@@ -2473,7 +2473,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void ZeroStringTests2() {
       Assert.AreEqual("0.0001265", ExtendedDecimal.FromString("1.265e-4").ToString());
       Assert.AreEqual("0.0001265", ExtendedDecimal.FromString("1.265e-4").ToEngineeringString());
@@ -2778,7 +2778,7 @@ namespace Test {
     }
     // Tests whether AsInt32/64/16/AsByte properly truncate floats
     // and doubles before bounds checking
-    [Test]
+    [TestMethod]
     public void FloatingPointCloseToEdge() {
       try {
         CBORObject.FromObject(2.147483647E9d).AsInt32();
@@ -5092,7 +5092,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void FromDoubleTest() {
       Assert.AreEqual("0.213299999999999989608312489508534781634807586669921875", ExtendedDecimal.FromDouble(0.2133).ToString());
       Assert.AreEqual("2.29360000000000010330982488752915582352898127282969653606414794921875E-7", ExtendedDecimal.FromDouble(2.2936E-7).ToString());
@@ -5197,7 +5197,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void ToPlainStringTest() {
       Assert.AreEqual("277220000000", ExtendedDecimal.FromString("277.22E9").ToPlainString());
       Assert.AreEqual("3911900", ExtendedDecimal.FromString("391.19E4").ToPlainString());
@@ -5302,7 +5302,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void ToEngineeringStringTest() {
       Assert.AreEqual("8.912", ExtendedDecimal.FromString("89.12E-1").ToEngineeringString());
       Assert.AreEqual("0.024231", ExtendedDecimal.FromString("242.31E-4").ToEngineeringString());
@@ -5407,7 +5407,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestDecimalsEquivalent() {
       AssertDecimalsEquivalent("1.310E-7", "131.0E-9");
       AssertDecimalsEquivalent("0.001231", "123.1E-5");
@@ -5512,7 +5512,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestAsByte() {
       for (int i = 0; i < 255; ++i) {
         Assert.AreEqual((byte)i, CBORObject.FromObject(i).AsByte());
@@ -5534,7 +5534,7 @@ namespace Test {
         }
       }
     }
-    [Test]
+    [TestMethod]
     [ExpectedException(typeof(CBORException))]
     public void TestByteStringStreamNoIndefiniteWithinDefinite() {
       TestCommon.FromBytesTestAB(
@@ -5548,7 +5548,7 @@ namespace Test {
         0xff });
     }
 
-    [Test]
+    [TestMethod]
     public void TestExceptions() {
       try {
         PrecisionContext.Unlimited.WithBigPrecision(null);
@@ -5656,7 +5656,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestExtendedMiscellaneous() {
       Assert.AreEqual(ExtendedDecimal.Zero, ExtendedDecimal.FromExtendedFloat(ExtendedFloat.Zero));
       Assert.AreEqual(ExtendedDecimal.NegativeZero, ExtendedDecimal.FromExtendedFloat(ExtendedFloat.NegativeZero));
@@ -5813,7 +5813,7 @@ namespace Test {
       Assert.AreEqual(CBORObject.FromObject(2), CBORObject.FromObject(2).Abs());
     }
 
-    [Test]
+    [TestMethod]
     public void TestExtendedDecimalExceptions() {
       try {
         ExtendedDecimal.Min(null, ExtendedDecimal.One);
@@ -6009,7 +6009,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestExtendedFloatDecFrac() {
       ExtendedFloat bf;
       bf = ExtendedFloat.FromInt64(20);
@@ -6028,7 +6028,7 @@ namespace Test {
       df = ExtendedDecimal.Create((BigInteger)(-15), (BigInteger)(-1));
       Assert.AreEqual("-1.5", df.ToExtendedFloat().ToString());
     }
-    [Test]
+    [TestMethod]
     public void TestDecFracToSingleDoubleHighExponents() {
       if (-5.731800748367376E125d != ExtendedDecimal.FromString("-57318007483673759194E+106").ToDouble()) {
         Assert.Fail("otherValue double -57318007483673759194E+106\nExpected: -5.731800748367376E125d\nWas: " + ExtendedDecimal.FromString("-57318007483673759194E+106").ToDouble());
@@ -6116,7 +6116,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestCanFitInSpecificCases() {
       CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xfb, 0x41, (byte)0xe0, (byte)0x85, 0x48, 0x2d, 0x14, 0x47, 0x7a });  // 2217361768.63373
       Assert.AreEqual(BigInteger.fromString("2217361768"), cbor.AsBigInteger());
@@ -6128,7 +6128,7 @@ namespace Test {
       Assert.IsFalse(CBORObject.FromObject(2554895343L).CanFitInSingle());
     }
 
-    [Test]
+    [TestMethod]
     public void TestCanFitIn() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
@@ -6171,7 +6171,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestDecimalFrac() {
       TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
@@ -6183,7 +6183,7 @@ namespace Test {
         3,
         4 });
     }
-    [Test]
+    [TestMethod]
     [ExpectedException(typeof(CBORException))]
     public void TestDecimalFracExponentMustNotBeBignum() {
       TestCommon.FromBytesTestAB(
@@ -6200,7 +6200,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestDoubleToOther() {
       CBORObject dbl1 = CBORObject.FromObject((double)Int32.MinValue);
       CBORObject dbl2 = CBORObject.FromObject((double)Int32.MaxValue);
@@ -6263,11 +6263,11 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestBigTag() {
       CBORObject.FromObjectAndTag(CBORObject.Null, (BigInteger.One << 64) - BigInteger.One);
     }
-    [Test]
+    [TestMethod]
     [ExpectedException(typeof(CBORException))]
     public void TestDecimalFracExactlyTwoElements() {
       TestCommon.FromBytesTestAB(
@@ -6279,7 +6279,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o = TestCommon.FromBytesTestAB(
         new byte[] { 0xc4,
@@ -6294,7 +6294,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestShort() {
       for (int i = Int16.MinValue; i <= Int16.MaxValue; ++i) {
         TestCommon.AssertSer(
@@ -6304,7 +6304,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestByteArray() {
       TestCommon.AssertSer(
         CBORObject.FromObject(new byte[] { 0x20, 0x78 }),
@@ -6312,7 +6312,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestBigNumBytes() {
       CBORObject o = null;
       o = TestCommon.FromBytesTestAB(new byte[] { 0xc2, 0x41, 0x88 });
@@ -6325,7 +6325,7 @@ namespace Test {
       Assert.AreEqual((BigInteger)0x88776655443322L, o.AsBigInteger());
     }
 
-    [Test]
+    [TestMethod]
     public void TestMapInMap() {
       CBORObject oo;
       oo = CBORObject.NewArray()
@@ -6350,7 +6350,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestTaggedUntagged() {
       for (int i = 200; i < 1000; ++i) {
         CBORObject o, o2;
@@ -6417,7 +6417,7 @@ namespace Test {
       Assert.AreEqual(s, bi.ToString());
     }
 
-    [Test]
+    [TestMethod]
     public void TestCBORBigInteger() {
       CBORObject o = CBORObject.DecodeFromBytes(new byte[] { 0x3b, (byte)0xce, (byte)0xe2, 0x5a, 0x57, (byte)0xd8, 0x21, (byte)0xb9, (byte)0xa7 });
       Assert.AreEqual(BigInteger.fromString("-14907577049884506536"), o.AsBigInteger());
@@ -6432,7 +6432,7 @@ namespace Test {
       this.AssertBigIntString(s, bi2 - (BigInteger)negbi);
     }
 
-    [Test]
+    [TestMethod]
     public void TestBigIntAddSub() {
       BigInteger posSmall = (BigInteger)5;
       BigInteger negSmall = -(BigInteger)5;
@@ -6451,7 +6451,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestBigInteger() {
       BigInteger bi = (BigInteger)3;
       this.AssertBigIntString("3", bi);
@@ -6495,7 +6495,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestLong() {
       long[] ranges = new long[] {
         -65539, 65539,
@@ -6529,7 +6529,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestFloat() {
       TestCommon.AssertSer(
         CBORObject.FromObject(Single.PositiveInfinity),
@@ -6548,7 +6548,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestCodePointCompare() {
       Assert.AreEqual(0, Math.Sign(DataUtilities.CodePointCompare("abc", "abc")));
       Assert.AreEqual(0, Math.Sign(DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")));
@@ -6558,7 +6558,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestSimpleValues() {
       TestCommon.AssertSer(
         CBORObject.FromObject(true),
@@ -6572,7 +6572,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestGetUtf8Length() {
       try {
         DataUtilities.GetUtf8Length(null, true);
@@ -6594,7 +6594,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestDouble() {
       if (!CBORObject.FromObject(Double.PositiveInfinity).IsPositiveInfinity()) {
         Assert.Fail("Not positive infinity");
@@ -6625,7 +6625,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void TestTags() {
       BigInteger maxuint = (BigInteger.One << 64) - BigInteger.One;
       BigInteger[] ranges = new BigInteger[] {
