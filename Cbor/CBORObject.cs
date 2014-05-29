@@ -204,7 +204,10 @@ namespace PeterO.Cbor {
       }
       ConverterInfo ci = new CBORObject.ConverterInfo();
       ci.Converter = converter;
-      ci.ToObject = PropertyMap.FindMethod(converter, "ToCBORObject");
+      ci.ToObject = PropertyMap.FindOneArgumentMethod(converter, "ToCBORObject", type);
+      if (ci.ToObject == null) {
+        throw new ArgumentException("Converter doesn't contain a proper ToCBORObject method");
+      }
       lock (converters) {
         converters[type] = ci;
       }
@@ -668,7 +671,7 @@ namespace PeterO.Cbor {
           // second object is NaN
           return -1;
         } else {
-          // Console.WriteLine("a=" + this + " b=" + (other));
+          // DebugUtility.Log("a=" + this + " b=" + (other));
           if (typeA == CBORObjectTypeExtendedRational) {
             ExtendedRational e1 = NumberInterfaces[typeA].AsExtendedRational(objA);
             if (typeB == CBORObjectTypeExtendedDecimal) {
@@ -854,8 +857,9 @@ namespace PeterO.Cbor {
       if (listACount == listBCount) {
         // Both maps have the same keys, so compare their values
         for (int i = 0; i < minCount; ++i) {
-          CBORObject key = sortedASet[i];
-          int cmp = mapA[key].CompareTo(mapB[key]);
+          CBORObject keyA = sortedASet[i];
+          CBORObject keyB = sortedBSet[i];
+          int cmp = mapA[keyA].CompareTo(mapB[keyB]);
           if (cmp != 0) {
             return cmp;
           }
@@ -3430,6 +3434,23 @@ namespace PeterO.Cbor {
             ExtendedFloat flo = (ExtendedFloat)this.ThisItem;
             if (flo.IsInfinity() || flo.IsNaN()) {
               return "null";
+            }
+            if (flo.IsFinite &&
+              BigInteger.Abs(flo.Exponent).CompareTo((BigInteger)1000) > 0) {
+              // Too inefficient to convert to a decimal number
+              // from a bigfloat with a very high exponent,
+              // so convert to double instead
+              double f = flo.ToDouble();
+              if (Double.IsNegativeInfinity(f) ||
+                  Double.IsPositiveInfinity(f) ||
+                  Double.IsNaN(f)) {
+                return "null";
+              } else {
+                return TrimDotZero(
+                  Convert.ToString(
+                    (double)f,
+                    CultureInfo.InvariantCulture));
+              }
             }
             return flo.ToString();
           }

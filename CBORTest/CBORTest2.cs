@@ -32,6 +32,19 @@ namespace Test {
     }
 
     [TestMethod]
+    public void TestEquivalentInfinities() {
+        CBORObject co, co2;
+        co = CBORObject.FromObject(ExtendedDecimal.PositiveInfinity);
+        co2 = CBORObject.FromObject(Double.PositiveInfinity);
+        Assert.AreEqual(0, co.CompareTo(co2));
+        Assert.AreEqual(0, co2.CompareTo(co));
+        co = CBORObject.NewMap().Add(ExtendedDecimal.PositiveInfinity, CBORObject.Undefined);
+        co2 = CBORObject.NewMap().Add(Double.PositiveInfinity, CBORObject.Undefined);
+        Assert.AreEqual(0, co.CompareTo(co2));
+        Assert.AreEqual(0, co2.CompareTo(co));
+    }
+
+    [TestMethod]
     public void TestSharedRefs() {
       byte[] bytes;
       CBORObject cbor;

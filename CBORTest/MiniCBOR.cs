@@ -26,9 +26,9 @@ namespace Test {
       value &= 0x7fff;
       if (value >= 0x7c00) {
         return ToSingle((int)(0x3fc00 | (value & 0x3ff)) << 13 | negvalue);
-      } else if (value > 0x400) {
+  } else if (value > 0x400) {
         return ToSingle((int)((value + 0x1c000) << 13) | negvalue);
-      } else if ((value & 0x400) == value) {
+  } else if ((value & 0x400) == value) {
         return ToSingle((int)((value == 0) ? 0 : 0x38800000) | negvalue);
       } else {
         // denormalized
@@ -58,13 +58,13 @@ namespace Test {
         // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.ReadByte();
-        } else if (b == 0xd9) {
+  } else if (b == 0xd9) {
           stream.Position += 2;
-        } else if (b == 0xda) {
+  } else if (b == 0xda) {
           stream.Position += 4;
-        } else if (b == 0xdb) {
+  } else if (b == 0xdb) {
           stream.Position += 8;
-        } else if (b > 0xdb) {
+  } else if (b > 0xdb) {
           throw new IOException("Not a boolean");
         }
         b = stream.ReadByte();
@@ -97,7 +97,7 @@ namespace Test {
       }
       if (value < 24) {
         stream.WriteByte((byte)(value | type));
-      } else if (value <= 0xff) {
+  } else if (value <= 0xff) {
         byte[] bytes = new byte[] { (byte)(24 | type), (byte)(value & 0xff) };
         stream.Write(bytes, 0, 2);
   } else if (value <= 0xffff) {
@@ -153,7 +153,7 @@ namespace Test {
         long b;
         if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0 || bytes[3] != 0)) {
           throw new IOException("Not a 32-bit integer");
-        } else if (!check32bit) {
+  } else if (!check32bit) {
           b = ((long)bytes[0]) & 0xff;
           b <<= 8;
           b |= ((long)bytes[1]) & 0xff;
@@ -252,13 +252,13 @@ namespace Test {
         // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.ReadByte();
-        } else if (b == 0xd9) {
+  } else if (b == 0xd9) {
           stream.Position += 2;
-        } else if (b == 0xda) {
+  } else if (b == 0xda) {
           stream.Position += 4;
-        } else if (b == 0xdb) {
+  } else if (b == 0xdb) {
           stream.Position += 8;
-        } else if (b > 0xdb) {
+  } else if (b > 0xdb) {
           throw new IOException("Not a 32-bit integer");
         }
         b = stream.ReadByte();
@@ -304,13 +304,13 @@ namespace Test {
         // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.ReadByte();
-        } else if (b == 0xd9) {
+  } else if (b == 0xd9) {
           stream.Position += 2;
-        } else if (b == 0xda) {
+  } else if (b == 0xda) {
           stream.Position += 4;
-        } else if (b == 0xdb) {
+  } else if (b == 0xdb) {
           stream.Position += 8;
-        } else if (b > 0xdb) {
+  } else if (b > 0xdb) {
           throw new IOException("Not a 32-bit integer");
         }
         b = stream.ReadByte();

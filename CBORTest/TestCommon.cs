@@ -274,19 +274,20 @@ namespace Test {
       try {
         o.AsSingle();
       } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ",  " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         o.AsDouble();
       } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ",  " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
     }
 
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (!o.ToString().Equals(o2.ToString())) {
-        Assert.AreEqual(o.ToString(), o2.ToString(), "o2 is not equal to o");
+      int cmp = o.CompareTo(o2);
+      if (cmp != 0) {
+        Assert.AreEqual(0, cmp, o.ToString() +"\nvs.\n" + o2.ToString());
       }
       TestNumber(o);
       AssertEqualsHashCode(o, o2);

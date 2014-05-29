@@ -178,7 +178,10 @@ public void setConverter(Object value) {
       }
       ConverterInfo ci = new CBORObject.ConverterInfo();
       ci.setConverter(converter);
-      ci.setToObject(PropertyMap.FindMethod(converter, "ToCBORObject"));
+      ci.setToObject(PropertyMap.FindOneArgumentMethod(converter, "ToCBORObject", type));
+      if (ci.getToObject() == null) {
+        throw new IllegalArgumentException("Converter doesn't contain a proper ToCBORObject method");
+      }
       synchronized(converters) {
         converters.put(type,ci);
       }
@@ -621,7 +624,7 @@ public int compareTo(CBORObject other) {
           // second Object is NaN
           return -1;
         } else {
-          // System.out.println("a=" + this + " b=" + (other));
+          // DebugUtility.Log("a=" + this + " b=" + (other));
           if (typeA == CBORObjectTypeExtendedRational) {
             ExtendedRational e1 = NumberInterfaces[typeA].AsExtendedRational(objA);
             if (typeB == CBORObjectTypeExtendedDecimal) {
@@ -810,8 +813,9 @@ public int compareTo(CBORObject other) {
       if (listACount == listBCount) {
         // Both maps have the same keys, so compare their values
         for (int i = 0; i < minCount; ++i) {
-          CBORObject key = sortedASet.get(i);
-          int cmp = mapA.get(key).compareTo(mapB.get(key));
+          CBORObject keyA = sortedASet.get(i);
+          CBORObject keyB = sortedBSet.get(i);
+          int cmp = mapA.get(keyA).compareTo(mapB.get(keyB));
           if (cmp != 0) {
             return cmp;
           }
@@ -3466,6 +3470,21 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             ExtendedFloat flo = (ExtendedFloat)this.getThisItem();
             if (flo.IsInfinity() || flo.IsNaN()) {
               return "null";
+            }
+            if (flo.isFinite() &&
+              (flo.getExponent()).abs().compareTo(BigInteger.valueOf(1000)) > 0) {
+              // Too inefficient to convert to a decimal number
+              // from a bigfloat with a very high exponent,
+              // so convert to double instead
+              double f = flo.ToDouble();
+              if (((f)==Double.NEGATIVE_INFINITY) ||
+                  ((f)==Double.POSITIVE_INFINITY) ||
+                  Double.isNaN(f)) {
+                return "null";
+              } else {
+                return TrimDotZero(
+                  Double.toString((double)f));
+              }
             }
             return flo.toString();
           }

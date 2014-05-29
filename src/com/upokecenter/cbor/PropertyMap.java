@@ -105,9 +105,9 @@ class PropertyMap
 		}
 	}
 	
-	public static Object FindMethod(Object obj, String name){
+	public static Object FindOneArgumentMethod(Object obj, String name, Class<?> argtype){
 		try {
-			return obj.getClass().getMethod(name);
+			return obj.getClass().getMethod(name, argtype);
 		} catch (SecurityException e) {
 			return null;
 		} catch (NoSuchMethodException e) {
@@ -117,6 +117,9 @@ class PropertyMap
 
 	public static Object InvokeOneArgumentMethod(Object method,
 			Object obj, Object argument) {
+		if(method==null){
+			throw new NullPointerException("method");
+		}
 		Method m=(Method)method;
 		try {
 			return m.invoke(obj, argument);
