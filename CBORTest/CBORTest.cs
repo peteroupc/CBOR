@@ -1395,10 +1395,6 @@ namespace Test {
         Assert.Fail(badstr);
       }
        // */
-      // Console.WriteLine("Testing slightly modified objects");
-      /*
-      // Test random nonsense data
-       */
     }
 
     /// <summary>Not documented yet.</summary>

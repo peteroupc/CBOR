@@ -32,6 +32,19 @@ import com.upokecenter.cbor.*;
     }
 
     @Test
+    public void TestEquivalentInfinities() {
+        CBORObject co, co2;
+        co = CBORObject.FromObject(ExtendedDecimal.PositiveInfinity);
+        co2 = CBORObject.FromObject(Double.POSITIVE_INFINITY);
+        Assert.assertEquals(0, co.compareTo(co2));
+        Assert.assertEquals(0, co2.compareTo(co));
+        co = CBORObject.NewMap().Add(ExtendedDecimal.PositiveInfinity, CBORObject.Undefined);
+        co2 = CBORObject.NewMap().Add(Double.POSITIVE_INFINITY, CBORObject.Undefined);
+        Assert.assertEquals(0, co.compareTo(co2));
+        Assert.assertEquals(0, co2.compareTo(co));
+    }
+
+    @Test
     public void TestSharedRefs() {
       byte[] bytes;
       CBORObject cbor;

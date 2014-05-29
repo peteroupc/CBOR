@@ -255,19 +255,20 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       try {
         o.AsSingle();
       } catch (Exception ex) {
-        Assert.fail("Object: " + o + ",  " + ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
       }
       try {
         o.AsDouble();
       } catch (Exception ex) {
-        Assert.fail("Object: " + o + ",  " + ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
       }
     }
 
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (!o.toString().equals(o2.toString())) {
-        Assert.assertEquals("o2 is not equal to o",o.toString(),o2.toString());
+      int cmp = o.compareTo(o2);
+      if (cmp != 0) {
+        Assert.assertEquals(o.toString() +"\nvs.\n" + o2.toString(),0,cmp);
       }
       TestNumber(o);
       AssertEqualsHashCode(o, o2);

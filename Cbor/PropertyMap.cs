@@ -149,8 +149,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    public static object FindMethod(object obj, string name) {
-      return obj.GetType().GetMethod(name);
+    public static object FindOneArgumentMethod(object obj, string name, Type argtype) {
+      return obj.GetType().GetMethod(name, new Type[] { argtype });
     }
 
     public static object InvokeOneArgumentMethod(object methodInfo, object obj, object argument) {

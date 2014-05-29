@@ -1406,7 +1406,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         thread.start();
         if (!thread.join(5000)) {
           String bas = ToByteArrayString(obj);
-          @SuppressWarnings("deprecation") thread.stop();
+          thread.stop();
           Assert.fail(bas);
           System.out.println(bas.length());
           if (badstr == null || bas.length()<badstr.length()) {
@@ -1423,10 +1423,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         Assert.fail(badstr);
       }
        // */
-      // System.out.println("Testing slightly modified objects");
-      /*
-      // Test random nonsense data
-       */
     }
 
     /**
