@@ -2,12 +2,12 @@ using System;
 using System.IO;
 using System.Text;
 
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 using PeterO.Cbor;
 
 namespace Test {
-  [TestFixture]
+  [TestClass]
   public class BEncodingTest {
     private static CBORObject EncodingFromBytes(byte[] b) {
       try {
@@ -51,7 +51,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void testLong() {
       this.doTestLong(0);
       this.doTestLong(-1);
@@ -62,7 +62,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void testList() {
       CBORObject beo = CBORObject.NewArray();
       beo.Add(CBORObject.FromObject(1));
@@ -84,7 +84,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void testDictionary() {
       CBORObject beo = CBORObject.NewMap();
       beo["zero"] = CBORObject.FromObject(1);
@@ -106,7 +106,7 @@ namespace Test {
     }
 
     /// <summary>Not documented yet.</summary>
-    [Test]
+    [TestMethod]
     public void testString() {
       this.doTestString(String.Empty);
       this.doTestString(" ");

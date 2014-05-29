@@ -9,13 +9,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 using Test;
 
 namespace CBOR {
     /// <summary>Description of ExtensiveTest.</summary>
-  [TestFixture]
+  [TestClass]
   public class ExtensiveTest
   {
     public static void AssertFlags(int expected, int actual, string str) {
@@ -1190,7 +1190,7 @@ namespace CBOR {
       return 0;
     }
 
-    [Test]
+    [TestMethod]
     public void TestParser() {
       long failures = 0;
       List<string> errors = new List<string>();

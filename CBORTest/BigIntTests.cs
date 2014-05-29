@@ -6,15 +6,15 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 
 namespace Test {
-  [TestFixture]
+  [TestClass]
   public class BigIntTests
   {
     // Test some specific cases
-    [Test]
+    [TestMethod]
     public void TestSpecificCases() {
       TestCommon.DoTestMultiply("39258416159456516340113264558732499166970244380745050", "39258416159456516340113264558732499166970244380745051", "1541223239349076530208308657654362309553698742116222355477449713742236585667505604058123112521437480247550");
       TestCommon.DoTestMultiply(
@@ -24,7 +24,7 @@ namespace Test {
       TestCommon.DoTestDivide("9999999999999999999999", "281474976710655", "35527136");
     }
 
-    [Test]
+    [TestMethod]
     public void TestToString() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
@@ -35,7 +35,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestShiftLeft() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
@@ -54,7 +54,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestShiftRight() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
@@ -83,7 +83,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestDigitCount() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
@@ -93,7 +93,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestMultiply() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
@@ -125,7 +125,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestMultiplyDivide() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 4000; ++i) {
@@ -177,7 +177,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestPow() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 200; ++i) {
@@ -191,7 +191,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestSquareRoot() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 10000; ++i) {
@@ -215,7 +215,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestSmallIntDivide() {
       int a, b;
       FastRandom fr = new FastRandom();
@@ -233,7 +233,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestMiscellaneous() {
      Assert.AreEqual(1, BigInteger.Zero.getDigitCount());
      BigInteger minValue = (BigInteger)Int32.MinValue;
@@ -304,7 +304,7 @@ namespace Test {
       Assert.AreEqual(BigInteger.Zero, tmpsqrt[0]);
     }
 
-    [Test]
+    [TestMethod]
     public void TestExceptions() {
       try {
         BigInteger.fromString("xyz");
@@ -554,7 +554,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestAddSubtract() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 10000; ++i) {
@@ -577,7 +577,7 @@ namespace Test {
       }
     }
 
-    [Test]
+    [TestMethod]
     public void TestBitLength() {
       Assert.AreEqual(0, BigInteger.valueOf(0).bitLength());
       Assert.AreEqual(1, BigInteger.valueOf(1).bitLength());
@@ -659,7 +659,7 @@ namespace Test {
       return true;
     }
 
-    [Test]
+    [TestMethod]
     public void TestGcd() {
       int prime = 0;
       FastRandom rand = new FastRandom();

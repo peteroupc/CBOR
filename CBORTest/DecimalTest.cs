@@ -9,12 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 
 namespace Test {
     /// <summary>Description of DecTest.</summary>
-  [TestFixture]
+  [TestClass]
   public class DecimalTest
   {
     private static Regex valuePropertyLine = new Regex(
@@ -310,7 +310,7 @@ namespace Test {
       Console.WriteLine("Elapsed time: " + (sw.ElapsedMilliseconds / 1000.0) + " s");
     }
 
-    [Test]
+    [TestMethod]
     public void TestPi() {
       System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
       sw.Start();
@@ -319,7 +319,7 @@ namespace Test {
       PrintTime(sw);
     }
 
-    [Test]
+    [TestMethod]
     public void TestParser() {
       long failures = 0;
       for (int i = 0; i < 1; ++i) {

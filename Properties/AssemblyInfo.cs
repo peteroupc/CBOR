@@ -14,9 +14,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CBOR")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A C# implementation of Concise Binary Object Representation (CBOR).")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Peter Occil")]
 [assembly: AssemblyProduct("CBOR")]
 [assembly: AssemblyCopyright("Written by Peter O. in 2013-2014. Any copyright is dedicated to the Public Domain. <http://creativecommons.org/publicdomain/zero/1.0/>")]
 [assembly: AssemblyTrademark("")]
