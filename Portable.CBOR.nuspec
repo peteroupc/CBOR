@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>petero-cbor</id>
+    <id>PeterO.Cbor</id>
     <version>$version$</version>
     <title>CBOR</title>
     <authors>$author$</authors>

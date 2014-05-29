@@ -1256,10 +1256,124 @@ try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
         CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x58, 0x1e, 0x0e, 0x53, 0x4f, (byte)0xfe, 0x4d, 0x54, (byte)0xbb, 0x21, 0x3f, (byte)0xd5, (byte)0xea, 0x61, (byte)0x90, 0x68, (byte)0x8a, 0x14, (byte)0xfd, (byte)0x8d, 0x19, (byte)0xba, (byte)0xaf, (byte)0xbf, 0x3a, 0x67, 0x5e, 0x2d, 0x52, 0x41, (byte)0x93, (byte)0xa7, 0x18, 0x41  }).compareTo(CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x1b, 0x00, 0x00, 0x4b, 0x3e, (byte)0xcb, (byte)0xe8, (byte)0xc4, (byte)0xa3, (byte)0xc2, 0x58, 0x2a, 0x17, 0x0a, 0x4d, (byte)0x88, 0x40, (byte)0xe7, (byte)0xe9, (byte)0xe1, (byte)0x95, (byte)0xdc, (byte)0xad, (byte)0x97, (byte)0x87, 0x66, (byte)0x8c, 0x77, 0x4b, (byte)0xd6, 0x46, 0x52, 0x00, (byte)0xf0, (byte)0xdd, 0x77, 0x16, (byte)0xa5, (byte)0xca, 0x71, 0x5d, (byte)0xf5, 0x7c, 0x6b, (byte)0x82, (byte)0x85, 0x47, 0x2d, (byte)0x90, (byte)0x89, 0x12, (byte)0x93, 0x0b, 0x1e  })));
     }
 
+    @Test
+    public void TestRandomNonsense() {
+        FastRandom rand = new FastRandom();
+        for (int i = 0; i < 200; ++i) {
+            byte[] array = new byte[rand.NextValue(1000000) + 1];
+            for (int j = 0; j < array.length; ++j) {
+                if (j + 3 <= array.length) {
+                    int r = rand.NextValue(0x1000000);
+                    array[j] = (byte)(r & 0xff);
+                    array[j + 1] = (byte)((r >> 8) & 0xff);
+                    array[j + 2] = (byte)((r >> 16) & 0xff);
+                    j += 2;
+                } else {
+                    array[j] = (byte)rand.NextValue(256);
+                }
+            }
+            java.io.ByteArrayInputStream ms=null;
+try {
+ms=new java.io.ByteArrayInputStream(array);
+int startingAvailable=ms.available();
+
+                while ((startingAvailable-ms.available()) != startingAvailable) {
+                    try {
+                        CBORObject o = CBORObject.Read(ms);
+                        if (o == null) {
+                            Assert.fail("Object read is null");
+                        }
+                        try {
+                            CBORObject.DecodeFromBytes(o.EncodeToBytes());
+                        }
+                        catch (Exception ex) {
+                            Assert.fail(ex.toString());
+                            throw new IllegalStateException("", ex);
+                        }
+                        String jsonString = "";
+                        try {
+                            if (o.getType() == CBORType.Array || o.getType() == CBORType.Map) {
+                                jsonString = o.ToJSONString();
+                                CBORObject.FromJSONString(jsonString);
+                            }
+                        }
+                        catch (Exception ex) {
+                            Assert.fail(jsonString + "\n" + ex.toString());
+                            throw new IllegalStateException("", ex);
+                        }
+                    }
+                    catch (CBORException ex) {
+                        // Expected exception
+                    }
+                }
+}
+finally {
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
+}
+        }
+    }
+
+    @Test(timeout=20000)
+    public void TestRandomSlightlyModified() {
+        FastRandom rand = new FastRandom();
+        // Test slightly modified objects
+        for (int i = 0; i < 200; ++i) {
+            CBORObject originalObject = RandomCBORObject(rand);
+            byte[] array = originalObject.EncodeToBytes();
+            // System.out.println(originalObject);
+            int count2 = rand.NextValue(10) + 1;
+            for (int j = 0; j < count2; ++j) {
+                int index = rand.NextValue(array.length);
+                array[index] = ((byte)rand.NextValue(256));
+            }
+            java.io.ByteArrayInputStream ms=null;
+try {
+ms=new java.io.ByteArrayInputStream(array);
+int startingAvailable=ms.available();
+
+                while ((startingAvailable-ms.available()) != startingAvailable) {
+                    try {
+                        CBORObject o = CBORObject.Read(ms);
+                        if (o == null) {
+                            Assert.fail("Object read is null");
+                        }
+                        byte[] encodedBytes = o.EncodeToBytes();
+                        try {
+                            CBORObject.DecodeFromBytes(encodedBytes);
+                        }
+                        catch (Exception ex) {
+                            Assert.fail(ex.toString());
+                            throw new IllegalStateException("", ex);
+                        }
+                        String jsonString = "";
+                        try {
+                            if (o.getType() == CBORType.Array || o.getType() == CBORType.Map) {
+                                jsonString = o.ToJSONString();
+                                // reread JSON String to test validity
+                                CBORObject.FromJSONString(jsonString);
+                            }
+                        }
+                        catch (Exception ex) {
+                            Assert.fail(jsonString + "\n" + ex.toString());
+                            throw new IllegalStateException("", ex);
+                        }
+                    }
+                    catch (CBORException ex) {
+                        // Expected exception
+                    }
+                }
+}
+finally {
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
+}
+        }
+    }
+
     /**
      * Not documented yet.
      */
-    @Test(timeout=20000)
+    @Test
+    // [Timeout(20000)]
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
       CBORObject obj;
@@ -1291,104 +1405,8 @@ try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
       }
        // */
       // System.out.println("Testing slightly modified objects");
-      // Test slightly modified objects
-      for (int i = 0; i < 200; ++i) {
-        byte[] array = RandomCBORObject(rand).EncodeToBytes();
-        int count2 = rand.NextValue(10) + 1;
-        for (int j = 0; j < count2; ++j) {
-          int index = rand.NextValue(array.length);
-          array[index] = ((byte)rand.NextValue(256));
-        }
-        java.io.ByteArrayInputStream ms=null;
-try {
-ms=new java.io.ByteArrayInputStream(array);
-int startingAvailable=ms.available();
-
-          while ((startingAvailable-ms.available()) != startingAvailable) {
-            try {
-              CBORObject o = CBORObject.Read(ms);
-              if (o == null) {
-                Assert.fail("Object read is null");
-              }
-              byte[] encodedBytes = o.EncodeToBytes();
-              try {
-                CBORObject.DecodeFromBytes(encodedBytes);
-              } catch (Exception ex) {
-                Assert.fail(ex.toString());
-                throw new IllegalStateException("", ex);
-              }
-              String jsonString = "";
-              try {
-                if (o.getType() == CBORType.Array || o.getType() == CBORType.Map) {
-                  jsonString = o.ToJSONString();
-                  // reread JSON String to test validity
-                  CBORObject.FromJSONString(jsonString);
-                }
-              } catch (Exception ex) {
-                Assert.fail(jsonString + "\n" + ex.toString());
-                throw new IllegalStateException("", ex);
-              }
-            } catch (CBORException ex) {
-              // Expected exception
-            }
-          }
-}
-finally {
-try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
-}
-      }
       /*
       // Test random nonsense data
-      System.out.println("Testing random nonsense");
-      for (int i = 0; i < 200; ++i) {
-        byte[] array = new byte[rand.NextValue(1000000) + 1];
-        for (int j = 0; j < array.length; ++j) {
-          if (j + 3 <= array.length) {
-            int r = rand.NextValue(0x1000000);
-            array[j] = (byte)(r & 0xff);
-            array[j + 1] = (byte)((r >> 8) & 0xff);
-            array[j + 2] = (byte)((r >> 16) & 0xff);
-            j += 2;
-          } else {
-            array[j] = (byte)rand.NextValue(256);
-          }
-        }
-        java.io.ByteArrayInputStream ms=null;
-try {
-ms=new java.io.ByteArrayInputStream(array);
-int startingAvailable=ms.available();
-
-          while ((startingAvailable-ms.available()) != startingAvailable) {
-            try {
-              CBORObject o = CBORObject.Read(ms);
-              if (o == null) {
-                Assert.fail("Object read is null");
-              }
-              try {
-                CBORObject.DecodeFromBytes(o.EncodeToBytes());
-              } catch (Exception ex) {
-                Assert.fail(ex.toString());
-                throw new IllegalStateException("", ex);
-              }
-              String jsonString = "";
-              try {
-                if (o.getType() == CBORType.Array || o.getType() == CBORType.Map) {
-                  jsonString = o.ToJSONString();
-                  CBORObject.FromJSONString(jsonString);
-                }
-              } catch (Exception ex) {
-                Assert.fail(jsonString + "\n" + ex.toString());
-                throw new IllegalStateException("", ex);
-              }
-            } catch (CBORException ex) {
-              // Expected exception
-            }
-          }
-}
-finally {
-try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
-}
-      }
        */
     }
 
