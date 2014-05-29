@@ -4336,7 +4336,7 @@ if (bytes.Length <= 0) {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="BigInteger is immutable")]
+      Justification = "BigInteger is immutable")]
     #endif
     public static readonly BigInteger ZERO = new BigInteger().InitializeInt(0);
 
@@ -4345,7 +4345,7 @@ if (bytes.Length <= 0) {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="BigInteger is immutable")]
+      Justification = "BigInteger is immutable")]
     #endif
 
     public static readonly BigInteger ONE = new BigInteger().InitializeInt(1);
@@ -4355,7 +4355,7 @@ if (bytes.Length <= 0) {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="BigInteger is immutable")]
+      Justification = "BigInteger is immutable")]
     #endif
 
     public static readonly BigInteger TEN = new BigInteger().InitializeInt(10);
