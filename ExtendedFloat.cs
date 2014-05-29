@@ -794,7 +794,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="ExtendedFloat is immutable")]
+      Justification = "ExtendedFloat is immutable")]
     #endif
     public static readonly ExtendedFloat One = ExtendedFloat.Create(BigInteger.One, BigInteger.Zero);
 
@@ -803,14 +803,14 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="ExtendedFloat is immutable")]
+      Justification = "ExtendedFloat is immutable")]
     #endif
     public static readonly ExtendedFloat Zero = ExtendedFloat.Create(BigInteger.Zero, BigInteger.Zero);
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="ExtendedFloat is immutable")]
+      Justification = "ExtendedFloat is immutable")]
     #endif
     public static readonly ExtendedFloat NegativeZero = CreateWithFlags(
       BigInteger.Zero,
@@ -822,7 +822,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="ExtendedFloat is immutable")]
+      Justification = "ExtendedFloat is immutable")]
     #endif
 
     public static readonly ExtendedFloat Ten = ExtendedFloat.Create((BigInteger)10, BigInteger.Zero);

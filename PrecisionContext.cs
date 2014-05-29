@@ -446,7 +446,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This PrecisionContext is immutable")]
+      Justification = "This PrecisionContext is immutable")]
     #endif
 
     public static readonly PrecisionContext Unlimited = PrecisionContext.ForPrecision(0);
@@ -457,7 +457,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This PrecisionContext is immutable")]
+      Justification = "This PrecisionContext is immutable")]
     #endif
     public static readonly PrecisionContext Binary16 =
       PrecisionContext.ForPrecisionAndRounding(11, Rounding.HalfEven)
@@ -470,7 +470,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This PrecisionContext is immutable")]
+      Justification = "This PrecisionContext is immutable")]
     #endif
     public static readonly PrecisionContext Binary32 =
       PrecisionContext.ForPrecisionAndRounding(24, Rounding.HalfEven)
@@ -483,7 +483,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This PrecisionContext is immutable")]
+      Justification = "This PrecisionContext is immutable")]
     #endif
     public static readonly PrecisionContext Binary64 =
       PrecisionContext.ForPrecisionAndRounding(53, Rounding.HalfEven)
@@ -496,7 +496,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This PrecisionContext is immutable")]
+      Justification = "This PrecisionContext is immutable")]
     #endif
     public static readonly PrecisionContext Binary128 =
       PrecisionContext.ForPrecisionAndRounding(113, Rounding.HalfEven)
@@ -508,7 +508,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This PrecisionContext is immutable")]
+      Justification = "This PrecisionContext is immutable")]
     #endif
 
     public static readonly PrecisionContext Decimal32 =
@@ -519,7 +519,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This PrecisionContext is immutable")]
+      Justification = "This PrecisionContext is immutable")]
     #endif
 
     public static readonly PrecisionContext Decimal64 =
@@ -530,7 +530,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This PrecisionContext is immutable")]
+      Justification = "This PrecisionContext is immutable")]
     #endif
 
     public static readonly PrecisionContext Decimal128 =
@@ -542,7 +542,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This PrecisionContext is immutable")]
+      Justification = "This PrecisionContext is immutable")]
     #endif
     public static readonly PrecisionContext Basic =
       PrecisionContext.ForPrecisionAndRounding(9, Rounding.HalfUp);
@@ -554,7 +554,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This PrecisionContext is immutable")]
+      Justification = "This PrecisionContext is immutable")]
     #endif
 
     public static readonly PrecisionContext CliDecimal =

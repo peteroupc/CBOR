@@ -151,7 +151,7 @@ namespace PeterO.Cbor {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This CBORObject is immutable")]
+      Justification = "This CBORObject is immutable")]
     #endif
 
     public static readonly CBORObject False = new CBORObject(CBORObjectTypeSimpleValue, 20);
@@ -161,7 +161,7 @@ namespace PeterO.Cbor {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This CBORObject is immutable")]
+      Justification = "This CBORObject is immutable")]
     #endif
 
     public static readonly CBORObject True = new CBORObject(CBORObjectTypeSimpleValue, 21);
@@ -171,7 +171,7 @@ namespace PeterO.Cbor {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This CBORObject is immutable")]
+      Justification = "This CBORObject is immutable")]
     #endif
 
     public static readonly CBORObject Null = new CBORObject(CBORObjectTypeSimpleValue, 22);
@@ -181,7 +181,7 @@ namespace PeterO.Cbor {
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
-      Justification="This CBORObject is immutable")]
+      Justification = "This CBORObject is immutable")]
     #endif
 
     public static readonly CBORObject Undefined = new CBORObject(CBORObjectTypeSimpleValue, 23);
