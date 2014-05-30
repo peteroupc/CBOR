@@ -308,7 +308,7 @@ namespace PeterO {
     /// . 0: Both strings are equal or null. Less than 0: a is null and b isn't;
     /// or the first code point that's different is less in A than in B; or b starts
     /// with a and is longer than a. Greater than 0: b is null and a isn't; or the
-    /// first code point that' s different is greater in A than in B; or a starts
+    /// first code point that's different is greater in A than in B; or a starts
     /// with b and is longer than b.</returns>
     /// <param name='strA'>The first string. Can be null.</param>
     /// <param name='strB'>The second string. Can be null.</param>
@@ -365,6 +365,26 @@ namespace PeterO {
       return (strA.Length < strB.Length) ? -1 : 1;
     }
 
+    /// <summary>Writes a portion of a string in UTF-8 encoding to a data stream.</summary>
+    /// <param name='str'>A string to write.</param>
+    /// <param name='offset'>The zero-based index where the string portion
+    /// to write begins.</param>
+    /// <param name='length'>The length of the string portion to write.</param>
+    /// <param name='stream'>A writable data stream.</param>
+    /// <param name='replace'>If true, replaces unpaired surrogate code
+    /// points with the replacement character (U + FFFD). If false, stops
+    /// processing when an unpaired surrogate code point is seen.</param>
+    /// <returns>0 if the entire string portion was written; or -1 if the string
+    /// portion contains an unpaired surrogate code point and <paramref
+    /// name='replace'/> is false.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null or <paramref name='stream'/> is
+    /// null.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='offset'/> is less than 0, <paramref name='length'/> is less
+    /// than 0, or <paramref name='offset'/> plus <paramref name='length'/>
+    /// is greater than the string's length.</exception>
+    /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     public static int WriteUtf8(String str, int offset, int length, Stream stream, bool replace) {
       return WriteUtf8(str, offset, length, stream, replace, false);
     }

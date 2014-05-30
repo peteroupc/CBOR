@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-// import java.math.*;
-
     /**
      * A mutable integer class initially backed by a small integer, that
      * only uses a big integer when arithmetic operations would overflow
@@ -68,11 +66,6 @@ at: http://upokecenter.com/d/
         this.data[0] = ((int)(val & 0xFFFFFFFFL));
       }
 
-    /**
-     * Not documented yet.
-     * @param val A 32-bit signed integer.
-     * @return A MutableNumber object.
-     */
       public MutableNumber SetInt(int val) {
         if (val < 0) {
           throw new IllegalArgumentException("val (" + Integer.toString((int)val) + ") is less than " + "0");
@@ -82,10 +75,6 @@ at: http://upokecenter.com/d/
         return this;
       }
 
-    /**
-     * Not documented yet.
-     * @return A BigInteger object.
-     */
       public BigInteger ToBigInteger() {
         if (this.wordCount == 1 && (this.data[0] >> 31) == 0) {
           return BigInteger.valueOf((int)this.data[0]);
@@ -107,26 +96,14 @@ at: http://upokecenter.com/d/
         return ret;
       }
 
-    /**
-     * Not documented yet.
-     * @return A Boolean object.
-     */
       public boolean CanFitInInt32() {
         return this.wordCount == 0 || (this.wordCount == 1 && (this.data[0] >> 31) == 0);
       }
 
-    /**
-     * Not documented yet.
-     * @return A 32-bit signed integer.
-     */
       public int ToInt32() {
         return this.wordCount == 0 ? 0 : this.data[0];
       }
 
-    /**
-     * Not documented yet.
-     * @return A MutableNumber object.
-     */
       public MutableNumber Copy() {
         MutableNumber mbi = new MutableNumber(0);
         if (this.wordCount > mbi.data.length) {
@@ -244,17 +221,13 @@ at: http://upokecenter.com/d/
         return this;
       }
 
-    /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
-     */
       public int signum() {
           return this.wordCount == 0 ? 0 : 1;
         }
 
     /**
      * Gets a value indicating whether this value is even.
-     * @return True if this value is even; otherwise, false..
+     * @return True if this value is even; otherwise, false.
      */
       public boolean isEvenNumber() {
           return this.wordCount == 0 || (this.data[0] & 1) == 0;
@@ -262,8 +235,9 @@ at: http://upokecenter.com/d/
 
     /**
      * Compares a 32-bit signed integer with this instance.
-     * @param val A 32-bit signed integer. (2).
-     * @return A 32-bit signed integer.
+     * @param val A 32-bit signed integer.
+     * @return Zero if the values are equal; a negative number if this instance
+     * is less, or a positive number if this instance is greater.
      */
       public int CompareToInt(int val) {
         if (val < 0 || this.wordCount > 1) {
@@ -480,10 +454,6 @@ at: http://upokecenter.com/d/
       }
     }
 
-    /**
-     * Not documented yet.
-     * @return A 32-bit signed integer.
-     */
     public int AsInt32() {
       switch (this.integerMode) {
         case 0:
@@ -529,10 +499,6 @@ at: http://upokecenter.com/d/
       }
     }
 
-    /**
-     * Not documented yet.
-     * @return A FastInteger object.
-     */
     public FastInteger Abs() {
       return (this.signum() < 0) ? this.Negate() : this;
     }
@@ -557,22 +523,12 @@ at: http://upokecenter.com/d/
       return MutableNumber.FromBigInteger(bigint).GetLastWordsInternal(numWords32Bit);
     }
 
-    /**
-     * Not documented yet.
-     * @param val A 32-bit signed integer.
-     * @return A FastInteger object.
-     */
     public FastInteger SetInt(int val) {
       this.smallValue = val;
       this.integerMode = 0;
       return this;
     }
 
-    /**
-     * Not documented yet.
-     * @param divisor A FastInteger object.
-     * @return A 32-bit signed integer.
-     */
     public int RepeatedSubtract(FastInteger divisor) {
       if (this.integerMode == 1) {
         int count = 0;
@@ -842,11 +798,6 @@ bigrem=divrem[1]; }
       }
     }
 
-    /**
-     * Not documented yet.
-     * @param val A FastInteger object. (2).
-     * @return A FastInteger object.
-     */
     public FastInteger Add(FastInteger val) {
       BigInteger valValue;
       switch (this.integerMode) {
@@ -928,10 +879,6 @@ bigrem=divrem[1]; }
       return this;
     }
 
-    /**
-     * Not documented yet.
-     * @return A FastInteger object.
-     */
     public FastInteger Increment() {
       if (this.integerMode == 0) {
         if (this.smallValue != Integer.MAX_VALUE) {
@@ -946,10 +893,6 @@ bigrem=divrem[1]; }
       }
     }
 
-    /**
-     * Not documented yet.
-     * @return A FastInteger object.
-     */
     public FastInteger Decrement() {
       if (this.integerMode == 0) {
         if (this.smallValue != Integer.MIN_VALUE) {
@@ -1009,7 +952,7 @@ bigrem=divrem[1]; }
 
     /**
      * Gets a value indicating whether this object&apos;s value is even.
-     * @return True if this object's value is even; otherwise, false..
+     * @return True if this object's value is even; otherwise, false.
      */
     public boolean isEvenNumber() {
         switch (this.integerMode) {
@@ -1069,10 +1012,6 @@ bigrem=divrem[1]; }
       return this;
     }
 
-    /**
-     * Not documented yet.
-     * @return A Boolean object.
-     */
     public boolean CanFitInInt32() {
       switch (this.integerMode) {
         case 0:
@@ -1123,7 +1062,7 @@ bigrem=divrem[1]; }
 
     /**
      * Gets a value indicating whether this value is zero.
-     * @return True if this value is zero; otherwise, false..
+     * @return True if this value is zero; otherwise, false.
      */
     public boolean isValueZero() {
         switch (this.integerMode) {
@@ -1157,10 +1096,6 @@ bigrem=divrem[1]; }
       }
     }
 
-    /**
-     * Not documented yet.
-     * @return A BigInteger object.
-     */
     public BigInteger AsBigInteger() {
       switch (this.integerMode) {
         case 0:

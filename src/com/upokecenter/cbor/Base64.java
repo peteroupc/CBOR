@@ -9,21 +9,12 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-    /**
-     * Description of Base64.
-     */
   final class Base64 {
 private Base64() {
 }
     private static final String Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     private static final String Base64Classic = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    /**
-     * Not documented yet.
-     * @param str A StringBuilder object.
-     * @param data A byte array.
-     * @param padding A Boolean object.
-     */
     public static void ToBase64(StringBuilder str, byte[] data, boolean padding) {
       if (data == null) {
         throw new NullPointerException("data");

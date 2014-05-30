@@ -14,10 +14,11 @@ namespace PeterO.Cbor {
   {
     /// <summary>Gets a type filter specifying what kinds of CBOR objects
     /// are supported by this tag.</summary>
-    /// <returns/>
+    /// <returns>A CBOR type filter.</returns>
     CBORTypeFilter GetTypeFilter();
 
     // NOTE: Will be passed an object with the corresponding tag
+    /// <summary>Not documented yet.</summary>
     CBORObject ValidateObject(CBORObject obj);
   }
 }

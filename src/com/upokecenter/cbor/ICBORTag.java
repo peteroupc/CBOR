@@ -16,9 +16,13 @@ at: http://upokecenter.com/d/
     /**
      * Gets a type filter specifying what kinds of CBOR objects are supported
      * by this tag.
+     * @return A CBOR type filter.
      */
     CBORTypeFilter GetTypeFilter();
 
     // NOTE: Will be passed an object with the corresponding tag
+    /**
+     * Not documented yet.
+     */
     CBORObject ValidateObject(CBORObject obj);
   }

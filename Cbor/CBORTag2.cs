@@ -9,11 +9,8 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Description of CBORTag2.</summary>
   internal class CBORTag2 : ICBORTag
   {
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.ByteString;
     }
@@ -86,9 +83,6 @@ namespace PeterO.Cbor {
       return CBORObject.FromObject(bi);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>A CBORObject object. (2).</param>
-    /// <returns>A CBORObject object.</returns>
     public CBORObject ValidateObject(CBORObject obj) {
       return ConvertToBigNum(obj, false);
     }

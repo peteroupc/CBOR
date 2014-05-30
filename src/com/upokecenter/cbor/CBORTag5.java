@@ -9,9 +9,6 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-    /**
-     * Description of CBORTag5.
-     */
   class CBORTag5 implements ICBORTag
   {
     private static CBORTypeFilter valueFilter = new CBORTypeFilter().WithArrayExactLength(
@@ -19,10 +16,6 @@ import com.upokecenter.util.*;
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger(),
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
 
-    /**
-     * Not documented yet.
-     * @return A CBORTypeFilter object.
-     */
     public CBORTypeFilter GetTypeFilter() {
       return valueFilter;
     }
@@ -57,11 +50,6 @@ import com.upokecenter.util.*;
       }
     }
 
-    /**
-     * Not documented yet.
-     * @param obj A CBORObject object. (2).
-     * @return A CBORObject object.
-     */
     public CBORObject ValidateObject(CBORObject obj) {
       return ConvertToDecimalFrac(obj, false);
     }

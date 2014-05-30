@@ -9,7 +9,6 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Description of CBORTag0.</summary>
   internal class CBORTag0 : ICBORTag, ICBORConverter<DateTime>
   {
     private static string DateTimeToString(DateTime bi) {
@@ -57,15 +56,10 @@ namespace PeterO.Cbor {
       CBORObject.AddConverter(typeof(DateTime), new CBORTag0());
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.TextString;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>A CBORObject object. (2).</param>
-    /// <returns>A CBORObject object.</returns>
     public CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {
         throw new CBORException("Not a text string");
@@ -73,9 +67,6 @@ namespace PeterO.Cbor {
       return obj;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>A DateTime object.</param>
-    /// <returns>A CBORObject object.</returns>
     public CBORObject ToCBORObject(DateTime obj) {
       return CBORObject.FromObjectAndTag(DateTimeToString(obj), 0);
     }

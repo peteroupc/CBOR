@@ -56,7 +56,7 @@ namespace PeterO {
     /// minimum and maximum exponent. If false, converted exponents can
     /// have any exponent and operations can't cause overflow or underflow.</summary>
     /// <value>True if this context defines a minimum and maximum exponent;
-    /// otherwise, false..</value>
+    /// otherwise, false.</value>
     public bool HasExponentRange {
       get {
         return this.hasExponentRange;
@@ -66,7 +66,7 @@ namespace PeterO {
     /// <summary>Gets a value indicating whether this context defines a
     /// maximum precision.</summary>
     /// <value>True if this context defines a maximum precision; otherwise,
-    /// false..</value>
+    /// false.</value>
     public bool HasMaxPrecision {
       get {
         return !this.bigintPrecision.IsZero;
@@ -136,7 +136,7 @@ namespace PeterO {
     /// <summary>Gets a value indicating whether this context has a mutable
     /// Flags field.</summary>
     /// <value>True if this context has a mutable Flags field; otherwise,
-    /// false..</value>
+    /// false.</value>
     public bool HasFlags {
       get {
         return this.hasFlags;
@@ -332,7 +332,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether to use a "simplified" arithmetic.</summary>
     /// <value>True if to use a &quot;simplified&quot; arithmetic; otherwise,
-    /// false..</value>
+    /// false.</value>
     public bool IsSimplified {
       get {
         return this.simplified;
@@ -411,14 +411,24 @@ namespace PeterO {
       return pcnew;
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A PrecisionContext object.</returns>
+    /// <param name='precision'>A 32-bit signed integer.</param>
     public static PrecisionContext ForPrecision(int precision) {
       return new PrecisionContext(precision, Rounding.HalfUp, 0, 0, false).WithUnlimitedExponents();
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A PrecisionContext object.</returns>
+    /// <param name='rounding'>A Rounding object.</param>
     public static PrecisionContext ForRounding(Rounding rounding) {
       return new PrecisionContext(0, rounding, 0, 0, false).WithUnlimitedExponents();
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A PrecisionContext object.</returns>
+    /// <param name='precision'>A 32-bit signed integer.</param>
+    /// <param name='rounding'>A Rounding object.</param>
     public static PrecisionContext ForPrecisionAndRounding(int precision, Rounding rounding) {
       return new PrecisionContext(precision, rounding, 0, 0, false).WithUnlimitedExponents();
     }

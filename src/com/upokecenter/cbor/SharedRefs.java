@@ -10,9 +10,6 @@ at: http://upokecenter.com/d/
 import java.util.*;
 import com.upokecenter.util.*;
 
-    /**
-     * Description of SharedRefs.
-     */
   class SharedRefs
   {
     private List<CBORObject> sharedObjects;
@@ -21,19 +18,10 @@ import com.upokecenter.util.*;
       this.sharedObjects = new ArrayList<CBORObject>();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj A CBORObject object.
-     */
     public void AddObject(CBORObject obj) {
         this.sharedObjects.add(obj);
     }
 
-    /**
-     * Not documented yet.
-     * @param smallIndex A 64-bit signed integer.
-     * @return A string object.
-     */
     public CBORObject GetObject(long smallIndex) {
       if (smallIndex < 0) {
         throw new CBORException("Unexpected index");
@@ -48,11 +36,6 @@ import com.upokecenter.util.*;
       return this.sharedObjects.get(index);
     }
 
-    /**
-     * Not documented yet.
-     * @param bigIndex A BigInteger object.
-     * @return A string object.
-     */
     public CBORObject GetObject(BigInteger bigIndex) {
       if (bigIndex.signum() < 0) {
         throw new CBORException("Unexpected index");

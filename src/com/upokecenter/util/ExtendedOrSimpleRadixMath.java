@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     * Description of ExtendedOrSimpleRadixMath.
+     *
      * @param <T> Number data type.
      */
   class ExtendedOrSimpleRadixMath<T> implements IRadixMath<T>
@@ -22,7 +22,7 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
+     *
      * @return An IRadixMathHelper(T) object.
      */
 public IRadixMathHelper<T> GetHelper() {
@@ -31,47 +31,21 @@ public IRadixMathHelper<T> GetHelper() {
       return this.ext.GetHelper();
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param divisor A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.DivideToIntegerNaturalScale(thisValue, divisor, ctx) :
         this.simp.DivideToIntegerNaturalScale(thisValue, divisor, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param divisor A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T DivideToIntegerZeroScale(T thisValue, T divisor, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.DivideToIntegerZeroScale(thisValue, divisor, ctx) :
         this.simp.DivideToIntegerZeroScale(thisValue, divisor, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param value A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Abs(T value, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Abs(value, ctx) :
         this.simp.Abs(value, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param value A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Negate(T value, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Negate(value, ctx) :
         this.simp.Negate(value, ctx);
@@ -89,125 +63,55 @@ public T Remainder(T thisValue, T divisor, PrecisionContext ctx) {
         this.simp.Remainder(thisValue, divisor, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param divisor A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T RemainderNear(T thisValue, T divisor, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.RemainderNear(thisValue, divisor, ctx) :
         this.simp.RemainderNear(thisValue, divisor, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Pi(PrecisionContext ctx) {
       return (!ctx.isSimplified()) ? this.ext.Pi(ctx) : this.simp.Pi(ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param pow A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Power(T thisValue, T pow, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Power(thisValue, pow, ctx) :
         this.simp.Power(thisValue, pow, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Log10(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Log10(thisValue, ctx) :
         this.simp.Log10(thisValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Ln(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Ln(thisValue, ctx) :
         this.simp.Ln(thisValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Exp(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Exp(thisValue, ctx) :
         this.simp.Exp(thisValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T SquareRoot(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.SquareRoot(thisValue, ctx) :
         this.simp.SquareRoot(thisValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T NextMinus(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.NextMinus(thisValue, ctx) :
         this.simp.NextMinus(thisValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param otherValue A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T NextToward(T thisValue, T otherValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.NextToward(thisValue, otherValue, ctx) :
         this.simp.NextToward(thisValue, otherValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T NextPlus(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.NextPlus(thisValue, ctx) :
         this.simp.NextPlus(thisValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param divisor A T object. (3).
-     * @param desiredExponent A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T DivideToExponent(T thisValue, T divisor, BigInteger desiredExponent, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.DivideToExponent(thisValue, divisor, desiredExponent, ctx) :
         this.simp.DivideToExponent(thisValue, divisor, desiredExponent, ctx);
@@ -225,46 +129,18 @@ public T Divide(T thisValue, T divisor, PrecisionContext ctx) {
         this.simp.Divide(thisValue, divisor, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param a A T object. (2).
-     * @param b A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T MinMagnitude(T a, T b, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.MinMagnitude(a, b, ctx) : this.simp.MinMagnitude(a, b, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param a A T object. (2).
-     * @param b A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T MaxMagnitude(T a, T b, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.MaxMagnitude(a, b, ctx) : this.simp.MaxMagnitude(a, b, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param a A T object. (2).
-     * @param b A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Max(T a, T b, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Max(a, b, ctx) : this.simp.Max(a, b, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param a A T object. (2).
-     * @param b A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Min(T a, T b, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Min(a, b, ctx) : this.simp.Min(a, b, ctx);
     }
@@ -281,142 +157,61 @@ public T Multiply(T thisValue, T other, PrecisionContext ctx) {
         this.simp.Multiply(thisValue, other, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param multiplicand A T object. (3).
-     * @param augend A T object. (4).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.MultiplyAndAdd(thisValue, multiplicand, augend, ctx) :
         this.simp.MultiplyAndAdd(thisValue, multiplicand, augend, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T RoundToBinaryPrecision(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToBinaryPrecision(thisValue, ctx) :
         this.simp.RoundToBinaryPrecision(thisValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Plus(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Plus(thisValue, ctx) :
         this.simp.Plus(thisValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T RoundToPrecision(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToPrecision(thisValue, ctx) :
         this.simp.RoundToPrecision(thisValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundAfterConversion(thisValue, ctx) :
         this.simp.RoundAfterConversion(thisValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param otherValue A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Quantize(T thisValue, T otherValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Quantize(thisValue, otherValue, ctx) :
         this.simp.Quantize(thisValue, otherValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param expOther A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T RoundToExponentExact(T thisValue, BigInteger expOther, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToExponentExact(thisValue, expOther, ctx) :
         this.simp.RoundToExponentExact(thisValue, expOther, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param expOther A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T RoundToExponentSimple(T thisValue, BigInteger expOther, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToExponentSimple(thisValue, expOther, ctx) :
         this.simp.RoundToExponentSimple(thisValue, expOther, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param exponent A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T RoundToExponentNoRoundedFlag(T thisValue, BigInteger exponent, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx) :
         this.simp.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Reduce(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Reduce(thisValue, ctx) :
         this.simp.Reduce(thisValue, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param other A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
 public T Add(T thisValue, T other, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Add(thisValue, other, ctx) :
         this.simp.Add(thisValue, other, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param other A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @param roundToOperandPrecision A Boolean object.
-     * @return A T object.
-     */
 public T AddEx(T thisValue, T other, PrecisionContext ctx, boolean roundToOperandPrecision) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.AddEx(thisValue, other, ctx, roundToOperandPrecision) :
         this.simp.AddEx(thisValue, other, ctx, roundToOperandPrecision);

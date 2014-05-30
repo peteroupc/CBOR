@@ -242,9 +242,9 @@ namespace PeterO {
     /// <summary>Insert cell as the left child of current node, and then rebalance
     /// the tree it is in. @return the new root of the current tree. (Rebalancing
     /// can change the root!).</summary>
-    /// <returns>A RBCell object.</returns>
     /// <param name='cell'>The cell to add.</param>
     /// <param name='root'>Root, the root of the current tree.</param>
+    /// <returns>A RBCell object.</returns>
       public RBCell insertLeft(RBCell cell, RBCell root) {
         this.leftValue = cell;
         cell.parentValue = this;
@@ -524,10 +524,6 @@ namespace PeterO {
       return this.treeValue.find(element, this.cmpValue) != null;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='element'>A T object.</param>
-    /// <param name='outval'>A T object. (2).</param>
-    /// <returns>A Boolean object.</returns>
     public bool Find(T element, out T outval) {
       if (this.countValue == 0) {
         outval = default(T);
@@ -542,9 +538,6 @@ namespace PeterO {
       return true;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='element'>A T object.</param>
-    /// <returns>A 32-bit signed integer.</returns>
     public int OccurrencesOf(T element) {
       if (this.countValue == 0) {
         return 0;
@@ -559,15 +552,10 @@ namespace PeterO {
       this.treeValue = null;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='element'>A T object.</param>
     public void RemoveAll(T element) {
       this.remove_(element, true);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='element'>A T object.</param>
-    /// <returns>A Boolean object.</returns>
     public bool Remove(T element) {
       return this.remove_(element, false);
     }
@@ -597,22 +585,14 @@ namespace PeterO {
       OverwriteIfExisting
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='element'>A T object.</param>
-    /// <returns>A Boolean object.</returns>
     public bool AddIfMissing(T element) {
       return this.addInternal(element, OccurrenceMode.AddIfMissing);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='element'>A T object.</param>
-    /// <returns>A Boolean object.</returns>
     public bool AddOverwrite(T element) {
       return this.addInternal(element, OccurrenceMode.OverwriteIfExisting);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='element'>A T object.</param>
     public void Add(T element) {
       this.addInternal(element, OccurrenceMode.AlwaysAdd);
     }
@@ -693,8 +673,6 @@ namespace PeterO {
       --this.countValue;
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
     public int Count {
       get {
         return this.countValue;
@@ -709,7 +687,6 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <param name='array'>A T[] object.</param>
     /// <param name='arrayIndex'>A 32-bit signed integer.</param>
     public void CopyTo(T[] array, int arrayIndex) {
@@ -726,7 +703,6 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <returns>An IEnumerator(T) object.</returns>
     public IEnumerator<T> GetEnumerator() {
       return this.Iterator().GetEnumerator();

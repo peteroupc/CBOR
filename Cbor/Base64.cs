@@ -11,16 +11,11 @@ using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Description of Base64.</summary>
   internal static class Base64
   {
     private const string Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     private const string Base64Classic = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='str'>A StringBuilder object.</param>
-    /// <param name='data'>A byte array.</param>
-    /// <param name='padding'>A Boolean object.</param>
     public static void ToBase64(StringBuilder str, byte[] data, bool padding) {
       if (data == null) {
         throw new ArgumentNullException("data");

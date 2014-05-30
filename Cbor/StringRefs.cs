@@ -22,13 +22,11 @@ namespace PeterO.Cbor {
       this.stack.Add(firstItem);
     }
 
-    /// <summary>Not documented yet.</summary>
     public void Push() {
       var firstItem = new List<CBORObject>();
       this.stack.Add(firstItem);
     }
 
-    /// <summary>Not documented yet.</summary>
     public void Pop() {
       #if DEBUG
       if (this.stack.Count <= 0) {
@@ -39,9 +37,6 @@ namespace PeterO.Cbor {
       this.stack.RemoveAt(this.stack.Count - 1);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='str'>A string object.</param>
-    /// <param name='lengthHint'>A 32-bit signed integer.</param>
     public void AddStringIfNeeded(CBORObject str, int lengthHint) {
       #if DEBUG
       if (str == null) {
@@ -84,9 +79,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='smallIndex'>A 64-bit signed integer.</param>
-    /// <returns>A string object.</returns>
     public CBORObject GetString(long smallIndex) {
       if (smallIndex < 0) {
         throw new CBORException("Unexpected index");
@@ -108,9 +100,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A string object.</returns>
-    /// <param name='bigIndex'>A BigInteger object.</param>
     public CBORObject GetString(BigInteger bigIndex) {
       if (bigIndex.Sign < 0) {
         throw new CBORException("Unexpected index");

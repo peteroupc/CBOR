@@ -9,7 +9,6 @@ using System;
 using System.Reflection;
 
 namespace PeterO {
-    /// <summary>Description of DebugUtility.</summary>
   internal class DebugUtility
   {
     [System.Diagnostics.Conditional("DEBUG")]

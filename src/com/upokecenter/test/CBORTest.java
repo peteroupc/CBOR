@@ -410,9 +410,6 @@ import com.upokecenter.cbor.*;
       CompareTestEqual(o, o2);
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestAdd() {
       FastRandom r = new FastRandom();
@@ -468,9 +465,6 @@ import com.upokecenter.cbor.*;
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestSubtract() {
       FastRandom r = new FastRandom();
@@ -673,9 +667,6 @@ import com.upokecenter.cbor.*;
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     // [Timeout(10000)]
     public void TestCompare() {
@@ -803,9 +794,6 @@ import com.upokecenter.cbor.*;
       if((CBORDataUtilities.ParseJSONNumber("0.5e+88xyz", false, false, false))!=null)Assert.fail();
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestParseDecimalStrings() {
       FastRandom rand = new FastRandom();
@@ -1388,9 +1376,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     // [Timeout(20000)]
     public void TestRandomData() {
@@ -1425,9 +1410,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
        // */
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestExtendedFloatSingle() {
       FastRandom rand = new FastRandom();
@@ -1439,9 +1421,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestExtendedFloatDouble() {
       TestExtendedFloatDoubleCore(3.5, "3.5");
@@ -1463,9 +1442,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       TestCommon.FromBytesTestAB(new byte[] {  (byte)0xd1, (byte)0xff  });
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestJSONSurrogates() {
       try {
@@ -1513,9 +1489,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestJSONEscapedChars() {
       CBORObject o = CBORObject.FromJSONString(
@@ -1528,9 +1501,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       TestCommon.AssertRoundTrip(o);
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestCBORFromArray() {
       CBORObject o = CBORObject.FromObject(new int[] { 1, 2, 3 });
@@ -1541,9 +1511,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       TestCommon.AssertRoundTrip(o);
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestJSON() {
       CBORObject o;
@@ -1979,9 +1946,6 @@ try { if(ms2b!=null)ms2b.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals(CBORObject.False, CBORObject.FromObject(false));
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestByte() {
       for (int i = 0; i <= 255; ++i) {
@@ -1991,15 +1955,7 @@ try { if(ms2b!=null)ms2b.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     * @param bytes A byte array.
-     * @param expectedRet A 32-bit signed integer.
-     * @param expectedString A string object.
-     * @param noReplaceRet A 32-bit signed integer. (2).
-     * @param noReplaceString A string object. (2).
-     */
-    public void DoTestReadUtf8(
+     public void DoTestReadUtf8(
       byte[] bytes,
       int expectedRet,
       String expectedString,
@@ -2014,15 +1970,6 @@ try { if(ms2b!=null)ms2b.close(); } catch (java.io.IOException ex){}
         noReplaceString);
     }
 
-    /**
-     * Not documented yet.
-     * @param bytes A byte array.
-     * @param length A 32-bit signed integer.
-     * @param expectedRet A 32-bit signed integer. (2).
-     * @param expectedString A string object.
-     * @param noReplaceRet A 32-bit signed integer. (3).
-     * @param noReplaceString A string object. (2).
-     */
     public void DoTestReadUtf8(
       byte[] bytes,
       int length,
@@ -2072,9 +2019,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestDecFracOverflow() {
       Assert.assertEquals(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedDecimal());
@@ -2085,9 +2029,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       if(!(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN()))Assert.fail();
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestFPToBigInteger() {
       Assert.assertEquals("0", CBORObject.FromObject((float)0.75).AsBigInteger().toString());
@@ -2142,9 +2083,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestDecFracFP() {
       Assert.assertEquals("0.75", ExtendedDecimal.FromDouble(0.75).toString());
@@ -2159,9 +2097,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals("0.125", ExtendedDecimal.FromSingle(0.125f).toString());
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void ScaleTest() {
       Assert.assertEquals((BigInteger.valueOf(7)).negate(), ExtendedDecimal.FromString("1.265e-4").getExponent());
@@ -2216,9 +2151,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals((BigInteger.valueOf(3)).negate(), ExtendedDecimal.FromString("0.565055e+3").getExponent());
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestReadUtf8() {
       this.DoTestReadUtf8(
@@ -2434,9 +2366,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       return true;
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestArray() {
       CBORObject cbor = CBORObject.FromJSONString("[]");
@@ -2452,9 +2381,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals("[0,1,2,3,4,5,6,7]", cbor.ToJSONString());
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestMap() {
       CBORObject cbor = CBORObject.FromJSONString("{\"a\":2,\"b\":4}");
@@ -2496,9 +2422,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       return sb.toString();
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
@@ -2556,9 +2479,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         (byte)0xff  });
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestByteStringStream() {
       TestCommon.FromBytesTestAB(
@@ -2589,9 +2509,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       TestCommon.AssertRoundTrip(cb);
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void ZeroStringTests2() {
       Assert.assertEquals("0.0001265", ExtendedDecimal.FromString("1.265e-4").toString());
@@ -5210,9 +5127,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void FromDoubleTest() {
       Assert.assertEquals("0.213299999999999989608312489508534781634807586669921875", ExtendedDecimal.FromDouble(0.2133).toString());
@@ -5317,9 +5231,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals("313300000000", ExtendedDecimal.FromDouble(3.133E11).toString());
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void ToPlainStringTest() {
       Assert.assertEquals("277220000000", ExtendedDecimal.FromString("277.22E9").ToPlainString());
@@ -5424,9 +5335,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals("0.00000026818", ExtendedDecimal.FromString("268.18E-9").ToPlainString());
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void ToEngineeringStringTest() {
       Assert.assertEquals("8.912", ExtendedDecimal.FromString("89.12E-1").ToEngineeringString());
@@ -5531,9 +5439,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals("70.7E+6", ExtendedDecimal.FromString("70.7E6").ToEngineeringString());
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestDecimalsEquivalent() {
       AssertDecimalsEquivalent("1.310E-7", "131.0E-9");
@@ -5638,9 +5543,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       AssertDecimalsEquivalent("5.912E+7", "59.12E6");
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestAsByte() {
       for (int i = 0; i < 255; ++i) {
@@ -6136,9 +6038,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestExtendedFloatDecFrac() {
       ExtendedFloat bf;
@@ -6300,9 +6199,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestDecimalFrac() {
       TestCommon.FromBytesTestAB(
@@ -6330,9 +6226,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         4  });
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestDoubleToOther() {
       CBORObject dbl1 = CBORObject.FromObject((double)Integer.MIN_VALUE);
@@ -6395,9 +6288,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestBigTag() {
       CBORObject.FromObjectAndTag(CBORObject.Null, (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE));
@@ -6412,9 +6302,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         1  });
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestDecimalFracMantissaMayBeBignum() {
       CBORObject o = TestCommon.FromBytesTestAB(
@@ -6429,9 +6316,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         o.AsExtendedDecimal());
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestShort() {
       for (int i = Short.MIN_VALUE; i <= Short.MAX_VALUE; ++i) {
@@ -6441,9 +6325,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestByteArray() {
       TestCommon.AssertSer(
@@ -6451,9 +6332,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         "h'2078'");
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestBigNumBytes() {
       CBORObject o = null;
@@ -6491,9 +6369,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       TestCommon.AssertRoundTrip(oo);
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestTaggedUntagged() {
       for (int i = 200; i < 1000; ++i) {
@@ -6594,9 +6469,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       this.AssertAdd(negLarge, negLarge, "-11111110");
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestBigInteger() {
       BigInteger bi = BigInteger.valueOf(3);
@@ -6640,9 +6512,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestLong() {
       long[] ranges = new long[] {
@@ -6676,9 +6545,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestFloat() {
       TestCommon.AssertSer(
@@ -6697,9 +6563,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestCodePointCompare() {
       Assert.assertEquals(0, ((DataUtilities.CodePointCompare("abc", "abc")==0) ? 0 : ((DataUtilities.CodePointCompare("abc", "abc")<0) ? -1 : 1)));
@@ -6709,9 +6572,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals(1, ((DataUtilities.CodePointCompare("\uf000", "\ud800")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000", "\ud800")<0) ? -1 : 1)));
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestSimpleValues() {
       TestCommon.AssertSer(
@@ -6725,9 +6585,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         "null");
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestGetUtf8Length() {
       try {
@@ -6749,9 +6606,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals(-1, DataUtilities.GetUtf8Length("\ud800\ud800", false));
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestDouble() {
       if (!CBORObject.FromObject(Double.POSITIVE_INFINITY).IsPositiveInfinity()) {
@@ -6782,9 +6636,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void TestTags() {
       BigInteger maxuint = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);

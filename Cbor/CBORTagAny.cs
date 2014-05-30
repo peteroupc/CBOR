@@ -10,15 +10,10 @@ using System;
 namespace PeterO.Cbor {
   internal class CBORTagAny : ICBORTag
   {
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.Any;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>A CBORObject object. (2).</param>
-    /// <returns>A CBORObject object.</returns>
     public CBORObject ValidateObject(CBORObject obj) {
       #if DEBUG
       if (obj == null) {

@@ -13,7 +13,6 @@ using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Description of CBORReader.</summary>
   internal class CBORReader
   {
     private SharedRefs sharedRefs;
@@ -145,9 +144,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='filter'>A CBORTypeFilter object.</param>
-    /// <returns>A CBORObject object.</returns>
     public CBORObject Read(
       CBORTypeFilter filter) {
       if (this.depth > 1000) {
@@ -160,10 +156,6 @@ namespace PeterO.Cbor {
       return this.ReadForFirstByte(firstbyte, filter);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='firstbyte'>A 32-bit signed integer.</param>
-    /// <param name='filter'>A CBORTypeFilter object.</param>
-    /// <returns>A CBORObject object.</returns>
     public CBORObject ReadForFirstByte(
       int firstbyte,
       CBORTypeFilter filter) {

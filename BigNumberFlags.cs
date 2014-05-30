@@ -8,7 +8,6 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO {
-    /// <summary>Description of BigNumberFlags.</summary>
   internal static class BigNumberFlags
   {
     internal const int FlagNegative = 1;

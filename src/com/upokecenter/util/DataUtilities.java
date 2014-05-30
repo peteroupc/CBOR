@@ -332,7 +332,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
      * Both strings are equal or null. Less than 0: a is null and b isn't; or
      * the first code point that's different is less in A than in B; or b starts
      * with a and is longer than a. Greater than 0: b is null and a isn't; or the
-     * first code point that' s different is greater in A than in B; or a starts
+     * first code point that's different is greater in A than in B; or a starts
      * with b and is longer than b.
      */
     public static int CodePointCompare(String strA, String strB) {
@@ -388,6 +388,26 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       return (strA.length() < strB.length()) ? -1 : 1;
     }
 
+    /**
+     * Writes a portion of a string in UTF-8 encoding to a data stream.
+     * @param str A string to write.
+     * @param offset The zero-based index where the string portion to write
+     * begins.
+     * @param length The length of the string portion to write.
+     * @param stream A writable data stream.
+     * @param replace If true, replaces unpaired surrogate code points
+     * with the replacement character (U + FFFD). If false, stops processing
+     * when an unpaired surrogate code point is seen.
+     * @return 0 if the entire string portion was written; or -1 if the string
+     * portion contains an unpaired surrogate code point and {@code replace}
+     * is false.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null or {@code stream} is null.
+     * @throws java.lang.IllegalArgumentException The parameter {@code offset}
+     * is less than 0, {@code length} is less than 0, or {@code offset} plus
+     * {@code length} is greater than the string's length.
+     * @throws java.io.IOException An I/O error occurred.
+     */
     public static int WriteUtf8(String str, int offset, int length, OutputStream stream, boolean replace) throws IOException {
       return WriteUtf8(str, offset, length, stream, replace, false);
     }

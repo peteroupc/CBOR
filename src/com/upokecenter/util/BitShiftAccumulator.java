@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-// import java.math.*;
-
   final class BitShiftAccumulator implements IShiftAccumulator
   {
     private static final int SmallBitLength = 32;
@@ -17,7 +15,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether the last discarded bit was set.
-     * @return True if the last discarded bit was set; otherwise, false..
+     * @return True if the last discarded bit was set; otherwise, false.
      */
     public int getLastDiscardedDigit() {
         return this.bitLeftmost;
@@ -29,7 +27,7 @@ at: http://upokecenter.com/d/
      * Gets a value indicating whether any of the discarded bits to the right
      * of the last one was set.
      * @return True if any of the discarded bits to the right of the last one
-     * was set; otherwise, false..
+     * was set; otherwise, false.
      */
     public int getOlderDiscardedDigits() {
         return this.bitsAfterLeftmost;
@@ -38,10 +36,6 @@ at: http://upokecenter.com/d/
     private BigInteger shiftedBigInt;
     private FastInteger knownBitLength;
 
-    /**
-     * Not documented yet.
-     * @return A FastInteger object.
-     */
     public FastInteger GetDigitLength() {
       if (this.knownBitLength == null) {
         this.knownBitLength = this.CalcKnownBitLength();
@@ -49,10 +43,6 @@ at: http://upokecenter.com/d/
       return FastInteger.Copy(this.knownBitLength);
     }
 
-    /**
-     * Not documented yet.
-     * @param bits A FastInteger object.
-     */
     public void ShiftToDigits(FastInteger bits) {
       if (bits.signum() < 0) {
         throw new IllegalArgumentException("bits's sign (" + Integer.toString((int)bits.signum()) + ") is less than " + "0");
@@ -75,10 +65,6 @@ at: http://upokecenter.com/d/
     private int shiftedSmall;
     private boolean isSmall;
 
-    /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
-     */
     public BigInteger getShiftedInt() {
         if (this.isSmall) {
           return BigInteger.valueOf(this.shiftedSmall);
@@ -87,10 +73,6 @@ at: http://upokecenter.com/d/
         }
       }
 
-    /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
-     */
     public FastInteger getShiftedIntFast() {
         if (this.isSmall) {
           return new FastInteger(this.shiftedSmall);
@@ -138,10 +120,6 @@ at: http://upokecenter.com/d/
       return bsa;
     }
 
-    /**
-     * Not documented yet.
-     * @param fastint A FastInteger object.
-     */
     public void ShiftRight(FastInteger fastint) {
       if (fastint.signum() <= 0) {
         return;

@@ -248,11 +248,6 @@ namespace PeterO {
       return val;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='divisor'>A T object. (3).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((object)ret != (object)default(T)) {
@@ -265,11 +260,6 @@ namespace PeterO {
       return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='divisor'>A T object. (3).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T DivideToIntegerZeroScale(T thisValue, T divisor, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((object)ret != (object)default(T)) {
@@ -282,10 +272,6 @@ namespace PeterO {
       return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='value'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Abs(T value, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(value, ctx);
       if ((object)ret != (object)default(T)) {
@@ -297,10 +283,6 @@ namespace PeterO {
       return this.PostProcess(value, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='value'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Negate(T value, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(value, ctx);
       if ((object)ret != (object)default(T)) {
@@ -313,10 +295,10 @@ namespace PeterO {
     }
 
     /// <summary>Finds the remainder that results when dividing two T objects.</summary>
+    /// <returns>The remainder of the two objects.</returns>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='divisor'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>The remainder of the two objects.</returns>
     public T Remainder(T thisValue, T divisor, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((object)ret != (object)default(T)) {
@@ -329,11 +311,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='divisor'>A T object. (3).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T RemainderNear(T thisValue, T divisor, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((object)ret != (object)default(T)) {
@@ -346,9 +323,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Pi(PrecisionContext ctx) {
       return this.wrapper.Pi(ctx);
     }
@@ -376,11 +350,6 @@ namespace PeterO {
         default(T) : this.GetHelper().CreateNewWithFlags(BigInteger.Zero, BigInteger.Zero, (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='pow'>A T object. (3).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Power(T thisValue, T pow, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, pow, ctx);
       if ((object)ret != (object)default(T)) {
@@ -409,10 +378,6 @@ namespace PeterO {
       return thisValue;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Log10(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -424,10 +389,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Ln(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -442,16 +403,11 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <returns>An IRadixMathHelper(T) object.</returns>
     public IRadixMathHelper<T> GetHelper() {
       return this.wrapper.GetHelper();
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Exp(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -463,10 +419,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T SquareRoot(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -481,10 +433,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T NextMinus(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -496,11 +444,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='otherValue'>A T object. (3).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T NextToward(T thisValue, T otherValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, otherValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -513,10 +456,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T NextPlus(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -528,12 +467,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='divisor'>A T object. (3).</param>
-    /// <param name='desiredExponent'>A BigInteger object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T DivideToExponent(T thisValue, T divisor, BigInteger desiredExponent, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((object)ret != (object)default(T)) {
@@ -547,10 +480,10 @@ namespace PeterO {
     }
 
     /// <summary>Divides two T objects.</summary>
+    /// <returns>The quotient of the two objects.</returns>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='divisor'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>The quotient of the two objects.</returns>
     public T Divide(T thisValue, T divisor, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((object)ret != (object)default(T)) {
@@ -563,11 +496,6 @@ namespace PeterO {
       return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='a'>A T object. (2).</param>
-    /// <param name='b'>A T object. (3).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T MinMagnitude(T a, T b, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(a, b, ctx);
       if ((object)ret != (object)default(T)) {
@@ -580,11 +508,6 @@ namespace PeterO {
       return this.PostProcess(a, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='a'>A T object. (2).</param>
-    /// <param name='b'>A T object. (3).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T MaxMagnitude(T a, T b, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(a, b, ctx);
       if ((object)ret != (object)default(T)) {
@@ -597,11 +520,6 @@ namespace PeterO {
       return this.PostProcess(a, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='a'>A T object. (2).</param>
-    /// <param name='b'>A T object. (3).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Max(T a, T b, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(a, b, ctx);
       if ((object)ret != (object)default(T)) {
@@ -615,11 +533,6 @@ namespace PeterO {
       return this.PostProcess(a, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='a'>A T object. (2).</param>
-    /// <param name='b'>A T object. (3).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Min(T a, T b, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(a, b, ctx);
       if ((object)ret != (object)default(T)) {
@@ -634,10 +547,10 @@ namespace PeterO {
     }
 
     /// <summary>Multiplies two T objects.</summary>
+    /// <returns>The product of the two objects.</returns>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='other'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>The product of the two objects.</returns>
     public T Multiply(T thisValue, T other, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, other, ctx);
       if ((object)ret != (object)default(T)) {
@@ -650,12 +563,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='multiplicand'>A T object. (3).</param>
-    /// <param name='augend'>A T object. (4).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext ctx) {
       T ret = this.CheckNotANumber3(thisValue, multiplicand, augend, ctx);
       if ((object)ret != (object)default(T)) {
@@ -683,10 +590,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T RoundToBinaryPrecision(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -698,10 +601,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Plus(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -713,10 +612,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T RoundToPrecision(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -728,11 +623,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='otherValue'>A T object. (3).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Quantize(T thisValue, T otherValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -755,11 +645,6 @@ namespace PeterO {
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='expOther'>A BigInteger object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T RoundToExponentExact(T thisValue, BigInteger expOther, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -771,11 +656,6 @@ namespace PeterO {
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='expOther'>A BigInteger object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T RoundToExponentSimple(T thisValue, BigInteger expOther, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -787,11 +667,6 @@ namespace PeterO {
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='exponent'>A BigInteger object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T RoundToExponentNoRoundedFlag(T thisValue, BigInteger exponent, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -803,10 +678,6 @@ namespace PeterO {
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Reduce(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -818,11 +689,6 @@ namespace PeterO {
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='other'>A T object. (3).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T Add(T thisValue, T other, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, other, ctx);
       if ((object)ret != (object)default(T)) {
@@ -844,24 +710,18 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='other'>A T object. (3).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <param name='roundToOperandPrecision'>A Boolean object.</param>
-    /// <returns>A T object.</returns>
     public T AddEx(T thisValue, T other, PrecisionContext ctx, bool roundToOperandPrecision) {
       // NOTE: Ignores roundToOperandPrecision
       return this.Add(thisValue, other, ctx);
     }
 
     /// <summary>Compares a T object with this instance.</summary>
+    /// <returns>Zero if the values are equal; a negative number if this instance
+    /// is less, or a positive number if this instance is greater.</returns>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='otherValue'>A T object. (2).</param>
     /// <param name='treatQuietNansAsSignaling'>A Boolean object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this instance
-    /// is less, or a positive number if this instance is greater.</returns>
     public T CompareToWithContext(T thisValue, T otherValue, bool treatQuietNansAsSignaling, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, otherValue, ctx);
       if ((object)ret != (object)default(T)) {
@@ -877,18 +737,14 @@ namespace PeterO {
     }
 
     /// <summary>Compares a T object with this instance.</summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='otherValue'>A T object. (2).</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
+    /// <param name='thisValue'>A T object.</param>
+    /// <param name='otherValue'>A T object. (2).</param>
     public int CompareTo(T thisValue, T otherValue) {
       return this.wrapper.CompareTo(thisValue, otherValue);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A T object.</returns>
     public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {

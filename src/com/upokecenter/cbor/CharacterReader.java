@@ -9,9 +9,6 @@ at: http://upokecenter.com/d/
 
 import java.io.*;
 
-    /**
-     * Description of CharacterReader.
-     */
   class CharacterReader
   {
     private String str;
@@ -32,11 +29,6 @@ import java.io.*;
       this.stream = stream;
     }
 
-    /**
-     * Not documented yet.
-     * @param str A string object.
-     * @return A CBORException object.
-     */
     public CBORException NewError(String str) {
       return new CBORException(str + " (offset " + this.offset + ")");
     }

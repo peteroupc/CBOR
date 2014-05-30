@@ -7,9 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-    /**
-     * Description of DecimalUtility.
-     */
   final class DecimalUtility {
 private DecimalUtility() {
 }
@@ -199,11 +196,6 @@ private DecimalUtility() {
         return ret;
       }
 
-    /**
-     * Not documented yet.
-     * @param bi A BigInteger object. (2).
-     * @return A BigInteger object.
-     */
       public BigInteger GetCachedPower(BigInteger bi) {
         synchronized(this.outputs) {
           for (int i = 0; i < this.size; ++i) {
@@ -228,11 +220,6 @@ private DecimalUtility() {
         return null;
       }
 
-    /**
-     * Not documented yet.
-     * @param bi A 32-bit signed integer.
-     * @return A BigInteger object.
-     */
       public BigInteger GetCachedPowerInt(int bi) {
         synchronized(this.outputs) {
           for (int i = 0; i < this.size; ++i) {
@@ -257,11 +244,6 @@ private DecimalUtility() {
         return null;
       }
 
-    /**
-     * Not documented yet.
-     * @param input A BigInteger object.
-     * @param output A BigInteger object. (2).
-     */
       public void AddPower(BigInteger input, BigInteger output) {
         synchronized(this.outputs) {
           if (this.size < MaxSize) {

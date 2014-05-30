@@ -9,18 +9,12 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Description of CBORTag32.</summary>
   internal class CBORTag32 : ICBORTag, ICBORConverter<System.Uri>
   {
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.TextString;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>A CBORObject object. (2).</param>
-    /// <returns>A CBORObject object.</returns>
     public CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.TextString) {
         throw new CBORException("URI must be a text string");
@@ -34,8 +28,8 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Converts a UUID to a CBOR object.</summary>
-    /// <returns>A CBORObject object.</returns>
     /// <param name='uri'>A System.Uri object.</param>
+    /// <returns>A CBORObject object.</returns>
     public CBORObject ToCBORObject(System.Uri uri) {
       if (uri == null) {
         throw new ArgumentNullException("uri");

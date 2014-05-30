@@ -9,19 +9,10 @@ at: http://upokecenter.com/d/
 
   class CBORTag28 implements ICBORTag
   {
-    /**
-     * Not documented yet.
-     * @return A CBORTypeFilter object.
-     */
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.Any;
     }
 
-    /**
-     * Not documented yet.
-     * @param obj A CBORObject object. (2).
-     * @return A CBORObject object.
-     */
     public CBORObject ValidateObject(CBORObject obj) {
 
       // Return this object without tag 28

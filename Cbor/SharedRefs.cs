@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Description of SharedRefs.</summary>
   internal class SharedRefs
   {
     private IList<CBORObject> sharedObjects;
@@ -19,15 +18,10 @@ namespace PeterO.Cbor {
       this.sharedObjects = new List<CBORObject>();
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>A CBORObject object.</param>
     public void AddObject(CBORObject obj) {
         this.sharedObjects.Add(obj);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='smallIndex'>A 64-bit signed integer.</param>
-    /// <returns>A string object.</returns>
     public CBORObject GetObject(long smallIndex) {
       if (smallIndex < 0) {
         throw new CBORException("Unexpected index");
@@ -42,9 +36,6 @@ namespace PeterO.Cbor {
       return this.sharedObjects[index];
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A string object.</returns>
-    /// <param name='bigIndex'>A BigInteger object.</param>
     public CBORObject GetObject(BigInteger bigIndex) {
       if (bigIndex.Sign < 0) {
         throw new CBORException("Unexpected index");

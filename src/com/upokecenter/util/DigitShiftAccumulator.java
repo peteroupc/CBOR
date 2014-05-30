@@ -7,14 +7,12 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-// import java.math.*;
-
   final class DigitShiftAccumulator implements IShiftAccumulator {
     private int bitLeftmost;
 
     /**
      * Gets a value indicating whether the last discarded digit was set.
-     * @return True if the last discarded digit was set; otherwise, false..
+     * @return True if the last discarded digit was set; otherwise, false.
      */
     public int getLastDiscardedDigit() {
         return this.bitLeftmost;
@@ -26,7 +24,7 @@ at: http://upokecenter.com/d/
      * Gets a value indicating whether any of the discarded digits to the
      * right of the last one was set.
      * @return True if any of the discarded digits to the right of the last
-     * one was set; otherwise, false..
+     * one was set; otherwise, false.
      */
     public int getOlderDiscardedDigits() {
         return this.bitsAfterLeftmost;
@@ -35,10 +33,6 @@ at: http://upokecenter.com/d/
     private BigInteger shiftedBigInt;
     private FastInteger knownBitLength;
 
-    /**
-     * Not documented yet.
-     * @return A FastInteger object.
-     */
     public FastInteger GetDigitLength() {
       if (this.knownBitLength == null) {
         this.knownBitLength = this.CalcKnownDigitLength();
@@ -51,10 +45,6 @@ at: http://upokecenter.com/d/
 
     private FastInteger discardedBitCount;
 
-    /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
-     */
     public FastInteger getDiscardedDigitCount() {
         if (this.discardedBitCount == null) {
           this.discardedBitCount = new FastInteger(0);
@@ -109,10 +99,6 @@ at: http://upokecenter.com/d/
       return ret;
     }
 
-    /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
-     */
     public FastInteger getShiftedIntFast() {
         if (this.isSmall) {
           return new FastInteger(this.shiftedSmall);
@@ -121,10 +107,6 @@ at: http://upokecenter.com/d/
         }
       }
 
-    /**
-     * Not documented yet.
-     * @param fastint A FastInteger object.
-     */
     public void ShiftRight(FastInteger fastint) {
       if (fastint == null) {
         throw new NullPointerException("fastint");
@@ -496,10 +478,6 @@ bigrem=divrem[1]; }
       this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
     }
 
-    /**
-     * Not documented yet.
-     * @param bits A FastInteger object.
-     */
     public void ShiftToDigits(FastInteger bits) {
       if (bits.CanFitInInt32()) {
         int intval = bits.AsInt32();
@@ -528,7 +506,7 @@ bigrem=divrem[1]; }
      * information on whether the last digit discarded is set and whether
      * the discarded digits to the right of that digit are set. Assumes that
      * the big integer being shifted is positive.
-     * @param digits A 64-bit signed integer.
+     * @param digits A 32-bit signed integer.
      */
     public void ShiftToDigitsInt(int digits) {
       if (this.isSmall) {

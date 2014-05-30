@@ -14,7 +14,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether the last discarded digit
     /// was set.</summary>
-    /// <value>True if the last discarded digit was set; otherwise, false..</value>
+    /// <value>True if the last discarded digit was set; otherwise, false.</value>
     public int LastDiscardedDigit {
       get {
         return this.bitLeftmost;
@@ -26,7 +26,7 @@ namespace PeterO {
     /// <summary>Gets a value indicating whether any of the discarded digits
     /// to the right of the last one was set.</summary>
     /// <value>True if any of the discarded digits to the right of the last
-    /// one was set; otherwise, false..</value>
+    /// one was set; otherwise, false.</value>
     public int OlderDiscardedDigits {
       get {
         return this.bitsAfterLeftmost;
@@ -36,8 +36,6 @@ namespace PeterO {
     private BigInteger shiftedBigInt;
     private FastInteger knownBitLength;
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A FastInteger object.</returns>
     public FastInteger GetDigitLength() {
       if (this.knownBitLength == null) {
         this.knownBitLength = this.CalcKnownDigitLength();
@@ -50,8 +48,6 @@ namespace PeterO {
 
     private FastInteger discardedBitCount;
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
     public FastInteger DiscardedDigitCount {
       get {
         if (this.discardedBitCount == null) {
@@ -108,8 +104,6 @@ namespace PeterO {
       return ret;
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
     public FastInteger ShiftedIntFast {
       get {
         if (this.isSmall) {
@@ -120,8 +114,6 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='fastint'>A FastInteger object.</param>
     public void ShiftRight(FastInteger fastint) {
       if (fastint == null) {
         throw new ArgumentNullException("fastint");
@@ -475,8 +467,6 @@ namespace PeterO {
       this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='bits'>A FastInteger object.</param>
     public void ShiftToDigits(FastInteger bits) {
       if (bits.CanFitInInt32()) {
         int intval = bits.AsInt32();
@@ -504,7 +494,7 @@ namespace PeterO {
     /// gathering information on whether the last digit discarded is set
     /// and whether the discarded digits to the right of that digit are set.
     /// Assumes that the big integer being shifted is positive.</summary>
-    /// <param name='digits'>A 64-bit signed integer.</param>
+    /// <param name='digits'>A 32-bit signed integer.</param>
     public void ShiftToDigitsInt(int digits) {
       if (this.isSmall) {
         this.ShiftToBitsSmall(digits);

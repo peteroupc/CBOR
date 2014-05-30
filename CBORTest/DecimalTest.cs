@@ -13,7 +13,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 
 namespace Test {
-    /// <summary>Description of DecTest.</summary>
   [TestClass]
   public class DecimalTest
   {

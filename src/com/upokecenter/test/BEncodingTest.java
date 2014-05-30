@@ -41,10 +41,6 @@ try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     * @param value A 64-bit signed integer.
-     */
     public void doTestLong(long value) {
       String b = "i" + value + "e";
       CBORObject beo = EncodingFromBytes(com.upokecenter.util.DataUtilities.GetUtf8Bytes(b,true));
@@ -53,10 +49,6 @@ try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals(b, newb);
     }
 
-    /**
-     * Not documented yet.
-     * @param value A string object.
-     */
     public void doTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(com.upokecenter.util.DataUtilities.GetUtf8Bytes(b,true));
@@ -65,9 +57,6 @@ try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals(b, newb);
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void testLong() {
       this.doTestLong(0);
@@ -78,9 +67,6 @@ try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
       this.doTestLong(Long.MAX_VALUE);
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void testList() {
       CBORObject beo = CBORObject.NewArray();
@@ -102,9 +88,6 @@ try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals("four", beo.get(3).AsString());
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void testDictionary() {
       CBORObject beo = CBORObject.NewMap();
@@ -126,9 +109,6 @@ try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals("four", beo.get("three").AsString());
     }
 
-    /**
-     * Not documented yet.
-     */
     @Test
     public void testString() {
       this.doTestString("");

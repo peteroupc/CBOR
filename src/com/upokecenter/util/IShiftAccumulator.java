@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-// import java.math.*;
-
     /**
      * Common interface for classes that shift a number of digits and record
      * information on whether a non-zero digit was discarded this way.

@@ -43,6 +43,9 @@ namespace PeterO {
     private int flags;
 
     #region Equals and GetHashCode implementation
+    /// <summary>Not documented yet.</summary>
+    /// <returns>True if the objects are equal; otherwise, false.</returns>
+    /// <param name='obj'>An arbitrary object.</param>
     public override bool Equals(object obj) {
       ExtendedRational other = obj as ExtendedRational;
       if (other == null) {
@@ -68,6 +71,9 @@ namespace PeterO {
     }
     #endregion
 
+    /// <summary>Initializes a new instance of the ExtendedRational class.</summary>
+    /// <param name='numerator'>A BigInteger object.</param>
+    /// <param name='denominator'>A BigInteger object. (2).</param>
     public ExtendedRational(BigInteger numerator, BigInteger denominator) {
       if (numerator == null) {
         throw new ArgumentNullException("numerator");
@@ -126,6 +132,9 @@ namespace PeterO {
       return this.Numerator + "/" + this.Denominator;
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='bigint'>A BigInteger object.</param>
     public static ExtendedRational FromBigInteger(BigInteger bigint) {
       return new ExtendedRational(bigint, BigInteger.One);
     }
@@ -138,14 +147,23 @@ namespace PeterO {
       return this.ToExtendedDecimal(null);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='flt'>A 32-bit floating-point number.</param>
     public static ExtendedRational FromSingle(float flt) {
       return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='flt'>A 64-bit floating-point number.</param>
     public static ExtendedRational FromDouble(double flt) {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='diag'>A BigInteger object.</param>
     public static ExtendedRational CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false);
     }
@@ -156,6 +174,11 @@ namespace PeterO {
       return er;
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='diag'>A BigInteger object.</param>
+    /// <param name='signaling'>A Boolean object.</param>
+    /// <param name='negative'>A Boolean object. (2).</param>
     public static ExtendedRational CreateNaN(BigInteger diag, bool signaling, bool negative) {
       if (diag == null) {
         throw new ArgumentNullException("diag");
@@ -176,6 +199,9 @@ namespace PeterO {
       return er;
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='ef'>An ExtendedFloat object.</param>
     public static ExtendedRational FromExtendedFloat(ExtendedFloat ef) {
       if (ef == null) {
         throw new ArgumentNullException("ef");
@@ -218,6 +244,9 @@ namespace PeterO {
       return new ExtendedRational(num, den);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='ef'>An ExtendedDecimal object.</param>
     public static ExtendedRational FromExtendedDecimal(ExtendedDecimal ef) {
       if (ef == null) {
         throw new ArgumentNullException("ef");
@@ -368,7 +397,7 @@ namespace PeterO {
     /// <summary>Gets a value indicating whether this object is finite (not
     /// infinity or NaN).</summary>
     /// <value>True if this object is finite (not infinity or NaN); otherwise,
-    /// false..</value>
+    /// false.</value>
     public bool IsFinite {
       get {
         return !this.IsNaN() && !this.IsInfinity();
@@ -386,10 +415,16 @@ namespace PeterO {
       return this.Numerator / (BigInteger)this.denominator;
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='smallint'>A 32-bit signed integer.</param>
     public static ExtendedRational FromInt32(int smallint) {
       return new ExtendedRational((BigInteger)smallint, BigInteger.One);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='longInt'>A 64-bit signed integer.</param>
     public static ExtendedRational FromInt64(long longInt) {
       return new ExtendedRational((BigInteger)longInt, BigInteger.One);
     }
@@ -433,7 +468,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object's value equals
     /// 0.</summary>
-    /// <value>True if this object&apos;s value equals 0; otherwise, false..</value>
+    /// <value>True if this object&apos;s value equals 0; otherwise, false.</value>
     public bool IsZero {
       get {
         if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
@@ -782,7 +817,7 @@ namespace PeterO {
     /// <summary>Gets a value indicating whether this object's value is
     /// negative.</summary>
     /// <value>True if this object&apos;s value is negative; otherwise,
-    /// false..</value>
+    /// false.</value>
     public bool IsNegative {
       get {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
@@ -1030,9 +1065,16 @@ namespace PeterO {
       return new ExtendedRational(ad, tden).Simplify().ChangeSign(resultNeg);
     }
 
+    /// <summary>Not documented yet.</summary>
     public static readonly ExtendedRational Zero = FromBigInteger(BigInteger.Zero);
+
+    /// <summary>Not documented yet.</summary>
     public static readonly ExtendedRational NegativeZero = FromBigInteger(BigInteger.Zero).ChangeSign(false);
+
+    /// <summary>Not documented yet.</summary>
     public static readonly ExtendedRational One = FromBigInteger(BigInteger.One);
+
+    /// <summary>Not documented yet.</summary>
     public static readonly ExtendedRational Ten = FromBigInteger((BigInteger)10);
   }
 }

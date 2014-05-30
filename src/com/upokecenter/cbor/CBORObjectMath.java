@@ -11,9 +11,6 @@ import com.upokecenter.util.*;
 
     /**
      * Implements arithmetic operations with CBOR objects.
-     * @param a A CBORObject object. (2).
-     * @param b A CBORObject object. (3).
-     * @return A CBORObject object.
      */
   final class CBORObjectMath {
 private CBORObjectMath() {

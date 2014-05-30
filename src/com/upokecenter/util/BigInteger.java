@@ -2235,8 +2235,8 @@ at: http://upokecenter.com/d/
 
     /**
      * Returns whether this object's value can fit in a 32-bit signed integer.
-     * @return True if this object's value is Integer.MAX_VALUE or greater,
-     * and Integer.MAX_VALUE or less; otherwise, false.
+     * @return True if this object's value is MinValue or greater, and MaxValue
+     * or less; otherwise, false.
      */
     public boolean canFitInInt() {
       int c = (int)this.wordCount;
@@ -2910,6 +2910,13 @@ at: http://upokecenter.com/d/
 
     private static final int MaxSafeInt = 214748363;
 
+    /**
+     * Not documented yet.
+     * @param str A string object.
+     * @param index A 32-bit signed integer.
+     * @param endIndex A 32-bit signed integer. (2).
+     * @return A BigInteger object.
+     */
     public static BigInteger fromSubstring(String str, int index, int endIndex) {
       if (str == null) {
         throw new NullPointerException("str");
@@ -3893,7 +3900,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether this value is 0.
-     * @return True if this value is 0; otherwise, false..
+     * @return True if this value is 0; otherwise, false.
      */
     public boolean isZero() {
         return this.wordCount == 0;
@@ -3909,22 +3916,9 @@ at: http://upokecenter.com/d/
       return srrem[0];
     }
 
-    /*
-    private static BigInteger WordsToBigInt(
-      short[] words,
-      int start,
-      int count) {
-
-      if (count == 0) {
-        return BigInteger.ZERO;
-      }
-      short[] newwords = new short[RoundupSize(count)];
-      System.arraycopy(words, start, newwords, 0, count);
-      BigInteger ret = new BigInteger();
-      ret.reg = newwords;
-      ret.wordCount = count;
-      return ret;
-    }
+    /**
+     * Not documented yet.
+     * @return A BigInteger[] object.
      */
     public BigInteger[] sqrtWithRemainder() {
       if (this.signum() <= 0) {
@@ -4033,7 +4027,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether this value is even.
-     * @return True if this value is even; otherwise, false..
+     * @return True if this value is even; otherwise, false.
      */
     public boolean isEven() {
         return !this.GetUnsignedBit(0);
