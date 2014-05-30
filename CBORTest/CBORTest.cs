@@ -791,25 +791,37 @@ namespace Test {
     }
 
     [TestMethod]
+    public void TestTags264And265() {
+      CBORObject cbor;
+      cbor = CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false);
+      Assert.IsTrue(cbor != null);
+      Assert.IsFalse(cbor.CanFitInDouble());
+      TestCommon.AssertRoundTrip(cbor);
+      // Tag 264
+      cbor = CBORObject.DecodeFromBytes(new byte[] { 0xd9, 0x01, 0x08, 0x82, 0xc2, 0x42, 2, 2, 0xc2, 0x42, 2, 2 });
+      TestCommon.AssertRoundTrip(cbor);
+      // Tag 265
+      cbor = CBORObject.DecodeFromBytes(new byte[] { 0xd9, 0x01, 0x09, 0x82, 0xc2, 0x42, 2, 2, 0xc2, 0x42, 2, 2 });
+      TestCommon.AssertRoundTrip(cbor);
+    }
+
+    [TestMethod]
     public void TestParseJSONNumber() {
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(null, false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false, true));
-      if (CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false, false) == null) {
-        Assert.Fail();
-      }
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(String.Empty, false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("xyz", false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("true", false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(".1", false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0..1", false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0xyz", false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.1xyz", false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.xyz", false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5exyz", false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5q+88", false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5ee88", false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5e+xyz", false, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5e+88xyz", false, false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(null, false, false));
+      Assert.IsTrue(CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false) != null);
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(String.Empty, false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("xyz", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("true", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(".1", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0..1", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0xyz", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.1xyz", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.xyz", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5exyz", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5q+88", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5ee88", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5e+xyz", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5e+88xyz", false, false));
     }
 
     [TestMethod]
@@ -6097,6 +6109,19 @@ namespace Test {
     }
 
     [TestMethod]
+    public void TestCanFitInForExtendedFloat() {
+      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 11)).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 12)).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 13)).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 14)).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 15)).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 16)).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 17)).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 18)).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 19)).CanTruncatedIntFitInInt32());
+    }
+
+    [TestMethod]
     public void TestCanFitInSpecificCases() {
       CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xfb, 0x41, (byte)0xe0, (byte)0x85, 0x48, 0x2d, 0x14, 0x47, 0x7a });  // 2217361768.63373
       Assert.AreEqual(BigInteger.fromString("2217361768"), cbor.AsBigInteger());
@@ -6106,6 +6131,12 @@ namespace Test {
       Assert.AreEqual(52, cbor.AsBigInteger().bitLength());
       Assert.IsTrue(cbor.CanFitInInt64());
       Assert.IsFalse(CBORObject.FromObject(2554895343L).CanFitInSingle());
+      cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xc5, (byte)0x82, 0x10, 0x38, 0x64 });  // -6619136
+      Assert.AreEqual((BigInteger)(-6619136), cbor.AsBigInteger());
+      Assert.AreEqual(-6619136, cbor.AsBigInteger().intValue());
+      Assert.AreEqual(-6619136, cbor.AsInt32());
+      Assert.IsTrue(cbor.AsBigInteger().canFitInInt());
+      Assert.IsTrue(cbor.CanTruncatedIntFitInInt32());
     }
 
     [TestMethod]
@@ -6325,6 +6356,11 @@ namespace Test {
     [TestMethod]
     public void TestTaggedUntagged() {
       for (int i = 200; i < 1000; ++i) {
+        if (i == 264 || i == 265 || i + 1 == 264 || i + 1 == 265) {
+          // Skip since they're being used as
+          // arbitrary-precision numbers
+          continue;
+        }
         CBORObject o, o2;
         o = CBORObject.FromObject(0);
         o2 = CBORObject.FromObjectAndTag(o, i);
@@ -6614,6 +6650,11 @@ namespace Test {
             bigintTemp += BigInteger.One;
             continue;
           }
+          if (bigintTemp.CompareTo((BigInteger)264) == 0 ||
+              bigintTemp.CompareTo((BigInteger)265) == 0) {
+            bigintTemp += BigInteger.One;
+            continue;
+          }
           CBORObject obj = CBORObject.FromObjectAndTag(0, bigintTemp);
           Assert.IsTrue(obj.IsTagged, "obj not tagged");
           BigInteger[] tags = obj.GetTags();
@@ -6629,8 +6670,13 @@ namespace Test {
             obj,
             String.Format(CultureInfo.InvariantCulture, "{0}(0)", bigintTemp));
           if (!bigintTemp.Equals(maxuint)) {
+            BigInteger bigintNew = bigintTemp + BigInteger.One;
+            if (bigintNew.Equals((BigInteger)264) || bigintNew.Equals((BigInteger)265)) {
+              bigintTemp += BigInteger.One;
+              continue;
+            }
             // Test multiple tags
-            CBORObject obj2 = CBORObject.FromObjectAndTag(obj, bigintTemp + BigInteger.One);
+            CBORObject obj2 = CBORObject.FromObjectAndTag(obj, bigintNew);
             BigInteger[] bi = obj2.GetTags();
             if (bi.Length != 2) {
               Assert.AreEqual(

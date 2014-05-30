@@ -43,9 +43,8 @@ namespace PeterO.Cbor {
       return (uint)v;
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <returns>An 8-bit signed integer.</returns>
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Converts this object to an 8-bit signed integer.</summary>
     [CLSCompliant(false)]
     public sbyte AsSByte() {
       int v = this.AsInt32();
@@ -249,15 +248,15 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Writes a .NET decimal in CBOR format to a data stream.</summary>
-    /// <returns>A CBORObject object.</returns>
+    /// <summary>Converts a .NET decimal to a CBOR object.</summary>
+    /// <returns>A CBORObject object with the same value as the .NET decimal.</returns>
     /// <param name='value'>A Decimal object.</param>
     public static CBORObject FromObject(decimal value) {
       if (Math.Round(value) == value) {
         // This is an integer
         if (value >= 0 && value <= UInt64.MaxValue) {
           return FromObject((ulong)value);
-  } else if (value >= Int64.MinValue && value <= Int64.MaxValue) {
+        } else if (value >= Int64.MinValue && value <= Int64.MaxValue) {
           return FromObject((long)value);
         } else {
           return FromObject(DecimalToBigInteger(value));
@@ -293,8 +292,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Writes a 32-bit unsigned integer in CBOR format to a data
     /// stream.</summary>
-    /// <param name="stream">A writable data stream.</param>
-    /// <param name="value">A 32-bit unsigned integer.</param>
+    /// <param name='value'>A 32-bit unsigned integer.</param>
+    /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
     public static void Write(uint value, Stream stream) {
       Write((ulong)value, stream);
@@ -302,8 +301,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Writes a 16-bit unsigned integer in CBOR format to a data
     /// stream.</summary>
-    /// <param name="stream">A writable data stream.</param>
-    /// <param name="value">A 16-bit unsigned integer.</param>
+    /// <param name='value'>A 16-bit unsigned integer.</param>
+    /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
     public static void Write(ushort value, Stream stream) {
       Write((ulong)value, stream);
@@ -352,7 +351,6 @@ namespace PeterO.Cbor {
     /// <returns>A CBORObject object.</returns>
     /// <summary>Not documented yet.</summary>
     [CLSCompliant(false)]
-
     public static CBORObject FromObject(ushort value) {
       return FromObject((long)value);
     }

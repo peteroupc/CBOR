@@ -31,9 +31,6 @@ namespace PeterO.Cbor {
       return ef.IsNaN();
     }
 
-    /// <returns>A 64-bit floating-point number.</returns>
-    /// <param name='obj'>An arbitrary object.</param>
- /// <summary>Not documented yet.</summary>
     public double AsDouble(object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
       return ef.ToDouble();
@@ -49,9 +46,6 @@ namespace PeterO.Cbor {
       return ef;
     }
 
-    /// <returns>A 32-bit floating-point number.</returns>
-    /// <param name='obj'>An arbitrary object.</param>
- /// <summary>Not documented yet.</summary>
     public float AsSingle(object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
       return ef.ToSingle();
@@ -118,7 +112,7 @@ namespace PeterO.Cbor {
       if (ef.IsZero) {
         return true;
       }
-      if (ef.Exponent.CompareTo((BigInteger)11) >= 0) {
+      if (ef.Exponent.CompareTo((BigInteger)33) >= 0) {
         return false;
       }
       BigInteger bi = ef.ToBigInteger();

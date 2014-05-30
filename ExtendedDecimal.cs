@@ -1499,7 +1499,7 @@ public int CompareToBinary(ExtendedFloat other) {
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104", Justification = "ExtendedDecimal is immutable")]
     #endif
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Represents the number negative zero.</summary>
     public static readonly ExtendedDecimal NegativeZero = CreateWithFlags(BigInteger.Zero, BigInteger.Zero, BigNumberFlags.FlagNegative);
 
     /// <summary>Represents the number 10.</summary>

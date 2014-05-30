@@ -7,10 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-    /**
-     * Not documented yet.
-     * @param <T> Number data type.
-     */
   class ExtendedOrSimpleRadixMath<T> implements IRadixMath<T>
   {
     private RadixMath<T> ext;

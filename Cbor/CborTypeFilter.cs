@@ -58,13 +58,15 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Copies this filter and includes unsigned integers in the
+    /// new filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithUnsignedInteger() {
       return this.WithType(0);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Copies this filter and includes negative integers in the
+    /// new filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithNegativeInteger() {
       return this.WithType(1);
@@ -399,8 +401,10 @@ namespace PeterO.Cbor {
       return this.elements[(int)index];
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <summary>Returns whether this filter allows simple values that
+    /// are not floating-point numbers.</summary>
+    /// <returns>True if this filter allows simple values that are not floating-point
+    /// numbers; otherwise, false.</returns>
     public bool NonFPSimpleValueAllowed() {
       return this.MajorTypeMatches(7) && !this.floatingpoint;
     }

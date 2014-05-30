@@ -35,8 +35,9 @@ namespace Test {
       return ((z << 16) | (w & 65535)) & 0x7fffffff;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='v'>A 32-bit signed integer. (2).</param>
+    /// <summary>Generates a random number.</summary>
+    /// <param name='v'>The return value will be 0 or greater, and less than
+    /// this number.</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int NextValue(int v) {
       if (v <= 0) {

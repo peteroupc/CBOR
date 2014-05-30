@@ -31,11 +31,6 @@ import com.upokecenter.util.*;
       return ef.IsNaN();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 64-bit floating-point number.
-     */
     public double AsDouble(Object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
       return ef.ToDouble();
@@ -51,11 +46,6 @@ import com.upokecenter.util.*;
       return ef;
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 32-bit floating-point number.
-     */
     public float AsSingle(Object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
       return ef.ToSingle();
@@ -122,7 +112,7 @@ import com.upokecenter.util.*;
       if (ef.signum()==0) {
         return true;
       }
-      if (ef.getExponent().compareTo(BigInteger.valueOf(11)) >= 0) {
+      if (ef.getExponent().compareTo(BigInteger.valueOf(33)) >= 0) {
         return false;
       }
       BigInteger bi = ef.ToBigInteger();

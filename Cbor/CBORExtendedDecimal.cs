@@ -31,9 +31,6 @@ namespace PeterO.Cbor {
       return ed.IsNaN();
     }
 
-    /// <returns>A 64-bit floating-point number.</returns>
-    /// <param name='obj'>An arbitrary object.</param>
- /// <summary>Not documented yet.</summary>
     public double AsDouble(object obj) {
       ExtendedDecimal ed = (ExtendedDecimal)obj;
       return ed.ToDouble();
@@ -49,9 +46,6 @@ namespace PeterO.Cbor {
       return ed.ToExtendedFloat();
     }
 
-    /// <returns>A 32-bit floating-point number.</returns>
-    /// <param name='obj'>An arbitrary object.</param>
- /// <summary>Not documented yet.</summary>
     public float AsSingle(object obj) {
       ExtendedDecimal ed = (ExtendedDecimal)obj;
       return ed.ToSingle();

@@ -27,11 +27,6 @@ import com.upokecenter.util.*;
       return ((ExtendedRational)obj).IsNaN();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 64-bit floating-point number.
-     */
     public double AsDouble(Object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return er.ToDouble();
@@ -47,11 +42,6 @@ import com.upokecenter.util.*;
       return er.ToExtendedFloatExactIfPossible(PrecisionContext.Binary128.WithUnlimitedExponents());
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 32-bit floating-point number.
-     */
     public float AsSingle(Object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return er.ToSingle();

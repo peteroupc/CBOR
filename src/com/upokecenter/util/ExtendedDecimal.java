@@ -1551,7 +1551,7 @@ remainder=divrem[1]; }
     public static final ExtendedDecimal Zero = ExtendedDecimal.Create(BigInteger.ZERO, BigInteger.ZERO);
 
     /**
-     * Not documented yet.
+     * Represents the number negative zero.
      */
     public static final ExtendedDecimal NegativeZero = CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative);
 

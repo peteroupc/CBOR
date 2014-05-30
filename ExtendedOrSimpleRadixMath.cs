@@ -8,8 +8,6 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO {
-    /// <typeparam name='T'>Number data type.</typeparam>
- /// <summary>Not documented yet.</summary>
   internal class ExtendedOrSimpleRadixMath<T> : IRadixMath<T>
   {
     private RadixMath<T> ext;

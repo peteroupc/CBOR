@@ -27,11 +27,6 @@ import com.upokecenter.util.*;
       return false;
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 64-bit floating-point number.
-     */
     public double AsDouble(Object obj) {
       return ((Long)obj).doubleValue();
     }
@@ -44,11 +39,6 @@ import com.upokecenter.util.*;
       return ExtendedFloat.FromInt64((((Long)obj).longValue()));
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 32-bit floating-point number.
-     */
     public float AsSingle(Object obj) {
       return ((Long)obj).floatValue();
     }

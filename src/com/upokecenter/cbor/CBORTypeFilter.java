@@ -63,7 +63,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
+     * Copies this filter and includes unsigned integers in the new filter.
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter WithUnsignedInteger() {
@@ -71,7 +71,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
+     * Copies this filter and includes negative integers in the new filter.
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter WithNegativeInteger() {
@@ -436,8 +436,10 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
-     * @return A Boolean object.
+     * Returns whether this filter allows simple values that are not floating-point
+     * numbers.
+     * @return True if this filter allows simple values that are not floating-point
+     * numbers; otherwise, false.
      */
     public boolean NonFPSimpleValueAllowed() {
       return this.MajorTypeMatches(7) && !this.floatingpoint;

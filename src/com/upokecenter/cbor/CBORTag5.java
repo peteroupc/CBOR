@@ -11,16 +11,34 @@ import com.upokecenter.util.*;
 
   class CBORTag5 implements ICBORTag
   {
-    private static CBORTypeFilter valueFilter = new CBORTypeFilter().WithArrayExactLength(
+    static final CBORTypeFilter Filter = new CBORTypeFilter().WithArrayExactLength(
       2,
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger(),
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
 
-    public CBORTypeFilter GetTypeFilter() {
-      return valueFilter;
+    static final CBORTypeFilter ExtendedFilter = new CBORTypeFilter().WithArrayExactLength(
+      2,
+      CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3),
+      CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
+
+    public CBORTag5 () {
+ this(false);
     }
 
-    static CBORObject ConvertToDecimalFrac(CBORObject o, boolean isDecimal) {
+    private boolean extended;
+
+    public CBORTag5 (boolean extended) {
+      this.extended = extended;
+    }
+
+    public CBORTypeFilter GetTypeFilter() {
+      return this.extended ? ExtendedFilter : Filter;
+    }
+
+    static CBORObject ConvertToDecimalFrac(
+      CBORObject o,
+      boolean isDecimal,
+      boolean extended) {
       if (o.getType() != CBORType.Array) {
         throw new CBORException("Big fraction must be an array");
       }
@@ -35,7 +53,7 @@ import com.upokecenter.util.*;
       }
       BigInteger exponent = o.get(0).AsBigInteger();
       BigInteger mantissa = o.get(1).AsBigInteger();
-      if (exponent.bitLength() > 64) {
+      if (exponent.bitLength() > 64 && !extended) {
         throw new CBORException("Exponent is too big");
       }
       if (exponent.signum()==0) {
@@ -51,6 +69,6 @@ import com.upokecenter.util.*;
     }
 
     public CBORObject ValidateObject(CBORObject obj) {
-      return ConvertToDecimalFrac(obj, false);
+      return ConvertToDecimalFrac(obj, false, this.extended);
     }
   }
