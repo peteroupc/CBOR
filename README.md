@@ -28,6 +28,12 @@ The Java version contains almost as many features as the C# version
 and has all the important ones, such as reading and writing CBOR objects,
 CBOR/JSON conversion, and support for decimal fractions and bigfloats.
 
+NuGet Package
+---------
+Starting with version 0.21.0, the C# implementation is available in the
+NuGet Package Gallery under the name
+[PeterO.Cbor](https://www.nuget.org/packages/PeterO.Cbor).
+
 Clarifications
 ------------------
 
