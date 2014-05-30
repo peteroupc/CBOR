@@ -28,9 +28,6 @@ namespace PeterO.Cbor {
       return false;
     }
 
-    /// <returns>A 64-bit floating-point number.</returns>
-    /// <param name='obj'>An arbitrary object.</param>
- /// <summary>Not documented yet.</summary>
     public double AsDouble(object obj) {
       return (double)(long)obj;
     }
@@ -43,9 +40,6 @@ namespace PeterO.Cbor {
       return ExtendedFloat.FromInt64((long)obj);
     }
 
-    /// <returns>A 32-bit floating-point number.</returns>
-    /// <param name='obj'>An arbitrary object.</param>
- /// <summary>Not documented yet.</summary>
     public float AsSingle(object obj) {
       return (float)(long)obj;
     }

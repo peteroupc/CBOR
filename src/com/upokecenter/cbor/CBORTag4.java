@@ -9,16 +9,21 @@ at: http://upokecenter.com/d/
 
   class CBORTag4 implements ICBORTag
   {
-    private static CBORTypeFilter valueFilter = new CBORTypeFilter().WithArrayExactLength(
-      2,
-      CBORTypeFilter.UnsignedInteger.WithNegativeInteger(),
-      CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
+    public CBORTag4 () {
+ this(false);
+    }
+
+    private boolean extended;
+
+    public CBORTag4 (boolean extended) {
+      this.extended = extended;
+    }
 
     public CBORTypeFilter GetTypeFilter() {
-      return valueFilter;
+      return this.extended ? CBORTag5.ExtendedFilter : CBORTag5.Filter;
     }
 
     public CBORObject ValidateObject(CBORObject obj) {
-      return CBORTag5.ConvertToDecimalFrac(obj, true);
+      return CBORTag5.ConvertToDecimalFrac(obj, true, this.extended);
     }
   }

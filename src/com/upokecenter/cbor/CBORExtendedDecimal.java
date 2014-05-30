@@ -31,11 +31,6 @@ import com.upokecenter.util.*;
       return ed.IsNaN();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 64-bit floating-point number.
-     */
     public double AsDouble(Object obj) {
       ExtendedDecimal ed = (ExtendedDecimal)obj;
       return ed.ToDouble();
@@ -51,11 +46,6 @@ import com.upokecenter.util.*;
       return ed.ToExtendedFloat();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 32-bit floating-point number.
-     */
     public float AsSingle(Object obj) {
       ExtendedDecimal ed = (ExtendedDecimal)obj;
       return ed.ToSingle();

@@ -20,12 +20,10 @@ namespace PeterO.Cbor {
     /// See #ParseJSONNumber(String, integersOnly, parseOnly) for more
     /// information.</summary>
     /// <param name='str'>A string to parse.</param>
-    /// <returns>A CBOR object that represents the parsed number. This function
-    /// will return a CBOR object representing positive or negative infinity
-    /// if the exponent is greater than 2^64-1 (unless the value is 0), and
-    /// will return zero if the exponent is less than -(2^64).</returns>
+    /// <returns>A CBOR object that represents the parsed number. Returns
+    /// null if the parsing fails.</returns>
     public static CBORObject ParseJSONNumber(string str) {
-      return ParseJSONNumber(str, false, false, false);
+      return ParseJSONNumber(str, false, false);
     }
 
     /// <summary>Parses a number whose format follows the JSON specification
@@ -38,18 +36,12 @@ namespace PeterO.Cbor {
     /// are allowed in the string.</param>
     /// <param name='positiveOnly'>If true, only positive numbers are
     /// allowed (the leading minus is disallowed).</param>
-    /// <param name='failOnExponentOverflow'>If true, this function
-    /// will return null if the exponent is less than -(2^64) or greater than
-    /// 2^64-1 (unless the value is 0). If false, this function will return
-    /// a CBOR object representing positive or negative infinity if the exponent
-    /// is greater than 2^64-1 (unless the value is 0), and will return zero
-    /// if the exponent is less than -(2^64).</param>
-    /// <returns>A CBOR object that represents the parsed number.</returns>
+    /// <returns>A CBOR object that represents the parsed number. Returns
+    /// null if the parsing fails.</returns>
     public static CBORObject ParseJSONNumber(
       string str,
       bool integersOnly,
-      bool positiveOnly,
-      bool failOnExponentOverflow) {
+      bool positiveOnly) {
       if (String.IsNullOrEmpty(str)) {
         return null;
       }
@@ -82,7 +74,7 @@ namespace PeterO.Cbor {
           if (str[i] == '.') {
             haveDecimalPoint = true;
             ++i;
-          } else if (str[i] == 'E' || str[i] == 'e') {
+  } else if (str[i] == 'E' || str[i] == 'e') {
             haveExponent = true;
           } else {
             return null;
@@ -125,7 +117,7 @@ namespace PeterO.Cbor {
               --newScaleInt;
             }
           }
-        } else if (!integersOnly && str[i] == '.') {
+  } else if (!integersOnly && str[i] == '.') {
           if (!haveDigits) {
             // no digits before the decimal point
             return null;
@@ -134,7 +126,7 @@ namespace PeterO.Cbor {
             return null;
           }
           haveDecimalPoint = true;
-        } else if (!integersOnly && (str[i] == 'E' || str[i] == 'e')) {
+  } else if (!integersOnly && (str[i] == 'E' || str[i] == 'e')) {
           haveExponent = true;
           ++i;
           break;
@@ -199,13 +191,13 @@ namespace PeterO.Cbor {
         }
         if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
           newScaleInt = expInt;
-        } else if (exp == null) {
+  } else if (exp == null) {
           if (newScale == null) {
             newScale = new FastInteger(newScaleInt);
           }
           if (offset < 0) {
             newScale.SubtractInt(expInt);
-          } else if (expInt != 0) {
+  } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
@@ -231,11 +223,11 @@ namespace PeterO.Cbor {
         }
         if (mant == null) {
           // NOTE: mantInt can only be positive, so overflow is impossible
-          #if DEBUG
+#if DEBUG
           if (mantInt < 0) {
             throw new ArgumentException("mantInt (" + Convert.ToString((int)mantInt, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
           }
-          #endif
+#endif
 
           if (negative) {
             mantInt = -mantInt;
@@ -254,32 +246,31 @@ namespace PeterO.Cbor {
         if (negative) {
           bigmant = -(BigInteger)bigmant;
         }
-        if (newScale != null && bigexp.bitLength() > 64) {
-          int bigexpSign = bigexp.Sign;
-          if (bigexpSign > 0) {
-            // Exponent is higher than the highest representable
-            // integer of major type 0
-            if (failOnExponentOverflow) {
-              return null;
-            } else {
-              return (bigexp.Sign < 0) ?
-                CBORObject.FromObject(Double.NegativeInfinity) :
-                CBORObject.FromObject(Double.PositiveInfinity);
-            }
-          } else {
-            // Exponent is lower than the lowest representable
-            // integer of major type 1
-            if (failOnExponentOverflow) {
-              return null;
-            } else {
-              return CBORObject.FromObject(0);
-            }
-          }
-        }
         return CBORObject.FromObject(ExtendedDecimal.Create(
           bigmant,
           bigexp));
       }
+    }
+
+    /// <summary>Parses a number whose format follows the JSON specification
+    /// (RFC 7159). Roughly speaking, a valid number consists of an optional
+    /// minus sign, one or more digits (starting with 1 to 9 unless the only
+    /// digit is 0), an optional decimal point with one or more digits, and
+    /// an optional letter E or e with one or more digits (the exponent).</summary>
+    /// <param name='str'>A string to parse.</param>
+    /// <param name='integersOnly'>If true, no decimal points or exponents
+    /// are allowed in the string.</param>
+    /// <param name='positiveOnly'>If true, only positive numbers are
+    /// allowed (the leading minus is disallowed).</param>
+    /// <param name='failOnExponentOverflow'>Has no effect.</param>
+    /// <returns>A CBOR object that represents the parsed number.</returns>
+    [Obsolete("Use the three-argument version instead; the 'failOnExponentOverflow' parameter now has no effect.")]
+    public static CBORObject ParseJSONNumber(
+      string str,
+      bool integersOnly,
+      bool positiveOnly,
+      bool failOnExponentOverflow) {
+        return ParseJSONNumber(str, integersOnly, positiveOnly);
     }
   }
 }

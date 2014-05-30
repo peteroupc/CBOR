@@ -940,8 +940,8 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @return A Boolean object.
+     * Returns whether this object is a not-a-number value.
+     * @return True if this object is a not-a-number value; otherwise, false.
      */
     public boolean IsNaN() {
       return (this.flags & (BigNumberFlags.FlagQuietNaN | BigNumberFlags.FlagSignalingNaN)) != 0;

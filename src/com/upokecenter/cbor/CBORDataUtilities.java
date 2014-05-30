@@ -22,13 +22,11 @@ private CBORDataUtilities() {
      * Parses a number whose format follows the JSON specification. See
      * #ParseJSONNumber(string, integersOnly, parseOnly) for more information.
      * @param str A string to parse.
-     * @return A CBOR object that represents the parsed number. This function
-     * will return a CBOR object representing positive or negative infinity
-     * if the exponent is greater than 2^64-1 (unless the value is 0), and
-     * will return zero if the exponent is less than -(2^64).
+     * @return A CBOR object that represents the parsed number. Returns
+     * null if the parsing fails.
      */
     public static CBORObject ParseJSONNumber(String str) {
-      return ParseJSONNumber(str, false, false, false);
+      return ParseJSONNumber(str, false, false);
     }
 
     /**
@@ -42,19 +40,13 @@ private CBORDataUtilities() {
      * in the string.
      * @param positiveOnly If true, only positive numbers are allowed (the
      * leading minus is disallowed).
-     * @param failOnExponentOverflow If true, this function will return
-     * null if the exponent is less than -(2^64) or greater than 2^64-1 (unless
-     * the value is 0). If false, this function will return a CBOR object representing
-     * positive or negative infinity if the exponent is greater than 2^64-1
-     * (unless the value is 0), and will return zero if the exponent is less
-     * than -(2^64).
-     * @return A CBOR object that represents the parsed number.
+     * @return A CBOR object that represents the parsed number. Returns
+     * null if the parsing fails.
      */
     public static CBORObject ParseJSONNumber(
       String str,
       boolean integersOnly,
-      boolean positiveOnly,
-      boolean failOnExponentOverflow) {
+      boolean positiveOnly) {
       if (((str)==null || (str).length()==0)) {
         return null;
       }
@@ -87,7 +79,7 @@ private CBORDataUtilities() {
           if (str.charAt(i) == '.') {
             haveDecimalPoint = true;
             ++i;
-          } else if (str.charAt(i) == 'E' || str.charAt(i) == 'e') {
+  } else if (str.charAt(i) == 'E' || str.charAt(i) == 'e') {
             haveExponent = true;
           } else {
             return null;
@@ -130,7 +122,7 @@ private CBORDataUtilities() {
               --newScaleInt;
             }
           }
-        } else if (!integersOnly && str.charAt(i) == '.') {
+  } else if (!integersOnly && str.charAt(i) == '.') {
           if (!haveDigits) {
             // no digits before the decimal point
             return null;
@@ -139,7 +131,7 @@ private CBORDataUtilities() {
             return null;
           }
           haveDecimalPoint = true;
-        } else if (!integersOnly && (str.charAt(i) == 'E' || str.charAt(i) == 'e')) {
+  } else if (!integersOnly && (str.charAt(i) == 'E' || str.charAt(i) == 'e')) {
           haveExponent = true;
           ++i;
           break;
@@ -204,13 +196,13 @@ private CBORDataUtilities() {
         }
         if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
           newScaleInt = expInt;
-        } else if (exp == null) {
+  } else if (exp == null) {
           if (newScale == null) {
             newScale = new FastInteger(newScaleInt);
           }
           if (offset < 0) {
             newScale.SubtractInt(expInt);
-          } else if (expInt != 0) {
+  } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
@@ -254,31 +246,33 @@ private CBORDataUtilities() {
         if (negative) {
           bigmant=(bigmant).negate();
         }
-        if (newScale != null && bigexp.bitLength() > 64) {
-          int bigexpSign = bigexp.signum();
-          if (bigexpSign > 0) {
-            // Exponent is higher than the highest representable
-            // integer of major type 0
-            if (failOnExponentOverflow) {
-              return null;
-            } else {
-              return (bigexp.signum() < 0) ?
-                CBORObject.FromObject(Double.NEGATIVE_INFINITY) :
-                CBORObject.FromObject(Double.POSITIVE_INFINITY);
-            }
-          } else {
-            // Exponent is lower than the lowest representable
-            // integer of major type 1
-            if (failOnExponentOverflow) {
-              return null;
-            } else {
-              return CBORObject.FromObject(0);
-            }
-          }
-        }
         return CBORObject.FromObject(ExtendedDecimal.Create(
           bigmant,
           bigexp));
       }
+    }
+
+    /**
+     * Parses a number whose format follows the JSON specification (RFC
+     * 7159). Roughly speaking, a valid number consists of an optional minus
+     * sign, one or more digits (starting with 1 to 9 unless the only digit
+     * is 0), an optional decimal point with one or more digits, and an optional
+     * letter E or e with one or more digits (the exponent).
+     * @param str A string to parse.
+     * @param integersOnly If true, no decimal points or exponents are allowed
+     * in the string.
+     * @param positiveOnly If true, only positive numbers are allowed (the
+     * leading minus is disallowed).
+     * @param failOnExponentOverflow Has no effect.
+     * @return A CBOR object that represents the parsed number.
+     * @deprecated Use the three-argument version instead; the 'failOnExponentOverflow' parameter now has no effect.
+ */
+@Deprecated
+    public static CBORObject ParseJSONNumber(
+      String str,
+      boolean integersOnly,
+      boolean positiveOnly,
+      boolean failOnExponentOverflow) {
+        return ParseJSONNumber(str, integersOnly, positiveOnly);
     }
   }

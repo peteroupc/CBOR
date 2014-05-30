@@ -773,25 +773,37 @@ import com.upokecenter.cbor.*;
     }
 
     @Test
+    public void TestTags264And265() {
+      CBORObject cbor;
+      cbor = CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false);
+      if(!(cbor != null))Assert.fail();
+      if(cbor.CanFitInDouble())Assert.fail();
+      TestCommon.AssertRoundTrip(cbor);
+      // Tag 264
+      cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd9, 0x01, 0x08, (byte)0x82, (byte)0xc2, 0x42, 2, 2, (byte)0xc2, 0x42, 2, 2  });
+      TestCommon.AssertRoundTrip(cbor);
+      // Tag 265
+      cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xd9, 0x01, 0x09, (byte)0x82, (byte)0xc2, 0x42, 2, 2, (byte)0xc2, 0x42, 2, 2  });
+      TestCommon.AssertRoundTrip(cbor);
+    }
+
+    @Test
     public void TestParseJSONNumber() {
-      if((CBORDataUtilities.ParseJSONNumber(null, false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false, true))!=null)Assert.fail();
-      if (CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false, false) == null) {
-        Assert.fail();
-      }
-      if((CBORDataUtilities.ParseJSONNumber("", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("xyz", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("true", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber(".1", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0..1", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0xyz", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.1xyz", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.xyz", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5exyz", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5q+88", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5ee88", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5e+xyz", false, false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5e+88xyz", false, false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber(null, false, false))!=null)Assert.fail();
+      if(!(CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false) != null))Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("", false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("xyz", false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("true", false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber(".1", false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0..1", false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0xyz", false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.1xyz", false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.xyz", false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5exyz", false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5q+88", false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5ee88", false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5e+xyz", false, false))!=null)Assert.fail();
+      if((CBORDataUtilities.ParseJSONNumber("0.5e+88xyz", false, false))!=null)Assert.fail();
     }
 
     @Test
@@ -6146,6 +6158,19 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     }
 
     @Test
+    public void TestCanFitInForExtendedFloat() {
+      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 11)).CanTruncatedIntFitInInt32()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 12)).CanTruncatedIntFitInInt32()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 13)).CanTruncatedIntFitInInt32()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 14)).CanTruncatedIntFitInInt32()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 15)).CanTruncatedIntFitInInt32()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 16)).CanTruncatedIntFitInInt32()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 17)).CanTruncatedIntFitInInt32()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 18)).CanTruncatedIntFitInInt32()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 19)).CanTruncatedIntFitInInt32()))Assert.fail();
+    }
+
+    @Test
     public void TestCanFitInSpecificCases() {
       CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfb, 0x41, (byte)0xe0, (byte)0x85, 0x48, 0x2d, 0x14, 0x47, 0x7a  });  // 2217361768.63373
       Assert.assertEquals(BigInteger.fromString("2217361768"), cbor.AsBigInteger());
@@ -6155,6 +6180,12 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals(52, cbor.AsBigInteger().bitLength());
       if(!(cbor.CanFitInInt64()))Assert.fail();
       if(CBORObject.FromObject(2554895343L).CanFitInSingle())Assert.fail();
+      cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xc5, (byte)0x82, 0x10, 0x38, 0x64  });  // -6619136
+      Assert.assertEquals(BigInteger.valueOf(-6619136), cbor.AsBigInteger());
+      Assert.assertEquals(-6619136, cbor.AsBigInteger().intValue());
+      Assert.assertEquals(-6619136, cbor.AsInt32());
+      if(!(cbor.AsBigInteger().canFitInInt()))Assert.fail();
+      if(!(cbor.CanTruncatedIntFitInInt32()))Assert.fail();
     }
 
     @Test
@@ -6372,6 +6403,11 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     @Test
     public void TestTaggedUntagged() {
       for (int i = 200; i < 1000; ++i) {
+        if (i == 264 || i == 265 || i + 1 == 264 || i + 1 == 265) {
+          // Skip since they're being used as
+          // arbitrary-precision numbers
+          continue;
+        }
         CBORObject o, o2;
         o = CBORObject.FromObject(0);
         o2 = CBORObject.FromObjectAndTag(o, i);
@@ -6661,6 +6697,11 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             bigintTemp=bigintTemp.add(BigInteger.ONE);
             continue;
           }
+          if (bigintTemp.compareTo(BigInteger.valueOf(264)) == 0 ||
+              bigintTemp.compareTo(BigInteger.valueOf(265)) == 0) {
+            bigintTemp=bigintTemp.add(BigInteger.ONE);
+            continue;
+          }
           CBORObject obj = CBORObject.FromObjectAndTag(0, bigintTemp);
           if(!(obj.isTagged()))Assert.fail( "obj not tagged");
           BigInteger[] tags = obj.GetTags();
@@ -6673,8 +6714,13 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             obj,
             String.format(java.util.Locale.US,"%s(0)", bigintTemp));
           if (!bigintTemp.equals(maxuint)) {
+            BigInteger bigintNew = bigintTemp .add(BigInteger.ONE);
+            if (bigintNew.equals(BigInteger.valueOf(264)) || bigintNew.equals(BigInteger.valueOf(265))) {
+              bigintTemp=bigintTemp.add(BigInteger.ONE);
+              continue;
+            }
             // Test multiple tags
-            CBORObject obj2 = CBORObject.FromObjectAndTag(obj, bigintTemp .add(BigInteger.ONE));
+            CBORObject obj2 = CBORObject.FromObjectAndTag(obj, bigintNew);
             BigInteger[] bi = obj2.GetTags();
             if (bi.length != 2) {
               Assert.assertEquals(String.format(java.util.Locale.US,"Expected 2 tags: %s", obj2),2,bi.length);

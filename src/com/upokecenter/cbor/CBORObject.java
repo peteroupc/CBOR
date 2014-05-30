@@ -381,17 +381,17 @@ public void setConverter(Object value) {
       }
 
     /**
-     * Not documented yet.
+     * The value positive infinity.
      */
     public static final CBORObject PositiveInfinity = CBORObject.FromObject(Double.POSITIVE_INFINITY);
 
     /**
-     * Not documented yet.
+     * The value negative infinity.
      */
     public static final CBORObject NegativeInfinity = CBORObject.FromObject(Double.NEGATIVE_INFINITY);
 
     /**
-     * Not documented yet.
+     * A not-a-number value.
      */
     public static final CBORObject NaN = CBORObject.FromObject(Double.NaN);
 
@@ -2366,8 +2366,6 @@ public void set(String key, CBORObject value) {
      * @param stream A writable data stream.
      * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
-     * @throws java.lang.IllegalArgumentException The value's exponent is less
-     * than -(2^64) or greater than (2^64-1).
      * @throws java.io.IOException An I/O error occurred.
      */
     public static void Write(ExtendedFloat bignum, OutputStream stream) throws IOException {
@@ -2387,10 +2385,14 @@ public void set(String key, CBORObject value) {
         Write(bignum.getMantissa(), stream);
       } else {
         if (!BigIntFits(exponent)) {
-          throw new IllegalArgumentException("Exponent is too low or too high");
+          stream.write(0xd9);  // tag 265
+          stream.write(0x01);
+          stream.write(0x09);
+          stream.write(0x82);  // array, length 2
+        } else {
+          stream.write(0xc5);  // tag 5
+          stream.write(0x82);  // array, length 2
         }
-        stream.write(0xc5);  // tag 5
-        stream.write(0x82);  // array, length 2
         Write(bignum.getExponent(), stream);
         Write(bignum.getMantissa(), stream);
       }
@@ -2420,8 +2422,8 @@ public void set(String key, CBORObject value) {
         Write(rational.getNumerator(), stream);
         return;
       }
-      stream.write(0xd8);  // tag 5
-      stream.write(0x1e);  // tag 5
+      stream.write(0xd8);  // tag 30
+      stream.write(0x1e);
       stream.write(0x82);  // array, length 2
       Write(rational.getNumerator(), stream);
       Write(rational.getDenominator(), stream);
@@ -2443,8 +2445,6 @@ public void set(String key, CBORObject value) {
      * @throws java.lang.NullPointerException The parameter {@code stream}
      * is null.
      * @throws java.io.IOException An I/O error occurred.
-     * @throws java.lang.IllegalArgumentException The value's exponent is less
-     * than -(2^64) or greater than (2^64-1).
      */
     public static void Write(ExtendedDecimal bignum, OutputStream stream) throws IOException {
       if (stream == null) {
@@ -2463,10 +2463,14 @@ public void set(String key, CBORObject value) {
         Write(bignum.getMantissa(), stream);
       } else {
         if (!BigIntFits(exponent)) {
-          throw new IllegalArgumentException("Exponent is too low or too high");
+          stream.write(0xd9);  // tag 264
+          stream.write(0x01);
+          stream.write(0x08);
+          stream.write(0x82);  // array, length 2
+        } else {
+          stream.write(0xc4);  // tag 4
+          stream.write(0x82);  // array, length 2
         }
-        stream.write(0xc4);  // tag 4
-        stream.write(0x82);  // array, length 2
         Write(bignum.getExponent(), stream);
         Write(bignum.getMantissa(), stream);
       }
@@ -3797,8 +3801,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * @param bigValue An arbitrary-precision binary floating-point
      * number.
      * @return A CBOR number object.
-     * @throws java.lang.IllegalArgumentException The value's exponent is less
-     * than -(2^64) or greater than (2^64-1).
      */
     public static CBORObject FromObject(ExtendedFloat bigValue) {
       if ((Object)bigValue == (Object)null) {
@@ -3811,9 +3813,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if (bigintExponent.signum()==0 && !(bigValue.signum()==0 && bigValue.isNegative())) {
         return FromObject(bigValue.getMantissa());
       } else {
-        if (!BigIntFits(bigintExponent)) {
-          throw new IllegalArgumentException("Exponent is too low or too high");
-        }
         return new CBORObject(CBORObjectTypeExtendedFloat, bigValue);
       }
     }
@@ -3837,8 +3836,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR object from a decimal number.
      * @param otherValue An arbitrary-precision decimal number.
      * @return A CBOR number object.
-     * @throws java.lang.IllegalArgumentException The value's exponent is less
-     * than -(2^64) or greater than (2^64-1).
      */
     public static CBORObject FromObject(ExtendedDecimal otherValue) {
       if ((Object)otherValue == (Object)null) {
@@ -3851,9 +3848,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if (bigintExponent.signum()==0 && !(otherValue.signum()==0 && otherValue.isNegative())) {
         return FromObject(otherValue.getMantissa());
       } else {
-        if (!BigIntFits(bigintExponent)) {
-          throw new IllegalArgumentException("Exponent is too low or too high");
-        }
         return new CBORObject(CBORObjectTypeExtendedDecimal, otherValue);
       }
     }
@@ -4231,7 +4225,10 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if (TagHandlersEmpty()) {
         AddTagHandler(BigInteger.valueOf(2), new CBORTag2());
         AddTagHandler(BigInteger.valueOf(3), new CBORTag3());
+        AddTagHandler(BigInteger.valueOf(4), new CBORTag4());
         AddTagHandler(BigInteger.valueOf(5), new CBORTag5());
+        AddTagHandler(BigInteger.valueOf(264), new CBORTag4(true));
+        AddTagHandler(BigInteger.valueOf(265), new CBORTag5(true));
         AddTagHandler(BigInteger.valueOf(25), new CBORTagUnsigned());
         AddTagHandler(BigInteger.valueOf(28), new CBORTag28());
         AddTagHandler(BigInteger.valueOf(29), new CBORTagUnsigned());
@@ -4243,7 +4240,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         AddTagHandler(BigInteger.valueOf(35), new CBORTagGenericString());
         AddTagHandler(BigInteger.valueOf(36), new CBORTagGenericString());
         AddTagHandler(BigInteger.valueOf(37), new CBORTag37());
-        AddTagHandler(BigInteger.valueOf(4), new CBORTag4());
         AddTagHandler(BigInteger.valueOf(30), new CBORTag30());
       }
       synchronized(tagHandlers) {

@@ -2256,9 +2256,11 @@ if (bytes.Length <= 0) {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='index'>A 32-bit unsigned integer.</param>
-    /// <returns>A Boolean object.</returns>
+    /// <summary>Returns whether a bit is set in the two's-complement representation
+    /// of this object's value.</summary>
+    /// <param name='index'>Zero based index of the bit to test. 0 means the
+    /// least significant bit.</param>
+    /// <returns>True if the specified bit is set; otherwise, false.</returns>
     public bool testBit(int index) {
       if (index < 0) {
         throw new ArgumentOutOfRangeException("index");
@@ -2706,8 +2708,8 @@ if (bytes.Length <= 0) {
       return bigintRet;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A BigInteger object.</returns>
+    /// <summary>Returns the absolute value of this object's value.</summary>
+    /// <returns>This object's value with the sign removed.</returns>
     public BigInteger abs() {
       return (this.wordCount == 0 || !this.negative) ? this : this.negate();
     }
@@ -3196,9 +3198,10 @@ if (bytes.Length <= 0) {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='str'>A string object.</param>
-    /// <returns>A BigInteger object.</returns>
+    /// <summary>Converts a string to an arbitrary-precision integer.</summary>
+    /// <param name='str'>A string containing only digits, except that
+    /// it may start with a minus sign.</param>
+    /// <returns>A BigInteger object with the same value as given in the string.</returns>
     public static BigInteger fromString(string str) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -4164,8 +4167,9 @@ if (bytes.Length <= 0) {
       }
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets the sign of this object's value.</summary>
+    /// <value>0 if this value is zero; -1 if this value is negative, or 1 if
+    /// this value is positive.</value>
     public int Sign {
       get {
         if (this.wordCount == 0) {
@@ -4192,8 +4196,11 @@ if (bytes.Length <= 0) {
       return srrem[0];
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A BigInteger[] object.</returns>
+    /// <summary>Calculates the square root and the remainder.</summary>
+    /// <returns>An array of two big integers: the first integer is the square
+    /// root, and the second is the difference between this value and the last
+    /// square of the first integer, before this value. Returns two zeros
+    /// if this value is 0 or less, or two ones if this value equals 1.</returns>
     public BigInteger[] sqrtWithRemainder() {
       if (this.Sign <= 0) {
         return new BigInteger[] { BigInteger.Zero, BigInteger.Zero };

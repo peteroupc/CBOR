@@ -21,8 +21,8 @@ namespace PeterO.Cbor {
     /// If the data is not valid, should throw a CBORException.</summary>
     /// <param name='obj'>A CBOR object with the corresponding tag handled
     /// by the ICBORTag object.</param>
-    /// <returns>A CBORObject object.  Note that this method may
-    /// choose to return the same object as the parameter.</returns>
+    /// <returns>A CBORObject object. Note that this method may choose to
+    /// return the same object as the parameter.</returns>
     CBORObject ValidateObject(CBORObject obj);
   }
 }

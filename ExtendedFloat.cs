@@ -889,8 +889,9 @@ namespace PeterO {
         BigNumberFlags.FlagInfinity;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <summary>Returns whether this object is a not-a-number value.</summary>
+    /// <returns>True if this object is a not-a-number value; otherwise,
+    /// false.</returns>
     public bool IsNaN() {
       return (this.flags & (BigNumberFlags.FlagQuietNaN | BigNumberFlags.FlagSignalingNaN)) != 0;
     }

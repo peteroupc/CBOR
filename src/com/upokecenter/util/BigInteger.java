@@ -1930,9 +1930,11 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param index A 32-bit unsigned integer.
-     * @return A Boolean object.
+     * Returns whether a bit is set in the two's-complement representation
+     * of this object's value.
+     * @param index Zero based index of the bit to test. 0 means the least significant
+     * bit.
+     * @return True if the specified bit is set; otherwise, false.
      */
     public boolean testBit(int index) {
       if (index < 0) {
@@ -2397,8 +2399,8 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @return A BigInteger object.
+     * Returns the absolute value of this object's value.
+     * @return This object's value with the sign removed.
      */
     public BigInteger abs() {
       return (this.wordCount == 0 || !this.negative) ? this : this.negate();
@@ -2897,9 +2899,10 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param str A string object.
-     * @return A BigInteger object.
+     * Converts a string to an arbitrary-precision integer.
+     * @param str A string containing only digits, except that it may start
+     * with a minus sign.
+     * @return A BigInteger object with the same value as given in the string.
      */
     public static BigInteger fromString(String str) {
       if (str == null) {
@@ -3888,8 +3891,9 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
+     * Gets the sign of this object's value.
+     * @return 0 if this value is zero; -1 if this value is negative, or 1 if
+     * this value is positive.
      */
     public int signum() {
         if (this.wordCount == 0) {
@@ -3917,8 +3921,11 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @return A BigInteger[] object.
+     * Calculates the square root and the remainder.
+     * @return An array of two big integers: the first integer is the square
+     * root, and the second is the difference between this value and the last
+     * square of the first integer, before this value. Returns two zeros
+     * if this value is 0 or less, or two ones if this value equals 1.
      */
     public BigInteger[] sqrtWithRemainder() {
       if (this.signum() <= 0) {

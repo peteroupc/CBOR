@@ -419,13 +419,13 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>The value positive infinity.</summary>
     public static readonly CBORObject PositiveInfinity = CBORObject.FromObject(Double.PositiveInfinity);
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>The value negative infinity.</summary>
     public static readonly CBORObject NegativeInfinity = CBORObject.FromObject(Double.NegativeInfinity);
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>A not-a-number value.</summary>
     public static readonly CBORObject NaN = CBORObject.FromObject(Double.NaN);
 
     /// <summary>Gets a value indicating whether this CBOR object represents
@@ -2341,8 +2341,6 @@ namespace PeterO.Cbor {
     /// </summary>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null.</exception>
-    /// <exception cref='System.ArgumentException'>The value's exponent
-    /// is less than -(2^64) or greater than (2^64-1).</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <param name='bignum'>An ExtendedFloat object.</param>
     /// <param name='stream'>A writable data stream.</param>
@@ -2363,10 +2361,14 @@ namespace PeterO.Cbor {
         Write(bignum.Mantissa, stream);
       } else {
         if (!BigIntFits(exponent)) {
-          throw new ArgumentException("Exponent is too low or too high");
+          stream.WriteByte(0xd9);  // tag 265
+          stream.WriteByte(0x01);
+          stream.WriteByte(0x09);
+          stream.WriteByte(0x82);  // array, length 2
+        } else {
+          stream.WriteByte(0xc5);  // tag 5
+          stream.WriteByte(0x82);  // array, length 2
         }
-        stream.WriteByte(0xc5);  // tag 5
-        stream.WriteByte(0x82);  // array, length 2
         Write(bignum.Exponent, stream);
         Write(bignum.Mantissa, stream);
       }
@@ -2394,8 +2396,8 @@ namespace PeterO.Cbor {
         Write(rational.Numerator, stream);
         return;
       }
-      stream.WriteByte(0xd8);  // tag 5
-      stream.WriteByte(0x1e);  // tag 5
+      stream.WriteByte(0xd8);  // tag 30
+      stream.WriteByte(0x1e);
       stream.WriteByte(0x82);  // array, length 2
       Write(rational.Numerator, stream);
       Write(rational.Denominator, stream);
@@ -2420,8 +2422,6 @@ namespace PeterO.Cbor {
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
-    /// <exception cref='System.ArgumentException'>The value's exponent
-    /// is less than -(2^64) or greater than (2^64-1).</exception>
     public static void Write(ExtendedDecimal bignum, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -2439,10 +2439,14 @@ namespace PeterO.Cbor {
         Write(bignum.Mantissa, stream);
       } else {
         if (!BigIntFits(exponent)) {
-          throw new ArgumentException("Exponent is too low or too high");
+          stream.WriteByte(0xd9);  // tag 264
+          stream.WriteByte(0x01);
+          stream.WriteByte(0x08);
+          stream.WriteByte(0x82);  // array, length 2
+        } else {
+          stream.WriteByte(0xc4);  // tag 4
+          stream.WriteByte(0x82);  // array, length 2
         }
-        stream.WriteByte(0xc4);  // tag 4
-        stream.WriteByte(0x82);  // array, length 2
         Write(bignum.Exponent, stream);
         Write(bignum.Mantissa, stream);
       }
@@ -3735,8 +3739,6 @@ namespace PeterO.Cbor {
     /// <param name='bigValue'>An arbitrary-precision binary floating-point
     /// number.</param>
     /// <returns>A CBOR number object.</returns>
-    /// <exception cref='System.ArgumentException'>The value's exponent
-    /// is less than -(2^64) or greater than (2^64-1).</exception>
     public static CBORObject FromObject(ExtendedFloat bigValue) {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
@@ -3748,9 +3750,6 @@ namespace PeterO.Cbor {
       if (bigintExponent.IsZero && !(bigValue.IsZero && bigValue.IsNegative)) {
         return FromObject(bigValue.Mantissa);
       } else {
-        if (!BigIntFits(bigintExponent)) {
-          throw new ArgumentException("Exponent is too low or too high");
-        }
         return new CBORObject(CBORObjectTypeExtendedFloat, bigValue);
       }
     }
@@ -3771,8 +3770,6 @@ namespace PeterO.Cbor {
     /// <summary>Generates a CBOR object from a decimal number.</summary>
     /// <param name='otherValue'>An arbitrary-precision decimal number.</param>
     /// <returns>A CBOR number object.</returns>
-    /// <exception cref='System.ArgumentException'>The value's exponent
-    /// is less than -(2^64) or greater than (2^64-1).</exception>
     public static CBORObject FromObject(ExtendedDecimal otherValue) {
       if ((object)otherValue == (object)null) {
         return CBORObject.Null;
@@ -3784,9 +3781,6 @@ namespace PeterO.Cbor {
       if (bigintExponent.IsZero && !(otherValue.IsZero && otherValue.IsNegative)) {
         return FromObject(otherValue.Mantissa);
       } else {
-        if (!BigIntFits(bigintExponent)) {
-          throw new ArgumentException("Exponent is too low or too high");
-        }
         return new CBORObject(CBORObjectTypeExtendedDecimal, otherValue);
       }
     }
@@ -4176,7 +4170,10 @@ namespace PeterO.Cbor {
       if (TagHandlersEmpty()) {
         AddTagHandler((BigInteger)2, new CBORTag2());
         AddTagHandler((BigInteger)3, new CBORTag3());
+        AddTagHandler((BigInteger)4, new CBORTag4());
         AddTagHandler((BigInteger)5, new CBORTag5());
+        AddTagHandler((BigInteger)264, new CBORTag4(true));
+        AddTagHandler((BigInteger)265, new CBORTag5(true));
         AddTagHandler((BigInteger)25, new CBORTagUnsigned());
         AddTagHandler((BigInteger)28, new CBORTag28());
         AddTagHandler((BigInteger)29, new CBORTagUnsigned());
@@ -4188,7 +4185,6 @@ namespace PeterO.Cbor {
         AddTagHandler((BigInteger)35, new CBORTagGenericString());
         AddTagHandler((BigInteger)36, new CBORTagGenericString());
         AddTagHandler((BigInteger)37, new CBORTag37());
-        AddTagHandler((BigInteger)4, new CBORTag4());
         AddTagHandler((BigInteger)30, new CBORTag30());
       }
       lock (tagHandlers) {

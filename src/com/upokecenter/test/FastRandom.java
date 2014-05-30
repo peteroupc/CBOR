@@ -37,8 +37,8 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param v A 32-bit signed integer. (2).
+     * Generates a random number.
+     * @param v The return value will be 0 or greater, and less than this number.
      * @return A 32-bit signed integer.
      */
     public int NextValue(int v) {

@@ -28,9 +28,6 @@ namespace PeterO.Cbor {
       return ((ExtendedRational)obj).IsNaN();
     }
 
-    /// <returns>A 64-bit floating-point number.</returns>
-    /// <param name='obj'>An arbitrary object.</param>
- /// <summary>Not documented yet.</summary>
     public double AsDouble(object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return er.ToDouble();
@@ -46,9 +43,6 @@ namespace PeterO.Cbor {
       return er.ToExtendedFloatExactIfPossible(PrecisionContext.Binary128.WithUnlimitedExponents());
     }
 
-    /// <returns>A 32-bit floating-point number.</returns>
-    /// <param name='obj'>An arbitrary object.</param>
- /// <summary>Not documented yet.</summary>
     public float AsSingle(object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return er.ToSingle();
