@@ -23,6 +23,9 @@ import com.upokecenter.util.*;
     private CBORTypeFilter[] elements;
     private BigInteger[] tags;
 
+    /**
+     * Initializes a new instance of the CBORTypeFilter class.
+     */
     public CBORTypeFilter () {
     }
 
@@ -100,7 +103,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
+     *
      * @param tags An integer array of tags allowed.
      * @return A CBORTypeFilter object.
      */
@@ -126,7 +129,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
+     *
      * @param tags A BigInteger[] object.
      * @return A CBORTypeFilter object.
      */
@@ -157,19 +160,7 @@ import com.upokecenter.util.*;
     /**
      * Not documented yet.
      * @param arrayLength A 32-bit signed integer.
-     * @param elements An array of CBORTypeFilter.
-     * @return A CBORTypeFilter object.
-     * @deprecated Use WithArrayExactLength instead.
- */
-@Deprecated
-    public CBORTypeFilter WithArray(int arrayLength, CBORTypeFilter... elements) {
-      return this.WithArrayExactLength(arrayLength, elements);
-    }
-
-    /**
-     * Not documented yet.
-     * @param arrayLength A 32-bit signed integer.
-     * @param elements An array of CBORTypeFilter.
+     * @param elements A params object.
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter WithArrayExactLength(int arrayLength, CBORTypeFilter... elements) {
@@ -194,7 +185,7 @@ import com.upokecenter.util.*;
     /**
      * Not documented yet.
      * @param arrayLength A 32-bit signed integer.
-     * @param elements An array of CBORTypeFilter.
+     * @param elements A params object.
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter WithArrayMinLength(int arrayLength, CBORTypeFilter... elements) {
@@ -428,10 +419,33 @@ import com.upokecenter.util.*;
       return this.MajorTypeMatches(7) && !this.floatingpoint;
     }
 
+    /**
+     * A filter that allows no CBOR types.
+     */
     public static final CBORTypeFilter None = new CBORTypeFilter();
+
+    /**
+     * A filter that allows unsigned integers.
+     */
     public static final CBORTypeFilter UnsignedInteger = new CBORTypeFilter().WithUnsignedInteger();
+
+    /**
+     * A filter that allows negative integers.
+     */
     public static final CBORTypeFilter NegativeInteger = new CBORTypeFilter().WithNegativeInteger();
+
+    /**
+     * A filter that allows any CBOR object.
+     */
     public static final CBORTypeFilter Any = new CBORTypeFilter().WithAny();
+
+    /**
+     * A filter that allows byte strings.
+     */
     public static final CBORTypeFilter ByteString = new CBORTypeFilter().WithByteString();
+
+    /**
+     * A filter that allows text strings.
+     */
     public static final CBORTypeFilter TextString = new CBORTypeFilter().WithTextString();
   }

@@ -9,11 +9,8 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Description of CBORTag30.</summary>
   internal class CBORTag30 : ICBORTag
   {
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter GetTypeFilter() {
       return new CBORTypeFilter().WithArrayExactLength(
         2,
@@ -21,9 +18,6 @@ namespace PeterO.Cbor {
         CBORTypeFilter.UnsignedInteger.WithTags(2));
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>A CBORObject object. (2).</param>
-    /// <returns>A CBORObject object.</returns>
     public CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.Array) {
         throw new CBORException("Rational number must be an array");

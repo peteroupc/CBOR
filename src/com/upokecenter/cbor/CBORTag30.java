@@ -9,15 +9,8 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-    /**
-     * Description of CBORTag30.
-     */
   class CBORTag30 implements ICBORTag
   {
-    /**
-     * Not documented yet.
-     * @return A CBORTypeFilter object.
-     */
     public CBORTypeFilter GetTypeFilter() {
       return new CBORTypeFilter().WithArrayExactLength(
         2,
@@ -25,11 +18,6 @@ import com.upokecenter.util.*;
         CBORTypeFilter.UnsignedInteger.WithTags(2));
     }
 
-    /**
-     * Not documented yet.
-     * @param obj A CBORObject object. (2).
-     * @return A CBORObject object.
-     */
     public CBORObject ValidateObject(CBORObject obj) {
       if (obj.getType() != CBORType.Array) {
         throw new CBORException("Rational number must be an array");

@@ -13,8 +13,8 @@ namespace PeterO.Cbor {
   // Contains extra methods placed separately
   // because they are not CLS-compliant or they
   // are specific to the .NET framework.
-  public sealed partial class CBORObject {
-    /// <summary>Not documented yet.</summary>
+  public sealed partial class CBORObject
+  {
     /// <returns>A 16-bit unsigned integer.</returns>
     [CLSCompliant(false)]
     public ushort AsUInt16() {
@@ -25,7 +25,6 @@ namespace PeterO.Cbor {
       return (ushort)v;
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <returns>A 32-bit unsigned integer.</returns>
     [CLSCompliant(false)]
     public uint AsUInt32() {
@@ -36,9 +35,10 @@ namespace PeterO.Cbor {
       return (uint)v;
     }
 
+    [CLSCompliant(false)]
     /// <summary>Not documented yet.</summary>
     /// <returns>A SByte object.</returns>
-    [CLSCompliant(false)]
+ /// <summary>Not documented yet.</summary>
     public sbyte AsSByte() {
       int v = this.AsInt32();
       if (v > SByte.MaxValue || v < SByte.MinValue) {
@@ -136,7 +136,8 @@ namespace PeterO.Cbor {
           BigInteger.Abs(newDecimal.Mantissa),
           -((int)newDecimal.Exponent),
           newDecimal.Mantissa.Sign < 0);
-      } catch (TrapException ex) {
+      }
+      catch (TrapException ex) {
         throw new OverflowException("This object's value is out of range", ex);
       }
     }
@@ -152,7 +153,8 @@ namespace PeterO.Cbor {
           BigInteger.Abs(newDecimal.Mantissa),
           -((int)newDecimal.Exponent),
           newDecimal.Mantissa.Sign < 0);
-      } catch (TrapException ex) {
+      }
+      catch (TrapException ex) {
         throw new OverflowException("This object's value is out of range", ex);
       }
     }
@@ -167,7 +169,7 @@ namespace PeterO.Cbor {
     public decimal AsDecimal() {
       if (this.ItemType == CBORObjectTypeInteger) {
         return (decimal)(long)this.ThisItem;
-      } else if (this.ItemType == CBORObjectTypeExtendedRational) {
+  } else if (this.ItemType == CBORObjectTypeExtendedRational) {
         return ExtendedRationalToDecimal((ExtendedRational)this.ThisItem);
       } else {
         return ExtendedDecimalToDecimal(this.AsExtendedDecimal());
@@ -196,7 +198,8 @@ namespace PeterO.Cbor {
       for (int i = 4; i < Math.Min(8, data.Length); ++i) {
         b |= (((int)data[i]) & 0xff) << ((i - 4) * 8);
       }
-      unchecked {
+      unchecked
+      {
         ulong ret = (ulong)a;
         ret &= 0xFFFFFFFFL;
         ulong retb = (ulong)b;
@@ -206,15 +209,15 @@ namespace PeterO.Cbor {
       }
     }
 
+    [CLSCompliant(false)]
     /// <summary>Not documented yet.</summary>
     /// <param name='value'>A SByte object.</param>
     /// <param name='stream'>A writable data stream.</param>
-    [CLSCompliant(false)]
+ /// <summary>Not documented yet.</summary>
     public static void Write(sbyte value, Stream stream) {
       Write((long)value, stream);
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
@@ -238,14 +241,14 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='value'>A Decimal object.</param>
     /// <returns>A CBORObject object.</returns>
+    /// <param name='value'>A Decimal object.</param>
     public static CBORObject FromObject(decimal value) {
       if (Math.Round(value) == value) {
         // This is an integer
         if (value >= 0 && value <= UInt64.MaxValue) {
           return FromObject((ulong)value);
-        } else if (value >= Int64.MinValue && value <= Int64.MaxValue) {
+  } else if (value >= Int64.MinValue && value <= Int64.MaxValue) {
           return FromObject((long)value);
         } else {
           return FromObject(DecimalToBigInteger(value));
@@ -279,7 +282,6 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <param name='value'>A 32-bit unsigned integer.</param>
     /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
@@ -287,7 +289,6 @@ namespace PeterO.Cbor {
       Write((ulong)value, stream);
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <param name='value'>A 16-bit unsigned integer.</param>
     /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
@@ -295,10 +296,11 @@ namespace PeterO.Cbor {
       Write((ulong)value, stream);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='value'>A SByte object.</param>
-    /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A CBORObject object.</returns>
+    /// <param name='value'>A SByte object.</param>
+ /// <summary>Not documented yet.</summary>
     public static CBORObject FromObject(sbyte value) {
       return FromObject((long)value);
     }
@@ -318,7 +320,6 @@ namespace PeterO.Cbor {
       return BigInteger.fromByteArray(data, true);
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
@@ -326,7 +327,6 @@ namespace PeterO.Cbor {
       return CBORObject.FromObject(UInt64ToBigInteger(value));
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <param name='value'>A 32-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
@@ -334,7 +334,6 @@ namespace PeterO.Cbor {
       return FromObject((long)value);
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <param name='value'>A 16-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
@@ -342,31 +341,52 @@ namespace PeterO.Cbor {
       return FromObject((long)value);
     }
 
+    [CLSCompliant(false)]
     /// <summary>Not documented yet.</summary>
+    /// <returns>A CBORObject object.</returns>
     /// <param name='o'>An arbitrary object.</param>
     /// <param name='tag'>A 64-bit unsigned integer.</param>
-    /// <returns>A CBORObject object.</returns>
-    [CLSCompliant(false)]
+ /// <summary>Not documented yet.</summary>
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
       return FromObjectAndTag(o, UInt64ToBigInteger(tag));
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>The sum of the two objects.</returns>
+    /// <param name='a'>A CBORObject object.</param>
+    /// <param name='b'>A CBORObject object. (2).</param>
     public static CBORObject operator +(CBORObject a, CBORObject b) {
       return Addition(a, b);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>The difference of the two objects.</returns>
+    /// <param name='a'>A CBORObject object.</param>
+    /// <param name='b'>A CBORObject object. (2).</param>
     public static CBORObject operator -(CBORObject a, CBORObject b) {
       return Subtract(a, b);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>The product of the two objects.</returns>
+    /// <param name='a'>A CBORObject object.</param>
+    /// <param name='b'>A CBORObject object. (2).</param>
     public static CBORObject operator *(CBORObject a, CBORObject b) {
       return Multiply(a, b);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>The quotient of the two objects.</returns>
+    /// <param name='a'>A CBORObject object.</param>
+    /// <param name='b'>A CBORObject object. (2).</param>
     public static CBORObject operator /(CBORObject a, CBORObject b) {
       return Divide(a, b);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>The remainder of the two objects.</returns>
+    /// <param name='a'>A CBORObject object.</param>
+    /// <param name='b'>A CBORObject object. (2).</param>
     public static CBORObject operator %(CBORObject a, CBORObject b) {
       return Remainder(a, b);
     }

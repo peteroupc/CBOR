@@ -47,15 +47,10 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='key'>A T1 object.</param>
-    /// <returns>A Boolean object.</returns>
     public bool ContainsKey(T1 key) {
       return this.tree.Contains(new KeyValuePair<T1, T2>(key, default(T2)));
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
     public ICollection<T1> Keys {
       get {
         var list = new List<T1>();
@@ -66,17 +61,10 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='key'>A T1 object.</param>
-    /// <returns>A Boolean object.</returns>
     public bool Remove(T1 key) {
       return this.tree.Remove(new KeyValuePair<T1, T2>(key, default(T2)));
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='key'>A T1 object.</param>
-    /// <param name='value'>A T2 object.</param>
-    /// <returns>A Boolean object.</returns>
     public bool TryGetValue(T1 key, out T2 value) {
       KeyValuePair<T1, T2> kvp;
       if (this.tree.Find(new KeyValuePair<T1, T2>(key, default(T2)), out kvp)) {
@@ -88,9 +76,6 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <returns>A T2 object.</returns>
-    /// <param name='key'>A T1 object.</param>
     public ICollection<T2> Values {
       get {
         var list = new List<T2>();
@@ -116,33 +101,24 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='item'>A KeyValuePair object.</param>
     public void Add(KeyValuePair<T1, T2> item) {
       this.tree.Add(item);
     }
 
-    /// <summary>Not documented yet.</summary>
     public void Clear() {
       this.tree.Clear();
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='item'>A KeyValuePair object.</param>
-    /// <returns>A Boolean object.</returns>
     public bool Contains(KeyValuePair<T1, T2> item) {
       return this.tree.Contains(item);
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <param name='array'>A KeyValuePair[] object.</param>
     /// <param name='arrayIndex'>A 32-bit signed integer.</param>
     public void CopyTo(KeyValuePair<T1, T2>[] array, int arrayIndex) {
       this.tree.CopyTo(array, arrayIndex);
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
     public int Count {
       get {
         return this.tree.Count;
@@ -157,9 +133,6 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='item'>A KeyValuePair object.</param>
-    /// <returns>A Boolean object.</returns>
     public bool Remove(KeyValuePair<T1, T2> item) {
       return this.tree.Remove(item);
     }

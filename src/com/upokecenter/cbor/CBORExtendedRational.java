@@ -11,44 +11,24 @@ import com.upokecenter.util.*;
 
   class CBORExtendedRational implements ICBORNumber
   {
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
     public boolean IsPositiveInfinity(Object obj) {
       return ((ExtendedRational)obj).IsPositiveInfinity();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
     public boolean IsInfinity(Object obj) {
       return ((ExtendedRational)obj).IsInfinity();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
     public boolean IsNegativeInfinity(Object obj) {
       return ((ExtendedRational)obj).IsNegativeInfinity();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
     public boolean IsNaN(Object obj) {
       return ((ExtendedRational)obj).IsNaN();
     }
 
     /**
-     * Not documented yet.
+     *
      * @param obj An arbitrary object.
      * @return A 64-bit floating-point number.
      */
@@ -57,28 +37,18 @@ import com.upokecenter.util.*;
       return er.ToDouble();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return An ExtendedDecimal object.
-     */
     public ExtendedDecimal AsExtendedDecimal(Object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return er.ToExtendedDecimalExactIfPossible(PrecisionContext.Decimal128.WithUnlimitedExponents());
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return An ExtendedFloat object.
-     */
     public ExtendedFloat AsExtendedFloat(Object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return er.ToExtendedFloatExactIfPossible(PrecisionContext.Binary128.WithUnlimitedExponents());
     }
 
     /**
-     * Not documented yet.
+     *
      * @param obj An arbitrary object.
      * @return A 32-bit floating-point number.
      */
@@ -87,21 +57,11 @@ import com.upokecenter.util.*;
       return er.ToSingle();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A BigInteger object.
-     */
     public BigInteger AsBigInteger(Object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return er.ToBigInteger();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 64-bit signed integer.
-     */
     public long AsInt64(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (ef.isFinite()) {
@@ -113,11 +73,6 @@ import com.upokecenter.util.*;
       throw new ArithmeticException("This Object's value is out of range");
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
     public boolean CanFitInSingle(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (!ef.isFinite()) {
@@ -126,11 +81,6 @@ import com.upokecenter.util.*;
       return ef.compareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0;
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
     public boolean CanFitInDouble(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (!ef.isFinite()) {
@@ -139,29 +89,14 @@ import com.upokecenter.util.*;
       return ef.compareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0;
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
     public boolean CanFitInInt32(Object obj) {
       return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt32(obj);
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
     public boolean CanFitInInt64(Object obj) {
       return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt64(obj);
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
     public boolean CanTruncatedIntFitInInt64(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (!ef.isFinite()) {
@@ -171,11 +106,6 @@ import com.upokecenter.util.*;
       return bi.bitLength() <= 63;
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
     public boolean CanTruncatedIntFitInInt32(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (!ef.isFinite()) {
@@ -185,31 +115,16 @@ import com.upokecenter.util.*;
       return bi.canFitInInt();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
     public boolean IsZero(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       return ef.signum()==0;
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A 32-bit signed integer.
-     */
     public int Sign(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       return ef.signum();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A Boolean object.
-     */
     public boolean IsIntegral(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (!ef.isFinite()) {
@@ -225,13 +140,6 @@ import com.upokecenter.util.*;
       return rem.signum()==0;
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @param minValue A 32-bit signed integer. (2).
-     * @param maxValue A 32-bit signed integer. (3).
-     * @return A 32-bit signed integer.
-     */
     public int AsInt32(Object obj, int minValue, int maxValue) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (ef.isFinite()) {
@@ -246,31 +154,16 @@ import com.upokecenter.util.*;
       throw new ArithmeticException("This Object's value is out of range");
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object. (2).
-     * @return An arbitrary object.
-     */
     public Object Negate(Object obj) {
       ExtendedRational ed = (ExtendedRational)obj;
       return ed.Negate();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object. (2).
-     * @return An arbitrary object.
-     */
     public Object Abs(Object obj) {
       ExtendedRational ed = (ExtendedRational)obj;
       return ed.Abs();
     }
 
-    /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return An ExtendedRational object.
-     */
     public ExtendedRational AsExtendedRational(Object obj) {
       return (ExtendedRational)obj;
     }

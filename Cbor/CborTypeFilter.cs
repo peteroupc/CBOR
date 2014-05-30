@@ -21,6 +21,7 @@ namespace PeterO.Cbor {
     private CBORTypeFilter[] elements;
     private BigInteger[] tags;
 
+    /// <summary>Initializes a new instance of the CBORTypeFilter class.</summary>
     public CBORTypeFilter() {
     }
 
@@ -89,7 +90,6 @@ namespace PeterO.Cbor {
       return this.WithType(3).WithTags(25);
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <param name='tags'>An integer array of tags allowed.</param>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithTags(params int[] tags) {
@@ -113,7 +113,6 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <param name='tags'>A BigInteger[] object.</param>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithTags(params BigInteger[] tags) {
@@ -141,18 +140,9 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='arrayLength'>A 32-bit signed integer.</param>
-    /// <param name='elements'>An array of CBORTypeFilter.</param>
-    /// <returns>A CBORTypeFilter object.</returns>
-    [Obsolete("Use WithArrayExactLength instead.")]
-    public CBORTypeFilter WithArray(int arrayLength, params CBORTypeFilter[] elements) {
-      return this.WithArrayExactLength(arrayLength, elements);
-    }
-
-    /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     /// <param name='arrayLength'>A 32-bit signed integer.</param>
-    /// <param name='elements'>An array of CBORTypeFilter.</param>
+    /// <param name='elements'>A params object.</param>
     public CBORTypeFilter WithArrayExactLength(int arrayLength, params CBORTypeFilter[] elements) {
       if (this.any) {
         return this;
@@ -175,7 +165,7 @@ namespace PeterO.Cbor {
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     /// <param name='arrayLength'>A 32-bit signed integer.</param>
-    /// <param name='elements'>An array of CBORTypeFilter.</param>
+    /// <param name='elements'>A params object.</param>
     public CBORTypeFilter WithArrayMinLength(int arrayLength, params CBORTypeFilter[] elements) {
       if (this.any) {
         return this;
@@ -226,8 +216,8 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='type'>A 32-bit signed integer.</param>
     /// <returns>A Boolean object.</returns>
+    /// <param name='type'>A 32-bit signed integer.</param>
     public bool MajorTypeMatches(int type) {
       #if DEBUG
       if (type < 0) {
@@ -242,24 +232,24 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='length'>A 32-bit signed integer.</param>
     /// <returns>A Boolean object.</returns>
+    /// <param name='length'>A 32-bit signed integer.</param>
     public bool ArrayLengthMatches(int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                                               (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='length'>A 64-bit signed integer.</param>
     /// <returns>A Boolean object.</returns>
+    /// <param name='length'>A 64-bit signed integer.</param>
     public bool ArrayLengthMatches(long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                                               (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='bigLength'>A BigInteger object.</param>
     /// <returns>A Boolean object.</returns>
+    /// <param name='bigLength'>A BigInteger object.</param>
     public bool ArrayLengthMatches(BigInteger bigLength) {
       if (bigLength == null) {
         throw new ArgumentNullException("bigLength");
@@ -280,8 +270,8 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='tag'>A 32-bit signed integer.</param>
     /// <returns>A Boolean object.</returns>
+    /// <param name='tag'>A 32-bit signed integer.</param>
     public bool TagAllowed(int tag) {
       if (this.any) {
         return true;
@@ -290,8 +280,8 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='tag'>A 64-bit signed integer.</param>
     /// <returns>A Boolean object.</returns>
+    /// <param name='tag'>A 64-bit signed integer.</param>
     public bool TagAllowed(long tag) {
       if (this.any) {
         return true;
@@ -300,8 +290,8 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='bigTag'>A BigInteger object.</param>
     /// <returns>A Boolean object.</returns>
+    /// <param name='bigTag'>A BigInteger object.</param>
     public bool TagAllowed(BigInteger bigTag) {
       if (bigTag == null) {
         throw new ArgumentNullException("bigTag");
@@ -324,16 +314,16 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='index'>A 32-bit signed integer.</param>
     /// <returns>A Boolean object.</returns>
+    /// <param name='index'>A 32-bit signed integer.</param>
     public bool ArrayIndexAllowed(int index) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                                               ((this.arrayMinLength || index < this.arrayLength) && index >= 0));
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='index'>A 32-bit signed integer.</param>
     /// <returns>A CBORTypeFilter object.</returns>
+    /// <param name='index'>A 32-bit signed integer.</param>
     public CBORTypeFilter GetSubFilter(int index) {
       if (this.anyArrayLength || this.any) {
         return Any;
@@ -357,8 +347,8 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='index'>A 64-bit signed integer.</param>
     /// <returns>A CBORTypeFilter object.</returns>
+    /// <param name='index'>A 64-bit signed integer.</param>
     public CBORTypeFilter GetSubFilter(long index) {
       if (this.anyArrayLength || this.any) {
         return Any;
@@ -389,11 +379,22 @@ namespace PeterO.Cbor {
       return this.MajorTypeMatches(7) && !this.floatingpoint;
     }
 
+    /// <summary>A filter that allows no CBOR types.</summary>
     public static readonly CBORTypeFilter None = new CBORTypeFilter();
+
+    /// <summary>A filter that allows unsigned integers.</summary>
     public static readonly CBORTypeFilter UnsignedInteger = new CBORTypeFilter().WithUnsignedInteger();
+
+    /// <summary>A filter that allows negative integers.</summary>
     public static readonly CBORTypeFilter NegativeInteger = new CBORTypeFilter().WithNegativeInteger();
+
+    /// <summary>A filter that allows any CBOR object.</summary>
     public static readonly CBORTypeFilter Any = new CBORTypeFilter().WithAny();
+
+    /// <summary>A filter that allows byte strings.</summary>
     public static readonly CBORTypeFilter ByteString = new CBORTypeFilter().WithByteString();
+
+    /// <summary>A filter that allows text strings.</summary>
     public static readonly CBORTypeFilter TextString = new CBORTypeFilter().WithTextString();
   }
 }

@@ -78,7 +78,6 @@ namespace Test {
       return new Decimal(x);
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void TestCBORObjectDecimal() {
       FastRandom rand = new FastRandom();
@@ -140,7 +139,6 @@ namespace Test {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void TestSByte() {
       for (int i = SByte.MinValue; i <= SByte.MaxValue; ++i) {
@@ -157,26 +155,24 @@ namespace Test {
     }
 
     private enum AByte : byte {
-    /// <summary>Not documented yet.</summary>
       A = 254,
 
-    /// <summary>Not documented yet.</summary>
       B
     }
 
     private enum AInt : int {
-    /// <summary>Not documented yet.</summary>
+    /// <summary>An arbitrary value.</summary>
       A = 256,
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>An arbitrary value.</summary>
       B
     }
 
     private enum AULong : ulong {
-    /// <summary>Not documented yet.</summary>
+    /// <summary>An arbitrary value.</summary>
       A = 999999,
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>An arbitrary value.</summary>
       B
     }
 
@@ -258,7 +254,6 @@ namespace Test {
       return new String(charbuf);
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void TestFloatCloseToEdge() {
       try {
@@ -4231,7 +4226,6 @@ namespace Test {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void TestULong() {
       ulong[] ranges = new ulong[] {
@@ -4330,7 +4324,6 @@ namespace Test {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void TestUInt() {
       uint[] ranges = new uint[] { 0, 65539,
@@ -4353,7 +4346,6 @@ namespace Test {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void TestDecimal() {
       TestCommon.AssertSer(
@@ -4375,7 +4367,6 @@ namespace Test {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void TestUShort() {
       for (int i = UInt16.MinValue; i <= UInt16.MaxValue; ++i) {
@@ -4385,7 +4376,6 @@ namespace Test {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void TestDoubleToOther() {
       CBORObject dbl1 = CBORObject.FromObject((double)Int32.MinValue);
@@ -4438,7 +4428,6 @@ namespace Test {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void TestDateTime() {
       DateTime[] ranges = new DateTime[] {

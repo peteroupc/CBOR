@@ -7,9 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-    /**
-     * Description of CBORTag5.
-     */
   class CBORTag4 implements ICBORTag
   {
     private static CBORTypeFilter valueFilter = new CBORTypeFilter().WithArrayExactLength(
@@ -17,19 +14,10 @@ at: http://upokecenter.com/d/
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger(),
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
 
-    /**
-     * Not documented yet.
-     * @return A CBORTypeFilter object.
-     */
     public CBORTypeFilter GetTypeFilter() {
       return valueFilter;
     }
 
-    /**
-     * Not documented yet.
-     * @param obj A CBORObject object. (2).
-     * @return A CBORObject object.
-     */
     public CBORObject ValidateObject(CBORObject obj) {
       return CBORTag5.ConvertToDecimalFrac(obj, true);
     }

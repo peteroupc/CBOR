@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-// import java.math.*;
-
     /**
      * Contains parameters for controlling the precision, rounding, and
      * exponent range of arbitrary-precision numbers.
@@ -59,7 +57,7 @@ at: http://upokecenter.com/d/
      * maximum exponent. If false, converted exponents can have any exponent
      * and operations can't cause overflow or underflow.
      * @return True if this context defines a minimum and maximum exponent;
-     * otherwise, false..
+     * otherwise, false.
      */
     public boolean getHasExponentRange() {
         return this.hasExponentRange;
@@ -68,7 +66,7 @@ at: http://upokecenter.com/d/
     /**
      * Gets a value indicating whether this context defines a maximum precision.
      * @return True if this context defines a maximum precision; otherwise,
-     * false..
+     * false.
      */
     public boolean getHasMaxPrecision() {
         return this.bigintPrecision.signum()!=0;
@@ -136,7 +134,7 @@ at: http://upokecenter.com/d/
     /**
      * Gets a value indicating whether this context has a mutable Flags field.
      * @return True if this context has a mutable Flags field; otherwise,
-     * false..
+     * false.
      */
     public boolean getHasFlags() {
         return this.hasFlags;
@@ -364,7 +362,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether to use a "simplified" arithmetic.
-     * @return True if to use a "simplified" arithmetic; otherwise, false..
+     * @return True if to use a "simplified" arithmetic; otherwise, false.
      */
     public boolean isSimplified() {
         return this.simplified;
@@ -449,14 +447,30 @@ at: http://upokecenter.com/d/
       return pcnew;
     }
 
+    /**
+     * Not documented yet.
+     * @param precision A 32-bit signed integer.
+     * @return A PrecisionContext object.
+     */
     public static PrecisionContext ForPrecision(int precision) {
       return new PrecisionContext(precision, Rounding.HalfUp, 0, 0, false).WithUnlimitedExponents();
     }
 
+    /**
+     * Not documented yet.
+     * @param rounding A Rounding object.
+     * @return A PrecisionContext object.
+     */
     public static PrecisionContext ForRounding(Rounding rounding) {
       return new PrecisionContext(0, rounding, 0, 0, false).WithUnlimitedExponents();
     }
 
+    /**
+     * Not documented yet.
+     * @param precision A 32-bit signed integer.
+     * @param rounding A Rounding object.
+     * @return A PrecisionContext object.
+     */
     public static PrecisionContext ForPrecisionAndRounding(int precision, Rounding rounding) {
       return new PrecisionContext(precision, rounding, 0, 0, false).WithUnlimitedExponents();
     }

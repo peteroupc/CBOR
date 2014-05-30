@@ -9,18 +9,12 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Description of CBORTag37.</summary>
   internal class CBORTag37 : ICBORTag, ICBORConverter<Guid>
   {
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.ByteString;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='obj'>A CBORObject object. (2).</param>
-    /// <returns>A CBORObject object.</returns>
     public CBORObject ValidateObject(CBORObject obj) {
       if (obj.Type != CBORType.ByteString) {
         throw new CBORException("UUID must be a byte string");

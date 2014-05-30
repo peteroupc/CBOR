@@ -14,7 +14,6 @@ using PeterO;
 using Test;
 
 namespace CBOR {
-    /// <summary>Description of ExtensiveTest.</summary>
   [TestClass]
   public class ExtensiveTest
   {

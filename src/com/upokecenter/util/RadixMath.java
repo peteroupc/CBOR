@@ -491,13 +491,6 @@ at: http://upokecenter.com/d/
       return val;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param divisor A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ctx) {
       FastInteger desiredScale = FastInteger.FromBig(this.helper.GetExponent(thisValue)).SubtractBig(this.helper.GetExponent(divisor));
       PrecisionContext ctx2 = PrecisionContext.ForRounding(Rounding.Down).WithBigPrecision(ctx == null ? BigInteger.ZERO : ctx.getPrecision()).WithBlankFlags();
@@ -556,13 +549,6 @@ bigrem=divrem[1]; }
       return ret;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param divisor A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T DivideToIntegerZeroScale(T thisValue, T divisor, PrecisionContext ctx) {
       PrecisionContext ctx2 = PrecisionContext.ForRounding(Rounding.Down).WithBigPrecision(ctx == null ? BigInteger.ZERO : ctx.getPrecision()).WithBlankFlags();
       T ret = this.DivideInternal(thisValue, divisor, ctx2, IntegerModeFixedScale, BigInteger.ZERO);
@@ -582,12 +568,6 @@ bigrem=divrem[1]; }
       return ret;
     }
 
-    /**
-     * Not documented yet.
-     * @param value A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Abs(T value, PrecisionContext ctx) {
       int flags = this.helper.GetFlags(value);
       if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -602,12 +582,6 @@ bigrem=divrem[1]; }
       return this.RoundToPrecision(value, ctx);
     }
 
-    /**
-     * Not documented yet.
-     * @param value A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Negate(T value, PrecisionContext ctx) {
       int flags = this.helper.GetFlags(value);
       if ((flags & BigNumberFlags.FlagSignalingNaN) != 0) {
@@ -687,13 +661,6 @@ bigrem=divrem[1]; }
       return ret;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param divisor A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T RemainderNear(T thisValue, T divisor, PrecisionContext ctx) {
       PrecisionContext ctx2 = ctx == null ? PrecisionContext.ForRounding(Rounding.HalfEven).WithBlankFlags() : ctx.WithRounding(Rounding.HalfEven).WithBlankFlags();
       T ret = this.RemainderHandleSpecial(thisValue, divisor, ctx2);
@@ -722,11 +689,6 @@ bigrem=divrem[1]; }
       return ret2;
     }
 
-    /**
-     * Not documented yet.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Pi(PrecisionContext ctx) {
       if (ctx == null) {
         return this.SignalInvalidWithMessage(ctx, "ctx is null");
@@ -975,13 +937,6 @@ bigrem=divrem[1]; }
       return true;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param pow A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Power(T thisValue, T pow, PrecisionContext ctx) {
       T ret = this.HandleNotANumber(thisValue, pow, ctx);
       if ((Object)ret != (Object)null) {
@@ -1162,12 +1117,6 @@ bigrem=divrem[1]; }
       return lnresult;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Log10(T thisValue, PrecisionContext ctx) {
       if (ctx == null) {
         return this.SignalInvalidWithMessage(ctx, "ctx is null");
@@ -1275,11 +1224,6 @@ bigrem=divrem[1]; }
       }
     }
 
-    /**
-     * Not documented yet.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     private T LnTenConstant(PrecisionContext ctx) {
 
       T thisValue = this.helper.ValueOf(10);
@@ -1304,12 +1248,6 @@ bigrem=divrem[1]; }
       return thisValue;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Ln(T thisValue, PrecisionContext ctx) {
       if (ctx == null) {
         return this.SignalInvalidWithMessage(ctx, "ctx is null");
@@ -1461,12 +1399,6 @@ bigrem=divrem[1]; }
     }
      */
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Exp(T thisValue, PrecisionContext ctx) {
       if (ctx == null) {
         return this.SignalInvalidWithMessage(ctx, "ctx is null");
@@ -1647,12 +1579,6 @@ bigrem=divrem[1]; }
     }
      */
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T SquareRoot(T thisValue, PrecisionContext ctx) {
       if (ctx == null) {
         return this.SignalInvalidWithMessage(ctx, "ctx is null");
@@ -1764,12 +1690,6 @@ bigrem=divrem[1]; }
       return retval;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T NextMinus(T thisValue, PrecisionContext ctx) {
       if (ctx == null) {
         return this.SignalInvalidWithMessage(ctx, "ctx is null");
@@ -1813,13 +1733,6 @@ bigrem=divrem[1]; }
       return this.Add(thisValue, quantum, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param otherValue A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T NextToward(T thisValue, T otherValue, PrecisionContext ctx) {
       if (ctx == null) {
         return this.SignalInvalidWithMessage(ctx, "ctx is null");
@@ -1892,12 +1805,6 @@ bigrem=divrem[1]; }
       }
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T NextPlus(T thisValue, PrecisionContext ctx) {
       if (ctx == null) {
         return this.SignalInvalidWithMessage(ctx, "ctx is null");
@@ -2551,14 +2458,6 @@ rem=divrem[1]; }
       return ret;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param multiplicand A T object. (3).
-     * @param augend A T object. (4).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext ctx) {
       PrecisionContext ctx2 = PrecisionContext.Unlimited.WithBlankFlags();
       T ret = this.MultiplyAddHandleSpecial(thisValue, multiplicand, augend, ctx);
@@ -2572,12 +2471,6 @@ rem=divrem[1]; }
       return ret;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param context A PrecisionContext object.
-     * @return A T object.
-     */
     public T RoundToBinaryPrecision(T thisValue, PrecisionContext context) {
       return this.RoundToBinaryPrecisionWithShift(thisValue, context, 0, 0, null, false);
     }
@@ -2586,22 +2479,10 @@ rem=divrem[1]; }
       return this.RoundToPrecisionInternal(thisValue, lastDiscarded, olderDiscarded, shift, true, adjustNegativeZero, context);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param context A PrecisionContext object.
-     * @return A T object.
-     */
     public T Plus(T thisValue, PrecisionContext context) {
       return this.RoundToPrecisionInternal(thisValue, 0, 0, null, false, true, context);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param context A PrecisionContext object.
-     * @return A T object.
-     */
     public T RoundToPrecision(T thisValue, PrecisionContext context) {
       return this.RoundToPrecisionInternal(thisValue, 0, 0, null, false, false, context);
     }
@@ -2610,13 +2491,6 @@ rem=divrem[1]; }
       return this.RoundToPrecisionInternal(thisValue, lastDiscarded, olderDiscarded, shift, false, adjustNegativeZero, context);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param otherValue A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Quantize(T thisValue, T otherValue, PrecisionContext ctx) {
       int thisFlags = this.helper.GetFlags(thisValue);
       int otherFlags = this.helper.GetFlags(otherValue);
@@ -2685,13 +2559,6 @@ rem=divrem[1]; }
       return ret;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param expOther A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T RoundToExponentExact(T thisValue, BigInteger expOther, PrecisionContext ctx) {
       if (this.helper.GetExponent(thisValue).compareTo(expOther) >= 0) {
         return this.RoundToPrecision(thisValue, ctx);
@@ -2705,13 +2572,6 @@ rem=divrem[1]; }
       }
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param expOther A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T RoundToExponentSimple(T thisValue, BigInteger expOther, PrecisionContext ctx) {
       int thisFlags = this.helper.GetFlags(thisValue);
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
@@ -2739,13 +2599,6 @@ rem=divrem[1]; }
       }
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param exponent A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T RoundToExponentNoRoundedFlag(T thisValue, BigInteger exponent, PrecisionContext ctx) {
       PrecisionContext pctx = (ctx == null) ? null : ctx.WithBlankFlags();
       T ret = this.RoundToExponentExact(thisValue, exponent, pctx);
@@ -2755,14 +2608,6 @@ rem=divrem[1]; }
       return ret;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @param precision A FastInteger object.
-     * @param idealExp A FastInteger object. (2).
-     * @return A T object.
-     */
     private T ReduceToPrecisionAndIdealExponent(T thisValue, PrecisionContext ctx, FastInteger precision, FastInteger idealExp) {
       T ret = this.RoundToPrecision(thisValue, ctx);
       if (ret != null && (this.helper.GetFlags(ret) & BigNumberFlags.FlagSpecial) == 0) {
@@ -2789,12 +2634,6 @@ rem=divrem[1]; }
       return ret;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Reduce(T thisValue, PrecisionContext ctx) {
       return this.ReduceToPrecisionAndIdealExponent(thisValue, ctx, null, null);
     }
@@ -3227,13 +3066,6 @@ rem=divrem[1]; }
       return this.helper.CreateNewWithFlags(mant1, exponent, negResult ? BigNumberFlags.FlagNegative : 0);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param other A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Add(T thisValue, T other, PrecisionContext ctx) {
       if (thisValue == null) {
         throw new NullPointerException("thisValue");
@@ -3244,14 +3076,6 @@ rem=divrem[1]; }
       return this.AddEx(thisValue, other, ctx, false);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param other A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @param roundToOperandPrecision A Boolean object.
-     * @return A T object.
-     */
     public T AddEx(T thisValue, T other, PrecisionContext ctx, boolean roundToOperandPrecision) {
       int thisFlags = this.helper.GetFlags(thisValue);
       int otherFlags = this.helper.GetFlags(other);
@@ -3456,11 +3280,12 @@ rem=divrem[1]; }
 
     /**
      * Compares a T object with this instance.
-     * @param thisValue A T object. (2).
-     * @param otherValue A T object. (3).
+     * @param thisValue A T object.
+     * @param otherValue A T object. (2).
      * @param treatQuietNansAsSignaling A Boolean object.
      * @param ctx A PrecisionContext object.
-     * @return A T object.
+     * @return Zero if the values are equal; a negative number if this instance
+     * is less, or a positive number if this instance is greater.
      */
     public T CompareToWithContext(T thisValue, T otherValue, boolean treatQuietNansAsSignaling, PrecisionContext ctx) {
       if (otherValue == null) {
@@ -3604,19 +3429,13 @@ rem=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
+     *
      * @return An IRadixMathHelper(T) object.
      */
     public IRadixMathHelper<T> GetHelper() {
       return this.helper;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
       // System.out.println("RM RoundAfterConversion");
       return this.RoundToPrecision(thisValue, ctx);

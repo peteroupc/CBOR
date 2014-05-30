@@ -23,27 +23,16 @@ import com.upokecenter.util.*;
       this.stack.add(firstItem);
     }
 
-    /**
-     * Not documented yet.
-     */
     public void Push() {
       ArrayList<CBORObject> firstItem=new ArrayList<CBORObject>();
       this.stack.add(firstItem);
     }
 
-    /**
-     * Not documented yet.
-     */
     public void Pop() {
 
       this.stack.remove(this.stack.size() - 1);
     }
 
-    /**
-     * Not documented yet.
-     * @param str A string object.
-     * @param lengthHint A 32-bit signed integer.
-     */
     public void AddStringIfNeeded(CBORObject str, int lengthHint) {
 
       boolean addStr = false;
@@ -75,11 +64,6 @@ import com.upokecenter.util.*;
       }
     }
 
-    /**
-     * Not documented yet.
-     * @param smallIndex A 64-bit signed integer.
-     * @return A string object.
-     */
     public CBORObject GetString(long smallIndex) {
       if (smallIndex < 0) {
         throw new CBORException("Unexpected index");
@@ -101,11 +85,6 @@ import com.upokecenter.util.*;
       }
     }
 
-    /**
-     * Not documented yet.
-     * @param bigIndex A BigInteger object.
-     * @return A string object.
-     */
     public CBORObject GetString(BigInteger bigIndex) {
       if (bigIndex.signum() < 0) {
         throw new CBORException("Unexpected index");

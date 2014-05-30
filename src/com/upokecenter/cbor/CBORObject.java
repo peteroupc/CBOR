@@ -169,6 +169,11 @@ public void setConverter(Object value) {
       this.tagHigh = tagHigh;
     }
 
+    /**
+     * Not documented yet.
+     * @param type A Type object.
+     * @param converter An ICBORConverter object.
+     */
     public static <T> void AddConverter(Class<?> type, ICBORConverter<T> converter) {
       if (type == null) {
         throw new NullPointerException("type");
@@ -197,6 +202,11 @@ public void setConverter(Object value) {
       return NumberInterfaces[type];
     }
 
+    /**
+     * Not documented yet.
+     * @param bigintTag A BigInteger object.
+     * @param handler An ICBORTag object.
+     */
     public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
       if (bigintTag == null) {
         throw new NullPointerException("bigintTag");
@@ -280,7 +290,7 @@ public void setConverter(Object value) {
 
     /**
      * Gets a value indicating whether this value is a CBOR true value.
-     * @return True if this value is a CBOR true value; otherwise, false..
+     * @return True if this value is a CBOR true value; otherwise, false.
      */
     public boolean isTrue() {
         return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 21;
@@ -288,7 +298,7 @@ public void setConverter(Object value) {
 
     /**
      * Gets a value indicating whether this value is a CBOR false value.
-     * @return True if this value is a CBOR false value; otherwise, false..
+     * @return True if this value is a CBOR false value; otherwise, false.
      */
     public boolean isFalse() {
         return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 20;
@@ -296,7 +306,7 @@ public void setConverter(Object value) {
 
     /**
      * Gets a value indicating whether this value is a CBOR null value.
-     * @return True if this value is a CBOR null value; otherwise, false..
+     * @return True if this value is a CBOR null value; otherwise, false.
      */
     public boolean isNull() {
         return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 22;
@@ -304,7 +314,7 @@ public void setConverter(Object value) {
 
     /**
      * Gets a value indicating whether this value is a CBOR undefined value.
-     * @return True if this value is a CBOR undefined value; otherwise, false..
+     * @return True if this value is a CBOR undefined value; otherwise, false.
      */
     public boolean isUndefined() {
         return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 23;
@@ -313,7 +323,7 @@ public void setConverter(Object value) {
     /**
      * Gets a value indicating whether this object&apos;s value equals
      * 0.
-     * @return True if this object's value equals 0; otherwise, false..
+     * @return True if this object's value equals 0; otherwise, false.
      */
     public boolean isZero() {
         ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -369,8 +379,19 @@ public void setConverter(Object value) {
         return ret;
       }
 
+    /**
+     * Not documented yet.
+     */
     public static final CBORObject PositiveInfinity = CBORObject.FromObject(Double.POSITIVE_INFINITY);
+
+    /**
+     * Not documented yet.
+     */
     public static final CBORObject NegativeInfinity = CBORObject.FromObject(Double.NEGATIVE_INFINITY);
+
+    /**
+     * Not documented yet.
+     */
     public static final CBORObject NaN = CBORObject.FromObject(Double.NaN);
 
     /**
@@ -398,7 +419,7 @@ public void setConverter(Object value) {
      * Gets a value indicating whether this CBOR object represents a finite
      * number.
      * @return True if this CBOR object represents a finite number; otherwise,
-     * false..
+     * false.
      */
     public boolean isFinite() {
         return this.getType() == CBORType.Number && !this.IsInfinity() && !this.IsNaN();
@@ -1269,7 +1290,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 
     /**
      * Gets a value indicating whether this data item has at least one tag.
-     * @return True if this data item has at least one tag; otherwise, false..
+     * @return True if this data item has at least one tag; otherwise, false.
      */
     public boolean isTagged() {
         return this.itemtypeValue == CBORObjectTypeTagged;
@@ -1292,9 +1313,11 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     }
 
     /**
-     * Not documented yet.
-     * @param tagValue A 32-bit signed integer.
-     * @return A Boolean object.
+     * Returns whether this object has a tag of the given number.
+     * @param tagValue The tag value to search for.
+     * @return True if this object has a tag of the given number; otherwise,
+     * false.
+     * @throws java.lang.IllegalArgumentException TagValue is less than 0.
      */
     public boolean HasTag(int tagValue) {
       if (tagValue < 0) {
@@ -1318,6 +1341,8 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
      * @param bigTagValue The tag value to search for.
      * @return True if this object has a tag of the given number; otherwise,
      * false.
+     * @throws java.lang.NullPointerException BigTagValue is null.
+     * @throws java.lang.IllegalArgumentException BigTagValue is less than 0.
      */
     public boolean HasTag(BigInteger bigTagValue) {
       if (bigTagValue == null) {
@@ -1923,9 +1948,10 @@ public void set(String key, CBORObject value) {
     /**
      * Returns whether this object's value can be converted to a 32-bit floating
      * point number without loss of its numerical value.
-     * @return A Boolean value. Returns true if this is a not-a-number value,
-     * even if the value's diagnostic information can't fit in a 32-bit floating
-     * point number.
+     * @return Whether this object's value can be converted to a 32-bit floating
+     * point number without loss of its numerical value. Returns true if
+     * this is a not-a-number value, even if the value's diagnostic information
+     * can't fit in a 32-bit floating point number.
      */
     public boolean CanFitInSingle() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -1938,9 +1964,10 @@ public void set(String key, CBORObject value) {
     /**
      * Returns whether this object's value can be converted to a 64-bit floating
      * point number without loss of its numerical value.
-     * @return A Boolean value. Returns true if this is a not-a-number value,
-     * even if the value's diagnostic information can't fit in a 64-bit floating
-     * point number.
+     * @return Whether this object's value can be converted to a 64-bit floating
+     * point number without loss of its numerical value. Returns true if
+     * this is a not-a-number value, even if the value's diagnostic information
+     * can't fit in a 64-bit floating point number.
      */
     public boolean CanFitInDouble() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -2011,7 +2038,7 @@ public void set(String key, CBORObject value) {
      * number, that is, a number without a fractional part. Infinity and
      * not-a-number are not considered integral.
      * @return True if this object represents an integral number, that is,
-     * a number without a fractional part; otherwise, false..
+     * a number without a fractional part; otherwise, false.
      */
     public boolean isIntegral() {
         ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -3662,10 +3689,22 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       return CBORObjectMath.Multiply(first, second);
     }
 
+    /**
+     * Not documented yet.
+     * @param first A CBORObject object.
+     * @param second A CBORObject object. (2).
+     * @return The quotient of the two objects.
+     */
     public static CBORObject Divide(CBORObject first, CBORObject second) {
       return CBORObjectMath.Divide(first, second);
     }
 
+    /**
+     * Not documented yet.
+     * @param first A CBORObject object.
+     * @param second A CBORObject object. (2).
+     * @return The remainder of the two objects.
+     */
     public static CBORObject Remainder(CBORObject first, CBORObject second) {
       return CBORObjectMath.Remainder(first, second);
     }

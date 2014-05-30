@@ -12,19 +12,10 @@ at: http://upokecenter.com/d/
      */
   class CBORTagGenericString implements ICBORTag
   {
-    /**
-     * Not documented yet.
-     * @return A CBORTypeFilter object.
-     */
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.TextString;
     }
 
-    /**
-     * Not documented yet.
-     * @param obj A CBORObject object. (2).
-     * @return A CBORObject object.
-     */
     public CBORObject ValidateObject(CBORObject obj) {
       if (obj.getType() == CBORType.TextString) {
         throw new CBORException("Not a text String");

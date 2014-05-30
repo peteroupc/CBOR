@@ -11,14 +11,11 @@ using System.Reflection;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Description of PropertyMap.</summary>
   internal class PropertyMap
   {
     private sealed class PropertyData {
       private string name;
 
-    /// <summary>Gets or sets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
       public string Name {
         get {
           return this.name;
@@ -31,8 +28,6 @@ namespace PeterO.Cbor {
 
       private PropertyInfo prop;
 
-    /// <summary>Gets or sets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
       public PropertyInfo Prop {
         get {
           return this.prop;

@@ -11,9 +11,6 @@ import java.io.*;
 
 import com.upokecenter.util.*;
 
-    /**
-     * Description of CBORReader.
-     */
   class CBORReader
   {
     private SharedRefs sharedRefs;
@@ -151,11 +148,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    /**
-     * Not documented yet.
-     * @param filter A CBORTypeFilter object.
-     * @return A CBORObject object.
-     */
     public CBORObject Read(
       CBORTypeFilter filter) throws IOException {
       if (this.depth > 1000) {
@@ -168,12 +160,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       return this.ReadForFirstByte(firstbyte, filter);
     }
 
-    /**
-     * Not documented yet.
-     * @param firstbyte A 32-bit signed integer.
-     * @param filter A CBORTypeFilter object.
-     * @return A CBORObject object.
-     */
     public CBORObject ReadForFirstByte(
       int firstbyte,
       CBORTypeFilter filter) throws IOException {

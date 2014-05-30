@@ -17,7 +17,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether the last discarded bit
     /// was set.</summary>
-    /// <value>True if the last discarded bit was set; otherwise, false..</value>
+    /// <value>True if the last discarded bit was set; otherwise, false.</value>
     public int LastDiscardedDigit
     {
       get
@@ -31,7 +31,7 @@ namespace PeterO {
     /// <summary>Gets a value indicating whether any of the discarded bits
     /// to the right of the last one was set.</summary>
     /// <value>True if any of the discarded bits to the right of the last one
-    /// was set; otherwise, false..</value>
+    /// was set; otherwise, false.</value>
     public int OlderDiscardedDigits
     {
       get
@@ -43,8 +43,6 @@ namespace PeterO {
     private BigInteger shiftedBigInt;
     private FastInteger knownBitLength;
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A FastInteger object.</returns>
     public FastInteger GetDigitLength() {
       if (this.knownBitLength == null) {
         this.knownBitLength = this.CalcKnownBitLength();
@@ -52,8 +50,6 @@ namespace PeterO {
       return FastInteger.Copy(this.knownBitLength);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='bits'>A FastInteger object.</param>
     public void ShiftToDigits(FastInteger bits) {
       if (bits.Sign < 0) {
         throw new ArgumentException("bits's sign (" + Convert.ToString((int)bits.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
@@ -76,8 +72,6 @@ namespace PeterO {
     private int shiftedSmall;
     private bool isSmall;
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
     public BigInteger ShiftedInt
     {
       get
@@ -90,8 +84,6 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
     public FastInteger ShiftedIntFast
     {
       get
@@ -145,8 +137,6 @@ namespace PeterO {
       return bsa;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='fastint'>A FastInteger object.</param>
     public void ShiftRight(FastInteger fastint) {
       if (fastint.Sign <= 0) {
         return;

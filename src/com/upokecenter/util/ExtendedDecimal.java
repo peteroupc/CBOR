@@ -145,10 +145,23 @@ at: http://upokecenter.com/d/
       return Create(BigInteger.valueOf(mantissaSmall), BigInteger.valueOf(exponentSmall));
     }
 
+    /**
+     * Not documented yet.
+     * @param diag A BigInteger object.
+     * @return An ExtendedDecimal object.
+     */
     public static ExtendedDecimal CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false, null);
     }
 
+    /**
+     * Not documented yet.
+     * @param diag A BigInteger object.
+     * @param signaling A Boolean object.
+     * @param negative A Boolean object. (2).
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedDecimal object.
+     */
     public static ExtendedDecimal CreateNaN(BigInteger diag, boolean signaling, boolean negative, PrecisionContext ctx) {
       if (diag == null) {
         throw new NullPointerException("diag");
@@ -205,6 +218,11 @@ at: http://upokecenter.com/d/
       return ext;
     }
 
+    /**
+     * Not documented yet.
+     * @param str A string object.
+     * @return An ExtendedDecimal object.
+     */
     public static ExtendedDecimal FromString(String str) {
       return FromString(str, null);
     }
@@ -1532,6 +1550,9 @@ remainder=divrem[1]; }
 
     public static final ExtendedDecimal Zero = ExtendedDecimal.Create(BigInteger.ZERO, BigInteger.ZERO);
 
+    /**
+     * Not documented yet.
+     */
     public static final ExtendedDecimal NegativeZero = CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative);
 
     /**
@@ -1601,7 +1622,7 @@ remainder=divrem[1]; }
      * Gets a value indicating whether this object is finite (not infinity
      * or NaN).
      * @return True if this object is finite (not infinity or NaN); otherwise,
-     * false..
+     * false.
      */
     public boolean isFinite() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
@@ -1611,7 +1632,7 @@ remainder=divrem[1]; }
      * Gets a value indicating whether this object is negative, including
      * negative zero.
      * @return True if this object is negative, including negative zero;
-     * otherwise, false..
+     * otherwise, false.
      */
     public boolean isNegative() {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
@@ -1648,7 +1669,7 @@ remainder=divrem[1]; }
     /**
      * Gets a value indicating whether this object&apos;s value equals
      * 0.
-     * @return True if this object's value equals 0; otherwise, false..
+     * @return True if this object's value equals 0; otherwise, false.
      */
     public boolean isZero() {
         return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum()==0;

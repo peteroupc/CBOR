@@ -7,9 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-    /**
-     * Description of BigNumberFlags.
-     */
   final class BigNumberFlags {
 private BigNumberFlags() {
 }

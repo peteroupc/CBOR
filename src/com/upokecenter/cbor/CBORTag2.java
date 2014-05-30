@@ -9,15 +9,8 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-    /**
-     * Description of CBORTag2.
-     */
   class CBORTag2 implements ICBORTag
   {
-    /**
-     * Not documented yet.
-     * @return A CBORTypeFilter object.
-     */
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.ByteString;
     }
@@ -90,11 +83,6 @@ import com.upokecenter.util.*;
       return CBORObject.FromObject(bi);
     }
 
-    /**
-     * Not documented yet.
-     * @param obj A CBORObject object. (2).
-     * @return A CBORObject object.
-     */
     public CBORObject ValidateObject(CBORObject obj) {
       return ConvertToBigNum(obj, false);
     }

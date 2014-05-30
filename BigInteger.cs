@@ -2554,8 +2554,8 @@ if (bytes.Length <= 0) {
 
     /// <summary>Returns whether this object's value can fit in a 32-bit
     /// signed integer.</summary>
-    /// <returns>True if this object's value is Int32.MaxValue or greater,
-    /// and Int32.MaxValue or less; otherwise, false.</returns>
+    /// <returns>True if this object's value is MinValue or greater, and
+    /// MaxValue or less; otherwise, false.</returns>
     public bool canFitInInt() {
       int c = (int)this.wordCount;
       if (c > 2) {
@@ -3208,6 +3208,11 @@ if (bytes.Length <= 0) {
 
     private const int MaxSafeInt = 214748363;
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A BigInteger object.</returns>
+    /// <param name='str'>A string object.</param>
+    /// <param name='index'>A 32-bit signed integer.</param>
+    /// <param name='endIndex'>A 32-bit signed integer. (2).</param>
     public static BigInteger fromSubstring(string str, int index, int endIndex) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -4171,7 +4176,7 @@ if (bytes.Length <= 0) {
     }
 
     /// <summary>Gets a value indicating whether this value is 0.</summary>
-    /// <value>True if this value is 0; otherwise, false..</value>
+    /// <value>True if this value is 0; otherwise, false.</value>
     public bool IsZero {
       get {
         return this.wordCount == 0;
@@ -4187,43 +4192,8 @@ if (bytes.Length <= 0) {
       return srrem[0];
     }
 
-    /*
-    private static BigInteger WordsToBigInt(
-      short[] words,
-      int start,
-      int count) {
-      #if DEBUG
-      if (words == null) {
-        throw new ArgumentNullException("words");
-      }
-      if (start < 0) {
- throw new ArgumentException("start (" + Convert.ToString((long)start, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-}
-      if (start > words.Length) {
- throw new ArgumentException("start (" + Convert.ToString((long)start, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words.Length, System.Globalization.CultureInfo.InvariantCulture));
-}
-      if (count < 0) {
- throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-}
-      if (count > words.Length) {
- throw new ArgumentException("count (" + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)words.Length, System.Globalization.CultureInfo.InvariantCulture));
-}
-      if (words.Length - start < count) {
- throw new ArgumentException("words.Length minus start (" + Convert.ToString((long)words.Length - start, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)count, System.Globalization.CultureInfo.InvariantCulture));
-}
-      #endif
-
-      if (count == 0) {
-        return BigInteger.Zero;
-      }
-      short[] newwords = new short[RoundupSize(count)];
-      Array.Copy(words, start, newwords, 0, count);
-      BigInteger ret = new BigInteger();
-      ret.reg = newwords;
-      ret.wordCount = count;
-      return ret;
-    }
-     */
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A BigInteger[] object.</returns>
     public BigInteger[] sqrtWithRemainder() {
       if (this.Sign <= 0) {
         return new BigInteger[] { BigInteger.Zero, BigInteger.Zero };
@@ -4330,7 +4300,7 @@ if (bytes.Length <= 0) {
     }
 
     /// <summary>Gets a value indicating whether this value is even.</summary>
-    /// <value>True if this value is even; otherwise, false..</value>
+    /// <value>True if this value is even; otherwise, false.</value>
     public bool IsEven {
       get {
         return !this.GetUnsignedBit(0);

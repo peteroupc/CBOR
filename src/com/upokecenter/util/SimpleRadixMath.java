@@ -243,13 +243,6 @@ at: http://upokecenter.com/d/
       return val;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param divisor A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((Object)ret != (Object)null) {
@@ -262,13 +255,6 @@ at: http://upokecenter.com/d/
       return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param divisor A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T DivideToIntegerZeroScale(T thisValue, T divisor, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((Object)ret != (Object)null) {
@@ -281,12 +267,6 @@ at: http://upokecenter.com/d/
       return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param value A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Abs(T value, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(value, ctx);
       if ((Object)ret != (Object)null) {
@@ -298,12 +278,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(value, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param value A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Negate(T value, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(value, ctx);
       if ((Object)ret != (Object)null) {
@@ -334,13 +308,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param divisor A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T RemainderNear(T thisValue, T divisor, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((Object)ret != (Object)null) {
@@ -353,11 +320,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Pi(PrecisionContext ctx) {
       return this.wrapper.Pi(ctx);
     }
@@ -385,13 +347,6 @@ at: http://upokecenter.com/d/
         null : this.GetHelper().CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param pow A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Power(T thisValue, T pow, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, pow, ctx);
       if ((Object)ret != (Object)null) {
@@ -420,12 +375,6 @@ at: http://upokecenter.com/d/
       return thisValue;
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Log10(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -437,12 +386,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Ln(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -458,19 +401,13 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
+     *
      * @return An IRadixMathHelper(T) object.
      */
     public IRadixMathHelper<T> GetHelper() {
       return this.wrapper.GetHelper();
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Exp(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -482,12 +419,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T SquareRoot(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -502,12 +433,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T NextMinus(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -519,13 +444,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param otherValue A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T NextToward(T thisValue, T otherValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, otherValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -538,12 +456,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T NextPlus(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -555,14 +467,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param divisor A T object. (3).
-     * @param desiredExponent A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T DivideToExponent(T thisValue, T divisor, BigInteger desiredExponent, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((Object)ret != (Object)null) {
@@ -594,13 +498,6 @@ at: http://upokecenter.com/d/
       return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param a A T object. (2).
-     * @param b A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T MinMagnitude(T a, T b, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(a, b, ctx);
       if ((Object)ret != (Object)null) {
@@ -613,13 +510,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(a, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param a A T object. (2).
-     * @param b A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T MaxMagnitude(T a, T b, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(a, b, ctx);
       if ((Object)ret != (Object)null) {
@@ -632,13 +522,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(a, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param a A T object. (2).
-     * @param b A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Max(T a, T b, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(a, b, ctx);
       if ((Object)ret != (Object)null) {
@@ -652,13 +535,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(a, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param a A T object. (2).
-     * @param b A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Min(T a, T b, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(a, b, ctx);
       if ((Object)ret != (Object)null) {
@@ -691,14 +567,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param multiplicand A T object. (3).
-     * @param augend A T object. (4).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext ctx) {
       T ret = this.CheckNotANumber3(thisValue, multiplicand, augend, ctx);
       if ((Object)ret != (Object)null) {
@@ -726,12 +594,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T RoundToBinaryPrecision(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -743,12 +605,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Plus(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -760,12 +616,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T RoundToPrecision(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -777,13 +627,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param otherValue A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Quantize(T thisValue, T otherValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -806,13 +649,6 @@ at: http://upokecenter.com/d/
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param expOther A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T RoundToExponentExact(T thisValue, BigInteger expOther, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -824,13 +660,6 @@ at: http://upokecenter.com/d/
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param expOther A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T RoundToExponentSimple(T thisValue, BigInteger expOther, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -842,13 +671,6 @@ at: http://upokecenter.com/d/
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param exponent A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T RoundToExponentNoRoundedFlag(T thisValue, BigInteger exponent, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -860,12 +682,6 @@ at: http://upokecenter.com/d/
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Reduce(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
@@ -877,13 +693,6 @@ at: http://upokecenter.com/d/
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param other A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T Add(T thisValue, T other, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, other, ctx);
       if ((Object)ret != (Object)null) {
@@ -905,14 +714,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param other A T object. (3).
-     * @param ctx A PrecisionContext object.
-     * @param roundToOperandPrecision A Boolean object.
-     * @return A T object.
-     */
     public T AddEx(T thisValue, T other, PrecisionContext ctx, boolean roundToOperandPrecision) {
       // NOTE: Ignores roundToOperandPrecision
       return this.Add(thisValue, other, ctx);
@@ -952,12 +753,6 @@ at: http://upokecenter.com/d/
       return this.wrapper.compareTo(thisValue, otherValue);
     }
 
-    /**
-     * Not documented yet.
-     * @param thisValue A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return A T object.
-     */
     public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {

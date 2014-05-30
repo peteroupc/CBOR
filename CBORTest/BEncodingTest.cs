@@ -30,8 +30,6 @@ namespace Test {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='value'>A 64-bit signed integer.</param>
     public void doTestLong(long value) {
       String b = "i" + value + "e";
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
@@ -40,8 +38,6 @@ namespace Test {
       Assert.AreEqual(b, newb);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='value'>A String object.</param>
     public void doTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
@@ -50,7 +46,6 @@ namespace Test {
       Assert.AreEqual(b, newb);
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void testLong() {
       this.doTestLong(0);
@@ -61,7 +56,6 @@ namespace Test {
       this.doTestLong(Int64.MaxValue);
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void testList() {
       CBORObject beo = CBORObject.NewArray();
@@ -83,7 +77,6 @@ namespace Test {
       Assert.AreEqual("four", beo[3].AsString());
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void testDictionary() {
       CBORObject beo = CBORObject.NewMap();
@@ -105,7 +98,6 @@ namespace Test {
       Assert.AreEqual("four", beo["three"].AsString());
     }
 
-    /// <summary>Not documented yet.</summary>
     [TestMethod]
     public void testString() {
       this.doTestString(String.Empty);

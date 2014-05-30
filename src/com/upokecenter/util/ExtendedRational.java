@@ -43,6 +43,11 @@ at: http://upokecenter.com/d/
 
     private int flags;
 
+    /**
+     * Not documented yet.
+     * @param obj An arbitrary object.
+     * @return True if the objects are equal; otherwise, false.
+     */
     @Override public boolean equals(Object obj) {
       ExtendedRational other = ((obj instanceof ExtendedRational) ? (ExtendedRational)obj : null);
       if (other == null) {
@@ -69,6 +74,11 @@ at: http://upokecenter.com/d/
       return valueHashCode;
     }
 
+    /**
+     * Initializes a new instance of the ExtendedRational class.
+     * @param numerator A BigInteger object.
+     * @param denominator A BigInteger object. (2).
+     */
     public ExtendedRational (BigInteger numerator, BigInteger denominator) {
       if (numerator == null) {
         throw new NullPointerException("numerator");
@@ -124,6 +134,11 @@ at: http://upokecenter.com/d/
       return this.getNumerator() + "/" + this.getDenominator();
     }
 
+    /**
+     * Not documented yet.
+     * @param bigint A BigInteger object.
+     * @return An ExtendedRational object.
+     */
     public static ExtendedRational FromBigInteger(BigInteger bigint) {
       return new ExtendedRational(bigint, BigInteger.ONE);
     }
@@ -138,14 +153,29 @@ at: http://upokecenter.com/d/
       return this.ToExtendedDecimal(null);
     }
 
+    /**
+     * Not documented yet.
+     * @param flt A 32-bit floating-point number.
+     * @return An ExtendedRational object.
+     */
     public static ExtendedRational FromSingle(float flt) {
       return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
     }
 
+    /**
+     * Not documented yet.
+     * @param flt A 64-bit floating-point number.
+     * @return An ExtendedRational object.
+     */
     public static ExtendedRational FromDouble(double flt) {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
     }
 
+    /**
+     * Not documented yet.
+     * @param diag A BigInteger object.
+     * @return An ExtendedRational object.
+     */
     public static ExtendedRational CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false);
     }
@@ -156,6 +186,13 @@ at: http://upokecenter.com/d/
       return er;
     }
 
+    /**
+     * Not documented yet.
+     * @param diag A BigInteger object.
+     * @param signaling A Boolean object.
+     * @param negative A Boolean object. (2).
+     * @return An ExtendedRational object.
+     */
     public static ExtendedRational CreateNaN(BigInteger diag, boolean signaling, boolean negative) {
       if (diag == null) {
         throw new NullPointerException("diag");
@@ -176,6 +213,11 @@ at: http://upokecenter.com/d/
       return er;
     }
 
+    /**
+     * Not documented yet.
+     * @param ef An ExtendedFloat object.
+     * @return An ExtendedRational object.
+     */
     public static ExtendedRational FromExtendedFloat(ExtendedFloat ef) {
       if (ef == null) {
         throw new NullPointerException("ef");
@@ -218,6 +260,11 @@ at: http://upokecenter.com/d/
       return new ExtendedRational(num, den);
     }
 
+    /**
+     * Not documented yet.
+     * @param ef An ExtendedDecimal object.
+     * @return An ExtendedRational object.
+     */
     public static ExtendedRational FromExtendedDecimal(ExtendedDecimal ef) {
       if (ef == null) {
         throw new NullPointerException("ef");
@@ -379,7 +426,7 @@ at: http://upokecenter.com/d/
      * Gets a value indicating whether this object is finite (not infinity
      * or NaN).
      * @return True if this object is finite (not infinity or NaN); otherwise,
-     * false..
+     * false.
      */
     public boolean isFinite() {
         return !this.IsNaN() && !this.IsInfinity();
@@ -397,10 +444,20 @@ at: http://upokecenter.com/d/
       return this.getNumerator().divide(this.denominator);
     }
 
+    /**
+     * Not documented yet.
+     * @param smallint A 32-bit signed integer.
+     * @return An ExtendedRational object.
+     */
     public static ExtendedRational FromInt32(int smallint) {
       return new ExtendedRational(BigInteger.valueOf(smallint), BigInteger.ONE);
     }
 
+    /**
+     * Not documented yet.
+     * @param longInt A 64-bit signed integer.
+     * @return An ExtendedRational object.
+     */
     public static ExtendedRational FromInt64(long longInt) {
       return new ExtendedRational(BigInteger.valueOf(longInt), BigInteger.ONE);
     }
@@ -452,7 +509,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether this object's value equals 0.
-     * @return True if this object's value equals 0; otherwise, false..
+     * @return True if this object's value equals 0; otherwise, false.
      */
     public boolean isZero() {
         if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
@@ -798,7 +855,7 @@ thisRem=divrem[1]; }
 
     /**
      * Gets a value indicating whether this object's value is negative.
-     * @return True if this object's value is negative; otherwise, false..
+     * @return True if this object's value is negative; otherwise, false.
      */
     public boolean isNegative() {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
@@ -1067,8 +1124,23 @@ thisRem=divrem[1]; }
       return new ExtendedRational(ad, tden).Simplify().ChangeSign(resultNeg);
     }
 
+    /**
+     * Not documented yet.
+     */
     public static final ExtendedRational Zero = FromBigInteger(BigInteger.ZERO);
+
+    /**
+     * Not documented yet.
+     */
     public static final ExtendedRational NegativeZero = FromBigInteger(BigInteger.ZERO).ChangeSign(false);
+
+    /**
+     * Not documented yet.
+     */
     public static final ExtendedRational One = FromBigInteger(BigInteger.ONE);
+
+    /**
+     * Not documented yet.
+     */
     public static final ExtendedRational Ten = FromBigInteger(BigInteger.TEN);
   }

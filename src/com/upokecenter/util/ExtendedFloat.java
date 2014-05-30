@@ -114,10 +114,23 @@ at: http://upokecenter.com/d/
       return valueHashCode;
     }
 
+    /**
+     * Not documented yet.
+     * @param diag A BigInteger object.
+     * @return An ExtendedFloat object.
+     */
     public static ExtendedFloat CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false, null);
     }
 
+    /**
+     * Not documented yet.
+     * @param diag A BigInteger object.
+     * @param signaling A Boolean object.
+     * @param negative A Boolean object. (2).
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedFloat object.
+     */
     public static ExtendedFloat CreateNaN(BigInteger diag, boolean signaling, boolean negative, PrecisionContext ctx) {
       if (diag == null) {
         throw new NullPointerException("diag");
@@ -215,6 +228,11 @@ at: http://upokecenter.com/d/
       return ExtendedDecimal.FromString(str, ctx).ToExtendedFloat();
     }
 
+    /**
+     * Not documented yet.
+     * @param str A string object.
+     * @return An ExtendedFloat object.
+     */
     public static ExtendedFloat FromString(String str) {
       return FromString(str, null);
     }
@@ -731,10 +749,20 @@ at: http://upokecenter.com/d/
         BigInteger.valueOf(floatExponent - 150));
     }
 
+    /**
+     * Not documented yet.
+     * @param bigint A BigInteger object.
+     * @return An ExtendedFloat object.
+     */
     public static ExtendedFloat FromBigInteger(BigInteger bigint) {
       return ExtendedFloat.Create(bigint, BigInteger.ZERO);
     }
 
+    /**
+     * Not documented yet.
+     * @param valueSmall A 64-bit signed integer.
+     * @return An ExtendedFloat object.
+     */
     public static ExtendedFloat FromInt64(long valueSmall) {
       BigInteger bigint = BigInteger.valueOf(valueSmall);
       return ExtendedFloat.Create(bigint, BigInteger.ZERO);
@@ -844,6 +872,9 @@ at: http://upokecenter.com/d/
 
     public static final ExtendedFloat Zero = ExtendedFloat.Create(BigInteger.ZERO, BigInteger.ZERO);
 
+    /**
+     * Not documented yet.
+     */
     public static final ExtendedFloat NegativeZero = CreateWithFlags(
       BigInteger.ZERO,
       BigInteger.ZERO,
@@ -930,7 +961,7 @@ at: http://upokecenter.com/d/
      * Gets a value indicating whether this object is finite (not infinity
      * or NaN).
      * @return True if this object is finite (not infinity or NaN); otherwise,
-     * false..
+     * false.
      */
     public boolean isFinite() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
@@ -940,7 +971,7 @@ at: http://upokecenter.com/d/
      * Gets a value indicating whether this object is negative, including
      * negative zero.
      * @return True if this object is negative, including negative zero;
-     * otherwise, false..
+     * otherwise, false.
      */
     public boolean isNegative() {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
@@ -979,7 +1010,7 @@ at: http://upokecenter.com/d/
     /**
      * Gets a value indicating whether this object&apos;s value equals
      * 0.
-     * @return True if this object's value equals 0; otherwise, false..
+     * @return True if this object's value equals 0; otherwise, false.
      */
     public boolean isZero() {
         return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum()==0;

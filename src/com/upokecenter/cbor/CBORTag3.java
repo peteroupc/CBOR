@@ -12,19 +12,10 @@ at: http://upokecenter.com/d/
      */
   class CBORTag3 implements ICBORTag
   {
-    /**
-     * Not documented yet.
-     * @return A CBORTypeFilter object.
-     */
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.ByteString;
     }
 
-    /**
-     * Not documented yet.
-     * @param obj A CBORObject object. (2).
-     * @return A CBORObject object.
-     */
     public CBORObject ValidateObject(CBORObject obj) {
       return CBORTag2.ConvertToBigNum(obj, true);
     }

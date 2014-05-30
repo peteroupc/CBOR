@@ -8,7 +8,6 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO {
-    /// <summary>Description of DecimalUtility.</summary>
   internal static class DecimalUtility
   {
     private static BigInteger[] valueBigIntPowersOfTen = new BigInteger[] {
@@ -210,9 +209,6 @@ namespace PeterO {
         return ret;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='bi'>A BigInteger object. (2).</param>
-    /// <returns>A BigInteger object.</returns>
       public BigInteger GetCachedPower(BigInteger bi) {
         lock (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
@@ -237,9 +233,6 @@ namespace PeterO {
         return null;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='bi'>A 32-bit signed integer.</param>
-    /// <returns>A BigInteger object.</returns>
       public BigInteger GetCachedPowerInt(int bi) {
         lock (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
@@ -264,9 +257,6 @@ namespace PeterO {
         return null;
       }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='input'>A BigInteger object.</param>
-    /// <param name='output'>A BigInteger object. (2).</param>
       public void AddPower(BigInteger input, BigInteger output) {
         lock (this.outputs) {
           if (this.size < MaxSize) {

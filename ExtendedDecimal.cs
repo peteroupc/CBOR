@@ -146,10 +146,19 @@ namespace PeterO {
       return Create((BigInteger)mantissaSmall, (BigInteger)exponentSmall);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedDecimal object.</returns>
+    /// <param name='diag'>A BigInteger object.</param>
     public static ExtendedDecimal CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false, null);
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedDecimal object.</returns>
+    /// <param name='diag'>A BigInteger object.</param>
+    /// <param name='signaling'>A Boolean object.</param>
+    /// <param name='negative'>A Boolean object. (2).</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     public static ExtendedDecimal CreateNaN(BigInteger diag, bool signaling, bool negative, PrecisionContext ctx) {
       if (diag == null) {
         throw new ArgumentNullException("diag");
@@ -204,6 +213,9 @@ namespace PeterO {
       return ext;
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <returns>An ExtendedDecimal object.</returns>
+    /// <param name='str'>A String object.</param>
     public static ExtendedDecimal FromString(String str) {
       return FromString(str, null);
     }
@@ -1487,6 +1499,7 @@ public int CompareToBinary(ExtendedFloat other) {
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104", Justification = "ExtendedDecimal is immutable")]
     #endif
+    /// <summary>Not documented yet.</summary>
     public static readonly ExtendedDecimal NegativeZero = CreateWithFlags(BigInteger.Zero, BigInteger.Zero, BigNumberFlags.FlagNegative);
 
     /// <summary>Represents the number 10.</summary>
@@ -1542,7 +1555,7 @@ public int CompareToBinary(ExtendedFloat other) {
     /// <summary>Gets a value indicating whether this object is finite (not
     /// infinity or NaN).</summary>
     /// <value>True if this object is finite (not infinity or NaN); otherwise,
-    /// false..</value>
+    /// false.</value>
     public bool IsFinite {
       get {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
@@ -1552,7 +1565,7 @@ public int CompareToBinary(ExtendedFloat other) {
     /// <summary>Gets a value indicating whether this object is negative,
     /// including negative zero.</summary>
     /// <value>True if this object is negative, including negative zero;
-    /// otherwise, false..</value>
+    /// otherwise, false.</value>
     public bool IsNegative {
       get {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
@@ -1587,7 +1600,7 @@ public int CompareToBinary(ExtendedFloat other) {
 
     /// <summary>Gets a value indicating whether this object&apos;s value
     /// equals 0.</summary>
-    /// <value>True if this object&apos;s value equals 0; otherwise, false..</value>
+    /// <value>True if this object&apos;s value equals 0; otherwise, false.</value>
     public bool IsZero {
       get {
         return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.IsZero;
