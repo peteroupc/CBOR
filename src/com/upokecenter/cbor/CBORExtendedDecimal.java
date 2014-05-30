@@ -32,7 +32,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     *
+     * Not documented yet.
      * @param obj An arbitrary object.
      * @return A 64-bit floating-point number.
      */
@@ -52,7 +52,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     *
+     * Not documented yet.
      * @param obj An arbitrary object.
      * @return A 32-bit floating-point number.
      */

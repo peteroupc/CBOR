@@ -1585,16 +1585,16 @@ remainder=divrem[1]; }
     public static final ExtendedDecimal NegativeInfinity = CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
     /**
-     * Not documented yet.
-     * @return A Boolean object.
+     * Returns whether this object is negative infinity.
+     * @return True if this object is negative infinity; otherwise, false.
      */
     public boolean IsNegativeInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) == (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
     /**
-     * Not documented yet.
-     * @return A Boolean object.
+     * Returns whether this object is positive infinity.
+     * @return True if this object is positive infinity; otherwise, false.
      */
     public boolean IsPositiveInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) == BigNumberFlags.FlagInfinity;

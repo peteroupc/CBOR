@@ -3428,10 +3428,6 @@ rem=divrem[1]; }
       }
     }
 
-    /**
-     *
-     * @return An IRadixMathHelper(T) object.
-     */
     public IRadixMathHelper<T> GetHelper() {
       return this.helper;
     }

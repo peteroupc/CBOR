@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     *
+     * Not documented yet.
      * @param <T> Data type for a numeric value in a particular radix.
      */
   class TrappableRadixMath<T> implements IRadixMath<T>
@@ -104,10 +104,6 @@ at: http://upokecenter.com/d/
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    /**
-     *
-     * @return An IRadixMathHelper(T) object.
-     */
     public IRadixMathHelper<T> GetHelper() {
       return this.math.GetHelper();
     }

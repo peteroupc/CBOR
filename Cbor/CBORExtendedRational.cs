@@ -30,6 +30,7 @@ namespace PeterO.Cbor {
 
     /// <returns>A 64-bit floating-point number.</returns>
     /// <param name='obj'>An arbitrary object.</param>
+ /// <summary>Not documented yet.</summary>
     public double AsDouble(object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return er.ToDouble();
@@ -47,6 +48,7 @@ namespace PeterO.Cbor {
 
     /// <returns>A 32-bit floating-point number.</returns>
     /// <param name='obj'>An arbitrary object.</param>
+ /// <summary>Not documented yet.</summary>
     public float AsSingle(object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return er.ToSingle();

@@ -92,6 +92,7 @@ namespace PeterO.Cbor {
 
     /// <param name='tags'>An integer array of tags allowed.</param>
     /// <returns>A CBORTypeFilter object.</returns>
+    /// <summary>Not documented yet.</summary>
     public CBORTypeFilter WithTags(params int[] tags) {
       if (this.any) {
         return this;
@@ -115,6 +116,7 @@ namespace PeterO.Cbor {
 
     /// <param name='tags'>A BigInteger[] object.</param>
     /// <returns>A CBORTypeFilter object.</returns>
+    /// <summary>Not documented yet.</summary>
     public CBORTypeFilter WithTags(params BigInteger[] tags) {
       if (this.any) {
         return this;
@@ -139,13 +141,25 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Copies this filter and includes CBOR arrays with an exact
+    /// length to the new filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
-    /// <param name='arrayLength'>A 32-bit signed integer.</param>
-    /// <param name='elements'>A params object.</param>
+    /// <param name='arrayLength'>The desired maximum length of an array.</param>
+    /// <param name='elements'>An array containing the allowed types for
+    /// each element in the array. There must be at least as many elements here
+    /// as given in the arrayLength parameter.</param>
+    /// <exception cref='System.ArgumentException'>The parameter arrayLength
+    /// is less than 0.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// elements is null.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter elements
+    /// has fewer elements than specified in arrayLength.</exception>
     public CBORTypeFilter WithArrayExactLength(int arrayLength, params CBORTypeFilter[] elements) {
       if (this.any) {
         return this;
+      }
+      if (elements == null) {
+        throw new ArgumentNullException("elements");
       }
       if (arrayLength < 0) {
         throw new ArgumentException("arrayLength (" + Convert.ToString((long)arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
@@ -162,13 +176,25 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Copies this filter and includes CBOR arrays with at least
+    /// a given length to the new filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
-    /// <param name='arrayLength'>A 32-bit signed integer.</param>
-    /// <param name='elements'>A params object.</param>
+    /// <param name='arrayLength'>The desired minimum length of an array.</param>
+    /// <param name='elements'>An array containing the allowed types for
+    /// each element in the array. There must be at least as many elements here
+    /// as given in the arrayLength parameter.</param>
+    /// <exception cref='System.ArgumentException'>The parameter arrayLength
+    /// is less than 0.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// elements is null.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter elements
+    /// has fewer elements than specified in arrayLength.</exception>
     public CBORTypeFilter WithArrayMinLength(int arrayLength, params CBORTypeFilter[] elements) {
       if (this.any) {
         return this;
+      }
+      if (elements == null) {
+        throw new ArgumentNullException("elements");
       }
       if (arrayLength < 0) {
         throw new ArgumentException("arrayLength (" + Convert.ToString((long)arrayLength, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");

@@ -10,6 +10,7 @@ using System;
 namespace PeterO {
     /// <typeparam name='T'>Data type for a numeric value in a particular
     /// radix.</typeparam>
+ /// <summary>Not documented yet.</summary>
   internal class TrappableRadixMath<T> : IRadixMath<T>
   {
     private static PrecisionContext GetTrappableContext(PrecisionContext ctx) {
@@ -106,7 +107,6 @@ namespace PeterO {
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    /// <returns>An IRadixMathHelper(T) object.</returns>
     public IRadixMathHelper<T> GetHelper() {
       return this.math.GetHelper();
     }

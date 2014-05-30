@@ -39,11 +39,6 @@ import com.upokecenter.util.*;
       return ExtendedFloat.FromDouble(((Double)obj).doubleValue());
     }
 
-    /**
-     *
-     * @param obj An arbitrary object.
-     * @return A 32-bit floating-point number.
-     */
     public float AsSingle(Object obj) {
       return ((Double)obj).floatValue();
     }

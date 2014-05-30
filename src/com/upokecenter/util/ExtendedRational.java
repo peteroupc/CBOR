@@ -44,7 +44,7 @@ at: http://upokecenter.com/d/
     private int flags;
 
     /**
-     * Not documented yet.
+     * Determines whether this object and another object are equal.
      * @param obj An arbitrary object.
      * @return True if the objects are equal; otherwise, false.
      */
@@ -828,8 +828,8 @@ thisRem=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
-     * @return A Boolean object.
+     * Returns whether this object is negative infinity.
+     * @return True if this object is negative infinity; otherwise, false.
      */
     public boolean IsNegativeInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
@@ -837,8 +837,8 @@ thisRem=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
-     * @return A Boolean object.
+     * Returns whether this object is positive infinity.
+     * @return True if this object is positive infinity; otherwise, false.
      */
     public boolean IsPositiveInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==

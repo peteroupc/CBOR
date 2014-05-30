@@ -400,10 +400,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /**
-     *
-     * @return An IRadixMathHelper(T) object.
-     */
     public IRadixMathHelper<T> GetHelper() {
       return this.wrapper.GetHelper();
     }

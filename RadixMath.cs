@@ -3429,7 +3429,6 @@ namespace PeterO {
       }
     }
 
-    /// <returns>An IRadixMathHelper(T) object.</returns>
     public IRadixMathHelper<T> GetHelper() {
       return this.helper;
     }

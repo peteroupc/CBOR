@@ -20,9 +20,13 @@ at: http://upokecenter.com/d/
      */
     CBORTypeFilter GetTypeFilter();
 
-    // NOTE: Will be passed an object with the corresponding tag
     /**
-     * Not documented yet.
+     * Generates a CBOR object based on the data of another object. If the
+     * data is not valid, should throw a CBORException.
+     * @param obj A CBOR object with the corresponding tag handled by the
+     * ICBORTag object.
+     * @return A CBORObject object. Note that this method may choose to return
+     * the same object as the parameter.
      */
     CBORObject ValidateObject(CBORObject obj);
   }

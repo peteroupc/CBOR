@@ -403,7 +403,6 @@ namespace PeterO {
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    /// <returns>An IRadixMathHelper(T) object.</returns>
     public IRadixMathHelper<T> GetHelper() {
       return this.wrapper.GetHelper();
     }

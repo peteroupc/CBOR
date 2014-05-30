@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     *
+     * Not documented yet.
      * @param <T> Number data type.
      */
   class ExtendedOrSimpleRadixMath<T> implements IRadixMath<T>
@@ -21,10 +21,6 @@ at: http://upokecenter.com/d/
       this.simp = new SimpleRadixMath<T>(this.ext);
     }
 
-    /**
-     *
-     * @return An IRadixMathHelper(T) object.
-     */
 public IRadixMathHelper<T> GetHelper() {
       // Both RadixMath implementations return the
       // same helper, so use the ext implementation

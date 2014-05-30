@@ -198,6 +198,7 @@ namespace PeterO.Cbor {
     /// <summary>Not documented yet.</summary>
     /// <param name='type'>A Type object.</param>
     /// <param name='converter'>An ICBORConverter object.</param>
+    /// <typeparam name='T'>Must be the same as the "type" parameter.</typeparam>
     public static void AddConverter<T>(Type type, ICBORConverter<T> converter) {
       if (type == null) {
         throw new ArgumentNullException("type");
@@ -3642,7 +3643,8 @@ namespace PeterO.Cbor {
       return CBORObjectMath.Multiply(first, second);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Divides a CBORObject object by the value of a CBORObject
+    /// object.</summary>
     /// <returns>The quotient of the two objects.</returns>
     /// <param name='first'>A CBORObject object.</param>
     /// <param name='second'>A CBORObject object. (2).</param>
@@ -3650,7 +3652,8 @@ namespace PeterO.Cbor {
       return CBORObjectMath.Divide(first, second);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Finds the remainder that results when a CBORObject object
+    /// is divided by the value of a CBORObject object.</summary>
     /// <returns>The remainder of the two objects.</returns>
     /// <param name='first'>A CBORObject object.</param>
     /// <param name='second'>A CBORObject object. (2).</param>
