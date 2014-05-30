@@ -2103,8 +2103,8 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param numberBits A 32-bit signed integer.
+     * Returns a big integer with the bits shifted to the right.
+     * @param numberBits Number of bits to shift right.
      * @return A BigInteger object.
      */
     public BigInteger shiftRight(int numberBits) {
@@ -2156,9 +2156,9 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
+     * Converts a 64-bit signed integer to a big integer.
      * @param longerValue A 64-bit signed integer.
-     * @return A BigInteger object.
+     * @return A BigInteger object with the same value as the 64-bit number.
      */
     public static BigInteger valueOf(long longerValue) {
       if (longerValue == 0) {
@@ -2202,8 +2202,10 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
+     * Converts this object's value to a 32-bit signed integer.
      * @return A 32-bit signed integer.
+     * @throws ArithmeticException This object's value is too big to fit a
+     * 32-bit signed integer.
      */
     public int intValue() {
       int c = (int)this.wordCount;
@@ -2232,8 +2234,9 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @return A Boolean object.
+     * Returns whether this object's value can fit in a 32-bit signed integer.
+     * @return True if this object's value is Integer.MAX_VALUE or greater,
+     * and Integer.MAX_VALUE or less; otherwise, false.
      */
     public boolean canFitInInt() {
       int c = (int)this.wordCount;
@@ -2262,8 +2265,10 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
+     * Converts this object's value to a 64-bit signed integer.
      * @return A 64-bit signed integer.
+     * @throws ArithmeticException This object's value is too big to fit a
+     * 64-bit signed integer.
      */
     public long longValue() {
       int count = this.wordCount;
@@ -3181,7 +3186,7 @@ at: http://upokecenter.com/d/
     /**
      * Determines whether this object and another object are equal.
      * @param obj An arbitrary object.
-     * @return True if the objects are equal; false otherwise.
+     * @return True if the objects are equal; otherwise, false.
      */
     @Override public boolean equals(Object obj) {
       BigInteger other = ((obj instanceof BigInteger) ? (BigInteger)obj : null);
@@ -3888,7 +3893,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether this value is 0.
-     * @return Whether this value is 0.
+     * @return True if this value is 0; otherwise, false..
      */
     public boolean isZero() {
         return this.wordCount == 0;
@@ -4028,7 +4033,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether this value is even.
-     * @return Whether this value is even.
+     * @return True if this value is even; otherwise, false..
      */
     public boolean isEven() {
         return !this.GetUnsignedBit(0);

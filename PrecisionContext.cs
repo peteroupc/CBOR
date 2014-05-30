@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-// using System.Numerics;
+
 namespace PeterO {
     /// <summary>Contains parameters for controlling the precision, rounding,
     /// and exponent range of arbitrary-precision numbers.</summary>
@@ -55,7 +55,8 @@ namespace PeterO {
     /// <summary>Gets a value indicating whether this context defines a
     /// minimum and maximum exponent. If false, converted exponents can
     /// have any exponent and operations can't cause overflow or underflow.</summary>
-    /// <value>Whether this context defines a minimum and maximum exponent.</value>
+    /// <value>True if this context defines a minimum and maximum exponent;
+    /// otherwise, false..</value>
     public bool HasExponentRange {
       get {
         return this.hasExponentRange;
@@ -64,7 +65,8 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this context defines a
     /// maximum precision.</summary>
-    /// <value>Whether this context defines a maximum precision.</value>
+    /// <value>True if this context defines a maximum precision; otherwise,
+    /// false..</value>
     public bool HasMaxPrecision {
       get {
         return !this.bigintPrecision.IsZero;
@@ -133,7 +135,8 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this context has a mutable
     /// Flags field.</summary>
-    /// <value>Whether this context has a mutable Flags field.</value>
+    /// <value>True if this context has a mutable Flags field; otherwise,
+    /// false..</value>
     public bool HasFlags {
       get {
         return this.hasFlags;
@@ -328,7 +331,8 @@ namespace PeterO {
     private bool simplified;
 
     /// <summary>Gets a value indicating whether to use a "simplified" arithmetic.</summary>
-    /// <value>Whether to use a &quot;simplified&quot; arithmetic.</value>
+    /// <value>True if to use a &quot;simplified&quot; arithmetic; otherwise,
+    /// false..</value>
     public bool IsSimplified {
       get {
         return this.simplified;

@@ -73,7 +73,8 @@ namespace PeterO {
     #region Equals and GetHashCode implementation
     /// <summary>Determines whether this object&apos;s mantissa and exponent
     /// are equal to those of another object.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>True if this object's mantissa and exponent are equal to
+    /// those of another object; otherwise, false.</returns>
     /// <param name='otherValue'>An ExtendedFloat object.</param>
     public bool EqualsInternal(ExtendedFloat otherValue) {
       if (otherValue == null) {
@@ -94,7 +95,7 @@ namespace PeterO {
     /// <summary>Determines whether this object&apos;s mantissa and exponent
     /// are equal to those of another object and that other object is a decimal
     /// fraction.</summary>
-    /// <returns>True if the objects are equal; false otherwise.</returns>
+    /// <returns>True if the objects are equal; otherwise, false.</returns>
     /// <param name='obj'>An arbitrary object.</param>
     public override bool Equals(object obj) {
       return this.EqualsInternal(obj as ExtendedFloat);
@@ -877,14 +878,16 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object is positive
     /// or negative infinity.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>True if this object is positive or negative infinity; otherwise,
+    /// false.</returns>
     public bool IsInfinity() {
       return (this.flags & BigNumberFlags.FlagInfinity) != 0;
     }
 
     /// <summary>Gets a value indicating whether this object is finite (not
     /// infinity or NaN).</summary>
-    /// <value>Whether this object is finite (not infinity or NaN).</value>
+    /// <value>True if this object is finite (not infinity or NaN); otherwise,
+    /// false..</value>
     public bool IsFinite {
       get {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
@@ -893,7 +896,8 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object is negative,
     /// including negative zero.</summary>
-    /// <value>Whether this object is negative, including negative zero.</value>
+    /// <value>True if this object is negative, including negative zero;
+    /// otherwise, false..</value>
     public bool IsNegative {
       get {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
@@ -902,14 +906,16 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object is a quiet not-a-number
     /// value.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>True if this object is a quiet not-a-number value; otherwise,
+    /// false.</returns>
     public bool IsQuietNaN() {
       return (this.flags & BigNumberFlags.FlagQuietNaN) != 0;
     }
 
     /// <summary>Gets a value indicating whether this object is a signaling
     /// not-a-number value.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>True if this object is a signaling not-a-number value;
+    /// otherwise, false.</returns>
     public bool IsSignalingNaN() {
       return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
     }
@@ -928,7 +934,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object&apos;s value
     /// equals 0.</summary>
-    /// <value>Whether this object&apos;s value equals 0.</value>
+    /// <value>True if this object&apos;s value equals 0; otherwise, false..</value>
     public bool IsZero {
       get {
         return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.IsZero;

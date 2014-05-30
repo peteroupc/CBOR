@@ -254,7 +254,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether this value is even.
-     * @return Whether this value is even.
+     * @return True if this value is even; otherwise, false..
      */
       public boolean isEvenNumber() {
           return this.wordCount == 0 || (this.data[0] & 1) == 0;
@@ -1009,7 +1009,7 @@ bigrem=divrem[1]; }
 
     /**
      * Gets a value indicating whether this object&apos;s value is even.
-     * @return Whether this object's value is even.
+     * @return True if this object's value is even; otherwise, false..
      */
     public boolean isEvenNumber() {
         switch (this.integerMode) {
@@ -1123,7 +1123,7 @@ bigrem=divrem[1]; }
 
     /**
      * Gets a value indicating whether this value is zero.
-     * @return Whether this value is zero.
+     * @return True if this value is zero; otherwise, false..
      */
     public boolean isValueZero() {
         switch (this.integerMode) {

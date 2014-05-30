@@ -8,10 +8,15 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     * Description of ICBORTag.
+     * Implemented by classes that validate CBOR objects belonging to a
+     * specific tag.
      */
   public interface ICBORTag
   {
+    /**
+     * Gets a type filter specifying what kinds of CBOR objects are supported
+     * by this tag.
+     */
     CBORTypeFilter GetTypeFilter();
 
     // NOTE: Will be passed an object with the corresponding tag

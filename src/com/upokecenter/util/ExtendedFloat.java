@@ -68,7 +68,8 @@ at: http://upokecenter.com/d/
      * Determines whether this object&apos;s mantissa and exponent are
      * equal to those of another object.
      * @param otherValue An ExtendedFloat object.
-     * @return A Boolean object.
+     * @return True if this object's mantissa and exponent are equal to those
+     * of another object; otherwise, false.
      */
     public boolean EqualsInternal(ExtendedFloat otherValue) {
       if (otherValue == null) {
@@ -93,7 +94,7 @@ at: http://upokecenter.com/d/
      * equal to those of another object and that other object is a decimal
      * fraction.
      * @param obj An arbitrary object.
-     * @return True if the objects are equal; false otherwise.
+     * @return True if the objects are equal; otherwise, false.
      */
     @Override public boolean equals(Object obj) {
       return this.EqualsInternal(((obj instanceof ExtendedFloat) ? (ExtendedFloat)obj : null));
@@ -918,7 +919,8 @@ at: http://upokecenter.com/d/
     /**
      * Gets a value indicating whether this object is positive or negative
      * infinity.
-     * @return A Boolean object.
+     * @return True if this object is positive or negative infinity; otherwise,
+     * false.
      */
     public boolean IsInfinity() {
       return (this.flags & BigNumberFlags.FlagInfinity) != 0;
@@ -927,7 +929,8 @@ at: http://upokecenter.com/d/
     /**
      * Gets a value indicating whether this object is finite (not infinity
      * or NaN).
-     * @return Whether this object is finite (not infinity or NaN).
+     * @return True if this object is finite (not infinity or NaN); otherwise,
+     * false..
      */
     public boolean isFinite() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
@@ -936,7 +939,8 @@ at: http://upokecenter.com/d/
     /**
      * Gets a value indicating whether this object is negative, including
      * negative zero.
-     * @return Whether this object is negative, including negative zero.
+     * @return True if this object is negative, including negative zero;
+     * otherwise, false..
      */
     public boolean isNegative() {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
@@ -945,7 +949,8 @@ at: http://upokecenter.com/d/
     /**
      * Gets a value indicating whether this object is a quiet not-a-number
      * value.
-     * @return A Boolean object.
+     * @return True if this object is a quiet not-a-number value; otherwise,
+     * false.
      */
     public boolean IsQuietNaN() {
       return (this.flags & BigNumberFlags.FlagQuietNaN) != 0;
@@ -954,7 +959,8 @@ at: http://upokecenter.com/d/
     /**
      * Gets a value indicating whether this object is a signaling not-a-number
      * value.
-     * @return A Boolean object.
+     * @return True if this object is a signaling not-a-number value; otherwise,
+     * false.
      */
     public boolean IsSignalingNaN() {
       return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
@@ -973,7 +979,7 @@ at: http://upokecenter.com/d/
     /**
      * Gets a value indicating whether this object&apos;s value equals
      * 0.
-     * @return Whether this object's value equals 0.
+     * @return True if this object's value equals 0; otherwise, false..
      */
     public boolean isZero() {
         return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum()==0;

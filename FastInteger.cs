@@ -7,7 +7,7 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
-// using System.Numerics;
+
 namespace PeterO {
     /// <summary>A mutable integer class initially backed by a small integer,
     /// that only uses a big integer when arithmetic operations would overflow
@@ -242,7 +242,7 @@ namespace PeterO {
       }
 
     /// <summary>Gets a value indicating whether this value is even.</summary>
-    /// <value>Whether this value is even.</value>
+    /// <value>True if this value is even; otherwise, false..</value>
       public bool IsEvenNumber {
         get {
           return this.wordCount == 0 || (this.data[0] & 1) == 0;
@@ -948,7 +948,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object&apos;s value
     /// is even.</summary>
-    /// <value>Whether this object&apos;s value is even.</value>
+    /// <value>True if this object&apos;s value is even; otherwise, false..</value>
     public bool IsEvenNumber {
       get {
         switch (this.integerMode) {
@@ -1056,7 +1056,7 @@ namespace PeterO {
     }
 
     /// <summary>Gets a value indicating whether this value is zero.</summary>
-    /// <value>Whether this value is zero.</value>
+    /// <value>True if this value is zero; otherwise, false..</value>
     public bool IsValueZero {
       get {
         switch (this.integerMode) {

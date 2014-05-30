@@ -9,14 +9,15 @@ at: http://upokecenter.com/d/
 
 // import java.math.*;
 
-  final class BitShiftAccumulator implements IShiftAccumulator {
+  final class BitShiftAccumulator implements IShiftAccumulator
+  {
     private static final int SmallBitLength = 32;
 
     private int bitLeftmost;
 
     /**
      * Gets a value indicating whether the last discarded bit was set.
-     * @return Whether the last discarded bit was set.
+     * @return True if the last discarded bit was set; otherwise, false..
      */
     public int getLastDiscardedDigit() {
         return this.bitLeftmost;
@@ -27,8 +28,8 @@ at: http://upokecenter.com/d/
     /**
      * Gets a value indicating whether any of the discarded bits to the right
      * of the last one was set.
-     * @return Whether any of the discarded bits to the right of the last one
-     * was set.
+     * @return True if any of the discarded bits to the right of the last one
+     * was set; otherwise, false..
      */
     public int getOlderDiscardedDigits() {
         return this.bitsAfterLeftmost;
@@ -54,8 +55,8 @@ at: http://upokecenter.com/d/
      */
     public void ShiftToDigits(FastInteger bits) {
       if (bits.signum() < 0) {
- throw new IllegalArgumentException("bits's sign (" + Integer.toString((int)bits.signum()) + ") is less than " + "0");
-}
+        throw new IllegalArgumentException("bits's sign (" + Integer.toString((int)bits.signum()) + ") is less than " + "0");
+      }
       if (bits.CanFitInInt32()) {
         this.ShiftToDigitsInt(bits.AsInt32());
       } else {
@@ -113,8 +114,8 @@ at: http://upokecenter.com/d/
       int lastDiscarded,
       int olderDiscarded) {
       if (bigint.signum() < 0) {
- throw new IllegalArgumentException("bigint's sign (" + Integer.toString((int)bigint.signum()) + ") is less than " + "0");
-}
+        throw new IllegalArgumentException("bigint's sign (" + Integer.toString((int)bigint.signum()) + ") is less than " + "0");
+      }
       if (bigint.canFitInInt()) {
         this.isSmall = true;
         this.shiftedSmall = bigint.intValue();
@@ -128,8 +129,8 @@ at: http://upokecenter.com/d/
 
     public static BitShiftAccumulator FromInt32(int smallNumber) {
       if (smallNumber < 0) {
- throw new IllegalArgumentException("smallNumber (" + Integer.toString((int)smallNumber) + ") is less than " + "0");
-}
+        throw new IllegalArgumentException("smallNumber (" + Integer.toString((int)smallNumber) + ") is less than " + "0");
+      }
       BitShiftAccumulator bsa = new BitShiftAccumulator(BigInteger.ZERO, 0, 0);
       bsa.shiftedSmall = smallNumber;
       bsa.discardedBitCount = new FastInteger(0);
@@ -206,7 +207,7 @@ at: http://upokecenter.com/d/
             // the last one is set
             this.bitsAfterLeftmost |= 1;
             this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
-          } else if (lowestSetBit > bs - 1) {
+  } else if (lowestSetBit > bs - 1) {
             // Means all discarded bits are zero
             this.bitLeftmost = 0;
           } else {
@@ -295,7 +296,7 @@ at: http://upokecenter.com/d/
             // the last one is set
             this.bitsAfterLeftmost |= 1;
             this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
-          } else if (lowestSetBit > bs - 1) {
+  } else if (lowestSetBit > bs - 1) {
             // Means all discarded bits are zero
             this.bitLeftmost = 0;
           } else {
@@ -375,8 +376,8 @@ at: http://upokecenter.com/d/
      */
     public void ShiftToDigitsInt(int bits) {
       if (bits < 0) {
- throw new IllegalArgumentException("bits (" + Integer.toString((int)bits) + ") is less than " + "0");
-}
+        throw new IllegalArgumentException("bits (" + Integer.toString((int)bits) + ") is less than " + "0");
+      }
       if (this.isSmall) {
         this.ShiftSmallToBits(bits);
       } else {

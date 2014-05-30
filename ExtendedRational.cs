@@ -367,7 +367,8 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object is finite (not
     /// infinity or NaN).</summary>
-    /// <value>Whether this object is finite (not infinity or NaN).</value>
+    /// <value>True if this object is finite (not infinity or NaN); otherwise,
+    /// false..</value>
     public bool IsFinite {
       get {
         return !this.IsNaN() && !this.IsInfinity();
@@ -432,7 +433,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object's value equals
     /// 0.</summary>
-    /// <value>Whether this object&apos;s value equals 0.</value>
+    /// <value>True if this object&apos;s value equals 0; otherwise, false..</value>
     public bool IsZero {
       get {
         if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
@@ -780,7 +781,8 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object's value is
     /// negative.</summary>
-    /// <value>Whether this object&apos;s value is negative.</value>
+    /// <value>True if this object&apos;s value is negative; otherwise,
+    /// false..</value>
     public bool IsNegative {
       get {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;

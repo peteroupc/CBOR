@@ -378,7 +378,8 @@ at: http://upokecenter.com/d/
     /**
      * Gets a value indicating whether this object is finite (not infinity
      * or NaN).
-     * @return Whether this object is finite (not infinity or NaN).
+     * @return True if this object is finite (not infinity or NaN); otherwise,
+     * false..
      */
     public boolean isFinite() {
         return !this.IsNaN() && !this.IsInfinity();
@@ -451,7 +452,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether this object's value equals 0.
-     * @return Whether this object's value equals 0.
+     * @return True if this object's value equals 0; otherwise, false..
      */
     public boolean isZero() {
         if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
@@ -797,7 +798,7 @@ thisRem=divrem[1]; }
 
     /**
      * Gets a value indicating whether this object's value is negative.
-     * @return Whether this object's value is negative.
+     * @return True if this object's value is negative; otherwise, false..
      */
     public boolean isNegative() {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
