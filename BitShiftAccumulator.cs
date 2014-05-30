@@ -7,18 +7,21 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
-// using System.Numerics;
+
 namespace PeterO {
-  internal sealed class BitShiftAccumulator : IShiftAccumulator {
+  internal sealed class BitShiftAccumulator : IShiftAccumulator
+  {
     private const int SmallBitLength = 32;
 
     private int bitLeftmost;
 
     /// <summary>Gets a value indicating whether the last discarded bit
     /// was set.</summary>
-    /// <value>Whether the last discarded bit was set.</value>
-    public int LastDiscardedDigit {
-      get {
+    /// <value>True if the last discarded bit was set; otherwise, false..</value>
+    public int LastDiscardedDigit
+    {
+      get
+      {
         return this.bitLeftmost;
       }
     }
@@ -27,10 +30,12 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether any of the discarded bits
     /// to the right of the last one was set.</summary>
-    /// <value>Whether any of the discarded bits to the right of the last one
-    /// was set.</value>
-    public int OlderDiscardedDigits {
-      get {
+    /// <value>True if any of the discarded bits to the right of the last one
+    /// was set; otherwise, false..</value>
+    public int OlderDiscardedDigits
+    {
+      get
+      {
         return this.bitsAfterLeftmost;
       }
     }
@@ -51,8 +56,8 @@ namespace PeterO {
     /// <param name='bits'>A FastInteger object.</param>
     public void ShiftToDigits(FastInteger bits) {
       if (bits.Sign < 0) {
- throw new ArgumentException("bits's sign (" + Convert.ToString((int)bits.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-}
+        throw new ArgumentException("bits's sign (" + Convert.ToString((int)bits.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
       if (bits.CanFitInInt32()) {
         this.ShiftToDigitsInt(bits.AsInt32());
       } else {
@@ -73,8 +78,10 @@ namespace PeterO {
 
     /// <summary>Gets a value not documented yet.</summary>
     /// <value>A value not documented yet.</value>
-    public BigInteger ShiftedInt {
-      get {
+    public BigInteger ShiftedInt
+    {
+      get
+      {
         if (this.isSmall) {
           return (BigInteger)this.shiftedSmall;
         } else {
@@ -85,8 +92,10 @@ namespace PeterO {
 
     /// <summary>Gets a value not documented yet.</summary>
     /// <value>A value not documented yet.</value>
-    public FastInteger ShiftedIntFast {
-      get {
+    public FastInteger ShiftedIntFast
+    {
+      get
+      {
         if (this.isSmall) {
           return new FastInteger(this.shiftedSmall);
         } else {
@@ -99,8 +108,10 @@ namespace PeterO {
 
     /// <summary>Gets the number of digits discarded.</summary>
     /// <value>The number of digits discarded.</value>
-    public FastInteger DiscardedDigitCount {
-      get {
+    public FastInteger DiscardedDigitCount
+    {
+      get
+      {
         return this.discardedBitCount;
       }
     }
@@ -110,8 +121,8 @@ namespace PeterO {
       int lastDiscarded,
       int olderDiscarded) {
       if (bigint.Sign < 0) {
- throw new ArgumentException("bigint's sign (" + Convert.ToString((int)bigint.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-}
+        throw new ArgumentException("bigint's sign (" + Convert.ToString((int)bigint.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
       if (bigint.canFitInInt()) {
         this.isSmall = true;
         this.shiftedSmall = (int)bigint;
@@ -125,8 +136,8 @@ namespace PeterO {
 
     public static BitShiftAccumulator FromInt32(int smallNumber) {
       if (smallNumber < 0) {
- throw new ArgumentException("smallNumber (" + Convert.ToString((int)smallNumber, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-}
+        throw new ArgumentException("smallNumber (" + Convert.ToString((int)smallNumber, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
       BitShiftAccumulator bsa = new BitShiftAccumulator(BigInteger.Zero, 0, 0);
       bsa.shiftedSmall = smallNumber;
       bsa.discardedBitCount = new FastInteger(0);
@@ -201,7 +212,7 @@ namespace PeterO {
             // the last one is set
             this.bitsAfterLeftmost |= 1;
             this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
-          } else if (lowestSetBit > bs - 1) {
+  } else if (lowestSetBit > bs - 1) {
             // Means all discarded bits are zero
             this.bitLeftmost = 0;
           } else {
@@ -290,7 +301,7 @@ namespace PeterO {
             // the last one is set
             this.bitsAfterLeftmost |= 1;
             this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
-          } else if (lowestSetBit > bs - 1) {
+  } else if (lowestSetBit > bs - 1) {
             // Means all discarded bits are zero
             this.bitLeftmost = 0;
           } else {
@@ -367,8 +378,8 @@ namespace PeterO {
     /// <param name='bits'>A 32-bit signed integer.</param>
     public void ShiftToDigitsInt(int bits) {
       if (bits < 0) {
- throw new ArgumentException("bits (" + Convert.ToString((int)bits, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-}
+        throw new ArgumentException("bits (" + Convert.ToString((int)bits, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
       if (this.isSmall) {
         this.ShiftSmallToBits(bits);
       } else {

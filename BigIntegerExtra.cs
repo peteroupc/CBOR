@@ -197,8 +197,10 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object&apos;s value
     /// is a power of two.</summary>
-    /// <returns>A Boolean object.</returns>
-    /// <value>Whether this object&apos;s value is a power of two.</value>
+    /// <returns>True if this object's value is a power of two; otherwise,
+    /// false.</returns>
+    /// <value>True if this object&apos;s value is a power of two; otherwise,
+    /// false..</value>
     public bool IsPowerOfTwo {
       get {
         int bits = this.bitLength();

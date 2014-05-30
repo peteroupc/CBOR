@@ -2427,9 +2427,9 @@ if (bytes.Length <= 0) {
       return ret;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Returns a big integer with the bits shifted to the right.</summary>
     /// <returns>A BigInteger object.</returns>
-    /// <param name='numberBits'>A 32-bit signed integer.</param>
+    /// <param name='numberBits'>Number of bits to shift right.</param>
     public BigInteger shiftRight(int numberBits) {
       if (numberBits == 0 || this.wordCount == 0) {
         return this;
@@ -2478,8 +2478,8 @@ if (bytes.Length <= 0) {
       return ret;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A BigInteger object.</returns>
+    /// <summary>Converts a 64-bit signed integer to a big integer.</summary>
+    /// <returns>A BigInteger object with the same value as the 64-bit number.</returns>
     /// <param name='longerValue'>A 64-bit signed integer.</param>
     public static BigInteger valueOf(long longerValue) {
       if (longerValue == 0) {
@@ -2522,8 +2522,10 @@ if (bytes.Length <= 0) {
       return ret;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Converts this object's value to a 32-bit signed integer.</summary>
     /// <returns>A 32-bit signed integer.</returns>
+    /// <exception cref='OverflowException'>This object's value is too
+    /// big to fit a 32-bit signed integer.</exception>
     public int intValue() {
       int c = (int)this.wordCount;
       if (c == 0) {
@@ -2550,8 +2552,10 @@ if (bytes.Length <= 0) {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <summary>Returns whether this object's value can fit in a 32-bit
+    /// signed integer.</summary>
+    /// <returns>True if this object's value is Int32.MaxValue or greater,
+    /// and Int32.MaxValue or less; otherwise, false.</returns>
     public bool canFitInInt() {
       int c = (int)this.wordCount;
       if (c > 2) {
@@ -2578,8 +2582,10 @@ if (bytes.Length <= 0) {
       return true;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Converts this object's value to a 64-bit signed integer.</summary>
     /// <returns>A 64-bit signed integer.</returns>
+    /// <exception cref='OverflowException'>This object's value is too
+    /// big to fit a 64-bit signed integer.</exception>
     public long longValue() {
       int count = this.wordCount;
       if (count == 0) {
@@ -3474,7 +3480,7 @@ if (bytes.Length <= 0) {
     #region Equals and GetHashCode implementation
     /// <inheritdoc/><summary>Determines whether this object and another
     /// object are equal.</summary>
-    /// <returns>True if the objects are equal; false otherwise.</returns>
+    /// <returns>True if the objects are equal; otherwise, false.</returns>
     /// <param name='obj'>An arbitrary object.</param>
     public override bool Equals(object obj) {
       BigInteger other = obj as BigInteger;
@@ -4165,7 +4171,7 @@ if (bytes.Length <= 0) {
     }
 
     /// <summary>Gets a value indicating whether this value is 0.</summary>
-    /// <value>Whether this value is 0.</value>
+    /// <value>True if this value is 0; otherwise, false..</value>
     public bool IsZero {
       get {
         return this.wordCount == 0;
@@ -4324,7 +4330,7 @@ if (bytes.Length <= 0) {
     }
 
     /// <summary>Gets a value indicating whether this value is even.</summary>
-    /// <value>Whether this value is even.</value>
+    /// <value>True if this value is even; otherwise, false..</value>
     public bool IsEven {
       get {
         return !this.GetUnsignedBit(0);

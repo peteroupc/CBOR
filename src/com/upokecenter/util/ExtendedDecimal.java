@@ -91,7 +91,8 @@ at: http://upokecenter.com/d/
      * Determines whether this object&apos;s mantissa and exponent are
      * equal to those of another object.
      * @param otherValue An ExtendedDecimal object.
-     * @return A Boolean object.
+     * @return True if this object's mantissa and exponent are equal to those
+     * of another object; otherwise, false.
      */
     public boolean EqualsInternal(ExtendedDecimal otherValue) {
       if (otherValue == null) {
@@ -114,7 +115,7 @@ at: http://upokecenter.com/d/
      * equal to those of another object and that other object is a decimal
      * fraction.
      * @param obj An arbitrary object.
-     * @return True if the objects are equal; false otherwise.
+     * @return True if the objects are equal; otherwise, false.
      */
     @Override public boolean equals(Object obj) {
       return this.EqualsInternal(((obj instanceof ExtendedDecimal) ? (ExtendedDecimal)obj : null));
@@ -1345,9 +1346,9 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
+     * Converts a big integer to an arbitrary precision decimal.
      * @param bigint A BigInteger object.
-     * @return An ExtendedDecimal object.
+     * @return An ExtendedDecimal object with the exponent set to 0.
      */
     public static ExtendedDecimal FromBigInteger(BigInteger bigint) {
       return ExtendedDecimal.Create(bigint, BigInteger.ZERO);
@@ -1356,7 +1357,7 @@ remainder=divrem[1]; }
     /**
      * Creates a decimal number from a 64-bit signed integer.
      * @param valueSmall A 64-bit signed integer.
-     * @return An ExtendedDecimal object.
+     * @return An ExtendedDecimal object with the exponent set to 0.
      */
     public static ExtendedDecimal FromInt64(long valueSmall) {
       BigInteger bigint = BigInteger.valueOf(valueSmall);
@@ -1579,8 +1580,8 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
-     * @return A Boolean object.
+     * Gets a value indicating whether this object is not a number (NaN).
+     * @return True if this object is not a number (NaN); otherwise, false.
      */
     public boolean IsNaN() {
       return (this.flags & (BigNumberFlags.FlagQuietNaN | BigNumberFlags.FlagSignalingNaN)) != 0;
@@ -1589,7 +1590,8 @@ remainder=divrem[1]; }
     /**
      * Gets a value indicating whether this object is positive or negative
      * infinity.
-     * @return A Boolean object.
+     * @return True if this object is positive or negative infinity; otherwise,
+     * false.
      */
     public boolean IsInfinity() {
       return (this.flags & BigNumberFlags.FlagInfinity) != 0;
@@ -1598,7 +1600,8 @@ remainder=divrem[1]; }
     /**
      * Gets a value indicating whether this object is finite (not infinity
      * or NaN).
-     * @return Whether this object is finite (not infinity or NaN).
+     * @return True if this object is finite (not infinity or NaN); otherwise,
+     * false..
      */
     public boolean isFinite() {
         return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0;
@@ -1607,7 +1610,8 @@ remainder=divrem[1]; }
     /**
      * Gets a value indicating whether this object is negative, including
      * negative zero.
-     * @return Whether this object is negative, including negative zero.
+     * @return True if this object is negative, including negative zero;
+     * otherwise, false..
      */
     public boolean isNegative() {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
@@ -1616,7 +1620,8 @@ remainder=divrem[1]; }
     /**
      * Gets a value indicating whether this object is a quiet not-a-number
      * value.
-     * @return A Boolean object.
+     * @return True if this object is a quiet not-a-number value; otherwise,
+     * false.
      */
     public boolean IsQuietNaN() {
       return (this.flags & BigNumberFlags.FlagQuietNaN) != 0;
@@ -1625,7 +1630,8 @@ remainder=divrem[1]; }
     /**
      * Gets a value indicating whether this object is a signaling not-a-number
      * value.
-     * @return A Boolean object.
+     * @return True if this object is a signaling not-a-number value; otherwise,
+     * false.
      */
     public boolean IsSignalingNaN() {
       return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
@@ -1642,7 +1648,7 @@ remainder=divrem[1]; }
     /**
      * Gets a value indicating whether this object&apos;s value equals
      * 0.
-     * @return Whether this object's value equals 0.
+     * @return True if this object's value equals 0; otherwise, false..
      */
     public boolean isZero() {
         return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum()==0;

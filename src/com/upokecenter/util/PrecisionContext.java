@@ -58,7 +58,8 @@ at: http://upokecenter.com/d/
      * Gets a value indicating whether this context defines a minimum and
      * maximum exponent. If false, converted exponents can have any exponent
      * and operations can't cause overflow or underflow.
-     * @return Whether this context defines a minimum and maximum exponent.
+     * @return True if this context defines a minimum and maximum exponent;
+     * otherwise, false..
      */
     public boolean getHasExponentRange() {
         return this.hasExponentRange;
@@ -66,7 +67,8 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether this context defines a maximum precision.
-     * @return Whether this context defines a maximum precision.
+     * @return True if this context defines a maximum precision; otherwise,
+     * false..
      */
     public boolean getHasMaxPrecision() {
         return this.bigintPrecision.signum()!=0;
@@ -133,7 +135,8 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether this context has a mutable Flags field.
-     * @return Whether this context has a mutable Flags field.
+     * @return True if this context has a mutable Flags field; otherwise,
+     * false..
      */
     public boolean getHasFlags() {
         return this.hasFlags;
@@ -361,7 +364,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether to use a "simplified" arithmetic.
-     * @return Whether to use a "simplified" arithmetic.
+     * @return True if to use a "simplified" arithmetic; otherwise, false..
      */
     public boolean isSimplified() {
         return this.simplified;

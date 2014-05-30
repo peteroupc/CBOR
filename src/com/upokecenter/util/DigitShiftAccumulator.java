@@ -14,7 +14,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether the last discarded digit was set.
-     * @return Whether the last discarded digit was set.
+     * @return True if the last discarded digit was set; otherwise, false..
      */
     public int getLastDiscardedDigit() {
         return this.bitLeftmost;
@@ -25,8 +25,8 @@ at: http://upokecenter.com/d/
     /**
      * Gets a value indicating whether any of the discarded digits to the
      * right of the last one was set.
-     * @return Whether any of the discarded digits to the right of the last
-     * one was set.
+     * @return True if any of the discarded digits to the right of the last
+     * one was set; otherwise, false..
      */
     public int getOlderDiscardedDigits() {
         return this.bitsAfterLeftmost;

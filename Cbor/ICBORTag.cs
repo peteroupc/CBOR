@@ -8,9 +8,13 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Description of ICBORTag.</summary>
+    /// <summary>Implemented by classes that validate CBOR objects belonging
+    /// to a specific tag.</summary>
   public interface ICBORTag
   {
+    /// <summary>Gets a type filter specifying what kinds of CBOR objects
+    /// are supported by this tag.</summary>
+    /// <returns/>
     CBORTypeFilter GetTypeFilter();
 
     // NOTE: Will be passed an object with the corresponding tag

@@ -9,7 +9,7 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Description of CBORTypeFilter.</summary>
+    /// <summary>Specifies what kinds of CBOR objects a tag can be.</summary>
   public class CBORTypeFilter
   {
     private bool any;
@@ -69,19 +69,21 @@ namespace PeterO.Cbor {
       return this.WithType(1);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Copies this filter and includes byte strings in the new
+    /// filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithByteString() {
       return this.WithType(2).WithTags(25);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Copies this filter and includes maps in the new filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithMap() {
       return this.WithType(5);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Copies this filter and includes text strings in the new
+    /// filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithTextString() {
       return this.WithType(3).WithTags(25);

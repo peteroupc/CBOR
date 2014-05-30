@@ -20,7 +20,7 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Initializes a new instance of the CBORException class.
-    /// Not documented yet.</summary>
+    /// Uses the given message and inner exception.</summary>
     /// <param name='message'>A string object.</param>
     /// <param name='innerException'>An Exception object.</param>
     public CBORException(string message, Exception innerException)

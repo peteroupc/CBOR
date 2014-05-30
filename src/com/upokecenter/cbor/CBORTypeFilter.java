@@ -10,7 +10,7 @@ at: http://upokecenter.com/d/
 import com.upokecenter.util.*;
 
     /**
-     * Description of CBORTypeFilter.
+     * Specifies what kinds of CBOR objects a tag can be.
      */
   public class CBORTypeFilter
   {
@@ -76,7 +76,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
+     * Copies this filter and includes byte strings in the new filter.
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter WithByteString() {
@@ -84,7 +84,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
+     * Copies this filter and includes maps in the new filter.
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter WithMap() {
@@ -92,7 +92,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
+     * Copies this filter and includes text strings in the new filter.
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter WithTextString() {

@@ -320,7 +320,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this value is a CBOR true
     /// value.</summary>
-    /// <value>Whether this value is a CBOR true value.</value>
+    /// <value>True if this value is a CBOR true value; otherwise, false..</value>
     public bool IsTrue {
       get {
         return this.ItemType == CBORObjectTypeSimpleValue && (int)this.ThisItem == 21;
@@ -329,7 +329,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this value is a CBOR false
     /// value.</summary>
-    /// <value>Whether this value is a CBOR false value.</value>
+    /// <value>True if this value is a CBOR false value; otherwise, false..</value>
     public bool IsFalse {
       get {
         return this.ItemType == CBORObjectTypeSimpleValue && (int)this.ThisItem == 20;
@@ -338,7 +338,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this value is a CBOR null
     /// value.</summary>
-    /// <value>Whether this value is a CBOR null value.</value>
+    /// <value>True if this value is a CBOR null value; otherwise, false..</value>
     public bool IsNull {
       get {
         return this.ItemType == CBORObjectTypeSimpleValue && (int)this.ThisItem == 22;
@@ -347,7 +347,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this value is a CBOR undefined
     /// value.</summary>
-    /// <value>Whether this value is a CBOR undefined value.</value>
+    /// <value>True if this value is a CBOR undefined value; otherwise, false..</value>
     public bool IsUndefined {
       get {
         return this.ItemType == CBORObjectTypeSimpleValue && (int)this.ThisItem == 23;
@@ -356,7 +356,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this object&apos;s value
     /// equals 0.</summary>
-    /// <value>Whether this object&apos;s value equals 0.</value>
+    /// <value>True if this object&apos;s value equals 0; otherwise, false..</value>
     public bool IsZero {
       get {
         ICBORNumber cn = NumberInterfaces[this.ItemType];
@@ -367,7 +367,7 @@ namespace PeterO.Cbor {
     /// <summary>Gets this object&apos;s value with the sign reversed.</summary>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type.</exception>
-    /// <returns>A CBORObject object.</returns>
+    /// <returns>The reversed-sign form of this number.</returns>
     public CBORObject Negate() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -376,8 +376,10 @@ namespace PeterO.Cbor {
       return CBORObject.FromObject(cn.Negate(this.ThisItem));
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORObject object.</returns>
+    /// <summary>Gets this object's absolute value.</summary>
+    /// <returns>This object's absolute without its negative sign.</returns>
+    /// <exception cref='System.InvalidOperationException'>This object's
+    /// type is not a number type.</exception>
     public CBORObject Abs() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -416,7 +418,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this CBOR object represents
     /// positive infinity.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>True if this CBOR object represents positive infinity;
+    /// otherwise, false.</returns>
     public bool IsPositiveInfinity() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return cn == null ? false : cn.IsPositiveInfinity(this.ThisItem);
@@ -424,7 +427,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this CBOR object represents
     /// infinity.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>True if this CBOR object represents infinity; otherwise,
+    /// false.</returns>
     public bool IsInfinity() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return cn == null ? false : cn.IsInfinity(this.ThisItem);
@@ -432,7 +436,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this CBOR object represents
     /// a finite number.</summary>
-    /// <value>Whether this CBOR object represents a finite number.</value>
+    /// <value>True if this CBOR object represents a finite number; otherwise,
+    /// false..</value>
     public bool IsFinite {
       get {
         return this.Type == CBORType.Number && !this.IsInfinity() && !this.IsNaN();
@@ -441,7 +446,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this CBOR object represents
     /// negative infinity.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>True if this CBOR object represents negative infinity;
+    /// otherwise, false.</returns>
     public bool IsNegativeInfinity() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return cn == null ? false : cn.IsNegativeInfinity(this.ThisItem);
@@ -450,7 +456,9 @@ namespace PeterO.Cbor {
     /// <summary>Gets a value indicating whether this CBOR object represents
     /// a not-a-number value (as opposed to whether this object&apos;s type
     /// is not a number type).</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>True if this CBOR object represents a not-a-number value
+    /// (as opposed to whether this object's type is not a number type); otherwise,
+    /// false.</returns>
     public bool IsNaN() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return cn == null ? false : cn.IsNaN(this.ThisItem);
@@ -946,7 +954,7 @@ namespace PeterO.Cbor {
     /// <summary>Determines whether this object and another object are
     /// equal.</summary>
     /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>True if the objects are equal; false otherwise.</returns>
+    /// <returns>True if the objects are equal; otherwise, false.</returns>
     public override bool Equals(object obj) {
       return this.Equals(obj as CBORObject);
     }
@@ -1288,7 +1296,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this data item has at least
     /// one tag.</summary>
-    /// <value>Whether this data item has at least one tag.</value>
+    /// <value>True if this data item has at least one tag; otherwise, false..</value>
     public bool IsTagged {
       get {
         return this.itemtypeValue == CBORObjectTypeTagged;
@@ -1334,9 +1342,10 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='bigTagValue'>A BigInteger object.</param>
-    /// <returns>A Boolean object.</returns>
+    /// <summary>Returns whether this object has a tag of the given number.</summary>
+    /// <param name='bigTagValue'>The tag value to search for.</param>
+    /// <returns>True if this object has a tag of the given number; otherwise,
+    /// false.</returns>
     public bool HasTag(BigInteger bigTagValue) {
       if (bigTagValue == null) {
         throw new ArgumentNullException("bigTagValue");
@@ -1938,7 +1947,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Returns whether this object's value is an integral value,
     /// is -(2^32) or greater, and is less than 2^32.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>True if this object's value is an integral value, is -(2^32)
+    /// or greater, and is less than 2^32; otherwise, false.</returns>
     public bool CanFitInInt32() {
       if (!this.CanFitInInt64()) {
         return false;
@@ -1949,7 +1959,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Returns whether this object's value is an integral value,
     /// is -(2^63) or greater, and is less than 2^63.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>True if this object's value is an integral value, is -(2^63)
+    /// or greater, and is less than 2^63; otherwise, false.</returns>
     public bool CanFitInInt64() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1960,7 +1971,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Returns whether this object's value, truncated to an integer,
     /// would be -(2^63) or greater, and less than 2^63.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>True if this object's value, truncated to an integer, would
+    /// be -(2^63) or greater, and less than 2^63; otherwise, false.</returns>
     public bool CanTruncatedIntFitInInt64() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1971,7 +1983,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Returns whether this object's value, truncated to an integer,
     /// would be -(2^31) or greater, and less than 2^31.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>True if this object's value, truncated to an integer, would
+    /// be -(2^31) or greater, and less than 2^31; otherwise, false.</returns>
     public bool CanTruncatedIntFitInInt32() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
@@ -1983,8 +1996,8 @@ namespace PeterO.Cbor {
     /// <summary>Gets a value indicating whether this object represents
     /// an integral number, that is, a number without a fractional part. Infinity
     /// and not-a-number are not considered integral.</summary>
-    /// <value>Whether this object represents an integral number, that
-    /// is, a number without a fractional part.</value>
+    /// <value>True if this object represents an integral number, that is,
+    /// a number without a fractional part; otherwise, false..</value>
     public bool IsIntegral {
       get {
         ICBORNumber cn = NumberInterfaces[this.ItemType];
@@ -3360,7 +3373,7 @@ namespace PeterO.Cbor {
     /// <summary>Converts this object to a JSON string. This function works
     /// not only with arrays and maps, but also integers, strings, byte arrays,
     /// and other JSON data types.</summary>
-    /// <returns>A string object.</returns>
+    /// <returns>A string object containing the converted object.</returns>
     public string ToJSONString() {
       int type = this.ItemType;
       switch (type) {
@@ -3788,15 +3801,15 @@ namespace PeterO.Cbor {
 
     /// <summary>Returns the CBOR true value or false value, depending on
     /// &quot;value&quot;.</summary>
-    /// <returns>A CBORObject object.</returns>
-    /// <param name='value'>A Boolean object.</param>
+    /// <returns>CBORObject.True if value is true; otherwise CBORObject.False.</returns>
+    /// <param name='value'>Either True or False.</param>
     public static CBORObject FromObject(bool value) {
       return value ? CBORObject.True : CBORObject.False;
     }
 
     /// <summary>Generates a CBOR object from a byte (0 to 255).</summary>
     /// <returns>A CBORObject object.</returns>
-    /// <param name='value'>A Byte object.</param>
+    /// <param name='value'>A Byte object (0 to 255).</param>
     public static CBORObject FromObject(byte value) {
       return FromObject(((int)value) & 0xff);
     }
@@ -3877,7 +3890,7 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Generates a CBOR object from a list of objects.</summary>
-    /// <param name='value'>An array of CBOR objects.</param>
+    /// <param name='value'>An array of CBOR objects. Can be null.</param>
     /// <returns>A CBOR object where each element of the given array is converted
     /// to a CBOR object and copied to a new array, or CBORObject.Null if the
     /// value is null.</returns>

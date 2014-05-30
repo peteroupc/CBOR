@@ -280,7 +280,7 @@ public void setConverter(Object value) {
 
     /**
      * Gets a value indicating whether this value is a CBOR true value.
-     * @return Whether this value is a CBOR true value.
+     * @return True if this value is a CBOR true value; otherwise, false..
      */
     public boolean isTrue() {
         return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 21;
@@ -288,7 +288,7 @@ public void setConverter(Object value) {
 
     /**
      * Gets a value indicating whether this value is a CBOR false value.
-     * @return Whether this value is a CBOR false value.
+     * @return True if this value is a CBOR false value; otherwise, false..
      */
     public boolean isFalse() {
         return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 20;
@@ -296,7 +296,7 @@ public void setConverter(Object value) {
 
     /**
      * Gets a value indicating whether this value is a CBOR null value.
-     * @return Whether this value is a CBOR null value.
+     * @return True if this value is a CBOR null value; otherwise, false..
      */
     public boolean isNull() {
         return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 22;
@@ -304,7 +304,7 @@ public void setConverter(Object value) {
 
     /**
      * Gets a value indicating whether this value is a CBOR undefined value.
-     * @return Whether this value is a CBOR undefined value.
+     * @return True if this value is a CBOR undefined value; otherwise, false..
      */
     public boolean isUndefined() {
         return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() == 23;
@@ -313,7 +313,7 @@ public void setConverter(Object value) {
     /**
      * Gets a value indicating whether this object&apos;s value equals
      * 0.
-     * @return Whether this object's value equals 0.
+     * @return True if this object's value equals 0; otherwise, false..
      */
     public boolean isZero() {
         ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -322,7 +322,7 @@ public void setConverter(Object value) {
 
     /**
      * Gets this object&apos;s value with the sign reversed.
-     * @return A CBORObject object.
+     * @return The reversed-sign form of this number.
      * @throws java.lang.IllegalStateException This object's type is
      * not a number type.
      */
@@ -335,8 +335,10 @@ public void setConverter(Object value) {
     }
 
     /**
-     * Not documented yet.
-     * @return A CBORObject object.
+     * Gets this object's absolute value.
+     * @return This object's absolute without its negative sign.
+     * @throws java.lang.IllegalStateException This object's type is
+     * not a number type.
      */
     public CBORObject Abs() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -374,7 +376,8 @@ public void setConverter(Object value) {
     /**
      * Gets a value indicating whether this CBOR object represents positive
      * infinity.
-     * @return A Boolean object.
+     * @return True if this CBOR object represents positive infinity; otherwise,
+     * false.
      */
     public boolean IsPositiveInfinity() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -383,7 +386,8 @@ public void setConverter(Object value) {
 
     /**
      * Gets a value indicating whether this CBOR object represents infinity.
-     * @return A Boolean object.
+     * @return True if this CBOR object represents infinity; otherwise,
+     * false.
      */
     public boolean IsInfinity() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -393,7 +397,8 @@ public void setConverter(Object value) {
     /**
      * Gets a value indicating whether this CBOR object represents a finite
      * number.
-     * @return Whether this CBOR object represents a finite number.
+     * @return True if this CBOR object represents a finite number; otherwise,
+     * false..
      */
     public boolean isFinite() {
         return this.getType() == CBORType.Number && !this.IsInfinity() && !this.IsNaN();
@@ -402,7 +407,8 @@ public void setConverter(Object value) {
     /**
      * Gets a value indicating whether this CBOR object represents negative
      * infinity.
-     * @return A Boolean object.
+     * @return True if this CBOR object represents negative infinity; otherwise,
+     * false.
      */
     public boolean IsNegativeInfinity() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -413,7 +419,9 @@ public void setConverter(Object value) {
      * Gets a value indicating whether this CBOR object represents a not-a-number
      * value (as opposed to whether this object&apos;s type is not a number
      * type).
-     * @return A Boolean object.
+     * @return True if this CBOR object represents a not-a-number value
+     * (as opposed to whether this object's type is not a number type); otherwise,
+     * false.
      */
     public boolean IsNaN() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -904,7 +912,7 @@ hasKey=(valueB==null) ? mapB.containsKey(kvp.getKey()) : true;
     /**
      * Determines whether this object and another object are equal.
      * @param obj An arbitrary object.
-     * @return True if the objects are equal; false otherwise.
+     * @return True if the objects are equal; otherwise, false.
      */
     @Override public boolean equals(Object obj) {
       return this.equals(((obj instanceof CBORObject) ? (CBORObject)obj : null));
@@ -1261,7 +1269,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 
     /**
      * Gets a value indicating whether this data item has at least one tag.
-     * @return Whether this data item has at least one tag.
+     * @return True if this data item has at least one tag; otherwise, false..
      */
     public boolean isTagged() {
         return this.itemtypeValue == CBORObjectTypeTagged;
@@ -1306,9 +1314,10 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     }
 
     /**
-     * Not documented yet.
-     * @param bigTagValue A BigInteger object.
-     * @return A Boolean object.
+     * Returns whether this object has a tag of the given number.
+     * @param bigTagValue The tag value to search for.
+     * @return True if this object has a tag of the given number; otherwise,
+     * false.
      */
     public boolean HasTag(BigInteger bigTagValue) {
       if (bigTagValue == null) {
@@ -1944,7 +1953,8 @@ public void set(String key, CBORObject value) {
     /**
      * Returns whether this object's value is an integral value, is -(2^32)
      * or greater, and is less than 2^32.
-     * @return A Boolean object.
+     * @return True if this object's value is an integral value, is -(2^32)
+     * or greater, and is less than 2^32; otherwise, false.
      */
     public boolean CanFitInInt32() {
       if (!this.CanFitInInt64()) {
@@ -1957,7 +1967,8 @@ public void set(String key, CBORObject value) {
     /**
      * Returns whether this object's value is an integral value, is -(2^63)
      * or greater, and is less than 2^63.
-     * @return A Boolean object.
+     * @return True if this object's value is an integral value, is -(2^63)
+     * or greater, and is less than 2^63; otherwise, false.
      */
     public boolean CanFitInInt64() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -1970,7 +1981,8 @@ public void set(String key, CBORObject value) {
     /**
      * Returns whether this object's value, truncated to an integer, would
      * be -(2^63) or greater, and less than 2^63.
-     * @return A Boolean object.
+     * @return True if this object's value, truncated to an integer, would
+     * be -(2^63) or greater, and less than 2^63; otherwise, false.
      */
     public boolean CanTruncatedIntFitInInt64() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -1983,7 +1995,8 @@ public void set(String key, CBORObject value) {
     /**
      * Returns whether this object's value, truncated to an integer, would
      * be -(2^31) or greater, and less than 2^31.
-     * @return A Boolean object.
+     * @return True if this object's value, truncated to an integer, would
+     * be -(2^31) or greater, and less than 2^31; otherwise, false.
      */
     public boolean CanTruncatedIntFitInInt32() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -1997,8 +2010,8 @@ public void set(String key, CBORObject value) {
      * Gets a value indicating whether this object represents an integral
      * number, that is, a number without a fractional part. Infinity and
      * not-a-number are not considered integral.
-     * @return Whether this object represents an integral number, that
-     * is, a number without a fractional part.
+     * @return True if this object represents an integral number, that is,
+     * a number without a fractional part; otherwise, false..
      */
     public boolean isIntegral() {
         ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -3399,7 +3412,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Converts this object to a JSON string. This function works not only
      * with arrays and maps, but also integers, strings, byte arrays, and
      * other JSON data types.
-     * @return A string object.
+     * @return A string object containing the converted object.
      */
     public String ToJSONString() {
       int type = this.getItemType();
@@ -3853,8 +3866,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     /**
      * Returns the CBOR true value or false value, depending on &quot;value&quot;.
-     * @param value A Boolean object.
-     * @return A CBORObject object.
+     * @param value Either True or False.
+     * @return CBORObject.True if value is true; otherwise CBORObject.False.
      */
     public static CBORObject FromObject(boolean value) {
       return value ? CBORObject.True : CBORObject.False;
@@ -3862,7 +3875,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     /**
      * Generates a CBOR object from a byte (0 to 255).
-     * @param value A Byte object.
+     * @param value A Byte object (0 to 255).
      * @return A CBORObject object.
      */
     public static CBORObject FromObject(byte value) {
@@ -3958,7 +3971,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     /**
      * Generates a CBOR object from a list of objects.
-     * @param value An array of CBOR objects.
+     * @param value An array of CBOR objects. Can be null.
      * @param <T> A type convertible to CBORObject.
      * @return A CBOR object where each element of the given array is converted
      * to a CBOR object and copied to a new array, or CBORObject.Null if the

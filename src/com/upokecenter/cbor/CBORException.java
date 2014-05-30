@@ -26,8 +26,8 @@ private static final long serialVersionUID=1L;
     }
 
     /**
-     * Initializes a new instance of the CBORException class. Not documented
-     * yet.
+     * Initializes a new instance of the CBORException class. Uses the given
+     * message and inner exception.
      * @param message A string object.
      * @param innerException An Exception object.
      */

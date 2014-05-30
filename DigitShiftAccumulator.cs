@@ -7,14 +7,14 @@ at: http://upokecenter.com/d/
  */
 using System;
 using System.Text;
-// using System.Numerics;
+
 namespace PeterO {
   internal sealed class DigitShiftAccumulator : IShiftAccumulator {
     private int bitLeftmost;
 
     /// <summary>Gets a value indicating whether the last discarded digit
     /// was set.</summary>
-    /// <value>Whether the last discarded digit was set.</value>
+    /// <value>True if the last discarded digit was set; otherwise, false..</value>
     public int LastDiscardedDigit {
       get {
         return this.bitLeftmost;
@@ -25,8 +25,8 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether any of the discarded digits
     /// to the right of the last one was set.</summary>
-    /// <value>Whether any of the discarded digits to the right of the last
-    /// one was set.</value>
+    /// <value>True if any of the discarded digits to the right of the last
+    /// one was set; otherwise, false..</value>
     public int OlderDiscardedDigits {
       get {
         return this.bitsAfterLeftmost;
