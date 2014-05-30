@@ -875,15 +875,15 @@ namespace PeterO {
       BigInteger.Zero,
       BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <summary>Returns whether this object is negative infinity.</summary>
+    /// <returns>True if this object is negative infinity; otherwise, false.</returns>
     public bool IsNegativeInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
         (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <summary>Returns whether this object is positive infinity.</summary>
+    /// <returns>True if this object is positive infinity; otherwise, false.</returns>
     public bool IsPositiveInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
         BigNumberFlags.FlagInfinity;

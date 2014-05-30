@@ -39,8 +39,6 @@ namespace PeterO.Cbor {
       return ExtendedFloat.FromDouble((double)obj);
     }
 
-    /// <returns>A 32-bit floating-point number.</returns>
-    /// <param name='obj'>An arbitrary object.</param>
     public float AsSingle(object obj) {
       return (float)(double)obj;
     }

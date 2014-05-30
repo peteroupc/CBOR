@@ -103,7 +103,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     *
+     * Not documented yet.
      * @param tags An integer array of tags allowed.
      * @return A CBORTypeFilter object.
      */
@@ -129,7 +129,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     *
+     * Not documented yet.
      * @param tags A BigInteger[] object.
      * @return A CBORTypeFilter object.
      */
@@ -158,14 +158,26 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
-     * @param arrayLength A 32-bit signed integer.
-     * @param elements A params object.
+     * Copies this filter and includes CBOR arrays with an exact length to
+     * the new filter.
+     * @param arrayLength The desired maximum length of an array.
+     * @param elements An array containing the allowed types for each element
+     * in the array. There must be at least as many elements here as given in
+     * the arrayLength parameter.
      * @return A CBORTypeFilter object.
+     * @throws java.lang.IllegalArgumentException The parameter arrayLength is
+     * less than 0.
+     * @throws java.lang.NullPointerException The parameter elements
+     * is null.
+     * @throws java.lang.IllegalArgumentException The parameter elements has fewer
+     * elements than specified in arrayLength.
      */
     public CBORTypeFilter WithArrayExactLength(int arrayLength, CBORTypeFilter... elements) {
       if (this.any) {
         return this;
+      }
+      if (elements == null) {
+        throw new NullPointerException("elements");
       }
       if (arrayLength < 0) {
         throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is less than " + "0");
@@ -183,14 +195,26 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
-     * @param arrayLength A 32-bit signed integer.
-     * @param elements A params object.
+     * Copies this filter and includes CBOR arrays with at least a given length
+     * to the new filter.
+     * @param arrayLength The desired minimum length of an array.
+     * @param elements An array containing the allowed types for each element
+     * in the array. There must be at least as many elements here as given in
+     * the arrayLength parameter.
      * @return A CBORTypeFilter object.
+     * @throws java.lang.IllegalArgumentException The parameter arrayLength is
+     * less than 0.
+     * @throws java.lang.NullPointerException The parameter elements
+     * is null.
+     * @throws java.lang.IllegalArgumentException The parameter elements has fewer
+     * elements than specified in arrayLength.
      */
     public CBORTypeFilter WithArrayMinLength(int arrayLength, CBORTypeFilter... elements) {
       if (this.any) {
         return this;
+      }
+      if (elements == null) {
+        throw new NullPointerException("elements");
       }
       if (arrayLength < 0) {
         throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is less than " + "0");

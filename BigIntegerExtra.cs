@@ -215,11 +215,11 @@ namespace PeterO {
       }
     }
 
-    [CLSCompliant(false)]
     /// <summary>Not documented yet.</summary>
     /// <returns>A BigInteger object.</returns>
     /// <param name='thisValue'>A BigInteger object. (2).</param>
- /// <summary>Not documented yet.</summary>
+    /// <summary>Not documented yet.</summary>
+    [CLSCompliant(false)]
     public static BigInteger Abs(BigInteger thisValue) {
       if (thisValue == null) {
         throw new ArgumentNullException("thisValue");

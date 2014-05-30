@@ -16,6 +16,10 @@ namespace PeterO.Cbor {
   public sealed partial class CBORObject
   {
     /// <returns>A 16-bit unsigned integer.</returns>
+    /// <summary>Converts this object to a 16-bit unsigned integer. The
+    /// return value will be truncated as necessary.</summary>
+    /// <exception cref='OverflowException'>This object's value is outside
+    /// the range of a 16-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ushort AsUInt16() {
       int v = this.AsInt32();
@@ -26,6 +30,10 @@ namespace PeterO.Cbor {
     }
 
     /// <returns>A 32-bit unsigned integer.</returns>
+    /// <summary>Converts this object to a 32-bit unsigned integer. The
+    /// return value will be truncated as necessary.</summary>
+    /// <exception cref='OverflowException'>This object's value is outside
+    /// the range of a 32-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public uint AsUInt32() {
       ulong v = this.AsUInt64();
@@ -35,10 +43,10 @@ namespace PeterO.Cbor {
       return (uint)v;
     }
 
-    [CLSCompliant(false)]
     /// <summary>Not documented yet.</summary>
-    /// <returns>A SByte object.</returns>
- /// <summary>Not documented yet.</summary>
+    /// <returns>An 8-bit signed integer.</returns>
+    /// <summary>Not documented yet.</summary>
+    [CLSCompliant(false)]
     public sbyte AsSByte() {
       int v = this.AsInt32();
       if (v > SByte.MaxValue || v < SByte.MinValue) {
@@ -209,17 +217,18 @@ namespace PeterO.Cbor {
       }
     }
 
-    [CLSCompliant(false)]
-    /// <summary>Not documented yet.</summary>
-    /// <param name='value'>A SByte object.</param>
+    /// <param name='value'>An 8-bit signed integer.</param>
     /// <param name='stream'>A writable data stream.</param>
- /// <summary>Not documented yet.</summary>
+    /// <summary>Writes an 8-bit signed integer in CBOR format to a data stream.</summary>
+    [CLSCompliant(false)]
     public static void Write(sbyte value, Stream stream) {
       Write((long)value, stream);
     }
 
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <param name='stream'>A writable data stream.</param>
+    /// <summary>Writes a 64-bit unsigned integer in CBOR format to a data
+    /// stream.</summary>
     [CLSCompliant(false)]
     public static void Write(ulong value, Stream stream) {
       if (stream == null) {
@@ -240,7 +249,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Writes a .NET decimal in CBOR format to a data stream.</summary>
     /// <returns>A CBORObject object.</returns>
     /// <param name='value'>A Decimal object.</param>
     public static CBORObject FromObject(decimal value) {
@@ -282,25 +291,28 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <param name='value'>A 32-bit unsigned integer.</param>
-    /// <param name='stream'>A writable data stream.</param>
+    /// <summary>Writes a 32-bit unsigned integer in CBOR format to a data
+    /// stream.</summary>
+    /// <param name="stream">A writable data stream.</param>
+    /// <param name="value">A 32-bit unsigned integer.</param>
     [CLSCompliant(false)]
     public static void Write(uint value, Stream stream) {
       Write((ulong)value, stream);
     }
 
-    /// <param name='value'>A 16-bit unsigned integer.</param>
-    /// <param name='stream'>A writable data stream.</param>
+    /// <summary>Writes a 16-bit unsigned integer in CBOR format to a data
+    /// stream.</summary>
+    /// <param name="stream">A writable data stream.</param>
+    /// <param name="value">A 16-bit unsigned integer.</param>
     [CLSCompliant(false)]
     public static void Write(ushort value, Stream stream) {
       Write((ulong)value, stream);
     }
 
-    [CLSCompliant(false)]
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Converts a signed 8-bit integer to a CBOR object.</summary>
     /// <returns>A CBORObject object.</returns>
-    /// <param name='value'>A SByte object.</param>
- /// <summary>Not documented yet.</summary>
+    /// <param name='value'>An 8-bit signed integer.</param>
+    [CLSCompliant(false)]
     public static CBORObject FromObject(sbyte value) {
       return FromObject((long)value);
     }
@@ -322,6 +334,7 @@ namespace PeterO.Cbor {
 
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
+    /// <summary>Not documented yet.</summary>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ulong value) {
       return CBORObject.FromObject(UInt64ToBigInteger(value));
@@ -329,6 +342,7 @@ namespace PeterO.Cbor {
 
     /// <param name='value'>A 32-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
+    /// <summary>Converts a 32-bit unsigned integer to a CBOR object.</summary>
     [CLSCompliant(false)]
     public static CBORObject FromObject(uint value) {
       return FromObject((long)value);
@@ -336,22 +350,24 @@ namespace PeterO.Cbor {
 
     /// <param name='value'>A 16-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
+    /// <summary>Not documented yet.</summary>
     [CLSCompliant(false)]
+
     public static CBORObject FromObject(ushort value) {
       return FromObject((long)value);
     }
 
-    [CLSCompliant(false)]
     /// <summary>Not documented yet.</summary>
     /// <returns>A CBORObject object.</returns>
     /// <param name='o'>An arbitrary object.</param>
     /// <param name='tag'>A 64-bit unsigned integer.</param>
- /// <summary>Not documented yet.</summary>
+    /// <summary>Not documented yet.</summary>
+    [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
       return FromObjectAndTag(o, UInt64ToBigInteger(tag));
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Adds a CBORObject object and a CBORObject object.</summary>
     /// <returns>The sum of the two objects.</returns>
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>A CBORObject object. (2).</param>
@@ -359,7 +375,7 @@ namespace PeterO.Cbor {
       return Addition(a, b);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Subtracts a CBORObject object from a CBORObject object.</summary>
     /// <returns>The difference of the two objects.</returns>
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>A CBORObject object. (2).</param>
@@ -367,7 +383,8 @@ namespace PeterO.Cbor {
       return Subtract(a, b);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Multiplies a CBORObject object by the value of a CBORObject
+    /// object.</summary>
     /// <returns>The product of the two objects.</returns>
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>A CBORObject object. (2).</param>
@@ -375,7 +392,8 @@ namespace PeterO.Cbor {
       return Multiply(a, b);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Divides a CBORObject object by the value of a CBORObject
+    /// object.</summary>
     /// <returns>The quotient of the two objects.</returns>
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>A CBORObject object. (2).</param>
@@ -383,7 +401,8 @@ namespace PeterO.Cbor {
       return Divide(a, b);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Finds the remainder that results when a CBORObject object
+    /// is divided by the value of a CBORObject object.</summary>
     /// <returns>The remainder of the two objects.</returns>
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>A CBORObject object. (2).</param>

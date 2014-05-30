@@ -173,6 +173,7 @@ public void setConverter(Object value) {
      * Not documented yet.
      * @param type A Type object.
      * @param converter An ICBORConverter object.
+     * @param <T> Must be the same as the "type" parameter.
      */
     public static <T> void AddConverter(Class<?> type, ICBORConverter<T> converter) {
       if (type == null) {
@@ -3690,7 +3691,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     /**
-     * Not documented yet.
+     * Divides a CBORObject object by the value of a CBORObject object.
      * @param first A CBORObject object.
      * @param second A CBORObject object. (2).
      * @return The quotient of the two objects.
@@ -3700,7 +3701,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     /**
-     * Not documented yet.
+     * Finds the remainder that results when a CBORObject object is divided
+     * by the value of a CBORObject object.
      * @param first A CBORObject object.
      * @param second A CBORObject object. (2).
      * @return The remainder of the two objects.

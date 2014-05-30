@@ -9,6 +9,7 @@ using System;
 
 namespace PeterO {
     /// <typeparam name='T'>Number data type.</typeparam>
+ /// <summary>Not documented yet.</summary>
   internal class ExtendedOrSimpleRadixMath<T> : IRadixMath<T>
   {
     private RadixMath<T> ext;
@@ -19,7 +20,6 @@ namespace PeterO {
       this.simp = new SimpleRadixMath<T>(this.ext);
     }
 
-    /// <returns>An IRadixMathHelper(T) object.</returns>
 public IRadixMathHelper<T> GetHelper() {
       // Both RadixMath implementations return the
       // same helper, so use the ext implementation

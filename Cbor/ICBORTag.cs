@@ -17,8 +17,12 @@ namespace PeterO.Cbor {
     /// <returns>A CBOR type filter.</returns>
     CBORTypeFilter GetTypeFilter();
 
-    // NOTE: Will be passed an object with the corresponding tag
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Generates a CBOR object based on the data of another object.
+    /// If the data is not valid, should throw a CBORException.</summary>
+    /// <param name='obj'>A CBOR object with the corresponding tag handled
+    /// by the ICBORTag object.</param>
+    /// <returns>A CBORObject object.  Note that this method may
+    /// choose to return the same object as the parameter.</returns>
     CBORObject ValidateObject(CBORObject obj);
   }
 }
