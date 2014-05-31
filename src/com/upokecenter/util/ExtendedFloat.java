@@ -239,7 +239,7 @@ at: http://upokecenter.com/d/
 
     private static final class BinaryMathHelper implements IRadixMathHelper<ExtendedFloat> {
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @return A 32-bit signed integer.
      */
       public int GetRadix() {
@@ -247,7 +247,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param value An ExtendedFloat object.
      * @return A 32-bit signed integer.
      */
@@ -256,7 +256,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param value An ExtendedFloat object.
      * @return A BigInteger object.
      */
@@ -265,7 +265,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param value An ExtendedFloat object.
      * @return A BigInteger object.
      */
@@ -274,7 +274,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param bigint A BigInteger object.
      * @param lastDigit A 32-bit signed integer.
      * @param olderDigits A 32-bit signed integer. (2).
@@ -285,7 +285,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param bigint A BigInteger object.
      * @return An IShiftAccumulator object.
      */
@@ -294,7 +294,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param num A BigInteger object.
      * @param den A BigInteger object. (2).
      * @return A Boolean object.
@@ -312,7 +312,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param bigint A BigInteger object. (2).
      * @param power A FastInteger object.
      * @return A BigInteger object.
@@ -341,7 +341,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param value An ExtendedFloat object.
      * @return A 32-bit signed integer.
      */
@@ -350,7 +350,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object. (2).
      * @param flags A 32-bit signed integer.
@@ -361,7 +361,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @return A 32-bit signed integer.
      */
       public int GetArithmeticSupport() {
@@ -369,7 +369,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param val A 32-bit signed integer.
      * @return An ExtendedFloat object.
      */

@@ -448,8 +448,9 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param precision A 32-bit signed integer.
+     * Creates a new precision context using the given maximum number of
+     * digits and an unlimited exponent range.
+     * @param precision Maximum number of digits (precision).
      * @return A PrecisionContext object.
      */
     public static PrecisionContext ForPrecision(int precision) {

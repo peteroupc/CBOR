@@ -230,34 +230,34 @@ namespace PeterO {
     }
 
     private sealed class BinaryMathHelper : IRadixMathHelper<ExtendedFloat> {
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetRadix() {
         return 2;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetSign(ExtendedFloat value) {
         return value.Sign;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger GetMantissa(ExtendedFloat value) {
         return value.Mantissa;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger GetExponent(ExtendedFloat value) {
         return value.exponent;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <returns>An IShiftAccumulator object.</returns>
     /// <param name='bigint'>A BigInteger object.</param>
     /// <param name='lastDigit'>A 32-bit signed integer.</param>
@@ -266,14 +266,14 @@ namespace PeterO {
         return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <returns>An IShiftAccumulator object.</returns>
     /// <param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new BitShiftAccumulator(bigint, 0, 0);
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='num'>A BigInteger object.</param>
     /// <param name='den'>A BigInteger object. (2).</param>
     /// <returns>A Boolean object.</returns>
@@ -289,7 +289,7 @@ namespace PeterO {
         return den.Equals(BigInteger.One);
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='bigint'>A BigInteger object. (2).</param>
     /// <param name='power'>A FastInteger object.</param>
     /// <returns>A BigInteger object.</returns>
@@ -316,14 +316,14 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetFlags(ExtendedFloat value) {
         return value.flags;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='mantissa'>A BigInteger object.</param>
     /// <param name='exponent'>A BigInteger object. (2).</param>
     /// <param name='flags'>A 32-bit signed integer.</param>
@@ -332,13 +332,13 @@ namespace PeterO {
         return ExtendedFloat.CreateWithFlags(mantissa, exponent, flags);
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteAndNonFinite;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedFloat object.</returns>
       public ExtendedFloat ValueOf(int val) {

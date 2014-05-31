@@ -232,7 +232,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
+     * Copies this filter and includes arrays of any length in the new filter.
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter WithArrayAnyLength() {
@@ -252,7 +252,8 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
+     * Copies this filter and includes floating-point numbers in the new
+     * filter.
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter WithFloatingPoint() {
@@ -276,7 +277,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
+     * Mented yet.
      * @param length A 32-bit signed integer.
      * @return A Boolean object.
      */
@@ -320,9 +321,11 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
-     * @param tag A 32-bit signed integer.
-     * @return A Boolean object.
+     * Gets a value indicating whether CBOR objects can have the given tag
+     * number.
+     * @param tag A tag number. Returns false if this is less than 0.
+     * @return True if CBOR objects can have the given tag number; otherwise,
+     * false.
      */
     public boolean TagAllowed(int tag) {
       if (this.any) {
@@ -332,9 +335,11 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
-     * @param tag A 64-bit signed integer.
-     * @return A Boolean object.
+     * Gets a value indicating whether CBOR objects can have the given tag
+     * number.
+     * @param tag A tag number. Returns false if this is less than 0.
+     * @return True if CBOR objects can have the given tag number; otherwise,
+     * false.
      */
     public boolean TagAllowed(long tag) {
       if (this.any) {
@@ -344,13 +349,18 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
-     * @param bigTag A BigInteger object.
-     * @return A Boolean object.
+     * Gets a value indicating whether CBOR objects can have the given tag
+     * number.
+     * @param bigTag A tag number. Returns false if this is less than 0.
+     * @return True if CBOR objects can have the given tag number; otherwise,
+     * false.
      */
     public boolean TagAllowed(BigInteger bigTag) {
       if (bigTag == null) {
         throw new NullPointerException("bigTag");
+      }
+      if (bigTag.signum() < 0) {
+        return false;
       }
       if (this.any) {
         return true;

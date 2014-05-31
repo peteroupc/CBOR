@@ -213,7 +213,8 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Copies this filter and includes arrays of any length in
+    /// the new filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithArrayAnyLength() {
       if (this.any) {
@@ -231,7 +232,8 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Copies this filter and includes floating-point numbers
+    /// in the new filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithFloatingPoint() {
       if (this.any) {
@@ -259,7 +261,7 @@ namespace PeterO.Cbor {
       return type >= 0 && type <= 7 && (this.types & (1 << type)) != 0;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Mented yet.</summary>
     /// <returns>A Boolean object.</returns>
     /// <param name='length'>A 32-bit signed integer.</param>
     public bool ArrayLengthMatches(int length) {
@@ -297,9 +299,12 @@ namespace PeterO.Cbor {
       return false;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
-    /// <param name='tag'>A 32-bit signed integer.</param>
+    /// <summary>Gets a value indicating whether CBOR objects can have the
+    /// given tag number.</summary>
+    /// <returns>True if CBOR objects can have the given tag number; otherwise,
+    /// false.</returns>
+    /// <param name='tag'>A tag number. Returns false if this is less than
+    /// 0.</param>
     public bool TagAllowed(int tag) {
       if (this.any) {
         return true;
@@ -307,9 +312,12 @@ namespace PeterO.Cbor {
       return this.TagAllowed((BigInteger)tag);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
-    /// <param name='tag'>A 64-bit signed integer.</param>
+    /// <summary>Gets a value indicating whether CBOR objects can have the
+    /// given tag number.</summary>
+    /// <returns>True if CBOR objects can have the given tag number; otherwise,
+    /// false.</returns>
+    /// <param name='tag'>A tag number. Returns false if this is less than
+    /// 0.</param>
     public bool TagAllowed(long tag) {
       if (this.any) {
         return true;
@@ -317,12 +325,18 @@ namespace PeterO.Cbor {
       return this.TagAllowed((BigInteger)tag);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
-    /// <param name='bigTag'>A BigInteger object.</param>
+    /// <summary>Gets a value indicating whether CBOR objects can have the
+    /// given tag number.</summary>
+    /// <returns>True if CBOR objects can have the given tag number; otherwise,
+    /// false.</returns>
+    /// <param name='bigTag'>A tag number. Returns false if this is less
+    /// than 0.</param>
     public bool TagAllowed(BigInteger bigTag) {
       if (bigTag == null) {
         throw new ArgumentNullException("bigTag");
+      }
+      if (bigTag.Sign < 0) {
+        return false;
       }
       if (this.any) {
         return true;

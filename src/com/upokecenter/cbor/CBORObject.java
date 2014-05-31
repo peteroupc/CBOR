@@ -91,8 +91,8 @@ import com.upokecenter.util.*;
       private Object toObject;
 
     /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
+     * Gets the converter's ToCBORObject method.
+     * @return The converter's ToCBORObject method.
      */
       public Object getToObject() {
           return this.toObject;
@@ -104,8 +104,8 @@ public void setToObject(Object value) {
       private Object converter;
 
     /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
+     * Gets the ICBORConverter object.
+     * @return The ICBORConverter object.
      */
       public Object getConverter() {
           return this.converter;
@@ -170,8 +170,10 @@ public void setConverter(Object value) {
     }
 
     /**
-     * Not documented yet.
-     * @param type A Type object.
+     * Registers an object that converts objects of a given type to CBOR objects
+     * (called a CBOR converter).
+     * @param type A Type object specifying the type that the converter converts
+     * to CBOR objects.
      * @param converter An ICBORConverter object.
      * @param <T> Must be the same as the "type" parameter.
      */

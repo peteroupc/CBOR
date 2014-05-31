@@ -98,8 +98,8 @@ namespace PeterO.Cbor {
     private sealed class ConverterInfo {
       private object toObject;
 
-    /// <summary>Gets or sets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets the converter's ToCBORObject method.</summary>
+    /// <value>The converter&apos;s ToCBORObject method.</value>
       public object ToObject {
         get {
           return this.toObject;
@@ -112,8 +112,8 @@ namespace PeterO.Cbor {
 
       private object converter;
 
-    /// <summary>Gets or sets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets the ICBORConverter object.</summary>
+    /// <value>The ICBORConverter object.</value>
       public object Converter {
         get {
           return this.converter;
@@ -195,8 +195,10 @@ namespace PeterO.Cbor {
       this.tagHigh = tagHigh;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='type'>A Type object.</param>
+    /// <summary>Registers an object that converts objects of a given type
+    /// to CBOR objects (called a CBOR converter).</summary>
+    /// <param name='type'>A Type object specifying the type that the converter
+    /// converts to CBOR objects.</param>
     /// <param name='converter'>An ICBORConverter object.</param>
     /// <typeparam name='T'>Must be the same as the "type" parameter.</typeparam>
     public static void AddConverter<T>(Type type, ICBORConverter<T> converter) {

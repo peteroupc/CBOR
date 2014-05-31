@@ -411,9 +411,10 @@ namespace PeterO {
       return pcnew;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Creates a new precision context using the given maximum
+    /// number of digits and an unlimited exponent range.</summary>
     /// <returns>A PrecisionContext object.</returns>
-    /// <param name='precision'>A 32-bit signed integer.</param>
+    /// <param name='precision'>Maximum number of digits (precision).</param>
     public static PrecisionContext ForPrecision(int precision) {
       return new PrecisionContext(precision, Rounding.HalfUp, 0, 0, false).WithUnlimitedExponents();
     }

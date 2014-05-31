@@ -97,22 +97,20 @@ namespace PeterO {
     }
 
     #region Equals and GetHashCode implementation
-    /// <summary>Determines whether this object&apos;s mantissa and exponent
-    /// are equal to those of another object.</summary>
-    /// <returns>True if this object's mantissa and exponent are equal to
-    /// those of another object; otherwise, false.</returns>
-    /// <param name='otherValue'>An ExtendedDecimal object.</param>
-    public bool EqualsInternal(ExtendedDecimal otherValue) {
+    private bool EqualsInternal(ExtendedDecimal otherValue) {
       if (otherValue == null) {
         return false;
       }
       return this.flags == otherValue.flags && this.unsignedMantissa.Equals(otherValue.unsignedMantissa) && this.exponent.Equals(otherValue.exponent);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='other'>An ExtendedDecimal object.</param>
-    /// <returns>A Boolean object.</returns>
-    public bool Equals(ExtendedDecimal other) {
+    /// <summary>Determines whether this object&apos;s mantissa and exponent
+    /// are equal to those of another object.</summary>
+    /// <returns>True if this object's mantissa and exponent are equal to
+    /// those of another object; otherwise, false.</returns>
+    /// <param name='otherValue'>An ExtendedDecimal object.</param>
+    public bool Equals(ExtendedDecimal other)
+    {
       return this.EqualsInternal(other);
     }
 
@@ -213,9 +211,15 @@ namespace PeterO {
       return ext;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedDecimal object.</returns>
-    /// <param name='str'>A String object.</param>
+    /// <summary>Creates a decimal number from a string that represents
+    /// a number. See FromString(String, PrecisionContext) for more information.</summary>
+    /// <param name='str'>A string that represents a number.</param>
+    /// <returns>An arbitrary-precision decimal number with the same value
+    /// as the given string.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
+    /// <exception cref='FormatException'>The parameter <paramref name='str'/>
+    /// is not a correctly formatted number string.</exception>
     public static ExtendedDecimal FromString(String str) {
       return FromString(str, null);
     }
@@ -238,7 +242,8 @@ namespace PeterO {
     /// except that the digits must be ASCII digits ('0' through '9').</para>
     /// </summary>
     /// <param name='str'>A string that represents a number.</param>
-    /// <returns>An ExtendedDecimal object.</returns>
+    /// <returns>An arbitrary-precision decimal number with the same value
+    /// as the given string.</returns>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
@@ -556,34 +561,34 @@ namespace PeterO {
 
     private sealed class DecimalMathHelper : IRadixMathHelper<ExtendedDecimal>
     {
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetRadix() {
         return 10;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='value'>An ExtendedDecimal object.</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetSign(ExtendedDecimal value) {
         return value.Sign;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='value'>An ExtendedDecimal object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger GetMantissa(ExtendedDecimal value) {
         return value.unsignedMantissa;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='value'>An ExtendedDecimal object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger GetExponent(ExtendedDecimal value) {
         return value.exponent;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <returns>An IShiftAccumulator object.</returns>
     /// <param name='bigint'>A BigInteger object.</param>
     /// <param name='lastDigit'>A 32-bit signed integer.</param>
@@ -592,14 +597,14 @@ namespace PeterO {
         return new DigitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <returns>An IShiftAccumulator object.</returns>
     /// <param name='bigint'>A BigInteger object.</param>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new DigitShiftAccumulator(bigint, 0, 0);
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='numerator'>A BigInteger object.</param>
     /// <param name='denominator'>A BigInteger object. (2).</param>
     /// <returns>A Boolean object.</returns>
@@ -626,7 +631,7 @@ namespace PeterO {
         return denominator.CompareTo(BigInteger.One) == 0;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='bigint'>A BigInteger object. (2).</param>
     /// <param name='power'>A FastInteger object.</param>
     /// <returns>A BigInteger object.</returns>
@@ -656,14 +661,14 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='value'>An ExtendedDecimal object.</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetFlags(ExtendedDecimal value) {
         return value.flags;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='mantissa'>A BigInteger object.</param>
     /// <param name='exponent'>A BigInteger object. (2).</param>
     /// <param name='flags'>A 32-bit signed integer.</param>
@@ -672,13 +677,13 @@ namespace PeterO {
         return CreateWithFlags(mantissa, exponent, flags);
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteAndNonFinite;
       }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>This is an internal method.</summary>
     /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedDecimal object.</returns>
       public ExtendedDecimal ValueOf(int val) {
