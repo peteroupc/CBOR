@@ -2698,8 +2698,8 @@ if (bytes.Length <= 0) {
       return r;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A BigInteger object.</returns>
+    /// <summary>Gets the value of this object with the sign reversed.</summary>
+    /// <returns>This object's value with the signe reversed.</returns>
     public BigInteger negate() {
       BigInteger bigintRet = new BigInteger();
       bigintRet.reg = this.reg;  // use the same reference
@@ -3202,6 +3202,10 @@ if (bytes.Length <= 0) {
     /// <param name='str'>A string containing only digits, except that
     /// it may start with a minus sign.</param>
     /// <returns>A BigInteger object with the same value as given in the string.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// str is null.</exception>
+    /// <exception cref='FormatException'>The parameter str is in an invalid
+    /// format.</exception>
     public static BigInteger fromString(string str) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -3211,11 +3215,19 @@ if (bytes.Length <= 0) {
 
     private const int MaxSafeInt = 214748363;
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A BigInteger object.</returns>
+    /// <summary>Converts a portion of a string to an arbitrary-precision
+    /// integer.</summary>
+    /// <returns>A BigInteger object with the same value as given in the string
+    /// portion.</returns>
     /// <param name='str'>A string object.</param>
-    /// <param name='index'>A 32-bit signed integer.</param>
-    /// <param name='endIndex'>A 32-bit signed integer. (2).</param>
+    /// <param name='index'>The index of the string that starts the string
+    /// portion.</param>
+    /// <param name='endIndex'>The index of the string that ends the string
+    /// portion. The length will be index + endIndex - 1.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// str is null.</exception>
+    /// <exception cref='FormatException'>The string portion is in an
+    /// invalid format.</exception>
     public static BigInteger fromSubstring(string str, int index, int endIndex) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -3924,10 +3936,15 @@ if (bytes.Length <= 0) {
       return quotient;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='divisor'>A BigInteger object.</param>
-    /// <returns>A BigInteger[] object.</returns>
-    public BigInteger[] divideAndRemainder(BigInteger divisor) {
+    /// <summary>Divides this object by another big integer and returns
+    /// the quotient and remainder.</summary>
+    /// <param name='divisor'>The divisor.</param>
+    /// <returns>An array with two big integers: the first is the
+    /// quotient, and the second is the remainder.</returns>
+    /// <exception cref="ArgumentNullException">The parameter divisor is null.</exception>
+    /// <exception cref="DivideByZeroException">The parameter divisor is 0.</exception>
+    public BigInteger[] divideAndRemainder(BigInteger divisor)
+    {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
       }

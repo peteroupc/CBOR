@@ -2387,8 +2387,8 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @return A BigInteger object.
+     * Gets the value of this object with the sign reversed.
+     * @return This object's value with the signe reversed.
      */
     public BigInteger negate() {
       BigInteger bigintRet = new BigInteger();
@@ -2903,6 +2903,8 @@ at: http://upokecenter.com/d/
      * @param str A string containing only digits, except that it may start
      * with a minus sign.
      * @return A BigInteger object with the same value as given in the string.
+     * @throws java.lang.NullPointerException The parameter str is null.
+     * @throws NumberFormatException The parameter str is in an invalid format.
      */
     public static BigInteger fromString(String str) {
       if (str == null) {
@@ -2914,11 +2916,15 @@ at: http://upokecenter.com/d/
     private static final int MaxSafeInt = 214748363;
 
     /**
-     * Not documented yet.
+     * Converts a portion of a string to an arbitrary-precision integer.
      * @param str A string object.
-     * @param index A 32-bit signed integer.
-     * @param endIndex A 32-bit signed integer. (2).
-     * @return A BigInteger object.
+     * @param index The index of the string that starts the string portion.
+     * @param endIndex The index of the string that ends the string portion.
+     * The length will be index + endIndex - 1.
+     * @return A BigInteger object with the same value as given in the string
+     * portion.
+     * @throws java.lang.NullPointerException The parameter str is null.
+     * @throws NumberFormatException The string portion is in an invalid format.
      */
     public static BigInteger fromSubstring(String str, int index, int endIndex) {
       if (str == null) {

@@ -219,9 +219,15 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param str A string object.
-     * @return An ExtendedDecimal object.
+     * Creates a decimal number from a string that represents a number. See
+     * FromString(string, PrecisionContext) for more information.
+     * @param str A string that represents a number.
+     * @return An arbitrary-precision decimal number with the same value
+     * as the given string.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     * @throws NumberFormatException The parameter {@code str} is not a correctly
+     * formatted number string.
      */
     public static ExtendedDecimal FromString(String str) {
       return FromString(str, null);
@@ -245,7 +251,8 @@ at: http://upokecenter.com/d/
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
-     * @return An ExtendedDecimal object.
+     * @return An arbitrary-precision decimal number with the same value
+     * as the given string.
      * @throws java.lang.NullPointerException The parameter {@code str}
      * is null.
      * @throws NumberFormatException The parameter {@code str} is not a correctly
@@ -561,7 +568,7 @@ at: http://upokecenter.com/d/
     private static final class DecimalMathHelper implements IRadixMathHelper<ExtendedDecimal>
     {
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @return A 32-bit signed integer.
      */
       public int GetRadix() {
@@ -569,7 +576,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param value An ExtendedDecimal object.
      * @return A 32-bit signed integer.
      */
@@ -578,7 +585,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param value An ExtendedDecimal object.
      * @return A BigInteger object.
      */
@@ -587,7 +594,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param value An ExtendedDecimal object.
      * @return A BigInteger object.
      */
@@ -596,7 +603,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param bigint A BigInteger object.
      * @param lastDigit A 32-bit signed integer.
      * @param olderDigits A 32-bit signed integer. (2).
@@ -607,7 +614,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param bigint A BigInteger object.
      * @return An IShiftAccumulator object.
      */
@@ -616,7 +623,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param numerator A BigInteger object.
      * @param denominator A BigInteger object. (2).
      * @return A Boolean object.
@@ -649,7 +656,7 @@ bigrem=divrem[1]; }
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param bigint A BigInteger object. (2).
      * @param power A FastInteger object.
      * @return A BigInteger object.
@@ -681,7 +688,7 @@ bigrem=divrem[1]; }
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param value An ExtendedDecimal object.
      * @return A 32-bit signed integer.
      */
@@ -690,7 +697,7 @@ bigrem=divrem[1]; }
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param mantissa A BigInteger object.
      * @param exponent A BigInteger object. (2).
      * @param flags A 32-bit signed integer.
@@ -701,7 +708,7 @@ bigrem=divrem[1]; }
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @return A 32-bit signed integer.
      */
       public int GetArithmeticSupport() {
@@ -709,7 +716,7 @@ bigrem=divrem[1]; }
       }
 
     /**
-     * Not documented yet.
+     * This is an internal method.
      * @param val A 32-bit signed integer.
      * @return An ExtendedDecimal object.
      */

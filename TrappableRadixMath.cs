@@ -10,7 +10,7 @@ using System;
 namespace PeterO {
     /// <typeparam name='T'>Data type for a numeric value in a particular
     /// radix.</typeparam>
- /// <summary>Not documented yet.</summary>
+    /// <summary>Implements arithmetic methods that support traps.</summary>
   internal class TrappableRadixMath<T> : IRadixMath<T>
   {
     private static PrecisionContext GetTrappableContext(PrecisionContext ctx) {

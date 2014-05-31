@@ -688,8 +688,8 @@ namespace PeterO {
     }
 
     /// <param name='array'>A T[] object.</param>
-    /// <param name='arrayIndex'>A 32-bit signed integer.</param>
- /// <summary>Not documented yet.</summary>
+    /// <param name='arrayIndex'>Starting index to copy to.</param>
+    /// <summary>Copies this object's data to a new array.</summary>
     public void CopyTo(T[] array, int arrayIndex) {
       if (this.treeValue != null) {
         RBCell t = this.treeValue.leftmost();

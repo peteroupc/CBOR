@@ -24,8 +24,9 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
+     * Gets this object's numberator with the sign removed.
+     * @return This object's numerator. If this object is a not-a-number
+     * value, returns the diagnostic information.
      */
     public BigInteger getUnsignedNumerator() {
         return this.unsignedNumerator;
@@ -34,8 +35,8 @@ at: http://upokecenter.com/d/
     private BigInteger denominator;
 
     /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
+     * Gets this object's denominator.
+     * @return This object's denominator.
      */
     public BigInteger getDenominator() {
         return this.denominator;
@@ -154,18 +155,24 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
+     * Converts a 32-bit floating-point number to a rational number. This
+     * method computes the exact value of the floating point number, not
+     * an approximation, as is often the case by converting the number to
+     * a string.
      * @param flt A 32-bit floating-point number.
-     * @return An ExtendedRational object.
+     * @return A rational number with the same value as {@code flt}.
      */
     public static ExtendedRational FromSingle(float flt) {
       return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
     }
 
     /**
-     * Not documented yet.
+     * Converts a 64-bit floating-point number to a rational number. This
+     * method computes the exact value of the floating point number, not
+     * an approximation, as is often the case by converting the number to
+     * a string.
      * @param flt A 64-bit floating-point number.
-     * @return An ExtendedRational object.
+     * @return A rational number with the same value as {@code flt}.
      */
     public static ExtendedRational FromDouble(double flt) {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
@@ -854,7 +861,8 @@ thisRem=divrem[1]; }
     }
 
     /**
-     * Gets a value indicating whether this object's value is negative.
+     * Gets a value indicating whether this object's value is negative (including
+     * negative zero).
      * @return True if this object's value is negative; otherwise, false.
      */
     public boolean isNegative() {
@@ -862,8 +870,8 @@ thisRem=divrem[1]; }
       }
 
     /**
-     * Not documented yet.
-     * @return A Boolean object.
+     * Gets a value indicating whether this object's value is infinity.
+     * @return True if this object's value is infinity; otherwise, false.
      */
     public boolean IsInfinity() {
       return (this.flags & BigNumberFlags.FlagInfinity) != 0;
@@ -1125,22 +1133,22 @@ thisRem=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
+     * A rational number for zero.
      */
     public static final ExtendedRational Zero = FromBigInteger(BigInteger.ZERO);
 
     /**
-     * Not documented yet.
+     * A rational number for negative zero.
      */
     public static final ExtendedRational NegativeZero = FromBigInteger(BigInteger.ZERO).ChangeSign(false);
 
     /**
-     * Not documented yet.
+     * The rational number one.
      */
     public static final ExtendedRational One = FromBigInteger(BigInteger.ONE);
 
     /**
-     * Not documented yet.
+     * The rational number ten.
      */
     public static final ExtendedRational Ten = FromBigInteger(BigInteger.TEN);
   }

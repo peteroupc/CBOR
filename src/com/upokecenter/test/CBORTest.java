@@ -6191,7 +6191,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     @Test
     public void TestCanFitIn() {
       FastRandom r = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
+      for (int i = 0; i < 5000; ++i) {
         CBORObject ed = RandomNumber(r);
         ExtendedDecimal ed2;
         ed2 = ExtendedDecimal.FromDouble(ed.AsExtendedDecimal().ToDouble());

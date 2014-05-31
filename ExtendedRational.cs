@@ -22,8 +22,9 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets this object's numberator with the sign removed.</summary>
+    /// <value>This object&apos;s numerator. If this object is a not-a-number
+    /// value, returns the diagnostic information.</value>
     public BigInteger UnsignedNumerator {
       get {
         return this.unsignedNumerator;
@@ -32,8 +33,8 @@ namespace PeterO {
 
     private BigInteger denominator;
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets this object's denominator.</summary>
+    /// <value>This object&apos;s denominator.</value>
     public BigInteger Denominator {
       get {
         return this.denominator;
@@ -148,15 +149,21 @@ namespace PeterO {
       return this.ToExtendedDecimal(null);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedRational object.</returns>
+    /// <summary>Converts a 32-bit floating-point number to a rational
+    /// number. This method computes the exact value of the floating point
+    /// number, not an approximation, as is often the case by converting the
+    /// number to a string.</summary>
+    /// <returns>A rational number with the same value as <paramref name='flt'/>.</returns>
     /// <param name='flt'>A 32-bit floating-point number.</param>
     public static ExtendedRational FromSingle(float flt) {
       return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedRational object.</returns>
+    /// <summary>Converts a 64-bit floating-point number to a rational
+    /// number. This method computes the exact value of the floating point
+    /// number, not an approximation, as is often the case by converting the
+    /// number to a string.</summary>
+    /// <returns>A rational number with the same value as <paramref name='flt'/>.</returns>
     /// <param name='flt'>A 64-bit floating-point number.</param>
     public static ExtendedRational FromDouble(double flt) {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
@@ -816,7 +823,7 @@ namespace PeterO {
     }
 
     /// <summary>Gets a value indicating whether this object's value is
-    /// negative.</summary>
+    /// negative (including negative zero).</summary>
     /// <value>True if this object&apos;s value is negative; otherwise,
     /// false.</value>
     public bool IsNegative {
@@ -825,8 +832,9 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <summary>Gets a value indicating whether this object's value is
+    /// infinity.</summary>
+    /// <returns>True if this object's value is infinity; otherwise, false.</returns>
     public bool IsInfinity() {
       return (this.flags & BigNumberFlags.FlagInfinity) != 0;
     }
@@ -1066,16 +1074,16 @@ namespace PeterO {
       return new ExtendedRational(ad, tden).Simplify().ChangeSign(resultNeg);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>A rational number for zero.</summary>
     public static readonly ExtendedRational Zero = FromBigInteger(BigInteger.Zero);
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>A rational number for negative zero.</summary>
     public static readonly ExtendedRational NegativeZero = FromBigInteger(BigInteger.Zero).ChangeSign(false);
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>The rational number one.</summary>
     public static readonly ExtendedRational One = FromBigInteger(BigInteger.One);
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>The rational number ten.</summary>
     public static readonly ExtendedRational Ten = FromBigInteger((BigInteger)10);
   }
 }

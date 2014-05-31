@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     * Not documented yet.
+     * Implements arithmetic methods that support traps.
      * @param <T> Data type for a numeric value in a particular radix.
      */
   class TrappableRadixMath<T> implements IRadixMath<T>

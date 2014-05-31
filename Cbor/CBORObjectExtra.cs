@@ -333,7 +333,7 @@ namespace PeterO.Cbor {
 
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Converts a 64-bit unsigned integer to a CBOR object.</summary>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ulong value) {
       return CBORObject.FromObject(UInt64ToBigInteger(value));
@@ -349,17 +349,18 @@ namespace PeterO.Cbor {
 
     /// <param name='value'>A 16-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Converts a 16-bit unsigned integer to a CBOR object.</summary>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ushort value) {
       return FromObject((long)value);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORObject object.</returns>
+    /// <summary>Generates a CBOR object from an arbitrary object and gives
+    /// the resulting object a tag.</summary>
+    /// <returns>A CBOR object where the object "valueOb" is converted to
+    /// a CBOR object and given the tag "bigintTag".</returns>
     /// <param name='o'>An arbitrary object.</param>
     /// <param name='tag'>A 64-bit unsigned integer.</param>
-    /// <summary>Not documented yet.</summary>
     [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
       return FromObjectAndTag(o, UInt64ToBigInteger(tag));
