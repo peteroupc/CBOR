@@ -186,9 +186,6 @@ namespace PeterO.Cbor {
 
     public static readonly CBORObject Undefined = new CBORObject(CBORObjectTypeSimpleValue, 23);
 
-    private CBORObject() {
-    }
-
     internal CBORObject(CBORObject obj, int tagLow, int tagHigh) :
       this(CBORObjectTypeTagged, obj) {
       this.tagLow = tagLow;
@@ -3475,7 +3472,7 @@ namespace PeterO.Cbor {
               return "null";
             }
             if (flo.IsFinite &&
-              BigInteger.Abs(flo.Exponent).CompareTo((BigInteger)1000) > 0) {
+              BigInteger.Abs(flo.Exponent).CompareTo((BigInteger)2500) > 0) {
               // Too inefficient to convert to a decimal number
               // from a bigfloat with a very high exponent,
               // so convert to double instead
@@ -4294,8 +4291,8 @@ namespace PeterO.Cbor {
     }
 
     private static string ExtendedToString(ExtendedFloat ef) {
-      if (ef.IsFinite && (ef.Exponent.CompareTo((BigInteger)1000) > 0 ||
-                          ef.Exponent.CompareTo((BigInteger)(-1000)) < 0)) {
+      if (ef.IsFinite && (ef.Exponent.CompareTo((BigInteger)2500) > 0 ||
+                          ef.Exponent.CompareTo((BigInteger)(-2500)) < 0)) {
         // It can take very long to convert a number with a very high
         // or very low exponent to a decimal string, so do this instead
         return ef.Mantissa.ToString() + "p" + ef.Exponent.ToString();
