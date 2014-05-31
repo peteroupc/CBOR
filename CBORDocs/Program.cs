@@ -18,11 +18,11 @@ using PeterO.Cbor;
 
 namespace CBORDocs {
   public class DocVisitor : Visitor {
-    StringBuilder paramStr = new StringBuilder();
-    StringBuilder returnStr = new StringBuilder();
-    StringBuilder exceptionStr = new StringBuilder();
-    StringBuilder currentBuffer = null;
-    StringBuilder buffer = new StringBuilder();
+    private StringBuilder paramStr = new StringBuilder();
+    private StringBuilder returnStr = new StringBuilder();
+    private StringBuilder exceptionStr = new StringBuilder();
+    private StringBuilder currentBuffer = null;
+    private StringBuilder buffer = new StringBuilder();
 
     public override string ToString() {
       return buffer.ToString();
@@ -55,9 +55,11 @@ namespace CBORDocs {
       return sb.ToString();
     }
 
+    private static string valueFourSpaces = " " + " " + " " + " ";
+
     public static string FormatTypeSig(Type typeInfo) {
       StringBuilder builder = new StringBuilder();
-      builder.Append("    ");
+      builder.Append(valueFourSpaces);
       if (typeInfo.IsPublic) {
         builder.Append("public ");
       } else {
@@ -99,17 +101,17 @@ namespace CBORDocs {
         derived = null;
       }
       if (derived != null || ifaces.Length > 0) {
-        builder.Append(" :\r\n    ");
+        builder.Append(" :\r\n" + valueFourSpaces);
         if (derived != null) {
-          builder.Append("    " + FormatType(derived));
+          builder.Append(valueFourSpaces + FormatType(derived));
           first = false;
         }
         if (ifaces.Length > 0) {
           foreach (var iface in ifaces) {
             if (!first) {
-              builder.Append(",\r\n    ");
+              builder.Append(",\r\n" + valueFourSpaces);
             }
-            builder.Append("    " + FormatType(iface));
+            builder.Append(valueFourSpaces + FormatType(iface));
             first = false;
           }
         }
@@ -128,7 +130,7 @@ namespace CBORDocs {
             GenericParameterAttributes.DefaultConstructorConstraint)) == GenericParameterAttributes.None) {
               continue;
           }
-          builder.Append("\r\n        where ");
+          builder.Append("\r\n" + valueFourSpaces + valueFourSpaces + "where ");
           builder.Append(UndecorateTypeName(arg.Name));
           builder.Append(" : ");
           bool first = true;
@@ -156,7 +158,7 @@ namespace CBORDocs {
             builder.Append("new()");
             first = false;
           }
-          foreach(var constr in constraints) {
+           foreach (var constr in constraints) {
             if (!first) {
               builder.Append(", ");
             }
@@ -170,7 +172,7 @@ namespace CBORDocs {
 
     public static string FormatMethod(MethodBase method) {
       StringBuilder builder = new StringBuilder();
-      builder.Append("    ");
+      builder.Append(valueFourSpaces);
       if (method.IsPublic) {
         builder.Append("public ");
       }
@@ -218,9 +220,9 @@ namespace CBORDocs {
       first = true;
       foreach (var param in method.GetParameters()) {
         if (!first) {
-          builder.Append(",\r\n        ");
+          builder.Append(",\r\n" + valueFourSpaces);
         } else {
-          builder.Append("\r\n        ");
+          builder.Append("\r\n" + valueFourSpaces);
         }
         Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null) {
@@ -256,7 +258,7 @@ namespace CBORDocs {
       StringBuilder builder = new StringBuilder();
       MethodInfo getter = property.GetGetMethod();
       MethodInfo setter = property.GetSetMethod();
-      builder.Append("    ");
+      builder.Append(valueFourSpaces);
       if ((getter == null ? false : getter.IsPublic) ||
         (setter == null ? false : setter.IsPublic)) {
         builder.Append("public ");
@@ -296,9 +298,10 @@ namespace CBORDocs {
       first = true;
       foreach (var param in indexParams) {
         if (!first) {
-          builder.Append(",\r\n        ");
+          builder.Append(",\r\n" + valueFourSpaces);
         } else {
-          builder.Append(indexParams.Length == 1 ? String.Empty : "\r\n        ");
+          builder.Append(indexParams.Length == 1 ?
+            String.Empty : "\r\n" + valueFourSpaces);
         }
         Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null) {
@@ -331,7 +334,7 @@ namespace CBORDocs {
 
     public static string FormatField(FieldInfo field) {
       StringBuilder builder = new StringBuilder();
-      builder.Append("    ");
+      builder.Append(valueFourSpaces);
       if (field.IsPublic) {
         builder.Append("public ");
       }
@@ -446,6 +449,7 @@ namespace CBORDocs {
       }
       return true;
     }
+
     public override void VisitReturns(Returns param) {
       currentBuffer = returnStr;
       WriteLine("<b>Returns:</b>\r\n");
@@ -505,6 +509,7 @@ namespace CBORDocs {
       WriteLine(" <i>" + param.Name + "</i>");
       base.VisitParamRef(param);
     }
+
     public override void VisitMember(Member member) {
       MemberInfo info = member.Info;
       string signature = String.Empty;
@@ -582,7 +587,7 @@ namespace CBORDocs {
     }
 
     public override void VisitSummary(Summary summary) {
-      //WriteLine("<b>Summary:</b>\r\n");
+      // WriteLine("<b>Summary:</b>\r\n");
       base.VisitSummary(summary);
       WriteLine("\r\n\r\n");
     }
@@ -602,7 +607,7 @@ namespace CBORDocs {
 
     public override void VisitCode(Code code) {
       foreach (var line in code.Content.Split('\n')) {
-        WriteLine("    " + line.TrimEnd());
+        WriteLine(valueFourSpaces + line.TrimEnd());
       }
       WriteLine("\r\n\r\n");
       base.VisitCode(code);
@@ -615,6 +620,7 @@ namespace CBORDocs {
         buffer.Append(ln);
       }
     }
+
     private void WriteLine(string ln) {
       if (currentBuffer != null) {
         currentBuffer.Append(ln);
@@ -627,7 +633,7 @@ namespace CBORDocs {
 
     public void Debug(string ln) {
       WriteLine(ln);
-      WriteLine("");
+      WriteLine(String.Empty);
     }
 
     public override void VisitPara(Para para) {
@@ -653,15 +659,17 @@ namespace CBORDocs {
   }
 
   public class TypeVisitor : Visitor, IComparer<Type> {
-    SortedDictionary<Type, DocVisitor> docs;
+    private SortedDictionary<Type, DocVisitor> docs;
+    private TextWriter writer;
 
-    public TypeVisitor() {
+    public TypeVisitor(TextWriter writer) {
       docs = new SortedDictionary<Type, DocVisitor>(this);
+      this.writer = writer;
     }
 
     public void Finish() {
       foreach (var key in docs.Keys) {
-        Console.WriteLine(docs[key].ToString());
+        writer.WriteLine(docs[key].ToString());
       }
     }
 
@@ -691,16 +699,14 @@ namespace CBORDocs {
     }
   }
 
-  class Program {
-    static void Main(string[] args) {
+  internal class Program {
+    internal static void Main(string[] args) {
       var members = DocReader.Read(typeof(CBORObject).Assembly);
       var oldWriter = Console.Out;
       using (var writer = new StreamWriter("../../../APIDocs.md")) {
-        Console.SetOut(writer);
-        var visitor = new TypeVisitor();
+        var visitor = new TypeVisitor(writer);
         members.Accept(visitor);
         visitor.Finish();
-        Console.SetOut(oldWriter);
       }
     }
   }

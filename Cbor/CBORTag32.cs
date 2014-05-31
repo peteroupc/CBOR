@@ -19,7 +19,9 @@ namespace PeterO.Cbor {
       if (obj.Type != CBORType.TextString) {
         throw new CBORException("URI must be a text string");
       }
-      // TODO: Validate URIs
+      if (!URIUtility.isValidIRI(obj.AsString())) {
+        throw new CBORException("String is not a valid URI/IRI");
+      }
       return obj;
     }
 
@@ -27,9 +29,9 @@ namespace PeterO.Cbor {
       CBORObject.AddConverter(typeof(System.Uri), new CBORTag32());
     }
 
-    /// <summary>Converts a UUID to a CBOR object.</summary>
-    /// <param name='uri'>A System.Uri object.</param>
+    /// <summary>Converts a URI to a CBOR object.</summary>
     /// <returns>A CBORObject object.</returns>
+    /// <param name='uri'>A System.Uri object.</param>
     public CBORObject ToCBORObject(System.Uri uri) {
       if (uri == null) {
         throw new ArgumentNullException("uri");

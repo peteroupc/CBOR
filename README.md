@@ -51,6 +51,9 @@ The following are some clarifications to RFC 7049.
   count leap seconds.  When this implementation supports date
   conversion, it won't count leap seconds, either.  This implementation
   treats values of infinity and NaN as invalid.
+* For tag 32, this implementation accepts strings that are valid
+  Internationalized Resource Identifiers (IRIs) in addition to URI.
+  IRI are like URIs except that they also allow non-ASCII characters.
 
 About
 -----------
