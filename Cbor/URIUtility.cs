@@ -329,9 +329,6 @@ namespace PeterO.Cbor {
       if (s == null) {
         return false;
       }
-      if (s == null) {
-        throw new ArgumentNullException("s");
-      }
       if (offset < 0) {
         throw new ArgumentException("offset (" + Convert.ToString((int)(long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }

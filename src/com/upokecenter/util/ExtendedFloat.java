@@ -23,9 +23,8 @@ at: http://upokecenter.com/d/
      * it will not throw an exception too, unless the operation's trap is
      * enabled in the precision context (see PrecisionContext's Traps
      * property).</p> <p>An ExtendedFloat value can be serialized in one
-     * of the following ways:</p> <ul> <li>By calling the toString() method,
-     * which will always return distinct strings for distinct ExtendedFloat
-     * values. However, not all strings can be converted back to an ExtendedFloat
+     * of the following ways:</p> <ul> <li>By calling the toString() method.
+     * However, not all strings can be converted back to an ExtendedFloat
      * without loss, especially if the string has a fractional part.</li>
      * <li>By calling the UnsignedMantissa, Exponent, and IsNegative
      * properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN
