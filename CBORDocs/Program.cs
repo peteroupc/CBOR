@@ -152,23 +152,30 @@ namespace CBORDocs
         builder.Append(FormatType(field.FieldType));
         builder.Append(" ");
         builder.Append(field.Name);
-        try
+        if (field.IsLiteral)
         {
-          object obj = field.GetRawConstantValue();
-          if (obj is int)
+          try
           {
-            builder.Append(" = " + (int)obj + ";");
+            object obj = field.GetRawConstantValue();
+            if (obj is int)
+            {
+              builder.Append(" = " + (int)obj + ";");
+            }
+            else if (obj is long)
+            {
+              builder.Append(" = " + (long)obj + "L;");
+            }
+            else
+            {
+              builder.Append(";");
+            }
           }
-          else if (obj is long)
-          {
-            builder.Append(" = " + (long)obj + "L;");
-          }
-          else
+          catch (InvalidOperationException)
           {
             builder.Append(";");
           }
         }
-        catch (InvalidOperationException)
+        else
         {
           builder.Append(";");
         }
@@ -298,6 +305,7 @@ namespace CBORDocs
         Type typeinfo = (Type)type.Info;
         if (typeinfo.IsPublic)
         {
+          // TODO: Write more detailed type info
           Console.WriteLine("# " + FormatType(typeinfo) + "\r\n\r\n");
           base.VisitType(type);
         }
