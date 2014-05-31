@@ -30,8 +30,8 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Converts a URI to a CBOR object.</summary>
-    /// <returns>A CBORObject object.</returns>
     /// <param name='uri'>A System.Uri object.</param>
+    /// <returns>A CBORObject object.</returns>
     public CBORObject ToCBORObject(System.Uri uri) {
       if (uri == null) {
         throw new ArgumentNullException("uri");

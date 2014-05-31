@@ -17,7 +17,7 @@ using ClariusLabs.NuDoc;
 using PeterO.Cbor;
 
 namespace CBORDocs {
-  /// <summary>A documentation visitor.</summary>
+    /// <summary>A documentation visitor.</summary>
   internal class DocVisitor : Visitor {
     private StringBuilder paramStr = new StringBuilder();
     private StringBuilder returnStr = new StringBuilder();
@@ -451,8 +451,6 @@ namespace CBORDocs {
       return true;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='param'>A Returns object.</param>
     public override void VisitReturns(Returns param) {
       this.currentBuffer = this.returnStr;
       this.WriteLine("<b>Returns:</b>\r\n");
@@ -461,8 +459,6 @@ namespace CBORDocs {
       this.currentBuffer = null;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='param'>A Value object.</param>
     public override void VisitValue(Value param) {
       this.currentBuffer = this.returnStr;
       this.WriteLine("<b>Returns:</b>\r\n");
@@ -491,15 +487,11 @@ namespace CBORDocs {
       this.currentBuffer = null;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='list'>A List object.</param>
     public override void VisitList(List list) {
       this.WriteLine("\r\n\r\n");
       base.VisitList(list);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='item'>An Item object.</param>
     public override void VisitItem(Item item) {
       this.Write(" * ");
       base.VisitItem(item);
@@ -519,8 +511,6 @@ namespace CBORDocs {
       base.VisitParamRef(param);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='member'>A Member object.</param>
     public override void VisitMember(Member member) {
       MemberInfo info = member.Info;
       string signature = String.Empty;
@@ -597,16 +587,12 @@ namespace CBORDocs {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='summary'>A Summary object.</param>
     public override void VisitSummary(Summary summary) {
       // WriteLine("<b>Summary:</b>\r\n");
       base.VisitSummary(summary);
       this.WriteLine("\r\n\r\n");
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='text'>A Text object.</param>
     public override void VisitText(Text text) {
       string t = text.Content;
       // Collapse multiple spaces into a single space
@@ -615,15 +601,11 @@ namespace CBORDocs {
       base.VisitText(text);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='code'>A C object.</param>
     public override void VisitC(C code) {
       this.Write(" `" + code.Content + "` ");
       base.VisitC(code);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='code'>A Code object.</param>
     public override void VisitCode(Code code) {
       foreach (var line in code.Content.Split('\n')) {
         this.WriteLine(valueFourSpaces + line.TrimEnd());
@@ -650,15 +632,11 @@ namespace CBORDocs {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='ln'>A string object.</param>
     public void Debug(string ln) {
       this.WriteLine(ln);
       this.WriteLine(String.Empty);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='para'>A Para object.</param>
     public override void VisitPara(Para para) {
       base.VisitPara(para);
       this.WriteLine("\r\n\r\n");
