@@ -13,7 +13,8 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO {
-    /// <summary>An arbitrary-precision integer.</summary>
+    /// <summary>An arbitrary-precision integer. Instances of this class
+    /// are immutable, so they are inherently safe for use by multiple threads.</summary>
   public sealed partial class BigInteger : IComparable<BigInteger>, IEquatable<BigInteger>
   {
     private static int CountWords(short[] array, int n) {
@@ -3939,12 +3940,13 @@ if (bytes.Length <= 0) {
     /// <summary>Divides this object by another big integer and returns
     /// the quotient and remainder.</summary>
     /// <param name='divisor'>The divisor.</param>
-    /// <returns>An array with two big integers: the first is the
-    /// quotient, and the second is the remainder.</returns>
-    /// <exception cref="ArgumentNullException">The parameter divisor is null.</exception>
-    /// <exception cref="DivideByZeroException">The parameter divisor is 0.</exception>
-    public BigInteger[] divideAndRemainder(BigInteger divisor)
-    {
+    /// <returns>An array with two big integers: the first is the quotient,
+    /// and the second is the remainder.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// divisor is null.</exception>
+    /// <exception cref='DivideByZeroException'>The parameter divisor
+    /// is 0.</exception>
+    public BigInteger[] divideAndRemainder(BigInteger divisor) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
       }

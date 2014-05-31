@@ -13,7 +13,8 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     * An arbitrary-precision integer.
+     * An arbitrary-precision integer. Instances of this class are immutable,
+     * so they are inherently safe for use by multiple threads.
      */
   public final class BigInteger implements Comparable<BigInteger>
   {
@@ -3648,9 +3649,14 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param divisor A BigInteger object.
-     * @return A BigInteger[] object.
+     * Divides this object by another big integer and returns the quotient
+     * and remainder.
+     * @param divisor The divisor.
+     * @return An array with two big integers: the first is the quotient,
+     * and the second is the remainder.
+     * @throws java.lang.NullPointerException The parameter divisor is
+     * null.
+     * @throws ArithmeticException The parameter divisor is 0.
      */
     public BigInteger[] divideAndRemainder(BigInteger divisor) {
       if (divisor == null) {
