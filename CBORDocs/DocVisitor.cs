@@ -221,9 +221,9 @@ namespace CBORDocs {
       first = true;
       foreach (var param in method.GetParameters()) {
         if (!first) {
-          builder.Append(",\r\n" + valueFourSpaces);
+          builder.Append(",\r\n" + valueFourSpaces + valueFourSpaces);
         } else {
-          builder.Append("\r\n" + valueFourSpaces);
+          builder.Append("\r\n" + valueFourSpaces + valueFourSpaces);
         }
         Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null) {
@@ -299,10 +299,10 @@ namespace CBORDocs {
       first = true;
       foreach (var param in indexParams) {
         if (!first) {
-          builder.Append(",\r\n" + valueFourSpaces);
+          builder.Append(",\r\n" + valueFourSpaces + valueFourSpaces);
         } else {
           builder.Append(indexParams.Length == 1 ?
-            String.Empty : "\r\n" + valueFourSpaces);
+            String.Empty : "\r\n" + valueFourSpaces + valueFourSpaces);
         }
         Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null) {
@@ -588,7 +588,6 @@ namespace CBORDocs {
     }
 
     public override void VisitSummary(Summary summary) {
-      // WriteLine("<b>Summary:</b>\r\n");
       base.VisitSummary(summary);
       this.WriteLine("\r\n\r\n");
     }

@@ -339,9 +339,6 @@ private URIUtility() {
       if (s == null) {
         return false;
       }
-      if (s == null) {
-        throw new NullPointerException("s");
-      }
       if (offset < 0) {
         throw new IllegalArgumentException("offset (" + Integer.toString((int)(long)offset) + ") is less than " + "0");
       }

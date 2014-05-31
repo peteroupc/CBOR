@@ -27,10 +27,9 @@ namespace PeterO {
     /// (see PrecisionContext's Traps property).</para>
     /// <para>An ExtendedFloat value can be serialized in one of the following
     /// ways:</para>
-    /// <list> <item>By calling the toString() method, which will always
-    /// return distinct strings for distinct ExtendedFloat values. However,
-    /// not all strings can be converted back to an ExtendedFloat without
-    /// loss, especially if the string has a fractional part.</item>
+    /// <list> <item>By calling the toString() method. However, not all
+    /// strings can be converted back to an ExtendedFloat without loss, especially
+    /// if the string has a fractional part.</item>
     /// <item>By calling the UnsignedMantissa, Exponent, and IsNegative
     /// properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN
     /// methods. The return values combined will uniquely identify a particular

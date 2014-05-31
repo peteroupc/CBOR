@@ -160,9 +160,6 @@ public void setConverter(Object value) {
 
     public static final CBORObject Undefined = new CBORObject(CBORObjectTypeSimpleValue, 23);
 
-    private CBORObject() {
-    }
-
     CBORObject(CBORObject obj, int tagLow, int tagHigh){
  this(CBORObjectTypeTagged,obj);
       this.tagLow = tagLow;
@@ -3518,7 +3515,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
               return "null";
             }
             if (flo.isFinite() &&
-              (flo.getExponent()).abs().compareTo(BigInteger.valueOf(1000)) > 0) {
+              (flo.getExponent()).abs().compareTo(BigInteger.valueOf(2500)) > 0) {
               // Too inefficient to convert to a decimal number
               // from a bigfloat with a very high exponent,
               // so convert to double instead
@@ -4346,8 +4343,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     private static String ExtendedToString(ExtendedFloat ef) {
-      if (ef.isFinite() && (ef.getExponent().compareTo(BigInteger.valueOf(1000)) > 0 ||
-                          ef.getExponent().compareTo(BigInteger.valueOf(-1000)) < 0)) {
+      if (ef.isFinite() && (ef.getExponent().compareTo(BigInteger.valueOf(2500)) > 0 ||
+                          ef.getExponent().compareTo(BigInteger.valueOf(-2500)) < 0)) {
         // It can take very long to convert a number with a very high
         // or very low exponent to a decimal String, so do this instead
         return ef.getMantissa().toString() + "p" + ef.getExponent().toString();
