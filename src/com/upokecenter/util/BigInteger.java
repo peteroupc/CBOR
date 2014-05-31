@@ -2926,7 +2926,8 @@ at: http://upokecenter.com/d/
      * The length will be index + endIndex - 1.
      * @return A BigInteger object with the same value as given in the string
      * portion.
-     * @throws java.lang.NullPointerException The parameter str is null.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
      * @throws NumberFormatException The string portion is in an invalid format.
      */
     public static BigInteger fromSubstring(String str, int index, int endIndex) {

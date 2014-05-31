@@ -3226,7 +3226,7 @@ if (bytes.Length <= 0) {
     /// <param name='endIndex'>The index of the string that ends the string
     /// portion. The length will be index + endIndex - 1.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name="str"/> is null.</exception>
+    /// <paramref name='str'/> is null.</exception>
     /// <exception cref='FormatException'>The string portion is in an
     /// invalid format.</exception>
     public static BigInteger fromSubstring(string str, int index, int endIndex) {
