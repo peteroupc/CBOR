@@ -19,7 +19,9 @@ import com.upokecenter.util.*;
       if (obj.getType() != CBORType.TextString) {
         throw new CBORException("URI must be a text String");
       }
-      // TODO: Validate URIs
+      if (!URIUtility.isValidIRI(obj.AsString())) {
+        throw new CBORException("String is not a valid URI/IRI");
+      }
       return obj;
     }
 
@@ -28,7 +30,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Converts a UUID to a CBOR object.
+     * Converts a URI to a CBOR object.
      * @param uri A java.net.URI object.
      * @return A CBORObject object.
      */

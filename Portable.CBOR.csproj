@@ -38,9 +38,6 @@
     <NoWarn>1587</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .NET Framework is automatically included -->
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="BigInteger.cs" />
     <Compile Include="BigIntegerExtra.cs" />
     <Compile Include="BigNumberFlags.cs" />
@@ -84,6 +81,7 @@
     <Compile Include="Cbor\PropertyMap.cs" />
     <Compile Include="Cbor\SharedRefs.cs" />
     <Compile Include="Cbor\StringRefs.cs" />
+    <Compile Include="Cbor\URIUtility.cs" />
     <Compile Include="DataUtilities.cs" />
     <Compile Include="DebugUtility.cs" />
     <Compile Include="DecimalUtility.cs" />
