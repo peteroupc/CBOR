@@ -108,9 +108,8 @@ namespace PeterO {
     /// are equal to those of another object.</summary>
     /// <returns>True if this object's mantissa and exponent are equal to
     /// those of another object; otherwise, false.</returns>
-    /// <param name='otherValue'>An ExtendedDecimal object.</param>
-    public bool Equals(ExtendedDecimal other)
-    {
+    /// <param name='other'>An ExtendedDecimal object.</param>
+    public bool Equals(ExtendedDecimal other) {
       return this.EqualsInternal(other);
     }
 

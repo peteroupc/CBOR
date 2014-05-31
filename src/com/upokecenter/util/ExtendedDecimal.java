@@ -87,14 +87,7 @@ at: http://upokecenter.com/d/
         return this.isNegative() ? ((this.unsignedMantissa).negate()) : this.unsignedMantissa;
       }
 
-    /**
-     * Determines whether this object&apos;s mantissa and exponent are
-     * equal to those of another object.
-     * @param otherValue An ExtendedDecimal object.
-     * @return True if this object's mantissa and exponent are equal to those
-     * of another object; otherwise, false.
-     */
-    public boolean EqualsInternal(ExtendedDecimal otherValue) {
+    private boolean EqualsInternal(ExtendedDecimal otherValue) {
       if (otherValue == null) {
         return false;
       }
@@ -102,9 +95,11 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
+     * Determines whether this object&apos;s mantissa and exponent are
+     * equal to those of another object.
      * @param other An ExtendedDecimal object.
-     * @return A Boolean object.
+     * @return True if this object's mantissa and exponent are equal to those
+     * of another object; otherwise, false.
      */
     public boolean equals(ExtendedDecimal other) {
       return this.EqualsInternal(other);

@@ -831,7 +831,7 @@ namespace PeterO {
       "CA2104",
       Justification = "ExtendedFloat is immutable")]
     #endif
-    /// <summary>Not documented yet.</summary>
+    /// <summary/>
     public static readonly ExtendedFloat NegativeZero = CreateWithFlags(
       BigInteger.Zero,
       BigInteger.Zero,
