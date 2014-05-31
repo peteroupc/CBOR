@@ -7,6 +7,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
@@ -21,6 +22,11 @@ namespace CBORDocs {
     StringBuilder returnStr = new StringBuilder();
     StringBuilder exceptionStr = new StringBuilder();
     StringBuilder currentBuffer = null;
+    StringBuilder buffer = new StringBuilder();
+
+    public override string ToString() {
+      return buffer.ToString();
+    }
 
     public static string FormatType(Type type) {
       string rawfmt = FormatTypeRaw(type);
@@ -57,11 +63,19 @@ namespace CBORDocs {
       } else {
         builder.Append("internal ");
       }
-      if (typeInfo.IsAbstract) {
+      if (typeInfo.IsAbstract && typeInfo.IsSealed) {
+        builder.Append("static ");
+      } else if (typeInfo.IsAbstract) {
         builder.Append("abstract ");
-      }
-      if (typeInfo.IsSealed) {
+      } else if (typeInfo.IsSealed) {
         builder.Append("sealed ");
+      }
+      if (typeInfo.IsValueType) {
+        builder.Append("struct ");
+      } else if (typeInfo.IsClass) {
+        builder.Append("class ");
+      } else {
+        builder.Append("interface ");
       }
       builder.Append(typeInfo.Name);
       bool first;
@@ -80,8 +94,12 @@ namespace CBORDocs {
       first = true;
       var ifaces = typeInfo.GetInterfaces();
       var derived = typeInfo.BaseType;
+      if (typeInfo.BaseType != null &&
+        typeInfo.BaseType.Equals(typeof(object))) {
+        derived = null;
+      }
       if (derived != null || ifaces.Length > 0) {
-        builder.Append(" :\r\n");
+        builder.Append(" :\r\n    ");
         if (derived != null) {
           builder.Append("    " + FormatType(derived));
           first = false;
@@ -89,18 +107,68 @@ namespace CBORDocs {
         if (ifaces.Length > 0) {
           foreach (var iface in ifaces) {
             if (!first) {
-              builder.Append(";\r\n");
+              builder.Append(",\r\n    ");
             }
             builder.Append("    " + FormatType(iface));
             first = false;
           }
         }
       }
-      // TODO: Get type constraints
+      AppendConstraints(typeInfo.GetGenericArguments(), builder);
       return builder.ToString();
     }
 
-    public static string FormatMethod(MethodInfo method) {
+    public static void AppendConstraints(Type[] genericArguments, StringBuilder builder) {
+      foreach (var arg in genericArguments) {
+        if (arg.IsGenericParameter) {
+          var constraints = arg.GetGenericParameterConstraints();
+          if (constraints.Length == 0 && (arg.GenericParameterAttributes &
+            (GenericParameterAttributes.ReferenceTypeConstraint |
+            GenericParameterAttributes.NotNullableValueTypeConstraint |
+            GenericParameterAttributes.DefaultConstructorConstraint)) == GenericParameterAttributes.None) {
+              continue;
+          }
+          builder.Append("\r\n        where ");
+          builder.Append(UndecorateTypeName(arg.Name));
+          builder.Append(" : ");
+          bool first = true;
+          if ((arg.GenericParameterAttributes &
+            GenericParameterAttributes.ReferenceTypeConstraint) != GenericParameterAttributes.None) {
+              if (!first) {
+                builder.Append(", ");
+              }
+            builder.Append("class");
+            first = false;
+          }
+          if ((arg.GenericParameterAttributes &
+            GenericParameterAttributes.NotNullableValueTypeConstraint) != GenericParameterAttributes.None) {
+            if (!first) {
+              builder.Append(", ");
+            }
+            builder.Append("struct");
+            first = false;
+          }
+          if ((arg.GenericParameterAttributes &
+            GenericParameterAttributes.DefaultConstructorConstraint) != GenericParameterAttributes.None) {
+            if (!first) {
+              builder.Append(", ");
+            }
+            builder.Append("new()");
+            first = false;
+          }
+          foreach(var constr in constraints) {
+            if (!first) {
+              builder.Append(", ");
+            }
+            builder.Append(FormatType(constr));
+            first = false;
+          }
+        }
+        builder.Append(FormatType(arg));
+      }
+    }
+
+    public static string FormatMethod(MethodBase method) {
       StringBuilder builder = new StringBuilder();
       builder.Append("    ");
       if (method.IsPublic) {
@@ -120,19 +188,21 @@ namespace CBORDocs {
       }
       if (method.IsFinal) {
         builder.Append("sealed ");
-      }
-      if (IsMethodOverride(method)) {
+      } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
         builder.Append("override ");
       } else if (method.IsVirtual) {
         builder.Append("virtual ");
       }
-      if (!method.IsConstructor) {
-        builder.Append(FormatType(method.ReturnType));
+      // TODO: Operator names
+      if (method is MethodInfo) {
+        builder.Append(FormatType(((MethodInfo)method).ReturnType));
         builder.Append(" ");
+        builder.Append(method.Name);
+      } else {
+        builder.Append(UndecorateTypeName(method.ReflectedType.Name));
       }
-      builder.Append(method.Name);
       bool first;
-      if (method.GetGenericArguments().Length > 0) {
+      if (method is MethodInfo && method.GetGenericArguments().Length > 0) {
         builder.Append('<');
         first = true;
         foreach (var arg in method.GetGenericArguments()) {
@@ -161,8 +231,101 @@ namespace CBORDocs {
         builder.Append(param.Name);
         first = false;
       }
-      // TODO: Get type constraints
-      builder.Append(");");
+      builder.Append(")");
+      if (method is MethodInfo && method.GetGenericArguments().Length > 0) {
+        AppendConstraints(method.GetGenericArguments(), builder);
+      }
+      builder.Append(";");
+      return builder.ToString();
+    }
+
+    private static bool PropertyIsPublicOrFamily(PropertyInfo property) {
+      MethodInfo getter = property.GetGetMethod();
+      MethodInfo setter = property.GetSetMethod();
+      if ((getter == null ? false : getter.IsPublic) ||
+         (setter == null ? false : setter.IsPublic)) {
+        return true;
+      } else if ((getter == null ? false : getter.IsAssembly) ||
+        (setter == null ? false : setter.IsAssembly)) {
+        return true;
+      }
+      return false;
+    }
+
+    public static string FormatProperty(PropertyInfo property) {
+      StringBuilder builder = new StringBuilder();
+      MethodInfo getter = property.GetGetMethod();
+      MethodInfo setter = property.GetSetMethod();
+      builder.Append("    ");
+      if ((getter == null ? false : getter.IsPublic) ||
+        (setter == null ? false : setter.IsPublic)) {
+        builder.Append("public ");
+      } else if ((getter == null ? false : getter.IsAssembly) ||
+        (setter == null ? false : setter.IsAssembly)) {
+        builder.Append("internal ");
+      } else if ((getter == null ? false : getter.IsFamily) ||
+        (setter == null ? false : setter.IsFamily)) {
+        builder.Append("protected ");
+      }
+      if ((getter == null ? false : getter.IsStatic) ||
+        (setter == null ? false : setter.IsStatic)) {
+        builder.Append("static ");
+      }
+      if ((getter == null ? false : getter.IsAbstract) ||
+        (setter == null ? false : setter.IsAbstract)) {
+        builder.Append("abstract ");
+      }
+      if ((getter == null ? false : getter.IsFinal) ||
+        (setter == null ? false : setter.IsFinal)) {
+        builder.Append("sealed ");
+      } else if (IsMethodOverride(getter ?? setter)) {
+        builder.Append("override ");
+      } else if ((getter == null ? false : getter.IsVirtual) ||
+        (setter == null ? false : setter.IsVirtual)) {
+        builder.Append("virtual ");
+      }
+      builder.Append(FormatType(property.PropertyType));
+      builder.Append(" ");
+      bool first;
+      var indexParams = property.GetIndexParameters();
+      if (indexParams.Length > 0) {
+        builder.Append("this[");
+      } else {
+        builder.Append(property.Name);
+      }
+      first = true;
+      foreach (var param in indexParams) {
+        if (!first) {
+          builder.Append(",\r\n        ");
+        } else {
+          builder.Append(indexParams.Length == 1 ? String.Empty : "\r\n        ");
+        }
+        Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
+        if (attr != null) {
+          builder.Append("params ");
+        }
+        builder.Append(FormatType(param.ParameterType));
+        builder.Append(" ");
+        builder.Append(param.Name);
+        first = false;
+      }
+      if (indexParams.Length > 0) {
+        builder.Append(")");
+      }
+      builder.Append(" { ");
+      if (getter != null) {
+        if (getter.IsPrivate && setter != null && !setter.IsPrivate) {
+          builder.Append("private ");
+        }
+        builder.Append("get; ");
+      }
+      if (setter != null) {
+        if (setter.IsPrivate && getter != null && !getter.IsPrivate) {
+          builder.Append("private ");
+        }
+        builder.Append("set;");
+      }
+      builder.Append("}");
       return builder.ToString();
     }
 
@@ -206,8 +369,7 @@ namespace CBORDocs {
       return builder.ToString();
     }
 
-    public static string FormatTypeRaw(Type type) {
-      string name = type.Name;
+    public static string UndecorateTypeName(string name) {
       int idx = name.IndexOf('`');
       if (idx >= 0) {
         name = name.Substring(0, idx);
@@ -216,6 +378,11 @@ namespace CBORDocs {
       if (idx >= 0) {
         name = name.Substring(0, idx);
       }
+      return name;
+    }
+
+    public static string FormatTypeRaw(Type type) {
+      string name = UndecorateTypeName(type.Name);
       if (type.IsGenericParameter) {
         return name;
       }
@@ -241,6 +408,9 @@ namespace CBORDocs {
       if (name.Equals("System.Char")) {
         return "char";
       }
+      if (name.Equals("System.Object")) {
+        return "object";
+      }
       if (name.Equals("System.Void")) {
         return "void";
       }
@@ -249,6 +419,9 @@ namespace CBORDocs {
       }
       if (name.Equals("System.SByte")) {
         return "sbyte";
+      }
+      if (name.Equals("System.String")) {
+        return "string";
       }
       if (name.Equals("System.Boolean")) {
         return "bool";
@@ -262,14 +435,13 @@ namespace CBORDocs {
       return name;
     }
 
-    private static bool IsMethodOverride(MethodInfo method) {
+    public static bool IsMethodOverride(MethodInfo method) {
       Type type = method.DeclaringType;
       MethodInfo baseMethod = method.GetBaseDefinition();
       if (baseMethod == null) {
         return false;
       }
-      // TODO: Doesn't work yet
-      if (method.DeclaringType.Equals(baseMethod.DeclaringType)) {
+      if (method.Equals(baseMethod)) {
         return false;
       }
       return true;
@@ -278,6 +450,14 @@ namespace CBORDocs {
       currentBuffer = returnStr;
       WriteLine("<b>Returns:</b>\r\n");
       base.VisitReturns(param);
+      WriteLine("\r\n\r\n");
+      currentBuffer = null;
+    }
+
+    public override void VisitValue(Value param) {
+      currentBuffer = returnStr;
+      WriteLine("<b>Returns:</b>\r\n");
+      base.VisitValue(param);
       WriteLine("\r\n\r\n");
       currentBuffer = null;
     }
@@ -322,21 +502,60 @@ namespace CBORDocs {
     }
 
     public override void VisitParamRef(ParamRef param) {
-      WriteLine("<i>" + param.Name + "</i>");
+      WriteLine(" <i>" + param.Name + "</i>");
       base.VisitParamRef(param);
     }
     public override void VisitMember(Member member) {
       MemberInfo info = member.Info;
       string signature = String.Empty;
-      if (info is MethodInfo) {
-        MethodInfo method = (MethodInfo)info;
+      if (info is MethodBase) {
+        MethodBase method = (MethodBase)info;
         if (!method.IsPublic && !method.IsFamily) {
           // Ignore methods other than public and protected
           // methods
           return;
         }
         signature = FormatMethod(method);
-        WriteLine("### " + method.Name + "\r\n\r\n" + signature + "\r\n\r\n");
+        if (method is ConstructorInfo) {
+          WriteLine("### " + UndecorateTypeName(method.ReflectedType.Name) +
+            " Constructor\r\n\r\n" + signature + "\r\n\r\n");
+        } else {
+          WriteLine("### " + method.Name + "\r\n\r\n" + signature + "\r\n\r\n");
+        }
+        paramStr.Clear();
+        returnStr.Clear();
+        exceptionStr.Clear();
+        base.VisitMember(member);
+        if (paramStr.Length > 0) {
+          Write("<b>Parameters:</b>\r\n\r\n");
+          string paramString = paramStr.ToString();
+          // Decrease spacing between list items
+          paramString = paramString.Replace("\r\n * ", " * ");
+          Write(paramString);
+        }
+        Write(returnStr.ToString());
+        if (exceptionStr.Length > 0) {
+          Write("<b>Exceptions:</b>\r\n\r\n");
+          Write(exceptionStr.ToString());
+        }
+      } else if (info is Type) {
+        Type type = (Type)info;
+        if (!type.IsPublic) {
+          // Ignore nonpublic types
+          return;
+        }
+        WriteLine("## " + FormatType(type) + "\r\n\r\n");
+        WriteLine(FormatTypeSig(type) + "\r\n\r\n");
+        base.VisitMember(member);
+      } else if (info is PropertyInfo) {
+        PropertyInfo property = (PropertyInfo)info;
+        if (!PropertyIsPublicOrFamily(property)) {
+          // Ignore methods other than public and protected
+          // methods
+          return;
+        }
+        signature = FormatProperty(property);
+        WriteLine("### " + property.Name + "\r\n\r\n" + signature + "\r\n\r\n");
         paramStr.Clear();
         returnStr.Clear();
         exceptionStr.Clear();
@@ -357,24 +576,15 @@ namespace CBORDocs {
           return;
         }
         signature = FormatField(field);
-        WriteLine("## " + field.Name + "\r\n\r\n" + signature + "\r\n\r\n");
+        WriteLine("### " + field.Name + "\r\n\r\n" + signature + "\r\n\r\n");
         base.VisitMember(member);
       }
-      // TODO: Properties
     }
 
     public override void VisitSummary(Summary summary) {
+      //WriteLine("<b>Summary:</b>\r\n");
       base.VisitSummary(summary);
       WriteLine("\r\n\r\n");
-    }
-
-    public override void VisitType(TypeDeclaration type) {
-      Type typeinfo = (Type)type.Info;
-      if (typeinfo.IsPublic) {
-        // TODO: Write more detailed type info
-        WriteLine("## " + FormatType(typeinfo) + "\r\n\r\n");
-        base.VisitType(type);
-      }
     }
 
     public override void VisitText(Text text) {
@@ -402,7 +612,7 @@ namespace CBORDocs {
       if (currentBuffer != null) {
         currentBuffer.Append(ln);
       } else {
-        Console.Write(ln);
+        buffer.Append(ln);
       }
     }
     private void WriteLine(string ln) {
@@ -410,8 +620,14 @@ namespace CBORDocs {
         currentBuffer.Append(ln);
         currentBuffer.Append("\r\n");
       } else {
-        Console.WriteLine(ln);
+        buffer.Append(ln);
+        buffer.Append("\r\n");
       }
+    }
+
+    public void Debug(string ln) {
+      WriteLine(ln);
+      WriteLine("");
     }
 
     public override void VisitPara(Para para) {
@@ -420,14 +636,70 @@ namespace CBORDocs {
     }
   }
 
+  public class Test {
+    public new bool Equals(object o) {
+      return false;
+    }
+
+    public override string ToString() {
+      return base.ToString();
+    }
+
+    public virtual void Virtual() {
+    }
+
+    public void Ordinary() {
+    }
+  }
+
+  public class TypeVisitor : Visitor, IComparer<Type> {
+    SortedDictionary<Type, DocVisitor> docs;
+
+    public TypeVisitor() {
+      docs = new SortedDictionary<Type, DocVisitor>(this);
+    }
+
+    public void Finish() {
+      foreach (var key in docs.Keys) {
+        Console.WriteLine(docs[key].ToString());
+      }
+    }
+
+    public override void VisitMember(Member member) {
+      Type currentType;
+      if (member.Info is Type) {
+        currentType = (Type)member.Info;
+      } else {
+        if (member.Info == null) {
+          return;
+        }
+        currentType = member.Info.ReflectedType;
+      }
+      if (currentType == null || !currentType.IsPublic) {
+        return;
+      }
+      if (!docs.ContainsKey(currentType)) {
+        var docVisitor = new DocVisitor();
+        docs[currentType] = docVisitor;
+      }
+      docs[currentType].VisitMember(member);
+      base.VisitMember(member);
+    }
+
+    public int Compare(Type x, Type y) {
+      return x.FullName.CompareTo(y.FullName);
+    }
+  }
+
   class Program {
-    // TODO: Currently a work in progress
     static void Main(string[] args) {
       var members = DocReader.Read(typeof(CBORObject).Assembly);
       var oldWriter = Console.Out;
-      using (var writer = new StreamWriter("doc.md")) {
+      using (var writer = new StreamWriter("../../../APIDocs.md")) {
         Console.SetOut(writer);
-        members.Accept(new DocVisitor());
+        var visitor = new TypeVisitor();
+        members.Accept(visitor);
+        visitor.Finish();
         Console.SetOut(oldWriter);
       }
     }

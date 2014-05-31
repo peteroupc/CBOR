@@ -17,7 +17,7 @@ namespace PeterO {
     /// <para> Many methods in this class return a reference to the same object
     /// as used in the call. This allows chaining operations in a single line
     /// of code. For example:</para>
-    /// <code> fastInt.Add(5).Multiply(10); </code>
+    /// <c> fastInt.Add(5).Multiply(10); </c>
     /// </summary>
   internal sealed class FastInteger : IComparable<FastInteger> {
     private sealed class MutableNumber {

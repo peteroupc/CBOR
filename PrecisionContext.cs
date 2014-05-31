@@ -183,8 +183,8 @@ namespace PeterO {
     /// according to this precision context. If HasFlags is false, this value
     /// will be 0. This value is a combination of bit fields. To retrieve a particular
     /// flag, use the AND operation on the return value of this method. For
-    /// example: <code>(this.Flags &amp; PrecisionContext.FlagInexact)
-    /// != 0</code>
+    /// example: <c>(this.Flags &amp; PrecisionContext.FlagInexact)
+    /// != 0</c>
     /// returns TRUE if the Inexact flag is set.</summary>
     /// <value>The flags that are set from converting numbers according
     /// to this precision context. If HasFlags is false, this value will be

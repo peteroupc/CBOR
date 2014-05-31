@@ -2389,7 +2389,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets the value of this object with the sign reversed.
-     * @return This object's value with the signe reversed.
+     * @return This object's value with the sign reversed.
      */
     public BigInteger negate() {
       BigInteger bigintRet = new BigInteger();

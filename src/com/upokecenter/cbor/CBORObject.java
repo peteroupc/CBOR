@@ -2358,12 +2358,12 @@ public void set(String key, CBORObject value) {
      * Writes a binary floating-point number in CBOR format to a data stream
      * as follows: <ul> <li>If the value is null, writes the byte 0xF6.</li>
      * <li>If the value is negative zero, infinity, or NaN, converts the
-     * number to a <code>double</code> and writes that <code>double</code>
-     * . If negative zero should not be written this way, use the Plus method
-     * to convert the value beforehand.</li> <li>If the value has an exponent
-     * of zero, writes the value as an unsigned integer or signed integer
-     * if the number can fit either type or as a big integer otherwise.</li>
-     * <li>In all other cases, writes the value as a big float.</li> </ul>
+     * number to a <code>double</code> and writes that <code>double</code> . If negative
+     * zero should not be written this way, use the Plus method to convert
+     * the value beforehand.</li> <li>If the value has an exponent of zero,
+     * writes the value as an unsigned integer or signed integer if the number
+     * can fit either type or as a big integer otherwise.</li> <li>In all
+     * other cases, writes the value as a big float.</li> </ul>
      * @param bignum An ExtendedFloat object.
      * @param stream A writable data stream.
      * @throws java.lang.NullPointerException The parameter {@code stream}
@@ -2435,13 +2435,12 @@ public void set(String key, CBORObject value) {
      * Writes a decimal floating-point number in CBOR format to a data stream,
      * as follows: <ul> <li>If the value is null, writes the byte 0xF6.</li>
      * <li>If the value is negative zero, infinity, or NaN, converts the
-     * number to a <code>double</code> and writes that <code>double</code>
-     * . If negative zero should not be written this way, use the Plus method
-     * to convert the value beforehand.</li> <li>If the value has an exponent
-     * of zero, writes the value as an unsigned integer or signed integer
-     * if the number can fit either type or as a big integer otherwise.</li>
-     * <li>In all other cases, writes the value as a decimal number.</li>
-     * </ul>
+     * number to a <code>double</code> and writes that <code>double</code> . If negative
+     * zero should not be written this way, use the Plus method to convert
+     * the value beforehand.</li> <li>If the value has an exponent of zero,
+     * writes the value as an unsigned integer or signed integer if the number
+     * can fit either type or as a big integer otherwise.</li> <li>In all
+     * other cases, writes the value as a decimal number.</li> </ul>
      * @param bignum Decimal fraction to write. Can be null.
      * @param stream InputStream to write to.
      * @throws java.lang.NullPointerException The parameter {@code stream}
@@ -2636,7 +2635,7 @@ public void set(String key, CBORObject value) {
     }
 
     /**
-     * Writes a 64-bit unsigned integer in CBOR format to a data stream.
+     * Writes a 64-bit signed integer in CBOR format to a data stream.
      * @param value The value to write.
      * @param stream A writable data stream.
      * @throws java.lang.NullPointerException The parameter {@code stream}
