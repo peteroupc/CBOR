@@ -1,6 +1,7 @@
 bin/
 obj/
 .settings/
+packages/
 Help/
 TestResults/
 CBORTest/bin/
