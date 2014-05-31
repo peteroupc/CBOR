@@ -261,17 +261,20 @@ namespace PeterO.Cbor {
       return type >= 0 && type <= 7 && (this.types & (1 << type)) != 0;
     }
 
-    /// <summary>Mented yet.</summary>
-    /// <returns>A Boolean object.</returns>
-    /// <param name='length'>A 32-bit signed integer.</param>
+    /// <summary>Returns whether an array's length is allowed under this
+    /// filter.</summary>
+    /// <returns>True if an array's length is allowed under this filter;
+    /// otherwise, false.</returns>
+    /// <param name='length'>The length of a CBOR array.</param>
     public bool ArrayLengthMatches(int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                                               (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
-    /// <param name='length'>A 64-bit signed integer.</param>
+    /// <summary>Returns whether an array's length is allowed under a filter.</summary>
+    /// <returns>True if an array's length is allowed under a filter; otherwise,
+    /// false.</returns>
+    /// <param name='length'>The length of a CBOR array.</param>
     public bool ArrayLengthMatches(long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                                               (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));

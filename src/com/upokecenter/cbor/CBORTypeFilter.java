@@ -277,9 +277,10 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Mented yet.
-     * @param length A 32-bit signed integer.
-     * @return A Boolean object.
+     * Returns whether an array's length is allowed under this filter.
+     * @param length The length of a CBOR array.
+     * @return True if an array's length is allowed under this filter; otherwise,
+     * false.
      */
     public boolean ArrayLengthMatches(int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
@@ -287,9 +288,10 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
-     * @param length A 64-bit signed integer.
-     * @return A Boolean object.
+     * Returns whether an array's length is allowed under a filter.
+     * @param length The length of a CBOR array.
+     * @return True if an array's length is allowed under a filter; otherwise,
+     * false.
      */
     public boolean ArrayLengthMatches(long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||

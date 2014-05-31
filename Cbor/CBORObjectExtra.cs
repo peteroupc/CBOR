@@ -357,8 +357,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag.</summary>
-    /// <returns>A CBOR object where the object "valueOb" is converted to
-    /// a CBOR object and given the tag "bigintTag".</returns>
+    /// <returns>A CBOR object where the object <paramref name='o'/> is
+    /// converted to a CBOR object and given the tag <paramref name='tag'/>.</returns>
     /// <param name='o'>An arbitrary object.</param>
     /// <param name='tag'>A 64-bit unsigned integer.</param>
     [CLSCompliant(false)]

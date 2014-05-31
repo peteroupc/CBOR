@@ -3204,9 +3204,9 @@ if (bytes.Length <= 0) {
     /// it may start with a minus sign.</param>
     /// <returns>A BigInteger object with the same value as given in the string.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
-    /// str is null.</exception>
-    /// <exception cref='FormatException'>The parameter str is in an invalid
-    /// format.</exception>
+    /// <paramref name='str'/> is null.</exception>
+    /// <exception cref='FormatException'>The parameter <paramref name='str'/>
+    /// is in an invalid format.</exception>
     public static BigInteger fromString(string str) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -3226,7 +3226,7 @@ if (bytes.Length <= 0) {
     /// <param name='endIndex'>The index of the string that ends the string
     /// portion. The length will be index + endIndex - 1.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
-    /// str is null.</exception>
+    /// <paramref name="str"/> is null.</exception>
     /// <exception cref='FormatException'>The string portion is in an
     /// invalid format.</exception>
     public static BigInteger fromSubstring(string str, int index, int endIndex) {

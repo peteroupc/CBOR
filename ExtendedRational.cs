@@ -22,7 +22,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets this object's numberator with the sign removed.</summary>
+    /// <summary>Gets this object's numerator with the sign removed.</summary>
     /// <value>This object&apos;s numerator. If this object is a not-a-number
     /// value, returns the diagnostic information.</value>
     public BigInteger UnsignedNumerator {

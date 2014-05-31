@@ -15,8 +15,8 @@ An arbitrary-precision integer.
 ### fromByteArray
 
     public static PeterO.BigInteger fromByteArray(
-        byte[] bytes,
-        bool littleEndian);
+    byte[] bytes,
+    bool littleEndian);
 
 
 Initializes a BigInteger object from an array of bytes.
@@ -37,7 +37,7 @@ A BigInteger object.
 ### testBit
 
     public bool testBit(
-        int index);
+    int index);
 
 
 Returns whether a bit is set in the two's-complement representation of this object's value.
@@ -56,7 +56,7 @@ True if the specified bit is set; otherwise, false.
 ### toByteArray
 
     public byte[] toByteArray(
-        bool littleEndian);
+    bool littleEndian);
 
 
 Returns a byte array of this object's value.
@@ -75,7 +75,7 @@ A byte array that represents the value of this object.
 ### shiftLeft
 
     public PeterO.BigInteger shiftLeft(
-        int numberBits);
+    int numberBits);
 
 
 Shifts this object's value by a number of bits. A value of 1 doubles this value, a value of 2 multiplies it by 4, a value of 3 by 8, a value of 4 by 16, and so on.
@@ -94,7 +94,7 @@ A BigInteger object.
 ### shiftRight
 
     public PeterO.BigInteger shiftRight(
-        int numberBits);
+    int numberBits);
 
 
 Returns a big integer with the bits shifted to the right.
@@ -113,7 +113,7 @@ A BigInteger object.
 ### valueOf
 
     public static PeterO.BigInteger valueOf(
-        long longerValue);
+    long longerValue);
 
 
 Converts a 64-bit signed integer to a big integer.
@@ -183,7 +183,7 @@ This object's value is too big to fit a 64-bit signed integer.
 ### PowBigIntVar
 
     public PeterO.BigInteger PowBigIntVar(
-        PeterO.BigInteger power);
+    PeterO.BigInteger power);
 
 
 Not documented yet.
@@ -202,7 +202,7 @@ A BigInteger object.
 ### pow
 
     public PeterO.BigInteger pow(
-        int powerSmall);
+    int powerSmall);
 
 
 Not documented yet.
@@ -299,7 +299,7 @@ A string representation of this object.
 ### fromString
 
     public static PeterO.BigInteger fromString(
-        string str);
+    string str);
 
 
 Converts a string to an arbitrary-precision integer.
@@ -328,9 +328,9 @@ The parameter str is in an invalid format.
 ### fromSubstring
 
     public static PeterO.BigInteger fromSubstring(
-        string str,
-        int index,
-        int endIndex);
+    string str,
+    int index,
+    int endIndex);
 
 
 Converts a portion of a string to an arbitrary-precision integer.
@@ -376,7 +376,7 @@ A 32-bit signed integer.
 ### gcd
 
     public PeterO.BigInteger gcd(
-        PeterO.BigInteger bigintSecond);
+    PeterO.BigInteger bigintSecond);
 
 
 Returns the greatest common divisor of two integers.
@@ -395,8 +395,8 @@ A BigInteger object.
 ### ModPow
 
     public PeterO.BigInteger ModPow(
-        PeterO.BigInteger pow,
-        PeterO.BigInteger mod);
+    PeterO.BigInteger pow,
+    PeterO.BigInteger mod);
 
 
 Calculates the remainder when a BigInteger raised to a certain power is divided by another BigInteger.
@@ -417,7 +417,7 @@ A BigInteger object.
 ### Equals
 
     public override bool Equals(
-        object obj);
+    object obj);
 
 
 Determines whether this object and another object are equal.
@@ -449,7 +449,7 @@ A 32-bit hash code.
 ### add
 
     public PeterO.BigInteger add(
-        PeterO.BigInteger bigintAugend);
+    PeterO.BigInteger bigintAugend);
 
 
 Adds this object and another object.
@@ -468,7 +468,7 @@ The sum of the two objects.
 ### subtract
 
     public PeterO.BigInteger subtract(
-        PeterO.BigInteger subtrahend);
+    PeterO.BigInteger subtrahend);
 
 
 Subtracts a BigInteger from this BigInteger.
@@ -487,7 +487,7 @@ The difference of the two objects.
 ### multiply
 
     public PeterO.BigInteger multiply(
-        PeterO.BigInteger bigintMult);
+    PeterO.BigInteger bigintMult);
 
 
 Multiplies this instance by the value of a BigInteger object.
@@ -506,7 +506,7 @@ The product of the two objects.
 ### divide
 
     public PeterO.BigInteger divide(
-        PeterO.BigInteger bigintDivisor);
+    PeterO.BigInteger bigintDivisor);
 
 
 Divides this instance by the value of a BigInteger object. The result is rounded down (the fractional part is discarded). Except if the result is 0, it will be negative if this object is positive and the other is negative, or vice versa, and will be positive if both are positive or both are negative.
@@ -531,7 +531,7 @@ The divisor is zero.
 ### divideAndRemainder
 
     public PeterO.BigInteger[] divideAndRemainder(
-        PeterO.BigInteger divisor);
+    PeterO.BigInteger divisor);
 
 
 Divides this object by another big integer and returns the quotient and remainder.
@@ -560,7 +560,7 @@ The parameter divisor is 0.
 ### mod
 
     public PeterO.BigInteger mod(
-        PeterO.BigInteger divisor);
+    PeterO.BigInteger divisor);
 
 
 Finds the modulus remainder that results when this instance is divided by the value of a BigInteger object. The modulus remainder is the same as the normal remainder if the normal remainder is positive, and equals divisor plus normal remainder if the normal remainder is negative.
@@ -586,7 +586,7 @@ The parameter  <i>divisor</i>
 ### remainder
 
     public PeterO.BigInteger remainder(
-        PeterO.BigInteger divisor);
+    PeterO.BigInteger divisor);
 
 
 Finds the remainder that results when this instance is divided by the value of a BigInteger object. The remainder is the value that remains when the absolute value of this object is divided by the absolute value of the other object; the remainder has the same sign (positive or negative) as this object.
@@ -605,7 +605,7 @@ The remainder of the two objects.
 ### CompareTo
 
     public sealed int CompareTo(
-        PeterO.BigInteger other);
+    PeterO.BigInteger other);
 
 
 Compares a BigInteger object with this instance.
@@ -674,8 +674,8 @@ BigInteger object for the number ten.
 ### op_Addition
 
     public static PeterO.BigInteger op_Addition(
-        PeterO.BigInteger bthis,
-        PeterO.BigInteger augend);
+    PeterO.BigInteger bthis,
+    PeterO.BigInteger augend);
 
 
 Adds a BigInteger object and a BigInteger object.
@@ -696,8 +696,8 @@ The sum of the two objects.
 ### op_Subtraction
 
     public static PeterO.BigInteger op_Subtraction(
-        PeterO.BigInteger bthis,
-        PeterO.BigInteger subtrahend);
+    PeterO.BigInteger bthis,
+    PeterO.BigInteger subtrahend);
 
 
 Subtracts two BigInteger values.
@@ -718,8 +718,8 @@ The difference of the two objects.
 ### op_Multiply
 
     public static PeterO.BigInteger op_Multiply(
-        PeterO.BigInteger operand1,
-        PeterO.BigInteger operand2);
+    PeterO.BigInteger operand1,
+    PeterO.BigInteger operand2);
 
 
 Multiplies a BigInteger object by the value of a BigInteger object.
@@ -740,8 +740,8 @@ The product of the two objects.
 ### op_Division
 
     public static PeterO.BigInteger op_Division(
-        PeterO.BigInteger dividend,
-        PeterO.BigInteger divisor);
+    PeterO.BigInteger dividend,
+    PeterO.BigInteger divisor);
 
 
 Divides a BigInteger object by the value of a BigInteger object.
@@ -762,8 +762,8 @@ The quotient of the two objects.
 ### op_Modulus
 
     public static PeterO.BigInteger op_Modulus(
-        PeterO.BigInteger dividend,
-        PeterO.BigInteger divisor);
+    PeterO.BigInteger dividend,
+    PeterO.BigInteger divisor);
 
 
 Finds the remainder that results when a BigInteger object is divided by the value of a BigInteger object.
@@ -784,8 +784,8 @@ The remainder of the two objects.
 ### op_LeftShift
 
     public static PeterO.BigInteger op_LeftShift(
-        PeterO.BigInteger bthis,
-        int bitCount);
+    PeterO.BigInteger bthis,
+    int bitCount);
 
 
 Not documented yet.
@@ -806,9 +806,9 @@ A BigInteger object.
 ### ModPow
 
     public static PeterO.BigInteger ModPow(
-        PeterO.BigInteger bigintValue,
-        PeterO.BigInteger pow,
-        PeterO.BigInteger mod);
+    PeterO.BigInteger bigintValue,
+    PeterO.BigInteger pow,
+    PeterO.BigInteger mod);
 
 
 Calculates the remainder when a BigInteger raised to a certain power is divided by another BigInteger.
@@ -834,8 +834,8 @@ The value ( <i>bigintValue</i>
 ### op_RightShift
 
     public static PeterO.BigInteger op_RightShift(
-        PeterO.BigInteger bthis,
-        int bigValue);
+    PeterO.BigInteger bthis,
+    int bigValue);
 
 
 Shifts the bits of a BigInteger instance to the right.
@@ -856,7 +856,7 @@ A BigInteger object.
 ### op_UnaryNegation
 
     public static PeterO.BigInteger op_UnaryNegation(
-        PeterO.BigInteger bigValue);
+    PeterO.BigInteger bigValue);
 
 
 Negates a BigInteger object.
@@ -875,8 +875,8 @@ A BigInteger object.
 ### op_LessThan
 
     public static bool op_LessThan(
-        PeterO.BigInteger thisValue,
-        PeterO.BigInteger otherValue);
+    PeterO.BigInteger thisValue,
+    PeterO.BigInteger otherValue);
 
 
 Determines whether a BigInteger instance is less than another BigInteger instance.
@@ -899,8 +899,8 @@ True if  <i>thisValue</i>
 ### op_LessThanOrEqual
 
     public static bool op_LessThanOrEqual(
-        PeterO.BigInteger thisValue,
-        PeterO.BigInteger otherValue);
+    PeterO.BigInteger thisValue,
+    PeterO.BigInteger otherValue);
 
 
 Determines whether a BigInteger instance is less than or equal to another BigInteger instance.
@@ -923,8 +923,8 @@ True if  <i>thisValue</i>
 ### op_GreaterThan
 
     public static bool op_GreaterThan(
-        PeterO.BigInteger thisValue,
-        PeterO.BigInteger otherValue);
+    PeterO.BigInteger thisValue,
+    PeterO.BigInteger otherValue);
 
 
 Determines whether a BigInteger instance is greater than another BigInteger instance.
@@ -947,8 +947,8 @@ True if  <i>thisValue</i>
 ### op_GreaterThanOrEqual
 
     public static bool op_GreaterThanOrEqual(
-        PeterO.BigInteger thisValue,
-        PeterO.BigInteger otherValue);
+    PeterO.BigInteger thisValue,
+    PeterO.BigInteger otherValue);
 
 
 Determines whether a BigInteger value is greater than another BigInteger value.
@@ -971,7 +971,7 @@ True if  <i>thisValue</i>
 ### Abs
 
     public static PeterO.BigInteger Abs(
-        PeterO.BigInteger thisValue);
+    PeterO.BigInteger thisValue);
 
 
 Not documented yet.
@@ -993,8 +993,8 @@ A BigInteger object.
 ### GetBits
 
     public long GetBits(
-        int index,
-        int numberBits);
+    int index,
+    int numberBits);
 
 
 Not documented yet.
@@ -1015,8 +1015,8 @@ A 64-bit signed integer.
 ### GreatestCommonDivisor
 
     public static PeterO.BigInteger GreatestCommonDivisor(
-        PeterO.BigInteger bigintFirst,
-        PeterO.BigInteger bigintSecond);
+    PeterO.BigInteger bigintFirst,
+    PeterO.BigInteger bigintSecond);
 
 
 Not documented yet.
@@ -1050,8 +1050,8 @@ A byte array.
 ### Pow
 
     public static PeterO.BigInteger Pow(
-        PeterO.BigInteger bigValue,
-        PeterO.BigInteger power);
+    PeterO.BigInteger bigValue,
+    PeterO.BigInteger power);
 
 
 Not documented yet.
@@ -1072,8 +1072,8 @@ A BigInteger object.
 ### Pow
 
     public static PeterO.BigInteger Pow(
-        PeterO.BigInteger bigValue,
-        int power);
+    PeterO.BigInteger bigValue,
+    int power);
 
 
 Not documented yet.
@@ -1094,7 +1094,7 @@ A BigInteger object.
 ### BigInteger Constructor
 
     public BigInteger(
-        byte[] bytes);
+    byte[] bytes);
 
 
 Initializes a new instance of the BigInteger class.
@@ -1108,7 +1108,7 @@ Initializes a new instance of the BigInteger class.
 ### Equals
 
     public sealed bool Equals(
-        PeterO.BigInteger other);
+    PeterO.BigInteger other);
 
 
 Not documented yet.
@@ -1127,7 +1127,7 @@ A Boolean object.
 ### Not
 
     public static PeterO.BigInteger Not(
-        PeterO.BigInteger valueA);
+    PeterO.BigInteger valueA);
 
 
 Returns a BigInteger with every bit flipped.
@@ -1146,8 +1146,8 @@ A BigInteger object.
 ### And
 
     public static PeterO.BigInteger And(
-        PeterO.BigInteger a,
-        PeterO.BigInteger b);
+    PeterO.BigInteger a,
+    PeterO.BigInteger b);
 
 
 Does an AND operation between two BigInteger values.
@@ -1168,8 +1168,8 @@ A BigInteger object.
 ### Or
 
     public static PeterO.BigInteger Or(
-        PeterO.BigInteger first,
-        PeterO.BigInteger second);
+    PeterO.BigInteger first,
+    PeterO.BigInteger second);
 
 
 Does an OR operation between two BigInteger instances.
@@ -1190,8 +1190,8 @@ A BigInteger object.
 ### Xor
 
     public static PeterO.BigInteger Xor(
-        PeterO.BigInteger a,
-        PeterO.BigInteger b);
+    PeterO.BigInteger a,
+    PeterO.BigInteger b);
 
 
 Finds the exclusive "or" of two BigInteger objects.
@@ -1300,7 +1300,7 @@ Contains methods useful for reading and writing data, with a focus on CBOR.
 ### ParseJSONNumber
 
     public static PeterO.Cbor.CBORObject ParseJSONNumber(
-        string str);
+    string str);
 
 
 Parses a number whose format follows the JSON specification. See #ParseJSONNumber(String, integersOnly, parseOnly) for more information.
@@ -1319,9 +1319,9 @@ A CBOR object that represents the parsed number. Returns null if the parsing fai
 ### ParseJSONNumber
 
     public static PeterO.Cbor.CBORObject ParseJSONNumber(
-        string str,
-        bool integersOnly,
-        bool positiveOnly);
+    string str,
+    bool integersOnly,
+    bool positiveOnly);
 
 
 Parses a number whose format follows the JSON specification (RFC 7159). Roughly speaking, a valid number consists of an optional minus sign, one or more digits (starting with 1 to 9 unless the only digit is 0), an optional decimal point with one or more digits, and an optional letter E or e with one or more digits (the exponent).
@@ -1344,10 +1344,10 @@ A CBOR object that represents the parsed number. Returns null if the parsing fai
 ### ParseJSONNumber
 
     public static PeterO.Cbor.CBORObject ParseJSONNumber(
-        string str,
-        bool integersOnly,
-        bool positiveOnly,
-        bool failOnExponentOverflow);
+    string str,
+    bool integersOnly,
+    bool positiveOnly,
+    bool failOnExponentOverflow);
 
 
 Parses a number whose format follows the JSON specification (RFC 7159). Roughly speaking, a valid number consists of an optional minus sign, one or more digits (starting with 1 to 9 unless the only digit is 0), an optional decimal point with one or more digits, and an optional letter E or e with one or more digits (the exponent).
@@ -1393,7 +1393,7 @@ Initializes a new instance of the CBORException class.
 ### CBORException Constructor
 
     public CBORException(
-        string message);
+    string message);
 
 
 Initializes a new instance of the CBORException class.
@@ -1407,8 +1407,8 @@ Initializes a new instance of the CBORException class.
 ### CBORException Constructor
 
     public CBORException(
-        string message,
-        System.Exception innerException);
+    string message,
+    System.Exception innerException);
 
 
 Initializes a new instance of the CBORException class. Uses the given message and inner exception.
@@ -1489,8 +1489,8 @@ Represents the value undefined.
 ### AddConverter
 
     public static void AddConverter<T>(
-        System.Type type,
-        PeterO.Cbor.ICBORConverter<T> converter);
+    System.Type type,
+    PeterO.Cbor.ICBORConverter<T> converter);
 
 
 Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
@@ -1508,8 +1508,8 @@ Registers an object that converts objects of a given type to CBOR objects (calle
 ### AddTagHandler
 
     public static void AddTagHandler(
-        PeterO.BigInteger bigintTag,
-        PeterO.Cbor.ICBORTag handler);
+    PeterO.BigInteger bigintTag,
+    PeterO.Cbor.ICBORTag handler);
 
 
 Not documented yet.
@@ -1639,7 +1639,7 @@ True if this CBOR object represents a not-a-number value (as opposed to whether 
 ### CompareTo
 
     public sealed int CompareTo(
-        PeterO.Cbor.CBORObject other);
+    PeterO.Cbor.CBORObject other);
 
 
 Compares two CBOR objects. In this implementation:
@@ -1720,7 +1720,7 @@ A CBORObject object.
 ### Equals
 
     public override bool Equals(
-        object obj);
+    object obj);
 
 
 Determines whether this object and another object are equal.
@@ -1739,7 +1739,7 @@ True if the objects are equal; otherwise, false.
 ### Equals
 
     public sealed bool Equals(
-        PeterO.Cbor.CBORObject other);
+    PeterO.Cbor.CBORObject other);
 
 
 Compares the equality of two CBOR objects.
@@ -1771,7 +1771,7 @@ A 32-bit hash code.
 ### DecodeFromBytes
 
     public static PeterO.Cbor.CBORObject DecodeFromBytes(
-        byte[] data);
+    byte[] data);
 
 
 Generates a CBOR object from an array of CBOR-encoded bytes.
@@ -1819,7 +1819,7 @@ This object is not a byte string.
 ### HasTag
 
     public bool HasTag(
-        int tagValue);
+    int tagValue);
 
 
 Returns whether this object has a tag of the given number.
@@ -1844,7 +1844,7 @@ TagValue is less than 0.
 ### HasTag
 
     public bool HasTag(
-        PeterO.BigInteger bigTagValue);
+    PeterO.BigInteger bigTagValue);
 
 
 Returns whether this object has a tag of the given number.
@@ -1886,8 +1886,8 @@ An array of tags, or the empty string if this object is untagged.
 ### Add
 
     public PeterO.Cbor.CBORObject Add(
-        PeterO.Cbor.CBORObject key,
-        PeterO.Cbor.CBORObject value);
+    PeterO.Cbor.CBORObject key,
+    PeterO.Cbor.CBORObject value);
 
 
 Adds a new object to this map.
@@ -1918,8 +1918,8 @@ This object is not a map.
 ### Add
 
     public PeterO.Cbor.CBORObject Add(
-        object key,
-        object valueOb);
+    object key,
+    object valueOb);
 
 
 Converts an object to a CBOR object and adds it to this map.
@@ -1956,7 +1956,7 @@ This object is not a map.
 ### ContainsKey
 
     public bool ContainsKey(
-        PeterO.Cbor.CBORObject key);
+    PeterO.Cbor.CBORObject key);
 
 
 Determines whether a value of the given key exists in this object.
@@ -1981,7 +1981,7 @@ Key is null (as opposed to CBORObject.Null).
 ### ContainsKey
 
     public bool ContainsKey(
-        string key);
+    string key);
 
 
 Determines whether a value of the given key exists in this object.
@@ -2006,7 +2006,7 @@ Key is null (as opposed to CBORObject.Null).
 ### Add
 
     public PeterO.Cbor.CBORObject Add(
-        PeterO.Cbor.CBORObject obj);
+    PeterO.Cbor.CBORObject obj);
 
 
 Adds a new object to the end of this array.
@@ -2036,7 +2036,7 @@ The parameter <i>obj</i>
 ### Add
 
     public PeterO.Cbor.CBORObject Add(
-        object obj);
+    object obj);
 
 
 Converts an object to a CBOR object and adds it to the end of this array.
@@ -2065,7 +2065,7 @@ The object's type is not supported.
 ### Remove
 
     public bool Remove(
-        PeterO.Cbor.CBORObject obj);
+    PeterO.Cbor.CBORObject obj);
 
 
 If this object is an array, removes the first instance of the specified item from the array. If this object is a map, removes the item with the given key from the map.
@@ -2170,7 +2170,7 @@ This object's type is not a number type.
 
 ### AsSingle
 
-    public System.Single AsSingle();
+    public float AsSingle();
 
 
 Converts this object to a 32-bit floating point number.
@@ -2415,7 +2415,7 @@ This object's type is not a string.
 ### Read
 
     public static PeterO.Cbor.CBORObject Read(
-        System.IO.Stream stream);
+    System.IO.Stream stream);
 
 
 Reads an object in CBOR format from a data stream.
@@ -2445,8 +2445,8 @@ There was an error in reading or parsing the data.
 ### Write
 
     public static void Write(
-        string str,
-        System.IO.Stream stream);
+    string str,
+    System.IO.Stream stream);
 
 
 Writes a string in CBOR format to a data stream.
@@ -2473,8 +2473,8 @@ An I/O error occurred.
 ### Write
 
     public static void Write(
-        PeterO.ExtendedFloat bignum,
-        System.IO.Stream stream);
+    PeterO.ExtendedFloat bignum,
+    System.IO.Stream stream);
 
 
 Writes a binary floating-point number in CBOR format to a data stream as follows: 
@@ -2516,8 +2516,8 @@ An I/O error occurred.
 ### Write
 
     public static void Write(
-        PeterO.ExtendedRational rational,
-        System.IO.Stream stream);
+    PeterO.ExtendedRational rational,
+    System.IO.Stream stream);
 
 
 Writes a rational number in CBOR format to a data stream.
@@ -2544,8 +2544,8 @@ An I/O error occurred.
 ### Write
 
     public static void Write(
-        PeterO.ExtendedDecimal bignum,
-        System.IO.Stream stream);
+    PeterO.ExtendedDecimal bignum,
+    System.IO.Stream stream);
 
 
 Writes a decimal floating-point number in CBOR format to a data stream, as follows: 
@@ -2587,8 +2587,8 @@ An I/O error occurred.
 ### Write
 
     public static void Write(
-        PeterO.BigInteger bigint,
-        System.IO.Stream stream);
+    PeterO.BigInteger bigint,
+    System.IO.Stream stream);
 
 
 Writes a big integer in CBOR format to a data stream.
@@ -2615,7 +2615,7 @@ An I/O error occurred.
 ### WriteTo
 
     public void WriteTo(
-        System.IO.Stream stream);
+    System.IO.Stream stream);
 
 
 Writes this CBOR object to a data stream.
@@ -2640,8 +2640,8 @@ An I/O error occurred.
 ### Write
 
     public static void Write(
-        long value,
-        System.IO.Stream stream);
+    long value,
+    System.IO.Stream stream);
 
 
 Writes a 64-bit signed integer in CBOR format to a data stream.
@@ -2668,8 +2668,8 @@ An I/O error occurred.
 ### Write
 
     public static void Write(
-        int value,
-        System.IO.Stream stream);
+    int value,
+    System.IO.Stream stream);
 
 
 Writes a 32-bit signed integer in CBOR format to a data stream.
@@ -2696,8 +2696,8 @@ An I/O error occurred.
 ### Write
 
     public static void Write(
-        short value,
-        System.IO.Stream stream);
+    short value,
+    System.IO.Stream stream);
 
 
 Writes a 16-bit signed integer in CBOR format to a data stream.
@@ -2724,8 +2724,8 @@ An I/O error occurred.
 ### Write
 
     public static void Write(
-        char value,
-        System.IO.Stream stream);
+    char value,
+    System.IO.Stream stream);
 
 
 Writes a Unicode character as a string in CBOR format to a data stream.
@@ -2757,8 +2757,8 @@ An I/O error occurred.
 ### Write
 
     public static void Write(
-        bool value,
-        System.IO.Stream stream);
+    bool value,
+    System.IO.Stream stream);
 
 
 Writes a Boolean value in CBOR format to a data stream.
@@ -2785,8 +2785,8 @@ An I/O error occurred.
 ### Write
 
     public static void Write(
-        byte value,
-        System.IO.Stream stream);
+    byte value,
+    System.IO.Stream stream);
 
 
 Writes a byte (0 to 255) in CBOR format to a data stream. If the value is less than 24, writes that byte. If the value is 25 to 255, writes the byte 24, then this byte's value.
@@ -2813,8 +2813,8 @@ An I/O error occurred.
 ### Write
 
     public static void Write(
-        System.Single value,
-        System.IO.Stream s);
+    float value,
+    System.IO.Stream s);
 
 
 Writes a 32-bit floating-point number in CBOR format to a data stream.
@@ -2841,8 +2841,8 @@ An I/O error occurred.
 ### Write
 
     public static void Write(
-        double value,
-        System.IO.Stream stream);
+    double value,
+    System.IO.Stream stream);
 
 
 Writes a 64-bit floating-point number in CBOR format to a data stream.
@@ -2882,8 +2882,8 @@ A byte array in CBOR format.
 ### Write
 
     public static void Write(
-        PeterO.Cbor.CBORObject value,
-        System.IO.Stream stream);
+    PeterO.Cbor.CBORObject value,
+    System.IO.Stream stream);
 
 
 Writes a CBOR object to a CBOR data stream.
@@ -2899,8 +2899,8 @@ Writes a CBOR object to a CBOR data stream.
 ### Write
 
     public static void Write(
-        object objValue,
-        System.IO.Stream stream);
+    object objValue,
+    System.IO.Stream stream);
 
 
 Writes an arbitrary object to a CBOR data stream. Currently, the following objects are supported: 
@@ -2937,7 +2937,7 @@ The object's type is not supported.
 ### FromJSONString
 
     public static PeterO.Cbor.CBORObject FromJSONString(
-        string str);
+    string str);
 
 
 Generates a CBOR object from a string in JavaScript Object Notation (JSON) format. If a JSON object has the same key, only the last given value will be used for each duplicated key. The JSON string may not begin with a byte order mark (U + FEFF).
@@ -2970,7 +2970,7 @@ The string is not in JSON format.
 ### ReadJSON
 
     public static PeterO.Cbor.CBORObject ReadJSON(
-        System.IO.Stream stream);
+    System.IO.Stream stream);
 
 
 Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format and UTF-8 encoding. The JSON stream may begin with a byte order mark (U + FEFF); however, this implementation's ToJSONString method will not place this character at the beginning of a JSON text, since doing so is forbidden under RFC 7159. If a JSON object has the same key, only the last given value will be used for each duplicated key.
@@ -3020,8 +3020,8 @@ A string object containing the converted object.
 ### Addition
 
     public static PeterO.Cbor.CBORObject Addition(
-        PeterO.Cbor.CBORObject first,
-        PeterO.Cbor.CBORObject second);
+    PeterO.Cbor.CBORObject first,
+    PeterO.Cbor.CBORObject second);
 
 
 Finds the sum of two CBOR number objects.
@@ -3048,8 +3048,8 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 ### Subtract
 
     public static PeterO.Cbor.CBORObject Subtract(
-        PeterO.Cbor.CBORObject first,
-        PeterO.Cbor.CBORObject second);
+    PeterO.Cbor.CBORObject first,
+    PeterO.Cbor.CBORObject second);
 
 
 Finds the difference between two CBOR number objects.
@@ -3076,8 +3076,8 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 ### Multiply
 
     public static PeterO.Cbor.CBORObject Multiply(
-        PeterO.Cbor.CBORObject first,
-        PeterO.Cbor.CBORObject second);
+    PeterO.Cbor.CBORObject first,
+    PeterO.Cbor.CBORObject second);
 
 
 Multiplies two CBOR number objects.
@@ -3104,8 +3104,8 @@ Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 ### Divide
 
     public static PeterO.Cbor.CBORObject Divide(
-        PeterO.Cbor.CBORObject first,
-        PeterO.Cbor.CBORObject second);
+    PeterO.Cbor.CBORObject first,
+    PeterO.Cbor.CBORObject second);
 
 
 Divides a CBORObject object by the value of a CBORObject object.
@@ -3126,8 +3126,8 @@ The quotient of the two objects.
 ### Remainder
 
     public static PeterO.Cbor.CBORObject Remainder(
-        PeterO.Cbor.CBORObject first,
-        PeterO.Cbor.CBORObject second);
+    PeterO.Cbor.CBORObject first,
+    PeterO.Cbor.CBORObject second);
 
 
 Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
@@ -3174,7 +3174,7 @@ A new CBOR map.
 ### FromSimpleValue
 
     public static PeterO.Cbor.CBORObject FromSimpleValue(
-        int simpleValue);
+    int simpleValue);
 
 
 Creates a CBOR object from a simple value number.
@@ -3200,7 +3200,7 @@ The parameter  <i>simpleValue</i>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        long value);
+    long value);
 
 
 Generates a CBOR object from a 64-bit signed integer.
@@ -3219,7 +3219,7 @@ A CBORObject object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        PeterO.Cbor.CBORObject value);
+    PeterO.Cbor.CBORObject value);
 
 
 Generates a CBOR object from a CBOR object.
@@ -3238,7 +3238,7 @@ Same as.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        PeterO.BigInteger bigintValue);
+    PeterO.BigInteger bigintValue);
 
 
 Generates a CBOR object from an arbitrary-precision integer.
@@ -3257,7 +3257,7 @@ A CBOR number object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        PeterO.ExtendedFloat bigValue);
+    PeterO.ExtendedFloat bigValue);
 
 
 Generates a CBOR object from an arbitrary-precision binary floating-point number.
@@ -3276,7 +3276,7 @@ A CBOR number object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        PeterO.ExtendedRational bigValue);
+    PeterO.ExtendedRational bigValue);
 
 
 Generates a CBOR object from a rational number.
@@ -3295,7 +3295,7 @@ A CBOR number object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        PeterO.ExtendedDecimal otherValue);
+    PeterO.ExtendedDecimal otherValue);
 
 
 Generates a CBOR object from a decimal number.
@@ -3314,7 +3314,7 @@ A CBOR number object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        string strValue);
+    string strValue);
 
 
 Generates a CBOR object from a string.
@@ -3339,7 +3339,7 @@ The string contains an unpaired surrogate code point.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        int value);
+    int value);
 
 
 Generates a CBOR object from a 32-bit signed integer.
@@ -3358,7 +3358,7 @@ A CBORObject object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        short value);
+    short value);
 
 
 Generates a CBOR object from a 16-bit signed integer.
@@ -3377,7 +3377,7 @@ A CBORObject object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        char value);
+    char value);
 
 
 Generates a CBOR string object from a Unicode character.
@@ -3403,7 +3403,7 @@ The parameter  <i>value</i>
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        bool value);
+    bool value);
 
 
 Returns the CBOR true value or false value, depending on "value".
@@ -3422,7 +3422,7 @@ CBORObject.True if value is true; otherwise CBORObject.False.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        byte value);
+    byte value);
 
 
 Generates a CBOR object from a byte (0 to 255).
@@ -3441,7 +3441,7 @@ A CBORObject object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        System.Single value);
+    float value);
 
 
 Generates a CBOR object from a 32-bit floating-point number.
@@ -3460,7 +3460,7 @@ A CBORObject object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        double value);
+    double value);
 
 
 Generates a CBOR object from a 64-bit floating-point number.
@@ -3479,7 +3479,7 @@ A CBORObject object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        byte[] bytes);
+    byte[] bytes);
 
 
 Generates a CBOR object from a byte array. The byte array is copied to a new byte array. (This method can't be used to decode CBOR data from a byte array; for that, use the DecodeFromBytes method instead.).
@@ -3498,7 +3498,7 @@ A CBOR byte string object where each byte of the given byte array is copied to a
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        PeterO.Cbor.CBORObject[] array);
+    PeterO.Cbor.CBORObject[] array);
 
 
 Generates a CBOR object from an array of CBOR objects.
@@ -3517,7 +3517,7 @@ A CBOR object where each element of the given array is copied to a new array, or
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        int[] array);
+    int[] array);
 
 
 Generates a CBOR object from an array of 32-bit integers.
@@ -3536,7 +3536,7 @@ A CBOR array object where each element of the given array is copied to a new arr
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        long[] array);
+    long[] array);
 
 
 Generates a CBOR object from an array of 64-bit integers.
@@ -3555,7 +3555,7 @@ A CBOR array object where each element of the given array is copied to a new arr
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject<T>(
-        System.Collections.Generic.IList<T> value);
+    System.Collections.Generic.IList<T> value);
 
 
 Generates a CBOR object from a list of objects.
@@ -3576,7 +3576,7 @@ A CBOR object where each element of the given array is converted to a CBOR objec
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject<T>(
-        System.Collections.Generic.IEnumerable<T> value);
+    System.Collections.Generic.IEnumerable<T> value);
 
 
 Generates a CBOR object from an enumerable set of objects.
@@ -3597,7 +3597,7 @@ A CBOR object where each element of the given enumerable object is converted to 
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject<TKey, TValue>(
-        System.Collections.Generic.IDictionary<TKey, TValue> dic);
+    System.Collections.Generic.IDictionary<TKey, TValue> dic);
 
 
 Generates a CBOR object from a map of objects.
@@ -3621,7 +3621,7 @@ A CBOR object where each key and value of the given map is converted to a CBOR o
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        object obj);
+    object obj);
 
 
 Generates a CBORObject from an arbitrary object. The following types are specially handled by this method:  `null` , primitive types, strings,  `CBORObject` ,  `ExtendedDecimal` ,  `ExtendedFloat` , the custom  `BigInteger` , lists, arrays, enumerations ( `Enum` objects), and maps.In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET  `Enum` objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.
@@ -3652,8 +3652,8 @@ The object's type is not supported.
 ### FromObjectAndTag
 
     public static PeterO.Cbor.CBORObject FromObjectAndTag(
-        object valueOb,
-        PeterO.BigInteger bigintTag);
+    object valueOb,
+    PeterO.BigInteger bigintTag);
 
 
 Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
@@ -3684,8 +3684,8 @@ The parameter  <i>bigintTag</i>
 ### FromObjectAndTag
 
     public static PeterO.Cbor.CBORObject FromObjectAndTag(
-        object valueObValue,
-        int smallTag);
+    object valueObValue,
+    int smallTag);
 
 
 Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
@@ -3826,8 +3826,8 @@ This object's value exceeds the range of a 64-bit unsigned integer.
 ### Write
 
     public static void Write(
-        sbyte value,
-        System.IO.Stream stream);
+    sbyte value,
+    System.IO.Stream stream);
 
 
 Writes an 8-bit signed integer in CBOR format to a data stream.
@@ -3843,8 +3843,8 @@ Writes an 8-bit signed integer in CBOR format to a data stream.
 ### Write
 
     public static void Write(
-        ulong value,
-        System.IO.Stream stream);
+    ulong value,
+    System.IO.Stream stream);
 
 
 Writes a 64-bit unsigned integer in CBOR format to a data stream.
@@ -3860,7 +3860,7 @@ Writes a 64-bit unsigned integer in CBOR format to a data stream.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        System.Decimal value);
+    System.Decimal value);
 
 
 Converts a .NET decimal to a CBOR object.
@@ -3879,8 +3879,8 @@ A CBORObject object with the same value as the .NET decimal.
 ### Write
 
     public static void Write(
-        uint value,
-        System.IO.Stream stream);
+    uint value,
+    System.IO.Stream stream);
 
 
 Writes a 32-bit unsigned integer in CBOR format to a data stream.
@@ -3896,8 +3896,8 @@ Writes a 32-bit unsigned integer in CBOR format to a data stream.
 ### Write
 
     public static void Write(
-        ushort value,
-        System.IO.Stream stream);
+    ushort value,
+    System.IO.Stream stream);
 
 
 Writes a 16-bit unsigned integer in CBOR format to a data stream.
@@ -3913,7 +3913,7 @@ Writes a 16-bit unsigned integer in CBOR format to a data stream.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        sbyte value);
+    sbyte value);
 
 
 Converts a signed 8-bit integer to a CBOR object.
@@ -3932,7 +3932,7 @@ A CBORObject object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        ulong value);
+    ulong value);
 
 
 Converts a 64-bit unsigned integer to a CBOR object.
@@ -3951,7 +3951,7 @@ A CBORObject object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        uint value);
+    uint value);
 
 
 Converts a 32-bit unsigned integer to a CBOR object.
@@ -3970,7 +3970,7 @@ A CBORObject object.
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject(
-        ushort value);
+    ushort value);
 
 
 Converts a 16-bit unsigned integer to a CBOR object.
@@ -3989,8 +3989,8 @@ A CBORObject object.
 ### FromObjectAndTag
 
     public static PeterO.Cbor.CBORObject FromObjectAndTag(
-        object o,
-        ulong tag);
+    object o,
+    ulong tag);
 
 
 Generates a CBOR object from an arbitrary object and gives the resulting object a tag.
@@ -4011,8 +4011,8 @@ A CBOR object where the object "valueOb" is converted to a CBOR object and given
 ### op_Addition
 
     public static PeterO.Cbor.CBORObject op_Addition(
-        PeterO.Cbor.CBORObject a,
-        PeterO.Cbor.CBORObject b);
+    PeterO.Cbor.CBORObject a,
+    PeterO.Cbor.CBORObject b);
 
 
 Adds a CBORObject object and a CBORObject object.
@@ -4033,8 +4033,8 @@ The sum of the two objects.
 ### op_Subtraction
 
     public static PeterO.Cbor.CBORObject op_Subtraction(
-        PeterO.Cbor.CBORObject a,
-        PeterO.Cbor.CBORObject b);
+    PeterO.Cbor.CBORObject a,
+    PeterO.Cbor.CBORObject b);
 
 
 Subtracts a CBORObject object from a CBORObject object.
@@ -4055,8 +4055,8 @@ The difference of the two objects.
 ### op_Multiply
 
     public static PeterO.Cbor.CBORObject op_Multiply(
-        PeterO.Cbor.CBORObject a,
-        PeterO.Cbor.CBORObject b);
+    PeterO.Cbor.CBORObject a,
+    PeterO.Cbor.CBORObject b);
 
 
 Multiplies a CBORObject object by the value of a CBORObject object.
@@ -4077,8 +4077,8 @@ The product of the two objects.
 ### op_Division
 
     public static PeterO.Cbor.CBORObject op_Division(
-        PeterO.Cbor.CBORObject a,
-        PeterO.Cbor.CBORObject b);
+    PeterO.Cbor.CBORObject a,
+    PeterO.Cbor.CBORObject b);
 
 
 Divides a CBORObject object by the value of a CBORObject object.
@@ -4099,8 +4099,8 @@ The quotient of the two objects.
 ### op_Modulus
 
     public static PeterO.Cbor.CBORObject op_Modulus(
-        PeterO.Cbor.CBORObject a,
-        PeterO.Cbor.CBORObject b);
+    PeterO.Cbor.CBORObject a,
+    PeterO.Cbor.CBORObject b);
 
 
 Finds the remainder that results when a CBORObject object is divided by the value of a CBORObject object.
@@ -4492,7 +4492,7 @@ A CBORTypeFilter object.
 ### WithTags
 
     public PeterO.Cbor.CBORTypeFilter WithTags(
-        params int[] tags);
+    params int[] tags);
 
 
 Not documented yet.
@@ -4511,7 +4511,7 @@ A CBORTypeFilter object.
 ### WithTags
 
     public PeterO.Cbor.CBORTypeFilter WithTags(
-        params PeterO.BigInteger[] tags);
+    params PeterO.BigInteger[] tags);
 
 
 Not documented yet.
@@ -4530,8 +4530,8 @@ A CBORTypeFilter object.
 ### WithArrayExactLength
 
     public PeterO.Cbor.CBORTypeFilter WithArrayExactLength(
-        int arrayLength,
-        params PeterO.Cbor.CBORTypeFilter[] elements);
+    int arrayLength,
+    params PeterO.Cbor.CBORTypeFilter[] elements);
 
 
 Copies this filter and includes CBOR arrays with an exact length to the new filter.
@@ -4566,8 +4566,8 @@ The parameter elements has fewer elements than specified in arrayLength.
 ### WithArrayMinLength
 
     public PeterO.Cbor.CBORTypeFilter WithArrayMinLength(
-        int arrayLength,
-        params PeterO.Cbor.CBORTypeFilter[] elements);
+    int arrayLength,
+    params PeterO.Cbor.CBORTypeFilter[] elements);
 
 
 Copies this filter and includes CBOR arrays with at least a given length to the new filter.
@@ -4628,7 +4628,7 @@ A CBORTypeFilter object.
 ### MajorTypeMatches
 
     public bool MajorTypeMatches(
-        int type);
+    int type);
 
 
 Not documented yet.
@@ -4647,7 +4647,7 @@ A Boolean object.
 ### ArrayLengthMatches
 
     public bool ArrayLengthMatches(
-        int length);
+    int length);
 
 
 Mented yet.
@@ -4666,7 +4666,7 @@ A Boolean object.
 ### ArrayLengthMatches
 
     public bool ArrayLengthMatches(
-        long length);
+    long length);
 
 
 Not documented yet.
@@ -4685,7 +4685,7 @@ A Boolean object.
 ### ArrayLengthMatches
 
     public bool ArrayLengthMatches(
-        PeterO.BigInteger bigLength);
+    PeterO.BigInteger bigLength);
 
 
 Not documented yet.
@@ -4704,7 +4704,7 @@ A Boolean object.
 ### TagAllowed
 
     public bool TagAllowed(
-        int tag);
+    int tag);
 
 
 Gets a value indicating whether CBOR objects can have the given tag number.
@@ -4723,7 +4723,7 @@ True if CBOR objects can have the given tag number; otherwise, false.
 ### TagAllowed
 
     public bool TagAllowed(
-        long tag);
+    long tag);
 
 
 Gets a value indicating whether CBOR objects can have the given tag number.
@@ -4742,7 +4742,7 @@ True if CBOR objects can have the given tag number; otherwise, false.
 ### TagAllowed
 
     public bool TagAllowed(
-        PeterO.BigInteger bigTag);
+    PeterO.BigInteger bigTag);
 
 
 Gets a value indicating whether CBOR objects can have the given tag number.
@@ -4761,7 +4761,7 @@ True if CBOR objects can have the given tag number; otherwise, false.
 ### ArrayIndexAllowed
 
     public bool ArrayIndexAllowed(
-        int index);
+    int index);
 
 
 Not documented yet.
@@ -4780,7 +4780,7 @@ A Boolean object.
 ### GetSubFilter
 
     public PeterO.Cbor.CBORTypeFilter GetSubFilter(
-        int index);
+    int index);
 
 
 Not documented yet.
@@ -4799,7 +4799,7 @@ A CBORTypeFilter object.
 ### GetSubFilter
 
     public PeterO.Cbor.CBORTypeFilter GetSubFilter(
-        long index);
+    long index);
 
 
 Not documented yet.
@@ -4889,7 +4889,7 @@ Interface implemented by classes that convert objects of arbitrary types to CBOR
 ### ToCBORObject
 
     public abstract virtual PeterO.Cbor.CBORObject ToCBORObject(
-        T obj);
+    T obj);
 
 
 Converts an object to a CBOR object.
@@ -4931,7 +4931,7 @@ A CBOR type filter.
 ### ValidateObject
 
     public abstract virtual PeterO.Cbor.CBORObject ValidateObject(
-        PeterO.Cbor.CBORObject obj);
+    PeterO.Cbor.CBORObject obj);
 
 
 Generates a CBOR object based on the data of another object. If the data is not valid, should throw a CBORException.
@@ -4960,8 +4960,8 @@ Contains methods useful for reading and writing strings. It is designed to have 
 ### GetUtf8String
 
     public static string GetUtf8String(
-        byte[] bytes,
-        bool replace);
+    byte[] bytes,
+    bool replace);
 
 
 Generates a text string from a UTF-8 byte array.
@@ -4994,10 +4994,10 @@ The string is not valid UTF-8 and  <i>replace</i>
 ### GetUtf8String
 
     public static string GetUtf8String(
-        byte[] bytes,
-        int offset,
-        int bytesCount,
-        bool replace);
+    byte[] bytes,
+    int offset,
+    int bytesCount,
+    bool replace);
 
 
 Generates a text string from a portion of a UTF-8 byte array.
@@ -5040,8 +5040,8 @@ is less than 0, or offset plus bytesCount is greater than the length of "data" .
 ### GetUtf8Bytes
 
     public static byte[] GetUtf8Bytes(
-        string str,
-        bool replace);
+    string str,
+    bool replace);
 
 
 Encodes a string in UTF-8 as a byte array.
@@ -5078,8 +5078,8 @@ The parameter "offset" is less than 0, "bytesCount" is less than 0, or offset pl
 ### GetUtf8Length
 
     public static long GetUtf8Length(
-        string str,
-        bool replace);
+    string str,
+    bool replace);
 
 
 Calculates the number of bytes needed to encode a string in UTF-8.
@@ -5108,8 +5108,8 @@ The parameter <i>str</i>
 ### CodePointBefore
 
     public static int CodePointBefore(
-        string str,
-        int index);
+    string str,
+    int index);
 
 
 Gets the Unicode code point just before the given index of the string.
@@ -5138,9 +5138,9 @@ The parameter <i>str</i>
 ### CodePointBefore
 
     public static int CodePointBefore(
-        string str,
-        int index,
-        int surrogateBehavior);
+    string str,
+    int index,
+    int surrogateBehavior);
 
 
 Gets the Unicode code point just before the given index of the string.
@@ -5172,8 +5172,8 @@ The parameter <i>str</i>
 ### CodePointAt
 
     public static int CodePointAt(
-        string str,
-        int index);
+    string str,
+    int index);
 
 
 Gets the Unicode code point at the given index of the string.
@@ -5202,9 +5202,9 @@ The parameter <i>str</i>
 ### CodePointAt
 
     public static int CodePointAt(
-        string str,
-        int index,
-        int surrogateBehavior);
+    string str,
+    int index,
+    int surrogateBehavior);
 
 
 Gets the Unicode code point at the given index of the string.
@@ -5236,7 +5236,7 @@ The parameter <i>str</i>
 ### ToLowerCaseAscii
 
     public static string ToLowerCaseAscii(
-        string str);
+    string str);
 
 
 Returns a string with upper-case ASCII letters (A to Z) converted to lower-case. Other characters remain unchanged.
@@ -5256,8 +5256,8 @@ is null.
 ### CodePointCompare
 
     public static int CodePointCompare(
-        string strA,
-        string strB);
+    string strA,
+    string strB);
 
 
 Compares two strings in Unicode code point order. Unpaired surrogates are treated as individual code points.
@@ -5278,11 +5278,11 @@ A value indicating which string is " less" or " greater" . 0: Both strings are e
 ### WriteUtf8
 
     public static int WriteUtf8(
-        string str,
-        int offset,
-        int length,
-        System.IO.Stream stream,
-        bool replace);
+    string str,
+    int offset,
+    int length,
+    System.IO.Stream stream,
+    bool replace);
 
 
 Writes a portion of a string in UTF-8 encoding to a data stream.
@@ -5330,12 +5330,12 @@ An I/O error occurred.
 ### WriteUtf8
 
     public static int WriteUtf8(
-        string str,
-        int offset,
-        int length,
-        System.IO.Stream stream,
-        bool replace,
-        bool lenientLineBreaks);
+    string str,
+    int offset,
+    int length,
+    System.IO.Stream stream,
+    bool replace,
+    bool lenientLineBreaks);
 
 
 Writes a portion of a string in UTF-8 encoding to a data stream.
@@ -5385,9 +5385,9 @@ An I/O error occurred.
 ### WriteUtf8
 
     public static int WriteUtf8(
-        string str,
-        System.IO.Stream stream,
-        bool replace);
+    string str,
+    System.IO.Stream stream,
+    bool replace);
 
 
 Writes a string in UTF-8 encoding to a data stream.
@@ -5423,11 +5423,11 @@ An I/O error occurred.
 ### ReadUtf8FromBytes
 
     public static int ReadUtf8FromBytes(
-        byte[] data,
-        int offset,
-        int bytesCount,
-        System.Text.StringBuilder builder,
-        bool replace);
+    byte[] data,
+    int offset,
+    int bytesCount,
+    System.Text.StringBuilder builder,
+    bool replace);
 
 
 Reads a string in UTF-8 encoding from a byte array.
@@ -5470,7 +5470,7 @@ is less than 0, or offset plus bytesCount is greater than the length of  <i>data
 ### ReadUtf8ToString
 
     public static string ReadUtf8ToString(
-        System.IO.Stream stream);
+    System.IO.Stream stream);
 
 
 Reads a string in UTF-8 encoding from a data stream in full and returns that string. Replaces invalid encoding with the replacement character (U + FFFD).
@@ -5500,9 +5500,9 @@ The parameter <i>stream</i>
 ### ReadUtf8ToString
 
     public static string ReadUtf8ToString(
-        System.IO.Stream stream,
-        int bytesCount,
-        bool replace);
+    System.IO.Stream stream,
+    int bytesCount,
+    bool replace);
 
 
 Reads a string in UTF-8 encoding from a data stream and returns that string.
@@ -5537,10 +5537,10 @@ The parameter <i>stream</i>
 ### ReadUtf8
 
     public static int ReadUtf8(
-        System.IO.Stream stream,
-        int bytesCount,
-        System.Text.StringBuilder builder,
-        bool replace);
+    System.IO.Stream stream,
+    int bytesCount,
+    System.Text.StringBuilder builder,
+    bool replace);
 
 
 Reads a string in UTF-8 encoding from a data stream.
@@ -5627,7 +5627,7 @@ An ExtendedDecimal value can be serialized in one of the following ways:
 ### Equals
 
     public sealed bool Equals(
-        PeterO.ExtendedDecimal other);
+    PeterO.ExtendedDecimal other);
 
 
 Determines whether this object's mantissa and exponent are equal to those of another object.
@@ -5646,7 +5646,7 @@ True if this object's mantissa and exponent are equal to those of another object
 ### Equals
 
     public override bool Equals(
-        object obj);
+    object obj);
 
 
 Determines whether this object's mantissa and exponent are equal to those of another object and that other object is a decimal fraction.
@@ -5678,8 +5678,8 @@ This object's hash code.
 ### Create
 
     public static PeterO.ExtendedDecimal Create(
-        int mantissaSmall,
-        int exponentSmall);
+    int mantissaSmall,
+    int exponentSmall);
 
 
 Creates a decimal number with the value exponent*10^mantissa.
@@ -5700,7 +5700,7 @@ An ExtendedDecimal object.
 ### CreateNaN
 
     public static PeterO.ExtendedDecimal CreateNaN(
-        PeterO.BigInteger diag);
+    PeterO.BigInteger diag);
 
 
 Not documented yet.
@@ -5719,10 +5719,10 @@ An ExtendedDecimal object.
 ### CreateNaN
 
     public static PeterO.ExtendedDecimal CreateNaN(
-        PeterO.BigInteger diag,
-        bool signaling,
-        bool negative,
-        PeterO.PrecisionContext ctx);
+    PeterO.BigInteger diag,
+    bool signaling,
+    bool negative,
+    PeterO.PrecisionContext ctx);
 
 
 Not documented yet.
@@ -5747,8 +5747,8 @@ An ExtendedDecimal object.
 ### Create
 
     public static PeterO.ExtendedDecimal Create(
-        PeterO.BigInteger mantissa,
-        PeterO.BigInteger exponent);
+    PeterO.BigInteger mantissa,
+    PeterO.BigInteger exponent);
 
 
 Creates a decimal number with the value exponent*10^mantissa.
@@ -5769,7 +5769,7 @@ An ExtendedDecimal object.
 ### FromString
 
     public static PeterO.ExtendedDecimal FromString(
-        string str);
+    string str);
 
 
 Creates a decimal number from a string that represents a number. See FromString(String, PrecisionContext) for more information.
@@ -5800,8 +5800,8 @@ is not a correctly formatted number string.
 ### FromString
 
     public static PeterO.ExtendedDecimal FromString(
-        string str,
-        PeterO.PrecisionContext ctx);
+    string str,
+    PeterO.PrecisionContext ctx);
 
 
 Creates a decimal number from a string that represents a number. The format of the string generally consists of:
@@ -5855,7 +5855,7 @@ is not a correctly formatted number string.
 ### CompareToBinary
 
     public int CompareToBinary(
-        PeterO.ExtendedFloat other);
+    PeterO.ExtendedFloat other);
 
 
 Compares a ExtendedFloat object with this instance.
@@ -5905,7 +5905,7 @@ An ExtendedFloat object.
 
 ### ToSingle
 
-    public System.Single ToSingle();
+    public float ToSingle();
 
 
 Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa. 
@@ -5938,7 +5938,7 @@ The closest 64-bit floating-point number to this value. The return value can be 
 ### FromSingle
 
     public static PeterO.ExtendedDecimal FromSingle(
-        System.Single flt);
+    float flt);
 
 
 Creates a decimal number from a 32-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the number to a string.
@@ -5958,7 +5958,7 @@ A decimal number with the same value as  <i>flt</i>
 ### FromBigInteger
 
     public static PeterO.ExtendedDecimal FromBigInteger(
-        PeterO.BigInteger bigint);
+    PeterO.BigInteger bigint);
 
 
 Converts a big integer to an arbitrary precision decimal.
@@ -5977,7 +5977,7 @@ An ExtendedDecimal object with the exponent set to 0.
 ### FromInt64
 
     public static PeterO.ExtendedDecimal FromInt64(
-        long valueSmall);
+    long valueSmall);
 
 
 Creates a decimal number from a 64-bit signed integer.
@@ -5996,7 +5996,7 @@ An ExtendedDecimal object with the exponent set to 0.
 ### FromInt32
 
     public static PeterO.ExtendedDecimal FromInt32(
-        int valueSmaller);
+    int valueSmaller);
 
 
 Creates a decimal number from a 32-bit signed integer.
@@ -6015,7 +6015,7 @@ An ExtendedDecimal object.
 ### FromDouble
 
     public static PeterO.ExtendedDecimal FromDouble(
-        double dbl);
+    double dbl);
 
 
 Creates a decimal number from a 64-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the number to a string.
@@ -6035,7 +6035,7 @@ A decimal number with the same value as  <i>dbl</i>
 ### FromExtendedFloat
 
     public static PeterO.ExtendedDecimal FromExtendedFloat(
-        PeterO.ExtendedFloat bigfloat);
+    PeterO.ExtendedFloat bigfloat);
 
 
 Creates a decimal number from an arbitrary-precision binary floating-point number.
@@ -6261,7 +6261,7 @@ An ExtendedDecimal object.
 ### Divide
 
     public PeterO.ExtendedDecimal Divide(
-        PeterO.ExtendedDecimal divisor);
+    PeterO.ExtendedDecimal divisor);
 
 
 Divides this object by another decimal number and returns the result. When possible, the result will be exact.
@@ -6280,8 +6280,8 @@ The quotient of the two numbers. Signals FlagDivideByZero and returns infinity i
 ### DivideToSameExponent
 
     public PeterO.ExtendedDecimal DivideToSameExponent(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.Rounding rounding);
+    PeterO.ExtendedDecimal divisor,
+    PeterO.Rounding rounding);
 
 
 Divides this object by another decimal number and returns a result with the same exponent as this object (the dividend).
@@ -6302,7 +6302,7 @@ The quotient of the two numbers. Signals FlagDivideByZero and returns infinity i
 ### DivideToIntegerNaturalScale
 
     public PeterO.ExtendedDecimal DivideToIntegerNaturalScale(
-        PeterO.ExtendedDecimal divisor);
+    PeterO.ExtendedDecimal divisor);
 
 
 Divides two ExtendedDecimal objects, and returns the integer part of the result, rounded down, with the preferred exponent set to this value's exponent minus the divisor's exponent.
@@ -6321,7 +6321,7 @@ The integer part of the quotient of the two objects. Signals FlagDivideByZero an
 ### Reduce
 
     public PeterO.ExtendedDecimal Reduce(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1.
@@ -6340,7 +6340,7 @@ This value with trailing zeros removed. Note that if the result has a very high 
 ### RemainderNaturalScale
 
     public PeterO.ExtendedDecimal RemainderNaturalScale(
-        PeterO.ExtendedDecimal divisor);
+    PeterO.ExtendedDecimal divisor);
 
 
 Not documented yet.
@@ -6359,8 +6359,8 @@ An ExtendedDecimal object.
 ### RemainderNaturalScale
 
     public PeterO.ExtendedDecimal RemainderNaturalScale(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal divisor,
+    PeterO.PrecisionContext ctx);
 
 
 Not documented yet.
@@ -6381,9 +6381,9 @@ An ExtendedDecimal object.
 ### DivideToExponent
 
     public PeterO.ExtendedDecimal DivideToExponent(
-        PeterO.ExtendedDecimal divisor,
-        long desiredExponentSmall,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal divisor,
+    long desiredExponentSmall,
+    PeterO.PrecisionContext ctx);
 
 
 Divides two ExtendedDecimal objects, and gives a particular exponent to the result.
@@ -6406,8 +6406,8 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 ### Divide
 
     public PeterO.ExtendedDecimal Divide(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal divisor,
+    PeterO.PrecisionContext ctx);
 
 
 Divides this ExtendedDecimal object by another ExtendedDecimal object. The preferred exponent for the result is this object's exponent minus the divisor's exponent.
@@ -6430,9 +6430,9 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 ### DivideToExponent
 
     public PeterO.ExtendedDecimal DivideToExponent(
-        PeterO.ExtendedDecimal divisor,
-        long desiredExponentSmall,
-        PeterO.Rounding rounding);
+    PeterO.ExtendedDecimal divisor,
+    long desiredExponentSmall,
+    PeterO.Rounding rounding);
 
 
 Divides two ExtendedDecimal objects, and gives a particular exponent to the result.
@@ -6455,9 +6455,9 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 ### DivideToExponent
 
     public PeterO.ExtendedDecimal DivideToExponent(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.BigInteger exponent,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal divisor,
+    PeterO.BigInteger exponent,
+    PeterO.PrecisionContext ctx);
 
 
 Divides two ExtendedDecimal objects, and gives a particular exponent to the result.
@@ -6480,9 +6480,9 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 ### DivideToExponent
 
     public PeterO.ExtendedDecimal DivideToExponent(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.BigInteger desiredExponent,
-        PeterO.Rounding rounding);
+    PeterO.ExtendedDecimal divisor,
+    PeterO.BigInteger desiredExponent,
+    PeterO.Rounding rounding);
 
 
 Divides two ExtendedDecimal objects, and gives a particular exponent to the result.
@@ -6505,7 +6505,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 ### Abs
 
     public PeterO.ExtendedDecimal Abs(
-        PeterO.PrecisionContext context);
+    PeterO.PrecisionContext context);
 
 
 Finds the absolute value of this object (if it's negative, it becomes positive).
@@ -6524,7 +6524,7 @@ The absolute value of this object.
 ### Negate
 
     public PeterO.ExtendedDecimal Negate(
-        PeterO.PrecisionContext context);
+    PeterO.PrecisionContext context);
 
 
 Returns a decimal number with the same value as this object but with the sign reversed.
@@ -6543,7 +6543,7 @@ An ExtendedDecimal object.
 ### Add
 
     public PeterO.ExtendedDecimal Add(
-        PeterO.ExtendedDecimal otherValue);
+    PeterO.ExtendedDecimal otherValue);
 
 
 Adds this object and another decimal number and returns the result.
@@ -6562,7 +6562,7 @@ The sum of the two objects.
 ### Subtract
 
     public PeterO.ExtendedDecimal Subtract(
-        PeterO.ExtendedDecimal otherValue);
+    PeterO.ExtendedDecimal otherValue);
 
 
 Subtracts an ExtendedDecimal object from this instance and returns the result.
@@ -6581,8 +6581,8 @@ The difference of the two objects.
 ### Subtract
 
     public PeterO.ExtendedDecimal Subtract(
-        PeterO.ExtendedDecimal otherValue,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal otherValue,
+    PeterO.PrecisionContext ctx);
 
 
 Subtracts an ExtendedDecimal object from this instance.
@@ -6603,7 +6603,7 @@ The difference of the two objects.
 ### Multiply
 
     public PeterO.ExtendedDecimal Multiply(
-        PeterO.ExtendedDecimal otherValue);
+    PeterO.ExtendedDecimal otherValue);
 
 
 Multiplies two decimal numbers. The resulting exponent will be the sum of the exponents of the two decimal numbers.
@@ -6622,8 +6622,8 @@ The product of the two decimal numbers.
 ### MultiplyAndAdd
 
     public PeterO.ExtendedDecimal MultiplyAndAdd(
-        PeterO.ExtendedDecimal multiplicand,
-        PeterO.ExtendedDecimal augend);
+    PeterO.ExtendedDecimal multiplicand,
+    PeterO.ExtendedDecimal augend);
 
 
 Multiplies by one decimal number, and then adds another decimal number.
@@ -6646,8 +6646,8 @@ The result this *  <i>multiplicand</i>
 ### DivideToIntegerNaturalScale
 
     public PeterO.ExtendedDecimal DivideToIntegerNaturalScale(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal divisor,
+    PeterO.PrecisionContext ctx);
 
 
 Divides this object by another object, and returns the integer part of the result, with the preferred exponent set to this value's exponent minus the divisor's exponent.
@@ -6668,8 +6668,8 @@ The integer part of the quotient of the two objects. Signals FlagInvalid and ret
 ### DivideToIntegerZeroScale
 
     public PeterO.ExtendedDecimal DivideToIntegerZeroScale(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal divisor,
+    PeterO.PrecisionContext ctx);
 
 
 Divides this object by another object, and returns the integer part of the result, with the exponent set to 0.
@@ -6690,8 +6690,8 @@ The integer part of the quotient of the two objects. The exponent will be set to
 ### Remainder
 
     public PeterO.ExtendedDecimal Remainder(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal divisor,
+    PeterO.PrecisionContext ctx);
 
 
 Finds the remainder that results when dividing two ExtendedDecimal objects.
@@ -6712,8 +6712,8 @@ The remainder of the two objects.
 ### RemainderNear
 
     public PeterO.ExtendedDecimal RemainderNear(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal divisor,
+    PeterO.PrecisionContext ctx);
 
 
 Finds the distance to the closest multiple of the given divisor, based on the result of dividing this object's value by another object's value.
@@ -6749,7 +6749,7 @@ The distance of the closest multiple. Signals FlagInvalid and returns NaN if the
 ### NextMinus
 
     public PeterO.ExtendedDecimal NextMinus(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds the largest value that's smaller than the given value.
@@ -6770,7 +6770,7 @@ is null, the precision is 0, or  <i>ctx</i>
 ### NextPlus
 
     public PeterO.ExtendedDecimal NextPlus(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds the smallest value that's greater than the given value.
@@ -6791,8 +6791,8 @@ has an unlimited exponent range.
 ### NextToward
 
     public PeterO.ExtendedDecimal NextToward(
-        PeterO.ExtendedDecimal otherValue,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal otherValue,
+    PeterO.PrecisionContext ctx);
 
 
 Finds the next value that is closer to the other object's value than this object's value.
@@ -6815,9 +6815,9 @@ Returns the next value that is closer to the other object' s value than this obj
 ### Max
 
     public static PeterO.ExtendedDecimal Max(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal first,
+    PeterO.ExtendedDecimal second,
+    PeterO.PrecisionContext ctx);
 
 
 Gets the greater value between two decimal numbers.
@@ -6840,9 +6840,9 @@ The larger value of the two objects.
 ### Min
 
     public static PeterO.ExtendedDecimal Min(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal first,
+    PeterO.ExtendedDecimal second,
+    PeterO.PrecisionContext ctx);
 
 
 Gets the lesser value between two decimal numbers.
@@ -6865,9 +6865,9 @@ The smaller value of the two objects.
 ### MaxMagnitude
 
     public static PeterO.ExtendedDecimal MaxMagnitude(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal first,
+    PeterO.ExtendedDecimal second,
+    PeterO.PrecisionContext ctx);
 
 
 Gets the greater value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Max.
@@ -6890,9 +6890,9 @@ An ExtendedDecimal object.
 ### MinMagnitude
 
     public static PeterO.ExtendedDecimal MinMagnitude(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal first,
+    PeterO.ExtendedDecimal second,
+    PeterO.PrecisionContext ctx);
 
 
 Gets the lesser value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Min.
@@ -6915,8 +6915,8 @@ An ExtendedDecimal object.
 ### Max
 
     public static PeterO.ExtendedDecimal Max(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second);
+    PeterO.ExtendedDecimal first,
+    PeterO.ExtendedDecimal second);
 
 
 Gets the greater value between two decimal numbers.
@@ -6937,8 +6937,8 @@ The larger value of the two objects.
 ### Min
 
     public static PeterO.ExtendedDecimal Min(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second);
+    PeterO.ExtendedDecimal first,
+    PeterO.ExtendedDecimal second);
 
 
 Gets the lesser value between two decimal numbers.
@@ -6959,8 +6959,8 @@ The smaller value of the two objects.
 ### MaxMagnitude
 
     public static PeterO.ExtendedDecimal MaxMagnitude(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second);
+    PeterO.ExtendedDecimal first,
+    PeterO.ExtendedDecimal second);
 
 
 Gets the greater value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Max.
@@ -6981,8 +6981,8 @@ An ExtendedDecimal object.
 ### MinMagnitude
 
     public static PeterO.ExtendedDecimal MinMagnitude(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second);
+    PeterO.ExtendedDecimal first,
+    PeterO.ExtendedDecimal second);
 
 
 Gets the lesser value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Min.
@@ -7003,7 +7003,7 @@ An ExtendedDecimal object.
 ### CompareTo
 
     public sealed int CompareTo(
-        PeterO.ExtendedDecimal other);
+    PeterO.ExtendedDecimal other);
 
 
 Compares the mathematical values of this object and another object, accepting NaN values. This method is not consistent with the Equals method because two different numbers with the same mathematical value, but different exponents, will compare as equal.
@@ -7032,8 +7032,8 @@ Less than 0 if this object's value is less than the other value, or greater than
 ### CompareToWithContext
 
     public PeterO.ExtendedDecimal CompareToWithContext(
-        PeterO.ExtendedDecimal other,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal other,
+    PeterO.PrecisionContext ctx);
 
 
 Compares the mathematical values of this object and another object.In this method, negative zero and positive zero are considered equal.
@@ -7060,8 +7060,8 @@ Quiet NaN if this object or the other object is NaN, or 0 if both objects have t
 ### CompareToSignal
 
     public PeterO.ExtendedDecimal CompareToSignal(
-        PeterO.ExtendedDecimal other,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal other,
+    PeterO.PrecisionContext ctx);
 
 
 Compares the mathematical values of this object and another object, treating quiet NaN as signaling.In this method, negative zero and positive zero are considered equal.
@@ -7088,8 +7088,8 @@ Quiet NaN if this object or the other object is NaN, or 0 if both objects have t
 ### Add
 
     public PeterO.ExtendedDecimal Add(
-        PeterO.ExtendedDecimal otherValue,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal otherValue,
+    PeterO.PrecisionContext ctx);
 
 
 Finds the sum of this object and another object. The result's exponent is set to the lower of the exponents of the two operands.
@@ -7110,8 +7110,8 @@ The sum of thisValue and the other object.
 ### Quantize
 
     public PeterO.ExtendedDecimal Quantize(
-        PeterO.BigInteger desiredExponent,
-        PeterO.PrecisionContext ctx);
+    PeterO.BigInteger desiredExponent,
+    PeterO.PrecisionContext ctx);
 
 
 Returns a decimal number with the same value but a new exponent.Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
@@ -7135,8 +7135,8 @@ A decimal number with the same value as this object but with the exponent change
 ### Quantize
 
     public PeterO.ExtendedDecimal Quantize(
-        int desiredExponentSmall,
-        PeterO.Rounding rounding);
+    int desiredExponentSmall,
+    PeterO.Rounding rounding);
 
 
 Returns a decimal number with the same value as this one but a new exponent.
@@ -7157,8 +7157,8 @@ A decimal number with the same value as this object but with the exponent change
 ### Quantize
 
     public PeterO.ExtendedDecimal Quantize(
-        int desiredExponentSmall,
-        PeterO.PrecisionContext ctx);
+    int desiredExponentSmall,
+    PeterO.PrecisionContext ctx);
 
 
 Returns a decimal number with the same value but a new exponent.Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
@@ -7182,8 +7182,8 @@ A decimal number with the same value as this object but with the exponent change
 ### Quantize
 
     public PeterO.ExtendedDecimal Quantize(
-        PeterO.ExtendedDecimal otherValue,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal otherValue,
+    PeterO.PrecisionContext ctx);
 
 
 Returns a decimal number with the same value as this object but with the same exponent as another decimal number.
@@ -7204,7 +7204,7 @@ A decimal number with the same value as this object but with the exponent change
 ### RoundToIntegralExact
 
     public PeterO.ExtendedDecimal RoundToIntegralExact(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Returns a decimal number with the same value as this object but rounded to an integer.
@@ -7223,7 +7223,7 @@ A decimal number with the same value as this object but rounded to an integer. S
 ### RoundToIntegralNoRoundedFlag
 
     public PeterO.ExtendedDecimal RoundToIntegralNoRoundedFlag(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Returns a decimal number with the same value as this object but rounded to an integer, without adding the FlagInexact or FlagRounded flags.
@@ -7242,8 +7242,8 @@ A decimal number with the same value as this object but rounded to an integer. S
 ### RoundToExponentExact
 
     public PeterO.ExtendedDecimal RoundToExponentExact(
-        PeterO.BigInteger exponent,
-        PeterO.PrecisionContext ctx);
+    PeterO.BigInteger exponent,
+    PeterO.PrecisionContext ctx);
 
 
 Returns a decimal number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
@@ -7264,8 +7264,8 @@ A decimal number with the same value as this object but rounded to an integer. S
 ### RoundToExponent
 
     public PeterO.ExtendedDecimal RoundToExponent(
-        PeterO.BigInteger exponent,
-        PeterO.PrecisionContext ctx);
+    PeterO.BigInteger exponent,
+    PeterO.PrecisionContext ctx);
 
 
 Returns a decimal number with the same value as this object, and rounds it to a new exponent if necessary.
@@ -7286,8 +7286,8 @@ A decimal number rounded to the closest value representable in the given precisi
 ### RoundToExponentExact
 
     public PeterO.ExtendedDecimal RoundToExponentExact(
-        int exponentSmall,
-        PeterO.PrecisionContext ctx);
+    int exponentSmall,
+    PeterO.PrecisionContext ctx);
 
 
 Returns a decimal number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
@@ -7308,8 +7308,8 @@ A decimal number with the same value as this object but rounded to an integer. S
 ### RoundToExponent
 
     public PeterO.ExtendedDecimal RoundToExponent(
-        int exponentSmall,
-        PeterO.PrecisionContext ctx);
+    int exponentSmall,
+    PeterO.PrecisionContext ctx);
 
 
 Returns a decimal number with the same value as this object, and rounds it to a new exponent if necessary.
@@ -7330,8 +7330,8 @@ A decimal number rounded to the closest value representable in the given precisi
 ### Multiply
 
     public PeterO.ExtendedDecimal Multiply(
-        PeterO.ExtendedDecimal op,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal op,
+    PeterO.PrecisionContext ctx);
 
 
 Multiplies two decimal numbers. The resulting scale will be the sum of the scales of the two decimal numbers. The result's sign is positive if both operands have the same sign, and negative if they have different signs.
@@ -7352,9 +7352,9 @@ The product of the two decimal numbers.
 ### MultiplyAndAdd
 
     public PeterO.ExtendedDecimal MultiplyAndAdd(
-        PeterO.ExtendedDecimal op,
-        PeterO.ExtendedDecimal augend,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal op,
+    PeterO.ExtendedDecimal augend,
+    PeterO.PrecisionContext ctx);
 
 
 Multiplies by one value, and then adds another value.
@@ -7377,9 +7377,9 @@ The result thisValue * multiplicand + augend.
 ### MultiplyAndSubtract
 
     public PeterO.ExtendedDecimal MultiplyAndSubtract(
-        PeterO.ExtendedDecimal op,
-        PeterO.ExtendedDecimal subtrahend,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal op,
+    PeterO.ExtendedDecimal subtrahend,
+    PeterO.PrecisionContext ctx);
 
 
 Multiplies by one value, and then subtracts another value.
@@ -7402,7 +7402,7 @@ The result thisValue * multiplicand - subtrahend.
 ### RoundToPrecision
 
     public PeterO.ExtendedDecimal RoundToPrecision(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Rounds this object's value to a given precision, using the given rounding mode and range of exponent.
@@ -7422,7 +7422,7 @@ The closest value to this object's value, rounded to the specified precision. Re
 ### Plus
 
     public PeterO.ExtendedDecimal Plus(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Rounds this object's value to a given precision, using the given rounding mode and range of exponent, and also converts negative zero to positive zero.
@@ -7442,7 +7442,7 @@ The closest value to this object's value, rounded to the specified precision. Re
 ### RoundToBinaryPrecision
 
     public PeterO.ExtendedDecimal RoundToBinaryPrecision(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Rounds this object's value to a given maximum bit length, using the given rounding mode and range of exponent.
@@ -7462,7 +7462,7 @@ The closest value to this object's value, rounded to the specified precision. Re
 ### SquareRoot
 
     public PeterO.ExtendedDecimal SquareRoot(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds the square root of this object's value.
@@ -7482,7 +7482,7 @@ The square root. Signals the flag FlagInvalid and returns NaN if this object is 
 ### Exp
 
     public PeterO.ExtendedDecimal Exp(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds e (the base of natural logarithms) raised to the power of this object's value.
@@ -7502,7 +7502,7 @@ is null or the precision is unlimited (the context's Precision property is 0).
 ### Log
 
     public PeterO.ExtendedDecimal Log(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds the natural logarithm of this object, that is, the power (exponent) that e (the base of natural logarithms) must be raised to in order to equal this object's value.
@@ -7522,7 +7522,7 @@ Ln(this object). Signals the flag FlagInvalid and returns NaN if this object is 
 ### Log10
 
     public PeterO.ExtendedDecimal Log10(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds the base-10 logarithm of this object, that is, the power (exponent) that the number 10 must be raised to in order to equal this object's value.
@@ -7542,8 +7542,8 @@ Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns NaN if this obj
 ### Pow
 
     public PeterO.ExtendedDecimal Pow(
-        PeterO.ExtendedDecimal exponent,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedDecimal exponent,
+    PeterO.PrecisionContext ctx);
 
 
 Raises this object's value to the given exponent.
@@ -7565,8 +7565,8 @@ is null or the precision is unlimited (the context's Precision property is 0), a
 ### Pow
 
     public PeterO.ExtendedDecimal Pow(
-        int exponentSmall,
-        PeterO.PrecisionContext ctx);
+    int exponentSmall,
+    PeterO.PrecisionContext ctx);
 
 
 Raises this object's value to the given exponent.
@@ -7587,7 +7587,7 @@ This^exponent. Signals the flag FlagInvalid and returns NaN if this object and e
 ### Pow
 
     public PeterO.ExtendedDecimal Pow(
-        int exponentSmall);
+    int exponentSmall);
 
 
 Raises this object's value to the given exponent.
@@ -7606,7 +7606,7 @@ This^exponent. Returns NaN if this object and exponent are both 0.
 ### PI
 
     public static PeterO.ExtendedDecimal PI(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds the constant pi.
@@ -7753,7 +7753,7 @@ An ExtendedFloat value can be serialized in one of the following ways:
 ### EqualsInternal
 
     public bool EqualsInternal(
-        PeterO.ExtendedFloat otherValue);
+    PeterO.ExtendedFloat otherValue);
 
 
 Determines whether this object's mantissa and exponent are equal to those of another object.
@@ -7772,7 +7772,7 @@ True if this object's mantissa and exponent are equal to those of another object
 ### Equals
 
     public sealed bool Equals(
-        PeterO.ExtendedFloat other);
+    PeterO.ExtendedFloat other);
 
 
 Not documented yet.
@@ -7791,7 +7791,7 @@ A Boolean object.
 ### Equals
 
     public override bool Equals(
-        object obj);
+    object obj);
 
 
 Determines whether this object's mantissa and exponent are equal to those of another object and that other object is a decimal fraction.
@@ -7823,7 +7823,7 @@ This object's hash code.
 ### CreateNaN
 
     public static PeterO.ExtendedFloat CreateNaN(
-        PeterO.BigInteger diag);
+    PeterO.BigInteger diag);
 
 
 Not documented yet.
@@ -7842,10 +7842,10 @@ An ExtendedFloat object.
 ### CreateNaN
 
     public static PeterO.ExtendedFloat CreateNaN(
-        PeterO.BigInteger diag,
-        bool signaling,
-        bool negative,
-        PeterO.PrecisionContext ctx);
+    PeterO.BigInteger diag,
+    bool signaling,
+    bool negative,
+    PeterO.PrecisionContext ctx);
 
 
 Not documented yet.
@@ -7870,8 +7870,8 @@ An ExtendedFloat object.
 ### Create
 
     public static PeterO.ExtendedFloat Create(
-        int mantissaSmall,
-        int exponentSmall);
+    int mantissaSmall,
+    int exponentSmall);
 
 
 Creates a number with the value exponent*2^mantissa.
@@ -7892,8 +7892,8 @@ An ExtendedFloat object.
 ### Create
 
     public static PeterO.ExtendedFloat Create(
-        PeterO.BigInteger mantissa,
-        PeterO.BigInteger exponent);
+    PeterO.BigInteger mantissa,
+    PeterO.BigInteger exponent);
 
 
 Creates a number with the value exponent*2^mantissa.
@@ -7914,8 +7914,8 @@ An ExtendedFloat object.
 ### FromString
 
     public static PeterO.ExtendedFloat FromString(
-        string str,
-        PeterO.PrecisionContext ctx);
+    string str,
+    PeterO.PrecisionContext ctx);
 
 
 Creates a binary float from a string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double). The format of the string generally consists of:
@@ -7957,7 +7957,7 @@ An ExtendedFloat object.
 ### FromString
 
     public static PeterO.ExtendedFloat FromString(
-        string str);
+    string str);
 
 
 Not documented yet.
@@ -7994,7 +7994,7 @@ This object's value is infinity or NaN.
 
 ### ToSingle
 
-    public System.Single ToSingle();
+    public float ToSingle();
 
 
 Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa. 
@@ -8027,7 +8027,7 @@ The closest 64-bit floating-point number to this value. The return value can be 
 ### FromSingle
 
     public static PeterO.ExtendedFloat FromSingle(
-        System.Single flt);
+    float flt);
 
 
 Creates a binary float from a 32-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the number to a string.
@@ -8047,7 +8047,7 @@ A binary float with the same value as  <i>flt</i>
 ### FromBigInteger
 
     public static PeterO.ExtendedFloat FromBigInteger(
-        PeterO.BigInteger bigint);
+    PeterO.BigInteger bigint);
 
 
 Not documented yet.
@@ -8066,7 +8066,7 @@ An ExtendedFloat object.
 ### FromInt64
 
     public static PeterO.ExtendedFloat FromInt64(
-        long valueSmall);
+    long valueSmall);
 
 
 Not documented yet.
@@ -8085,7 +8085,7 @@ An ExtendedFloat object.
 ### FromInt32
 
     public static PeterO.ExtendedFloat FromInt32(
-        int valueSmaller);
+    int valueSmaller);
 
 
 Creates a binary float from a 32-bit signed integer.
@@ -8104,7 +8104,7 @@ An ExtendedDecimal object.
 ### FromDouble
 
     public static PeterO.ExtendedFloat FromDouble(
-        double dbl);
+    double dbl);
 
 
 Creates a binary float from a 64-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the number to a string.
@@ -8344,7 +8344,7 @@ An ExtendedFloat object.
 ### Divide
 
     public PeterO.ExtendedFloat Divide(
-        PeterO.ExtendedFloat divisor);
+    PeterO.ExtendedFloat divisor);
 
 
 Divides this object by another binary float and returns the result. When possible, the result will be exact.
@@ -8369,8 +8369,8 @@ The result can't be exact because it would have a nonterminating binary expansio
 ### DivideToSameExponent
 
     public PeterO.ExtendedFloat DivideToSameExponent(
-        PeterO.ExtendedFloat divisor,
-        PeterO.Rounding rounding);
+    PeterO.ExtendedFloat divisor,
+    PeterO.Rounding rounding);
 
 
 Divides this object by another binary float and returns a result with the same exponent as this object (the dividend).
@@ -8397,7 +8397,7 @@ The rounding mode is Rounding.Unnecessary and the result is not exact.
 ### DivideToIntegerNaturalScale
 
     public PeterO.ExtendedFloat DivideToIntegerNaturalScale(
-        PeterO.ExtendedFloat divisor);
+    PeterO.ExtendedFloat divisor);
 
 
 Divides two ExtendedFloat objects, and returns the integer part of the result, rounded down, with the preferred exponent set to this value's exponent minus the divisor's exponent.
@@ -8416,7 +8416,7 @@ The integer part of the quotient of the two objects. Signals FlagDivideByZero an
 ### Reduce
 
     public PeterO.ExtendedFloat Reduce(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1.
@@ -8435,7 +8435,7 @@ This value with trailing zeros removed. Note that if the result has a very high 
 ### RemainderNaturalScale
 
     public PeterO.ExtendedFloat RemainderNaturalScale(
-        PeterO.ExtendedFloat divisor);
+    PeterO.ExtendedFloat divisor);
 
 
 Not documented yet.
@@ -8454,8 +8454,8 @@ An ExtendedFloat object.
 ### RemainderNaturalScale
 
     public PeterO.ExtendedFloat RemainderNaturalScale(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat divisor,
+    PeterO.PrecisionContext ctx);
 
 
 Not documented yet.
@@ -8476,9 +8476,9 @@ An ExtendedFloat object.
 ### DivideToExponent
 
     public PeterO.ExtendedFloat DivideToExponent(
-        PeterO.ExtendedFloat divisor,
-        long desiredExponentSmall,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat divisor,
+    long desiredExponentSmall,
+    PeterO.PrecisionContext ctx);
 
 
 Divides two ExtendedFloat objects, and gives a particular exponent to the result.
@@ -8507,8 +8507,8 @@ The rounding mode is Rounding.Unnecessary and the result is not exact.
 ### Divide
 
     public PeterO.ExtendedFloat Divide(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat divisor,
+    PeterO.PrecisionContext ctx);
 
 
 Divides this ExtendedFloat object by another ExtendedFloat object. The preferred exponent for the result is this object's exponent minus the divisor's exponent.
@@ -8537,9 +8537,9 @@ is null or  <i>ctx</i>
 ### DivideToExponent
 
     public PeterO.ExtendedFloat DivideToExponent(
-        PeterO.ExtendedFloat divisor,
-        long desiredExponentSmall,
-        PeterO.Rounding rounding);
+    PeterO.ExtendedFloat divisor,
+    long desiredExponentSmall,
+    PeterO.Rounding rounding);
 
 
 Divides two ExtendedFloat objects, and gives a particular exponent to the result.
@@ -8568,9 +8568,9 @@ The rounding mode is Rounding.Unnecessary and the result is not exact.
 ### DivideToExponent
 
     public PeterO.ExtendedFloat DivideToExponent(
-        PeterO.ExtendedFloat divisor,
-        PeterO.BigInteger exponent,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat divisor,
+    PeterO.BigInteger exponent,
+    PeterO.PrecisionContext ctx);
 
 
 Divides two ExtendedFloat objects, and gives a particular exponent to the result.
@@ -8599,9 +8599,9 @@ The rounding mode is Rounding.Unnecessary and the result is not exact.
 ### DivideToExponent
 
     public PeterO.ExtendedFloat DivideToExponent(
-        PeterO.ExtendedFloat divisor,
-        PeterO.BigInteger desiredExponent,
-        PeterO.Rounding rounding);
+    PeterO.ExtendedFloat divisor,
+    PeterO.BigInteger desiredExponent,
+    PeterO.Rounding rounding);
 
 
 Divides two ExtendedFloat objects, and gives a particular exponent to the result.
@@ -8630,7 +8630,7 @@ The rounding mode is Rounding.Unnecessary and the result is not exact.
 ### Abs
 
     public PeterO.ExtendedFloat Abs(
-        PeterO.PrecisionContext context);
+    PeterO.PrecisionContext context);
 
 
 Finds the absolute value of this object (if it's negative, it becomes positive).
@@ -8649,7 +8649,7 @@ The absolute value of this object.
 ### Negate
 
     public PeterO.ExtendedFloat Negate(
-        PeterO.PrecisionContext context);
+    PeterO.PrecisionContext context);
 
 
 Returns a binary float with the same value as this object but with the sign reversed.
@@ -8668,7 +8668,7 @@ An ExtendedFloat object.
 ### Add
 
     public PeterO.ExtendedFloat Add(
-        PeterO.ExtendedFloat otherValue);
+    PeterO.ExtendedFloat otherValue);
 
 
 Adds this object and another binary float and returns the result.
@@ -8687,7 +8687,7 @@ The sum of the two objects.
 ### Subtract
 
     public PeterO.ExtendedFloat Subtract(
-        PeterO.ExtendedFloat otherValue);
+    PeterO.ExtendedFloat otherValue);
 
 
 Subtracts an ExtendedFloat object from this instance and returns the result..
@@ -8706,8 +8706,8 @@ The difference of the two objects.
 ### Subtract
 
     public PeterO.ExtendedFloat Subtract(
-        PeterO.ExtendedFloat otherValue,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat otherValue,
+    PeterO.PrecisionContext ctx);
 
 
 Subtracts an ExtendedFloat object from this instance.
@@ -8728,7 +8728,7 @@ The difference of the two objects.
 ### Multiply
 
     public PeterO.ExtendedFloat Multiply(
-        PeterO.ExtendedFloat otherValue);
+    PeterO.ExtendedFloat otherValue);
 
 
 Multiplies two binary floats. The resulting exponent will be the sum of the exponents of the two binary floats.
@@ -8747,8 +8747,8 @@ The product of the two binary floats.
 ### MultiplyAndAdd
 
     public PeterO.ExtendedFloat MultiplyAndAdd(
-        PeterO.ExtendedFloat multiplicand,
-        PeterO.ExtendedFloat augend);
+    PeterO.ExtendedFloat multiplicand,
+    PeterO.ExtendedFloat augend);
 
 
 Multiplies by one binary float, and then adds another binary float.
@@ -8769,8 +8769,8 @@ The result this * multiplicand + augend.
 ### DivideToIntegerNaturalScale
 
     public PeterO.ExtendedFloat DivideToIntegerNaturalScale(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat divisor,
+    PeterO.PrecisionContext ctx);
 
 
 Divides this object by another object, and returns the integer part of the result, with the preferred exponent set to this value's exponent minus the divisor's exponent.
@@ -8797,8 +8797,8 @@ The rounding mode is Rounding.Unnecessary and the integer part of the result is 
 ### DivideToIntegerZeroScale
 
     public PeterO.ExtendedFloat DivideToIntegerZeroScale(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat divisor,
+    PeterO.PrecisionContext ctx);
 
 
 Divides this object by another object, and returns the integer part of the result, with the exponent set to 0.
@@ -8819,8 +8819,8 @@ The integer part of the quotient of the two objects. The exponent will be set to
 ### Remainder
 
     public PeterO.ExtendedFloat Remainder(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat divisor,
+    PeterO.PrecisionContext ctx);
 
 
 Finds the remainder that results when dividing two ExtendedFloat objects.
@@ -8841,8 +8841,8 @@ The remainder of the two objects.
 ### RemainderNear
 
     public PeterO.ExtendedFloat RemainderNear(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat divisor,
+    PeterO.PrecisionContext ctx);
 
 
 Finds the distance to the closest multiple of the given divisor, based on the result of dividing this object's value by another object's value.
@@ -8878,7 +8878,7 @@ The distance of the closest multiple. Signals FlagInvalid and returns NaN if the
 ### NextMinus
 
     public PeterO.ExtendedFloat NextMinus(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds the largest value that's smaller than the given value.
@@ -8905,7 +8905,7 @@ has an unlimited exponent range.
 ### NextPlus
 
     public PeterO.ExtendedFloat NextPlus(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds the smallest value that's greater than the given value.
@@ -8932,8 +8932,8 @@ has an unlimited exponent range.
 ### NextToward
 
     public PeterO.ExtendedFloat NextToward(
-        PeterO.ExtendedFloat otherValue,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat otherValue,
+    PeterO.PrecisionContext ctx);
 
 
 Finds the next value that is closer to the other object's value than this object's value.
@@ -8962,9 +8962,9 @@ has an unlimited exponent range.
 ### Max
 
     public static PeterO.ExtendedFloat Max(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat first,
+    PeterO.ExtendedFloat second,
+    PeterO.PrecisionContext ctx);
 
 
 Gets the greater value between two binary floats.
@@ -8987,9 +8987,9 @@ The larger value of the two objects.
 ### Min
 
     public static PeterO.ExtendedFloat Min(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat first,
+    PeterO.ExtendedFloat second,
+    PeterO.PrecisionContext ctx);
 
 
 Gets the lesser value between two binary floats.
@@ -9012,9 +9012,9 @@ The smaller value of the two objects.
 ### MaxMagnitude
 
     public static PeterO.ExtendedFloat MaxMagnitude(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat first,
+    PeterO.ExtendedFloat second,
+    PeterO.PrecisionContext ctx);
 
 
 Gets the greater value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Max.
@@ -9037,9 +9037,9 @@ An ExtendedFloat object.
 ### MinMagnitude
 
     public static PeterO.ExtendedFloat MinMagnitude(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat first,
+    PeterO.ExtendedFloat second,
+    PeterO.PrecisionContext ctx);
 
 
 Gets the lesser value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Min.
@@ -9062,8 +9062,8 @@ An ExtendedFloat object.
 ### Max
 
     public static PeterO.ExtendedFloat Max(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second);
+    PeterO.ExtendedFloat first,
+    PeterO.ExtendedFloat second);
 
 
 Gets the greater value between two binary floats.
@@ -9084,8 +9084,8 @@ The larger value of the two objects.
 ### Min
 
     public static PeterO.ExtendedFloat Min(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second);
+    PeterO.ExtendedFloat first,
+    PeterO.ExtendedFloat second);
 
 
 Gets the lesser value between two binary floats.
@@ -9106,8 +9106,8 @@ The smaller value of the two objects.
 ### MaxMagnitude
 
     public static PeterO.ExtendedFloat MaxMagnitude(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second);
+    PeterO.ExtendedFloat first,
+    PeterO.ExtendedFloat second);
 
 
 Gets the greater value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Max.
@@ -9128,8 +9128,8 @@ An ExtendedFloat object.
 ### MinMagnitude
 
     public static PeterO.ExtendedFloat MinMagnitude(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second);
+    PeterO.ExtendedFloat first,
+    PeterO.ExtendedFloat second);
 
 
 Gets the lesser value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Min.
@@ -9150,7 +9150,7 @@ An ExtendedFloat object.
 ### CompareTo
 
     public sealed int CompareTo(
-        PeterO.ExtendedFloat other);
+    PeterO.ExtendedFloat other);
 
 
 Compares the mathematical values of this object and another object, accepting NaN values. This method is not consistent with the Equals method because two different numbers with the same mathematical value, but different exponents, will compare as equal.
@@ -9179,8 +9179,8 @@ Less than 0 if this object's value is less than the other value, or greater than
 ### CompareToWithContext
 
     public PeterO.ExtendedFloat CompareToWithContext(
-        PeterO.ExtendedFloat other,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat other,
+    PeterO.PrecisionContext ctx);
 
 
 Compares the mathematical values of this object and another object.In this method, negative zero and positive zero are considered equal.
@@ -9207,8 +9207,8 @@ Quiet NaN if this object or the other object is NaN, or 0 if both objects have t
 ### CompareToSignal
 
     public PeterO.ExtendedFloat CompareToSignal(
-        PeterO.ExtendedFloat other,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat other,
+    PeterO.PrecisionContext ctx);
 
 
 Compares the mathematical values of this object and another object, treating quiet NaN as signaling.In this method, negative zero and positive zero are considered equal.
@@ -9235,8 +9235,8 @@ Quiet NaN if this object or the other object is NaN, or 0 if both objects have t
 ### Add
 
     public PeterO.ExtendedFloat Add(
-        PeterO.ExtendedFloat otherValue,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat otherValue,
+    PeterO.PrecisionContext ctx);
 
 
 Finds the sum of this object and another object. The result's exponent is set to the lower of the exponents of the two operands.
@@ -9257,8 +9257,8 @@ The sum of thisValue and the other object.
 ### Quantize
 
     public PeterO.ExtendedFloat Quantize(
-        PeterO.BigInteger desiredExponent,
-        PeterO.PrecisionContext ctx);
+    PeterO.BigInteger desiredExponent,
+    PeterO.PrecisionContext ctx);
 
 
 Returns a binary float with the same value but a new exponent.
@@ -9279,8 +9279,8 @@ A binary float with the same value as this object but with the exponent changed.
 ### Quantize
 
     public PeterO.ExtendedFloat Quantize(
-        int desiredExponentSmall,
-        PeterO.PrecisionContext ctx);
+    int desiredExponentSmall,
+    PeterO.PrecisionContext ctx);
 
 
 Returns a binary float with the same value but a new exponent.
@@ -9301,8 +9301,8 @@ A binary float with the same value as this object but with the exponent changed.
 ### Quantize
 
     public PeterO.ExtendedFloat Quantize(
-        PeterO.ExtendedFloat otherValue,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat otherValue,
+    PeterO.PrecisionContext ctx);
 
 
 Returns a binary float with the same value as this object but with the same exponent as another binary float.
@@ -9323,7 +9323,7 @@ A binary float with the same value as this object but with the exponent changed.
 ### RoundToIntegralExact
 
     public PeterO.ExtendedFloat RoundToIntegralExact(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Returns a binary float with the same value as this object but rounded to an integer.
@@ -9342,7 +9342,7 @@ A binary float with the same value as this object but rounded to an integer. Sig
 ### RoundToIntegralNoRoundedFlag
 
     public PeterO.ExtendedFloat RoundToIntegralNoRoundedFlag(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Returns a binary float with the same value as this object but rounded to an integer, without adding the FlagInexact or FlagRounded flags.
@@ -9361,8 +9361,8 @@ A binary float with the same value as this object but rounded to an integer. Sig
 ### RoundToExponentExact
 
     public PeterO.ExtendedFloat RoundToExponentExact(
-        PeterO.BigInteger exponent,
-        PeterO.PrecisionContext ctx);
+    PeterO.BigInteger exponent,
+    PeterO.PrecisionContext ctx);
 
 
 Returns a binary float with the same value as this object but rounded to an integer.
@@ -9383,8 +9383,8 @@ A binary float with the same value as this object but rounded to an integer. Sig
 ### RoundToExponent
 
     public PeterO.ExtendedFloat RoundToExponent(
-        PeterO.BigInteger exponent,
-        PeterO.PrecisionContext ctx);
+    PeterO.BigInteger exponent,
+    PeterO.PrecisionContext ctx);
 
 
 Returns a binary float with the same value as this object, and rounds it to a new exponent if necessary.
@@ -9405,8 +9405,8 @@ A binary float rounded to the closest value representable in the given precision
 ### Multiply
 
     public PeterO.ExtendedFloat Multiply(
-        PeterO.ExtendedFloat op,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat op,
+    PeterO.PrecisionContext ctx);
 
 
 Multiplies two binary floats. The resulting scale will be the sum of the scales of the two binary floats. The result's sign is positive if both operands have the same sign, and negative if they have different signs.
@@ -9427,9 +9427,9 @@ The product of the two binary floats.
 ### MultiplyAndAdd
 
     public PeterO.ExtendedFloat MultiplyAndAdd(
-        PeterO.ExtendedFloat op,
-        PeterO.ExtendedFloat augend,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat op,
+    PeterO.ExtendedFloat augend,
+    PeterO.PrecisionContext ctx);
 
 
 Multiplies by one value, and then adds another value.
@@ -9452,9 +9452,9 @@ The result thisValue * multiplicand + augend.
 ### MultiplyAndSubtract
 
     public PeterO.ExtendedFloat MultiplyAndSubtract(
-        PeterO.ExtendedFloat op,
-        PeterO.ExtendedFloat subtrahend,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat op,
+    PeterO.ExtendedFloat subtrahend,
+    PeterO.PrecisionContext ctx);
 
 
 Multiplies by one value, and then subtracts another value.
@@ -9477,7 +9477,7 @@ The result thisValue * multiplicand - subtrahend.
 ### RoundToPrecision
 
     public PeterO.ExtendedFloat RoundToPrecision(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Rounds this object's value to a given precision, using the given rounding mode and range of exponent.
@@ -9497,7 +9497,7 @@ The closest value to this object's value, rounded to the specified precision. Re
 ### Plus
 
     public PeterO.ExtendedFloat Plus(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Rounds this object's value to a given precision, using the given rounding mode and range of exponent, and also converts negative zero to positive zero.
@@ -9517,7 +9517,7 @@ The closest value to this object's value, rounded to the specified precision. Re
 ### RoundToBinaryPrecision
 
     public PeterO.ExtendedFloat RoundToBinaryPrecision(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Rounds this object's value to a given maximum bit length, using the given rounding mode and range of exponent.
@@ -9537,7 +9537,7 @@ The closest value to this object's value, rounded to the specified precision. Re
 ### SquareRoot
 
     public PeterO.ExtendedFloat SquareRoot(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds the square root of this object's value.
@@ -9563,7 +9563,7 @@ The parameter  <i>ctx</i>
 ### Exp
 
     public PeterO.ExtendedFloat Exp(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds e (the base of natural logarithms) raised to the power of this object's value.
@@ -9589,7 +9589,7 @@ The parameter  <i>ctx</i>
 ### Log
 
     public PeterO.ExtendedFloat Log(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds the natural logarithm of this object, that is, the power (exponent) that e (the base of natural logarithms) must be raised to in order to equal this object's value.
@@ -9615,7 +9615,7 @@ The parameter  <i>ctx</i>
 ### Log10
 
     public PeterO.ExtendedFloat Log10(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds the base-10 logarithm of this object, that is, the power (exponent) that the number 10 must be raised to in order to equal this object's value.
@@ -9635,8 +9635,8 @@ Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns NaN if this obj
 ### Pow
 
     public PeterO.ExtendedFloat Pow(
-        PeterO.ExtendedFloat exponent,
-        PeterO.PrecisionContext ctx);
+    PeterO.ExtendedFloat exponent,
+    PeterO.PrecisionContext ctx);
 
 
 Raises this object's value to the given exponent.
@@ -9664,8 +9664,8 @@ The parameter  <i>ctx</i>
 ### Pow
 
     public PeterO.ExtendedFloat Pow(
-        int exponentSmall,
-        PeterO.PrecisionContext ctx);
+    int exponentSmall,
+    PeterO.PrecisionContext ctx);
 
 
 Raises this object's value to the given exponent.
@@ -9686,7 +9686,7 @@ This^exponent. Signals the flag FlagInvalid and returns NaN if this object and e
 ### Pow
 
     public PeterO.ExtendedFloat Pow(
-        int exponentSmall);
+    int exponentSmall);
 
 
 Raises this object's value to the given exponent.
@@ -9705,7 +9705,7 @@ This^exponent. Returns NaN if this object and exponent are both 0.
 ### PI
 
     public static PeterO.ExtendedFloat PI(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Finds the constant pi.
@@ -9834,7 +9834,7 @@ Arbitrary-precision rational number.
 ### Equals
 
     public override bool Equals(
-        object obj);
+    object obj);
 
 
 Determines whether this object and another object are equal.
@@ -9866,8 +9866,8 @@ A 32-bit hash code.
 ### ExtendedRational Constructor
 
     public ExtendedRational(
-        PeterO.BigInteger numerator,
-        PeterO.BigInteger denominator);
+    PeterO.BigInteger numerator,
+    PeterO.BigInteger denominator);
 
 
 Initializes a new instance of the ExtendedRational class.
@@ -9896,7 +9896,7 @@ A string representation of this object. The result can be Infinity, NaN, or sNaN
 ### FromBigInteger
 
     public static PeterO.ExtendedRational FromBigInteger(
-        PeterO.BigInteger bigint);
+    PeterO.BigInteger bigint);
 
 
 Not documented yet.
@@ -9928,7 +9928,7 @@ The exact value of the rational number, or not-a-number (NaN) if the result can'
 ### FromSingle
 
     public static PeterO.ExtendedRational FromSingle(
-        System.Single flt);
+    float flt);
 
 
 Converts a 32-bit floating-point number to a rational number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the number to a string.
@@ -9948,7 +9948,7 @@ A rational number with the same value as  <i>flt</i>
 ### FromDouble
 
     public static PeterO.ExtendedRational FromDouble(
-        double flt);
+    double flt);
 
 
 Converts a 64-bit floating-point number to a rational number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the number to a string.
@@ -9968,7 +9968,7 @@ A rational number with the same value as  <i>flt</i>
 ### CreateNaN
 
     public static PeterO.ExtendedRational CreateNaN(
-        PeterO.BigInteger diag);
+    PeterO.BigInteger diag);
 
 
 Not documented yet.
@@ -9987,9 +9987,9 @@ An ExtendedRational object.
 ### CreateNaN
 
     public static PeterO.ExtendedRational CreateNaN(
-        PeterO.BigInteger diag,
-        bool signaling,
-        bool negative);
+    PeterO.BigInteger diag,
+    bool signaling,
+    bool negative);
 
 
 Not documented yet.
@@ -10012,7 +10012,7 @@ An ExtendedRational object.
 ### FromExtendedFloat
 
     public static PeterO.ExtendedRational FromExtendedFloat(
-        PeterO.ExtendedFloat ef);
+    PeterO.ExtendedFloat ef);
 
 
 Not documented yet.
@@ -10031,7 +10031,7 @@ An ExtendedRational object.
 ### FromExtendedDecimal
 
     public static PeterO.ExtendedRational FromExtendedDecimal(
-        PeterO.ExtendedDecimal ef);
+    PeterO.ExtendedDecimal ef);
 
 
 Not documented yet.
@@ -10050,7 +10050,7 @@ An ExtendedRational object.
 ### ToExtendedDecimal
 
     public PeterO.ExtendedDecimal ToExtendedDecimal(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Converts this rational number to a decimal number and rounds the result to the given precision.
@@ -10069,7 +10069,7 @@ An ExtendedDecimal object.
 ### ToExtendedDecimalExactIfPossible
 
     public PeterO.ExtendedDecimal ToExtendedDecimalExactIfPossible(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Converts this rational number to a decimal number, but if the result would have a nonterminating decimal expansion, rounds that result to the given precision.
@@ -10101,7 +10101,7 @@ The exact value of the rational number, or not-a-number (NaN) if the result can'
 ### ToExtendedFloat
 
     public PeterO.ExtendedFloat ToExtendedFloat(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Converts this rational number to a binary number and rounds the result to the given precision.
@@ -10120,7 +10120,7 @@ An ExtendedFloat object.
 ### ToExtendedFloatExactIfPossible
 
     public PeterO.ExtendedFloat ToExtendedFloatExactIfPossible(
-        PeterO.PrecisionContext ctx);
+    PeterO.PrecisionContext ctx);
 
 
 Converts this rational number to a binary number, but if the result would have a nonterminating binary expansion, rounds that result to the given precision.
@@ -10152,7 +10152,7 @@ A BigInteger object.
 ### FromInt32
 
     public static PeterO.ExtendedRational FromInt32(
-        int smallint);
+    int smallint);
 
 
 Not documented yet.
@@ -10171,7 +10171,7 @@ An ExtendedRational object.
 ### FromInt64
 
     public static PeterO.ExtendedRational FromInt64(
-        long longInt);
+    long longInt);
 
 
 Not documented yet.
@@ -10202,7 +10202,7 @@ The closest 64-bit floating-point number to this value. The return value can be 
 
 ### ToSingle
 
-    public System.Single ToSingle();
+    public float ToSingle();
 
 
 Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.
@@ -10242,7 +10242,7 @@ An ExtendedRational object.
 ### CompareTo
 
     public sealed int CompareTo(
-        PeterO.ExtendedRational other);
+    PeterO.ExtendedRational other);
 
 
 Compares an ExtendedRational object with this instance.
@@ -10261,7 +10261,7 @@ Zero if the values are equal; a negative number if this instance is less, or a p
 ### CompareToBinary
 
     public int CompareToBinary(
-        PeterO.ExtendedFloat other);
+    PeterO.ExtendedFloat other);
 
 
 Compares an ExtendedFloat object with this instance.
@@ -10280,7 +10280,7 @@ Zero if the values are equal; a negative number if this instance is less, or a p
 ### CompareToDecimal
 
     public int CompareToDecimal(
-        PeterO.ExtendedDecimal other);
+    PeterO.ExtendedDecimal other);
 
 
 Compares an ExtendedDecimal object with this instance.
@@ -10299,7 +10299,7 @@ Zero if the values are equal; a negative number if this instance is less, or a p
 ### Equals
 
     public sealed bool Equals(
-        PeterO.ExtendedRational other);
+    PeterO.ExtendedRational other);
 
 
 Not documented yet.
@@ -10428,7 +10428,7 @@ Negative infinity, less than any other number.
 ### Add
 
     public PeterO.ExtendedRational Add(
-        PeterO.ExtendedRational otherValue);
+    PeterO.ExtendedRational otherValue);
 
 
 Not documented yet.
@@ -10447,7 +10447,7 @@ An ExtendedRational object.
 ### Subtract
 
     public PeterO.ExtendedRational Subtract(
-        PeterO.ExtendedRational otherValue);
+    PeterO.ExtendedRational otherValue);
 
 
 Subtracts an ExtendedRational object from this instance.
@@ -10466,7 +10466,7 @@ The difference of the two objects.
 ### Multiply
 
     public PeterO.ExtendedRational Multiply(
-        PeterO.ExtendedRational otherValue);
+    PeterO.ExtendedRational otherValue);
 
 
 Multiplies this instance by the value of an ExtendedRational object.
@@ -10485,7 +10485,7 @@ The product of the two objects.
 ### Divide
 
     public PeterO.ExtendedRational Divide(
-        PeterO.ExtendedRational otherValue);
+    PeterO.ExtendedRational otherValue);
 
 
 Divides this instance by the value of an ExtendedRational object.
@@ -10504,7 +10504,7 @@ The quotient of the two objects.
 ### Remainder
 
     public PeterO.ExtendedRational Remainder(
-        PeterO.ExtendedRational otherValue);
+    PeterO.ExtendedRational otherValue);
 
 
 Finds the remainder that results when this instance is divided by the value of a ExtendedRational object.
@@ -10728,7 +10728,7 @@ Signals that an operand was rounded to a different mathematical value before an 
 ### ExponentWithinRange
 
     public bool ExponentWithinRange(
-        PeterO.BigInteger exponent);
+    PeterO.BigInteger exponent);
 
 
 Not documented yet.
@@ -10760,7 +10760,7 @@ A string representation of this object.
 ### WithRounding
 
     public PeterO.PrecisionContext WithRounding(
-        PeterO.Rounding rounding);
+    PeterO.Rounding rounding);
 
 
 Copies this PrecisionContext with the specified rounding mode.
@@ -10792,7 +10792,7 @@ A PrecisionContext object.
 ### WithTraps
 
     public PeterO.PrecisionContext WithTraps(
-        int traps);
+    int traps);
 
 
 Copies this PrecisionContext with Traps set to the given value.
@@ -10811,7 +10811,7 @@ A PrecisionContext object.
 ### WithExponentClamp
 
     public PeterO.PrecisionContext WithExponentClamp(
-        bool clamp);
+    bool clamp);
 
 
 Copies this precision context and sets the copy's "ClampNormalExponents" flag to the given value.
@@ -10830,8 +10830,8 @@ A PrecisionContext object.
 ### WithExponentRange
 
     public PeterO.PrecisionContext WithExponentRange(
-        int exponentMinSmall,
-        int exponentMaxSmall);
+    int exponentMinSmall,
+    int exponentMaxSmall);
 
 
 Copies this precision context and sets the copy's exponent range.
@@ -10852,8 +10852,8 @@ A PrecisionContext object.
 ### WithBigExponentRange
 
     public PeterO.PrecisionContext WithBigExponentRange(
-        PeterO.BigInteger exponentMin,
-        PeterO.BigInteger exponentMax);
+    PeterO.BigInteger exponentMin,
+    PeterO.BigInteger exponentMax);
 
 
 Copies this precision context and sets the copy's exponent range.
@@ -10887,7 +10887,7 @@ A PrecisionContext object.
 ### WithSimplified
 
     public PeterO.PrecisionContext WithSimplified(
-        bool simplified);
+    bool simplified);
 
 
 Not documented yet.
@@ -10919,7 +10919,7 @@ A PrecisionContext object.
 ### WithPrecision
 
     public PeterO.PrecisionContext WithPrecision(
-        int precision);
+    int precision);
 
 
 Copies this PrecisionContext and gives it a particular precision value.
@@ -10938,7 +10938,7 @@ A PrecisionContext object.
 ### WithBigPrecision
 
     public PeterO.PrecisionContext WithBigPrecision(
-        PeterO.BigInteger bigintPrecision);
+    PeterO.BigInteger bigintPrecision);
 
 
 Copies this PrecisionContext and gives it a particular precision value.
@@ -10977,7 +10977,7 @@ A PrecisionContext object.
 ### ForPrecision
 
     public static PeterO.PrecisionContext ForPrecision(
-        int precision);
+    int precision);
 
 
 Creates a new precision context using the given maximum number of digits and an unlimited exponent range.
@@ -10996,7 +10996,7 @@ A PrecisionContext object.
 ### ForRounding
 
     public static PeterO.PrecisionContext ForRounding(
-        PeterO.Rounding rounding);
+    PeterO.Rounding rounding);
 
 
 Not documented yet.
@@ -11015,8 +11015,8 @@ A PrecisionContext object.
 ### ForPrecisionAndRounding
 
     public static PeterO.PrecisionContext ForPrecisionAndRounding(
-        int precision,
-        PeterO.Rounding rounding);
+    int precision,
+    PeterO.Rounding rounding);
 
 
 Not documented yet.
@@ -11037,11 +11037,11 @@ A PrecisionContext object.
 ### PrecisionContext Constructor
 
     public PrecisionContext(
-        int precision,
-        PeterO.Rounding rounding,
-        int exponentMinSmall,
-        int exponentMaxSmall,
-        bool clampNormalExponents);
+    int precision,
+    PeterO.Rounding rounding,
+    int exponentMinSmall,
+    int exponentMaxSmall,
+    bool clampNormalExponents);
 
 
 Initializes a new instance of the PrecisionContext class. HasFlags will be set to false.
@@ -11389,9 +11389,9 @@ Exception thrown for arithmetic trap errors.
 ### TrapException Constructor
 
     public TrapException(
-        int flag,
-        PeterO.PrecisionContext ctx,
-        object result);
+    int flag,
+    PeterO.PrecisionContext ctx,
+    object result);
 
 
 Initializes a new instance of the TrapException class.

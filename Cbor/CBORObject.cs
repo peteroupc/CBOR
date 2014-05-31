@@ -98,7 +98,7 @@ namespace PeterO.Cbor {
     private sealed class ConverterInfo {
       private object toObject;
 
-    /// <summary>Gets the converter's ToCBORObject method.</summary>
+    /// <summary>Gets or sets the converter's ToCBORObject method.</summary>
     /// <value>The converter&apos;s ToCBORObject method.</value>
       public object ToObject {
         get {
@@ -112,7 +112,7 @@ namespace PeterO.Cbor {
 
       private object converter;
 
-    /// <summary>Gets the ICBORConverter object.</summary>
+    /// <summary>Gets or sets the ICBORConverter object.</summary>
     /// <value>The ICBORConverter object.</value>
       public object Converter {
         get {
@@ -3835,7 +3835,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Generates a CBOR object from a byte (0 to 255).</summary>
     /// <returns>A CBORObject object.</returns>
-    /// <param name='value'>A Byte object (0 to 255).</param>
+    /// <param name='value'>A Byte object.</param>
     public static CBORObject FromObject(byte value) {
       return FromObject(((int)value) & 0xff);
     }

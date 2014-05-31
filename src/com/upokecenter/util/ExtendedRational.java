@@ -24,7 +24,7 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Gets this object's numberator with the sign removed.
+     * Gets this object's numerator with the sign removed.
      * @return This object's numerator. If this object is a not-a-number
      * value, returns the diagnostic information.
      */

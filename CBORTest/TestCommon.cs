@@ -287,7 +287,7 @@ namespace Test {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
       int cmp = o.CompareTo(o2);
       if (cmp != 0) {
-        Assert.AreEqual(0, cmp, o.ToString() +"\nvs.\n" + o2.ToString());
+        Assert.AreEqual(0, cmp, o.ToString() + "\nvs.\n" + o2.ToString());
       }
       TestNumber(o);
       AssertEqualsHashCode(o, o2);

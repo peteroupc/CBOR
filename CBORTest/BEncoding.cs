@@ -65,8 +65,7 @@ namespace PeterO {
       return CBORDataUtilities.ParseJSONNumber(
         builder.ToString(),
         true,
-        false,
-        true);
+        false);
     }
 
     private static CBORObject readList(Stream stream) {
@@ -124,7 +123,6 @@ namespace PeterO {
       }
       CBORObject number = CBORDataUtilities.ParseJSONNumber(
         builder.ToString(),
-        true,
         true,
         true);
       int length = 0;
