@@ -2904,8 +2904,10 @@ at: http://upokecenter.com/d/
      * @param str A string containing only digits, except that it may start
      * with a minus sign.
      * @return A BigInteger object with the same value as given in the string.
-     * @throws java.lang.NullPointerException The parameter str is null.
-     * @throws NumberFormatException The parameter str is in an invalid format.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     * @throws NumberFormatException The parameter {@code str} is in an invalid
+     * format.
      */
     public static BigInteger fromString(String str) {
       if (str == null) {

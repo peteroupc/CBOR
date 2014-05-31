@@ -155,8 +155,10 @@ namespace Test {
     }
 
     private enum AByte : byte {
+    /// <summary>An arbitrary value.</summary>
       A = 254,
 
+    /// <summary>An arbitrary value.</summary>
       B
     }
 

@@ -873,7 +873,7 @@ at: http://upokecenter.com/d/
     public static final ExtendedFloat Zero = ExtendedFloat.Create(BigInteger.ZERO, BigInteger.ZERO);
 
     /**
-     *
+     * Represents the number negative zero.
      */
     public static final ExtendedFloat NegativeZero = CreateWithFlags(
       BigInteger.ZERO,

@@ -48,7 +48,7 @@ namespace PeterO.Cbor {
       IRISurrogateLenient
     }
 
-    private static readonly string hex = "0123456789ABCDEF";
+    private static string hex = "0123456789ABCDEF";
 
     private static void appendAuthority(
         StringBuilder builder,
@@ -56,7 +56,7 @@ namespace PeterO.Cbor {
         int[] segments) {
       if (segments[2] >= 0) {
         builder.Append("//");
-        builder.Append(refValue.Substring(segments[2], (segments[3]) - segments[2]));
+        builder.Append(refValue.Substring(segments[2], segments[3] - segments[2]));
       }
     }
 
@@ -66,7 +66,7 @@ namespace PeterO.Cbor {
         int[] segments) {
       if (segments[8] >= 0) {
         builder.Append('#');
-        builder.Append(refValue.Substring(segments[8], (segments[9]) - segments[8]));
+        builder.Append(refValue.Substring(segments[8], segments[9] - segments[8]));
       }
     }
 
@@ -74,14 +74,14 @@ namespace PeterO.Cbor {
         StringBuilder builder,
         string refValue,
         int[] segments) {
-      builder.Append(normalizePath(refValue.Substring(segments[4], (segments[5]) - segments[4])));
+      builder.Append(normalizePath(refValue.Substring(segments[4], segments[5] - segments[4])));
     }
 
     private static void appendPath(
         StringBuilder builder,
         string refValue,
         int[] segments) {
-      builder.Append(refValue.Substring(segments[4], (segments[5]) - segments[4]));
+      builder.Append(refValue.Substring(segments[4], segments[5] - segments[4]));
     }
 
     private static void appendQuery(
@@ -90,7 +90,7 @@ namespace PeterO.Cbor {
         int[] segments) {
       if (segments[6] >= 0) {
         builder.Append('?');
-        builder.Append(refValue.Substring(segments[6], (segments[7]) - segments[6]));
+        builder.Append(refValue.Substring(segments[6], segments[7] - segments[6]));
       }
     }
 
@@ -99,33 +99,33 @@ namespace PeterO.Cbor {
         string refValue,
         int[] segments) {
       if (segments[0] >= 0) {
-        builder.Append(refValue.Substring(segments[0], (segments[1]) - segments[0]));
+        builder.Append(refValue.Substring(segments[0], segments[1] - segments[0]));
         builder.Append(':');
       }
     }
 
     /// <summary>Escapes characters that cannot appear in URIs or IRIs.
     /// The function is idempotent; that is, calling the function again on
-    /// the result with the same mode doesn't change the result. @param s a
-    /// string to escape. @param mode One of the following values: <ul> <li>0
+    /// the result with the same mode doesn't change the result.</summary>
+    /// <param name='s'>A string to escape.</param>
+    /// <param name='mode'>One of the following values:.<list> <item>0
     /// - Non-ASCII characters and other characters that cannot appear in
     /// a URI are escaped, whether or not the string is a valid URI. Unpaired
     /// surrogates are treated as U + FFFD (Replacement Character). (Note
     /// that square brackets "[" and "]" can only appear in the authority component
-    /// of a URI or IRI; elsewhere they will be escaped.)</li>
-    /// <li>1 - Only non-ASCII characters are escaped. If the string is not
-    /// a valid IRI, returns null instead.</li>
-    /// <li>2 - Only non-ASCII characters are escaped, whether or not the
+    /// of a URI or IRI; elsewhere they will be escaped.)</item>
+    /// <item>1 - Only non-ASCII characters are escaped. If the string is
+    /// not a valid IRI, returns null instead.</item>
+    /// <item>2 - Only non-ASCII characters are escaped, whether or not the
     /// string is a valid IRI. Unpaired surrogates are treated as U + FFFD (Replacement
-    /// Character).</li>
-    /// <li>3 - Similar to 0, except that illegal percent encodings are also
-    /// escaped.</li>
-    /// </ul>
-    /// @return a string possibly containing escaped characters, or null
-    /// if s is null.</summary>
+    /// Character).</item>
+    /// <item>3 - Similar to 0, except that illegal percent encodings are
+    /// also escaped.</item>
+    /// </list>
+    /// </param>
+    /// <return>a string possibly containing escaped characters, or null
+    /// if s is null.</return>
     /// <returns>A string object.</returns>
-    /// <param name='s'>A string object. (2).</param>
-    /// <param name='mode'>A 32-bit signed integer.</param>
     public static string escapeURI(string s, int mode) {
       if (s == null) {
         return null;
@@ -160,9 +160,7 @@ namespace PeterO.Cbor {
               percentEncodeUtf8(builder, c);
             } else {
               if (c <= 0xffff) {
-                {
                   builder.Append((char)c);
-                }
               } else if (c <= 0x10ffff) {
                 builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
                 builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
@@ -177,9 +175,7 @@ namespace PeterO.Cbor {
             if (components != null && index >= components[2] && index < components[3]) {
               // within the authority component, so don't percent-encode
               if (c <= 0xffff) {
-                {
                   builder.Append((char)c);
-                }
               } else if (c <= 0x10ffff) {
                 builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
                 builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
@@ -190,9 +186,7 @@ namespace PeterO.Cbor {
             }
           } else {
             if (c <= 0xffff) {
-              {
                 builder.Append((char)c);
-              }
             } else if (c <= 0x10ffff) {
               builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
               builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
@@ -205,9 +199,7 @@ namespace PeterO.Cbor {
             if (components != null && index >= components[2] && index < components[3]) {
               // within the authority component, so don't percent-encode
               if (c <= 0xffff) {
-                {
                   builder.Append((char)c);
-                }
               } else if (c <= 0x10ffff) {
                 builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
                 builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
@@ -218,9 +210,7 @@ namespace PeterO.Cbor {
             }
           } else {
             if (c <= 0xffff) {
-              {
                 builder.Append((char)c);
-              }
             } else if (c <= 0x10ffff) {
               builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
               builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
@@ -263,74 +253,74 @@ namespace PeterO.Cbor {
     }
 
     private static bool isHexChar(char c) {
-      return ((c >= 'a' && c <= 'f') ||
+      return (c >= 'a' && c <= 'f') ||
           (c >= 'A' && c <= 'F') ||
-          (c >= '0' && c <= '9'));
+          (c >= '0' && c <= '9');
     }
 
     private static bool isIfragmentChar(int c) {
       // '%' omitted
-      return ((c >= 'a' && c <= 'z') ||
+      return (c >= 'a' && c <= 'z') ||
           (c >= 'A' && c <= 'Z') ||
           (c >= '0' && c <= '9') ||
           ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
           (c >= 0xa0 && c <= 0xd7ff) ||
           (c >= 0xf900 && c <= 0xfdcf) ||
           (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe));
+          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
     private static bool isIpchar(int c) {
       // '%' omitted
-      return ((c >= 'a' && c <= 'z') ||
+      return (c >= 'a' && c <= 'z') ||
           (c >= 'A' && c <= 'Z') ||
           (c >= '0' && c <= '9') ||
           ((c & 0x7F) == c && "/-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
           (c >= 0xa0 && c <= 0xd7ff) ||
           (c >= 0xf900 && c <= 0xfdcf) ||
           (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe));
+          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
     private static bool isIqueryChar(int c) {
       // '%' omitted
-      return ((c >= 'a' && c <= 'z') ||
+      return (c >= 'a' && c <= 'z') ||
           (c >= 'A' && c <= 'Z') ||
           (c >= '0' && c <= '9') ||
           ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
           (c >= 0xa0 && c <= 0xd7ff) ||
           (c >= 0xe000 && c <= 0xfdcf) ||
           (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0x10fffd && (c & 0xfffe) != 0xfffe));
+          (c >= 0x10000 && c <= 0x10fffd && (c & 0xfffe) != 0xfffe);
     }
 
     private static bool isIRegNameChar(int c) {
       // '%' omitted
-      return ((c >= 'a' && c <= 'z') ||
+      return (c >= 'a' && c <= 'z') ||
           (c >= 'A' && c <= 'Z') ||
           (c >= '0' && c <= '9') ||
           ((c & 0x7F) == c && "-._~!$&'()*+,;=".IndexOf((char)c) >= 0) ||
           (c >= 0xa0 && c <= 0xd7ff) ||
           (c >= 0xf900 && c <= 0xfdcf) ||
           (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe));
+          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
     private static bool isIUserInfoChar(int c) {
       // '%' omitted
-      return ((c >= 'a' && c <= 'z') ||
+      return (c >= 'a' && c <= 'z') ||
           (c >= 'A' && c <= 'Z') ||
           (c >= '0' && c <= '9') ||
           ((c & 0x7F) == c && "-._~:!$&'()*+,;=".IndexOf((char)c) >= 0) ||
           (c >= 0xa0 && c <= 0xd7ff) ||
           (c >= 0xf900 && c <= 0xfdcf) ||
           (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe));
+          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
     /// <summary>Determines whether the substring is a valid CURIE reference
-    /// under RDFa 1.1. (The CURIE reference is the part after the colon.).</summary>
-    /// <returns>True if the substring is a valid CURIE reference under RDFa
+    /// under RDFA 1.1. (The CURIE reference is the part after the colon.).</summary>
+    /// <returns>True if the substring is a valid CURIE reference under RDFA
     /// 1; otherwise, false.</returns>
     /// <param name='s'>A string object.</param>
     /// <param name='offset'>A 32-bit signed integer.</param>
@@ -339,8 +329,23 @@ namespace PeterO.Cbor {
       if (s == null) {
         return false;
       }
-      if (offset < 0 || length < 0 || offset + length > s.Length) {
-        throw new ArgumentOutOfRangeException();
+      if (s == null) {
+        throw new ArgumentNullException("s");
+      }
+      if (offset < 0) {
+        throw new ArgumentException("offset (" + Convert.ToString((int)(long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
+      if (offset > s.Length) {
+        throw new ArgumentException("offset (" + Convert.ToString((int)(long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((int)(long)s.Length, System.Globalization.CultureInfo.InvariantCulture));
+      }
+      if (length < 0) {
+        throw new ArgumentException("length (" + Convert.ToString((int)(long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+      }
+      if (length > s.Length) {
+        throw new ArgumentException("length (" + Convert.ToString((int)(long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((int)(long)s.Length, System.Globalization.CultureInfo.InvariantCulture));
+      }
+      if (s.Length - offset < length) {
+        throw new ArgumentException("s's length minus " + offset + " (" + Convert.ToString((int)(long)(s.Length - offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((int)(long)length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (length == 0) {
         return true;
@@ -348,9 +353,10 @@ namespace PeterO.Cbor {
       int index = offset;
       int valueSLength = offset + length;
       int state = 0;
-      if (index + 2 <= valueSLength && s[index] == '/' && s[index + 1] == '/')
+      if (index + 2 <= valueSLength && s[index] == '/' && s[index + 1] == '/') {
         // has an authority, which is not allowed
         return false;
+      }
       state = 0;  // IRI Path
       while (index < valueSLength) {
         // Get the next Unicode character
@@ -360,9 +366,10 @@ namespace PeterO.Cbor {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
           ++index;
-        } else if ((c & 0xf800) == 0xd800)
+        } else if ((c & 0xf800) == 0xd800) {
           // error
           return false;
+        }
         if (c == '%') {
           // Percent encoded character
           if (index + 2 < valueSLength && isHexChar(s[index + 1]) &&
@@ -504,24 +511,24 @@ int endOffset,
 int c,
 int delim) {
       if (c >= '1' && c <= '9' && index + 2 < endOffset &&
-          (s[index + 1] >= '0' && s[index + 1] <= '9') &&
+          s[index + 1] >= '0' && s[index + 1] <= '9' &&
           s[index + 2] == delim) {
-        return (c - '0') * 10 + (s[index + 1] - '0');
+        return ((c - '0') * 10) + (s[index + 1] - '0');
       } else if (c == '2' && index + 3 < endOffset &&
               (s[index + 1] == '5') &&
               (s[index + 2] >= '0' && s[index + 2] <= '5') &&
               s[index + 3] == delim) {
         return 250 + (s[index + 2] - '0');
       } else if (c == '2' && index + 3 < endOffset &&
-              (s[index + 1] >= '0' && s[index + 1] <= '4') &&
-              (s[index + 2] >= '0' && s[index + 2] <= '9') &&
+              s[index + 1] >= '0' && s[index + 1] <= '4' &&
+              s[index + 2] >= '0' && s[index + 2] <= '9' &&
               s[index + 3] == delim) {
-        return 200 + (s[index + 1] - '0') * 10 + (s[index + 2] - '0');
+        return 200 + ((s[index + 1] - '0') * 10) + (s[index + 2] - '0');
       } else if (c == '1' && index + 3 < endOffset &&
-              (s[index + 1] >= '0' && s[index + 1] <= '9') &&
-              (s[index + 2] >= '0' && s[index + 2] <= '9') &&
+              s[index + 1] >= '0' && s[index + 1] <= '9' &&
+              s[index + 2] >= '0' && s[index + 2] <= '9' &&
               s[index + 3] == delim) {
-        return 100 + (s[index + 1] - '0') * 10 + (s[index + 2] - '0');
+        return 100 + ((s[index + 1] - '0') * 10) + (s[index + 2] - '0');
       } else if (c >= '0' && c <= '9' && index + 1 < endOffset &&
               s[index + 1] == delim) {
         return c - '0';
@@ -608,10 +615,10 @@ int delim) {
             // Check for IPv4 address
             int decOctet = parseDecOctet(s, index, endOffset, c, '.');
             if (decOctet >= 0) {
-              if ((phase1 + (phased ? 1 : 0) + phase2) > 6)
+              if ((phase1 + (phased ? 1 : 0) + phase2) > 6) {
                 // IPv4 address illegal at this point
                 return -1;
-              else {
+              } else {
                 // Parse the rest of the IPv4 address
                 phase2 += 2;
                 if (decOctet >= 100) {
@@ -621,10 +628,13 @@ int delim) {
                 } else {
                   index += 2;
                 }
+                char tmpc = (index < endOffset) ? s[index] : '\0';
                 decOctet = parseDecOctet(
-
-s, index, endOffset,
-                    (index < endOffset) ? s[index] : '\0', '.');
+s,
+index,
+endOffset,
+tmpc,
+'.');
                 if (decOctet >= 100) {
                   index += 4;
                 } else if (decOctet >= 10) {
@@ -634,10 +644,8 @@ s, index, endOffset,
                 } else {
                   return -1;
                 }
-                decOctet = parseDecOctet(
-
-s, index, endOffset,
-                    (index < endOffset) ? s[index] : '\0', '.');
+                tmpc = (index < endOffset) ? s[index] : '\0';
+                decOctet = parseDecOctet(s, index, endOffset, tmpc, '.');
                 if (decOctet >= 100) {
                   index += 4;
                 } else if (decOctet >= 10) {
@@ -647,15 +655,11 @@ s, index, endOffset,
                 } else {
                   return -1;
                 }
-                decOctet = parseDecOctet(
-
-s, index, endOffset,
-                    (index < endOffset) ? s[index] : '\0', ']');
+                tmpc = (index < endOffset) ? s[index] : '\0';
+                decOctet = parseDecOctet(s, index, endOffset, tmpc, ']');
                 if (decOctet < 0) {
-                  decOctet = parseDecOctet(
-
-s, index, endOffset,
-                      (index < endOffset) ? s[index] : '\0', '%');
+                  tmpc = (index < endOffset) ? s[index] : '\0';
+                  decOctet = parseDecOctet(s, index, endOffset, tmpc, '%');
                 }
                 if (decOctet >= 100) {
                   index += 3;
@@ -919,8 +923,9 @@ ParseMode parseMode) {
         }
         if (strict && index == offset && !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) {
           break;
-        } else if (strict && index > offset && !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
-              c == '+' && c == '-' && c == '.')) {
+        } else if (strict && index > offset &&
+          !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
+              c == '+' || c == '-' || c == '.')) {
           break;
         } else if (!strict && (c == '#' || c == ':' || c == '?' || c == '/')) {
           break;
@@ -1048,9 +1053,10 @@ ParseMode parseMode) {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (s[index + 1] - 0xdc00);
           ++index;
-        } else if ((c & 0xf800) == 0xd800)
+        } else if ((c & 0xf800) == 0xd800) {
           // error
           return null;
+        }
         if (c == '%' && strict) {
           // Percent encoded character
           if (index + 2 < valueSLength && isHexChar(s[index + 1]) &&
@@ -1111,13 +1117,13 @@ ParseMode parseMode) {
     /// <summary>Parses an Internationalized Resource Identifier (IRI)
     /// reference under RFC3987. If the IRI is syntactically valid, splits
     /// the string into its components and returns an array containing the
-    /// indices into the components. @return If the string is a valid IRI reference,
-    /// returns an array of 10 integers. Each of the five pairs corresponds
-    /// to the start and end index of the IRI's scheme, authority, path, query,
-    /// or fragment component, respectively. If a component is absent, both
-    /// indices in that pair will be -1. If the string is null or is not a valid
-    /// IRI, returns null.</summary>
-    /// <returns>An array of 32-bit unsigned integers.</returns>
+    /// indices into the components.</summary>
+    /// <returns>If the string is a valid IRI reference, returns an array
+    /// of 10 integers. Each of the five pairs corresponds to the start and
+    /// end index of the IRI's scheme, authority, path, query, or fragment
+    /// component, respectively. If a component is absent, both indices
+    /// in that pair will be -1. If the string is null or is not a valid IRI, returns
+    /// null.</returns>
     /// <param name='s'>A string object.</param>
     /// <param name='parseMode'>A ParseMode object.</param>
     public static int[] splitIRI(string s, ParseMode parseMode) {

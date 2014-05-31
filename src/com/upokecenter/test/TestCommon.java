@@ -268,7 +268,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
       int cmp = o.compareTo(o2);
       if (cmp != 0) {
-        Assert.assertEquals(o.toString() +"\nvs.\n" + o2.toString(),0,cmp);
+        Assert.assertEquals(o.toString() + "\nvs.\n" + o2.toString(),0,cmp);
       }
       TestNumber(o);
       AssertEqualsHashCode(o, o2);

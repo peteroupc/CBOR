@@ -3911,7 +3911,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     /**
      * Generates a CBOR object from a byte (0 to 255).
-     * @param value A Byte object (0 to 255).
+     * @param value A Byte object.
      * @return A CBORObject object.
      */
     public static CBORObject FromObject(byte value) {
