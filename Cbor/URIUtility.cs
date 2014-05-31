@@ -249,8 +249,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Determines whether the string is a valid URI with a scheme
     /// component. This can be used to check for relative URI references.
-    /// The following cases return true: <code> example:  // y/z xx-x:mm example:/ww
-    /// </code>
+    /// The following cases return true: <code> http://example/z xx-x:mm
+    /// example:/ww </code>
     /// The following cases return false: <code> x@y:/z /x/y/z example.xyz
     /// </code>
     /// </summary>
