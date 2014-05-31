@@ -2331,8 +2331,8 @@ namespace PeterO.Cbor {
     /// a data stream as follows: <list type=''> <item>If the value is null,
     /// writes the byte 0xF6.</item>
     /// <item>If the value is negative zero, infinity, or NaN, converts the
-    /// number to a <code>double</code>
-    /// and writes that <code>double</code>
+    /// number to a <c>double</c>
+    /// and writes that <c>double</c>
     /// . If negative zero should not be written this way, use the Plus method
     /// to convert the value beforehand.</item>
     /// <item>If the value has an exponent of zero, writes the value as an unsigned
@@ -2409,8 +2409,8 @@ namespace PeterO.Cbor {
     /// to a data stream, as follows: <list type=''> <item>If the value is
     /// null, writes the byte 0xF6.</item>
     /// <item>If the value is negative zero, infinity, or NaN, converts the
-    /// number to a <code>double</code>
-    /// and writes that <code>double</code>
+    /// number to a <c>double</c>
+    /// and writes that <c>double</c>
     /// . If negative zero should not be written this way, use the Plus method
     /// to convert the value beforehand.</item>
     /// <item>If the value has an exponent of zero, writes the value as an unsigned
@@ -2612,8 +2612,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Writes a 64-bit unsigned integer in CBOR format to a data
-    /// stream.</summary>
+    /// <summary>Writes a 64-bit signed integer in CBOR format to a data stream.</summary>
     /// <param name='value'>The value to write.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null.</exception>
@@ -3978,19 +3977,19 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Generates a CBORObject from an arbitrary object. The following
-    /// types are specially handled by this method: <code>null</code>
-    /// , primitive types, strings, <code>CBORObject</code>
-    /// , <code>ExtendedDecimal</code>
-    /// , <code>ExtendedFloat</code>
-    /// , the custom <code>BigInteger</code>
-    /// , lists, arrays, enumerations (<code>Enum</code>
+    /// types are specially handled by this method: <c>null</c>
+    /// , primitive types, strings, <c>CBORObject</c>
+    /// , <c>ExtendedDecimal</c>
+    /// , <c>ExtendedFloat</c>
+    /// , the custom <c>BigInteger</c>
+    /// , lists, arrays, enumerations (<c>Enum</c>
     /// objects), and maps.<para>In the .NET version, if the object is a type
     /// not specially handled by this method, returns a CBOR map with the values
     /// of each of its read/write properties (or all properties in the case
     /// of an anonymous type). Properties are converted to their camel-case
     /// names (meaning if a name starts with A to Z, that letter is lower-cased).
     /// If the property name begins with the word "Is", that word is deleted
-    /// from the name. Also, .NET <code>Enum</code>
+    /// from the name. Also, .NET <c>Enum</c>
     /// objects will be converted to their integer values, and a multidimensional
     /// array is converted to an array of arrays.</para>
     /// <para>In the Java version, if the object is a type not specially handled
@@ -3999,8 +3998,8 @@ namespace PeterO.Cbor {
     /// map with one entry for each such method found. For each method found,
     /// the starting word "get" or "is" is deleted from its name, and the name
     /// is converted to camel case (meaning if a name starts with A to Z, that
-    /// letter is lower-cased). Also, Java <code>Enum</code>
-    /// objects will be converted to the result of their <code>name</code>
+    /// letter is lower-cased). Also, Java <c>Enum</c>
+    /// objects will be converted to the result of their <c>name</c>
     /// method.</para>
     /// </summary>
     /// <param name='obj'>An arbitrary object.</param>

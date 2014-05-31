@@ -197,8 +197,8 @@ at: http://upokecenter.com/d/
      * precision context. If HasFlags is false, this value will be 0. This
      * value is a combination of bit fields. To retrieve a particular flag,
      * use the AND operation on the return value of this method. For example:
-     * <code>(this.getFlags() &amp; PrecisionContext.FlagInexact)
-     * != 0</code> returns TRUE if the Inexact flag is set.
+     * <code>(this.getFlags() &amp; PrecisionContext.FlagInexact) !=
+     * 0</code> returns TRUE if the Inexact flag is set.
      * @return The flags that are set from converting numbers according
      * to this precision context. If HasFlags is false, this value will be
      * 0.

@@ -2700,7 +2700,7 @@ if (bytes.Length <= 0) {
     }
 
     /// <summary>Gets the value of this object with the sign reversed.</summary>
-    /// <returns>This object's value with the signe reversed.</returns>
+    /// <returns>This object's value with the sign reversed.</returns>
     public BigInteger negate() {
       BigInteger bigintRet = new BigInteger();
       bigintRet.reg = this.reg;  // use the same reference
