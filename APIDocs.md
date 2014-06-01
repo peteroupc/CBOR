@@ -674,9 +674,9 @@ BigInteger object for the number one.
 BigInteger object for the number ten.
 
 
-### op_Addition
+### Operator `+`
 
-    public static PeterO.BigInteger op_Addition(
+    public static PeterO.BigInteger operator +(
         PeterO.BigInteger bthis,
         PeterO.BigInteger augend);
 
@@ -696,9 +696,9 @@ Adds a BigInteger object and a BigInteger object.
 The sum of the two objects.
 
 
-### op_Subtraction
+### Operator `-`
 
-    public static PeterO.BigInteger op_Subtraction(
+    public static PeterO.BigInteger operator -(
         PeterO.BigInteger bthis,
         PeterO.BigInteger subtrahend);
 
@@ -718,9 +718,9 @@ Subtracts two BigInteger values.
 The difference of the two objects.
 
 
-### op_Multiply
+### Operator `*`
 
-    public static PeterO.BigInteger op_Multiply(
+    public static PeterO.BigInteger operator *(
         PeterO.BigInteger operand1,
         PeterO.BigInteger operand2);
 
@@ -740,9 +740,9 @@ Multiplies a BigInteger object by the value of a BigInteger object.
 The product of the two objects.
 
 
-### op_Division
+### Operator `/`
 
-    public static PeterO.BigInteger op_Division(
+    public static PeterO.BigInteger operator /(
         PeterO.BigInteger dividend,
         PeterO.BigInteger divisor);
 
@@ -762,9 +762,9 @@ Divides a BigInteger object by the value of a BigInteger object.
 The quotient of the two objects.
 
 
-### op_Modulus
+### Operator `%`
 
-    public static PeterO.BigInteger op_Modulus(
+    public static PeterO.BigInteger operator %(
         PeterO.BigInteger dividend,
         PeterO.BigInteger divisor);
 
@@ -784,9 +784,9 @@ Finds the remainder that results when a BigInteger object is divided by the valu
 The remainder of the two objects.
 
 
-### op_LeftShift
+### Operator `<<`
 
-    public static PeterO.BigInteger op_LeftShift(
+    public static PeterO.BigInteger operator <<(
         PeterO.BigInteger bthis,
         int bitCount);
 
@@ -834,9 +834,9 @@ The value ( <i>bigintValue</i>
 .
 
 
-### op_RightShift
+### Operator `>>`
 
-    public static PeterO.BigInteger op_RightShift(
+    public static PeterO.BigInteger operator >>(
         PeterO.BigInteger bthis,
         int bigValue);
 
@@ -856,9 +856,9 @@ For this operation, the BigInteger is treated as a two's complement representati
 A BigInteger object.
 
 
-### op_UnaryNegation
+### Operator `-`
 
-    public static PeterO.BigInteger op_UnaryNegation(
+    public static PeterO.BigInteger operator -(
         PeterO.BigInteger bigValue);
 
 
@@ -875,9 +875,9 @@ Negates a BigInteger object.
 A BigInteger object.
 
 
-### op_LessThan
+### Operator `<`
 
-    public static bool op_LessThan(
+    public static bool operator <(
         PeterO.BigInteger thisValue,
         PeterO.BigInteger otherValue);
 
@@ -899,9 +899,9 @@ True if  <i>thisValue</i>
 ; otherwise, false.
 
 
-### op_LessThanOrEqual
+### Operator `<=`
 
-    public static bool op_LessThanOrEqual(
+    public static bool operator <=(
         PeterO.BigInteger thisValue,
         PeterO.BigInteger otherValue);
 
@@ -923,9 +923,9 @@ True if  <i>thisValue</i>
 ; otherwise, false.
 
 
-### op_GreaterThan
+### Operator `>`
 
-    public static bool op_GreaterThan(
+    public static bool operator >(
         PeterO.BigInteger thisValue,
         PeterO.BigInteger otherValue);
 
@@ -947,9 +947,9 @@ True if  <i>thisValue</i>
 ; otherwise, false.
 
 
-### op_GreaterThanOrEqual
+### Operator `>=`
 
-    public static bool op_GreaterThanOrEqual(
+    public static bool operator >=(
         PeterO.BigInteger thisValue,
         PeterO.BigInteger otherValue);
 
@@ -4013,9 +4013,9 @@ A CBOR object where the object  <i>o</i>
 .
 
 
-### op_Addition
+### Operator `+`
 
-    public static PeterO.Cbor.CBORObject op_Addition(
+    public static PeterO.Cbor.CBORObject operator +(
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
@@ -4035,9 +4035,9 @@ Adds a CBORObject object and a CBORObject object.
 The sum of the two objects.
 
 
-### op_Subtraction
+### Operator `-`
 
-    public static PeterO.Cbor.CBORObject op_Subtraction(
+    public static PeterO.Cbor.CBORObject operator -(
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
@@ -4057,9 +4057,9 @@ Subtracts a CBORObject object from a CBORObject object.
 The difference of the two objects.
 
 
-### op_Multiply
+### Operator `*`
 
-    public static PeterO.Cbor.CBORObject op_Multiply(
+    public static PeterO.Cbor.CBORObject operator *(
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
@@ -4079,9 +4079,9 @@ Multiplies a CBORObject object by the value of a CBORObject object.
 The product of the two objects.
 
 
-### op_Division
+### Operator `/`
 
-    public static PeterO.Cbor.CBORObject op_Division(
+    public static PeterO.Cbor.CBORObject operator /(
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
@@ -4101,9 +4101,9 @@ Divides a CBORObject object by the value of a CBORObject object.
 The quotient of the two objects.
 
 
-### op_Modulus
+### Operator `%`
 
-    public static PeterO.Cbor.CBORObject op_Modulus(
+    public static PeterO.Cbor.CBORObject operator %(
         PeterO.Cbor.CBORObject a,
         PeterO.Cbor.CBORObject b);
 
