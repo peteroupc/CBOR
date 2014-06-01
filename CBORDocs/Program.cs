@@ -18,7 +18,7 @@ using PeterO.Cbor;
 
 namespace CBORDocs {
   internal class Program {
-    internal static void Main(string[] args) {
+    public static void Main(string[] args) {
       var members = DocReader.Read(typeof(CBORObject).Assembly);
       var oldWriter = Console.Out;
       using (var writer = new StreamWriter("../../../APIDocs.md")) {

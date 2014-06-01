@@ -1081,6 +1081,8 @@ A CBOR object that represents the parsed number. Returns null if the parsing fai
         bool positiveOnly,
         bool failOnExponentOverflow);
 
+<b>Deprecated.</b> Use the three-argument version instead; the 'failOnExponentOverflow' parameter now has no effect.
+
 Parses a number whose format follows the JSON specification (RFC 7159). Roughly speaking, a valid number consists of an optional minus sign, one or more digits (starting with 1 to 9 unless the only digit is 0), an optional decimal point with one or more digits, and an optional letter E or e with one or more digits (the exponent).
 
 <b>Parameters:</b>

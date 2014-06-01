@@ -39,7 +39,7 @@ namespace PeterO {
       }
     }
 
-    internal static int CountTrailingZeros(int numberValue) {
+    private static int CountTrailingZeros(int numberValue) {
       if (numberValue == 0) {
         return 32;
       }

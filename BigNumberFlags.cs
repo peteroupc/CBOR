@@ -19,6 +19,6 @@ namespace PeterO {
 
     internal const int FiniteOnly = 0;
     internal const int FiniteAndNonFinite = 1;
-    internal const int X3Dot274 = 2;
+    private const int X3Dot274 = 2;
   }
 }
