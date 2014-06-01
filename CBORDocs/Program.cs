@@ -26,7 +26,7 @@ namespace CBORDocs {
       TypeVisitor visitor = new TypeVisitor(directory);
       members.Accept(visitor);
       visitor.Finish();
-      using (var writer = new StreamWriter(Path.Combine(directory,"APIDocs.md"))) {
+      using (var writer = new StreamWriter(Path.Combine(directory,"APIDocs.md"), false, Encoding.UTF8)) {
         SummaryVisitor visitor2 = new SummaryVisitor(writer);
         members.Accept(visitor2);
         visitor2.Finish();
