@@ -7,6 +7,8 @@ This implementation was written by Peter O. and is released to the Public Domain
 
 This implementation also doubles as a reader and writer of JSON, and can convert data from JSON to CBOR and back.
 
+Finally, this implementation supports arbitrary-precision binary and decimal floating-point numbers and rational numbers with arbitrary-precision components.
+
 Documentation
 ------------
 
@@ -22,10 +24,12 @@ The Different Versions
 -----------
 
 This repository contains code in two languages: C# and Java.
-C# is the main language of the project, and has the most features.  The Java
-version is a translation from the C# version. 
+C# is the main language of the project, and the C# implementation has the most features.  
 
-The Java version contains almost as many features as the C# version
+The C# implementation is designed as a Portable Class Library, making it usable not only in the .NET
+Framework, but also Silverlight 5 and Windows Phone 8.
+
+The Java version is a translation from the C# version. It contains almost as many features as the C# version
 and has all the important ones, such as reading and writing CBOR objects,
 CBOR/JSON conversion, and support for decimal fractions and bigfloats.
 
