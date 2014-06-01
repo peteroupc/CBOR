@@ -88,7 +88,7 @@ import com.upokecenter.util.*;
       }
     }
 
-    static BigInteger ToUnsignedBigInteger(long val) {
+    private static BigInteger ToUnsignedBigInteger(long val) {
       BigInteger lval = BigInteger.valueOf(val & ~(1L << 63));
       if ((val >> 63) != 0) {
         BigInteger bigintAdd = BigInteger.ONE.shiftLeft(63);

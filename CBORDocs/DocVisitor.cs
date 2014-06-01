@@ -33,13 +33,13 @@ namespace CBORDocs {
     public static string GetTypeID(Type type) {
       string name = FormatType(type);
       StringBuilder builder = new StringBuilder();
-      for (int i = 0; i < name.Length; i++) {
-        UnicodeCategory cat=CharUnicodeInfo.GetUnicodeCategory(name, i);
+      for (int i = 0; i < name.Length; ++i) {
+        UnicodeCategory cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
         int cp = PeterO.DataUtilities.CodePointAt(name, i);
-        if(cp>=0x10000){
-          i++;
+        if (cp >= 0x10000) {
+          ++i;
         }
-        if(cat == UnicodeCategory.UppercaseLetter ||
+        if (cat == UnicodeCategory.UppercaseLetter ||
           cat == UnicodeCategory.LowercaseLetter ||
           cat == UnicodeCategory.TitlecaseLetter ||
           cat == UnicodeCategory.OtherLetter ||
@@ -54,7 +54,7 @@ namespace CBORDocs {
           builder.Append(' ');
         }
       }
-      name=builder.ToString();
+      name = builder.ToString();
       name = name.Trim();
       name = name.Replace(' ', '-');
       return name;
@@ -602,7 +602,7 @@ namespace CBORDocs {
           this.WriteLine("### " + MethodNameHeading(method.Name) + "\r\n\r\n" + signature + "\r\n\r\n");
         }
         ObsoleteAttribute attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
-        if (attr!=null) {
+        if (attr != null) {
           this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
         }
         this.paramStr.Clear();

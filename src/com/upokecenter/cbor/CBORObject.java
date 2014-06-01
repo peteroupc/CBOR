@@ -69,23 +69,23 @@ import com.upokecenter.util.*;
     private int tagLow;
     private int tagHigh;
     static final int CBORObjectTypeInteger = 0;  // -(2^63).. (2^63-1)
-    static final int CBORObjectTypeBigInteger = 1;  // all other integers
+    private static final int CBORObjectTypeBigInteger = 1;  // all other integers
     static final int CBORObjectTypeByteString = 2;
     static final int CBORObjectTypeTextString = 3;
-    static final int CBORObjectTypeArray = 4;
-    static final int CBORObjectTypeMap = 5;
-    static final int CBORObjectTypeSimpleValue = 6;
+    private static final int CBORObjectTypeArray = 4;
+    private static final int CBORObjectTypeMap = 5;
+    private static final int CBORObjectTypeSimpleValue = 6;
     static final int CBORObjectTypeSingle = 7;
     static final int CBORObjectTypeDouble = 8;
     static final int CBORObjectTypeExtendedDecimal = 9;
-    static final int CBORObjectTypeTagged = 10;
+    private static final int CBORObjectTypeTagged = 10;
     static final int CBORObjectTypeExtendedFloat = 11;
     static final int CBORObjectTypeExtendedRational = 12;
     static final BigInteger Int64MaxValue = BigInteger.valueOf(Long.MAX_VALUE);
     static final BigInteger Int64MinValue = BigInteger.valueOf(Long.MIN_VALUE);
-    static final BigInteger LowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
+    private static final BigInteger LowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
 
-    static final BigInteger UInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
+    private static final BigInteger UInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
 
     private static final class ConverterInfo {
       private Object toObject;
@@ -120,7 +120,7 @@ public void setConverter(Object value) {
 
     private static int[] valueNumberTypeOrder = new int[] { 0, 0, 2, 3, 4, 5, 1, 0, 0, 0, 0, 0, 0 };
 
-    static final ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
+    private static final ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
       new CBORInteger(),
       new CBORBigInteger(),
       null,
@@ -3364,11 +3364,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     /**
      * Generates a CBOR object from a data stream in JavaScript Object Notation
      * (JSON) format and UTF-8 encoding. The JSON stream may begin with a
-     * byte order mark (U + FEFF); however, this implementation's ToJSONString
-     * method will not place this character at the beginning of a JSON text,
-     * since doing so is forbidden under RFC 7159. <p>If a JSON object has
-     * the same key, only the last given value will be used for each duplicated
-     * key.</p>
+     * byte order mark (U + FEFF). <p>If a JSON object has the same key, only
+     * the last given value will be used for each duplicated key.</p>
      * @param stream A readable data stream.
      * @return A CBORObject object.
      * @throws java.lang.NullPointerException The parameter {@code stream}
@@ -3439,10 +3436,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     /**
-     * Converts this object to a JSON string. This function works not only
-     * with arrays and maps, but also integers, strings, byte arrays, and
-     * other JSON data types.
-     * @return A string object containing the converted object.
+     * Not documented yet.
+     * @return A string object.
      */
     public String ToJSONString() {
       int type = this.getItemType();
@@ -3644,15 +3639,15 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
-    static CBORObject FromRaw(String str) {
+    private static CBORObject FromRaw(String str) {
       return new CBORObject(CBORObjectTypeTextString, str);
     }
 
-    static CBORObject FromRaw(List<CBORObject> list) {
+    private static CBORObject FromRaw(List<CBORObject> list) {
       return new CBORObject(CBORObjectTypeArray, list);
     }
 
-    static CBORObject FromRaw(Map<CBORObject, CBORObject> map) {
+    private static CBORObject FromRaw(Map<CBORObject, CBORObject> map) {
       return new CBORObject(CBORObjectTypeMap, map);
     }
 
@@ -4211,11 +4206,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
-    static ICBORTag FindTagConverter(int tag) {
+    private static ICBORTag FindTagConverter(int tag) {
       return FindTagConverter(BigInteger.valueOf(tag));
     }
 
-    static ICBORTag FindTagConverter(long tag) {
+    private static ICBORTag FindTagConverter(long tag) {
       return FindTagConverter(BigInteger.valueOf(tag));
     }
 
