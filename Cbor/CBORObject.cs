@@ -3319,9 +3319,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Generates a CBOR object from a data stream in JavaScript
     /// Object Notation (JSON) format and UTF-8 encoding. The JSON stream
-    /// may begin with a byte order mark (U + FEFF); however, this implementation's
-    /// ToJSONString method will not place this character at the beginning
-    /// of a JSON text, since doing so is forbidden under RFC 7159. <para>If
+    /// may begin with a byte order mark (U + FEFF). <para>If
     /// a JSON object has the same key, only the last given value will be used
     /// for each duplicated key.</para>
     /// </summary>
@@ -3393,9 +3391,28 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Converts this object to a JSON string. This function works
+    /// <summary>Converts this object to a string in JavaScript Object
+    /// Notation (JSON) format. This function works
     /// not only with arrays and maps, but also integers, strings, byte arrays,
-    /// and other JSON data types.</summary>
+    /// and other JSON data types. Notes: <list><item>
+    /// If this object contains maps with non-string keys, the keys are converted
+    /// to JSON strings before writing the map as a JSON string.
+    /// </item>
+    /// <item>If a number in the form of a bigfloat has a very high binary
+    /// exponent, it will be converted to a double before being converted to
+    /// a JSON string. (The resulting double could overflow to infinity, in which case the
+    /// bigfloat is converted to null.)</item>
+    /// <item>The string will not begin with a byte-order mark (U + FEFF); RFC 7159
+    /// (the JSON specification)
+    /// forbids placing a byte-order mark at the beginning of a JSON string.</item>
+    /// <item>Byte strings are converted to Base64 URL by default.</item>
+    /// <item>Rational numbers will be converted to their exact form, if possible,
+    /// otherwise to a high-precision approximation. (The resulting approximation 
+    /// could overflow to infinity, in which case the rational number is converted to null.)</item>
+    /// <item>Simple values other than true and false will be converted to null.
+    /// (This doesn't include floating-point numbers.)</item>
+    /// <item>Infinity and not-a-number will be converted to null.</item>
+    /// </summary>
     /// <returns>A string object containing the converted object.</returns>
     public string ToJSONString() {
       int type = this.ItemType;

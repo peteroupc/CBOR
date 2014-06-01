@@ -1207,7 +1207,7 @@ The string is not in JSON format.
     public static PeterO.Cbor.CBORObject ReadJSON(
         System.IO.Stream stream);
 
-Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format and UTF-8 encoding. The JSON stream may begin with a byte order mark (U + FEFF); however, this implementation's ToJSONString method will not place this character at the beginning of a JSON text, since doing so is forbidden under RFC 7159. If a JSON object has the same key, only the last given value will be used for each duplicated key.
+Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format and UTF-8 encoding. The JSON stream may begin with a byte order mark (U + FEFF). If a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -1228,16 +1228,6 @@ An I/O error occurred.
 
  * PeterO.Cbor.CBORException: 
 The data stream contains invalid UTF-8 or is not in JSON format.
-
-### ToJSONString
-
-    public string ToJSONString();
-
-Converts this object to a JSON string. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types.
-
-<b>Returns:</b>
-
-A string object containing the converted object.
 
 ### Addition
 
