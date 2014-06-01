@@ -58,6 +58,37 @@ namespace CBORDocs {
 
     private static string valueFourSpaces = " " + " " + " " + " ";
 
+    private static IDictionary<string, string> operators = OperatorList();
+
+    private static IDictionary<string, string> OperatorList() {
+      var operators = new Dictionary<string, string>();
+      operators["op_Addition"] = "+";
+      operators["op_UnaryPlus"] = "+";
+      operators["op_Subtraction"] = "-";
+      operators["op_UnaryNegation"] = "-";
+      operators["op_Multiply"] = "*";
+      operators["op_Division"] = "/";
+      operators["op_LeftShift"] = "<<";
+      operators["op_RightShift"] = ">>";
+      operators["op_BitwiseAnd"] = "&";
+      operators["op_BitwiseOr"] = "|";
+      operators["op_ExclusiveOr"] = "^";
+      operators["op_LogicalNot"] = "!";
+      operators["op_OnesComplement"] = "~";
+      operators["op_True"] = "true";
+      operators["op_False"] = "false";
+      operators["op_Modulus"] = "%";
+      operators["op_Decrement"] = "--";
+      operators["op_Increment"] = "++";
+      operators["op_Equality"] = "==";
+      operators["op_Inequality"] = "!=";
+      operators["op_GreaterThan"] = ">";
+      operators["op_GreaterThanOrEqual"] = ">=";
+      operators["op_LessThan"] = "<";
+      operators["op_LessThanOrEqual"] = "<=";
+      return operators;
+    }
+
     public static string FormatTypeSig(Type typeInfo) {
       StringBuilder builder = new StringBuilder();
       builder.Append(valueFourSpaces);
@@ -196,11 +227,22 @@ namespace CBORDocs {
       } else if (method.IsVirtual) {
         builder.Append("virtual ");
       }
-      // TODO: Operator names
       if (method is MethodInfo) {
-        builder.Append(FormatType(((MethodInfo)method).ReturnType));
-        builder.Append(" ");
-        builder.Append(method.Name);
+        if (method.Name.Equals("op_Explicit")) {
+          builder.Append("explicit operator ");
+          builder.Append(FormatType(((MethodInfo)method).ReturnType));
+        } else if (method.Name.Equals("op_Implicit")) {
+          builder.Append("implicit operator ");
+          builder.Append(FormatType(((MethodInfo)method).ReturnType));
+        } else if (operators.ContainsKey(method.Name)) {
+          builder.Append(FormatType(((MethodInfo)method).ReturnType));
+          builder.Append(" operator ");
+          builder.Append(operators[method.Name]);
+        } else {
+          builder.Append(FormatType(((MethodInfo)method).ReturnType));
+          builder.Append(" ");
+          builder.Append(method.Name);
+        }
       } else {
         builder.Append(UndecorateTypeName(method.ReflectedType.Name));
       }
@@ -526,7 +568,7 @@ namespace CBORDocs {
           this.WriteLine("### " + UndecorateTypeName(method.ReflectedType.Name) +
             " Constructor\r\n\r\n" + signature + "\r\n\r\n");
         } else {
-          this.WriteLine("### " + method.Name + "\r\n\r\n" + signature + "\r\n\r\n");
+          this.WriteLine("### " + MethodNameHeading(method.Name) + "\r\n\r\n" + signature + "\r\n\r\n");
         }
         this.paramStr.Clear();
         this.returnStr.Clear();
@@ -584,6 +626,18 @@ namespace CBORDocs {
         signature = FormatField(field);
         this.WriteLine("### " + field.Name + "\r\n\r\n" + signature + "\r\n\r\n");
         base.VisitMember(member);
+      }
+    }
+
+    private static string MethodNameHeading(string p) {
+      if (operators.ContainsKey(p)) {
+        return "Operator `" + operators[p] + "`";
+      } else if (p.Equals("op_Explicit")) {
+        return "Explicit Operator";
+      } else if (p.Equals("op_Implicit")) {
+        return "Implicit Operator";
+      } else {
+        return p;
       }
     }
 
