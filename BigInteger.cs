@@ -3458,7 +3458,7 @@ if (bytes.Length <= 0) {
       return r;
     }
 
-    internal static void PositiveSubtract(
+    private static void PositiveSubtract(
       BigInteger bigintDiff,
       BigInteger minuend,
       BigInteger subtrahend) {
@@ -4129,13 +4129,13 @@ if (bytes.Length <= 0) {
       return remainder;
     }
 
-    internal void NegateInternal() {
+    private void NegateInternal() {
       if (this.wordCount != 0) {
         this.negative = this.Sign > 0;
       }
     }
 
-    internal int PositiveCompare(BigInteger t) {
+    private int PositiveCompare(BigInteger t) {
       int size = this.wordCount, tempSize = t.wordCount;
       if (size == tempSize) {
         return Compare(this.reg, 0, t.reg, 0, (int)size);

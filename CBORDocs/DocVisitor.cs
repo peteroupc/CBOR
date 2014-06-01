@@ -570,6 +570,10 @@ namespace CBORDocs {
         } else {
           this.WriteLine("### " + MethodNameHeading(method.Name) + "\r\n\r\n" + signature + "\r\n\r\n");
         }
+        ObsoleteAttribute attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
+        if (attr!=null) {
+          this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+        }
         this.paramStr.Clear();
         this.returnStr.Clear();
         this.exceptionStr.Clear();
@@ -594,6 +598,10 @@ namespace CBORDocs {
         }
         this.WriteLine("## " + FormatType(type) + "\r\n\r\n");
         this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
+        ObsoleteAttribute attr = type.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
+        if (attr != null) {
+          this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+        }
         base.VisitMember(member);
       } else if (info is PropertyInfo) {
         PropertyInfo property = (PropertyInfo)info;
@@ -604,6 +612,10 @@ namespace CBORDocs {
         }
         signature = FormatProperty(property);
         this.WriteLine("### " + property.Name + "\r\n\r\n" + signature + "\r\n\r\n");
+        ObsoleteAttribute attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
+        if (attr != null) {
+          this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+        }
         this.paramStr.Clear();
         this.returnStr.Clear();
         this.exceptionStr.Clear();

@@ -90,7 +90,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    internal static BigInteger ToUnsignedBigInteger(long val) {
+    private static BigInteger ToUnsignedBigInteger(long val) {
       BigInteger lval = (BigInteger)(val & ~(1L << 63));
       if ((val >> 63) != 0) {
         BigInteger bigintAdd = BigInteger.One << 63;

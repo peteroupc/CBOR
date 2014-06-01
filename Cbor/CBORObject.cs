@@ -77,23 +77,23 @@ namespace PeterO.Cbor {
     private int tagLow;
     private int tagHigh;
     internal const int CBORObjectTypeInteger = 0;  // -(2^63).. (2^63-1)
-    internal const int CBORObjectTypeBigInteger = 1;  // all other integers
+    private const int CBORObjectTypeBigInteger = 1;  // all other integers
     internal const int CBORObjectTypeByteString = 2;
     internal const int CBORObjectTypeTextString = 3;
-    internal const int CBORObjectTypeArray = 4;
-    internal const int CBORObjectTypeMap = 5;
-    internal const int CBORObjectTypeSimpleValue = 6;
+    private const int CBORObjectTypeArray = 4;
+    private const int CBORObjectTypeMap = 5;
+    private const int CBORObjectTypeSimpleValue = 6;
     internal const int CBORObjectTypeSingle = 7;
     internal const int CBORObjectTypeDouble = 8;
     internal const int CBORObjectTypeExtendedDecimal = 9;
-    internal const int CBORObjectTypeTagged = 10;
+    private const int CBORObjectTypeTagged = 10;
     internal const int CBORObjectTypeExtendedFloat = 11;
     internal const int CBORObjectTypeExtendedRational = 12;
     internal static readonly BigInteger Int64MaxValue = (BigInteger)Int64.MaxValue;
     internal static readonly BigInteger Int64MinValue = (BigInteger)Int64.MinValue;
-    internal static readonly BigInteger LowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
+    private static readonly BigInteger LowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
 
-    internal static readonly BigInteger UInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
+    private static readonly BigInteger UInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
     private sealed class ConverterInfo {
       private object toObject;
@@ -130,7 +130,7 @@ namespace PeterO.Cbor {
 
     private static int[] valueNumberTypeOrder = new int[] { 0, 0, 2, 3, 4, 5, 1, 0, 0, 0, 0, 0, 0 };
 
-    internal static readonly ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
+    private static readonly ICBORNumber[] NumberInterfaces = new ICBORNumber[] {
       new CBORInteger(),
       new CBORBigInteger(),
       null,
@@ -3603,15 +3603,15 @@ namespace PeterO.Cbor {
       }
     }
 
-    internal static CBORObject FromRaw(String str) {
+    private static CBORObject FromRaw(String str) {
       return new CBORObject(CBORObjectTypeTextString, str);
     }
 
-    internal static CBORObject FromRaw(IList<CBORObject> list) {
+    private static CBORObject FromRaw(IList<CBORObject> list) {
       return new CBORObject(CBORObjectTypeArray, list);
     }
 
-    internal static CBORObject FromRaw(IDictionary<CBORObject, CBORObject> map) {
+    private static CBORObject FromRaw(IDictionary<CBORObject, CBORObject> map) {
       return new CBORObject(CBORObjectTypeMap, map);
     }
 
@@ -4156,11 +4156,11 @@ namespace PeterO.Cbor {
       }
     }
 
-    internal static ICBORTag FindTagConverter(int tag) {
+    private static ICBORTag FindTagConverter(int tag) {
       return FindTagConverter((BigInteger)tag);
     }
 
-    internal static ICBORTag FindTagConverter(long tag) {
+    private static ICBORTag FindTagConverter(long tag) {
       return FindTagConverter((BigInteger)tag);
     }
 

@@ -72,35 +72,35 @@ namespace PeterO {
     /// <summary>Return color of node p, or BLACK if p is null.</summary>
     /// <returns>A Boolean object.</returns>
     /// <param name='p'>A RBCell object.</param>
-      internal static bool colorOf(RBCell p) {
+      private static bool colorOf(RBCell p) {
         return (p == null) ? BLACK : p.colorValue;
       }
 
     /// <summary>Return parent of node p, or null if p is null.</summary>
     /// <returns>A RBCell object.</returns>
     /// <param name='p'>A RBCell object. (2).</param>
-      internal static RBCell parentOf(RBCell p) {
+      private static RBCell parentOf(RBCell p) {
         return (p == null) ? null : p.parentValue;
       }
 
     /// <summary>Set the color of node p, or do nothing if p is null.</summary>
     /// <param name='p'>A RBCell object.</param>
     /// <param name='c'>A Boolean object.</param>
-      internal static void setColor(RBCell p, bool c) { if (p != null) {
+      private static void setColor(RBCell p, bool c) { if (p != null) {
           p.colorValue = c;
         } }
 
     /// <summary>Return left child of node p, or null if p is null.</summary>
     /// <returns>A RBCell object.</returns>
     /// <param name='p'>A RBCell object. (2).</param>
-      internal static RBCell leftOf(RBCell p) {
+      private static RBCell leftOf(RBCell p) {
         return (p == null) ? null : p.leftValue;
       }
 
     /// <summary>Return right child of node p, or null if p is null.</summary>
     /// <returns>A RBCell object.</returns>
     /// <param name='p'>A RBCell object. (2).</param>
-      internal static RBCell rightOf(RBCell p) {
+      private static RBCell rightOf(RBCell p) {
         return (p == null) ? null : p.rightValue;
       }
 
@@ -269,7 +269,7 @@ namespace PeterO {
     /// <returns>The new root of the current tree. Rebalancing can change
     /// the root.</returns>
       public RBCell delete(RBCell root) {
-        // if strictly internal, swap contents with successor and then delete it
+        // if strictly private, swap contents with successor and then delete it
         if (this.leftValue != null && this.rightValue != null) {
           RBCell s = this.successor();
           this.copyContents(s);
