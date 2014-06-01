@@ -39,6 +39,21 @@ Starting with version 0.21.0, the C# implementation is available in the
 NuGet Package Gallery under the name
 [PeterO.Cbor](https://www.nuget.org/packages/PeterO.Cbor).
 
+Source Code
+---------
+Source code is available in the [project page](https://github.com/peteroupc/CBOR).
+
+About
+-----------
+
+Written in 2013 by Peter O.
+
+Any copyright is dedicated to the Public Domain.
+http://creativecommons.org/publicdomain/zero/1.0/
+
+If you like this, you should donate to Peter O.
+at: http://peteroupc.github.io/CBOR/
+
 Clarifications
 ------------------
 
@@ -55,19 +70,18 @@ The following are some clarifications to RFC 7049.
   conversion, it won't count leap seconds, either.  This implementation
   treats values of infinity and NaN as invalid.
 * For tag 32, this implementation accepts strings that are valid
-  Internationalized Resource Identifiers (IRIs) in addition to URI.
+  Internationalized Resource Identifiers (IRIs) in addition to URIs.
   IRI are like URIs except that they also allow non-ASCII characters.
 
-About
+Specifications
 -----------
+Here are specifications by this implementation's author on proposed
+CBOR tags:
 
-Written in 2013 by Peter O.
-
-Any copyright is dedicated to the Public Domain.
-http://creativecommons.org/publicdomain/zero/1.0/
-
-If you like this, you should donate to Peter O.
-at: http://peteroupc.github.io/CBOR/
+* Tag 30: [Rational numbers](http://peteroupc.github.io/rational.html)
+* Tag 257: [Binary MIME messages](http://peteroupc.github.io/binarymime.html)
+* Tag 38: [Language-tagged strings](http://peteroupc.github.io/langtags.html)
+* Tag 264 and 265: [Arbitrary-exponent numbers](http://peteroupc.github.io/bigfrac.html)
 
 Acknowledgments
 -----------
