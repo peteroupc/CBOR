@@ -19,5 +19,5 @@ private BigNumberFlags() {
 
     static final int FiniteOnly = 0;
     static final int FiniteAndNonFinite = 1;
-    static final int X3Dot274 = 2;
+    private static final int X3Dot274 = 2;
   }

@@ -15,7 +15,7 @@ import com.upokecenter.util.*;
       return CBORTypeFilter.ByteString;
     }
 
-    static CBORObject FromObjectAndInnerTags(Object objectValue, CBORObject objectWithTags) {
+    private static CBORObject FromObjectAndInnerTags(Object objectValue, CBORObject objectWithTags) {
       CBORObject newObject = CBORObject.FromObject(objectValue);
       if (!objectWithTags.isTagged()) {
         return newObject;

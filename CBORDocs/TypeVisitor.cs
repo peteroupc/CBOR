@@ -19,7 +19,7 @@ using ClariusLabs.NuDoc;
 namespace CBORDocs {
   internal class TypeVisitor : Visitor, IComparer<Type> {
     private SortedDictionary<Type, DocVisitor> docs;
-    string directory;
+    internal string directory;
 
     public TypeVisitor(string directory) {
       this.docs = new SortedDictionary<Type, DocVisitor>(this);

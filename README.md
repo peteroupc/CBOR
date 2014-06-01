@@ -1,22 +1,18 @@
 CBOR
 ====
 
-A C# and Java implementation of Concise Binary Object Representation (RFC 7049).  
-CBOR is a general-purpose binary data format designed by Carsten 
-Bormann, and its data model "is an extended version of the JSON data model",
-supporting many more types of data than JSON. "CBOR was inspired by 
-MessagePack", but "is not intended as a version of or replacement for 
-MessagePack."
+A C# implementation of Concise Binary Object Representation, a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. "CBOR was inspired by MessagePack", but "is not intended as a version of or replacement for MessagePack."
 
-This implementation also doubles as a reader and writer of JSON, and can convert
-data from JSON to CBOR and back.
+This implementation was written by Peter O. and is released to the Public Domain under the CC0 Declaration.
+
+This implementation also doubles as a reader and writer of JSON, and can convert data from JSON to CBOR and back.
 
 Documentation
 ------------
 
 This library defines one class, called CBORObject, that allows you to read and
 write CBOR objects to and from data streams and byte arrays, and to convert JSON
-text to CBOR objects.
+text to CBOR objects and back.
 
 See the [Wiki](https://github.com/peteroupc/CBOR/wiki) for Java API documentation.
 
