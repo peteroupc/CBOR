@@ -531,7 +531,7 @@ public int compareTo(CBORObject other) {
         }
       } else if (typeA == typeB) {
         switch (typeA) {
-            case CBORObjectTypeInteger: {
+          case CBORObjectTypeInteger: {
               long a = (((Long)objA).longValue());
               long b = (((Long)objB).longValue());
               if (a == b) {
@@ -541,7 +541,7 @@ public int compareTo(CBORObject other) {
               }
               break;
             }
-            case CBORObjectTypeSingle: {
+          case CBORObjectTypeSingle: {
               float a = ((Float)objA).floatValue();
               float b = ((Float)objB).floatValue();
               // Treat NaN as greater than all other numbers
@@ -556,13 +556,13 @@ public int compareTo(CBORObject other) {
               }
               break;
             }
-            case CBORObjectTypeBigInteger: {
+          case CBORObjectTypeBigInteger: {
               BigInteger bigintA = (BigInteger)objA;
               BigInteger bigintB = (BigInteger)objB;
               cmp = bigintA.compareTo(bigintB);
               break;
             }
-            case CBORObjectTypeDouble: {
+          case CBORObjectTypeDouble: {
               double a = ((Double)objA).doubleValue();
               double b = ((Double)objB).doubleValue();
               // Treat NaN as greater than all other numbers
@@ -577,44 +577,44 @@ public int compareTo(CBORObject other) {
               }
               break;
             }
-            case CBORObjectTypeExtendedDecimal: {
+          case CBORObjectTypeExtendedDecimal: {
               cmp = ((ExtendedDecimal)objA).compareTo(
                 (ExtendedDecimal)objB);
               break;
             }
-            case CBORObjectTypeExtendedFloat: {
+          case CBORObjectTypeExtendedFloat: {
               cmp = ((ExtendedFloat)objA).compareTo(
                 (ExtendedFloat)objB);
               break;
             }
-            case CBORObjectTypeExtendedRational: {
+          case CBORObjectTypeExtendedRational: {
               cmp = ((ExtendedRational)objA).compareTo(
                 (ExtendedRational)objB);
               break;
             }
-            case CBORObjectTypeByteString: {
+          case CBORObjectTypeByteString: {
               cmp = CBORUtilities.ByteArrayCompare((byte[])objA, (byte[])objB);
               break;
             }
-            case CBORObjectTypeTextString: {
+          case CBORObjectTypeTextString: {
               cmp = DataUtilities.CodePointCompare(
                 (String)objA,
                 (String)objB);
               break;
             }
-            case CBORObjectTypeArray: {
+          case CBORObjectTypeArray: {
               cmp = ListCompare(
                 (ArrayList<CBORObject>)objA,
                 (ArrayList<CBORObject>)objB);
               break;
             }
-            case CBORObjectTypeMap: {
+          case CBORObjectTypeMap: {
               cmp = MapCompare(
                 (Map<CBORObject, CBORObject>)objA,
                 (Map<CBORObject, CBORObject>)objB);
               break;
             }
-            case CBORObjectTypeSimpleValue: {
+          case CBORObjectTypeSimpleValue: {
               int valueA = ((Integer)objA).intValue();
               int valueB = ((Integer)objB).intValue();
               if (valueA == valueB) {
@@ -959,7 +959,7 @@ public boolean equals(CBORObject other) {
             return false;
           }
           break;
-          case CBORObjectTypeMap: {
+        case CBORObjectTypeMap: {
             Map<CBORObject, CBORObject> cbordict = ((otherValue.itemValue instanceof Map<?,?>) ? (Map<CBORObject,
             CBORObject>)otherValue.itemValue : null);
             if (!CBORMapEquals(this.AsMap(), cbordict)) {
@@ -2077,7 +2077,7 @@ public void set(String key, CBORObject value) {
     public String AsString() {
       int type = this.getItemType();
       switch (type) {
-          case CBORObjectTypeTextString: {
+        case CBORObjectTypeTextString: {
             return (String)this.getThisItem();
           }
         default:
@@ -2876,7 +2876,7 @@ public void set(String key, CBORObject value) {
             }
             if (this.isNull()) {
               return new byte[] {  tagbyte, (byte)0xf6  };
-          }
+            }
             if (this.isUndefined()) {
               return new byte[] {  tagbyte, (byte)0xf7  };
             }
@@ -3077,7 +3077,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
               case 't':
                 c = '\t';
                 break;
-                case 'u': { // Unicode escape
+              case 'u': { // Unicode escape
                   c = 0;
                   // Consists of 4 hex digits
                   for (int i = 0; i < 4; ++i) {
@@ -3269,7 +3269,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
               throw reader.NewError("Trailing comma");
             }
             return CBORObject.FromRaw(myHashMap);
-            default: {
+          default: {
               // Read the next String
               if (c < 0) {
                 throw reader.NewError("Unexpected end of data");
@@ -3436,13 +3436,31 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     /**
-     * Not documented yet.
-     * @return A string object.
+     * Converts this object to a string in JavaScript Object Notation (JSON)
+     * format. This function works not only with arrays and maps, but also
+     * integers, strings, byte arrays, and other JSON data types. Notes:
+     * <ul><li> If this object contains maps with non-string keys, the keys
+     * are converted to JSON strings before writing the map as a JSON string.
+     * </li> <li>If a number in the form of a big float has a very high binary
+     * exponent, it will be converted to a double before being converted
+     * to a JSON string. (The resulting double could overflow to infinity,
+     * in which case the big float is converted to null.)</li> <li>The string
+     * will not begin with a byte-order mark (U + FEFF); RFC 7159 (the JSON
+     * specification) forbids placing a byte-order mark at the beginning
+     * of a JSON string.</li> <li>Byte strings are converted to Base64 URL
+     * by default.</li> <li>Rational numbers will be converted to their
+     * exact form, if possible, otherwise to a high-precision approximation.
+     * (The resulting approximation could overflow to infinity, in which
+     * case the rational number is converted to null.)</li> <li>Simple
+     * values other than true and false will be converted to null. (This doesn't
+     * include floating-point numbers.)</li> <li>Infinity and not-a-number
+     * will be converted to null.</li> </ul>
+     * @return A string object containing the converted object.
      */
     public String ToJSONString() {
       int type = this.getItemType();
       switch (type) {
-          case CBORObjectTypeSimpleValue: {
+        case CBORObjectTypeSimpleValue: {
             if (this.isTrue()) {
               {
                 return "true";
@@ -3459,7 +3477,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
               return "null";
             }
           }
-          case CBORObjectTypeSingle: {
+        case CBORObjectTypeSingle: {
             float f = ((Float)this.getThisItem()).floatValue();
             if (((f)==Float.NEGATIVE_INFINITY) ||
                 ((f)==Float.POSITIVE_INFINITY) ||
@@ -3470,7 +3488,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
                 Float.toString((float)f));
             }
           }
-          case CBORObjectTypeDouble: {
+        case CBORObjectTypeDouble: {
             double f = ((Double)this.getThisItem()).doubleValue();
             if (((f)==Double.NEGATIVE_INFINITY) ||
                 ((f)==Double.POSITIVE_INFINITY) ||
@@ -3481,13 +3499,13 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
                 Double.toString((double)f));
             }
           }
-          case CBORObjectTypeInteger: {
+        case CBORObjectTypeInteger: {
             return Long.toString((((Long)this.getThisItem()).longValue()));
           }
-          case CBORObjectTypeBigInteger: {
+        case CBORObjectTypeBigInteger: {
             return CBORUtilities.BigIntToString((BigInteger)this.getThisItem());
           }
-          case CBORObjectTypeExtendedRational: {
+        case CBORObjectTypeExtendedRational: {
             ExtendedRational dec = (ExtendedRational)this.getThisItem();
             ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
               PrecisionContext.Decimal128.WithUnlimitedExponents());
@@ -3497,14 +3515,14 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
               return f.toString();
             }
           }
-          case CBORObjectTypeExtendedDecimal: {
+        case CBORObjectTypeExtendedDecimal: {
             ExtendedDecimal dec = (ExtendedDecimal)this.getThisItem();
             if (dec.IsInfinity() || dec.IsNaN()) {
               return "null";
             }
             return dec.toString();
           }
-          case CBORObjectTypeExtendedFloat: {
+        case CBORObjectTypeExtendedFloat: {
             ExtendedFloat flo = (ExtendedFloat)this.getThisItem();
             if (flo.IsInfinity() || flo.IsNaN()) {
               return "null";
@@ -3526,7 +3544,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             }
             return flo.toString();
           }
-          default: {
+        default: {
             StringBuilder sb = new StringBuilder();
             this.ToJSONStringInternal(sb);
             return sb.toString();
@@ -3537,7 +3555,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     private void ToJSONStringInternal(StringBuilder sb) {
       int type = this.getItemType();
       switch (type) {
-          case CBORObjectTypeByteString: {
+        case CBORObjectTypeByteString: {
             sb.append('\"');
             if (this.HasTag(22)) {
               Base64.ToBase64(sb, (byte[])this.getThisItem(), false);
@@ -3549,13 +3567,13 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             sb.append('\"');
             break;
           }
-          case CBORObjectTypeTextString: {
+        case CBORObjectTypeTextString: {
             sb.append('\"');
             StringToJSONStringUnquoted((String)this.getThisItem(), sb);
             sb.append('\"');
             break;
           }
-          case CBORObjectTypeArray: {
+        case CBORObjectTypeArray: {
             boolean first = true;
             sb.append('[');
             for(CBORObject i : this.AsList()) {
@@ -3568,7 +3586,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             sb.append(']');
             break;
           }
-          case CBORObjectTypeExtendedRational: {
+        case CBORObjectTypeExtendedRational: {
             ExtendedRational dec = (ExtendedRational)this.getThisItem();
             ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
               PrecisionContext.Decimal128.WithUnlimitedExponents());
@@ -3579,7 +3597,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             }
             break;
           }
-          case CBORObjectTypeMap: {
+        case CBORObjectTypeMap: {
             boolean first = true;
             boolean hasNonStringKeys = false;
             Map<CBORObject, CBORObject> objMap = this.AsMap();
