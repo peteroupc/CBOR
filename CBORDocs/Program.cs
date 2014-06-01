@@ -19,12 +19,17 @@ using PeterO.Cbor;
 namespace CBORDocs {
   internal class Program {
     public static void Main(string[] args) {
+      var directory = "../../../docs";
+      Directory.CreateDirectory(directory);
       var members = DocReader.Read(typeof(CBORObject).Assembly);
       var oldWriter = Console.Out;
-      using (var writer = new StreamWriter("../../../APIDocs.md")) {
-        var visitor = new TypeVisitor(writer);
-        members.Accept(visitor);
-        visitor.Finish();
+      TypeVisitor visitor = new TypeVisitor(directory);
+      members.Accept(visitor);
+      visitor.Finish();
+      using (var writer = new StreamWriter(Path.Combine(directory,"APIDocs.md"))) {
+        SummaryVisitor visitor2 = new SummaryVisitor(writer);
+        members.Accept(visitor2);
+        visitor2.Finish();
       }
     }
   }

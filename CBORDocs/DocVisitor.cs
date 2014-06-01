@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 using ClariusLabs.NuDoc;
@@ -27,6 +28,36 @@ namespace CBORDocs {
 
     public override string ToString() {
       return this.buffer.ToString();
+    }
+
+    public static string GetTypeID(Type type) {
+      string name = FormatType(type);
+      StringBuilder builder = new StringBuilder();
+      for (int i = 0; i < name.Length; i++) {
+        UnicodeCategory cat=CharUnicodeInfo.GetUnicodeCategory(name, i);
+        int cp = PeterO.DataUtilities.CodePointAt(name, i);
+        if(cp>=0x10000){
+          i++;
+        }
+        if(cat == UnicodeCategory.UppercaseLetter ||
+          cat == UnicodeCategory.LowercaseLetter ||
+          cat == UnicodeCategory.TitlecaseLetter ||
+          cat == UnicodeCategory.OtherLetter ||
+          cat == UnicodeCategory.DecimalDigitNumber ||
+          cp == '_' || cp == '.') {
+            if (cp >= 0x10000) {
+              builder.Append(name, i, 2);
+            } else {
+              builder.Append(name[i]);
+            }
+        } else {
+          builder.Append(' ');
+        }
+      }
+      name=builder.ToString();
+      name = name.Trim();
+      name = name.Replace(' ', '-');
+      return name;
     }
 
     public static string FormatType(Type type) {
