@@ -34,6 +34,9 @@ namespace CBORDocs {
         typeName = typeName.Replace("<", "&lt;");
         typeName = typeName.Replace(">", "&gt;");
         typeName = "[" + typeName + "](" + DocVisitor.GetTypeID(key) + ".md)";
+        if (finalString.IndexOf(".") >= 0) {
+          finalString = finalString.Substring(0, finalString.IndexOf(".") + 1);
+        }
         finalString = Regex.Replace(finalString, @"\r?\n(\r?\n)+", "\r\n\r\n");
         this.writer.Write(" * " + typeName + " - ");
         this.writer.WriteLine(finalString);
@@ -57,9 +60,6 @@ namespace CBORDocs {
       foreach (var element in member.Elements) {
         if (element is Summary) {
           string text = element.ToText();
-          if (text.IndexOf(".") >= 0) {
-            text = text.Substring(0, text.IndexOf(".") + 1);
-          }
           this.docs[currentType].Append(text);
           this.docs[currentType].Append("\r\n");
         }
