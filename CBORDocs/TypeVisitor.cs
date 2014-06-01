@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 using ClariusLabs.NuDoc;
@@ -27,7 +28,9 @@ namespace CBORDocs {
 
     public void Finish() {
       foreach (var key in this.docs.Keys) {
-        this.writer.WriteLine(this.docs[key].ToString());
+        string finalString = this.docs[key].ToString();
+        finalString = Regex.Replace(finalString, @"\r?\n(\r?\n)+", "\r\n\r\n");
+        this.writer.WriteLine(finalString);
       }
     }
 
