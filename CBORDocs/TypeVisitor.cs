@@ -19,18 +19,21 @@ using ClariusLabs.NuDoc;
 namespace CBORDocs {
   internal class TypeVisitor : Visitor, IComparer<Type> {
     private SortedDictionary<Type, DocVisitor> docs;
-    private TextWriter writer;
+    string directory;
 
-    public TypeVisitor(TextWriter writer) {
+    public TypeVisitor(string directory) {
       this.docs = new SortedDictionary<Type, DocVisitor>(this);
-      this.writer = writer;
+      this.directory = directory;
     }
 
     public void Finish() {
       foreach (var key in this.docs.Keys) {
         string finalString = this.docs[key].ToString();
-        finalString = Regex.Replace(finalString, @"\r?\n(\r?\n)+", "\r\n\r\n");
-        this.writer.WriteLine(finalString);
+        string filename = Path.Combine(this.directory, DocVisitor.GetTypeID(key) + ".md");
+        using (var writer = new StreamWriter(filename, false, Encoding.UTF8)) {
+          finalString = Regex.Replace(finalString, @"\r?\n(\r?\n)+", "\r\n\r\n");
+          writer.WriteLine(finalString);
+        }
       }
     }
 

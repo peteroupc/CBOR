@@ -17,7 +17,7 @@ text to CBOR objects.
 
 See the [Wiki](https://github.com/peteroupc/CBOR/wiki) for Java API documentation.
 
-See [APIDocs.md](https://github.com/peteroupc/CBOR/blob/master/APIDocs.md) for C# (.NET) API documentation.
+See [docs/APIDocs.md](https://github.com/peteroupc/CBOR/blob/master/docs/APIDocs.md) for C# (.NET) API documentation.
 
 The Different Versions
 -----------
