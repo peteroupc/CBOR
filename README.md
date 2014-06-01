@@ -8,6 +8,9 @@ supporting many more types of data than JSON. "CBOR was inspired by
 MessagePack", but "is not intended as a version of or replacement for 
 MessagePack."
 
+This implementation also doubles as a reader and writer of JSON, and can convert
+data from JSON to CBOR and back.
+
 Documentation
 ------------
 
