@@ -20,3 +20,4 @@ CBORTest/ProfilingSessions/
 *.suo
 *.log
 .pmd
+/target
