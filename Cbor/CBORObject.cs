@@ -6,51 +6,51 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Represents an object in Concise Binary Object Representation
-    /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
-    /// is defined in RFC 7049. <para>There are many ways to get a CBOR object,
-    /// including from bytes, objects, streams and JSON, as described below.</para>
-    /// <para> <b>To and from byte arrays:</b>
-    /// The CBORObject.DecodeToBytes method converts a byte array in CBOR
-    /// format to a CBOR object. The EncodeToBytes method converts a CBOR
-    /// object to its corresponding byte array in CBOR format. </para>
-    /// <para> <b>To and from data streams:</b>
-    /// The CBORObject.Write methods write many kinds of objects to a data
-    /// stream, including numbers, CBOR objects, strings, and arrays of
-    /// numbers and strings. The CBORObject.Read method reads a CBOR object
-    /// from a data stream. </para>
-    /// <para> <b>To and from other objects:</b>
-    /// The CBORObject.FromObject methods converts many kinds of objects
-    /// to a CBOR object, including numbers, strings, and arrays and maps
-    /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
-    /// convert a CBOR object to different types of object. </para>
-    /// <para> <b>To and from JSON:</b>
-    /// This class also doubles as a reader and writer of JavaScript Object
-    /// Notation (JSON). The CBORObject.FromJSONString method converts
-    /// JSON to a CBOR object, and the ToJSONString method converts a CBOR
-    /// object to a JSON string. </para>
-    /// <para> Thread Safety: CBOR objects that are numbers, "simple values",
-    /// and text strings are immutable (their values can't be changed), so
-    /// they are inherently safe for use by multiple threads. CBOR objects
-    /// that are arrays, maps, and byte strings are mutable, but this class
-    /// doesn't attempt to synchronize reads and writes to those objects
-    /// by multiple threads, so those objects are not thread safe without
-    /// such synchronization. </para>
-    /// <para> One kind of CBOR object is called a map, or a list of key-value
-    /// pairs. Keys can be any kind of CBOR object, including numbers, strings,
-    /// arrays, and maps. However, since byte strings, arrays, and maps are
-    /// mutable, it is not advisable to use these three kinds of object as keys;
-    /// they are much better used as map values instead, keeping in mind that
-    /// they are not thread safe without synchronizing reads and writes to
-    /// them. </para>
-    /// </summary>
+  /// <summary>Represents an object in Concise Binary Object Representation
+  /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
+  /// is defined in RFC 7049. <para>There are many ways to get a CBOR object,
+  /// including from bytes, objects, streams and JSON, as described below.</para>
+  /// <para> <b>To and from byte arrays:</b>
+  /// The CBORObject.DecodeToBytes method converts a byte array in CBOR
+  /// format to a CBOR object. The EncodeToBytes method converts a CBOR
+  /// object to its corresponding byte array in CBOR format. </para>
+  /// <para> <b>To and from data streams:</b>
+  /// The CBORObject.Write methods write many kinds of objects to a data
+  /// stream, including numbers, CBOR objects, strings, and arrays of
+  /// numbers and strings. The CBORObject.Read method reads a CBOR object
+  /// from a data stream. </para>
+  /// <para> <b>To and from other objects:</b>
+  /// The CBORObject.FromObject methods converts many kinds of objects
+  /// to a CBOR object, including numbers, strings, and arrays and maps
+  /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
+  /// convert a CBOR object to different types of object. </para>
+  /// <para> <b>To and from JSON:</b>
+  /// This class also doubles as a reader and writer of JavaScript Object
+  /// Notation (JSON). The CBORObject.FromJSONString method converts
+  /// JSON to a CBOR object, and the ToJSONString method converts a CBOR
+  /// object to a JSON string. </para>
+  /// <para> Thread Safety: CBOR objects that are numbers, "simple values",
+  /// and text strings are immutable (their values can't be changed), so
+  /// they are inherently safe for use by multiple threads. CBOR objects
+  /// that are arrays, maps, and byte strings are mutable, but this class
+  /// doesn't attempt to synchronize reads and writes to those objects
+  /// by multiple threads, so those objects are not thread safe without
+  /// such synchronization. </para>
+  /// <para> One kind of CBOR object is called a map, or a list of key-value
+  /// pairs. Keys can be any kind of CBOR object, including numbers, strings,
+  /// arrays, and maps. However, since byte strings, arrays, and maps are
+  /// mutable, it is not advisable to use these three kinds of object as keys;
+  /// they are much better used as map values instead, keeping in mind that
+  /// they are not thread safe without synchronizing reads and writes to
+  /// them. </para>
+  /// </summary>
   public sealed partial class CBORObject : IComparable<CBORObject>, IEquatable<CBORObject> {
     internal int ItemType {
       get {
@@ -91,14 +91,15 @@ namespace PeterO.Cbor {
     internal const int CBORObjectTypeExtendedRational = 12;
     internal static readonly BigInteger Int64MaxValue = (BigInteger)Int64.MaxValue;
     internal static readonly BigInteger Int64MinValue = (BigInteger)Int64.MinValue;
+    private static readonly BigInteger LowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
 
     private static readonly BigInteger UInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
     private sealed class ConverterInfo {
       private object toObject;
 
-    /// <summary>Gets or sets the converter's ToCBORObject method.</summary>
-    /// <value>The converter&apos;s ToCBORObject method.</value>
+      /// <summary>Gets or sets the converter's ToCBORObject method.</summary>
+      /// <value>The converter&apos;s ToCBORObject method.</value>
       public object ToObject {
         get {
           return this.toObject;
@@ -111,8 +112,8 @@ namespace PeterO.Cbor {
 
       private object converter;
 
-    /// <summary>Gets or sets the ICBORConverter object.</summary>
-    /// <value>The ICBORConverter object.</value>
+      /// <summary>Gets or sets the ICBORConverter object.</summary>
+      /// <value>The ICBORConverter object.</value>
       public object Converter {
         get {
           return this.converter;
@@ -1498,11 +1499,11 @@ namespace PeterO.Cbor {
         }
       }
 
-    /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not an array.</exception>
-    /// <exception cref='System.ArgumentNullException'>Value is null
-    /// (as opposed to CBORObject.Null).</exception>
+      /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not an array.</exception>
+      /// <exception cref='System.ArgumentNullException'>Value is null
+      /// (as opposed to CBORObject.Null).</exception>
       set {
         if (this.ItemType == CBORObjectTypeArray) {
           if (value == null) {
@@ -1577,12 +1578,12 @@ namespace PeterO.Cbor {
         }
       }
 
-    /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
-    /// as the key.</summary>
-    /// <exception cref='System.ArgumentNullException'>The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not a map.</exception>
+      /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
+      /// as the key.</summary>
+      /// <exception cref='System.ArgumentNullException'>The key or value
+      /// is null (as opposed to CBORObject.Null).</exception>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("key");
@@ -1615,12 +1616,12 @@ namespace PeterO.Cbor {
         return this[objkey];
       }
 
-    /// <summary>Sets the value of a CBOR object in this map, using a string
-    /// as the key.</summary>
-    /// <exception cref='System.ArgumentNullException'>The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not a map.</exception>
+      /// <summary>Sets the value of a CBOR object in this map, using a string
+      /// as the key.</summary>
+      /// <exception cref='System.ArgumentNullException'>The key or value
+      /// is null (as opposed to CBORObject.Null).</exception>
+      /// <exception cref='System.InvalidOperationException'>This object
+      /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("key");
@@ -3390,28 +3391,27 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Converts this object to a string in JavaScript Object Notation
-    /// (JSON) format. This function works not only with arrays and maps,
-    /// but also integers, strings, byte arrays, and other JSON data types.
-    /// Notes: <list><item> If this object contains maps with non-string
-    /// keys, the keys are converted to JSON strings before writing the map
-    /// as a JSON string. </item>
-    /// <item>If a number in the form of a big float has a very high binary exponent,
-    /// it will be converted to a double before being converted to a JSON string.
-    /// (The resulting double could overflow to infinity, in which case the
+    /// <summary>Converts this object to a string in JavaScript Object
+    /// Notation (JSON) format. This function works
+    /// not only with arrays and maps, but also integers, strings, byte arrays,
+    /// and other JSON data types. Notes: <list><item>
+    /// If this object contains maps with non-string keys, the keys are converted
+    /// to JSON strings before writing the map as a JSON string.
+    /// </item>
+    /// <item>If a number in the form of a big float has a very high binary
+    /// exponent, it will be converted to a double before being converted to
+    /// a JSON string. (The resulting double could overflow to infinity, in which case the
     /// big float is converted to null.)</item>
-    /// <item>The string will not begin with a byte-order mark (U + FEFF);
-    /// RFC 7159 (the JSON specification) forbids placing a byte-order mark
-    /// at the beginning of a JSON string.</item>
+    /// <item>The string will not begin with a byte-order mark (U + FEFF); RFC 7159
+    /// (the JSON specification)
+    /// forbids placing a byte-order mark at the beginning of a JSON string.</item>
     /// <item>Byte strings are converted to Base64 URL by default.</item>
-    /// <item>Rational numbers will be converted to their exact form, if
-    /// possible, otherwise to a high-precision approximation. (The resulting
-    /// approximation could overflow to infinity, in which case the rational
-    /// number is converted to null.)</item>
-    /// <item>Simple values other than true and false will be converted to
-    /// null. (This doesn't include floating-point numbers.)</item>
-    /// <item>Infinity and not-a-number will be converted to null.</item>
-    /// </list>
+    /// <item>Rational numbers will be converted to their exact form, if possible,
+    /// otherwise to a high-precision approximation. (The resulting approximation 
+    /// could overflow to infinity, in which case the rational number is converted to null.)</item>
+    /// <item>Simple values other than true and false will be converted to null.
+    /// (This doesn't include floating-point numbers.)</item>
+    /// <item>Infinity and not-a-number will be converted to null.</item></list>
     /// </summary>
     /// <returns>A string object containing the converted object.</returns>
     public string ToJSONString() {
@@ -4177,7 +4177,7 @@ namespace PeterO.Cbor {
       return FindTagConverter((BigInteger)tag);
     }
 
-    internal static ICBORTag FindTagConverterLong(long tag) {
+    private static ICBORTag FindTagConverter(long tag) {
       return FindTagConverter((BigInteger)tag);
     }
 
