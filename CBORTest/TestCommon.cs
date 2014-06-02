@@ -8,7 +8,6 @@ at: http://upokecenter.com/d/
 using System;
 using System.Globalization;
 // using System.Numerics;
-using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 using PeterO.Cbor;
@@ -164,7 +163,7 @@ namespace Test {
     }
 
     private static CBORObject FromBytesB(byte[] b) {
-      using (MemoryStream ms = new MemoryStream(b)) {
+      using (System.IO.MemoryStream ms = new System.IO.MemoryStream(b)) {
         CBORObject o = CBORObject.Read(ms);
         if (ms.Position != ms.Length) {
           throw new CBORException("not at EOF");

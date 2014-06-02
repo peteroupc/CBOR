@@ -6,9 +6,9 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using PeterO;
 
@@ -91,7 +91,6 @@ namespace PeterO.Cbor {
     internal const int CBORObjectTypeExtendedRational = 12;
     internal static readonly BigInteger Int64MaxValue = (BigInteger)Int64.MaxValue;
     internal static readonly BigInteger Int64MinValue = (BigInteger)Int64.MinValue;
-    private static readonly BigInteger LowestMajorType1 = BigInteger.Zero - (BigInteger.One << 64);
 
     private static readonly BigInteger UInt64MaxValue = (BigInteger.One << 64) - BigInteger.One;
 
@@ -4178,7 +4177,7 @@ namespace PeterO.Cbor {
       return FindTagConverter((BigInteger)tag);
     }
 
-    private static ICBORTag FindTagConverterLong(long tag) {
+    internal static ICBORTag FindTagConverterLong(long tag) {
       return FindTagConverter((BigInteger)tag);
     }
 

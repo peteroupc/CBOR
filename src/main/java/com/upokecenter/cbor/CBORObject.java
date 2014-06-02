@@ -8,7 +8,6 @@ at: http://upokecenter.com/d/
  */
 
 import java.util.*;
-
 import java.io.*;
 
 import com.upokecenter.util.*;
@@ -83,7 +82,6 @@ import com.upokecenter.util.*;
     static final int CBORObjectTypeExtendedRational = 12;
     static final BigInteger Int64MaxValue = BigInteger.valueOf(Long.MAX_VALUE);
     static final BigInteger Int64MinValue = BigInteger.valueOf(Long.MIN_VALUE);
-    private static final BigInteger LowestMajorType1 = BigInteger.ZERO .subtract(BigInteger.ONE.shiftLeft(64));
 
     private static final BigInteger UInt64MaxValue = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
 
@@ -4228,7 +4226,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       return FindTagConverter(BigInteger.valueOf(tag));
     }
 
-    private static ICBORTag FindTagConverterLong(long tag) {
+    static ICBORTag FindTagConverterLong(long tag) {
       return FindTagConverter(BigInteger.valueOf(tag));
     }
 
