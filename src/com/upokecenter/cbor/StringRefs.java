@@ -49,16 +49,14 @@ import com.upokecenter.util.*;
         if (lengthHint >= 5) {
           addStr = true;
         }
-      } else if ((long)lastList.size() <= 0xFFFFFFFFL) {
+      } else {
+        // NOTE: lastList's size can't be higher than (2^64)-1
         if (lengthHint >= 7) {
           addStr = true;
         }
-      } else {
-        if (lengthHint >= 11) {
-          addStr = true;
-        }
       }
-      // System.out.println("addStr=" + addStr + " lengthHint=" + lengthHint + " str=" + (str));
+      // NOTE: An additional branch, with lengthHint >= 11, would
+      // be needed if the size could be higher than (2^64)-1
       if (addStr) {
         lastList.add(str);
       }

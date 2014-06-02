@@ -4228,7 +4228,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       return FindTagConverter(BigInteger.valueOf(tag));
     }
 
-    private static ICBORTag FindTagConverter(long tag) {
+    private static ICBORTag FindTagConverterLong(long tag) {
       return FindTagConverter(BigInteger.valueOf(tag));
     }
 

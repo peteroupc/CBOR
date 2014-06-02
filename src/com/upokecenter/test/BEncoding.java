@@ -69,8 +69,7 @@ private BEncoding() {
       return CBORDataUtilities.ParseJSONNumber(
         builder.toString(),
         true,
-        false,
-        true);
+        false);
     }
 
     private static CBORObject readList(InputStream stream) throws IOException {
@@ -128,7 +127,6 @@ private BEncoding() {
       }
       CBORObject number = CBORDataUtilities.ParseJSONNumber(
         builder.toString(),
-        true,
         true,
         true);
       int length = 0;

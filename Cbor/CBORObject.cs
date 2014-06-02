@@ -4178,7 +4178,7 @@ namespace PeterO.Cbor {
       return FindTagConverter((BigInteger)tag);
     }
 
-    private static ICBORTag FindTagConverter(long tag) {
+    private static ICBORTag FindTagConverterLong(long tag) {
       return FindTagConverter((BigInteger)tag);
     }
 

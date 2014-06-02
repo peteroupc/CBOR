@@ -527,7 +527,7 @@ namespace PeterO.Cbor {
             }
             haveFirstByte = true;
           }
-          taginfo = CBORObject.FindTagConverter(uadditional);
+          taginfo = CBORObject.FindTagConverterLong(uadditional);
         } else {
           if (filter != null && !filter.TagAllowed(bigintAdditional)) {
             throw new CBORException("Unexpected tag encountered: " + uadditional);
