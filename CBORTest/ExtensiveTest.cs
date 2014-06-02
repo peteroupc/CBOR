@@ -1200,12 +1200,6 @@ namespace CBOR {
       TextWriter standardOut = Console.Out;
       int x = 0;
       dirfiles.AddRange(Directory.GetFiles("."));
-      if (Directory.Exists("../../../.settings")) {
-        dirfiles.AddRange(Directory.GetFiles("../../../.settings"));
-      }
-      if (Directory.Exists("../../../.settings")) {
-        dirfiles.AddRange(Directory.GetFiles("../../../.settings/test"));
-      }
       foreach (var f in dirfiles) {
         Console.WriteLine(f);
         ++x;
