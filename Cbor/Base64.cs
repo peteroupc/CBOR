@@ -8,8 +8,6 @@ at: http://upokecenter.com/d/
 using System;
 using System.Text;
 
-using PeterO;
-
 namespace PeterO.Cbor {
   internal static class Base64
   {

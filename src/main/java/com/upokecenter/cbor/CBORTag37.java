@@ -7,7 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-import com.upokecenter.util.*;
 import java.util.UUID;
 
     /**

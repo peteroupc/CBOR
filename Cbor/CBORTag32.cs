@@ -6,7 +6,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using PeterO;
 
 namespace PeterO.Cbor {
   internal class CBORTag32 : ICBORTag, ICBORConverter<System.Uri>

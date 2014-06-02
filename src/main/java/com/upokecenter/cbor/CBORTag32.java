@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-import com.upokecenter.util.*;
-
   class CBORTag32 implements ICBORTag, ICBORConverter<java.net.URI>
   {
     public CBORTypeFilter GetTypeFilter() {

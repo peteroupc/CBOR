@@ -8,7 +8,6 @@ at: http://upokecenter.com/d/
  */
 
 // import java.math.*;
-import java.io.*;
 import org.junit.Assert;
 
 import com.upokecenter.util.*;
