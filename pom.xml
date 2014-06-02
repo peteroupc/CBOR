@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.upokecenter.cbor</groupId>
+  <artifactId>cbor</artifactId>
+  <version>0.23.0</version>
+  <name>CBOR</name>
+  <url>https://github.com/peteroupc/CBOR</url>
+  <description>A Java implementation of Concise Binary Object Representation, a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. This implementation was written by Peter O. and is released to the Public Domain under the CC0 Declaration.  This implementation also doubles as a reader and writer of JSON, and can convert data from JSON to CBOR and back.  Finally, this implementation supports arbitrary-precision binary and decimal floating-point numbers and rational numbers with arbitrary-precision components.</description>
+  <build>
+    <sourceDirectory>src</sourceDirectory>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source/>
+          <target/>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

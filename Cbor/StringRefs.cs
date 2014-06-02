@@ -64,16 +64,14 @@ namespace PeterO.Cbor {
         if (lengthHint >= 5) {
           addStr = true;
         }
-      } else if ((long)lastList.Count <= 0xFFFFFFFFL) {
+      } else {
+        // NOTE: lastList's size can't be higher than (2^64)-1
         if (lengthHint >= 7) {
           addStr = true;
         }
-      } else {
-        if (lengthHint >= 11) {
-          addStr = true;
-        }
       }
-      // Console.WriteLine("addStr=" + addStr + " lengthHint=" + lengthHint + " str=" + (str));
+      // NOTE: An additional branch, with lengthHint >= 11, would
+      // be needed if the size could be higher than (2^64)-1
       if (addStr) {
         lastList.Add(str);
       }

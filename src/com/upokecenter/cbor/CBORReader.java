@@ -537,7 +537,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             }
             haveFirstByte = true;
           }
-          taginfo = CBORObject.FindTagConverter(uadditional);
+          taginfo = CBORObject.FindTagConverterLong(uadditional);
         } else {
           if (filter != null && !filter.TagAllowed(bigintAdditional)) {
             throw new CBORException("Unexpected tag encountered: " + uadditional);
