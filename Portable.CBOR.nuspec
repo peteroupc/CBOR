@@ -14,7 +14,7 @@
 data from JSON to CBOR and back.  Finally, this implementation supports arbitrary-precision binary and decimal floating-point numbers and rational numbers with arbitrary-precision components.
     </description>
     <summary>A C# implementation of Concise Binary Object Representation (CBOR), a data serialization format. This implementation can also convert between CBOR and JSON.</summary>
-    <releaseNotes>This version adds CBOR support for decimal fractions and big floats with any exponent, even exponents higher than 65 bits, and implements well-formedness checking for tag 32 (URIs).  Several bugs were also fixed.</releaseNotes>
+    <releaseNotes>Version 0.22.0 adds CBOR support for decimal fractions and big floats with any exponent, even exponents higher than 65 bits, and implements well-formedness checking for tag 32 (URIs).  Several bugs were also fixed.   Version 0.23.0 has no new features of note.</releaseNotes>
     <copyright>Written by Peter O. in 2013-2014.  Any copyright is released to the Public Domain.</copyright>
     <tags>cbor data serialization binary json</tags>
   </metadata>
