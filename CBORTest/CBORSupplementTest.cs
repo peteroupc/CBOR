@@ -13,7 +13,7 @@ using PeterO.Cbor;
 
 namespace Test {
   [TestClass]
-  public class CBORTest2
+  public class CBORSupplementTest
   {
     [TestMethod]
     public void TestCyclicRefs() {
@@ -120,6 +120,11 @@ namespace Test {
         er = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.One);
         er2 = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.One);
         if (er2.IsZero || !er2.IsFinite) {
+          continue;
+        }
+        if (er.IsZero || !er.IsFinite) {
+          // Code below will divide by "er",
+          // so skip if "er" is zero
           continue;
         }
         ExtendedRational ermult = er.Multiply(er2);

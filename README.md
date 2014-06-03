@@ -33,11 +33,23 @@ The Java version is a translation from the C# version. It contains almost as man
 and has all the important ones, such as reading and writing CBOR objects,
 CBOR/JSON conversion, and support for decimal fractions and bigfloats.
 
-NuGet Package
+Packages
 ---------
 Starting with version 0.21.0, the C# implementation is available in the
 NuGet Package Gallery under the name
-[PeterO.Cbor](https://www.nuget.org/packages/PeterO.Cbor).
+[PeterO.Cbor](https://www.nuget.org/packages/PeterO.Cbor). To install
+this library as a NuGet package, enter `Install-Package PeterO.Cbor` in the
+NuGet Package Manager Console.
+
+Starting with version 0.23.0, the Java implementation is available
+as an artifact in the Central Repository. To add this library to a Maven
+project, add the following to the `dependencies` section in your `pom.xml` file:
+
+    <dependency>
+			<groupId>com.upokecenter</groupId>
+			<artifactId>cbor</artifactId>
+			<version>0.23.0</version>
+		</dependency>
 
 Source Code
 ---------
