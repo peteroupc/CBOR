@@ -1229,6 +1229,30 @@ An I/O error occurred.
  * PeterO.Cbor.CBORException: 
 The data stream contains invalid UTF-8 or is not in JSON format.
 
+### ToJSONString
+
+    public string ToJSONString();
+
+Converts this object to a string in JavaScript Object Notation (JSON) format. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes: 
+
+ *  If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string. 
+
+ * If a number in the form of a big float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the big float is converted to null.)
+
+ * The string will not begin with a byte-order mark (U + FEFF); RFC 7159 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
+
+ * Byte strings are converted to Base64 URL by default.
+
+ * Rational numbers will be converted to their exact form, if possible, otherwise to a high-precision approximation. (The resulting approximation could overflow to infinity, in which case the rational number is converted to null.)
+
+ * Simple values other than true and false will be converted to null. (This doesn't include floating-point numbers.)
+
+ * Infinity and not-a-number will be converted to null.
+
+<b>Returns:</b>
+
+A string object containing the converted object.
+
 ### Addition
 
     public static PeterO.Cbor.CBORObject Addition(
