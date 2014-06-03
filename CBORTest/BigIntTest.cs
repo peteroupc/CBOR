@@ -11,7 +11,7 @@ using PeterO;
 
 namespace Test {
   [TestClass]
-  public class BigIntTests
+  public class BigIntTest
   {
     // Test some specific cases
     [TestMethod]

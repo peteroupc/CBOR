@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.upokecenter.util.*;
 import com.upokecenter.cbor.*;
 
-  public class CBORTest2
+  public class CBORSupplementTest
   {
     @Test
     public void TestCyclicRefs() {
@@ -120,6 +120,11 @@ import com.upokecenter.cbor.*;
         er = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.ONE);
         er2 = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.ONE);
         if (er2.signum()==0 || !er2.isFinite()) {
+          continue;
+        }
+        if (er.signum()==0 || !er.isFinite()) {
+          // Code below will divide by "er",
+          // so skip if "er" is zero
           continue;
         }
         ExtendedRational ermult = er.Multiply(er2);

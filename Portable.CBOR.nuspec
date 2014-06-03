@@ -10,8 +10,7 @@
     <projectUrl>https://github.com/peteroupc/CBOR</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-    A C# implementation of Concise Binary Object Representation, a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. This implementation was written by Peter O. and is released to the Public Domain under the CC0 Declaration.  This implementation also doubles as a reader and writer of JSON, and can convert
-data from JSON to CBOR and back.  Finally, this implementation supports arbitrary-precision binary and decimal floating-point numbers and rational numbers with arbitrary-precision components.
+    A C# implementation of Concise Binary Object Representation, a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. This implementation was written by Peter O. and is released to the Public Domain under the CC0 Declaration.  This implementation also doubles as a reader and writer of JSON, and can convert data from JSON to CBOR and back.  Finally, this implementation supports arbitrary-precision binary and decimal floating-point numbers and rational numbers with arbitrary-precision components.
     </description>
     <summary>A C# implementation of Concise Binary Object Representation (CBOR), a data serialization format. This implementation can also convert between CBOR and JSON.</summary>
     <releaseNotes>Version 0.22.0 adds CBOR support for decimal fractions and big floats with any exponent, even exponents higher than 65 bits, and implements well-formedness checking for tag 32 (URIs).  Several bugs were also fixed.   Version 0.23.0 has no new features of note.</releaseNotes>
