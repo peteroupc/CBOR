@@ -1,7 +1,7 @@
 CBOR
 ====
 
-A C# implementation of Concise Binary Object Representation, a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. "CBOR was inspired by MessagePack", but "is not intended as a version of or replacement for MessagePack."
+A C# and Java implementation of Concise Binary Object Representation, a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. "CBOR was inspired by MessagePack", but "is not intended as a version of or replacement for MessagePack."
 
 This implementation was written by Peter O. and is released to the Public Domain under the CC0 Declaration.
 
@@ -33,7 +33,7 @@ The Java version is a translation from the C# version. It contains almost as man
 and has all the important ones, such as reading and writing CBOR objects,
 CBOR/JSON conversion, and support for decimal fractions and bigfloats.
 
-Packages
+How to Install
 ---------
 Starting with version 0.21.0, the C# implementation is available in the
 NuGet Package Gallery under the name
@@ -46,10 +46,13 @@ as an artifact in the Central Repository. To add this library to a Maven
 project, add the following to the `dependencies` section in your `pom.xml` file:
 
     <dependency>
-			<groupId>com.upokecenter</groupId>
-			<artifactId>cbor</artifactId>
-			<version>0.23.0</version>
-		</dependency>
+      <groupId>com.upokecenter</groupId>
+      <artifactId>cbor</artifactId>
+      <version>0.23.0</version>
+    </dependency>
+
+In other Java-based environments, the library can be referred to by its
+group ID (`com.upokecenter`), artifact ID (`cbor`), and version, as given above.
 
 Source Code
 ---------
@@ -90,10 +93,10 @@ Specifications
 Here are specifications by this implementation's author on proposed
 CBOR tags:
 
-* Tag 30: [Rational numbers](http://peteroupc.github.io/rational.html)
-* Tag 257: [Binary MIME messages](http://peteroupc.github.io/binarymime.html)
-* Tag 38: [Language-tagged strings](http://peteroupc.github.io/langtags.html)
-* Tag 264 and 265: [Arbitrary-exponent numbers](http://peteroupc.github.io/bigfrac.html)
+* Tag 30: [Rational numbers](http://peteroupc.github.io/CBOR/rational.html)
+* Tag 257: [Binary MIME messages](http://peteroupc.github.io/CBOR/binarymime.html)
+* Tag 38: [Language-tagged strings](http://peteroupc.github.io/CBOR/langtags.html)
+* Tag 264 and 265: [Arbitrary-exponent numbers](http://peteroupc.github.io/CBOR/bigfrac.html)
 
 Acknowledgments
 -----------
