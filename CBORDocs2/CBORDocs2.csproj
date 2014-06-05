@@ -48,13 +48,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CBORDocs\DocGen.csproj">
+    <ProjectReference Include="..\CBORDocs\CBORDocs.csproj">
       <Project>{b4719819-fe90-4a02-a71b-0169583b4752}</Project>
-      <Name>DocGen</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Portable.CBOR.csproj">
-      <Project>{23a1b70c-f064-47b6-8b7e-e2042cdad8c7}</Project>
-      <Name>Portable.CBOR</Name>
+      <Name>CBORDocs</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
