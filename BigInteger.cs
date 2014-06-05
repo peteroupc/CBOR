@@ -3883,6 +3883,8 @@ if (bytes.Length <= 0) {
     /// <param name='bigintDivisor'>A BigInteger object.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='bigintDivisor'/> is null.</exception>
+    /// <exception cref='System.DivideByZeroException'>Attempted
+    /// to divide by zero.</exception>
     public BigInteger divide(BigInteger bigintDivisor) {
       if (bigintDivisor == null) {
         throw new ArgumentNullException("bigintDivisor");
@@ -3962,6 +3964,8 @@ if (bytes.Length <= 0) {
     /// divisor is null.</exception>
     /// <exception cref='DivideByZeroException'>The parameter divisor
     /// is 0.</exception>
+    /// <exception cref='System.DivideByZeroException'>Attempted
+    /// to divide by zero.</exception>
     public BigInteger[] divideAndRemainder(BigInteger divisor) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
@@ -4098,6 +4102,8 @@ if (bytes.Length <= 0) {
     /// <returns>The remainder of the two objects.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='divisor'/> is null.</exception>
+    /// <exception cref='System.DivideByZeroException'>Attempted
+    /// to divide by zero.</exception>
     public BigInteger remainder(BigInteger divisor) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");

@@ -132,6 +132,8 @@ import com.upokecenter.util.*;
      * Not documented yet.
      * @param tags A BigInteger[] object.
      * @return A CBORTypeFilter object.
+     * @throws java.lang.NullPointerException The parameter "tags[i]"
+     * is null.
      */
     public CBORTypeFilter WithTags(BigInteger... tags) {
       if (this.any) {
@@ -302,6 +304,8 @@ import com.upokecenter.util.*;
      * Not documented yet.
      * @param bigLength A BigInteger object.
      * @return A Boolean object.
+     * @throws java.lang.NullPointerException The parameter {@code bigLength}
+     * is null.
      */
     public boolean ArrayLengthMatches(BigInteger bigLength) {
       if (bigLength == null) {
@@ -356,6 +360,8 @@ import com.upokecenter.util.*;
      * @param bigTag A tag number. Returns false if this is less than 0.
      * @return True if CBOR objects can have the given tag number; otherwise,
      * false.
+     * @throws java.lang.NullPointerException The parameter {@code bigTag}
+     * is null.
      */
     public boolean TagAllowed(BigInteger bigTag) {
       if (bigTag == null) {

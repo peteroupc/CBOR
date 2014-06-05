@@ -239,6 +239,8 @@ import java.io.*;
      * @return A 64-bit floating-point number.
      * @throws java.io.IOException The end of the stream was reached,
      * or the object read isn't a number.
+     * @throws java.lang.NullPointerException The parameter {@code stream}
+     * is null.
      */
     public static double ReadDouble(InputStream stream) throws IOException {
       if (stream == null) {
@@ -291,6 +293,8 @@ import java.io.*;
      * @return A 32-bit signed integer.
      * @throws java.io.IOException The end of the stream was reached,
      * or the object read isn't a number, or can't fit a 32-bit integer.
+     * @throws java.lang.NullPointerException The parameter {@code stream}
+     * is null.
      */
     public static int ReadInt32(InputStream stream) throws IOException {
       if (stream == null) {

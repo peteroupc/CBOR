@@ -30,6 +30,7 @@ at: http://upokecenter.com/d/
     /**
      * Converts a URI to a CBOR object.
      * @param uri A java.net.URI object.
+     * @param uri A java.net.URI object.
      * @return A CBORObject object.
      * @throws java.lang.NullPointerException The parameter {@code uri}
      * is null.
