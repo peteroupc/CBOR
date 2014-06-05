@@ -208,6 +208,8 @@ namespace PeterO {
     /// <summary>Not documented yet.</summary>
     /// <param name='exponent'>A BigInteger object.</param>
     /// <returns>A Boolean object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='exponent'/> is null.</exception>
     public bool ExponentWithinRange(BigInteger exponent) {
       if (exponent == null) {
         throw new ArgumentNullException("exponent");
@@ -304,6 +306,8 @@ namespace PeterO {
     /// <param name='exponentMin'>Desired minimum exponent (EMin).</param>
     /// <param name='exponentMax'>Desired maximum exponent.</param>
     /// <returns>A PrecisionContext object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='exponentMin'/> is null.</exception>
     public PrecisionContext WithBigExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
       if (exponentMin == null) {
         throw new ArgumentNullException("exponentMin");

@@ -126,6 +126,8 @@ namespace PeterO {
     /// <param name='signaling'>A Boolean object.</param>
     /// <param name='negative'>A Boolean object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='diag'/> is null.</exception>
     public static ExtendedFloat CreateNaN(BigInteger diag, bool signaling, bool negative, PrecisionContext ctx) {
       if (diag == null) {
         throw new ArgumentNullException("diag");
@@ -164,6 +166,9 @@ namespace PeterO {
     /// <param name='mantissa'>The un-scaled value.</param>
     /// <param name='exponent'>The binary exponent.</param>
     /// <returns>An ExtendedFloat object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='mantissa'/> or <paramref name='exponent'/> is
+    /// null.</exception>
     public static ExtendedFloat Create(BigInteger mantissa, BigInteger exponent) {
       if (mantissa == null) {
         throw new ArgumentNullException("mantissa");
@@ -214,6 +219,8 @@ namespace PeterO {
     /// <param name='str'>A string that represents a number.</param>
     /// <returns>An ExtendedFloat object.</returns>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
     public static ExtendedFloat FromString(String str, PrecisionContext ctx) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -1218,6 +1225,8 @@ namespace PeterO {
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The difference of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='otherValue'/> is null.</exception>
     public ExtendedFloat Subtract(ExtendedFloat otherValue, PrecisionContext ctx) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -1745,6 +1754,8 @@ namespace PeterO {
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The result thisValue * multiplicand - subtrahend.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// "otherValue" is null.</exception>
     public ExtendedFloat MultiplyAndSubtract(
       ExtendedFloat op,
       ExtendedFloat subtrahend,

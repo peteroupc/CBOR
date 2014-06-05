@@ -156,6 +156,8 @@ namespace PeterO {
     /// <param name='signaling'>A Boolean object.</param>
     /// <param name='negative'>A Boolean object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='diag'/> is null.</exception>
     public static ExtendedDecimal CreateNaN(BigInteger diag, bool signaling, bool negative, PrecisionContext ctx) {
       if (diag == null) {
         throw new ArgumentNullException("diag");
@@ -186,6 +188,9 @@ namespace PeterO {
     /// <param name='mantissa'>The un-scaled value.</param>
     /// <param name='exponent'>The decimal exponent.</param>
     /// <returns>An ExtendedDecimal object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='mantissa'/> or <paramref name='exponent'/> is
+    /// null.</exception>
     public static ExtendedDecimal Create(BigInteger mantissa, BigInteger exponent) {
       if (mantissa == null) {
         throw new ArgumentNullException("mantissa");
@@ -1420,6 +1425,8 @@ public int CompareToBinary(ExtendedFloat other) {
     /// binary floating-point number.</summary>
     /// <param name='bigfloat'>A big floating-point number.</param>
     /// <returns>An ExtendedDecimal object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bigfloat'/> is null.</exception>
     public static ExtendedDecimal FromExtendedFloat(ExtendedFloat bigfloat) {
       if (bigfloat == null) {
         throw new ArgumentNullException("bigfloat");
@@ -1842,6 +1849,8 @@ public int CompareToBinary(ExtendedFloat other) {
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The difference of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='otherValue'/> is null.</exception>
     public ExtendedDecimal Subtract(ExtendedDecimal otherValue, PrecisionContext ctx) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -2394,6 +2403,8 @@ public int CompareToBinary(ExtendedFloat other) {
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
     /// <returns>The result thisValue * multiplicand - subtrahend.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// "otherValue" is null.</exception>
     public ExtendedDecimal MultiplyAndSubtract(ExtendedDecimal op, ExtendedDecimal subtrahend, PrecisionContext ctx) {
       if (subtrahend == null) {
         throw new ArgumentNullException("otherValue");

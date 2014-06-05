@@ -2301,6 +2301,8 @@ rem=divrem[1]; }
      * @param b A T object. (3).
      * @param ctx A PrecisionContext object.
      * @return A T object.
+     * @throws java.lang.NullPointerException The parameter {@code a}
+     * or {@code b} is null.
      */
     public T MinMagnitude(T a, T b, PrecisionContext ctx) {
       if (a == null) {
@@ -2328,6 +2330,8 @@ rem=divrem[1]; }
      * @param b A T object. (3).
      * @param ctx A PrecisionContext object.
      * @return A T object.
+     * @throws java.lang.NullPointerException The parameter {@code a}
+     * or {@code b} is null.
      */
     public T MaxMagnitude(T a, T b, PrecisionContext ctx) {
       if (a == null) {
@@ -2354,6 +2358,8 @@ rem=divrem[1]; }
      * @param b A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return The larger value of the two objects.
+     * @throws java.lang.NullPointerException The parameter {@code a}
+     * or {@code b} is null.
      */
     public T Max(T a, T b, PrecisionContext ctx) {
       if (a == null) {
@@ -2388,6 +2394,8 @@ rem=divrem[1]; }
      * @param b A T object. (2).
      * @param ctx A PrecisionContext object.
      * @return The smaller value of the two objects.
+     * @throws java.lang.NullPointerException The parameter {@code a}
+     * or {@code b} is null.
      */
     public T Min(T a, T b, PrecisionContext ctx) {
       if (a == null) {

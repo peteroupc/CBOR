@@ -2305,6 +2305,8 @@ namespace PeterO {
     /// <summary>Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.</summary>
     /// <returns>A T object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
     /// <param name='a'>A T object. (2).</param>
     /// <param name='b'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
@@ -2330,6 +2332,8 @@ namespace PeterO {
     /// <summary>Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.</summary>
     /// <returns>A T object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
     /// <param name='a'>A T object. (2).</param>
     /// <param name='b'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
@@ -2354,6 +2358,8 @@ namespace PeterO {
 
     /// <summary>Gets the greater value between two T values.</summary>
     /// <returns>The larger value of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
     /// <param name='a'>A T object.</param>
     /// <param name='b'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
@@ -2386,6 +2392,8 @@ namespace PeterO {
 
     /// <summary>Gets the lesser value between two T values.</summary>
     /// <returns>The smaller value of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
     /// <param name='a'>A T object.</param>
     /// <param name='b'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>

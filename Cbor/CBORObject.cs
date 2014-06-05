@@ -197,6 +197,8 @@ namespace PeterO.Cbor {
     /// converts to CBOR objects.</param>
     /// <param name='converter'>An ICBORConverter object.</param>
     /// <typeparam name='T'>Must be the same as the "type" parameter.</typeparam>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='type'/> or <paramref name='converter'/> is null.</exception>
     public static void AddConverter<T>(Type type, ICBORConverter<T> converter) {
       if (type == null) {
         throw new ArgumentNullException("type");
@@ -228,6 +230,9 @@ namespace PeterO.Cbor {
     /// <summary>Not documented yet.</summary>
     /// <param name='bigintTag'>A BigInteger object.</param>
     /// <param name='handler'>An ICBORTag object.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bigintTag'/> or <paramref name='handler'/> is
+    /// null.</exception>
     public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
       if (bigintTag == null) {
         throw new ArgumentNullException("bigintTag");
@@ -1252,6 +1257,8 @@ namespace PeterO.Cbor {
     /// <exception cref='CBORException'>There was an error in reading
     /// or parsing the data. This includes cases where not all of the byte array
     /// represents a CBOR object.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='data'/> is null.</exception>
     public static CBORObject DecodeFromBytes(byte[] data) {
       if (data == null) {
         throw new ArgumentNullException("data");
@@ -1334,6 +1341,8 @@ namespace PeterO.Cbor {
     /// false.</returns>
     /// <exception cref='System.ArgumentException'>TagValue is less
     /// than 0.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// "obj" is null.</exception>
     public bool HasTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + Convert.ToString((long)tagValue, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
@@ -1488,6 +1497,8 @@ namespace PeterO.Cbor {
     /// is not an array.</exception>
     /// <returns>A CBORObject object.</returns>
     /// <param name='index'>Zero-based index of the element.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// "value" is null.</exception>
     public CBORObject this[int index] {
       get {
         if (this.ItemType == CBORObjectTypeArray) {
@@ -2924,6 +2935,8 @@ namespace PeterO.Cbor {
     /// <summary>Writes a CBOR object to a CBOR data stream.</summary>
     /// <param name='value'>The value to write. Can be null.</param>
     /// <param name='stream'>A writable data stream.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null.</exception>
     public static void Write(CBORObject value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -2947,6 +2960,8 @@ namespace PeterO.Cbor {
     /// <param name='stream'>A writable data stream.</param>
     /// <exception cref='System.ArgumentException'>The object's type
     /// is not supported.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null.</exception>
     public static void Write(object objValue, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -4138,6 +4153,8 @@ namespace PeterO.Cbor {
     /// the exponent, and the second must be an integer representing a mantissa.</param>
     /// <param name='bigintTag'>Tag number. The tag number 55799 can be
     /// used to mark a &quot;self-described CBOR&quot; object.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bigintTag'/> is null.</exception>
     public static CBORObject FromObjectAndTag(object valueOb, BigInteger bigintTag) {
       if (bigintTag == null) {
         throw new ArgumentNullException("bigintTag");

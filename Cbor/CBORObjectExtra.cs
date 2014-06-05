@@ -228,6 +228,8 @@ namespace PeterO.Cbor {
     /// <param name='stream'>A writable data stream.</param>
     /// <summary>Writes a 64-bit unsigned integer in CBOR format to a data
     /// stream.</summary>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null.</exception>
     [CLSCompliant(false)]
     public static void Write(ulong value, Stream stream) {
       if (stream == null) {

@@ -1835,6 +1835,8 @@ at: http://upokecenter.com/d/
      * @param bytes A byte array.
      * @param littleEndian A Boolean object.
      * @return A BigInteger object.
+     * @throws java.lang.NullPointerException The parameter {@code bytes}
+     * is null.
      */
     public static BigInteger fromByteArray(byte[] bytes, boolean littleEndian) {
       if (bytes == null) {
@@ -2322,6 +2324,8 @@ at: http://upokecenter.com/d/
      * Not documented yet.
      * @param power A BigInteger object. (2).
      * @return A BigInteger object.
+     * @throws java.lang.NullPointerException The parameter {@code power}
+     * is null.
      */
     public BigInteger PowBigIntVar(BigInteger power) {
       if (power == null) {
@@ -3081,6 +3085,8 @@ at: http://upokecenter.com/d/
      * Returns the greatest common divisor of two integers.
      * @param bigintSecond A BigInteger object. (2).
      * @return A BigInteger object.
+     * @throws java.lang.NullPointerException The parameter {@code bigintSecond}
+     * is null.
      */
     public BigInteger gcd(BigInteger bigintSecond) {
       if (bigintSecond == null) {
@@ -3138,6 +3144,8 @@ at: http://upokecenter.com/d/
      * @param pow A BigInteger object. (2).
      * @param mod A BigInteger object. (3).
      * @return A BigInteger object.
+     * @throws java.lang.NullPointerException The parameter {@code pow}
+     * is null.
      */
     public BigInteger ModPow(BigInteger pow, BigInteger mod) {
       if (pow == null) {
@@ -3248,6 +3256,8 @@ at: http://upokecenter.com/d/
      * Adds this object and another object.
      * @param bigintAugend A BigInteger object.
      * @return The sum of the two objects.
+     * @throws java.lang.NullPointerException The parameter {@code bigintAugend}
+     * is null.
      */
     public BigInteger add(BigInteger bigintAugend) {
       if (bigintAugend == null) {
@@ -3377,6 +3387,8 @@ at: http://upokecenter.com/d/
      * Subtracts a BigInteger from this BigInteger.
      * @param subtrahend A BigInteger object.
      * @return The difference of the two objects.
+     * @throws java.lang.NullPointerException The parameter {@code subtrahend}
+     * is null.
      */
     public BigInteger subtract(BigInteger subtrahend) {
       if (subtrahend == null) {
@@ -3409,6 +3421,8 @@ at: http://upokecenter.com/d/
      * Multiplies this instance by the value of a BigInteger object.
      * @param bigintMult A BigInteger object.
      * @return The product of the two objects.
+     * @throws java.lang.NullPointerException The parameter {@code bigintMult}
+     * is null.
      */
     public BigInteger multiply(BigInteger bigintMult) {
       if (bigintMult == null) {
@@ -3580,6 +3594,8 @@ at: http://upokecenter.com/d/
      * @param bigintDivisor A BigInteger object.
      * @return The quotient of the two objects.
      * @throws ArithmeticException The divisor is zero.
+     * @throws java.lang.NullPointerException The parameter {@code bigintDivisor}
+     * is null.
      */
     public BigInteger divide(BigInteger bigintDivisor) {
       if (bigintDivisor == null) {
@@ -3771,6 +3787,8 @@ at: http://upokecenter.com/d/
      * @param divisor A divisor greater than 0 (the modulus).
      * @return A BigInteger object.
      * @throws ArithmeticException The parameter {@code divisor} is negative.
+     * @throws java.lang.NullPointerException The parameter {@code divisor}
+     * is null.
      */
     public BigInteger mod(BigInteger divisor) {
       if (divisor == null) {
@@ -3794,6 +3812,8 @@ at: http://upokecenter.com/d/
      * as this object.
      * @param divisor A BigInteger object.
      * @return The remainder of the two objects.
+     * @throws java.lang.NullPointerException The parameter {@code divisor}
+     * is null.
      */
     public BigInteger remainder(BigInteger divisor) {
       if (divisor == null) {

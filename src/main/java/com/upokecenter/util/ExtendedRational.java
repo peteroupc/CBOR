@@ -199,6 +199,8 @@ at: http://upokecenter.com/d/
      * @param signaling A Boolean object.
      * @param negative A Boolean object. (2).
      * @return An ExtendedRational object.
+     * @throws java.lang.NullPointerException The parameter {@code diag}
+     * is null.
      */
     public static ExtendedRational CreateNaN(BigInteger diag, boolean signaling, boolean negative) {
       if (diag == null) {
@@ -224,6 +226,8 @@ at: http://upokecenter.com/d/
      * Not documented yet.
      * @param ef An ExtendedFloat object.
      * @return An ExtendedRational object.
+     * @throws java.lang.NullPointerException The parameter {@code ef}
+     * is null.
      */
     public static ExtendedRational FromExtendedFloat(ExtendedFloat ef) {
       if (ef == null) {
@@ -271,6 +275,8 @@ at: http://upokecenter.com/d/
      * Not documented yet.
      * @param ef An ExtendedDecimal object.
      * @return An ExtendedRational object.
+     * @throws java.lang.NullPointerException The parameter {@code ef}
+     * is null.
      */
     public static ExtendedRational FromExtendedDecimal(ExtendedDecimal ef) {
       if (ef == null) {
@@ -938,6 +944,8 @@ thisRem=divrem[1]; }
      * Not documented yet.
      * @param otherValue An ExtendedRational object. (2).
      * @return An ExtendedRational object.
+     * @throws java.lang.NullPointerException The parameter {@code otherValue}
+     * is null.
      */
     public ExtendedRational Add(ExtendedRational otherValue) {
       if (otherValue == null) {
@@ -975,6 +983,8 @@ thisRem=divrem[1]; }
      * Subtracts an ExtendedRational object from this instance.
      * @param otherValue An ExtendedRational object.
      * @return The difference of the two objects.
+     * @throws java.lang.NullPointerException The parameter {@code otherValue}
+     * is null.
      */
     public ExtendedRational Subtract(ExtendedRational otherValue) {
       if (otherValue == null) {
@@ -1013,6 +1023,8 @@ thisRem=divrem[1]; }
      * Multiplies this instance by the value of an ExtendedRational object.
      * @param otherValue An ExtendedRational object.
      * @return The product of the two objects.
+     * @throws java.lang.NullPointerException The parameter {@code otherValue}
+     * is null.
      */
     public ExtendedRational Multiply(ExtendedRational otherValue) {
       if (otherValue == null) {
@@ -1049,6 +1061,8 @@ thisRem=divrem[1]; }
      * Divides this instance by the value of an ExtendedRational object.
      * @param otherValue An ExtendedRational object.
      * @return The quotient of the two objects.
+     * @throws java.lang.NullPointerException The parameter {@code otherValue}
+     * is null.
      */
     public ExtendedRational Divide(ExtendedRational otherValue) {
       if (otherValue == null) {
@@ -1089,6 +1103,8 @@ thisRem=divrem[1]; }
      * the value of a ExtendedRational object.
      * @param otherValue An ExtendedRational object.
      * @return The remainder of the two objects.
+     * @throws java.lang.NullPointerException The parameter {@code otherValue}
+     * is null.
      */
     public ExtendedRational Remainder(ExtendedRational otherValue) {
       if (otherValue == null) {
