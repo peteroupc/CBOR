@@ -58,6 +58,13 @@ Registers an object that converts objects of a given type to CBOR objects (calle
 
  * &lt;T&gt;: Must be the same as the "type" parameter.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>type</i>
+ or  <i>converter</i>
+ is null.
+
 ### AddTagHandler
 
     public static void AddTagHandler(
@@ -71,6 +78,13 @@ Not documented yet.
  * <i>bigintTag</i>: A BigInteger object.
 
  * <i>handler</i>: An ICBORTag object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bigintTag</i>
+ or  <i>handler</i>
+ is null.
 
 ### Negate
 
@@ -278,6 +292,10 @@ Data is null or empty.
  * PeterO.Cbor.CBORException: 
 There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object.
 
+ * System.ArgumentNullException: 
+The parameter <i>data</i>
+ is null.
+
 ### GetByteString
 
     public byte[] GetByteString();
@@ -312,6 +330,9 @@ True if this object has a tag of the given number; otherwise, false.
 
  * System.ArgumentException: 
 TagValue is less than 0.
+
+ * System.ArgumentNullException: 
+The parameter "obj" is null.
 
 ### HasTag
 
@@ -1151,6 +1172,12 @@ Writes a CBOR object to a CBOR data stream.
 
  * <i>stream</i>: A writable data stream.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>stream</i>
+ is null.
+
 ### Write
 
     public static void Write(
@@ -1177,6 +1204,10 @@ Writes an arbitrary object to a CBOR data stream. Currently, the following objec
 
  * System.ArgumentException: 
 The object's type is not supported.
+
+ * System.ArgumentNullException: 
+The parameter <i>stream</i>
+ is null.
 
 ### FromJSONString
 
@@ -1783,6 +1814,10 @@ The parameter  <i>bigintTag</i>
  is less than 0 or greater than 2^64-1, or  <i>valueOb</i>
 's type is unsupported.
 
+ * System.ArgumentNullException: 
+The parameter <i>bigintTag</i>
+ is null.
+
 ### FromObjectAndTag
 
     public static PeterO.Cbor.CBORObject FromObjectAndTag(
@@ -1923,6 +1958,12 @@ Writes a 64-bit unsigned integer in CBOR format to a data stream.
  * <i>value</i>: A 64-bit unsigned integer.
 
  * <i>stream</i>: A writable data stream.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>stream</i>
+ is null.
 
 ### FromObject
 

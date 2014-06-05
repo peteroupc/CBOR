@@ -84,6 +84,11 @@ Not documented yet.
 
 A CBORTypeFilter object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter "tags[i]" is null.
+
 ### WithArrayExactLength
 
     public PeterO.Cbor.CBORTypeFilter WithArrayExactLength(
@@ -222,6 +227,12 @@ Not documented yet.
 
 A Boolean object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bigLength</i>
+ is null.
+
 ### TagAllowed
 
     public bool TagAllowed(
@@ -266,6 +277,12 @@ Gets a value indicating whether CBOR objects can have the given tag number.
 <b>Returns:</b>
 
 True if CBOR objects can have the given tag number; otherwise, false.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bigTag</i>
+ is null.
 
 ### ArrayIndexAllowed
 

@@ -70,10 +70,10 @@
   <ItemGroup>
     <Compile Include="BEncoding.cs" />
     <Compile Include="BEncodingTest.cs" />
-    <Compile Include="BigIntTests.cs" />
+    <Compile Include="BigIntTest.cs" />
     <Compile Include="CBORExtraTest.cs" />
+    <Compile Include="CBORSupplementTest.cs" />
     <Compile Include="CBORTest.cs" />
-    <Compile Include="CBORTest2.cs" />
     <Compile Include="DecimalTest.cs" />
     <Compile Include="ExtensiveTest.cs" />
     <Compile Include="FastRandom.cs" />

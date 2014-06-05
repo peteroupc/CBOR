@@ -73,6 +73,12 @@ Not documented yet.
 
 A Boolean object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>exponent</i>
+ is null.
+
 ### ToString
 
     public override string ToString();
@@ -173,6 +179,12 @@ Copies this precision context and sets the copy's exponent range.
 <b>Returns:</b>
 
 A PrecisionContext object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>exponentMin</i>
+ is null.
 
 ### WithNoFlags
 

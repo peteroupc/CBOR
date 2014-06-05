@@ -26,6 +26,12 @@ Initializes a BigInteger object from an array of bytes.
 
 A BigInteger object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bytes</i>
+ is null.
+
 ### testBit
 
     public bool testBit(
@@ -155,6 +161,12 @@ Not documented yet.
 <b>Returns:</b>
 
 A BigInteger object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>power</i>
+ is null.
 
 ### pow
 
@@ -311,6 +323,12 @@ The greatest common divisor (GCD) is also known as the greatest common factor (G
 
 A BigInteger object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bigintSecond</i>
+ is null.
+
 ### ModPow
 
     public PeterO.BigInteger ModPow(
@@ -328,6 +346,12 @@ Calculates the remainder when a BigInteger raised to a certain power is divided 
 <b>Returns:</b>
 
 A BigInteger object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>pow</i>
+ is null.
 
 ### Equals
 
@@ -369,6 +393,12 @@ Adds this object and another object.
 
 The sum of the two objects.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bigintAugend</i>
+ is null.
+
 ### subtract
 
     public PeterO.BigInteger subtract(
@@ -384,6 +414,12 @@ Subtracts a BigInteger from this BigInteger.
 
 The difference of the two objects.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>subtrahend</i>
+ is null.
+
 ### multiply
 
     public PeterO.BigInteger multiply(
@@ -398,6 +434,12 @@ Multiplies this instance by the value of a BigInteger object.
 <b>Returns:</b>
 
 The product of the two objects.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bigintMult</i>
+ is null.
 
 ### divide
 
@@ -418,6 +460,13 @@ The quotient of the two objects.
 
  * System.DivideByZeroException: 
 The divisor is zero.
+
+ * System.ArgumentNullException: 
+The parameter <i>bigintDivisor</i>
+ is null.
+
+ * System.DivideByZeroException: 
+Attempted to divide by zero.
 
 ### divideAndRemainder
 
@@ -442,6 +491,9 @@ The parameter divisor is null.
  * System.DivideByZeroException: 
 The parameter divisor is 0.
 
+ * System.DivideByZeroException: 
+Attempted to divide by zero.
+
 ### mod
 
     public PeterO.BigInteger mod(
@@ -463,6 +515,10 @@ A BigInteger object.
 The parameter  <i>divisor</i>
  is negative.
 
+ * System.ArgumentNullException: 
+The parameter <i>divisor</i>
+ is null.
+
 ### remainder
 
     public PeterO.BigInteger remainder(
@@ -477,6 +533,15 @@ Finds the remainder that results when this instance is divided by the value of a
 <b>Returns:</b>
 
 The remainder of the two objects.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>divisor</i>
+ is null.
+
+ * System.DivideByZeroException: 
+Attempted to divide by zero.
 
 ### CompareTo
 
@@ -549,6 +614,12 @@ Adds a BigInteger object and a BigInteger object.
 
 The sum of the two objects.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bthis</i>
+ is null.
+
 ### Operator `-`
 
     public static PeterO.BigInteger operator -(
@@ -566,6 +637,12 @@ Subtracts two BigInteger values.
 <b>Returns:</b>
 
 The difference of the two objects.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bthis</i>
+ is null.
 
 ### Operator `*`
 
@@ -585,6 +662,12 @@ Multiplies a BigInteger object by the value of a BigInteger object.
 
 The product of the two objects.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>operand1</i>
+ is null.
+
 ### Operator `/`
 
     public static PeterO.BigInteger operator /(
@@ -602,6 +685,12 @@ Divides a BigInteger object by the value of a BigInteger object.
 <b>Returns:</b>
 
 The quotient of the two objects.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>dividend</i>
+ is null.
 
 ### Operator `%`
 
@@ -621,6 +710,12 @@ Finds the remainder that results when a BigInteger object is divided by the valu
 
 The remainder of the two objects.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>dividend</i>
+ is null.
+
 ### Operator `<<`
 
     public static PeterO.BigInteger operator <<(
@@ -638,6 +733,12 @@ Not documented yet.
 <b>Returns:</b>
 
 A BigInteger object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bthis</i>
+ is null.
 
 ### ModPow
 
@@ -663,6 +764,12 @@ The value ( <i>bigintValue</i>
 )% <i>mod</i>
 .
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bigintValue</i>
+ is null.
+
 ### Operator `>>`
 
     public static PeterO.BigInteger operator >>(
@@ -681,6 +788,12 @@ For this operation, the BigInteger is treated as a two's complement representati
 
 A BigInteger object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bthis</i>
+ is null.
+
 ### Operator `-`
 
     public static PeterO.BigInteger operator -(
@@ -695,6 +808,12 @@ Negates a BigInteger object.
 <b>Returns:</b>
 
 A BigInteger object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bigValue</i>
+ is null.
 
 ### Operator `<`
 
@@ -793,6 +912,12 @@ Not documented yet.
 
 A BigInteger object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>thisValue</i>
+ is null.
+
 ### GetBits
 
     public long GetBits(
@@ -829,6 +954,12 @@ Not documented yet.
 
 A BigInteger object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bigintFirst</i>
+ is null.
+
 ### ToByteArray
 
     public byte[] ToByteArray();
@@ -857,6 +988,13 @@ Not documented yet.
 
 A BigInteger object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bigValue</i>
+ or  <i>power</i>
+ is null.
+
 ### Pow
 
     public static PeterO.BigInteger Pow(
@@ -875,6 +1013,12 @@ Not documented yet.
 
 A BigInteger object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bigValue</i>
+ is null.
+
 ### BigInteger Constructor
 
     public BigInteger(
@@ -885,6 +1029,12 @@ Initializes a new instance of the BigInteger class.
 <b>Parameters:</b>
 
  * <i>bytes</i>: A byte array.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bytes</i>
+ is null.
 
 ### Equals
 
@@ -916,6 +1066,12 @@ Returns a BigInteger with every bit flipped.
 
 A BigInteger object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>valueA</i>
+ is null.
+
 ### And
 
     public static PeterO.BigInteger And(
@@ -933,6 +1089,13 @@ Each BigInteger instance is treated as a two's complement representation for the
 <b>Returns:</b>
 
 A BigInteger object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>a</i>
+ or  <i>b</i>
+ is null.
 
 ### Or
 
@@ -952,6 +1115,13 @@ Each BigInteger instance is treated as a two's complement representation for the
 
 A BigInteger object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>first</i>
+ or  <i>second</i>
+ is null.
+
 ### Xor
 
     public static PeterO.BigInteger Xor(
@@ -969,6 +1139,13 @@ Each BigInteger instance is treated as a two's complement representation for the
 <b>Returns:</b>
 
 A BigInteger object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>a</i>
+ or  <i>b</i>
+ is null.
 
 ### Sign
 
