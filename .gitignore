@@ -3,6 +3,7 @@ obj/
 .settings/
 packages/
 Help/
+*.user
 TestResults/
 CBORTest/bin/
 CBORTest/obj/
@@ -20,5 +21,4 @@ CBORTest/ProfilingSessions/
 *.suo
 *.log
 .pmd
-/target
 /target

@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2014 by Peter O.
 
 Any copyright is dedicated to the Public Domain.
@@ -14,12 +14,15 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using PeterO.DocGen;
-using PeterO.Cbor;
 
 namespace CBORDocs {
   internal class Program {
     public static void Main(string[] args) {
-      DocGenerator.Generate(typeof(CBORObject).Assembly, "../../../docs");
+      if (args.Length < 2) {
+        Console.WriteLine("Usage: CBORDocs2 <dllfile> <docpath>");
+        return;
+      }
+      DocGenerator.Generate(args[0], args[1]);
     }
   }
 }
