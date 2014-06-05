@@ -2158,6 +2158,8 @@ namespace PeterO {
     /// <param name='bytes'>A byte array.</param>
     /// <returns>A BigInteger object.</returns>
     /// <param name='littleEndian'>A Boolean object.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bytes'/> is null.</exception>
     public static BigInteger fromByteArray(byte[] bytes, bool littleEndian) {
       if (bytes == null) {
  throw new ArgumentNullException("bytes");
@@ -2637,6 +2639,8 @@ if (bytes.Length <= 0) {
     /// <summary>Not documented yet.</summary>
     /// <returns>A BigInteger object.</returns>
     /// <param name='power'>A BigInteger object. (2).</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='power'/> is null.</exception>
     public BigInteger PowBigIntVar(BigInteger power) {
       if (power == null) {
         throw new ArgumentNullException("power");
@@ -3379,6 +3383,8 @@ if (bytes.Length <= 0) {
     /// <remarks>The greatest common divisor (GCD) is also known as the greatest
     /// common factor (GCF).</remarks>
     /// <param name='bigintSecond'>A BigInteger object. (2).</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bigintSecond'/> is null.</exception>
     public BigInteger gcd(BigInteger bigintSecond) {
       if (bigintSecond == null) {
         throw new ArgumentNullException("bigintSecond");
@@ -3434,6 +3440,8 @@ if (bytes.Length <= 0) {
     /// <param name='pow'>A BigInteger object. (2).</param>
     /// <param name='mod'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='pow'/> is null.</exception>
     public BigInteger ModPow(BigInteger pow, BigInteger mod) {
       if (pow == null) {
         throw new ArgumentNullException("pow");
@@ -3541,6 +3549,8 @@ if (bytes.Length <= 0) {
     /// <summary>Adds this object and another object.</summary>
     /// <returns>The sum of the two objects.</returns>
     /// <param name='bigintAugend'>A BigInteger object.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bigintAugend'/> is null.</exception>
     public BigInteger add(BigInteger bigintAugend) {
       if (bigintAugend == null) {
         throw new ArgumentNullException("bigintAugend");
@@ -3668,6 +3678,8 @@ if (bytes.Length <= 0) {
     /// <summary>Subtracts a BigInteger from this BigInteger.</summary>
     /// <param name='subtrahend'>A BigInteger object.</param>
     /// <returns>The difference of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='subtrahend'/> is null.</exception>
     public BigInteger subtract(BigInteger subtrahend) {
       if (subtrahend == null) {
         throw new ArgumentNullException("subtrahend");
@@ -3698,6 +3710,8 @@ if (bytes.Length <= 0) {
     /// <summary>Multiplies this instance by the value of a BigInteger object.</summary>
     /// <param name='bigintMult'>A BigInteger object.</param>
     /// <returns>The product of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bigintMult'/> is null.</exception>
     public BigInteger multiply(BigInteger bigintMult) {
       if (bigintMult == null) {
         throw new ArgumentNullException("bigintMult");
@@ -3867,6 +3881,8 @@ if (bytes.Length <= 0) {
     /// <returns>The quotient of the two objects.</returns>
     /// <exception cref='DivideByZeroException'>The divisor is zero.</exception>
     /// <param name='bigintDivisor'>A BigInteger object.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bigintDivisor'/> is null.</exception>
     public BigInteger divide(BigInteger bigintDivisor) {
       if (bigintDivisor == null) {
         throw new ArgumentNullException("bigintDivisor");
@@ -4057,6 +4073,8 @@ if (bytes.Length <= 0) {
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArithmeticException'>The parameter <paramref
     /// name='divisor'/> is negative.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='divisor'/> is null.</exception>
     public BigInteger mod(BigInteger divisor) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
@@ -4078,6 +4096,8 @@ if (bytes.Length <= 0) {
     /// (positive or negative) as this object.</summary>
     /// <param name='divisor'>A BigInteger object.</param>
     /// <returns>The remainder of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='divisor'/> is null.</exception>
     public BigInteger remainder(BigInteger divisor) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");

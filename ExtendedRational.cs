@@ -187,6 +187,8 @@ namespace PeterO {
     /// <param name='diag'>A BigInteger object.</param>
     /// <param name='signaling'>A Boolean object.</param>
     /// <param name='negative'>A Boolean object. (2).</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='diag'/> is null.</exception>
     public static ExtendedRational CreateNaN(BigInteger diag, bool signaling, bool negative) {
       if (diag == null) {
         throw new ArgumentNullException("diag");
@@ -210,6 +212,8 @@ namespace PeterO {
     /// <summary>Not documented yet.</summary>
     /// <returns>An ExtendedRational object.</returns>
     /// <param name='ef'>An ExtendedFloat object.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='ef'/> is null.</exception>
     public static ExtendedRational FromExtendedFloat(ExtendedFloat ef) {
       if (ef == null) {
         throw new ArgumentNullException("ef");
@@ -255,6 +259,8 @@ namespace PeterO {
     /// <summary>Not documented yet.</summary>
     /// <returns>An ExtendedRational object.</returns>
     /// <param name='ef'>An ExtendedDecimal object.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='ef'/> is null.</exception>
     public static ExtendedRational FromExtendedDecimal(ExtendedDecimal ef) {
       if (ef == null) {
         throw new ArgumentNullException("ef");
@@ -887,6 +893,8 @@ namespace PeterO {
     /// <summary>Not documented yet.</summary>
     /// <param name='otherValue'>An ExtendedRational object. (2).</param>
     /// <returns>An ExtendedRational object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='otherValue'/> is null.</exception>
     public ExtendedRational Add(ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -922,6 +930,8 @@ namespace PeterO {
     /// <summary>Subtracts an ExtendedRational object from this instance.</summary>
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The difference of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='otherValue'/> is null.</exception>
     public ExtendedRational Subtract(ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -959,6 +969,8 @@ namespace PeterO {
     /// object.</summary>
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The product of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='otherValue'/> is null.</exception>
     public ExtendedRational Multiply(ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -994,6 +1006,8 @@ namespace PeterO {
     /// object.</summary>
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The quotient of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='otherValue'/> is null.</exception>
     public ExtendedRational Divide(ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -1032,6 +1046,8 @@ namespace PeterO {
     /// divided by the value of a ExtendedRational object.</summary>
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The remainder of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='otherValue'/> is null.</exception>
     public ExtendedRational Remainder(ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");

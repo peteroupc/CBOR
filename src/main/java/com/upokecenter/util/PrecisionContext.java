@@ -223,6 +223,8 @@ at: http://upokecenter.com/d/
      * Not documented yet.
      * @param exponent A BigInteger object.
      * @return A Boolean object.
+     * @throws java.lang.NullPointerException The parameter {@code exponent}
+     * is null.
      */
     public boolean ExponentWithinRange(BigInteger exponent) {
       if (exponent == null) {
@@ -331,6 +333,8 @@ at: http://upokecenter.com/d/
      * @param exponentMin Desired minimum exponent (EMin).
      * @param exponentMax Desired maximum exponent.
      * @return A PrecisionContext object.
+     * @throws java.lang.NullPointerException The parameter {@code exponentMin}
+     * is null.
      */
     public PrecisionContext WithBigExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
       if (exponentMin == null) {

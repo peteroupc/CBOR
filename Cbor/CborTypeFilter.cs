@@ -119,6 +119,8 @@ namespace PeterO.Cbor {
     /// <param name='tags'>A BigInteger[] object.</param>
     /// <returns>A CBORTypeFilter object.</returns>
     /// <summary>Not documented yet.</summary>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// "tags[i]" is null.</exception>
     public CBORTypeFilter WithTags(params BigInteger[] tags) {
       if (this.any) {
         return this;
@@ -283,6 +285,8 @@ namespace PeterO.Cbor {
     /// <summary>Not documented yet.</summary>
     /// <returns>A Boolean object.</returns>
     /// <param name='bigLength'>A BigInteger object.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bigLength'/> is null.</exception>
     public bool ArrayLengthMatches(BigInteger bigLength) {
       if (bigLength == null) {
         throw new ArgumentNullException("bigLength");
@@ -334,6 +338,8 @@ namespace PeterO.Cbor {
     /// false.</returns>
     /// <param name='bigTag'>A tag number. Returns false if this is less
     /// than 0.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bigTag'/> is null.</exception>
     public bool TagAllowed(BigInteger bigTag) {
       if (bigTag == null) {
         throw new ArgumentNullException("bigTag");

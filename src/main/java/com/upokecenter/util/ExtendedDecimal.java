@@ -156,6 +156,8 @@ at: http://upokecenter.com/d/
      * @param negative A Boolean object. (2).
      * @param ctx A PrecisionContext object.
      * @return An ExtendedDecimal object.
+     * @throws java.lang.NullPointerException The parameter {@code diag}
+     * is null.
      */
     public static ExtendedDecimal CreateNaN(BigInteger diag, boolean signaling, boolean negative, PrecisionContext ctx) {
       if (diag == null) {
@@ -188,6 +190,8 @@ at: http://upokecenter.com/d/
      * @param mantissa The un-scaled value.
      * @param exponent The decimal exponent.
      * @return An ExtendedDecimal object.
+     * @throws java.lang.NullPointerException The parameter {@code mantissa}
+     * or {@code exponent} is null.
      */
     public static ExtendedDecimal Create(BigInteger mantissa, BigInteger exponent) {
       if (mantissa == null) {
@@ -1464,6 +1468,8 @@ remainder=divrem[1]; }
      * number.
      * @param bigfloat A big floating-point number.
      * @return An ExtendedDecimal object.
+     * @throws java.lang.NullPointerException The parameter {@code bigfloat}
+     * is null.
      */
     public static ExtendedDecimal FromExtendedFloat(ExtendedFloat bigfloat) {
       if (bigfloat == null) {
@@ -1938,6 +1944,8 @@ remainder=divrem[1]; }
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
      * @return The difference of the two objects.
+     * @throws java.lang.NullPointerException The parameter {@code otherValue}
+     * is null.
      */
     public ExtendedDecimal Subtract(ExtendedDecimal otherValue, PrecisionContext ctx) {
       if (otherValue == null) {
@@ -2540,6 +2548,8 @@ remainder=divrem[1]; }
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
      * @return The result thisValue * multiplicand - subtrahend.
+     * @throws java.lang.NullPointerException The parameter "otherValue"
+     * is null.
      */
     public ExtendedDecimal MultiplyAndSubtract(ExtendedDecimal op, ExtendedDecimal subtrahend, PrecisionContext ctx) {
       if (subtrahend == null) {

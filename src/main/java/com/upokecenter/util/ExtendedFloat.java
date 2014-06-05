@@ -129,6 +129,8 @@ at: http://upokecenter.com/d/
      * @param negative A Boolean object. (2).
      * @param ctx A PrecisionContext object.
      * @return An ExtendedFloat object.
+     * @throws java.lang.NullPointerException The parameter {@code diag}
+     * is null.
      */
     public static ExtendedFloat CreateNaN(BigInteger diag, boolean signaling, boolean negative, PrecisionContext ctx) {
       if (diag == null) {
@@ -171,6 +173,8 @@ at: http://upokecenter.com/d/
      * @param mantissa The un-scaled value.
      * @param exponent The binary exponent.
      * @return An ExtendedFloat object.
+     * @throws java.lang.NullPointerException The parameter {@code mantissa}
+     * or {@code exponent} is null.
      */
     public static ExtendedFloat Create(BigInteger mantissa, BigInteger exponent) {
       if (mantissa == null) {
@@ -219,6 +223,8 @@ at: http://upokecenter.com/d/
      * @param str A string that represents a number.
      * @param ctx A PrecisionContext object.
      * @return An ExtendedFloat object.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
      */
     public static ExtendedFloat FromString(String str, PrecisionContext ctx) {
       if (str == null) {
@@ -1303,6 +1309,8 @@ at: http://upokecenter.com/d/
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
      * @return The difference of the two objects.
+     * @throws java.lang.NullPointerException The parameter {@code otherValue}
+     * is null.
      */
     public ExtendedFloat Subtract(ExtendedFloat otherValue, PrecisionContext ctx) {
       if (otherValue == null) {
@@ -1880,6 +1888,8 @@ at: http://upokecenter.com/d/
      * also store the flags resulting from the operation (the flags are in
      * addition to the pre-existing flags). Can be null.
      * @return The result thisValue * multiplicand - subtrahend.
+     * @throws java.lang.NullPointerException The parameter "otherValue"
+     * is null.
      */
     public ExtendedFloat MultiplyAndSubtract(
       ExtendedFloat op,

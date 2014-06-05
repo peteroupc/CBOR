@@ -237,6 +237,8 @@ namespace Test {
     /// <exception cref='System.IO.IOException'>The end of the stream
     /// was reached, or the object read isn't a number.</exception>
     /// <returns>A 64-bit floating-point number.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null.</exception>
     public static double ReadDouble(Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -289,6 +291,8 @@ namespace Test {
     /// <exception cref='System.IO.IOException'>The end of the stream
     /// was reached, or the object read isn't a number, or can't fit a 32-bit
     /// integer.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='stream'/> is null.</exception>
     public static int ReadInt32(Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
