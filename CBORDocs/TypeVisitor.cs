@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 using ClariusLabs.NuDoc;
 
-namespace CBORDocs {
+namespace PeterO.DocGen {
   internal class TypeVisitor : Visitor, IComparer<Type> {
     private SortedDictionary<Type, DocVisitor> docs;
     private string directory;

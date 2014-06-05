@@ -123,6 +123,12 @@ Not documented yet.
 
 An ExtendedDecimal object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>diag</i>
+ is null.
+
 ### Create
 
     public static PeterO.ExtendedDecimal Create(
@@ -140,6 +146,13 @@ Creates a decimal number with the value exponent*10^mantissa.
 <b>Returns:</b>
 
 An ExtendedDecimal object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>mantissa</i>
+ or  <i>exponent</i>
+ is null.
 
 ### FromString
 
@@ -355,6 +368,12 @@ Creates a decimal number from an arbitrary-precision binary floating-point numbe
 <b>Returns:</b>
 
 An ExtendedDecimal object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>bigfloat</i>
+ is null.
 
 ### ToString
 
@@ -791,6 +810,12 @@ Subtracts an ExtendedDecimal object from this instance.
 <b>Returns:</b>
 
 The difference of the two objects.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>otherValue</i>
+ is null.
 
 ### Multiply
 
@@ -1430,6 +1455,11 @@ Multiplies by one value, and then subtracts another value.
 <b>Returns:</b>
 
 The result thisValue * multiplicand - subtrahend.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter "otherValue" is null.
 
 ### RoundToPrecision
 

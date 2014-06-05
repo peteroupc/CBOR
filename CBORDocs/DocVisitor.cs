@@ -15,9 +15,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using ClariusLabs.NuDoc;
-using PeterO.Cbor;
 
-namespace CBORDocs {
+namespace PeterO.DocGen {
     /// <summary>A documentation visitor.</summary>
   internal class DocVisitor : Visitor {
     private StringBuilder paramStr = new StringBuilder();

@@ -45,6 +45,13 @@ Initializes a new instance of the ExtendedRational class.
 
  * <i>denominator</i>: A BigInteger object. (2).
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>numerator</i>
+ or  <i>denominator</i>
+is null.
+
 ### ToString
 
     public override string ToString();
@@ -148,6 +155,12 @@ Not documented yet.
 
 An ExtendedRational object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>diag</i>
+ is null.
+
 ### FromExtendedFloat
 
     public static PeterO.ExtendedRational FromExtendedFloat(
@@ -163,6 +176,12 @@ Not documented yet.
 
 An ExtendedRational object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>ef</i>
+ is null.
+
 ### FromExtendedDecimal
 
     public static PeterO.ExtendedRational FromExtendedDecimal(
@@ -177,6 +196,12 @@ Not documented yet.
 <b>Returns:</b>
 
 An ExtendedRational object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>ef</i>
+ is null.
 
 ### ToExtendedDecimal
 
@@ -487,6 +512,12 @@ Not documented yet.
 
 An ExtendedRational object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>otherValue</i>
+ is null.
+
 ### Subtract
 
     public PeterO.ExtendedRational Subtract(
@@ -501,6 +532,12 @@ Subtracts an ExtendedRational object from this instance.
 <b>Returns:</b>
 
 The difference of the two objects.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>otherValue</i>
+ is null.
 
 ### Multiply
 
@@ -517,6 +554,12 @@ Multiplies this instance by the value of an ExtendedRational object.
 
 The product of the two objects.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>otherValue</i>
+ is null.
+
 ### Divide
 
     public PeterO.ExtendedRational Divide(
@@ -532,6 +575,12 @@ Divides this instance by the value of an ExtendedRational object.
 
 The quotient of the two objects.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>otherValue</i>
+ is null.
+
 ### Remainder
 
     public PeterO.ExtendedRational Remainder(
@@ -546,6 +595,12 @@ Finds the remainder that results when this instance is divided by the value of a
 <b>Returns:</b>
 
 The remainder of the two objects.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>otherValue</i>
+ is null.
 
 ### Zero
 

@@ -112,6 +112,12 @@ Not documented yet.
 
 An ExtendedFloat object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>diag</i>
+ is null.
+
 ### Create
 
     public static PeterO.ExtendedFloat Create(
@@ -148,6 +154,13 @@ Creates a number with the value exponent*2^mantissa.
 
 An ExtendedFloat object.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>mantissa</i>
+ or  <i>exponent</i>
+ is null.
+
 ### FromString
 
     public static PeterO.ExtendedFloat FromString(
@@ -175,6 +188,12 @@ The string can also be "-INF", "-Infinity", "Infinity", "INF", quiet NaN ("qNaN"
 <b>Returns:</b>
 
 An ExtendedFloat object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>str</i>
+ is null.
 
 ### FromString
 
@@ -784,6 +803,12 @@ Subtracts an ExtendedFloat object from this instance.
 
 The difference of the two objects.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>otherValue</i>
+ is null.
+
 ### Multiply
 
     public PeterO.ExtendedFloat Multiply(
@@ -1386,6 +1411,11 @@ Multiplies by one value, and then subtracts another value.
 <b>Returns:</b>
 
 The result thisValue * multiplicand - subtrahend.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter "otherValue" is null.
 
 ### RoundToPrecision
 

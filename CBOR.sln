@@ -7,7 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBORTest", "CBORTest\CBORTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portable.CBOR", "Portable.CBOR.csproj", "{23A1B70C-F064-47B6-8B7E-E2042CDAD8C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBORDocs", "CBORDocs\CBORDocs.csproj", "{B4719819-FE90-4A02-A71B-0169583B4752}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocGen", "CBORDocs\DocGen.csproj", "{B4719819-FE90-4A02-A71B-0169583B4752}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CBORDocs2", "CBORDocs2\CBORDocs2.csproj", "{B38659A7-A3DB-4CD1-8DFF-641B579E5092}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{B4719819-FE90-4A02-A71B-0169583B4752}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4719819-FE90-4A02-A71B-0169583B4752}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4719819-FE90-4A02-A71B-0169583B4752}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B38659A7-A3DB-4CD1-8DFF-641B579E5092}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B38659A7-A3DB-4CD1-8DFF-641B579E5092}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B38659A7-A3DB-4CD1-8DFF-641B579E5092}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B38659A7-A3DB-4CD1-8DFF-641B579E5092}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
