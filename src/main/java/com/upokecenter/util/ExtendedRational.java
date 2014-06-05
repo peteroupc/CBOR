@@ -79,6 +79,8 @@ at: http://upokecenter.com/d/
      * Initializes a new instance of the ExtendedRational class.
      * @param numerator A BigInteger object.
      * @param denominator A BigInteger object. (2).
+     * @throws java.lang.NullPointerException The parameter {@code numerator}
+     * or {@code denominator} is null.
      */
     public ExtendedRational (BigInteger numerator, BigInteger denominator) {
       if (numerator == null) {

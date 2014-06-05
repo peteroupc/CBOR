@@ -3596,6 +3596,7 @@ at: http://upokecenter.com/d/
      * @throws ArithmeticException The divisor is zero.
      * @throws java.lang.NullPointerException The parameter {@code bigintDivisor}
      * is null.
+     * @throws ArithmeticException Attempted to divide by zero.
      */
     public BigInteger divide(BigInteger bigintDivisor) {
       if (bigintDivisor == null) {
@@ -3676,6 +3677,7 @@ at: http://upokecenter.com/d/
      * @throws java.lang.NullPointerException The parameter divisor is
      * null.
      * @throws ArithmeticException The parameter divisor is 0.
+     * @throws ArithmeticException Attempted to divide by zero.
      */
     public BigInteger[] divideAndRemainder(BigInteger divisor) {
       if (divisor == null) {
@@ -3814,6 +3816,7 @@ at: http://upokecenter.com/d/
      * @return The remainder of the two objects.
      * @throws java.lang.NullPointerException The parameter {@code divisor}
      * is null.
+     * @throws ArithmeticException Attempted to divide by zero.
      */
     public BigInteger remainder(BigInteger divisor) {
       if (divisor == null) {

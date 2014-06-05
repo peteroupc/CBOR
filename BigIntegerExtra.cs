@@ -391,6 +391,8 @@ namespace PeterO {
 
     /// <summary>Initializes a new instance of the BigInteger class.</summary>
     /// <param name='bytes'>A byte array.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='bytes'/> is null.</exception>
     public BigInteger(byte[] bytes) {
       if (bytes == null) {
         throw new ArgumentNullException("bytes");

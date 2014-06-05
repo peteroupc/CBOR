@@ -820,6 +820,8 @@ namespace PeterO {
     /// value divided by the given integer.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <returns>This object.</returns>
+    /// <exception cref='System.DivideByZeroException'>Attempted
+    /// to divide by zero.</exception>
     public FastInteger Remainder(int divisor) {
       // Mod operator will always result in a
       // number that fits an int for int divisors
@@ -879,6 +881,8 @@ namespace PeterO {
 
     /// <summary>Divides this instance by the value of a 32-bit signed integer.</summary>
     /// <returns>The quotient of the two objects.</returns>
+    /// <exception cref='System.DivideByZeroException'>Attempted
+    /// to divide by zero.</exception>
     /// <param name='divisor'>A 32-bit signed integer.</param>
     public FastInteger Divide(int divisor) {
       if (divisor != 0) {

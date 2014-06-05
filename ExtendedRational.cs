@@ -76,6 +76,9 @@ namespace PeterO {
     /// <summary>Initializes a new instance of the ExtendedRational class.</summary>
     /// <param name='numerator'>A BigInteger object.</param>
     /// <param name='denominator'>A BigInteger object. (2).</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='numerator'/> or <paramref name='denominator'/>
+    /// is null.</exception>
     public ExtendedRational(BigInteger numerator, BigInteger denominator) {
       if (numerator == null) {
         throw new ArgumentNullException("numerator");

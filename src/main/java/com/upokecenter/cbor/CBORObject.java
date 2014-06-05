@@ -172,6 +172,8 @@ public void setConverter(Object value) {
      * to CBOR objects.
      * @param converter An ICBORConverter object.
      * @param <T> Must be the same as the "type" parameter.
+     * @throws java.lang.NullPointerException The parameter {@code type}
+     * or {@code converter} is null.
      */
     public static <T> void AddConverter(Class<?> type, ICBORConverter<T> converter) {
       if (type == null) {
@@ -205,6 +207,8 @@ public void setConverter(Object value) {
      * Not documented yet.
      * @param bigintTag A BigInteger object.
      * @param handler An ICBORTag object.
+     * @throws java.lang.NullPointerException The parameter {@code bigintTag}
+     * or {@code handler} is null.
      */
     public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
       if (bigintTag == null) {
@@ -1227,6 +1231,8 @@ public boolean equals(CBORObject other) {
      * @throws CBORException There was an error in reading or parsing the
      * data. This includes cases where not all of the byte array represents
      * a CBOR object.
+     * @throws java.lang.NullPointerException The parameter {@code data}
+     * is null.
      */
     public static CBORObject DecodeFromBytes(byte[] data) {
       if (data == null) {
@@ -1317,6 +1323,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
      * @return True if this object has a tag of the given number; otherwise,
      * false.
      * @throws java.lang.IllegalArgumentException TagValue is less than 0.
+     * @throws java.lang.NullPointerException The parameter "obj" is null.
      */
     public boolean HasTag(int tagValue) {
       if (tagValue < 0) {
@@ -1472,6 +1479,8 @@ private List<CBORObject> AsList() {
      * @return A CBORObject object.
      * @throws java.lang.IllegalStateException This object is not an
      * array.
+     * @throws java.lang.NullPointerException The parameter "value" is
+     * null.
      */
     public CBORObject get(int index) {
         if (this.getItemType() == CBORObjectTypeArray) {
@@ -2968,6 +2977,8 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
      * Writes a CBOR object to a CBOR data stream.
      * @param value The value to write. Can be null.
      * @param stream A writable data stream.
+     * @throws java.lang.NullPointerException The parameter {@code stream}
+     * is null.
      */
     public static void Write(CBORObject value, OutputStream stream) throws IOException {
       if (stream == null) {
@@ -2988,6 +2999,8 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
      * @param objValue The value to write.
      * @param stream A writable data stream.
      * @throws java.lang.IllegalArgumentException The object's type is not supported.
+     * @throws java.lang.NullPointerException The parameter {@code stream}
+     * is null.
      */
     @SuppressWarnings("unchecked")
 public static void Write(Object objValue, OutputStream stream) throws IOException {
@@ -4187,6 +4200,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * @throws java.lang.IllegalArgumentException The parameter {@code bigintTag}
      * is less than 0 or greater than 2^64-1, or {@code valueOb}'s type is
      * unsupported.
+     * @throws java.lang.NullPointerException The parameter {@code bigintTag}
+     * is null.
      */
     public static CBORObject FromObjectAndTag(Object valueOb, BigInteger bigintTag) {
       if (bigintTag == null) {

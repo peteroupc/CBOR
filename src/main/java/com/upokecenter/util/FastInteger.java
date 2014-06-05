@@ -850,6 +850,7 @@ bigrem=divrem[1]; }
      * divided by the given integer.
      * @param divisor The divisor.
      * @return This object.
+     * @throws ArithmeticException Attempted to divide by zero.
      */
     public FastInteger Remainder(int divisor) {
       // Mod operator will always result in a
@@ -912,6 +913,7 @@ bigrem=divrem[1]; }
      * Divides this instance by the value of a 32-bit signed integer.
      * @param divisor A 32-bit signed integer.
      * @return The quotient of the two objects.
+     * @throws ArithmeticException Attempted to divide by zero.
      */
     public FastInteger Divide(int divisor) {
       if (divisor != 0) {
