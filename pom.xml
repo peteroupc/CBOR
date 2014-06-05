@@ -90,7 +90,7 @@
 		<license>
 			<name>CC0 Universal</name>
 			<distribution>repo</distribution>
-			<url>www.creativecommons.org/publicdomain/zero/1.0/</url>
+			<url>http://www.creativecommons.org/publicdomain/zero/1.0/</url>
 		</license>
 	</licenses>
 	<distributionManagement>
