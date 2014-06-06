@@ -129,7 +129,7 @@ namespace PeterO.DocGen {
       }
       if (typeInfo.IsAbstract && typeInfo.IsSealed) {
         builder.Append("static ");
-      } else if (typeInfo.IsAbstract) {
+      } else if (typeInfo.IsAbstract && !typeInfo.IsInterface) {
         builder.Append("abstract ");
       } else if (typeInfo.IsSealed) {
         builder.Append("sealed ");
@@ -141,7 +141,7 @@ namespace PeterO.DocGen {
       } else {
         builder.Append("interface ");
       }
-      builder.Append(typeInfo.Name);
+      builder.Append(UndecorateTypeName(typeInfo.Name));
       bool first;
       if (typeInfo.GetGenericArguments().Length > 0) {
         builder.Append('<');
@@ -235,27 +235,29 @@ namespace PeterO.DocGen {
     public static string FormatMethod(MethodBase method) {
       StringBuilder builder = new StringBuilder();
       builder.Append(valueFourSpaces);
-      if (method.IsPublic) {
-        builder.Append("public ");
-      }
-      if (method.IsAssembly) {
-        builder.Append("internal ");
-      }
-      if (method.IsFamily) {
-        builder.Append("protected ");
-      }
-      if (method.IsStatic) {
-        builder.Append("static ");
-      }
-      if (method.IsAbstract) {
-        builder.Append("abstract ");
-      }
-      if (method.IsFinal) {
-        builder.Append("sealed ");
-      } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
-        builder.Append("override ");
-      } else if (method.IsVirtual) {
-        builder.Append("virtual ");
+      if (!method.ReflectedType.IsInterface) {
+        if (method.IsPublic) {
+          builder.Append("public ");
+        }
+        if (method.IsAssembly) {
+          builder.Append("internal ");
+        }
+        if (method.IsFamily) {
+          builder.Append("protected ");
+        }
+        if (method.IsStatic) {
+          builder.Append("static ");
+        }
+        if (method.IsAbstract) {
+          builder.Append("abstract ");
+        }
+        if (method.IsFinal) {
+          builder.Append("sealed ");
+        } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
+          builder.Append("override ");
+        } else if (method.IsVirtual) {
+          builder.Append("virtual ");
+        }
       }
       if (method is MethodInfo) {
         if (method.Name.Equals("op_Explicit")) {
@@ -332,32 +334,34 @@ namespace PeterO.DocGen {
       MethodInfo getter = property.GetGetMethod();
       MethodInfo setter = property.GetSetMethod();
       builder.Append(valueFourSpaces);
-      if ((getter == null ? false : getter.IsPublic) ||
-        (setter == null ? false : setter.IsPublic)) {
-        builder.Append("public ");
-      } else if ((getter == null ? false : getter.IsAssembly) ||
-        (setter == null ? false : setter.IsAssembly)) {
-        builder.Append("internal ");
-      } else if ((getter == null ? false : getter.IsFamily) ||
-        (setter == null ? false : setter.IsFamily)) {
-        builder.Append("protected ");
-      }
-      if ((getter == null ? false : getter.IsStatic) ||
-        (setter == null ? false : setter.IsStatic)) {
-        builder.Append("static ");
-      }
-      if ((getter == null ? false : getter.IsAbstract) ||
-        (setter == null ? false : setter.IsAbstract)) {
-        builder.Append("abstract ");
-      }
-      if ((getter == null ? false : getter.IsFinal) ||
-        (setter == null ? false : setter.IsFinal)) {
-        builder.Append("sealed ");
-      } else if (IsMethodOverride(getter ?? setter)) {
-        builder.Append("override ");
-      } else if ((getter == null ? false : getter.IsVirtual) ||
-        (setter == null ? false : setter.IsVirtual)) {
-        builder.Append("virtual ");
+      if (!property.ReflectedType.IsInterface) {
+        if ((getter == null ? false : getter.IsPublic) ||
+          (setter == null ? false : setter.IsPublic)) {
+          builder.Append("public ");
+        } else if ((getter == null ? false : getter.IsAssembly) ||
+          (setter == null ? false : setter.IsAssembly)) {
+          builder.Append("internal ");
+        } else if ((getter == null ? false : getter.IsFamily) ||
+          (setter == null ? false : setter.IsFamily)) {
+          builder.Append("protected ");
+        }
+        if ((getter == null ? false : getter.IsStatic) ||
+          (setter == null ? false : setter.IsStatic)) {
+          builder.Append("static ");
+        }
+        if ((getter == null ? false : getter.IsAbstract) ||
+          (setter == null ? false : setter.IsAbstract)) {
+          builder.Append("abstract ");
+        }
+        if ((getter == null ? false : getter.IsFinal) ||
+          (setter == null ? false : setter.IsFinal)) {
+          builder.Append("sealed ");
+        } else if (IsMethodOverride(getter ?? setter)) {
+          builder.Append("override ");
+        } else if ((getter == null ? false : getter.IsVirtual) ||
+          (setter == null ? false : setter.IsVirtual)) {
+          builder.Append("virtual ");
+        }
       }
       builder.Append(FormatType(property.PropertyType));
       builder.Append(" ");

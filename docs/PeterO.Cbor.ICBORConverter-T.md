@@ -1,12 +1,12 @@
 ﻿## PeterO.Cbor.ICBORConverter<T>
 
-    public abstract interface ICBORConverter`1<T>
+    public interface ICBORConverter<T>
 
 Interface implemented by classes that convert objects of arbitrary types to CBOR objects.
 
 ### ToCBORObject
 
-    public abstract virtual PeterO.Cbor.CBORObject ToCBORObject(
+    PeterO.Cbor.CBORObject ToCBORObject(
         T obj);
 
 Converts an object to a CBOR object.
