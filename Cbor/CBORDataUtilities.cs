@@ -30,7 +30,7 @@ namespace PeterO.Cbor {
     /// (RFC 7159). Roughly speaking, a valid number consists of an optional
     /// minus sign, one or more digits (starting with 1 to 9 unless the only
     /// digit is 0), an optional decimal point with one or more digits, and
-    /// an optional letter E or e with one or more digits (the exponent).</summary>
+    /// an optional letter E or e with an optional plus or minus sign and one or more digits (the exponent).</summary>
     /// <param name='str'>A string to parse.</param>
     /// <param name='integersOnly'>If true, no decimal points or exponents
     /// are allowed in the string.</param>
@@ -250,27 +250,6 @@ namespace PeterO.Cbor {
           bigmant,
           bigexp));
       }
-    }
-
-    /// <summary>Parses a number whose format follows the JSON specification
-    /// (RFC 7159). Roughly speaking, a valid number consists of an optional
-    /// minus sign, one or more digits (starting with 1 to 9 unless the only
-    /// digit is 0), an optional decimal point with one or more digits, and
-    /// an optional letter E or e with one or more digits (the exponent).</summary>
-    /// <param name='str'>A string to parse.</param>
-    /// <param name='integersOnly'>If true, no decimal points or exponents
-    /// are allowed in the string.</param>
-    /// <param name='positiveOnly'>If true, only positive numbers are
-    /// allowed (the leading minus is disallowed).</param>
-    /// <param name='failOnExponentOverflow'>Has no effect.</param>
-    /// <returns>A CBOR object that represents the parsed number.</returns>
-    [Obsolete("Use the three-argument version instead; the 'failOnExponentOverflow' parameter now has no effect.")]
-    public static CBORObject ParseJSONNumber(
-      string str,
-      bool integersOnly,
-      bool positiveOnly,
-      bool failOnExponentOverflow) {
-        return ParseJSONNumber(str, integersOnly, positiveOnly);
     }
   }
 }
