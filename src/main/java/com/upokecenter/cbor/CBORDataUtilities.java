@@ -34,7 +34,8 @@ private CBORDataUtilities() {
      * 7159). Roughly speaking, a valid number consists of an optional minus
      * sign, one or more digits (starting with 1 to 9 unless the only digit
      * is 0), an optional decimal point with one or more digits, and an optional
-     * letter E or e with one or more digits (the exponent).
+     * letter E or e with an optional plus or minus sign and one or more digits
+     * (the exponent).
      * @param str A string to parse.
      * @param integersOnly If true, no decimal points or exponents are allowed
      * in the string.
@@ -250,29 +251,5 @@ private CBORDataUtilities() {
           bigmant,
           bigexp));
       }
-    }
-
-    /**
-     * Parses a number whose format follows the JSON specification (RFC
-     * 7159). Roughly speaking, a valid number consists of an optional minus
-     * sign, one or more digits (starting with 1 to 9 unless the only digit
-     * is 0), an optional decimal point with one or more digits, and an optional
-     * letter E or e with one or more digits (the exponent).
-     * @param str A string to parse.
-     * @param integersOnly If true, no decimal points or exponents are allowed
-     * in the string.
-     * @param positiveOnly If true, only positive numbers are allowed (the
-     * leading minus is disallowed).
-     * @param failOnExponentOverflow Has no effect.
-     * @return A CBOR object that represents the parsed number.
-     * @deprecated Use the three-argument version instead; the 'failOnExponentOverflow' parameter now has no effect.
- */
-@Deprecated
-    public static CBORObject ParseJSONNumber(
-      String str,
-      boolean integersOnly,
-      boolean positiveOnly,
-      boolean failOnExponentOverflow) {
-        return ParseJSONNumber(str, integersOnly, positiveOnly);
     }
   }

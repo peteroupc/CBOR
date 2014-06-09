@@ -3961,9 +3961,9 @@ at: http://upokecenter.com/d/
     /**
      * Calculates the square root and the remainder.
      * @return An array of two big integers: the first integer is the square
-     * root, and the second is the difference between this value and the last
-     * square of the first integer, before this value. Returns two zeros
-     * if this value is 0 or less, or two ones if this value equals 1.
+     * root, and the second is the difference between this value and the square
+     * of the first integer. Returns two zeros if this value is 0 or less, or
+     * one and zero if this value equals 1.
      */
     public BigInteger[] sqrtWithRemainder() {
       if (this.signum() <= 0) {
