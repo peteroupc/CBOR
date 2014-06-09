@@ -33,9 +33,10 @@ namespace PeterO.Cbor {
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// "uri" is null.</exception>
     /// <param name='uri'>A System.Uri object.</param>
-    /// <returns>A CBORObject object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='uri'/> is null.</exception>
+    /// <returns>A CBORObject object.</returns>
+    /// <param name='uri'>A System.Uri object.</param>
     public CBORObject ToCBORObject(System.Uri uri) {
       if (uri == null) {
         throw new ArgumentNullException("uri");

@@ -257,6 +257,11 @@ namespace Test {
     }
 
     [TestMethod]
+    public void TestDBNull() {
+      Assert.AreEqual(CBORObject.Undefined, CBORObject.FromObject(DBNull.Value));
+    }
+
+    [TestMethod]
     public void TestFloatCloseToEdge() {
       try {
         CBORObject.FromObject(2.147483647E9d).AsUInt32();
