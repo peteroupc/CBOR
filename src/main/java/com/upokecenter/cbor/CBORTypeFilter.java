@@ -10,7 +10,8 @@ at: http://upokecenter.com/d/
 import com.upokecenter.util.*;
 
     /**
-     * Specifies what kinds of CBOR objects a tag can be.
+     * Specifies what kinds of CBOR objects a tag can be. This class is used
+     * when a CBOR object is being read from a data stream.
      */
   public class CBORTypeFilter
   {
