@@ -9,9 +9,9 @@ using System;
 using System.Text;
 
 namespace PeterO {
-    /// <summary>Encapsulates radix-independent arithmetic.</summary>
-    /// <typeparam name='T'>Data type for a numeric value in a particular
-    /// radix.</typeparam>
+  /// <summary>Encapsulates radix-independent arithmetic.</summary>
+  /// <typeparam name='T'>Data type for a numeric value in a particular
+  /// radix.</typeparam>
   internal class RadixMath<T> : IRadixMath<T> {
     private const int IntegerModeFixedScale = 1;
     private const int IntegerModeRegular = 0;
@@ -257,7 +257,7 @@ namespace PeterO {
       int otherFlags = this.helper.GetFlags(other);
       if (((thisFlags | otherFlags) & BigNumberFlags.FlagSpecial) != 0) {
         // Assumes that neither operand is NaN
-        #if DEBUG
+#if DEBUG
         if (!((thisFlags & BigNumberFlags.FlagNaN) == 0)) {
           throw new ArgumentException("doesn't satisfy (thisFlags & BigNumberFlags.FlagNaN)==0");
         }
@@ -265,7 +265,7 @@ namespace PeterO {
         if (!((otherFlags & BigNumberFlags.FlagNaN) == 0)) {
           throw new ArgumentException("doesn't satisfy (otherFlags & BigNumberFlags.FlagNaN)==0");
         }
-        #endif
+#endif
 
         if ((thisFlags & BigNumberFlags.FlagInfinity) != 0) {
           // thisValue is infinity
@@ -376,7 +376,10 @@ namespace PeterO {
           FastInteger fastPrecision = FastInteger.FromBig(pc.Precision);
           overflowMant = this.helper.MultiplyByRadixPower(BigInteger.One, fastPrecision);
           overflowMant -= BigInteger.One;
-          FastInteger clamp = FastInteger.FromBig(pc.EMax).Increment().Subtract(fastPrecision);
+          FastInteger clamp = FastInteger.FromBig(pc.EMax);
+          if (pc.AdjustExponent) {
+            clamp.Increment().Subtract(fastPrecision);
+          }
           return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
         }
       }
@@ -927,8 +930,10 @@ namespace PeterO {
       FastInteger digits = this.helper.CreateShiftAccumulator(BigInteger.Abs(this.helper.GetMantissa(thisValue))).GetDigitLength();
       BigInteger exp = this.helper.GetExponent(thisValue);
       FastInteger fi = FastInteger.FromBig(exp);
-      fi.Add(digits);
-      fi.Decrement();
+      if (ctx.AdjustExponent) {
+        fi.Add(digits);
+        fi.Decrement();
+      }
       // Console.WriteLine("" + exp + " -> " + (fi));
       if (fi.Sign < 0) {
         fi.Negate().Divide(2).Negate();
@@ -1065,11 +1070,11 @@ namespace PeterO {
         }
         return this.ExtendPrecision(this.helper.ValueOf(1), ctx);
       }
-      #if DEBUG
+#if DEBUG
       if (ctx == null) {
         throw new ArgumentNullException("ctx");
       }
-      #endif
+#endif
       // Special case for 0.5
       if (this.thisRadix == 10 || this.thisRadix == 2) {
         T half = (this.thisRadix == 10) ?
@@ -1229,11 +1234,11 @@ namespace PeterO {
     }
 
     private T LnTenConstant(PrecisionContext ctx) {
-      #if DEBUG
+#if DEBUG
       if (ctx == null) {
         throw new ArgumentNullException("ctx");
       }
-      #endif
+#endif
       T thisValue = this.helper.ValueOf(10);
       FastInteger error;
       BigInteger bigError;
@@ -1728,7 +1733,10 @@ namespace PeterO {
           return this.helper.CreateNewWithFlags(overflowMant, bigexp2, 0);
         }
       }
-      FastInteger minexp = FastInteger.FromBig(ctx.EMin).SubtractBig(ctx.Precision).Increment();
+      FastInteger minexp = FastInteger.FromBig(ctx.EMin);
+      if (ctx.AdjustExponent) {
+        minexp.SubtractBig(ctx.Precision).Increment();
+      }
       FastInteger bigexp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
       if (bigexp.CompareTo(minexp) <= 0) {
         // Use a smaller exponent if the input exponent is already
@@ -1778,7 +1786,10 @@ namespace PeterO {
             return this.helper.CreateNewWithFlags(overflowMant, bigexp2, thisFlags & BigNumberFlags.FlagNegative);
           }
         }
-        FastInteger minexp = FastInteger.FromBig(ctx.EMin).SubtractBig(ctx.Precision).Increment();
+        FastInteger minexp = FastInteger.FromBig(ctx.EMin);
+        if (ctx.AdjustExponent) {
+          minexp.SubtractBig(ctx.Precision).Increment();
+        }
         FastInteger bigexp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
         if (bigexp.CompareTo(minexp) < 0) {
           // Use a smaller exponent if the input exponent is already
@@ -1800,7 +1811,9 @@ namespace PeterO {
         }
         if ((ctx2.Flags & PrecisionContext.FlagUnderflow) != 0) {
           BigInteger bigmant = BigInteger.Abs(this.helper.GetMantissa(val));
-          BigInteger maxmant = this.helper.MultiplyByRadixPower(BigInteger.One, FastInteger.FromBig(ctx.Precision).Decrement());
+          // TODO: Is it more correct not to decrement here?
+          BigInteger maxmant = this.helper.MultiplyByRadixPower(BigInteger.One, 
+            FastInteger.FromBig(ctx.Precision).Decrement());
           if (bigmant.CompareTo(maxmant) >= 0 || ctx.Precision.CompareTo(BigInteger.One) == 0) {
             // don't treat max-precision results as having underflowed
             ctx2.Flags = 0;
@@ -1843,7 +1856,10 @@ namespace PeterO {
           return thisValue;
         }
       }
-      FastInteger minexp = FastInteger.FromBig(ctx.EMin).SubtractBig(ctx.Precision).Increment();
+      FastInteger minexp = FastInteger.FromBig(ctx.EMin);
+      if (ctx.AdjustExponent) {
+        minexp.SubtractBig(ctx.Precision).Increment();
+      }
       FastInteger bigexp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
       if (bigexp.CompareTo(minexp) <= 0) {
         // Use a smaller exponent if the input exponent is already
@@ -1937,7 +1953,7 @@ namespace PeterO {
       FastInteger shift,
       bool neg,
       PrecisionContext ctx) {
-      #if DEBUG
+#if DEBUG
       if (!(mantissa.Sign >= 0)) {
         throw new ArgumentException("doesn't satisfy mantissa.Sign>= 0");
       }
@@ -1949,7 +1965,7 @@ namespace PeterO {
       if (!(divisor.Sign >= 0)) {
         throw new ArgumentException("doesn't satisfy divisor.Sign>= 0");
       }
-      #endif
+#endif
 
       IShiftAccumulator accum;
       Rounding rounding = (ctx == null) ? Rounding.HalfEven : ctx.Rounding;
@@ -2111,11 +2127,11 @@ namespace PeterO {
             quo = null;
           }
           if (hasPrecision) {
-            #if DEBUG
+#if DEBUG
             if (ctx == null) {
               throw new ArgumentNullException("ctx");
             }
-            #endif
+#endif
 
             BigInteger divid = mantissaDividend;
             FastInteger shift = FastInteger.FromBig(ctx.Precision);
@@ -2644,7 +2660,7 @@ namespace PeterO {
       return this.ReduceToPrecisionAndIdealExponent(thisValue, ctx, null, null);
     }
 
-    // whether "precision" is the number of bits and not digits
+    // "binaryPrec" means whether "precision" is the number of bits and not digits
     private T RoundToPrecisionInternal(T thisValue, int lastDiscarded, int olderDiscarded, FastInteger shift, bool binaryPrec, bool adjustNegativeZero, PrecisionContext ctx) {
       if (ctx == null) {
         ctx = PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven);
@@ -2671,9 +2687,14 @@ namespace PeterO {
       }
       // get the precision
       FastInteger fastPrecision = ctx.Precision.canFitInInt() ? new FastInteger(ctx.Precision.intValue()) : FastInteger.FromBig(ctx.Precision);
-      if (fastPrecision.Sign < 0) {
-        return this.SignalInvalidWithMessage(ctx, "precision less than 0 (" + fastPrecision + ")");
+      // No need to check if precision is less than 0, since the PrecisionContext
+      // object should already ensure this
+#if DEBUG
+      if (!(fastPrecision.Sign >= 0)) {
+        throw new ArgumentException("doesn't satisfy fastPrecision.Sign>= 0");
       }
+#endif
+
       if (this.thisRadix == 2 || fastPrecision.IsValueZero) {
         // "binaryPrec" will have no special effect here
         binaryPrec = false;
@@ -2690,7 +2711,9 @@ namespace PeterO {
       bool unlimitedPrec = fastPrecision.IsValueZero;
       if (!binaryPrec) {
         // Fast path to check if rounding is necessary at all
-        if (fastPrecision.Sign > 0 && (shift == null || shift.IsValueZero) && (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
+        if (fastPrecision.Sign > 0 &&
+           (shift == null || shift.IsValueZero) &&
+           (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
           BigInteger mantabs = BigInteger.Abs(this.helper.GetMantissa(thisValue));
           if (adjustNegativeZero && (thisFlags & BigNumberFlags.FlagNegative) != 0 && mantabs.IsZero && (ctx.Rounding != Rounding.Floor)) {
             // Change negative zero to positive zero
@@ -2710,8 +2733,12 @@ namespace PeterO {
               }
               BigInteger bigexp = this.helper.GetExponent(thisValue);
               FastInteger fastExp = bigexp.canFitInInt() ? new FastInteger(bigexp.intValue()) : FastInteger.FromBig(bigexp);
-              FastInteger fastAdjustedExp = FastInteger.Copy(fastExp).Add(fastPrecision).Decrement();
-              FastInteger fastNormalMin = FastInteger.Copy(fastEMin).Add(fastPrecision).Decrement();
+              FastInteger fastAdjustedExp = FastInteger.Copy(fastExp);
+              FastInteger fastNormalMin = FastInteger.Copy(fastEMin);
+              if (ctx == null || ctx.AdjustExponent) {
+                fastAdjustedExp.Add(fastPrecision).Decrement();
+                fastNormalMin.Add(fastPrecision).Decrement();
+              }
               if (fastAdjustedExp.CompareTo(fastEMax) <= 0 && fastAdjustedExp.CompareTo(fastNormalMin) >= 0) {
                 return thisValue;
               }
@@ -2728,13 +2755,17 @@ namespace PeterO {
                 stillWithinPrecision = mantabs.CompareTo(radixPower) < 0;
               }
               if (stillWithinPrecision) {
-                if (!ctx.HasExponentRange) {
-                  return this.helper.CreateNewWithFlags(mantabs, this.helper.GetExponent(thisValue), thisFlags);
-                }
                 BigInteger bigexp = this.helper.GetExponent(thisValue);
+                if (!ctx.HasExponentRange) {
+                  return this.helper.CreateNewWithFlags(mantabs, bigexp, thisFlags);
+                }
                 FastInteger fastExp = bigexp.canFitInInt() ? new FastInteger(bigexp.intValue()) : FastInteger.FromBig(bigexp);
-                FastInteger fastAdjustedExp = FastInteger.Copy(fastExp).Add(fastPrecision).Decrement();
-                FastInteger fastNormalMin = FastInteger.Copy(fastEMin).Add(fastPrecision).Decrement();
+                FastInteger fastAdjustedExp = FastInteger.Copy(fastExp);
+                FastInteger fastNormalMin = FastInteger.Copy(fastEMin);
+                if (ctx == null || ctx.AdjustExponent) {
+                  fastAdjustedExp.Add(fastPrecision).Decrement();
+                  fastNormalMin.Add(fastPrecision).Decrement();
+                }
                 if (fastAdjustedExp.CompareTo(fastEMax) <= 0 && fastAdjustedExp.CompareTo(fastNormalMin) >= 0) {
                   return this.helper.CreateNewWithFlags(mantabs, bigexp, thisFlags);
                 }
@@ -2790,7 +2821,10 @@ namespace PeterO {
       }
       FastInteger discardedBits = FastInteger.Copy(accum.DiscardedDigitCount);
       exp.Add(discardedBits);
-      FastInteger adjExponent = FastInteger.Copy(exp).Add(accum.GetDigitLength()).Decrement();
+      FastInteger adjExponent = FastInteger.Copy(exp);
+      if (ctx.AdjustExponent) {
+        adjExponent = adjExponent.Add(accum.GetDigitLength()).Decrement();
+      }
       // Console.WriteLine("" + bigmantissa + "->" + accum.ShiftedInt + " digits=" + accum.DiscardedDigitCount + " exp=" + exp + " [curexp=" + (helper.GetExponent(thisValue)) + "] adj=" + adjExponent + ",max=" + (fastEMax));
       FastInteger newAdjExponent = adjExponent;
       FastInteger clamp = null;
@@ -2818,7 +2852,10 @@ namespace PeterO {
             if (binaryPrec || newDigitLength.CompareTo(fastPrecision) > 0) {
               newDigitLength = FastInteger.Copy(fastPrecision);
             }
-            newAdjExponent = FastInteger.Copy(exp).Add(newDigitLength).Decrement();
+            newAdjExponent = FastInteger.Copy(exp);
+            if (ctx.AdjustExponent) {
+              newAdjExponent = newAdjExponent.Add(newDigitLength).Decrement();
+            }
           }
         }
       }
@@ -2833,7 +2870,10 @@ namespace PeterO {
             if (binaryPrec && this.thisRadix != 2) {
               fastPrecision = this.helper.CreateShiftAccumulator(maxMantissa).GetDigitLength();
             }
-            FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+            FastInteger clampExp = FastInteger.Copy(fastEMax);
+            if (ctx.AdjustExponent) {
+              clampExp.Increment().Subtract(fastPrecision);
+            }
             if (fastEMax.CompareTo(clampExp) > 0) {
               if (ctx.HasFlags) {
                 ctx.Flags |= PrecisionContext.FlagClamped;
@@ -2861,7 +2901,10 @@ namespace PeterO {
             if (ctx.HasFlags) {
               ctx.Flags |= flags;
             }
-            clamp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+            clamp = FastInteger.Copy(fastEMax);
+            if (ctx.AdjustExponent) {
+              clamp.Increment().Subtract(fastPrecision);
+            }
             return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
           }
           if (ctx.HasFlags) {
@@ -2871,7 +2914,10 @@ namespace PeterO {
         }
       } else if (fastEMin != null && adjExponent.CompareTo(fastEMin) < 0) {
         // Subnormal
-        FastInteger fastETiny = FastInteger.Copy(fastEMin).Subtract(fastPrecision).Increment();
+        FastInteger fastETiny = FastInteger.Copy(fastEMin);
+        if (ctx.AdjustExponent) {
+          fastETiny = fastETiny.Subtract(fastPrecision).Increment();
+        }
         if (ctx.HasFlags) {
           if (!earlyRounded.IsZero) {
             if (newAdjExponent.CompareTo(fastEMin) < 0) {
@@ -2923,7 +2969,10 @@ namespace PeterO {
             if (binaryPrec && this.thisRadix != 2) {
               fastPrecision = this.helper.CreateShiftAccumulator(maxMantissa).GetDigitLength();
             }
-            FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+            FastInteger clampExp = FastInteger.Copy(fastEMax);
+            if (ctx.AdjustExponent) {
+              clampExp.Increment().Subtract(fastPrecision);
+            }
             if (fastETiny.CompareTo(clampExp) > 0) {
               if (!bigmantissa.IsZero) {
                 expdiff = FastInteger.Copy(fastETiny).Subtract(clampExp);
@@ -2984,7 +3033,9 @@ namespace PeterO {
       if (recheckOverflow && fastEMax != null) {
         // Check for overflow again
         adjExponent = FastInteger.Copy(exp);
-        adjExponent.Add(accum.GetDigitLength()).Decrement();
+        if (ctx.AdjustExponent) {
+          adjExponent.Add(accum.GetDigitLength()).Decrement();
+        }
         if (binaryPrec && fastEMax != null && adjExponent.CompareTo(fastEMax) == 0) {
           // May or may not be an overflow depending on the mantissa
           // (uses accumulator from previous steps, including the check
@@ -3012,7 +3063,10 @@ namespace PeterO {
             if (ctx.HasFlags) {
               ctx.Flags |= flags;
             }
-            clamp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+            clamp = FastInteger.Copy(fastEMax);
+            if (ctx.AdjustExponent) {
+              clamp.Increment().Subtract(fastPrecision);
+            }
             return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
           }
           if (ctx.HasFlags) {
@@ -3030,7 +3084,10 @@ namespace PeterO {
         if (binaryPrec && this.thisRadix != 2) {
           fastPrecision = this.helper.CreateShiftAccumulator(maxMantissa).GetDigitLength();
         }
-        FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+        FastInteger clampExp = FastInteger.Copy(fastEMax);
+        if (ctx.AdjustExponent) {
+          clampExp.Increment().Subtract(fastPrecision);
+        }
         if (exp.CompareTo(clampExp) > 0) {
           if (!bigmantissa.IsZero) {
             FastInteger expdiff = FastInteger.Copy(exp).Subtract(clampExp);
@@ -3047,14 +3104,14 @@ namespace PeterO {
 
     // mant1 and mant2 are assumed to be nonnegative
     private T AddCore(BigInteger mant1, BigInteger mant2, BigInteger exponent, int flags1, int flags2, PrecisionContext ctx) {
-      #if DEBUG
+#if DEBUG
       if (mant1.Sign < 0) {
         throw new InvalidOperationException();
       }
       if (mant2.Sign < 0) {
         throw new InvalidOperationException();
       }
-      #endif
+#endif
       bool neg1 = (flags1 & BigNumberFlags.FlagNegative) != 0;
       bool neg2 = (flags2 & BigNumberFlags.FlagNegative) != 0;
       bool negResult = false;

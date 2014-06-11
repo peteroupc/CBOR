@@ -4143,6 +4143,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         return FromObject(((Float)obj).floatValue());
       }
 
+    //
       if(obj instanceof Enum<?>) {
         return FromObject(PropertyMap.EnumToObject((Enum<?>)obj));
       }
