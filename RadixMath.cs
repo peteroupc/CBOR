@@ -1486,7 +1486,6 @@ namespace PeterO {
               1,
               null,
               false,
-              false,
               ctx);
           }
         } else {
@@ -1665,7 +1664,7 @@ namespace PeterO {
       }
       T retval = this.helper.CreateNewWithFlags(mantissa, currentExp, 0);
       // Console.WriteLine("idealExp=" + idealExp + ", curr " + currentExp + " guess=" + (mantissa));
-      retval = this.RoundToPrecisionInternal(retval, 0, inexact ? 1 : 0, null, false, false, ctxtmp);
+      retval = this.RoundToPrecisionInternal(retval, 0, inexact ? 1 : 0, null, false, ctxtmp);
       currentExp = this.helper.GetExponent(retval);
       // Console.WriteLine("guess I " + guess + " idealExp=" + idealExp + ", curr " + currentExp + " clamped=" + (ctxtmp.Flags&PrecisionContext.FlagClamped));
       if ((ctxtmp.Flags & PrecisionContext.FlagUnderflow) == 0) {
@@ -1811,9 +1810,9 @@ namespace PeterO {
         }
         if ((ctx2.Flags & PrecisionContext.FlagUnderflow) != 0) {
           BigInteger bigmant = BigInteger.Abs(this.helper.GetMantissa(val));
-          // TODO: Is it more correct not to decrement here?
-          BigInteger maxmant = this.helper.MultiplyByRadixPower(BigInteger.One, 
-            FastInteger.FromBig(ctx.Precision).Decrement());
+          BigInteger maxmant = this.helper.MultiplyByRadixPower(
+BigInteger.One,
+FastInteger.FromBig(ctx.Precision).Decrement());
           if (bigmant.CompareTo(maxmant) >= 0 || ctx.Precision.CompareTo(BigInteger.One) == 0) {
             // don't treat max-precision results as having underflowed
             ctx2.Flags = 0;
@@ -2493,24 +2492,16 @@ namespace PeterO {
       return ret;
     }
 
-    public T RoundToBinaryPrecision(T thisValue, PrecisionContext context) {
-      return this.RoundToBinaryPrecisionWithShift(thisValue, context, 0, 0, null, false);
-    }
-
-    private T RoundToBinaryPrecisionWithShift(T thisValue, PrecisionContext context, int lastDiscarded, int olderDiscarded, FastInteger shift, bool adjustNegativeZero) {
-      return this.RoundToPrecisionInternal(thisValue, lastDiscarded, olderDiscarded, shift, true, adjustNegativeZero, context);
-    }
-
     public T Plus(T thisValue, PrecisionContext context) {
-      return this.RoundToPrecisionInternal(thisValue, 0, 0, null, false, true, context);
+      return this.RoundToPrecisionInternal(thisValue, 0, 0, null, true, context);
     }
 
     public T RoundToPrecision(T thisValue, PrecisionContext context) {
-      return this.RoundToPrecisionInternal(thisValue, 0, 0, null, false, false, context);
+      return this.RoundToPrecisionInternal(thisValue, 0, 0, null, false, context);
     }
 
     private T RoundToPrecisionWithShift(T thisValue, PrecisionContext context, int lastDiscarded, int olderDiscarded, FastInteger shift, bool adjustNegativeZero) {
-      return this.RoundToPrecisionInternal(thisValue, lastDiscarded, olderDiscarded, shift, false, adjustNegativeZero, context);
+      return this.RoundToPrecisionInternal(thisValue, lastDiscarded, olderDiscarded, shift, adjustNegativeZero, context);
     }
 
     public T Quantize(T thisValue, T otherValue, PrecisionContext ctx) {
@@ -2661,7 +2652,7 @@ namespace PeterO {
     }
 
     // "binaryPrec" means whether "precision" is the number of bits and not digits
-    private T RoundToPrecisionInternal(T thisValue, int lastDiscarded, int olderDiscarded, FastInteger shift, bool binaryPrec, bool adjustNegativeZero, PrecisionContext ctx) {
+    private T RoundToPrecisionInternal(T thisValue, int lastDiscarded, int olderDiscarded, FastInteger shift, bool adjustNegativeZero, PrecisionContext ctx) {
       if (ctx == null) {
         ctx = PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven);
       }
@@ -2670,6 +2661,7 @@ namespace PeterO {
       if (!ctx.HasMaxPrecision && !ctx.HasExponentRange && (lastDiscarded | olderDiscarded) == 0 && (shift == null || shift.IsValueZero)) {
         return thisValue;
       }
+      bool binaryPrec = ctx.IsPrecisionInBits;
       int thisFlags = this.helper.GetFlags(thisValue);
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
         if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {

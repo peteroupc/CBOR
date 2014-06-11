@@ -224,9 +224,9 @@ namespace PeterO {
         return exponent.CompareTo(this.EMax) <= 0;
       } else {
         BigInteger bigint = exponent;
-        if(adjustExponent){
+        if (this.adjustExponent) {
           bigint += (BigInteger)this.bigintPrecision;
-          bigint -= BigInteger.One;          
+          bigint -= BigInteger.One;
         }
         if (bigint.CompareTo(this.EMin) < 0) {
           return false;
@@ -244,6 +244,7 @@ namespace PeterO {
     public override string ToString() {
       return "[PrecisionContext ExponentMax=" + this.exponentMax + ", Traps=" + this.traps + ", ExponentMin=" + this.exponentMin + ", HasExponentRange=" + this.hasExponentRange + ", BigintPrecision=" + this.bigintPrecision + ", Rounding=" + this.rounding + ", ClampNormalExponents=" + this.clampNormalExponents + ", Flags=" + this.flags + ", HasFlags=" + this.hasFlags + "]";
     }
+
 
     /// <summary>Copies this PrecisionContext with the specified rounding
     /// mode.</summary>
@@ -334,21 +335,44 @@ namespace PeterO {
       return pc;
     }
 
+    private bool precisionInBits;
+
+    /// <summary>Gets a value indicating whether this context's
+    /// Precision property is in bits, rather than digits.
+    /// The default is false.
+    /// </summary>
+    public bool IsPrecisionInBits {
+      get {
+        return this.precisionInBits;
+      }
+    }
+
+    /// <summary>Copies this PrecisionContext and sets the copy's "IsPrecisionInBits"
+    /// property to the given value.</summary>
+    /// <param name='isPrecisionBits'>A Boolean object.</param>
+    /// <returns>A PrecisionContext object.</returns>
+    public PrecisionContext WithPrecisionInBits(bool isPrecisionBits) {
+      PrecisionContext pc = this.Copy();
+      pc.precisionInBits = isPrecisionBits;
+      return pc;
+    }
+
     private bool simplified;
 
     /// <summary>Gets a value indicating whether to use a "simplified" arithmetic.
-    /// In the simplified arithmetic, infinity, not-a-number, and subnormal numbers
-    /// are not allowed, and negative zero is treated the same as positive zero.
-    /// For further details, see <code>http://speleotrove.com/decimal/dax3274.html</code>.</summary>
-    /// <value>True if a &quot;simplified&quot; arithmetic will be used; otherwise,
-    /// false.</value>
+    /// In the simplified arithmetic, infinity, not-a-number, and subnormal
+    /// numbers are not allowed, and negative zero is treated the same as positive
+    /// zero. For further details, see <code>http://speleotrove.com/decimal/dax3274.html</code>
+    /// </summary>
+    /// <value>True if a &quot;simplified&quot; arithmetic will be used;
+    /// otherwise, false.</value>
     public bool IsSimplified {
       get {
         return this.simplified;
       }
     }
 
-    /// <summary>Copies this PrecisionContext and sets the "IsSimplified"
+    /// <summary>Copies this PrecisionContext and sets the copy's "IsSimplified"
     /// property to the given value.</summary>
     /// <param name='simplified'>A Boolean object.</param>
     /// <returns>A PrecisionContext object.</returns>
@@ -361,22 +385,25 @@ namespace PeterO {
     private bool adjustExponent;
 
     /// <summary>Gets a value indicating whether the EMax and EMin properties
-    /// refer to the Exponent property adjusted to the number's precision, or just the
-    /// number's Exponent property.  The default value is true, meaning that
-    /// EMax and EMin refer to the adjusted exponent.  Setting this value to
-    /// false (using WithAdjustExponent) is useful for modeling floating
-    /// point representations with an integer mantissa and an integer exponent,
-    /// such as Java's BigDecimal.</summary>
+    /// refer to the number's Exponent property adjusted to the number's precision,
+    /// or just the number's Exponent property. The default value is true,
+    /// meaning that EMax and EMin refer to the adjusted exponent. Setting
+    /// this value to false (using WithAdjustExponent) is useful for modeling
+    /// floating point representations with an integer mantissa and an integer
+    /// exponent, such as Java's BigDecimal.</summary>
+    /// <value>True if the EMax and EMin properties refer to the number's Exponent
+    /// property adjusted to the number&apos;s precision, or false if they
+    /// refer to just the number&apos;s Exponent property.</value>
     public bool AdjustExponent {
       get {
         return this.adjustExponent;
       }
     }
 
-    /// <summary>Copies this PrecisionContext and sets the "AdjustExponent"
+    /// <summary>Copies this PrecisionContext and sets the copy's "AdjustExponent"
     /// property to the given value.</summary>
-    /// <param name='simplified'>A Boolean object.</param>
     /// <returns>A PrecisionContext object.</returns>
+    /// <param name='adjustExponent'>A Boolean object.</param>
     public PrecisionContext WithAdjustExponent(bool adjustExponent) {
       PrecisionContext pc = this.Copy();
       pc.adjustExponent = adjustExponent;
@@ -435,6 +462,7 @@ namespace PeterO {
         0,
         this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
+      pcnew.precisionInBits = this.precisionInBits;
       pcnew.adjustExponent = this.adjustExponent;
       pcnew.simplified = this.simplified;
       pcnew.flags = this.flags;
@@ -600,8 +628,8 @@ namespace PeterO {
       PrecisionContext.ForPrecisionAndRounding(9, Rounding.HalfUp);
 
     /// <summary>Precision context for the Common Language Infrastructure
-    /// (.NET Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
-    /// to round a decimal number to this format.</summary>
+    /// (.NET Framework) decimal format, 96 bits precision, and a valid
+    /// exponent range of -28 to 0.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -610,11 +638,10 @@ namespace PeterO {
     #endif
 
     public static readonly PrecisionContext CliDecimal =
-      new PrecisionContext(96, Rounding.HalfEven, 0, 28, true);
+      new PrecisionContext(96, Rounding.HalfEven, 0, 28, true)
+      .WithPrecisionInBits(true);
 
-    /// <summary>Precision context for the Common Language Infrastructure
-    /// (.NET Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
-    /// to round a decimal number to this format.</summary>
+    /// <summary>Precision context for Java's BigDecimal format.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -622,8 +649,10 @@ namespace PeterO {
       Justification = "This PrecisionContext is immutable")]
     #endif
     public static readonly PrecisionContext JavaBigDecimal =
-      new PrecisionContext(96, Rounding.HalfEven, Int32.MinValue, Int32.MaxValue, true)
-        .WithExponentClamp(true);
-
+      new PrecisionContext(0, Rounding.HalfEven, 0, 0, true)
+        .WithExponentClamp(true)
+        .WithBigExponentRange(
+           BigInteger.Zero - (BigInteger)Int32.MaxValue,
+           BigInteger.One + (BigInteger)Int32.MaxValue);
   }
 }

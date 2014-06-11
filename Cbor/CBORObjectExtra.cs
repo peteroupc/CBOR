@@ -137,8 +137,7 @@ namespace PeterO.Cbor {
           ExtendedDecimal.FromBigInteger(extendedNumber.Numerator)
           .Divide(
             ExtendedDecimal.FromBigInteger(extendedNumber.Denominator),
-            PrecisionContext.ForPrecisionAndRounding(29, Rounding.HalfEven).WithTraps(PrecisionContext.FlagOverflow))
-          .RoundToBinaryPrecision(PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
+            PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
         return EncodeDecimal(
           BigInteger.Abs(newDecimal.Mantissa),
           -((int)newDecimal.Exponent),
@@ -154,7 +153,7 @@ namespace PeterO.Cbor {
         throw new OverflowException("This object's value is out of range");
       }
       try {
-        ExtendedDecimal newDecimal = extendedNumber.RoundToBinaryPrecision(
+        ExtendedDecimal newDecimal = extendedNumber.RoundToPrecision(
           PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
         return EncodeDecimal(
           BigInteger.Abs(newDecimal.Mantissa),

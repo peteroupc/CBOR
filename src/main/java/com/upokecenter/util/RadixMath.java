@@ -366,7 +366,10 @@ at: http://upokecenter.com/d/
           FastInteger fastPrecision = FastInteger.FromBig(pc.getPrecision());
           overflowMant = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
           overflowMant=overflowMant.subtract(BigInteger.ONE);
-          FastInteger clamp = FastInteger.FromBig(pc.getEMax()).Increment().Subtract(fastPrecision);
+          FastInteger clamp = FastInteger.FromBig(pc.getEMax());
+          if (pc.getAdjustExponent()) {
+            clamp.Increment().Subtract(fastPrecision);
+          }
           return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
         }
       }
@@ -923,8 +926,10 @@ bigrem=divrem[1]; }
       FastInteger digits = this.helper.CreateShiftAccumulator((this.helper.GetMantissa(thisValue)).abs()).GetDigitLength();
       BigInteger exp = this.helper.GetExponent(thisValue);
       FastInteger fi = FastInteger.FromBig(exp);
-      fi.Add(digits);
-      fi.Decrement();
+      if (ctx.getAdjustExponent()) {
+        fi.Add(digits);
+        fi.Decrement();
+      }
       // System.out.println("" + exp + " -> " + (fi));
       if (fi.signum() < 0) {
         fi.Negate().Divide(2).Negate();
@@ -1720,7 +1725,10 @@ bigrem=divrem[1]; }
           return this.helper.CreateNewWithFlags(overflowMant, bigexp2, 0);
         }
       }
-      FastInteger minexp = FastInteger.FromBig(ctx.getEMin()).SubtractBig(ctx.getPrecision()).Increment();
+      FastInteger minexp = FastInteger.FromBig(ctx.getEMin());
+      if (ctx.getAdjustExponent()) {
+        minexp.SubtractBig(ctx.getPrecision()).Increment();
+      }
       FastInteger bigexp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
       if (bigexp.compareTo(minexp) <= 0) {
         // Use a smaller exponent if the input exponent is already
@@ -1770,7 +1778,10 @@ bigrem=divrem[1]; }
             return this.helper.CreateNewWithFlags(overflowMant, bigexp2, thisFlags & BigNumberFlags.FlagNegative);
           }
         }
-        FastInteger minexp = FastInteger.FromBig(ctx.getEMin()).SubtractBig(ctx.getPrecision()).Increment();
+        FastInteger minexp = FastInteger.FromBig(ctx.getEMin());
+        if (ctx.getAdjustExponent()) {
+          minexp.SubtractBig(ctx.getPrecision()).Increment();
+        }
         FastInteger bigexp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
         if (bigexp.compareTo(minexp) < 0) {
           // Use a smaller exponent if the input exponent is already
@@ -1792,7 +1803,10 @@ bigrem=divrem[1]; }
         }
         if ((ctx2.getFlags() & PrecisionContext.FlagUnderflow) != 0) {
           BigInteger bigmant = (this.helper.GetMantissa(val)).abs();
-          BigInteger maxmant = this.helper.MultiplyByRadixPower(BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()).Decrement());
+          // TODO: Is it more correct not to decrement here?
+          BigInteger maxmant = this.helper.MultiplyByRadixPower(
+BigInteger.ONE,
+FastInteger.FromBig(ctx.getPrecision()).Decrement());
           if (bigmant.compareTo(maxmant) >= 0 || ctx.getPrecision().compareTo(BigInteger.ONE) == 0) {
             // don't treat max-precision results as having underflowed
             ctx2.setFlags(0);
@@ -1835,7 +1849,10 @@ bigrem=divrem[1]; }
           return thisValue;
         }
       }
-      FastInteger minexp = FastInteger.FromBig(ctx.getEMin()).SubtractBig(ctx.getPrecision()).Increment();
+      FastInteger minexp = FastInteger.FromBig(ctx.getEMin());
+      if (ctx.getAdjustExponent()) {
+        minexp.SubtractBig(ctx.getPrecision()).Increment();
+      }
       FastInteger bigexp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
       if (bigexp.compareTo(minexp) <= 0) {
         // Use a smaller exponent if the input exponent is already
@@ -2714,8 +2731,12 @@ rem=divrem[1]; }
               }
               BigInteger bigexp = this.helper.GetExponent(thisValue);
               FastInteger fastExp = bigexp.canFitInInt() ? new FastInteger(bigexp.intValue()) : FastInteger.FromBig(bigexp);
-              FastInteger fastAdjustedExp = FastInteger.Copy(fastExp).Add(fastPrecision).Decrement();
-              FastInteger fastNormalMin = FastInteger.Copy(fastEMin).Add(fastPrecision).Decrement();
+              FastInteger fastAdjustedExp = FastInteger.Copy(fastExp);
+              FastInteger fastNormalMin = FastInteger.Copy(fastEMin);
+              if (ctx == null || ctx.getAdjustExponent()) {
+                fastAdjustedExp.Add(fastPrecision).Decrement();
+                fastNormalMin.Add(fastPrecision).Decrement();
+              }
               if (fastAdjustedExp.compareTo(fastEMax) <= 0 && fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
                 return thisValue;
               }
@@ -2737,8 +2758,12 @@ rem=divrem[1]; }
                   return this.helper.CreateNewWithFlags(mantabs, bigexp, thisFlags);
                 }
                 FastInteger fastExp = bigexp.canFitInInt() ? new FastInteger(bigexp.intValue()) : FastInteger.FromBig(bigexp);
-                FastInteger fastAdjustedExp = FastInteger.Copy(fastExp).Add(fastPrecision).Decrement();
-                FastInteger fastNormalMin = FastInteger.Copy(fastEMin).Add(fastPrecision).Decrement();
+                FastInteger fastAdjustedExp = FastInteger.Copy(fastExp);
+                FastInteger fastNormalMin = FastInteger.Copy(fastEMin);
+                if (ctx == null || ctx.getAdjustExponent()) {
+                  fastAdjustedExp.Add(fastPrecision).Decrement();
+                  fastNormalMin.Add(fastPrecision).Decrement();
+                }
                 if (fastAdjustedExp.compareTo(fastEMax) <= 0 && fastAdjustedExp.compareTo(fastNormalMin) >= 0) {
                   return this.helper.CreateNewWithFlags(mantabs, bigexp, thisFlags);
                 }
@@ -2794,7 +2819,10 @@ rem=divrem[1]; }
       }
       FastInteger discardedBits = FastInteger.Copy(accum.getDiscardedDigitCount());
       exp.Add(discardedBits);
-      FastInteger adjExponent = FastInteger.Copy(exp).Add(accum.GetDigitLength()).Decrement();
+      FastInteger adjExponent = FastInteger.Copy(exp);
+      if (ctx.getAdjustExponent()) {
+        adjExponent = adjExponent.Add(accum.GetDigitLength()).Decrement();
+      }
       // System.out.println("" + bigmantissa + "->" + accum.getShiftedInt() + " digits=" + accum.getDiscardedDigitCount() + " exp=" + exp + " [curexp=" + (helper.GetExponent(thisValue)) + "] adj=" + adjExponent + ",max=" + (fastEMax));
       FastInteger newAdjExponent = adjExponent;
       FastInteger clamp = null;
@@ -2822,12 +2850,15 @@ rem=divrem[1]; }
             if (binaryPrec || newDigitLength.compareTo(fastPrecision) > 0) {
               newDigitLength = FastInteger.Copy(fastPrecision);
             }
-            newAdjExponent = FastInteger.Copy(exp).Add(newDigitLength).Decrement();
+            newAdjExponent = FastInteger.Copy(exp);
+            if (ctx.getAdjustExponent()) {
+              newAdjExponent = newAdjExponent.Add(newDigitLength).Decrement();
+            }
           }
         }
       }
       if (fastEMax != null && adjExponent.compareTo(fastEMax) > 0) {
-        if (mantissaWasZero || true) {
+        if (mantissaWasZero) {
           if (ctx.getHasFlags()) {
             ctx.setFlags(ctx.getFlags()|(flags | PrecisionContext.FlagClamped));
           }
@@ -2837,7 +2868,10 @@ rem=divrem[1]; }
             if (binaryPrec && this.thisRadix != 2) {
               fastPrecision = this.helper.CreateShiftAccumulator(maxMantissa).GetDigitLength();
             }
-            FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+            FastInteger clampExp = FastInteger.Copy(fastEMax);
+            if (ctx.getAdjustExponent()) {
+              clampExp.Increment().Subtract(fastPrecision);
+            }
             if (fastEMax.compareTo(clampExp) > 0) {
               if (ctx.getHasFlags()) {
                 ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagClamped));
@@ -2865,7 +2899,10 @@ rem=divrem[1]; }
             if (ctx.getHasFlags()) {
               ctx.setFlags(ctx.getFlags()|(flags));
             }
-            clamp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+            clamp = FastInteger.Copy(fastEMax);
+            if (ctx.getAdjustExponent()) {
+              clamp.Increment().Subtract(fastPrecision);
+            }
             return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
           }
           if (ctx.getHasFlags()) {
@@ -2875,7 +2912,10 @@ rem=divrem[1]; }
         }
       } else if (fastEMin != null && adjExponent.compareTo(fastEMin) < 0) {
         // Subnormal
-        FastInteger fastETiny = FastInteger.Copy(fastEMin).Subtract(fastPrecision).Increment();
+        FastInteger fastETiny = FastInteger.Copy(fastEMin);
+        if (ctx.getAdjustExponent()) {
+          fastETiny = fastETiny.Subtract(fastPrecision).Increment();
+        }
         if (ctx.getHasFlags()) {
           if (earlyRounded.signum()!=0) {
             if (newAdjExponent.compareTo(fastEMin) < 0) {
@@ -2927,7 +2967,10 @@ rem=divrem[1]; }
             if (binaryPrec && this.thisRadix != 2) {
               fastPrecision = this.helper.CreateShiftAccumulator(maxMantissa).GetDigitLength();
             }
-            FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+            FastInteger clampExp = FastInteger.Copy(fastEMax);
+            if (ctx.getAdjustExponent()) {
+              clampExp.Increment().Subtract(fastPrecision);
+            }
             if (fastETiny.compareTo(clampExp) > 0) {
               if (bigmantissa.signum()!=0) {
                 expdiff = FastInteger.Copy(fastETiny).Subtract(clampExp);
@@ -2988,7 +3031,9 @@ rem=divrem[1]; }
       if (recheckOverflow && fastEMax != null) {
         // Check for overflow again
         adjExponent = FastInteger.Copy(exp);
-        adjExponent.Add(accum.GetDigitLength()).Decrement();
+        if (ctx.getAdjustExponent()) {
+          adjExponent.Add(accum.GetDigitLength()).Decrement();
+        }
         if (binaryPrec && fastEMax != null && adjExponent.compareTo(fastEMax) == 0) {
           // May or may not be an overflow depending on the mantissa
           // (uses accumulator from previous steps, including the check
@@ -3016,7 +3061,10 @@ rem=divrem[1]; }
             if (ctx.getHasFlags()) {
               ctx.setFlags(ctx.getFlags()|(flags));
             }
-            clamp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+            clamp = FastInteger.Copy(fastEMax);
+            if (ctx.getAdjustExponent()) {
+              clamp.Increment().Subtract(fastPrecision);
+            }
             return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
           }
           if (ctx.getHasFlags()) {
@@ -3034,7 +3082,10 @@ rem=divrem[1]; }
         if (binaryPrec && this.thisRadix != 2) {
           fastPrecision = this.helper.CreateShiftAccumulator(maxMantissa).GetDigitLength();
         }
-        FastInteger clampExp = FastInteger.Copy(fastEMax).Increment().Subtract(fastPrecision);
+        FastInteger clampExp = FastInteger.Copy(fastEMax);
+        if (ctx.getAdjustExponent()) {
+          clampExp.Increment().Subtract(fastPrecision);
+        }
         if (exp.compareTo(clampExp) > 0) {
           if (bigmantissa.signum()!=0) {
             FastInteger expdiff = FastInteger.Copy(exp).Subtract(clampExp);

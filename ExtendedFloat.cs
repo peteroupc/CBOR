@@ -1804,9 +1804,16 @@ namespace PeterO {
     /// <returns>The closest value to this object's value, rounded to the
     /// specified precision. Returns the same value as this object if <paramref
     /// name='ctx'/> is null or the precision and exponent range are unlimited.</returns>
+    [Obsolete("Instead of this method, use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.")]
     public ExtendedFloat RoundToBinaryPrecision(
       PrecisionContext ctx) {
-      return math.RoundToBinaryPrecision(this, ctx);
+      if (ctx == null) return this;
+      PrecisionContext ctx2 = ctx.Copy().WithPrecisionInBits(true);
+      ExtendedFloat ret = math.RoundToPrecision(this, ctx2);
+      if (ctx2.HasFlags) {
+        ctx.Flags = ctx2.Flags;
+      }
+      return ret;
     }
 
     /// <summary>Finds the square root of this object&apos;s value.</summary>

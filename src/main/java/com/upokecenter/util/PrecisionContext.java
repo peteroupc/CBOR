@@ -240,8 +240,10 @@ at: http://upokecenter.com/d/
         return exponent.compareTo(this.getEMax()) <= 0;
       } else {
         BigInteger bigint = exponent;
-        bigint=bigint.add(this.bigintPrecision);
-        bigint=bigint.subtract(BigInteger.ONE);
+        if (this.adjustExponent) {
+          bigint=bigint.add(this.bigintPrecision);
+          bigint=bigint.subtract(BigInteger.ONE);
+        }
         if (bigint.compareTo(this.getEMin()) < 0) {
           return false;
         }
@@ -366,20 +368,59 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether to use a "simplified" arithmetic.
-     * @return True if to use a "simplified" arithmetic; otherwise, false.
+     * In the simplified arithmetic, infinity, not-a-number, and subnormal
+     * numbers are not allowed, and negative zero is treated the same as positive
+     * zero. For further details, see <code>http://speleotrove.com/decimal/dax3274.html</code>
+     * @return True if a "simplified" arithmetic will be used; otherwise,
+     * false.
      */
     public boolean isSimplified() {
         return this.simplified;
       }
 
     /**
-     * Not documented yet.
+     * Copies this PrecisionContext and sets the "IsSimplified" property
+     * to the given value.
      * @param simplified A Boolean object.
      * @return A PrecisionContext object.
      */
     public PrecisionContext WithSimplified(boolean simplified) {
       PrecisionContext pc = this.Copy();
       pc.simplified = simplified;
+      return pc;
+    }
+
+    private boolean adjustExponent;
+
+    /**
+     * Gets a value indicating whether the EMax and EMin properties refer
+     * to the Exponent property adjusted to the number's precision, or just
+     * the number's Exponent property. The default value is true, meaning
+     * that EMax and EMin refer to the adjusted exponent. Setting this value
+     * to false (using WithAdjustExponent) is useful for modeling floating
+     * point representations with an integer mantissa and an integer exponent,
+     * such as Java's BigDecimal.
+     * @return True if the EMax and EMin properties refer to the Exponent
+     * property adjusted to the number's precision, or just the number's
+     * Exponent property; otherwise, false.. The default value is true,
+     * meaning that EMax and EMin refer to the adjusted exponent. Setting
+     * this value to false (using WithAdjustExponent) is useful for modeling
+     * floating point representations with an integer mantissa and an integer
+     * exponent, such as Java's BigDecimal.
+     */
+    public boolean getAdjustExponent() {
+        return this.adjustExponent;
+      }
+
+    /**
+     * Copies this PrecisionContext and sets the "AdjustExponent" property
+     * to the given value.
+     * @param adjustExponent A Boolean object.
+     * @return A PrecisionContext object.
+     */
+    public PrecisionContext WithAdjustExponent(boolean adjustExponent) {
+      PrecisionContext pc = this.Copy();
+      pc.adjustExponent = adjustExponent;
       return pc;
     }
 
@@ -440,6 +481,7 @@ at: http://upokecenter.com/d/
         0,
         this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
+      pcnew.adjustExponent = this.adjustExponent;
       pcnew.simplified = this.simplified;
       pcnew.flags = this.flags;
       pcnew.exponentMax = this.exponentMax;
@@ -500,6 +542,7 @@ at: http://upokecenter.com/d/
       this.rounding = rounding;
       this.clampNormalExponents = clampNormalExponents;
       this.hasExponentRange = true;
+      this.adjustExponent = true;
       this.exponentMax = exponentMaxSmall == 0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMaxSmall);
       this.exponentMin = exponentMinSmall == 0 ? BigInteger.ZERO : BigInteger.valueOf(exponentMinSmall);
     }
@@ -587,4 +630,15 @@ at: http://upokecenter.com/d/
 
     public static final PrecisionContext CliDecimal =
       new PrecisionContext(96, Rounding.HalfEven, 0, 28, true);
+
+    /**
+     * Precision context for Java's BigDecimal format.
+     */
+
+    public static final PrecisionContext JavaBigDecimal =
+      new PrecisionContext(0, Rounding.HalfEven, 0, 0, true)
+        .WithExponentClamp(true)
+        .WithBigExponentRange(
+           BigInteger.ZERO.subtract(BigInteger.valueOf(Integer.MAX_VALUE)),
+           BigInteger.ONE.add(BigInteger.valueOf(Integer.MAX_VALUE)));
   }

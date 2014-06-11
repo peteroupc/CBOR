@@ -18,43 +18,6 @@ using PeterO.Cbor;
 namespace Test {
   [TestClass]
   public class CBORExtraTest {
-    // [TestMethod]
-    public void GenerateDecimalTests() {
-      FastRandom r = new FastRandom();
-      for (int i = 0; i < 5000; ++i) {
-        CBORObject o1 = CBORTest.RandomNumber(r);
-        var df = o1.AsExtendedDecimal();
-        try {
-          decimal s = Decimal.Parse(df.ToPlainString(), CultureInfo.InvariantCulture);
-          try {
-            var df2 = df.RoundToBinaryPrecision(
-              new PrecisionContext(96, Rounding.HalfEven, 0, 28, true));
-            if (df2.Exponent < (BigInteger)(-28) ||
-                df2.Exponent > BigInteger.Zero) {
-              Console.WriteLine(df2);
-            }
-            Assert.AreEqual(s.ToString(CultureInfo.InvariantCulture), df2.ToPlainString());
-          } catch (Exception) {
-            Console.WriteLine(
-              "Assert.AreEqual(\"" + s.ToString(CultureInfo.InvariantCulture) +
-              "\",ExtendedDecimal.FromString(\"" + df.ToString() + "\")" +
-              ".RoundToBinaryPrecision(new PrecisionContext(96,Rounding.HalfEven,0,28,false)).ToPlainString());");
-            throw;
-          }
-        } catch (OverflowException) {
-          try {
-            Assert.AreEqual(
-              null,
-              df.RoundToBinaryPrecision(new PrecisionContext(96, Rounding.HalfEven, 0, 28, false)));
-          } catch (Exception) {
-            Console.WriteLine(
-              "Assert.AreEqual(null,ExtendedDecimal.FromString(\"" + df.ToString() + "\")" +
-              ".RoundToBinaryPrecision(new PrecisionContext(96,Rounding.HalfEven,0,28,false)));");
-            throw;
-          }
-        }
-      }
-    }
 
     private decimal RandomDecimal(FastRandom rand, int exponent) {
       int[] x = new int[4];
@@ -256,10 +219,12 @@ namespace Test {
       return new String(charbuf);
     }
 
+    /*
     [TestMethod]
     public void TestDBNull() {
       Assert.AreEqual(CBORObject.Undefined, CBORObject.FromObject(DBNull.Value));
     }
+    */
 
     [TestMethod]
     public void TestFloatCloseToEdge() {
