@@ -312,8 +312,8 @@ at: http://upokecenter.com/d/
     /**
      * Copies this precision context and sets the copy&apos;s exponent
      * range.
-     * @param exponentMinSmall A 32-bit signed integer.
-     * @param exponentMaxSmall A 32-bit signed integer. (2).
+     * @param exponentMinSmall Desired minimum exponent (EMin).
+     * @param exponentMaxSmall Desired maximum exponent (EMax).
      * @return A PrecisionContext object.
      */
     public PrecisionContext WithExponentRange(int exponentMinSmall, int exponentMaxSmall) {
@@ -331,7 +331,7 @@ at: http://upokecenter.com/d/
      * Copies this precision context and sets the copy&apos;s exponent
      * range.
      * @param exponentMin Desired minimum exponent (EMin).
-     * @param exponentMax Desired maximum exponent.
+     * @param exponentMax Desired maximum exponent (EMax).
      * @return A PrecisionContext object.
      * @throws java.lang.NullPointerException The parameter {@code exponentMin}
      * is null.

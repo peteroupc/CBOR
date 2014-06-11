@@ -2646,7 +2646,7 @@ rem=divrem[1]; }
       return this.ReduceToPrecisionAndIdealExponent(thisValue, ctx, null, null);
     }
 
-    // whether "precision" is the number of bits and not digits
+    // "binaryPrec" means whether "precision" is the number of bits and not digits
     private T RoundToPrecisionInternal(T thisValue, int lastDiscarded, int olderDiscarded, FastInteger shift, boolean binaryPrec, boolean adjustNegativeZero, PrecisionContext ctx) {
       if (ctx == null) {
         ctx = PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven);
@@ -2673,9 +2673,9 @@ rem=divrem[1]; }
       }
       // get the precision
       FastInteger fastPrecision = ctx.getPrecision().canFitInInt() ? new FastInteger(ctx.getPrecision().intValue()) : FastInteger.FromBig(ctx.getPrecision());
-      if (fastPrecision.signum() < 0) {
-        return this.SignalInvalidWithMessage(ctx, "precision less than 0 (" + fastPrecision + ")");
-      }
+      // No need to check if precision is less than 0, since the PrecisionContext
+      // Object should already ensure this
+
       if (this.thisRadix == 2 || fastPrecision.isValueZero()) {
         // "binaryPrec" will have no special effect here
         binaryPrec = false;
@@ -2692,7 +2692,9 @@ rem=divrem[1]; }
       boolean unlimitedPrec = fastPrecision.isValueZero();
       if (!binaryPrec) {
         // Fast path to check if rounding is necessary at all
-        if (fastPrecision.signum() > 0 && (shift == null || shift.isValueZero()) && (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
+        if (fastPrecision.signum() > 0 &&
+           (shift == null || shift.isValueZero()) &&
+           (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
           BigInteger mantabs = (this.helper.GetMantissa(thisValue)).abs();
           if (adjustNegativeZero && (thisFlags & BigNumberFlags.FlagNegative) != 0 && mantabs.signum()==0 && (ctx.getRounding() != Rounding.Floor)) {
             // Change negative zero to positive zero
@@ -2730,10 +2732,10 @@ rem=divrem[1]; }
                 stillWithinPrecision = mantabs.compareTo(radixPower) < 0;
               }
               if (stillWithinPrecision) {
-                if (!ctx.getHasExponentRange()) {
-                  return this.helper.CreateNewWithFlags(mantabs, this.helper.GetExponent(thisValue), thisFlags);
-                }
                 BigInteger bigexp = this.helper.GetExponent(thisValue);
+                if (!ctx.getHasExponentRange()) {
+                  return this.helper.CreateNewWithFlags(mantabs, bigexp, thisFlags);
+                }
                 FastInteger fastExp = bigexp.canFitInInt() ? new FastInteger(bigexp.intValue()) : FastInteger.FromBig(bigexp);
                 FastInteger fastAdjustedExp = FastInteger.Copy(fastExp).Add(fastPrecision).Decrement();
                 FastInteger fastNormalMin = FastInteger.Copy(fastEMin).Add(fastPrecision).Decrement();
@@ -2825,7 +2827,7 @@ rem=divrem[1]; }
         }
       }
       if (fastEMax != null && adjExponent.compareTo(fastEMax) > 0) {
-        if (mantissaWasZero) {
+        if (mantissaWasZero || true) {
           if (ctx.getHasFlags()) {
             ctx.setFlags(ctx.getFlags()|(flags | PrecisionContext.FlagClamped));
           }
