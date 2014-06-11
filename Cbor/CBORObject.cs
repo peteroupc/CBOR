@@ -4098,9 +4098,9 @@ namespace PeterO.Cbor {
       if (obj is decimal) {
         return FromObject((decimal)obj);
       }
-    //  if (obj is DBNull) {
-    //    return CBORObject.Undefined;
-    //  }
+    // if (obj is DBNull) {
+    // return CBORObject.Undefined;
+    // }
       if (obj is Enum) {
         return FromObject(PropertyMap.EnumToObject((Enum)obj));
       }
