@@ -63,15 +63,15 @@ Signals that an operand was rounded to a different mathematical value before an 
     public bool ExponentWithinRange(
         PeterO.BigInteger exponent);
 
-Not documented yet.
+Determines whether a number can have the given Exponent property under this precision context.
 
 <b>Parameters:</b>
 
- * <i>exponent</i>: A BigInteger object.
+ * <i>exponent</i>: A BigInteger object indicating the desired exponent.
 
 <b>Returns:</b>
 
-A Boolean object.
+True if a number can have the given Exponent property under this precision context; otherwise, false.
 
 <b>Exceptions:</b>
 
@@ -154,9 +154,9 @@ Copies this precision context and sets the copy's exponent range.
 
 <b>Parameters:</b>
 
- * <i>exponentMinSmall</i>: A 32-bit signed integer.
+ * <i>exponentMinSmall</i>: Desired minimum exponent (EMin).
 
- * <i>exponentMaxSmall</i>: A 32-bit signed integer. (2).
+ * <i>exponentMaxSmall</i>: Desired maximum exponent (EMax).
 
 <b>Returns:</b>
 
@@ -174,7 +174,7 @@ Copies this precision context and sets the copy's exponent range.
 
  * <i>exponentMin</i>: Desired minimum exponent (EMin).
 
- * <i>exponentMax</i>: Desired maximum exponent.
+ * <i>exponentMax</i>: Desired maximum exponent (EMax).
 
 <b>Returns:</b>
 
@@ -196,16 +196,46 @@ Copies this PrecisionContext with HasFlags set to false and a Flags value of 0.
 
 A PrecisionContext object.
 
+### WithPrecisionInBits
+
+    public PeterO.PrecisionContext WithPrecisionInBits(
+        bool isPrecisionBits);
+
+Copies this PrecisionContext and sets the copy's "IsPrecisionInBits" property to the given value.
+
+<b>Parameters:</b>
+
+ * <i>isPrecisionBits</i>: A Boolean object.
+
+<b>Returns:</b>
+
+A PrecisionContext object.
+
 ### WithSimplified
 
     public PeterO.PrecisionContext WithSimplified(
         bool simplified);
 
-Not documented yet.
+Copies this PrecisionContext and sets the copy's "IsSimplified" property to the given value.
 
 <b>Parameters:</b>
 
  * <i>simplified</i>: A Boolean object.
+
+<b>Returns:</b>
+
+A PrecisionContext object.
+
+### WithAdjustExponent
+
+    public PeterO.PrecisionContext WithAdjustExponent(
+        bool adjustExponent);
+
+Copies this PrecisionContext and sets the copy's "AdjustExponent" property to the given value.
+
+<b>Parameters:</b>
+
+ * <i>adjustExponent</i>: A Boolean object.
 
 <b>Returns:</b>
 
@@ -287,11 +317,11 @@ A PrecisionContext object.
     public static PeterO.PrecisionContext ForRounding(
         PeterO.Rounding rounding);
 
-Not documented yet.
+Creates a new PrecisionContext object initialized with unlimited precision and exponent range, and the given rounding mode.
 
 <b>Parameters:</b>
 
- * <i>rounding</i>: A Rounding object.
+ * <i>rounding</i>: The rounding mode for the new precision context.
 
 <b>Returns:</b>
 
@@ -303,11 +333,11 @@ A PrecisionContext object.
         int precision,
         PeterO.Rounding rounding);
 
-Not documented yet.
+Creates a new PrecisionContext object initialized with unlimited and exponent range, and the given rounding mode and maximum precision.
 
 <b>Parameters:</b>
 
- * <i>precision</i>: A 32-bit signed integer.
+ * <i>precision</i>: Maximum number of digits (precision).
 
  * <i>rounding</i>: A Rounding object.
 
@@ -396,7 +426,13 @@ Basic precision context, 9 digits precision, rounding mode half-up, unlimited ex
 
     public static readonly PeterO.PrecisionContext CliDecimal;
 
-Precision context for the Common Language Infrastructure (.NET Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision to round a decimal number to this format.
+Precision context for the Common Language Infrastructure (.NET Framework) decimal format, 96 bits precision, and a valid exponent range of -28 to 0.
+
+### JavaBigDecimal
+
+    public static readonly PeterO.PrecisionContext JavaBigDecimal;
+
+Precision context for Java's BigDecimal format.
 
 ### EMax
 
@@ -499,14 +535,34 @@ Gets or sets the flags that are set from converting numbers according to this pr
 
 The flags that are set from converting numbers according to this precision context. If HasFlags is false, this value will be 0.
 
+### IsPrecisionInBits
+
+    public bool IsPrecisionInBits { get; }
+
+Gets a value indicating whether this context's Precision property is in bits, rather than digits. The default is false.
+
+<b>Returns:</b>
+
+True if this context's Precision property is in bits, rather than digits; otherwise, false.. The default is false.
+
 ### IsSimplified
 
     public bool IsSimplified { get; }
 
-Gets a value indicating whether to use a "simplified" arithmetic.
+Gets a value indicating whether to use a "simplified" arithmetic. In the simplified arithmetic, infinity, not-a-number, and subnormal numbers are not allowed, and negative zero is treated the same as positive zero. For further details, see  `http://speleotrove.com/decimal/dax3274.html` 
 
 <b>Returns:</b>
 
-True if to use a "simplified" arithmetic; otherwise, false.
+True if a "simplified" arithmetic will be used; otherwise, false.
+
+### AdjustExponent
+
+    public bool AdjustExponent { get; }
+
+Gets a value indicating whether the EMax and EMin properties refer to the number's Exponent property adjusted to the number's precision, or just the number's Exponent property. The default value is true, meaning that EMax and EMin refer to the adjusted exponent. Setting this value to false (using WithAdjustExponent) is useful for modeling floating point representations with an integer mantissa and an integer exponent, such as Java's BigDecimal.
+
+<b>Returns:</b>
+
+True if the EMax and EMin properties refer to the number's Exponent property adjusted to the number's precision, or false if they refer to just the number's Exponent property.
 
 

@@ -4,7 +4,7 @@
         System.IComparable,
         System.IEquatable
 
-Represents an arbitrary-precision binary floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 2^exponent. This class also supports values for negative zero, not-a-number (NaN) values, and infinity.Passing a signaling NaN to any arithmetic operation shown here will signal the flag FlagInvalid and return a quiet NaN, even if another operand to that operation is a quiet NaN, unless noted otherwise.
+Represents an arbitrary-precision binary floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 2^exponent. This class also supports values for negative zero, not-a-number (NaN) values, and infinity. Passing a signaling NaN to any arithmetic operation shown here will signal the flag FlagInvalid and return a quiet NaN, even if another operand to that operation is a quiet NaN, unless noted otherwise.
 
 Passing a quiet NaN to any arithmetic operation shown here will return a quiet NaN, unless noted otherwise.
 
@@ -167,17 +167,17 @@ The parameter <i>mantissa</i>
         string str,
         PeterO.PrecisionContext ctx);
 
-Creates a binary float from a string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double). The format of the string generally consists of:
+Creates a binary float from a string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double). The format of the string generally consists of: 
 
- *  An optional '-' or '+' character (if '-', the value is negative.)
+ * An optional '-' or '+' character (if '-', the value is negative.)
 
- *  One or more digits, with a single optional decimal point after the first digit and before the last digit.
+ * One or more digits, with a single optional decimal point after the first digit and before the last digit.
 
- *  Optionally, E+ (positive exponent) or E- (negative exponent) plus one or more digits specifying the exponent.
+ * Optionally, E+ (positive exponent) or E- (negative exponent) plus one or more digits specifying the exponent.
 
 The string can also be "-INF", "-Infinity", "Infinity", "INF", quiet NaN ("qNaN") followed by any number of digits, or signaling NaN ("sNaN") followed by any number of digits, all in any combination of upper and lower case.
 
- The format generally follows the definition in java.math.BigDecimal(), except that the digits must be ASCII digits ('0' through '9').
+The format generally follows the definition in java.math.BigDecimal(), except that the digits must be ASCII digits ('0' through '9').
 
 <b>Parameters:</b>
 
@@ -229,7 +229,7 @@ This object's value is infinity or NaN.
 
     public float ToSingle();
 
-Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa. 
+Converts this value to a 32-bit floating-point number. The half-even rounding mode is used. If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
 <b>Returns:</b>
 
@@ -239,7 +239,7 @@ The closest 32-bit floating-point number to this value. The return value can be 
 
     public double ToDouble();
 
-Converts this value to a 64-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa. 
+Converts this value to a 64-bit floating-point number. The half-even rounding mode is used. If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
 <b>Returns:</b>
 
@@ -645,7 +645,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
  * System.ArithmeticException: 
 Either  <i>ctx</i>
 is null or  <i>ctx</i>
-'s precision is 0, and the result would have a nonterminating binary expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
+ 's precision is 0, and the result would have a nonterminating binary expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
 
 ### DivideToExponent
 
@@ -907,9 +907,9 @@ The remainder of the two objects.
         PeterO.ExtendedFloat divisor,
         PeterO.PrecisionContext ctx);
 
-Finds the distance to the closest multiple of the given divisor, based on the result of dividing this object's value by another object's value.
+Finds the distance to the closest multiple of the given divisor, based on the result of dividing this object's value by another object's value. 
 
- *  If this and the other object divide evenly, the result is 0.
+ * If this and the other object divide evenly, the result is 0.
 
  * If the remainder's absolute value is less than half of the divisor's absolute value, the result has the same sign as this object and will be the distance to the closest multiple.
 
@@ -917,7 +917,7 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
  * If the remainder's absolute value is exactly half of the divisor's absolute value, the result has the opposite sign of this object if the quotient, rounded down, is odd, and has the same sign as this object if the quotient, rounded down, is even, and the result's absolute value is half of the divisor's absolute value.
 
-This function is also known as the "IEEE Remainder" function.
+This function is also known as the IEEE Remainder" function.
 
 <b>Parameters:</b>
 
@@ -1180,7 +1180,7 @@ Less than 0 if this object's value is less than the other value, or greater than
         PeterO.ExtendedFloat other,
         PeterO.PrecisionContext ctx);
 
-Compares the mathematical values of this object and another object.In this method, negative zero and positive zero are considered equal.
+Compares the mathematical values of this object and another object. In this method, negative zero and positive zero are considered equal.
 
 If this object or the other object is a quiet NaN or signaling NaN, this method returns a quiet NaN, and will signal a FlagInvalid flag if either is a signaling NaN.
 
@@ -1200,7 +1200,7 @@ Quiet NaN if this object or the other object is NaN, or 0 if both objects have t
         PeterO.ExtendedFloat other,
         PeterO.PrecisionContext ctx);
 
-Compares the mathematical values of this object and another object, treating quiet NaN as signaling.In this method, negative zero and positive zero are considered equal.
+Compares the mathematical values of this object and another object, treating quiet NaN as signaling. In this method, negative zero and positive zero are considered equal.
 
 If this object or the other object is a quiet NaN or signaling NaN, this method will return a quiet NaN and will signal a FlagInvalid flag.
 
@@ -1453,6 +1453,8 @@ The closest value to this object's value, rounded to the specified precision. Re
 
     public PeterO.ExtendedFloat RoundToBinaryPrecision(
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Instead of this method, use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.
 
 Rounds this object's value to a given maximum bit length, using the given rounding mode and range of exponent.
 

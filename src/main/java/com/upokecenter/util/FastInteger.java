@@ -7,16 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-  /**
-   * A mutable integer class initially backed by a small integer, that
-   * only uses a big integer when arithmetic operations would overflow
-   * the small integer.<p> This class is ideal for cases where operations
-   * should be arbitrary precision, but the need to use a high precision
-   * is rare.</p> <p> Many methods in this class return a reference to the
-   * same object as used in the call. This allows chaining operations in
-   * a single line of code. For example:</p> <code> fastInt.Add(5).Multiply(10);
-   * </code>
-   */
   final class FastInteger implements Comparable<FastInteger> {
     private static final class MutableNumber {
       private int[] data;

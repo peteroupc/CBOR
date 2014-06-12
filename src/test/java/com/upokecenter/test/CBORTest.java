@@ -1282,6 +1282,23 @@ try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
     }
 
     @Test
+    public void TestExample() {
+      // The following creates a CBOR map and adds
+      // several kinds of objects to it
+      var cbor = CBORObject.NewMap()
+         .Add("item", "any String")
+         .Add("number", 42)
+         .Add("map", CBORObject.NewMap().Add("number", 42))
+         .Add("array", CBORObject.NewArray().Add(999f).Add("xyz"))
+         .Add("bytes", new byte[] {  0, 1, 2  });
+      // The following converts the map to CBOR
+      byte[] bytes = cbor.EncodeToBytes();
+      // The following converts the map to JSON
+      String json = cbor.ToJSONString();
+      System.out.println(json);
+    }
+
+    @Test
     public void TestRandomNonsense() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 200; ++i) {

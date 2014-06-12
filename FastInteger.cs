@@ -9,18 +9,6 @@ using System;
 using System.Text;
 
 namespace PeterO {
-  /// <summary>A mutable integer class initially backed by a small integer,
-  /// that only uses a big integer when arithmetic operations would overflow
-  /// the small integer.<para> This class is ideal for cases where operations
-  /// should be arbitrary precision, but the need to use a high precision
-  /// is rare.</para>
-  /// <para> Many methods in this class return a reference to the same object
-  /// as used in the call. This allows chaining operations in a single line
-  /// of code. For example:</para>
-  /// <code>
-  /// fastInt.Add(5).Multiply(10);
-  /// </code>
-  /// </summary>
   internal sealed class FastInteger : IComparable<FastInteger> {
     private sealed class MutableNumber {
       private int[] data;

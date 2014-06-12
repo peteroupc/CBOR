@@ -6,17 +6,17 @@
 
 Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049. There are many ways to get a CBOR object, including from bytes, objects, streams and JSON, as described below.
 
-To and from byte arrays:The CBORObject.DecodeToBytes method converts a byte array in CBOR format to a CBOR object. The EncodeToBytes method converts a CBOR object to its corresponding byte array in CBOR format. 
+To and from byte arrays:The CBORObject.DecodeToBytes ethod converts a byte array in CBOR format to a CBOR object. The EncodeToBytes ethod converts a CBOR object to its corresponding byte array in CBOR ormat.
 
-To and from data streams:The CBORObject.Write methods write many kinds of objects to a data stream, including numbers, CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read method reads a CBOR object from a data stream. 
+To and from data streams:The CBORObject.Write ethods write many kinds of objects to a data stream, including numbers, BOR objects, strings, and arrays of numbers and strings. The CBORObject.Read ethod reads a CBOR object from a data stream.
 
-To and from other objects:The CBORObject.FromObject methods converts many kinds of objects to a CBOR object, including numbers, strings, and arrays and maps of numbers and strings. Methods like AsDouble, AsByte, and AsString convert a CBOR object to different types of object. 
+To and from other objects:The CBORObject.FromObject methods onverts many kinds of objects to a CBOR object, including numbers, trings, and arrays and maps of numbers and strings. Methods like sDouble, AsByte, and AsString convert a CBOR object to different ypes of object.
 
-To and from JSON:This class also doubles as a reader and writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString method converts JSON to a CBOR object, and the ToJSONString method converts a CBOR object to a JSON string. 
+To and from JSON:This class lso doubles as a reader and writer of JavaScript Object Notation JSON). The CBORObject.FromJSONString method converts JSON to CBOR object, and the ToJSONString method converts a CBOR object o a JSON string.
 
- Thread Safety: CBOR objects that are numbers, "simple values", and text strings are immutable (their values can't be changed), so they are inherently safe for use by multiple threads. CBOR objects that are arrays, maps, and byte strings are mutable, but this class doesn't attempt to synchronize reads and writes to those objects by multiple threads, so those objects are not thread safe without such synchronization. 
+Thread Safety: CBOR objects that are numbers, "simple values", and text strings are immutable (their values can't be changed), so they are inherently safe for use by multiple threads. CBOR objects that are arrays, maps, and byte strings are mutable, but this class doesn't attempt to synchronize reads and writes to those objects by multiple threads, so those objects are not thread safe without such synchronization.
 
- One kind of CBOR object is called a map, or a list of key-value pairs. Keys can be any kind of CBOR object, including numbers, strings, arrays, and maps. However, since byte strings, arrays, and maps are mutable, it is not advisable to use these three kinds of object as keys; they are much better used as map values instead, keeping in mind that they are not thread safe without synchronizing reads and writes to them. 
+One kind of CBOR object is called a map, or a list of key-value pairs. Keys can be any kind of CBOR object, including numbers, strings, arrays, and maps. However, since byte strings, arrays, and maps are mutable, it is not advisable to use these three kinds of object as keys; they are much better used as map values instead, keeping in mind that they are not thread safe without synchronizing reads and writes to them.
 
 ### False
 
@@ -183,23 +183,23 @@ Compares two CBOR objects. In this implementation:
 
  * The null pointer (null reference) is considered less than any other object.
 
- *  If either object is true, false, CBORObject.Null, or the undefined value, it is treated as less than the other value. If both objects have one of these four values, then undefined is less than CBORObject.Null, which is less than false, which is less than true.
+ * If either object is true, false, CBORObject.Null, or the undefined value, it is treated as less than the other value. If both objects have one of these four values, then undefined is less than CBORObject.Null, which is less than false, which is less than true.
 
- *  If both objects are numbers, their mathematical values are compared. Here, NaN (not-a-number) is considered greater than any number.
+ * If both objects are numbers, their mathematical values are compared. Here, NaN (not-a-number) is considered greater than any number.
 
- *  If both objects are simple values other than true, false, CBORObject.Null, and the undefined value, the objects are compared according to their ordinal numbers.
+ * If both objects are simple values other than true, false, CBORObject.Null, and the undefined value, the objects are compared according to their ordinal numbers.
 
- *  If both objects are arrays, each element is compared. If one array is shorter than the other and the other array begins with that array (for the purposes of comparison), the shorter array is considered less than the longer array.
+ * If both objects are arrays, each element is compared. If one array is shorter than the other and the other array begins with that array (for the purposes of comparison), the shorter array is considered less than the longer array.
 
- *  If both objects are strings, compares each string code-point by code-point, as though by the DataUtilities.CodePointCompare method.
+ * If both objects are strings, compares each string code-point by code-point, as though by the DataUtilities.CodePointCompare method.
 
- *  If both objects are maps, compares each map as though each were an array with the sorted keys of that map as the array's elements. If both maps have the same keys, their values are compared in the order of the sorted keys.
+ * If both objects are maps, compares each map as though each were an array with the sorted keys of that map as the array's elements. If both maps have the same keys, their values are compared in the order of the sorted keys.
 
- *  If each object is a different type, then they are sorted by their type number, in the order given for the CBORType enumeration.
+ * If each object is a different type, then they are sorted by their type number, in the order given for the CBORType enumeration.
 
- *  If each object has different tags and both objects are otherwise equal under this method, each element is compared as though each were an array with that object's tags listed in order from outermost to innermost. 
+ * If each object has different tags and both objects are otherwise equal under this method, each element is compared as though each were an array with that object's tags listed in order from outermost to innermost.
 
- This method is not consistent with the Equals method.
+This method is not consistent with the Equals method.
 
 <b>Parameters:</b>
 
@@ -367,19 +367,19 @@ Gets a list of all tags, from outermost to innermost.
 
 An array of tags, or the empty string if this object is untagged.
 
-### Add
+### Set
 
-    public PeterO.Cbor.CBORObject Add(
-        PeterO.Cbor.CBORObject key,
-        PeterO.Cbor.CBORObject value);
+    public PeterO.Cbor.CBORObject Set(
+        object key,
+        object valueOb);
 
-Adds a new object to this map.
+Maps an object to a key in this CBOR map, or adds the value if the key doesn't exist.
 
 <b>Parameters:</b>
 
- * <i>key</i>: A CBOR object representing the key. Can be null, in which case this value is converted to CBORObject.Null.
+ * <i>key</i>: An object representing the key. Can be null, in which case this value is converted to CBORObject.Null.
 
- * <i>value</i>: A CBOR object representing the value. Can be null, in which case this value is converted to CBORObject.Null.
+ * <i>valueOb</i>: A CBOR object representing the value. Can be null, in which case this value is converted to CBORObject.Null.
 
 <b>Returns:</b>
 
@@ -387,11 +387,13 @@ This object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
-Key already exists in this map.
-
  * System.InvalidOperationException: 
 This object is not a map.
+
+ * System.ArgumentException: 
+The parameter  <i>key</i>
+ or  <i>valueOb</i>
+ has an unsupported type.
 
 ### Add
 
@@ -415,7 +417,8 @@ This object.
 
  * System.ArgumentException: 
 The parameter  <i>key</i>
- or "value" has an unsupported type.
+ or  <i>valueOb</i>
+ has an unsupported type.
 
  * System.ArgumentException: 
 The parameter  <i>key</i>
@@ -790,7 +793,7 @@ This object's type is not a string.
     public static PeterO.Cbor.CBORObject Read(
         System.IO.Stream stream);
 
-Reads an object in CBOR format from a data stream.
+Reads an object in CBOR format from a data stream. This method will read from the stream until the end of the CBOR object is reached or an error occurs, whichever happens first.
 
 <b>Parameters:</b>
 
@@ -842,7 +845,7 @@ Writes a binary floating-point number in CBOR format to a data stream as follows
 
  * If the value is null, writes the byte 0xF6.
 
- * If the value is negative zero, infinity, or NaN, converts the number to a  `double` and writes that  `double` . If negative zero should not be written this way, use the Plus method to convert the value beforehand.
+ * If the value is negative zero, infinity, or NaN, converts the number to a  `double` and writes hat  `double` . If negative zero should not be written this way, se the Plus method to convert the value beforehand.
 
  * If the value has an exponent of zero, writes the value as an unsigned integer or signed integer if the number can fit either type or as a big integer otherwise.
 
@@ -896,7 +899,7 @@ Writes a decimal floating-point number in CBOR format to a data stream, as follo
 
  * If the value is null, writes the byte 0xF6.
 
- * If the value is negative zero, infinity, or NaN, converts the number to a  `double` and writes that  `double` . If negative zero should not be written this way, use the Plus method to convert the value beforehand.
+ * If the value is negative zero, infinity, or NaN, converts the number to a  `double` and rites that  `double` . If negative zero should not be written his way, use the Plus method to convert the value beforehand.
 
  * If the value has an exponent of zero, writes the value as an unsigned integer or signed integer if the number can fit either type or as a big integer otherwise.
 
@@ -1266,7 +1269,7 @@ The data stream contains invalid UTF-8 or is not in JSON format.
 
 Converts this object to a string in JavaScript Object Notation (JSON) format. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes: 
 
- *  If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string. 
+ * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
  * If a number in the form of a big float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the big float is converted to null.)
 
@@ -1770,9 +1773,7 @@ A CBOR object where each key and value of the given map is converted to a CBOR o
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
-Generates a CBORObject from an arbitrary object. The following types are specially handled by this method:  `null` , primitive types, strings,  `CBORObject` ,  `ExtendedDecimal` ,  `ExtendedFloat` , the custom  `BigInteger` , lists, arrays, enumerations ( `Enum` objects), and maps.In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET  `Enum` objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.
-
-In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum` objects will be converted to the result of their  `name` method.
+Not documented yet.
 
 <b>Parameters:</b>
 
@@ -1780,12 +1781,7 @@ In the Java version, if the object is a type not specially handled by this metho
 
 <b>Returns:</b>
 
-A CBOR object corresponding to the given object. Returns CBORObject.Null if the object is null.
-
-<b>Exceptions:</b>
-
- * System.ArgumentException: 
-The object's type is not supported.
+A CBORObject object.
 
 ### FromObjectAndTag
 
@@ -1812,7 +1808,7 @@ is converted to a CBOR object and given the tag  <i>bigintTag</i>
  * System.ArgumentException: 
 The parameter  <i>bigintTag</i>
  is less than 0 or greater than 2^64-1, or  <i>valueOb</i>
-'s type is unsupported.
+ 's type is unsupported.
 
  * System.ArgumentNullException: 
 The parameter <i>bigintTag</i>
