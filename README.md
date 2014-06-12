@@ -78,7 +78,7 @@ Console.WriteLine(json);
 ```
 
 Reading data from a file (C#).  Note that all the examples for
-reading and writing to files assumes that the platform supports
+reading and writing to files assume that the platform supports
 file I/O; the portable class library doesn't make that assumption.
 
 ```c#
@@ -104,9 +104,9 @@ Another example of reading data from a file (C#):
     // rest of the file.  The following is an example of checking for the
     // end of the stream.
     if (stream.Position != stream.Length) {
-// The end of the stream wasn't reached yet.
+      // The end of the stream wasn't reached yet.
     } else {
-// The end of the stream was reached.
+      // The end of the stream was reached.
     }
  }
 ```
