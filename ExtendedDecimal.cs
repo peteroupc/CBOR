@@ -1514,6 +1514,7 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
     public static readonly ExtendedDecimal Zero = ExtendedDecimal.Create(BigInteger.Zero, BigInteger.Zero);
+
     /// <summary>Represents the number negative zero.</summary>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104", Justification = "ExtendedDecimal is immutable")]

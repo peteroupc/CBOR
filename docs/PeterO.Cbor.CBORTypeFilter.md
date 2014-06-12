@@ -2,7 +2,7 @@
 
     public class CBORTypeFilter
 
-Specifies what kinds of CBOR objects a tag can be.
+Specifies what kinds of CBOR objects a tag can be. This class is used when a CBOR object is being read from a data stream.
 
 ### WithUnsignedInteger
 

@@ -576,7 +576,7 @@ Calculates the square root and the remainder.
 
 <b>Returns:</b>
 
-An array of two big integers: the first integer is the square root, and the second is the difference between this value and the last square of the first integer, before this value. Returns two zeros if this value is 0 or less, or two ones if this value equals 1.
+An array of two big integers: the first integer is the square root, and the second is the difference between this value and the square of the first integer. Returns two zeros if this value is 0 or less, or one and zero if this value equals 1.
 
 ### ZERO
 
@@ -759,10 +759,10 @@ Calculates the remainder when a BigInteger raised to a certain power is divided 
 
 <b>Returns:</b>
 
-The value ( <i>bigintValue</i>
-^ <i>pow</i>
-)% <i>mod</i>
-.
+The value (  <i>bigintValue</i>
+ ^  <i>pow</i>
+ )%  <i>mod</i>
+ .
 
 <b>Exceptions:</b>
 
@@ -833,7 +833,7 @@ Determines whether a BigInteger instance is less than another BigInteger instanc
 
 True if  <i>thisValue</i>
  is less than  <i>otherValue</i>
-; otherwise, false.
+ ; otherwise, false.
 
 ### Operator `<=`
 
@@ -853,7 +853,7 @@ Determines whether a BigInteger instance is less than or equal to another BigInt
 
 True if  <i>thisValue</i>
  is up to  <i>otherValue</i>
-; otherwise, false.
+ ; otherwise, false.
 
 ### Operator `>`
 
@@ -873,7 +873,7 @@ Determines whether a BigInteger instance is greater than another BigInteger inst
 
 True if  <i>thisValue</i>
  is greater than <i>otherValue</i>
-; otherwise, false.
+ ; otherwise, false.
 
 ### Operator `>=`
 
@@ -893,7 +893,7 @@ Determines whether a BigInteger value is greater than another BigInteger value.
 
 True if  <i>thisValue</i>
  is at least  <i>otherValue</i>
-; otherwise, false.
+ ; otherwise, false.
 
 ### Abs
 

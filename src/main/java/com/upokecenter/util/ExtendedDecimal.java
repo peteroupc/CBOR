@@ -1559,6 +1559,7 @@ remainder=divrem[1]; }
     /**
      * Represents the number negative zero.
      */
+
     public static final ExtendedDecimal NegativeZero = CreateWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagNegative);
 
     /**

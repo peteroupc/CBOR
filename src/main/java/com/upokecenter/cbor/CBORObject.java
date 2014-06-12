@@ -1640,28 +1640,33 @@ public void set(String key, CBORObject value) {
       }
 
     /**
-     * Adds a new object to this map.
-     * @param key A CBOR object representing the key. Can be null, in which
-     * case this value is converted to CBORObject.Null.
-     * @param value A CBOR object representing the value. Can be null, in
-     * which case this value is converted to CBORObject.Null.
+     * Maps an object to a key in this CBOR map, or adds the value if the key doesn't
+     * exist.
+     * @param key An object representing the key. Can be null, in which case
+     * this value is converted to CBORObject.Null.
+     * @param valueOb A CBOR object representing the value. Can be null,
+     * in which case this value is converted to CBORObject.Null.
      * @return This object.
-     * @throws java.lang.IllegalArgumentException Key already exists in this map.
      * @throws IllegalStateException This object is not a map.
+     * @throws java.lang.IllegalArgumentException The parameter {@code key} or
+     * {@code valueOb} has an unsupported type.
      */
-    public CBORObject Add(CBORObject key, CBORObject value) {
-      if (key == null) {
-        key = CBORObject.Null;
-      }
-      if (value == null) {
-        value = CBORObject.Null;
-      }
+    public CBORObject Set(Object key, Object valueOb) {
       if (this.getItemType() == CBORObjectTypeMap) {
-        Map<CBORObject, CBORObject> map = this.AsMap();
-        if (map.containsKey(key)) {
-          throw new IllegalArgumentException("Key already exists.");
+        if (key == null) {
+          key = CBORObject.Null;
         }
-        map.put(key, value);
+        if (valueOb == null) {
+          valueOb = CBORObject.Null;
+        }
+        CBORObject mapKey = CBORObject.FromObject(key);
+        CBORObject mapValue = CBORObject.FromObject(valueOb);
+        Map<CBORObject, CBORObject> map = this.AsMap();
+        if (map.containsKey(mapKey)) {
+          map.put(mapKey,mapValue);
+        } else {
+          map.put(mapKey, mapValue);
+        }
       } else {
         throw new IllegalStateException("Not a map");
       }
@@ -1676,7 +1681,7 @@ public void set(String key, CBORObject value) {
      * value is converted to CBORObject.Null.
      * @return This object.
      * @throws java.lang.IllegalArgumentException The parameter {@code key} or
-     * "value" has an unsupported type.
+     * {@code valueOb} has an unsupported type.
      * @throws java.lang.IllegalArgumentException The parameter {@code key} already
      * exists in this map.
      * @throws IllegalStateException This object is not a map.
@@ -2091,7 +2096,9 @@ public void set(String key, CBORObject value) {
     }
 
     /**
-     * Reads an object in CBOR format from a data stream.
+     * Reads an object in CBOR format from a data stream. This method will
+     * read from the stream until the end of the CBOR object is reached or an
+     * error occurs, whichever happens first.
      * @param stream A readable data stream.
      * @return A CBOR object that was read.
      * @throws java.lang.NullPointerException The parameter {@code stream}
