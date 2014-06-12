@@ -251,7 +251,9 @@ namespace PeterO.Cbor {
     /// <returns>A CBORObject object with the same value as the .NET decimal.</returns>
     /// <param name='value'>A Decimal object.</param>
     public static CBORObject FromObject(decimal value) {
-      if (Math.Round(value) == value) {
+      int[] bits = Decimal.GetBits(value);
+      int scale = (bits[3] >> 16) & 0xff;
+      if (scale == 0 && Math.Round(value) == value) {
         // This is an integer
         if (value >= 0 && value <= UInt64.MaxValue) {
           return FromObject((ulong)value);
@@ -260,33 +262,30 @@ namespace PeterO.Cbor {
         } else {
           return FromObject(DecimalToBigInteger(value));
         }
-      } else {
-        int[] bits = Decimal.GetBits(value);
-        byte[] data = new byte[13];
-        data[0] = (byte)(bits[0] & 0xff);
-        data[1] = (byte)((bits[0] >> 8) & 0xff);
-        data[2] = (byte)((bits[0] >> 16) & 0xff);
-        data[3] = (byte)((bits[0] >> 24) & 0xff);
-        data[4] = (byte)(bits[1] & 0xff);
-        data[5] = (byte)((bits[1] >> 8) & 0xff);
-        data[6] = (byte)((bits[1] >> 16) & 0xff);
-        data[7] = (byte)((bits[1] >> 24) & 0xff);
-        data[8] = (byte)(bits[2] & 0xff);
-        data[9] = (byte)((bits[2] >> 8) & 0xff);
-        data[10] = (byte)((bits[2] >> 16) & 0xff);
-        data[11] = (byte)((bits[2] >> 24) & 0xff);
-        data[12] = 0;
-        BigInteger mantissa = new BigInteger((byte[])data);
-        bool negative = (bits[3] >> 31) != 0;
-        int scale = (bits[3] >> 16) & 0xff;
-        if (negative) {
-          mantissa = -mantissa;
-        }
-        return FromObjectAndTag(
-          new CBORObject[] { FromObject(-scale),
-          FromObject(mantissa) },
-          4);
       }
+      byte[] data = new byte[13];
+      data[0] = (byte)(bits[0] & 0xff);
+      data[1] = (byte)((bits[0] >> 8) & 0xff);
+      data[2] = (byte)((bits[0] >> 16) & 0xff);
+      data[3] = (byte)((bits[0] >> 24) & 0xff);
+      data[4] = (byte)(bits[1] & 0xff);
+      data[5] = (byte)((bits[1] >> 8) & 0xff);
+      data[6] = (byte)((bits[1] >> 16) & 0xff);
+      data[7] = (byte)((bits[1] >> 24) & 0xff);
+      data[8] = (byte)(bits[2] & 0xff);
+      data[9] = (byte)((bits[2] >> 8) & 0xff);
+      data[10] = (byte)((bits[2] >> 16) & 0xff);
+      data[11] = (byte)((bits[2] >> 24) & 0xff);
+      data[12] = 0;
+      BigInteger mantissa = new BigInteger((byte[])data);
+      bool negative = (bits[3] >> 31) != 0;
+      if (negative) {
+        mantissa = -mantissa;
+      }
+      return FromObjectAndTag(
+        new CBORObject[] { FromObject(-scale),
+          FromObject(mantissa) },
+        4);
     }
 
     /// <summary>Writes a 32-bit unsigned integer in CBOR format to a data
