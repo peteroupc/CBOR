@@ -57,10 +57,6 @@ at: http://upokecenter.com/d/
 
     T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext ctx);
 
-    // TODO: Add a property to PrecisionContext for binary
-    // precision size, then deprecate this property
-    T RoundToBinaryPrecision(T thisValue, PrecisionContext ctx);
-
     T Plus(T thisValue, PrecisionContext ctx);
 
     T RoundToPrecision(T thisValue, PrecisionContext ctx);

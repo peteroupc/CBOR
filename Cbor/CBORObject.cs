@@ -826,10 +826,12 @@ namespace PeterO.Cbor {
     }
 
     internal void Redefine(CBORObject cbor) {
-      if (this.itemtypeValue != CBORObjectTypeTagged ||
-          cbor == null || cbor.itemtypeValue != CBORObjectTypeTagged) {
-        throw new InvalidOperationException();
+      #if DEBUG
+      if ((cbor) == null) {
+       throw new ArgumentNullException("cbor");
       }
+      #endif
+      this.itemtypeValue = cbor.itemtypeValue;
       this.tagLow = cbor.tagLow;
       this.tagHigh = cbor.tagHigh;
       this.itemValue = cbor.itemValue;
@@ -4020,8 +4022,7 @@ namespace PeterO.Cbor {
     /// If the property name begins with the word "Is", that word is deleted
     /// from the name. Also, .NET <c>Enum</c>
     /// objects will be converted to their integer values, and a multidimensional
-    /// array is converted to an array of arrays. The .NET value DBNull.Value
-    /// is converted to CBORObject.Undefined.</para>
+    /// array is converted to an array of arrays.</para>
     /// <para>In the Java version, if the object is a type not specially handled
     /// by this method, this method checks the CBOR object for methods starting
     /// with the word "get" or "is" that take no parameters, and returns a CBOR
@@ -4098,9 +4099,6 @@ namespace PeterO.Cbor {
       if (obj is decimal) {
         return FromObject((decimal)obj);
       }
-    // if (obj is DBNull) {
-    // return CBORObject.Undefined;
-    // }
       if (obj is Enum) {
         return FromObject(PropertyMap.EnumToObject((Enum)obj));
       }

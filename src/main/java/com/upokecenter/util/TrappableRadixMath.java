@@ -230,12 +230,6 @@ at: http://upokecenter.com/d/
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T RoundToBinaryPrecision(T thisValue, PrecisionContext ctx) {
-      PrecisionContext tctx = GetTrappableContext(ctx);
-      T result = this.math.RoundToBinaryPrecision(thisValue, tctx);
-      return this.TriggerTraps(result, tctx, ctx);
-    }
-
     public T Plus(T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Plus(thisValue, tctx);

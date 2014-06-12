@@ -1478,7 +1478,6 @@ bigrem=divrem[1]; }
               1,
               null,
               false,
-              false,
               ctx);
           }
         } else {
@@ -1657,7 +1656,7 @@ bigrem=divrem[1]; }
       }
       T retval = this.helper.CreateNewWithFlags(mantissa, currentExp, 0);
       // System.out.println("idealExp=" + idealExp + ", curr " + currentExp + " guess=" + (mantissa));
-      retval = this.RoundToPrecisionInternal(retval, 0, inexact ? 1 : 0, null, false, false, ctxtmp);
+      retval = this.RoundToPrecisionInternal(retval, 0, inexact ? 1 : 0, null, false, ctxtmp);
       currentExp = this.helper.GetExponent(retval);
       // System.out.println("guess I " + guess + " idealExp=" + idealExp + ", curr " + currentExp + " clamped=" + (ctxtmp.getFlags()&PrecisionContext.FlagClamped));
       if ((ctxtmp.getFlags() & PrecisionContext.FlagUnderflow) == 0) {
@@ -1803,7 +1802,6 @@ bigrem=divrem[1]; }
         }
         if ((ctx2.getFlags() & PrecisionContext.FlagUnderflow) != 0) {
           BigInteger bigmant = (this.helper.GetMantissa(val)).abs();
-          // TODO: Is it more correct not to decrement here?
           BigInteger maxmant = this.helper.MultiplyByRadixPower(
 BigInteger.ONE,
 FastInteger.FromBig(ctx.getPrecision()).Decrement());
@@ -2496,24 +2494,16 @@ rem=divrem[1]; }
       return ret;
     }
 
-    public T RoundToBinaryPrecision(T thisValue, PrecisionContext context) {
-      return this.RoundToBinaryPrecisionWithShift(thisValue, context, 0, 0, null, false);
-    }
-
-    private T RoundToBinaryPrecisionWithShift(T thisValue, PrecisionContext context, int lastDiscarded, int olderDiscarded, FastInteger shift, boolean adjustNegativeZero) {
-      return this.RoundToPrecisionInternal(thisValue, lastDiscarded, olderDiscarded, shift, true, adjustNegativeZero, context);
-    }
-
     public T Plus(T thisValue, PrecisionContext context) {
-      return this.RoundToPrecisionInternal(thisValue, 0, 0, null, false, true, context);
+      return this.RoundToPrecisionInternal(thisValue, 0, 0, null, true, context);
     }
 
     public T RoundToPrecision(T thisValue, PrecisionContext context) {
-      return this.RoundToPrecisionInternal(thisValue, 0, 0, null, false, false, context);
+      return this.RoundToPrecisionInternal(thisValue, 0, 0, null, false, context);
     }
 
     private T RoundToPrecisionWithShift(T thisValue, PrecisionContext context, int lastDiscarded, int olderDiscarded, FastInteger shift, boolean adjustNegativeZero) {
-      return this.RoundToPrecisionInternal(thisValue, lastDiscarded, olderDiscarded, shift, false, adjustNegativeZero, context);
+      return this.RoundToPrecisionInternal(thisValue, lastDiscarded, olderDiscarded, shift, adjustNegativeZero, context);
     }
 
     public T Quantize(T thisValue, T otherValue, PrecisionContext ctx) {
@@ -2664,7 +2654,7 @@ rem=divrem[1]; }
     }
 
     // "binaryPrec" means whether "precision" is the number of bits and not digits
-    private T RoundToPrecisionInternal(T thisValue, int lastDiscarded, int olderDiscarded, FastInteger shift, boolean binaryPrec, boolean adjustNegativeZero, PrecisionContext ctx) {
+    private T RoundToPrecisionInternal(T thisValue, int lastDiscarded, int olderDiscarded, FastInteger shift, boolean adjustNegativeZero, PrecisionContext ctx) {
       if (ctx == null) {
         ctx = PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven);
       }
@@ -2673,6 +2663,7 @@ rem=divrem[1]; }
       if (!ctx.getHasMaxPrecision() && !ctx.getHasExponentRange() && (lastDiscarded | olderDiscarded) == 0 && (shift == null || shift.isValueZero())) {
         return thisValue;
       }
+      boolean binaryPrec = ctx.isPrecisionInBits();
       int thisFlags = this.helper.GetFlags(thisValue);
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
         if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {

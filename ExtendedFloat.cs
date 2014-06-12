@@ -1807,7 +1807,9 @@ namespace PeterO {
     [Obsolete("Instead of this method, use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.")]
     public ExtendedFloat RoundToBinaryPrecision(
       PrecisionContext ctx) {
-      if (ctx == null) return this;
+      if (ctx == null) {
+ return this;
+}
       PrecisionContext ctx2 = ctx.Copy().WithPrecisionInBits(true);
       ExtendedFloat ret = math.RoundToPrecision(this, ctx2);
       if (ctx2.HasFlags) {

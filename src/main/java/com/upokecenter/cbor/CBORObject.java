@@ -791,10 +791,7 @@ public int compareTo(CBORObject other) {
     }
 
     void Redefine(CBORObject cbor) {
-      if (this.itemtypeValue != CBORObjectTypeTagged ||
-          cbor == null || cbor.itemtypeValue != CBORObjectTypeTagged) {
-        throw new IllegalStateException();
-      }
+
       this.tagLow = cbor.tagLow;
       this.tagHigh = cbor.tagHigh;
       this.itemValue = cbor.itemValue;
@@ -4143,7 +4140,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         return FromObject(((Float)obj).floatValue());
       }
 
-    //
       if(obj instanceof Enum<?>) {
         return FromObject(PropertyMap.EnumToObject((Enum<?>)obj));
       }
