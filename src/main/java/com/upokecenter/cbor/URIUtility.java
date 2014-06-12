@@ -122,7 +122,7 @@ private URIUtility() {
      * is idempotent; that is, calling the function again on the result with
      * the same mode doesn't change the result.
      * @param s A string to escape.
-     * @param mode One of the following values:.<list> <item>0 - Non-ASCII
+     * @param mode One of the following values:. <list><item>0 - Non-ASCII
      * characters and other characters that cannot appear in a URI are escaped,
      * whether or not the string is a valid URI. Unpaired surrogates are treated
      * as U + FFFD (Replacement Character). (Note that square brackets "["
@@ -233,7 +233,7 @@ private URIUtility() {
 
     /**
      * Determines whether the string is a valid IRI with a scheme component.
-     * This can be used to check for relative IRI references.<p> The following
+     * This can be used to check for relative IRI references. <p>The following
      * cases return true:</p> <code> xx-x:mm example:/ww </code> The following
      * cases return false: <code> x@y:/z /x/y/z example.xyz </code>
      * @param refValue A string object.

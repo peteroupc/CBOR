@@ -14,7 +14,7 @@ namespace PeterO {
     /// left open. For example: in which cases is the Clamped flag set? The
     /// test cases set the Clamped flag in only a handful of test cases, all
     /// within the <c>exp</c>
-    /// operation.</summary>
+    ///  operation.</summary>
     /// <typeparam name='T'>Data type for a numeric value in a particular
     /// radix.</typeparam>
   internal sealed class SimpleRadixMath<T> : IRadixMath<T> {

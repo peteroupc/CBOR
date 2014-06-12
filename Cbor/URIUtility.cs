@@ -108,21 +108,22 @@ namespace PeterO.Cbor {
     /// The function is idempotent; that is, calling the function again on
     /// the result with the same mode doesn't change the result.</summary>
     /// <param name='s'>A string to escape.</param>
-    /// <param name='mode'>One of the following values:.<list> <item>0
+    /// <param name='mode'>One of the following values:. <list><item>0
     /// - Non-ASCII characters and other characters that cannot appear in
     /// a URI are escaped, whether or not the string is a valid URI. Unpaired
     /// surrogates are treated as U + FFFD (Replacement Character). (Note
     /// that square brackets "[" and "]" can only appear in the authority component
     /// of a URI or IRI; elsewhere they will be escaped.)</item>
-    /// <item>1 - Only non-ASCII characters are escaped. If the string is
-    /// not a valid IRI, returns null instead.</item>
-    /// <item>2 - Only non-ASCII characters are escaped, whether or not the
-    /// string is a valid IRI. Unpaired surrogates are treated as U + FFFD (Replacement
-    /// Character).</item>
-    /// <item>3 - Similar to 0, except that illegal percent encodings are
-    /// also escaped.</item>
+    ///  <item>1 -
+    /// Only non-ASCII characters are escaped. If the string is not a valid
+    /// IRI, returns null instead.</item>
+    ///  <item>2 - Only non-ASCII characters
+    /// are escaped, whether or not the string is a valid IRI. Unpaired surrogates
+    /// are treated as U + FFFD (Replacement Character).</item>
+    ///  <item>3
+    /// - Similar to 0, except that illegal percent encodings are also escaped.</item>
     /// </list>
-    /// </param>
+    ///  </param>
     /// <return>a string possibly containing escaped characters, or null
     /// if s is null.</return>
     /// <returns>A string object.</returns>
@@ -222,12 +223,14 @@ namespace PeterO.Cbor {
       return builder.ToString();
     }
 
-    /// <summary>Determines whether the string is a valid IRI with a scheme
-    /// component. This can be used to check for relative IRI references.<para>
-    /// The following cases return true:</para>
+    /// <summary>
+    /// Determines whether the string is a valid IRI with a
+    /// scheme component. This can be used to check for
+    /// relative IRI references.
+    /// <para>The following cases return true:</para>
     /// <code> xx-x:mm example:/ww </code>
-    /// The following cases return false: <code> x@y:/z /x/y/z example.xyz
-    /// </code>
+    ///  The following cases return false:
+    /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
     /// <returns>True if the string is a valid IRI with a scheme component;
     /// otherwise, false.</returns>
@@ -237,12 +240,14 @@ namespace PeterO.Cbor {
       return segments != null && segments[0] >= 0;
     }
 
-    /// <summary>Determines whether the string is a valid URI with a scheme
-    /// component. This can be used to check for relative URI references.
-    /// The following cases return true: <code> http://example/z xx-x:mm
-    /// example:/ww </code>
-    /// The following cases return false: <code> x@y:/z /x/y/z example.xyz
-    /// </code>
+    /// <summary>
+    /// Determines whether the string is a valid URI with a
+    /// scheme component. This can be used to check for
+    /// relative URI references. The following cases return
+    /// true:
+    /// <code> http://example/z xx-x:mm example:/ww </code>
+    ///  The following cases return false:
+    /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
     /// <returns>True if the string is a valid URI with a scheme component;
     /// otherwise, false.</returns>
@@ -865,7 +870,7 @@ tmpc,
     /// path, query, or fragment component, respectively. If a component
     /// is absent, both indices in that pair will be -1. If the string is null
     /// or is not a valid IRI, returns null.</returns>
-    /// </summary>
+    ///  </summary>
     /// <returns>An array of 32-bit unsigned integers.</returns>
     /// <param name='s'>A string object.</param>
     public static int[] splitIRI(string s) {

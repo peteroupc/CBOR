@@ -15,7 +15,7 @@ using PeterO.Cbor;
 
 namespace Test {
     /// <summary>Contains CBOR tests.</summary>
-    /// <returns/><param name='r'> A FastRandom object.</param>
+    /// <returns/><param name='r'>A FastRandom object.</param>
   [TestClass]
   public class CBORTest {
     private static void TestExtendedFloatDoubleCore(double d, string s) {
@@ -1274,6 +1274,23 @@ namespace Test {
       Assert.AreEqual(
         -1,
         CBORObject.DecodeFromBytes(new byte[] { (byte)0xd8, 0x1e, (byte)0x82, (byte)0xc2, 0x58, 0x1e, 0x0e, 0x53, 0x4f, (byte)0xfe, 0x4d, 0x54, (byte)0xbb, 0x21, 0x3f, (byte)0xd5, (byte)0xea, 0x61, (byte)0x90, 0x68, (byte)0x8a, 0x14, (byte)0xfd, (byte)0x8d, 0x19, (byte)0xba, (byte)0xaf, (byte)0xbf, 0x3a, 0x67, 0x5e, 0x2d, 0x52, 0x41, (byte)0x93, (byte)0xa7, 0x18, 0x41 }).CompareTo(CBORObject.DecodeFromBytes(new byte[] { (byte)0xc5, (byte)0x82, 0x1b, 0x00, 0x00, 0x4b, 0x3e, (byte)0xcb, (byte)0xe8, (byte)0xc4, (byte)0xa3, (byte)0xc2, 0x58, 0x2a, 0x17, 0x0a, 0x4d, (byte)0x88, 0x40, (byte)0xe7, (byte)0xe9, (byte)0xe1, (byte)0x95, (byte)0xdc, (byte)0xad, (byte)0x97, (byte)0x87, 0x66, (byte)0x8c, 0x77, 0x4b, (byte)0xd6, 0x46, 0x52, 0x00, (byte)0xf0, (byte)0xdd, 0x77, 0x16, (byte)0xa5, (byte)0xca, 0x71, 0x5d, (byte)0xf5, 0x7c, 0x6b, (byte)0x82, (byte)0x85, 0x47, 0x2d, (byte)0x90, (byte)0x89, 0x12, (byte)0x93, 0x0b, 0x1e })));
+    }
+
+    [TestMethod]
+    public void TestExample() {
+      // The following creates a CBOR map and adds
+      // several kinds of objects to it
+      var cbor = CBORObject.NewMap()
+         .Add("item", "any string")
+         .Add("number", 42)
+         .Add("map", CBORObject.NewMap().Add("number", 42))
+         .Add("array", CBORObject.NewArray().Add(999f).Add("xyz"))
+         .Add("bytes", new byte[] { 0, 1, 2 });
+      // The following converts the map to CBOR
+      byte[] bytes = cbor.EncodeToBytes();
+      // The following converts the map to JSON
+      string json = cbor.ToJSONString();
+      Console.WriteLine(json);
     }
 
     [TestMethod]

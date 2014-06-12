@@ -101,8 +101,8 @@ namespace PeterO {
 
     /// <summary>Calculates the remainder when a BigInteger raised to a
     /// certain power is divided by another BigInteger.</summary>
-    /// <returns>The value (<paramref name='bigintValue'/>^<paramref
-    /// name='pow'/>)%<paramref name='mod'/>.</returns>
+    /// <returns>The value ( <paramref name='bigintValue'/> ^ <paramref
+    /// name='pow'/> )% <paramref name='mod'/> .</returns>
     /// <param name='bigintValue'>A BigInteger object.</param>
     /// <param name='pow'>A BigInteger object. (2).</param>
     /// <param name='mod'>A BigInteger object. (3).</param>
@@ -164,7 +164,7 @@ namespace PeterO {
     /// <summary>Determines whether a BigInteger instance is less than
     /// another BigInteger instance.</summary>
     /// <returns>True if <paramref name='thisValue'/> is less than <paramref
-    /// name='otherValue'/>; otherwise, false.</returns>
+    /// name='otherValue'/> ; otherwise, false.</returns>
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
     public static bool operator <(BigInteger thisValue, BigInteger otherValue) {
@@ -177,7 +177,7 @@ namespace PeterO {
     /// <summary>Determines whether a BigInteger instance is less than
     /// or equal to another BigInteger instance.</summary>
     /// <returns>True if <paramref name='thisValue'/> is up to <paramref
-    /// name='otherValue'/>; otherwise, false.</returns>
+    /// name='otherValue'/> ; otherwise, false.</returns>
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
     public static bool operator <=(BigInteger thisValue, BigInteger otherValue) {
@@ -190,7 +190,7 @@ namespace PeterO {
     /// <summary>Determines whether a BigInteger instance is greater than
     /// another BigInteger instance.</summary>
     /// <returns>True if <paramref name='thisValue'/> is greater than
-    /// <paramref name='otherValue'/>; otherwise, false.</returns>
+    /// <paramref name='otherValue'/> ; otherwise, false.</returns>
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
     public static bool operator >(BigInteger thisValue, BigInteger otherValue) {
@@ -203,7 +203,7 @@ namespace PeterO {
     /// <summary>Determines whether a BigInteger value is greater than
     /// another BigInteger value.</summary>
     /// <returns>True if <paramref name='thisValue'/> is at least <paramref
-    /// name='otherValue'/>; otherwise, false.</returns>
+    /// name='otherValue'/> ; otherwise, false.</returns>
     /// <param name='thisValue'>A BigInteger object.</param>
     /// <param name='otherValue'>A BigInteger object. (2).</param>
     public static bool operator >=(BigInteger thisValue, BigInteger otherValue) {

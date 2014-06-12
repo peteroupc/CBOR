@@ -17,35 +17,34 @@ import com.upokecenter.util.*;
      * Represents an object in Concise Binary Object Representation (CBOR)
      * and contains methods for reading and writing CBOR data. CBOR is defined
      * in RFC 7049. <p>There are many ways to get a CBOR object, including
-     * from bytes, objects, streams and JSON, as described below.</p> <p>
-     * <b>To and from byte arrays:</b> The CBORObject.DecodeToBytes method
+     * from bytes, objects, streams and JSON, as described below.</p> <p><b>To
+     * and from byte arrays:</b> The CBORObject.DecodeToBytes method
      * converts a byte array in CBOR format to a CBOR object. The EncodeToBytes
      * method converts a CBOR object to its corresponding byte array in CBOR
-     * format. </p> <p> <b>To and from data streams:</b> The CBORObject.Write
+     * format.</p> <p><b>To and from data streams:</b> The CBORObject.Write
      * methods write many kinds of objects to a data stream, including numbers,
      * CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read
-     * method reads a CBOR object from a data stream. </p> <p> <b>To and from
+     * method reads a CBOR object from a data stream.</p> <p><b>To and from
      * other objects:</b> The CBORObject.FromObject methods converts
      * many kinds of objects to a CBOR object, including numbers, strings,
      * and arrays and maps of numbers and strings. Methods like AsDouble,
-     * AsByte, and AsString convert a CBOR object to different types of object.
-     * </p> <p> <b>To and from JSON:</b> This class also doubles as a reader
-     * and writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString
+     * AsByte, and AsString convert a CBOR object to different types of object.</p>
+     * <p><b>To and from JSON:</b> This class also doubles as a reader and
+     * writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString
      * method converts JSON to a CBOR object, and the ToJSONString method
-     * converts a CBOR object to a JSON string. </p> <p> Thread Safety: CBOR
+     * converts a CBOR object to a JSON string.</p> <p>Thread Safety: CBOR
      * objects that are numbers, "simple values", and text strings are immutable
      * (their values can't be changed), so they are inherently safe for use
      * by multiple threads. CBOR objects that are arrays, maps, and byte
      * strings are mutable, but this class doesn't attempt to synchronize
      * reads and writes to those objects by multiple threads, so those objects
-     * are not thread safe without such synchronization. </p> <p> One kind
+     * are not thread safe without such synchronization.</p> <p>One kind
      * of CBOR object is called a map, or a list of key-value pairs. Keys can
      * be any kind of CBOR object, including numbers, strings, arrays, and
      * maps. However, since byte strings, arrays, and maps are mutable,
      * it is not advisable to use these three kinds of object as keys; they
      * are much better used as map values instead, keeping in mind that they
-     * are not thread safe without synchronizing reads and writes to them.
-     * </p>
+     * are not thread safe without synchronizing reads and writes to them.</p>
      */
   public final class CBORObject implements Comparable<CBORObject> {
     int getItemType(){
@@ -453,31 +452,31 @@ public void setConverter(Object value) {
     }
 
     /**
-     * Compares two CBOR objects.<p> In this implementation:</p> <ul>
-     * <li>The null pointer (null reference) is considered less than any
-     * other object.</li> <li> If either object is true, false, CBORObject.Null,
-     * or the undefined value, it is treated as less than the other value.
-     * If both objects have one of these four values, then undefined is less
-     * than CBORObject.Null, which is less than false, which is less than
-     * true.</li> <li> If both objects are numbers, their mathematical
-     * values are compared. Here, NaN (not-a-number) is considered greater
-     * than any number.</li> <li> If both objects are simple values other
-     * than true, false, CBORObject.Null, and the undefined value, the
-     * objects are compared according to their ordinal numbers.</li> <li>
-     * If both objects are arrays, each element is compared. If one array
-     * is shorter than the other and the other array begins with that array
-     * (for the purposes of comparison), the shorter array is considered
-     * less than the longer array.</li> <li> If both objects are strings,
-     * compares each string code-point by code-point, as though by the DataUtilities.CodePointCompare
-     * method.</li> <li> If both objects are maps, compares each map as though
-     * each were an array with the sorted keys of that map as the array's elements.
-     * If both maps have the same keys, their values are compared in the order
-     * of the sorted keys.</li> <li> If each object is a different type, then
+     * Compares two CBOR objects. <p>In this implementation:</p> <ul><li>The
+     * null pointer (null reference) is considered less than any other object.</li>
+     * <li>If either object is true, false, CBORObject.Null, or the undefined
+     * value, it is treated as less than the other value. If both objects have
+     * one of these four values, then undefined is less than CBORObject.Null,
+     * which is less than false, which is less than true.</li> <li>If both
+     * objects are numbers, their mathematical values are compared. Here,
+     * NaN (not-a-number) is considered greater than any number.</li>
+     * <li>If both objects are simple values other than true, false, CBORObject.Null,
+     * and the undefined value, the objects are compared according to their
+     * ordinal numbers.</li> <li>If both objects are arrays, each element
+     * is compared. If one array is shorter than the other and the other array
+     * begins with that array (for the purposes of comparison), the shorter
+     * array is considered less than the longer array.</li> <li>If both
+     * objects are strings, compares each string code-point by code-point,
+     * as though by the DataUtilities.CodePointCompare method.</li>
+     * <li>If both objects are maps, compares each map as though each were
+     * an array with the sorted keys of that map as the array's elements. If
+     * both maps have the same keys, their values are compared in the order
+     * of the sorted keys.</li> <li>If each object is a different type, then
      * they are sorted by their type number, in the order given for the CBORType
-     * enumeration.</li> <li> If each object has different tags and both
+     * enumeration.</li> <li>If each object has different tags and both
      * objects are otherwise equal under this method, each element is compared
      * as though each were an array with that object's tags listed in order
-     * from outermost to innermost. </li> </ul> <p> This method is not consistent
+     * from outermost to innermost.</li> </ul> <p>This method is not consistent
      * with the Equals method.</p>
      * @param other A value to compare with.
      * @return Less than 0, if this value is less than the other object; or
@@ -2359,7 +2358,7 @@ public void set(String key, CBORObject value) {
 
     /**
      * Writes a binary floating-point number in CBOR format to a data stream
-     * as follows: <ul> <li>If the value is null, writes the byte 0xF6.</li>
+     * as follows: <ul><li>If the value is null, writes the byte 0xF6.</li>
      * <li>If the value is negative zero, infinity, or NaN, converts the
      * number to a <code>double</code> and writes that <code>double</code> . If negative
      * zero should not be written this way, use the Plus method to convert
@@ -2436,7 +2435,7 @@ public void set(String key, CBORObject value) {
 
     /**
      * Writes a decimal floating-point number in CBOR format to a data stream,
-     * as follows: <ul> <li>If the value is null, writes the byte 0xF6.</li>
+     * as follows: <ul><li>If the value is null, writes the byte 0xF6.</li>
      * <li>If the value is negative zero, infinity, or NaN, converts the
      * number to a <code>double</code> and writes that <code>double</code> . If negative
      * zero should not be written this way, use the Plus method to convert
@@ -2991,7 +2990,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 
     /**
      * Writes an arbitrary object to a CBOR data stream. Currently, the following
-     * objects are supported: <ul> <li>Lists of CBORObject.</li> <li>Maps
+     * objects are supported: <ul><li>Lists of CBORObject.</li> <li>Maps
      * of CBORObject.</li> <li>Null.</li> <li>Any object accepted by
      * the FromObject static methods.</li> </ul>
      * @param objValue The value to write.
@@ -3449,22 +3448,21 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Converts this object to a string in JavaScript Object Notation (JSON)
      * format. This function works not only with arrays and maps, but also
      * integers, strings, byte arrays, and other JSON data types. Notes:
-     * <ul><li> If this object contains maps with non-string keys, the keys
-     * are converted to JSON strings before writing the map as a JSON string.
-     * </li> <li>If a number in the form of a big float has a very high binary
-     * exponent, it will be converted to a double before being converted
-     * to a JSON string. (The resulting double could overflow to infinity,
-     * in which case the big float is converted to null.)</li> <li>The string
-     * will not begin with a byte-order mark (U + FEFF); RFC 7159 (the JSON
-     * specification) forbids placing a byte-order mark at the beginning
-     * of a JSON string.</li> <li>Byte strings are converted to Base64 URL
-     * by default.</li> <li>Rational numbers will be converted to their
-     * exact form, if possible, otherwise to a high-precision approximation.
-     * (The resulting approximation could overflow to infinity, in which
-     * case the rational number is converted to null.)</li> <li>Simple
-     * values other than true and false will be converted to null. (This doesn't
-     * include floating-point numbers.)</li> <li>Infinity and not-a-number
-     * will be converted to null.</li> </ul>
+     * <ul><li>If this object contains maps with non-string keys, the keys
+     * are converted to JSON strings before writing the map as a JSON string.</li>
+     * <li>If a number in the form of a big float has a very high binary exponent,
+     * it will be converted to a double before being converted to a JSON string.
+     * (The resulting double could overflow to infinity, in which case the
+     * big float is converted to null.)</li> <li>The string will not begin
+     * with a byte-order mark (U + FEFF); RFC 7159 (the JSON specification)
+     * forbids placing a byte-order mark at the beginning of a JSON string.</li>
+     * <li>Byte strings are converted to Base64 URL by default.</li> <li>Rational
+     * numbers will be converted to their exact form, if possible, otherwise
+     * to a high-precision approximation. (The resulting approximation
+     * could overflow to infinity, in which case the rational number is converted
+     * to null.)</li> <li>Simple values other than true and false will be
+     * converted to null. (This doesn't include floating-point numbers.)</li>
+     * <li>Infinity and not-a-number will be converted to null.</li> </ul>
      * @return A string object containing the converted object.
      */
     public String ToJSONString() {
@@ -4092,7 +4090,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     /**
-     *
+     * Not documented yet.
+     * @param obj An arbitrary object.
+     * @return A CBORObject object.
      */
     public static CBORObject FromObject(Object obj) {
       if (obj == null) {
@@ -4194,9 +4194,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * @param bigintTag Tag number. The tag number 55799 can be used to mark
      * a &quot;self-described CBOR&quot; object.
      * @return A CBOR object where the object {@code valueOb} is converted
-     * to a CBOR object and given the tag {@code bigintTag}.
+     * to a CBOR object and given the tag {@code bigintTag} .
      * @throws java.lang.IllegalArgumentException The parameter {@code bigintTag}
-     * is less than 0 or greater than 2^64-1, or {@code valueOb}'s type is
+     * is less than 0 or greater than 2^64-1, or {@code valueOb} 's type is
      * unsupported.
      * @throws java.lang.NullPointerException The parameter {@code bigintTag}
      * is null.
@@ -4287,7 +4287,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * tag number 55799 can be used to mark a &quot;self-described CBOR&quot;
      * object.
      * @return A CBOR object where the object {@code valueObValue} is converted
-     * to a CBOR object and given the tag {@code smallTag}.
+     * to a CBOR object and given the tag {@code smallTag} .
      * @throws java.lang.IllegalArgumentException The parameter {@code smallTag}
      * is less than 0 or {@code valueObValue} 's type is unsupported.
      */

@@ -17,39 +17,43 @@ namespace PeterO.Cbor {
     /// (CBOR) and contains methods for reading and writing CBOR data. CBOR
     /// is defined in RFC 7049. <para>There are many ways to get a CBOR object,
     /// including from bytes, objects, streams and JSON, as described below.</para>
-    /// <para> <b>To and from byte arrays:</b>
-    /// The CBORObject.DecodeToBytes method converts a byte array in CBOR
-    /// format to a CBOR object. The EncodeToBytes method converts a CBOR
-    /// object to its corresponding byte array in CBOR format. </para>
-    /// <para> <b>To and from data streams:</b>
-    /// The CBORObject.Write methods write many kinds of objects to a data
-    /// stream, including numbers, CBOR objects, strings, and arrays of
-    /// numbers and strings. The CBORObject.Read method reads a CBOR object
-    /// from a data stream. </para>
-    /// <para> <b>To and from other objects:</b>
-    /// The CBORObject.FromObject methods converts many kinds of objects
-    /// to a CBOR object, including numbers, strings, and arrays and maps
-    /// of numbers and strings. Methods like AsDouble, AsByte, and AsString
-    /// convert a CBOR object to different types of object. </para>
-    /// <para> <b>To and from JSON:</b>
-    /// This class also doubles as a reader and writer of JavaScript Object
-    /// Notation (JSON). The CBORObject.FromJSONString method converts
-    /// JSON to a CBOR object, and the ToJSONString method converts a CBOR
-    /// object to a JSON string. </para>
-    /// <para> Thread Safety: CBOR objects that are numbers, "simple values",
-    /// and text strings are immutable (their values can't be changed), so
-    /// they are inherently safe for use by multiple threads. CBOR objects
-    /// that are arrays, maps, and byte strings are mutable, but this class
-    /// doesn't attempt to synchronize reads and writes to those objects
-    /// by multiple threads, so those objects are not thread safe without
-    /// such synchronization. </para>
-    /// <para> One kind of CBOR object is called a map, or a list of key-value
-    /// pairs. Keys can be any kind of CBOR object, including numbers, strings,
-    /// arrays, and maps. However, since byte strings, arrays, and maps are
-    /// mutable, it is not advisable to use these three kinds of object as keys;
-    /// they are much better used as map values instead, keeping in mind that
-    /// they are not thread safe without synchronizing reads and writes to
-    /// them. </para>
+    /// <para><b>To and from byte arrays:</b>
+    /// The CBORObject.DecodeToBytes
+    /// method converts a byte array in CBOR format to a CBOR object. The EncodeToBytes
+    /// method converts a CBOR object to its corresponding byte array in CBOR
+    /// format.</para>
+    /// <para><b>To and from data streams:</b>
+    /// The CBORObject.Write
+    /// methods write many kinds of objects to a data stream, including numbers,
+    /// CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read
+    /// method reads a CBOR object from a data stream.</para>
+    /// <para><b>To
+    /// and from other objects:</b>
+    /// The CBORObject.FromObject methods
+    /// converts many kinds of objects to a CBOR object, including numbers,
+    /// strings, and arrays and maps of numbers and strings. Methods like
+    /// AsDouble, AsByte, and AsString convert a CBOR object to different
+    /// types of object.</para>
+    /// <para><b>To and from JSON:</b>
+    /// This class
+    /// also doubles as a reader and writer of JavaScript Object Notation
+    /// (JSON). The CBORObject.FromJSONString method converts JSON to
+    /// a CBOR object, and the ToJSONString method converts a CBOR object
+    /// to a JSON string.</para>
+    /// <para>Thread Safety: CBOR objects that
+    /// are numbers, "simple values", and text strings are immutable (their
+    /// values can't be changed), so they are inherently safe for use by multiple
+    /// threads. CBOR objects that are arrays, maps, and byte strings are
+    /// mutable, but this class doesn't attempt to synchronize reads and
+    /// writes to those objects by multiple threads, so those objects are
+    /// not thread safe without such synchronization.</para>
+    /// <para>One
+    /// kind of CBOR object is called a map, or a list of key-value pairs. Keys
+    /// can be any kind of CBOR object, including numbers, strings, arrays,
+    /// and maps. However, since byte strings, arrays, and maps are mutable,
+    /// it is not advisable to use these three kinds of object as keys; they
+    /// are much better used as map values instead, keeping in mind that they
+    /// are not thread safe without synchronizing reads and writes to them.</para>
     /// </summary>
   public sealed partial class CBORObject : IComparable<CBORObject>, IEquatable<CBORObject> {
     internal int ItemType {
@@ -479,38 +483,41 @@ namespace PeterO.Cbor {
       return cn == null ? false : cn.IsNaN(this.ThisItem);
     }
 
-    /// <summary>Compares two CBOR objects.<para> In this implementation:</para>
-    /// <list type=''> <item>The null pointer (null reference) is considered
+    /// <summary>Compares two CBOR objects. <para>In this implementation:</para>
+    /// <list type=''><item>The null pointer (null reference) is considered
     /// less than any other object.</item>
-    /// <item> If either object is true, false, CBORObject.Null, or the undefined
-    /// value, it is treated as less than the other value. If both objects have
-    /// one of these four values, then undefined is less than CBORObject.Null,
-    /// which is less than false, which is less than true.</item>
-    /// <item> If both objects are numbers, their mathematical values are
-    /// compared. Here, NaN (not-a-number) is considered greater than any
-    /// number.</item>
-    /// <item> If both objects are simple values other than true, false, CBORObject.Null,
-    /// and the undefined value, the objects are compared according to their
-    /// ordinal numbers.</item>
-    /// <item> If both objects are arrays, each element is compared. If one
-    /// array is shorter than the other and the other array begins with that
-    /// array (for the purposes of comparison), the shorter array is considered
-    /// less than the longer array.</item>
-    /// <item> If both objects are strings, compares each string code-point
-    /// by code-point, as though by the DataUtilities.CodePointCompare
-    /// method.</item>
-    /// <item> If both objects are maps, compares each map as though each were
+    /// <item>If either object is true,
+    /// false, CBORObject.Null, or the undefined value, it is treated as
+    /// less than the other value. If both objects have one of these four values,
+    /// then undefined is less than CBORObject.Null, which is less than false,
+    /// which is less than true.</item>
+    /// <item>If both objects are numbers,
+    /// their mathematical values are compared. Here, NaN (not-a-number)
+    /// is considered greater than any number.</item>
+    /// <item>If both objects
+    /// are simple values other than true, false, CBORObject.Null, and the
+    /// undefined value, the objects are compared according to their ordinal
+    /// numbers.</item>
+    /// <item>If both objects are arrays, each element
+    /// is compared. If one array is shorter than the other and the other array
+    /// begins with that array (for the purposes of comparison), the shorter
+    /// array is considered less than the longer array.</item>
+    /// <item>If
+    /// both objects are strings, compares each string code-point by code-point,
+    /// as though by the DataUtilities.CodePointCompare method.</item>
+    /// <item>If both objects are maps, compares each map as though each were
     /// an array with the sorted keys of that map as the array's elements. If
     /// both maps have the same keys, their values are compared in the order
     /// of the sorted keys.</item>
-    /// <item> If each object is a different type, then they are sorted by their
-    /// type number, in the order given for the CBORType enumeration.</item>
-    /// <item> If each object has different tags and both objects are otherwise
-    /// equal under this method, each element is compared as though each were
-    /// an array with that object's tags listed in order from outermost to
-    /// innermost. </item>
+    /// <item>If each object is a different type,
+    /// then they are sorted by their type number, in the order given for the
+    /// CBORType enumeration.</item>
+    /// <item>If each object has different
+    /// tags and both objects are otherwise equal under this method, each
+    /// element is compared as though each were an array with that object's
+    /// tags listed in order from outermost to innermost.</item>
     /// </list>
-    /// <para> This method is not consistent with the Equals method.</para>
+    /// <para>This method is not consistent with the Equals method.</para>
     /// </summary>
     /// <param name='other'>A value to compare with.</param>
     /// <returns>Less than 0, if this value is less than the other object;
@@ -1665,29 +1672,33 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Adds a new object to this map.</summary>
-    /// <param name='key'>A CBOR object representing the key. Can be null,
+    /// <summary>Maps an object to a key in this CBOR map,
+    /// or adds the value if the key doesn't exist.</summary>
+    /// <param name='key'>An object representing the key. Can be null,
     /// in which case this value is converted to CBORObject.Null.</param>
-    /// <param name='value'>A CBOR object representing the value. Can be
+    /// <param name='valueOb'>A CBOR object representing the value. Can be
     /// null, in which case this value is converted to CBORObject.Null.</param>
-    /// <exception cref='System.ArgumentException'>Key already exists
-    /// in this map.</exception>
     /// <exception cref='InvalidOperationException'>This object is
     /// not a map.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='key'/> or "valueOb" has an unsupported type.</exception>
     /// <returns>This object.</returns>
-    public CBORObject Add(CBORObject key, CBORObject value) {
-      if (key == null) {
-        key = CBORObject.Null;
-      }
-      if (value == null) {
-        value = CBORObject.Null;
-      }
+    public CBORObject Set(object key, object valueOb) {
       if (this.ItemType == CBORObjectTypeMap) {
-        IDictionary<CBORObject, CBORObject> map = this.AsMap();
-        if (map.ContainsKey(key)) {
-          throw new ArgumentException("Key already exists.");
+        if (key == null) {
+          key = CBORObject.Null;
         }
-        map.Add(key, value);
+        if (valueOb == null) {
+          valueOb = CBORObject.Null;
+        }
+        CBORObject mapKey = CBORObject.FromObject(key);
+        CBORObject mapValue = CBORObject.FromObject(valueOb);
+        IDictionary<CBORObject, CBORObject> map = this.AsMap();
+        if (map.ContainsKey(mapKey)) {
+          map[mapKey] = mapValue;
+        } else {
+          map.Add(mapKey, mapValue);
+        }
       } else {
         throw new InvalidOperationException("Not a map");
       }
@@ -1698,7 +1709,7 @@ namespace PeterO.Cbor {
     /// <param name='key'>A string representing the key. Can be null, in
     /// which case this value is converted to CBORObject.Null.</param>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
-    /// name='key'/> or "value" has an unsupported type.</exception>
+    /// name='key'/> or "valueOb" has an unsupported type.</exception>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='key'/> already exists in this map.</exception>
     /// <exception cref='InvalidOperationException'>This object is
@@ -1747,6 +1758,8 @@ namespace PeterO.Cbor {
         return false;
       }
     }
+
+
 
     /// <summary>Adds a new object to the end of this array.</summary>
     /// <param name='obj'>A CBOR object.</param>
@@ -2337,17 +2350,20 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Writes a binary floating-point number in CBOR format to
-    /// a data stream as follows: <list type=''> <item>If the value is null,
+    /// a data stream as follows: <list type=''><item>If the value is null,
     /// writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero, infinity, or NaN, converts the
-    /// number to a <c>double</c>
-    /// and writes that <c>double</c>
-    /// . If negative zero should not be written this way, use the Plus method
-    /// to convert the value beforehand.</item>
-    /// <item>If the value has an exponent of zero, writes the value as an unsigned
-    /// integer or signed integer if the number can fit either type or as a big
-    /// integer otherwise.</item>
-    /// <item>In all other cases, writes the value as a big float.</item>
+    /// <item>If the value is negative zero,
+    /// infinity, or NaN, converts the number to a <c>double</c>
+    /// and writes
+    /// that <c>double</c>
+    /// . If negative zero should not be written this way,
+    /// use the Plus method to convert the value beforehand.</item>
+    /// <item>If
+    /// the value has an exponent of zero, writes the value as an unsigned integer
+    /// or signed integer if the number can fit either type or as a big integer
+    /// otherwise.</item>
+    /// <item>In all other cases, writes the value as
+    /// a big float.</item>
     /// </list>
     /// </summary>
     /// <exception cref='System.ArgumentNullException'>The parameter
@@ -2415,17 +2431,19 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Writes a decimal floating-point number in CBOR format
-    /// to a data stream, as follows: <list type=''> <item>If the value is
+    /// to a data stream, as follows: <list type=''><item>If the value is
     /// null, writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero, infinity, or NaN, converts the
-    /// number to a <c>double</c>
-    /// and writes that <c>double</c>
-    /// . If negative zero should not be written this way, use the Plus method
-    /// to convert the value beforehand.</item>
+    /// <item>If the value is negative
+    /// zero, infinity, or NaN, converts the number to a <c>double</c>
+    /// and
+    /// writes that <c>double</c>
+    /// . If negative zero should not be written
+    /// this way, use the Plus method to convert the value beforehand.</item>
     /// <item>If the value has an exponent of zero, writes the value as an unsigned
     /// integer or signed integer if the number can fit either type or as a big
     /// integer otherwise.</item>
-    /// <item>In all other cases, writes the value as a decimal number.</item>
+    /// <item>In all other cases, writes the
+    /// value as a decimal number.</item>
     /// </list>
     /// </summary>
     /// <param name='bignum'>Decimal fraction to write. Can be null.</param>
@@ -2951,7 +2969,7 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Writes an arbitrary object to a CBOR data stream. Currently,
-    /// the following objects are supported: <list type=''> <item>Lists
+    /// the following objects are supported: <list type=''><item>Lists
     /// of CBORObject.</item>
     /// <item>Maps of CBORObject.</item>
     /// <item>Null.</item>
@@ -3410,23 +3428,25 @@ namespace PeterO.Cbor {
     /// <summary>Converts this object to a string in JavaScript Object Notation
     /// (JSON) format. This function works not only with arrays and maps,
     /// but also integers, strings, byte arrays, and other JSON data types.
-    /// Notes: <list type=''><item> If this object contains maps with non-string
+    /// Notes: <list type=''><item>If this object contains maps with non-string
     /// keys, the keys are converted to JSON strings before writing the map
-    /// as a JSON string. </item>
-    /// <item>If a number in the form of a big float has a very high binary exponent,
-    /// it will be converted to a double before being converted to a JSON string.
-    /// (The resulting double could overflow to infinity, in which case the
-    /// big float is converted to null.)</item>
+    /// as a JSON string.</item>
+    /// <item>If a number in the form of a big float
+    /// has a very high binary exponent, it will be converted to a double before
+    /// being converted to a JSON string. (The resulting double could overflow
+    /// to infinity, in which case the big float is converted to null.)</item>
     /// <item>The string will not begin with a byte-order mark (U + FEFF);
     /// RFC 7159 (the JSON specification) forbids placing a byte-order mark
     /// at the beginning of a JSON string.</item>
-    /// <item>Byte strings are converted to Base64 URL by default.</item>
-    /// <item>Rational numbers will be converted to their exact form, if
-    /// possible, otherwise to a high-precision approximation. (The resulting
-    /// approximation could overflow to infinity, in which case the rational
-    /// number is converted to null.)</item>
-    /// <item>Simple values other than true and false will be converted to
-    /// null. (This doesn't include floating-point numbers.)</item>
+    /// <item>Byte strings are
+    /// converted to Base64 URL by default.</item>
+    /// <item>Rational numbers
+    /// will be converted to their exact form, if possible, otherwise to a
+    /// high-precision approximation. (The resulting approximation could
+    /// overflow to infinity, in which case the rational number is converted
+    /// to null.)</item>
+    /// <item>Simple values other than true and false will
+    /// be converted to null. (This doesn't include floating-point numbers.)</item>
     /// <item>Infinity and not-a-number will be converted to null.</item>
     /// </list>
     /// </summary>
@@ -4007,37 +4027,9 @@ namespace PeterO.Cbor {
       return new CBORObject(CBORObjectTypeMap, map);
     }
 
-    /// <summary>Generates a CBORObject from an arbitrary object. The following
-    /// types are specially handled by this method: <c>null</c>
-    /// , primitive types, strings, <c>CBORObject</c>
-    /// , <c>ExtendedDecimal</c>
-    /// , <c>ExtendedFloat</c>
-    /// , the custom <c>BigInteger</c>
-    /// , lists, arrays, enumerations (<c>Enum</c>
-    /// objects), and maps.<para>In the .NET version, if the object is a type
-    /// not specially handled by this method, returns a CBOR map with the values
-    /// of each of its read/write properties (or all properties in the case
-    /// of an anonymous type). Properties are converted to their camel-case
-    /// names (meaning if a name starts with A to Z, that letter is lower-cased).
-    /// If the property name begins with the word "Is", that word is deleted
-    /// from the name. Also, .NET <c>Enum</c>
-    /// objects will be converted to their integer values, and a multidimensional
-    /// array is converted to an array of arrays.</para>
-    /// <para>In the Java version, if the object is a type not specially handled
-    /// by this method, this method checks the CBOR object for methods starting
-    /// with the word "get" or "is" that take no parameters, and returns a CBOR
-    /// map with one entry for each such method found. For each method found,
-    /// the starting word "get" or "is" is deleted from its name, and the name
-    /// is converted to camel case (meaning if a name starts with A to Z, that
-    /// letter is lower-cased). Also, Java <c>Enum</c>
-    /// objects will be converted to the result of their <c>name</c>
-    /// method.</para>
-    /// </summary>
+    /// <returns>A CBORObject object.</returns>
     /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>A CBOR object corresponding to the given object. Returns
-    /// CBORObject.Null if the object is null.</returns>
-    /// <exception cref='System.ArgumentException'>The object's type
-    /// is not supported.</exception>
+ /// <summary>Not documented yet.</summary>
     public static CBORObject FromObject(object obj) {
       if (obj == null) {
         return CBORObject.Null;
@@ -4143,10 +4135,11 @@ namespace PeterO.Cbor {
     /// <summary>Generates a CBOR object from an arbitrary object and gives
     /// the resulting object a tag.</summary>
     /// <returns>A CBOR object where the object <paramref name='valueOb'/>
-    /// is converted to a CBOR object and given the tag <paramref name='bigintTag'/>.</returns>
+    /// is converted to a CBOR object and given the tag <paramref name='bigintTag'/>
+    /// .</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='bigintTag'/> is less than 0 or greater than 2^64-1, or <paramref
-    /// name='valueOb'/>'s type is unsupported.</exception>
+    /// name='valueOb'/> 's type is unsupported.</exception>
     /// <param name='valueOb'>An arbitrary object. If the tag number is
     /// 2 or 3, this must be a byte string whose bytes represent an integer in
     /// little-endian byte order, and the value of the number is 1 minus the
@@ -4246,7 +4239,8 @@ namespace PeterO.Cbor {
     /// The tag number 55799 can be used to mark a &quot;self-described CBOR&quot;
     /// object.</param>
     /// <returns>A CBOR object where the object <paramref name='valueObValue'/>
-    /// is converted to a CBOR object and given the tag <paramref name='smallTag'/>.</returns>
+    /// is converted to a CBOR object and given the tag <paramref name='smallTag'/>
+    /// .</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='smallTag'/> is less than 0 or <paramref name='valueObValue'/>
     /// 's type is unsupported.</exception>

@@ -3507,8 +3507,8 @@ if (bytes.Length <= 0) {
     }
 
     #region Equals and GetHashCode implementation
-    /// <inheritdoc/><summary>Determines whether this object and another
-    /// object are equal.</summary>
+    /// <inheritdoc/><summary>Determines whether this object and another object are
+    /// equal.</summary>
     /// <returns>True if the objects are equal; otherwise, false.</returns>
     /// <param name='obj'>An arbitrary object.</param>
     public override bool Equals(object obj) {

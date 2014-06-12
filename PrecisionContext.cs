@@ -40,7 +40,7 @@ namespace PeterO {
     /// will be thrown if an operation's return value is not the same as the
     /// exact result (FlagInexact) or if the return value's exponent is lower
     /// than the lowest allowed (FlagSubnormal).</para>
-    /// </summary>
+    ///  </summary>
     /// <value>The traps that are set for each flag in the context.</value>
     public int Traps {
       get {
@@ -185,7 +185,7 @@ namespace PeterO {
     /// flag, use the AND operation on the return value of this method. For
     /// example: <c>(this.Flags &amp; PrecisionContext.FlagInexact)
     /// != 0</c>
-    /// returns TRUE if the Inexact flag is set.</summary>
+    ///  returns TRUE if the Inexact flag is set.</summary>
     /// <value>The flags that are set from converting numbers according
     /// to this precision context. If HasFlags is false, this value will be
     /// 0.</value>
@@ -205,9 +205,12 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='exponent'>A BigInteger object.</param>
-    /// <returns>A Boolean object.</returns>
+    /// <summary>Determines whether a number can have the given Exponent
+    /// property under this precision context.</summary>
+    /// <param name='exponent'>A BigInteger object indicating the desired
+    /// exponent.</param>
+    /// <returns>True if a number can have the given Exponent property under
+    /// this precision context; otherwise, false.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='exponent'/> is null.</exception>
     public bool ExponentWithinRange(BigInteger exponent) {
@@ -361,7 +364,7 @@ namespace PeterO {
     /// <summary>Gets a value indicating whether to use a "simplified" arithmetic.
     /// In the simplified arithmetic, infinity, not-a-number, and subnormal
     /// numbers are not allowed, and negative zero is treated the same as positive
-    /// zero. For further details, see <code>http://speleotrove.com/decimal/dax3274.html</code>
+    /// zero. For further details, see <c>http://speleotrove.com/decimal/dax3274.html</c>
     /// </summary>
     /// <value>True if a &quot;simplified&quot; arithmetic will be used;
     /// otherwise, false.</value>
@@ -482,16 +485,20 @@ namespace PeterO {
       return new PrecisionContext(precision, Rounding.HalfUp, 0, 0, false).WithUnlimitedExponents();
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Creates a new PrecisionContext object initialized with
+    /// unlimited precision and exponent range, and the given rounding mode.</summary>
     /// <returns>A PrecisionContext object.</returns>
-    /// <param name='rounding'>A Rounding object.</param>
+    /// <param name='rounding'>The rounding mode for the new precision
+    /// context.</param>
     public static PrecisionContext ForRounding(Rounding rounding) {
       return new PrecisionContext(0, rounding, 0, 0, false).WithUnlimitedExponents();
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Creates a new PrecisionContext object initialized with
+    /// unlimited and exponent range, and the given rounding mode and maximum
+    /// precision.</summary>
+    /// <param name='precision'>Maximum number of digits (precision).</param>
     /// <returns>A PrecisionContext object.</returns>
-    /// <param name='precision'>A 32-bit signed integer.</param>
     /// <param name='rounding'>A Rounding object.</param>
     public static PrecisionContext ForPrecisionAndRounding(int precision, Rounding rounding) {
       return new PrecisionContext(precision, rounding, 0, 0, false).WithUnlimitedExponents();
