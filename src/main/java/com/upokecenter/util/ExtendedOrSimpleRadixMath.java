@@ -154,11 +154,6 @@ public T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext 
         this.simp.MultiplyAndAdd(thisValue, multiplicand, augend, ctx);
     }
 
-public T RoundToBinaryPrecision(T thisValue, PrecisionContext ctx) {
-      return (ctx == null || !ctx.isSimplified()) ? this.ext.RoundToBinaryPrecision(thisValue, ctx) :
-        this.simp.RoundToBinaryPrecision(thisValue, ctx);
-    }
-
 public T Plus(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.isSimplified()) ? this.ext.Plus(thisValue, ctx) :
         this.simp.Plus(thisValue, ctx);

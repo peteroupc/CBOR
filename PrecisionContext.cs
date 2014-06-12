@@ -245,7 +245,6 @@ namespace PeterO {
       return "[PrecisionContext ExponentMax=" + this.exponentMax + ", Traps=" + this.traps + ", ExponentMin=" + this.exponentMin + ", HasExponentRange=" + this.hasExponentRange + ", BigintPrecision=" + this.bigintPrecision + ", Rounding=" + this.rounding + ", ClampNormalExponents=" + this.clampNormalExponents + ", Flags=" + this.flags + ", HasFlags=" + this.hasFlags + "]";
     }
 
-
     /// <summary>Copies this PrecisionContext with the specified rounding
     /// mode.</summary>
     /// <returns>A PrecisionContext object.</returns>
@@ -337,10 +336,10 @@ namespace PeterO {
 
     private bool precisionInBits;
 
-    /// <summary>Gets a value indicating whether this context's
-    /// Precision property is in bits, rather than digits.
-    /// The default is false.
-    /// </summary>
+    /// <summary>Gets a value indicating whether this context's Precision
+    /// property is in bits, rather than digits. The default is false.</summary>
+    /// <value>True if this context&apos;s Precision property is in bits,
+    /// rather than digits; otherwise, false.. The default is false.</value>
     public bool IsPrecisionInBits {
       get {
         return this.precisionInBits;
@@ -385,15 +384,15 @@ namespace PeterO {
     private bool adjustExponent;
 
     /// <summary>Gets a value indicating whether the EMax and EMin properties
-    /// refer to the number's Exponent property adjusted to the number's precision,
-    /// or just the number's Exponent property. The default value is true,
-    /// meaning that EMax and EMin refer to the adjusted exponent. Setting
-    /// this value to false (using WithAdjustExponent) is useful for modeling
-    /// floating point representations with an integer mantissa and an integer
-    /// exponent, such as Java's BigDecimal.</summary>
-    /// <value>True if the EMax and EMin properties refer to the number's Exponent
-    /// property adjusted to the number&apos;s precision, or false if they
-    /// refer to just the number&apos;s Exponent property.</value>
+    /// refer to the number's Exponent property adjusted to the number's
+    /// precision, or just the number's Exponent property. The default value
+    /// is true, meaning that EMax and EMin refer to the adjusted exponent.
+    /// Setting this value to false (using WithAdjustExponent) is useful
+    /// for modeling floating point representations with an integer mantissa
+    /// and an integer exponent, such as Java's BigDecimal.</summary>
+    /// <value>True if the EMax and EMin properties refer to the number&apos;s
+    /// Exponent property adjusted to the number&apos;s precision, or false
+    /// if they refer to just the number&apos;s Exponent property.</value>
     public bool AdjustExponent {
       get {
         return this.adjustExponent;
@@ -628,8 +627,8 @@ namespace PeterO {
       PrecisionContext.ForPrecisionAndRounding(9, Rounding.HalfUp);
 
     /// <summary>Precision context for the Common Language Infrastructure
-    /// (.NET Framework) decimal format, 96 bits precision, and a valid
-    /// exponent range of -28 to 0.</summary>
+    /// (.NET Framework) decimal format, 96 bits precision, and a valid exponent
+    /// range of -28 to 0.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",

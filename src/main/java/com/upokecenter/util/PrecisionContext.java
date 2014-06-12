@@ -364,6 +364,30 @@ at: http://upokecenter.com/d/
       return pc;
     }
 
+    private boolean precisionInBits;
+
+    /**
+     * Gets a value indicating whether this context's Precision property
+     * is in bits, rather than digits. The default is false.
+     * @return True if this context's Precision property is in bits, rather
+     * than digits; otherwise, false.. The default is false.
+     */
+    public boolean isPrecisionInBits() {
+        return this.precisionInBits;
+      }
+
+    /**
+     * Copies this PrecisionContext and sets the copy's "IsPrecisionInBits"
+     * property to the given value.
+     * @param isPrecisionBits A Boolean object.
+     * @return A PrecisionContext object.
+     */
+    public PrecisionContext WithPrecisionInBits(boolean isPrecisionBits) {
+      PrecisionContext pc = this.Copy();
+      pc.precisionInBits = isPrecisionBits;
+      return pc;
+    }
+
     private boolean simplified;
 
     /**
@@ -379,8 +403,8 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Copies this PrecisionContext and sets the "IsSimplified" property
-     * to the given value.
+     * Copies this PrecisionContext and sets the copy's "IsSimplified"
+     * property to the given value.
      * @param simplified A Boolean object.
      * @return A PrecisionContext object.
      */
@@ -394,27 +418,23 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets a value indicating whether the EMax and EMin properties refer
-     * to the Exponent property adjusted to the number's precision, or just
-     * the number's Exponent property. The default value is true, meaning
-     * that EMax and EMin refer to the adjusted exponent. Setting this value
-     * to false (using WithAdjustExponent) is useful for modeling floating
-     * point representations with an integer mantissa and an integer exponent,
-     * such as Java's BigDecimal.
-     * @return True if the EMax and EMin properties refer to the Exponent
-     * property adjusted to the number's precision, or just the number's
-     * Exponent property; otherwise, false.. The default value is true,
+     * to the number's Exponent property adjusted to the number's precision,
+     * or just the number's Exponent property. The default value is true,
      * meaning that EMax and EMin refer to the adjusted exponent. Setting
      * this value to false (using WithAdjustExponent) is useful for modeling
      * floating point representations with an integer mantissa and an integer
      * exponent, such as Java's BigDecimal.
+     * @return True if the EMax and EMin properties refer to the number's
+     * Exponent property adjusted to the number's precision, or false if
+     * they refer to just the number's Exponent property.
      */
     public boolean getAdjustExponent() {
         return this.adjustExponent;
       }
 
     /**
-     * Copies this PrecisionContext and sets the "AdjustExponent" property
-     * to the given value.
+     * Copies this PrecisionContext and sets the copy's "AdjustExponent"
+     * property to the given value.
      * @param adjustExponent A Boolean object.
      * @return A PrecisionContext object.
      */
@@ -481,6 +501,7 @@ at: http://upokecenter.com/d/
         0,
         this.clampNormalExponents);
       pcnew.hasFlags = this.hasFlags;
+      pcnew.precisionInBits = this.precisionInBits;
       pcnew.adjustExponent = this.adjustExponent;
       pcnew.simplified = this.simplified;
       pcnew.flags = this.flags;
@@ -624,12 +645,13 @@ at: http://upokecenter.com/d/
 
     /**
      * Precision context for the Common Language Infrastructure (.NET
-     * Framework) decimal format, 96 bits precision. Use RoundToBinaryPrecision
-     * to round a decimal number to this format.
+     * Framework) decimal format, 96 bits precision, and a valid exponent
+     * range of -28 to 0.
      */
 
     public static final PrecisionContext CliDecimal =
-      new PrecisionContext(96, Rounding.HalfEven, 0, 28, true);
+      new PrecisionContext(96, Rounding.HalfEven, 0, 28, true)
+      .WithPrecisionInBits(true);
 
     /**
      * Precision context for Java's BigDecimal format.

@@ -590,17 +590,6 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    public T RoundToBinaryPrecision(T thisValue, PrecisionContext ctx) {
-      T ret = this.CheckNotANumber1(thisValue, ctx);
-      if ((Object)ret != (Object)null) {
-        return ret;
-      }
-      PrecisionContext ctx2 = GetContextWithFlags(ctx);
-      thisValue = this.RoundBeforeOp(thisValue, ctx2);
-      thisValue = this.wrapper.RoundToBinaryPrecision(thisValue, ctx2);
-      return this.PostProcess(thisValue, ctx, ctx2);
-    }
-
     public T Plus(T thisValue, PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {

@@ -27,18 +27,6 @@ at: http://upokecenter.com/d/
       CBORObject.AddConverter(java.net.URI.class, new CBORTag32());
     }
 
-    /**
-     * Converts a URI to a CBOR object.
-     * @param uri A java.net.URI object.
-     * @param uri A java.net.URI object.
-     * @param uri A java.net.URI object.
-     * @param uri A java.net.URI object.
-     * @return A CBORObject object.
-     * @throws java.lang.NullPointerException The parameter "uri" is null.
-     * @throws java.lang.NullPointerException The parameter "uri" is null.
-     * @throws java.lang.NullPointerException The parameter {@code uri}
-     * is null.
-     */
     public CBORObject ToCBORObject(java.net.URI uri) {
       if (uri == null) {
         throw new NullPointerException("uri");

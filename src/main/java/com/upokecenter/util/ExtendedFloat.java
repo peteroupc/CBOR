@@ -1944,10 +1944,20 @@ at: http://upokecenter.com/d/
      * @return The closest value to this object's value, rounded to the specified
      * precision. Returns the same value as this object if {@code ctx} is
      * null or the precision and exponent range are unlimited.
-     */
+     * @deprecated Instead of this method, use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.
+ */
+@Deprecated
     public ExtendedFloat RoundToBinaryPrecision(
       PrecisionContext ctx) {
-      return math.RoundToBinaryPrecision(this, ctx);
+      if (ctx == null) {
+ return this;
+}
+      PrecisionContext ctx2 = ctx.Copy().WithPrecisionInBits(true);
+      ExtendedFloat ret = math.RoundToPrecision(this, ctx2);
+      if (ctx2.getHasFlags()) {
+        ctx.setFlags(ctx2.getFlags());
+      }
+      return ret;
     }
 
     /**

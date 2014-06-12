@@ -18,7 +18,6 @@ using PeterO.Cbor;
 namespace Test {
   [TestClass]
   public class CBORExtraTest {
-
     private decimal RandomDecimal(FastRandom rand, int exponent) {
       int[] x = new int[4];
       int r = rand.NextValue(0x10000);

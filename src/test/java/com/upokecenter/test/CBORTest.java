@@ -519,11 +519,10 @@ import com.upokecenter.cbor.*;
       return cmp;
     }
 
-    public static String ToByteArrayString(CBORObject obj) {
-      byte[] bytes = obj.EncodeToBytes();
+    public static String ToByteArrayString(byte[] bytes) {
       StringBuilder sb = new StringBuilder();
       String hex = "0123456789ABCDEF";
-      sb.append("CBORObject.DecodeFromBytes(new byte[] {  ");
+      sb.append("new byte[] {  ");
       for (int i = 0; i < bytes.length; ++i) {
         if (i > 0) {
           sb.append(",");  }
@@ -535,8 +534,16 @@ import com.upokecenter.cbor.*;
         sb.append(hex.charAt((bytes[i] >> 4) & 0xf));
         sb.append(hex.charAt(bytes[i] & 0xf));
       }
-      sb.append("})");
+      sb.append("}");
       return sb.toString();
+    }
+
+    public static String ToByteArrayString(CBORObject obj) {
+      return new StringBuilder()
+        .append("CBORObject.DecodeFromBytes(")
+        .append(ToByteArrayString(obj.EncodeToBytes()))
+        .append(")")
+        .toString();
     }
 
     @Test
@@ -634,22 +641,22 @@ import com.upokecenter.cbor.*;
     public void ExtraDecimalTests() {
       Assert.assertEquals(
         ExtendedDecimal.NegativeInfinity,
-        ExtendedDecimal.FromString("-79228162514264337593543950336").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+        ExtendedDecimal.FromString("-79228162514264337593543950336").RoundToPrecision(PrecisionContext.CliDecimal));
       Assert.assertEquals(
         ExtendedDecimal.PositiveInfinity,
-        ExtendedDecimal.FromString("8.782580686213340724E+28").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+        ExtendedDecimal.FromString("8.782580686213340724E+28").RoundToPrecision(PrecisionContext.CliDecimal));
       Assert.assertEquals(
         ExtendedDecimal.NegativeInfinity,
-        ExtendedDecimal.FromString("-9.3168444507547E+28").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+        ExtendedDecimal.FromString("-9.3168444507547E+28").RoundToPrecision(PrecisionContext.CliDecimal));
       Assert.assertEquals(
         "-9344285899206687626894794544",
-        ExtendedDecimal.FromString("-9344285899206687626894794544.04982268810272216796875").RoundToBinaryPrecision(new PrecisionContext(96, Rounding.HalfEven, 0, 28, false)).ToPlainString());
+        ExtendedDecimal.FromString("-9344285899206687626894794544.04982268810272216796875").RoundToPrecision(PrecisionContext.CliDecimal).ToPlainString());
       Assert.assertEquals(
         ExtendedDecimal.PositiveInfinity,
-        ExtendedDecimal.FromString("96148154858060747311034406200").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+        ExtendedDecimal.FromString("96148154858060747311034406200").RoundToPrecision(PrecisionContext.CliDecimal));
       Assert.assertEquals(
         ExtendedDecimal.PositiveInfinity,
-        ExtendedDecimal.FromString("90246605365627217170000000000").RoundToBinaryPrecision(PrecisionContext.CliDecimal));
+        ExtendedDecimal.FromString("90246605365627217170000000000").RoundToPrecision(PrecisionContext.CliDecimal));
     }
 
     @Test
@@ -1278,8 +1285,8 @@ try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
     @Test
     public void TestRandomNonsense() {
         FastRandom rand = new FastRandom();
-        for (int i = 0; i < 200; ++i) {
-            byte[] array = new byte[rand.NextValue(1000000) + 1];
+        for (int i = 0; i < 200000; ++i) {
+            byte[] array = new byte[rand.NextValue(1000) + 1];
             for (int j = 0; j < array.length; ++j) {
                 if (j + 3 <= array.length) {
                     int r = rand.NextValue(0x1000000);
@@ -1323,6 +1330,11 @@ int startingAvailable=ms.available();
                     }
                     catch (CBORException ex) {
                         // Expected exception
+                    }
+                    catch (Exception ex) {
+                      System.out.println(ToByteArrayString(array));
+                      System.out.println(ex.toString());
+                      // throw new IllegalStateException("", ex);
                     }
                 }
 }
@@ -1963,7 +1975,7 @@ try { if(ms2b!=null)ms2b.close(); } catch (java.io.IOException ex){}
       for (int i = 0; i <= 255; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((byte)i),
-          String.format(java.util.Locale.getUS(),"%s", i));
+          "" + i);
       }
     }
 
@@ -6352,7 +6364,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       for (int i = Short.MIN_VALUE; i <= Short.MAX_VALUE; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((short)i),
-          String.format(java.util.Locale.getUS(),"%s", i));
+          "" + i);
       }
     }
 
@@ -6518,7 +6530,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       for (int i = 0; i < 500; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject(bi),
-          String.format(java.util.Locale.getUS(),"%s", bi));
+          String.format(java.util.Locale.US,"%s", bi));
         if(!(CBORObject.FromObject(bi).isIntegral()))Assert.fail();
         TestCommon.AssertRoundTrip(CBORObject.FromObject(bi));
         TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.Create(bi, BigInteger.ONE)));
@@ -6539,7 +6551,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         while (true) {
           TestCommon.AssertSer(
             CBORObject.FromObject(bigintTemp),
-            String.format(java.util.Locale.getUS(),"%s", bigintTemp));
+            String.format(java.util.Locale.US,"%s", bigintTemp));
           if (bigintTemp.equals(ranges[i + 1])) {
             break;
           }
@@ -6564,15 +6576,15 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           if(!(CBORObject.FromObject(j).CanTruncatedIntFitInInt64()))Assert.fail();
           TestCommon.AssertSer(
             CBORObject.FromObject(j),
-            String.format(java.util.Locale.getUS(),"%s", j));
+            String.format(java.util.Locale.US,"%s", j));
           Assert.assertEquals(
             CBORObject.FromObject(j),
             CBORObject.FromObject(BigInteger.valueOf(j)));
           CBORObject obj = CBORObject.FromJSONString(
-            String.format(java.util.Locale.getUS(),"[%s]", j));
+            String.format(java.util.Locale.US,"[%s]", j));
           TestCommon.AssertSer(
             obj,
-            String.format(java.util.Locale.getUS(),"[%s]", j));
+            String.format(java.util.Locale.US,"[%s]", j));
           if (j == ranges[i + 1]) {
             break;
           }
@@ -6595,7 +6607,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       for (int i = -65539; i <= 65539; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((float)i),
-          String.format(java.util.Locale.getUS(),"%s", i));
+          "" + i);
       }
     }
 
@@ -6664,7 +6676,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         if(!(o.isIntegral()))Assert.fail();
         TestCommon.AssertSer(
           o,
-          String.format(java.util.Locale.getUS(),"%s", i));
+          "" + i);
         if (oldobj != null) {
           CompareTestLess(oldobj, o);
         }
@@ -6708,11 +6720,11 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           Assert.assertEquals(1, tags.length);
           Assert.assertEquals(bigintTemp, tags[0]);
           if (!obj.getInnermostTag().equals(bigintTemp)) {
-            Assert.assertEquals(String.format(java.util.Locale.getUS(),"obj tag doesn't match: %s", obj),bigintTemp,obj.getInnermostTag());
+            Assert.assertEquals(String.format(java.util.Locale.US,"obj tag doesn't match: %s", obj),bigintTemp,obj.getInnermostTag());
           }
           TestCommon.AssertSer(
             obj,
-            String.format(java.util.Locale.getUS(),"%s(0)", bigintTemp));
+            String.format(java.util.Locale.US,"%s(0)", bigintTemp));
           if (!bigintTemp.equals(maxuint)) {
             BigInteger bigintNew = bigintTemp .add(BigInteger.ONE);
             if (bigintNew.equals(BigInteger.valueOf(264)) || bigintNew.equals(BigInteger.valueOf(265))) {
@@ -6723,18 +6735,18 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             CBORObject obj2 = CBORObject.FromObjectAndTag(obj, bigintNew);
             BigInteger[] bi = obj2.GetTags();
             if (bi.length != 2) {
-              Assert.assertEquals(String.format(java.util.Locale.getUS(),"Expected 2 tags: %s", obj2),2,bi.length);
+              Assert.assertEquals(String.format(java.util.Locale.US,"Expected 2 tags: %s", obj2),2,bi.length);
             }
             if (!bi[0].equals((BigInteger)bigintTemp .add(BigInteger.ONE))) {
-              Assert.assertEquals(String.format(java.util.Locale.getUS(),"Outer tag doesn't match: %s", obj2),bigintTemp .add(BigInteger.ONE),bi[0]);
+              Assert.assertEquals(String.format(java.util.Locale.US,"Outer tag doesn't match: %s", obj2),bigintTemp .add(BigInteger.ONE),bi[0]);
             }
             if (!bi[1].equals(bigintTemp)) {
-              Assert.assertEquals(String.format(java.util.Locale.getUS(),"Inner tag doesn't match: %s", obj2),bigintTemp,bi[1]);
+              Assert.assertEquals(String.format(java.util.Locale.US,"Inner tag doesn't match: %s", obj2),bigintTemp,bi[1]);
             }
             if (!obj2.getInnermostTag().equals(bigintTemp)) {
-              Assert.assertEquals(String.format(java.util.Locale.getUS(),"Innermost tag doesn't match: %s", obj2),bigintTemp,obj2.getInnermostTag());
+              Assert.assertEquals(String.format(java.util.Locale.US,"Innermost tag doesn't match: %s", obj2),bigintTemp,obj2.getInnermostTag());
             }
-            String str = String.format(java.util.Locale.getUS(),"%s(%s(0))",
+            String str = String.format(java.util.Locale.US,"%s(%s(0))",
               bigintTemp .add(BigInteger.ONE),
               bigintTemp);
             TestCommon.AssertSer(

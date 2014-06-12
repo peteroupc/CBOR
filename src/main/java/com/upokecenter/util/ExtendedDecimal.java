@@ -52,8 +52,7 @@ at: http://upokecenter.com/d/
      * methods. The return values combined will uniquely identify a particular
      * ExtendedDecimal value.</li> </ul>
      */
-  public final class ExtendedDecimal implements Comparable<ExtendedDecimal>
-  {
+  public final class ExtendedDecimal implements Comparable<ExtendedDecimal> {
     private static final int MaxSafeInt = 214748363;
 
     private BigInteger exponent;
@@ -564,8 +563,7 @@ at: http://upokecenter.com/d/
       return ret;
     }
 
-    private static final class DecimalMathHelper implements IRadixMathHelper<ExtendedDecimal>
-    {
+    private static final class DecimalMathHelper implements IRadixMathHelper<ExtendedDecimal> {
     /**
      * This is an internal method.
      * @return A 32-bit signed integer.
@@ -976,7 +974,7 @@ bigrem=divrem[1]; }
      * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
      */
-public int CompareToBinary(ExtendedFloat other) {
+    public int CompareToBinary(ExtendedFloat other) {
       if (other == null) {
         return 1;
       }
@@ -2599,9 +2597,19 @@ remainder=divrem[1]; }
      * @return The closest value to this object's value, rounded to the specified
      * precision. Returns the same value as this object if {@code ctx} is
      * null or the precision and exponent range are unlimited.
-     */
+     * @deprecated Instead of this method, use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.
+ */
+@Deprecated
     public ExtendedDecimal RoundToBinaryPrecision(PrecisionContext ctx) {
-      return math.RoundToBinaryPrecision(this, ctx);
+      if (ctx == null) {
+ return this;
+}
+      PrecisionContext ctx2 = ctx.Copy().WithPrecisionInBits(true);
+      ExtendedDecimal ret = math.RoundToPrecision(this, ctx2);
+      if (ctx2.getHasFlags()) {
+        ctx.setFlags(ctx2.getFlags());
+      }
+      return ret;
     }
 
     /**

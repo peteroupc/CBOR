@@ -528,11 +528,10 @@ namespace Test {
       return cmp;
     }
 
-    public static string ToByteArrayString(CBORObject obj) {
-      byte[] bytes = obj.EncodeToBytes();
+    public static string ToByteArrayString(byte[] bytes) {
       StringBuilder sb = new StringBuilder();
       string hex = "0123456789ABCDEF";
-      sb.Append("CBORObject.DecodeFromBytes(new byte[] { ");
+      sb.Append("new byte[] { ");
       for (int i = 0; i < bytes.Length; ++i) {
         if (i > 0) {
           sb.Append(","); }
@@ -544,8 +543,16 @@ namespace Test {
         sb.Append(hex[(bytes[i] >> 4) & 0xf]);
         sb.Append(hex[bytes[i] & 0xf]);
       }
-      sb.Append("})");
+      sb.Append("}");
       return sb.ToString();
+    }
+
+    public static string ToByteArrayString(CBORObject obj) {
+      return new StringBuilder()
+        .Append("CBORObject.DecodeFromBytes(")
+        .Append(ToByteArrayString(obj.EncodeToBytes()))
+        .Append(")")
+        .ToString();
     }
 
     [TestMethod]
@@ -1276,6 +1283,14 @@ namespace Test {
         for (int i = 0; i < 200; ++i) {
             byte[] array = new byte[rand.NextValue(1000000) + 1];
             for (int j = 0; j < array.Length; ++j) {
+              if (rand.NextValue(10) == 0) {
+                if (j + 2 <= array.Length) {
+                  array[j] = (byte)0xd8;
+                  array[j + 1] = (rand.NextValue(2) == 0) ? (byte)0x1c : (byte)0x1d;
+                  j += 1;
+                  continue;
+                }
+              }
                 if (j + 3 <= array.Length) {
                     int r = rand.NextValue(0x1000000);
                     array[j] = (byte)(r & 0xff);
@@ -1916,7 +1931,7 @@ namespace Test {
       for (int i = 0; i <= 255; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((byte)i),
-          String.Format(CultureInfo.InvariantCulture, "{0}", i));
+          String.Empty + i);
       }
     }
 
@@ -6305,7 +6320,7 @@ namespace Test {
       for (int i = Int16.MinValue; i <= Int16.MaxValue; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((short)i),
-          String.Format(CultureInfo.InvariantCulture, "{0}", i));
+          String.Empty + i);
       }
     }
 
@@ -6548,7 +6563,7 @@ namespace Test {
       for (int i = -65539; i <= 65539; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((float)i),
-          String.Format(CultureInfo.InvariantCulture, "{0}", i));
+          String.Empty + i);
       }
     }
 
@@ -6617,7 +6632,7 @@ namespace Test {
         Assert.IsTrue(o.IsIntegral);
         TestCommon.AssertSer(
           o,
-          String.Format(CultureInfo.InvariantCulture, "{0}", i));
+          String.Empty + i);
         if (oldobj != null) {
           CompareTestLess(oldobj, o);
         }
