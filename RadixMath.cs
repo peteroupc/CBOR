@@ -9,9 +9,9 @@ using System;
 using System.Text;
 
 namespace PeterO {
-    /// <summary>Encapsulates radix-independent arithmetic.</summary>
-    /// <typeparam name='T'>Data type for a numeric value in a particular
-    /// radix.</typeparam>
+  /// <summary>Encapsulates radix-independent arithmetic.</summary>
+  /// <typeparam name='T'>Data type for a numeric value in a particular
+  /// radix.</typeparam>
   internal class RadixMath<T> : IRadixMath<T> {
     private const int IntegerModeFixedScale = 1;
     private const int IntegerModeRegular = 0;
