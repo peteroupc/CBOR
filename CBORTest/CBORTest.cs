@@ -1280,7 +1280,7 @@ namespace Test {
     public void TestExample() {
       // The following creates a CBOR map and adds
       // several kinds of objects to it
-      var cbor = CBORObject.NewMap()
+      CBORObject cbor = CBORObject.NewMap()
          .Add("item", "any string")
          .Add("number", 42)
          .Add("map", CBORObject.NewMap().Add("number", 42))
@@ -1290,7 +1290,6 @@ namespace Test {
       byte[] bytes = cbor.EncodeToBytes();
       // The following converts the map to JSON
       string json = cbor.ToJSONString();
-      Console.WriteLine(json);
     }
 
     [TestMethod]

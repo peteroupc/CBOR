@@ -1285,7 +1285,7 @@ try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
     public void TestExample() {
       // The following creates a CBOR map and adds
       // several kinds of objects to it
-      var cbor = CBORObject.NewMap()
+      CBORObject cbor = CBORObject.NewMap()
          .Add("item", "any String")
          .Add("number", 42)
          .Add("map", CBORObject.NewMap().Add("number", 42))
@@ -1295,7 +1295,6 @@ try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
       byte[] bytes = cbor.EncodeToBytes();
       // The following converts the map to JSON
       String json = cbor.ToJSONString();
-      System.out.println(json);
     }
 
     @Test

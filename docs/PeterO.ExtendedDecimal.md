@@ -8,7 +8,7 @@ Represents an arbitrary-precision decimal floating-point number. Consists of an 
 
 The mantissa and exponent format preserves trailing zeros in the number's value. This may give rise to multiple ways to store the same value. For example, 1.00 and 1 would be stored differently, even though they have the same value. In the first case, 100 * 10^-2 (100 with decimal point moved left by 2), and in the second case, 1 * 10^0 (1 with decimal point moved 0).
 
-This class also supports values for negative zero, not-a-number (NaN) values, and infinity. Negative zerois generally used when a negative number is rounded to 0; it has the same mathematical value as positive zero. Infinityis generally sed when a non-zero number is divided by zero, or when a very high number an't be represented in a given exponent range. Not-a-numberis generally used to signal errors.
+This class also supports values for negative zero, not-a-number (NaN) values, and infinity. Negative zerois generally used when a negative number is rounded to 0; it has the same mathematical value as positive zero. Infinityis generally used when a non-zero number is divided by zero, or when a very high number can't be represented in a given exponent range. Not-a-numberis generally used to signal errors.
 
 This class implements the General Decimal Arithmetic Specificationversion 1.70.
 
@@ -922,7 +922,7 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
  * If the remainder's absolute value is exactly half of the divisor's absolute value, the result has the opposite sign of this object if the quotient, rounded down, is odd, and has the same sign as this object if the quotient, rounded down, is even, and the result's absolute value is half of the divisor's absolute value.
 
-This function is also known as the IEEE Remainder" function.
+This function is also known as the "IEEE Remainder" function.
 
 <b>Parameters:</b>
 
