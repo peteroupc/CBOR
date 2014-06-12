@@ -142,8 +142,7 @@ namespace PeterO.Cbor {
           BigInteger.Abs(newDecimal.Mantissa),
           -((int)newDecimal.Exponent),
           newDecimal.Mantissa.Sign < 0);
-      }
-      catch (TrapException ex) {
+      } catch (TrapException ex) {
         throw new OverflowException("This object's value is out of range", ex);
       }
     }
@@ -159,8 +158,7 @@ namespace PeterO.Cbor {
           BigInteger.Abs(newDecimal.Mantissa),
           -((int)newDecimal.Exponent),
           newDecimal.Mantissa.Sign < 0);
-      }
-      catch (TrapException ex) {
+      } catch (TrapException ex) {
         throw new OverflowException("This object's value is out of range", ex);
       }
     }

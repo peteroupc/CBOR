@@ -590,8 +590,7 @@ namespace Test {
         using (var ms6 = new MemoryStream(bytes)) {
           Assert.AreEqual(-1 - 0x17, MiniCBOR.ReadInt32(ms6));
         }
-      }
-      catch (IOException ioex) {
+      } catch (IOException ioex) {
         Assert.Fail(ioex.Message);
       }
     }

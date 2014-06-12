@@ -1201,8 +1201,7 @@ namespace Test {
             }
           }
         }
-      }
-      catch (IOException ioex) {
+      } catch (IOException ioex) {
         Assert.Fail(ioex.Message);
       }
     }
@@ -1279,110 +1278,96 @@ namespace Test {
 
     [TestMethod]
     public void TestRandomNonsense() {
-        FastRandom rand = new FastRandom();
-        for (int i = 0; i < 200; ++i) {
-            byte[] array = new byte[rand.NextValue(1000000) + 1];
-            for (int j = 0; j < array.Length; ++j) {
-              if (rand.NextValue(10) == 0) {
-                if (j + 2 <= array.Length) {
-                  array[j] = (byte)0xd8;
-                  array[j + 1] = (rand.NextValue(2) == 0) ? (byte)0x1c : (byte)0x1d;
-                  j += 1;
-                  continue;
-                }
-              }
-                if (j + 3 <= array.Length) {
-                    int r = rand.NextValue(0x1000000);
-                    array[j] = (byte)(r & 0xff);
-                    array[j + 1] = (byte)((r >> 8) & 0xff);
-                    array[j + 2] = (byte)((r >> 16) & 0xff);
-                    j += 2;
-                } else {
-                    array[j] = (byte)rand.NextValue(256);
-                }
-            }
-            using (MemoryStream ms = new MemoryStream(array)) {
-                while (ms.Position != ms.Length) {
-                    try {
-                        CBORObject o = CBORObject.Read(ms);
-                        if (o == null) {
-                            Assert.Fail("object read is null");
-                        }
-                        try {
-                            CBORObject.DecodeFromBytes(o.EncodeToBytes());
-                        }
-                        catch (Exception ex) {
-                            Assert.Fail(ex.ToString());
-                            throw new InvalidOperationException(String.Empty, ex);
-                        }
-                        String jsonString = String.Empty;
-                        try {
-                            if (o.Type == CBORType.Array || o.Type == CBORType.Map) {
-                                jsonString = o.ToJSONString();
-                                CBORObject.FromJSONString(jsonString);
-                            }
-                        }
-                        catch (Exception ex) {
-                            Assert.Fail(jsonString + "\n" + ex.ToString());
-                            throw new InvalidOperationException(String.Empty, ex);
-                        }
-                    }
-                    catch (CBORException) {
-                        // Expected exception
-                    }
-                }
-            }
+      FastRandom rand = new FastRandom();
+      for (int i = 0; i < 200; ++i) {
+        byte[] array = new byte[rand.NextValue(1000000) + 1];
+        for (int j = 0; j < array.Length; ++j) {
+          if (j + 3 <= array.Length) {
+            int r = rand.NextValue(0x1000000);
+            array[j] = (byte)(r & 0xff);
+            array[j + 1] = (byte)((r >> 8) & 0xff);
+            array[j + 2] = (byte)((r >> 16) & 0xff);
+            j += 2;
+          } else {
+            array[j] = (byte)rand.NextValue(256);
+          }
         }
+        using (MemoryStream ms = new MemoryStream(array)) {
+          while (ms.Position != ms.Length) {
+            try {
+              CBORObject o = CBORObject.Read(ms);
+              if (o == null) {
+                Assert.Fail("object read is null");
+              }
+              try {
+                CBORObject.DecodeFromBytes(o.EncodeToBytes());
+              } catch (Exception ex) {
+                Assert.Fail(ex.ToString());
+                throw new InvalidOperationException(String.Empty, ex);
+              }
+              String jsonString = String.Empty;
+              try {
+                if (o.Type == CBORType.Array || o.Type == CBORType.Map) {
+                  jsonString = o.ToJSONString();
+                  CBORObject.FromJSONString(jsonString);
+                }
+              } catch (Exception ex) {
+                Assert.Fail(jsonString + "\n" + ex.ToString());
+                throw new InvalidOperationException(String.Empty, ex);
+              }
+            } catch (CBORException) {
+              // Expected exception
+            }
+          }
+        }
+      }
     }
 
     [TestMethod]
-      [Timeout(20000)]
+    [Timeout(20000)]
     public void TestRandomSlightlyModified() {
-        FastRandom rand = new FastRandom();
-        // Test slightly modified objects
-        for (int i = 0; i < 200; ++i) {
-            CBORObject originalObject = RandomCBORObject(rand);
-            byte[] array = originalObject.EncodeToBytes();
-            // Console.WriteLine(originalObject);
-            int count2 = rand.NextValue(10) + 1;
-            for (int j = 0; j < count2; ++j) {
-                int index = rand.NextValue(array.Length);
-                array[index] = unchecked((byte)rand.NextValue(256));
-            }
-            using (MemoryStream ms = new MemoryStream(array)) {
-                while (ms.Position != ms.Length) {
-                    try {
-                        CBORObject o = CBORObject.Read(ms);
-                        if (o == null) {
-                            Assert.Fail("object read is null");
-                        }
-                        byte[] encodedBytes = o.EncodeToBytes();
-                        try {
-                            CBORObject.DecodeFromBytes(encodedBytes);
-                        }
-                        catch (Exception ex) {
-                            Assert.Fail(ex.ToString());
-                            throw new InvalidOperationException(String.Empty, ex);
-                        }
-                        String jsonString = String.Empty;
-                        try {
-                            if (o.Type == CBORType.Array || o.Type == CBORType.Map) {
-                                jsonString = o.ToJSONString();
-                                // reread JSON string to test validity
-                                CBORObject.FromJSONString(jsonString);
-                            }
-                        }
-                        catch (Exception ex) {
-                            Assert.Fail(jsonString + "\n" + ex.ToString());
-                            throw new InvalidOperationException(String.Empty, ex);
-                        }
-                    }
-                    catch (CBORException) {
-                        // Expected exception
-                    }
-                }
-            }
+      FastRandom rand = new FastRandom();
+      // Test slightly modified objects
+      for (int i = 0; i < 200; ++i) {
+        CBORObject originalObject = RandomCBORObject(rand);
+        byte[] array = originalObject.EncodeToBytes();
+        // Console.WriteLine(originalObject);
+        int count2 = rand.NextValue(10) + 1;
+        for (int j = 0; j < count2; ++j) {
+          int index = rand.NextValue(array.Length);
+          array[index] = unchecked((byte)rand.NextValue(256));
         }
+        using (MemoryStream ms = new MemoryStream(array)) {
+          while (ms.Position != ms.Length) {
+            try {
+              CBORObject o = CBORObject.Read(ms);
+              if (o == null) {
+                Assert.Fail("object read is null");
+              }
+              byte[] encodedBytes = o.EncodeToBytes();
+              try {
+                CBORObject.DecodeFromBytes(encodedBytes);
+              } catch (Exception ex) {
+                Assert.Fail(ex.ToString());
+                throw new InvalidOperationException(String.Empty, ex);
+              }
+              String jsonString = String.Empty;
+              try {
+                if (o.Type == CBORType.Array || o.Type == CBORType.Map) {
+                  jsonString = o.ToJSONString();
+                  // reread JSON string to test validity
+                  CBORObject.FromJSONString(jsonString);
+                }
+              } catch (Exception ex) {
+                Assert.Fail(jsonString + "\n" + ex.ToString());
+                throw new InvalidOperationException(String.Empty, ex);
+              }
+            } catch (CBORException) {
+              // Expected exception
+            }
+          }
+        }
+      }
     }
 
     [TestMethod]
@@ -1549,12 +1534,14 @@ namespace Test {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
-      try { CBORObject.FromJSONString("{\"0\":0,,\"1\":1}"); Assert.Fail("Should have failed");
+      try {
+        CBORObject.FromJSONString("{\"0\":0,,\"1\":1}"); Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
-      try { CBORObject.FromJSONString("{\"0\":0,\"1\":1,}"); Assert.Fail("Should have failed");
+      try {
+        CBORObject.FromJSONString("{\"0\":0,\"1\":1,}"); Assert.Fail("Should have failed");
       } catch (CBORException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
@@ -1935,12 +1922,12 @@ namespace Test {
       }
     }
 
-     public void DoTestReadUtf8(
-      byte[] bytes,
-      int expectedRet,
-      string expectedString,
-      int noReplaceRet,
-      string noReplaceString) {
+    public void DoTestReadUtf8(
+     byte[] bytes,
+     int expectedRet,
+     string expectedString,
+     int noReplaceRet,
+     string noReplaceString) {
       this.DoTestReadUtf8(
         bytes,
         bytes.Length,

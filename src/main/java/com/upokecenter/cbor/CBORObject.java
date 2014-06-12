@@ -792,6 +792,7 @@ public int compareTo(CBORObject other) {
 
     void Redefine(CBORObject cbor) {
 
+      this.itemtypeValue = cbor.itemtypeValue;
       this.tagLow = cbor.tagLow;
       this.tagHigh = cbor.tagHigh;
       this.itemValue = cbor.itemValue;
