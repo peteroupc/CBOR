@@ -12,7 +12,7 @@ at: http://upokecenter.com/d/
      * Consists of an integer mantissa and an integer exponent, both arbitrary-precision.
      * The value of the number equals mantissa * 2^exponent. This class also
      * supports values for negative zero, not-a-number (NaN) values, and
-     * infinity.<p>Passing a signaling NaN to any arithmetic operation
+     * infinity. <p>Passing a signaling NaN to any arithmetic operation
      * shown here will signal the flag FlagInvalid and return a quiet NaN,
      * even if another operand to that operation is a quiet NaN, unless noted
      * otherwise.</p> <p>Passing a quiet NaN to any arithmetic operation
@@ -23,7 +23,7 @@ at: http://upokecenter.com/d/
      * it will not throw an exception too, unless the operation's trap is
      * enabled in the precision context (see PrecisionContext's Traps
      * property).</p> <p>An ExtendedFloat value can be serialized in one
-     * of the following ways:</p> <ul> <li>By calling the toString() method.
+     * of the following ways:</p> <ul><li>By calling the toString() method.
      * However, not all strings can be converted back to an ExtendedFloat
      * without loss, especially if the string has a fractional part.</li>
      * <li>By calling the UnsignedMantissa, Exponent, and IsNegative
@@ -208,16 +208,16 @@ at: http://upokecenter.com/d/
      * that if the string contains a negative exponent, the resulting value
      * might not be exact. However, the resulting binary float will contain
      * enough precision to accurately convert it to a 32-bit or 64-bit floating
-     * point number (float or double).<p> The format of the string generally
-     * consists of:<ul> <li> An optional '-' or '+' character (if '-', the
-     * value is negative.)</li> <li> One or more digits, with a single optional
+     * point number (float or double). <p>The format of the string generally
+     * consists of: <ul><li>An optional '-' or '+' character (if '-', the
+     * value is negative.)</li> <li>One or more digits, with a single optional
      * decimal point after the first digit and before the last digit.</li>
-     * <li> Optionally, E+ (positive exponent) or E- (negative exponent)
+     * <li>Optionally, E+ (positive exponent) or E- (negative exponent)
      * plus one or more digits specifying the exponent.</li> </ul> </p>
      * <p>The string can also be "-INF", "-Infinity", "Infinity", "INF",
      * quiet NaN ("qNaN") followed by any number of digits, or signaling
      * NaN ("sNaN") followed by any number of digits, all in any combination
-     * of upper and lower case.</p> <p> The format generally follows the
+     * of upper and lower case.</p> <p>The format generally follows the
      * definition in java.math.BigDecimal(), except that the digits must
      * be ASCII digits ('0' through '9').</p>
      * @param str A string that represents a number.
@@ -445,12 +445,12 @@ at: http://upokecenter.com/d/
 
     /**
      * Converts this value to a 32-bit floating-point number. The half-even
-     * rounding mode is used.<p>If this value is a NaN, sets the high bit of
+     * rounding mode is used. <p>If this value is a NaN, sets the high bit of
      * the 32-bit floating point number's mantissa for a quiet NaN, and clears
      * it for a signaling NaN. Then the next highest bit of the mantissa is
      * cleared for a quiet NaN, and set for a signaling NaN. Then the other
      * bits of the mantissa are set to the lowest bits of this object's unsigned
-     * mantissa. </p>
+     * mantissa.</p>
      * @return The closest 32-bit floating-point number to this value.
      * The return value can be positive infinity or negative infinity if
      * this value exceeds the range of a 32-bit floating point number.
@@ -568,12 +568,12 @@ at: http://upokecenter.com/d/
 
     /**
      * Converts this value to a 64-bit floating-point number. The half-even
-     * rounding mode is used.<p>If this value is a NaN, sets the high bit of
+     * rounding mode is used. <p>If this value is a NaN, sets the high bit of
      * the 64-bit floating point number's mantissa for a quiet NaN, and clears
      * it for a signaling NaN. Then the next highest bit of the mantissa is
      * cleared for a quiet NaN, and set for a signaling NaN. Then the other
      * bits of the mantissa are set to the lowest bits of this object's unsigned
-     * mantissa. </p>
+     * mantissa.</p>
      * @return The closest 64-bit floating-point number to this value.
      * The return value can be positive infinity or negative infinity if
      * this value exceeds the range of a 64-bit floating point number.
@@ -708,7 +708,7 @@ at: http://upokecenter.com/d/
      * an approximation, as is often the case by converting the number to
      * a string.
      * @param flt A 32-bit floating-point number.
-     * @return A binary float with the same value as {@code flt}.
+     * @return A binary float with the same value as {@code flt} .
      */
     public static ExtendedFloat FromSingle(float flt) {
       int value = Float.floatToRawIntBits(flt);
@@ -789,7 +789,7 @@ at: http://upokecenter.com/d/
      * an approximation, as is often the case by converting the number to
      * a string.
      * @param dbl A 64-bit floating-point number.
-     * @return A binary float with the same value as {@code dbl}.
+     * @return A binary float with the same value as {@code dbl} .
      */
     public static ExtendedFloat FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
@@ -1169,7 +1169,7 @@ at: http://upokecenter.com/d/
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
      * are 0.
      * @throws ArithmeticException Either {@code ctx} is null or {@code
-     * ctx}'s precision is 0, and the result would have a nonterminating
+     * ctx} 's precision is 0, and the result would have a nonterminating
      * binary expansion; or, the rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
@@ -1412,7 +1412,7 @@ at: http://upokecenter.com/d/
     /**
      * Finds the distance to the closest multiple of the given divisor, based
      * on the result of dividing this object&apos;s value by another object&apos;s
-     * value.<ul> <li> If this and the other object divide evenly, the result
+     * value. <ul><li>If this and the other object divide evenly, the result
      * is 0.</li> <li>If the remainder's absolute value is less than half
      * of the divisor's absolute value, the result has the same sign as this
      * object and will be the distance to the closest multiple.</li> <li>If
@@ -1621,7 +1621,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Compares the mathematical values of this object and another object,
-     * accepting NaN values.<p> This method is not consistent with the Equals
+     * accepting NaN values. <p>This method is not consistent with the Equals
      * method because two different numbers with the same mathematical
      * value, but different exponents, will compare as equal.</p> <p>In
      * this method, negative zero and positive zero are considered equal.</p>
@@ -1640,11 +1640,11 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Compares the mathematical values of this object and another object.<p>In
-     * this method, negative zero and positive zero are considered equal.</p>
-     * <p>If this object or the other object is a quiet NaN or signaling NaN,
-     * this method returns a quiet NaN, and will signal a FlagInvalid flag
-     * if either is a signaling NaN.</p>
+     * Compares the mathematical values of this object and another object.
+     * <p>In this method, negative zero and positive zero are considered
+     * equal.</p> <p>If this object or the other object is a quiet NaN or signaling
+     * NaN, this method returns a quiet NaN, and will signal a FlagInvalid
+     * flag if either is a signaling NaN.</p>
      * @param other An ExtendedFloat object.
      * @param ctx A precision context. The precision, rounding, and exponent
      * range are ignored. If HasFlags of the context is true, will store the
@@ -1662,7 +1662,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Compares the mathematical values of this object and another object,
-     * treating quiet NaN as signaling.<p>In this method, negative zero
+     * treating quiet NaN as signaling. <p>In this method, negative zero
      * and positive zero are considered equal.</p> <p>If this object or
      * the other object is a quiet NaN or signaling NaN, this method will return
      * a quiet NaN and will signal a FlagInvalid flag.</p>

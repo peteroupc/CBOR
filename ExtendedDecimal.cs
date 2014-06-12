@@ -21,43 +21,49 @@ namespace PeterO {
     /// since it has 2 decimal places and the decimal point is "moved to the
     /// left by 2." Therefore, in the ExtendedDecimal representation, this
     /// number would be stored as 235678 * 10^-2.</para>
-    /// <para>The mantissa and exponent format preserves trailing zeros
-    /// in the number's value. This may give rise to multiple ways to store
-    /// the same value. For example, 1.00 and 1 would be stored differently,
-    /// even though they have the same value. In the first case, 100 * 10^-2
-    /// (100 with decimal point moved left by 2), and in the second case, 1 *
-    /// 10^0 (1 with decimal point moved 0).</para>
-    /// <para>This class also supports values for negative zero, not-a-number
-    /// (NaN) values, and infinity. <b>Negative zero</b>
+    /// <para>The mantissa
+    /// and exponent format preserves trailing zeros in the number's value.
+    /// This may give rise to multiple ways to store the same value. For example,
+    /// 1.00 and 1 would be stored differently, even though they have the same
+    /// value. In the first case, 100 * 10^-2 (100 with decimal point moved
+    /// left by 2), and in the second case, 1 * 10^0 (1 with decimal point moved
+    /// 0).</para>
+    /// <para>This class also supports values for negative zero,
+    /// not-a-number (NaN) values, and infinity. <b>Negative zero</b>
     /// is generally used when a negative number is rounded to 0; it has the
     /// same mathematical value as positive zero. <b>Infinity</b>
-    /// is generally used when a non-zero number is divided by zero, or when
-    /// a very high number can't be represented in a given exponent range.
-    /// <b>Not-a-number</b>
-    /// is generally used to signal errors. </para>
-    /// <para>This class implements the <a href='http://speleotrove.com/decimal/decarith.html'>General
+    /// is generally
+    /// used when a non-zero number is divided by zero, or when a very high number
+    /// can't be represented in a given exponent range. <b>Not-a-number</b>
+    /// is generally used to signal errors.</para>
+    /// <para>This class implements
+    /// the <a href='http://speleotrove.com/decimal/decarith.html'>General
     /// Decimal Arithmetic Specification</a>
     /// version 1.70.</para>
-    /// <para>Passing a signaling NaN to any arithmetic operation shown
-    /// here will signal the flag FlagInvalid and return a quiet NaN, even
-    /// if another operand to that operation is a quiet NaN, unless noted otherwise.</para>
+    /// <para>Passing
+    /// a signaling NaN to any arithmetic operation shown here will signal
+    /// the flag FlagInvalid and return a quiet NaN, even if another operand
+    /// to that operation is a quiet NaN, unless noted otherwise.</para>
     /// <para>Passing a quiet NaN to any arithmetic operation shown here
     /// will return a quiet NaN, unless noted otherwise. Invalid operations
     /// will also return a quiet NaN, as stated in the individual methods.</para>
     /// <para>Unless noted otherwise, passing a null ExtendedDecimal argument
     /// to any method here will throw an exception.</para>
-    /// <para>When an arithmetic operation signals the flag FlagInvalid,
-    /// FlagOverflow, or FlagDivideByZero, it will not throw an exception
-    /// too, unless the flag's trap is enabled in the precision context (see
-    /// PrecisionContext's Traps property).</para>
-    /// <para>An ExtendedDecimal value can be serialized in one of the following
-    /// ways:</para>
-    /// <list> <item>By calling the toString() method, which will always
-    /// return distinct strings for distinct ExtendedDecimal values.</item>
-    /// <item>By calling the UnsignedMantissa, Exponent, and IsNegative
-    /// properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN
-    /// methods. The return values combined will uniquely identify a particular
-    /// ExtendedDecimal value.</item>
+    /// <para>When an
+    /// arithmetic operation signals the flag FlagInvalid, FlagOverflow,
+    /// or FlagDivideByZero, it will not throw an exception too, unless the
+    /// flag's trap is enabled in the precision context (see PrecisionContext's
+    /// Traps property).</para>
+    /// <para>An ExtendedDecimal value can be
+    /// serialized in one of the following ways:</para>
+    /// <list><item>By
+    /// calling the toString() method, which will always return distinct
+    /// strings for distinct ExtendedDecimal values.</item>
+    /// <item>By
+    /// calling the UnsignedMantissa, Exponent, and IsNegative properties,
+    /// and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN methods.
+    /// The return values combined will uniquely identify a particular ExtendedDecimal
+    /// value.</item>
     /// </list>
     /// </summary>
   public sealed class ExtendedDecimal : IComparable<ExtendedDecimal>, IEquatable<ExtendedDecimal> {
@@ -228,20 +234,21 @@ namespace PeterO {
     }
 
     /// <summary>Creates a decimal number from a string that represents
-    /// a number.<para> The format of the string generally consists of:<list
-    /// type=''> <item> An optional '-' or '+' character (if '-', the value
+    /// a number. <para>The format of the string generally consists of: <list
+    /// type=''><item>An optional '-' or '+' character (if '-', the value
     /// is negative.)</item>
-    /// <item> One or more digits, with a single optional decimal point after
-    /// the first digit and before the last digit.</item>
-    /// <item> Optionally, E+ (positive exponent) or E- (negative exponent)
+    /// <item>One or more digits, with a single optional
+    /// decimal point after the first digit and before the last digit.</item>
+    /// <item>Optionally, E+ (positive exponent) or E- (negative exponent)
     /// plus one or more digits specifying the exponent.</item>
     /// </list>
     /// </para>
-    /// <para>The string can also be "-INF", "-Infinity", "Infinity", "INF",
-    /// quiet NaN ("qNaN"/"-qNaN") followed by any number of digits, or signaling
-    /// NaN ("sNaN"/"-sNaN") followed by any number of digits, all in any
-    /// combination of upper and lower case.</para>
-    /// <para> The format generally follows the definition in java.math.BigDecimal(),
+    /// <para>The string can also be "-INF", "-Infinity", "Infinity",
+    /// "INF", quiet NaN ("qNaN"/"-qNaN") followed by any number of digits,
+    /// or signaling NaN ("sNaN"/"-sNaN") followed by any number of digits,
+    /// all in any combination of upper and lower case.</para>
+    /// <para>The
+    /// format generally follows the definition in java.math.BigDecimal(),
     /// except that the digits must be ASCII digits ('0' through '9').</para>
     /// </summary>
     /// <param name='str'>A string that represents a number.</param>
@@ -1163,12 +1170,12 @@ namespace PeterO {
     }
 
     /// <summary>Converts this value to a 32-bit floating-point number.
-    /// The half-even rounding mode is used.<para>If this value is a NaN,
+    /// The half-even rounding mode is used. <para>If this value is a NaN,
     /// sets the high bit of the 32-bit floating point number's mantissa for
     /// a quiet NaN, and clears it for a signaling NaN. Then the next highest
     /// bit of the mantissa is cleared for a quiet NaN, and set for a signaling
     /// NaN. Then the other bits of the mantissa are set to the lowest bits of
-    /// this object's unsigned mantissa. </para>
+    /// this object's unsigned mantissa.</para>
     /// </summary>
     /// <returns>The closest 32-bit floating-point number to this value.
     /// The return value can be positive infinity or negative infinity if
@@ -1230,12 +1237,12 @@ namespace PeterO {
     }
 
     /// <summary>Converts this value to a 64-bit floating-point number.
-    /// The half-even rounding mode is used.<para>If this value is a NaN,
+    /// The half-even rounding mode is used. <para>If this value is a NaN,
     /// sets the high bit of the 64-bit floating point number's mantissa for
     /// a quiet NaN, and clears it for a signaling NaN. Then the next highest
     /// bit of the mantissa is cleared for a quiet NaN, and set for a signaling
     /// NaN. Then the other bits of the mantissa are set to the lowest bits of
-    /// this object's unsigned mantissa. </para>
+    /// this object's unsigned mantissa.</para>
     /// </summary>
     /// <returns>The closest 64-bit floating-point number to this value.
     /// The return value can be positive infinity or negative infinity if
@@ -1274,7 +1281,8 @@ namespace PeterO {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting the
     /// number to a string.</summary>
-    /// <returns>A decimal number with the same value as <paramref name='flt'/>.</returns>
+    /// <returns>A decimal number with the same value as <paramref name='flt'/>
+    /// .</returns>
     /// <param name='flt'>A 32-bit floating-point number.</param>
     public static ExtendedDecimal FromSingle(float flt) {
       int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt), 0);
@@ -1361,7 +1369,8 @@ namespace PeterO {
     /// number, not an approximation, as is often the case by converting the
     /// number to a string.</summary>
     /// <param name='dbl'>A 64-bit floating-point number.</param>
-    /// <returns>A decimal number with the same value as <paramref name='dbl'/>.</returns>
+    /// <returns>A decimal number with the same value as <paramref name='dbl'/>
+    /// .</returns>
     public static ExtendedDecimal FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
       int floatExponent = (int)((value[1] >> 20) & 0x7ff);
@@ -1505,10 +1514,10 @@ namespace PeterO {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
     public static readonly ExtendedDecimal Zero = ExtendedDecimal.Create(BigInteger.Zero, BigInteger.Zero);
+    /// <summary>Represents the number negative zero.</summary>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
-    /// <summary>Represents the number negative zero.</summary>
     public static readonly ExtendedDecimal NegativeZero = CreateWithFlags(BigInteger.Zero, BigInteger.Zero, BigNumberFlags.FlagNegative);
 
     /// <summary>Represents the number 10.</summary>
@@ -1733,8 +1742,8 @@ namespace PeterO {
     /// <returns>The quotient of the two objects. Signals FlagDivideByZero
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
-    /// are 0; or, either <paramref name='ctx'/> is null or <paramref name='ctx'/>'s
-    /// precision is 0, and the result would have a nonterminating decimal
+    /// are 0; or, either <paramref name='ctx'/> is null or <paramref name='ctx'/>
+    /// 's precision is 0, and the result would have a nonterminating decimal
     /// expansion; or, the rounding mode is Rounding.Unnecessary and the
     /// result is not exact.</returns>
     public ExtendedDecimal Divide(ExtendedDecimal divisor, PrecisionContext ctx) {
@@ -1874,7 +1883,7 @@ namespace PeterO {
     /// <param name='multiplicand'>The value to multiply.</param>
     /// <param name='augend'>The value to add.</param>
     /// <returns>The result this * <paramref name='multiplicand'/> + <paramref
-    /// name='augend'/>.</returns>
+    /// name='augend'/> .</returns>
     public ExtendedDecimal MultiplyAndAdd(ExtendedDecimal multiplicand, ExtendedDecimal augend) {
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
@@ -1930,21 +1939,25 @@ namespace PeterO {
 
     /// <summary>Finds the distance to the closest multiple of the given
     /// divisor, based on the result of dividing this object&apos;s value
-    /// by another object&apos;s value.<list type=''> <item> If this and
+    /// by another object&apos;s value. <list type=''><item>If this and
     /// the other object divide evenly, the result is 0.</item>
-    /// <item>If the remainder's absolute value is less than half of the divisor's
+    /// <item>If
+    /// the remainder's absolute value is less than half of the divisor's
     /// absolute value, the result has the same sign as this object and will
     /// be the distance to the closest multiple.</item>
-    /// <item>If the remainder's absolute value is more than half of the divisor's
-    /// absolute value, the result has the opposite sign of this object and
-    /// will be the distance to the closest multiple.</item>
-    /// <item>If the remainder's absolute value is exactly half of the divisor's
-    /// absolute value, the result has the opposite sign of this object if
-    /// the quotient, rounded down, is odd, and has the same sign as this object
-    /// if the quotient, rounded down, is even, and the result's absolute
-    /// value is half of the divisor's absolute value.</item>
+    /// <item>If the remainder's
+    /// absolute value is more than half of the divisor's absolute value,
+    /// the result has the opposite sign of this object and will be the distance
+    /// to the closest multiple.</item>
+    /// <item>If the remainder's absolute
+    /// value is exactly half of the divisor's absolute value, the result
+    /// has the opposite sign of this object if the quotient, rounded down,
+    /// is odd, and has the same sign as this object if the quotient, rounded
+    /// down, is even, and the result's absolute value is half of the divisor's
+    /// absolute value.</item>
     /// </list>
-    /// This function is also known as the "IEEE Remainder" function.</summary>
+    /// This function is also known as the
+    /// "IEEE Remainder" function.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision.
     /// The rounding and exponent range settings of this context are ignored
@@ -2090,15 +2103,15 @@ namespace PeterO {
     }
 
     /// <summary>Compares the mathematical values of this object and another
-    /// object, accepting NaN values.<para> This method is not consistent
+    /// object, accepting NaN values. <para>This method is not consistent
     /// with the Equals method because two different numbers with the same
     /// mathematical value, but different exponents, will compare as equal.</para>
     /// <para>In this method, negative zero and positive zero are considered
     /// equal.</para>
-    /// <para>If this object or the other object is a quiet NaN or signaling
-    /// NaN, this method will not trigger an error. Instead, NaN will compare
-    /// greater than any other number, including infinity. Two different
-    /// NaN values will be considered equal.</para>
+    /// <para>If this object or the other object is a quiet
+    /// NaN or signaling NaN, this method will not trigger an error. Instead,
+    /// NaN will compare greater than any other number, including infinity.
+    /// Two different NaN values will be considered equal.</para>
     /// </summary>
     /// <returns>Less than 0 if this object's value is less than the other
     /// value, or greater than 0 if this object's value is greater than the
@@ -2110,11 +2123,11 @@ namespace PeterO {
     }
 
     /// <summary>Compares the mathematical values of this object and another
-    /// object.<para>In this method, negative zero and positive zero are
+    /// object. <para>In this method, negative zero and positive zero are
     /// considered equal.</para>
-    /// <para>If this object or the other object is a quiet NaN or signaling
-    /// NaN, this method returns a quiet NaN, and will signal a FlagInvalid
-    /// flag if either is a signaling NaN.</para>
+    /// <para>If this object or the other object
+    /// is a quiet NaN or signaling NaN, this method returns a quiet NaN, and
+    /// will signal a FlagInvalid flag if either is a signaling NaN.</para>
     /// </summary>
     /// <param name='other'>An ExtendedDecimal object.</param>
     /// <param name='ctx'>A precision context. The precision, rounding,
@@ -2129,11 +2142,11 @@ namespace PeterO {
     }
 
     /// <summary>Compares the mathematical values of this object and another
-    /// object, treating quiet NaN as signaling.<para>In this method, negative
+    /// object, treating quiet NaN as signaling. <para>In this method, negative
     /// zero and positive zero are considered equal.</para>
-    /// <para>If this object or the other object is a quiet NaN or signaling
-    /// NaN, this method will return a quiet NaN and will signal a FlagInvalid
-    /// flag.</para>
+    /// <para>If this
+    /// object or the other object is a quiet NaN or signaling NaN, this method
+    /// will return a quiet NaN and will signal a FlagInvalid flag.</para>
     /// </summary>
     /// <param name='other'>An ExtendedDecimal object.</param>
     /// <param name='ctx'>A precision context. The precision, rounding,
@@ -2193,12 +2206,13 @@ namespace PeterO {
       return this.Quantize(ExtendedDecimal.Create(BigInteger.One, (BigInteger)desiredExponentSmall), PrecisionContext.ForRounding(rounding));
     }
 
-    /// <summary>Returns a decimal number with the same value but a new exponent.<para>Note
-    /// that this is not always the same as rounding to a given number of decimal
-    /// places, since it can fail if the difference between this value's exponent
-    /// and the desired exponent is too big, depending on the maximum precision.
-    /// If rounding to a number of decimal places is desired, it's better to
-    /// use the RoundToExponent and RoundToIntegral methods instead.</para>
+    /// <summary>Returns a decimal number with the same value but a new exponent.
+    /// <para>Note that this is not always the same as rounding to a given number
+    /// of decimal places, since it can fail if the difference between this
+    /// value's exponent and the desired exponent is too big, depending on
+    /// the maximum precision. If rounding to a number of decimal places is
+    /// desired, it's better to use the RoundToExponent and RoundToIntegral
+    /// methods instead.</para>
     /// </summary>
     /// <returns>A decimal number with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an overflow

@@ -162,7 +162,7 @@ at: http://upokecenter.com/d/
      * an approximation, as is often the case by converting the number to
      * a string.
      * @param flt A 32-bit floating-point number.
-     * @return A rational number with the same value as {@code flt}.
+     * @return A rational number with the same value as {@code flt} .
      */
     public static ExtendedRational FromSingle(float flt) {
       return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
@@ -174,7 +174,7 @@ at: http://upokecenter.com/d/
      * an approximation, as is often the case by converting the number to
      * a string.
      * @param flt A 64-bit floating-point number.
-     * @return A rational number with the same value as {@code flt}.
+     * @return A rational number with the same value as {@code flt} .
      */
     public static ExtendedRational FromDouble(double flt) {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));

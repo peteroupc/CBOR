@@ -30,7 +30,7 @@ at: http://upokecenter.com/d/
      * it has the same mathematical value as positive zero. <b>Infinity</b>
      * is generally used when a non-zero number is divided by zero, or when
      * a very high number can't be represented in a given exponent range.
-     * <b>Not-a-number</b> is generally used to signal errors. </p> <p>This
+     * <b>Not-a-number</b> is generally used to signal errors.</p> <p>This
      * class implements the <a href='http://speleotrove.com/decimal/decarith.html'>General
      * Decimal Arithmetic Specification</a> version 1.70.</p> <p>Passing
      * a signaling NaN to any arithmetic operation shown here will signal
@@ -45,7 +45,7 @@ at: http://upokecenter.com/d/
      * it will not throw an exception too, unless the flag's trap is enabled
      * in the precision context (see PrecisionContext's Traps property).</p>
      * <p>An ExtendedDecimal value can be serialized in one of the following
-     * ways:</p> <ul> <li>By calling the toString() method, which will
+     * ways:</p> <ul><li>By calling the toString() method, which will
      * always return distinct strings for distinct ExtendedDecimal values.</li>
      * <li>By calling the UnsignedMantissa, Exponent, and IsNegative
      * properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN
@@ -232,17 +232,17 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Creates a decimal number from a string that represents a number.<p>
-     * The format of the string generally consists of:<ul> <li> An optional
-     * '-' or '+' character (if '-', the value is negative.)</li> <li> One
+     * Creates a decimal number from a string that represents a number. <p>The
+     * format of the string generally consists of: <ul><li>An optional
+     * '-' or '+' character (if '-', the value is negative.)</li> <li>One
      * or more digits, with a single optional decimal point after the first
-     * digit and before the last digit.</li> <li> Optionally, E+ (positive
+     * digit and before the last digit.</li> <li>Optionally, E+ (positive
      * exponent) or E- (negative exponent) plus one or more digits specifying
      * the exponent.</li> </ul> </p> <p>The string can also be "-INF", "-Infinity",
      * "Infinity", "INF", quiet NaN ("qNaN"/"-qNaN") followed by any number
      * of digits, or signaling NaN ("sNaN"/"-sNaN") followed by any number
-     * of digits, all in any combination of upper and lower case.</p> <p>
-     * The format generally follows the definition in java.math.BigDecimal(),
+     * of digits, all in any combination of upper and lower case.</p> <p>The
+     * format generally follows the definition in java.math.BigDecimal(),
      * except that the digits must be ASCII digits ('0' through '9').</p>
      * @param str A string that represents a number.
      * @param ctx A precision context to control precision, rounding, and
@@ -1194,12 +1194,12 @@ remainder=divrem[1]; }
 
     /**
      * Converts this value to a 32-bit floating-point number. The half-even
-     * rounding mode is used.<p>If this value is a NaN, sets the high bit of
+     * rounding mode is used. <p>If this value is a NaN, sets the high bit of
      * the 32-bit floating point number's mantissa for a quiet NaN, and clears
      * it for a signaling NaN. Then the next highest bit of the mantissa is
      * cleared for a quiet NaN, and set for a signaling NaN. Then the other
      * bits of the mantissa are set to the lowest bits of this object's unsigned
-     * mantissa. </p>
+     * mantissa.</p>
      * @return The closest 32-bit floating-point number to this value.
      * The return value can be positive infinity or negative infinity if
      * this value exceeds the range of a 32-bit floating point number.
@@ -1262,12 +1262,12 @@ remainder=divrem[1]; }
 
     /**
      * Converts this value to a 64-bit floating-point number. The half-even
-     * rounding mode is used.<p>If this value is a NaN, sets the high bit of
+     * rounding mode is used. <p>If this value is a NaN, sets the high bit of
      * the 64-bit floating point number's mantissa for a quiet NaN, and clears
      * it for a signaling NaN. Then the next highest bit of the mantissa is
      * cleared for a quiet NaN, and set for a signaling NaN. Then the other
      * bits of the mantissa are set to the lowest bits of this object's unsigned
-     * mantissa. </p>
+     * mantissa.</p>
      * @return The closest 64-bit floating-point number to this value.
      * The return value can be positive infinity or negative infinity if
      * this value exceeds the range of a 64-bit floating point number.
@@ -1308,7 +1308,7 @@ remainder=divrem[1]; }
      * an approximation, as is often the case by converting the number to
      * a string.
      * @param flt A 32-bit floating-point number.
-     * @return A decimal number with the same value as {@code flt}.
+     * @return A decimal number with the same value as {@code flt} .
      */
     public static ExtendedDecimal FromSingle(float flt) {
       int value = Float.floatToRawIntBits(flt);
@@ -1402,7 +1402,7 @@ remainder=divrem[1]; }
      * an approximation, as is often the case by converting the number to
      * a string.
      * @param dbl A 64-bit floating-point number.
-     * @return A decimal number with the same value as {@code dbl}.
+     * @return A decimal number with the same value as {@code dbl} .
      */
     public static ExtendedDecimal FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
@@ -1815,7 +1815,7 @@ remainder=divrem[1]; }
      * @return The quotient of the two objects. Signals FlagDivideByZero
      * and returns infinity if the divisor is 0 and the dividend is nonzero.
      * Signals FlagInvalid and returns NaN if the divisor and the dividend
-     * are 0; or, either {@code ctx} is null or {@code ctx}'s precision is
+     * are 0; or, either {@code ctx} is null or {@code ctx} 's precision is
      * 0, and the result would have a nonterminating decimal expansion;
      * or, the rounding mode is Rounding.Unnecessary and the result is not
      * exact.
@@ -1971,7 +1971,7 @@ remainder=divrem[1]; }
      * Multiplies by one decimal number, and then adds another decimal number.
      * @param multiplicand The value to multiply.
      * @param augend The value to add.
-     * @return The result this * {@code multiplicand} + {@code augend}.
+     * @return The result this * {@code multiplicand} + {@code augend} .
      */
     public ExtendedDecimal MultiplyAndAdd(ExtendedDecimal multiplicand, ExtendedDecimal augend) {
       return this.MultiplyAndAdd(multiplicand, augend, null);
@@ -2035,7 +2035,7 @@ remainder=divrem[1]; }
     /**
      * Finds the distance to the closest multiple of the given divisor, based
      * on the result of dividing this object&apos;s value by another object&apos;s
-     * value.<ul> <li> If this and the other object divide evenly, the result
+     * value. <ul><li>If this and the other object divide evenly, the result
      * is 0.</li> <li>If the remainder's absolute value is less than half
      * of the divisor's absolute value, the result has the same sign as this
      * object and will be the distance to the closest multiple.</li> <li>If
@@ -2215,7 +2215,7 @@ remainder=divrem[1]; }
 
     /**
      * Compares the mathematical values of this object and another object,
-     * accepting NaN values.<p> This method is not consistent with the Equals
+     * accepting NaN values. <p>This method is not consistent with the Equals
      * method because two different numbers with the same mathematical
      * value, but different exponents, will compare as equal.</p> <p>In
      * this method, negative zero and positive zero are considered equal.</p>
@@ -2233,11 +2233,11 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Compares the mathematical values of this object and another object.<p>In
-     * this method, negative zero and positive zero are considered equal.</p>
-     * <p>If this object or the other object is a quiet NaN or signaling NaN,
-     * this method returns a quiet NaN, and will signal a FlagInvalid flag
-     * if either is a signaling NaN.</p>
+     * Compares the mathematical values of this object and another object.
+     * <p>In this method, negative zero and positive zero are considered
+     * equal.</p> <p>If this object or the other object is a quiet NaN or signaling
+     * NaN, this method returns a quiet NaN, and will signal a FlagInvalid
+     * flag if either is a signaling NaN.</p>
      * @param other An ExtendedDecimal object.
      * @param ctx A precision context. The precision, rounding, and exponent
      * range are ignored. If HasFlags of the context is true, will store the
@@ -2253,7 +2253,7 @@ remainder=divrem[1]; }
 
     /**
      * Compares the mathematical values of this object and another object,
-     * treating quiet NaN as signaling.<p>In this method, negative zero
+     * treating quiet NaN as signaling. <p>In this method, negative zero
      * and positive zero are considered equal.</p> <p>If this object or
      * the other object is a quiet NaN or signaling NaN, this method will return
      * a quiet NaN and will signal a FlagInvalid flag.</p>
@@ -2320,7 +2320,7 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Returns a decimal number with the same value but a new exponent.<p>Note
+     * Returns a decimal number with the same value but a new exponent. <p>Note
      * that this is not always the same as rounding to a given number of decimal
      * places, since it can fail if the difference between this value's exponent
      * and the desired exponent is too big, depending on the maximum precision.

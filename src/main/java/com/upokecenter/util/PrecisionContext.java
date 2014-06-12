@@ -220,9 +220,11 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Not documented yet.
-     * @param exponent A BigInteger object.
-     * @return A Boolean object.
+     * Determines whether a number can have the given Exponent property
+     * under this precision context.
+     * @param exponent A BigInteger object indicating the desired exponent.
+     * @return True if a number can have the given Exponent property under
+     * this precision context; otherwise, false.
      * @throws java.lang.NullPointerException The parameter {@code exponent}
      * is null.
      */
@@ -525,8 +527,9 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param rounding A Rounding object.
+     * Creates a new PrecisionContext object initialized with unlimited
+     * precision and exponent range, and the given rounding mode.
+     * @param rounding The rounding mode for the new precision context.
      * @return A PrecisionContext object.
      */
     public static PrecisionContext ForRounding(Rounding rounding) {
@@ -534,8 +537,9 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param precision A 32-bit signed integer.
+     * Creates a new PrecisionContext object initialized with unlimited
+     * and exponent range, and the given rounding mode and maximum precision.
+     * @param precision Maximum number of digits (precision).
      * @param rounding A Rounding object.
      * @return A PrecisionContext object.
      */

@@ -156,7 +156,8 @@ namespace PeterO {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting the
     /// number to a string.</summary>
-    /// <returns>A rational number with the same value as <paramref name='flt'/>.</returns>
+    /// <returns>A rational number with the same value as <paramref name='flt'/>
+    /// .</returns>
     /// <param name='flt'>A 32-bit floating-point number.</param>
     public static ExtendedRational FromSingle(float flt) {
       return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
@@ -166,7 +167,8 @@ namespace PeterO {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting the
     /// number to a string.</summary>
-    /// <returns>A rational number with the same value as <paramref name='flt'/>.</returns>
+    /// <returns>A rational number with the same value as <paramref name='flt'/>
+    /// .</returns>
     /// <param name='flt'>A 64-bit floating-point number.</param>
     public static ExtendedRational FromDouble(double flt) {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
