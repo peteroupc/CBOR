@@ -172,7 +172,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       if (o.equals(o2)) {
         if (!o2.equals(o)) {
           Assert.fail(
-            String.format(java.util.Locale.getUS(),"%s equals %s but not vice versa",
+            String.format(java.util.Locale.US,"%s equals %s but not vice versa",
               o,
               o2));
         }
@@ -182,14 +182,14 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           // Don't use Assert.assertEquals directly because it has
           // quite a lot of overhead
           Assert.fail(
-            String.format(java.util.Locale.getUS(),"%s and %s don't have equal hash codes",
+            String.format(java.util.Locale.US,"%s and %s don't have equal hash codes",
               o,
               o2));
         }
       } else {
         if (o2.equals(o)) {
           Assert.fail(
-            String.format(java.util.Locale.getUS(),"%s does not equal %s but not vice versa",
+            String.format(java.util.Locale.US,"%s does not equal %s but not vice versa",
               o,
               o2));
         }
