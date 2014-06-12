@@ -1642,10 +1642,12 @@ public void set(String key, CBORObject value) {
     /**
      * Maps an object to a key in this CBOR map, or adds the value if the key doesn't
      * exist.
-     * @param key An object representing the key. Can be null, in which case
-     * this value is converted to CBORObject.Null.
-     * @param valueOb A CBOR object representing the value. Can be null,
-     * in which case this value is converted to CBORObject.Null.
+     * @param key An object representing the key, which will be converted
+     * to a CBORObject. Can be null, in which case this value is converted
+     * to CBORObject.Null.
+     * @param valueOb An object representing the value, which will be converted
+     * to a CBORObject. Can be null, in which case this value is converted
+     * to CBORObject.Null.
      * @return This object.
      * @throws IllegalStateException This object is not a map.
      * @throws java.lang.IllegalArgumentException The parameter {@code key} or
@@ -1653,14 +1655,24 @@ public void set(String key, CBORObject value) {
      */
     public CBORObject Set(Object key, Object valueOb) {
       if (this.getItemType() == CBORObjectTypeMap) {
+        CBORObject mapKey;
+        CBORObject mapValue;
         if (key == null) {
-          key = CBORObject.Null;
+          mapKey = CBORObject.Null;
+        } else {
+          mapKey = ((key instanceof CBORObject) ? (CBORObject)key : null);
+          if (mapKey == null) {
+            mapKey = CBORObject.FromObject(valueOb);
+          }
         }
         if (valueOb == null) {
-          valueOb = CBORObject.Null;
+          mapValue = CBORObject.Null;
+        } else {
+          mapValue = ((valueOb instanceof CBORObject) ? (CBORObject)valueOb : null);
+          if (mapValue == null) {
+            mapValue = CBORObject.FromObject(valueOb);
+          }
         }
-        CBORObject mapKey = CBORObject.FromObject(key);
-        CBORObject mapValue = CBORObject.FromObject(valueOb);
         Map<CBORObject, CBORObject> map = this.AsMap();
         if (map.containsKey(mapKey)) {
           map.put(mapKey,mapValue);
@@ -1674,20 +1686,51 @@ public void set(String key, CBORObject value) {
     }
 
     /**
-     * Converts an object to a CBOR object and adds it to this map.
-     * @param key A string representing the key. Can be null, in which case
-     * this value is converted to CBORObject.Null.
-     * @param valueOb An arbitrary object. Can be null, in which case this
-     * value is converted to CBORObject.Null.
+     * Adds a new key and its value to this CBOR map, or adds the value if the
+     * key doesn't exist.
+     * @param key An object representing the key, which will be converted
+     * to a CBORObject. Can be null, in which case this value is converted
+     * to CBORObject.Null.
+     * @param valueOb An object representing the value, which will be converted
+     * to a CBORObject. Can be null, in which case this value is converted
+     * to CBORObject.Null.
      * @return This object.
-     * @throws java.lang.IllegalArgumentException The parameter {@code key} or
-     * {@code valueOb} has an unsupported type.
      * @throws java.lang.IllegalArgumentException The parameter {@code key} already
      * exists in this map.
      * @throws IllegalStateException This object is not a map.
+     * @throws java.lang.IllegalArgumentException The parameter {@code key} or
+     * {@code valueOb} has an unsupported type.
      */
     public CBORObject Add(Object key, Object valueOb) {
-      return this.Add(CBORObject.FromObject(key), CBORObject.FromObject(valueOb));
+      if (this.getItemType() == CBORObjectTypeMap) {
+        CBORObject mapKey;
+        CBORObject mapValue;
+        if (key == null) {
+          mapKey = CBORObject.Null;
+        } else {
+          mapKey = ((key instanceof CBORObject) ? (CBORObject)key : null);
+          if (mapKey == null) {
+            mapKey = CBORObject.FromObject(valueOb);
+          }
+        }
+        if (valueOb == null) {
+          mapValue = CBORObject.Null;
+        } else {
+          mapValue = ((valueOb instanceof CBORObject) ? (CBORObject)valueOb : null);
+          if (mapValue == null) {
+            mapValue = CBORObject.FromObject(valueOb);
+          }
+        }
+        Map<CBORObject, CBORObject> map = this.AsMap();
+        if (map.containsKey(mapKey)) {
+          throw new IllegalArgumentException("Key already exists");
+        } else {
+          map.put(mapKey, mapValue);
+        }
+      } else {
+        throw new IllegalStateException("Not a map");
+      }
+      return this;
     }
 
     /**

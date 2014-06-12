@@ -21,11 +21,13 @@ Starting with version 0.23.0, the Java implementation is available
 as an artifact in the Central Repository. To add this library to a Maven
 project, add the following to the `dependencies` section in your `pom.xml` file:
 
-    <dependency>
-      <groupId>com.upokecenter</groupId>
-      <artifactId>cbor</artifactId>
-      <version>0.23.0</version>
-    </dependency>
+```xml
+<dependency>
+  <groupId>com.upokecenter</groupId>
+  <artifactId>cbor</artifactId>
+  <version>0.23.0</version>
+</dependency>
+```
 
 In other Java-based environments, the library can be referred to by its
 group ID (`com.upokecenter`), artifact ID (`cbor`), and version, as given above.
@@ -54,52 +56,84 @@ The Java version is a translation from the C# version. It contains almost as man
 and has all the important ones, such as reading and writing CBOR objects,
 CBOR/JSON conversion, and support for decimal fractions and bigfloats.
 
-Example
+Examples
 ----------
 
 This code is in C#, but the Java version of the code would be very similar.
 
-      // The following creates a CBOR map and adds
-      // several kinds of objects to it
-      var cbor = CBORObject.NewMap()
-         .Add("item", "any string")
-         .Add("number", 42)
-         .Add("map", CBORObject.NewMap().Add("number", 42))
-         .Add("array", CBORObject.NewArray().Add(999f).Add("xyz"))
-         .Add("bytes", new byte[] { 0, 1, 2 });
-      // The following converts the map to CBOR
-      byte[] bytes = cbor.EncodeToBytes();
-      // The following converts the map to JSON
-      string json = cbor.ToJSONString();
-      Console.WriteLine(json);
+```c#
+// The following creates a CBOR map and adds
+// several kinds of objects to it
+var cbor = CBORObject.NewMap()
+   .Add("item", "any string")
+   .Add("number", 42)
+   .Add("map", CBORObject.NewMap().Add("number", 42))
+   .Add("array", CBORObject.NewArray().Add(999f).Add("xyz"))
+   .Add("bytes", new byte[] { 0, 1, 2 });
+// The following converts the map to CBOR
+byte[] bytes = cbor.EncodeToBytes();
+// The following converts the map to JSON
+string json = cbor.ToJSONString();
+Console.WriteLine(json);
+```
 
-Reading data from a file:
+Reading data from a file (C#).  Note that all the examples for
+reading and writing to files assumes that the platform supports
+file I/O; the portable class library doesn't make that assumption.
 
-       // Read all the bytes from a file and decode the CBOR object
-       // from it.  However, there are two disadvantages to this approach:
-       // 1.  The byte array might be very huge, so a lot of memory to store
-       // the array may be needed.
-       // 2.  The decoding will succeed only if the entire array,
-       // not just the start of the array, consists of a CBOR object.
-       var cbor = CBORObject.DecodeFromBytes(File.ReadAllBytes("object.cbor"));
+```c#
+ // Read all the bytes from a file and decode the CBOR object
+ // from it.  However, there are two disadvantages to this approach:
+ // 1.  The byte array might be very huge, so a lot of memory to store
+ // the array may be needed.
+ // 2.  The decoding will succeed only if the entire array,
+ // not just the start of the array, consists of a CBOR object.
+ var cbor = CBORObject.DecodeFromBytes(File.ReadAllBytes("object.cbor"));
+```
 
-Another example of reading data from a file:
+Another example of reading data from a file (C#):
 
-       // Open the file stream
-       using (var stream = new FileStream("object.cbor", FileMode.Open)) {
-          // Read the CBOR object from the stream
-          var cbor = CBORObject.Read(stream);
-          // At this point, the object is read, but the file stream might
-          // not have ended yet.  Here, the code may choose to read another
-          // CBOR object, check for the end of the stream, or just ignore the
-          // rest of the file.  The following is an example of checking for the
-          // end of the stream.
-          if (stream.Position != stream.Length) {
-            // The end of the stream wasn't reached yet.
-          } else {
-            // The end of the stream was reached.
-          }
-       }
+```c#
+ // Open the file stream
+ using (var stream = new FileStream("object.cbor", FileMode.Open)) {
+    // Read the CBOR object from the stream
+    var cbor = CBORObject.Read(stream);
+    // At this point, the object is read, but the file stream might
+    // not have ended yet.  Here, the code may choose to read another
+    // CBOR object, check for the end of the stream, or just ignore the
+    // rest of the file.  The following is an example of checking for the
+    // end of the stream.
+    if (stream.Position != stream.Length) {
+// The end of the stream wasn't reached yet.
+    } else {
+// The end of the stream was reached.
+    }
+ }
+```
+
+Writing CBOR data to a file (C#):
+
+```c#
+// This example assumes that the variable "cbor" refers
+// to a CBORObject object.
+using (var stream = new FileStream("object.cbor", FileMode.Create)) {
+   cbor.WriteTo(stream);
+}
+```
+
+Writing multiple objects to a file, including arbitrary objects (C#):
+
+```c#
+// This example writes different kinds of objects in CBOR
+// format to the same file.
+using (var stream = new FileStream("object.cbor", FileMode.Create)) {
+   CBORObject.Write(true, stream);
+   CBORObject.Write(422.5, stream);
+   CBORObject.Write("some string", stream);
+   CBORObject.Write(CBORObject.Undefined, stream);
+   CBORObject.NewArray().Add(42).WriteTo(stream);
+}
+```
 
 NOTE: All code samples in this section are released to the Public Domain,
 as explained in <http://creativecommons.org/publicdomain/zero/1.0/>.

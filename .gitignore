@@ -19,6 +19,7 @@ CBORTest/ProfilingSessions/
 *.Settings
 *.class
 *.suo
+*.properties
 *.log
 .pmd
 /target

@@ -1674,10 +1674,12 @@ namespace PeterO.Cbor {
 
     /// <summary>Maps an object to a key in this CBOR map, or adds the value
     /// if the key doesn't exist.</summary>
-    /// <param name='key'>An object representing the key. Can be null, in
-    /// which case this value is converted to CBORObject.Null.</param>
-    /// <param name='valueOb'>A CBOR object representing the value. Can
-    /// be null, in which case this value is converted to CBORObject.Null.</param>
+    /// <param name='key'>An object representing the key, which will be
+    /// converted to a CBORObject. Can be null, in which case this value is
+    /// converted to CBORObject.Null.</param>
+    /// <param name='valueOb'>An object representing the value, which
+    /// will be converted to a CBORObject. Can be null, in which case this value
+    /// is converted to CBORObject.Null.</param>
     /// <exception cref='InvalidOperationException'>This object is
     /// not a map.</exception>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
@@ -1686,14 +1688,24 @@ namespace PeterO.Cbor {
     /// <returns>This object.</returns>
     public CBORObject Set(object key, object valueOb) {
       if (this.ItemType == CBORObjectTypeMap) {
+        CBORObject mapKey;
+        CBORObject mapValue;
         if (key == null) {
-          key = CBORObject.Null;
+          mapKey = CBORObject.Null;
+        } else {
+          mapKey = key as CBORObject;
+          if (mapKey == null) {
+            mapKey = CBORObject.FromObject(valueOb);
+          }
         }
         if (valueOb == null) {
-          valueOb = CBORObject.Null;
+          mapValue = CBORObject.Null;
+        } else {
+          mapValue = valueOb as CBORObject;
+          if (mapValue == null) {
+            mapValue = CBORObject.FromObject(valueOb);
+          }
         }
-        CBORObject mapKey = CBORObject.FromObject(key);
-        CBORObject mapValue = CBORObject.FromObject(valueOb);
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         if (map.ContainsKey(mapKey)) {
           map[mapKey] = mapValue;
@@ -1706,21 +1718,52 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <summary>Converts an object to a CBOR object and adds it to this map.</summary>
-    /// <param name='key'>A string representing the key. Can be null, in
-    /// which case this value is converted to CBORObject.Null.</param>
-    /// <exception cref='System.ArgumentException'>The parameter <paramref
-    /// name='key'/> or <paramref name='valueOb'/> has an unsupported
-    /// type.</exception>
+    /// <summary>Adds a new key and its value to this CBOR map, or adds the value
+    /// if the key doesn't exist.</summary>
+    /// <param name='key'>An object representing the key, which will be
+    /// converted to a CBORObject. Can be null, in which case this value is
+    /// converted to CBORObject.Null.</param>
+    /// <param name='valueOb'>An object representing the value, which
+    /// will be converted to a CBORObject. Can be null, in which case this value
+    /// is converted to CBORObject.Null.</param>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='key'/> already exists in this map.</exception>
     /// <exception cref='InvalidOperationException'>This object is
     /// not a map.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='key'/> or <paramref name='valueOb'/> has an unsupported
+    /// type.</exception>
     /// <returns>This object.</returns>
-    /// <param name='valueOb'>An arbitrary object. Can be null, in which
-    /// case this value is converted to CBORObject.Null.</param>
     public CBORObject Add(object key, object valueOb) {
-      return this.Add(CBORObject.FromObject(key), CBORObject.FromObject(valueOb));
+      if (this.ItemType == CBORObjectTypeMap) {
+        CBORObject mapKey;
+        CBORObject mapValue;
+        if (key == null) {
+          mapKey = CBORObject.Null;
+        } else {
+          mapKey = key as CBORObject;
+          if (mapKey == null) {
+            mapKey = CBORObject.FromObject(valueOb);
+          }
+        }
+        if (valueOb == null) {
+          mapValue = CBORObject.Null;
+        } else {
+          mapValue = valueOb as CBORObject;
+          if (mapValue == null) {
+            mapValue = CBORObject.FromObject(valueOb);
+          }
+        }
+        IDictionary<CBORObject, CBORObject> map = this.AsMap();
+        if (map.ContainsKey(mapKey)) {
+          throw new ArgumentException("Key already exists");
+        } else {
+          map.Add(mapKey, mapValue);
+        }
+      } else {
+        throw new InvalidOperationException("Not a map");
+      }
+      return this;
     }
 
     /// <summary>Determines whether a value of the given key exists in this
