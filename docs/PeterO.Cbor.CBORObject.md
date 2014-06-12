@@ -377,9 +377,9 @@ Maps an object to a key in this CBOR map, or adds the value if the key doesn't e
 
 <b>Parameters:</b>
 
- * <i>key</i>: An object representing the key. Can be null, in which case this value is converted to CBORObject.Null.
+ * <i>key</i>: An object representing the key, which will be converted to a CBORObject. Can be null, in which case this value is converted to CBORObject.Null.
 
- * <i>valueOb</i>: A CBOR object representing the value. Can be null, in which case this value is converted to CBORObject.Null.
+ * <i>valueOb</i>: An object representing the value, which will be converted to a CBORObject. Can be null, in which case this value is converted to CBORObject.Null.
 
 <b>Returns:</b>
 
@@ -401,13 +401,13 @@ The parameter  <i>key</i>
         object key,
         object valueOb);
 
-Converts an object to a CBOR object and adds it to this map.
+Adds a new key and its value to this CBOR map, or adds the value if the key doesn't exist.
 
 <b>Parameters:</b>
 
- * <i>key</i>: A string representing the key. Can be null, in which case this value is converted to CBORObject.Null.
+ * <i>key</i>: An object representing the key, which will be converted to a CBORObject. Can be null, in which case this value is converted to CBORObject.Null.
 
- * <i>valueOb</i>: An arbitrary object. Can be null, in which case this value is converted to CBORObject.Null.
+ * <i>valueOb</i>: An object representing the value, which will be converted to a CBORObject. Can be null, in which case this value is converted to CBORObject.Null.
 
 <b>Returns:</b>
 
@@ -417,15 +417,15 @@ This object.
 
  * System.ArgumentException: 
 The parameter  <i>key</i>
- or  <i>valueOb</i>
- has an unsupported type.
-
- * System.ArgumentException: 
-The parameter  <i>key</i>
  already exists in this map.
 
  * System.InvalidOperationException: 
 This object is not a map.
+
+ * System.ArgumentException: 
+The parameter  <i>key</i>
+ or  <i>valueOb</i>
+ has an unsupported type.
 
 ### ContainsKey
 
