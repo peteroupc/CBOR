@@ -73,6 +73,36 @@ This code is in C#, but the Java version of the code would be very similar.
       string json = cbor.ToJSONString();
       Console.WriteLine(json);
 
+Reading data from a file:
+
+       // Read all the bytes from a file and decode the CBOR object
+       // from it.  However, there are two disadvantages to this approach:
+       // 1.  The byte array might be very huge, so a lot of memory to store
+       // the array may be needed.
+       // 2.  The decoding will succeed only if the entire array,
+       // not just the start of the array, consists of a CBOR object.
+       var cbor = CBORObject.DecodeFromBytes(File.ReadAllBytes("object.cbor"));
+
+Another example of reading data from a file:
+
+       // Open the file stream
+       using (var stream = new FileStream("object.cbor", FileMode.Open)) {
+          // Read the CBOR object from the stream
+          var cbor = CBORObject.Read(stream);
+          // At this point, the object is read, but the file stream might
+          // not have ended yet.  Here, the code may choose to read another
+          // CBOR object, check for the end of the stream, or just ignore the
+          // rest of the file.  The following is an example of checking for the
+          // end of the stream.
+          if (stream.Position != stream.Length) {
+            // The end of the stream wasn't reached yet.
+          } else {
+            // The end of the stream was reached.
+          }
+       }
+
+NOTE: All code samples in this section are released to the Public Domain,
+as explained in <http://creativecommons.org/publicdomain/zero/1.0/>.
 
 Source Code
 ---------

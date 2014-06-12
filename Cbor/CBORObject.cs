@@ -2087,7 +2087,10 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Reads an object in CBOR format from a data stream.</summary>
+    /// <summary>Reads an object in CBOR format from a data stream.
+    /// This method will read from the stream until the end of the
+    /// CBOR object is reached or an error occurs, whichever happens
+    /// first.</summary>
     /// <param name='stream'>A readable data stream.</param>
     /// <returns>A CBOR object that was read.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
