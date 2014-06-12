@@ -15,7 +15,10 @@
     Finally, this implementation supports arbitrary-precision binary and decimal floating-point numbers and rational numbers with arbitrary-precision components, and supports arithmetic with these numbers.
     </description>
     <summary>A C# implementation of Concise Binary Object Representation (CBOR), a data serialization format. This implementation can also convert between CBOR and JSON.</summary>
-    <releaseNotes>Version 0.22.0 adds CBOR support for decimal fractions and big floats with any exponent, even exponents higher than 65 bits, and implements well-formedness checking for tag 32 (URIs).  Several bugs were also fixed.   Version 0.23.0 has no new features of note.</releaseNotes>
+    <releaseNotes>
+    In version 1.0, the "adjust exponent" and "is precision in bits" flags were added to the arbitrary-precision arithmetic contexts, and a new Set method that is similar to Add but can replace a key's value in a CBOR map. Some bugs were also fixed.
+    See the project page for release notes on previous versions: https://github.com/peteroupc/CBOR
+    </releaseNotes>
     <copyright>Written by Peter O. in 2013-2014.  Any copyright is released to the Public Domain.</copyright>
     <tags>cbor data serialization binary json numbers arithmetic</tags>
   </metadata>

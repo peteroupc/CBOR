@@ -172,6 +172,21 @@ The following are some clarifications to RFC 7049.
   Internationalized Resource Identifiers (IRIs) in addition to URIs.
   IRI are like URIs except that they also allow non-ASCII characters.
 
+Release Notes
+-----------
+In version 1.0, the "adjust exponent" and "is precision in bits" flags were added to
+the arbitrary-precision arithmetic contexts, and a new Set method that is similar
+to Add but can replace a key's value in a CBOR map. Some bugs were also fixed.
+
+Version 0.23.0 has no new features of note.
+
+Version 0.22.0 adds CBOR support for decimal fractions and big floats with any 
+exponent, even exponents higher than 65 bits, and implements well-formedness 
+checking for tag 32 (URIs).  Several bugs were also fixed.   
+
+The [commit history](https://github.com/peteroupc/CBOR/commits/master) 
+contains details on code changes in previous versions.
+
 Specifications
 -----------
 Here are specifications by this implementation's author on proposed
