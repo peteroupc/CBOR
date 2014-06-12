@@ -284,7 +284,7 @@ namespace PeterO.Cbor {
       }
       return FromObjectAndTag(
         new CBORObject[] { FromObject(-scale),
-          FromObject(mantissa) },
+        FromObject(mantissa) },
         4);
     }
 
