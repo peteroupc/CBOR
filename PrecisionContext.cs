@@ -40,7 +40,7 @@ namespace PeterO {
     /// will be thrown if an operation's return value is not the same as the
     /// exact result (FlagInexact) or if the return value's exponent is lower
     /// than the lowest allowed (FlagSubnormal).</para>
-    ///  </summary>
+    /// </summary>
     /// <value>The traps that are set for each flag in the context.</value>
     public int Traps {
       get {
@@ -185,7 +185,7 @@ namespace PeterO {
     /// flag, use the AND operation on the return value of this method. For
     /// example: <c>(this.Flags &amp; PrecisionContext.FlagInexact)
     /// != 0</c>
-    ///  returns TRUE if the Inexact flag is set.</summary>
+    /// returns TRUE if the Inexact flag is set.</summary>
     /// <value>The flags that are set from converting numbers according
     /// to this precision context. If HasFlags is false, this value will be
     /// 0.</value>
@@ -652,13 +652,29 @@ namespace PeterO {
       .WithPrecisionInBits(true);
 
     /// <summary>Precision context for Java's BigDecimal format. The default
-    /// rounding mode is HalfEven.</summary>
+    /// rounding mode is HalfUp.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification = "This PrecisionContext is immutable")]
     #endif
+    public static readonly PrecisionContext BigDecimalJava =
+      new PrecisionContext(0, Rounding.HalfUp, 0, 0, true)
+        .WithExponentClamp(true)
+        .WithAdjustExponent(false)
+        .WithBigExponentRange(
+           BigInteger.Zero - (BigInteger)Int32.MaxValue,
+           BigInteger.One + (BigInteger)Int32.MaxValue);
+
+/// <summary>Precision context for Java's BigDecimal format. The default
+    #if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security",
+      "CA2104",
+      Justification = "This PrecisionContext is immutable")]
+    #endif
+    [Obsolete("This context has the wrong settings. Use BigDecimalJava instead in the meantime. It may be corrected in version 2.")]
     public static readonly PrecisionContext JavaBigDecimal =
       new PrecisionContext(0, Rounding.HalfEven, 0, 0, true)
         .WithExponentClamp(true)

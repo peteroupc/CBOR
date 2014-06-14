@@ -662,9 +662,23 @@ at: http://upokecenter.com/d/
 
     /**
      * Precision context for Java's BigDecimal format. The default rounding
-     * mode is HalfEven.
+     * mode is HalfUp.
      */
 
+    public static final PrecisionContext BigDecimalJava =
+      new PrecisionContext(0, Rounding.HalfUp, 0, 0, true)
+        .WithExponentClamp(true)
+        .WithAdjustExponent(false)
+        .WithBigExponentRange(
+           BigInteger.ZERO.subtract(BigInteger.valueOf(Integer.MAX_VALUE)),
+           BigInteger.ONE.add(BigInteger.valueOf(Integer.MAX_VALUE)));
+
+/// <summary>Precision context for Java's BigDecimal format. The default
+
+/**
+ * @deprecated This context has the wrong settings. Use BigDecimalJava instead in the meantime. It may be corrected in version 2.
+ */
+@Deprecated
     public static final PrecisionContext JavaBigDecimal =
       new PrecisionContext(0, Rounding.HalfEven, 0, 0, true)
         .WithExponentClamp(true)

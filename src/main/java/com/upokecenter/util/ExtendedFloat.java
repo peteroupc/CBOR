@@ -1129,7 +1129,7 @@ at: http://upokecenter.com/d/
      * and exponent range without rounding.
      * @return An ExtendedFloat object.
      */
-    public ExtendedFloat RemainderNaturalScale(ExtendedFloat divisor, ExtendedFloat ctx) {
+    public ExtendedFloat RemainderNaturalScale(ExtendedFloat divisor, PrecisionContext ctx) {
       return this.Subtract(this.DivideToIntegerNaturalScale(divisor, ctx).Multiply(divisor, null), null);
     }
 

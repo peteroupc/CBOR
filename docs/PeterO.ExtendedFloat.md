@@ -590,13 +590,13 @@ An ExtendedFloat object.
         PeterO.ExtendedFloat divisor,
         PeterO.PrecisionContext ctx);
 
-Not documented yet.
+Calculates the remainder of a number by the formula this - ((this / divisor) * divisor). This is meant to be similar to the remainder operation in Java's BigDecimal.
 
 <b>Parameters:</b>
 
  * <i>divisor</i>: An ExtendedFloat object. (2).
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the integer part of the result. This context will be used only in the division portion of the remainder calculation. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the result doesn't fit the precision and exponent range without rounding.
 
 <b>Returns:</b>
 

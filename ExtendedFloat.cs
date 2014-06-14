@@ -1067,7 +1067,7 @@ namespace PeterO {
     /// HasFlags is true and the integer part of the result doesn&apos;t fit
     /// the precision and exponent range without rounding.</param>
     /// <returns>An ExtendedFloat object.</returns>
-    public ExtendedFloat RemainderNaturalScale(ExtendedFloat divisor, ExtendedFloat ctx) {
+    public ExtendedFloat RemainderNaturalScale(ExtendedFloat divisor, PrecisionContext ctx) {
       return this.Subtract(this.DivideToIntegerNaturalScale(divisor, ctx).Multiply(divisor, null), null);
     }
 
