@@ -428,11 +428,11 @@ Basic precision context, 9 digits precision, rounding mode half-up, unlimited ex
 
 Precision context for the Common Language Infrastructure (.NET Framework) decimal format, 96 bits precision, and a valid exponent range of -28 to 0. The default rounding mode is HalfEven.
 
-### JavaBigDecimal
+### BigDecimalJava
 
-    public static readonly PeterO.PrecisionContext JavaBigDecimal;
+    public static readonly PeterO.PrecisionContext BigDecimalJava;
 
-Precision context for Java's BigDecimal format. The default rounding mode is HalfEven.
+Precision context for Java's BigDecimal format. The default rounding mode is HalfUp.
 
 ### EMax
 

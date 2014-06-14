@@ -437,11 +437,11 @@ True if this object is positive infinity; otherwise, false.
 
     public bool IsNaN();
 
-Returns whether thi object is a not-a-number value.
+Returns whether this object is a not-a-number value.
 
 <b>Returns:</b>
 
-True if thi object is a not-a-number value; otherwise, false.
+True if this object is a not-a-number value; otherwise, false.
 
 ### IsInfinity
 

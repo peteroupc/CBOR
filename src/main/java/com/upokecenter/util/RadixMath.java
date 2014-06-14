@@ -11,6 +11,7 @@ at: http://upokecenter.com/d/
      * Encapsulates radix-independent arithmetic.
      * @param <T> Data type for a numeric value in a particular radix.
      */
+    // TODO: Replace more MultiplyByRadixPower by TryMultiplyByRadixPower where appropriate
   class RadixMath<T> implements IRadixMath<T> {
     private static final int IntegerModeFixedScale = 1;
     private static final int IntegerModeRegular = 0;
@@ -701,7 +702,7 @@ bigrem=divrem[1]; }
       }
       // Gauss-Legendre algorithm
       T a = this.helper.ValueOf(1);
-      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(BigInteger.TEN)).WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp);
+      PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, ctx.getPrecision().add(BigInteger.TEN)).WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp);
       T two = this.helper.ValueOf(2);
       T b = this.Divide(a, this.SquareRoot(two, ctxdiv), ctxdiv);
       T four = this.helper.ValueOf(4);
@@ -756,7 +757,7 @@ bigrem=divrem[1]; }
       boolean more = true;
       int lastCompare = 0;
       int vacillations = 0;
-      PrecisionContext ctxdiv = ctx.WithBigPrecision(workingPrecision.add(BigInteger.valueOf(6)))
+      PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, workingPrecision.add(BigInteger.valueOf(6)))
         .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp);
       T z = this.Add(this.NegateRaw(thisValue), this.helper.ValueOf(1), null);
       T zpow = this.Multiply(z, z, ctxdiv);
@@ -793,7 +794,7 @@ bigrem=divrem[1]; }
 
     private T ExpInternal(T thisValue, BigInteger workingPrecision, PrecisionContext ctx) {
       T one = this.helper.ValueOf(1);
-      PrecisionContext ctxdiv = ctx.WithBigPrecision(workingPrecision.add(BigInteger.valueOf(6)))
+      PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, workingPrecision.add(BigInteger.valueOf(6)))
         .WithRounding(this.thisRadix == 2 ? Rounding.Down : Rounding.ZeroFiveUp);
       BigInteger bigintN = BigInteger.valueOf(2);
       BigInteger facto = BigInteger.ONE;
@@ -840,6 +841,13 @@ bigrem=divrem[1]; }
       return this.RoundToPrecision(guess, ctx);
     }
 
+    private static boolean SetPrecisionIfLimited(PrecisionContext ctx, BigInteger bigPrecision) {
+      if (ctx == null || !ctx.getHasMaxPrecision()) {
+        return ctx;
+      }
+      return ctx.WithBigPrecision(bigPrecision);
+    }
+
     private T PowerIntegral(
       T thisValue,
       BigInteger powIntBig,
@@ -861,8 +869,8 @@ bigrem=divrem[1]; }
         (powIntBig).abs()).GetDigitLength();
       error.AddInt(6);
       BigInteger bigError = error.AsBigInteger();
-      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError))
-        .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
+      PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, ctx.getPrecision().add(bigError))
+         .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
       if (sign < 0) {
         // Use the reciprocal for negative powers
         thisValue = this.Divide(one, thisValue, ctxdiv);
@@ -1091,8 +1099,8 @@ bigrem=divrem[1]; }
       }
       int guardDigitCount = this.thisRadix == 2 ? 32 : 10;
       BigInteger guardDigits = BigInteger.valueOf(guardDigitCount);
-      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(guardDigits))
-        .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
+      PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, ctx.getPrecision().add(guardDigits)) : ctx;
+      ctxdiv = ctxdiv.WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
       T lnresult = this.Ln(thisValue, ctxdiv);
       /*
       System.out.println("guard=" + guardDigits + " prec=" + ctx.getPrecision() + " newprec=" + ctxdiv.getPrecision());
@@ -1184,7 +1192,7 @@ bigrem=divrem[1]; }
             // Value is an integer power of 10
             thisValue = this.RoundToPrecision(this.helper.CreateNewWithFlags(expTmp.AsBigInteger(), BigInteger.ZERO, expTmp.signum() < 0 ? BigNumberFlags.FlagNegative : 0), ctxCopy);
           } else {
-            PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(BigInteger.TEN))
+            PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, ctx.getPrecision().add(BigInteger.TEN))
               .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
             T logNatural = this.Ln(thisValue, ctxdiv);
             T logTen = this.LnTenConstant(ctxdiv);
@@ -1236,7 +1244,7 @@ bigrem=divrem[1]; }
       BigInteger bigError;
       error = new FastInteger(10);
       bigError = error.AsBigInteger();
-      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError))
+      PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, ctx.getPrecision().add(bigError))
         .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
       for (int i = 0; i < 9; ++i) {
         thisValue = this.SquareRoot(thisValue, ctxdiv.WithUnlimitedExponents());
@@ -1292,7 +1300,7 @@ bigrem=divrem[1]; }
           // Less than 1
           FastInteger error = new FastInteger(10);
           BigInteger bigError = error.AsBigInteger();
-          ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError))
+          ctxdiv = SetPrecisionIfLimited(ctx, ctx.getPrecision().add(bigError))
             .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
           T quarter = this.Divide(one, this.helper.ValueOf(4), ctxCopy);
           if (this.compareTo(thisValue, quarter) <= 0) {
@@ -1337,7 +1345,7 @@ bigrem=divrem[1]; }
             BigInteger bigError;
             error = new FastInteger(10);
             bigError = error.AsBigInteger();
-            ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError))
+            ctxdiv = SetPrecisionIfLimited(ctx, ctx.getPrecision().add(bigError))
               .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
             T smallfrac = this.Divide(one, this.helper.ValueOf(10), ctxdiv);
             T closeToOne = this.Add(one, smallfrac, null);
@@ -1360,7 +1368,7 @@ bigrem=divrem[1]; }
             BigInteger bigError;
             error = new FastInteger(10);
             bigError = error.AsBigInteger();
-            ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(bigError))
+            ctxdiv = SetPrecisionIfLimited(ctx, ctx.getPrecision().add(bigError))
               .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
             T smallfrac = this.Divide(one, this.helper.ValueOf(16), ctxdiv);
             T closeToOne = this.Add(one, smallfrac, null);
@@ -1437,7 +1445,7 @@ bigrem=divrem[1]; }
       T one = this.helper.ValueOf(1);
       BigInteger guardDigits = this.thisRadix == 2 ? ctx.getPrecision().add(BigInteger.TEN) :
         BigInteger.TEN;
-      PrecisionContext ctxdiv = ctx.WithBigPrecision(ctx.getPrecision().add(guardDigits))
+      PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, ctx.getPrecision().add(guardDigits))
         .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
       if (sign == 0) {
         thisValue = this.RoundToPrecision(one, ctxCopy);
@@ -1628,7 +1636,10 @@ bigrem=divrem[1]; }
         }
         BigInteger bigdiff = diff.AsBigInteger();
         currentExp=currentExp.subtract(bigdiff);
-        mantissa = this.helper.MultiplyByRadixPower(mantissa, diff);
+        mantissa = this.TryMultiplyByRadixPower(mantissa, diff);
+        if (mantissa == null) {
+          return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+        }
       } else if (digitCount.compareTo(precision) < 0) {
         FastInteger diff = FastInteger.Copy(digitCount).Subtract(precision);
         accum.ShiftRight(diff);
@@ -1940,6 +1951,26 @@ FastInteger.FromBig(ctx.getPrecision()).Decrement());
         olderDiscarded };
     }
 
+    private BigInteger TryMultiplyByRadixPower(BigInteger bi, FastInteger radixPower) {
+      if (bi.signum()==0) {
+        return bi;
+      }
+      if (!radixPower.CanFitInInt32()) {
+        return null;
+      }
+      FastInteger tmp = FastInteger.Copy(radixPower);
+      if (this.thisRadix == 10) {
+        // NOTE: 3 is a conservative number less than ln(10)/ln(2).
+        // 8 is the number of bits in a byte.  Thus, we check if the
+        // radix power's length in bytes will meet or exceed the range of a
+        // 32-bit signed integer.
+        if (tmp.Multiply(3).Divide(8).CompareToInt(Integer.MAX_VALUE) > 0) {
+          return null;
+        }
+      }
+      return this.helper.MultiplyByRadixPower(bi, radixPower);
+    }
+
     private T RoundToScale(
       BigInteger mantissa,
       BigInteger remainder,
@@ -2085,7 +2116,10 @@ rem=divrem[1]; }
             return this.SignalInvalidWithMessage(ctx, "Result can't fit the precision");
           } else {
             shift = FastInteger.Copy(expdiff).Subtract(fastDesiredExponent);
-            mantissaDividend = this.helper.MultiplyByRadixPower(mantissaDividend, shift);
+            mantissaDividend = this.TryMultiplyByRadixPower(mantissaDividend, shift);
+            if (mantissaDividend == null) {
+              return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+            }
             BigInteger quo;
 {
 BigInteger[] divrem=(mantissaDividend).divideAndRemainder(mantissaDivisor);
@@ -2129,14 +2163,20 @@ rem=divrem[1]; }
               divisorPrecision.Subtract(dividendPrecision);
               divisorPrecision.Increment();
               shift.Add(divisorPrecision);
-              divid = this.helper.MultiplyByRadixPower(divid, shift);
+              divid = this.TryMultiplyByRadixPower(divid, shift);
+              if (divid == null) {
+                return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+              }
             } else {
               // Already greater than divisor precision
               dividendPrecision.Subtract(divisorPrecision);
               if (dividendPrecision.compareTo(shift) <= 0) {
                 shift.Subtract(dividendPrecision);
                 shift.Increment();
-                divid = this.helper.MultiplyByRadixPower(divid, shift);
+                divid = this.TryMultiplyByRadixPower(divid, shift);
+                if (divid == null) {
+                  return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+                }
               } else {
                 // no need to shift
                 shift.SetInt(0);
@@ -2189,7 +2229,10 @@ rem=divrem[1]; }
           // multiply dividend mantissa so precisions are the same
           // (except if they're already the same, in which case multiply
           // by radix)
-          mantissaDividend = this.helper.MultiplyByRadixPower(mantissaDividend, divisorPrecision);
+          mantissaDividend = this.TryMultiplyByRadixPower(mantissaDividend, divisorPrecision);
+          if (mantissaDividend == null) {
+            return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+          }
           adjust.Add(divisorPrecision);
           if (mantissaDividend.compareTo(mantissaDivisor) < 0) {
             // dividend mantissa is still less, multiply once more
@@ -2206,7 +2249,10 @@ rem=divrem[1]; }
           divisorPrecision = this.helper.CreateShiftAccumulator(mantissaDivisor).GetDigitLength();
           dividendPrecision.Subtract(divisorPrecision);
           BigInteger oldMantissaB = mantissaDivisor;
-          mantissaDivisor = this.helper.MultiplyByRadixPower(mantissaDivisor, dividendPrecision);
+          mantissaDivisor = this.TryMultiplyByRadixPower(mantissaDivisor, dividendPrecision);
+          if (mantissaDivisor == null) {
+            return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+          }
           adjust.Subtract(dividendPrecision);
           if (mantissaDividend.compareTo(mantissaDivisor) < 0) {
             // dividend mantissa is now less, divide by radix power
@@ -2548,7 +2594,10 @@ rem=divrem[1]; }
           // System.out.println("result too high for prec: " + tmpctx.getPrecision() + " radixPower=" + radixPower);
           return this.SignalInvalidWithMessage(ctx, "Result too high for current precision");
         }
-        mantThis = this.helper.MultiplyByRadixPower(mantThis, radixPower);
+        mantThis = this.TryMultiplyByRadixPower(mantThis, radixPower);
+        if (mantThis == null) {
+          return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+        }
         ret = this.helper.CreateNewWithFlags(mantThis, expOther, negativeFlag);
         ret = this.RoundToPrecision(ret, tmpctx);
       } else {

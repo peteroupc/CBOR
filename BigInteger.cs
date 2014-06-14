@@ -1151,32 +1151,6 @@ namespace PeterO {
         Increment(resultArr, (int)(resultStart + count + count2), count2, (short)carry);
       } else {
         SameSizeMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words1, words1Start, count);
-        /*
-        int countHigh = count >> 1;
-        int countLow = countHigh + 1;
-        int countMiddle = (countLow << 1);
-        RecursiveSquare(resultArr, resultStart + countMiddle, tempArr, tempStart + countMiddle, words1, words1Start + countLow, countHigh);
-        Array.Copy(tempArr, tempStart + countMiddle, words1, words1Start + countLow, countHigh);
-        tempArr[tempStart + countMiddle + countHigh] = (short)0;
-        RecursiveMultiply(
-          tempArr,
-          tempStart,
-          resultArr,
-          resultStart,
-          words1,
-          words1Start,
-          tempArr,
-          tempStart + countMiddle,
-          countLow);
-        short tmpEnd1 = tempArr[tempStart + countMiddle - 2];
-        short tmpEnd2 = tempArr[tempStart + countMiddle - 1];
-        RecursiveSquare(resultArr, resultStart, tempArr, tempStart + (countHigh << 1), words1, words1Start, countLow);
-        tempArr[tempStart + countMiddle - 2] = tmpEnd1;
-        tempArr[tempStart + countMiddle - 1] = tmpEnd2;
-        int carry = AddOneByOne(resultArr, (int)(resultStart + countLow), resultArr, (int)(resultStart + countLow), tempArr, tempStart, (countLow << 1));
-        carry += AddOneByOne(resultArr, (int)(resultStart + countLow), resultArr, (int)(resultStart + countLow), tempArr, tempStart, (countLow << 1));
-        Increment(resultArr, (int)(resultStart + countMiddle + countLow), countLow - 2, (short)carry);
-         */
       }
     }
 
