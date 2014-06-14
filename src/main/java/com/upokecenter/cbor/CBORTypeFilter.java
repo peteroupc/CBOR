@@ -282,8 +282,8 @@ import com.upokecenter.util.*;
     /**
      * Returns whether an array's length is allowed under this filter.
      * @param length The length of a CBOR array.
-     * @return True if an array's length is allowed under this filter; otherwise,
-     * false.
+     * @return True if this filter allows CBOR arrays and an array's length
+     * is allowed under this filter; otherwise, false.
      */
     public boolean ArrayLengthMatches(int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
@@ -293,8 +293,8 @@ import com.upokecenter.util.*;
     /**
      * Returns whether an array's length is allowed under a filter.
      * @param length The length of a CBOR array.
-     * @return True if an array's length is allowed under a filter; otherwise,
-     * false.
+     * @return True if this filter allows CBOR arrays and an array's length
+     * is allowed under a filter; otherwise, false.
      */
     public boolean ArrayLengthMatches(long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
@@ -302,9 +302,10 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
+     * Returns whether an array's length is allowed under a filter.
      * @param bigLength A BigInteger object.
-     * @return A Boolean object.
+     * @return True if this filter allows CBOR arrays and an array's length
+     * is allowed under a filter; otherwise, false.
      * @throws java.lang.NullPointerException The parameter {@code bigLength}
      * is null.
      */
@@ -389,12 +390,14 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Not documented yet.
-     * @param index A 32-bit signed integer.
-     * @return A Boolean object.
+     * Determines whether this type filter allows CBOR arrays and the given
+     * array index is allowed under this type filter.
+     * @param index An array index, starting from 0.
+     * @return True if this type filter allows CBOR arrays and the given array
+     * index is allowed under this type filter; otherwise, false.
      */
     public boolean ArrayIndexAllowed(int index) {
-      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
+      return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength ||
                                               ((this.arrayMinLength || index < this.arrayLength) && index >= 0));
     }
 

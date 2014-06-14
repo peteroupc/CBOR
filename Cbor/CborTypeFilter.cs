@@ -266,8 +266,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Returns whether an array's length is allowed under this
     /// filter.</summary>
-    /// <returns>True if an array's length is allowed under this filter;
-    /// otherwise, false.</returns>
+    /// <returns>True if this filter allows CBOR arrays and an array's length
+    /// is allowed under this filter; otherwise, false.</returns>
     /// <param name='length'>The length of a CBOR array.</param>
     public bool ArrayLengthMatches(int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
@@ -275,19 +275,20 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Returns whether an array's length is allowed under a filter.</summary>
-    /// <returns>True if an array's length is allowed under a filter; otherwise,
-    /// false.</returns>
+    /// <returns>True if this filter allows CBOR arrays and an array's length
+    /// is allowed under a filter; otherwise, false.</returns>
     /// <param name='length'>The length of a CBOR array.</param>
     public bool ArrayLengthMatches(long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                                               (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
-    /// <param name='bigLength'>A BigInteger object.</param>
+    /// <summary>Returns whether an array's length is allowed under a filter.</summary>
+    /// <returns>True if this filter allows CBOR arrays and an array's length
+    /// is allowed under a filter; otherwise, false.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='bigLength'/> is null.</exception>
+    /// <param name='bigLength'>A BigInteger object.</param>
     public bool ArrayLengthMatches(BigInteger bigLength) {
       if (bigLength == null) {
         throw new ArgumentNullException("bigLength");
@@ -365,11 +366,13 @@ namespace PeterO.Cbor {
       return false;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
-    /// <param name='index'>A 32-bit signed integer.</param>
+    /// <summary>Determines whether this type filter allows CBOR arrays
+    /// and the given array index is allowed under this type filter.</summary>
+    /// <returns>True if this type filter allows CBOR arrays and the given
+    /// array index is allowed under this type filter; otherwise, false.</returns>
+    /// <param name='index'>An array index, starting from 0.</param>
     public bool ArrayIndexAllowed(int index) {
-      return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
+      return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength ||
                                               ((this.arrayMinLength || index < this.arrayLength) && index >= 0));
     }
 

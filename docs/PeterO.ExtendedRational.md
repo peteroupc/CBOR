@@ -437,11 +437,11 @@ True if this object is positive infinity; otherwise, false.
 
     public bool IsNaN();
 
-Not documented yet.
+Returns whether thi object is a not-a-number value.
 
 <b>Returns:</b>
 
-A Boolean object.
+True if thi object is a not-a-number value; otherwise, false.
 
 ### IsInfinity
 
@@ -457,21 +457,21 @@ True if this object's value is infinity; otherwise, false.
 
     public bool IsQuietNaN();
 
-Not documented yet.
+Returns whether this object is a quiet not-a-number value.
 
 <b>Returns:</b>
 
-A Boolean object.
+True if this object is a quiet not-a-number value; otherwise, false.
 
 ### IsSignalingNaN
 
     public bool IsSignalingNaN();
 
-Not documented yet.
+Returns whether this object is a signaling not-a-number value (which causes an error if the value is passed to any arithmetic operation in this class).
 
 <b>Returns:</b>
 
-A Boolean object.
+True if this object is a signaling not-a-number value (which causes an error if the value is passed to any arithmetic operation in this class); otherwise, false.
 
 ### NaN
 
@@ -502,7 +502,7 @@ Negative infinity, less than any other number.
     public PeterO.ExtendedRational Add(
         PeterO.ExtendedRational otherValue);
 
-Not documented yet.
+Adds two rational numbers.
 
 <b>Parameters:</b>
 
@@ -510,7 +510,7 @@ Not documented yet.
 
 <b>Returns:</b>
 
-An ExtendedRational object.
+The sum of the two numbers. Returns NaN if either operand is NaN.
 
 <b>Exceptions:</b>
 
@@ -680,11 +680,11 @@ True if this object's value equals 0; otherwise, false.
 
     public int Sign { get; }
 
-Gets a value not documented yet.
+Gets the sign of this rational number.
 
 <b>Returns:</b>
 
-A value not documented yet.
+Zero if this value is zero or negative zero; -1 if this value is less than 0; and 1 if this value is greater than 0.
 
 ### IsNegative
 

@@ -497,8 +497,9 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets a value not documented yet.</summary>
-    /// <value>A value not documented yet.</value>
+    /// <summary>Gets the sign of this rational number.</summary>
+    /// <value>Zero if this value is zero or negative zero; -1 if this value
+    /// is less than 0; and 1 if this value is greater than 0.</value>
     public int Sign {
       get {
         if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
@@ -827,8 +828,9 @@ namespace PeterO {
         BigNumberFlags.FlagInfinity;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <summary>Returns whether this object is a not-a-number value.</summary>
+    /// <returns>True if this object is a not-a-number value; otherwise,
+    /// false.</returns>
     public bool IsNaN() {
       return (this.flags & BigNumberFlags.FlagNaN) != 0;
     }
@@ -850,14 +852,19 @@ namespace PeterO {
       return (this.flags & BigNumberFlags.FlagInfinity) != 0;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <summary>Returns whether this object is a quiet not-a-number value.</summary>
+    /// <returns>True if this object is a quiet not-a-number value; otherwise,
+    /// false.</returns>
     public bool IsQuietNaN() {
       return (this.flags & BigNumberFlags.FlagQuietNaN) != 0;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <summary>Returns whether this object is a signaling not-a-number
+    /// value (which causes an error if the value is passed to any arithmetic
+    /// operation in this class).</summary>
+    /// <returns>True if this object is a signaling not-a-number value (which
+    /// causes an error if the value is passed to any arithmetic operation
+    /// in this class); otherwise, false.</returns>
     public bool IsSignalingNaN() {
       return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
     }
@@ -895,9 +902,10 @@ namespace PeterO {
       return this;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Adds two rational numbers.</summary>
     /// <param name='otherValue'>An ExtendedRational object. (2).</param>
-    /// <returns>An ExtendedRational object.</returns>
+    /// <returns>The sum of the two numbers. Returns NaN if either operand
+    /// is NaN.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='otherValue'/> is null.</exception>
     public ExtendedRational Add(ExtendedRational otherValue) {

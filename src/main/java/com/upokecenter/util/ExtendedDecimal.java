@@ -140,9 +140,13 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param diag A BigInteger object.
-     * @return An ExtendedDecimal object.
+     * Creates a not-a-number ExtendedDecimal object.
+     * @param diag A number to use as diagnostic information associated
+     * with this object. The sign will be ignored. If none is needed, should
+     * be zero.
+     * @return A quiet not-a-number object.
+     * @throws java.lang.NullPointerException The parameter {@code diag}
+     * is null.
      */
     public static ExtendedDecimal CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false, null);
@@ -150,8 +154,11 @@ at: http://upokecenter.com/d/
 
     /**
      * Not documented yet.
-     * @param diag A BigInteger object.
-     * @param signaling A Boolean object.
+     * @param diag A number to use as diagnostic information associated
+     * with this object. The sign will be ignored. If none is needed, should
+     * be zero.
+     * @param signaling Whether the return value will be signaling (true)
+     * or quiet (false).
      * @param negative A Boolean object. (2).
      * @param ctx A PrecisionContext object.
      * @return An ExtendedDecimal object.
@@ -1767,13 +1774,19 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
+     * Calculates the remainder of a number by the formula this - ((this.divide(divisor)).multiply(divisor)).
+     * This is meant to be similar to the remainder operation in Java's BigDecimal.
      * @param divisor An ExtendedDecimal object. (2).
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context object to control the precision, rounding,
+     * and exponent range of the integer part of the result. This context
+     * will be used only in the division portion of the remainder calculation.
+     * Flags will be set on the given context only if the context&apos;s HasFlags
+     * is true and the integer part of the result doesn&apos;t fit the precision
+     * and exponent range without rounding.
      * @return An ExtendedDecimal object.
      */
     public ExtendedDecimal RemainderNaturalScale(ExtendedDecimal divisor, PrecisionContext ctx) {
-      return this.Subtract(this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null), ctx);
+      return this.Subtract(this.DivideToIntegerNaturalScale(divisor, ctx).Multiply(divisor, null), null);
     }
 
     /**

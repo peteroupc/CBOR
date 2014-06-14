@@ -231,7 +231,8 @@ namespace PeterO.Cbor {
       return NumberInterfaces[type];
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Registers an object that validates CBOR objects with new
+    /// tags.</summary>
     /// <param name='bigintTag'>A BigInteger object.</param>
     /// <param name='handler'>An ICBORTag object.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
@@ -4072,9 +4073,41 @@ namespace PeterO.Cbor {
       return new CBORObject(CBORObjectTypeMap, map);
     }
 
-    /// <returns>A CBORObject object.</returns>
+    /// <summary><para>Generates a CBORObject from an arbitrary object.
+    /// The following types are specially handled by this method: <c>null</c>
+    /// , primitive types, strings, <c>CBORObject</c>
+    ///  , <c>ExtendedDecimal</c>
+    /// , <c>ExtendedFloat</c>
+    ///  , the custom <c>BigInteger</c>
+    ///  , lists,
+    /// arrays, enumerations ( <c>Enum</c>
+    ///  objects), and maps.</para>
+    /// <para>In the .NET version, if the object is a type not specially handled
+    /// by this method, returns a CBOR map with the values of each of its read/write
+    /// properties (or all properties in the case of an anonymous type). Properties
+    /// are converted to their camel-case names (meaning if a name starts
+    /// with A to Z, that letter is lower-cased). If the property name begins
+    /// with the word "Is", that word is deleted from the name. Also, .NET <c>Enum</c>
+    /// objects will be converted to their integer values, and a multidimensional
+    /// array is converted to an array of arrays. The .NET value DBNull.Value
+    /// is converted to CBORObject.Undefined.</para>
+    ///  <para>In the Java
+    /// version, if the object is a type not specially handled by this method,
+    /// this method checks the CBOR object for methods starting with the word
+    /// "get" or "is" that take no parameters, and returns a CBOR map with one
+    /// entry for each such method found. For each method found, the starting
+    /// word "get" or "is" is deleted from its name, and the name is converted
+    /// to camel case (meaning if a name starts with A to Z, that letter is lower-cased).
+    /// Also, Java <c>Enum</c>
+    ///  objects will be converted to the result of
+    /// their <c>name</c>
+    ///  method.</para>
+    ///  </summary>
     /// <param name='obj'>An arbitrary object.</param>
-    /// <summary>Not documented yet.</summary>
+    /// <returns>A CBOR object corresponding to the given object. Returns
+    /// CBORObject.Null if the object is null.</returns>
+    /// <exception cref='System.ArgumentException'>The object's type
+    /// is not supported.</exception>
     public static CBORObject FromObject(object obj) {
       if (obj == null) {
         return CBORObject.Null;

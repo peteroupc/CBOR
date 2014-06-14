@@ -195,7 +195,7 @@ Returns whether an array's length is allowed under this filter.
 
 <b>Returns:</b>
 
-True if an array's length is allowed under this filter; otherwise, false.
+True if this filter allows CBOR arrays and an array's length is allowed under this filter; otherwise, false.
 
 ### ArrayLengthMatches
 
@@ -210,14 +210,14 @@ Returns whether an array's length is allowed under a filter.
 
 <b>Returns:</b>
 
-True if an array's length is allowed under a filter; otherwise, false.
+True if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise, false.
 
 ### ArrayLengthMatches
 
     public bool ArrayLengthMatches(
         PeterO.BigInteger bigLength);
 
-Not documented yet.
+Returns whether an array's length is allowed under a filter.
 
 <b>Parameters:</b>
 
@@ -225,7 +225,7 @@ Not documented yet.
 
 <b>Returns:</b>
 
-A Boolean object.
+True if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise, false.
 
 <b>Exceptions:</b>
 
@@ -289,15 +289,15 @@ The parameter <i>bigTag</i>
     public bool ArrayIndexAllowed(
         int index);
 
-Not documented yet.
+Determines whether this type filter allows CBOR arrays and the given array index is allowed under this type filter.
 
 <b>Parameters:</b>
 
- * <i>index</i>: A 32-bit signed integer.
+ * <i>index</i>: An array index, starting from 0.
 
 <b>Returns:</b>
 
-A Boolean object.
+True if this type filter allows CBOR arrays and the given array index is allowed under this type filter; otherwise, false.
 
 ### GetSubFilter
 

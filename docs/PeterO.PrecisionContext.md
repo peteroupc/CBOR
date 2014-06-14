@@ -378,61 +378,61 @@ No specific limit on precision. Rounding mode HalfUp.
 
     public static readonly PeterO.PrecisionContext Binary16;
 
-Precision context for the IEEE-754-2008 binary16 format, 11 bits precision.
+Precision context for the IEEE-754-2008 binary16 format, 11 bits precision. The default rounding mode is HalfEven.
 
 ### Binary32
 
     public static readonly PeterO.PrecisionContext Binary32;
 
-Precision context for the IEEE-754-2008 binary32 format, 24 bits precision.
+Precision context for the IEEE-754-2008 binary32 format, 24 bits precision. The default rounding mode is HalfEven.
 
 ### Binary64
 
     public static readonly PeterO.PrecisionContext Binary64;
 
-Precision context for the IEEE-754-2008 binary64 format, 53 bits precision.
+Precision context for the IEEE-754-2008 binary64 format, 53 bits precision. The default rounding mode is HalfEven.
 
 ### Binary128
 
     public static readonly PeterO.PrecisionContext Binary128;
 
-Precision context for the IEEE-754-2008 binary128 format, 113 bits precision.
+Precision context for the IEEE-754-2008 binary128 format, 113 bits precision. The default rounding mode is HalfEven.
 
 ### Decimal32
 
     public static readonly PeterO.PrecisionContext Decimal32;
 
-Precision context for the IEEE-754-2008 decimal32 format.
+Precision context for the IEEE-754-2008 decimal32 format. The default rounding mode is HalfEven.
 
 ### Decimal64
 
     public static readonly PeterO.PrecisionContext Decimal64;
 
-Precision context for the IEEE-754-2008 decimal64 format.
+Precision context for the IEEE-754-2008 decimal64 format. The default rounding mode is HalfEven.
 
 ### Decimal128
 
     public static readonly PeterO.PrecisionContext Decimal128;
 
-Precision context for the IEEE-754-2008 decimal128 format.
+Precision context for the IEEE-754-2008 decimal128 format. The default rounding mode is HalfEven.
 
 ### Basic
 
     public static readonly PeterO.PrecisionContext Basic;
 
-Basic precision context, 9 digits precision, rounding mode half-up, unlimited exponent range.
+Basic precision context, 9 digits precision, rounding mode half-up, unlimited exponent range. The default rounding mode is HalfUp.
 
 ### CliDecimal
 
     public static readonly PeterO.PrecisionContext CliDecimal;
 
-Precision context for the Common Language Infrastructure (.NET Framework) decimal format, 96 bits precision, and a valid exponent range of -28 to 0.
+Precision context for the Common Language Infrastructure (.NET Framework) decimal format, 96 bits precision, and a valid exponent range of -28 to 0. The default rounding mode is HalfEven.
 
 ### JavaBigDecimal
 
     public static readonly PeterO.PrecisionContext JavaBigDecimal;
 
-Precision context for Java's BigDecimal format.
+Precision context for Java's BigDecimal format. The default rounding mode is HalfEven.
 
 ### EMax
 

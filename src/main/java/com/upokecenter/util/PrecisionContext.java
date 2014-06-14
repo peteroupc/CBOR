@@ -580,7 +580,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Precision context for the IEEE-754-2008 binary16 format, 11 bits
-     * precision.
+     * precision. The default rounding mode is HalfEven.
      */
 
     public static final PrecisionContext Binary16 =
@@ -590,7 +590,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Precision context for the IEEE-754-2008 binary32 format, 24 bits
-     * precision.
+     * precision. The default rounding mode is HalfEven.
      */
 
     public static final PrecisionContext Binary32 =
@@ -600,7 +600,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Precision context for the IEEE-754-2008 binary64 format, 53 bits
-     * precision.
+     * precision. The default rounding mode is HalfEven.
      */
 
     public static final PrecisionContext Binary64 =
@@ -610,7 +610,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Precision context for the IEEE-754-2008 binary128 format, 113 bits
-     * precision.
+     * precision. The default rounding mode is HalfEven.
      */
 
     public static final PrecisionContext Binary128 =
@@ -619,21 +619,24 @@ at: http://upokecenter.com/d/
       .WithExponentRange(-16382, 16383);
 
     /**
-     * Precision context for the IEEE-754-2008 decimal32 format.
+     * Precision context for the IEEE-754-2008 decimal32 format. The default
+     * rounding mode is HalfEven.
      */
 
     public static final PrecisionContext Decimal32 =
       new PrecisionContext(7, Rounding.HalfEven, -95, 96, true);
 
     /**
-     * Precision context for the IEEE-754-2008 decimal64 format.
+     * Precision context for the IEEE-754-2008 decimal64 format. The default
+     * rounding mode is HalfEven.
      */
 
     public static final PrecisionContext Decimal64 =
       new PrecisionContext(16, Rounding.HalfEven, -383, 384, true);
 
     /**
-     * Precision context for the IEEE-754-2008 decimal128 format.
+     * Precision context for the IEEE-754-2008 decimal128 format. The
+     * default rounding mode is HalfEven.
      */
 
     public static final PrecisionContext Decimal128 =
@@ -641,7 +644,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Basic precision context, 9 digits precision, rounding mode half-up,
-     * unlimited exponent range.
+     * unlimited exponent range. The default rounding mode is HalfUp.
      */
 
     public static final PrecisionContext Basic =
@@ -650,7 +653,7 @@ at: http://upokecenter.com/d/
     /**
      * Precision context for the Common Language Infrastructure (.NET
      * Framework) decimal format, 96 bits precision, and a valid exponent
-     * range of -28 to 0.
+     * range of -28 to 0. The default rounding mode is HalfEven.
      */
 
     public static final PrecisionContext CliDecimal =
@@ -658,7 +661,8 @@ at: http://upokecenter.com/d/
       .WithPrecisionInBits(true);
 
     /**
-     * Precision context for Java's BigDecimal format.
+     * Precision context for Java's BigDecimal format. The default rounding
+     * mode is HalfEven.
      */
 
     public static final PrecisionContext JavaBigDecimal =
