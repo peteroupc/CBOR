@@ -89,15 +89,21 @@ An ExtendedDecimal object.
     public static PeterO.ExtendedDecimal CreateNaN(
         PeterO.BigInteger diag);
 
-Not documented yet.
+Creates a not-a-number ExtendedDecimal object.
 
 <b>Parameters:</b>
 
- * <i>diag</i>: A BigInteger object.
+ * <i>diag</i>: A number to use as diagnostic information associated with this object. The sign will be ignored. If none is needed, should be zero.
 
 <b>Returns:</b>
 
-An ExtendedDecimal object.
+A quiet not-a-number object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>diag</i>
+ is null.
 
 ### CreateNaN
 
@@ -111,9 +117,9 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>diag</i>: A BigInteger object.
+ * <i>diag</i>: A number to use as diagnostic information associated with this object. The sign will be ignored. If none is needed, should be zero.
 
- * <i>signaling</i>: A Boolean object.
+ * <i>signaling</i>: Whether the return value will be signaling (true) or quiet (false).
 
  * <i>negative</i>: A Boolean object. (2).
 

@@ -16,6 +16,13 @@ namespace Test {
   public class CBORSupplementTest
   {
     [TestMethod]
+    public void TestCreateNaN() {
+      Assert.IsFalse(ExtendedDecimal.CreateNaN((BigInteger)(-1)).IsNegative);
+      Assert.IsFalse(ExtendedFloat.CreateNaN((BigInteger)(-1)).IsNegative);
+      Assert.IsFalse(ExtendedRational.CreateNaN((BigInteger)(-1)).IsNegative);
+    }
+
+    [TestMethod]
     public void TestCyclicRefs() {
       CBORObject cbor = CBORObject.NewArray();
       cbor.Add(CBORObject.NewArray());

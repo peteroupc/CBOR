@@ -80,9 +80,11 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
+     * Determines whether this object&apos;s mantissa and exponent are
+     * equal to those of another object.
      * @param other An ExtendedFloat object.
-     * @return A Boolean object.
+     * @return True if this object's mantissa and exponent are equal to those
+     * of another object; otherwise, false.
      */
     public boolean equals(ExtendedFloat other) {
       return this.EqualsInternal(other);
@@ -114,9 +116,13 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param diag A BigInteger object.
-     * @return An ExtendedFloat object.
+     * Creates a not-a-number ExtendedFloat object.
+     * @param diag A number to use as diagnostic information associated
+     * with this object. The sign will be ignored. If none is needed, should
+     * be zero.
+     * @return A quiet not-a-number object.
+     * @throws java.lang.NullPointerException The parameter {@code diag}
+     * is null.
      */
     public static ExtendedFloat CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false, null);
@@ -1111,17 +1117,20 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
+     * Calculates the remainder of a number by the formula this - ((this /
+     * divisor) * divisor). This is meant to be similar to the remainder operation
+     * in Java's BigDecimal.
      * @param divisor An ExtendedFloat object. (2).
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context object to control the precision, rounding,
+     * and exponent range of the integer part of the result. This context
+     * will be used only in the division portion of the remainder calculation.
+     * Flags will be set on the given context only if the context&apos;s HasFlags
+     * is true and the integer part of the result doesn&apos;t fit the precision
+     * and exponent range without rounding.
      * @return An ExtendedFloat object.
      */
-    public ExtendedFloat RemainderNaturalScale(
-      ExtendedFloat divisor,
-      PrecisionContext ctx) {
-      return this.Subtract(
-        this.DivideToIntegerNaturalScale(divisor, null).Multiply(divisor, null),
-        ctx);
+    public ExtendedFloat RemainderNaturalScale(ExtendedFloat divisor, ExtendedFloat ctx) {
+      return this.Subtract(this.DivideToIntegerNaturalScale(divisor, ctx).Multiply(divisor, null), null);
     }
 
     /**

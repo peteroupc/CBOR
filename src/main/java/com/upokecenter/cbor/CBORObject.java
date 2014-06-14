@@ -203,7 +203,7 @@ public void setConverter(Object value) {
     }
 
     /**
-     * Not documented yet.
+     * Registers an object that validates CBOR objects with new tags.
      * @param bigintTag A BigInteger object.
      * @param handler An ICBORTag object.
      * @throws java.lang.NullPointerException The parameter {@code bigintTag}
@@ -4140,9 +4140,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     /**
-     * Not documented yet.
-     * @param obj An arbitrary object.
-     * @return A CBORObject object.
+     *
      */
     public static CBORObject FromObject(Object obj) {
       if (obj == null) {

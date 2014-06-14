@@ -534,8 +534,9 @@ at: http://upokecenter.com/d/
       }
 
     /**
-     * Gets a value not documented yet.
-     * @return A value not documented yet.
+     * Gets the sign of this rational number.
+     * @return Zero if this value is zero or negative zero; -1 if this value
+     * is less than 0; and 1 if this value is greater than 0.
      */
     public int signum() {
         if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
@@ -861,8 +862,8 @@ thisRem=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
-     * @return A Boolean object.
+     * Returns whether this object is a not-a-number value.
+     * @return True if this object is a not-a-number value; otherwise, false.
      */
     public boolean IsNaN() {
       return (this.flags & BigNumberFlags.FlagNaN) != 0;
@@ -886,16 +887,21 @@ thisRem=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
-     * @return A Boolean object.
+     * Returns whether this object is a quiet not-a-number value.
+     * @return True if this object is a quiet not-a-number value; otherwise,
+     * false.
      */
     public boolean IsQuietNaN() {
       return (this.flags & BigNumberFlags.FlagQuietNaN) != 0;
     }
 
     /**
-     * Not documented yet.
-     * @return A Boolean object.
+     * Returns whether this object is a signaling not-a-number value (which
+     * causes an error if the value is passed to any arithmetic operation
+     * in this class).
+     * @return True if this object is a signaling not-a-number value (which
+     * causes an error if the value is passed to any arithmetic operation
+     * in this class); otherwise, false.
      */
     public boolean IsSignalingNaN() {
       return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
@@ -943,9 +949,10 @@ thisRem=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
+     * Adds two rational numbers.
      * @param otherValue An ExtendedRational object. (2).
-     * @return An ExtendedRational object.
+     * @return The sum of the two numbers. Returns NaN if either operand is
+     * NaN.
      * @throws java.lang.NullPointerException The parameter {@code otherValue}
      * is null.
      */

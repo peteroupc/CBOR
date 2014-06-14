@@ -509,7 +509,7 @@ namespace PeterO {
       PrecisionContext ctx2 = PrecisionContext.ForRounding(Rounding.Down).WithBigPrecision(ctx == null ? BigInteger.Zero : ctx.Precision).WithBlankFlags();
       T ret = this.DivideInternal(thisValue, divisor, ctx2, IntegerModeFixedScale, BigInteger.Zero);
       if ((ctx2.Flags & (PrecisionContext.FlagInvalid | PrecisionContext.FlagDivideByZero)) != 0) {
-        if (ctx.HasFlags) {
+        if (ctx != null && ctx.HasFlags) {
           ctx.Flags |= PrecisionContext.FlagInvalid | PrecisionContext.FlagDivideByZero;
         }
         return ret;

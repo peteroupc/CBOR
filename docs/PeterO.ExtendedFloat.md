@@ -38,7 +38,7 @@ True if this object's mantissa and exponent are equal to those of another object
     public sealed bool Equals(
         PeterO.ExtendedFloat other);
 
-Not documented yet.
+Determines whether this object's mantissa and exponent are equal to those of another object.
 
 <b>Parameters:</b>
 
@@ -46,7 +46,7 @@ Not documented yet.
 
 <b>Returns:</b>
 
-A Boolean object.
+True if this object's mantissa and exponent are equal to those of another object; otherwise, false.
 
 ### Equals
 
@@ -78,15 +78,21 @@ This object's hash code.
     public static PeterO.ExtendedFloat CreateNaN(
         PeterO.BigInteger diag);
 
-Not documented yet.
+Creates a not-a-number ExtendedFloat object.
 
 <b>Parameters:</b>
 
- * <i>diag</i>: A BigInteger object.
+ * <i>diag</i>: A number to use as diagnostic information associated with this object. The sign will be ignored. If none is needed, should be zero.
 
 <b>Returns:</b>
 
-An ExtendedFloat object.
+A quiet not-a-number object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>diag</i>
+ is null.
 
 ### CreateNaN
 

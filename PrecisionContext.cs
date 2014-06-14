@@ -538,7 +538,7 @@ namespace PeterO {
     public static readonly PrecisionContext Unlimited = PrecisionContext.ForPrecision(0);
 
     /// <summary>Precision context for the IEEE-754-2008 binary16 format,
-    /// 11 bits precision.</summary>
+    /// 11 bits precision. The default rounding mode is HalfEven.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -551,7 +551,7 @@ namespace PeterO {
       .WithExponentRange(-14, 15);
 
     /// <summary>Precision context for the IEEE-754-2008 binary32 format,
-    /// 24 bits precision.</summary>
+    /// 24 bits precision. The default rounding mode is HalfEven.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -564,7 +564,7 @@ namespace PeterO {
       .WithExponentRange(-126, 127);
 
     /// <summary>Precision context for the IEEE-754-2008 binary64 format,
-    /// 53 bits precision.</summary>
+    /// 53 bits precision. The default rounding mode is HalfEven.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -577,7 +577,7 @@ namespace PeterO {
       .WithExponentRange(-1022, 1023);
 
     /// <summary>Precision context for the IEEE-754-2008 binary128 format,
-    /// 113 bits precision.</summary>
+    /// 113 bits precision. The default rounding mode is HalfEven.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -589,7 +589,8 @@ namespace PeterO {
       .WithExponentClamp(true)
       .WithExponentRange(-16382, 16383);
 
-    /// <summary>Precision context for the IEEE-754-2008 decimal32 format.</summary>
+    /// <summary>Precision context for the IEEE-754-2008 decimal32 format.
+    /// The default rounding mode is HalfEven.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -600,7 +601,8 @@ namespace PeterO {
     public static readonly PrecisionContext Decimal32 =
       new PrecisionContext(7, Rounding.HalfEven, -95, 96, true);
 
-    /// <summary>Precision context for the IEEE-754-2008 decimal64 format.</summary>
+    /// <summary>Precision context for the IEEE-754-2008 decimal64 format.
+    /// The default rounding mode is HalfEven.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -611,7 +613,8 @@ namespace PeterO {
     public static readonly PrecisionContext Decimal64 =
       new PrecisionContext(16, Rounding.HalfEven, -383, 384, true);
 
-    /// <summary>Precision context for the IEEE-754-2008 decimal128 format.</summary>
+    /// <summary>Precision context for the IEEE-754-2008 decimal128 format.
+    /// The default rounding mode is HalfEven.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -623,7 +626,8 @@ namespace PeterO {
       new PrecisionContext(34, Rounding.HalfEven, -6143, 6144, true);
 
     /// <summary>Basic precision context, 9 digits precision, rounding
-    /// mode half-up, unlimited exponent range.</summary>
+    /// mode half-up, unlimited exponent range. The default rounding mode
+    /// is HalfUp.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -635,7 +639,7 @@ namespace PeterO {
 
     /// <summary>Precision context for the Common Language Infrastructure
     /// (.NET Framework) decimal format, 96 bits precision, and a valid exponent
-    /// range of -28 to 0.</summary>
+    /// range of -28 to 0. The default rounding mode is HalfEven.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -647,7 +651,8 @@ namespace PeterO {
       new PrecisionContext(96, Rounding.HalfEven, 0, 28, true)
       .WithPrecisionInBits(true);
 
-    /// <summary>Precision context for Java's BigDecimal format.</summary>
+    /// <summary>Precision context for Java's BigDecimal format. The default
+    /// rounding mode is HalfEven.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
