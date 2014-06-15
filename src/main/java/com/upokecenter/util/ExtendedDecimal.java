@@ -225,7 +225,7 @@ at: http://upokecenter.com/d/
 
     /**
      * Creates a decimal number from a string that represents a number. See
-     * FromString(string, PrecisionContext) for more information.
+     * FromString(string, int, int, PrecisionContext) for more information.
      * @param str A string that represents a number.
      * @return An arbitrary-precision decimal number with the same value
      * as the given string.
@@ -235,7 +235,49 @@ at: http://upokecenter.com/d/
      * formatted number string.
      */
     public static ExtendedDecimal FromString(String str) {
-      return FromString(str, null);
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
+      return FromString(str, 0, str.length(), null);
+    }
+
+    /**
+     * Creates a decimal number from a string that represents a number. See
+     * FromString(string, int, int, PrecisionContext) for more information.
+     * @param str A string that represents a number.
+     * @param ctx A PrecisionContext object.
+     * @return An arbitrary-precision decimal number with the same value
+     * as the given string.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     * @throws NumberFormatException The parameter {@code str} is not a correctly
+     * formatted number string.
+     */
+    public static ExtendedDecimal FromString(String str, PrecisionContext ctx) {
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
+      return FromString(str, 0, str.length(), ctx);
+    }
+
+    /**
+     * Creates a decimal number from a string that represents a number. See
+     * FromString(string, int, int, PrecisionContext) for more information.
+     * @param str A string that represents a number.
+     * @param offset A 32-bit signed integer.
+     * @param length A 32-bit signed integer. (2).
+     * @return An arbitrary-precision decimal number with the same value
+     * as the given string.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     * @throws NumberFormatException The parameter {@code str} is not a correctly
+     * formatted number string.
+     */
+    public static ExtendedDecimal FromString(String str, int offset, int length) {
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
+      return FromString(str, offset, length, null);
     }
 
     /**
@@ -251,11 +293,10 @@ at: http://upokecenter.com/d/
      * of digits, all in any combination of upper and lower case.</p> <p>The
      * format generally follows the definition in java.math.BigDecimal(),
      * except that the digits must be ASCII digits ('0' through '9').</p>
-     * @param str A string that represents a number.
-     * @param ctx A precision context to control precision, rounding, and
-     * exponent range of the result. If HasFlags of the context is true, will
-     * also store the flags resulting from the operation (the flags are in
-     * addition to the pre-existing flags). Can be null.
+     * @param str A string object.
+     * @param offset A 32-bit signed integer.
+     * @param length A 32-bit signed integer. (2).
+     * @param ctx A PrecisionContext object.
      * @return An arbitrary-precision decimal number with the same value
      * as the given string.
      * @throws java.lang.NullPointerException The parameter {@code str}
@@ -263,15 +304,30 @@ at: http://upokecenter.com/d/
      * @throws NumberFormatException The parameter {@code str} is not a correctly
      * formatted number string.
      */
-    public static ExtendedDecimal FromString(String str, PrecisionContext ctx) {
+    public static ExtendedDecimal FromString(String str, int offset, int length, PrecisionContext ctx) {
       if (str == null) {
         throw new NullPointerException("str");
       }
-      if (str.length() == 0) {
+      if (offset < 0) {
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
+      }
+      if (offset > str.length()) {
+        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)str.length()));
+      }
+      if (length < 0) {
+        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is less than " + "0");
+      }
+      if (length > str.length()) {
+        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is more than " + Long.toString((long)str.length()));
+      }
+      if (str.length() - offset < length) {
+        throw new IllegalArgumentException("str's length minus " + offset + " (" + Long.toString((long)(str.length() - offset)) + ") is less than " + Long.toString((long)length));
+      }
+      if (length == 0) {
         throw new NumberFormatException();
       }
-      int offset = 0;
       boolean negative = false;
+      int endStr = offset + length;
       if (str.charAt(0) == '+' || str.charAt(0) == '-') {
         negative = str.charAt(0) == '-';
         ++offset;
@@ -288,29 +344,29 @@ at: http://upokecenter.com/d/
       int newScaleInt = 0;
       FastInteger newScale = null;
       int i = offset;
-      if (i + 8 == str.length()) {
+      if (i + 8 == endStr) {
         if ((str.charAt(i) == 'I' || str.charAt(i) == 'i') && (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') && (str.charAt(i + 2) == 'F' || str.charAt(i + 2) == 'f') && (str.charAt(i + 3) == 'I' || str.charAt(i + 3) == 'i') && (str.charAt(i + 4) == 'N' || str.charAt(i + 4) == 'n') && (str.charAt(i + 5) == 'I' || str.charAt(i + 5) == 'i') && (str.charAt(i + 6) == 'T' || str.charAt(i + 6) == 't') && (str.charAt(i + 7) == 'Y' || str.charAt(i + 7) == 'y')) {
-          if (ctx != null && ctx.isSimplified() && i < str.length()) {
+          if (ctx != null && ctx.isSimplified() && i < endStr) {
             throw new NumberFormatException("Infinity not allowed");
           }
           return negative ? NegativeInfinity : PositiveInfinity;
         }
       }
-      if (i + 3 == str.length()) {
+      if (i + 3 == endStr) {
         if ((str.charAt(i) == 'I' || str.charAt(i) == 'i') && (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') && (str.charAt(i + 2) == 'F' || str.charAt(i + 2) == 'f')) {
-          if (ctx != null && ctx.isSimplified() && i < str.length()) {
+          if (ctx != null && ctx.isSimplified() && i < endStr) {
             throw new NumberFormatException("Infinity not allowed");
           }
           return negative ? NegativeInfinity : PositiveInfinity;
         }
       }
-      if (i + 3 <= str.length()) {
+      if (i + 3 <= endStr) {
         // Quiet NaN
         if ((str.charAt(i) == 'N' || str.charAt(i) == 'n') && (str.charAt(i + 1) == 'A' || str.charAt(i + 1) == 'a') && (str.charAt(i + 2) == 'N' || str.charAt(i + 2) == 'n')) {
-          if (ctx != null && ctx.isSimplified() && i < str.length()) {
+          if (ctx != null && ctx.isSimplified() && i < endStr) {
             throw new NumberFormatException("NaN not allowed");
           }
-          if (i + 3 == str.length()) {
+          if (i + 3 == endStr) {
             if (!negative) {
               return NaN;
             }
@@ -326,7 +382,7 @@ at: http://upokecenter.com/d/
               maxDigits.Decrement();
             }
           }
-          for (; i < str.length(); ++i) {
+          for (; i < endStr; ++i) {
             if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
               int thisdigit = (int)(str.charAt(i) - '0');
               haveDigits = haveDigits || thisdigit != 0;
@@ -368,13 +424,13 @@ at: http://upokecenter.com/d/
           return CreateWithFlags(bigmant, BigInteger.ZERO, (negative ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagQuietNaN);
         }
       }
-      if (i + 4 <= str.length()) {
+      if (i + 4 <= endStr) {
         // Signaling NaN
         if ((str.charAt(i) == 'S' || str.charAt(i) == 's') && (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') && (str.charAt(i + 2) == 'A' || str.charAt(i + 2) == 'a') && (str.charAt(i + 3) == 'N' || str.charAt(i + 3) == 'n')) {
-          if (ctx != null && ctx.isSimplified() && i < str.length()) {
+          if (ctx != null && ctx.isSimplified() && i < endStr) {
             throw new NumberFormatException("NaN not allowed");
           }
-          if (i + 4 == str.length()) {
+          if (i + 4 == endStr) {
             if (!negative) {
               return SignalingNaN;
             }
@@ -390,7 +446,7 @@ at: http://upokecenter.com/d/
               maxDigits.Decrement();
             }
           }
-          for (; i < str.length(); ++i) {
+          for (; i < endStr; ++i) {
             if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
               int thisdigit = (int)(str.charAt(i) - '0');
               haveDigits = haveDigits || thisdigit != 0;
@@ -433,7 +489,7 @@ at: http://upokecenter.com/d/
         }
       }
       // Ordinary number
-      for (; i < str.length(); ++i) {
+      for (; i < endStr; ++i) {
         if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
           int thisdigit = (int)(str.charAt(i) - '0');
           if (mantInt > MaxSafeInt) {
@@ -491,7 +547,7 @@ at: http://upokecenter.com/d/
         int expInt = 0;
         offset = 1;
         haveDigits = false;
-        if (i == str.length()) {
+        if (i == endStr) {
           throw new NumberFormatException();
         }
         if (str.charAt(i) == '+' || str.charAt(i) == '-') {
@@ -500,7 +556,7 @@ at: http://upokecenter.com/d/
           }
           ++i;
         }
-        for (; i < str.length(); ++i) {
+        for (; i < endStr; ++i) {
           if (str.charAt(i) >= '0' && str.charAt(i) <= '9') {
             haveDigits = true;
             int thisdigit = (int)(str.charAt(i) - '0');
@@ -557,7 +613,7 @@ at: http://upokecenter.com/d/
           }
         }
       }
-      if (i != str.length()) {
+      if (i != endStr) {
         throw new NumberFormatException();
       }
       ExtendedDecimal ret = new ExtendedDecimal();
@@ -1765,7 +1821,8 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Not documented yet.
+     * Calculates the remainder of a number by the formula this - ((this.divide(divisor)).multiply(divisor)).
+     * This is meant to be similar to the remainder operation in Java's BigDecimal.
      * @param divisor An ExtendedDecimal object. (2).
      * @return An ExtendedDecimal object.
      */
@@ -1778,11 +1835,12 @@ remainder=divrem[1]; }
      * This is meant to be similar to the remainder operation in Java's BigDecimal.
      * @param divisor An ExtendedDecimal object. (2).
      * @param ctx A precision context object to control the precision, rounding,
-     * and exponent range of the integer part of the result. This context
-     * will be used only in the division portion of the remainder calculation.
-     * Flags will be set on the given context only if the context&apos;s HasFlags
-     * is true and the integer part of the result doesn&apos;t fit the precision
-     * and exponent range without rounding.
+     * and exponent range of the result. This context will be used only in
+     * the division portion of the remainder calculation; as a result, it&apos;s
+     * possible for the return value to have a higher precision than given
+     * in this context. Flags will be set on the given context only if the context&apos;s
+     * HasFlags is true and the integer part of the result doesn&apos;t fit
+     * the precision and exponent range without rounding.
      * @return An ExtendedDecimal object.
      */
     public ExtendedDecimal RemainderNaturalScale(ExtendedDecimal divisor, PrecisionContext ctx) {
@@ -2173,8 +2231,8 @@ remainder=divrem[1]; }
     /**
      * Gets the lesser value between two values, ignoring their signs. If
      * the absolute values are equal, has the same effect as Min.
-     * @param first An ExtendedDecimal object. (2).
-     * @param second An ExtendedDecimal object. (3).
+     * @param first The first value to compare.
+     * @param second The second value to compare.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -2363,7 +2421,12 @@ remainder=divrem[1]; }
 
     /**
      * Returns a decimal number with the same value as this object but with
-     * the same exponent as another decimal number.
+     * the same exponent as another decimal number. <p>Note that this is
+     * not always the same as rounding to a given number of decimal places,
+     * since it can fail if the difference between this value's exponent
+     * and the desired exponent is too big, depending on the maximum precision.
+     * If rounding to a number of decimal places is desired, it's better to
+     * use the RoundToExponent and RoundToIntegral methods instead.</p>
      * @param otherValue A decimal number containing the desired exponent
      * of the result. The mantissa is ignored. The exponent is the number
      * of fractional digits in the result, expressed as a negative number.
@@ -2389,7 +2452,8 @@ remainder=divrem[1]; }
 
     /**
      * Returns a decimal number with the same value as this object but rounded
-     * to an integer.
+     * to an integer, and signals an invalid operation if the result would
+     * be inexact.
      * @param ctx A precision context to control precision and rounding
      * of the result. If HasFlags of the context is true, will also store the
      * flags resulting from the operation (the flags are in addition to the
@@ -2616,8 +2680,8 @@ remainder=divrem[1]; }
 @Deprecated
     public ExtendedDecimal RoundToBinaryPrecision(PrecisionContext ctx) {
       if (ctx == null) {
- return this;
-}
+        return this;
+      }
       PrecisionContext ctx2 = ctx.Copy().WithPrecisionInBits(true);
       ExtendedDecimal ret = math.RoundToPrecision(this, ctx2);
       if (ctx2.getHasFlags()) {

@@ -174,9 +174,16 @@ namespace PeterO {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
     }
 
-    /// <summary>Not documented yet.</summary>
+
+    /// <summary>Creates a not-a-number ExtendedRational object.</summary>
     /// <returns>An ExtendedRational object.</returns>
-    /// <param name='diag'>A BigInteger object.</param>
+    /// <param name='diag'>A number to use as diagnostic information associated
+    /// with this object. If none is needed, should
+    /// be zero.</param>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='diag'/> is null.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter
+    /// <paramref name='diag'/> is less than 0.</exception>
     public static ExtendedRational CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false);
     }
@@ -187,13 +194,18 @@ namespace PeterO {
       return er;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Creates a not-a-number ExtendedRational object.</summary>
     /// <returns>An ExtendedRational object.</returns>
-    /// <param name='diag'>A BigInteger object.</param>
-    /// <param name='signaling'>A Boolean object.</param>
-    /// <param name='negative'>A Boolean object. (2).</param>
+    /// <param name='diag'>A number to use as diagnostic information associated
+    /// with this object. If none is needed, should
+    /// be zero.</param>
+    /// <param name='signaling'>Whether the return value will be signaling
+    /// (true) or quiet (false).</param>
+    /// <param name='negative'>Whether the return value is negative.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='diag'/> is null.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter
+    /// <paramref name='diag'/> is less than 0.</exception>
     public static ExtendedRational CreateNaN(BigInteger diag, bool signaling, bool negative) {
       if (diag == null) {
         throw new ArgumentNullException("diag");

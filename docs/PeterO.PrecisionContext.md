@@ -434,6 +434,12 @@ Precision context for the Common Language Infrastructure (.NET Framework) decima
 
 Precision context for Java's BigDecimal format. The default rounding mode is HalfUp.
 
+### JavaBigDecimal
+
+    public static readonly PeterO.PrecisionContext JavaBigDecimal;
+
+Precision context for Java's BigDecimal format. The default rounding mode is HalfUp.
+
 ### EMax
 
     public PeterO.BigInteger EMax { get; }

@@ -148,25 +148,29 @@ namespace PeterO {
     /// <returns>A 64-bit signed integer with the same value as the BigInteger
     /// object.</returns>
     /// <param name='bigValue'>A BigInteger object.</param>
+    /// <exception cref='OverflowException'>This object's value is too
+    /// big to fit a 64-bit signed integer.</exception>
     public static explicit operator long(BigInteger bigValue) {
-      return bigValue.longValue();
+      return bigValue.longValueChecked();
     }
 
     /// <summary>Converts the value of a BigInteger object to a 32-bit signed
     /// integer.</summary>
     /// <returns>A 32-bit signed integer with the same value as the BigInteger
     /// object.</returns>
+    /// <exception cref='OverflowException'>This object's value is too
+    /// big to fit a 32-bit signed integer.</exception>
     /// <param name='bigValue'>A BigInteger object.</param>
     public static explicit operator int(BigInteger bigValue) {
-      return bigValue.intValue();
+      return bigValue.intValueChecked();
     }
 
     /// <summary>Determines whether a BigInteger instance is less than
     /// another BigInteger instance.</summary>
     /// <returns>True if <paramref name='thisValue'/> is less than <paramref
     /// name='otherValue'/> ; otherwise, false.</returns>
-    /// <param name='thisValue'>A BigInteger object.</param>
-    /// <param name='otherValue'>A BigInteger object. (2).</param>
+    /// <param name='thisValue'>The first BigInteger object.</param>
+    /// <param name='otherValue'>The second BigInteger object.</param>
     public static bool operator <(BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
         return otherValue != null;
@@ -178,8 +182,8 @@ namespace PeterO {
     /// or equal to another BigInteger instance.</summary>
     /// <returns>True if <paramref name='thisValue'/> is up to <paramref
     /// name='otherValue'/> ; otherwise, false.</returns>
-    /// <param name='thisValue'>A BigInteger object.</param>
-    /// <param name='otherValue'>A BigInteger object. (2).</param>
+    /// <param name='thisValue'>The first BigInteger object.</param>
+    /// <param name='otherValue'>The second BigInteger object.</param>
     public static bool operator <=(BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
         return true;
@@ -191,8 +195,8 @@ namespace PeterO {
     /// another BigInteger instance.</summary>
     /// <returns>True if <paramref name='thisValue'/> is greater than
     /// <paramref name='otherValue'/> ; otherwise, false.</returns>
-    /// <param name='thisValue'>A BigInteger object.</param>
-    /// <param name='otherValue'>A BigInteger object. (2).</param>
+    /// <param name='thisValue'>The first BigInteger object.</param>
+    /// <param name='otherValue'>The second BigInteger object.</param>
     public static bool operator >(BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
         return false;
@@ -204,8 +208,8 @@ namespace PeterO {
     /// another BigInteger value.</summary>
     /// <returns>True if <paramref name='thisValue'/> is at least <paramref
     /// name='otherValue'/> ; otherwise, false.</returns>
-    /// <param name='thisValue'>A BigInteger object.</param>
-    /// <param name='otherValue'>A BigInteger object. (2).</param>
+    /// <param name='thisValue'>The first BigInteger object.</param>
+    /// <param name='otherValue'>The second BigInteger object.</param>
     public static bool operator >=(BigInteger thisValue, BigInteger otherValue) {
       if (thisValue == null) {
         return otherValue == null;
