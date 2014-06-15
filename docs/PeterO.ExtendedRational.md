@@ -39,6 +39,16 @@ A 32-bit hash code.
 
 Creates a number with the given numerator and denominator.
 
+<b>Parameters:</b>
+
+ * <i>numeratorSmall</i>: A 32-bit signed integer.
+
+ * <i>denominatorSmall</i>: A 32-bit signed integer. (2).
+
+<b>Returns:</b>
+
+An ExtendedRational object.
+
 ### Create
 
     public static PeterO.ExtendedRational Create(
@@ -46,6 +56,16 @@ Creates a number with the given numerator and denominator.
         PeterO.BigInteger denominator);
 
 Creates a number with the given numerator and denominator.
+
+<b>Parameters:</b>
+
+ * <i>numerator</i>: A BigInteger object.
+
+ * <i>denominator</i>: A BigInteger object. (2).
+
+<b>Returns:</b>
+
+An ExtendedRational object.
 
 ### ExtendedRational Constructor
 

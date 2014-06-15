@@ -675,7 +675,7 @@ The integer part of the quotient of the two objects. Signals FlagDivideByZero an
     public PeterO.ExtendedDecimal Reduce(
         PeterO.PrecisionContext ctx);
 
-Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1.
+Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1. Unlike the "stripTrailingZeros" method of Java's BigDecimal, if this object's value is 0, changes the exponent to 0.
 
 <b>Parameters:</b>
 
@@ -694,7 +694,7 @@ Calculates the remainder of a number by the formula this - ((this / divisor) * d
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: An ExtendedDecimal object. (2).
+ * <i>divisor</i>: The number to divide by.
 
 <b>Returns:</b>
 
@@ -710,7 +710,7 @@ Calculates the remainder of a number by the formula this - ((this / divisor) * d
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: An ExtendedDecimal object. (2).
+ * <i>divisor</i>: The number to divide by.
 
  * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the result. This context will be used only in the division portion of the remainder calculation; as a result, it's possible for the return value to have a higher precision than given in this context. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the result doesn't fit the precision and exponent range without rounding.
 

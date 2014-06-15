@@ -648,7 +648,7 @@ The integer part of the quotient of the two objects. Signals FlagDivideByZero an
     public PeterO.ExtendedFloat Reduce(
         PeterO.PrecisionContext ctx);
 
-Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1.
+Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1. Unlike the "stripTrailingZeros" method of Java's BigDecimal, if this object's value is 0, changes the exponent to 0.
 
 <b>Parameters:</b>
 

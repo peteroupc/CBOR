@@ -312,19 +312,19 @@ namespace PeterO {
         throw new ArgumentNullException("str");
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        throw new FormatException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (offset > str.Length) {
-        throw new ArgumentException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new FormatException("offset (" + Convert.ToString((long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (length < 0) {
-        throw new ArgumentException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        throw new FormatException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
       if (length > str.Length) {
-        throw new ArgumentException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new FormatException("length (" + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((long)str.Length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (str.Length - offset < length) {
-        throw new ArgumentException("str's length minus " + offset + " (" + Convert.ToString((long)(str.Length - offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new FormatException("str's length minus " + offset + " (" + Convert.ToString((long)(str.Length - offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)length, System.Globalization.CultureInfo.InvariantCulture));
       }
       if (length == 0) {
         throw new FormatException();
@@ -1752,7 +1752,9 @@ namespace PeterO {
     }
 
     /// <summary>Removes trailing zeros from this object&apos;s mantissa.
-    /// For example, 1.000 becomes 1.</summary>
+    /// For example, 1.000 becomes 1. Unlike the "stripTrailingZeros" method
+    /// of Java's BigDecimal, if this object's value is 0, changes the exponent
+    /// to 0.</summary>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
@@ -1767,7 +1769,7 @@ namespace PeterO {
     /// <summary>Calculates the remainder of a number by the formula this
     /// - ((this / divisor) * divisor). This is meant to be similar to the remainder
     /// operation in Java's BigDecimal.</summary>
-    /// <param name='divisor'>An ExtendedDecimal object. (2).</param>
+    /// <param name='divisor'>The number to divide by.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal RemainderNaturalScale(ExtendedDecimal divisor) {
       return this.RemainderNaturalScale(divisor, null);
@@ -1776,7 +1778,7 @@ namespace PeterO {
     /// <summary>Calculates the remainder of a number by the formula this
     /// - ((this / divisor) * divisor). This is meant to be similar to the remainder
     /// operation in Java's BigDecimal.</summary>
-    /// <param name='divisor'>An ExtendedDecimal object. (2).</param>
+    /// <param name='divisor'>The number to divide by.</param>
     /// <param name='ctx'>A precision context object to control the precision,
     /// rounding, and exponent range of the result. This context will be used
     /// only in the division portion of the remainder calculation; as a result,
