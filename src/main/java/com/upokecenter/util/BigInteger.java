@@ -2271,9 +2271,9 @@ at: http://upokecenter.com/d/
       if (c > 1) {
         ivv |= (((long)this.reg[1]) & 0xffffL) << 16;
         if (c > 2) {
-          ivv |= (((long)this.reg[2]) & 0xffffL) << 16;
+          ivv |= (((long)this.reg[2]) & 0xffffL) << 32;
           if (c > 3) {
-            ivv |= (((long)this.reg[3]) & 0xffffL) << 16;
+            ivv |= (((long)this.reg[3]) & 0xffffL) << 48;
           }
         }
       }

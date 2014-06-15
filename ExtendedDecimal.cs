@@ -151,8 +151,7 @@ namespace PeterO {
     /// <summary>Creates a not-a-number ExtendedDecimal object.</summary>
     /// <returns>A quiet not-a-number object.</returns>
     /// <param name='diag'>A number to use as diagnostic information associated
-    /// with this object. If none is needed, should
-    /// be zero.</param>
+    /// with this object. If none is needed, should be zero.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='diag'/> is null or is less than 0.</exception>
     public static ExtendedDecimal CreateNaN(BigInteger diag) {
@@ -162,8 +161,7 @@ namespace PeterO {
     /// <summary>Creates a not-a-number ExtendedDecimal object.</summary>
     /// <returns>An ExtendedDecimal object.</returns>
     /// <param name='diag'>A number to use as diagnostic information associated
-    /// with this object. If none is needed, should
-    /// be zero.</param>
+    /// with this object. If none is needed, should be zero.</param>
     /// <param name='signaling'>Whether the return value will be signaling
     /// (true) or quiet (false).</param>
     /// <param name='negative'>Whether the return value is negative.</param>

@@ -181,9 +181,14 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param diag A BigInteger object.
+     * Creates a not-a-number ExtendedRational object.
+     * @param diag A number to use as diagnostic information associated
+     * with this object. If none is needed, should be zero.
      * @return An ExtendedRational object.
+     * @throws java.lang.NullPointerException The parameter {@code diag}
+     * is null.
+     * @throws java.lang.IllegalArgumentException The parameter {@code diag} is
+     * less than 0.
      */
     public static ExtendedRational CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false);
@@ -196,13 +201,17 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Not documented yet.
-     * @param diag A BigInteger object.
-     * @param signaling A Boolean object.
-     * @param negative A Boolean object. (2).
+     * Creates a not-a-number ExtendedRational object.
+     * @param diag A number to use as diagnostic information associated
+     * with this object. If none is needed, should be zero.
+     * @param signaling Whether the return value will be signaling (true)
+     * or quiet (false).
+     * @param negative Whether the return value is negative.
      * @return An ExtendedRational object.
      * @throws java.lang.NullPointerException The parameter {@code diag}
      * is null.
+     * @throws java.lang.IllegalArgumentException The parameter {@code diag} is
+     * less than 0.
      */
     public static ExtendedRational CreateNaN(BigInteger diag, boolean signaling, boolean negative) {
       if (diag == null) {

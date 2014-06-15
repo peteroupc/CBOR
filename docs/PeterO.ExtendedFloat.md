@@ -986,7 +986,7 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
  * If the remainder's absolute value is exactly half of the divisor's absolute value, the result has the opposite sign of this object if the quotient, rounded down, is odd, and has the same sign as this object if the quotient, rounded down, is even, and the result's absolute value is half of the divisor's absolute value.
 
-This function is also known as the IEEE Remainder" function.
+This function is also known as the "IEEE Remainder" function.
 
 <b>Parameters:</b>
 
