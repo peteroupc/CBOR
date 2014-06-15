@@ -674,11 +674,13 @@ at: http://upokecenter.com/d/
            BigInteger.ONE.add(BigInteger.valueOf(Integer.MAX_VALUE)));
 
 /// <summary>Precision context for Java's BigDecimal format. The default
+/// rounding mode is HalfUp.</summary>
 
 /**
  * @deprecated This context has the wrong settings. Use BigDecimalJava instead in the meantime. It may be corrected in version 2.
  */
 @Deprecated
+
     public static final PrecisionContext JavaBigDecimal =
       new PrecisionContext(0, Rounding.HalfEven, 0, 0, true)
         .WithExponentClamp(true)

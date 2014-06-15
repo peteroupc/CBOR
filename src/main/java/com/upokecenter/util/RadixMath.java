@@ -841,7 +841,7 @@ bigrem=divrem[1]; }
       return this.RoundToPrecision(guess, ctx);
     }
 
-    private static boolean SetPrecisionIfLimited(PrecisionContext ctx, BigInteger bigPrecision) {
+    private static PrecisionContext SetPrecisionIfLimited(PrecisionContext ctx, BigInteger bigPrecision) {
       if (ctx == null || !ctx.getHasMaxPrecision()) {
         return ctx;
       }
@@ -1099,7 +1099,7 @@ bigrem=divrem[1]; }
       }
       int guardDigitCount = this.thisRadix == 2 ? 32 : 10;
       BigInteger guardDigits = BigInteger.valueOf(guardDigitCount);
-      PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, ctx.getPrecision().add(guardDigits)) : ctx;
+      PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, ctx.getPrecision().add(guardDigits));
       ctxdiv = ctxdiv.WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
       T lnresult = this.Ln(thisValue, ctxdiv);
       /*

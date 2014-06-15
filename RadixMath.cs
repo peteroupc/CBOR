@@ -845,7 +845,7 @@ namespace PeterO {
       return this.RoundToPrecision(guess, ctx);
     }
 
-    private static bool SetPrecisionIfLimited(PrecisionContext ctx, BigInteger bigPrecision) {
+    private static PrecisionContext SetPrecisionIfLimited(PrecisionContext ctx, BigInteger bigPrecision) {
       if (ctx == null || !ctx.HasMaxPrecision) {
         return ctx;
       }
@@ -1107,7 +1107,7 @@ namespace PeterO {
       }
       int guardDigitCount = this.thisRadix == 2 ? 32 : 10;
       BigInteger guardDigits = (BigInteger)guardDigitCount;
-      PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, ctx.Precision + guardDigits) : ctx;
+      PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, ctx.Precision + guardDigits);
       ctxdiv = ctxdiv.WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
       T lnresult = this.Ln(thisValue, ctxdiv);
       /*

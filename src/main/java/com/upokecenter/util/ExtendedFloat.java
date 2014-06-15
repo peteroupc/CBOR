@@ -226,7 +226,38 @@ at: http://upokecenter.com/d/
      * of upper and lower case.</p> <p>The format generally follows the
      * definition in java.math.BigDecimal(), except that the digits must
      * be ASCII digits ('0' through '9').</p>
-     * @param str A string that represents a number.
+     * @param str A string object.
+     * @param offset A 32-bit signed integer.
+     * @param length A 32-bit signed integer. (2).
+     * @param ctx A PrecisionContext object.
+     * @return An ExtendedFloat object.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     */
+    public static ExtendedFloat FromString(String str, int offset, int length, PrecisionContext ctx) {
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
+      return ExtendedDecimal.FromString(str, offset, length, ctx).ToExtendedFloat();
+    }
+
+    /**
+     * Not documented yet.
+     * @param str A string object.
+     * @return An ExtendedFloat object.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
+     */
+    public static ExtendedFloat FromString(String str) {
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
+      return FromString(str, 0, str.length(), null);
+    }
+
+    /**
+     * Not documented yet.
+     * @param str A string object.
      * @param ctx A PrecisionContext object.
      * @return An ExtendedFloat object.
      * @throws java.lang.NullPointerException The parameter {@code str}
@@ -236,16 +267,23 @@ at: http://upokecenter.com/d/
       if (str == null) {
         throw new NullPointerException("str");
       }
-      return ExtendedDecimal.FromString(str, ctx).ToExtendedFloat();
+      return FromString(str, 0, str.length(), ctx);
     }
 
     /**
      * Not documented yet.
      * @param str A string object.
+     * @param offset A 32-bit signed integer.
+     * @param length A 32-bit signed integer. (2).
      * @return An ExtendedFloat object.
+     * @throws java.lang.NullPointerException The parameter {@code str}
+     * is null.
      */
-    public static ExtendedFloat FromString(String str) {
-      return FromString(str, null);
+    public static ExtendedFloat FromString(String str, int offset, int length) {
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
+      return FromString(str, offset, length, null);
     }
 
     private static final class BinaryMathHelper implements IRadixMathHelper<ExtendedFloat> {
@@ -1959,8 +1997,8 @@ at: http://upokecenter.com/d/
     public ExtendedFloat RoundToBinaryPrecision(
       PrecisionContext ctx) {
       if (ctx == null) {
- return this;
-}
+        return this;
+      }
       PrecisionContext ctx2 = ctx.Copy().WithPrecisionInBits(true);
       ExtendedFloat ret = math.RoundToPrecision(this, ctx2);
       if (ctx2.getHasFlags()) {

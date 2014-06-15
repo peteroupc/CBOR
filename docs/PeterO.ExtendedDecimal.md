@@ -8,7 +8,7 @@ Represents an arbitrary-precision decimal floating-point number. Consists of an 
 
 The mantissa and exponent format preserves trailing zeros in the number's value. This may give rise to multiple ways to store the same value. For example, 1.00 and 1 would be stored differently, even though they have the same value. In the first case, 100 * 10^-2 (100 with decimal point moved left by 2), and in the second case, 1 * 10^0 (1 with decimal point moved 0).
 
-This class also supports values for negative zero, not-a-number (NaN) values, and infinity. Negative zerois generally used when a negative number is rounded to 0; it has the same mathematical value as positive zero. Infinityis generally used when a non-zero number is divided by zero, or when a very high number can't be represented in a given exponent range. Not-a-numberis generally used to signal errors.
+This class also supports values for negative zero, not-a-number (NaN) values, and infinity. Negative zerois generally used when a negative number is rounded to 0; it has the same mathematical value as positive zero. Infinityis generally sed when a non-zero number is divided by zero, or when a very high number an't be represented in a given exponent range. Not-a-numberis generally used to signal errors.
 
 This class implements the General Decimal Arithmetic Specificationversion 1.70.
 
@@ -165,7 +165,7 @@ The parameter <i>mantissa</i>
     public static PeterO.ExtendedDecimal FromString(
         string str);
 
-Creates a decimal number from a string that represents a number. See FromString(String, PrecisionContext) for more information.
+Creates a decimal number from a string that represents a number. See FromString(String, int, int, PrecisionContext) for more information.
 
 <b>Parameters:</b>
 
@@ -191,6 +191,67 @@ is not a correctly formatted number string.
         string str,
         PeterO.PrecisionContext ctx);
 
+Creates a decimal number from a string that represents a number. See FromString(String, int, int, PrecisionContext) for more information.
+
+<b>Parameters:</b>
+
+ * <i>str</i>: A string that represents a number.
+
+ * <i>ctx</i>: A PrecisionContext object.
+
+<b>Returns:</b>
+
+An arbitrary-precision decimal number with the same value as the given string.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>str</i>
+ is null.
+
+ * System.FormatException: 
+The parameter  <i>str</i>
+is not a correctly formatted number string.
+
+### FromString
+
+    public static PeterO.ExtendedDecimal FromString(
+        string str,
+        int offset,
+        int length);
+
+Creates a decimal number from a string that represents a number. See FromString(String, int, int, PrecisionContext) for more information.
+
+<b>Parameters:</b>
+
+ * <i>str</i>: A string that represents a number.
+
+ * <i>offset</i>: A 32-bit signed integer.
+
+ * <i>length</i>: A 32-bit signed integer. (2).
+
+<b>Returns:</b>
+
+An arbitrary-precision decimal number with the same value as the given string.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>str</i>
+ is null.
+
+ * System.FormatException: 
+The parameter  <i>str</i>
+is not a correctly formatted number string.
+
+### FromString
+
+    public static PeterO.ExtendedDecimal FromString(
+        string str,
+        int offset,
+        int length,
+        PeterO.PrecisionContext ctx);
+
 Creates a decimal number from a string that represents a number. The format of the string generally consists of: 
 
  * An optional '-' or '+' character (if '-', the value is negative.)
@@ -205,9 +266,13 @@ The format generally follows the definition in java.math.BigDecimal(), except th
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string that represents a number.
+ * <i>str</i>: A String object.
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+ * <i>offset</i>: A 32-bit signed integer.
+
+ * <i>length</i>: A 32-bit signed integer. (2).
+
+ * <i>ctx</i>: A PrecisionContext object.
 
 <b>Returns:</b>
 
@@ -607,7 +672,7 @@ This value with trailing zeros removed. Note that if the result has a very high 
     public PeterO.ExtendedDecimal RemainderNaturalScale(
         PeterO.ExtendedDecimal divisor);
 
-Not documented yet.
+Calculates the remainder of a number by the formula this - ((this / divisor) * divisor). This is meant to be similar to the remainder operation in Java's BigDecimal.
 
 <b>Parameters:</b>
 
@@ -629,7 +694,7 @@ Calculates the remainder of a number by the formula this - ((this / divisor) * d
 
  * <i>divisor</i>: An ExtendedDecimal object. (2).
 
- * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the integer part of the result. This context will be used only in the division portion of the remainder calculation. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the result doesn't fit the precision and exponent range without rounding.
+ * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the result. This context will be used only in the division portion of the remainder calculation; as a result, it's possible for the return value to have a higher precision than given in this context. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the result doesn't fit the precision and exponent range without rounding.
 
 <b>Returns:</b>
 
@@ -928,7 +993,7 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
  * If the remainder's absolute value is exactly half of the divisor's absolute value, the result has the opposite sign of this object if the quotient, rounded down, is odd, and has the same sign as this object if the quotient, rounded down, is even, and the result's absolute value is half of the divisor's absolute value.
 
-This function is also known as the "IEEE Remainder" function.
+This function is also known as the IEEE Remainder" function.
 
 <b>Parameters:</b>
 
@@ -1068,9 +1133,9 @@ Gets the lesser value between two values, ignoring their signs. If the absolute 
 
 <b>Parameters:</b>
 
- * <i>first</i>: An ExtendedDecimal object. (2).
+ * <i>first</i>: The first value to compare.
 
- * <i>second</i>: An ExtendedDecimal object. (3).
+ * <i>second</i>: The second value to compare.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
@@ -1288,7 +1353,7 @@ A decimal number with the same value as this object but with the exponent change
         PeterO.ExtendedDecimal otherValue,
         PeterO.PrecisionContext ctx);
 
-Returns a decimal number with the same value as this object but with the same exponent as another decimal number.
+Returns a decimal number with the same value as this object but with the same exponent as another decimal number. Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
 
 <b>Parameters:</b>
 
@@ -1305,7 +1370,7 @@ A decimal number with the same value as this object but with the exponent change
     public PeterO.ExtendedDecimal RoundToIntegralExact(
         PeterO.PrecisionContext ctx);
 
-Returns a decimal number with the same value as this object but rounded to an integer.
+Returns a decimal number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
 <b>Parameters:</b>
 

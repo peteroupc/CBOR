@@ -2186,30 +2186,114 @@ at: http://upokecenter.com/d/
      * @throws ArithmeticException This object's value is too big to fit a
      * 32-bit signed integer.
      */
-    public int intValue() {
-      int c = (int)this.wordCount;
-      if (c == 0) {
+    public int intValueChecked() {
+      int count = this.wordCount;
+      if (count == 0) {
         return 0;
       }
-      if (c > 2) {
+      if (count > 2) {
         throw new ArithmeticException();
       }
-      if (c == 2 && (this.reg[1] & 0x8000) != 0) {
-        if (((short)(this.reg[1] & (short)0x7fff) | this.reg[0]) == 0 && this.negative) {
+      if (count == 2 && (this.reg[1] & 0x8000) != 0) {
+        if (this.negative && this.reg[1] == ((short)0x8000) &&
+            this.reg[0] == 0) {
           return Integer.MIN_VALUE;
         } else {
           throw new ArithmeticException();
         }
-      } else {
-        int ivv = ((int)this.reg[0]) & 0xffff;
-        if (c > 1) {
-          ivv |= (((int)this.reg[1]) & 0xffff) << 16;
-        }
-        if (this.negative) {
-          ivv = -ivv;
-        }
-        return ivv;
       }
+      return this.intValueUnchecked();
+    }
+
+    /**
+     * Converts this object's value to a 32-bit signed integer. If the value
+     * can't fit in a 32-bit integer, returns the lower 32 bits of this object's
+     * two's complement representation (in which case the return value
+     * might have a different sign than this object's value).
+     * @return A 32-bit signed integer.
+     */
+    public int intValueUnchecked() {
+      int c = (int)this.wordCount;
+      if (c == 0) {
+        return 0;
+      }
+      int ivv = ((int)this.reg[0]) & 0xffff;
+      if (c > 1) {
+        ivv |= (((int)this.reg[1]) & 0xffff) << 16;
+      }
+      if (this.negative) {
+        ivv = (ivv - 1);
+        ivv = (~ivv);
+      }
+      return ivv;
+    }
+
+    /**
+     * Converts this object's value to a 64-bit signed integer.
+     * @return A 64-bit signed integer.
+     * @throws ArithmeticException This object's value is too big to fit a
+     * 64-bit signed integer.
+     */
+    public long longValueChecked() {
+      int count = this.wordCount;
+      if (count == 0) {
+        return (long)0;
+      }
+      if (count > 4) {
+        throw new ArithmeticException();
+      }
+      if (count == 4 && (this.reg[3] & 0x8000) != 0) {
+        if (this.negative && this.reg[3] == ((short)0x8000) &&
+            this.reg[2] == 0 &&
+            this.reg[1] == 0 &&
+            this.reg[0] == 0) {
+          return Long.MIN_VALUE;
+        } else {
+          throw new ArithmeticException();
+        }
+      }
+      return this.longValueUnchecked();
+    }
+
+    /**
+     * Converts this object's value to a 64-bit signed integer. If the value
+     * can't fit in a 64-bit integer, returns the lower 64 bits of this object's
+     * two's complement representation (in which case the return value
+     * might have a different sign than this object's value).
+     * @return A 64-bit signed integer.
+     */
+    public long longValueUnchecked() {
+      int c = (int)this.wordCount;
+      if (c == 0) {
+        return (long)0;
+      }
+      long ivv = ((long)this.reg[0]) & 0xffffL;
+      if (c > 1) {
+        ivv |= (((long)this.reg[1]) & 0xffffL) << 16;
+        if (c > 2) {
+          ivv |= (((long)this.reg[2]) & 0xffffL) << 16;
+          if (c > 3) {
+            ivv |= (((long)this.reg[3]) & 0xffffL) << 16;
+          }
+        }
+      }
+      if (this.negative) {
+        ivv = (ivv - 1L);
+        ivv = (~ivv);
+      }
+      return ivv;
+    }
+
+    /**
+     * Converts this object's value to a 32-bit signed integer. This method
+     * is obsoleted by the intValueChecked and intValueUnchecked methods,
+     * which should be used instead.
+     * @return A 32-bit signed integer.
+     * @throws ArithmeticException This object's value is too big to fit a
+     * 32-bit signed integer.
+     */
+    public int intValue() {
+      return this.intValueChecked();
     }
 
     /**
@@ -2244,48 +2328,15 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Converts this object's value to a 64-bit signed integer.
+     * Converts this object's value to a 64-bit signed integer. This method
+     * is obsoleted by the longValueChecked and longValueUnchecked methods,
+     * which should be used instead.
      * @return A 64-bit signed integer.
      * @throws ArithmeticException This object's value is too big to fit a
      * 64-bit signed integer.
      */
     public long longValue() {
-      int count = this.wordCount;
-      if (count == 0) {
-        return (long)0;
-      }
-      if (count > 4) {
-        throw new ArithmeticException();
-      }
-      if (count == 4 && (this.reg[3] & 0x8000) != 0) {
-        if (this.negative && this.reg[3] == ((short)0x8000) &&
-            this.reg[2] == 0 &&
-            this.reg[1] == 0 &&
-            this.reg[0] == 0) {
-          return Long.MIN_VALUE;
-        } else {
-          throw new ArithmeticException();
-        }
-      } else {
-        int tmp = ((int)this.reg[0]) & 0xffff;
-        long vv = (long)tmp;
-        if (count > 1) {
-          tmp = ((int)this.reg[1]) & 0xffff;
-          vv |= (long)tmp << 16;
-        }
-        if (count > 2) {
-          tmp = ((int)this.reg[2]) & 0xffff;
-          vv |= (long)tmp << 32;
-        }
-        if (count > 3) {
-          tmp = ((int)this.reg[3]) & 0xffff;
-          vv |= (long)tmp << 48;
-        }
-        if (this.negative) {
-          vv = -vv;
-        }
-        return vv;
-      }
+      return this.longValueChecked();
     }
 
     private static BigInteger Power2(int e) {

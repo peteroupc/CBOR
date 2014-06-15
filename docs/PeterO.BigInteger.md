@@ -107,11 +107,61 @@ Converts a 64-bit signed integer to a big integer.
 
 A BigInteger object with the same value as the 64-bit number.
 
+### intValueChecked
+
+    public int intValueChecked();
+
+Converts this object's value to a 32-bit signed integer.
+
+<b>Returns:</b>
+
+A 32-bit signed integer.
+
+<b>Exceptions:</b>
+
+ * System.OverflowException: 
+This object's value is too big to fit a 32-bit signed integer.
+
+### intValueUnchecked
+
+    public int intValueUnchecked();
+
+Converts this object's value to a 32-bit signed integer. If the value can't fit in a 32-bit integer, returns the lower 32 bits of this object's two's complement representation (in which case the return value might have a different sign than this object's value).
+
+<b>Returns:</b>
+
+A 32-bit signed integer.
+
+### longValueChecked
+
+    public long longValueChecked();
+
+Converts this object's value to a 64-bit signed integer.
+
+<b>Returns:</b>
+
+A 64-bit signed integer.
+
+<b>Exceptions:</b>
+
+ * System.OverflowException: 
+This object's value is too big to fit a 64-bit signed integer.
+
+### longValueUnchecked
+
+    public long longValueUnchecked();
+
+Converts this object's value to a 64-bit signed integer. If the value can't fit in a 64-bit integer, returns the lower 64 bits of this object's two's complement representation (in which case the return value might have a different sign than this object's value).
+
+<b>Returns:</b>
+
+A 64-bit signed integer.
+
 ### intValue
 
     public int intValue();
 
-Converts this object's value to a 32-bit signed integer.
+Converts this object's value to a 32-bit signed integer. This method is obsoleted by the intValueChecked and intValueUnchecked methods, which should be used instead.
 
 <b>Returns:</b>
 
@@ -136,7 +186,7 @@ True if this object's value is MinValue or greater, and MaxValue or less; otherw
 
     public long longValue();
 
-Converts this object's value to a 64-bit signed integer.
+Converts this object's value to a 64-bit signed integer. This method is obsoleted by the longValueChecked and longValueUnchecked methods, which should be used instead.
 
 <b>Returns:</b>
 
@@ -825,9 +875,9 @@ Determines whether a BigInteger instance is less than another BigInteger instanc
 
 <b>Parameters:</b>
 
- * <i>thisValue</i>: A BigInteger object.
+ * <i>thisValue</i>: The first BigInteger object.
 
- * <i>otherValue</i>: A BigInteger object. (2).
+ * <i>otherValue</i>: The second BigInteger object.
 
 <b>Returns:</b>
 
@@ -845,9 +895,9 @@ Determines whether a BigInteger instance is less than or equal to another BigInt
 
 <b>Parameters:</b>
 
- * <i>thisValue</i>: A BigInteger object.
+ * <i>thisValue</i>: The first BigInteger object.
 
- * <i>otherValue</i>: A BigInteger object. (2).
+ * <i>otherValue</i>: The second BigInteger object.
 
 <b>Returns:</b>
 
@@ -865,9 +915,9 @@ Determines whether a BigInteger instance is greater than another BigInteger inst
 
 <b>Parameters:</b>
 
- * <i>thisValue</i>: A BigInteger object.
+ * <i>thisValue</i>: The first BigInteger object.
 
- * <i>otherValue</i>: A BigInteger object. (2).
+ * <i>otherValue</i>: The second BigInteger object.
 
 <b>Returns:</b>
 
@@ -885,9 +935,9 @@ Determines whether a BigInteger value is greater than another BigInteger value.
 
 <b>Parameters:</b>
 
- * <i>thisValue</i>: A BigInteger object.
+ * <i>thisValue</i>: The first BigInteger object.
 
- * <i>otherValue</i>: A BigInteger object. (2).
+ * <i>otherValue</i>: The second BigInteger object.
 
 <b>Returns:</b>
 

@@ -171,6 +171,8 @@ The parameter <i>mantissa</i>
 
     public static PeterO.ExtendedFloat FromString(
         string str,
+        int offset,
+        int length,
         PeterO.PrecisionContext ctx);
 
 Creates a binary float from a string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double). The format of the string generally consists of: 
@@ -187,7 +189,11 @@ The format generally follows the definition in java.math.BigDecimal(), except th
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string that represents a number.
+ * <i>str</i>: A String object.
+
+ * <i>offset</i>: A 32-bit signed integer.
+
+ * <i>length</i>: A 32-bit signed integer. (2).
 
  * <i>ctx</i>: A PrecisionContext object.
 
@@ -215,6 +221,63 @@ Not documented yet.
 <b>Returns:</b>
 
 An ExtendedFloat object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>str</i>
+ is null.
+
+### FromString
+
+    public static PeterO.ExtendedFloat FromString(
+        string str,
+        PeterO.PrecisionContext ctx);
+
+Not documented yet.
+
+<b>Parameters:</b>
+
+ * <i>str</i>: A String object.
+
+ * <i>ctx</i>: A PrecisionContext object.
+
+<b>Returns:</b>
+
+An ExtendedFloat object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>str</i>
+ is null.
+
+### FromString
+
+    public static PeterO.ExtendedFloat FromString(
+        string str,
+        int offset,
+        int length);
+
+Not documented yet.
+
+<b>Parameters:</b>
+
+ * <i>str</i>: A String object.
+
+ * <i>offset</i>: A 32-bit signed integer.
+
+ * <i>length</i>: A 32-bit signed integer. (2).
+
+<b>Returns:</b>
+
+An ExtendedFloat object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>str</i>
+ is null.
 
 ### ToBigInteger
 
@@ -923,7 +986,7 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
  * If the remainder's absolute value is exactly half of the divisor's absolute value, the result has the opposite sign of this object if the quotient, rounded down, is odd, and has the same sign as this object if the quotient, rounded down, is even, and the result's absolute value is half of the divisor's absolute value.
 
-This function is also known as the "IEEE Remainder" function.
+This function is also known as the IEEE Remainder" function.
 
 <b>Parameters:</b>
 
