@@ -307,19 +307,19 @@ at: http://upokecenter.com/d/
         throw new NullPointerException("str");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
+        throw new NumberFormatException("offset (" + Long.toString((long)offset) + ") is less than " + "0");
       }
       if (offset > str.length()) {
-        throw new IllegalArgumentException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)str.length()));
+        throw new NumberFormatException("offset (" + Long.toString((long)offset) + ") is more than " + Long.toString((long)str.length()));
       }
       if (length < 0) {
-        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is less than " + "0");
+        throw new NumberFormatException("length (" + Long.toString((long)length) + ") is less than " + "0");
       }
       if (length > str.length()) {
-        throw new IllegalArgumentException("length (" + Long.toString((long)length) + ") is more than " + Long.toString((long)str.length()));
+        throw new NumberFormatException("length (" + Long.toString((long)length) + ") is more than " + Long.toString((long)str.length()));
       }
       if (str.length() - offset < length) {
-        throw new IllegalArgumentException("str's length minus " + offset + " (" + Long.toString((long)(str.length() - offset)) + ") is less than " + Long.toString((long)length));
+        throw new NumberFormatException("str's length minus " + offset + " (" + Long.toString((long)(str.length() - offset)) + ") is less than " + Long.toString((long)length));
       }
       if (length == 0) {
         throw new NumberFormatException();
@@ -1820,7 +1820,8 @@ remainder=divrem[1]; }
 
     /**
      * Removes trailing zeros from this object&apos;s mantissa. For example,
-     * 1.000 becomes 1.
+     * 1.000 becomes 1. Unlike the "stripTrailingZeros" method of Java's
+     * BigDecimal, if this object's value is 0, changes the exponent to 0.
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in
@@ -1836,7 +1837,7 @@ remainder=divrem[1]; }
     /**
      * Calculates the remainder of a number by the formula this - ((this.divide(divisor)).multiply(divisor)).
      * This is meant to be similar to the remainder operation in Java's BigDecimal.
-     * @param divisor An ExtendedDecimal object. (2).
+     * @param divisor The number to divide by.
      * @return An ExtendedDecimal object.
      */
     public ExtendedDecimal RemainderNaturalScale(ExtendedDecimal divisor) {
@@ -1846,7 +1847,7 @@ remainder=divrem[1]; }
     /**
      * Calculates the remainder of a number by the formula this - ((this.divide(divisor)).multiply(divisor)).
      * This is meant to be similar to the remainder operation in Java's BigDecimal.
-     * @param divisor An ExtendedDecimal object. (2).
+     * @param divisor The number to divide by.
      * @param ctx A precision context object to control the precision, rounding,
      * and exponent range of the result. This context will be used only in
      * the division portion of the remainder calculation; as a result, it&apos;s

@@ -13,55 +13,54 @@ import org.junit.Test;
 import com.upokecenter.util.*;
 import com.upokecenter.cbor.*;
 
-  public class CBORSupplementTest
-  {
+  public class CBORSupplementTest {
     @Test
     public void TestExtendedToInteger() {
-      ExtendedDecimal dec = ExtendedDecimal.Create(999, 1);
-      ExtendedFloat flo = ExtendedFloat.Create(999, 1);
+      ExtendedDecimal dec = ExtendedDecimal.Create(999, -1);
+      ExtendedFloat flo = ExtendedFloat.Create(999, -1);
       ExtendedRational rat = new ExtendedRational(8, 5);
       try {
- dec.ToBigIntegerExact();
-Assert.fail("Should have failed");
-} catch (ArithmeticException ex) {
-} catch (Exception ex) {
- Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        dec.ToBigIntegerExact();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
       try {
- flo.ToBigIntegerExact();
-Assert.fail("Should have failed");
-} catch (ArithmeticException ex) {
-} catch (Exception ex) {
- Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        flo.ToBigIntegerExact();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
       try {
- rat.ToBigIntegerExact();
-Assert.fail("Should have failed");
-} catch (ArithmeticException ex) {
-} catch (Exception ex) {
- Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        rat.ToBigIntegerExact();
+        Assert.fail("Should have failed");
+      } catch (ArithmeticException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
       try {
- dec.ToBigInteger();
-} catch (Exception ex) {
-Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        dec.ToBigInteger();
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
       try {
- flo.ToBigInteger();
-} catch (Exception ex) {
-Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        flo.ToBigInteger();
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
       try {
- rat.ToBigInteger();
-} catch (Exception ex) {
-Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        rat.ToBigInteger();
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
 
     @Test
@@ -82,15 +81,15 @@ throw new IllegalStateException("", ex);
 
     @Test
     public void TestEquivalentInfinities() {
-        CBORObject co, co2;
-        co = CBORObject.FromObject(ExtendedDecimal.PositiveInfinity);
-        co2 = CBORObject.FromObject(Double.POSITIVE_INFINITY);
-        Assert.assertEquals(0, co.compareTo(co2));
-        Assert.assertEquals(0, co2.compareTo(co));
-        co = CBORObject.NewMap().Add(ExtendedDecimal.PositiveInfinity, CBORObject.Undefined);
-        co2 = CBORObject.NewMap().Add(Double.POSITIVE_INFINITY, CBORObject.Undefined);
-        Assert.assertEquals(0, co.compareTo(co2));
-        Assert.assertEquals(0, co2.compareTo(co));
+      CBORObject co, co2;
+      co = CBORObject.FromObject(ExtendedDecimal.PositiveInfinity);
+      co2 = CBORObject.FromObject(Double.POSITIVE_INFINITY);
+      Assert.assertEquals(0, co.compareTo(co2));
+      Assert.assertEquals(0, co2.compareTo(co));
+      co = CBORObject.NewMap().Add(ExtendedDecimal.PositiveInfinity, CBORObject.Undefined);
+      co2 = CBORObject.NewMap().Add(Double.POSITIVE_INFINITY, CBORObject.Undefined);
+      Assert.assertEquals(0, co.compareTo(co2));
+      Assert.assertEquals(0, co2.compareTo(co));
     }
 
     @Test
