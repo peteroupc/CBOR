@@ -93,7 +93,7 @@ Creates a not-a-number ExtendedDecimal object.
 
 <b>Parameters:</b>
 
- * <i>diag</i>: A number to use as diagnostic information associated with this object. The sign will be ignored. If none is needed, should be zero.
+ * <i>diag</i>: A number to use as diagnostic information associated with this object. If none is needed, should be zero.
 
 <b>Returns:</b>
 
@@ -103,7 +103,7 @@ A quiet not-a-number object.
 
  * System.ArgumentNullException: 
 The parameter <i>diag</i>
- is null.
+ is null or is less than 0.
 
 ### CreateNaN
 
@@ -113,15 +113,15 @@ The parameter <i>diag</i>
         bool negative,
         PeterO.PrecisionContext ctx);
 
-Not documented yet.
+Creates a not-a-number ExtendedDecimal object.
 
 <b>Parameters:</b>
 
- * <i>diag</i>: A number to use as diagnostic information associated with this object. The sign will be ignored. If none is needed, should be zero.
+ * <i>diag</i>: A number to use as diagnostic information associated with this object. If none is needed, should be zero.
 
  * <i>signaling</i>: Whether the return value will be signaling (true) or quiet (false).
 
- * <i>negative</i>: A Boolean object. (2).
+ * <i>negative</i>: Whether the return value is negative.
 
  * <i>ctx</i>: A PrecisionContext object.
 
@@ -133,7 +133,7 @@ An ExtendedDecimal object.
 
  * System.ArgumentNullException: 
 The parameter <i>diag</i>
- is null.
+ is null or is less than 0.
 
 ### Create
 
@@ -317,6 +317,24 @@ A BigInteger object.
 
  * System.OverflowException: 
 This object's value is infinity or NaN.
+
+### ToBigIntegerExact
+
+    public PeterO.BigInteger ToBigIntegerExact();
+
+Converts this value to an arbitrary-precision integer, checking whether the fractional part of the integer would be lost.
+
+<b>Returns:</b>
+
+A BigInteger object.
+
+<b>Exceptions:</b>
+
+ * System.OverflowException: 
+This object's value is infinity or NaN.
+
+ * System.ArithmeticException: 
+This object's value is not an exact integer.
 
 ### ToExtendedFloat
 

@@ -73,6 +73,22 @@ namespace PeterO {
     }
     #endregion
 
+    /// <summary>Creates a number with the given numerator and denominator.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='numeratorSmall'>A 32-bit signed integer.</param>
+    /// <param name='denominatorSmall'>A 32-bit signed integer. (2).</param>
+    public static ExtendedRational Create(int numeratorSmall, int denominatorSmall) {
+      return Create((BigInteger)numeratorSmall, (BigInteger)denominatorSmall);
+    }
+
+    /// <summary>Creates a number with the given numerator and denominator.</summary>
+    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='numerator'>A BigInteger object.</param>
+    /// <param name='denominator'>A BigInteger object. (2).</param>
+    public static ExtendedRational Create(BigInteger numerator, BigInteger denominator) {
+      return new ExtendedRational(numerator, denominator);
+    }
+
     /// <summary>Initializes a new instance of the ExtendedRational class.</summary>
     /// <param name='numerator'>A BigInteger object.</param>
     /// <param name='denominator'>A BigInteger object. (2).</param>
@@ -340,9 +356,18 @@ namespace PeterO {
     /// <summary>Converts this rational number to a decimal number, but
     /// if the result would have a nonterminating decimal expansion, rounds
     /// that result to the given precision.</summary>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'>A precision context object to control the precision.
+    /// The rounding and exponent range settings of this context are ignored.
+    /// This context will be used only if the exact result would have a nonterminating
+    /// decimal expansion. If HasFlags of the context is true, will also store
+    /// the flags resulting from the operation (the flags are in addition
+    /// to the pre-existing flags). Can be null, in which case this method
+    /// is the same as ToExtendedDecimal.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal ToExtendedDecimalExactIfPossible(PrecisionContext ctx) {
+      if (ctx == null) {
+        return this.ToExtendedDecimal(null);
+      }
       if (this.IsNaN()) {
         return ExtendedDecimal.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.IsNegative, ctx);
       }
@@ -396,9 +421,18 @@ namespace PeterO {
     /// <summary>Converts this rational number to a binary number, but if
     /// the result would have a nonterminating binary expansion, rounds
     /// that result to the given precision.</summary>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'>A precision context object to control the precision.
+    /// The rounding and exponent range settings of this context are ignored.
+    /// This context will be used only if the exact result would have a nonterminating
+    /// binary expansion. If HasFlags of the context is true, will also store
+    /// the flags resulting from the operation (the flags are in addition
+    /// to the pre-existing flags). Can be null, in which case this method
+    /// is the same as ToExtendedFloat.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat ToExtendedFloatExactIfPossible(PrecisionContext ctx) {
+      if (ctx == null) {
+        return this.ToExtendedFloat(null);
+      }
       if (this.IsNaN()) {
         return ExtendedFloat.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.IsNegative, ctx);
       }
@@ -436,11 +470,32 @@ namespace PeterO {
     /// Any fractional part in this value will be discarded when converting
     /// to a big integer.</summary>
     /// <returns>A BigInteger object.</returns>
+    /// <exception cref='OverflowException'>This object's value is infinity
+    /// or NaN.</exception>
     public BigInteger ToBigInteger() {
       if (!this.IsFinite) {
         throw new OverflowException("Value is infinity or NaN");
       }
       return this.Numerator / (BigInteger)this.denominator;
+    }
+
+    /// <summary>Converts this value to an arbitrary-precision integer,
+    /// checking whether the value is an exact integer.</summary>
+    /// <returns>A BigInteger object.</returns>
+    /// <exception cref='OverflowException'>This object's value is infinity
+    /// or NaN.</exception>
+    /// <exception cref='ArithmeticException'>This object's value is
+    /// not an exact integer.</exception>
+    public BigInteger ToBigIntegerExact() {
+      if (!this.IsFinite) {
+        throw new OverflowException("Value is infinity or NaN");
+      }
+      BigInteger rem;
+      BigInteger quo = BigInteger.DivRem(this.Numerator, this.denominator, out rem);
+      if (!rem.IsZero) {
+        throw new ArithmeticException("Value is not an integral value");
+      }
+      return quo;
     }
 
     /// <summary>Not documented yet.</summary>

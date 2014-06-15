@@ -403,14 +403,32 @@ namespace PeterO {
     }
 
     /// <summary>Converts this value to an arbitrary-precision integer.
-    /// Any fractional part in this value will be discarded when converting
+    /// Any fractional part of this value will be discarded when converting
     /// to a big integer.</summary>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='OverflowException'>This object's value is infinity
     /// or NaN.</exception>
     public BigInteger ToBigInteger() {
+      return this.ToBigIntegerInternal(false);
+    }
+
+    /// <summary>Converts this value to an arbitrary-precision integer,
+    /// checking whether the value contains a fractional part.</summary>
+    /// <returns>A BigInteger object.</returns>
+    /// <exception cref='OverflowException'>This object's value is infinity
+    /// or NaN.</exception>
+    /// <exception cref='ArithmeticException'>This object's value is
+    /// not an exact integer.</exception>
+    public BigInteger ToBigIntegerExact() {
+      return this.ToBigIntegerInternal(true);
+    }
+
+    private BigInteger ToBigIntegerInternal(bool exact) {
       if (!this.IsFinite) {
         throw new OverflowException("Value is infinity or NaN");
+      }
+      if (this.IsZero) {
+        return BigInteger.Zero;
       }
       int expsign = this.Exponent.Sign;
       if (expsign == 0) {
@@ -433,26 +451,17 @@ namespace PeterO {
         }
         return bigmantissa;
       } else {
-        // Has fractional parts,
-        // shift right without rounding
-        BigInteger curexp = this.Exponent;
         BigInteger bigmantissa = this.Mantissa;
-        if (bigmantissa.IsZero) {
-          return bigmantissa;
+        FastInteger bigexponent = FastInteger.FromBig(this.Exponent).Negate();
+        bigmantissa = BigInteger.Abs(bigmantissa);
+        BitShiftAccumulator acc = new BitShiftAccumulator(bigmantissa, 0, 0);
+        acc.ShiftRight(bigexponent);
+        if (exact && (acc.LastDiscardedDigit != 0 || acc.OlderDiscardedDigits != 0)) {
+          // Some digits were discarded
+          throw new ArithmeticException("Not an exact integer");
         }
-        bool neg = bigmantissa.Sign < 0;
-        if (neg) {
-          bigmantissa = -bigmantissa;
-        }
-        while (curexp.Sign < 0 && !bigmantissa.IsZero) {
-          int shift = 4096;
-          if (curexp.CompareTo((BigInteger)(-4096)) > 0) {
-            shift = -((int)curexp);
-          }
-          bigmantissa >>= shift;
-          curexp += (BigInteger)shift;
-        }
-        if (neg) {
+        bigmantissa = acc.ShiftedInt;
+        if (this.IsNegative) {
           bigmantissa = -bigmantissa;
         }
         return bigmantissa;

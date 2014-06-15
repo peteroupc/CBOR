@@ -76,6 +76,26 @@ at: http://upokecenter.com/d/
     }
 
     /**
+     * Creates a number with the given numerator and denominator.
+     * @param numeratorSmall A 32-bit signed integer.
+     * @param denominatorSmall A 32-bit signed integer. (2).
+     * @return An ExtendedRational object.
+     */
+    public static ExtendedRational Create(int numeratorSmall, int denominatorSmall) {
+      return Create(BigInteger.valueOf(numeratorSmall), BigInteger.valueOf(denominatorSmall));
+    }
+
+    /**
+     * Creates a number with the given numerator and denominator.
+     * @param numerator A BigInteger object.
+     * @param denominator A BigInteger object. (2).
+     * @return An ExtendedRational object.
+     */
+    public static ExtendedRational Create(BigInteger numerator, BigInteger denominator) {
+      return new ExtendedRational(numerator, denominator);
+    }
+
+    /**
      * Initializes a new instance of the ExtendedRational class.
      * @param numerator A BigInteger object.
      * @param denominator A BigInteger object. (2).
@@ -357,10 +377,19 @@ at: http://upokecenter.com/d/
      * Converts this rational number to a decimal number, but if the result
      * would have a nonterminating decimal expansion, rounds that result
      * to the given precision.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context object to control the precision. The
+     * rounding and exponent range settings of this context are ignored.
+     * This context will be used only if the exact result would have a nonterminating
+     * decimal expansion. If HasFlags of the context is true, will also store
+     * the flags resulting from the operation (the flags are in addition
+     * to the pre-existing flags). Can be null, in which case this method
+     * is the same as ToExtendedDecimal.
      * @return An ExtendedDecimal object.
      */
     public ExtendedDecimal ToExtendedDecimalExactIfPossible(PrecisionContext ctx) {
+      if (ctx == null) {
+        return this.ToExtendedDecimal(null);
+      }
       if (this.IsNaN()) {
         return ExtendedDecimal.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.isNegative(), ctx);
       }
@@ -419,10 +448,19 @@ at: http://upokecenter.com/d/
      * Converts this rational number to a binary number, but if the result
      * would have a nonterminating binary expansion, rounds that result
      * to the given precision.
-     * @param ctx A PrecisionContext object.
+     * @param ctx A precision context object to control the precision. The
+     * rounding and exponent range settings of this context are ignored.
+     * This context will be used only if the exact result would have a nonterminating
+     * binary expansion. If HasFlags of the context is true, will also store
+     * the flags resulting from the operation (the flags are in addition
+     * to the pre-existing flags). Can be null, in which case this method
+     * is the same as ToExtendedFloat.
      * @return An ExtendedFloat object.
      */
     public ExtendedFloat ToExtendedFloatExactIfPossible(PrecisionContext ctx) {
+      if (ctx == null) {
+        return this.ToExtendedFloat(null);
+      }
       if (this.IsNaN()) {
         return ExtendedFloat.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.isNegative(), ctx);
       }
@@ -460,12 +498,37 @@ at: http://upokecenter.com/d/
      * Converts this value to an arbitrary-precision integer. Any fractional
      * part in this value will be discarded when converting to a big integer.
      * @return A BigInteger object.
+     * @throws ArithmeticException This object's value is infinity or NaN.
      */
     public BigInteger ToBigInteger() {
       if (!this.isFinite()) {
         throw new ArithmeticException("Value is infinity or NaN");
       }
       return this.getNumerator().divide(this.denominator);
+    }
+
+    /**
+     * Converts this value to an arbitrary-precision integer, checking
+     * whether the value is an exact integer.
+     * @return A BigInteger object.
+     * @throws ArithmeticException This object's value is infinity or NaN.
+     * @throws ArithmeticException This object's value is not an exact
+     * integer.
+     */
+    public BigInteger ToBigIntegerExact() {
+      if (!this.isFinite()) {
+        throw new ArithmeticException("Value is infinity or NaN");
+      }
+      BigInteger rem;
+      BigInteger quo;
+{
+BigInteger[] divrem=(this.getNumerator()).divideAndRemainder(this.denominator);
+quo=divrem[0];
+rem=divrem[1]; }
+      if (rem.signum()!=0) {
+        throw new ArithmeticException("Value is not an integral value");
+      }
+      return quo;
     }
 
     /**
