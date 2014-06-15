@@ -121,12 +121,11 @@ namespace PeterO {
     /// <summary>Creates a not-a-number ExtendedFloat object.</summary>
     /// <returns>A quiet not-a-number object.</returns>
     /// <param name='diag'>A number to use as diagnostic information associated
-    /// with this object. If none is needed, should
-    /// be zero.</param>
+    /// with this object. If none is needed, should be zero.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='diag'/> is null.</exception>
-    /// <exception cref='System.ArgumentException'>The parameter
-    /// <paramref name='diag'/> is less than 0.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='diag'/> is less than 0.</exception>
     public static ExtendedFloat CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false, null);
     }
@@ -134,16 +133,15 @@ namespace PeterO {
     /// <summary>Creates a not-a-number ExtendedFloat object.</summary>
     /// <returns>An ExtendedFloat object.</returns>
     /// <param name='diag'>A number to use as diagnostic information associated
-    /// with this object. If none is needed, should
-    /// be zero.</param>
+    /// with this object. If none is needed, should be zero.</param>
     /// <param name='signaling'>Whether the return value will be signaling
     /// (true) or quiet (false).</param>
     /// <param name='negative'>Whether the return value is negative.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='diag'/> is null.</exception>
-    /// <exception cref='System.ArgumentException'>The parameter
-    /// <paramref name='diag'/> is less than 0.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='diag'/> is less than 0.</exception>
     public static ExtendedFloat CreateNaN(BigInteger diag, bool signaling, bool negative, PrecisionContext ctx) {
       if (diag == null) {
         throw new ArgumentNullException("diag");

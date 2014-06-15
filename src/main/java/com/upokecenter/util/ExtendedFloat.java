@@ -118,25 +118,30 @@ at: http://upokecenter.com/d/
     /**
      * Creates a not-a-number ExtendedFloat object.
      * @param diag A number to use as diagnostic information associated
-     * with this object. The sign will be ignored. If none is needed, should
-     * be zero.
+     * with this object. If none is needed, should be zero.
      * @return A quiet not-a-number object.
      * @throws java.lang.NullPointerException The parameter {@code diag}
      * is null.
+     * @throws java.lang.IllegalArgumentException The parameter {@code diag} is
+     * less than 0.
      */
     public static ExtendedFloat CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false, null);
     }
 
     /**
-     * Not documented yet.
-     * @param diag A BigInteger object.
-     * @param signaling A Boolean object.
-     * @param negative A Boolean object. (2).
+     * Creates a not-a-number ExtendedFloat object.
+     * @param diag A number to use as diagnostic information associated
+     * with this object. If none is needed, should be zero.
+     * @param signaling Whether the return value will be signaling (true)
+     * or quiet (false).
+     * @param negative Whether the return value is negative.
      * @param ctx A PrecisionContext object.
      * @return An ExtendedFloat object.
      * @throws java.lang.NullPointerException The parameter {@code diag}
      * is null.
+     * @throws java.lang.IllegalArgumentException The parameter {@code diag} is
+     * less than 0.
      */
     public static ExtendedFloat CreateNaN(BigInteger diag, boolean signaling, boolean negative, PrecisionContext ctx) {
       if (diag == null) {

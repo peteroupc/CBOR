@@ -16,13 +16,6 @@ import com.upokecenter.cbor.*;
   public class CBORSupplementTest
   {
     @Test
-    public void TestCreateNaN() {
-      if(ExtendedDecimal.CreateNaN(BigInteger.valueOf(-1)).isNegative())Assert.fail();
-      if(ExtendedFloat.CreateNaN(BigInteger.valueOf(-1)).isNegative())Assert.fail();
-      if(ExtendedRational.CreateNaN(BigInteger.valueOf(-1)).isNegative())Assert.fail();
-    }
-
-    @Test
     public void TestCyclicRefs() {
       CBORObject cbor = CBORObject.NewArray();
       cbor.Add(CBORObject.NewArray());
