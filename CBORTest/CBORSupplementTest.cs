@@ -13,8 +13,56 @@ using PeterO.Cbor;
 
 namespace Test {
   [TestClass]
-  public class CBORSupplementTest
-  {
+  public class CBORSupplementTest {
+    [TestMethod]
+    public void TestExtendedToInteger() {
+      ExtendedDecimal dec = ExtendedDecimal.Create(999, -1);
+      ExtendedFloat flo = ExtendedFloat.Create(999, -1);
+      ExtendedRational rat = new ExtendedRational(8, 5);
+      try {
+        dec.ToBigIntegerExact();
+        Assert.Fail("Should have failed");
+      } catch (ArithmeticException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        flo.ToBigIntegerExact();
+        Assert.Fail("Should have failed");
+      } catch (ArithmeticException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        rat.ToBigIntegerExact();
+        Assert.Fail("Should have failed");
+      } catch (ArithmeticException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        dec.ToBigInteger();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        flo.ToBigInteger();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        rat.ToBigInteger();
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
     [TestMethod]
     public void TestCyclicRefs() {
       CBORObject cbor = CBORObject.NewArray();
@@ -33,15 +81,15 @@ namespace Test {
 
     [TestMethod]
     public void TestEquivalentInfinities() {
-        CBORObject co, co2;
-        co = CBORObject.FromObject(ExtendedDecimal.PositiveInfinity);
-        co2 = CBORObject.FromObject(Double.PositiveInfinity);
-        Assert.AreEqual(0, co.CompareTo(co2));
-        Assert.AreEqual(0, co2.CompareTo(co));
-        co = CBORObject.NewMap().Add(ExtendedDecimal.PositiveInfinity, CBORObject.Undefined);
-        co2 = CBORObject.NewMap().Add(Double.PositiveInfinity, CBORObject.Undefined);
-        Assert.AreEqual(0, co.CompareTo(co2));
-        Assert.AreEqual(0, co2.CompareTo(co));
+      CBORObject co, co2;
+      co = CBORObject.FromObject(ExtendedDecimal.PositiveInfinity);
+      co2 = CBORObject.FromObject(Double.PositiveInfinity);
+      Assert.AreEqual(0, co.CompareTo(co2));
+      Assert.AreEqual(0, co2.CompareTo(co));
+      co = CBORObject.NewMap().Add(ExtendedDecimal.PositiveInfinity, CBORObject.Undefined);
+      co2 = CBORObject.NewMap().Add(Double.PositiveInfinity, CBORObject.Undefined);
+      Assert.AreEqual(0, co.CompareTo(co2));
+      Assert.AreEqual(0, co2.CompareTo(co));
     }
 
     [TestMethod]

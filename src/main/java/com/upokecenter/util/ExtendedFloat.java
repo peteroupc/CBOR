@@ -434,13 +434,32 @@ at: http://upokecenter.com/d/
 
     /**
      * Converts this value to an arbitrary-precision integer. Any fractional
-     * part in this value will be discarded when converting to a big integer.
+     * part of this value will be discarded when converting to a big integer.
      * @return A BigInteger object.
      * @throws ArithmeticException This object's value is infinity or NaN.
      */
     public BigInteger ToBigInteger() {
+      return this.ToBigIntegerInternal(false);
+    }
+
+    /**
+     * Converts this value to an arbitrary-precision integer, checking
+     * whether the value contains a fractional part.
+     * @return A BigInteger object.
+     * @throws ArithmeticException This object's value is infinity or NaN.
+     * @throws ArithmeticException This object's value is not an exact
+     * integer.
+     */
+    public BigInteger ToBigIntegerExact() {
+      return this.ToBigIntegerInternal(true);
+    }
+
+    private BigInteger ToBigIntegerInternal(boolean exact) {
       if (!this.isFinite()) {
         throw new ArithmeticException("Value is infinity or NaN");
+      }
+      if (this.signum()==0) {
+        return BigInteger.ZERO;
       }
       int expsign = this.getExponent().signum();
       if (expsign == 0) {
@@ -463,26 +482,17 @@ at: http://upokecenter.com/d/
         }
         return bigmantissa;
       } else {
-        // Has fractional parts,
-        // shift right without rounding
-        BigInteger curexp = this.getExponent();
         BigInteger bigmantissa = this.getMantissa();
-        if (bigmantissa.signum()==0) {
-          return bigmantissa;
+        FastInteger bigexponent = FastInteger.FromBig(this.getExponent()).Negate();
+        bigmantissa = (bigmantissa).abs();
+        BitShiftAccumulator acc = new BitShiftAccumulator(bigmantissa, 0, 0);
+        acc.ShiftRight(bigexponent);
+        if (exact && (acc.getLastDiscardedDigit() != 0 || acc.getOlderDiscardedDigits() != 0)) {
+          // Some digits were discarded
+          throw new ArithmeticException("Not an exact integer");
         }
-        boolean neg = bigmantissa.signum() < 0;
-        if (neg) {
-          bigmantissa=bigmantissa.negate();
-        }
-        while (curexp.signum() < 0 && bigmantissa.signum()!=0) {
-          int shift = 4096;
-          if (curexp.compareTo(BigInteger.valueOf(-4096)) > 0) {
-            shift = -(curexp.intValue());
-          }
-          bigmantissa=bigmantissa.shiftRight(shift);
-          curexp=curexp.add(BigInteger.valueOf(shift));
-        }
-        if (neg) {
+        bigmantissa = acc.getShiftedInt();
+        if (this.isNegative()) {
           bigmantissa=bigmantissa.negate();
         }
         return bigmantissa;

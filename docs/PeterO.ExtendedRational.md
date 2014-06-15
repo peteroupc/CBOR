@@ -31,6 +31,22 @@ Returns the hash code for this instance.
 
 A 32-bit hash code.
 
+### Create
+
+    public static PeterO.ExtendedRational Create(
+        int numeratorSmall,
+        int denominatorSmall);
+
+Creates a number with the given numerator and denominator.
+
+### Create
+
+    public static PeterO.ExtendedRational Create(
+        PeterO.BigInteger numerator,
+        PeterO.BigInteger denominator);
+
+Creates a number with the given numerator and denominator.
+
 ### ExtendedRational Constructor
 
     public ExtendedRational(
@@ -124,32 +140,11 @@ A rational number with the same value as  <i>flt</i>
     public static PeterO.ExtendedRational CreateNaN(
         PeterO.BigInteger diag);
 
-Not documented yet.
+Creates a not-a-number ExtendedRational object.
 
 <b>Parameters:</b>
 
- * <i>diag</i>: A BigInteger object.
-
-<b>Returns:</b>
-
-An ExtendedRational object.
-
-### CreateNaN
-
-    public static PeterO.ExtendedRational CreateNaN(
-        PeterO.BigInteger diag,
-        bool signaling,
-        bool negative);
-
-Not documented yet.
-
-<b>Parameters:</b>
-
- * <i>diag</i>: A BigInteger object.
-
- * <i>signaling</i>: A Boolean object.
-
- * <i>negative</i>: A Boolean object. (2).
+ * <i>diag</i>: A number to use as diagnostic information associated with this object. If none is needed, should be zero.
 
 <b>Returns:</b>
 
@@ -160,6 +155,41 @@ An ExtendedRational object.
  * System.ArgumentNullException: 
 The parameter <i>diag</i>
  is null.
+
+ * System.ArgumentException: 
+The parameter  <i>diag</i>
+ is less than 0.
+
+### CreateNaN
+
+    public static PeterO.ExtendedRational CreateNaN(
+        PeterO.BigInteger diag,
+        bool signaling,
+        bool negative);
+
+Creates a not-a-number ExtendedRational object.
+
+<b>Parameters:</b>
+
+ * <i>diag</i>: A number to use as diagnostic information associated with this object. If none is needed, should be zero.
+
+ * <i>signaling</i>: Whether the return value will be signaling (true) or quiet (false).
+
+ * <i>negative</i>: Whether the return value is negative.
+
+<b>Returns:</b>
+
+An ExtendedRational object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>diag</i>
+ is null.
+
+ * System.ArgumentException: 
+The parameter  <i>diag</i>
+ is less than 0.
 
 ### FromExtendedFloat
 
@@ -227,7 +257,7 @@ Converts this rational number to a decimal number, but if the result would have 
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context object to control the precision. The rounding and exponent range settings of this context are ignored. This context will be used only if the exact result would have a nonterminating decimal expansion. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case this method is the same as ToExtendedDecimal.
 
 <b>Returns:</b>
 
@@ -267,7 +297,7 @@ Converts this rational number to a binary number, but if the result would have a
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context object to control the precision. The rounding and exponent range settings of this context are ignored. This context will be used only if the exact result would have a nonterminating binary expansion. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case this method is the same as ToExtendedFloat.
 
 <b>Returns:</b>
 
@@ -282,6 +312,29 @@ Converts this value to an arbitrary-precision integer. Any fractional part in th
 <b>Returns:</b>
 
 A BigInteger object.
+
+<b>Exceptions:</b>
+
+ * System.OverflowException: 
+This object's value is infinity or NaN.
+
+### ToBigIntegerExact
+
+    public PeterO.BigInteger ToBigIntegerExact();
+
+Converts this value to an arbitrary-precision integer, checking whether the value is an exact integer.
+
+<b>Returns:</b>
+
+A BigInteger object.
+
+<b>Exceptions:</b>
+
+ * System.OverflowException: 
+This object's value is infinity or NaN.
+
+ * System.ArithmeticException: 
+This object's value is not an exact integer.
 
 ### FromInt32
 

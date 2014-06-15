@@ -1110,6 +1110,21 @@ namespace PeterO {
     /// <exception cref='OverflowException'>This object's value is infinity
     /// or NaN.</exception>
     public BigInteger ToBigInteger() {
+      return this.ToBigIntegerInternal(false);
+    }
+
+    /// <summary>Converts this value to an arbitrary-precision integer,
+    /// checking whether the fractional part of the integer would be lost.</summary>
+    /// <returns>A BigInteger object.</returns>
+    /// <exception cref='OverflowException'>This object's value is infinity
+    /// or NaN.</exception>
+    /// <exception cref='ArithmeticException'>This object's value is
+    /// not an exact integer.</exception>
+    public BigInteger ToBigIntegerExact() {
+      return this.ToBigIntegerInternal(true);
+    }
+
+    private BigInteger ToBigIntegerInternal(bool exact) {
       if (!this.IsFinite) {
         throw new OverflowException("Value is infinity or NaN");
       }
@@ -1127,19 +1142,18 @@ namespace PeterO {
         return bigmantissa;
       } else {
         BigInteger bigmantissa = this.Mantissa;
-        BigInteger bigexponent = this.Exponent;
-        bigexponent = -bigexponent;
-        if (bigexponent.CompareTo((BigInteger)1000) > 0) {
-          int smallPrecision = this.UnsignedMantissa.getDigitCount();
-          BigInteger bigPrecision = (BigInteger)smallPrecision;
-          if (bigPrecision.CompareTo(bigexponent) <= 0) {
-            // Unsigned mantissa is less than the power of 10
-            // to be divided by
-            return BigInteger.Zero;
-          }
+        FastInteger bigexponent = FastInteger.FromBig(this.Exponent).Negate();
+        bigmantissa = BigInteger.Abs(bigmantissa);
+        DigitShiftAccumulator acc = new DigitShiftAccumulator(bigmantissa, 0, 0);
+        acc.ShiftRight(bigexponent);
+        if (exact && (acc.LastDiscardedDigit != 0 || acc.OlderDiscardedDigits != 0)) {
+          // Some digits were discarded
+          throw new ArithmeticException("Not an exact integer");
         }
-        bigexponent = DecimalUtility.FindPowerOfTenFromBig(bigexponent);
-        bigmantissa /= (BigInteger)bigexponent;
+        bigmantissa = acc.ShiftedInt;
+        if (this.IsNegative) {
+          bigmantissa = -bigmantissa;
+        }
         return bigmantissa;
       }
     }

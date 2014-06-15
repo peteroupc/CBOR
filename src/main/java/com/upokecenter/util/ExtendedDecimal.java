@@ -1128,6 +1128,22 @@ bigrem=divrem[1]; }
      * @throws ArithmeticException This object's value is infinity or NaN.
      */
     public BigInteger ToBigInteger() {
+      return this.ToBigIntegerInternal(false);
+    }
+
+    /**
+     * Converts this value to an arbitrary-precision integer, checking
+     * whether the fractional part of the integer would be lost.
+     * @return A BigInteger object.
+     * @throws ArithmeticException This object's value is infinity or NaN.
+     * @throws ArithmeticException This object's value is not an exact
+     * integer.
+     */
+    public BigInteger ToBigIntegerExact() {
+      return this.ToBigIntegerInternal(true);
+    }
+
+    private BigInteger ToBigIntegerInternal(boolean exact) {
       if (!this.isFinite()) {
         throw new ArithmeticException("Value is infinity or NaN");
       }
@@ -1145,19 +1161,18 @@ bigrem=divrem[1]; }
         return bigmantissa;
       } else {
         BigInteger bigmantissa = this.getMantissa();
-        BigInteger bigexponent = this.getExponent();
-        bigexponent=bigexponent.negate();
-        if (bigexponent.compareTo(BigInteger.valueOf(1000)) > 0) {
-          int smallPrecision = this.getUnsignedMantissa().getDigitCount();
-          BigInteger bigPrecision = BigInteger.valueOf(smallPrecision);
-          if (bigPrecision.compareTo(bigexponent) <= 0) {
-            // Unsigned mantissa is less than the power of 10
-            // to be divided by
-            return BigInteger.ZERO;
-          }
+        FastInteger bigexponent = FastInteger.FromBig(this.getExponent()).Negate();
+        bigmantissa = (bigmantissa).abs();
+        DigitShiftAccumulator acc = new DigitShiftAccumulator(bigmantissa, 0, 0);
+        acc.ShiftRight(bigexponent);
+        if (exact && (acc.getLastDiscardedDigit() != 0 || acc.getOlderDiscardedDigits() != 0)) {
+          // Some digits were discarded
+          throw new ArithmeticException("Not an exact integer");
         }
-        bigexponent = DecimalUtility.FindPowerOfTenFromBig(bigexponent);
-        bigmantissa=bigmantissa.divide(bigexponent);
+        bigmantissa = acc.getShiftedInt();
+        if (this.isNegative()) {
+          bigmantissa=bigmantissa.negate();
+        }
         return bigmantissa;
       }
     }

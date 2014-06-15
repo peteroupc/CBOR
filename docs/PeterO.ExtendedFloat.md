@@ -82,7 +82,7 @@ Creates a not-a-number ExtendedFloat object.
 
 <b>Parameters:</b>
 
- * <i>diag</i>: A number to use as diagnostic information associated with this object. The sign will be ignored. If none is needed, should be zero.
+ * <i>diag</i>: A number to use as diagnostic information associated with this object. If none is needed, should be zero.
 
 <b>Returns:</b>
 
@@ -94,6 +94,10 @@ A quiet not-a-number object.
 The parameter <i>diag</i>
  is null.
 
+ * System.ArgumentException: 
+The parameter  <i>diag</i>
+ is less than 0.
+
 ### CreateNaN
 
     public static PeterO.ExtendedFloat CreateNaN(
@@ -102,15 +106,15 @@ The parameter <i>diag</i>
         bool negative,
         PeterO.PrecisionContext ctx);
 
-Not documented yet.
+Creates a not-a-number ExtendedFloat object.
 
 <b>Parameters:</b>
 
- * <i>diag</i>: A BigInteger object.
+ * <i>diag</i>: A number to use as diagnostic information associated with this object. If none is needed, should be zero.
 
- * <i>signaling</i>: A Boolean object.
+ * <i>signaling</i>: Whether the return value will be signaling (true) or quiet (false).
 
- * <i>negative</i>: A Boolean object. (2).
+ * <i>negative</i>: Whether the return value is negative.
 
  * <i>ctx</i>: A PrecisionContext object.
 
@@ -123,6 +127,10 @@ An ExtendedFloat object.
  * System.ArgumentNullException: 
 The parameter <i>diag</i>
  is null.
+
+ * System.ArgumentException: 
+The parameter  <i>diag</i>
+ is less than 0.
 
 ### Create
 
@@ -283,7 +291,7 @@ The parameter <i>str</i>
 
     public PeterO.BigInteger ToBigInteger();
 
-Converts this value to an arbitrary-precision integer. Any fractional part in this value will be discarded when converting to a big integer.
+Converts this value to an arbitrary-precision integer. Any fractional part of this value will be discarded when converting to a big integer.
 
 <b>Returns:</b>
 
@@ -293,6 +301,24 @@ A BigInteger object.
 
  * System.OverflowException: 
 This object's value is infinity or NaN.
+
+### ToBigIntegerExact
+
+    public PeterO.BigInteger ToBigIntegerExact();
+
+Converts this value to an arbitrary-precision integer, checking whether the value contains a fractional part.
+
+<b>Returns:</b>
+
+A BigInteger object.
+
+<b>Exceptions:</b>
+
+ * System.OverflowException: 
+This object's value is infinity or NaN.
+
+ * System.ArithmeticException: 
+This object's value is not an exact integer.
 
 ### ToSingle
 
