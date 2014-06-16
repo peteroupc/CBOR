@@ -226,7 +226,7 @@ namespace PeterO {
     }
 
     /// <summary>Creates a decimal number from a string that represents
-    /// a number. See FromString(String, int, int, PrecisionContext) for
+    /// a number. See <c>FromString(String, int, int, PrecisionContext)</c> for
     /// more information.</summary>
     /// <param name='str'>A string that represents a number.</param>
     /// <returns>An arbitrary-precision decimal number with the same value
@@ -243,7 +243,7 @@ namespace PeterO {
     }
 
     /// <summary>Creates a decimal number from a string that represents
-    /// a number. See FromString(String, int, int, PrecisionContext) for
+    /// a number. See <c>FromString(String, int, int, PrecisionContext)</c> for
     /// more information.</summary>
     /// <param name='str'>A string that represents a number.</param>
     /// <returns>An arbitrary-precision decimal number with the same value

@@ -1662,7 +1662,7 @@ public void set(String key, CBORObject value) {
         } else {
           mapKey = ((key instanceof CBORObject) ? (CBORObject)key : null);
           if (mapKey == null) {
-            mapKey = CBORObject.FromObject(valueOb);
+            mapKey = CBORObject.FromObject(key);
           }
         }
         if (valueOb == null) {
@@ -1710,7 +1710,7 @@ public void set(String key, CBORObject value) {
         } else {
           mapKey = ((key instanceof CBORObject) ? (CBORObject)key : null);
           if (mapKey == null) {
-            mapKey = CBORObject.FromObject(valueOb);
+            mapKey = CBORObject.FromObject(key);
           }
         }
         if (valueOb == null) {
@@ -3413,11 +3413,15 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      */
     public static CBORObject FromJSONString(String str) {
       CharacterReader reader = new CharacterReader(str);
-      CBORObject obj = ParseJSONValue(reader, false, false, false, 0);
-      if (SkipWhitespaceJSON(reader) != -1) {
-        throw reader.NewError("End of String not reached");
-      }
+      try {
+        CBORObject obj = ParseJSONValue(reader, false, false, false, 0);
+        if (SkipWhitespaceJSON(reader) != -1) {
+          throw reader.NewError("End of String not reached");
+        }
       return obj;
+      } catch (CBORException ex) {
+        throw new CBORException(str + "\r\n" + ex.getMessage(), ex);
+      }
     }
 
     /**
@@ -3450,6 +3454,74 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     }
 
     private static final String Hex16 = "0123456789ABCDEF";
+
+    private static void WriteJSONStringUnquoted(String str, OutputStream outputStream) throws IOException {
+      // Surrogates were already verified when this
+      // String was added to the CBOR Object; that check
+      // is not repeated here
+      boolean first = true;
+      int startIndex = 0;
+      byte[] buffer = null;
+      for (int i = 0; i < str.length(); ++i) {
+        char c = str.charAt(i);
+        if (c == '\\' || c == '"') {
+          if (buffer == null) {
+            buffer = new byte[6];
+          }
+          if (startIndex != i) {
+            DataUtilities.WriteUtf8(str, startIndex, i - startIndex, outputStream, true);
+          }
+          startIndex = i + 1;
+          buffer[0] = (byte)'\\';
+          buffer[1] = (byte)c;
+          outputStream.write(buffer,0,2);
+        } else if (c < 0x20) {
+          if (buffer == null) {
+            buffer = new byte[6];
+          }
+          if (startIndex != i) {
+            DataUtilities.WriteUtf8(str, startIndex, i - startIndex, outputStream, true);
+          }
+          int bufferSize = 0;
+          startIndex = i + 1;
+          if (c == 0x0d) {
+            buffer[0] = (byte)'\\';
+            buffer[1] = (byte)'r';
+            bufferSize = 2;
+          } else if (c == 0x0a) {
+            buffer[0] = (byte)'\\';
+            buffer[1] = (byte)'n';
+            bufferSize = 2;
+          } else if (c == 0x08) {
+            buffer[0] = (byte)'\\';
+            buffer[1] = (byte)'b';
+            bufferSize = 2;
+          } else if (c == 0x0c) {
+            buffer[0] = (byte)'\\';
+            buffer[1] = (byte)'f';
+            bufferSize = 2;
+          } else if (c == 0x09) {
+            buffer[0] = (byte)'\\';
+            buffer[1] = (byte)'t';
+            bufferSize = 2;
+          } else {
+            buffer[0] = (byte)'\\';
+            buffer[1] = (byte)'u';
+            buffer[2] = (byte)'0';
+            buffer[3] = (byte)'0';
+            buffer[4] = (byte)Hex16.charAt((int)(c >> 4));
+            buffer[5] = (byte)Hex16.charAt((int)(c & 15));
+            bufferSize = 6;
+          }
+          outputStream.write(buffer,0,bufferSize);
+        }
+      }
+      if (startIndex == 0) {
+        DataUtilities.WriteUtf8(str, outputStream, true);
+      } else {
+        DataUtilities.WriteUtf8(str, startIndex, str.length() - startIndex, outputStream, true);
+      }
+    }
 
     private static void StringToJSONStringUnquoted(String str, StringBuilder sb) {
       // Surrogates were already verified when this
@@ -3491,6 +3563,295 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
       if (first) {
         sb.append(str);
+      }
+    }
+
+    private static byte[] valueTrueBytes = new byte[] {  0x74, 0x72, 0x75, 0x65  };
+    private static byte[] valueFalseBytes = new byte[] {  0x66, 0x61, 0x6c, 0x73, 0x65  };
+    private static byte[] valueNullBytes = new byte[] {  0x6e, 0x75, 0x6c, 0x6c  };
+    private static byte[] valueEmptyStringBytes = new byte[] {  0x22, 0x22  };
+
+    /**
+     * Converts an arbitrary object to a string in JavaScript Object Notation
+     * (JSON) format, as in the ToJSONString method, and writes that string
+     * to a data stream in UTF-8.
+     * @param obj An arbitrary object.
+     * @param outputStream A writable data stream.
+     */
+    public void WriteJSON(Object obj, OutputStream outputStream) throws IOException {
+      if (obj == null) {
+        outputStream.write(valueNullBytes,0,valueNullBytes.length);
+        return;
+      }
+      if(obj instanceof Boolean) {
+        if (((Boolean)obj).booleanValue()) {
+          outputStream.write(valueTrueBytes,0,valueTrueBytes.length);
+          return;
+        } else {
+          outputStream.write(valueFalseBytes,0,valueFalseBytes.length);
+          return;
+        }
+      }
+      CBORObject.FromObject(obj).WriteJSONTo(outputStream);
+    }
+
+    /**
+     * Converts this object to a string in JavaScript Object Notation (JSON)
+     * format, as in the ToJSONString method, and writes that string to a
+     * data stream in UTF-8.
+     * @param outputStream A writable data stream.
+     */
+    public void WriteJSONTo(OutputStream outputStream) throws IOException {
+      int type = this.getItemType();
+      switch (type) {
+        case CBORObjectTypeSimpleValue: {
+            if (this.isTrue()) {
+                outputStream.write(valueTrueBytes,0,valueTrueBytes.length);
+                return;
+            } else if (this.isFalse()) {
+                outputStream.write(valueFalseBytes,0,valueFalseBytes.length);
+                return;
+            } else if (this.isNull()) {
+                outputStream.write(valueNullBytes,0,valueNullBytes.length);
+                return;
+            } else {
+              outputStream.write(valueNullBytes,0,valueNullBytes.length);
+              return;
+            }
+          }
+        case CBORObjectTypeSingle: {
+            float f = ((Float)this.getThisItem()).floatValue();
+            if (((f)==Float.NEGATIVE_INFINITY) ||
+                ((f)==Float.POSITIVE_INFINITY) ||
+                Float.isNaN(f)) {
+              outputStream.write(valueNullBytes,0,valueNullBytes.length);
+              return;
+            } else {
+              DataUtilities.WriteUtf8(
+
+TrimDotZero(
+                Float.toString((float)f)), outputStream, true);
+              return;
+            }
+          }
+        case CBORObjectTypeDouble: {
+            double f = ((Double)this.getThisItem()).doubleValue();
+            if (((f)==Double.NEGATIVE_INFINITY) ||
+                ((f)==Double.POSITIVE_INFINITY) ||
+                Double.isNaN(f)) {
+              outputStream.write(valueNullBytes,0,valueNullBytes.length);
+              return;
+            } else {
+              DataUtilities.WriteUtf8(
+
+TrimDotZero(
+                Double.toString((double)f)),
+                outputStream, true);
+              return;
+            }
+          }
+        case CBORObjectTypeInteger: {
+            DataUtilities.WriteUtf8(
+              Long.toString((((Long)this.getThisItem()).longValue())),
+              outputStream,
+              true);
+            return;
+          }
+        case CBORObjectTypeBigInteger: {
+            DataUtilities.WriteUtf8(
+CBORUtilities.BigIntToString((BigInteger)this.getThisItem()),
+outputStream,
+true);
+            return;
+          }
+        case CBORObjectTypeExtendedRational: {
+            ExtendedRational dec = (ExtendedRational)this.getThisItem();
+            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
+              PrecisionContext.Decimal128.WithUnlimitedExponents());
+            if (!f.isFinite()) {
+              outputStream.write(valueNullBytes,0,valueNullBytes.length);
+              return;
+            } else {
+              DataUtilities.WriteUtf8(
+f.toString(),
+outputStream,
+true);
+              return;
+            }
+          }
+        case CBORObjectTypeExtendedDecimal: {
+            ExtendedDecimal dec = (ExtendedDecimal)this.getThisItem();
+            if (dec.IsInfinity() || dec.IsNaN()) {
+              outputStream.write(valueNullBytes,0,valueNullBytes.length);
+              return;
+            }
+            DataUtilities.WriteUtf8(
+dec.toString(),
+outputStream,
+true);
+            return;
+          }
+        case CBORObjectTypeExtendedFloat: {
+            ExtendedFloat flo = (ExtendedFloat)this.getThisItem();
+            if (flo.IsInfinity() || flo.IsNaN()) {
+              outputStream.write(valueNullBytes,0,valueNullBytes.length);
+              return;
+            }
+            if (flo.isFinite() &&
+              (flo.getExponent()).abs().compareTo(BigInteger.valueOf(2500)) > 0) {
+              // Too inefficient to convert to a decimal number
+              // from a bigfloat with a very high exponent,
+              // so convert to double instead
+              double f = flo.ToDouble();
+              if (((f)==Double.NEGATIVE_INFINITY) ||
+                  ((f)==Double.POSITIVE_INFINITY) ||
+                  Double.isNaN(f)) {
+                outputStream.write(valueNullBytes,0,valueNullBytes.length);
+                return;
+              } else {
+                DataUtilities.WriteUtf8(
+
+TrimDotZero(
+                  Double.toString((double)f)),
+                outputStream, true);
+                return;
+              }
+            }
+            DataUtilities.WriteUtf8(
+flo.toString(),
+outputStream,
+true);
+            return;
+          }
+        default: {
+            this.WriteJSONToInternal(outputStream);
+            return;
+          }
+      }
+    }
+
+    private void WriteJSONToInternal(OutputStream outputStream) throws IOException {
+      int type = this.getItemType();
+      switch (type) {
+        case CBORObjectTypeByteString: {
+            byte[] byteArray = (byte[])this.getThisItem();
+            if (byteArray.length == 0) {
+              outputStream.write(valueEmptyStringBytes,0,valueEmptyStringBytes.length);
+              return;
+            } else {
+              outputStream.write((byte)'\"');
+              StringBuilder sb = new StringBuilder();
+              // TODO: Support base64 streaming
+              if (this.HasTag(22)) {
+                Base64.ToBase64(sb, (byte[])this.getThisItem(), false);
+              } else if (this.HasTag(23)) {
+                CBORUtilities.ToBase16(sb, (byte[])this.getThisItem());
+              } else {
+                Base64.ToBase64URL(sb, (byte[])this.getThisItem(), false);
+              }
+              DataUtilities.WriteUtf8(sb.toString(), outputStream, true);
+              outputStream.write((byte)'\"');
+            }
+            break;
+          }
+        case CBORObjectTypeTextString: {
+          String thisString = (String)this.getThisItem();
+            if (thisString.length() == 0) {
+              outputStream.write(valueEmptyStringBytes,0,valueEmptyStringBytes.length);
+              return;
+            } else {
+              outputStream.write((byte)'\"');
+              WriteJSONStringUnquoted(thisString, outputStream);
+              outputStream.write((byte)'\"');
+              break;
+            }
+          }
+        case CBORObjectTypeArray: {
+            boolean first = true;
+            outputStream.write((byte)'[');
+            for(CBORObject i : this.AsList()) {
+              if (!first) {
+                outputStream.write((byte)',');
+              }
+              i.WriteJSONTo(outputStream);
+              first = false;
+            }
+            outputStream.write((byte)']');
+            break;
+          }
+        case CBORObjectTypeExtendedRational: {
+            ExtendedRational dec = (ExtendedRational)this.getThisItem();
+            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
+              PrecisionContext.Decimal128.WithUnlimitedExponents());
+            if (!f.isFinite()) {
+              outputStream.write(valueNullBytes,0,valueNullBytes.length);
+            } else {
+              DataUtilities.WriteUtf8(f.toString(), outputStream, true);
+            }
+            break;
+          }
+        case CBORObjectTypeMap: {
+            boolean first = true;
+            boolean hasNonStringKeys = false;
+            Map<CBORObject, CBORObject> objMap = this.AsMap();
+            for(Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
+              CBORObject key = entry.getKey();
+              if (key.getItemType() != CBORObjectTypeTextString) {
+                hasNonStringKeys = true;
+                break;
+              }
+            }
+            if (!hasNonStringKeys) {
+              outputStream.write((byte)'{');
+              for(Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
+                CBORObject key = entry.getKey();
+                CBORObject value = entry.getValue();
+                if (!first) {
+                  outputStream.write((byte)',');
+                }
+                outputStream.write((byte)'\"');
+                WriteJSONStringUnquoted((String)key.getThisItem(), outputStream);
+                outputStream.write((byte)'\"');
+                outputStream.write((byte)':');
+                value.WriteJSONTo(outputStream);
+                first = false;
+              }
+              outputStream.write((byte)'}');
+            } else {
+              // This map has non-String keys
+              Map<String, CBORObject> stringMap = new HashMap<String, CBORObject>();
+              // Copy to a map with String keys, since
+              // some keys could be duplicates
+              // when serialized to strings
+              for(Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
+                CBORObject key = entry.getKey();
+                CBORObject value = entry.getValue();
+                String str = (key.getItemType() == CBORObjectTypeTextString) ?
+                  ((String)key.getThisItem()) : key.ToJSONString();
+                stringMap.put(str,value);
+              }
+              first = true;
+              outputStream.write((byte)'{');
+              for(Map.Entry<String, CBORObject> entry : stringMap.entrySet()) {
+                String key = entry.getKey();
+                CBORObject value = entry.getValue();
+                if (!first) {
+                  outputStream.write((byte)',');
+                }
+                outputStream.write((byte)'\"');
+                WriteJSONStringUnquoted((String)key, outputStream);
+                outputStream.write((byte)'\"');
+                outputStream.write((byte)':');
+                value.WriteJSONTo(outputStream);
+                first = false;
+              }
+              outputStream.write((byte)'}');
+            }
+            break;
+          }
+        default:
+          this.WriteJSONTo(outputStream);
+          break;
       }
     }
 

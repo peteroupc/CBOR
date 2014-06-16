@@ -223,7 +223,7 @@ namespace Test {
       return new ExtendedRational(bigintA, bigintB);
     }
 
-    private static CBORObject RandomCBORObject(FastRandom rand) {
+    public static CBORObject RandomCBORObject(FastRandom rand) {
       return RandomCBORObject(rand, 0);
     }
 
@@ -1292,6 +1292,24 @@ namespace Test {
       string json = cbor.ToJSONString();
     }
 
+    private void TestWriteToJSON(CBORObject obj) {
+      CBORObject objA = null;
+      using (MemoryStream ms = new MemoryStream()) {
+        try {
+          obj.WriteJSONTo(ms);
+          objA = CBORObject.FromJSONString(DataUtilities.GetUtf8String(ms.ToArray(), true));
+        } catch (IOException ex) {
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+      }
+      CBORObject objB = CBORObject.FromJSONString(obj.ToJSONString());
+      if (!objA.Equals(objB)) {
+        Console.WriteLine(objA);
+        Console.WriteLine(objB);
+        Assert.Fail("WriteToJSON gives different results from ToJSONString");
+      }
+    }
+
     [TestMethod]
     public void TestRandomNonsense() {
       FastRandom rand = new FastRandom();
@@ -1326,6 +1344,7 @@ namespace Test {
                 if (o.Type == CBORType.Array || o.Type == CBORType.Map) {
                   jsonString = o.ToJSONString();
                   CBORObject.FromJSONString(jsonString);
+                  this.TestWriteToJSON(o);
                 }
               } catch (Exception ex) {
                 Assert.Fail(jsonString + "\n" + ex.ToString());
@@ -1337,6 +1356,21 @@ namespace Test {
           }
         }
       }
+    }
+
+    public void TestCBORMapAdd() {
+      CBORObject cbor = CBORObject.NewMap();
+      cbor.Add(1, 2);
+      Assert.IsTrue(cbor.ContainsKey(CBORObject.FromObject(1)));
+      Assert.AreEqual((int)2, cbor[CBORObject.FromObject(1)]);
+      Assert.AreEqual("{\"1\":2}", cbor.ToJSONString());
+      cbor.Add("hello", 2);
+      Assert.IsTrue(cbor.ContainsKey("hello"));
+      Assert.IsTrue(cbor.ContainsKey(CBORObject.FromObject("hello")));
+      Assert.AreEqual((int)2, cbor["hello"]);
+      cbor.Set(1, 3);
+      Assert.IsTrue(cbor.ContainsKey(CBORObject.FromObject(1)));
+      Assert.AreEqual((int)3, cbor[CBORObject.FromObject(1)]);
     }
 
     [TestMethod]
@@ -1373,6 +1407,7 @@ namespace Test {
                   jsonString = o.ToJSONString();
                   // reread JSON string to test validity
                   CBORObject.FromJSONString(jsonString);
+                  this.TestWriteToJSON(o);
                 }
               } catch (Exception ex) {
                 Assert.Fail(jsonString + "\n" + ex.ToString());
@@ -1391,33 +1426,12 @@ namespace Test {
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
       CBORObject obj;
-      // String badstr = null;
       int count = 1000;
       for (int i = 0; i < count; ++i) {
         obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
-        /*
-        System.Threading.Thread thread = new System.Threading.Thread(()=>TestCommon.AssertRoundTrip(obj));
-        thread.Start();
-        if (!thread.Join(5000)) {
-          String bas = ToByteArrayString(obj);
-          thread.Abort();
-          Assert.Fail(bas);
-          Console.WriteLine(bas.Length);
-          if (badstr == null || bas.Length<badstr.Length) {
-            badstr = bas;
-          }
-        }
-         // */
+        this.TestWriteToJSON(obj);
       }
-      /*
-      if (badstr != null) {
-        if (badstr.Length>10000) {
-          Assert.Fail("badstr "+badstr.Length);
-        }
-        Assert.Fail(badstr);
-      }
-       // */
     }
 
     [TestMethod]
