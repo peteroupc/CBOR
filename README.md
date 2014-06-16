@@ -18,7 +18,7 @@ this library as a NuGet package, enter `Install-Package PeterO.Cbor` in the
 NuGet Package Manager Console.
 
 Starting with version 0.23.0, the Java implementation is available
-as an artifact in the Central Repository. To add this library to a Maven
+as an [artifact](https://search.maven.org/#search|gav|1|g%3A%22com.upokecenter%22%20AND%20a%3A%22cbor%22) in the Central Repository. To add this library to a Maven
 project, add the following to the `dependencies` section in your `pom.xml` file:
 
 ```xml
