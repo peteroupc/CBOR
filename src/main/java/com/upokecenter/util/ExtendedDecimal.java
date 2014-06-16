@@ -31,17 +31,17 @@ at: http://upokecenter.com/d/
      * is generally used when a non-zero number is divided by zero, or when
      * a very high number can't be represented in a given exponent range.
      * <b>Not-a-number</b> is generally used to signal errors.</p> <p>This
-     * class implements the <a href='http://speleotrove.com/decimal/decarith.html'>General
-     * Decimal Arithmetic Specification</a> version 1.70.</p> <p>Passing
-     * a signaling NaN to any arithmetic operation shown here will signal
-     * the flag FlagInvalid and return a quiet NaN, even if another operand
-     * to that operation is a quiet NaN, unless noted otherwise.</p> <p>Passing
-     * a quiet NaN to any arithmetic operation shown here will return a quiet
-     * NaN, unless noted otherwise. Invalid operations will also return
-     * a quiet NaN, as stated in the individual methods.</p> <p>Unless noted
-     * otherwise, passing a null ExtendedDecimal argument to any method
-     * here will throw an exception.</p> <p>When an arithmetic operation
-     * signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero,
+     * class implements the General Decimal Arithmetic Specification
+     * version 1.70: <code>http://speleotrove.com/decimal/decarith.html</code>
+     * </p> <p>Passing a signaling NaN to any arithmetic operation shown
+     * here will signal the flag FlagInvalid and return a quiet NaN, even
+     * if another operand to that operation is a quiet NaN, unless noted otherwise.</p>
+     * <p>Passing a quiet NaN to any arithmetic operation shown here will
+     * return a quiet NaN, unless noted otherwise. Invalid operations will
+     * also return a quiet NaN, as stated in the individual methods.</p>
+     * <p>Unless noted otherwise, passing a null ExtendedDecimal argument
+     * to any method here will throw an exception.</p> <p>When an arithmetic
+     * operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero,
      * it will not throw an exception too, unless the flag's trap is enabled
      * in the precision context (see PrecisionContext's Traps property).</p>
      * <p>An ExtendedDecimal value can be serialized in one of the following
@@ -1835,8 +1835,9 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Calculates the remainder of a number by the formula this - ((this.divide(divisor)).multiply(divisor)).
-     * This is meant to be similar to the remainder operation in Java's BigDecimal.
+     * Calculates the remainder of a number by the formula "this" - (("this"
+     * / "divisor") * "divisor"). This is meant to be similar to the remainder
+     * operation in Java's BigDecimal.
      * @param divisor The number to divide by.
      * @return An ExtendedDecimal object.
      */
@@ -1845,8 +1846,9 @@ remainder=divrem[1]; }
     }
 
     /**
-     * Calculates the remainder of a number by the formula this - ((this.divide(divisor)).multiply(divisor)).
-     * This is meant to be similar to the remainder operation in Java's BigDecimal.
+     * Calculates the remainder of a number by the formula "this" - (("this"
+     * / "divisor") * "divisor"). This is meant to be similar to the remainder
+     * operation in Java's BigDecimal.
      * @param divisor The number to divide by.
      * @param ctx A precision context object to control the precision, rounding,
      * and exponent range of the result. This context will be used only in
