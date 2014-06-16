@@ -25,7 +25,7 @@ project, add the following to the `dependencies` section in your `pom.xml` file:
 <dependency>
   <groupId>com.upokecenter</groupId>
   <artifactId>cbor</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
@@ -161,13 +161,13 @@ File.WriteAllText(
   new System.Text.Encoding.UTF8Encoding(false));
 
 // This is an alternative way to write the CBOR object
-// and will be supported in version 1.2.
+// and is now supported in version 1.2.
 using (var stream = new FileStream("object2.json", FileMode.Create)) {
     // Write the CBOR object as JSON; here, a byte order
     // mark won't be added
     cbor.WriteTo(stream);
 }
-// Version 1.2 will also support a third way to write
+// Version 1.2 now supports a third way to write
 // objects to JSON: the CBORObject.Write method
 using (var stream = new FileStream("object3.json", FileMode.Create)) {
    CBORObject.Write("some string", stream);
@@ -224,6 +224,12 @@ The following are some clarifications to RFC 7049.
 
 Release Notes
 -----------
+
+In version 1.2:
+
+- The WriteJSON and WriteToJSON methods were added to CBORObject
+- Bugs were fixed in the Set and Add methods of CBORObject
+
 In version 1.1 there were many additions and bug fixes in arbitrary-precision
 arithmetic, including:
 

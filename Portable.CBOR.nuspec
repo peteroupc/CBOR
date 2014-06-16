@@ -16,12 +16,9 @@
     </description>
     <summary>A C# implementation of Concise Binary Object Representation (CBOR), a data serialization format. This implementation can also convert between CBOR and JSON.</summary>
     <releaseNotes>
-In version 1.1 there were many additions and bug fixes in arbitrary-precision
-arithmetic, including:
-- Added unchecked versions of intValue and longValue in BigInteger
-- Added more overloads for FromString in ExtendedDecimal and ExtendedFloat
-- Fixed bug where Pow doesn't compute the exact value in unlimited precision contexts
-- Much added documentation
+In version 1.2:
+- The WriteJSON and WriteToJSON methods were added to CBORObject
+- Bugs were fixed in the Set and Add methods of CBORObject
     See the project page for release notes on previous versions: https://github.com/peteroupc/CBOR
     </releaseNotes>
     <copyright>Written by Peter O. in 2013-2014.  Any copyright is released to the Public Domain.</copyright>
