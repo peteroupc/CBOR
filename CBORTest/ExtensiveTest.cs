@@ -1189,6 +1189,10 @@ namespace CBOR {
       return 0;
     }
 
+    public static string[] GetTestFiles() {
+      return Directory.GetFiles(".");
+    }
+
     [TestMethod]
     public void TestParser() {
       long failures = 0;
@@ -1199,7 +1203,7 @@ namespace CBOR {
       TextWriter nullWriter = TextWriter.Null;
       TextWriter standardOut = Console.Out;
       int x = 0;
-      dirfiles.AddRange(Directory.GetFiles("."));
+      dirfiles.AddRange(GetTestFiles());
       foreach (var f in dirfiles) {
         Console.WriteLine(f);
         ++x;

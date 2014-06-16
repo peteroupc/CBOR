@@ -135,6 +135,32 @@ using (var stream = new FileStream("object.cbor", FileMode.Create)) {
 }
 ```
 
+Reading JSON from a file:
+
+```c#
+ // Open the file stream
+ using (var stream = new FileStream("object.json", FileMode.Open)) {
+    // Read the JSON object from the stream
+    // as a CBOR object
+    var cbor = CBORObject.ReadJSON(stream);
+ }
+```
+
+Writing a CBOR object as JSON:
+
+```c#
+// This example assumes that the variable "cbor" refers
+// to a CBORObject object.
+// NOTE: Specifying Encoding.UTF8 as the third parameter
+// would add a byte order mark to the beginning of the text, 
+// but conforming JSON implementations are forbidden from 
+// adding it this way in JSON texts they generate.
+File.WriteAllText(
+  "object.json",
+  cbor.ToJSONString(),
+  new System.Text.Encoding.UTF8Encoding(false));
+```
+
 NOTE: All code samples in this section are released to the Public Domain,
 as explained in <http://creativecommons.org/publicdomain/zero/1.0/>.
 

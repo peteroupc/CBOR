@@ -1263,6 +1263,21 @@ An I/O error occurred.
  * PeterO.Cbor.CBORException: 
 The data stream contains invalid UTF-8 or is not in JSON format.
 
+### WriteJSON
+
+    public void WriteJSON(
+        object obj,
+        System.IO.Stream outputStream);
+
+Converts an arbitrary object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
+
+### WriteJSONTo
+
+    public void WriteJSONTo(
+        System.IO.Stream outputStream);
+
+Converts this object to a string in JavaScript Object Notation (JSON) format, as in the ToJSONString method, and writes that string to a data stream in UTF-8.
+
 ### ToJSONString
 
     public string ToJSONString();

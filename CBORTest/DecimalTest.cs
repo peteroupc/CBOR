@@ -11,6 +11,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
+using PeterO.Cbor;
 
 namespace Test {
   [TestClass]
@@ -324,11 +325,11 @@ namespace Test {
       for (int i = 0; i < 1; ++i) {
         // Reads decimal test files described in:
         // <http://speleotrove.com/decimal/dectest.html>
-        foreach (var f in Directory.GetFiles(".")) {
+        foreach (var f in CBOR.ExtensiveTest.GetTestFiles()) {
           if (!Path.GetFileName(f).Contains(".decTest")) {
             continue;
           }
-          Console.WriteLine("//" + f);
+          Console.WriteLine(f);
           IDictionary<string, string> context = new Dictionary<string, string>();
           using (StreamReader w = new StreamReader(f)) {
             while (!w.EndOfStream) {

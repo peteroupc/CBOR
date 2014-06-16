@@ -225,7 +225,7 @@ import com.upokecenter.cbor.*;
       return new ExtendedRational(bigintA, bigintB);
     }
 
-    private static CBORObject RandomCBORObject(FastRandom rand) {
+    public static CBORObject RandomCBORObject(FastRandom rand) {
       return RandomCBORObject(rand, 0);
     }
 
@@ -1297,6 +1297,30 @@ try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
       String json = cbor.ToJSONString();
     }
 
+    private void TestWriteToJSON(CBORObject obj) {
+      CBORObject objA = null;
+      java.io.ByteArrayOutputStream ms=null;
+try {
+  try {
+ms=new java.io.ByteArrayOutputStream();
+
+        obj.WriteJSONTo(ms);
+        objA = CBORObject.FromJSONString(DataUtilities.GetUtf8String(ms.toByteArray(), true));
+        } catch (java.io.IOException ex) {
+          throw new IllegalStateException("", ex);
+        }
+}
+finally {
+try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
+}
+      CBORObject objB = CBORObject.FromJSONString(obj.ToJSONString());
+      if (!objA.equals(objB)) {
+        System.out.println(objA);
+        System.out.println(objB);
+        Assert.fail("WriteToJSON gives different results from ToJSONString");
+      }
+    }
+
     @Test
     public void TestRandomNonsense() {
       FastRandom rand = new FastRandom();
@@ -1335,6 +1359,7 @@ int startingAvailable=ms.available();
                 if (o.getType() == CBORType.Array || o.getType() == CBORType.Map) {
                   jsonString = o.ToJSONString();
                   CBORObject.FromJSONString(jsonString);
+                  this.TestWriteToJSON(o);
                 }
               } catch (Exception ex) {
                 Assert.fail(jsonString + "\n" + ex.toString());
@@ -1349,6 +1374,21 @@ finally {
 try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       }
+    }
+
+    public void TestCBORMapAdd() {
+      CBORObject cbor = CBORObject.NewMap();
+      cbor.Add(1, 2);
+      if(!(cbor.ContainsKey(CBORObject.FromObject(1))))Assert.fail();
+      Assert.assertEquals((int)2, cbor.get(CBORObject.FromObject(1)));
+      Assert.assertEquals("{\"1\":2}", cbor.ToJSONString());
+      cbor.Add("hello", 2);
+      if(!(cbor.ContainsKey("hello")))Assert.fail();
+      if(!(cbor.ContainsKey(CBORObject.FromObject("hello"))))Assert.fail();
+      Assert.assertEquals((int)2, cbor.get("hello"));
+      cbor.Set(1, 3);
+      if(!(cbor.ContainsKey(CBORObject.FromObject(1))))Assert.fail();
+      Assert.assertEquals((int)3, cbor.get(CBORObject.FromObject(1)));
     }
 
     @Test(timeout=20000)
@@ -1388,6 +1428,7 @@ int startingAvailable=ms.available();
                   jsonString = o.ToJSONString();
                   // reread JSON String to test validity
                   CBORObject.FromJSONString(jsonString);
+                  this.TestWriteToJSON(o);
                 }
               } catch (Exception ex) {
                 Assert.fail(jsonString + "\n" + ex.toString());
@@ -1409,33 +1450,12 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
       CBORObject obj;
-      // String badstr = null;
       int count = 1000;
       for (int i = 0; i < count; ++i) {
         obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
-        /*
-        System.Threading.Thread thread = new Thread(new Runnable(){ public void run() { TestCommon.AssertRoundTrip(obj) }});
-        thread.start();
-        if (!thread.join(5000)) {
-          String bas = ToByteArrayString(obj);
-          thread.stop();
-          Assert.fail(bas);
-          System.out.println(bas.length());
-          if (badstr == null || bas.length()<badstr.length()) {
-            badstr = bas;
-          }
-        }
-         // */
+        this.TestWriteToJSON(obj);
       }
-      /*
-      if (badstr != null) {
-        if (badstr.length()>10000) {
-          Assert.fail("badstr "+badstr.length());
-        }
-        Assert.fail(badstr);
-      }
-       // */
     }
 
     @Test
