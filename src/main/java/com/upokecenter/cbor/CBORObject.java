@@ -3413,15 +3413,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      */
     public static CBORObject FromJSONString(String str) {
       CharacterReader reader = new CharacterReader(str);
-      try {
-        CBORObject obj = ParseJSONValue(reader, false, false, false, 0);
-        if (SkipWhitespaceJSON(reader) != -1) {
-          throw reader.NewError("End of String not reached");
-        }
-      return obj;
-      } catch (CBORException ex) {
-        throw new CBORException(str + "\r\n" + ex.getMessage(), ex);
+      CBORObject obj = ParseJSONValue(reader, false, false, false, 0);
+      if (SkipWhitespaceJSON(reader) != -1) {
+        throw reader.NewError("End of String not reached");
       }
+      return obj;
     }
 
     /**
@@ -3459,7 +3455,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       // Surrogates were already verified when this
       // String was added to the CBOR Object; that check
       // is not repeated here
-      boolean first = true;
       int startIndex = 0;
       byte[] buffer = null;
       for (int i = 0; i < str.length(); ++i) {
@@ -3606,14 +3601,14 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       switch (type) {
         case CBORObjectTypeSimpleValue: {
             if (this.isTrue()) {
-                outputStream.write(valueTrueBytes,0,valueTrueBytes.length);
-                return;
+              outputStream.write(valueTrueBytes,0,valueTrueBytes.length);
+              return;
             } else if (this.isFalse()) {
-                outputStream.write(valueFalseBytes,0,valueFalseBytes.length);
-                return;
+              outputStream.write(valueFalseBytes,0,valueFalseBytes.length);
+              return;
             } else if (this.isNull()) {
-                outputStream.write(valueNullBytes,0,valueNullBytes.length);
-                return;
+              outputStream.write(valueNullBytes,0,valueNullBytes.length);
+              return;
             } else {
               outputStream.write(valueNullBytes,0,valueNullBytes.length);
               return;
@@ -3628,9 +3623,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
               return;
             } else {
               DataUtilities.WriteUtf8(
-
-TrimDotZero(
-                Float.toString((float)f)), outputStream, true);
+                TrimDotZero(Float.toString((float)f)),
+                outputStream,
+                true);
               return;
             }
           }
@@ -3643,10 +3638,9 @@ TrimDotZero(
               return;
             } else {
               DataUtilities.WriteUtf8(
-
-TrimDotZero(
-                Double.toString((double)f)),
-                outputStream, true);
+                TrimDotZero(Double.toString((double)f)),
+                outputStream,
+                true);
               return;
             }
           }
@@ -3710,17 +3704,13 @@ true);
                 return;
               } else {
                 DataUtilities.WriteUtf8(
-
-TrimDotZero(
-                  Double.toString((double)f)),
-                outputStream, true);
+                  TrimDotZero(Double.toString((double)f)),
+                  outputStream,
+                  true);
                 return;
               }
             }
-            DataUtilities.WriteUtf8(
-flo.toString(),
-outputStream,
-true);
+            DataUtilities.WriteUtf8(flo.toString(), outputStream, true);
             return;
           }
         default: {
@@ -3755,7 +3745,7 @@ true);
             break;
           }
         case CBORObjectTypeTextString: {
-          String thisString = (String)this.getThisItem();
+            String thisString = (String)this.getThisItem();
             if (thisString.length() == 0) {
               outputStream.write(valueEmptyStringBytes,0,valueEmptyStringBytes.length);
               return;

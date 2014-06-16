@@ -165,7 +165,7 @@ The parameter <i>mantissa</i>
     public static PeterO.ExtendedDecimal FromString(
         string str);
 
-Creates a decimal number from a string that represents a number. See FromString(String, int, int, PrecisionContext) for more information.
+Creates a decimal number from a string that represents a number. See  `FromString(String, int, int, PrecisionContext)` for more information.
 
 <b>Parameters:</b>
 
@@ -191,7 +191,7 @@ is not a correctly formatted number string.
         string str,
         PeterO.PrecisionContext ctx);
 
-Creates a decimal number from a string that represents a number. See FromString(String, int, int, PrecisionContext) for more information.
+Creates a decimal number from a string that represents a number. See  `FromString(String, int, int, PrecisionContext)` for more information.
 
 <b>Parameters:</b>
 

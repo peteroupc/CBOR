@@ -159,7 +159,31 @@ File.WriteAllText(
   "object.json",
   cbor.ToJSONString(),
   new System.Text.Encoding.UTF8Encoding(false));
+
+// This is an alternative way to write the CBOR object
+// and will be supported in version 1.2.
+using (var stream = new FileStream("object2.json", FileMode.Create)) {
+    // Write the CBOR object as JSON; here, a byte order
+    // mark won't be added
+    cbor.WriteTo(stream);
+}
+// Version 1.2 will also support a third way to write
+// objects to JSON: the CBORObject.Write method
+using (var stream = new FileStream("object3.json", FileMode.Create)) {
+   CBORObject.Write("some string", stream);
+}
+using (var stream = new FileStream("object4.json", FileMode.Create)) {
+   CBORObject.Write(cbor, stream);
+}
+using (var stream = new FileStream("object5.json", FileMode.Create)) {
+   CBORObject.Write(true, stream);
+}
+using (var stream = new FileStream("object6.json", FileMode.Create)) {
+   CBORObject.Write(42, stream);
+}
 ```
+
+
 
 NOTE: All code samples in this section are released to the Public Domain,
 as explained in <http://creativecommons.org/publicdomain/zero/1.0/>.

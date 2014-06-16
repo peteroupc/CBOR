@@ -1301,12 +1301,12 @@ try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
       CBORObject objA = null;
       java.io.ByteArrayOutputStream ms=null;
 try {
-  try {
 ms=new java.io.ByteArrayOutputStream();
 
-        obj.WriteJSONTo(ms);
-        objA = CBORObject.FromJSONString(DataUtilities.GetUtf8String(ms.toByteArray(), true));
-        } catch (java.io.IOException ex) {
+        try {
+          obj.WriteJSONTo(ms);
+          objA = CBORObject.FromJSONString(DataUtilities.GetUtf8String(ms.toByteArray(), true));
+        } catch (IOException ex) {
           throw new IllegalStateException("", ex);
         }
 }
