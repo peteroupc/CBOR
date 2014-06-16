@@ -25,7 +25,7 @@ project, add the following to the `dependencies` section in your `pom.xml` file:
 <dependency>
   <groupId>com.upokecenter</groupId>
   <artifactId>cbor</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
@@ -174,6 +174,14 @@ The following are some clarifications to RFC 7049.
 
 Release Notes
 -----------
+In version 1.1 there were many additions and bug fixes in arbitrary-precision
+arithmetic, including:
+
+- Added unchecked versions of intValue and longValue in BigInteger
+- Added more overloads for FromString in ExtendedDecimal and ExtendedFloat
+- Fixed bug where Pow doesn't compute the exact value in unlimited precision contexts
+- Much added documentation
+
 In version 1.0, the "adjust exponent" and "is precision in bits" flags were added to
 the arbitrary-precision arithmetic contexts, and a new Set method that is similar
 to Add but can replace a key's value in a CBOR map. Some bugs were also fixed.

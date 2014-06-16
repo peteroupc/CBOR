@@ -10,13 +10,18 @@
     <projectUrl>https://github.com/peteroupc/CBOR</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-    A C# implementation of Concise Binary Object Representation, a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. This implementation was written by Peter O. and is released to the Public Domain under the CC0 Declaration.
+    A C# implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. This implementation was written by Peter O. and is released to the Public Domain under the CC0 Declaration.
     This implementation also doubles as a reader and writer of JSON, and can convert data from JSON to CBOR and back.
     Finally, this implementation supports arbitrary-precision binary and decimal floating-point numbers and rational numbers with arbitrary-precision components, and supports arithmetic with these numbers.
     </description>
     <summary>A C# implementation of Concise Binary Object Representation (CBOR), a data serialization format. This implementation can also convert between CBOR and JSON.</summary>
     <releaseNotes>
-    In version 1.0, the "adjust exponent" and "is precision in bits" flags were added to the arbitrary-precision arithmetic contexts, and a new Set method that is similar to Add but can replace a key's value in a CBOR map. Some bugs were also fixed.
+In version 1.1 there were many additions and bug fixes in arbitrary-precision
+arithmetic, including:
+- Added unchecked versions of intValue and longValue in BigInteger
+- Added more overloads for FromString in ExtendedDecimal and ExtendedFloat
+- Fixed bug where Pow doesn't compute the exact value in unlimited precision contexts
+- Much added documentation
     See the project page for release notes on previous versions: https://github.com/peteroupc/CBOR
     </releaseNotes>
     <copyright>Written by Peter O. in 2013-2014.  Any copyright is released to the Public Domain.</copyright>
