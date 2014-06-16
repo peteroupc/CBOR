@@ -223,7 +223,8 @@ at: http://upokecenter.com/d/
 
     /**
      * Creates a decimal number from a string that represents a number. See
-     * FromString(string, int, int, PrecisionContext) for more information.
+     * <code>FromString(string, int, int, PrecisionContext)</code> for more
+     * information.
      * @param str A string that represents a number.
      * @return An arbitrary-precision decimal number with the same value
      * as the given string.
@@ -241,7 +242,8 @@ at: http://upokecenter.com/d/
 
     /**
      * Creates a decimal number from a string that represents a number. See
-     * FromString(string, int, int, PrecisionContext) for more information.
+     * <code>FromString(string, int, int, PrecisionContext)</code> for more
+     * information.
      * @param str A string that represents a number.
      * @param ctx A PrecisionContext object.
      * @return An arbitrary-precision decimal number with the same value
