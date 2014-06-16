@@ -690,7 +690,7 @@ This value with trailing zeros removed. Note that if the result has a very high 
     public PeterO.ExtendedDecimal RemainderNaturalScale(
         PeterO.ExtendedDecimal divisor);
 
-Calculates the remainder of a number by the formula this - ((this / divisor) * divisor). This is meant to be similar to the remainder operation in Java's BigDecimal.
+Calculates the remainder of a number by the formula "this" - (("this" / "divisor") * "divisor"). This is meant to be similar to the remainder operation in Java's BigDecimal.
 
 <b>Parameters:</b>
 
@@ -706,7 +706,7 @@ An ExtendedDecimal object.
         PeterO.ExtendedDecimal divisor,
         PeterO.PrecisionContext ctx);
 
-Calculates the remainder of a number by the formula this - ((this / divisor) * divisor). This is meant to be similar to the remainder operation in Java's BigDecimal.
+Calculates the remainder of a number by the formula "this" - (("this" / "divisor") * "divisor"). This is meant to be similar to the remainder operation in Java's BigDecimal.
 
 <b>Parameters:</b>
 

@@ -18,7 +18,7 @@ import com.upokecenter.cbor.*;
     public void TestExtendedToInteger() {
       ExtendedDecimal dec = ExtendedDecimal.Create(999, -1);
       ExtendedFloat flo = ExtendedFloat.Create(999, -1);
-      ExtendedRational rat = new ExtendedRational(8, 5);
+      ExtendedRational rat = ExtendedRational.Create(8, 5);
       try {
         dec.ToBigIntegerExact();
         Assert.fail("Should have failed");

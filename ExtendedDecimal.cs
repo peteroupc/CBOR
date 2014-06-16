@@ -37,20 +37,20 @@ namespace PeterO {
     /// can't be represented in a given exponent range. <b>Not-a-number</b>
     /// is generally used to signal errors.</para>
     /// <para>This class implements
-    /// the <a href='http://speleotrove.com/decimal/decarith.html'>General
-    /// Decimal Arithmetic Specification</a>
-    /// version 1.70.</para>
-    /// <para>Passing
-    /// a signaling NaN to any arithmetic operation shown here will signal
-    /// the flag FlagInvalid and return a quiet NaN, even if another operand
-    /// to that operation is a quiet NaN, unless noted otherwise.</para>
-    /// <para>Passing a quiet NaN to any arithmetic operation shown here
-    /// will return a quiet NaN, unless noted otherwise. Invalid operations
-    /// will also return a quiet NaN, as stated in the individual methods.</para>
-    /// <para>Unless noted otherwise, passing a null ExtendedDecimal argument
-    /// to any method here will throw an exception.</para>
-    /// <para>When an
-    /// arithmetic operation signals the flag FlagInvalid, FlagOverflow,
+    /// the General Decimal Arithmetic Specification version 1.70: <c>http://speleotrove.com/decimal/decarith.html</c>
+    /// </para>
+    /// <para>Passing a signaling NaN to any arithmetic operation
+    /// shown here will signal the flag FlagInvalid and return a quiet NaN,
+    /// even if another operand to that operation is a quiet NaN, unless noted
+    /// otherwise.</para>
+    /// <para>Passing a quiet NaN to any arithmetic operation
+    /// shown here will return a quiet NaN, unless noted otherwise. Invalid
+    /// operations will also return a quiet NaN, as stated in the individual
+    /// methods.</para>
+    /// <para>Unless noted otherwise, passing a null ExtendedDecimal
+    /// argument to any method here will throw an exception.</para>
+    /// <para>When
+    /// an arithmetic operation signals the flag FlagInvalid, FlagOverflow,
     /// or FlagDivideByZero, it will not throw an exception too, unless the
     /// flag's trap is enabled in the precision context (see PrecisionContext's
     /// Traps property).</para>
@@ -1766,18 +1766,18 @@ namespace PeterO {
       return math.Reduce(this, ctx);
     }
 
-    /// <summary>Calculates the remainder of a number by the formula this
-    /// - ((this / divisor) * divisor). This is meant to be similar to the remainder
-    /// operation in Java's BigDecimal.</summary>
+    /// <summary>Calculates the remainder of a number by the formula "this"
+    /// - (("this" / "divisor") * "divisor"). This is meant to be similar to
+    /// the remainder operation in Java's BigDecimal.</summary>
     /// <param name='divisor'>The number to divide by.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal RemainderNaturalScale(ExtendedDecimal divisor) {
       return this.RemainderNaturalScale(divisor, null);
     }
 
-    /// <summary>Calculates the remainder of a number by the formula this
-    /// - ((this / divisor) * divisor). This is meant to be similar to the remainder
-    /// operation in Java's BigDecimal.</summary>
+    /// <summary>Calculates the remainder of a number by the formula "this"
+    /// - (("this" / "divisor") * "divisor"). This is meant to be similar to
+    /// the remainder operation in Java's BigDecimal.</summary>
     /// <param name='divisor'>The number to divide by.</param>
     /// <param name='ctx'>A precision context object to control the precision,
     /// rounding, and exponent range of the result. This context will be used

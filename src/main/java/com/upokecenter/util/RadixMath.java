@@ -11,7 +11,6 @@ at: http://upokecenter.com/d/
      * Encapsulates radix-independent arithmetic.
      * @param <T> Data type for a numeric value in a particular radix.
      */
-    // TODO: Replace more MultiplyByRadixPower by TryMultiplyByRadixPower where appropriate
   class RadixMath<T> implements IRadixMath<T> {
     private static final int IntegerModeFixedScale = 1;
     private static final int IntegerModeRegular = 0;
@@ -30,10 +29,20 @@ at: http://upokecenter.com/d/
       BigInteger mant = (this.helper.GetMantissa(thisValue)).abs();
       boolean mantChanged = false;
       if (mant.signum()!=0 && ctx != null && ctx.getHasMaxPrecision()) {
-        BigInteger limit = this.helper.MultiplyByRadixPower(BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()));
-        if (mant.compareTo(limit) >= 0) {
-          mant=mant.remainder(limit);
-          mantChanged = true;
+        FastInteger compPrecision = FastInteger.FromBig(ctx.getPrecision());
+        if (this.helper.CreateShiftAccumulator(mant).GetDigitLength()
+          .compareTo(compPrecision) >= 0) {
+          // Mant's precision is higher than the maximum precision
+          BigInteger limit = this.TryMultiplyByRadixPower(BigInteger.ONE, compPrecision);
+          if (limit == null) {
+            // Limit can't be allocated
+            return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+          } else {
+            if (mant.compareTo(limit) >= 0) {
+              mant=mant.remainder(limit);
+              mantChanged = true;
+            }
+          }
         }
       }
       int flags = this.helper.GetFlags(thisValue);
@@ -352,23 +361,26 @@ at: http://upokecenter.com/d/
       return this.support == BigNumberFlags.FiniteOnly ? null : this.helper.CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
     }
 
-    private T SignalOverflow2(PrecisionContext pc, boolean neg) {
-      if (pc != null) {
-        Rounding roundingOnOverflow = pc.getRounding();
-        if (pc.getHasFlags()) {
-          pc.setFlags(pc.getFlags()|(PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
+    private T SignalOverflow2(PrecisionContext ctx, boolean neg) {
+      if (ctx != null) {
+        Rounding roundingOnOverflow = ctx.getRounding();
+        if (ctx.getHasFlags()) {
+          ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
         }
-        if (pc.getHasMaxPrecision() && pc.getHasExponentRange() &&
+        if (ctx.getHasMaxPrecision() && ctx.getHasExponentRange() &&
             (roundingOnOverflow == Rounding.Down || roundingOnOverflow == Rounding.ZeroFiveUp ||
              (roundingOnOverflow == Rounding.Ceiling && neg) || (roundingOnOverflow == Rounding.Floor && !neg))) {
           // Set to the highest possible value for
           // the given precision
           BigInteger overflowMant = BigInteger.ZERO;
-          FastInteger fastPrecision = FastInteger.FromBig(pc.getPrecision());
-          overflowMant = this.helper.MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
+          FastInteger fastPrecision = FastInteger.FromBig(ctx.getPrecision());
+          overflowMant = this.TryMultiplyByRadixPower(BigInteger.ONE, fastPrecision);
+          if (overflowMant == null) {
+            return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+          }
           overflowMant=overflowMant.subtract(BigInteger.ONE);
-          FastInteger clamp = FastInteger.FromBig(pc.getEMax());
-          if (pc.getAdjustExponent()) {
+          FastInteger clamp = FastInteger.FromBig(ctx.getEMax());
+          if (ctx.getAdjustExponent()) {
             clamp.Increment().Subtract(fastPrecision);
           }
           return this.helper.CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
@@ -479,7 +491,7 @@ at: http://upokecenter.com/d/
         return BigInteger.ZERO;
       }
       FastInteger diff = FastInteger.FromBig(e1).SubtractBig(e2).Abs();
-      return this.helper.MultiplyByRadixPower(mantissa, diff);
+      return this.TryMultiplyByRadixPower(mantissa, diff);
     }
 
     private T EnsureSign(T val, boolean negative) {
@@ -919,7 +931,10 @@ bigrem=divrem[1]; }
       BigInteger exponent = this.helper.GetExponent(thisValue);
       if (digits.compareTo(fastPrecision) < 0) {
         fastPrecision.Subtract(digits);
-        mant = this.helper.MultiplyByRadixPower(mant, fastPrecision);
+        mant = this.TryMultiplyByRadixPower(mant, fastPrecision);
+        if (mant == null) {
+          return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+        }
         BigInteger bigPrec = fastPrecision.AsBigInteger();
         exponent=exponent.subtract(bigPrec);
       }
@@ -1826,7 +1841,7 @@ bigrem=divrem[1]; }
 BigInteger.ONE,
 FastInteger.FromBig(ctx.getPrecision()).Decrement());
           if (maxmant == null) {
-              return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+            return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
           } else if (bigmant.compareTo(maxmant) >= 0 || ctx.getPrecision().compareTo(BigInteger.ONE) == 0) {
             // don't treat max-precision results as having underflowed
             ctx2.setFlags(0);
@@ -3403,11 +3418,17 @@ neg ? BigNumberFlags.FlagNegative : 0);
         if (expcmp > 0) {
           // System.out.println("" + op1MantAbs + " " + (op2MantAbs));
           op1MantAbs = this.RescaleByExponentDiff(op1MantAbs, op1Exponent, op2Exponent);
+          if (op1MantAbs == null) {
+            return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+          }
           retval = this.AddCore(op1MantAbs, op2MantAbs, resultExponent, thisFlags, otherFlags, ctx);
           // System.out.println("" + op1MantAbs + " " + op2MantAbs + " -> " + (op2Exponent-op1Exponent) + " [op1 exp greater]");
         } else {
           // System.out.println("" + op1MantAbs + " " + (op2MantAbs));
           op2MantAbs = this.RescaleByExponentDiff(op2MantAbs, op1Exponent, op2Exponent);
+          if (op2MantAbs == null) {
+            return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
+          }
           // System.out.println("" + op1MantAbs + " " + op1Exponent + " " + op2MantAbs + "e " + op2Exponent + " -> " + (op2Exponent-op1Exponent) + " [op2 exp greater]");
           retval = this.AddCore(op1MantAbs, op2MantAbs, resultExponent, thisFlags, otherFlags, ctx);
           // System.out.println("" + op1MantAbs + " " + op2MantAbs + " -> " + (op2Exponent-op1Exponent) + " [op2 exp greater]");
@@ -3448,17 +3469,26 @@ neg ? BigNumberFlags.FlagNegative : 0);
       if ((Object)result != (Object)null) {
         return result;
       }
+      int cmp = this.CompareToInternal(thisValue, otherValue, false);
+      if (cmp == -2) {
+        return this.SignalInvalidWithMessage(ctx, "Out of memory");
+      }
       return this.ValueOf(this.compareTo(thisValue, otherValue), null);
+    }
+
+    public int compareTo(T thisValue, T otherValue) {
+      return this.CompareToInternal(thisValue, otherValue, true);
     }
 
     /**
      * Compares a T object with this instance.
      * @param thisValue A T object.
      * @param otherValue A T object. (2).
+     * @param reportOOM A Boolean object.
      * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
      */
-    public int compareTo(T thisValue, T otherValue) {
+    private int CompareToInternal(T thisValue, T otherValue, boolean reportOOM) {
       if (otherValue == null) {
         return 1;
       }
@@ -3568,12 +3598,26 @@ neg ? BigNumberFlags.FlagNegative : 0);
       }
       if (expcmp > 0) {
         BigInteger newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(thisValue), op1Exponent, op2Exponent);
+        if (newmant == null) {
+          if (reportOOM) {
+            throw new OutOfMemoryError("Result requires too much memory");
+          } else {
+            return -2;
+          }
+        }
         BigInteger othermant = (this.helper.GetMantissa(otherValue)).abs();
         newmant = (newmant).abs();
         mantcmp = newmant.compareTo(othermant);
         return (signA < 0) ? -mantcmp : mantcmp;
       } else {
         BigInteger newmant = this.RescaleByExponentDiff(this.helper.GetMantissa(otherValue), op1Exponent, op2Exponent);
+        if (newmant == null) {
+          if (reportOOM) {
+            throw new OutOfMemoryError("Result requires too much memory");
+          } else {
+            return -2;
+          }
+        }
         BigInteger othermant = (this.helper.GetMantissa(thisValue)).abs();
         newmant = (newmant).abs();
         mantcmp = othermant.compareTo(newmant);
