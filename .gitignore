@@ -4,6 +4,7 @@ obj/
 packages/
 Help/
 *.user
+*.nupkg
 TestResults/
 CBORTest/bin/
 CBORTest/obj/
