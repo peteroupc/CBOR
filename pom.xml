@@ -4,7 +4,7 @@
 	<groupId>com.upokecenter</groupId>
 	<artifactId>cbor</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2.0</version>
+	<version>1.3.0-SNAPSHOT</version>
 	<name>CBOR</name>
 	<description>
     A Java implementation of Concise Binary Object Representation (CBOR), a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. This implementation was written by Peter O. and is released to the Public Domain under the CC0 Declaration.
