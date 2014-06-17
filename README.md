@@ -3,7 +3,7 @@ CBOR
 
 A C# and Java implementation of Concise Binary Object Representation, a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. "CBOR was inspired by MessagePack", but "is not intended as a version of or replacement for MessagePack."
 
-This implementation was written by Peter O. and is released to the Public Domain under the CC0 Declaration.
+This implementation was written by Peter O. and is released to the Public Domain under the [CC0 Declaration](http://creativecommons.org/publicdomain/zero/1.0/).
 
 This implementation also doubles as a reader and writer of JSON, and can convert data from JSON to CBOR and back.
 
@@ -91,9 +91,10 @@ file I/O; the portable class library doesn't make that assumption.
  var cbor = CBORObject.DecodeFromBytes(File.ReadAllBytes("object.cbor"));
 ```
 
-Another example of reading data from a file (C#):
+Another example of reading data from a file:
 
 ```c#
+ // C#
  // Open the file stream
  using (var stream = new FileStream("object.cbor", FileMode.Open)) {
     // Read the CBOR object from the stream
@@ -111,6 +112,25 @@ Another example of reading data from a file (C#):
  }
 ```
 
+```java
+ // Java
+ // Open the file stream
+ try (FileInputStream stream = new FileInputStream("object.cbor")) {
+    // Read the CBOR object from the stream
+    var cbor = CBORObject.Read(stream);
+    // At this point, the object is read, but the file stream might
+    // not have ended yet.  Here, the code may choose to read another
+    // CBOR object, check for the end of the stream, or just ignore the
+    // rest of the file.  The following is an example of checking for the
+    // end of the stream.
+    if (stream.getChannel().position() != stream.getChannel().size()) {
+      // The end of the stream wasn't reached yet.
+    } else {
+      // The end of the stream was reached.
+    }
+ }
+```
+
 Writing CBOR data to a file (C#):
 
 ```c#
@@ -121,12 +141,27 @@ using (var stream = new FileStream("object.cbor", FileMode.Create)) {
 }
 ```
 
-Writing multiple objects to a file, including arbitrary objects (C#):
+Writing multiple objects to a file, including arbitrary objects:
 
 ```c#
+// C#
 // This example writes different kinds of objects in CBOR
 // format to the same file.
 using (var stream = new FileStream("object.cbor", FileMode.Create)) {
+   CBORObject.Write(true, stream);
+   CBORObject.Write(422.5, stream);
+   CBORObject.Write("some string", stream);
+   CBORObject.Write(CBORObject.Undefined, stream);
+   CBORObject.NewArray().Add(42).WriteTo(stream);
+}
+```
+
+```java
+// Java
+// This example uses the "try-with-resources" statement from Java 7.
+// This example writes different kinds of objects in CBOR
+// format to the same file.
+try (FileOutputStream stream = new FileOutputStream("object.cbor")) {
    CBORObject.Write(true, stream);
    CBORObject.Write(422.5, stream);
    CBORObject.Write("some string", stream);
