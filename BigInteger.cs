@@ -2129,7 +2129,8 @@ namespace PeterO {
     }
 
     /// <summary>Initializes a BigInteger object from an array of bytes.</summary>
-    /// <param name='bytes'>A byte array.</param>
+    /// <param name='bytes'>A byte array. Can be empty, in which case the
+    /// return value is 0.</param>
     /// <returns>A BigInteger object.</returns>
     /// <param name='littleEndian'>A Boolean object.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
@@ -2598,7 +2599,8 @@ if (bytes.Length <= 0) {
     }
 
     /// <summary>Converts this object's value to a 32-bit signed integer.
-    /// This method is obsoleted by the intValueChecked and intValueUnchecked
+    /// This method is obsoleted by the <c>intValueChecked</c>
+    ///  and <c>intValueUnchecked</c>
     /// methods, which should be used instead.</summary>
     /// <returns>A 32-bit signed integer.</returns>
     /// <exception cref='OverflowException'>This object's value is too

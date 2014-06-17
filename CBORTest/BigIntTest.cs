@@ -13,6 +13,11 @@ namespace Test {
   [TestClass]
   public class BigIntTest
   {
+    [TestMethod]
+    public void TestBigIntegerFromByteArray() {
+      Assert.AreEqual(BigInteger.Zero, BigInteger.fromByteArray(new byte[] { }, false));
+    }
+
     // Test some specific cases
     [TestMethod]
     public void TestSpecificCases() {
@@ -235,8 +240,8 @@ namespace Test {
 
     [TestMethod]
     public void TestMiscellaneous() {
-     Assert.AreEqual(1, BigInteger.Zero.getDigitCount());
-     BigInteger minValue = (BigInteger)Int32.MinValue;
+      Assert.AreEqual(1, BigInteger.Zero.getDigitCount());
+      BigInteger minValue = (BigInteger)Int32.MinValue;
       BigInteger minValueTimes2 = minValue + (BigInteger)minValue;
       Assert.AreEqual(Int32.MinValue, (int)minValue);
       try {

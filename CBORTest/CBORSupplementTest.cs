@@ -15,6 +15,891 @@ namespace Test {
   [TestClass]
   public class CBORSupplementTest {
     [TestMethod]
+    public void TestBigIntegerArgumentCheck() {
+      try {
+ BigInteger.Abs(null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+    }
+
+    [TestMethod]
+    public void IncorrectDecimalFrac() {
+      byte[] bytes;
+      // string instead of array
+      bytes = new byte[] { 0xc4, 0x61, 0x41 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      // number instead of array
+      bytes = new byte[] { 0xc4, 0x00 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bytes = new byte[] { 0xc4, 0x81, 0, 0 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bytes = new byte[] { 0xc4, 0x82, 0, 0x61, 0x41 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bytes = new byte[] { 0xc4, 0x82, 0x61, 0x41, 0 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bytes = new byte[] { 0xc4, 0x83, 0, 0, 0 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [TestMethod]
+    public void TestPrecisionContextArgValidation() {
+      try {
+        new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        new PrecisionContext(0, Rounding.HalfEven, 0, -1, false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [TestMethod]
+    public void IncorrectBigFloat() {
+      byte[] bytes;
+      // string instead of array
+      bytes = new byte[] { 0xc5, 0x61, 0x41 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      // number instead of array
+      bytes = new byte[] { 0xc5, 0x00 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bytes = new byte[] { 0xc5, 0x81, 0, 0 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bytes = new byte[] { 0xc5, 0x82, 0, 0x61, 0x41 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bytes = new byte[] { 0xc5, 0x82, 0x61, 0x41, 0 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bytes = new byte[] { 0xc5, 0x83, 0, 0, 0 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [TestMethod]
+    public void TestCBORObjectAsInt32() {
+      try {
+        CBORObject.True.AsInt32();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.False.AsInt32();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewArray().AsInt32();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewMap().AsInt32();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [TestMethod]
+    public void TestCBORObjectIsIntegral() {
+      Assert.IsFalse(CBORObject.True.IsIntegral);
+      Assert.IsFalse(CBORObject.False.IsIntegral);
+      Assert.IsFalse(CBORObject.NewArray().IsIntegral);
+      Assert.IsFalse(CBORObject.NewMap().IsIntegral);
+      Assert.IsTrue(CBORObject.FromObject(0).IsIntegral);
+      Assert.IsTrue(CBORObject.FromObject(BigInteger.One << 63).IsIntegral);
+      Assert.IsTrue(CBORObject.FromObject(BigInteger.One << 64).IsIntegral);
+      Assert.IsTrue(CBORObject.FromObject(BigInteger.One << 80).IsIntegral);
+      Assert.IsTrue(CBORObject.FromObject(ExtendedDecimal.FromString("4444e+800")).IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.FromString("4444e-800")).IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(2.5).IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(999.99).IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(Double.PositiveInfinity).IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(Double.NegativeInfinity).IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(Double.NaN).IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity).IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity).IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN).IsIntegral);
+    }
+
+    private sealed class FakeConverter : ICBORConverter<System.Uri> {
+      public CBORObject ToCBORObject(System.Uri obj) {
+        throw new NotImplementedException();
+      }
+    }
+
+    [TestMethod]
+    public void TestCBORObjectArgumentValidation() {
+      try {
+        CBORObject.AddConverter(null, new FakeConverter());
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.AddConverter(typeof(String), new FakeConverter());
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.AddTagHandler(null, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.True.Negate();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.False.Negate();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewArray().Negate();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewMap().Negate();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.True.Abs();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.False.Abs();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewArray().Abs();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewMap().Abs();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.True.AsExtendedRational();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.False.AsExtendedRational();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewArray().AsExtendedRational();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewMap().AsExtendedRational();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+    [TestMethod]
+    public void TestCBORObjectIsFinite() {
+      Assert.IsFalse(CBORObject.True.IsFinite);
+      Assert.IsFalse(CBORObject.False.IsFinite);
+      Assert.IsFalse(CBORObject.NewArray().IsFinite);
+      Assert.IsFalse(CBORObject.NewMap().IsFinite);
+      Assert.IsTrue(CBORObject.FromObject(0).IsFinite);
+      Assert.IsTrue(CBORObject.FromObject(2.5).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(Double.PositiveInfinity).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(Double.NegativeInfinity).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(Double.NaN).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN).IsFinite);
+    }
+
+    [TestMethod]
+    public void TestCBORObjectCanTruncatedIntFitInInt32() {
+      Assert.IsFalse(CBORObject.True.CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.False.CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.NewArray().CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.NewMap().CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(0).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(2.5).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(Int32.MinValue).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(Int32.MaxValue).CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(Double.PositiveInfinity).CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(Double.NegativeInfinity).CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(Double.NaN).CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity).CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity).CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN).CanTruncatedIntFitInInt32());
+    }
+
+    [TestMethod]
+    public void TestIncompleteCBORString() {
+      byte[] bytes = new byte[] { 0x65, 0x41, 0x41, 0x41, 0x41 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [TestMethod]
+    public void TestIncompleteIndefLengthArray() {
+      byte[] bytes = new byte[] { 0x9f, 0, 0, 0, 0, 0 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bytes = new byte[] { 0x9f, 0, 0, 0, 0, 0xff };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [TestMethod]
+    public void TestIncompleteIndefLengthMap() {
+      // Premature end after value
+      byte[] bytes = new byte[] { 0xbf, 0x61, 0x41, 0, 0x61, 0x42, 0 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      // Premature end after key
+      bytes = new byte[] { 0xbf, 0x61, 0x41, 0, 0x61, 0x42 };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bytes = new byte[] { 0xbf, 0x61, 0x41, 0, 0x61, 0x42 , 0, 0xff };
+      try {
+        CBORObject.DecodeFromBytes(bytes);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [TestMethod]
+    public void TestExtendedRationalArgValidation() {
+      try {
+        ExtendedRational.PositiveInfinity.ToBigIntegerExact();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedRational.NegativeInfinity.ToBigIntegerExact();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedRational.NaN.ToBigIntegerExact();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedRational.SignalingNaN.ToBigIntegerExact();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [TestMethod]
+    public void TestExtendedDecimalArgValidation() {
+      try {
+        ExtendedDecimal.Create(null, BigInteger.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.Create(null, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.Create(BigInteger.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      Assert.AreEqual(ExtendedDecimal.Zero, ExtendedDecimal.FromString("0"));
+      Assert.AreEqual(ExtendedDecimal.Zero, ExtendedDecimal.FromString("0", null));
+      try {
+        ExtendedDecimal.FromString(null, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString(String.Empty);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString(null, 0, 1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("x", -1,1);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("x", 2,1);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("x", 0,-1);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("x", 0,2);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("x", 1,1);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString(null, 0, 1, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("x", -1,1,null);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("x", 2,1,null);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("x", 0,-1,null);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("x", 0,2,null);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("x", 1,1,null);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        ExtendedFloat.Create(null, BigInteger.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.Create(null, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.Create(BigInteger.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      Assert.AreEqual(ExtendedFloat.Zero, ExtendedFloat.FromString("0"));
+      Assert.AreEqual(ExtendedFloat.Zero, ExtendedFloat.FromString("0", null));
+      try {
+        ExtendedFloat.FromString(null, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString(String.Empty);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString(null, 0, 1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("x", -1,1);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("x", 2,1);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("x", 0,-1);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("x", 0,2);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("x", 1,1);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString(null, 0, 1, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("x", -1,1,null);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("x", 2,1,null);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("x", 0,-1,null);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("x", 0,2,null);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("x", 1,1,null);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("Infinity", PrecisionContext.Unlimited.WithSimplified(true));
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("-Infinity", PrecisionContext.Unlimited.WithSimplified(true));
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("NaN", PrecisionContext.Unlimited.WithSimplified(true));
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("sNaN", PrecisionContext.Unlimited.WithSimplified(true));
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("Infinity", PrecisionContext.Unlimited.WithSimplified(true));
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("-Infinity", PrecisionContext.Unlimited.WithSimplified(true));
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("NaN", PrecisionContext.Unlimited.WithSimplified(true));
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("sNaN", PrecisionContext.Unlimited.WithSimplified(true));
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      try {
+        ExtendedDecimal.FromString("0..1");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("0.1x+222");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.FromString("0.1g-222");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("0..1");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("0.1x+222");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.FromString("0.1g-222");
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [TestMethod]
     public void TestExtendedToInteger() {
       ExtendedDecimal dec = ExtendedDecimal.Create(999, -1);
       ExtendedFloat flo = ExtendedFloat.Create(999, -1);
@@ -73,6 +958,100 @@ namespace Test {
         cbor.WriteTo(new MemoryStream());
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    //[TestMethod]
+    public void TestNestingDepth() {
+      try {
+         using (var ms = new MemoryStream()) {
+          for (int i = 0; i < 2000; ++i) {
+            // Write beginning of indefinite-length array
+            ms.WriteByte((byte)0x9f);
+          }
+          for (int i = 0; i < 2000; ++i) {
+            // Write end of indefinite-length array
+            ms.WriteByte((byte)0xff);
+          }
+          // Assert throwing CBOR exception for reaching maximum
+          // nesting depth
+          try {
+            CBORObject.DecodeFromBytes(ms.ToArray());
+            Assert.Fail("Should have failed");
+          } catch (CBORException) {
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        }
+         using (var ms2 = new MemoryStream()) {
+          for (int i = 0; i < 995; ++i) {
+            // Write beginning of indefinite-length array
+            ms2.WriteByte((byte)0x9f);
+          }
+          for (int i = 0; i < 995; ++i) {
+            // Write end of indefinite-length array
+            ms2.WriteByte((byte)0xff);
+          }
+          // Maximum nesting depth not reached, so shouldn't throw
+          try {
+            CBORObject.DecodeFromBytes(ms2.ToArray());
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        }
+      } catch (IOException ex) {
+        throw new InvalidOperationException(ex.Message, ex);
+      }
+    }
+
+    [TestMethod]
+    public void TestCBORBigInteger() {
+      BigInteger bi = (BigInteger)Int64.MaxValue;
+      bi += BigInteger.One;
+      try {
+        CBORObject.FromObject(bi).AsInt64();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(bi).AsInt32();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bi = (BigInteger)Int64.MinValue;
+      bi -= BigInteger.One;
+      try {
+        CBORObject.FromObject(bi).AsInt64();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(bi).AsInt32();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      bi = (BigInteger)Int64.MinValue;
+      try {
+        CBORObject.FromObject(bi).AsInt32();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
