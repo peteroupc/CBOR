@@ -262,7 +262,8 @@ at: http://upokecenter.com/d/
 
     /**
      * Creates a decimal number from a string that represents a number. See
-     * FromString(string, int, int, PrecisionContext) for more information.
+     * <code>FromString(string, int, int, PrecisionContext)</code> for more
+     * information.
      * @param str A string that represents a number.
      * @param offset A 32-bit signed integer.
      * @param length A 32-bit signed integer. (2).
@@ -1857,8 +1858,8 @@ remainder=divrem[1]; }
      * the division portion of the remainder calculation; as a result, it&apos;s
      * possible for the return value to have a higher precision than given
      * in this context. Flags will be set on the given context only if the context&apos;s
-     * HasFlags is true and the integer part of the result doesn&apos;t fit
-     * the precision and exponent range without rounding.
+     * HasFlags is true and the integer part of the division result doesn&apos;t
+     * fit the precision and exponent range without rounding.
      * @return An ExtendedDecimal object.
      */
     public ExtendedDecimal RemainderNaturalScale(ExtendedDecimal divisor, PrecisionContext ctx) {

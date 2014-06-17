@@ -939,6 +939,7 @@ at: http://upokecenter.com/d/
     /**
      * Represents the number negative zero.
      */
+
     public static final ExtendedFloat NegativeZero = CreateWithFlags(
       BigInteger.ZERO,
       BigInteger.ZERO,
@@ -1179,8 +1180,8 @@ at: http://upokecenter.com/d/
      * and exponent range of the integer part of the result. This context
      * will be used only in the division portion of the remainder calculation.
      * Flags will be set on the given context only if the context&apos;s HasFlags
-     * is true and the integer part of the result doesn&apos;t fit the precision
-     * and exponent range without rounding.
+     * is true and the integer part of the division result doesn&apos;t fit
+     * the precision and exponent range without rounding.
      * @return An ExtendedFloat object.
      */
     public ExtendedFloat RemainderNaturalScale(ExtendedFloat divisor, PrecisionContext ctx) {

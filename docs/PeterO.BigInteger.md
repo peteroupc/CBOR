@@ -18,7 +18,7 @@ Initializes a BigInteger object from an array of bytes.
 
 <b>Parameters:</b>
 
- * <i>bytes</i>: A byte array.
+ * <i>bytes</i>: A byte array. Can be empty, in which case the return value is 0.
 
  * <i>littleEndian</i>: A Boolean object.
 
@@ -161,7 +161,7 @@ A 64-bit signed integer.
 
     public int intValue();
 
-Converts this object's value to a 32-bit signed integer. This method is obsoleted by the intValueChecked and intValueUnchecked methods, which should be used instead.
+Converts this object's value to a 32-bit signed integer. This method is obsoleted by the  `intValueChecked` and  `intValueUnchecked` methods, which should be used instead.
 
 <b>Returns:</b>
 

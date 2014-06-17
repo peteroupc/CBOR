@@ -892,13 +892,14 @@ namespace PeterO {
       Justification = "ExtendedFloat is immutable")]
 #endif
     public static readonly ExtendedFloat Zero = ExtendedFloat.Create(BigInteger.Zero, BigInteger.Zero);
+
+    /// <summary>Represents the number negative zero.</summary>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification = "ExtendedFloat is immutable")]
 #endif
-    /// <summary>Represents the number negative zero.</summary>
     public static readonly ExtendedFloat NegativeZero = CreateWithFlags(
       BigInteger.Zero,
       BigInteger.Zero,
@@ -1114,8 +1115,8 @@ namespace PeterO {
     /// rounding, and exponent range of the integer part of the result. This
     /// context will be used only in the division portion of the remainder
     /// calculation. Flags will be set on the given context only if the context&apos;s
-    /// HasFlags is true and the integer part of the result doesn&apos;t fit
-    /// the precision and exponent range without rounding.</param>
+    /// HasFlags is true and the integer part of the division result doesn&apos;t
+    /// fit the precision and exponent range without rounding.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat RemainderNaturalScale(ExtendedFloat divisor, PrecisionContext ctx) {
       return this.Subtract(this.DivideToIntegerNaturalScale(divisor, ctx).Multiply(divisor, null), null);

@@ -408,10 +408,6 @@ namespace PeterO.Cbor {
               headByte,
               filter == null ? null : filter.GetSubFilter(vtindex));
             --this.depth;
-            // break if the "break" code was read
-            if (o == null) {
-              break;
-            }
             cbor.Add(o);
             ++vtindex;
           }

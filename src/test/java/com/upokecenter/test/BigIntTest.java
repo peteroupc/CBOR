@@ -13,6 +13,11 @@ import com.upokecenter.util.*;
 
   public class BigIntTest
   {
+    @Test
+    public void TestBigIntegerFromByteArray() {
+      Assert.assertEquals(BigInteger.ZERO, BigInteger.fromByteArray(new byte[] {   }, false));
+    }
+
     // Test some specific cases
     @Test
     public void TestSpecificCases() {
@@ -244,8 +249,8 @@ bigintRem=divrem[1]; }
 
     @Test
     public void TestMiscellaneous() {
-     Assert.assertEquals(1, BigInteger.ZERO.getDigitCount());
-     BigInteger minValue = BigInteger.valueOf(Integer.MIN_VALUE);
+      Assert.assertEquals(1, BigInteger.ZERO.getDigitCount());
+      BigInteger minValue = BigInteger.valueOf(Integer.MIN_VALUE);
       BigInteger minValueTimes2 = minValue.add(minValue);
       Assert.assertEquals(Integer.MIN_VALUE, minValue.intValue());
       try {

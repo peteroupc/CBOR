@@ -1806,7 +1806,8 @@ at: http://upokecenter.com/d/
 
     /**
      * Initializes a BigInteger object from an array of bytes.
-     * @param bytes A byte array.
+     * @param bytes A byte array. Can be empty, in which case the return value
+     * is 0.
      * @param littleEndian A Boolean object.
      * @return A BigInteger object.
      * @throws java.lang.NullPointerException The parameter {@code bytes}
@@ -2286,8 +2287,8 @@ at: http://upokecenter.com/d/
 
     /**
      * Converts this object's value to a 32-bit signed integer. This method
-     * is obsoleted by the intValueChecked and intValueUnchecked methods,
-     * which should be used instead.
+     * is obsoleted by the <code>intValueChecked</code> and <code>intValueUnchecked</code>
+     * methods, which should be used instead.
      * @return A 32-bit signed integer.
      * @throws ArithmeticException This object's value is too big to fit a
      * 32-bit signed integer.

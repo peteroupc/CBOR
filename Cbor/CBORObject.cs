@@ -292,9 +292,7 @@ namespace PeterO.Cbor {
       if ((type == CBORObjectTypeBigInteger) &&
           ((BigInteger)item).CompareTo(Int64MinValue) >= 0 &&
           ((BigInteger)item).CompareTo(Int64MaxValue) <= 0) {
-        // if (!false) {
         throw new ArgumentException("Big integer is within range for Integer");
-        // }
       }
 #endif
       this.itemtypeValue = type;
@@ -835,7 +833,7 @@ namespace PeterO.Cbor {
 
     internal void Redefine(CBORObject cbor) {
 #if DEBUG
-      if ((cbor) == null) {
+      if (cbor == null) {
        throw new ArgumentNullException("cbor");
       }
 #endif
@@ -3639,10 +3637,7 @@ true);
               outputStream.Write(valueNullBytes, 0, valueNullBytes.Length);
               return;
             } else {
-              DataUtilities.WriteUtf8(
-f.ToString(),
-outputStream,
-true);
+              DataUtilities.WriteUtf8(f.ToString(), outputStream, true);
               return;
             }
           }
@@ -3652,10 +3647,7 @@ true);
               outputStream.Write(valueNullBytes, 0, valueNullBytes.Length);
               return;
             }
-            DataUtilities.WriteUtf8(
-dec.ToString(),
-outputStream,
-true);
+            DataUtilities.WriteUtf8(dec.ToString(), outputStream, true);
             return;
           }
         case CBORObjectTypeExtendedFloat: {

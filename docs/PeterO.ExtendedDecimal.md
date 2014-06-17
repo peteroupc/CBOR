@@ -220,7 +220,7 @@ is not a correctly formatted number string.
         int offset,
         int length);
 
-Creates a decimal number from a string that represents a number. See FromString(String, int, int, PrecisionContext) for more information.
+Creates a decimal number from a string that represents a number. See  `FromString(String, int, int, PrecisionContext)` for more information.
 
 <b>Parameters:</b>
 
@@ -712,7 +712,7 @@ Calculates the remainder of a number by the formula "this" - (("this" / "divisor
 
  * <i>divisor</i>: The number to divide by.
 
- * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the result. This context will be used only in the division portion of the remainder calculation; as a result, it's possible for the return value to have a higher precision than given in this context. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the result doesn't fit the precision and exponent range without rounding.
+ * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the result. This context will be used only in the division portion of the remainder calculation; as a result, it's possible for the return value to have a higher precision than given in this context. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the division result doesn't fit the precision and exponent range without rounding.
 
 <b>Returns:</b>
 

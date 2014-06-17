@@ -261,8 +261,8 @@ namespace PeterO {
     }
 
     /// <summary>Creates a decimal number from a string that represents
-    /// a number. See FromString(String, int, int, PrecisionContext) for
-    /// more information.</summary>
+    /// a number. See <c>FromString(String, int, int, PrecisionContext)</c>
+    /// for more information.</summary>
     /// <param name='str'>A string that represents a number.</param>
     /// <returns>An arbitrary-precision decimal number with the same value
     /// as the given string.</returns>
@@ -1785,8 +1785,8 @@ namespace PeterO {
     /// it&apos;s possible for the return value to have a higher precision
     /// than given in this context. Flags will be set on the given context only
     /// if the context&apos;s HasFlags is true and the integer part of the
-    /// result doesn&apos;t fit the precision and exponent range without
-    /// rounding.</param>
+    /// division result doesn&apos;t fit the precision and exponent range
+    /// without rounding.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal RemainderNaturalScale(ExtendedDecimal divisor, PrecisionContext ctx) {
       return this.Subtract(this.DivideToIntegerNaturalScale(divisor, ctx).Multiply(divisor, null), null);

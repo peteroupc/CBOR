@@ -3666,10 +3666,7 @@ true);
               outputStream.write(valueNullBytes,0,valueNullBytes.length);
               return;
             } else {
-              DataUtilities.WriteUtf8(
-f.toString(),
-outputStream,
-true);
+              DataUtilities.WriteUtf8(f.toString(), outputStream, true);
               return;
             }
           }
@@ -3679,10 +3676,7 @@ true);
               outputStream.write(valueNullBytes,0,valueNullBytes.length);
               return;
             }
-            DataUtilities.WriteUtf8(
-dec.toString(),
-outputStream,
-true);
+            DataUtilities.WriteUtf8(dec.toString(), outputStream, true);
             return;
           }
         case CBORObjectTypeExtendedFloat: {
