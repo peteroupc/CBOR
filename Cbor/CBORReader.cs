@@ -146,7 +146,7 @@ namespace PeterO.Cbor {
 
     public CBORObject Read(
       CBORTypeFilter filter) {
-      if (this.depth > 1000) {
+      if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
       int firstbyte = this.stream.ReadByte();
@@ -159,7 +159,7 @@ namespace PeterO.Cbor {
     public CBORObject ReadForFirstByte(
       int firstbyte,
       CBORTypeFilter filter) {
-      if (this.depth > 1000) {
+      if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
       if (firstbyte < 0) {

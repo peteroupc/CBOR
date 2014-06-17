@@ -150,7 +150,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 
     public CBORObject Read(
       CBORTypeFilter filter) throws IOException {
-      if (this.depth > 1000) {
+      if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
       int firstbyte = this.stream.read();
@@ -163,7 +163,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     public CBORObject ReadForFirstByte(
       int firstbyte,
       CBORTypeFilter filter) throws IOException {
-      if (this.depth > 1000) {
+      if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
       if (firstbyte < 0) {

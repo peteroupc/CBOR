@@ -550,7 +550,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedDecimal.FromString("x", -1,1);
+        ExtendedDecimal.FromString("x", -1, 1);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -558,7 +558,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 2,1);
+        ExtendedDecimal.FromString("x", 2, 1);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -566,7 +566,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 0,-1);
+        ExtendedDecimal.FromString("x", 0, -1);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -574,7 +574,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 0,2);
+        ExtendedDecimal.FromString("x", 0, 2);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -582,7 +582,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 1,1);
+        ExtendedDecimal.FromString("x", 1, 1);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -598,7 +598,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedDecimal.FromString("x", -1,1,null);
+        ExtendedDecimal.FromString("x", -1, 1,null);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -606,7 +606,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 2,1,null);
+        ExtendedDecimal.FromString("x", 2, 1,null);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -614,7 +614,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 0,-1,null);
+        ExtendedDecimal.FromString("x", 0, -1,null);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -622,7 +622,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 0,2,null);
+        ExtendedDecimal.FromString("x", 0, 2,null);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -630,7 +630,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 1,1,null);
+        ExtendedDecimal.FromString("x", 1, 1,null);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -697,7 +697,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedFloat.FromString("x", -1,1);
+        ExtendedFloat.FromString("x", -1, 1);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -705,7 +705,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedFloat.FromString("x", 2,1);
+        ExtendedFloat.FromString("x", 2, 1);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -713,7 +713,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedFloat.FromString("x", 0,-1);
+        ExtendedFloat.FromString("x", 0, -1);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -721,7 +721,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedFloat.FromString("x", 0,2);
+        ExtendedFloat.FromString("x", 0, 2);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -729,7 +729,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedFloat.FromString("x", 1,1);
+        ExtendedFloat.FromString("x", 1, 1);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -745,7 +745,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedFloat.FromString("x", -1,1,null);
+        ExtendedFloat.FromString("x", -1, 1,null);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -753,7 +753,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedFloat.FromString("x", 2,1,null);
+        ExtendedFloat.FromString("x", 2, 1,null);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -761,7 +761,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedFloat.FromString("x", 0,-1,null);
+        ExtendedFloat.FromString("x", 0, -1,null);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -769,7 +769,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedFloat.FromString("x", 0,2,null);
+        ExtendedFloat.FromString("x", 0, 2,null);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -777,7 +777,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        ExtendedFloat.FromString("x", 1,1,null);
+        ExtendedFloat.FromString("x", 1, 1,null);
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -964,7 +964,7 @@ throw new InvalidOperationException(String.Empty, ex);
       }
     }
 
-    //[TestMethod]
+    [TestMethod]
     public void TestNestingDepth() {
       try {
          using (var ms = new MemoryStream()) {
@@ -988,11 +988,11 @@ throw new InvalidOperationException(String.Empty, ex);
           }
         }
          using (var ms2 = new MemoryStream()) {
-          for (int i = 0; i < 995; ++i) {
+          for (int i = 0; i < 495; ++i) {
             // Write beginning of indefinite-length array
             ms2.WriteByte((byte)0x9f);
           }
-          for (int i = 0; i < 995; ++i) {
+          for (int i = 0; i < 495; ++i) {
             // Write end of indefinite-length array
             ms2.WriteByte((byte)0xff);
           }
