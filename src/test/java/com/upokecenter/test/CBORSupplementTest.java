@@ -173,7 +173,7 @@ throw new IllegalStateException("", ex);
       try {
         CBORObject.True.AsInt32();
         Assert.fail("Should have failed");
-      } catch (NullPointerException ex) {
+      } catch (IllegalStateException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
@@ -181,7 +181,7 @@ throw new IllegalStateException("", ex);
       try {
         CBORObject.False.AsInt32();
         Assert.fail("Should have failed");
-      } catch (NullPointerException ex) {
+      } catch (IllegalStateException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
@@ -189,7 +189,7 @@ throw new IllegalStateException("", ex);
       try {
         CBORObject.NewArray().AsInt32();
         Assert.fail("Should have failed");
-      } catch (NullPointerException ex) {
+      } catch (IllegalStateException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
@@ -197,7 +197,7 @@ throw new IllegalStateException("", ex);
       try {
         CBORObject.NewMap().AsInt32();
         Assert.fail("Should have failed");
-      } catch (NullPointerException ex) {
+      } catch (IllegalStateException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
@@ -379,8 +379,8 @@ throw new IllegalStateException("", ex);
       if(CBORObject.NewMap().CanTruncatedIntFitInInt32())Assert.fail();
       if(!(CBORObject.FromObject(0).CanTruncatedIntFitInInt32()))Assert.fail();
       if(!(CBORObject.FromObject(2.5).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(CBORObject.FromObject(Integer.MIN_VALUE).CanTruncatedIntFitInInt32())Assert.fail();
-      if(CBORObject.FromObject(Integer.MAX_VALUE).CanTruncatedIntFitInInt32())Assert.fail();
+      if(!(CBORObject.FromObject(Integer.MIN_VALUE).CanTruncatedIntFitInInt32()))Assert.fail();
+      if(!(CBORObject.FromObject(Integer.MAX_VALUE).CanTruncatedIntFitInInt32()))Assert.fail();
       if(CBORObject.FromObject(Double.POSITIVE_INFINITY).CanTruncatedIntFitInInt32())Assert.fail();
       if(CBORObject.FromObject(Double.NEGATIVE_INFINITY).CanTruncatedIntFitInInt32())Assert.fail();
       if(CBORObject.FromObject(Double.NaN).CanTruncatedIntFitInInt32())Assert.fail();
@@ -550,7 +550,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedDecimal.FromString("x", -1,1);
+        ExtendedDecimal.FromString("x", -1, 1);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -558,7 +558,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 2,1);
+        ExtendedDecimal.FromString("x", 2, 1);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -566,7 +566,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 0,-1);
+        ExtendedDecimal.FromString("x", 0, -1);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -574,7 +574,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 0,2);
+        ExtendedDecimal.FromString("x", 0, 2);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -582,7 +582,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 1,1);
+        ExtendedDecimal.FromString("x", 1, 1);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -598,7 +598,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedDecimal.FromString("x", -1,1,null);
+        ExtendedDecimal.FromString("x", -1, 1,null);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -606,7 +606,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 2,1,null);
+        ExtendedDecimal.FromString("x", 2, 1,null);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -614,7 +614,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 0,-1,null);
+        ExtendedDecimal.FromString("x", 0, -1,null);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -622,7 +622,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 0,2,null);
+        ExtendedDecimal.FromString("x", 0, 2,null);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -630,7 +630,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedDecimal.FromString("x", 1,1,null);
+        ExtendedDecimal.FromString("x", 1, 1,null);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -697,7 +697,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("x", -1,1);
+        ExtendedFloat.FromString("x", -1, 1);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -705,7 +705,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("x", 2,1);
+        ExtendedFloat.FromString("x", 2, 1);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -713,7 +713,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("x", 0,-1);
+        ExtendedFloat.FromString("x", 0, -1);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -721,7 +721,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("x", 0,2);
+        ExtendedFloat.FromString("x", 0, 2);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -729,7 +729,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("x", 1,1);
+        ExtendedFloat.FromString("x", 1, 1);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -745,7 +745,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("x", -1,1,null);
+        ExtendedFloat.FromString("x", -1, 1,null);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -753,7 +753,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("x", 2,1,null);
+        ExtendedFloat.FromString("x", 2, 1,null);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -761,7 +761,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("x", 0,-1,null);
+        ExtendedFloat.FromString("x", 0, -1,null);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -769,7 +769,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("x", 0,2,null);
+        ExtendedFloat.FromString("x", 0, 2,null);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -777,7 +777,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("x", 1,1,null);
+        ExtendedFloat.FromString("x", 1, 1,null);
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -997,11 +997,11 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 try {
 ms2=new java.io.ByteArrayOutputStream();
 
-          for (int i = 0; i < 995; ++i) {
+          for (int i = 0; i < 495; ++i) {
             // Write beginning of indefinite-length array
             ms2.write((byte)0x9f);
           }
-          for (int i = 0; i < 995; ++i) {
+          for (int i = 0; i < 495; ++i) {
             // Write end of indefinite-length array
             ms2.write((byte)0xff);
           }
