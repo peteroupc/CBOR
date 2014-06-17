@@ -165,21 +165,21 @@ File.WriteAllText(
 using (var stream = new FileStream("object2.json", FileMode.Create)) {
     // Write the CBOR object as JSON; here, a byte order
     // mark won't be added
-    cbor.WriteTo(stream);
+    cbor.WriteJSONTo(stream);
 }
 // Version 1.2 now supports a third way to write
-// objects to JSON: the CBORObject.Write method
+// objects to JSON: the CBORObject.WriteJSON method
 using (var stream = new FileStream("object3.json", FileMode.Create)) {
-   CBORObject.Write("some string", stream);
+   CBORObject.WriteJSON("some string", stream);
 }
 using (var stream = new FileStream("object4.json", FileMode.Create)) {
-   CBORObject.Write(cbor, stream);
+   CBORObject.WriteJSON(cbor, stream);
 }
 using (var stream = new FileStream("object5.json", FileMode.Create)) {
-   CBORObject.Write(true, stream);
+   CBORObject.WriteJSON(true, stream);
 }
 using (var stream = new FileStream("object6.json", FileMode.Create)) {
-   CBORObject.Write(42, stream);
+   CBORObject.WriteJSON(42, stream);
 }
 ```
 
