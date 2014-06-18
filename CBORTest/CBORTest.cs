@@ -1017,7 +1017,7 @@ namespace Test {
       try {
         CBORObject.DecodeFromBytes(new byte[] { });
         Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
+      } catch (CBORException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
