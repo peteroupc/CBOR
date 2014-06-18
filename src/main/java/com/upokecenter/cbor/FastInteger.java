@@ -680,8 +680,9 @@ final class FastInteger {
 	 }
 
 	 /**
+	  * {@inheritDoc}
+	  *
 	  * Converts this object to a text string.
-	  * @return A string representation of this object.
 	  */
 	 @Override public String toString() {
 		 switch (this.integerMode) {

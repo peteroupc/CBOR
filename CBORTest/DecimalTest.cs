@@ -312,7 +312,7 @@ namespace Test {
 
     [TestMethod]
     public void TestPi() {
-      System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+      var sw = new System.Diagnostics.Stopwatch();
       sw.Start();
       ExtendedDecimal.PI(PrecisionContext.ForPrecision(1000)).ToString();
       sw.Stop();

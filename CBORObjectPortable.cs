@@ -35,7 +35,7 @@ namespace PeterO {
         long ui=(long)(BigInteger)bigint;
         WritePositiveInt64(datatype, ui, s);
       } else {
-        using(MemoryStream ms = new MemoryStream()) {
+        using(var ms = new MemoryStream()) {
           long tmp = 0;
           byte[] buffer = new byte[10];
           while (bigint.Sign>0) {
@@ -110,7 +110,7 @@ namespace PeterO {
         if (!bi.IsZero) {
           while (true) {
             if (bi.CompareTo((BigInteger)Int32.MaxValue) <= 0) {
-              int tmp = (int)bi;
+              var tmp = (int)bi;
               while (tmp > 0) {
                 ++kb;
                 tmp /= 10;

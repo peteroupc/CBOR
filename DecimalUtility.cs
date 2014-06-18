@@ -152,7 +152,7 @@ namespace PeterO {
         val <<= 1000000;
         bigShift -= (BigInteger)valueBigShiftIteration;
       }
-      int lastshift = (int)bigShift;
+      var lastshift = (int)bigShift;
       val <<= lastshift;
       return val;
     }
@@ -171,7 +171,7 @@ namespace PeterO {
         val <<= 1000000;
         shift -= 1000000;
       }
-      int lastshift = (int)shift;
+      var lastshift = (int)shift;
       val <<= lastshift;
       return val;
     }
@@ -397,7 +397,7 @@ namespace PeterO {
       if (bigpow != null) {
         return bigpow;
       }
-      BigInteger origPrecision = (BigInteger)precision;
+      var origPrecision = (BigInteger)precision;
       if (precision <= 54) {
         if ((precision & 1) == 0) {
           ret = valueBigIntPowersOfFive[(int)(precision >> 1)];
@@ -453,7 +453,7 @@ namespace PeterO {
           // Console.WriteLine("calcing pow for "+precision);
           bigpow = BigInteger.Pow(valueBigIntPowersOfFive[1], precision);
           if (precision != startPrecision) {
-            BigInteger bigprec = (BigInteger)precision;
+            var bigprec = (BigInteger)precision;
             powerOfFiveCache.AddPower(bigprec, bigpow);
           }
           if (first) {
@@ -497,9 +497,9 @@ namespace PeterO {
       if (bigpow != null) {
         return bigpow;
       }
-      BigInteger origPrecision = (BigInteger)precision;
+      var origPrecision = (BigInteger)precision;
       if (precision <= 27) {
-        int prec = (int)precision;
+        var prec = (int)precision;
         ret = valueBigIntPowersOfFive[prec];
         ret <<= prec;
         powerOfTenCache.AddPower(origPrecision, ret);
@@ -554,7 +554,7 @@ namespace PeterO {
           bigpow = FindPowerOfFive(precision);
           bigpow <<= precision;
           if (precision != startPrecision) {
-            BigInteger bigprec = (BigInteger)precision;
+            var bigprec = (BigInteger)precision;
             powerOfTenCache.AddPower(bigprec, bigpow);
           }
           if (first) {
@@ -597,9 +597,9 @@ namespace PeterO {
         exponentMutable.SetInt(0);
         return bigmant;
       }
-      BigInteger bigradix = (BigInteger)radix;
+      var bigradix = (BigInteger)radix;
       int bitToTest = 0;
-      FastInteger bitsToShift = new FastInteger(0);
+      var bitsToShift = new FastInteger(0);
       while (!bigmant.IsZero) {
         if (precision != null && digits.CompareTo(precision) == 0) {
           break;

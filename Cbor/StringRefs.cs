@@ -84,7 +84,7 @@ namespace PeterO.Cbor {
       if (smallIndex > Int32.MaxValue) {
         throw new CBORException("Index " + smallIndex + " is bigger than supported");
       }
-      int index = (int)smallIndex;
+      var index = (int)smallIndex;
       List<CBORObject> lastList = this.stack[this.stack.Count - 1];
       if (index >= lastList.Count) {
         throw new CBORException("Index " + index + " is not valid");
@@ -105,7 +105,7 @@ namespace PeterO.Cbor {
       if (!bigIndex.canFitInInt()) {
         throw new CBORException("Index " + bigIndex + " is bigger than supported");
       }
-      int index = (int)bigIndex;
+      var index = (int)bigIndex;
       List<CBORObject> lastList = this.stack[this.stack.Count - 1];
       if (index >= lastList.Count) {
         throw new CBORException("Index " + index + " is not valid");

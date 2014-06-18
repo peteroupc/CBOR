@@ -234,9 +234,9 @@ namespace Test {
     /// <summary>Reads a double-precision floating point number in CBOR
     /// format from a data stream.</summary>
     /// <param name='stream'>A data stream.</param>
+    /// <returns>A 64-bit floating-point number.</returns>
     /// <exception cref='System.IO.IOException'>The end of the stream
     /// was reached, or the object read isn't a number.</exception>
-    /// <returns>A 64-bit floating-point number.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null.</exception>
     public static double ReadDouble(Stream stream) {

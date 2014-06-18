@@ -97,7 +97,7 @@ namespace PeterO {
       }
       int ret = 0;
       for (int i = 0; i < length; ++i) {
-        int digit = (int)(str[offset + i] - '0');
+        var digit = (int)(str[offset + i] - '0');
         ret *= 10;
         ret += digit;
       }
@@ -263,7 +263,7 @@ namespace PeterO {
         this.shiftedSmall = 0;
         this.knownBitLength = new FastInteger(1);
       } else {
-        int newLength = (int)(digitLength - digitShift);
+        var newLength = (int)(digitLength - digitShift);
         this.knownBitLength = new FastInteger(newLength);
         if (newLength <= 9) {
           // Fits in a small number
@@ -328,7 +328,7 @@ namespace PeterO {
           this.shiftedBigInt,
           radixPower,
           out bigrem);
-        int rem = (int)bigrem;
+        var rem = (int)bigrem;
         this.bitsAfterLeftmost |= this.bitLeftmost;
         for (int i = 0; i < diffInt; ++i) {
           if (i == diffInt - 1) {
@@ -378,7 +378,7 @@ namespace PeterO {
       if (digitLength > digits) {
         int digitShift = digitLength - digits;
         this.knownBitLength.SubtractInt(digitShift);
-        int newLength = (int)(digitLength - digitShift);
+        var newLength = (int)(digitLength - digitShift);
         // Console.WriteLine("dlen=" + digitLength + " dshift=" + digitShift + " newlen=" + (newLength));
         if (this.discardedBitCount == null) {
           this.discardedBitCount = new FastInteger(0);
@@ -456,7 +456,7 @@ namespace PeterO {
           this.knownBitLength = new FastInteger(0);
           break;
         } else {
-          int digit = (int)(this.shiftedSmall % 10);
+          var digit = (int)(this.shiftedSmall % 10);
           this.bitsAfterLeftmost |= this.bitLeftmost;
           this.bitLeftmost = digit;
           --digits;
@@ -560,8 +560,8 @@ namespace PeterO {
       }
       this.knownBitLength = new FastInteger(kb);
       if (kb > digits) {
-        int digitShift = (int)(kb - digits);
-        int newLength = (int)(kb - digitShift);
+        var digitShift = (int)(kb - digits);
+        var newLength = (int)(kb - digitShift);
         this.knownBitLength = new FastInteger(Math.Max(1, newLength));
         if (this.discardedBitCount == null) {
           this.discardedBitCount = new FastInteger(digitShift);
@@ -569,7 +569,7 @@ namespace PeterO {
           this.discardedBitCount.AddInt(digitShift);
         }
         for (int i = 0; i < digitShift; ++i) {
-          int digit = (int)(this.shiftedSmall % 10);
+          var digit = (int)(this.shiftedSmall % 10);
           this.shiftedSmall /= 10;
           this.bitsAfterLeftmost |= this.bitLeftmost;
           this.bitLeftmost = digit;

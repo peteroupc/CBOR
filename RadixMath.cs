@@ -482,7 +482,7 @@ namespace PeterO {
             incremented = true;
           } else {
             BigInteger bigdigit = bigval % (BigInteger)radix;
-            int lastDigit = (int)bigdigit;
+            var lastDigit = (int)bigdigit;
             if (lastDigit == 0 || lastDigit == (radix / 2)) {
               incremented = true;
             }
@@ -551,7 +551,7 @@ namespace PeterO {
           // but not after scale is reached
           BigInteger bigmantissa = BigInteger.Abs(this.helper.GetMantissa(ret));
           FastInteger fastexponent = FastInteger.FromBig(this.helper.GetExponent(ret));
-          BigInteger bigradix = (BigInteger)this.thisRadix;
+          var bigradix = (BigInteger)this.thisRadix;
           while (true) {
             if (desiredScale.CompareTo(fastexponent) == 0) {
               break;
@@ -663,10 +663,11 @@ namespace PeterO {
     }
 
     /// <summary>Finds the remainder that results when dividing two T objects.</summary>
-    /// <returns>The remainder of the two objects.</returns>
+    /// <summary>Finds the remainder that results when dividing two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='divisor'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>The remainder of the two objects.</returns>
     public T Remainder(T thisValue, T divisor, PrecisionContext ctx) {
       PrecisionContext ctx2 = ctx == null ? null : ctx.WithBlankFlags();
       T ret = this.RemainderHandleSpecial(thisValue, divisor, ctx2);
@@ -782,7 +783,7 @@ namespace PeterO {
       T zpow = this.Multiply(z, z, ctxdiv);
       T guess = this.NegateRaw(z);
       T lastGuess = default(T);
-      BigInteger denom = (BigInteger)2;
+      var denom = (BigInteger)2;
       while (more) {
         lastGuess = guess;
         T tmp = this.Divide(zpow, this.helper.CreateNewWithFlags(denom, BigInteger.Zero, 0), ctxdiv);
@@ -815,7 +816,7 @@ namespace PeterO {
       T one = this.helper.ValueOf(1);
       PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, workingPrecision + (BigInteger)6)
         .WithRounding(this.thisRadix == 2 ? Rounding.Down : Rounding.ZeroFiveUp);
-      BigInteger bigintN = (BigInteger)2;
+      var bigintN = (BigInteger)2;
       BigInteger facto = BigInteger.One;
       // Guess starts with 1 + thisValue
       T guess = this.Add(one, thisValue, null);
@@ -1124,7 +1125,7 @@ namespace PeterO {
         }
       }
       int guardDigitCount = this.thisRadix == 2 ? 32 : 10;
-      BigInteger guardDigits = (BigInteger)guardDigitCount;
+      var guardDigits = (BigInteger)guardDigitCount;
       PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, ctx.Precision + guardDigits);
       ctxdiv = ctxdiv.WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
       T lnresult = this.Ln(thisValue, ctxdiv);
@@ -1199,7 +1200,7 @@ namespace PeterO {
         } else {
           BigInteger mantissa = this.helper.GetMantissa(thisValue);
           FastInteger expTmp = FastInteger.FromBig(exp);
-          BigInteger tenBig = (BigInteger)10;
+          var tenBig = (BigInteger)10;
           while (true) {
             BigInteger bigrem;
             BigInteger bigquo = BigInteger.DivRem(mantissa, tenBig, out bigrem);
@@ -1324,7 +1325,7 @@ namespace PeterO {
           thisValue = this.RoundToPrecision(this.helper.CreateNewWithFlags(BigInteger.Zero, BigInteger.Zero, 0), ctxCopy);
         } else if (cmpOne < 0) {
           // Less than 1
-          FastInteger error = new FastInteger(10);
+          var error = new FastInteger(10);
           BigInteger bigError = error.AsBigInteger();
           ctxdiv = SetPrecisionIfLimited(ctx, ctx.Precision + bigError)
             .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
@@ -1332,7 +1333,7 @@ namespace PeterO {
           if (this.CompareTo(thisValue, quarter) <= 0) {
             // One quarter or less
             T half = this.Multiply(quarter, this.helper.ValueOf(2), null);
-            FastInteger roots = new FastInteger(0);
+            var roots = new FastInteger(0);
             // Take square root until this value
             // is one half or more
             while (this.CompareTo(thisValue, half) < 0) {
@@ -1366,7 +1367,7 @@ namespace PeterO {
           // Greater than 1
           T two = this.helper.ValueOf(2);
           if (this.CompareTo(thisValue, two) >= 0) {
-            FastInteger roots = new FastInteger(0);
+            var roots = new FastInteger(0);
             FastInteger error;
             BigInteger bigError;
             error = new FastInteger(10);
@@ -1427,7 +1428,7 @@ namespace PeterO {
     /*
     private string BitMantissa(T val) {
       BigInteger mant = this.helper.GetMantissa(val);
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       int len = mant.bitLength();
       for (int i = 0; i < len; ++i) {
         int shift = len-1-i;
@@ -1495,9 +1496,7 @@ namespace PeterO {
           if ((ctxdiv.Flags & PrecisionContext.FlagOverflow) != 0) {
             // Still overflowed
             if (ctx.HasFlags) {
-              int newFlags = PrecisionContext.FlagInexact | PrecisionContext.FlagSubnormal |
-                PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
-              ctx.Flags |= newFlags;
+              ctx.Flags |= BigNumberFlags.UnderflowFlags;
             }
             // Return a "subnormal" zero, with fake extra digits to stimulate
             // rounding
@@ -1666,14 +1665,6 @@ namespace PeterO {
         if (mantissa == null) {
           return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
         }
-      } else if (digitCount.CompareTo(precision) < 0) {
-        FastInteger diff = FastInteger.Copy(digitCount).Subtract(precision);
-        accum.ShiftRight(diff);
-        BigInteger bigdiff = diff.AsBigInteger();
-        currentExp += (BigInteger)bigdiff;
-        mantissa = accum.ShiftedInt;
-        rounded = true;
-        inexact = (accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0;
       }
       BigInteger[] sr = mantissa.sqrtWithRemainder();
       digitCount = this.helper.CreateShiftAccumulator(sr[0]).GetDigitLength();
@@ -1913,11 +1904,11 @@ FastInteger.FromBig(ctx.Precision).Decrement());
     }
 
     /// <summary>Divides two T objects.</summary>
-    /// <returns>The quotient of the two objects.</returns>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='divisor'>A T object. (2).</param>
     /// <param name='desiredExponent'>A BigInteger object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>The quotient of the two objects.</returns>
     public T DivideToExponent(T thisValue, T divisor, BigInteger desiredExponent, PrecisionContext ctx) {
       if (ctx != null && !ctx.ExponentWithinRange(desiredExponent)) {
         return this.SignalInvalidWithMessage(ctx, "Exponent not within exponent range: " + desiredExponent.ToString());
@@ -1940,10 +1931,11 @@ FastInteger.FromBig(ctx.Precision).Decrement());
     }
 
     /// <summary>Divides two T objects.</summary>
-    /// <returns>The quotient of the two objects.</returns>
+    /// <summary>Divides two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='divisor'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>The quotient of the two objects.</returns>
     public T Divide(T thisValue, T divisor, PrecisionContext ctx) {
       return this.DivideInternal(thisValue, divisor, ctx, IntegerModeRegular, BigInteger.Zero);
     }
@@ -2130,8 +2122,8 @@ FastInteger.FromBig(ctx.Precision).Decrement());
         FastInteger expDividend = FastInteger.FromBig(this.helper.GetExponent(thisValue));
         FastInteger expDivisor = FastInteger.FromBig(this.helper.GetExponent(divisor));
         FastInteger expdiff = FastInteger.Copy(expDividend).Subtract(expDivisor);
-        FastInteger adjust = new FastInteger(0);
-        FastInteger result = new FastInteger(0);
+        var adjust = new FastInteger(0);
+        var result = new FastInteger(0);
         FastInteger naturalExponent = FastInteger.Copy(expdiff);
         bool hasPrecision = ctx != null && ctx.Precision.Sign != 0;
         bool resultNeg = (this.helper.GetFlags(thisValue) & BigNumberFlags.FlagNegative) != (this.helper.GetFlags(divisor) & BigNumberFlags.FlagNegative);
@@ -2298,7 +2290,7 @@ FastInteger.FromBig(ctx.Precision).Decrement());
               // the multiplication
               mantissaDivisor = oldMantissaB;
             } else {
-              BigInteger bigpow = (BigInteger)radix;
+              var bigpow = (BigInteger)radix;
               mantissaDivisor /= bigpow;
             }
             adjust.Increment();
@@ -2394,12 +2386,12 @@ FastInteger.FromBig(ctx.Precision).Decrement());
 
     /// <summary>Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.</summary>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
-    /// <returns>A T object.</returns>
     /// <param name='a'>A T object. (2).</param>
     /// <param name='b'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A T object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
     public T MinMagnitude(T a, T b, PrecisionContext ctx) {
       if (a == null) {
         throw new ArgumentNullException("a");
@@ -2421,12 +2413,12 @@ FastInteger.FromBig(ctx.Precision).Decrement());
 
     /// <summary>Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.</summary>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
-    /// <returns>A T object.</returns>
     /// <param name='a'>A T object. (2).</param>
     /// <param name='b'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A T object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
     public T MaxMagnitude(T a, T b, PrecisionContext ctx) {
       if (a == null) {
         throw new ArgumentNullException("a");
@@ -2447,12 +2439,12 @@ FastInteger.FromBig(ctx.Precision).Decrement());
     }
 
     /// <summary>Gets the greater value between two T values.</summary>
-    /// <returns>The larger value of the two objects.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
     /// <param name='a'>A T object.</param>
     /// <param name='b'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>The larger value of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
     public T Max(T a, T b, PrecisionContext ctx) {
       if (a == null) {
         throw new ArgumentNullException("a");
@@ -2481,12 +2473,12 @@ FastInteger.FromBig(ctx.Precision).Decrement());
     }
 
     /// <summary>Gets the lesser value between two T values.</summary>
-    /// <returns>The smaller value of the two objects.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
     /// <param name='a'>A T object.</param>
     /// <param name='b'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>The smaller value of the two objects.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
     public T Min(T a, T b, PrecisionContext ctx) {
       if (a == null) {
         throw new ArgumentNullException("a");
@@ -2515,10 +2507,11 @@ FastInteger.FromBig(ctx.Precision).Decrement());
     }
 
     /// <summary>Multiplies two T objects.</summary>
-    /// <returns>The product of the two objects.</returns>
+    /// <summary>Multiplies two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='other'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>The product of the two objects.</returns>
     public T Multiply(T thisValue, T other, PrecisionContext ctx) {
       int thisFlags = this.helper.GetFlags(thisValue);
       int otherFlags = this.helper.GetFlags(other);
@@ -3463,12 +3456,13 @@ neg ? BigNumberFlags.FlagNegative : 0);
     }
 
     /// <summary>Compares a T object with this instance.</summary>
-    /// <returns>Zero if the values are equal; a negative number if this instance
-    /// is less, or a positive number if this instance is greater.</returns>
+    /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='otherValue'>A T object. (2).</param>
     /// <param name='treatQuietNansAsSignaling'>A Boolean object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>Zero if the values are equal; a negative number if this instance
+    /// is less, or a positive number if this instance is greater.</returns>
     public T CompareToWithContext(T thisValue, T otherValue, bool treatQuietNansAsSignaling, PrecisionContext ctx) {
       if (otherValue == null) {
         return this.SignalInvalid(ctx);
@@ -3489,11 +3483,12 @@ neg ? BigNumberFlags.FlagNegative : 0);
     }
 
     /// <summary>Compares a T object with this instance.</summary>
-    /// <returns>Zero if the values are equal; a negative number if this instance
-    /// is less, or a positive number if this instance is greater.</returns>
+    /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='otherValue'>A T object. (2).</param>
     /// <param name='reportOOM'>A Boolean object.</param>
+    /// <returns>Zero if the values are equal; a negative number if this instance
+    /// is less, or a positive number if this instance is greater.</returns>
     private int CompareToInternal(T thisValue, T otherValue, bool reportOOM) {
       if (otherValue == null) {
         return 1;

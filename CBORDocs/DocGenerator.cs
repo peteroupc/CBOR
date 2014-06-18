@@ -20,11 +20,11 @@ public class DocGenerator {
       var assembly = Assembly.LoadFrom(assemblyFile);
       var members = DocReader.Read(assembly);
       var oldWriter = Console.Out;
-      TypeVisitor visitor = new TypeVisitor(directory);
+      var visitor = new TypeVisitor(directory);
       members.Accept(visitor);
       visitor.Finish();
       using (var writer = new StreamWriter(Path.Combine(directory, "APIDocs.md"), false, Encoding.UTF8)) {
-        SummaryVisitor visitor2 = new SummaryVisitor(writer);
+        var visitor2 = new SummaryVisitor(writer);
         members.Accept(visitor2);
         visitor2.Finish();
       }

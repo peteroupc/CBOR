@@ -130,7 +130,7 @@ namespace PeterO {
       if (smallNumber < 0) {
         throw new ArgumentException("smallNumber (" + Convert.ToString((int)smallNumber, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
       }
-      BitShiftAccumulator bsa = new BitShiftAccumulator(BigInteger.Zero, 0, 0);
+      var bsa = new BitShiftAccumulator(BigInteger.Zero, 0, 0);
       bsa.shiftedSmall = smallNumber;
       bsa.discardedBitCount = new FastInteger(0);
       bsa.isSmall = true;
@@ -202,7 +202,7 @@ namespace PeterO {
             // the last one is set
             this.bitsAfterLeftmost |= 1;
             this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
-  } else if (lowestSetBit > bs - 1) {
+          } else if (lowestSetBit > bs - 1) {
             // Means all discarded bits are zero
             this.bitLeftmost = 0;
           } else {
@@ -227,9 +227,8 @@ namespace PeterO {
         for (int i = SmallBitLength - 1; i >= 0; --i) {
           if ((this.shiftedSmall & (1 << i)) != 0) {
             break;
-          } else {
-            --kb;
           }
+          --kb;
         }
         // Make sure bit length is 1 if value is 0
         if (kb == 0) {
@@ -238,10 +237,7 @@ namespace PeterO {
         // Console.WriteLine("{0:X8} kbl=" + (kb));
         return new FastInteger(kb);
       } else {
-        if (this.shiftedBigInt.IsZero) {
-          return new FastInteger(1);
-        }
-        return new FastInteger(this.shiftedBigInt.bitLength());
+        return new FastInteger(this.shiftedBigInt.IsZero ? 1 : this.shiftedBigInt.bitLength());
       }
     }
 
@@ -291,7 +287,7 @@ namespace PeterO {
             // the last one is set
             this.bitsAfterLeftmost |= 1;
             this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
-  } else if (lowestSetBit > bs - 1) {
+          } else if (lowestSetBit > bs - 1) {
             // Means all discarded bits are zero
             this.bitLeftmost = 0;
           } else {
@@ -342,7 +338,7 @@ namespace PeterO {
           --kb;
         }
       }
-      int shift = (int)Math.Min(kb, bits);
+      var shift = (int)Math.Min(kb, bits);
       bool shiftingMoreBits = bits > kb;
       kb -= shift;
       this.knownBitLength = new FastInteger(kb);
@@ -393,7 +389,7 @@ namespace PeterO {
       // Shift by the difference in bit length
       if (kbl > bits) {
         int bitShift = kbl - (int)bits;
-        int shift = (int)bitShift;
+        var shift = (int)bitShift;
         this.knownBitLength = new FastInteger(bits);
         this.discardedBitCount.AddInt(bitShift);
         this.bitsAfterLeftmost |= this.bitLeftmost;

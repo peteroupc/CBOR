@@ -27,7 +27,7 @@ namespace PeterO.Cbor {
     }
 
     private CBORTypeFilter Copy() {
-      CBORTypeFilter filter = new CBORTypeFilter();
+      var filter = new CBORTypeFilter();
       filter.any = this.any;
       filter.types = this.types;
       filter.floatingpoint = this.floatingpoint;
@@ -93,9 +93,9 @@ namespace PeterO.Cbor {
       return this.WithType(3).WithTags(25);
     }
 
+    /// <summary>Not documented yet.</summary>
     /// <param name='tags'>An integer array of tags allowed.</param>
     /// <returns>A CBORTypeFilter object.</returns>
-    /// <summary>Not documented yet.</summary>
     public CBORTypeFilter WithTags(params int[] tags) {
       if (this.any) {
         return this;
@@ -117,9 +117,9 @@ namespace PeterO.Cbor {
       return filter;
     }
 
+    /// <summary>Not documented yet.</summary>
     /// <param name='tags'>A BigInteger[] object.</param>
     /// <returns>A CBORTypeFilter object.</returns>
-    /// <summary>Not documented yet.</summary>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// "tags[i]" is null.</exception>
     public CBORTypeFilter WithTags(params BigInteger[] tags) {
@@ -148,11 +148,11 @@ namespace PeterO.Cbor {
 
     /// <summary>Copies this filter and includes CBOR arrays with an exact
     /// length to the new filter.</summary>
-    /// <returns>A CBORTypeFilter object.</returns>
     /// <param name='arrayLength'>The desired maximum length of an array.</param>
     /// <param name='elements'>An array containing the allowed types for
     /// each element in the array. There must be at least as many elements here
     /// as given in the arrayLength parameter.</param>
+    /// <returns>A CBORTypeFilter object.</returns>
     /// <exception cref='System.ArgumentException'>The parameter arrayLength
     /// is less than 0.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
@@ -183,11 +183,11 @@ namespace PeterO.Cbor {
 
     /// <summary>Copies this filter and includes CBOR arrays with at least
     /// a given length to the new filter.</summary>
-    /// <returns>A CBORTypeFilter object.</returns>
     /// <param name='arrayLength'>The desired minimum length of an array.</param>
     /// <param name='elements'>An array containing the allowed types for
     /// each element in the array. There must be at least as many elements here
     /// as given in the arrayLength parameter.</param>
+    /// <returns>A CBORTypeFilter object.</returns>
     /// <exception cref='System.ArgumentException'>The parameter arrayLength
     /// is less than 0.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
@@ -249,8 +249,8 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>A Boolean object.</returns>
     /// <param name='type'>A 32-bit signed integer.</param>
+    /// <returns>A Boolean object.</returns>
     public bool MajorTypeMatches(int type) {
       #if DEBUG
       if (type < 0) {
@@ -266,29 +266,29 @@ namespace PeterO.Cbor {
 
     /// <summary>Returns whether an array's length is allowed under this
     /// filter.</summary>
+    /// <param name='length'>The length of a CBOR array.</param>
     /// <returns>True if this filter allows CBOR arrays and an array's length
     /// is allowed under this filter; otherwise, false.</returns>
-    /// <param name='length'>The length of a CBOR array.</param>
     public bool ArrayLengthMatches(int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                                               (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
     }
 
     /// <summary>Returns whether an array's length is allowed under a filter.</summary>
+    /// <param name='length'>The length of a CBOR array.</param>
     /// <returns>True if this filter allows CBOR arrays and an array's length
     /// is allowed under a filter; otherwise, false.</returns>
-    /// <param name='length'>The length of a CBOR array.</param>
     public bool ArrayLengthMatches(long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                                               (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
     }
 
     /// <summary>Returns whether an array's length is allowed under a filter.</summary>
+    /// <param name='bigLength'>A BigInteger object.</param>
     /// <returns>True if this filter allows CBOR arrays and an array's length
     /// is allowed under a filter; otherwise, false.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='bigLength'/> is null.</exception>
-    /// <param name='bigLength'>A BigInteger object.</param>
     public bool ArrayLengthMatches(BigInteger bigLength) {
       if (bigLength == null) {
         throw new ArgumentNullException("bigLength");
@@ -310,10 +310,10 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether CBOR objects can have the
     /// given tag number.</summary>
-    /// <returns>True if CBOR objects can have the given tag number; otherwise,
-    /// false.</returns>
     /// <param name='tag'>A tag number. Returns false if this is less than
     /// 0.</param>
+    /// <returns>True if CBOR objects can have the given tag number; otherwise,
+    /// false.</returns>
     public bool TagAllowed(int tag) {
       if (this.any) {
         return true;
@@ -323,10 +323,10 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether CBOR objects can have the
     /// given tag number.</summary>
-    /// <returns>True if CBOR objects can have the given tag number; otherwise,
-    /// false.</returns>
     /// <param name='tag'>A tag number. Returns false if this is less than
     /// 0.</param>
+    /// <returns>True if CBOR objects can have the given tag number; otherwise,
+    /// false.</returns>
     public bool TagAllowed(long tag) {
       if (this.any) {
         return true;
@@ -336,10 +336,10 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether CBOR objects can have the
     /// given tag number.</summary>
-    /// <returns>True if CBOR objects can have the given tag number; otherwise,
-    /// false.</returns>
     /// <param name='bigTag'>A tag number. Returns false if this is less
     /// than 0.</param>
+    /// <returns>True if CBOR objects can have the given tag number; otherwise,
+    /// false.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='bigTag'/> is null.</exception>
     public bool TagAllowed(BigInteger bigTag) {
@@ -368,17 +368,17 @@ namespace PeterO.Cbor {
 
     /// <summary>Determines whether this type filter allows CBOR arrays
     /// and the given array index is allowed under this type filter.</summary>
+    /// <param name='index'>An array index, starting from 0.</param>
     /// <returns>True if this type filter allows CBOR arrays and the given
     /// array index is allowed under this type filter; otherwise, false.</returns>
-    /// <param name='index'>An array index, starting from 0.</param>
     public bool ArrayIndexAllowed(int index) {
       return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength ||
                                               ((this.arrayMinLength || index < this.arrayLength) && index >= 0));
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORTypeFilter object.</returns>
     /// <param name='index'>A 32-bit signed integer.</param>
+    /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter GetSubFilter(int index) {
       if (this.anyArrayLength || this.any) {
         return Any;
@@ -402,8 +402,8 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>A CBORTypeFilter object.</returns>
     /// <param name='index'>A 64-bit signed integer.</param>
+    /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter GetSubFilter(long index) {
       if (this.anyArrayLength || this.any) {
         return Any;

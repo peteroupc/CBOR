@@ -46,8 +46,8 @@ namespace PeterO {
     #region Equals and GetHashCode implementation
     /// <summary>Determines whether this object and another object are
     /// equal.</summary>
-    /// <returns>True if the objects are equal; otherwise, false.</returns>
     /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>True if the objects are equal; otherwise, false.</returns>
     public override bool Equals(object obj) {
       ExtendedRational other = obj as ExtendedRational;
       if (other == null) {
@@ -74,17 +74,17 @@ namespace PeterO {
     #endregion
 
     /// <summary>Creates a number with the given numerator and denominator.</summary>
-    /// <returns>An ExtendedRational object.</returns>
     /// <param name='numeratorSmall'>A 32-bit signed integer.</param>
     /// <param name='denominatorSmall'>A 32-bit signed integer. (2).</param>
+    /// <returns>An ExtendedRational object.</returns>
     public static ExtendedRational Create(int numeratorSmall, int denominatorSmall) {
       return Create((BigInteger)numeratorSmall, (BigInteger)denominatorSmall);
     }
 
     /// <summary>Creates a number with the given numerator and denominator.</summary>
-    /// <returns>An ExtendedRational object.</returns>
     /// <param name='numerator'>A BigInteger object.</param>
     /// <param name='denominator'>A BigInteger object. (2).</param>
+    /// <returns>An ExtendedRational object.</returns>
     public static ExtendedRational Create(BigInteger numerator, BigInteger denominator) {
       return new ExtendedRational(numerator, denominator);
     }
@@ -154,8 +154,8 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedRational object.</returns>
     /// <param name='bigint'>A BigInteger object.</param>
+    /// <returns>An ExtendedRational object.</returns>
     public static ExtendedRational FromBigInteger(BigInteger bigint) {
       return new ExtendedRational(bigint, BigInteger.One);
     }
@@ -172,9 +172,9 @@ namespace PeterO {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting the
     /// number to a string.</summary>
+    /// <param name='flt'>A 32-bit floating-point number.</param>
     /// <returns>A rational number with the same value as <paramref name='flt'/>
     /// .</returns>
-    /// <param name='flt'>A 32-bit floating-point number.</param>
     public static ExtendedRational FromSingle(float flt) {
       return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
     }
@@ -183,17 +183,17 @@ namespace PeterO {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting the
     /// number to a string.</summary>
+    /// <param name='flt'>A 64-bit floating-point number.</param>
     /// <returns>A rational number with the same value as <paramref name='flt'/>
     /// .</returns>
-    /// <param name='flt'>A 64-bit floating-point number.</param>
     public static ExtendedRational FromDouble(double flt) {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
     }
 
     /// <summary>Creates a not-a-number ExtendedRational object.</summary>
-    /// <returns>An ExtendedRational object.</returns>
     /// <param name='diag'>A number to use as diagnostic information associated
     /// with this object. If none is needed, should be zero.</param>
+    /// <returns>An ExtendedRational object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='diag'/> is null.</exception>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
@@ -203,18 +203,18 @@ namespace PeterO {
     }
 
     private static ExtendedRational CreateWithFlags(BigInteger numerator, BigInteger denominator, int flags) {
-      ExtendedRational er = new ExtendedRational(numerator, denominator);
+      var er = new ExtendedRational(numerator, denominator);
       er.flags = flags;
       return er;
     }
 
     /// <summary>Creates a not-a-number ExtendedRational object.</summary>
-    /// <returns>An ExtendedRational object.</returns>
     /// <param name='diag'>A number to use as diagnostic information associated
     /// with this object. If none is needed, should be zero.</param>
     /// <param name='signaling'>Whether the return value will be signaling
     /// (true) or quiet (false).</param>
     /// <param name='negative'>Whether the return value is negative.</param>
+    /// <returns>An ExtendedRational object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='diag'/> is null.</exception>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
@@ -234,14 +234,14 @@ namespace PeterO {
         flags |= BigNumberFlags.FlagNegative;
       }
       flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
-      ExtendedRational er = new ExtendedRational(diag, BigInteger.Zero);
+      var er = new ExtendedRational(diag, BigInteger.Zero);
       er.flags = flags;
       return er;
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedRational object.</returns>
     /// <param name='ef'>An ExtendedFloat object.</param>
+    /// <returns>An ExtendedRational object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='ef'/> is null.</exception>
     public static ExtendedRational FromExtendedFloat(ExtendedFloat ef) {
@@ -249,7 +249,7 @@ namespace PeterO {
         throw new ArgumentNullException("ef");
       }
       if (!ef.IsFinite) {
-        ExtendedRational er = new ExtendedRational(ef.Mantissa, BigInteger.One);
+        var er = new ExtendedRational(ef.Mantissa, BigInteger.One);
         int flags = 0;
         if (ef.IsNegative) {
           flags |= BigNumberFlags.FlagNegative;
@@ -287,8 +287,8 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedRational object.</returns>
     /// <param name='ef'>An ExtendedDecimal object.</param>
+    /// <returns>An ExtendedRational object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='ef'/> is null.</exception>
     public static ExtendedRational FromExtendedDecimal(ExtendedDecimal ef) {
@@ -296,7 +296,7 @@ namespace PeterO {
         throw new ArgumentNullException("ef");
       }
       if (!ef.IsFinite) {
-        ExtendedRational er = new ExtendedRational(ef.Mantissa, BigInteger.One);
+        var er = new ExtendedRational(ef.Mantissa, BigInteger.One);
         int flags = 0;
         if (ef.IsNegative) {
           flags |= BigNumberFlags.FlagNegative;
@@ -499,15 +499,15 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedRational object.</returns>
     /// <param name='smallint'>A 32-bit signed integer.</param>
+    /// <returns>An ExtendedRational object.</returns>
     public static ExtendedRational FromInt32(int smallint) {
       return new ExtendedRational((BigInteger)smallint, BigInteger.One);
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedRational object.</returns>
     /// <param name='longInt'>A 64-bit signed integer.</param>
+    /// <returns>An ExtendedRational object.</returns>
     public static ExtendedRational FromInt64(long longInt) {
       return new ExtendedRational((BigInteger)longInt, BigInteger.One);
     }
@@ -534,7 +534,7 @@ namespace PeterO {
     /// <returns>An ExtendedRational object.</returns>
     public ExtendedRational Abs() {
       if (this.IsNegative) {
-        ExtendedRational er = new ExtendedRational(this.unsignedNumerator, this.denominator);
+        var er = new ExtendedRational(this.unsignedNumerator, this.denominator);
         er.flags = this.flags & ~BigNumberFlags.FlagNegative;
         return er;
       }
@@ -544,7 +544,7 @@ namespace PeterO {
     /// <summary>Not documented yet.</summary>
     /// <returns>An ExtendedRational object.</returns>
     public ExtendedRational Negate() {
-      ExtendedRational er = new ExtendedRational(this.unsignedNumerator, this.denominator);
+      var er = new ExtendedRational(this.unsignedNumerator, this.denominator);
       er.flags = this.flags ^ BigNumberFlags.FlagNegative;
       return er;
     }
@@ -739,7 +739,7 @@ namespace PeterO {
           // 0 instead of 1, but the possibility of 0 was already excluded
           int digitCount = this.UnsignedNumerator.bitLength();
           --digitCount;
-          BigInteger bigDigitCount = (BigInteger)digitCount;
+          var bigDigitCount = (BigInteger)digitCount;
           if (bigDigitCount.CompareTo(other.Exponent) < 0) {
             // Numerator's digit count minus 1 is less than the other's exponent,
             // and other's exponent is positive, so this value's absolute
@@ -851,7 +851,7 @@ namespace PeterO {
         if (other.Exponent.Sign > 0) {
           int digitCount = this.UnsignedNumerator.getDigitCount();
           --digitCount;
-          BigInteger bigDigitCount = (BigInteger)digitCount;
+          var bigDigitCount = (BigInteger)digitCount;
           if (bigDigitCount.CompareTo(other.Exponent) < 0) {
             // Numerator's digit count minus 1 is less than the other's exponent,
             // and other's exponent is positive, so this value's absolute

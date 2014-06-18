@@ -42,7 +42,7 @@ namespace Test {
 
     [TestMethod]
     public void TestCBORObjectDecimal() {
-      FastRandom rand = new FastRandom();
+      var rand = new FastRandom();
       for (int i = 0; i <= 28; ++i) {  // Try a random decimal with a given exponent
         for (int j = 0; j < 8; ++j) {
           decimal d = this.RandomDecimal(rand, i);
@@ -4275,18 +4275,18 @@ namespace Test {
 
     [TestMethod]
     public void TestDivideUnsigned() {
-      FastRandom fr = new FastRandom();
+      var fr = new FastRandom();
       unchecked {
         for (int i = 0; i < 1000; ++i) {
-          uint x = (uint)fr.NextValue(0x10000);
+          var x = (uint)fr.NextValue(0x10000);
           x |= ((uint)fr.NextValue(0x10000)) << 16;
-          ushort y = (ushort)fr.NextValue(0x10000);
-          int dx = (int)x;
-          short dy = (short)y;
+          var y = (ushort)fr.NextValue(0x10000);
+          var dx = (int)x;
+          var dy = (short)y;
           if (dy == 0) {
             continue;
           }
-          short expected = (short)(x / y);
+          var expected = (short)(x / y);
           short actual = DivideUnsigned(dx, dy);
           if (expected != actual) {
             Assert.AreEqual(expected, actual, "Dividing " + x + " by " + y);

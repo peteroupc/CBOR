@@ -16,7 +16,6 @@ import com.upokecenter.cbor.*;
 
     /**
      * Contains CBOR tests.
-     * @param r A FastRandom object.
      */
 
   public class CBORTest {
@@ -901,18 +900,10 @@ import com.upokecenter.cbor.*;
         ExtendedRational.NegativeInfinity,
         ExtendedRational.FromExtendedFloat(ExtendedFloat.NegativeInfinity));
 
-      if (Double.POSITIVE_INFINITY != ExtendedRational.PositiveInfinity.ToDouble()) {
-        Assert.fail();
-      }
-      if (Double.NEGATIVE_INFINITY != ExtendedRational.NegativeInfinity.ToDouble()) {
-        Assert.fail();
-      }
-      if (Float.POSITIVE_INFINITY != ExtendedRational.PositiveInfinity.ToSingle()) {
-        Assert.fail();
-      }
-      if (Float.NEGATIVE_INFINITY != ExtendedRational.NegativeInfinity.ToSingle()) {
-        Assert.fail();
-      }
+      if(!(((ExtendedRational.PositiveInfinity.ToDouble())==Double.POSITIVE_INFINITY)))Assert.fail();
+      if(!(((ExtendedRational.NegativeInfinity.ToDouble())==Double.NEGATIVE_INFINITY)))Assert.fail();
+      if(!(((ExtendedRational.PositiveInfinity.ToSingle())==Float.POSITIVE_INFINITY)))Assert.fail();
+      if(!(((ExtendedRational.NegativeInfinity.ToSingle())==Float.NEGATIVE_INFINITY)))Assert.fail();
       try {
         ExtendedDecimal.PositiveInfinity.ToBigInteger();
         Assert.fail("Should have failed");

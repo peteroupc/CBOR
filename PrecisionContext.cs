@@ -115,7 +115,7 @@ namespace PeterO {
     /// not be higher than EMax + 1 - Precision.</value>
     public bool ClampNormalExponents {
       get {
-        return this.hasExponentRange ? this.clampNormalExponents : false;
+        return this.hasExponentRange && this.clampNormalExponents;
       }
     }
 
@@ -234,10 +234,7 @@ namespace PeterO {
         if (bigint.CompareTo(this.EMin) < 0) {
           return false;
         }
-        if (exponent.CompareTo(this.EMax) > 0) {
-          return false;
-        }
-        return true;
+        return exponent.CompareTo(this.EMax) <= 0;
       }
     }
 
@@ -250,8 +247,8 @@ namespace PeterO {
 
     /// <summary>Copies this PrecisionContext with the specified rounding
     /// mode.</summary>
-    /// <returns>A PrecisionContext object.</returns>
     /// <param name='rounding'>A Rounding object.</param>
+    /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithRounding(Rounding rounding) {
       PrecisionContext pc = this.Copy();
       pc.rounding = rounding;
@@ -292,9 +289,9 @@ namespace PeterO {
 
     /// <summary>Copies this precision context and sets the copy&apos;s
     /// exponent range.</summary>
-    /// <returns>A PrecisionContext object.</returns>
     /// <param name='exponentMinSmall'>Desired minimum exponent (EMin).</param>
     /// <param name='exponentMaxSmall'>Desired maximum exponent (EMax).</param>
+    /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithExponentRange(int exponentMinSmall, int exponentMaxSmall) {
       if (exponentMinSmall > exponentMaxSmall) {
         throw new ArgumentException("exponentMinSmall (" + Convert.ToString((int)exponentMinSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((int)exponentMaxSmall, System.Globalization.CultureInfo.InvariantCulture));
@@ -404,8 +401,8 @@ namespace PeterO {
 
     /// <summary>Copies this PrecisionContext and sets the copy's "AdjustExponent"
     /// property to the given value.</summary>
-    /// <returns>A PrecisionContext object.</returns>
     /// <param name='adjustExponent'>A Boolean object.</param>
+    /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithAdjustExponent(bool adjustExponent) {
       PrecisionContext pc = this.Copy();
       pc.adjustExponent = adjustExponent;
@@ -423,9 +420,9 @@ namespace PeterO {
 
     /// <summary>Copies this PrecisionContext and gives it a particular
     /// precision value.</summary>
-    /// <returns>A PrecisionContext object.</returns>
     /// <param name='precision'>Desired precision. 0 means unlimited
     /// precision.</param>
+    /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
         throw new ArgumentException("precision (" + Convert.ToString((int)precision, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
@@ -437,10 +434,10 @@ namespace PeterO {
 
     /// <summary>Copies this PrecisionContext and gives it a particular
     /// precision value.</summary>
+    /// <param name='bigintPrecision'>A BigInteger object.</param>
     /// <returns>A PrecisionContext object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='bigintPrecision'/> is null.</exception>
-    /// <param name='bigintPrecision'>A BigInteger object.</param>
     public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
       if (bigintPrecision == null) {
         throw new ArgumentNullException("bigintPrecision");
@@ -457,7 +454,7 @@ namespace PeterO {
     /// PrecisionContext.</summary>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext Copy() {
-      PrecisionContext pcnew = new PrecisionContext(
+      var pcnew = new PrecisionContext(
         0,
         this.rounding,
         0,
@@ -479,17 +476,17 @@ namespace PeterO {
 
     /// <summary>Creates a new precision context using the given maximum
     /// number of digits and an unlimited exponent range.</summary>
-    /// <returns>A PrecisionContext object.</returns>
     /// <param name='precision'>Maximum number of digits (precision).</param>
+    /// <returns>A PrecisionContext object.</returns>
     public static PrecisionContext ForPrecision(int precision) {
       return new PrecisionContext(precision, Rounding.HalfUp, 0, 0, false).WithUnlimitedExponents();
     }
 
     /// <summary>Creates a new PrecisionContext object initialized with
     /// unlimited precision and exponent range, and the given rounding mode.</summary>
-    /// <returns>A PrecisionContext object.</returns>
     /// <param name='rounding'>The rounding mode for the new precision
     /// context.</param>
+    /// <returns>A PrecisionContext object.</returns>
     public static PrecisionContext ForRounding(Rounding rounding) {
       return new PrecisionContext(0, rounding, 0, 0, false).WithUnlimitedExponents();
     }
@@ -498,8 +495,8 @@ namespace PeterO {
     /// unlimited and exponent range, and the given rounding mode and maximum
     /// precision.</summary>
     /// <param name='precision'>Maximum number of digits (precision).</param>
-    /// <returns>A PrecisionContext object.</returns>
     /// <param name='rounding'>A Rounding object.</param>
+    /// <returns>A PrecisionContext object.</returns>
     public static PrecisionContext ForPrecisionAndRounding(int precision, Rounding rounding) {
       return new PrecisionContext(precision, rounding, 0, 0, false).WithUnlimitedExponents();
     }

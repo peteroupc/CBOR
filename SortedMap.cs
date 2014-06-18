@@ -113,9 +113,9 @@ namespace PeterO {
       return this.tree.Contains(item);
     }
 
+    /// <summary>Copies this object's elements to another array.</summary>
     /// <param name='array'>An array of KeyValuePair.</param>
     /// <param name='arrayIndex'>Index into the array to copy to.</param>
-    /// <summary>Copies this object's elements to another array.</summary>
     public void CopyTo(KeyValuePair<T1, T2>[] array, int arrayIndex) {
       this.tree.CopyTo(array, arrayIndex);
     }

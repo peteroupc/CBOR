@@ -2068,7 +2068,7 @@ remainder=divrem[1]; }
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-    private static IRadixMath<ExtendedDecimal> math = new TrappableRadixMath<ExtendedDecimal>(
+    private static final IRadixMath<ExtendedDecimal> math = new TrappableRadixMath<ExtendedDecimal>(
       new ExtendedOrSimpleRadixMath<ExtendedDecimal>(new DecimalMathHelper()));
 
     /**
@@ -2648,7 +2648,7 @@ remainder=divrem[1]; }
      */
     public ExtendedDecimal MultiplyAndSubtract(ExtendedDecimal op, ExtendedDecimal subtrahend, PrecisionContext ctx) {
       if (subtrahend == null) {
-        throw new NullPointerException("otherValue");
+        throw new NullPointerException("subtrahend");
       }
       ExtendedDecimal negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {

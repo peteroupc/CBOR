@@ -19,12 +19,12 @@ import com.upokecenter.util.*;
 
     public StringRefs () {
       this.stack = new ArrayList<ArrayList<CBORObject>>();
-      ArrayList<CBORObject> firstItem=new ArrayList<CBORObject>();
+      ArrayList<CBORObject> firstItem = new ArrayList<CBORObject>();
       this.stack.add(firstItem);
     }
 
     public void Push() {
-      ArrayList<CBORObject> firstItem=new ArrayList<CBORObject>();
+      ArrayList<CBORObject> firstItem = new ArrayList<CBORObject>();
       this.stack.add(firstItem);
     }
 

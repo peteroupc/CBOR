@@ -29,7 +29,7 @@ namespace PeterO.Cbor {
       if (smallIndex > Int32.MaxValue) {
         throw new CBORException("Index " + smallIndex + " is bigger than supported");
       }
-      int index = (int)smallIndex;
+      var index = (int)smallIndex;
       if (index >= this.sharedObjects.Count) {
         throw new CBORException("Index " + index + " is not valid");
       }
@@ -43,7 +43,7 @@ namespace PeterO.Cbor {
       if (!bigIndex.canFitInInt()) {
         throw new CBORException("Index " + bigIndex + " is bigger than supported");
       }
-      int index = (int)bigIndex;
+      var index = (int)bigIndex;
       if (index >= this.sharedObjects.Count) {
         throw new CBORException("Index " + index + " is not valid");
       }

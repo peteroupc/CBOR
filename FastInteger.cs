@@ -16,7 +16,7 @@ namespace PeterO {
       private int wordCount;
 
       public static MutableNumber FromBigInteger(BigInteger bigintVal) {
-        MutableNumber mnum = new MutableNumber(0);
+        var mnum = new MutableNumber(0);
         if (bigintVal.Sign < 0) {
           throw new ArgumentException("bigintVal's sign (" + Convert.ToString((int)bigintVal.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
         }
@@ -97,7 +97,7 @@ namespace PeterO {
       }
 
       public MutableNumber Copy() {
-        MutableNumber mbi = new MutableNumber(0);
+        var mbi = new MutableNumber(0);
         if (this.wordCount > mbi.data.Length) {
           mbi.data = new int[this.wordCount];
         }
@@ -108,8 +108,9 @@ namespace PeterO {
 
     /// <summary>Multiplies this instance by the value of a 32-bit signed
     /// integer.</summary>
-    /// <returns>The product of the two objects.</returns>
+    /// <summary>Multiplies this instance by the value of a Int32 object.</summary>
     /// <param name='multiplicand'>A 32-bit signed integer.</param>
+    /// <returns>The product of the two objects.</returns>
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
           throw new ArgumentException("multiplicand (" + Convert.ToString((int)multiplicand, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
@@ -227,9 +228,10 @@ namespace PeterO {
       }
 
     /// <summary>Compares a 32-bit signed integer with this instance.</summary>
+    /// <summary>Compares a Int32 object with this instance.</summary>
+    /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
-    /// <param name='val'>A 32-bit signed integer.</param>
       public int CompareToInt(int val) {
         if (val < 0 || this.wordCount > 1) {
           return 1;
@@ -246,13 +248,14 @@ namespace PeterO {
       }
 
     /// <summary>Subtracts a 32-bit signed integer from this instance.</summary>
-    /// <returns>The difference of the two objects.</returns>
     /// <param name='other'>A 32-bit signed integer.</param>
+    /// <returns>The difference of the two objects.</returns>
       public MutableNumber SubtractInt(
         int other) {
         if (other < 0) {
           throw new ArgumentException("other (" + Convert.ToString((int)other, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-        } else if (other != 0) {
+        }
+      if (other != 0) {
           unchecked {
             // Ensure a length of at least 1
             if (this.wordCount == 0) {
@@ -289,8 +292,9 @@ namespace PeterO {
       }
 
     /// <summary>Subtracts a MutableNumber object from this instance.</summary>
-    /// <returns>The difference of the two objects.</returns>
+    /// <summary>Subtracts a MutableNumber object from this instance.</summary>
     /// <param name='other'>A MutableNumber object.</param>
+    /// <returns>The difference of the two objects.</returns>
       public MutableNumber Subtract(
         MutableNumber other) {
         unchecked {
@@ -331,9 +335,10 @@ namespace PeterO {
       }
 
     /// <summary>Compares a MutableNumber object with this instance.</summary>
+    /// <summary>Compares a MutableNumber object with this instance.</summary>
+    /// <param name='other'>A MutableNumber object.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
-    /// <param name='other'>A MutableNumber object.</param>
       public int CompareTo(MutableNumber other) {
         if (this.wordCount != other.wordCount) {
           return (this.wordCount < other.wordCount) ? -1 : 1;
@@ -355,8 +360,8 @@ namespace PeterO {
       }
 
     /// <summary>Adds a 32-bit signed integer to this instance.</summary>
-    /// <returns>This instance.</returns>
     /// <param name='augend'>A 32-bit signed integer.</param>
+    /// <returns>This instance.</returns>
       public MutableNumber Add(int augend) {
         if (augend < 0) {
           throw new ArgumentException("augend (" + Convert.ToString((int)augend, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
@@ -414,7 +419,7 @@ namespace PeterO {
     }
 
     public static FastInteger Copy(FastInteger value) {
-      FastInteger fi = new FastInteger(value.smallValue);
+      var fi = new FastInteger(value.smallValue);
       fi.integerMode = value.integerMode;
       fi.largeValue = value.largeValue;
       fi.mnum = (value.mnum == null || value.integerMode != 1) ? null : value.mnum.Copy();
@@ -425,12 +430,12 @@ namespace PeterO {
       if (bigintVal.canFitInInt()) {
         return new FastInteger(bigintVal.intValue());
       } else if (bigintVal.Sign > 0) {
-        FastInteger fi = new FastInteger(0);
+        var fi = new FastInteger(0);
         fi.integerMode = 1;
         fi.mnum = MutableNumber.FromBigInteger(bigintVal);
         return fi;
       } else {
-        FastInteger fi = new FastInteger(0);
+        var fi = new FastInteger(0);
         fi.integerMode = 2;
         fi.largeValue = bigintVal;
         return fi;
@@ -451,9 +456,10 @@ namespace PeterO {
     }
 
     /// <summary>Compares a FastInteger object with this instance.</summary>
+    /// <summary>Compares a FastInteger object with this instance.</summary>
+    /// <param name='val'>A FastInteger object.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
-    /// <param name='val'>A FastInteger object.</param>
     public int CompareTo(FastInteger val) {
       switch ((this.integerMode << 2) | val.integerMode) {
           case (0 << 2) | 0: {
@@ -525,7 +531,7 @@ namespace PeterO {
             count = small / divisor.smallValue;
             this.mnum.SetInt(small % divisor.smallValue);
           } else {
-            MutableNumber dmnum = new MutableNumber(divisor.smallValue);
+            var dmnum = new MutableNumber(divisor.smallValue);
             while (this.mnum.CompareTo(dmnum) >= 0) {
               this.mnum.Subtract(dmnum);
               ++count;
@@ -535,7 +541,7 @@ namespace PeterO {
         } else {
           BigInteger bigrem;
           BigInteger bigquo = BigInteger.DivRem(this.AsBigInteger(), divisor.AsBigInteger(), out bigrem);
-          int smallquo = (int)bigquo;
+          var smallquo = (int)bigquo;
           this.integerMode = 2;
           this.largeValue = bigrem;
           return smallquo;
@@ -543,7 +549,7 @@ namespace PeterO {
       } else {
         BigInteger bigrem;
         BigInteger bigquo = BigInteger.DivRem(this.AsBigInteger(), divisor.AsBigInteger(), out bigrem);
-        int smallquo = (int)bigquo;
+        var smallquo = (int)bigquo;
         this.integerMode = 2;
         this.largeValue = bigrem;
         return smallquo;
@@ -870,10 +876,11 @@ namespace PeterO {
     }
 
     /// <summary>Divides this instance by the value of a 32-bit signed integer.</summary>
+    /// <summary>Divides this instance by the value of a Int32 object.</summary>
+    /// <param name='divisor'>A 32-bit signed integer.</param>
     /// <returns>The quotient of the two objects.</returns>
     /// <exception cref='System.DivideByZeroException'>Attempted
     /// to divide by zero.</exception>
-    /// <param name='divisor'>A 32-bit signed integer.</param>
     public FastInteger Divide(int divisor) {
       if (divisor != 0) {
         switch (this.integerMode) {
@@ -930,8 +937,8 @@ namespace PeterO {
     }
 
     /// <summary>Adds a 32-bit signed integer to this instance.</summary>
-    /// <returns>This instance.</returns>
     /// <param name='val'>A 32-bit signed integer.</param>
+    /// <returns>This instance.</returns>
     public FastInteger AddInt(int val) {
       BigInteger valValue;
       switch (this.integerMode) {
@@ -1036,9 +1043,10 @@ namespace PeterO {
     }
 
     /// <summary>Compares a 32-bit signed integer with this instance.</summary>
+    /// <summary>Compares a Int32 object with this instance.</summary>
+    /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
-    /// <param name='val'>A 32-bit signed integer.</param>
     public int CompareToInt(int val) {
       switch (this.integerMode) {
         case 0:

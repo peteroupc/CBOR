@@ -809,9 +809,9 @@ Calculates the remainder when a BigInteger raised to a certain power is divided 
 
 <b>Returns:</b>
 
-The value (  <i>bigintValue</i>
+The value ( <i>bigintValue</i>
  ^  <i>pow</i>
- )%  <i>mod</i>
+)%  <i>mod</i>
  .
 
 <b>Exceptions:</b>

@@ -16,6 +16,7 @@ import java.util.UUID;
   {
     /**
      * Not documented yet.
+     *
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter GetTypeFilter() {
@@ -23,9 +24,9 @@ import java.util.UUID;
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Not documented yet.
-     * @param obj A CBORObject object. (2).
-     * @return A CBORObject object.
      */
     public CBORObject ValidateObject(CBORObject obj) {
       if (obj.getType() != CBORType.ByteString) {
@@ -42,6 +43,12 @@ import java.util.UUID;
       CBORObject.AddConverter(UUID.class, new CBORTag37());
     }
     
+    /**
+     * <p>ToCBORObject.</p>
+     *
+     * @param obj a {@link java.util.UUID} object.
+     * @return a {@link com.upokecenter.cbor.CBORObject} object.
+     */
     public CBORObject ToCBORObject(UUID obj)
     {
       byte[] bytes2=new byte[16];

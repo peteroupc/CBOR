@@ -48,7 +48,7 @@ namespace PeterO.Cbor {
     }
 
     public long AsInt64(object obj) {
-      double fltItem = (double)obj;
+      var fltItem = (double)obj;
       if (Double.IsNaN(fltItem)) {
         throw new OverflowException("This object's value is out of range");
       }
@@ -60,11 +60,11 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInSingle(object obj) {
-      double fltItem = (double)obj;
+      var fltItem = (double)obj;
       if (Double.IsNaN(fltItem)) {
         return true;
       }
-      float sing = (float)fltItem;
+      var sing = (float)fltItem;
       return (double)sing == fltItem;
     }
 
@@ -81,7 +81,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt64(object obj) {
-      double fltItem = (double)obj;
+      var fltItem = (double)obj;
       if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
         return false;
       }
@@ -90,7 +90,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
-      double fltItem = (double)obj;
+      var fltItem = (double)obj;
       if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
         return false;
       }
@@ -99,13 +99,13 @@ namespace PeterO.Cbor {
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
-      double fltItem = (double)obj;
+      var fltItem = (double)obj;
       if (Double.IsNaN(fltItem)) {
         throw new OverflowException("This object's value is out of range");
       }
       fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
       if (fltItem >= minValue && fltItem <= maxValue) {
-        int ret = (int)fltItem;
+        var ret = (int)fltItem;
         return ret;
       }
       throw new OverflowException("This object's value is out of range");
@@ -116,7 +116,7 @@ namespace PeterO.Cbor {
     }
 
     public int Sign(object obj) {
-      double flt = (double)obj;
+      var flt = (double)obj;
       if (Double.IsNaN(flt)) {
         return 2;
       }
@@ -124,7 +124,7 @@ namespace PeterO.Cbor {
     }
 
     public bool IsIntegral(object obj) {
-      double fltItem = (double)obj;
+      var fltItem = (double)obj;
       if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
         return false;
       }
@@ -133,12 +133,12 @@ namespace PeterO.Cbor {
     }
 
     public object Negate(object obj) {
-      double val = (double)obj;
+      var val = (double)obj;
       return -val;
     }
 
     public object Abs(object obj) {
-      double val = (double)obj;
+      var val = (double)obj;
       return (val < 0) ? -val : obj;
     }
 

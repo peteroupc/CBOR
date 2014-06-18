@@ -48,7 +48,7 @@ namespace PeterO.Cbor {
     }
 
     public long AsInt64(object obj) {
-      BigInteger bi = (BigInteger)obj;
+      var bi = (BigInteger)obj;
       if (bi.CompareTo(CBORObject.Int64MaxValue) > 0 ||
           bi.CompareTo(CBORObject.Int64MinValue) < 0) {
         throw new OverflowException("This object's value is out of range");
@@ -57,26 +57,26 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInSingle(object obj) {
-      BigInteger bigintItem = (BigInteger)obj;
+      var bigintItem = (BigInteger)obj;
       ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
       ExtendedFloat ef2 = ExtendedFloat.FromSingle(ef.ToSingle());
       return ef.CompareTo(ef2) == 0;
     }
 
     public bool CanFitInDouble(object obj) {
-      BigInteger bigintItem = (BigInteger)obj;
+      var bigintItem = (BigInteger)obj;
       ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
       ExtendedFloat ef2 = ExtendedFloat.FromDouble(ef.ToDouble());
       return ef.CompareTo(ef2) == 0;
     }
 
     public bool CanFitInInt32(object obj) {
-      BigInteger bi = (BigInteger)obj;
+      var bi = (BigInteger)obj;
       return bi.canFitInInt();
     }
 
     public bool CanFitInInt64(object obj) {
-      BigInteger bi = (BigInteger)obj;
+      var bi = (BigInteger)obj;
       return bi.bitLength() <= 63;
     }
 
@@ -101,9 +101,9 @@ namespace PeterO.Cbor {
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
-      BigInteger bi = (BigInteger)obj;
+      var bi = (BigInteger)obj;
       if (bi.canFitInInt()) {
-        int ret = (int)bi;
+        var ret = (int)bi;
         if (ret >= minValue && ret <= maxValue) {
           return ret;
         }
@@ -112,7 +112,7 @@ namespace PeterO.Cbor {
     }
 
     public object Negate(object obj) {
-      BigInteger bigobj = (BigInteger)obj;
+      var bigobj = (BigInteger)obj;
       bigobj = -(BigInteger)bigobj;
       return bigobj;
     }

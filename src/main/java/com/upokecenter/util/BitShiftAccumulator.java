@@ -185,7 +185,7 @@ at: http://upokecenter.com/d/
             // the last one is set
             this.bitsAfterLeftmost |= 1;
             this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
-  } else if (lowestSetBit > bs - 1) {
+          } else if (lowestSetBit > bs - 1) {
             // Means all discarded bits are zero
             this.bitLeftmost = 0;
           } else {
@@ -210,9 +210,8 @@ at: http://upokecenter.com/d/
         for (int i = SmallBitLength - 1; i >= 0; --i) {
           if ((this.shiftedSmall & (1 << i)) != 0) {
             break;
-          } else {
-            --kb;
           }
+          --kb;
         }
         // Make sure bit length is 1 if value is 0
         if (kb == 0) {
@@ -221,10 +220,7 @@ at: http://upokecenter.com/d/
         // System.out.println("{0:X8} kbl=" + (kb));
         return new FastInteger(kb);
       } else {
-        if (this.shiftedBigInt.signum()==0) {
-          return new FastInteger(1);
-        }
-        return new FastInteger(this.shiftedBigInt.bitLength());
+        return new FastInteger(this.shiftedBigInt.signum()==0 ? 1 : this.shiftedBigInt.bitLength());
       }
     }
 
@@ -274,7 +270,7 @@ at: http://upokecenter.com/d/
             // the last one is set
             this.bitsAfterLeftmost |= 1;
             this.bitLeftmost = this.shiftedBigInt.testBit(bs - 1) ? 1 : 0;
-  } else if (lowestSetBit > bs - 1) {
+          } else if (lowestSetBit > bs - 1) {
             // Means all discarded bits are zero
             this.bitLeftmost = 0;
           } else {

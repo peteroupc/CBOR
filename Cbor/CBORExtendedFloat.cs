@@ -12,52 +12,52 @@ namespace PeterO.Cbor {
   internal class CBORExtendedFloat : ICBORNumber
   {
     public bool IsPositiveInfinity(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       return ef.IsPositiveInfinity();
     }
 
     public bool IsInfinity(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       return ef.IsInfinity();
     }
 
     public bool IsNegativeInfinity(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       return ef.IsNegativeInfinity();
     }
 
     public bool IsNaN(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       return ef.IsNaN();
     }
 
     public double AsDouble(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       return ef.ToDouble();
     }
 
     public ExtendedDecimal AsExtendedDecimal(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       return ef.ToExtendedDecimal();
     }
 
     public ExtendedFloat AsExtendedFloat(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       return ef;
     }
 
     public float AsSingle(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       return ef.ToSingle();
     }
 
     public BigInteger AsBigInteger(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       return ef.ToBigInteger();
     }
 
     public long AsInt64(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       if (this.CanTruncatedIntFitInInt64(obj)) {
         BigInteger bi = ef.ToBigInteger();
         return (long)bi;
@@ -66,7 +66,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInSingle(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       if (!ef.IsFinite) {
         return true;
       }
@@ -74,7 +74,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInDouble(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       if (!ef.IsFinite) {
         return true;
       }
@@ -90,7 +90,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt64(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       if (!ef.IsFinite) {
         return false;
       }
@@ -105,7 +105,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       if (!ef.IsFinite) {
         return false;
       }
@@ -120,12 +120,12 @@ namespace PeterO.Cbor {
     }
 
     public bool IsZero(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       return ef.IsZero;
     }
 
     public int Sign(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       if (ef.IsNaN()) {
         return 2;
       }
@@ -133,7 +133,7 @@ namespace PeterO.Cbor {
     }
 
     public bool IsIntegral(object obj) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       if (!ef.IsFinite) {
         return false;
       }
@@ -145,10 +145,10 @@ namespace PeterO.Cbor {
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
-      ExtendedFloat ef = (ExtendedFloat)obj;
+      var ef = (ExtendedFloat)obj;
       if (this.CanTruncatedIntFitInInt32(obj)) {
         BigInteger bi = ef.ToBigInteger();
-        int ret = (int)bi;
+        var ret = (int)bi;
         if (ret >= minValue && ret <= maxValue) {
           return ret;
         }
@@ -157,12 +157,12 @@ namespace PeterO.Cbor {
     }
 
     public object Negate(object obj) {
-      ExtendedFloat ed = (ExtendedFloat)obj;
+      var ed = (ExtendedFloat)obj;
       return ed.Negate();
     }
 
     public object Abs(object obj) {
-      ExtendedFloat ed = (ExtendedFloat)obj;
+      var ed = (ExtendedFloat)obj;
       return ed.Abs();
     }
 

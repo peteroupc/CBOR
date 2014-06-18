@@ -15,7 +15,7 @@ using PeterO.Cbor;
 
 namespace Test {
     /// <summary>Contains CBOR tests.</summary>
-    /// <returns/><param name='r'>A FastRandom object.</param>
+    /// <returns/>
   [TestClass]
   public class CBORTest {
     private static void TestExtendedFloatDoubleCore(double d, string s) {
@@ -104,7 +104,7 @@ namespace Test {
 
     private static CBORObject RandomCBORTextString(FastRandom rand) {
       int length = rand.NextValue(0x2000);
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       for (int i = 0; i < length; ++i) {
         int x = rand.NextValue(100);
         if (x < 95) {
@@ -341,7 +341,7 @@ namespace Test {
 
     public static String RandomBigIntString(FastRandom r) {
       int count = r.NextValue(50) + 1;
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       if (r.NextValue(2) == 0) {
         sb.Append('-');
       }
@@ -357,7 +357,7 @@ namespace Test {
 
     public static CBORObject RandomSmallIntegral(FastRandom r) {
       int count = r.NextValue(20) + 1;
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       if (r.NextValue(2) == 0) {
         sb.Append('-');
       }
@@ -373,7 +373,7 @@ namespace Test {
 
     public static String RandomDecimalString(FastRandom r) {
       int count = r.NextValue(20) + 1;
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       if (r.NextValue(2) == 0) {
         sb.Append('-');
       }
@@ -412,7 +412,7 @@ namespace Test {
 
     [TestMethod]
     public void TestAdd() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
@@ -431,14 +431,14 @@ namespace Test {
 
     [TestMethod]
     public void TestDivide() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
         CBORObject o1 = CBORObject.FromObject(RandomBigInteger(r));
         CBORObject o2 = CBORObject.FromObject(RandomBigInteger(r));
         if (o2.IsZero) {
           continue;
         }
-        ExtendedRational er = new ExtendedRational(o1.AsBigInteger(), o2.AsBigInteger());
+        var er = new ExtendedRational(o1.AsBigInteger(), o2.AsBigInteger());
         if (er.CompareTo(CBORObject.Divide(o1, o2).AsExtendedRational()) != 0) {
           Assert.Fail(ObjectMessages(o1, o2, "Results don't match"));
         }
@@ -454,7 +454,7 @@ namespace Test {
     }
     [TestMethod]
     public void TestMultiply() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
@@ -473,7 +473,7 @@ namespace Test {
 
     [TestMethod]
     public void TestSubtract() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
         CBORObject o1 = RandomNumber(r);
         CBORObject o2 = RandomNumber(r);
@@ -529,7 +529,7 @@ namespace Test {
     }
 
     public static string ToByteArrayString(byte[] bytes) {
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       string hex = "0123456789ABCDEF";
       sb.Append("new byte[] { ");
       for (int i = 0; i < bytes.Length; ++i) {
@@ -676,7 +676,7 @@ namespace Test {
 
     [TestMethod]
     public void TestFloatDecimalRoundTrip() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 5000; ++i) {
         ExtendedFloat ef = RandomExtendedFloat(r);
         ExtendedDecimal ed = ef.ToExtendedDecimal();
@@ -695,7 +695,7 @@ namespace Test {
     [TestMethod]
     // [Timeout(10000)]
     public void TestCompare() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       // string badstr = null;
       int count = 500;
       for (int i = 0; i < count; ++i) {
@@ -833,7 +833,7 @@ namespace Test {
 
     [TestMethod]
     public void TestParseDecimalStrings() {
-      FastRandom rand = new FastRandom();
+      var rand = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
         string r = RandomDecimalString(rand);
         TestDecimalString(r);
@@ -919,18 +919,10 @@ namespace Test {
         ExtendedRational.NegativeInfinity,
         ExtendedRational.FromExtendedFloat(ExtendedFloat.NegativeInfinity));
 
-      if (Double.PositiveInfinity != ExtendedRational.PositiveInfinity.ToDouble()) {
-        Assert.Fail();
-      }
-      if (Double.NegativeInfinity != ExtendedRational.NegativeInfinity.ToDouble()) {
-        Assert.Fail();
-      }
-      if (Single.PositiveInfinity != ExtendedRational.PositiveInfinity.ToSingle()) {
-        Assert.Fail();
-      }
-      if (Single.NegativeInfinity != ExtendedRational.NegativeInfinity.ToSingle()) {
-        Assert.Fail();
-      }
+      Assert.IsTrue(Double.IsPositiveInfinity(ExtendedRational.PositiveInfinity.ToDouble()));
+      Assert.IsTrue(Double.IsNegativeInfinity(ExtendedRational.NegativeInfinity.ToDouble()));
+      Assert.IsTrue(Single.IsPositiveInfinity(ExtendedRational.PositiveInfinity.ToSingle()));
+      Assert.IsTrue(Single.IsNegativeInfinity(ExtendedRational.NegativeInfinity.ToSingle()));
       try {
         ExtendedDecimal.PositiveInfinity.ToBigInteger();
         Assert.Fail("Should have failed");
@@ -1184,7 +1176,7 @@ namespace Test {
 
     [TestMethod]
     public void TestReadWriteInt() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       try {
         for (int i = 0; i < 1000; ++i) {
           int val = unchecked((int)RandomInt64(r));
@@ -1312,7 +1304,7 @@ namespace Test {
 
     [TestMethod]
     public void TestRandomNonsense() {
-      FastRandom rand = new FastRandom();
+      var rand = new FastRandom();
       for (int i = 0; i < 200; ++i) {
         byte[] array = new byte[rand.NextValue(1000000) + 1];
         for (int j = 0; j < array.Length; ++j) {
@@ -1376,7 +1368,7 @@ namespace Test {
     [TestMethod]
     [Timeout(20000)]
     public void TestRandomSlightlyModified() {
-      FastRandom rand = new FastRandom();
+      var rand = new FastRandom();
       // Test slightly modified objects
       for (int i = 0; i < 200; ++i) {
         CBORObject originalObject = RandomCBORObject(rand);
@@ -1424,7 +1416,7 @@ namespace Test {
     [TestMethod]
     // [Timeout(20000)]
     public void TestRandomData() {
-      FastRandom rand = new FastRandom();
+      var rand = new FastRandom();
       CBORObject obj;
       int count = 1000;
       for (int i = 0; i < count; ++i) {
@@ -1436,7 +1428,7 @@ namespace Test {
 
     [TestMethod]
     public void TestExtendedFloatSingle() {
-      FastRandom rand = new FastRandom();
+      var rand = new FastRandom();
       for (int i = 0; i < 255; ++i) {  // Try a random float with a given exponent
         TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
         TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
@@ -1453,7 +1445,7 @@ namespace Test {
       TestExtendedFloatDoubleCore(3.5, "3.5");
       TestExtendedFloatDoubleCore((double)Int32.MinValue, "-2147483648");
       TestExtendedFloatDoubleCore((double)Int64.MinValue, "-9223372036854775808");
-      FastRandom rand = new FastRandom();
+      var rand = new FastRandom();
       for (int i = 0; i < 2047; ++i) {  // Try a random double with a given exponent
         TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
         TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
@@ -1975,7 +1967,7 @@ namespace Test {
       int noReplaceRet,
       string noReplaceString) {
       try {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         int ret = 0;
         using (MemoryStream ms = new MemoryStream(bytes)) {
           ret = DataUtilities.ReadUtf8(ms, length, builder, true);
@@ -2398,7 +2390,7 @@ namespace Test {
     }
 
     private static String Repeat(char c, int num) {
-      System.Text.StringBuilder sb = new System.Text.StringBuilder();
+      var sb = new System.Text.StringBuilder();
       for (int i = 0; i < num; ++i) {
         sb.Append(c);
       }
@@ -2406,7 +2398,7 @@ namespace Test {
     }
 
     private static String Repeat(String c, int num) {
-      System.Text.StringBuilder sb = new System.Text.StringBuilder();
+      var sb = new System.Text.StringBuilder();
       for (int i = 0; i < num; ++i) {
         sb.Append(c);
       }
@@ -6173,7 +6165,7 @@ namespace Test {
 
     [TestMethod]
     public void TestCanFitIn() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 5000; ++i) {
         CBORObject ed = RandomNumber(r);
         ExtendedDecimal ed2;
@@ -6474,9 +6466,9 @@ namespace Test {
 
     [TestMethod]
     public void TestBigIntAddSub() {
-      BigInteger posSmall = (BigInteger)5;
+      var posSmall = (BigInteger)5;
       BigInteger negSmall = -(BigInteger)5;
-      BigInteger posLarge = (BigInteger)5555555;
+      var posLarge = (BigInteger)5555555;
       BigInteger negLarge = -(BigInteger)5555555;
       this.AssertAdd(posSmall, posSmall, "10");
       this.AssertAdd(posSmall, negSmall, "0");
@@ -6492,11 +6484,11 @@ namespace Test {
 
     [TestMethod]
     public void TestBigInteger() {
-      BigInteger bi = (BigInteger)3;
+      var bi = (BigInteger)3;
       this.AssertBigIntString("3", bi);
-      BigInteger negseven = (BigInteger)(-7);
+      var negseven = (BigInteger)(-7);
       this.AssertBigIntString("-7", negseven);
-      BigInteger other = (BigInteger)(-898989);
+      var other = (BigInteger)(-898989);
       this.AssertBigIntString("-898989", other);
       other = (BigInteger)898989;
       this.AssertBigIntString("898989", other);

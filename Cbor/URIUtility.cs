@@ -104,6 +104,8 @@ namespace PeterO.Cbor {
       }
     }
 
+    /// <return>a string possibly containing escaped characters, or null
+    /// if s is null.</return>
     /// <summary>Escapes characters that cannot appear in URIs or IRIs.
     /// The function is idempotent; that is, calling the function again on
     /// the result with the same mode doesn't change the result.</summary>
@@ -124,8 +126,6 @@ namespace PeterO.Cbor {
     /// - Similar to 0, except that illegal percent encodings are also escaped.</item>
     /// </list>
     ///  </param>
-    /// <return>a string possibly containing escaped characters, or null
-    /// if s is null.</return>
     /// <returns>A string object.</returns>
     public static string escapeURI(string s, int mode) {
       if (s == null) {
@@ -142,7 +142,7 @@ namespace PeterO.Cbor {
       }
       int index = 0;
       int valueSLength = s.Length;
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       while (index < valueSLength) {
         int c = s[index];
         if ((c & 0xfc00) == 0xd800 && index + 1 < valueSLength &&
@@ -232,9 +232,9 @@ namespace PeterO.Cbor {
     ///  The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
+    /// <param name='refValue'>A string object.</param>
     /// <returns>True if the string is a valid IRI with a scheme component;
     /// otherwise, false.</returns>
-    /// <param name='refValue'>A string object.</param>
     public static bool hasScheme(string refValue) {
       int[] segments = (refValue == null) ? null : splitIRI(refValue, 0, refValue.Length, ParseMode.IRIStrict);
       return segments != null && segments[0] >= 0;
@@ -249,9 +249,9 @@ namespace PeterO.Cbor {
     ///  The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
+    /// <param name='refValue'>A string object.</param>
     /// <returns>True if the string is a valid URI with a scheme component;
     /// otherwise, false.</returns>
-    /// <param name='refValue'>A string object.</param>
     public static bool hasSchemeForURI(string refValue) {
       int[] segments = (refValue == null) ? null : splitIRI(refValue, 0, refValue.Length, ParseMode.URIStrict);
       return segments != null && segments[0] >= 0;
@@ -325,11 +325,11 @@ namespace PeterO.Cbor {
 
     /// <summary>Determines whether the substring is a valid CURIE reference
     /// under RDFA 1.1. (The CURIE reference is the part after the colon.).</summary>
-    /// <returns>True if the substring is a valid CURIE reference under RDFA
-    /// 1; otherwise, false.</returns>
     /// <param name='s'>A string object.</param>
     /// <param name='offset'>A 32-bit signed integer.</param>
     /// <param name='length'>A 32-bit signed integer. (2).</param>
+    /// <returns>True if the substring is a valid CURIE reference under RDFA
+    /// 1; otherwise, false.</returns>
     public static bool isValidCurieReference(string s, int offset, int length) {
       if (s == null) {
         return false;
@@ -420,7 +420,7 @@ namespace PeterO.Cbor {
       if (path.IndexOf("/.", StringComparison.Ordinal) < 0 && path.IndexOf("./", StringComparison.Ordinal) < 0) {
         return path;
       }
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       int index = 0;
       while (index < len) {
         char c = path[index];
@@ -791,21 +791,21 @@ tmpc,
     }
 
     /// <summary>Resolves a URI or IRI relative to another URI or IRI.</summary>
-    /// <returns>A string object.</returns>
     /// <param name='refValue'>A string object. (2).</param>
     /// <param name='baseURI'>A string object. (3).</param>
+    /// <returns>A string object.</returns>
     public static string relativeResolve(string refValue, string baseURI) {
       return relativeResolve(refValue, baseURI, ParseMode.IRIStrict);
     }
 
-    /// <summary>Resolves a URI or IRI relative to another URI or IRI.</summary>
     /// <i>refValue</i>
     /// <i>base</i>
-    /// <returns>The resolved IRI, or null if refValue is null or is not a valid
-    /// IRI. If base is null or is not a valid IRI, returns refValue.</returns>
+    /// <summary>Resolves a URI or IRI relative to another URI or IRI.</summary>
     /// <param name='refValue'>A string object.</param>
     /// <param name='baseURI'>A string object. (2).</param>
     /// <param name='parseMode'>A ParseMode object.</param>
+    /// <returns>The resolved IRI, or null if refValue is null or is not a valid
+    /// IRI. If base is null or is not a valid IRI, returns refValue.</returns>
     public static string relativeResolve(string refValue, string baseURI, ParseMode parseMode) {
       int[] segments = (refValue == null) ? null : splitIRI(refValue, 0, refValue.Length, parseMode);
       if (segments == null) {
@@ -815,7 +815,7 @@ tmpc,
       if (segmentsBase == null) {
         return refValue;
       }
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       if (segments[0] >= 0) {  // scheme present
         appendScheme(builder, refValue, segments);
         appendAuthority(builder, refValue, segments);
@@ -844,7 +844,7 @@ tmpc,
         if (segments[4] < segments[5] && refValue[segments[4]] == '/') {
           appendNormalizedPath(builder, refValue, segments);
         } else {
-          StringBuilder merged = new StringBuilder();
+          var merged = new StringBuilder();
           if (segmentsBase[2] >= 0 && segmentsBase[4] == segmentsBase[5]) {
             merged.Append('/');
             appendPath(merged, refValue, segments);
@@ -871,8 +871,8 @@ tmpc,
     /// is absent, both indices in that pair will be -1. If the string is null
     /// or is not a valid IRI, returns null.</returns>
     ///  </summary>
-    /// <returns>An array of 32-bit unsigned integers.</returns>
     /// <param name='s'>A string object.</param>
+    /// <returns>An array of 32-bit unsigned integers.</returns>
     public static int[] splitIRI(string s) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict);
     }
@@ -881,16 +881,16 @@ tmpc,
     /// Resource Identifier (IRI) under RFC3987. If the IRI is syntactically
     /// valid, splits the string into its components and returns an array
     /// containing the indices into the components.</summary>
+    /// <param name='s'>A string object.</param>
+    /// <param name='offset'>A 32-bit signed integer.</param>
+    /// <param name='length'>A 32-bit signed integer. (2).</param>
+    /// <param name='parseMode'>A ParseMode object.</param>
     /// <returns>If the string is a valid IRI, returns an array of 10 integers.
     /// Each of the five pairs corresponds to the start and end index of the
     /// IRI's scheme, authority, path, query, or fragment component, respectively.
     /// If a component is absent, both indices in that pair will be -1 (an index
     /// won't be less than 0 in any other case). If the string is null or is not
     /// a valid IRI, returns null.</returns>
-    /// <param name='s'>A string object.</param>
-    /// <param name='offset'>A 32-bit signed integer.</param>
-    /// <param name='length'>A 32-bit signed integer. (2).</param>
-    /// <param name='parseMode'>A ParseMode object.</param>
     public static int[] splitIRI(
 string s,
 int offset,
@@ -1120,14 +1120,14 @@ ParseMode parseMode) {
     /// reference under RFC3987. If the IRI is syntactically valid, splits
     /// the string into its components and returns an array containing the
     /// indices into the components.</summary>
+    /// <param name='s'>A string object.</param>
+    /// <param name='parseMode'>A ParseMode object.</param>
     /// <returns>If the string is a valid IRI reference, returns an array
     /// of 10 integers. Each of the five pairs corresponds to the start and
     /// end index of the IRI's scheme, authority, path, query, or fragment
     /// component, respectively. If a component is absent, both indices
     /// in that pair will be -1. If the string is null or is not a valid IRI, returns
     /// null.</returns>
-    /// <param name='s'>A string object.</param>
-    /// <param name='parseMode'>A ParseMode object.</param>
     public static int[] splitIRI(string s, ParseMode parseMode) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, parseMode);
     }

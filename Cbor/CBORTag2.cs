@@ -73,7 +73,7 @@ namespace PeterO.Cbor {
           bytes[bytes.Length - 1] = 0;
         }
       }
-      BigInteger bi = new BigInteger((byte[])bytes);
+      var bi = new BigInteger((byte[])bytes);
       // NOTE: Here, any tags are discarded; when called from
       // the Read method, "o" will have no tags anyway (beyond tag 2),
       // and when called from FromObjectAndTag, we prefer

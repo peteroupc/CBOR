@@ -1487,9 +1487,7 @@ bigrem=divrem[1]; }
           if ((ctxdiv.getFlags() & PrecisionContext.FlagOverflow) != 0) {
             // Still overflowed
             if (ctx.getHasFlags()) {
-              int newFlags = PrecisionContext.FlagInexact | PrecisionContext.FlagSubnormal |
-                PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
-              ctx.setFlags(ctx.getFlags()|(newFlags));
+              ctx.setFlags(ctx.getFlags()|(BigNumberFlags.UnderflowFlags));
             }
             // Return a "subnormal" zero, with fake extra digits to stimulate
             // rounding
@@ -1658,14 +1656,6 @@ bigrem=divrem[1]; }
         if (mantissa == null) {
           return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
         }
-      } else if (digitCount.compareTo(precision) < 0) {
-        FastInteger diff = FastInteger.Copy(digitCount).Subtract(precision);
-        accum.ShiftRight(diff);
-        BigInteger bigdiff = diff.AsBigInteger();
-        currentExp=currentExp.add(bigdiff);
-        mantissa = accum.getShiftedInt();
-        rounded = true;
-        inexact = (accum.getLastDiscardedDigit() | accum.getOlderDiscardedDigits()) != 0;
       }
       BigInteger[] sr = mantissa.sqrtWithRemainder();
       digitCount = this.helper.CreateShiftAccumulator(sr[0]).GetDigitLength();

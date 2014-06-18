@@ -9,7 +9,7 @@ using System;
 using System.Reflection;
 
 namespace PeterO {
-  internal class DebugUtility
+  internal static class DebugUtility
   {
     [System.Diagnostics.Conditional("DEBUG")]
     public static void Log(string str) {

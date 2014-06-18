@@ -79,7 +79,7 @@ namespace PeterO.Cbor {
 
     public static BigInteger BigIntegerFromSingle(float flt) {
       int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt), 0);
-      int fpexponent = (int)((value >> 23) & 0xff);
+      var fpexponent = (int)((value >> 23) & 0xff);
       if (fpexponent == 255) {
         throw new OverflowException("Value is infinity or NaN");
       }
@@ -105,7 +105,7 @@ namespace PeterO.Cbor {
         return (BigInteger)mantissa;
       } else if (fpexponent > 0) {
         // Value is an integer
-        BigInteger bigmantissa = (BigInteger)mantissa;
+        var bigmantissa = (BigInteger)mantissa;
         bigmantissa <<= fpexponent;
         if (neg) {
           bigmantissa = -(BigInteger)bigmantissa;
@@ -131,7 +131,7 @@ namespace PeterO.Cbor {
         0);
       int value0 = unchecked((int)(lvalue & 0xFFFFFFFFL));
       int value1 = unchecked((int)((lvalue >> 32) & 0xFFFFFFFFL));
-      int floatExponent = (int)((value1 >> 20) & 0x7ff);
+      var floatExponent = (int)((value1 >> 20) & 0x7ff);
       bool neg = (value1 >> 31) != 0;
       if (floatExponent == 2047) {
         throw new OverflowException("Value is infinity or NaN");
@@ -162,7 +162,7 @@ namespace PeterO.Cbor {
       bytes[6] = (byte)((value1 >> 16) & 0xff);
       bytes[7] = (byte)((value1 >> 24) & 0xff);
       bytes[8] = (byte)0;
-      BigInteger bigmantissa = new BigInteger((byte[])bytes);
+      var bigmantissa = new BigInteger((byte[])bytes);
       if (floatExponent == 0) {
         if (neg) {
           bigmantissa = -bigmantissa;

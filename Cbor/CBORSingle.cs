@@ -48,7 +48,7 @@ namespace PeterO.Cbor {
     }
 
     public long AsInt64(object obj) {
-      float fltItem = (float)obj;
+      var fltItem = (float)obj;
       if (Single.IsNaN(fltItem)) {
         throw new OverflowException("This object's value is out of range");
       }
@@ -76,7 +76,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt64(object obj) {
-      float fltItem = (float)obj;
+      var fltItem = (float)obj;
       if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
         return false;
       }
@@ -85,7 +85,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
-      float fltItem = (float)obj;
+      var fltItem = (float)obj;
       if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
         return false;
       }
@@ -94,13 +94,13 @@ namespace PeterO.Cbor {
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
-      float fltItem = (float)obj;
+      var fltItem = (float)obj;
       if (Single.IsNaN(fltItem)) {
         throw new OverflowException("This object's value is out of range");
       }
       fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
       if (fltItem >= Int32.MinValue && fltItem <= Int32.MaxValue) {
-        int ret = (int)fltItem;
+        var ret = (int)fltItem;
         return ret;
       }
       throw new OverflowException("This object's value is out of range");
@@ -111,7 +111,7 @@ namespace PeterO.Cbor {
     }
 
     public int Sign(object obj) {
-      float flt = (float)obj;
+      var flt = (float)obj;
       if (Single.IsNaN(flt)) {
         return 2;
       }
@@ -119,7 +119,7 @@ namespace PeterO.Cbor {
     }
 
     public bool IsIntegral(object obj) {
-      float fltItem = (float)obj;
+      var fltItem = (float)obj;
       if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
         return false;
       }
@@ -128,12 +128,12 @@ namespace PeterO.Cbor {
     }
 
     public object Negate(object obj) {
-      float val = (float)obj;
+      var val = (float)obj;
       return -val;
     }
 
     public object Abs(object obj) {
-      float val = (float)obj;
+      var val = (float)obj;
       return (val < 0) ? -val : obj;
     }
 
