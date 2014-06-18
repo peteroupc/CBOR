@@ -501,13 +501,13 @@ namespace Test {
       }
     }
 
-    private static void CompareTestEqual(CBORObject o1, CBORObject o2) {
+    public static void CompareTestEqual(CBORObject o1, CBORObject o2) {
       if (CompareTestReciprocal(o1, o2) != 0) {
         Assert.Fail(ObjectMessages(o1, o2, "Not equal: " + CompareTestReciprocal(o1, o2)));
       }
     }
 
-    private static void CompareTestLess(CBORObject o1, CBORObject o2) {
+    public static void CompareTestLess(CBORObject o1, CBORObject o2) {
       if (CompareTestReciprocal(o1, o2) >= 0) {
         Assert.Fail(ObjectMessages(o1, o2, "Not less: " + CompareTestReciprocal(o1, o2)));
       }

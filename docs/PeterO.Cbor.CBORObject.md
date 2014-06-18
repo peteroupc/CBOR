@@ -290,7 +290,8 @@ A CBOR object corresponding to the data.
 Data is null or empty.
 
  * PeterO.Cbor.CBORException: 
-There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object.
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object, and cases where  <i>data</i>
+is empty.
 
  * System.ArgumentNullException: 
 The parameter <i>data</i>
