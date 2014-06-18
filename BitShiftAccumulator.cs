@@ -6,7 +6,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using System.Text;
 
 namespace PeterO {
   internal sealed class BitShiftAccumulator : IShiftAccumulator
@@ -74,25 +73,15 @@ namespace PeterO {
 
     public BigInteger ShiftedInt
     {
-      get
-      {
-        if (this.isSmall) {
-          return (BigInteger)this.shiftedSmall;
-        } else {
-          return this.shiftedBigInt;
-        }
+      get {
+        return this.isSmall ? ((BigInteger)this.shiftedSmall) : this.shiftedBigInt;
       }
     }
 
     public FastInteger ShiftedIntFast
     {
-      get
-      {
-        if (this.isSmall) {
-          return new FastInteger(this.shiftedSmall);
-        } else {
-          return FastInteger.FromBig(this.shiftedBigInt);
-        }
+      get {
+        return this.isSmall ? (new FastInteger(this.shiftedSmall)) : FastInteger.FromBig(this.shiftedBigInt);
       }
     }
 
@@ -236,9 +225,8 @@ namespace PeterO {
         }
         // Console.WriteLine("{0:X8} kbl=" + (kb));
         return new FastInteger(kb);
-      } else {
-        return new FastInteger(this.shiftedBigInt.IsZero ? 1 : this.shiftedBigInt.bitLength());
       }
+      return new FastInteger(this.shiftedBigInt.IsZero ? 1 : this.shiftedBigInt.bitLength());
     }
 
     private void ShiftBigToBits(int bits) {
@@ -268,9 +256,8 @@ namespace PeterO {
           if (!bitShift.CanFitInInt32()) {
             this.ShiftRight(bitShift);
             return;
-          } else {
-            bs = bitShift.AsInt32();
           }
+          bs = bitShift.AsInt32();
         }
         this.knownBitLength.SetInt(bits);
         this.discardedBitCount.AddInt(bs);
@@ -334,9 +321,8 @@ namespace PeterO {
       for (int i = SmallBitLength - 1; i >= 0; --i) {
         if ((this.shiftedSmall & (1 << i)) != 0) {
           break;
-        } else {
-          --kb;
         }
+        --kb;
       }
       var shift = (int)Math.Min(kb, bits);
       bool shiftingMoreBits = bits > kb;

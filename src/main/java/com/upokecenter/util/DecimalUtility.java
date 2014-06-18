@@ -10,14 +10,14 @@ at: http://upokecenter.com/d/
   final class DecimalUtility {
 private DecimalUtility() {
 }
-    private static BigInteger[] valueBigIntPowersOfTen = new BigInteger[] {
+    private static BigInteger[] valueBigIntPowersOfTen = {
       BigInteger.ONE, BigInteger.TEN, BigInteger.valueOf(100), BigInteger.valueOf(1000), BigInteger.valueOf(10000), BigInteger.valueOf(100000), BigInteger.valueOf(1000000), BigInteger.valueOf(10000000), BigInteger.valueOf(100000000), BigInteger.valueOf(1000000000),
       BigInteger.valueOf(10000000000L), BigInteger.valueOf(100000000000L), BigInteger.valueOf(1000000000000L), BigInteger.valueOf(10000000000000L),
       BigInteger.valueOf(100000000000000L), BigInteger.valueOf(1000000000000000L), BigInteger.valueOf(10000000000000000L),
       BigInteger.valueOf(100000000000000000L), BigInteger.valueOf(1000000000000000000L)
     };
 
-    private static BigInteger[] valueBigIntPowersOfFive = new BigInteger[] {
+    private static BigInteger[] valueBigIntPowersOfFive = {
       BigInteger.ONE, BigInteger.valueOf(5), BigInteger.valueOf(25), BigInteger.valueOf(125), BigInteger.valueOf(625), BigInteger.valueOf(3125), BigInteger.valueOf(15625), BigInteger.valueOf(78125), BigInteger.valueOf(390625),
       BigInteger.valueOf(1953125), BigInteger.valueOf(9765625), BigInteger.valueOf(48828125), BigInteger.valueOf(244140625), BigInteger.valueOf(1220703125),
       BigInteger.valueOf(6103515625L), BigInteger.valueOf(30517578125L), BigInteger.valueOf(152587890625L), BigInteger.valueOf(762939453125L),
@@ -118,18 +118,17 @@ private DecimalUtility() {
           arr[0] = (int)((a0 >> tz) & (0x7fffffff >> (tz - 1))) | (int)carry;
           arr[1] = (a1 >> tz) & (0x7fffffff >> (tz - 1));
           return tz;
-        } else {
-          tz = CountTrailingZeros(a1);
-          if (tz == 32) {
-            arr[0] = 0;
-          } else if (tz > 0) {
-            arr[0] = (a1 >> tz) & (0x7fffffff >> (tz - 1));
-          } else {
-            arr[0] = a1;
-          }
-          arr[1] = 0;
-          return 32 + tz;
         }
+        tz = CountTrailingZeros(a1);
+        if (tz == 32) {
+          arr[0] = 0;
+        } else if (tz > 0) {
+          arr[0] = (a1 >> tz) & (0x7fffffff >> (tz - 1));
+        } else {
+          arr[0] = a1;
+        }
+        arr[1] = 0;
+        return 32 + tz;
       }
     }
 
@@ -188,7 +187,9 @@ private DecimalUtility() {
           for (int i = 0; i < this.size; ++i) {
             if (this.inputs[i].compareTo(bi) <= 0 && (minValue == null || this.inputs[i].compareTo(minValue) >= 0)) {
               // System.out.println("Have cached power (" + inputs[i] + ", " + bi + ")");
-              ret = new BigInteger[] { this.inputs[i], this.outputs[i] };
+              ret = new BigInteger[2];
+              ret[0] = this.inputs[i];
+              ret[1] = this.outputs[i];
               minValue = this.inputs[i];
             }
           }
@@ -307,17 +308,17 @@ private DecimalUtility() {
           bigpow = FindPowerOfFive(intcurexp.AsInt32());
           mantissa=mantissa.multiply(bigpow);
           break;
-        } else if (intcurexp.CompareToInt(9999999) <= 0) {
+        }
+        if (intcurexp.CompareToInt(9999999) <= 0) {
           bigpow = (FindPowerOfFive(1)).pow(intcurexp.AsInt32());
           mantissa=mantissa.multiply(bigpow);
           break;
-        } else {
-          if (bigpow.signum()==0) {
-            bigpow = (FindPowerOfFive(1)).pow(9999999);
-          }
-          mantissa=mantissa.multiply(bigpow);
-          intcurexp.AddInt(-9999999);
         }
+        if (bigpow.signum()==0) {
+          bigpow = (FindPowerOfFive(1)).pow(9999999);
+        }
+        mantissa=mantissa.multiply(bigpow);
+        intcurexp.AddInt(-9999999);
       }
       powerOfFiveCache.AddPower(origdiff, mantissa);
       return mantissa;
@@ -344,20 +345,20 @@ private DecimalUtility() {
           bigpow = FindPowerOfTen(intcurexp.AsInt32());
           mantissa=mantissa.multiply(bigpow);
           break;
-        } else if (intcurexp.CompareToInt(9999999) <= 0) {
+        }
+        if (intcurexp.CompareToInt(9999999) <= 0) {
           int val = intcurexp.AsInt32();
           bigpow = FindPowerOfFive(val);
           bigpow=bigpow.shiftLeft(val);
           mantissa=mantissa.multiply(bigpow);
           break;
-        } else {
-          if (bigpow.signum()==0) {
-            bigpow = FindPowerOfFive(9999999);
-            bigpow=bigpow.shiftLeft(9999999);
-          }
-          mantissa=mantissa.multiply(bigpow);
-          intcurexp.AddInt(-9999999);
         }
+        if (bigpow.signum()==0) {
+          bigpow = FindPowerOfFive(9999999);
+          bigpow=bigpow.shiftLeft(9999999);
+        }
+        mantissa=mantissa.multiply(bigpow);
+        intcurexp.AddInt(-9999999);
       }
       return mantissa;
     }
@@ -391,13 +392,12 @@ private DecimalUtility() {
           ret=ret.multiply(ret);
           powerOfFiveCache.AddPower(origPrecision, ret);
           return ret;
-        } else {
-          ret = valueBigIntPowersOfFive[27];
-          bigpow = valueBigIntPowersOfFive[((int)precision) - 27];
-          ret=ret.multiply(bigpow);
-          powerOfFiveCache.AddPower(origPrecision, ret);
-          return ret;
         }
+        ret = valueBigIntPowersOfFive[27];
+        bigpow = valueBigIntPowersOfFive[((int)precision) - 27];
+        ret=ret.multiply(bigpow);
+        powerOfFiveCache.AddPower(origPrecision, ret);
+        return ret;
       }
       if (precision > 40 && precision <= 94) {
         ret = valueFivePower40;
@@ -436,7 +436,8 @@ private DecimalUtility() {
           }
           first = false;
           break;
-        } else if (precision <= 9999999) {
+        }
+        if (precision <= 9999999) {
           // System.out.println("calcing pow for "+precision);
           bigpow = (valueBigIntPowersOfFive[1]).pow(precision);
           if (precision != startPrecision) {
@@ -450,18 +451,17 @@ private DecimalUtility() {
           }
           first = false;
           break;
-        } else {
-          if (bigpow.signum()==0) {
-            bigpow = FindPowerOfFive(9999999);
-          }
-          if (first) {
-            ret = bigpow;
-          } else {
-            ret=ret.multiply(bigpow);
-          }
-          first = false;
-          precision -= 9999999;
         }
+        if (bigpow.signum()==0) {
+          bigpow = FindPowerOfFive(9999999);
+        }
+        if (first) {
+          ret = bigpow;
+        } else {
+          ret=ret.multiply(bigpow);
+        }
+        first = false;
+        precision -= 9999999;
       }
       powerOfFiveCache.AddPower(origPrecision, ret);
       return ret;
@@ -498,13 +498,12 @@ private DecimalUtility() {
           ret=ret.multiply(ret);
           powerOfTenCache.AddPower(origPrecision, ret);
           return ret;
-        } else {
-          ret = valueBigIntPowersOfTen[18];
-          bigpow = valueBigIntPowersOfTen[((int)precision) - 18];
-          ret=ret.multiply(bigpow);
-          powerOfTenCache.AddPower(origPrecision, ret);
-          return ret;
         }
+        ret = valueBigIntPowersOfTen[18];
+        bigpow = valueBigIntPowersOfTen[((int)precision) - 18];
+        ret=ret.multiply(bigpow);
+        powerOfTenCache.AddPower(origPrecision, ret);
+        return ret;
       }
       BigInteger[] otherPower;
       boolean first = true;
@@ -536,7 +535,8 @@ private DecimalUtility() {
           }
           first = false;
           break;
-        } else if (precision <= 9999999) {
+        }
+        if (precision <= 9999999) {
           // System.out.println("calcing pow for "+precision);
           bigpow = FindPowerOfFive(precision);
           bigpow=bigpow.shiftLeft(precision);
@@ -551,18 +551,17 @@ private DecimalUtility() {
           }
           first = false;
           break;
-        } else {
-          if (bigpow.signum()==0) {
-            bigpow = FindPowerOfTen(9999999);
-          }
-          if (first) {
-            ret = bigpow;
-          } else {
-            ret=ret.multiply(bigpow);
-          }
-          first = false;
-          precision -= 9999999;
         }
+        if (bigpow.signum()==0) {
+          bigpow = FindPowerOfTen(9999999);
+        }
+        if (first) {
+          ret = bigpow;
+        } else {
+          ret=ret.multiply(bigpow);
+        }
+        first = false;
+        precision -= 9999999;
       }
       powerOfTenCache.AddPower(origPrecision, ret);
       return ret;

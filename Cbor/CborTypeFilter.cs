@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written by Peter O. in 2014.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -21,10 +21,6 @@ namespace PeterO.Cbor {
     private bool arrayMinLength;
     private CBORTypeFilter[] elements;
     private BigInteger[] tags;
-
-    /// <summary>Initializes a new instance of the CBORTypeFilter class.</summary>
-    public CBORTypeFilter() {
-    }
 
     private CBORTypeFilter Copy() {
       var filter = new CBORTypeFilter();
@@ -104,7 +100,7 @@ namespace PeterO.Cbor {
       filter.types |= 1 << 6;  // Always include the "tag" major type
       int startIndex = 0;
       if (filter.tags != null) {
-        BigInteger[] newTags = new BigInteger[tags.Length + filter.tags.Length];
+        var newTags = new BigInteger[tags.Length + filter.tags.Length];
         Array.Copy(filter.tags, newTags, filter.tags.Length);
         startIndex = filter.tags.Length;
         filter.tags = newTags;
@@ -128,14 +124,14 @@ namespace PeterO.Cbor {
       }
       for (int i = 0; i < tags.Length; ++i) {
         if (tags[i] == null) {
-          throw new ArgumentNullException("tags[i]");
+          throw new ArgumentNullException("tags");
         }
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 6;  // Always include the "tag" major type
       int startIndex = 0;
       if (filter.tags != null) {
-        BigInteger[] newTags = new BigInteger[tags.Length + filter.tags.Length];
+        var newTags = new BigInteger[tags.Length + filter.tags.Length];
         Array.Copy(filter.tags, newTags, filter.tags.Length);
         startIndex = filter.tags.Length;
         filter.tags = newTags;
@@ -293,19 +289,7 @@ namespace PeterO.Cbor {
       if (bigLength == null) {
         throw new ArgumentNullException("bigLength");
       }
-      if ((this.types & (1 << 4)) != 0) {
-        return false;
-      }
-      if (this.anyArrayLength) {
-        return true;
-      }
-      if (!this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) == 0) {
-        return true;
-      }
-      if (this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) >= 0) {
-        return true;
-      }
-      return false;
+      return ((this.types & (1 << 4)) == 0) && (this.anyArrayLength || ((!this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) == 0) ? true : (this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) >= 0)));
     }
 
     /// <summary>Gets a value indicating whether CBOR objects can have the
@@ -315,10 +299,7 @@ namespace PeterO.Cbor {
     /// <returns>True if CBOR objects can have the given tag number; otherwise,
     /// false.</returns>
     public bool TagAllowed(int tag) {
-      if (this.any) {
-        return true;
-      }
-      return this.TagAllowed((BigInteger)tag);
+      return this.any || this.TagAllowed((BigInteger)tag);
     }
 
     /// <summary>Gets a value indicating whether CBOR objects can have the
@@ -328,10 +309,7 @@ namespace PeterO.Cbor {
     /// <returns>True if CBOR objects can have the given tag number; otherwise,
     /// false.</returns>
     public bool TagAllowed(long tag) {
-      if (this.any) {
-        return true;
-      }
-      return this.TagAllowed((BigInteger)tag);
+      return this.any || this.TagAllowed((BigInteger)tag);
     }
 
     /// <summary>Gets a value indicating whether CBOR objects can have the

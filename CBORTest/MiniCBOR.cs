@@ -11,7 +11,7 @@ using System.IO;
 namespace Test {
     /// <summary>Contains lightweight methods for reading and writing
     /// CBOR data.</summary>
-  public class MiniCBOR
+  public static class MiniCBOR
   {
     private static float ToSingle(int value) {
       return BitConverter.ToSingle(BitConverter.GetBytes(value), 0);
@@ -26,9 +26,10 @@ namespace Test {
       value &= 0x7fff;
       if (value >= 0x7c00) {
         return ToSingle((int)(0x3fc00 | (value & 0x3ff)) << 13 | negvalue);
-  } else if (value > 0x400) {
+      }
+      if (value > 0x400) {
         return ToSingle((int)((value + 0x1c000) << 13) | negvalue);
-  } else if ((value & 0x400) == value) {
+      } else if ((value & 0x400) == value) {
         return ToSingle((int)((value == 0) ? 0 : 0x38800000) | negvalue);
       } else {
         // denormalized
@@ -90,6 +91,7 @@ namespace Test {
         throw new ArgumentNullException("stream");
       }
       int type = 0;
+      byte[] bytes;
       if (value < 0) {
         ++value;
         value = -value;
@@ -98,13 +100,13 @@ namespace Test {
       if (value < 24) {
         stream.WriteByte((byte)(value | type));
   } else if (value <= 0xff) {
-        byte[] bytes = new byte[] { (byte)(24 | type), (byte)(value & 0xff) };
+        bytes = new [] { (byte)(24 | type), (byte)(value & 0xff) };
         stream.Write(bytes, 0, 2);
   } else if (value <= 0xffff) {
-        byte[] bytes = new byte[] { (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff) };
+        bytes = new [] { (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff) };
         stream.Write(bytes, 0, 3);
       } else {
-        byte[] bytes = new byte[] { (byte)(26 | type), (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff), (byte)(value & 0xff) };
+        bytes = new [] { (byte)(26 | type), (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff), (byte)(value & 0xff) };
         stream.Write(bytes, 0, 5);
       }
     }
@@ -119,7 +121,7 @@ namespace Test {
         return (b != 0x38) ? b : -1 - b;
       }
       if (kind == 0x18) {
-        byte[] bytes = new byte[2];
+        var bytes = new byte[2];
         if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
           throw new IOException("Premature end of stream");
         }
@@ -129,7 +131,7 @@ namespace Test {
         return (headByte != 0x19) ? b : -1 - b;
       }
       if (kind == 0x1a || kind == 0x3a) {
-        byte[] bytes = new byte[4];
+        var bytes = new byte[4];
         if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
           throw new IOException("Premature end of stream");
         }
@@ -146,14 +148,15 @@ namespace Test {
         return (headByte != 0x3a) ? b : -1 - b;
       }
       if (headByte == 0x1b || headByte == 0x3b) {
-        byte[] bytes = new byte[8];
+        var bytes = new byte[8];
         if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
           throw new IOException("Premature end of stream");
         }
         long b;
         if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0 || bytes[3] != 0)) {
           throw new IOException("Not a 32-bit integer");
-  } else if (!check32bit) {
+        }
+        if (!check32bit) {
           b = ((long)bytes[0]) & 0xff;
           b <<= 8;
           b |= ((long)bytes[1]) & 0xff;
@@ -182,7 +185,7 @@ namespace Test {
       int b;
       if (headByte == 0xf9) {
         // Half-precision
-        byte[] bytes = new byte[2];
+        var bytes = new byte[2];
         if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
           throw new IOException("Premature end of stream");
         }
@@ -192,7 +195,7 @@ namespace Test {
         return (double)HalfPrecisionToSingle(b);
       }
       if (headByte == 0xfa) {
-        byte[] bytes = new byte[4];
+        var bytes = new byte[4];
         if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
           throw new IOException("Premature end of stream");
         }
@@ -206,7 +209,7 @@ namespace Test {
         return (double)ToSingle(b);
       }
       if (headByte == 0xfb) {
-        byte[] bytes = new byte[8];
+        var bytes = new byte[8];
         if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
           throw new IOException("Premature end of stream");
         }

@@ -8,7 +8,6 @@ at: http://upokecenter.com/d/
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -19,7 +18,7 @@ namespace Test {
   [TestClass]
   public class CBORExtraTest {
     private decimal RandomDecimal(FastRandom rand, int exponent) {
-      int[] x = new int[4];
+      var x = new int[4];
       int r = rand.NextValue(0x10000);
       r |= ((int)rand.NextValue(0x10000)) << 16;
       x[0] = r;
@@ -124,7 +123,7 @@ namespace Test {
       B
     }
 
-    private enum AInt : int {
+    private enum AInt {
     /// <summary>An arbitrary value.</summary>
       A = 256,
 
@@ -142,7 +141,7 @@ namespace Test {
 
     [TestMethod]
     public void TestArbitraryTypes() {
-      CBORObject obj = CBORObject.FromObject(new { A = AByte.A, B = AInt.A, C = AULong.A });
+      CBORObject obj = CBORObject.FromObject(new { AByte.A, B = AInt.A, C = AULong.A });
       Assert.AreEqual(254, obj["a"].AsInt32());
       Assert.AreEqual(256, obj["b"].AsInt32());
       Assert.AreEqual(999999, obj["c"].AsInt32());
@@ -186,7 +185,7 @@ namespace Test {
       int minute = dt.Minute;
       int second = dt.Second;
       int millisecond = dt.Millisecond;
-      char[] charbuf = new char[millisecond > 0 ? 24 : 20];
+      var charbuf = new char[millisecond > 0 ? 24 : 20];
       charbuf[0] = (char)('0' + ((year / 1000) % 10));
       charbuf[1] = (char)('0' + ((year / 100) % 10));
       charbuf[2] = (char)('0' + ((year / 10) % 10));
@@ -4199,7 +4198,7 @@ namespace Test {
 
     [TestMethod]
     public void TestULong() {
-      ulong[] ranges = new ulong[] {
+      ulong[] ranges = {
         0, 65539,
         0xFFFFF000UL, 0x100000400UL,
         0x7FFFFFFFFFFFF000UL, 0x8000000000000400UL,
@@ -4248,9 +4247,8 @@ namespace Test {
         if ((x >> 31) == 0) {
           // x is already nonnegative
           return (short)(((int)x / iy) & 0xffff);
-        } else {
-          return Divide32By16(x, y, false);
         }
+        return Divide32By16(x, y, false);
       }
     }
 
@@ -4260,9 +4258,8 @@ namespace Test {
         if ((x >> 31) == 0) {
           // x is already nonnegative
           return (short)(((int)x % iy) & 0xffff);
-        } else {
-          return Divide32By16(x, y, true);
         }
+        return Divide32By16(x, y, true);
       }
     }
 
@@ -4297,7 +4294,7 @@ namespace Test {
 
     [TestMethod]
     public void TestUInt() {
-      uint[] ranges = new uint[] { 0, 65539,
+      uint[] ranges = { 0, 65539,
         0x7FFFF000U, 0x80000400U,
         UInt32.MaxValue - 1000, UInt32.MaxValue };
       for (int i = 0; i < ranges.Length; i += 2) {
@@ -4401,7 +4398,7 @@ namespace Test {
 
     [TestMethod]
     public void TestDateTime() {
-      DateTime[] ranges = new DateTime[] {
+      DateTime[] ranges = {
         new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc),
         new DateTime(100, 1, 1, 0, 0, 0, DateTimeKind.Utc),
         new DateTime(1998, 1, 1, 0, 0, 0, DateTimeKind.Utc),

@@ -23,13 +23,13 @@ namespace PeterO {
       private bool colorValue = BLACK;
 
     /// <summary>Pointer to left child.</summary>
-      private RBCell leftValue = null;
+      private RBCell leftValue;
 
     /// <summary>Pointer to right child.</summary>
-      private RBCell rightValue = null;
+      private RBCell rightValue;
 
     /// <summary>Pointer to parent (null if root).</summary>
-      private RBCell parentValue = null;
+      private RBCell parentValue;
 
     /// <summary>Initializes a new instance of the RBCell class. Make a new
     /// cell with given element, null links, and BLACK color. Normally only
@@ -198,11 +198,8 @@ namespace PeterO {
           int diff = cmp.Compare(element, t.element());
           if (diff == 0) {
             return t;
-          } else if (diff < 0) {
-            t = t.leftValue;
-          } else {
-            t = t.rightValue;
           }
+          t = (diff < 0) ? t.leftValue : t.rightValue;
           if (t == null) {
             return null;
           }
@@ -230,11 +227,9 @@ namespace PeterO {
               c += t.rightValue.count(element, cmp);
               t = t.leftValue;
             }
-          } else if (diff < 0) {
-            t = t.leftValue;
           } else {
-            t = t.rightValue;
-          }
+ t = (diff < 0) ? t.leftValue : t.rightValue;
+}
         }
         return c;
       }
@@ -300,26 +295,26 @@ namespace PeterO {
             root = replacement.fixAfterDeletion(root);
           }
           return root;
-        } else if (this.parentValue == null) {  // exit if we are the only node
-          return null;
-        } else {  // if no children, use self as phantom replacement and then unlink
-
-          if (this.colorValue == BLACK) {
-            root = this.fixAfterDeletion(root);
-          }
-
-          // Unlink (Couldn't before since fixAfterDeletion needs parent ptr)
-          if (this.parentValue != null) {
-            if (this == this.parentValue.leftValue) {
-              this.parentValue.leftValue = null;
-            } else if (this == this.parentValue.rightValue) {
-              this.parentValue.rightValue = null;
-            }
-            this.parentValue = null;
-          }
-
-          return root;
         }
+        if (this.parentValue == null) {  // exit if we are the only node
+          return null;  // if no children, use self as phantom replacement and then unlink
+        }
+
+        if (this.colorValue == BLACK) {
+          root = this.fixAfterDeletion(root);
+        }
+
+        // Unlink (Couldn't before since fixAfterDeletion needs parent ptr)
+        if (this.parentValue != null) {
+          if (this == this.parentValue.leftValue) {
+            this.parentValue.leftValue = null;
+          } else if (this == this.parentValue.rightValue) {
+            this.parentValue.rightValue = null;
+          }
+          this.parentValue = null;
+        }
+
+        return root;
       }
 
       /** From CLR **/
@@ -514,10 +509,7 @@ namespace PeterO {
     /// <param name='element'>A T object.</param>
     /// <returns>A Boolean object.</returns>
     public bool Contains(T element) {
-      if (this.countValue == 0) {
-        return false;
-      }
-      return this.treeValue.find(element, this.cmpValue) != null;
+      return (this.countValue != 0) && (this.treeValue.find(element, this.cmpValue) != null);
     }
 
     public bool Find(T element, out T outval) {
@@ -605,7 +597,8 @@ namespace PeterO {
           if (diff == 0 && checkOccurrence == OccurrenceMode.OverwriteIfExisting) {
             t.element(element);
             return false;
-          } else if (diff <= 0) {
+          }
+          if (diff <= 0) {
             if (t.left() != null) {
               t = t.left();
             } else {

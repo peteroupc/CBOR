@@ -112,15 +112,12 @@ namespace PeterO.Cbor {
     }
 
     public bool IsZero(object obj) {
-      return ((double)obj) == 0.0;
+      return (double)obj == 0.0;
     }
 
     public int Sign(object obj) {
       var flt = (double)obj;
-      if (Double.IsNaN(flt)) {
-        return 2;
-      }
-      return flt == 0.0f ? 0 : (flt < 0.0f ? -1 : 1);
+      return Double.IsNaN(flt) ? 2 : ((double)flt == 0.0 ? 0 : (flt < 0.0f ? -1 : 1));
     }
 
     public bool IsIntegral(object obj) {
@@ -129,7 +126,7 @@ namespace PeterO.Cbor {
         return false;
       }
       double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
-      return fltItem2 == fltItem;
+      return fltItem == fltItem2;
     }
 
     public object Negate(object obj) {

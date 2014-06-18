@@ -37,18 +37,6 @@ import com.upokecenter.cbor.*;
     }
 
     @Test
-    public void TestBigIntegerArgumentCheck() {
-      try {
-        (null).abs();
-        Assert.fail("Should have failed");
-      } catch (NullPointerException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-    }
-
-    @Test
     public void IncorrectDecimalFrac() {
       byte[] bytes;
       // String instead of array
@@ -284,8 +272,10 @@ import com.upokecenter.cbor.*;
 
     @Test
     public void TestCBORObjectIsIntegral() {
-      if(CBORObject.True.IsIntegral)Assert.fail();
-      if(CBORObject.False.IsIntegral)Assert.fail();
+      CBORObject cbor = CBORObject.True;
+      if(cbor.isIntegral())Assert.fail();
+      cbor = CBORObject.False;
+      if(cbor.isIntegral())Assert.fail();
       if(CBORObject.NewArray().isIntegral())Assert.fail();
       if(CBORObject.NewMap().isIntegral())Assert.fail();
       if(!(CBORObject.FromObject(0).isIntegral()))Assert.fail();
@@ -372,11 +362,11 @@ import com.upokecenter.cbor.*;
       Assert.assertEquals(CBORObject.Null, CBORObject.FromObject((ExtendedDecimal)null));
       Assert.assertEquals(CBORObject.FromObject(10), CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       try {
- CBORObject.FromObject(ExtendedRational.Create(10, 2));
-} catch (Exception ex) {
-Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        CBORObject.FromObject(ExtendedRational.Create(10, 2));
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
 
     @Test
@@ -419,18 +409,9 @@ throw new IllegalStateException("", ex);
       }
       cbor = CBORObject.NewArray();
       try {
-       CBORObject cbor2 = cbor.get(0);
+        CBORObject cbor2 = cbor.get(0);
         Assert.fail("Should have failed");
-      } catch (IllegalStateException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      cbor = CBORObject.NewMap();
-      try {
-       CBORObject cbor2 = cbor.get(0);
-        Assert.fail("Should have failed");
-      } catch (IllegalStateException ex) {
+      } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
@@ -440,27 +421,27 @@ throw new IllegalStateException("", ex);
     @Test
     public void TestCBORObjectArgumentValidation() {
       try {
- CBORObject.FromObjectAndTag(CBORObject.Null, -1);
-Assert.fail("Should have failed");
-} catch (IllegalArgumentException ex) {
-} catch (Exception ex) {
- Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        CBORObject.FromObjectAndTag(CBORObject.Null, -1);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
       try {
- CBORObject.FromObjectAndTag(CBORObject.Null, 0);
-} catch (Exception ex) {
-Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        CBORObject.FromObjectAndTag(CBORObject.Null, 999999);
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
       try {
- CBORObject.FromObject('\udddd');
-Assert.fail("Should have failed");
-} catch (IllegalArgumentException ex) {
-} catch (Exception ex) {
- Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        CBORObject.FromObject('\udddd');
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
       Assert.assertEquals(CBORObject.Null, CBORObject.FromObject((byte[])null));
       Assert.assertEquals(CBORObject.Null, CBORObject.FromObject((CBORObject[])null));
       Assert.assertEquals(CBORObject.True, CBORObject.FromObject(true));
@@ -629,8 +610,10 @@ throw new IllegalStateException("", ex);
     }
     @Test
     public void TestCBORObjectIsFinite() {
-      if(CBORObject.True.IsFinite)Assert.fail();
-      if(CBORObject.False.IsFinite)Assert.fail();
+      CBORObject cbor = CBORObject.True;
+      if(cbor.isFinite())Assert.fail();
+      cbor = CBORObject.False;
+      if(cbor.isFinite())Assert.fail();
       if(CBORObject.NewArray().isFinite())Assert.fail();
       if(CBORObject.NewMap().isFinite())Assert.fail();
       if(!(CBORObject.FromObject(0).isFinite()))Assert.fail();
@@ -663,7 +646,7 @@ throw new IllegalStateException("", ex);
 
     @Test
     public void TestIncompleteCBORString() {
-      byte[] bytes = new byte[] {  0x65, 0x41, 0x41, 0x41, 0x41  };
+      byte[] bytes = {  0x65, 0x41, 0x41, 0x41, 0x41  };
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.fail("Should have failed");
@@ -676,7 +659,8 @@ throw new IllegalStateException("", ex);
 
     @Test
     public void TestIncompleteIndefLengthArray() {
-      byte[] bytes = new byte[] {  (byte)0x9f, 0, 0, 0, 0, 0  };
+      byte[] bytes;
+      bytes = new byte[] {  (byte)0x9f, 0, 0, 0, 0, 0  };
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.fail("Should have failed");
@@ -697,7 +681,7 @@ throw new IllegalStateException("", ex);
     @Test
     public void TestIncompleteIndefLengthMap() {
       // Premature end after value
-      byte[] bytes = new byte[] {  (byte)0xbf, 0x61, 0x41, 0, 0x61, 0x42, 0  };
+      byte[] bytes = {  (byte)0xbf, 0x61, 0x41, 0, 0x61, 0x42, 0  };
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.fail("Should have failed");
@@ -716,7 +700,7 @@ throw new IllegalStateException("", ex);
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
-      bytes = new byte[] {  (byte)0xbf, 0x61, 0x41, 0, 0x61, 0x42 , 0, (byte)0xff  };
+      bytes = new byte[] {  (byte)0xbf, 0x61, 0x41, 0, 0x61, 0x42, 0, (byte)0xff  };
       try {
         CBORObject.DecodeFromBytes(bytes);
       } catch (Exception ex) {
@@ -1288,7 +1272,7 @@ ms2=new java.io.ByteArrayOutputStream();
 finally {
 try { if(ms2!=null)ms2.close(); } catch (java.io.IOException ex){}
 }
-      } catch (IOException ex) {
+      } catch (Exception ex) {
         throw new IllegalStateException(ex.getMessage(), ex);
       }
     }
@@ -1826,7 +1810,7 @@ try { if(ms2!=null)ms2.close(); } catch (java.io.IOException ex){}
     }
 
     // @Test
-    public void TestMiniCBOR() {
+    public static void TestMiniCBOR() {
       byte[] bytes;
       bytes = new byte[] {  0x19, 2  };
       try {

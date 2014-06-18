@@ -48,7 +48,7 @@ namespace PeterO.Cbor {
       IRISurrogateLenient
     }
 
-    private static string hex = "0123456789ABCDEF";
+    private const string HexChars = "0123456789ABCDEF";
 
     private static void appendAuthority(
         StringBuilder builder,
@@ -116,16 +116,16 @@ namespace PeterO.Cbor {
     /// surrogates are treated as U + FFFD (Replacement Character). (Note
     /// that square brackets "[" and "]" can only appear in the authority component
     /// of a URI or IRI; elsewhere they will be escaped.)</item>
-    ///  <item>1 -
+    /// <item>1 -
     /// Only non-ASCII characters are escaped. If the string is not a valid
     /// IRI, returns null instead.</item>
-    ///  <item>2 - Only non-ASCII characters
+    /// <item>2 - Only non-ASCII characters
     /// are escaped, whether or not the string is a valid IRI. Unpaired surrogates
     /// are treated as U + FFFD (Replacement Character).</item>
-    ///  <item>3
+    /// <item>3
     /// - Similar to 0, except that illegal percent encodings are also escaped.</item>
     /// </list>
-    ///  </param>
+    /// </param>
     /// <returns>A string object.</returns>
     public static string escapeURI(string s, int mode) {
       if (s == null) {
@@ -375,12 +375,11 @@ namespace PeterO.Cbor {
         if (c == '%') {
           // Percent encoded character
           if (index + 2 < valueSLength && isHexChar(s[index + 1]) &&
-              isHexChar(s[index + 2])) {
+                   isHexChar(s[index + 2])) {
             index += 3;
             continue;
-          } else {
-            return false;
           }
+          return false;
         }
         if (state == 0) {  // Path
           if (c == '?') {
@@ -425,36 +424,39 @@ namespace PeterO.Cbor {
       while (index < len) {
         char c = path[index];
         if ((index + 3 <= len && c == '/' &&
-            path[index + 1] == '.' &&
-            path[index + 2] == '/') ||
-            (index + 2 == len && c == '.' &&
-            path[index + 1] == '.')) {
+                path[index + 1] == '.' &&
+                path[index + 2] == '/') ||
+                (index + 2 == len && c == '.' &&
+                path[index + 1] == '.')) {
           // begins with "/./" or is "..";
           // move index by 2
           index += 2;
           continue;
-        } else if (index + 3 <= len && c == '.' &&
-            path[index + 1] == '.' &&
-            path[index + 2] == '/') {
+        }
+        if (index + 3 <= len && c == '.' &&
+                path[index + 1] == '.' &&
+                path[index + 2] == '/') {
           // begins with "../";
           // move index by 3
           index += 3;
           continue;
-        } else if ((index + 2 <= len && c == '.' &&
-            path[index + 1] == '/') ||
-            (index + 1 == len && c == '.')) {
+        }
+        if ((index + 2 <= len && c == '.' &&
+                path[index + 1] == '/') ||
+                (index + 1 == len && c == '.')) {
           // begins with "./" or is ".";
           // move index by 1
           ++index;
           continue;
-        } else if (index + 2 == len && c == '/' &&
-            path[index + 1] == '.') {
+        }
+        if (index + 2 == len && c == '/' &&
+                  path[index + 1] == '.') {
           // is "/."; append '/' and break
           builder.Append('/');
           break;
         } else if (index + 3 == len && c == '/' &&
-            path[index + 1] == '.' &&
-            path[index + 2] == '.') {
+                       path[index + 1] == '.' &&
+                       path[index + 2] == '.') {
           // is "/.."; remove last segment,
           // append "/" and return
           int index2 = builder.Length - 1;
@@ -471,9 +473,9 @@ namespace PeterO.Cbor {
           builder.Append('/');
           break;
         } else if (index + 4 <= len && c == '/' &&
-            path[index + 1] == '.' &&
-            path[index + 2] == '.' &&
-            path[index + 3] == '/') {
+                       path[index + 1] == '.' &&
+                       path[index + 2] == '.' &&
+                       path[index + 3] == '/') {
           // begins with "/../"; remove last segment
           int index2 = builder.Length - 1;
           while (index2 >= 0) {
@@ -513,26 +515,29 @@ int endOffset,
 int c,
 int delim) {
       if (c >= '1' && c <= '9' && index + 2 < endOffset &&
-          s[index + 1] >= '0' && s[index + 1] <= '9' &&
-          s[index + 2] == delim) {
+             s[index + 1] >= '0' && s[index + 1] <= '9' &&
+             s[index + 2] == delim) {
         return ((c - '0') * 10) + (s[index + 1] - '0');
-      } else if (c == '2' && index + 3 < endOffset &&
-              (s[index + 1] == '5') &&
-              (s[index + 2] >= '0' && s[index + 2] <= '5') &&
-              s[index + 3] == delim) {
+      }
+      if (c == '2' && index + 3 < endOffset &&
+             (s[index + 1] == '5') &&
+             (s[index + 2] >= '0' && s[index + 2] <= '5') &&
+             s[index + 3] == delim) {
         return 250 + (s[index + 2] - '0');
-      } else if (c == '2' && index + 3 < endOffset &&
-              s[index + 1] >= '0' && s[index + 1] <= '4' &&
-              s[index + 2] >= '0' && s[index + 2] <= '9' &&
-              s[index + 3] == delim) {
+      }
+      if (c == '2' && index + 3 < endOffset &&
+             s[index + 1] >= '0' && s[index + 1] <= '4' &&
+             s[index + 2] >= '0' && s[index + 2] <= '9' &&
+             s[index + 3] == delim) {
         return 200 + ((s[index + 1] - '0') * 10) + (s[index + 2] - '0');
-      } else if (c == '1' && index + 3 < endOffset &&
-              s[index + 1] >= '0' && s[index + 1] <= '9' &&
-              s[index + 2] >= '0' && s[index + 2] <= '9' &&
-              s[index + 3] == delim) {
+      }
+      if (c == '1' && index + 3 < endOffset &&
+               s[index + 1] >= '0' && s[index + 1] <= '9' &&
+               s[index + 2] >= '0' && s[index + 2] <= '9' &&
+               s[index + 3] == delim) {
         return 100 + ((s[index + 1] - '0') * 10) + (s[index + 2] - '0');
       } else if (c >= '0' && c <= '9' && index + 1 < endOffset &&
-              s[index + 1] == delim) {
+                    s[index + 1] == delim) {
         return c - '0';
       } else {
         return -1;
@@ -570,9 +575,9 @@ int delim) {
         while (index < endOffset) {
           char c = s[index];
           if ((c >= 'a' && c <= 'z') ||
-              (c >= 'A' && c <= 'Z') ||
-              (c >= '0' && c <= '9') ||
-              ((c & 0x7F) == c && ":-._~!$&'()*+,;=".IndexOf(c) >= 0)) {
+                   (c >= 'A' && c <= 'Z') ||
+                   (c >= '0' && c <= '9') ||
+                   ((c & 0x7F) == c && ":-._~!$&'()*+,;=".IndexOf(c) >= 0)) {
             hex = true;
           } else {
             break;
@@ -587,8 +592,9 @@ int delim) {
         }
         ++index;
         return index;
-      } else if (s[index] == ':' ||
-          isHexChar(s[index])) {
+      }
+      if (s[index] == ':' ||
+             isHexChar(s[index])) {
         // IPv6 Address
         int phase1 = 0;
         int phase2 = 0;
@@ -612,8 +618,9 @@ int delim) {
             expectHex = true;
             expectColon = false;
             continue;
-          } else if ((c >= '0' && c <= '9') && !expectColon &&
-              (phased || (phase1 + (phased ? 1 : 0) + phase2) == 6)) {
+          }
+          if ((c >= '0' && c <= '9') && !expectColon &&
+                   (phased || (phase1 + (phased ? 1 : 0) + phase2) == 6)) {
             // Check for IPv4 address
             int decOctet = parseDecOctet(s, index, endOffset, c, '.');
             if (decOctet >= 0) {
@@ -632,11 +639,11 @@ int delim) {
                 }
                 char tmpc = (index < endOffset) ? s[index] : '\0';
                 decOctet = parseDecOctet(
-s,
-index,
-endOffset,
-tmpc,
-'.');
+                  s,
+                  index,
+                  endOffset,
+                  tmpc,
+                  '.');
                 if (decOctet >= 100) {
                   index += 4;
                 } else if (decOctet >= 10) {
@@ -710,7 +717,7 @@ tmpc,
         }
         if (s[index] == '%') {
           if (index + 2 < endOffset && s[index + 1] == '2' &&
-              s[index + 2] == '5') {
+                   s[index + 2] == '5') {
             // Zone identifier in an IPv6 address
             // (see RFC6874)
             index += 3;
@@ -719,35 +726,33 @@ tmpc,
               char c = s[index];
               if (c == ']') {
                 return haveChar ? index + 1 : -1;
-              } else if (c == '%') {
+              }
+              if (c == '%') {
                 if (index + 2 < endOffset && isHexChar(s[index + 1]) &&
-                    isHexChar(s[index + 2])) {
+                            isHexChar(s[index + 2])) {
                   index += 3;
                   haveChar = true;
                   continue;
-                } else {
-                  return -1;
                 }
-              } else if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-                  (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-' || c == '~') {
+                return -1;
+              }
+              if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
+                         (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-' || c == '~') {
                 // unreserved character under RFC3986
                 ++index;
                 haveChar = true;
                 continue;
-              } else {
-                return -1;
               }
+              return -1;
             }
             return -1;
-          } else {
-            return -1;
           }
+          return -1;
         }
         ++index;
         return index;
-      } else {
-        return -1;
       }
+      return -1;
     }
 
     private static string pathParent(string refValue, int startIndex, int endIndex) {
@@ -766,15 +771,15 @@ tmpc,
 
     private static void percentEncode(StringBuilder buffer, int b) {
       buffer.Append('%');
-      buffer.Append(hex[(b >> 4) & 0x0f]);
-      buffer.Append(hex[b & 0x0f]);
+      buffer.Append(HexChars[(b >> 4) & 0x0f]);
+      buffer.Append(HexChars[b & 0x0f]);
     }
 
     private static void percentEncodeUtf8(StringBuilder buffer, int cp) {
       if (cp <= 0x7f) {
         buffer.Append('%');
-        buffer.Append(hex[(cp >> 4) & 0x0f]);
-        buffer.Append(hex[cp & 0x0f]);
+        buffer.Append(HexChars[(cp >> 4) & 0x0f]);
+        buffer.Append(HexChars[cp & 0x0f]);
       } else if (cp <= 0x7ff) {
         percentEncode(buffer, 0xc0 | ((cp >> 6) & 0x1f));
         percentEncode(buffer, 0x80 | (cp & 0x3f));
@@ -870,7 +875,7 @@ tmpc,
     /// path, query, or fragment component, respectively. If a component
     /// is absent, both indices in that pair will be -1. If the string is null
     /// or is not a valid IRI, returns null.</returns>
-    ///  </summary>
+    /// </summary>
     /// <param name='s'>A string object.</param>
     /// <returns>An array of 32-bit unsigned integers.</returns>
     public static int[] splitIRI(string s) {
@@ -902,7 +907,7 @@ ParseMode parseMode) {
       if (offset < 0 || length < 0 || offset + length > s.Length) {
         throw new ArgumentOutOfRangeException();
       }
-      int[] retval = new int[] { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
+      int[] retval = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
       if (length == 0) {
         retval[4] = 0;
         retval[5] = 0;
@@ -925,11 +930,13 @@ ParseMode parseMode) {
         }
         if (strict && index == offset && !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) {
           break;
-        } else if (strict && index > offset &&
-          !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
-              c == '+' || c == '-' || c == '.')) {
+        }
+        if (strict && index > offset &&
+                !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
+                c == '+' || c == '-' || c == '.')) {
           break;
-        } else if (!strict && (c == '#' || c == ':' || c == '?' || c == '/')) {
+        }
+        if (!strict && (c == '#' || c == ':' || c == '?' || c == '/')) {
           break;
         }
         ++index;
@@ -967,12 +974,11 @@ ParseMode parseMode) {
           if (c == '%' && (state == 0 || state == 1) && strict) {
             // Percent encoded character (except in port)
             if (index + 2 < valueSLength && isHexChar(s[index + 1]) &&
-                isHexChar(s[index + 2])) {
+                      isHexChar(s[index + 2])) {
               index += 3;
               continue;
-            } else {
-              return null;
             }
+            return null;
           }
           if (state == 0) {  // User info
             if (c == '/' || c == '?' || c == '#') {
@@ -980,12 +986,14 @@ ParseMode parseMode) {
               state = 1;
               index = authorityStart;
               continue;
-            } else if (strict && c == '@') {
+            }
+            if (strict && c == '@') {
               // is user info
               ++index;
               state = 1;
               continue;
-            } else if (strict && isIUserInfoChar(c)) {
+            }
+            if (strict && isIUserInfoChar(c)) {
               ++index;
               if (index == valueSLength) {
                 // not user info
@@ -1004,7 +1012,8 @@ ParseMode parseMode) {
               // end of authority
               retval[3] = index;
               break;
-            } else if (!strict) {
+            }
+            if (!strict) {
               ++index;
             } else if (c == '[') {
               ++index;
@@ -1030,7 +1039,8 @@ ParseMode parseMode) {
               // end of authority
               retval[3] = index;
               break;
-            } else if (c >= '0' && c <= '9') {
+            }
+            if (c >= '0' && c <= '9') {
               ++index;
             } else {
               return null;
@@ -1062,12 +1072,11 @@ ParseMode parseMode) {
         if (c == '%' && strict) {
           // Percent encoded character
           if (index + 2 < valueSLength && isHexChar(s[index + 1]) &&
-              isHexChar(s[index + 2])) {
+                   isHexChar(s[index + 2])) {
             index += 3;
             continue;
-          } else {
-            return null;
           }
+          return null;
         }
         if (state == 0) {  // Path
           if (c == ':' && fullyRelative) {

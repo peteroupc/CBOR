@@ -24,12 +24,6 @@ import com.upokecenter.util.*;
     private CBORTypeFilter[] elements;
     private BigInteger[] tags;
 
-    /**
-     * Initializes a new instance of the CBORTypeFilter class.
-     */
-    public CBORTypeFilter () {
-    }
-
     private CBORTypeFilter Copy() {
       CBORTypeFilter filter = new CBORTypeFilter();
       filter.any = this.any;
@@ -142,7 +136,7 @@ import com.upokecenter.util.*;
       }
       for (int i = 0; i < tags.length; ++i) {
         if (tags[i] == null) {
-          throw new NullPointerException("tags[i]");
+          throw new NullPointerException("tags");
         }
       }
       CBORTypeFilter filter = this.Copy();
@@ -313,19 +307,7 @@ import com.upokecenter.util.*;
       if (bigLength == null) {
         throw new NullPointerException("bigLength");
       }
-      if ((this.types & (1 << 4)) != 0) {
-        return false;
-      }
-      if (this.anyArrayLength) {
-        return true;
-      }
-      if (!this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) == 0) {
-        return true;
-      }
-      if (this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) >= 0) {
-        return true;
-      }
-      return false;
+      return ((this.types & (1 << 4)) == 0) && (this.anyArrayLength || ((!this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) == 0) ? true : (this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) >= 0)));
     }
 
     /**
@@ -336,10 +318,7 @@ import com.upokecenter.util.*;
      * false.
      */
     public boolean TagAllowed(int tag) {
-      if (this.any) {
-        return true;
-      }
-      return this.TagAllowed(BigInteger.valueOf(tag));
+      return this.any || this.TagAllowed(BigInteger.valueOf(tag));
     }
 
     /**
@@ -350,10 +329,7 @@ import com.upokecenter.util.*;
      * false.
      */
     public boolean TagAllowed(long tag) {
-      if (this.any) {
-        return true;
-      }
-      return this.TagAllowed(BigInteger.valueOf(tag));
+      return this.any || this.TagAllowed(BigInteger.valueOf(tag));
     }
 
     /**

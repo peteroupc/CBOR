@@ -86,7 +86,7 @@ namespace Test {
 
     private static CBORObject RandomCBORByteString(FastRandom rand) {
       int x = rand.NextValue(0x2000);
-      byte[] bytes = new byte[x];
+      var bytes = new byte[x];
       for (int i = 0; i < x; ++i) {
         bytes[i] = unchecked((byte)rand.NextValue(256));
       }
@@ -95,7 +95,7 @@ namespace Test {
 
     private static CBORObject RandomCBORByteStringShort(FastRandom rand) {
       int x = rand.NextValue(50);
-      byte[] bytes = new byte[x];
+      var bytes = new byte[x];
       for (int i = 0; i < x; ++i) {
         bytes[i] = unchecked((byte)rand.NextValue(256));
       }
@@ -132,15 +132,7 @@ namespace Test {
     private static CBORObject RandomCBORMap(FastRandom rand, int depth) {
       int x = rand.NextValue(100);
       int count = 0;
-      if (x < 80) {
-        count = 2;
-      } else if (x < 93) {
-        count = 1;
-      } else if (x < 98) {
-        count = 0;
-      } else {
-        count = 10;
-      }
+      count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
       CBORObject cborRet = CBORObject.NewMap();
       for (int i = 0; i < count; ++i) {
         CBORObject key = RandomCBORObject(rand, depth + 1);
@@ -153,7 +145,7 @@ namespace Test {
     private static CBORObject RandomCBORTaggedObject(FastRandom rand, int depth) {
       int tag = 0;
       if (rand.NextValue(2) == 0) {
-        int[] tagselection = new int[] { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30, 30, 0, 1, 25, 26, 27 };
+        int[] tagselection = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30, 30, 0, 1, 25, 26, 27 };
         tag = tagselection[rand.NextValue(tagselection.Length)];
       } else {
         tag = rand.NextValue(0x1000000);
@@ -198,15 +190,7 @@ namespace Test {
     private static CBORObject RandomCBORArray(FastRandom rand, int depth) {
       int x = rand.NextValue(100);
       int count = 0;
-      if (x < 80) {
-        count = 2;
-      } else if (x < 93) {
-        count = 1;
-      } else if (x < 98) {
-        count = 0;
-      } else {
-        count = 10;
-      }
+      count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
       CBORObject cborRet = CBORObject.NewArray();
       for (int i = 0; i < count; ++i) {
         cborRet.Add(RandomCBORObject(rand, depth + 1));
@@ -316,7 +300,7 @@ namespace Test {
 
     public static BigInteger RandomBigInteger(FastRandom r) {
       int count = r.NextValue(60) + 1;
-      byte[] bytes = new byte[count];
+      var bytes = new byte[count];
       for (int i = 0; i < count; ++i) {
         bytes[i] = (byte)((int)r.NextValue(256));
       }
@@ -493,12 +477,11 @@ namespace Test {
     private static string ObjectMessages(CBORObject o1, CBORObject o2, String s) {
       if (o1.Type == CBORType.Number && o2.Type == CBORType.Number) {
         return s + ":\n" + o1.ToString() + " and\n" + o2.ToString() + "\nOR\n" +
-          o1.AsExtendedDecimal().ToString() + " and\n" + o2.AsExtendedDecimal().ToString() + "\nOR\n" +
-          "AddSubCompare(" + ToByteArrayString(o1) + ",\n" + ToByteArrayString(o2) + ");";
-      } else {
-        return s + ":\n" + o1.ToString() + " and\n" + o2.ToString() + "\nOR\n" +
-          ToByteArrayString(o1) + " and\n" + ToByteArrayString(o2);
+        o1.AsExtendedDecimal().ToString() + " and\n" + o2.AsExtendedDecimal().ToString() + "\nOR\n" +
+        "AddSubCompare(" + ToByteArrayString(o1) + ",\n" + ToByteArrayString(o2) + ");";
       }
+      return s + ":\n" + o1.ToString() + " and\n" + o2.ToString() + "\nOR\n" +
+      ToByteArrayString(o1) + " and\n" + ToByteArrayString(o2);
     }
 
     public static void CompareTestEqual(CBORObject o1, CBORObject o2) {
@@ -697,8 +680,8 @@ namespace Test {
     public void TestCompare() {
       var r = new FastRandom();
       // string badstr = null;
-      int count = 500;
-      for (int i = 0; i < count; ++i) {
+      const int CompareCount = 500;
+      for (int i = 0; i < CompareCount; ++i) {
         CBORObject o1 = RandomCBORObject(r);
         CBORObject o2 = RandomCBORObject(r);
         CompareTestReciprocal(o1, o2);
@@ -726,7 +709,7 @@ namespace Test {
         o1 = CBORObject.FromObject(Double.NaN);
         CompareTestLess(o2, o1);
       }
-      CBORObject[] sortedObjects = new CBORObject[] {
+      CBORObject[] sortedObjects = {
         CBORObject.Undefined,
         CBORObject.Null,
         CBORObject.False,
@@ -1306,7 +1289,7 @@ namespace Test {
     public void TestRandomNonsense() {
       var rand = new FastRandom();
       for (int i = 0; i < 200; ++i) {
-        byte[] array = new byte[rand.NextValue(1000000) + 1];
+        var array = new byte[rand.NextValue(1000000) + 1];
         for (int j = 0; j < array.Length; ++j) {
           if (j + 3 <= array.Length) {
             int r = rand.NextValue(0x1000000);
@@ -6501,7 +6484,7 @@ namespace Test {
         TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.Create(bi, BigInteger.One)));
         bi *= (BigInteger)negseven;
       }
-      BigInteger[] ranges = new BigInteger[] {
+      BigInteger[] ranges = {
         (BigInteger)Int64.MinValue - (BigInteger)512,
         (BigInteger)Int64.MinValue + (BigInteger)512,
         BigInteger.Zero - (BigInteger)512,
@@ -6527,7 +6510,7 @@ namespace Test {
 
     [TestMethod]
     public void TestLong() {
-      long[] ranges = new long[] {
+      long[] ranges = {
         -65539, 65539,
         0xFFFFF000L, 0x100000400L,
         Int64.MaxValue - 1000, Int64.MaxValue,
@@ -6652,7 +6635,7 @@ namespace Test {
     [TestMethod]
     public void TestTags() {
       BigInteger maxuint = (BigInteger.One << 64) - BigInteger.One;
-      BigInteger[] ranges = new BigInteger[] {
+      BigInteger[] ranges = {
         (BigInteger)37,
         (BigInteger)65539,
         (BigInteger)Int32.MaxValue - (BigInteger)500,

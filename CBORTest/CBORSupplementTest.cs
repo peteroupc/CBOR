@@ -37,18 +37,6 @@ namespace Test {
     }
 
     [TestMethod]
-    public void TestBigIntegerArgumentCheck() {
-      try {
-        BigInteger.Abs(null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-    }
-
-    [TestMethod]
     public void IncorrectDecimalFrac() {
       byte[] bytes;
       // string instead of array
@@ -284,8 +272,10 @@ namespace Test {
 
     [TestMethod]
     public void TestCBORObjectIsIntegral() {
-      Assert.IsFalse(CBORObject.True.IsIntegral);
-      Assert.IsFalse(CBORObject.False.IsIntegral);
+      CBORObject cbor = CBORObject.True;
+      Assert.IsFalse(cbor.IsIntegral);
+      cbor = CBORObject.False;
+      Assert.IsFalse(cbor.IsIntegral);
       Assert.IsFalse(CBORObject.NewArray().IsIntegral);
       Assert.IsFalse(CBORObject.NewMap().IsIntegral);
       Assert.IsTrue(CBORObject.FromObject(0).IsIntegral);
@@ -304,8 +294,8 @@ namespace Test {
       Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN).IsIntegral);
     }
 
-    private sealed class FakeConverter : ICBORConverter<System.Uri> {
-      public CBORObject ToCBORObject(System.Uri obj) {
+    private sealed class FakeConverter : ICBORConverter<Uri> {
+      public CBORObject ToCBORObject(Uri obj) {
         throw new NotImplementedException();
       }
     }
@@ -620,8 +610,10 @@ namespace Test {
     }
     [TestMethod]
     public void TestCBORObjectIsFinite() {
-      Assert.IsFalse(CBORObject.True.IsFinite);
-      Assert.IsFalse(CBORObject.False.IsFinite);
+      CBORObject cbor = CBORObject.True;
+      Assert.IsFalse(cbor.IsFinite);
+      cbor = CBORObject.False;
+      Assert.IsFalse(cbor.IsFinite);
       Assert.IsFalse(CBORObject.NewArray().IsFinite);
       Assert.IsFalse(CBORObject.NewMap().IsFinite);
       Assert.IsTrue(CBORObject.FromObject(0).IsFinite);
@@ -654,7 +646,7 @@ namespace Test {
 
     [TestMethod]
     public void TestIncompleteCBORString() {
-      byte[] bytes = new byte[] { 0x65, 0x41, 0x41, 0x41, 0x41 };
+      byte[] bytes = { 0x65, 0x41, 0x41, 0x41, 0x41 };
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
@@ -667,7 +659,8 @@ namespace Test {
 
     [TestMethod]
     public void TestIncompleteIndefLengthArray() {
-      byte[] bytes = new byte[] { 0x9f, 0, 0, 0, 0, 0 };
+      byte[] bytes;
+      bytes = new byte[] { 0x9f, 0, 0, 0, 0, 0 };
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
@@ -688,7 +681,7 @@ namespace Test {
     [TestMethod]
     public void TestIncompleteIndefLengthMap() {
       // Premature end after value
-      byte[] bytes = new byte[] { 0xbf, 0x61, 0x41, 0, 0x61, 0x42, 0 };
+      byte[] bytes = { 0xbf, 0x61, 0x41, 0, 0x61, 0x42, 0 };
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
@@ -1267,7 +1260,7 @@ namespace Test {
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-      } catch (IOException ex) {
+      } catch (Exception ex) {
         throw new InvalidOperationException(ex.Message, ex);
       }
     }
@@ -1808,7 +1801,7 @@ namespace Test {
     }
 
     // [TestMethod]
-    public void TestMiniCBOR() {
+    public static void TestMiniCBOR() {
       byte[] bytes;
       bytes = new byte[] { 0x19, 2 };
       try {

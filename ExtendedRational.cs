@@ -50,10 +50,7 @@ namespace PeterO {
     /// <returns>True if the objects are equal; otherwise, false.</returns>
     public override bool Equals(object obj) {
       ExtendedRational other = obj as ExtendedRational;
-      if (other == null) {
-        return false;
-      }
-      return object.Equals(this.unsignedNumerator, other.unsignedNumerator) && object.Equals(this.denominator, other.denominator) && this.flags == other.flags;
+      return (other != null) && (object.Equals(this.unsignedNumerator, other.unsignedNumerator) && object.Equals(this.denominator, other.denominator) && this.flags == other.flags);
     }
 
     /// <summary>Returns the hash code for this instance.</summary>
@@ -115,7 +112,7 @@ namespace PeterO {
         denominator = -denominator;
       }
       #if DEBUG
-      if (!(!denominator.IsZero)) {
+      if (denominator.IsZero) {
         throw new ArgumentException("doesn't satisfy !denominator.IsZero");
       }
       #endif
@@ -133,18 +130,16 @@ namespace PeterO {
         if (this.IsSignalingNaN()) {
           if (this.unsignedNumerator.IsZero) {
             return this.IsNegative ? "-sNaN" : "sNaN";
-          } else {
-            return this.IsNegative ? "-sNaN" + this.unsignedNumerator.ToString() :
-              "sNaN" + this.unsignedNumerator.ToString();
           }
+          return this.IsNegative ? "-sNaN" + this.unsignedNumerator :
+              "sNaN" + this.unsignedNumerator;
         }
         if (this.IsQuietNaN()) {
           if (this.unsignedNumerator.IsZero) {
             return this.IsNegative ? "-NaN" : "NaN";
-          } else {
-            return this.IsNegative ? "-NaN" + this.unsignedNumerator.ToString() :
-              "NaN" + this.unsignedNumerator.ToString();
           }
+          return this.IsNegative ? "-NaN" + this.unsignedNumerator :
+              "NaN" + this.unsignedNumerator;
         }
         if (this.IsInfinity()) {
           return this.IsNegative ? "-Infinity" : "Infinity";
@@ -554,10 +549,7 @@ namespace PeterO {
     /// <value>True if this object&apos;s value equals 0; otherwise, false.</value>
     public bool IsZero {
       get {
-        if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
-          return false;
-        }
-        return this.unsignedNumerator.IsZero;
+        return ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0) && this.unsignedNumerator.IsZero;
       }
     }
 
@@ -566,13 +558,7 @@ namespace PeterO {
     /// is less than 0; and 1 if this value is greater than 0.</value>
     public int Sign {
       get {
-        if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
-          return this.IsNegative ? -1 : 1;
-        }
-        if (this.unsignedNumerator.IsZero) {
-          return 0;
-        }
-        return this.IsNegative ? -1 : 1;
+        return ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) ? (this.IsNegative ? -1 : 1) : (this.unsignedNumerator.IsZero ? 0 : (this.IsNegative ? -1 : 1));
       }
     }
 
@@ -588,10 +574,7 @@ namespace PeterO {
         return 0;
       }
       if (this.IsNaN()) {
-        if (other.IsNaN()) {
-          return 0;
-        }
-        return 1;
+        return other.IsNaN() ? 0 : 1;
       }
       if (other.IsNaN()) {
         return -1;
@@ -658,10 +641,7 @@ namespace PeterO {
         return 1;
       }
       if (this.IsNaN()) {
-        if (other.IsNaN()) {
-          return 0;
-        }
-        return 1;
+        return other.IsNaN() ? 0 : 1;
       }
       int signA = this.Sign;
       int signB = other.Sign;
@@ -768,10 +748,7 @@ namespace PeterO {
         return 1;
       }
       if (this.IsNaN()) {
-        if (other.IsNaN()) {
-          return 0;
-        }
-        return 1;
+        return other.IsNaN() ? 0 : 1;
       }
       int signA = this.Sign;
       int signB = other.Sign;
@@ -989,10 +966,7 @@ namespace PeterO {
         return otherValue;
       }
       if (this.IsInfinity()) {
-        if (otherValue.IsInfinity()) {
-          return (this.IsNegative == otherValue.IsNegative) ? this : NaN;
-        }
-        return this;
+        return otherValue.IsInfinity() ? ((this.IsNegative == otherValue.IsNegative) ? this : NaN) : this;
       }
       if (otherValue.IsInfinity()) {
         return otherValue;
@@ -1073,10 +1047,7 @@ namespace PeterO {
       }
       BigInteger ac = this.Numerator * (BigInteger)otherValue.Numerator;
       BigInteger bd = this.Denominator * (BigInteger)otherValue.Denominator;
-      if (ac.IsZero) {
-        return resultNeg ? NegativeZero : Zero;
-      }
-      return new ExtendedRational(ac, bd).Simplify().ChangeSign(resultNeg);
+      return ac.IsZero ? (resultNeg ? NegativeZero : Zero) : new ExtendedRational(ac, bd).Simplify().ChangeSign(resultNeg);
     }
 
     /// <summary>Divides this instance by the value of an ExtendedRational

@@ -38,22 +38,14 @@ import com.upokecenter.util.*;
       boolean addStr = false;
       ArrayList<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
       if (lastList.size() < 24) {
-        if (lengthHint >= 3) {
-          addStr = true;
-        }
+        addStr |= lengthHint >= 3;
       } else if (lastList.size() < 256) {
-        if (lengthHint >= 4) {
-          addStr = true;
-        }
+        addStr |= lengthHint >= 4;
       } else if (lastList.size() < 65536) {
-        if (lengthHint >= 5) {
-          addStr = true;
-        }
+        addStr |= lengthHint >= 5;
       } else {
         // NOTE: lastList's size can't be higher than (2^64)-1
-        if (lengthHint >= 7) {
-          addStr = true;
-        }
+        addStr |= lengthHint >= 7;
       }
       // NOTE: An additional branch, with lengthHint >= 11, would
       // be needed if the size could be higher than (2^64)-1
@@ -78,9 +70,8 @@ import com.upokecenter.util.*;
       if (ret.getType() == CBORType.ByteString) {
         // Byte strings are mutable, so make a copy
         return CBORObject.FromObject(ret.GetByteString());
-      } else {
-        return ret;
       }
+      return ret;
     }
 
     public CBORObject GetString(BigInteger bigIndex) {
@@ -99,8 +90,7 @@ import com.upokecenter.util.*;
       if (ret.getType() == CBORType.ByteString) {
         // Byte strings are mutable, so make a copy
         return CBORObject.FromObject(ret.GetByteString());
-      } else {
-        return ret;
       }
+      return ret;
     }
   }

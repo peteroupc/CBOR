@@ -59,11 +59,7 @@ at: http://upokecenter.com/d/
      * @return The current integer after shifting.
      */
     public BigInteger getShiftedInt() {
-        if (this.isSmall) {
-          return BigInteger.valueOf(this.shiftedSmall);
-        } else {
-          return this.shiftedBigInt;
-        }
+        return this.isSmall ? (BigInteger.valueOf(this.shiftedSmall)) : this.shiftedBigInt;
       }
 
     public DigitShiftAccumulator (
@@ -100,11 +96,7 @@ at: http://upokecenter.com/d/
     }
 
     public FastInteger getShiftedIntFast() {
-        if (this.isSmall) {
-          return new FastInteger(this.shiftedSmall);
-        } else {
-          return FastInteger.FromBig(this.shiftedBigInt);
-        }
+        return this.isSmall ? (new FastInteger(this.shiftedSmall)) : FastInteger.FromBig(this.shiftedBigInt);
       }
 
     public void ShiftRight(FastInteger fastint) {
@@ -323,7 +315,8 @@ bigrem=divrem[1]; }
         this.knownBitLength.Subtract(digitDiff);
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
         return;
-      } else if (digitDiff.CompareToInt(9) <= 0) {
+      }
+      if (digitDiff.CompareToInt(9) <= 0) {
         BigInteger bigrem;
         int diffInt = digitDiff.AsInt32();
         BigInteger radixPower = DecimalUtility.FindPowerOfTen(diffInt);
@@ -350,7 +343,8 @@ bigrem=divrem[1]; }
         this.knownBitLength.Subtract(digitDiff);
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
         return;
-      } else if (digitDiff.CompareToInt(Integer.MAX_VALUE) <= 0) {
+      }
+      if (digitDiff.CompareToInt(Integer.MAX_VALUE) <= 0) {
         BigInteger bigrem;
         BigInteger radixPower = DecimalUtility.FindPowerOfTen(digitDiff.AsInt32() - 1);
         BigInteger bigquo;
@@ -520,57 +514,16 @@ bigrem=divrem[1]; }
       if (this.isSmall) {
         int kb = 0;
         int v2 = this.shiftedSmall;
-        if (v2 >= 1000000000) {
-          kb = 10;
-        } else if (v2 >= 100000000) {
-          kb = 9;
-        } else if (v2 >= 10000000) {
-          kb = 8;
-        } else if (v2 >= 1000000) {
-          kb = 7;
-        } else if (v2 >= 100000) {
-          kb = 6;
-        } else if (v2 >= 10000) {
-          kb = 5;
-        } else if (v2 >= 1000) {
-          kb = 4;
-        } else if (v2 >= 100) {
-          kb = 3;
-        } else if (v2 >= 10) {
-          kb = 2;
-        } else {
-          kb = 1;
-        }
+        kb = (v2 >= 1000000000) ? 10 : ((v2 >= 100000000) ? 9 : ((v2 >= 10000000) ? 8 : ((v2 >= 1000000) ? 7 : ((v2 >= 100000) ? 6 : ((v2 >= 10000) ? 5 : ((v2 >= 1000) ? 4 : ((v2 >= 100) ? 3 : ((v2 >= 10) ? 2 : 1))))))));
         return new FastInteger(kb);
-      } else {
-        return new FastInteger(this.shiftedBigInt.getDigitCount());
       }
+      return new FastInteger(this.shiftedBigInt.getDigitCount());
     }
 
     private void ShiftToBitsSmall(int digits) {
       int kb = 0;
       int v2 = this.shiftedSmall;
-      if (v2 >= 1000000000) {
-        kb = 10;
-      } else if (v2 >= 100000000) {
-        kb = 9;
-      } else if (v2 >= 10000000) {
-        kb = 8;
-      } else if (v2 >= 1000000) {
-        kb = 7;
-      } else if (v2 >= 100000) {
-        kb = 6;
-      } else if (v2 >= 10000) {
-        kb = 5;
-      } else if (v2 >= 1000) {
-        kb = 4;
-      } else if (v2 >= 100) {
-        kb = 3;
-      } else if (v2 >= 10) {
-        kb = 2;
-      } else {
-        kb = 1;
-      }
+      kb = (v2 >= 1000000000) ? 10 : ((v2 >= 100000000) ? 9 : ((v2 >= 10000000) ? 8 : ((v2 >= 1000000) ? 7 : ((v2 >= 100000) ? 6 : ((v2 >= 10000) ? 5 : ((v2 >= 1000) ? 4 : ((v2 >= 100) ? 3 : ((v2 >= 10) ? 2 : 1))))))));
       this.knownBitLength = new FastInteger(kb);
       if (kb > digits) {
         int digitShift = (int)(kb - digits);

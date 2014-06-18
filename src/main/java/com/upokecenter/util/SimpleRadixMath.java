@@ -24,10 +24,7 @@ at: http://upokecenter.com/d/
     }
 
     private static PrecisionContext GetContextWithFlags(PrecisionContext ctx) {
-      if (ctx == null) {
-        return ctx;
-      }
-      return ctx.WithBlankFlags();
+      return (ctx == null) ? ctx : ctx.WithBlankFlags();
     }
 
     private T SignalInvalid(PrecisionContext ctx) {
@@ -62,24 +59,16 @@ at: http://upokecenter.com/d/
           ctxDest.setFlags(ctxDest.getFlags()|(ctxSrc.getFlags()));
           if ((ctxSrc.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
             // Treat subnormal numbers as underflows
-            int newflags = PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact |
-              PrecisionContext.FlagRounded;
-            ctxDest.setFlags(ctxDest.getFlags()|(newflags));
+            ctxDest.setFlags(ctxDest.getFlags()|(BigNumberFlags.UnderflowFlags));
           }
         }
       }
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
-        if (ctxDest.getFlags() == 0) {
-          return this.SignalInvalid(ctxDest);
-        }
-        return thisValue;
+        return (ctxDest.getFlags() == 0) ? this.SignalInvalid(ctxDest) : thisValue;
       }
       BigInteger mant = (this.GetHelper().GetMantissa(thisValue)).abs();
       if (mant.signum()==0) {
-        if (afterQuantize) {
-          return this.GetHelper().CreateNewWithFlags(mant, this.GetHelper().GetExponent(thisValue), 0);
-        }
-        return this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctxDest);
+        return afterQuantize ? this.GetHelper().CreateNewWithFlags(mant, this.GetHelper().GetExponent(thisValue), 0) : this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctxDest);
       }
       if (afterQuantize) {
         return thisValue;
@@ -143,13 +132,7 @@ at: http://upokecenter.com/d/
         return this.SignalingNaNInvalid(other, ctx);
       }
       // Check this value then the other value for quiet NaN
-      if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
-        return this.ReturnQuietNaN(thisValue, ctx);
-      }
-      if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
-        return this.ReturnQuietNaN(other, ctx);
-      }
-      return null;
+      return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(other, ctx) : null);
     }
 
     private T CheckNotANumber3(T thisValue, T other, T other2, PrecisionContext ctx) {
@@ -167,16 +150,7 @@ at: http://upokecenter.com/d/
         return this.SignalingNaNInvalid(other, ctx);
       }
       // Check this value then the other value for quiet NaN
-      if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
-        return this.ReturnQuietNaN(thisValue, ctx);
-      }
-      if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
-        return this.ReturnQuietNaN(other, ctx);
-      }
-      if ((other2Flags & BigNumberFlags.FlagQuietNaN) != 0) {
-        return this.ReturnQuietNaN(other, ctx);
-      }
-      return null;
+      return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(other, ctx) : (((other2Flags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(other, ctx) : null));
     }
 
     private T SignalingNaNInvalid(T value, PrecisionContext ctx) {
@@ -219,9 +193,7 @@ at: http://upokecenter.com/d/
 
       if ((ctx2.getFlags() & PrecisionContext.FlagInexact) != 0) {
         if (ctx.getHasFlags()) {
-          int newflags = PrecisionContext.FlagLostDigits | PrecisionContext.FlagInexact |
-            PrecisionContext.FlagRounded;
-          ctx.setFlags(ctx.getFlags()|(newflags));
+          ctx.setFlags(ctx.getFlags()|(BigNumberFlags.LostDigitsFlags));
         }
       }
       if ((ctx2.getFlags() & PrecisionContext.FlagRounded) != 0) {
@@ -691,11 +663,9 @@ at: http://upokecenter.com/d/
       if (zeroA) {
         thisValue = zeroB ? this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) : other;
         thisValue = this.RoundToPrecision(thisValue, ctx2);
-      } else if (!zeroB) {
-        thisValue = this.wrapper.AddEx(thisValue, other, ctx2, true);
       } else {
-        thisValue = this.RoundToPrecision(thisValue, ctx2);
-      }
+ thisValue = (!zeroB) ? this.wrapper.AddEx(thisValue, other, ctx2, true) : this.RoundToPrecision(thisValue, ctx2);
+}
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 

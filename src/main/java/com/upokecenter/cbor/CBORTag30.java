@@ -37,10 +37,7 @@ import com.upokecenter.util.*;
         throw new CBORException("Rational number requires denominator greater than 0");
       }
       BigInteger denom = second.AsBigInteger();
-      // NOTE: Discards tags.  See comment in CBORTag2.
-      if (denom.equals(BigInteger.ONE)) {
-        return CBORObject.FromObject(first.AsBigInteger());
-      }
-      return CBORObject.FromObject(new ExtendedRational(first.AsBigInteger(), denom));
+      // NOTE: Discards tags. See comment in CBORTag2.
+      return denom.equals(BigInteger.ONE) ? CBORObject.FromObject(first.AsBigInteger()) : CBORObject.FromObject(new ExtendedRational(first.AsBigInteger(), denom));
     }
   }

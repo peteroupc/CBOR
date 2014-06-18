@@ -15,7 +15,7 @@ namespace PeterO {
   public class Runner {
     private static bool HasAttribute(Type mi, Type t) {
       foreach (object a in mi.GetCustomAttributes(t, false)) {
-        if (t.IsAssignableFrom(a.GetType())) {
+        if (t.IsInstanceOfType(a)) {
           return true;
         }
       }
@@ -24,7 +24,7 @@ namespace PeterO {
 
     private static bool HasAttribute(MethodInfo mi, Type t) {
       foreach (object a in mi.GetCustomAttributes(t, false)) {
-        if (t.IsAssignableFrom(a.GetType())) {
+        if (t.IsInstanceOfType(a)) {
           return true;
         }
       }
@@ -41,7 +41,7 @@ namespace PeterO {
         Console.WriteLine("-------");
         Console.WriteLine(type.FullName);
         Console.WriteLine("-------");
-        if (param != null && param.Length > 0) {
+        if (!string.IsNullOrEmpty(param)) {
           if (!type.FullName.Contains(param)) {
             // continue;
           }
@@ -65,7 +65,7 @@ namespace PeterO {
           }
           try {
             method.Invoke(test, new object[] { });
-          } catch (System.Reflection.TargetInvocationException e) {
+          } catch (TargetInvocationException e) {
             if (exctype == null || !e.InnerException.GetType().Equals(exctype)) {
               Console.WriteLine(e.InnerException.GetType().FullName);
               string message = e.InnerException.Message;

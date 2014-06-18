@@ -14,7 +14,7 @@ namespace PeterO {
     /// left open. For example: in which cases is the Clamped flag set? The
     /// test cases set the Clamped flag in only a handful of test cases, all
     /// within the <c>exp</c>
-    ///  operation.</summary>
+    /// operation.</summary>
     /// <typeparam name='T'>Data type for a numeric value in a particular
     /// radix.</typeparam>
   internal sealed class SimpleRadixMath<T> : IRadixMath<T> {
@@ -25,10 +25,7 @@ namespace PeterO {
     }
 
     private static PrecisionContext GetContextWithFlags(PrecisionContext ctx) {
-      if (ctx == null) {
-        return ctx;
-      }
-      return ctx.WithBlankFlags();
+      return (ctx == null) ? ctx : ctx.WithBlankFlags();
     }
 
     private T SignalInvalid(PrecisionContext ctx) {
@@ -63,24 +60,16 @@ namespace PeterO {
           ctxDest.Flags |= ctxSrc.Flags;
           if ((ctxSrc.Flags & PrecisionContext.FlagSubnormal) != 0) {
             // Treat subnormal numbers as underflows
-            int newflags = PrecisionContext.FlagUnderflow | PrecisionContext.FlagInexact |
-              PrecisionContext.FlagRounded;
-            ctxDest.Flags |= newflags;
+            ctxDest.Flags |= BigNumberFlags.UnderflowFlags;
           }
         }
       }
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
-        if (ctxDest.Flags == 0) {
-          return this.SignalInvalid(ctxDest);
-        }
-        return thisValue;
+        return (ctxDest.Flags == 0) ? this.SignalInvalid(ctxDest) : thisValue;
       }
       BigInteger mant = BigInteger.Abs(this.GetHelper().GetMantissa(thisValue));
       if (mant.IsZero) {
-        if (afterQuantize) {
-          return this.GetHelper().CreateNewWithFlags(mant, this.GetHelper().GetExponent(thisValue), 0);
-        }
-        return this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctxDest);
+        return afterQuantize ? this.GetHelper().CreateNewWithFlags(mant, this.GetHelper().GetExponent(thisValue), 0) : this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctxDest);
       }
       if (afterQuantize) {
         return thisValue;
@@ -144,13 +133,7 @@ namespace PeterO {
         return this.SignalingNaNInvalid(other, ctx);
       }
       // Check this value then the other value for quiet NaN
-      if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
-        return this.ReturnQuietNaN(thisValue, ctx);
-      }
-      if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
-        return this.ReturnQuietNaN(other, ctx);
-      }
-      return default(T);
+      return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(other, ctx) : default(T));
     }
 
     private T CheckNotANumber3(T thisValue, T other, T other2, PrecisionContext ctx) {
@@ -168,16 +151,7 @@ namespace PeterO {
         return this.SignalingNaNInvalid(other, ctx);
       }
       // Check this value then the other value for quiet NaN
-      if ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) {
-        return this.ReturnQuietNaN(thisValue, ctx);
-      }
-      if ((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) {
-        return this.ReturnQuietNaN(other, ctx);
-      }
-      if ((other2Flags & BigNumberFlags.FlagQuietNaN) != 0) {
-        return this.ReturnQuietNaN(other, ctx);
-      }
-      return default(T);
+      return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(other, ctx) : (((other2Flags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(other, ctx) : default(T)));
     }
 
     private T SignalingNaNInvalid(T value, PrecisionContext ctx) {
@@ -218,15 +192,13 @@ namespace PeterO {
       // operation is if an operand is signaling NaN, but
       // this was already checked beforehand
       #if DEBUG
-      if (!((ctx2.Flags & PrecisionContext.FlagInvalid) == 0)) {
+      if ((ctx2.Flags & PrecisionContext.FlagInvalid) != 0) {
         throw new ArgumentException("doesn't satisfy (ctx2.Flags&PrecisionContext.FlagInvalid)==0");
       }
       #endif
       if ((ctx2.Flags & PrecisionContext.FlagInexact) != 0) {
         if (ctx.HasFlags) {
-          int newflags = PrecisionContext.FlagLostDigits | PrecisionContext.FlagInexact |
-            PrecisionContext.FlagRounded;
-          ctx.Flags |= newflags;
+          ctx.Flags |= BigNumberFlags.LostDigitsFlags;
         }
       }
       if ((ctx2.Flags & PrecisionContext.FlagRounded) != 0) {
@@ -294,7 +266,6 @@ namespace PeterO {
       return this.PostProcess(value, ctx, ctx2);
     }
 
-    /// <summary>Finds the remainder that results when dividing two T objects.</summary>
     /// <summary>Finds the remainder that results when dividing two T objects.</summary>
     /// <summary>Finds the remainder that results when dividing two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
@@ -482,7 +453,6 @@ namespace PeterO {
 
     /// <summary>Divides two T objects.</summary>
     /// <summary>Divides two T objects.</summary>
-    /// <summary>Divides two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='divisor'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
@@ -549,7 +519,6 @@ namespace PeterO {
       return this.PostProcess(a, ctx, ctx2);
     }
 
-    /// <summary>Multiplies two T objects.</summary>
     /// <summary>Multiplies two T objects.</summary>
     /// <summary>Multiplies two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
@@ -696,11 +665,9 @@ namespace PeterO {
       if (zeroA) {
         thisValue = zeroB ? this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) : other;
         thisValue = this.RoundToPrecision(thisValue, ctx2);
-      } else if (!zeroB) {
-        thisValue = this.wrapper.AddEx(thisValue, other, ctx2, true);
       } else {
-        thisValue = this.RoundToPrecision(thisValue, ctx2);
-      }
+ thisValue = (!zeroB) ? this.wrapper.AddEx(thisValue, other, ctx2, true) : this.RoundToPrecision(thisValue, ctx2);
+}
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
@@ -709,7 +676,6 @@ namespace PeterO {
       return this.Add(thisValue, other, ctx);
     }
 
-    /// <summary>Compares a T object with this instance.</summary>
     /// <summary>Compares a T object with this instance.</summary>
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>
@@ -732,7 +698,6 @@ namespace PeterO {
         ctx);
     }
 
-    /// <summary>Compares a T object with this instance.</summary>
     /// <summary>Compares a T object with this instance.</summary>
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>

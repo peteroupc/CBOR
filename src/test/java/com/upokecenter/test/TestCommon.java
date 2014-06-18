@@ -119,7 +119,7 @@ rembi=divrem[1]; }
       }
       if (output != null && !d3.toString().equals(output)) {
         ExtendedDecimal d4 = ExtendedDecimal.FromString(output);
-        Assert.assertEquals(name + ": expected: [" + d4.getUnsignedMantissa().toString() + " " + d4.getExponent().toString() + "]\\n" + "but was: [" + d3.getUnsignedMantissa().toString() + " " + d3.getExponent().toString() + "]",output,d3.toString());
+        Assert.assertEquals(name + ": expected: [" + d4.getUnsignedMantissa() + " " + d4.getExponent() + "]\\n" + "but was: [" + d3.getUnsignedMantissa() + " " + d3.getExponent() + "]",output,d3.toString());
       }
     }
 
@@ -207,28 +207,28 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
-          Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
+          Assert.fail("Object: " + o + ", " + ex); throw new IllegalStateException("", ex);
         }
         try {
           o.AsInt16();
           Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
-          Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
+          Assert.fail("Object: " + o + ", " + ex); throw new IllegalStateException("", ex);
         }
         try {
           o.AsInt32();
           Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
-          Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
+          Assert.fail("Object: " + o + ", " + ex); throw new IllegalStateException("", ex);
         }
         try {
           o.AsInt64();
           Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
-          Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
+          Assert.fail("Object: " + o + ", " + ex); throw new IllegalStateException("", ex);
         }
         try {
           o.AsSingle();
@@ -247,19 +247,19 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           Assert.fail("Should have failed");
         } catch (ArithmeticException ex) {
         } catch (Exception ex) {
-          Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
+          Assert.fail("Object: " + o + ", " + ex); throw new IllegalStateException("", ex);
         }
         return;
       }
       try {
         o.AsSingle();
       } catch (Exception ex) {
-        Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail("Object: " + o + ", " + ex); throw new IllegalStateException("", ex);
       }
       try {
         o.AsDouble();
       } catch (Exception ex) {
-        Assert.fail("Object: " + o + ", " + ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail("Object: " + o + ", " + ex); throw new IllegalStateException("", ex);
       }
     }
 
@@ -267,7 +267,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
       int cmp = o.compareTo(o2);
       if (cmp != 0) {
-        Assert.assertEquals(o.toString() + "\nvs.\n" + o2.toString(),0,cmp);
+        Assert.assertEquals(o + "\nvs.\n" + o2,0,cmp);
       }
       TestNumber(o);
       AssertEqualsHashCode(o, o2);

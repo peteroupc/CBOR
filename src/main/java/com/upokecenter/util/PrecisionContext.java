@@ -76,9 +76,9 @@ at: http://upokecenter.com/d/
      * Gets the lowest exponent possible when a converted number is expressed
      * in scientific notation with one digit before the decimal point. For
      * example, with a precision of 3 and an EMin of -100, the next value that
-     * comes after 0 is 0.001E-100. (This is not the same as the lowest possible
-     * Exponent property.) If HasExponentRange is false, this value will
-     * be 0.
+     * comes after 0 is 0.001E-100. (If AdjustExponent is false, this property
+     * specifies the lowest possible Exponent property instead.) If HasExponentRange
+     * is false, this value will be 0.
      * @return The lowest exponent possible when a converted number is expressed
      * in scientific notation with one digit before the decimal point.
      */
@@ -246,10 +246,7 @@ at: http://upokecenter.com/d/
           bigint=bigint.add(this.bigintPrecision);
           bigint=bigint.subtract(BigInteger.ONE);
         }
-        if (bigint.compareTo(this.getEMin()) < 0) {
-          return false;
-        }
-        return exponent.compareTo(this.getEMax()) <= 0;
+        return (bigint.compareTo(this.getEMin()) >= 0) && (exponent.compareTo(this.getEMax()) <= 0);
       }
     }
 

@@ -112,7 +112,8 @@ at: http://upokecenter.com/d/
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
           throw new IllegalArgumentException("multiplicand (" + Integer.toString((int)multiplicand) + ") is less than " + "0");
-        } else if (multiplicand != 0) {
+        }
+        if (multiplicand != 0) {
           int carry = 0;
           if (this.wordCount == 0) {
             if (this.data.length == 0) {
@@ -130,10 +131,12 @@ at: http://upokecenter.com/d/
               x0 &= 65535;
               x1 = (x1 >> 16) & 65535;
               int temp = (x0 * y0);  // a * c
-              result1 = (temp >> 16) & 65535; result0 = temp & 65535;
+              result1 = (temp >> 16) & 65535;
+              result0 = temp & 65535;
               result2 = 0;
               temp = (x1 * y0);  // b * c
-              result2 += (temp >> 16) & 65535; result1 += temp & 65535;
+              result2 += (temp >> 16) & 65535;
+              result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
               result1 &= 65535;
               result3 = (result2 >> 16) & 65535;
@@ -161,19 +164,23 @@ at: http://upokecenter.com/d/
               x1 = (x1 >> 16) & 65535;
               y1 = (y1 >> 16) & 65535;
               int temp = (x0 * y0);  // a * c
-              result1 = (temp >> 16) & 65535; result0 = temp & 65535;
+              result1 = (temp >> 16) & 65535;
+              result0 = temp & 65535;
               temp = (x0 * y1);  // a * d
-              result2 = (temp >> 16) & 65535; result1 += temp & 65535;
+              result2 = (temp >> 16) & 65535;
+              result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
               result1 &= 65535;
               temp = (x1 * y0);  // b * c
-              result2 += (temp >> 16) & 65535; result1 += temp & 65535;
+              result2 += (temp >> 16) & 65535;
+              result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
               result1 &= 65535;
               result3 = (result2 >> 16) & 65535;
               result2 &= 65535;
               temp = (x1 * y1);  // b * d
-              result3 += (temp >> 16) & 65535; result2 += temp & 65535;
+              result3 += (temp >> 16) & 65535;
+              result2 += temp & 65535;
               result3 += (result2 >> 16) & 65535;
               result2 &= 65535;
               // Add carry
@@ -236,12 +243,12 @@ at: http://upokecenter.com/d/
         if (this.wordCount == 0) {
           // this value is 0
           return (val == 0) ? 0 : -1;
-        } else if (this.data[0] == val) {
-          return 0;
-        } else {
-          return (((this.data[0] >> 31) == (val >> 31)) ? ((this.data[0] & Integer.MAX_VALUE) < (val & Integer.MAX_VALUE))
-                  : ((this.data[0] >> 31) == 0)) ? -1 : 1;
         }
+        if (this.data[0] == val) {
+          return 0;
+        }
+        return (((this.data[0] >> 31) == (val >> 31)) ? ((this.data[0] & Integer.MAX_VALUE) < (val & Integer.MAX_VALUE))
+                  : ((this.data[0] >> 31) == 0)) ? -1 : 1;
       }
 
     /**
@@ -353,7 +360,8 @@ at: http://upokecenter.com/d/
               ((an & Integer.MAX_VALUE) < (bn & Integer.MAX_VALUE)) :
               ((an >> 31) == 0)) {
             return -1;
-          } else if (an != bn) {
+          }
+          if (an != bn) {
             return 1;
           }
         }
@@ -368,7 +376,8 @@ at: http://upokecenter.com/d/
       public MutableNumber Add(int augend) {
         if (augend < 0) {
           throw new IllegalArgumentException("augend (" + Integer.toString((int)augend) + ") is less than " + "0");
-        } else if (augend != 0) {
+        }
+        if (augend != 0) {
           int carry = 0;
           // Ensure a length of at least 1
           if (this.wordCount == 0) {
@@ -411,7 +420,7 @@ at: http://upokecenter.com/d/
     private int smallValue;  // if integerMode is 0
     private MutableNumber mnum;  // if integerMode is 1
     private BigInteger largeValue;  // if integerMode is 2
-    private int integerMode = 0;
+    private int integerMode;
 
     private static BigInteger valueInt32MinValue = BigInteger.valueOf(Integer.MIN_VALUE);
     private static BigInteger valueInt32MaxValue = BigInteger.valueOf(Integer.MAX_VALUE);
@@ -432,7 +441,8 @@ at: http://upokecenter.com/d/
     public static FastInteger FromBig(BigInteger bigintVal) {
       if (bigintVal.canFitInInt()) {
         return new FastInteger(bigintVal.intValue());
-      } else if (bigintVal.signum() > 0) {
+      }
+      if (bigintVal.signum() > 0) {
         FastInteger fi = new FastInteger(0);
         fi.integerMode = 1;
         fi.mnum = MutableNumber.FromBigInteger(bigintVal);
@@ -529,7 +539,8 @@ at: http://upokecenter.com/d/
             ++count;
           }
           return count;
-        } else if (divisor.integerMode == 0 && divisor.smallValue >= 0) {
+        }
+        if (divisor.integerMode == 0 && divisor.smallValue >= 0) {
           if (this.mnum.CanFitInInt32()) {
             int small = this.mnum.ToInt32();
             count = small / divisor.smallValue;
@@ -717,9 +728,10 @@ bigrem=divrem[1]; }
     public FastInteger SubtractInt(int val) {
       if (val == Integer.MIN_VALUE) {
         return this.AddBig(valueNegativeInt32MinValue);
-      } else if (this.integerMode == 0) {
+      }
+      if (this.integerMode == 0) {
         if ((val < 0 && Integer.MAX_VALUE + val < this.smallValue) ||
-            (val > 0 && Integer.MIN_VALUE + val > this.smallValue)) {
+                (val > 0 && Integer.MIN_VALUE + val > this.smallValue)) {
           // would overflow, convert to large
           this.integerMode = 2;
           this.largeValue = BigInteger.valueOf(this.smallValue);
@@ -728,9 +740,8 @@ bigrem=divrem[1]; }
           this.smallValue -= val;
         }
         return this;
-      } else {
-        return this.AddInt(-val);
       }
+      return this.AddInt(-val);
     }
 
     /**
@@ -742,10 +753,7 @@ bigrem=divrem[1]; }
     public FastInteger AddBig(BigInteger bigintVal) {
       switch (this.integerMode) {
           case 0: {
-            if (bigintVal.canFitInInt()) {
-              return this.AddInt(bigintVal.intValue());
-            }
-            return this.Add(FastInteger.FromBig(bigintVal));
+            return bigintVal.canFitInInt() ? this.AddInt(bigintVal.intValue()) : this.Add(FastInteger.FromBig(bigintVal));
           }
         case 1:
           this.integerMode = 2;
@@ -880,9 +888,8 @@ bigrem=divrem[1]; }
           this.mnum = MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
         }
         return this;
-      } else {
-        return this.AddInt(1);
       }
+      return this.AddInt(1);
     }
 
     public FastInteger Decrement() {
@@ -895,9 +902,8 @@ bigrem=divrem[1]; }
           this.mnum.SubtractInt(1);
         }
         return this;
-      } else {
-        return this.SubtractInt(1);
       }
+      return this.SubtractInt(1);
     }
 
     /**

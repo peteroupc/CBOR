@@ -88,11 +88,14 @@ namespace PeterO {
       int c = stream.ReadByte();
       if (c == 'd') {
         return readDictionary(stream);
-      } else if (c == 'l') {
+      }
+      if (c == 'l') {
         return readList(stream);
-      } else if (allowEnd && c == 'e') {
+      }
+      if (allowEnd && c == 'e') {
         return null;
-      } else if (c == 'i') {
+      }
+      if (c == 'i') {
         return readInteger(stream);
       } else if (c >= '0' && c <= '9') {
         return readString(stream, (char)c);
@@ -105,9 +108,8 @@ namespace PeterO {
       var builder = new StringBuilder();
       if (firstChar < (int)'0' && firstChar > (int)'9') {
         throw new CBORException("Invalid integer encoding");
-      } else {
-        builder.Append(firstChar);
       }
+      builder.Append(firstChar);
       while (true) {
         int c = stream.ReadByte();
         if (c < 0) {
@@ -122,9 +124,9 @@ namespace PeterO {
         }
       }
       CBORObject number = CBORDataUtilities.ParseJSONNumber(
-        builder.ToString(),
-        true,
-        true);
+                               builder.ToString(),
+                               true,
+                               true);
       int length = 0;
       try {
         length = number.AsInt32();
@@ -137,8 +139,6 @@ namespace PeterO {
           throw new CBORException("Premature end of data");
         case -1:
           throw new CBORException("Invalid UTF-8");
-        default:
-          break;
       }
       return CBORObject.FromObject(builder.ToString());
     }

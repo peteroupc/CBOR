@@ -133,15 +133,7 @@ import com.upokecenter.cbor.*;
     private static CBORObject RandomCBORMap(FastRandom rand, int depth) {
       int x = rand.NextValue(100);
       int count = 0;
-      if (x < 80) {
-        count = 2;
-      } else if (x < 93) {
-        count = 1;
-      } else if (x < 98) {
-        count = 0;
-      } else {
-        count = 10;
-      }
+      count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
       CBORObject cborRet = CBORObject.NewMap();
       for (int i = 0; i < count; ++i) {
         CBORObject key = RandomCBORObject(rand, depth + 1);
@@ -154,7 +146,7 @@ import com.upokecenter.cbor.*;
     private static CBORObject RandomCBORTaggedObject(FastRandom rand, int depth) {
       int tag = 0;
       if (rand.NextValue(2) == 0) {
-        int[] tagselection = new int[] { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30, 30, 0, 1, 25, 26, 27 };
+        int[] tagselection = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30, 30, 0, 1, 25, 26, 27 };
         tag = tagselection[rand.NextValue(tagselection.length)];
       } else {
         tag = rand.NextValue(0x1000000);
@@ -199,15 +191,7 @@ import com.upokecenter.cbor.*;
     private static CBORObject RandomCBORArray(FastRandom rand, int depth) {
       int x = rand.NextValue(100);
       int count = 0;
-      if (x < 80) {
-        count = 2;
-      } else if (x < 93) {
-        count = 1;
-      } else if (x < 98) {
-        count = 0;
-      } else {
-        count = 10;
-      }
+      count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
       CBORObject cborRet = CBORObject.NewArray();
       for (int i = 0; i < count; ++i) {
         cborRet.Add(RandomCBORObject(rand, depth + 1));
@@ -483,12 +467,11 @@ import com.upokecenter.cbor.*;
     private static String ObjectMessages(CBORObject o1, CBORObject o2, String s) {
       if (o1.getType() == CBORType.Number && o2.getType() == CBORType.Number) {
         return s + ":\n" + o1.toString() + " and\n" + o2.toString() + "\nOR\n" +
-          o1.AsExtendedDecimal().toString() + " and\n" + o2.AsExtendedDecimal().toString() + "\nOR\n" +
-          "AddSubCompare(" + ToByteArrayString(o1) + ",\n" + ToByteArrayString(o2) + ");";
-      } else {
-        return s + ":\n" + o1.toString() + " and\n" + o2.toString() + "\nOR\n" +
-          ToByteArrayString(o1) + " and\n" + ToByteArrayString(o2);
+        o1.AsExtendedDecimal().toString() + " and\n" + o2.AsExtendedDecimal().toString() + "\nOR\n" +
+        "AddSubCompare(" + ToByteArrayString(o1) + ",\n" + ToByteArrayString(o2) + ");";
       }
+      return s + ":\n" + o1.toString() + " and\n" + o2.toString() + "\nOR\n" +
+      ToByteArrayString(o1) + " and\n" + ToByteArrayString(o2);
     }
 
     public static void CompareTestEqual(CBORObject o1, CBORObject o2) {
@@ -678,8 +661,8 @@ import com.upokecenter.cbor.*;
     public void TestCompare() {
       FastRandom r = new FastRandom();
       // String badstr = null;
-      int count = 500;
-      for (int i = 0; i < count; ++i) {
+      int CompareCount = 500;
+      for (int i = 0; i < CompareCount; ++i) {
         CBORObject o1 = RandomCBORObject(r);
         CBORObject o2 = RandomCBORObject(r);
         CompareTestReciprocal(o1, o2);
@@ -707,7 +690,7 @@ import com.upokecenter.cbor.*;
         o1 = CBORObject.FromObject(Double.NaN);
         CompareTestLess(o2, o1);
       }
-      CBORObject[] sortedObjects = new CBORObject[] {
+      CBORObject[] sortedObjects = {
         CBORObject.Undefined,
         CBORObject.Null,
         CBORObject.False,
@@ -998,7 +981,7 @@ import com.upokecenter.cbor.*;
       try {
         CBORObject.DecodeFromBytes(new byte[] {   });
         Assert.fail("Should have failed");
-      } catch (IllegalArgumentException ex) {
+      } catch (CBORException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
@@ -6553,7 +6536,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.Create(bi, BigInteger.ONE)));
         bi=bi.multiply(negseven);
       }
-      BigInteger[] ranges = new BigInteger[] {
+      BigInteger[] ranges = {
         BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.valueOf(512)),
         BigInteger.valueOf(Long.MIN_VALUE).add(BigInteger.valueOf(512)),
         BigInteger.ZERO.subtract(BigInteger.valueOf(512)),
@@ -6579,7 +6562,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 
     @Test
     public void TestLong() {
-      long[] ranges = new long[] {
+      long[] ranges = {
         -65539, 65539,
         0xFFFFF000L, 0x100000400L,
         Long.MAX_VALUE - 1000, Long.MAX_VALUE,
@@ -6704,7 +6687,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     @Test
     public void TestTags() {
       BigInteger maxuint = (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE);
-      BigInteger[] ranges = new BigInteger[] {
+      BigInteger[] ranges = {
         BigInteger.valueOf(37),
         BigInteger.valueOf(65539),
         BigInteger.valueOf(Integer.MAX_VALUE).subtract(BigInteger.valueOf(500)),

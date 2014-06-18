@@ -11,7 +11,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
-using Test;
 
 namespace CBOR {
   [TestClass]
@@ -49,10 +48,7 @@ namespace CBOR {
     }
 
     private bool Contains(string str, string sub) {
-      if (sub.Length == 1) {
-        return str.IndexOf(sub[0]) >= 0;
-      }
-      return str.IndexOf(sub, StringComparison.Ordinal) >= 0;
+      return (sub.Length == 1) ? (str.IndexOf(sub[0]) >= 0) : (str.IndexOf(sub, StringComparison.Ordinal) >= 0);
     }
 
     private bool StartsWith(string str, string sub) {
@@ -93,17 +89,11 @@ namespace CBOR {
     }
 
     private string DecFracString(ExtendedDecimal df) {
-      return "ExtendedDecimal.FromString(\"" + df.ToString() + "\")";
+      return "ExtendedDecimal.FromString(\"" + df + "\")";
     }
 
     private static string ConvertOp(string s) {
-      if (s.Equals("S")) {
-        return "sNaN";
-      }
-      if (s.Equals("Q") || s.Equals("#")) {
-        return "NaN";
-      }
-      return s;
+      return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ? "NaN" : s);
     }
 
     private interface IExtendedNumber {
@@ -144,10 +134,7 @@ namespace CBOR {
       #region Equals and GetHashCode implementation
       public override bool Equals(object obj) {
         ExtensiveTest.DecimalNumber other = obj as ExtensiveTest.DecimalNumber;
-        if (other == null) {
-          return false;
-        }
-        return object.Equals(this.ed, other.ed);
+        return (other != null) && object.Equals(this.ed, other.ed);
       }
 
       public override int GetHashCode() {
@@ -405,15 +392,9 @@ namespace CBOR {
           int exponent = (words[0] >> 23) & 0xff;
           int mantissa = words[0] & 0x7fffff;
           if (exponent == 255) {
-            if (mantissa == 0) {
-              return Create(neg ? ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity);
-            }
-            if ((mantissa & 0x00400000) != 0) {
-              return Create(ExtendedFloat.NaN);
-            } else {
-              return Create(ExtendedFloat.SignalingNaN);
-            }
-          } else if (exponent == 0) {
+            return (mantissa == 0) ? Create(neg ? ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity) : (((mantissa & 0x00400000) != 0) ? Create(ExtendedFloat.NaN) : Create(ExtendedFloat.SignalingNaN));
+          }
+          if (exponent == 0) {
             if (mantissa == 0) {
               return Create(neg ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero);
             }
@@ -430,21 +411,16 @@ namespace CBOR {
           }
           exponent -= 23;
           return Create(ExtendedFloat.Create(bigmantissa, (BigInteger)exponent));
-        } else if (words.Length == 2) {
+        }
+        if (words.Length == 2) {
           bool neg = (words[0] >> 31) != 0;
           int exponent = (words[0] >> 20) & 0x7ff;
           int mantissa = words[0] & 0xfffff;
           int mantissaNonzero = mantissa | words[1];
           if (exponent == 2047) {
-            if (mantissaNonzero == 0) {
-              return Create(neg ? ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity);
-            }
-            if ((mantissa & 0x00080000) != 0) {
-              return Create(ExtendedFloat.NaN);
-            } else {
-              return Create(ExtendedFloat.SignalingNaN);
-            }
-          } else if (exponent == 0) {
+            return (mantissaNonzero == 0) ? Create(neg ? ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity) : (((mantissa & 0x00080000) != 0) ? Create(ExtendedFloat.NaN) : Create(ExtendedFloat.SignalingNaN));
+          }
+          if (exponent == 0) {
             if (mantissaNonzero == 0) {
               return Create(neg ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero);
             }
@@ -474,15 +450,9 @@ namespace CBOR {
           int mantissa = words[0] & 0xffff;
           int mantissaNonzero = mantissa | words[3] | words[1] | words[2];
           if (exponent == 0x7fff) {
-            if (mantissaNonzero == 0) {
-              return Create(neg ? ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity);
-            }
-            if ((mantissa & 0x00008000) != 0) {
-              return Create(ExtendedFloat.NaN);
-            } else {
-              return Create(ExtendedFloat.SignalingNaN);
-            }
-          } else if (exponent == 0) {
+            return (mantissaNonzero == 0) ? Create(neg ? ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity) : (((mantissa & 0x00008000) != 0) ? Create(ExtendedFloat.NaN) : Create(ExtendedFloat.SignalingNaN));
+          }
+          if (exponent == 0) {
             if (mantissaNonzero == 0) {
               return Create(neg ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero);
             }
@@ -522,10 +492,7 @@ namespace CBOR {
       #region Equals and GetHashCode implementation
       public override bool Equals(object obj) {
         ExtensiveTest.BinaryNumber other = obj as ExtensiveTest.BinaryNumber;
-        if (other == null) {
-          return false;
-        }
-        return this.ef.CompareTo(other.ef) == 0;
+        return (other != null) && (this.ef.CompareTo(other.ef) == 0);
       }
 
       public override int GetHashCode() {
@@ -683,44 +650,43 @@ namespace CBOR {
         if (chunks.Length < 6) {
           return 0;
         }
-        op1 = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[4]) });
-        op2 = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[5]) });
+        op1 = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[4]) });
+        op2 = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[5]) });
         if (chunks.Length == 6 || chunks[6].Length == 0) {
           result = op2;
           op2 = null;
         } else {
-          result = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[6]) });
+          result = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[6]) });
         }
       } else if (size == 1) {
         // double
         if (chunks.Length < 8) {
           return 0;
         }
-        op1 = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[4]), this.HexInt(chunks[5]) });
-        op2 = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[6]), this.HexInt(chunks[7]) });
+        op1 = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[4]), this.HexInt(chunks[5]) });
+        op2 = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[6]), this.HexInt(chunks[7]) });
         if (chunks.Length == 8 || chunks[8].Length == 0) {
           result = op2;
           op2 = null;
           return 0;
-        } else {
-          result = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[8]), this.HexInt(chunks[9]) });
         }
+        result = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[8]), this.HexInt(chunks[9]) });
       } else if (size == 2) {
         // quad
         if (chunks.Length < 12) {
           return 0;
         }
-        op1 = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[4]), this.HexInt(chunks[5]),
+        op1 = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[4]), this.HexInt(chunks[5]),
                                             this.HexInt(chunks[6]),
                                             this.HexInt(chunks[7]) });
-        op2 = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[8]), this.HexInt(chunks[9]),
+        op2 = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[8]), this.HexInt(chunks[9]),
                                             this.HexInt(chunks[10]),
                                             this.HexInt(chunks[11]) });
         if (chunks.Length == 12 || chunks[12].Length == 0) {
           result = op2;
           op2 = null;
         } else {
-          result = BinaryNumber.FromFloatWords(new int[] { this.HexInt(chunks[12]), this.HexInt(chunks[13]),
+          result = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[12]), this.HexInt(chunks[13]),
                                                  this.HexInt(chunks[14]),
                                                  this.HexInt(chunks[15]) });
         }
@@ -1070,7 +1036,7 @@ namespace CBOR {
           BinaryNumber.FromString(op2str);
         op3 = String.IsNullOrEmpty(op3str) ? null :
           BinaryNumber.FromString(op3str);
-        result = BinaryNumber.FromString(sresult.ToString());
+        result = BinaryNumber.FromString(sresult);
       } else {
         op1 = DecimalNumber.Create(ExtendedDecimal.FromString(op1str));
         op2 = String.IsNullOrEmpty(op2str) ? null :
@@ -1078,7 +1044,7 @@ namespace CBOR {
         op3 = String.IsNullOrEmpty(op3str) ? null :
           DecimalNumber.Create(ExtendedDecimal.FromString(op3str));
         result = DecimalNumber.Create(
-          ExtendedDecimal.FromString(sresult.ToString()));
+          ExtendedDecimal.FromString(sresult));
       }
       int expectedFlags = 0;
       if (this.Contains(flags, "x")) {

@@ -71,10 +71,7 @@ namespace PeterO.Cbor {
           return (a[i] < b[i]) ? -1 : 1;
         }
       }
-      if (a.Length != b.Length) {
-        return (a.Length < b.Length) ? -1 : 1;
-      }
-      return 0;
+      return (a.Length != b.Length) ? ((a.Length < b.Length) ? -1 : 1) : 0;
     }
 
     public static BigInteger BigIntegerFromSingle(float flt) {
@@ -103,7 +100,8 @@ namespace PeterO.Cbor {
           mantissa = -mantissa;
         }
         return (BigInteger)mantissa;
-      } else if (fpexponent > 0) {
+      }
+      if (fpexponent > 0) {
         // Value is an integer
         var bigmantissa = (BigInteger)mantissa;
         bigmantissa <<= fpexponent;
@@ -127,8 +125,8 @@ namespace PeterO.Cbor {
 
     public static BigInteger BigIntegerFromDouble(double dbl) {
       long lvalue = BitConverter.ToInt64(
-        BitConverter.GetBytes((double)dbl),
-        0);
+                         BitConverter.GetBytes((double)dbl),
+                         0);
       int value0 = unchecked((int)(lvalue & 0xFFFFFFFFL));
       int value1 = unchecked((int)((lvalue >> 32) & 0xFFFFFFFFL));
       var floatExponent = (int)((value1 >> 20) & 0x7ff);
@@ -152,7 +150,7 @@ namespace PeterO.Cbor {
         }
       }
       floatExponent -= 1075;
-      byte[] bytes = new byte[9];
+      var bytes = new byte[9];
       bytes[0] = (byte)(value0 & 0xff);
       bytes[1] = (byte)((value0 >> 8) & 0xff);
       bytes[2] = (byte)((value0 >> 16) & 0xff);
@@ -168,7 +166,8 @@ namespace PeterO.Cbor {
           bigmantissa = -bigmantissa;
         }
         return bigmantissa;
-      } else if (floatExponent > 0) {
+      }
+      if (floatExponent > 0) {
         // Value is an integer
         bigmantissa <<= floatExponent;
         if (neg) {
@@ -191,9 +190,11 @@ namespace PeterO.Cbor {
       value &= 0x7fff;
       if (value >= 0x7c00) {
         return BitConverter.ToSingle(BitConverter.GetBytes((int)(0x3fc00 | (value & 0x3ff)) << 13 | negvalue), 0);
-      } else if (value > 0x400) {
+      }
+      if (value > 0x400) {
         return BitConverter.ToSingle(BitConverter.GetBytes((int)((value + 0x1c000) << 13) | negvalue), 0);
-      } else if ((value & 0x400) == value) {
+      }
+      if ((value & 0x400) == value) {
         return BitConverter.ToSingle(BitConverter.GetBytes((int)((value == 0) ? 0 : 0x38800000) | negvalue), 0);
       } else {
         // denormalized

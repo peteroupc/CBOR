@@ -14,8 +14,10 @@ namespace PeterO {
       long value = BitConverter.ToInt64(
         BitConverter.GetBytes((double)dbl),
         0);
-      return new int[] { unchecked((int)(value & 0xFFFFFFFFL)),
-        unchecked((int)((value >> 32) & 0xFFFFFFFFL)) };
+      var ret = new int[2];
+      ret[0] = unchecked((int)(value & 0xFFFFFFFFL));
+      ret[1] = unchecked((int)((value >> 32) & 0xFFFFFFFFL));
+      return ret;
     }
 
     public static double IntegersToDouble(int[] integers) {

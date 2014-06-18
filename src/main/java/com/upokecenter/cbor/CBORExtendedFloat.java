@@ -67,18 +67,12 @@ import com.upokecenter.util.*;
 
     public boolean CanFitInSingle(Object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
-      if (!ef.isFinite()) {
-        return true;
-      }
-      return ef.compareTo(ExtendedFloat.FromSingle(ef.ToSingle())) == 0;
+      return (!ef.isFinite()) || (ef.compareTo(ExtendedFloat.FromSingle(ef.ToSingle())) == 0);
     }
 
     public boolean CanFitInDouble(Object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
-      if (!ef.isFinite()) {
-        return true;
-      }
-      return ef.compareTo(ExtendedFloat.FromDouble(ef.ToDouble())) == 0;
+      return (!ef.isFinite()) || (ef.compareTo(ExtendedFloat.FromDouble(ef.ToDouble())) == 0);
     }
 
     public boolean CanFitInInt32(Object obj) {
@@ -126,10 +120,7 @@ import com.upokecenter.util.*;
 
     public int Sign(Object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
-      if (ef.IsNaN()) {
-        return 2;
-      }
-      return ef.signum();
+      return ef.IsNaN() ? 2 : ef.signum();
     }
 
     public boolean IsIntegral(Object obj) {

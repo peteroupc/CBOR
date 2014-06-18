@@ -107,15 +107,12 @@ import com.upokecenter.util.*;
     }
 
     public boolean IsZero(Object obj) {
-      return (((Float)obj).floatValue()) == 0.0f;
+      return ((Float)obj).floatValue() == 0.0f;
     }
 
     public int Sign(Object obj) {
       float flt = ((Float)obj).floatValue();
-      if (Float.isNaN(flt)) {
-        return 2;
-      }
-      return flt == 0.0f ? 0 : (flt < 0.0f ? -1 : 1);
+      return Float.isNaN(flt) ? 2 : (flt == 0.0f ? 0 : (flt < 0.0f ? -1 : 1));
     }
 
     public boolean IsIntegral(Object obj) {
@@ -124,7 +121,7 @@ import com.upokecenter.util.*;
         return false;
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
-      return fltItem2 == fltItem;
+      return fltItem == fltItem2;
     }
 
     public Object Negate(Object obj) {

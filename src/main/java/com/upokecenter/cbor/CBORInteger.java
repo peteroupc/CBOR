@@ -85,10 +85,7 @@ import com.upokecenter.util.*;
     }
 
     public Object Negate(Object obj) {
-      if (((((Long)obj).longValue())) == Long.MIN_VALUE) {
-        return BigInteger.ONE.shiftLeft(63);
-      }
-      return -((((Long)obj).longValue()));
+      return (((((Long)obj).longValue())) == Long.MIN_VALUE) ? (BigInteger.ONE.shiftLeft(63)) : (-((((Long)obj).longValue())));
     }
 
     public boolean CanTruncatedIntFitInInt64(Object obj) {
@@ -123,10 +120,7 @@ import com.upokecenter.util.*;
 
     public Object Abs(Object obj) {
       long val = (((Long)obj).longValue());
-      if (val == Integer.MIN_VALUE) {
-        return BigInteger.ONE.shiftLeft(63);
-      }
-      return (val < 0) ? -val : obj;
+      return (val == Integer.MIN_VALUE) ? (BigInteger.ONE.shiftLeft(63)) : ((val < 0) ? -val : obj);
     }
 
 public ExtendedRational AsExtendedRational(Object obj) {

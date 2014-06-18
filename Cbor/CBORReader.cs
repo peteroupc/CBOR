@@ -37,7 +37,7 @@ namespace PeterO.Cbor {
       if (headByte < 24) {
         return headByte;
       }
-      byte[] data = new byte[8];
+      var data = new byte[8];
       switch (headByte & 0x1f) {
           case 24: {
             int tmp = stream.ReadByte();
@@ -105,18 +105,17 @@ namespace PeterO.Cbor {
       }
       if (uadditional <= 0x10000) {
         // Simple case: small size
-        byte[] data = new byte[(int)uadditional];
+        var data = new byte[(int)uadditional];
         if (stream.Read(data, 0, data.Length) != data.Length) {
           throw new CBORException("Premature end of stream");
         }
         if (outputStream != null) {
           outputStream.Write(data, 0, data.Length);
           return null;
-        } else {
-          return data;
         }
+        return data;
       } else {
-        byte[] tmpdata = new byte[0x10000];
+        var tmpdata = new byte[0x10000];
         var total = (int)uadditional;
         if (outputStream != null) {
           while (total > 0) {
@@ -128,18 +127,17 @@ namespace PeterO.Cbor {
             total -= bufsize;
           }
           return null;
-        } else {
-          using (var ms = new MemoryStream()) {
-            while (total > 0) {
-              int bufsize = Math.Min(tmpdata.Length, total);
-              if (stream.Read(tmpdata, 0, bufsize) != bufsize) {
-                throw new CBORException("Premature end of stream");
-              }
-              ms.Write(tmpdata, 0, bufsize);
-              total -= bufsize;
+        }
+        using (var ms = new MemoryStream()) {
+          while (total > 0) {
+            int bufsize = Math.Min(tmpdata.Length, total);
+            if (stream.Read(tmpdata, 0, bufsize) != bufsize) {
+              throw new CBORException("Premature end of stream");
             }
-            return ms.ToArray();
+            ms.Write(tmpdata, 0, bufsize);
+            total -= bufsize;
           }
+          return ms.ToArray();
         }
       }
     }
@@ -200,7 +198,7 @@ namespace PeterO.Cbor {
         // will assume it exists for some head bytes
         data[0] = unchecked((byte)firstbyte);
         if (expectedLength > 1 &&
-            this.stream.Read(data, 1, expectedLength - 1) != expectedLength - 1) {
+                this.stream.Read(data, 1, expectedLength - 1) != expectedLength - 1) {
           throw new CBORException("Premature end of data");
         }
         CBORObject cbor = CBORObject.GetFixedLengthObject(firstbyte, data);
@@ -218,7 +216,7 @@ namespace PeterO.Cbor {
       data = new byte[8];
       int lowAdditional = 0;
       switch (firstbyte & 0x1f) {
-          case 24: {
+        case 24: {
             int tmp = this.stream.ReadByte();
             if (tmp < 0) {
               throw new CBORException("Premature end of data");
@@ -227,7 +225,7 @@ namespace PeterO.Cbor {
             uadditional = lowAdditional;
             break;
           }
-          case 25: {
+        case 25: {
             if (this.stream.Read(data, 0, 2) != 2) {
               throw new CBORException("Premature end of data");
             }
@@ -236,7 +234,7 @@ namespace PeterO.Cbor {
             uadditional = lowAdditional;
             break;
           }
-          case 26: {
+        case 26: {
             if (this.stream.Read(data, 0, 4) != 4) {
               throw new CBORException("Premature end of data");
             }
@@ -246,13 +244,13 @@ namespace PeterO.Cbor {
             uadditional |= (long)(data[3] & (long)0xff);
             break;
           }
-          case 27: {
+        case 27: {
             if (this.stream.Read(data, 0, 8) != 8) {
               throw new CBORException("Premature end of data");
             }
             if ((((int)data[0]) & 0x80) != 0) {
               // Won't fit in a signed 64-bit number
-              byte[] uabytes = new byte[9];
+              var uabytes = new byte[9];
               uabytes[0] = data[7];
               uabytes[1] = data[6];
               uabytes[2] = data[5];
@@ -276,8 +274,6 @@ namespace PeterO.Cbor {
             }
             break;
           }
-        default:
-          break;
       }
       // The following doesn't check for major types 0 and 1,
       // since all of them are fixed-length types and are
@@ -312,12 +308,13 @@ namespace PeterO.Cbor {
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
-                                    CBORUtilities.BigIntToString(bigintAdditional) +
-                                    " is bigger than supported");
-          } else if (uadditional > Int32.MaxValue) {
+            CBORUtilities.BigIntToString(bigintAdditional) +
+            " is bigger than supported");
+          }
+          if (uadditional > Int32.MaxValue) {
             throw new CBORException("Length of " +
-                                    Convert.ToString((long)uadditional, CultureInfo.InvariantCulture) +
-                                    " is bigger than supported");
+            Convert.ToString((long)uadditional, CultureInfo.InvariantCulture) +
+            " is bigger than supported");
           }
           data = ReadByteData(this.stream, uadditional, null);
           var cbor = new CBORObject(CBORObject.CBORObjectTypeByteString, data);
@@ -328,7 +325,8 @@ namespace PeterO.Cbor {
           }
           return cbor;
         }
-      } else if (type == 3) {  // Text string
+      }
+      if (type == 3) {  // Text string
         if (additional == 31) {
           // Streaming text string
           var builder = new StringBuilder();
@@ -348,8 +346,6 @@ namespace PeterO.Cbor {
                   throw new CBORException("Invalid UTF-8");
                 case -2:
                   throw new CBORException("Premature end of data");
-                default:
-                  break;  // No error
               }
             }
           }
@@ -359,12 +355,13 @@ namespace PeterO.Cbor {
         } else {
           if (hasBigAdditional) {
             throw new CBORException("Length of " +
-                                    CBORUtilities.BigIntToString(bigintAdditional) +
-                                    " is bigger than supported");
-          } else if (uadditional > Int32.MaxValue) {
+            CBORUtilities.BigIntToString(bigintAdditional) +
+            " is bigger than supported");
+          }
+          if (uadditional > Int32.MaxValue) {
             throw new CBORException("Length of " +
-                                    Convert.ToString((long)uadditional, CultureInfo.InvariantCulture) +
-                                    " is bigger than supported");
+            Convert.ToString((long)uadditional, CultureInfo.InvariantCulture) +
+            " is bigger than supported");
           }
           var builder = new StringBuilder();
           switch (DataUtilities.ReadUtf8(this.stream, (int)uadditional, builder, false)) {
@@ -372,8 +369,6 @@ namespace PeterO.Cbor {
               throw new CBORException("Invalid UTF-8");
             case -2:
               throw new CBORException("Premature end of data");
-            default:
-              break;  // No error
           }
           var cbor = new CBORObject(CBORObject.CBORObjectTypeTextString, builder.ToString());
           if (this.stringRefs != null) {
@@ -383,7 +378,8 @@ namespace PeterO.Cbor {
           }
           return cbor;
         }
-      } else if (type == 4) {  // Array
+      }
+      if (type == 4) {  // Array
         CBORObject cbor = CBORObject.NewArray();
         if (this.addSharedRef) {
           this.sharedRefs.AddObject(cbor);
@@ -396,7 +392,8 @@ namespace PeterO.Cbor {
             int headByte = this.stream.ReadByte();
             if (headByte < 0) {
               throw new CBORException("Premature end of data");
-            } else if (headByte == 0xff) {
+            }
+            if (headByte == 0xff) {
               // Break code was read
               break;
             }
@@ -405,35 +402,36 @@ namespace PeterO.Cbor {
             }
             ++this.depth;
             CBORObject o = this.ReadForFirstByte(
-              headByte,
-              filter == null ? null : filter.GetSubFilter(vtindex));
+                                   headByte,
+                                   filter == null ? null : filter.GetSubFilter(vtindex));
             --this.depth;
             cbor.Add(o);
             ++vtindex;
           }
           return cbor;
-        } else {
-          if (hasBigAdditional) {
-            throw new CBORException("Length of " +
-                                    CBORUtilities.BigIntToString(bigintAdditional) +
-                                    " is bigger than supported");
-          } else if (uadditional > Int32.MaxValue) {
-            throw new CBORException("Length of " +
-                                    Convert.ToString((long)uadditional, CultureInfo.InvariantCulture) +
-                                    " is bigger than supported");
-          }
-          if (filter != null && !filter.ArrayLengthMatches(uadditional)) {
-            throw new CBORException("Array is too long");
-          }
-          ++this.depth;
-          for (long i = 0; i < uadditional; ++i) {
-            cbor.Add(
-              this.Read(filter == null ? null : filter.GetSubFilter(i)));
-          }
-          --this.depth;
-          return cbor;
         }
-      } else if (type == 5) {  // Map, type 5
+        if (hasBigAdditional) {
+          throw new CBORException("Length of " +
+          CBORUtilities.BigIntToString(bigintAdditional) +
+          " is bigger than supported");
+        }
+        if (uadditional > Int32.MaxValue) {
+          throw new CBORException("Length of " +
+          Convert.ToString((long)uadditional, CultureInfo.InvariantCulture) +
+          " is bigger than supported");
+        }
+        if (filter != null && !filter.ArrayLengthMatches(uadditional)) {
+          throw new CBORException("Array is too long");
+        }
+        ++this.depth;
+        for (long i = 0; i < uadditional; ++i) {
+          cbor.Add(
+            this.Read(filter == null ? null : filter.GetSubFilter(i)));
+        }
+        --this.depth;
+        return cbor;
+      }
+      if (type == 5) {  // Map, type 5
         CBORObject cbor = CBORObject.NewMap();
         if (this.addSharedRef) {
           this.sharedRefs.AddObject(cbor);
@@ -445,7 +443,8 @@ namespace PeterO.Cbor {
             int headByte = this.stream.ReadByte();
             if (headByte < 0) {
               throw new CBORException("Premature end of data");
-            } else if (headByte == 0xff) {
+            }
+            if (headByte == 0xff) {
               // Break code was read
               break;
             }
@@ -462,25 +461,25 @@ namespace PeterO.Cbor {
             cbor[key] = value;
           }
           return cbor;
-        } else {
-          if (hasBigAdditional) {
-            throw new CBORException("Length of " +
-                                    CBORUtilities.BigIntToString(bigintAdditional) +
-                                    " is bigger than supported");
-          } else if (uadditional > Int32.MaxValue) {
-            throw new CBORException("Length of " +
-                                    Convert.ToString((long)uadditional, CultureInfo.InvariantCulture) +
-                                    " is bigger than supported");
-          }
-          for (long i = 0; i < uadditional; ++i) {
-            ++this.depth;
-            CBORObject key = this.Read(null);
-            CBORObject value = this.Read(null);
-            --this.depth;
-            cbor[key] = value;
-          }
-          return cbor;
         }
+        if (hasBigAdditional) {
+          throw new CBORException("Length of " +
+          CBORUtilities.BigIntToString(bigintAdditional) +
+          " is bigger than supported");
+        }
+        if (uadditional > Int32.MaxValue) {
+          throw new CBORException("Length of " +
+          Convert.ToString((long)uadditional, CultureInfo.InvariantCulture) +
+          " is bigger than supported");
+        }
+        for (long i = 0; i < uadditional; ++i) {
+          ++this.depth;
+          CBORObject key = this.Read(null);
+          CBORObject value = this.Read(null);
+          --this.depth;
+          cbor[key] = value;
+        }
+        return cbor;
       } else if (type == 6) {  // Tagged item
         CBORObject o;
         ICBORTag taginfo = null;
@@ -531,15 +530,12 @@ namespace PeterO.Cbor {
           taginfo = CBORObject.FindTagConverter(bigintAdditional);
         }
         ++this.depth;
-        if (haveFirstByte) {
-          o = this.ReadForFirstByte(newFirstByte, taginfo == null ? null : taginfo.GetTypeFilter());
-        } else {
-          o = this.Read(taginfo == null ? null : taginfo.GetTypeFilter());
-        }
+        o = haveFirstByte ? this.ReadForFirstByte(newFirstByte, taginfo == null ? null : taginfo.GetTypeFilter()) : this.Read(taginfo == null ? null : taginfo.GetTypeFilter());
         --this.depth;
         if (hasBigAdditional) {
           return CBORObject.FromObjectAndTag(o, bigintAdditional);
-        } else if (uadditional < 65536) {
+        }
+        if (uadditional < 65536) {
           if (uadditional == 256) {
             // string tag
             this.stringRefs.Pop();
@@ -563,11 +559,10 @@ namespace PeterO.Cbor {
           return CBORObject.FromObjectAndTag(
             o,
             (int)uadditional);
-        } else {
-          return CBORObject.FromObjectAndTag(
-            o,
-            (BigInteger)uadditional);
         }
+        return CBORObject.FromObjectAndTag(
+          o,
+          (BigInteger)uadditional);
       } else {
         throw new CBORException("Unexpected data encountered");
       }

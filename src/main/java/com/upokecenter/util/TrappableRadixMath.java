@@ -14,13 +14,7 @@ at: http://upokecenter.com/d/
   class TrappableRadixMath<T> implements IRadixMath<T>
   {
     private static PrecisionContext GetTrappableContext(PrecisionContext ctx) {
-      if (ctx == null) {
-        return null;
-      }
-      if (ctx.getTraps() == 0) {
-        return ctx;
-      }
-      return ctx.WithBlankFlags();
+      return (ctx == null) ? null : ((ctx.getTraps() == 0) ? ctx : ctx.WithBlankFlags());
     }
 
     private T TriggerTraps(T result, PrecisionContext src, PrecisionContext dst) {

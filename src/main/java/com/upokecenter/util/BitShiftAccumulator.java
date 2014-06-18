@@ -66,19 +66,11 @@ at: http://upokecenter.com/d/
     private boolean isSmall;
 
     public BigInteger getShiftedInt() {
-        if (this.isSmall) {
-          return BigInteger.valueOf(this.shiftedSmall);
-        } else {
-          return this.shiftedBigInt;
-        }
+        return this.isSmall ? (BigInteger.valueOf(this.shiftedSmall)) : this.shiftedBigInt;
       }
 
     public FastInteger getShiftedIntFast() {
-        if (this.isSmall) {
-          return new FastInteger(this.shiftedSmall);
-        } else {
-          return FastInteger.FromBig(this.shiftedBigInt);
-        }
+        return this.isSmall ? (new FastInteger(this.shiftedSmall)) : FastInteger.FromBig(this.shiftedBigInt);
       }
 
     private FastInteger discardedBitCount;
@@ -219,9 +211,8 @@ at: http://upokecenter.com/d/
         }
         // System.out.println("{0:X8} kbl=" + (kb));
         return new FastInteger(kb);
-      } else {
-        return new FastInteger(this.shiftedBigInt.signum()==0 ? 1 : this.shiftedBigInt.bitLength());
       }
+      return new FastInteger(this.shiftedBigInt.signum()==0 ? 1 : this.shiftedBigInt.bitLength());
     }
 
     private void ShiftBigToBits(int bits) {
@@ -251,9 +242,8 @@ at: http://upokecenter.com/d/
           if (!bitShift.CanFitInInt32()) {
             this.ShiftRight(bitShift);
             return;
-          } else {
-            bs = bitShift.AsInt32();
           }
+          bs = bitShift.AsInt32();
         }
         this.knownBitLength.SetInt(bits);
         this.discardedBitCount.AddInt(bs);
@@ -318,9 +308,8 @@ at: http://upokecenter.com/d/
       for (int i = SmallBitLength - 1; i >= 0; --i) {
         if ((this.shiftedSmall & (1 << i)) != 0) {
           break;
-        } else {
-          --kb;
         }
+        --kb;
       }
       int shift = (int)Math.min(kb, bits);
       boolean shiftingMoreBits = bits > kb;

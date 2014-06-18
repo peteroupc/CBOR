@@ -61,11 +61,7 @@ import com.upokecenter.util.*;
         return CBORObject.FromObject(mantissa);
       }
       // NOTE: Discards tags. See comment in CBORTag2.
-      if (isDecimal) {
-        return CBORObject.FromObject(ExtendedDecimal.Create(mantissa, exponent));
-      } else {
-        return CBORObject.FromObject(ExtendedFloat.Create(mantissa, exponent));
-      }
+      return isDecimal ? CBORObject.FromObject(ExtendedDecimal.Create(mantissa, exponent)) : CBORObject.FromObject(ExtendedFloat.Create(mantissa, exponent));
     }
 
     public CBORObject ValidateObject(CBORObject obj) {

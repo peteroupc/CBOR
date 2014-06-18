@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -11,7 +11,6 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
-using PeterO.Cbor;
 
 namespace Test {
   [TestClass]
@@ -30,13 +29,10 @@ namespace Test {
       RegexOptions.Compiled);
 
     private static TValue GetKeyOrDefault<TKey, TValue>(IDictionary<TKey, TValue> dict, TKey key, TValue defaultValue) {
-      if (!dict.ContainsKey(key)) {
-        return defaultValue;
-      }
-      return dict[key];
+      return (!dict.ContainsKey(key)) ? defaultValue : dict[key];
     }
 
-    public void ParseDecTest(string ln, IDictionary<string, string> context) {
+    public static void ParseDecTest(string ln, IDictionary<string, string> context) {
       Match match;
       if (ln.Contains("-- ")) {
         ln = ln.Substring(0, ln.IndexOf("-- ", StringComparison.Ordinal));
@@ -339,10 +335,10 @@ namespace Test {
                   TextWriter oldOut = Console.Out;
                   try {
                     Console.SetOut(TextWriter.Null);
-                    this.ParseDecTest(ln, context);
+                    ParseDecTest(ln, context);
                   } catch (Exception) {
                     Console.SetOut(oldOut);
-                    this.ParseDecTest(ln, context);
+                    ParseDecTest(ln, context);
                   } finally {
                     Console.SetOut(oldOut);
                   }

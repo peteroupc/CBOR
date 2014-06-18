@@ -172,10 +172,7 @@ namespace PeterO {
     /// <returns>True if <paramref name='thisValue'/> is less than <paramref
     /// name='otherValue'/> ; otherwise, false.</returns>
     public static bool operator <(BigInteger thisValue, BigInteger otherValue) {
-      if (thisValue == null) {
-        return otherValue != null;
-      }
-      return thisValue.CompareTo(otherValue) < 0;
+      return (thisValue == null) ? (otherValue != null) : (thisValue.CompareTo(otherValue) < 0);
     }
 
     /// <summary>Determines whether a BigInteger instance is less than
@@ -185,10 +182,7 @@ namespace PeterO {
     /// <returns>True if <paramref name='thisValue'/> is up to <paramref
     /// name='otherValue'/> ; otherwise, false.</returns>
     public static bool operator <=(BigInteger thisValue, BigInteger otherValue) {
-      if (thisValue == null) {
-        return true;
-      }
-      return thisValue.CompareTo(otherValue) <= 0;
+      return (thisValue == null) || (thisValue.CompareTo(otherValue) <= 0);
     }
 
     /// <summary>Determines whether a BigInteger instance is greater than
@@ -198,10 +192,7 @@ namespace PeterO {
     /// <returns>True if <paramref name='thisValue'/> is greater than
     /// <paramref name='otherValue'/> ; otherwise, false.</returns>
     public static bool operator >(BigInteger thisValue, BigInteger otherValue) {
-      if (thisValue == null) {
-        return false;
-      }
-      return thisValue.CompareTo(otherValue) > 0;
+      return (thisValue != null) && (thisValue.CompareTo(otherValue) > 0);
     }
 
     /// <summary>Determines whether a BigInteger value is greater than
@@ -211,10 +202,7 @@ namespace PeterO {
     /// <returns>True if <paramref name='thisValue'/> is at least <paramref
     /// name='otherValue'/> ; otherwise, false.</returns>
     public static bool operator >=(BigInteger thisValue, BigInteger otherValue) {
-      if (thisValue == null) {
-        return otherValue == null;
-      }
-      return thisValue.CompareTo(otherValue) >= 0;
+      return (thisValue == null) ? (otherValue == null) : (thisValue.CompareTo(otherValue) >= 0);
     }
 
     /// <summary>Gets a value indicating whether this object&apos;s value
@@ -237,7 +225,6 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
     /// <summary>Not documented yet.</summary>
     /// <param name='thisValue'>A BigInteger object. (2).</param>
     /// <returns>A BigInteger object.</returns>
@@ -412,10 +399,7 @@ namespace PeterO {
     /// <param name='other'>A BigInteger object.</param>
     /// <returns>A Boolean object.</returns>
     public bool Equals(BigInteger other) {
-      if (other == null) {
-        return false;
-      }
-      return this.CompareTo(other) == 0;
+      return (other != null) && (this.CompareTo(other) == 0);
     }
 
     /// <summary>Returns a BigInteger with every bit flipped.</summary>

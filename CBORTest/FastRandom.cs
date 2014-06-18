@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -15,14 +15,14 @@ namespace Test {
   {
     private const int ReseedCount = 10000;
 
-    private System.Random rand;
+    private Random rand;
     private int count;
 
     private int w = 521288629;
     private int z = 362436069;
 
     public FastRandom() {
-      this.rand = new System.Random();
+      this.rand = new Random();
       this.count = ReseedCount;
     }
 

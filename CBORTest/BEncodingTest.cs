@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 
@@ -30,7 +30,7 @@ namespace Test {
       }
     }
 
-    public void doTestLong(long value) {
+    public static void doTestLong(long value) {
       String b = "i" + value + "e";
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
       Assert.AreEqual(value, beo.AsInt64());
@@ -38,7 +38,7 @@ namespace Test {
       Assert.AreEqual(b, newb);
     }
 
-    public void doTestString(String value) {
+    public static void doTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
       Assert.AreEqual(value, beo.AsString());
@@ -48,12 +48,12 @@ namespace Test {
 
     [TestMethod]
     public void testLong() {
-      this.doTestLong(0);
-      this.doTestLong(-1);
-      this.doTestLong(Int32.MinValue);
-      this.doTestLong(Int32.MaxValue);
-      this.doTestLong(Int64.MinValue);
-      this.doTestLong(Int64.MaxValue);
+      doTestLong(0);
+      doTestLong(-1);
+      doTestLong(Int32.MinValue);
+      doTestLong(Int32.MaxValue);
+      doTestLong(Int64.MinValue);
+      doTestLong(Int64.MaxValue);
     }
 
     [TestMethod]
@@ -100,22 +100,22 @@ namespace Test {
 
     [TestMethod]
     public void testString() {
-      this.doTestString(String.Empty);
-      this.doTestString(" ");
-      this.doTestString("test");
-      this.doTestString("testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods");
-      this.doTestString("te\u007fst");
-      this.doTestString("te\u0080st");
-      this.doTestString("te\u3000st");
-      this.doTestString("te\u07ffst");
-      this.doTestString("te\u0800st");
-      this.doTestString("te\uffffst");
-      this.doTestString("te\ud7ffst");
-      this.doTestString("te\ue000st");
-      this.doTestString("te\ud800\udc00st");
-      this.doTestString("te\udbff\udc00st");
-      this.doTestString("te\ud800\udfffst");
-      this.doTestString("te\udbff\udfffst");
+      doTestString(String.Empty);
+      doTestString(" ");
+      doTestString("test");
+      doTestString("testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods");
+      doTestString("te\u007fst");
+      doTestString("te\u0080st");
+      doTestString("te\u3000st");
+      doTestString("te\u07ffst");
+      doTestString("te\u0800st");
+      doTestString("te\uffffst");
+      doTestString("te\ud7ffst");
+      doTestString("te\ue000st");
+      doTestString("te\ud800\udc00st");
+      doTestString("te\udbff\udc00st");
+      doTestString("te\ud800\udfffst");
+      doTestString("te\udbff\udfffst");
     }
   }
 }
