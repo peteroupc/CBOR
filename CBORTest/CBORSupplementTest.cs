@@ -1283,7 +1283,7 @@ throw new InvalidOperationException(String.Empty, ex);
 
     [TestMethod]
     public void TestCBORBigInteger() {
-      BigInteger bi = (BigInteger)Int64.MaxValue;
+      var bi = (BigInteger)Int64.MaxValue;
       bi += BigInteger.One;
       try {
         CBORObject.FromObject(bi).AsInt64();
@@ -1368,9 +1368,9 @@ throw new InvalidOperationException(String.Empty, ex);
 
     [TestMethod]
     public void TestRationalCompareDecimal() {
-      FastRandom fr = new FastRandom();
-      // System.Diagnostics.Stopwatch sw1 = new System.Diagnostics.Stopwatch();
-      // System.Diagnostics.Stopwatch sw2 = new System.Diagnostics.Stopwatch();
+      var fr = new FastRandom();
+      // var sw1 = new System.Diagnostics.Stopwatch();
+      // var sw2 = new System.Diagnostics.Stopwatch();
       for (int i = 0; i < 100; ++i) {
         ExtendedRational er = CBORTest.RandomRational(fr);
         int exp = -100000 + fr.NextValue(200000);
@@ -1391,7 +1391,7 @@ throw new InvalidOperationException(String.Empty, ex);
 
     [TestMethod]
     public void TestRationalDivide() {
-      FastRandom fr = new FastRandom();
+      var fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
         ExtendedRational er = CBORTest.RandomRational(fr);
         ExtendedRational er2 = CBORTest.RandomRational(fr);
@@ -1412,7 +1412,7 @@ throw new InvalidOperationException(String.Empty, ex);
 
     [TestMethod]
     public void TestRationalRemainder() {
-      FastRandom fr = new FastRandom();
+      var fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
         ExtendedRational er;
         ExtendedRational er2;
@@ -1441,7 +1441,7 @@ throw new InvalidOperationException(String.Empty, ex);
 
     [TestMethod]
     public void TestRationalCompare() {
-      FastRandom fr = new FastRandom();
+      var fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
         BigInteger num = CBORTest.RandomBigInteger(fr);
         if (num.IsZero) {
@@ -1450,8 +1450,8 @@ throw new InvalidOperationException(String.Empty, ex);
           continue;
         }
         num = BigInteger.Abs(num);
-        ExtendedRational rat = new ExtendedRational(num, BigInteger.One);
-        ExtendedRational rat2 = new ExtendedRational(num, (BigInteger)2);
+        var rat = new ExtendedRational(num, BigInteger.One);
+        var rat2 = new ExtendedRational(num, (BigInteger)2);
         if (rat2.CompareTo(rat) != -1) {
           Assert.Fail(rat + "; " + rat2);
         }
@@ -1469,7 +1469,7 @@ throw new InvalidOperationException(String.Empty, ex);
         if (den.IsZero) {
           den = BigInteger.One;
         }
-        ExtendedRational rat = new ExtendedRational(num, den);
+        var rat = new ExtendedRational(num, den);
         for (int j = 0; j < 10; ++j) {
           BigInteger num2 = num;
           BigInteger den2 = den;
@@ -1479,7 +1479,7 @@ throw new InvalidOperationException(String.Empty, ex);
           }
           num2 *= (BigInteger)mult;
           den2 *= (BigInteger)mult;
-          ExtendedRational rat2 = new ExtendedRational(num2, den2);
+          var rat2 = new ExtendedRational(num2, den2);
           if (rat.CompareTo(rat2) != 0) {
             Assert.AreEqual(
               0,

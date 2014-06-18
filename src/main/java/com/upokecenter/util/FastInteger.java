@@ -253,7 +253,8 @@ at: http://upokecenter.com/d/
         int other) {
         if (other < 0) {
           throw new IllegalArgumentException("other (" + Integer.toString((int)other) + ") is less than " + "0");
-        } else if (other != 0) {
+        }
+      if (other != 0) {
           {
             // Ensure a length of at least 1
             if (this.wordCount == 0) {

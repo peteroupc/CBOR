@@ -86,7 +86,7 @@ namespace PeterO.Cbor {
       }
       for (; i < str.Length; ++i) {
         if (str[i] >= '0' && str[i] <= '9') {
-          int thisdigit = (int)(str[i] - '0');
+          var thisdigit = (int)(str[i] - '0');
           if (mantInt > MaxSafeInt) {
             if (mant == null) {
               mant = new FastInteger(mantInt);
@@ -158,7 +158,7 @@ namespace PeterO.Cbor {
         for (; i < str.Length; ++i) {
           if (str[i] >= '0' && str[i] <= '9') {
             haveDigits = true;
-            int thisdigit = (int)(str[i] - '0');
+            var thisdigit = (int)(str[i] - '0');
             if (expInt > MaxSafeInt) {
               if (exp == null) {
                 exp = new FastInteger(expInt);

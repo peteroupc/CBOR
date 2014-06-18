@@ -29,32 +29,32 @@ namespace PeterO.Cbor {
     }
 
     public double AsDouble(object obj) {
-      ExtendedRational er = (ExtendedRational)obj;
+      var er = (ExtendedRational)obj;
       return er.ToDouble();
     }
 
     public ExtendedDecimal AsExtendedDecimal(object obj) {
-      ExtendedRational er = (ExtendedRational)obj;
+      var er = (ExtendedRational)obj;
       return er.ToExtendedDecimalExactIfPossible(PrecisionContext.Decimal128.WithUnlimitedExponents());
     }
 
     public ExtendedFloat AsExtendedFloat(object obj) {
-      ExtendedRational er = (ExtendedRational)obj;
+      var er = (ExtendedRational)obj;
       return er.ToExtendedFloatExactIfPossible(PrecisionContext.Binary128.WithUnlimitedExponents());
     }
 
     public float AsSingle(object obj) {
-      ExtendedRational er = (ExtendedRational)obj;
+      var er = (ExtendedRational)obj;
       return er.ToSingle();
     }
 
     public BigInteger AsBigInteger(object obj) {
-      ExtendedRational er = (ExtendedRational)obj;
+      var er = (ExtendedRational)obj;
       return er.ToBigInteger();
     }
 
     public long AsInt64(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      var ef = (ExtendedRational)obj;
       if (ef.IsFinite) {
         BigInteger bi = ef.ToBigInteger();
         if (bi.bitLength() <= 63) {
@@ -65,7 +65,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInSingle(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      var ef = (ExtendedRational)obj;
       if (!ef.IsFinite) {
         return true;
       }
@@ -73,7 +73,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInDouble(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      var ef = (ExtendedRational)obj;
       if (!ef.IsFinite) {
         return true;
       }
@@ -89,7 +89,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt64(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      var ef = (ExtendedRational)obj;
       if (!ef.IsFinite) {
         return false;
       }
@@ -98,7 +98,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      var ef = (ExtendedRational)obj;
       if (!ef.IsFinite) {
         return false;
       }
@@ -107,17 +107,17 @@ namespace PeterO.Cbor {
     }
 
     public bool IsZero(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      var ef = (ExtendedRational)obj;
       return ef.IsZero;
     }
 
     public int Sign(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      var ef = (ExtendedRational)obj;
       return ef.Sign;
     }
 
     public bool IsIntegral(object obj) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      var ef = (ExtendedRational)obj;
       if (!ef.IsFinite) {
         return false;
       }
@@ -132,11 +132,11 @@ namespace PeterO.Cbor {
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
-      ExtendedRational ef = (ExtendedRational)obj;
+      var ef = (ExtendedRational)obj;
       if (ef.IsFinite) {
         BigInteger bi = ef.ToBigInteger();
         if (bi.canFitInInt()) {
-          int ret = (int)bi;
+          var ret = (int)bi;
           if (ret >= minValue && ret <= maxValue) {
             return ret;
           }
@@ -146,12 +146,12 @@ namespace PeterO.Cbor {
     }
 
     public object Negate(object obj) {
-      ExtendedRational ed = (ExtendedRational)obj;
+      var ed = (ExtendedRational)obj;
       return ed.Negate();
     }
 
     public object Abs(object obj) {
-      ExtendedRational ed = (ExtendedRational)obj;
+      var ed = (ExtendedRational)obj;
       return ed.Abs();
     }
 

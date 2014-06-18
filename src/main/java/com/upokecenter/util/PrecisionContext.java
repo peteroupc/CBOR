@@ -115,7 +115,7 @@ at: http://upokecenter.com/d/
      * be higher than EMax + 1 - Precision.
      */
     public boolean getClampNormalExponents() {
-        return this.hasExponentRange ? this.clampNormalExponents : false;
+        return this.hasExponentRange && this.clampNormalExponents;
       }
 
     /**
@@ -249,10 +249,7 @@ at: http://upokecenter.com/d/
         if (bigint.compareTo(this.getEMin()) < 0) {
           return false;
         }
-        if (exponent.compareTo(this.getEMax()) > 0) {
-          return false;
-        }
-        return true;
+        return exponent.compareTo(this.getEMax()) <= 0;
       }
     }
 

@@ -53,7 +53,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInSingle(object obj) {
-      long intItem = (long)obj;
+      var intItem = (long)obj;
       if (intItem == Int64.MinValue) {
         return true;
       }
@@ -65,7 +65,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInDouble(object obj) {
-      long intItem = (long)obj;
+      var intItem = (long)obj;
       if (intItem == Int64.MinValue) {
         return true;
       }
@@ -77,7 +77,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInInt32(object obj) {
-      long val = (long)obj;
+      var val = (long)obj;
       return val >= Int32.MinValue && val <= Int32.MaxValue;
     }
 
@@ -97,7 +97,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
-      long val = (long)obj;
+      var val = (long)obj;
       return val >= Int32.MinValue && val <= Int32.MaxValue;
     }
 
@@ -106,7 +106,7 @@ namespace PeterO.Cbor {
     }
 
     public int Sign(object obj) {
-      long val = (long)obj;
+      var val = (long)obj;
       return (val == 0) ? 0 : ((val < 0) ? -1 : 1);
     }
 
@@ -115,7 +115,7 @@ namespace PeterO.Cbor {
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
-      long val = (long)obj;
+      var val = (long)obj;
       if (val >= minValue && val <= maxValue) {
         return (int)val;
       }
@@ -123,7 +123,7 @@ namespace PeterO.Cbor {
     }
 
     public object Abs(object obj) {
-      long val = (long)obj;
+      var val = (long)obj;
       if (val == Int32.MinValue) {
         return BigInteger.One << 63;
       }

@@ -75,9 +75,9 @@ namespace PeterO {
     #region Equals and GetHashCode implementation
     /// <summary>Determines whether this object&apos;s mantissa and exponent
     /// are equal to those of another object.</summary>
+    /// <param name='otherValue'>An ExtendedFloat object.</param>
     /// <returns>True if this object's mantissa and exponent are equal to
     /// those of another object; otherwise, false.</returns>
-    /// <param name='otherValue'>An ExtendedFloat object.</param>
     public bool EqualsInternal(ExtendedFloat otherValue) {
       if (otherValue == null) {
         return false;
@@ -89,9 +89,9 @@ namespace PeterO {
 
     /// <summary>Determines whether this object&apos;s mantissa and exponent
     /// are equal to those of another object.</summary>
+    /// <param name='other'>An ExtendedFloat object.</param>
     /// <returns>True if this object's mantissa and exponent are equal to
     /// those of another object; otherwise, false.</returns>
-    /// <param name='other'>An ExtendedFloat object.</param>
     public bool Equals(ExtendedFloat other) {
       return this.EqualsInternal(other);
     }
@@ -99,8 +99,8 @@ namespace PeterO {
     /// <summary>Determines whether this object&apos;s mantissa and exponent
     /// are equal to those of another object and that other object is a decimal
     /// fraction.</summary>
-    /// <returns>True if the objects are equal; otherwise, false.</returns>
     /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>True if the objects are equal; otherwise, false.</returns>
     public override bool Equals(object obj) {
       return this.EqualsInternal(obj as ExtendedFloat);
     }
@@ -119,9 +119,9 @@ namespace PeterO {
     #endregion
 
     /// <summary>Creates a not-a-number ExtendedFloat object.</summary>
-    /// <returns>A quiet not-a-number object.</returns>
     /// <param name='diag'>A number to use as diagnostic information associated
     /// with this object. If none is needed, should be zero.</param>
+    /// <returns>A quiet not-a-number object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='diag'/> is null.</exception>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
@@ -131,13 +131,13 @@ namespace PeterO {
     }
 
     /// <summary>Creates a not-a-number ExtendedFloat object.</summary>
-    /// <returns>An ExtendedFloat object.</returns>
     /// <param name='diag'>A number to use as diagnostic information associated
     /// with this object. If none is needed, should be zero.</param>
     /// <param name='signaling'>Whether the return value will be signaling
     /// (true) or quiet (false).</param>
     /// <param name='negative'>Whether the return value is negative.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='diag'/> is null.</exception>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
@@ -190,7 +190,7 @@ namespace PeterO {
       if (exponent == null) {
         throw new ArgumentNullException("exponent");
       }
-      ExtendedFloat ex = new ExtendedFloat();
+      var ex = new ExtendedFloat();
       ex.exponent = exponent;
       int sign = mantissa == null ? 0 : mantissa.Sign;
       ex.unsignedMantissa = sign < 0 ? (-(BigInteger)mantissa) : mantissa;
@@ -232,13 +232,13 @@ namespace PeterO {
     /// <para>The format generally follows the definition in java.math.BigDecimal(),
     /// except that the digits must be ASCII digits ('0' through '9').</para>
     /// </summary>
-    /// <returns>An ExtendedFloat object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='str'/> is null.</exception>
     /// <param name='str'>A String object.</param>
     /// <param name='offset'>A 32-bit signed integer.</param>
     /// <param name='length'>A 32-bit signed integer. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
     public static ExtendedFloat FromString(String str, int offset, int length, PrecisionContext ctx) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -247,8 +247,8 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedFloat object.</returns>
     /// <param name='str'>A String object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null.</exception>
     public static ExtendedFloat FromString(String str) {
@@ -259,11 +259,11 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedFloat object.</returns>
     /// <param name='str'>A String object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null.</exception>
-    /// <param name='ctx'>A PrecisionContext object.</param>
     public static ExtendedFloat FromString(String str, PrecisionContext ctx) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -272,12 +272,12 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedFloat object.</returns>
     /// <param name='str'>A String object.</param>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='str'/> is null.</exception>
     /// <param name='offset'>A 32-bit signed integer.</param>
     /// <param name='length'>A 32-bit signed integer. (2).</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='str'/> is null.</exception>
     public static ExtendedFloat FromString(String str, int offset, int length) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -314,17 +314,17 @@ namespace PeterO {
       }
 
     /// <summary>This is an internal method.</summary>
-    /// <returns>An IShiftAccumulator object.</returns>
     /// <param name='bigint'>A BigInteger object.</param>
     /// <param name='lastDigit'>A 32-bit signed integer.</param>
     /// <param name='olderDigits'>A 32-bit signed integer. (2).</param>
+    /// <returns>An IShiftAccumulator object.</returns>
       public IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger bigint, int lastDigit, int olderDigits) {
         return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
     /// <summary>This is an internal method.</summary>
-    /// <returns>An IShiftAccumulator object.</returns>
     /// <param name='bigint'>A BigInteger object.</param>
+    /// <returns>An IShiftAccumulator object.</returns>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new BitShiftAccumulator(bigint, 0, 0);
       }
@@ -454,7 +454,7 @@ namespace PeterO {
         BigInteger bigmantissa = this.Mantissa;
         FastInteger bigexponent = FastInteger.FromBig(this.Exponent).Negate();
         bigmantissa = BigInteger.Abs(bigmantissa);
-        BitShiftAccumulator acc = new BitShiftAccumulator(bigmantissa, 0, 0);
+        var acc = new BitShiftAccumulator(bigmantissa, 0, 0);
         acc.ShiftRight(bigexponent);
         if (exact && (acc.LastDiscardedDigit != 0 || acc.OlderDiscardedDigits != 0)) {
           // Some digits were discarded
@@ -531,7 +531,7 @@ namespace PeterO {
         bigexponent.SubtractInt(exponentchange);
         fastSmallMant = new FastInteger(smallmant);
       } else {
-        BitShiftAccumulator accum = new BitShiftAccumulator(bigmant, 0, 0);
+        var accum = new BitShiftAccumulator(bigmant, 0, 0);
         accum.ShiftToDigitsInt(24);
         bitsAfterLeftmost = accum.OlderDiscardedDigits;
         bitLeftmost = accum.LastDiscardedDigit;
@@ -652,7 +652,7 @@ namespace PeterO {
           bigexponent.Decrement();
         }
       } else {
-        BitShiftAccumulator accum = new BitShiftAccumulator(bigmant, 0, 0);
+        var accum = new BitShiftAccumulator(bigmant, 0, 0);
         accum.ShiftToDigitsInt(53);
         bitsAfterLeftmost = accum.OlderDiscardedDigits;
         bitLeftmost = accum.LastDiscardedDigit;
@@ -683,7 +683,7 @@ namespace PeterO {
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
-        BitShiftAccumulator accum = new BitShiftAccumulator(
+        var accum = new BitShiftAccumulator(
           FastInteger.WordsToBigInteger(mantissaBits),
           0,
           0);
@@ -732,13 +732,13 @@ namespace PeterO {
     /// This method computes the exact value of the floating point number,
     /// not an approximation, as is often the case by converting the number
     /// to a string.</summary>
+    /// <param name='flt'>A 32-bit floating-point number.</param>
     /// <returns>A binary float with the same value as <paramref name='flt'/>
     /// .</returns>
-    /// <param name='flt'>A 32-bit floating-point number.</param>
     public static ExtendedFloat FromSingle(float flt) {
       int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt), 0);
       bool neg = (value >> 31) != 0;
-      int floatExponent = (int)((value >> 23) & 0xff);
+      var floatExponent = (int)((value >> 23) & 0xff);
       int valueFpMantissa = value & 0x7fffff;
       BigInteger bigmant;
       if (floatExponent == 255) {
@@ -780,25 +780,25 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedFloat object.</returns>
     /// <param name='bigint'>A BigInteger object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
     public static ExtendedFloat FromBigInteger(BigInteger bigint) {
       return ExtendedFloat.Create(bigint, BigInteger.Zero);
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedFloat object.</returns>
     /// <param name='valueSmall'>A 64-bit signed integer.</param>
+    /// <returns>An ExtendedFloat object.</returns>
     public static ExtendedFloat FromInt64(long valueSmall) {
-      BigInteger bigint = (BigInteger)valueSmall;
+      var bigint = (BigInteger)valueSmall;
       return ExtendedFloat.Create(bigint, BigInteger.Zero);
     }
 
     /// <summary>Creates a binary float from a 32-bit signed integer.</summary>
-    /// <returns>An ExtendedDecimal object.</returns>
     /// <param name='valueSmaller'>A 32-bit signed integer.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
     public static ExtendedFloat FromInt32(int valueSmaller) {
-      BigInteger bigint = (BigInteger)valueSmaller;
+      var bigint = (BigInteger)valueSmaller;
       return ExtendedFloat.Create(bigint, BigInteger.Zero);
     }
 
@@ -811,7 +811,7 @@ namespace PeterO {
     /// .</returns>
     public static ExtendedFloat FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
-      int floatExponent = (int)((value[1] >> 20) & 0x7ff);
+      var floatExponent = (int)((value[1] >> 20) & 0x7ff);
       bool neg = (value[1] >> 31) != 0;
       if (floatExponent == 2047) {
         if ((value[1] & 0xfffff) == 0 && value[0] == 0) {
@@ -1183,12 +1183,12 @@ namespace PeterO {
     /// point.</param>
     /// <param name='rounding'>The rounding mode to use if the result must
     /// be scaled down to have the same exponent as this value.</param>
-    /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
-    /// and the result is not exact.</exception>
     /// <returns>The quotient of the two objects. Signals FlagDivideByZero
     /// and returns infinity if the divisor is 0 and the dividend is nonzero.
     /// Signals FlagInvalid and returns NaN if the divisor and the dividend
     /// are 0.</returns>
+    /// <exception cref='ArithmeticException'>The rounding mode is Rounding.Unnecessary
+    /// and the result is not exact.</exception>
     public ExtendedFloat DivideToExponent(
       ExtendedFloat divisor,
       long desiredExponentSmall,
@@ -1325,7 +1325,7 @@ namespace PeterO {
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-    private static IRadixMath<ExtendedFloat> math = new TrappableRadixMath<ExtendedFloat>(
+    private static readonly IRadixMath<ExtendedFloat> math = new TrappableRadixMath<ExtendedFloat>(
       new ExtendedOrSimpleRadixMath<ExtendedFloat>(new BinaryMathHelper()));
 
     /// <summary>Divides this object by another object, and returns the
@@ -1472,13 +1472,13 @@ namespace PeterO {
     }
 
     /// <summary>Gets the greater value between two binary floats.</summary>
-    /// <returns>The larger value of the two objects.</returns>
     /// <param name='first'>An ExtendedFloat object.</param>
     /// <param name='second'>An ExtendedFloat object. (2).</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
+    /// <returns>The larger value of the two objects.</returns>
     public static ExtendedFloat Max(
       ExtendedFloat first,
       ExtendedFloat second,
@@ -1487,13 +1487,13 @@ namespace PeterO {
     }
 
     /// <summary>Gets the lesser value between two binary floats.</summary>
-    /// <returns>The smaller value of the two objects.</returns>
     /// <param name='first'>An ExtendedFloat object.</param>
     /// <param name='second'>An ExtendedFloat object. (2).</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
+    /// <returns>The smaller value of the two objects.</returns>
     public static ExtendedFloat Min(
       ExtendedFloat first,
       ExtendedFloat second,
@@ -1503,13 +1503,13 @@ namespace PeterO {
 
     /// <summary>Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.</summary>
-    /// <returns>An ExtendedFloat object.</returns>
     /// <param name='first'>An ExtendedFloat object. (2).</param>
     /// <param name='second'>An ExtendedFloat object. (3).</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
+    /// <returns>An ExtendedFloat object.</returns>
     public static ExtendedFloat MaxMagnitude(
       ExtendedFloat first,
       ExtendedFloat second,
@@ -1519,13 +1519,13 @@ namespace PeterO {
 
     /// <summary>Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.</summary>
-    /// <returns>An ExtendedFloat object.</returns>
     /// <param name='first'>An ExtendedFloat object. (2).</param>
     /// <param name='second'>An ExtendedFloat object. (3).</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags). Can be null.</param>
+    /// <returns>An ExtendedFloat object.</returns>
     public static ExtendedFloat MinMagnitude(
       ExtendedFloat first,
       ExtendedFloat second,
@@ -1534,9 +1534,9 @@ namespace PeterO {
     }
 
     /// <summary>Gets the greater value between two binary floats.</summary>
-    /// <returns>The larger value of the two objects.</returns>
     /// <param name='first'>An ExtendedFloat object.</param>
     /// <param name='second'>An ExtendedFloat object. (2).</param>
+    /// <returns>The larger value of the two objects.</returns>
     public static ExtendedFloat Max(
       ExtendedFloat first,
       ExtendedFloat second) {
@@ -1544,9 +1544,9 @@ namespace PeterO {
     }
 
     /// <summary>Gets the lesser value between two binary floats.</summary>
-    /// <returns>The smaller value of the two objects.</returns>
     /// <param name='first'>An ExtendedFloat object.</param>
     /// <param name='second'>An ExtendedFloat object. (2).</param>
+    /// <returns>The smaller value of the two objects.</returns>
     public static ExtendedFloat Min(
       ExtendedFloat first,
       ExtendedFloat second) {
@@ -1555,9 +1555,9 @@ namespace PeterO {
 
     /// <summary>Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Max.</summary>
-    /// <returns>An ExtendedFloat object.</returns>
     /// <param name='first'>An ExtendedFloat object. (2).</param>
     /// <param name='second'>An ExtendedFloat object. (3).</param>
+    /// <returns>An ExtendedFloat object.</returns>
     public static ExtendedFloat MaxMagnitude(
       ExtendedFloat first,
       ExtendedFloat second) {
@@ -1566,9 +1566,9 @@ namespace PeterO {
 
     /// <summary>Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as Min.</summary>
-    /// <returns>An ExtendedFloat object.</returns>
     /// <param name='first'>An ExtendedFloat object. (2).</param>
     /// <param name='second'>An ExtendedFloat object. (3).</param>
+    /// <returns>An ExtendedFloat object.</returns>
     public static ExtendedFloat MinMagnitude(
       ExtendedFloat first,
       ExtendedFloat second) {
@@ -1586,11 +1586,11 @@ namespace PeterO {
     /// NaN will compare greater than any other number, including infinity.
     /// Two different NaN values will be considered equal.</para>
     /// </summary>
+    /// <param name='other'>An ExtendedFloat object.</param>
     /// <returns>Less than 0 if this object's value is less than the other
     /// value, or greater than 0 if this object's value is greater than the
     /// other value or if <paramref name='other'/> is null, or 0 if both values
     /// are equal.</returns>
-    /// <param name='other'>An ExtendedFloat object.</param>
     public int CompareTo(
       ExtendedFloat other) {
       return math.CompareTo(this, other);
@@ -1653,13 +1653,13 @@ namespace PeterO {
     }
 
     /// <summary>Returns a binary float with the same value but a new exponent.</summary>
+    /// <param name='desiredExponent'>A BigInteger object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A binary float with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an overflow
     /// error occurred, or the rounded result can't fit the given precision,
     /// or if the context defines an exponent range and the given exponent
     /// is outside that range.</returns>
-    /// <param name='desiredExponent'>A BigInteger object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
     public ExtendedFloat Quantize(
       BigInteger desiredExponent,
       PrecisionContext ctx) {
@@ -1667,13 +1667,13 @@ namespace PeterO {
     }
 
     /// <summary>Returns a binary float with the same value but a new exponent.</summary>
+    /// <param name='desiredExponentSmall'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A binary float with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an overflow
     /// error occurred, or the rounded result can't fit the given precision,
     /// or if the context defines an exponent range and the given exponent
     /// is outside that range.</returns>
-    /// <param name='desiredExponentSmall'>A 32-bit signed integer.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
     public ExtendedFloat Quantize(
       int desiredExponentSmall,
       PrecisionContext ctx) {
@@ -1747,14 +1747,14 @@ namespace PeterO {
 
     /// <summary>Returns a binary float with the same value as this object
     /// but rounded to an integer.</summary>
+    /// <param name='exponent'>A BigInteger object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A binary float with the same value as this object but rounded
     /// to an integer. Signals FlagInvalid and returns NaN if an overflow
     /// error occurred, or the result can't fit the given precision without
     /// rounding. Signals FlagInvalid and returns NaN if the new exponent
     /// is outside of the valid range of the precision context, if it defines
     /// an exponent range.</returns>
-    /// <param name='exponent'>A BigInteger object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
     public ExtendedFloat RoundToExponentExact(
       BigInteger exponent,
       PrecisionContext ctx) {
@@ -1832,7 +1832,7 @@ namespace PeterO {
       ExtendedFloat subtrahend,
       PrecisionContext ctx) {
       if (subtrahend == null) {
-        throw new ArgumentNullException("otherValue");
+        throw new ArgumentNullException("subtrahend");
       }
       ExtendedFloat negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
@@ -1960,34 +1960,34 @@ namespace PeterO {
     }
 
     /// <summary>Raises this object&apos;s value to the given exponent.</summary>
+    /// <param name='exponent'>An ExtendedFloat object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>This^exponent. Signals the flag FlagInvalid and returns
     /// NaN if this object and exponent are both 0; or if this value is less than
     /// 0 and the exponent either has a fractional part or is infinity.</returns>
     /// <exception cref='System.ArgumentException'>The parameter <paramref
     /// name='ctx'/> is null or the precision is unlimited (the context's
     /// Precision property is 0), and the exponent has a fractional part.</exception>
-    /// <param name='exponent'>An ExtendedFloat object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
     public ExtendedFloat Pow(ExtendedFloat exponent, PrecisionContext ctx) {
       return math.Power(this, exponent, ctx);
     }
 
     /// <summary>Raises this object&apos;s value to the given exponent.</summary>
-    /// <returns>This^exponent. Signals the flag FlagInvalid and returns
-    /// NaN if this object and exponent are both 0.</returns>
     /// <param name='exponentSmall'>A 32-bit signed integer.</param>
     /// <param name='ctx'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true,
     /// will also store the flags resulting from the operation (the flags
     /// are in addition to the pre-existing flags).</param>
+    /// <returns>This^exponent. Signals the flag FlagInvalid and returns
+    /// NaN if this object and exponent are both 0.</returns>
     public ExtendedFloat Pow(int exponentSmall, PrecisionContext ctx) {
       return this.Pow(ExtendedFloat.FromInt64(exponentSmall), ctx);
     }
 
     /// <summary>Raises this object&apos;s value to the given exponent.</summary>
+    /// <param name='exponentSmall'>A 32-bit signed integer.</param>
     /// <returns>This^exponent. Returns NaN if this object and exponent
     /// are both 0.</returns>
-    /// <param name='exponentSmall'>A 32-bit signed integer.</param>
     public ExtendedFloat Pow(int exponentSmall) {
       return this.Pow(ExtendedFloat.FromInt64(exponentSmall), null);
     }

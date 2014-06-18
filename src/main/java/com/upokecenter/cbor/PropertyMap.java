@@ -76,6 +76,12 @@ class PropertyMap
 		}
 	}
   
+  /**
+   * <p>FromArray.</p>
+   *
+   * @param arr a {@link java.lang.Object} object.
+   * @return a {@link com.upokecenter.cbor.CBORObject} object.
+   */
   public static CBORObject FromArray(Object arr){
    int length=Array.getLength(arr);
    CBORObject obj=CBORObject.NewArray();
@@ -85,10 +91,22 @@ class PropertyMap
    return obj;
   }
 	
+	/**
+	 * <p>EnumToObject.</p>
+	 *
+	 * @param value a {@link java.lang.Enum} object.
+	 * @return a {@link java.lang.Object} object.
+	 */
 	public static Object EnumToObject(Enum<?> value){
 		return value.name();
 	}
 
+	/**
+	 * <p>GetProperties.</p>
+	 *
+	 * @param o a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.Iterable} object.
+	 */
 	public static Iterable<Map.Entry<String, Object>> GetProperties(Object o) {
 		List<Map.Entry<String, Object>> ret = 
 				new ArrayList<Map.Entry<String, Object>>();
@@ -105,6 +123,14 @@ class PropertyMap
 		}
 	}
 	
+	/**
+	 * <p>FindOneArgumentMethod.</p>
+	 *
+	 * @param obj a {@link java.lang.Object} object.
+	 * @param name a {@link java.lang.String} object.
+	 * @param argtype a {@link java.lang.Class} object.
+	 * @return a {@link java.lang.Object} object.
+	 */
 	public static Object FindOneArgumentMethod(Object obj, String name, Class<?> argtype){
 		try {
 			return obj.getClass().getMethod(name, argtype);
@@ -115,6 +141,14 @@ class PropertyMap
 		}
 	}
 
+	/**
+	 * <p>InvokeOneArgumentMethod.</p>
+	 *
+	 * @param method a {@link java.lang.Object} object.
+	 * @param obj a {@link java.lang.Object} object.
+	 * @param argument a {@link java.lang.Object} object.
+	 * @return a {@link java.lang.Object} object.
+	 */
 	public static Object InvokeOneArgumentMethod(Object method,
 			Object obj, Object argument) {
 		if(method==null){

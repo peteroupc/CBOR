@@ -51,13 +51,13 @@ namespace PeterO.Cbor {
     }
 
     public static string ToBase64String(byte[] data, int offset, int count, bool padding) {
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       ToBase64(builder, data, offset, count, Base64Classic, padding);
       return builder.ToString();
     }
 
     public static string ToBase64URLString(byte[] data, int offset, int count, bool padding) {
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       ToBase64(builder, data, offset, count, Base64Classic, padding);
       return builder.ToString();
     }

@@ -62,7 +62,7 @@ namespace PeterO.Cbor {
             }
             // Convert to camel case
             if (pd.Name[0] >= 'A' && pd.Name[0] <= 'Z') {
-              System.Text.StringBuilder sb = new System.Text.StringBuilder();
+              var sb = new System.Text.StringBuilder();
               sb.Append((char)(pd.Name[0] + 0x20));
               sb.Append(pd.Name.Substring(1));
               pd.Name = sb.ToString();
@@ -99,7 +99,7 @@ namespace PeterO.Cbor {
     }
 
     public static CBORObject FromArray(Object arrObj) {
-      Array arr = (Array)arrObj;
+      var arr = (Array)arrObj;
       int rank = arr.Rank;
       if (rank == 0) {
         return CBORObject.NewArray();

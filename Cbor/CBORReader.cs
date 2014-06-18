@@ -91,7 +91,7 @@ namespace PeterO.Cbor {
     }
 
     private static BigInteger ToUnsignedBigInteger(long val) {
-      BigInteger lval = (BigInteger)(val & ~(1L << 63));
+      var lval = (BigInteger)(val & ~(1L << 63));
       if ((val >> 63) != 0) {
         BigInteger bigintAdd = BigInteger.One << 63;
         lval += (BigInteger)bigintAdd;
@@ -117,7 +117,7 @@ namespace PeterO.Cbor {
         }
       } else {
         byte[] tmpdata = new byte[0x10000];
-        int total = (int)uadditional;
+        var total = (int)uadditional;
         if (outputStream != null) {
           while (total > 0) {
             int bufsize = Math.Min(tmpdata.Length, total);
@@ -212,7 +212,7 @@ namespace PeterO.Cbor {
         }
         return cbor;
       }
-      long uadditional = (long)additional;
+      var uadditional = (long)additional;
       BigInteger bigintAdditional = BigInteger.Zero;
       bool hasBigAdditional = false;
       data = new byte[8];
@@ -285,7 +285,7 @@ namespace PeterO.Cbor {
       if (type == 2) {  // Byte string
         if (additional == 31) {
           // Streaming byte string
-          using (MemoryStream ms = new MemoryStream()) {
+          using (var ms = new MemoryStream()) {
             // Requires same type as this one
             while (true) {
               int nextByte = this.stream.ReadByte();
@@ -320,7 +320,7 @@ namespace PeterO.Cbor {
                                     " is bigger than supported");
           }
           data = ReadByteData(this.stream, uadditional, null);
-          CBORObject cbor = new CBORObject(CBORObject.CBORObjectTypeByteString, data);
+          var cbor = new CBORObject(CBORObject.CBORObjectTypeByteString, data);
           if (this.stringRefs != null) {
             int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ? Int32.MaxValue :
               (int)uadditional;
@@ -331,7 +331,7 @@ namespace PeterO.Cbor {
       } else if (type == 3) {  // Text string
         if (additional == 31) {
           // Streaming text string
-          StringBuilder builder = new StringBuilder();
+          var builder = new StringBuilder();
           while (true) {
             int nextByte = this.stream.ReadByte();
             if (nextByte == 0xff) {
@@ -366,7 +366,7 @@ namespace PeterO.Cbor {
                                     Convert.ToString((long)uadditional, CultureInfo.InvariantCulture) +
                                     " is bigger than supported");
           }
-          StringBuilder builder = new StringBuilder();
+          var builder = new StringBuilder();
           switch (DataUtilities.ReadUtf8(this.stream, (int)uadditional, builder, false)) {
             case -1:
               throw new CBORException("Invalid UTF-8");
@@ -375,7 +375,7 @@ namespace PeterO.Cbor {
             default:
               break;  // No error
           }
-          CBORObject cbor = new CBORObject(CBORObject.CBORObjectTypeTextString, builder.ToString());
+          var cbor = new CBORObject(CBORObject.CBORObjectTypeTextString, builder.ToString());
           if (this.stringRefs != null) {
             int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ? Int32.MaxValue :
               (int)uadditional;

@@ -31,7 +31,7 @@ namespace PeterO.DocGen {
 
     public static string GetTypeID(Type type) {
       string name = FormatType(type);
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       for (int i = 0; i < name.Length; ++i) {
         UnicodeCategory cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
         int cp = PeterO.DataUtilities.CodePointAt(name, i);
@@ -64,7 +64,7 @@ namespace PeterO.DocGen {
       if (!type.IsArray && !type.IsGenericType) {
         return rawfmt;
       }
-      StringBuilder sb = new StringBuilder();
+      var sb = new StringBuilder();
       sb.Append(rawfmt);
       if (type.ContainsGenericParameters) {
         sb.Append('<');
@@ -120,7 +120,7 @@ namespace PeterO.DocGen {
     }
 
     public static string FormatTypeSig(Type typeInfo) {
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       builder.Append(valueFourSpaces);
       if (typeInfo.IsPublic) {
         builder.Append("public ");
@@ -233,7 +233,7 @@ namespace PeterO.DocGen {
     }
 
     public static string FormatMethod(MethodBase method) {
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       builder.Append(valueFourSpaces);
       if (!method.ReflectedType.IsInterface) {
         if (method.IsPublic) {
@@ -330,7 +330,7 @@ namespace PeterO.DocGen {
     }
 
     public static string FormatProperty(PropertyInfo property) {
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       MethodInfo getter = property.GetGetMethod();
       MethodInfo setter = property.GetSetMethod();
       builder.Append(valueFourSpaces);
@@ -410,7 +410,7 @@ namespace PeterO.DocGen {
     }
 
     public static string FormatField(FieldInfo field) {
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       builder.Append(valueFourSpaces);
       if (field.IsPublic) {
         builder.Append("public ");
@@ -591,7 +591,7 @@ namespace PeterO.DocGen {
       MemberInfo info = member.Info;
       string signature = String.Empty;
       if (info is MethodBase) {
-        MethodBase method = (MethodBase)info;
+        var method = (MethodBase)info;
         if (!method.IsPublic && !method.IsFamily) {
           // Ignore methods other than public and protected
           // methods
@@ -625,7 +625,7 @@ namespace PeterO.DocGen {
           this.Write(this.exceptionStr.ToString());
         }
       } else if (info is Type) {
-        Type type = (Type)info;
+        var type = (Type)info;
         if (!type.IsPublic) {
           // Ignore nonpublic types
           return;
@@ -638,7 +638,7 @@ namespace PeterO.DocGen {
         }
         base.VisitMember(member);
       } else if (info is PropertyInfo) {
-        PropertyInfo property = (PropertyInfo)info;
+        var property = (PropertyInfo)info;
         if (!PropertyIsPublicOrFamily(property)) {
           // Ignore methods other than public and protected
           // methods
@@ -664,7 +664,7 @@ namespace PeterO.DocGen {
           this.Write(this.exceptionStr.ToString());
         }
       } else if (info is FieldInfo) {
-        FieldInfo field = (FieldInfo)info;
+        var field = (FieldInfo)info;
         if (!field.IsPublic && !field.IsFamily) {
           // Ignore nonpublic, nonprotected fields
           return;

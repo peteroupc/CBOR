@@ -170,7 +170,7 @@ private BEncoding() {
           }
         }
         if (hasNonStringKeys) {
-          HashMap<String, CBORObject> valueSMap=new HashMap<String, CBORObject>();
+          HashMap<String, CBORObject> valueSMap = new HashMap<String, CBORObject>();
           // Copy to a map with String keys, since
           // some keys could be duplicates
           // when serialized to strings

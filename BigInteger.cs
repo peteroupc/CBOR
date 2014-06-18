@@ -1244,7 +1244,7 @@ namespace PeterO {
         Console.Write("{0:X4} ", a[astart + i]);
       }
       Console.WriteLine(String.Empty);
-      BigInteger bi = new BigInteger();
+      var bi = new BigInteger();
       bi.reg = new short[count];
       bi.wordCount = count;
       Array.Copy(a, astart, bi.reg, 0, count);
@@ -2018,15 +2018,15 @@ namespace PeterO {
       if (quotientArr == null) {
         quot = new short[2];
       }
-      int valueTBstart = (int)(tempStart + (words1Count + 2));
-      int valueTPstart = (int)(tempStart + (words1Count + 2 + words2Count));
+      var valueTBstart = (int)(tempStart + (words1Count + 2));
+      var valueTPstart = (int)(tempStart + (words1Count + 2 + words2Count));
       unchecked {
         // copy words2 into TB and normalize it so that TB has highest bit set to 1
         int shiftWords = (short)(words2[words2Start + words2Count - 1] == 0 ? 1 : 0);
         tempArr[valueTBstart] = (short)0;
         tempArr[valueTBstart + words2Count - 1] = (short)0;
         Array.Copy(words2, words2Start, tempArr, (int)(valueTBstart + shiftWords), words2Count - shiftWords);
-        short shiftBits = (short)((short)16 - BitPrecision(tempArr[valueTBstart + words2Count - 1]));
+        var shiftBits = (short)((short)16 - BitPrecision(tempArr[valueTBstart + words2Count - 1]));
         ShiftWordsLeftByBits(
           tempArr,
           valueTBstart,
@@ -2071,8 +2071,8 @@ namespace PeterO {
           words1Count += 2;
         }
 
-        short valueBT0 = (short)(tempArr[valueTBstart + words2Count - 2] + (short)1);
-        short valueBT1 = (short)(tempArr[valueTBstart + words2Count - 1] + (short)(valueBT0 == (short)0 ? 1 : 0));
+        var valueBT0 = (short)(tempArr[valueTBstart + words2Count - 2] + (short)1);
+        var valueBT1 = (short)(tempArr[valueTBstart + words2Count - 1] + (short)(valueBT0 == (short)0 ? 1 : 0));
 
         // start reducing valueTA mod TB, 2 words at a time
         short[] valueTAtomic = new short[4];
@@ -2131,8 +2131,8 @@ namespace PeterO {
     /// <summary>Initializes a BigInteger object from an array of bytes.</summary>
     /// <param name='bytes'>A byte array. Can be empty, in which case the
     /// return value is 0.</param>
-    /// <returns>A BigInteger object.</returns>
     /// <param name='littleEndian'>A Boolean object.</param>
+    /// <returns>A BigInteger object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='bytes'/> is null.</exception>
     public static BigInteger fromByteArray(byte[] bytes, bool littleEndian) {
@@ -2142,7 +2142,7 @@ namespace PeterO {
       if (bytes.Length == 0) {
  return BigInteger.Zero;
 }
-      BigInteger bigint = new BigInteger();
+      var bigint = new BigInteger();
       bigint.fromByteArrayInternal(bytes, littleEndian);
       return bigint;
     }
@@ -2303,8 +2303,8 @@ if (bytes.Length <= 0) {
     }
 
     /// <summary>Returns a byte array of this object&apos;s value.</summary>
-    /// <returns>A byte array that represents the value of this object.</returns>
     /// <param name='littleEndian'>A Boolean object.</param>
+    /// <returns>A byte array that represents the value of this object.</returns>
     public byte[] toByteArray(bool littleEndian) {
       int sign = this.Sign;
       if (sign == 0) {
@@ -2383,10 +2383,10 @@ if (bytes.Length <= 0) {
         }
         return this.shiftRight(-numberBits);
       }
-      BigInteger ret = new BigInteger();
-      int numWords = (int)this.wordCount;
-      int shiftWords = (int)(numberBits >> 4);
-      int shiftBits = (int)(numberBits & 15);
+      var ret = new BigInteger();
+      var numWords = (int)this.wordCount;
+      var shiftWords = (int)(numberBits >> 4);
+      var shiftBits = (int)(numberBits & 15);
       bool neg = numWords > 0 && this.negative;
       if (!neg) {
         ret.negative = false;
@@ -2408,8 +2408,8 @@ if (bytes.Length <= 0) {
     }
 
     /// <summary>Returns a big integer with the bits shifted to the right.</summary>
-    /// <returns>A BigInteger object.</returns>
     /// <param name='numberBits'>Number of bits to shift right.</param>
+    /// <returns>A BigInteger object.</returns>
     public BigInteger shiftRight(int numberBits) {
       if (numberBits == 0 || this.wordCount == 0) {
         return this;
@@ -2421,9 +2421,9 @@ if (bytes.Length <= 0) {
         return this.shiftLeft(-numberBits);
       }
       BigInteger ret;
-      int numWords = (int)this.wordCount;
-      int shiftWords = (int)(numberBits >> 4);
-      int shiftBits = (int)(numberBits & 15);
+      var numWords = (int)this.wordCount;
+      var shiftWords = (int)(numberBits >> 4);
+      var shiftBits = (int)(numberBits & 15);
       if (this.negative) {
         ret = new BigInteger();
         ret.reg = new short[this.reg.Length];
@@ -2459,8 +2459,8 @@ if (bytes.Length <= 0) {
     }
 
     /// <summary>Converts a 64-bit signed integer to a big integer.</summary>
-    /// <returns>A BigInteger object with the same value as the 64-bit number.</returns>
     /// <param name='longerValue'>A 64-bit signed integer.</param>
+    /// <returns>A BigInteger object with the same value as the 64-bit number.</returns>
     public static BigInteger valueOf(long longerValue) {
       if (longerValue == 0) {
         return BigInteger.Zero;
@@ -2468,7 +2468,7 @@ if (bytes.Length <= 0) {
       if (longerValue == 1) {
         return BigInteger.One;
       }
-      BigInteger ret = new BigInteger();
+      var ret = new BigInteger();
       unchecked {
         ret.negative = longerValue < 0;
         ret.reg = new short[4];
@@ -2531,7 +2531,7 @@ if (bytes.Length <= 0) {
     /// the return value might have a different sign than this object's value).</summary>
     /// <returns>A 32-bit signed integer.</returns>
     public int intValueUnchecked() {
-      int c = (int)this.wordCount;
+      var c = (int)this.wordCount;
       if (c == 0) {
         return 0;
       }
@@ -2577,7 +2577,7 @@ if (bytes.Length <= 0) {
     /// the return value might have a different sign than this object's value).</summary>
     /// <returns>A 64-bit signed integer.</returns>
     public long longValueUnchecked() {
-      int c = (int)this.wordCount;
+      var c = (int)this.wordCount;
       if (c == 0) {
         return (long)0;
       }
@@ -2614,7 +2614,7 @@ if (bytes.Length <= 0) {
     /// <returns>True if this object's value is MinValue or greater, and
     /// MaxValue or less; otherwise, false.</returns>
     public bool canFitInInt() {
-      int c = (int)this.wordCount;
+      var c = (int)this.wordCount;
       if (c > 2) {
         return false;
       }
@@ -2626,7 +2626,7 @@ if (bytes.Length <= 0) {
     }
 
     private bool HasSmallValue() {
-      int c = (int)this.wordCount;
+      var c = (int)this.wordCount;
       if (c > 4) {
         return false;
       }
@@ -2650,14 +2650,14 @@ if (bytes.Length <= 0) {
     }
 
     private static BigInteger Power2(int e) {
-      BigInteger r = new BigInteger().Allocate(BitsToWords((int)(e + 1)));
+      var r = new BigInteger().Allocate(BitsToWords((int)(e + 1)));
       r.SetBitInternal((int)e, true);  // NOTE: Will recalculate word count
       return r;
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <returns>A BigInteger object.</returns>
     /// <param name='power'>A BigInteger object. (2).</param>
+    /// <returns>A BigInteger object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='power'/> is null.</exception>
     public BigInteger PowBigIntVar(BigInteger power) {
@@ -2725,7 +2725,7 @@ if (bytes.Length <= 0) {
     /// <summary>Gets the value of this object with the sign reversed.</summary>
     /// <returns>This object's value with the sign reversed.</returns>
     public BigInteger negate() {
-      BigInteger bigintRet = new BigInteger();
+      var bigintRet = new BigInteger();
       bigintRet.reg = this.reg;  // use the same reference
       bigintRet.wordCount = this.wordCount;
       bigintRet.negative = (this.wordCount != 0) && (!this.negative);
@@ -2979,7 +2979,7 @@ if (bytes.Length <= 0) {
           }
           return 9;
         } else {
-          int v2 = (int)value;
+          var v2 = (int)value;
           if (v2 >= 100000000) {
             return 9;
           }
@@ -3213,7 +3213,7 @@ if (bytes.Length <= 0) {
       }
       ReverseChars(s, 0, i);
       if (this.negative) {
-        System.Text.StringBuilder sb = new System.Text.StringBuilder(i + 1);
+        var sb = new System.Text.StringBuilder(i + 1);
         sb.Append('-');
         sb.Append(s, 0, i);
         return sb.ToString();
@@ -3241,13 +3241,13 @@ if (bytes.Length <= 0) {
 
     /// <summary>Converts a portion of a string to an arbitrary-precision
     /// integer.</summary>
-    /// <returns>A BigInteger object with the same value as given in the string
-    /// portion.</returns>
     /// <param name='str'>A string object.</param>
     /// <param name='index'>The index of the string that starts the string
     /// portion.</param>
     /// <param name='endIndex'>The index of the string that ends the string
     /// portion. The length will be index + endIndex - 1.</param>
+    /// <returns>A BigInteger object with the same value as given in the string
+    /// portion.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null.</exception>
     /// <exception cref='FormatException'>The string portion is in an
@@ -3279,7 +3279,7 @@ if (bytes.Length <= 0) {
         ++index;
         negative = true;
       }
-      BigInteger bigint = new BigInteger().Allocate(4);
+      var bigint = new BigInteger().Allocate(4);
       bool haveDigits = false;
       bool haveSmallInt = true;
       int smallInt = 0;
@@ -3289,7 +3289,7 @@ if (bytes.Length <= 0) {
           throw new FormatException("Illegal character found");
         }
         haveDigits = true;
-        int digit = (int)(c - '0');
+        var digit = (int)(c - '0');
         if (haveSmallInt && smallInt < MaxSafeInt) {
           smallInt *= 10;
           smallInt += digit;
@@ -3398,12 +3398,12 @@ if (bytes.Length <= 0) {
     }
 
     /// <summary>Returns the greatest common divisor of two integers.</summary>
-    /// <returns>A BigInteger object.</returns>
-    /// <remarks>The greatest common divisor (GCD) is also known as the greatest
-    /// common factor (GCF).</remarks>
     /// <param name='bigintSecond'>A BigInteger object. (2).</param>
+    /// <returns>A BigInteger object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='bigintSecond'/> is null.</exception>
+    /// <remarks>The greatest common divisor (GCD) is also known as the greatest
+    /// common factor (GCF).</remarks>
     public BigInteger gcd(BigInteger bigintSecond) {
       if (bigintSecond == null) {
         throw new ArgumentNullException("bigintSecond");
@@ -3505,14 +3505,14 @@ if (bytes.Length <= 0) {
         }
       } else if (words1Size > words2Size) {
         // words1 is greater than words2
-        short borrow = (short)Subtract(bigintDiff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words2Size);
+        var borrow = (short)Subtract(bigintDiff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words2Size);
         Array.Copy(minuend.reg, words2Size, bigintDiff.reg, words2Size, words1Size - words2Size);
         borrow = (short)Decrement(bigintDiff.reg, words2Size, (int)(words1Size - words2Size), borrow);
         // DebugAssert.IsTrue(borrow==0,"{0} line {1}: !borrow","integer.cpp",3524);
         bigintDiff.negative = false;
       } else {
         // words1 is less than words2
-        short borrow = (short)Subtract(bigintDiff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
+        var borrow = (short)Subtract(bigintDiff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
         Array.Copy(subtrahend.reg, words1Size, bigintDiff.reg, words1Size, words2Size - words1Size);
         borrow = (short)Decrement(bigintDiff.reg, words1Size, (int)(words2Size - words1Size), borrow);
         // DebugAssert.IsTrue(borrow==0,"{0} line {1}: !borrow","integer.cpp",3532);
@@ -3528,8 +3528,8 @@ if (bytes.Length <= 0) {
     #region Equals and GetHashCode implementation
     /// <inheritdoc/><summary>Determines whether this object and another object are
     /// equal.</summary>
-    /// <returns>True if the objects are equal; otherwise, false.</returns>
     /// <param name='obj'>An arbitrary object.</param>
+    /// <returns>True if the objects are equal; otherwise, false.</returns>
     public override bool Equals(object obj) {
       BigInteger other = obj as BigInteger;
       if (other == null) {
@@ -3566,8 +3566,8 @@ if (bytes.Length <= 0) {
     #endregion
 
     /// <summary>Adds this object and another object.</summary>
-    /// <returns>The sum of the two objects.</returns>
     /// <param name='bigintAugend'>A BigInteger object.</param>
+    /// <returns>The sum of the two objects.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='bigintAugend'/> is null.</exception>
     public BigInteger add(BigInteger bigintAugend) {
@@ -3744,7 +3744,7 @@ if (bytes.Length <= 0) {
       if (bigintMult.wordCount == 1 && bigintMult.reg[0] == 1) {
         return bigintMult.negative ? this.negate() : this;
       }
-      BigInteger product = new BigInteger();
+      var product = new BigInteger();
       bool needShorten = true;
       if (this.wordCount == 1) {
         int wc = bigintMult.wordCount;
@@ -3897,9 +3897,9 @@ if (bytes.Length <= 0) {
     /// if the result is 0, it will be negative if this object is positive and
     /// the other is negative, or vice versa, and will be positive if both are
     /// positive or both are negative.</summary>
+    /// <param name='bigintDivisor'>A BigInteger object.</param>
     /// <returns>The quotient of the two objects.</returns>
     /// <exception cref='DivideByZeroException'>The divisor is zero.</exception>
-    /// <param name='bigintDivisor'>A BigInteger object.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='bigintDivisor'/> is null.</exception>
     /// <exception cref='System.DivideByZeroException'>Attempted
@@ -4048,7 +4048,7 @@ if (bytes.Length <= 0) {
           };
         }
       }
-      BigInteger remainder = new BigInteger();
+      var remainder = new BigInteger();
       quotient = new BigInteger();
       words1Size += words1Size & 1;
       words2Size += words2Size & 1;
@@ -4147,7 +4147,7 @@ if (bytes.Length <= 0) {
       if (this.PositiveCompare(divisor) < 0) {
         return this;
       }
-      BigInteger remainder = new BigInteger();
+      var remainder = new BigInteger();
       words1Size += words1Size & 1;
       words2Size += words2Size & 1;
       remainder.reg = new short[RoundupSize((int)words2Size)];
@@ -4190,9 +4190,9 @@ if (bytes.Length <= 0) {
     }
 
     /// <summary>Compares a BigInteger object with this instance.</summary>
+    /// <param name='other'>A BigInteger object.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance
     /// is less, or a positive number if this instance is greater.</returns>
-    /// <param name='other'>A BigInteger object.</param>
     public int CompareTo(BigInteger other) {
       if (other == null) {
         return 1;

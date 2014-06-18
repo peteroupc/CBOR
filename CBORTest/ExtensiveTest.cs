@@ -272,7 +272,7 @@ namespace CBOR {
         bool haveDigits = false;
         for (; i < str.Length; ++i) {
           if (str[i] >= '0' && str[i] <= '9') {
-            int thisdigit = (int)(str[i] - '0');
+            var thisdigit = (int)(str[i] - '0');
             if ((beforeDec >> 28) != 0) {
               throw new FormatException(str);
             }
@@ -280,7 +280,7 @@ namespace CBOR {
             beforeDec |= thisdigit;
             haveDigits = true;
           } else if (str[i] >= 'A' && str[i] <= 'F') {
-            int thisdigit = (int)(str[i] - 'A') + 10;
+            var thisdigit = (int)(str[i] - 'A') + 10;
             if ((beforeDec >> 28) != 0) {
               throw new FormatException(str);
             }
@@ -288,7 +288,7 @@ namespace CBOR {
             beforeDec |= thisdigit;
             haveDigits = true;
           } else if (str[i] >= 'a' && str[i] <= 'f') {
-            int thisdigit = (int)(str[i] - 'a') + 10;
+            var thisdigit = (int)(str[i] - 'a') + 10;
             if ((beforeDec >> 28) != 0) {
               throw new FormatException(str);
             }
@@ -317,7 +317,7 @@ namespace CBOR {
           int afterDec = 0;
           for (; i < str.Length; ++i) {
             if (str[i] >= '0' && str[i] <= '9') {
-              int thisdigit = (int)(str[i] - '0');
+              var thisdigit = (int)(str[i] - '0');
               if ((afterDec >> 28) != 0) {
                 throw new FormatException(str);
               }
@@ -325,7 +325,7 @@ namespace CBOR {
               afterDec |= thisdigit;
               haveDigits = true;
             } else if (str[i] >= 'A' && str[i] <= 'F') {
-              int thisdigit = (int)(str[i] - 'A') + 10;
+              var thisdigit = (int)(str[i] - 'A') + 10;
               if ((afterDec >> 28) != 0) {
                 throw new FormatException(str);
               }
@@ -333,7 +333,7 @@ namespace CBOR {
               afterDec |= thisdigit;
               haveDigits = true;
             } else if (str[i] >= 'a' && str[i] <= 'f') {
-              int thisdigit = (int)(str[i] - 'a') + 10;
+              var thisdigit = (int)(str[i] - 'a') + 10;
               if ((afterDec >> 28) != 0) {
                 throw new FormatException(str);
               }
@@ -368,7 +368,7 @@ namespace CBOR {
           }
           for (; i < str.Length; ++i) {
             if (str[i] >= '0' && str[i] <= '9') {
-              int thisdigit = (int)(str[i] - '0');
+              var thisdigit = (int)(str[i] - '0');
               if ((exponent >> 28) != 0) {
                 throw new FormatException(str);
               }
@@ -424,7 +424,7 @@ namespace CBOR {
             exponent -= 127;
             mantissa |= 0x800000;
           }
-          BigInteger bigmantissa = (BigInteger)mantissa;
+          var bigmantissa = (BigInteger)mantissa;
           if (neg) {
             bigmantissa = -bigmantissa;
           }
@@ -1198,7 +1198,7 @@ namespace CBOR {
       long failures = 0;
       List<string> errors = new List<string>();
       List<string> dirfiles = new List<string>();
-      System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+      var sw = new System.Diagnostics.Stopwatch();
       sw.Start();
       TextWriter nullWriter = TextWriter.Null;
       TextWriter standardOut = Console.Out;

@@ -12,52 +12,52 @@ namespace PeterO.Cbor {
   internal class CBORExtendedDecimal : ICBORNumber
   {
     public bool IsPositiveInfinity(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       return ed.IsPositiveInfinity();
     }
 
     public bool IsInfinity(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       return ed.IsInfinity();
     }
 
     public bool IsNegativeInfinity(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       return ed.IsNegativeInfinity();
     }
 
     public bool IsNaN(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       return ed.IsNaN();
     }
 
     public double AsDouble(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       return ed.ToDouble();
     }
 
     public ExtendedDecimal AsExtendedDecimal(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       return ed;
     }
 
     public ExtendedFloat AsExtendedFloat(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       return ed.ToExtendedFloat();
     }
 
     public float AsSingle(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       return ed.ToSingle();
     }
 
     public BigInteger AsBigInteger(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       return ed.ToBigInteger();
     }
 
     public long AsInt64(object obj) {
-      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      var ef = (ExtendedDecimal)obj;
       if (this.CanTruncatedIntFitInInt64(obj)) {
         BigInteger bi = ef.ToBigInteger();
         return (long)bi;
@@ -66,7 +66,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInSingle(object obj) {
-      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      var ef = (ExtendedDecimal)obj;
       if (!ef.IsFinite) {
         return true;
       }
@@ -74,7 +74,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInDouble(object obj) {
-      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      var ef = (ExtendedDecimal)obj;
       if (!ef.IsFinite) {
         return true;
       }
@@ -90,7 +90,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt64(object obj) {
-      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      var ef = (ExtendedDecimal)obj;
       if (!ef.IsFinite) {
         return false;
       }
@@ -105,7 +105,7 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
-      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      var ef = (ExtendedDecimal)obj;
       if (!ef.IsFinite) {
         return false;
       }
@@ -120,12 +120,12 @@ namespace PeterO.Cbor {
     }
 
     public bool IsZero(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       return ed.IsZero;
     }
 
     public int Sign(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       if (ed.IsNaN()) {
         return 2;
       }
@@ -133,7 +133,7 @@ namespace PeterO.Cbor {
     }
 
     public bool IsIntegral(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       if (!ed.IsFinite) {
         return false;
       }
@@ -144,10 +144,10 @@ namespace PeterO.Cbor {
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
-      ExtendedDecimal ef = (ExtendedDecimal)obj;
+      var ef = (ExtendedDecimal)obj;
       if (this.CanTruncatedIntFitInInt32(obj)) {
         BigInteger bi = ef.ToBigInteger();
-        int ret = (int)bi;
+        var ret = (int)bi;
         if (ret >= minValue && ret <= maxValue) {
           return ret;
         }
@@ -156,12 +156,12 @@ namespace PeterO.Cbor {
     }
 
     public object Negate(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       return ed.Negate();
     }
 
     public object Abs(object obj) {
-      ExtendedDecimal ed = (ExtendedDecimal)obj;
+      var ed = (ExtendedDecimal)obj;
       return ed.Abs();
     }
 

@@ -29,8 +29,8 @@ namespace PeterO.Cbor {
       int typeA = a.ItemType;
       int typeB = b.ItemType;
       if (typeA == CBORObject.CBORObjectTypeInteger && typeB == CBORObject.CBORObjectTypeInteger) {
-        long valueA = (long)objA;
-        long valueB = (long)objB;
+        var valueA = (long)objA;
+        var valueB = (long)objB;
         if ((valueA < 0 && valueB < Int64.MinValue - valueA) ||
             (valueA > 0 && valueB > Int64.MaxValue - valueA)) {
           // would overflow, convert to BigInteger
@@ -78,8 +78,8 @@ namespace PeterO.Cbor {
       int typeA = a.ItemType;
       int typeB = b.ItemType;
       if (typeA == CBORObject.CBORObjectTypeInteger && typeB == CBORObject.CBORObjectTypeInteger) {
-        long valueA = (long)objA;
-        long valueB = (long)objB;
+        var valueA = (long)objA;
+        var valueB = (long)objB;
         if ((valueB < 0 && Int64.MaxValue + valueB < valueA) ||
             (valueB > 0 && Int64.MinValue + valueB > valueA)) {
           // would overflow, convert to BigInteger
@@ -127,8 +127,8 @@ namespace PeterO.Cbor {
       int typeA = a.ItemType;
       int typeB = b.ItemType;
       if (typeA == CBORObject.CBORObjectTypeInteger && typeB == CBORObject.CBORObjectTypeInteger) {
-        long valueA = (long)objA;
-        long valueB = (long)objB;
+        var valueA = (long)objA;
+        var valueB = (long)objB;
         bool apos = valueA > 0L;
         bool bpos = valueB > 0L;
         if (
@@ -138,8 +138,8 @@ namespace PeterO.Cbor {
                       (Int64.MaxValue / valueA) > valueB) ||
                      (bpos && valueA < (Int64.MinValue / valueB))))) {
           // would overflow, convert to BigInteger
-          BigInteger bvalueA = (BigInteger)valueA;
-          BigInteger bvalueB = (BigInteger)valueB;
+          var bvalueA = (BigInteger)valueA;
+          var bvalueB = (BigInteger)valueB;
           return CBORObject.FromObject(bvalueA * (BigInteger)bvalueB);
         }
         return CBORObject.FromObject(valueA * valueB);
@@ -184,8 +184,8 @@ namespace PeterO.Cbor {
       int typeA = a.ItemType;
       int typeB = b.ItemType;
       if (typeA == CBORObject.CBORObjectTypeInteger && typeB == CBORObject.CBORObjectTypeInteger) {
-        long valueA = (long)objA;
-        long valueB = (long)objB;
+        var valueA = (long)objA;
+        var valueB = (long)objB;
         if (valueB == 0) {
           return (valueA == 0) ? CBORObject.NaN : ((valueA < 0) ?
                                                  CBORObject.NegativeInfinity : CBORObject.PositiveInfinity);
@@ -273,8 +273,8 @@ namespace PeterO.Cbor {
       int typeA = a.ItemType;
       int typeB = b.ItemType;
       if (typeA == CBORObject.CBORObjectTypeInteger && typeB == CBORObject.CBORObjectTypeInteger) {
-        long valueA = (long)objA;
-        long valueB = (long)objB;
+        var valueA = (long)objA;
+        var valueB = (long)objB;
         if (valueA == Int64.MinValue && valueB == -1) {
           return CBORObject.FromObject(0);
         }

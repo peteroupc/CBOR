@@ -1402,7 +1402,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
       CBORObject curitem = this;
       if (curitem.isTagged()) {
-        ArrayList<BigInteger> list=new ArrayList<BigInteger>();
+        ArrayList<BigInteger> list = new ArrayList<BigInteger>();
         while (curitem.isTagged()) {
           list.add(LowHighToBigInteger(
             curitem.tagLow,
@@ -3316,7 +3316,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       CBORObject obj;
       int[] nextchar = new int[1];
       boolean seenComma = false;
-      HashMap<CBORObject, CBORObject> myHashMap=new HashMap<CBORObject, CBORObject>();
+      HashMap<CBORObject, CBORObject> myHashMap = new HashMap<CBORObject, CBORObject>();
       while (true) {
         c = SkipWhitespaceJSON(reader);
         switch (c) {
@@ -3370,7 +3370,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if (depth > 1000) {
         throw reader.NewError("Too deeply nested");
       }
-      ArrayList<CBORObject> myArrayList=new ArrayList<CBORObject>();
+      ArrayList<CBORObject> myArrayList = new ArrayList<CBORObject>();
       boolean seenComma = false;
       int[] nextchar = new int[1];
       while (true) {
@@ -4475,7 +4475,7 @@ true);
       if (dic == null) {
         return CBORObject.Null;
       }
-      HashMap<CBORObject, CBORObject> map=new HashMap<CBORObject, CBORObject>();
+      HashMap<CBORObject, CBORObject> map = new HashMap<CBORObject, CBORObject>();
       for(Map.Entry<TKey, TValue> entry : dic.entrySet()) {
         CBORObject key = FromObject(entry.getKey());
         CBORObject value = FromObject(entry.getValue());

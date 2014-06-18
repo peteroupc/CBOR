@@ -31,7 +31,7 @@ namespace Test {
 
     [TestMethod]
     public void TestToString() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         String s = bigintA.ToString();
@@ -42,7 +42,7 @@ namespace Test {
 
     [TestMethod]
     public void TestShiftLeft() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = bigintA;
@@ -61,10 +61,10 @@ namespace Test {
 
     [TestMethod]
     public void TestShiftRight() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         int smallint = r.NextValue(0x7fffffff);
-        BigInteger bigintA = (BigInteger)smallint;
+        var bigintA = (BigInteger)smallint;
         string str = bigintA.ToString();
         for (int j = 32; j < 80; ++j) {
           TestCommon.DoTestShiftRight(str, j, "0");
@@ -90,7 +90,7 @@ namespace Test {
 
     [TestMethod]
     public void TestDigitCount() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         String str = BigInteger.Abs(bigintA).ToString();
@@ -100,7 +100,7 @@ namespace Test {
 
     [TestMethod]
     public void TestMultiply() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = bigintA + BigInteger.One;
@@ -132,7 +132,7 @@ namespace Test {
 
     [TestMethod]
     public void TestMultiplyDivide() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 4000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
@@ -184,7 +184,7 @@ namespace Test {
 
     [TestMethod]
     public void TestPow() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 200; ++i) {
         int power = 1 + r.NextValue(8);
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
@@ -198,7 +198,7 @@ namespace Test {
 
     [TestMethod]
     public void TestSquareRoot() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 10000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         if (bigintA.Sign < 0) {
@@ -223,7 +223,7 @@ namespace Test {
     [TestMethod]
     public void TestSmallIntDivide() {
       int a, b;
-      FastRandom fr = new FastRandom();
+      var fr = new FastRandom();
       for (int i = 0; i < 10000; ++i) {
         a = fr.NextValue(0x1000000);
         b = fr.NextValue(0x1000000);
@@ -231,8 +231,8 @@ namespace Test {
           continue;
         }
         int c = a / b;
-        BigInteger bigintA = (BigInteger)a;
-        BigInteger bigintB = (BigInteger)b;
+        var bigintA = (BigInteger)a;
+        var bigintB = (BigInteger)b;
         BigInteger bigintC = bigintA / (BigInteger)bigintB;
         Assert.AreEqual((int)bigintC, c);
       }
@@ -241,7 +241,7 @@ namespace Test {
     [TestMethod]
     public void TestMiscellaneous() {
       Assert.AreEqual(1, BigInteger.Zero.getDigitCount());
-      BigInteger minValue = (BigInteger)Int32.MinValue;
+      var minValue = (BigInteger)Int32.MinValue;
       BigInteger minValueTimes2 = minValue + (BigInteger)minValue;
       Assert.AreEqual(Int32.MinValue, (int)minValue);
       try {
@@ -561,7 +561,7 @@ namespace Test {
 
     [TestMethod]
     public void TestAddSubtract() {
-      FastRandom r = new FastRandom();
+      var r = new FastRandom();
       for (int i = 0; i < 10000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
@@ -667,7 +667,7 @@ namespace Test {
     [TestMethod]
     public void TestGcd() {
       int prime = 0;
-      FastRandom rand = new FastRandom();
+      var rand = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
         while (true) {
           prime = rand.NextValue(0x7fffffff);
@@ -676,7 +676,7 @@ namespace Test {
             break;
           }
         }
-        BigInteger bigprime = (BigInteger)prime;
+        var bigprime = (BigInteger)prime;
         BigInteger ba = CBORTest.RandomBigInteger(rand);
         if (ba.IsZero) {
           continue;

@@ -1410,7 +1410,7 @@ at: http://upokecenter.com/d/
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-    private static IRadixMath<ExtendedFloat> math = new TrappableRadixMath<ExtendedFloat>(
+    private static final IRadixMath<ExtendedFloat> math = new TrappableRadixMath<ExtendedFloat>(
       new ExtendedOrSimpleRadixMath<ExtendedFloat>(new BinaryMathHelper()));
 
     /**
@@ -1960,7 +1960,7 @@ at: http://upokecenter.com/d/
       ExtendedFloat subtrahend,
       PrecisionContext ctx) {
       if (subtrahend == null) {
-        throw new NullPointerException("otherValue");
+        throw new NullPointerException("subtrahend");
       }
       ExtendedFloat negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {

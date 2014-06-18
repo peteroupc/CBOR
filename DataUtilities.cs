@@ -30,7 +30,7 @@ namespace PeterO {
       if (bytes == null) {
         throw new ArgumentNullException("bytes");
       }
-      StringBuilder b = new StringBuilder();
+      var b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, 0, bytes.Length, b, replace) != 0) {
         throw new ArgumentException("Invalid UTF-8");
       }
@@ -72,7 +72,7 @@ namespace PeterO {
       if (bytes.Length - offset < bytesCount) {
         throw new ArgumentException("bytes's length minus " + offset + " (" + Convert.ToString((long)(bytes.Length - offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((long)bytesCount, System.Globalization.CultureInfo.InvariantCulture));
       }
-      StringBuilder b = new StringBuilder();
+      var b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, offset, bytesCount, b, replace) != 0) {
         throw new ArgumentException("Invalid UTF-8");
       }
@@ -111,15 +111,15 @@ namespace PeterO {
 
     /// <summary>Calculates the number of bytes needed to encode a string
     /// in UTF-8.</summary>
+    /// <param name='str'>A String object.</param>
+    /// <param name='replace'>If true, treats unpaired surrogate code
+    /// points as having 3 UTF-8 bytes (the UTF-8 length of the replacement
+    /// character U + FFFD).</param>
     /// <returns>The number of bytes needed to encode the given string in
     /// UTF-8, or -1 if the string contains an unpaired surrogate code point
     /// and <paramref name='replace'/> is false.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null.</exception>
-    /// <param name='str'>A String object.</param>
-    /// <param name='replace'>If true, treats unpaired surrogate code
-    /// points as having 3 UTF-8 bytes (the UTF-8 length of the replacement
-    /// character U + FFFD).</param>
     public static long GetUtf8Length(String str, bool replace) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -278,7 +278,7 @@ namespace PeterO {
         return null;
       }
       int len = str.Length;
-      char c = (char)0;
+      var c = (char)0;
       bool hasUpperCase = false;
       for (int i = 0; i < len; ++i) {
         c = str[i];
@@ -290,7 +290,7 @@ namespace PeterO {
       if (!hasUpperCase) {
         return str;
       }
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       for (int i = 0; i < len; ++i) {
         c = str[i];
         if (c >= 'A' && c <= 'Z') {
@@ -304,14 +304,14 @@ namespace PeterO {
 
     /// <summary>Compares two strings in Unicode code point order. Unpaired
     /// surrogates are treated as individual code points.</summary>
+    /// <param name='strA'>The first string. Can be null.</param>
+    /// <param name='strB'>The second string. Can be null.</param>
     /// <returns>A value indicating which string is " less" or " greater"
     /// . 0: Both strings are equal or null. Less than 0: a is null and b isn't;
     /// or the first code point that's different is less in A than in B; or b starts
     /// with a and is longer than a. Greater than 0: b is null and a isn't; or the
     /// first code point that's different is greater in A than in B; or a starts
     /// with b and is longer than b.</returns>
-    /// <param name='strA'>The first string. Can be null.</param>
-    /// <param name='strB'>The second string. Can be null.</param>
     public static int CodePointCompare(String strA, String strB) {
       if (strA == null) {
         return (strB == null) ? 0 : -1;
@@ -665,11 +665,11 @@ namespace PeterO {
     /// <summary>Reads a string in UTF-8 encoding from a data stream in full
     /// and returns that string. Replaces invalid encoding with the replacement
     /// character (U + FFFD).</summary>
+    /// <param name='stream'>A readable data stream.</param>
     /// <returns>The string read.</returns>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='stream'/> is null.</exception>
-    /// <param name='stream'>A readable data stream.</param>
     public static string ReadUtf8ToString(
       Stream stream) {
       return ReadUtf8ToString(stream, -1, true);
@@ -693,7 +693,7 @@ namespace PeterO {
       Stream stream,
       int bytesCount,
       bool replace) {
-      StringBuilder builder = new StringBuilder();
+      var builder = new StringBuilder();
       int retval = DataUtilities.ReadUtf8(stream, bytesCount, builder, replace);
       if (retval == -1) {
         throw new IOException("Unpaired surrogate code point found.", new DecoderFallbackException());

@@ -70,15 +70,15 @@ namespace PeterO {
       }
 
     /// <summary>Return color of node p, or BLACK if p is null.</summary>
-    /// <returns>A Boolean object.</returns>
     /// <param name='p'>A RBCell object.</param>
+    /// <returns>A Boolean object.</returns>
       private static bool colorOf(RBCell p) {
         return (p == null) ? BLACK : p.colorValue;
       }
 
     /// <summary>Return parent of node p, or null if p is null.</summary>
-    /// <returns>A RBCell object.</returns>
     /// <param name='p'>A RBCell object. (2).</param>
+    /// <returns>A RBCell object.</returns>
       private static RBCell parentOf(RBCell p) {
         return (p == null) ? null : p.parentValue;
       }
@@ -91,15 +91,15 @@ namespace PeterO {
         } }
 
     /// <summary>Return left child of node p, or null if p is null.</summary>
-    /// <returns>A RBCell object.</returns>
     /// <param name='p'>A RBCell object. (2).</param>
+    /// <returns>A RBCell object.</returns>
       private static RBCell leftOf(RBCell p) {
         return (p == null) ? null : p.leftValue;
       }
 
     /// <summary>Return right child of node p, or null if p is null.</summary>
-    /// <returns>A RBCell object.</returns>
     /// <param name='p'>A RBCell object. (2).</param>
+    /// <returns>A RBCell object.</returns>
       private static RBCell rightOf(RBCell p) {
         return (p == null) ? null : p.rightValue;
       }
@@ -189,9 +189,9 @@ namespace PeterO {
     /// <summary>Return node of current sub-tree containing element as
     /// element(), if it exists, else null. Uses IComparer <paramref name='cmp'/>
     /// to find and to check equality.</summary>
-    /// <returns>A RBCell object.</returns>
     /// <param name='element'>A T object.</param>
     /// <param name='cmp'>An IComparer object.</param>
+    /// <returns>A RBCell object.</returns>
       public RBCell find(T element, IComparer<T> cmp) {
         RBCell t = this;
         for (;;) {
@@ -212,9 +212,9 @@ namespace PeterO {
     /// <summary>Return number of nodes of current sub-tree containing
     /// element. Uses IComparer <paramref name='cmp'/> to find and to check
     /// equality.</summary>
-    /// <returns>A 32-bit signed integer.</returns>
     /// <param name='element'>A T object.</param>
     /// <param name='cmp'>An IComparer object.</param>
+    /// <returns>A 32-bit signed integer.</returns>
       public int count(T element, IComparer<T> cmp) {
         int c = 0;
         RBCell t = this;
@@ -253,10 +253,10 @@ namespace PeterO {
 
     /// <summary>Insert cell as the right child of current node, and then
     /// rebalance the tree it is in.</summary>
-    /// <returns>The new root of the current tree. (Rebalancing can change
-    /// the root!).</returns>
     /// <param name='cell'>The cell to add.</param>
     /// <param name='root'>The root of the current tree.</param>
+    /// <returns>The new root of the current tree. (Rebalancing can change
+    /// the root!).</returns>
       public RBCell insertRight(RBCell cell, RBCell root) {
         this.rightValue = cell;
         cell.parentValue = this;
@@ -277,7 +277,7 @@ namespace PeterO {
         }
 
         // Start fixup at replacement node, if it exists
-        RBCell replacement = (this.leftValue != null) ? this.leftValue : this.rightValue;
+        RBCell replacement = this.leftValue ?? this.rightValue;
 
         if (replacement != null) {
           // link replacement to parent
@@ -323,7 +323,7 @@ namespace PeterO {
       }
 
       /** From CLR **/
-      private RBCell rotateLeft(RBCell root) {
+      private RBCell rotateLeft(RBCell rootValue) {
         RBCell r = this.rightValue;
         this.rightValue = r.leftValue;
         if (r.leftValue != null) {
@@ -331,7 +331,7 @@ namespace PeterO {
         }
         r.parentValue = this.parentValue;
         if (this.parentValue == null) {
-          root = r;
+          rootValue = r;
         } else if (this.parentValue.leftValue == this) {
           this.parentValue.leftValue = r;
         } else {
@@ -339,11 +339,11 @@ namespace PeterO {
         }
         r.leftValue = this;
         this.parentValue = r;
-        return root;
+        return rootValue;
       }
 
       /** From CLR **/
-      private RBCell rotateRight(RBCell root) {
+      private RBCell rotateRight(RBCell rootValue) {
         RBCell l = this.leftValue;
         this.leftValue = l.rightValue;
         if (l.rightValue != null) {
@@ -351,7 +351,7 @@ namespace PeterO {
         }
         l.parentValue = this.parentValue;
         if (this.parentValue == null) {
-          root = l;
+          rootValue = l;
         } else if (this.parentValue.rightValue == this) {
           this.parentValue.rightValue = l;
         } else {
@@ -359,15 +359,15 @@ namespace PeterO {
         }
         l.rightValue = this;
         this.parentValue = l;
-        return root;
+        return rootValue;
       }
 
       /** From CLR **/
-      private RBCell fixAfterInsertion(RBCell root) {
+      private RBCell fixAfterInsertion(RBCell rootValue) {
         this.colorValue = RED;
         RBCell x = this;
 
-        while (x != null && x != root && x.parentValue.colorValue == RED) {
+        while (x != null && x != rootValue && x.parentValue.colorValue == RED) {
           if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
             RBCell y = rightOf(parentOf(parentOf(x)));
 
@@ -379,12 +379,12 @@ namespace PeterO {
             } else {
               if (x == rightOf(parentOf(x))) {
                 x = parentOf(x);
-                root = x.rotateLeft(root);
+                rootValue = x.rotateLeft(rootValue);
               }
               setColor(parentOf(x), BLACK);
               setColor(parentOf(parentOf(x)), RED);
               if (parentOf(parentOf(x)) != null) {
-                root = parentOf(parentOf(x)).rotateRight(root);
+                rootValue = parentOf(parentOf(x)).rotateRight(rootValue);
               }
             }
           } else {
@@ -398,30 +398,30 @@ namespace PeterO {
             } else {
               if (x == leftOf(parentOf(x))) {
                 x = parentOf(x);
-                root = x.rotateRight(root);
+                rootValue = x.rotateRight(rootValue);
               }
               setColor(parentOf(x), BLACK);
               setColor(parentOf(parentOf(x)), RED);
               if (parentOf(parentOf(x)) != null) {
-                root = parentOf(parentOf(x)).rotateLeft(root);
+                rootValue = parentOf(parentOf(x)).rotateLeft(rootValue);
               }
             }
           }
         }
-        root.colorValue = BLACK;
-        return root;
+        rootValue.colorValue = BLACK;
+        return rootValue;
       }
       /** From CLR **/
-      private RBCell fixAfterDeletion(RBCell root) {
+      private RBCell fixAfterDeletion(RBCell rootValue) {
         RBCell x = this;
-        while (x != root && colorOf(x) == BLACK) {
+        while (x != rootValue && colorOf(x) == BLACK) {
           if (x == leftOf(parentOf(x))) {
             RBCell sib = rightOf(parentOf(x));
 
             if (colorOf(sib) == RED) {
               setColor(sib, BLACK);
               setColor(parentOf(x), RED);
-              root = parentOf(x).rotateLeft(root);
+              rootValue = parentOf(x).rotateLeft(rootValue);
               sib = rightOf(parentOf(x));
             }
 
@@ -432,14 +432,14 @@ namespace PeterO {
               if (colorOf(rightOf(sib)) == BLACK) {
                 setColor(leftOf(sib), BLACK);
                 setColor(sib, RED);
-                root = sib.rotateRight(root);
+                rootValue = sib.rotateRight(rootValue);
                 sib = rightOf(parentOf(x));
               }
               setColor(sib, colorOf(parentOf(x)));
               setColor(parentOf(x), BLACK);
               setColor(rightOf(sib), BLACK);
-              root = parentOf(x).rotateLeft(root);
-              x = root;
+              rootValue = parentOf(x).rotateLeft(rootValue);
+              x = rootValue;
             }
           } else {  // symmetric
 
@@ -448,7 +448,7 @@ namespace PeterO {
             if (colorOf(sib) == RED) {
               setColor(sib, BLACK);
               setColor(parentOf(x), RED);
-              root = parentOf(x).rotateRight(root);
+              rootValue = parentOf(x).rotateRight(rootValue);
               sib = leftOf(parentOf(x));
             }
 
@@ -459,19 +459,19 @@ namespace PeterO {
               if (colorOf(leftOf(sib)) == BLACK) {
                 setColor(rightOf(sib), BLACK);
                 setColor(sib, RED);
-                root = sib.rotateLeft(root);
+                rootValue = sib.rotateLeft(rootValue);
                 sib = leftOf(parentOf(x));
               }
               setColor(sib, colorOf(parentOf(x)));
               setColor(parentOf(x), BLACK);
               setColor(leftOf(sib), BLACK);
-              root = parentOf(x).rotateRight(root);
-              x = root;
+              rootValue = parentOf(x).rotateRight(rootValue);
+              x = rootValue;
             }
           }
         }
         setColor(x, BLACK);
-        return root;
+        return rootValue;
       }
     }
 
@@ -504,19 +504,15 @@ namespace PeterO {
     private RedBlackTree(IComparer<T> cmp, RBCell t, int n) {
       this.countValue = n;
       this.treeValue = t;
-      if (cmp != null) {
-        this.cmpValue = cmp;
-      } else {
-        this.cmpValue = Comparer<T>.Default;
-      }
+        this.cmpValue = cmp ?? Comparer<T>.Default;
     }
 
     // Collection methods
 
     /// <summary>Implements collections.Collection.includes. Time
     /// complexity: O(log n).</summary>
-    /// <returns>A Boolean object.</returns>
     /// <param name='element'>A T object.</param>
+    /// <returns>A Boolean object.</returns>
     public bool Contains(T element) {
       if (this.countValue == 0) {
         return false;
@@ -539,10 +535,7 @@ namespace PeterO {
     }
 
     public int OccurrencesOf(T element) {
-      if (this.countValue == 0) {
-        return 0;
-      }
-      return this.treeValue.count(element, this.cmpValue);
+      return (this.countValue == 0) ? 0 : this.treeValue.count(element, this.cmpValue);
     }
 
     /// <summary>Implements collections.UpdatableCollection.clear.
@@ -687,9 +680,9 @@ namespace PeterO {
       }
     }
 
+    /// <summary>Copies this object's data to a new array.</summary>
     /// <param name='array'>A T[] object.</param>
     /// <param name='arrayIndex'>Starting index to copy to.</param>
-    /// <summary>Copies this object's data to a new array.</summary>
     public void CopyTo(T[] array, int arrayIndex) {
       if (this.treeValue != null) {
         RBCell t = this.treeValue.leftmost();
