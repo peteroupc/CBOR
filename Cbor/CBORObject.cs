@@ -1264,7 +1264,8 @@ namespace PeterO.Cbor {
     /// <exception cref='System.ArgumentException'>Data is null or empty.</exception>
     /// <exception cref='CBORException'>There was an error in reading
     /// or parsing the data. This includes cases where not all of the byte array
-    /// represents a CBOR object.</exception>
+    /// represents a CBOR object, and cases where <paramref name='data'/>
+    /// is empty.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='data'/> is null.</exception>
     public static CBORObject DecodeFromBytes(byte[] data) {
@@ -1272,7 +1273,7 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("data");
       }
       if (data.Length == 0) {
-        throw new ArgumentException("data is empty.");
+        throw new CBORException("data is empty.");
       }
       int firstbyte = (int)(data[0] & (int)0xff);
       int expectedLength = valueExpectedLengths[firstbyte];
