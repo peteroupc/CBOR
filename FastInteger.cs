@@ -6,7 +6,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using System.Text;
 
 namespace PeterO {
   internal sealed class FastInteger : IComparable<FastInteger> {
@@ -71,7 +70,7 @@ namespace PeterO {
         if (this.wordCount == 1 && (this.data[0] >> 31) == 0) {
           return (BigInteger)((int)this.data[0]);
         }
-        byte[] bytes = new byte[(this.wordCount * 4) + 1];
+        var bytes = new byte[(this.wordCount * 4) + 1];
         for (int i = 0; i < this.wordCount; ++i) {
           bytes[i * 4] = (byte)(this.data[i] & 0xff);
           bytes[(i * 4) + 1] = (byte)((this.data[i] >> 8) & 0xff);
@@ -83,7 +82,7 @@ namespace PeterO {
       }
 
       internal int[] GetLastWordsInternal(int numWords32Bit) {
-        int[] ret = new int[numWords32Bit];
+        var ret = new int[numWords32Bit];
         Array.Copy(this.data, ret, Math.Min(numWords32Bit, this.wordCount));
         return ret;
       }
@@ -114,7 +113,8 @@ namespace PeterO {
       public MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
           throw new ArgumentException("multiplicand (" + Convert.ToString((int)multiplicand, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-        } else if (multiplicand != 0) {
+        }
+        if (multiplicand != 0) {
           int carry = 0;
           if (this.wordCount == 0) {
             if (this.data.Length == 0) {
@@ -132,10 +132,12 @@ namespace PeterO {
               x0 &= 65535;
               x1 = (x1 >> 16) & 65535;
               int temp = unchecked(x0 * y0);  // a * c
-              result1 = (temp >> 16) & 65535; result0 = temp & 65535;
+              result1 = (temp >> 16) & 65535;
+              result0 = temp & 65535;
               result2 = 0;
               temp = unchecked(x1 * y0);  // b * c
-              result2 += (temp >> 16) & 65535; result1 += temp & 65535;
+              result2 += (temp >> 16) & 65535;
+              result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
               result1 &= 65535;
               result3 = (result2 >> 16) & 65535;
@@ -163,19 +165,23 @@ namespace PeterO {
               x1 = (x1 >> 16) & 65535;
               y1 = (y1 >> 16) & 65535;
               int temp = unchecked(x0 * y0);  // a * c
-              result1 = (temp >> 16) & 65535; result0 = temp & 65535;
+              result1 = (temp >> 16) & 65535;
+              result0 = temp & 65535;
               temp = unchecked(x0 * y1);  // a * d
-              result2 = (temp >> 16) & 65535; result1 += temp & 65535;
+              result2 = (temp >> 16) & 65535;
+              result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
               result1 &= 65535;
               temp = unchecked(x1 * y0);  // b * c
-              result2 += (temp >> 16) & 65535; result1 += temp & 65535;
+              result2 += (temp >> 16) & 65535;
+              result1 += temp & 65535;
               result2 += (result1 >> 16) & 65535;
               result1 &= 65535;
               result3 = (result2 >> 16) & 65535;
               result2 &= 65535;
               temp = unchecked(x1 * y1);  // b * d
-              result3 += (temp >> 16) & 65535; result2 += temp & 65535;
+              result3 += (temp >> 16) & 65535;
+              result2 += temp & 65535;
               result3 += (result2 >> 16) & 65535;
               result2 &= 65535;
               // Add carry
@@ -193,7 +199,7 @@ namespace PeterO {
           }
           if (carry != 0) {
             if (this.wordCount >= this.data.Length) {
-              int[] newdata = new int[this.wordCount + 20];
+              var newdata = new int[this.wordCount + 20];
               Array.Copy(this.data, 0, newdata, 0, this.data.Length);
               this.data = newdata;
             }
@@ -239,12 +245,12 @@ namespace PeterO {
         if (this.wordCount == 0) {
           // this value is 0
           return (val == 0) ? 0 : -1;
-        } else if (this.data[0] == val) {
-          return 0;
-        } else {
-          return (((this.data[0] >> 31) == (val >> 31)) ? ((this.data[0] & Int32.MaxValue) < (val & Int32.MaxValue))
-                  : ((this.data[0] >> 31) == 0)) ? -1 : 1;
         }
+        if (this.data[0] == val) {
+          return 0;
+        }
+        return (((this.data[0] >> 31) == (val >> 31)) ? ((this.data[0] & Int32.MaxValue) < (val & Int32.MaxValue))
+                  : ((this.data[0] >> 31) == 0)) ? -1 : 1;
       }
 
     /// <summary>Subtracts a 32-bit signed integer from this instance.</summary>
@@ -302,7 +308,7 @@ namespace PeterO {
             // Console.WriteLine("" + this.data.Length + " " + (other.data.Length));
             int neededSize = (this.wordCount > other.wordCount) ? this.wordCount : other.wordCount;
             if (this.data.Length < neededSize) {
-              int[] newdata = new int[neededSize + 20];
+              var newdata = new int[neededSize + 20];
               Array.Copy(this.data, 0, newdata, 0, this.data.Length);
               this.data = newdata;
             }
@@ -352,7 +358,8 @@ namespace PeterO {
               ((an & Int32.MaxValue) < (bn & Int32.MaxValue)) :
               ((an >> 31) == 0)) {
             return -1;
-          } else if (an != bn) {
+          }
+          if (an != bn) {
             return 1;
           }
         }
@@ -365,7 +372,8 @@ namespace PeterO {
       public MutableNumber Add(int augend) {
         if (augend < 0) {
           throw new ArgumentException("augend (" + Convert.ToString((int)augend, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-        } else if (augend != 0) {
+        }
+        if (augend != 0) {
           int carry = 0;
           // Ensure a length of at least 1
           if (this.wordCount == 0) {
@@ -389,7 +397,7 @@ namespace PeterO {
           }
           if (carry != 0) {
             if (this.wordCount >= this.data.Length) {
-              int[] newdata = new int[this.wordCount + 20];
+              var newdata = new int[this.wordCount + 20];
               Array.Copy(this.data, 0, newdata, 0, this.data.Length);
               this.data = newdata;
             }
@@ -408,7 +416,7 @@ namespace PeterO {
     private int smallValue;  // if integerMode is 0
     private MutableNumber mnum;  // if integerMode is 1
     private BigInteger largeValue;  // if integerMode is 2
-    private int integerMode = 0;
+    private int integerMode;
 
     private static BigInteger valueInt32MinValue = (BigInteger)Int32.MinValue;
     private static BigInteger valueInt32MaxValue = (BigInteger)Int32.MaxValue;
@@ -429,7 +437,8 @@ namespace PeterO {
     public static FastInteger FromBig(BigInteger bigintVal) {
       if (bigintVal.canFitInInt()) {
         return new FastInteger(bigintVal.intValue());
-      } else if (bigintVal.Sign > 0) {
+      }
+      if (bigintVal.Sign > 0) {
         var fi = new FastInteger(0);
         fi.integerMode = 1;
         fi.mnum = MutableNumber.FromBigInteger(bigintVal);
@@ -495,7 +504,7 @@ namespace PeterO {
       if (wordCount == 1 && (words[0] >> 31) == 0) {
         return (BigInteger)((int)words[0]);
       }
-      byte[] bytes = new byte[(wordCount * 4) + 1];
+      var bytes = new byte[(wordCount * 4) + 1];
       for (int i = 0; i < wordCount; ++i) {
         bytes[(i * 4) + 0] = (byte)(words[i] & 0xff);
         bytes[(i * 4) + 1] = (byte)((words[i] >> 8) & 0xff);
@@ -525,7 +534,8 @@ namespace PeterO {
             ++count;
           }
           return count;
-        } else if (divisor.integerMode == 0 && divisor.smallValue >= 0) {
+        }
+        if (divisor.integerMode == 0 && divisor.smallValue >= 0) {
           if (this.mnum.CanFitInInt32()) {
             int small = this.mnum.ToInt32();
             count = small / divisor.smallValue;
@@ -697,9 +707,10 @@ namespace PeterO {
     public FastInteger SubtractInt(int val) {
       if (val == Int32.MinValue) {
         return this.AddBig(valueNegativeInt32MinValue);
-      } else if (this.integerMode == 0) {
+      }
+      if (this.integerMode == 0) {
         if ((val < 0 && Int32.MaxValue + val < this.smallValue) ||
-            (val > 0 && Int32.MinValue + val > this.smallValue)) {
+                (val > 0 && Int32.MinValue + val > this.smallValue)) {
           // would overflow, convert to large
           this.integerMode = 2;
           this.largeValue = (BigInteger)this.smallValue;
@@ -708,9 +719,8 @@ namespace PeterO {
           this.smallValue -= val;
         }
         return this;
-      } else {
-        return this.AddInt(-val);
       }
+      return this.AddInt(-val);
     }
 
     /// <summary>Sets this object&apos;s value to the current value plus
@@ -720,10 +730,7 @@ namespace PeterO {
     public FastInteger AddBig(BigInteger bigintVal) {
       switch (this.integerMode) {
           case 0: {
-            if (bigintVal.canFitInInt()) {
-              return this.AddInt((int)bigintVal);
-            }
-            return this.Add(FastInteger.FromBig(bigintVal));
+            return bigintVal.canFitInInt() ? this.AddInt((int)bigintVal) : this.Add(FastInteger.FromBig(bigintVal));
           }
         case 1:
           this.integerMode = 2;
@@ -855,9 +862,8 @@ namespace PeterO {
           this.mnum = MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
         }
         return this;
-      } else {
-        return this.AddInt(1);
       }
+      return this.AddInt(1);
     }
 
     public FastInteger Decrement() {
@@ -870,9 +876,8 @@ namespace PeterO {
           this.mnum.SubtractInt(1);
         }
         return this;
-      } else {
-        return this.SubtractInt(1);
       }
+      return this.SubtractInt(1);
     }
 
     /// <summary>Divides this instance by the value of a 32-bit signed integer.</summary>

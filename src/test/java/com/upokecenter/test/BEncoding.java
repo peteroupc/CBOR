@@ -92,11 +92,14 @@ private BEncoding() {
       int c = stream.read();
       if (c == 'd') {
         return readDictionary(stream);
-      } else if (c == 'l') {
+      }
+      if (c == 'l') {
         return readList(stream);
-      } else if (allowEnd && c == 'e') {
+      }
+      if (allowEnd && c == 'e') {
         return null;
-      } else if (c == 'i') {
+      }
+      if (c == 'i') {
         return readInteger(stream);
       } else if (c >= '0' && c <= '9') {
         return readString(stream, (char)c);
@@ -109,9 +112,8 @@ private BEncoding() {
       StringBuilder builder = new StringBuilder();
       if (firstChar < (int)'0' && firstChar > (int)'9') {
         throw new CBORException("Invalid integer encoding");
-      } else {
-        builder.append(firstChar);
       }
+      builder.append(firstChar);
       while (true) {
         int c = stream.read();
         if (c < 0) {
@@ -126,9 +128,9 @@ private BEncoding() {
         }
       }
       CBORObject number = CBORDataUtilities.ParseJSONNumber(
-        builder.toString(),
-        true,
-        true);
+                               builder.toString(),
+                               true,
+                               true);
       int length = 0;
       try {
         length = number.AsInt32();
@@ -141,8 +143,6 @@ private BEncoding() {
           throw new CBORException("Premature end of data");
         case -1:
           throw new CBORException("Invalid UTF-8");
-        default:
-          break;
       }
       return CBORObject.FromObject(builder.toString());
     }

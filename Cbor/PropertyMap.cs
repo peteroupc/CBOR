@@ -11,7 +11,7 @@ using System.Reflection;
 using PeterO;
 
 namespace PeterO.Cbor {
-  internal class PropertyMap
+  internal static class PropertyMap
   {
     private sealed class PropertyData {
       private string name;
@@ -114,7 +114,7 @@ namespace PeterO.Cbor {
         }
         return obj;
       }
-      int[] index = new int[rank];
+      var index = new int[rank];
       obj = CBORObject.NewArray();
       FromArrayRecursive(arr, index, 0, obj);
       return obj;
@@ -123,7 +123,7 @@ namespace PeterO.Cbor {
     public static object EnumToObject(Enum value) {
       Type t = Enum.GetUnderlyingType(value.GetType());
       if (t.Equals(typeof(ulong))) {
-        byte[] data = new byte[13];
+        var data = new byte[13];
         ulong uvalue = Convert.ToUInt64(value);
         data[0] = (byte)(uvalue & 0xff);
         data[1] = (byte)((uvalue >> 8) & 0xff);
@@ -135,21 +135,16 @@ namespace PeterO.Cbor {
         data[7] = (byte)((uvalue >> 56) & 0xff);
         data[8] = (byte)0;
         return BigInteger.fromByteArray(data, true);
-      } else if (t.Equals(typeof(long))) {
-        return Convert.ToInt64(value);
-      } else if (t.Equals(typeof(uint))) {
-        return Convert.ToInt64(value);
-      } else {
-        return Convert.ToInt32(value);
       }
+      return t.Equals(typeof(long)) ? Convert.ToInt64(value) : (t.Equals(typeof(uint)) ? Convert.ToInt64(value) : Convert.ToInt32(value));
     }
 
     public static object FindOneArgumentMethod(object obj, string name, Type argtype) {
-      return obj.GetType().GetMethod(name, new Type[] { argtype });
+      return obj.GetType().GetMethod(name, new[] { argtype });
     }
 
     public static object InvokeOneArgumentMethod(object methodInfo, object obj, object argument) {
-      return ((MethodInfo)methodInfo).Invoke(obj, new object[] { argument });
+      return ((MethodInfo)methodInfo).Invoke(obj, new[] { argument });
     }
 
     public static IEnumerable<KeyValuePair<string, object>> GetProperties(Object o) {

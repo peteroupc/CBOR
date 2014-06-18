@@ -65,18 +65,12 @@ import com.upokecenter.util.*;
 
     public boolean CanFitInSingle(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
-      if (!ef.isFinite()) {
-        return true;
-      }
-      return ef.compareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0;
+      return (!ef.isFinite()) || (ef.compareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0);
     }
 
     public boolean CanFitInDouble(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
-      if (!ef.isFinite()) {
-        return true;
-      }
-      return ef.compareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0;
+      return (!ef.isFinite()) || (ef.compareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0);
     }
 
     public boolean CanFitInInt32(Object obj) {

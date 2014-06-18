@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -112,7 +112,7 @@ namespace Test {
         Assert.AreEqual(
           output,
           d3.ToString(),
-          name + ": expected: [" + d4.UnsignedMantissa.ToString() + " " + d4.Exponent.ToString() + "]\\n" + "but was: [" + d3.UnsignedMantissa.ToString() + " " + d3.Exponent.ToString() + "]");
+          name + ": expected: [" + d4.UnsignedMantissa + " " + d4.Exponent + "]\\n" + "but was: [" + d3.UnsignedMantissa + " " + d3.Exponent + "]");
       }
     }
 
@@ -226,28 +226,28 @@ namespace Test {
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt16();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt32();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt64();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsSingle();
@@ -266,19 +266,19 @@ namespace Test {
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
         }
         return;
       }
       try {
         o.AsSingle();
       } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         o.AsDouble();
       } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
       }
     }
 
@@ -286,7 +286,7 @@ namespace Test {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
       int cmp = o.CompareTo(o2);
       if (cmp != 0) {
-        Assert.AreEqual(0, cmp, o.ToString() + "\nvs.\n" + o2.ToString());
+        Assert.AreEqual(0, cmp, o + "\nvs.\n" + o2);
       }
       TestNumber(o);
       AssertEqualsHashCode(o, o2);

@@ -34,7 +34,7 @@ namespace PeterO.Cbor {
     /// <returns>A CBORObject object.</returns>
     public CBORObject ToCBORObject(Guid obj) {
       byte[] bytes = obj.ToByteArray();
-      byte[] bytes2 = new byte[16];
+      var bytes2 = new byte[16];
       Array.Copy(bytes, bytes2, 16);
       // Swap the bytes to conform with the UUID RFC
       bytes2[0] = bytes[3];

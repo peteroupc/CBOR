@@ -37,7 +37,7 @@ namespace PeterO {
       } else {
         using(var ms = new MemoryStream()) {
           long tmp = 0;
-          byte[] buffer = new byte[10];
+          var buffer = new byte[10];
           while (bigint.Sign>0) {
             // To reduce the number of big integer
             // operations, extract the big int 56 bits at a time

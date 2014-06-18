@@ -66,18 +66,12 @@ namespace PeterO.Cbor {
 
     public bool CanFitInSingle(object obj) {
       var ef = (ExtendedRational)obj;
-      if (!ef.IsFinite) {
-        return true;
-      }
-      return ef.CompareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0;
+      return (!ef.IsFinite) || (ef.CompareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0);
     }
 
     public bool CanFitInDouble(object obj) {
       var ef = (ExtendedRational)obj;
-      if (!ef.IsFinite) {
-        return true;
-      }
-      return ef.CompareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0;
+      return (!ef.IsFinite) || (ef.CompareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0);
     }
 
     public bool CanFitInInt32(object obj) {

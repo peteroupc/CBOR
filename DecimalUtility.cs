@@ -10,14 +10,14 @@ using System;
 namespace PeterO {
   internal static class DecimalUtility
   {
-    private static BigInteger[] valueBigIntPowersOfTen = new BigInteger[] {
+    private static BigInteger[] valueBigIntPowersOfTen = {
       BigInteger.One, (BigInteger)10, (BigInteger)100, (BigInteger)1000, (BigInteger)10000, (BigInteger)100000, (BigInteger)1000000, (BigInteger)10000000, (BigInteger)100000000, (BigInteger)1000000000,
       (BigInteger)10000000000L, (BigInteger)100000000000L, (BigInteger)1000000000000L, (BigInteger)10000000000000L,
       (BigInteger)100000000000000L, (BigInteger)1000000000000000L, (BigInteger)10000000000000000L,
       (BigInteger)100000000000000000L, (BigInteger)1000000000000000000L
     };
 
-    private static BigInteger[] valueBigIntPowersOfFive = new BigInteger[] {
+    private static BigInteger[] valueBigIntPowersOfFive = {
       BigInteger.One, (BigInteger)5, (BigInteger)25, (BigInteger)125, (BigInteger)625, (BigInteger)3125, (BigInteger)15625, (BigInteger)78125, (BigInteger)390625,
       (BigInteger)1953125, (BigInteger)9765625, (BigInteger)48828125, (BigInteger)244140625, (BigInteger)1220703125,
       (BigInteger)6103515625L, (BigInteger)30517578125L, (BigInteger)152587890625L, (BigInteger)762939453125L,
@@ -118,18 +118,17 @@ namespace PeterO {
           arr[0] = (int)((a0 >> tz) & (0x7fffffff >> (tz - 1))) | (int)carry;
           arr[1] = (a1 >> tz) & (0x7fffffff >> (tz - 1));
           return tz;
-        } else {
-          tz = CountTrailingZeros(a1);
-          if (tz == 32) {
-            arr[0] = 0;
-          } else if (tz > 0) {
-            arr[0] = (a1 >> tz) & (0x7fffffff >> (tz - 1));
-          } else {
-            arr[0] = a1;
-          }
-          arr[1] = 0;
-          return 32 + tz;
         }
+        tz = CountTrailingZeros(a1);
+        if (tz == 32) {
+          arr[0] = 0;
+        } else if (tz > 0) {
+          arr[0] = (a1 >> tz) & (0x7fffffff >> (tz - 1));
+        } else {
+          arr[0] = a1;
+        }
+        arr[1] = 0;
+        return 32 + tz;
       }
     }
 
@@ -201,7 +200,9 @@ namespace PeterO {
           for (int i = 0; i < this.size; ++i) {
             if (this.inputs[i].CompareTo(bi) <= 0 && (minValue == null || this.inputs[i].CompareTo(minValue) >= 0)) {
               // Console.WriteLine("Have cached power (" + inputs[i] + ", " + bi + ")");
-              ret = new BigInteger[] { this.inputs[i], this.outputs[i] };
+              ret = new BigInteger[2];
+              ret[0] = this.inputs[i];
+              ret[1] = this.outputs[i];
               minValue = this.inputs[i];
             }
           }
@@ -320,17 +321,17 @@ namespace PeterO {
           bigpow = FindPowerOfFive(intcurexp.AsInt32());
           mantissa *= (BigInteger)bigpow;
           break;
-        } else if (intcurexp.CompareToInt(9999999) <= 0) {
+        }
+        if (intcurexp.CompareToInt(9999999) <= 0) {
           bigpow = BigInteger.Pow(FindPowerOfFive(1), intcurexp.AsInt32());
           mantissa *= (BigInteger)bigpow;
           break;
-        } else {
-          if (bigpow.IsZero) {
-            bigpow = BigInteger.Pow(FindPowerOfFive(1), 9999999);
-          }
-          mantissa *= bigpow;
-          intcurexp.AddInt(-9999999);
         }
+        if (bigpow.IsZero) {
+          bigpow = BigInteger.Pow(FindPowerOfFive(1), 9999999);
+        }
+        mantissa *= bigpow;
+        intcurexp.AddInt(-9999999);
       }
       powerOfFiveCache.AddPower(origdiff, mantissa);
       return mantissa;
@@ -357,20 +358,20 @@ namespace PeterO {
           bigpow = FindPowerOfTen(intcurexp.AsInt32());
           mantissa *= (BigInteger)bigpow;
           break;
-        } else if (intcurexp.CompareToInt(9999999) <= 0) {
+        }
+        if (intcurexp.CompareToInt(9999999) <= 0) {
           int val = intcurexp.AsInt32();
           bigpow = FindPowerOfFive(val);
           bigpow <<= val;
           mantissa *= (BigInteger)bigpow;
           break;
-        } else {
-          if (bigpow.IsZero) {
-            bigpow = FindPowerOfFive(9999999);
-            bigpow <<= 9999999;
-          }
-          mantissa *= bigpow;
-          intcurexp.AddInt(-9999999);
         }
+        if (bigpow.IsZero) {
+          bigpow = FindPowerOfFive(9999999);
+          bigpow <<= 9999999;
+        }
+        mantissa *= bigpow;
+        intcurexp.AddInt(-9999999);
       }
       return mantissa;
     }
@@ -404,13 +405,12 @@ namespace PeterO {
           ret *= (BigInteger)ret;
           powerOfFiveCache.AddPower(origPrecision, ret);
           return ret;
-        } else {
-          ret = valueBigIntPowersOfFive[27];
-          bigpow = valueBigIntPowersOfFive[((int)precision) - 27];
-          ret *= (BigInteger)bigpow;
-          powerOfFiveCache.AddPower(origPrecision, ret);
-          return ret;
         }
+        ret = valueBigIntPowersOfFive[27];
+        bigpow = valueBigIntPowersOfFive[((int)precision) - 27];
+        ret *= (BigInteger)bigpow;
+        powerOfFiveCache.AddPower(origPrecision, ret);
+        return ret;
       }
       if (precision > 40 && precision <= 94) {
         ret = valueFivePower40;
@@ -449,7 +449,8 @@ namespace PeterO {
           }
           first = false;
           break;
-        } else if (precision <= 9999999) {
+        }
+        if (precision <= 9999999) {
           // Console.WriteLine("calcing pow for "+precision);
           bigpow = BigInteger.Pow(valueBigIntPowersOfFive[1], precision);
           if (precision != startPrecision) {
@@ -463,18 +464,17 @@ namespace PeterO {
           }
           first = false;
           break;
-        } else {
-          if (bigpow.IsZero) {
-            bigpow = FindPowerOfFive(9999999);
-          }
-          if (first) {
-            ret = bigpow;
-          } else {
-            ret *= (BigInteger)bigpow;
-          }
-          first = false;
-          precision -= 9999999;
         }
+        if (bigpow.IsZero) {
+          bigpow = FindPowerOfFive(9999999);
+        }
+        if (first) {
+          ret = bigpow;
+        } else {
+          ret *= (BigInteger)bigpow;
+        }
+        first = false;
+        precision -= 9999999;
       }
       powerOfFiveCache.AddPower(origPrecision, ret);
       return ret;
@@ -511,13 +511,12 @@ namespace PeterO {
           ret *= (BigInteger)ret;
           powerOfTenCache.AddPower(origPrecision, ret);
           return ret;
-        } else {
-          ret = valueBigIntPowersOfTen[18];
-          bigpow = valueBigIntPowersOfTen[((int)precision) - 18];
-          ret *= (BigInteger)bigpow;
-          powerOfTenCache.AddPower(origPrecision, ret);
-          return ret;
         }
+        ret = valueBigIntPowersOfTen[18];
+        bigpow = valueBigIntPowersOfTen[((int)precision) - 18];
+        ret *= (BigInteger)bigpow;
+        powerOfTenCache.AddPower(origPrecision, ret);
+        return ret;
       }
       BigInteger[] otherPower;
       bool first = true;
@@ -549,7 +548,8 @@ namespace PeterO {
           }
           first = false;
           break;
-        } else if (precision <= 9999999) {
+        }
+        if (precision <= 9999999) {
           // Console.WriteLine("calcing pow for "+precision);
           bigpow = FindPowerOfFive(precision);
           bigpow <<= precision;
@@ -564,18 +564,17 @@ namespace PeterO {
           }
           first = false;
           break;
-        } else {
-          if (bigpow.IsZero) {
-            bigpow = FindPowerOfTen(9999999);
-          }
-          if (first) {
-            ret = bigpow;
-          } else {
-            ret *= (BigInteger)bigpow;
-          }
-          first = false;
-          precision -= 9999999;
         }
+        if (bigpow.IsZero) {
+          bigpow = FindPowerOfTen(9999999);
+        }
+        if (first) {
+          ret = bigpow;
+        } else {
+          ret *= (BigInteger)bigpow;
+        }
+        first = false;
+        precision -= 9999999;
       }
       powerOfTenCache.AddPower(origPrecision, ret);
       return ret;

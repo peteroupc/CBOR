@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written in 2014 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -8,7 +8,7 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO.Cbor {
-  internal class CBORTag32 : ICBORTag, ICBORConverter<System.Uri>
+  internal class CBORTag32 : ICBORTag, ICBORConverter<Uri>
   {
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.TextString;
@@ -25,10 +25,10 @@ namespace PeterO.Cbor {
     }
 
     internal static void AddConverter() {
-      CBORObject.AddConverter(typeof(System.Uri), new CBORTag32());
+      CBORObject.AddConverter(typeof(Uri), new CBORTag32());
     }
 
-    public CBORObject ToCBORObject(System.Uri uri) {
+    public CBORObject ToCBORObject(Uri uri) {
       if (uri == null) {
         throw new ArgumentNullException("uri");
       }

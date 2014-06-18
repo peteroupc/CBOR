@@ -20,10 +20,10 @@ namespace PeterO {
     private static IComparer<KeyValuePair<T1, T2>> comp = new KeyComparer();
 
     private sealed class KeyComparer : IComparer<KeyValuePair<T1, T2>> {
-      private static IComparer<T1> keyComp = Comparer<T1>.Default;
+      private static readonly IComparer<T1> KeyComp = Comparer<T1>.Default;
 
       public int Compare(KeyValuePair<T1, T2> x, KeyValuePair<T1, T2> y) {
-        return keyComp.Compare(x.Key, y.Key);
+        return KeyComp.Compare(x.Key, y.Key);
       }
     }
 
@@ -70,10 +70,9 @@ namespace PeterO {
       if (this.tree.Find(new KeyValuePair<T1, T2>(key, default(T2)), out kvp)) {
         value = kvp.Value;
         return true;
-      } else {
-        value = default(T2);
-        return false;
       }
+      value = default(T2);
+      return false;
     }
 
     public ICollection<T2> Values {
@@ -91,9 +90,8 @@ namespace PeterO {
         KeyValuePair<T1, T2> kvp;
         if (this.tree.Find(new KeyValuePair<T1, T2>(key, default(T2)), out kvp)) {
           return kvp.Value;
-        } else {
-          throw new KeyNotFoundException("Key not found: " + key);
         }
+        throw new KeyNotFoundException("Key not found: " + key);
       }
 
       set {

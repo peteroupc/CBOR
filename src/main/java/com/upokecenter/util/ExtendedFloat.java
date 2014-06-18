@@ -163,10 +163,9 @@ at: http://upokecenter.com/d/
         ef.flags &= ~BigNumberFlags.FlagQuietNaN;
         ef.flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
         return ef;
-      } else {
-        flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
-        return CreateWithFlags(diag, BigInteger.ZERO, flags);
       }
+      flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+      return CreateWithFlags(diag, BigInteger.ZERO, flags);
     }
 
     /**
@@ -385,13 +384,8 @@ at: http://upokecenter.com/d/
             bigint=bigint.negate();
           }
           return bigint;
-        } else {
-          if (power.CanFitInInt32()) {
-            return DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
-          } else {
-            return DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
-          }
         }
+        return power.CanFitInInt32() ? DecimalUtility.ShiftLeftInt(bigint, power.AsInt32()) : DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
       }
 
     /**
@@ -465,7 +459,8 @@ at: http://upokecenter.com/d/
       if (expsign == 0) {
         // Integer
         return this.getMantissa();
-      } else if (expsign > 0) {
+      }
+      if (expsign > 0) {
         // Integer with trailing zeros
         BigInteger curexp = this.getExponent();
         BigInteger bigmantissa = this.getMantissa();
@@ -572,7 +567,7 @@ at: http://upokecenter.com/d/
       }
       // Round half-even
       if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                              !fastSmallMant.isEvenNumber())) {
+             !fastSmallMant.isEvenNumber())) {
         fastSmallMant.Increment();
         if (fastSmallMant.CompareToInt(1 << 24) == 0) {
           fastSmallMant = new FastInteger(1 << 23);
@@ -585,7 +580,8 @@ at: http://upokecenter.com/d/
         return this.isNegative() ?
           Float.NEGATIVE_INFINITY :
           Float.POSITIVE_INFINITY;
-      } else if (bigexponent.CompareToInt(-149) < 0) {
+      }
+      if (bigexponent.CompareToInt(-149) < 0) {
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
@@ -598,7 +594,7 @@ at: http://upokecenter.com/d/
         fastSmallMant = accum.getShiftedIntFast();
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                                !fastSmallMant.isEvenNumber())) {
+                !fastSmallMant.isEvenNumber())) {
           fastSmallMant.Increment();
           if (fastSmallMant.CompareToInt(1 << 24) == 0) {
             fastSmallMant = new FastInteger(1 << 23);
@@ -645,7 +641,7 @@ at: http://upokecenter.com/d/
         return Double.NEGATIVE_INFINITY;
       }
       if (this.IsNaN()) {
-        int[] nan = new int[] { 0, 0x7ff00000 };
+        int[] nan = { 0, 0x7ff00000 };
         if (this.isNegative()) {
           nan[1] |= ((int)(1 << 31));
         }
@@ -665,7 +661,7 @@ at: http://upokecenter.com/d/
         return Extras.IntegersToDouble(nan);
       }
       if (this.isNegative() && this.signum()==0) {
-        return Extras.IntegersToDouble(new int[] { ((int)(1 << 31)), 0 });
+        return Extras.IntegersToDouble(new int[] {((int)(1 << 31)), 0 });
       }
       BigInteger bigmant = (this.unsignedMantissa).abs();
       FastInteger bigexponent = FastInteger.FromBig(this.exponent);
@@ -694,7 +690,7 @@ at: http://upokecenter.com/d/
       }
       // Round half-even
       if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                              DecimalUtility.HasBitSet(mantissaBits, 0))) {
+          DecimalUtility.HasBitSet(mantissaBits, 0))) {
         // Add 1 to the bits
         mantissaBits[0] = ((int)(mantissaBits[0] + 1));
         if (mantissaBits[0] == 0) {
@@ -712,14 +708,15 @@ at: http://upokecenter.com/d/
         return this.isNegative() ?
           Double.NEGATIVE_INFINITY :
           Double.POSITIVE_INFINITY;
-      } else if (bigexponent.CompareToInt(-1074) < 0) {
+      }
+      if (bigexponent.CompareToInt(-1074) < 0) {
         // subnormal
         subnormal = true;
         // Shift while number remains subnormal
         BitShiftAccumulator accum = new BitShiftAccumulator(
-          FastInteger.WordsToBigInteger(mantissaBits),
-          0,
-          0);
+                      FastInteger.WordsToBigInteger(mantissaBits),
+                      0,
+                      0);
         FastInteger fi = FastInteger.Copy(bigexponent).SubtractInt(-1074).Abs();
         accum.ShiftRight(fi);
         bitsAfterLeftmost = accum.getOlderDiscardedDigits();
@@ -728,7 +725,7 @@ at: http://upokecenter.com/d/
         mantissaBits = FastInteger.GetLastWords(accum.getShiftedInt(), 2);
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                                DecimalUtility.HasBitSet(mantissaBits, 0))) {
+            DecimalUtility.HasBitSet(mantissaBits, 0))) {
           // Add 1 to the bits
           mantissaBits[0] = ((int)(mantissaBits[0] + 1));
           if (mantissaBits[0] == 0) {
@@ -746,19 +743,18 @@ at: http://upokecenter.com/d/
         return this.isNegative() ?
           Extras.IntegersToDouble(new int[] { 0, ((int)0x80000000) }) :
           0.0d;
-      } else {
-        bigexponent.AddInt(1075);
-        // Clear the high bits where the exponent and sign are
-        mantissaBits[1] &= 0xfffff;
-        if (!subnormal) {
-          int smallexponent = bigexponent.AsInt32() << 20;
-          mantissaBits[1] |= smallexponent;
-        }
-        if (this.isNegative()) {
-          mantissaBits[1] |= ((int)(1 << 31));
-        }
-        return Extras.IntegersToDouble(mantissaBits);
       }
+      bigexponent.AddInt(1075);
+      // Clear the high bits where the exponent and sign are
+      mantissaBits[1] &= 0xfffff;
+      if (!subnormal) {
+        int smallexponent = bigexponent.AsInt32() << 20;
+        mantissaBits[1] |= smallexponent;
+      }
+      if (this.isNegative()) {
+        mantissaBits[1] |= ((int)(1 << 31));
+      }
+      return Extras.IntegersToDouble(mantissaBits);
     }
 
     /**
@@ -785,12 +781,11 @@ at: http://upokecenter.com/d/
         bigmant = BigInteger.valueOf(valueFpMantissa);
         if (bigmant.signum()==0) {
           return quiet ? NaN : SignalingNaN;
-        } else {
-          return CreateWithFlags(
-            bigmant,
-            BigInteger.ZERO,
-            (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
         }
+        return CreateWithFlags(
+          bigmant,
+          BigInteger.ZERO,
+          (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
       }
       if (floatExponent == 0) {
         ++floatExponent;
@@ -864,12 +859,11 @@ at: http://upokecenter.com/d/
         BigInteger info = FastInteger.WordsToBigInteger(value);
         if (info.signum()==0) {
           return quiet ? NaN : SignalingNaN;
-        } else {
-          return CreateWithFlags(
-            info,
-            BigInteger.ZERO,
-            (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
         }
+        return CreateWithFlags(
+          info,
+          BigInteger.ZERO,
+          (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN));
       }
       value[1] &= 0xfffff;  // Mask out the exponent and sign
       if (floatExponent == 0) {
@@ -1158,7 +1152,7 @@ at: http://upokecenter.com/d/
      */
     public ExtendedFloat Reduce(
       PrecisionContext ctx) {
-      return math.Reduce(this, ctx);
+      return MathValue.Reduce(this, ctx);
     }
 
     /**
@@ -1240,7 +1234,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat Divide(
       ExtendedFloat divisor,
       PrecisionContext ctx) {
-      return math.Divide(this, divisor, ctx);
+      return MathValue.Divide(this, divisor, ctx);
     }
 
     /**
@@ -1294,7 +1288,7 @@ at: http://upokecenter.com/d/
       ExtendedFloat divisor,
       BigInteger exponent,
       PrecisionContext ctx) {
-      return math.DivideToExponent(this, divisor, exponent, ctx);
+      return MathValue.DivideToExponent(this, divisor, exponent, ctx);
     }
 
     /**
@@ -1330,7 +1324,7 @@ at: http://upokecenter.com/d/
      * @return The absolute value of this object.
      */
     public ExtendedFloat Abs(PrecisionContext context) {
-      return math.Abs(this, context);
+      return MathValue.Abs(this, context);
     }
 
     /**
@@ -1343,7 +1337,7 @@ at: http://upokecenter.com/d/
      * @return An ExtendedFloat object.
      */
     public ExtendedFloat Negate(PrecisionContext context) {
-      return math.Negate(this, context);
+      return MathValue.Negate(this, context);
     }
 
     /**
@@ -1410,7 +1404,7 @@ at: http://upokecenter.com/d/
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
-    private static final IRadixMath<ExtendedFloat> math = new TrappableRadixMath<ExtendedFloat>(
+    private static final IRadixMath<ExtendedFloat> MathValue = new TrappableRadixMath<ExtendedFloat>(
       new ExtendedOrSimpleRadixMath<ExtendedFloat>(new BinaryMathHelper()));
 
     /**
@@ -1436,7 +1430,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat DivideToIntegerNaturalScale(
       ExtendedFloat divisor,
       PrecisionContext ctx) {
-      return math.DivideToIntegerNaturalScale(this, divisor, ctx);
+      return MathValue.DivideToIntegerNaturalScale(this, divisor, ctx);
     }
 
     /**
@@ -1457,7 +1451,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat DivideToIntegerZeroScale(
       ExtendedFloat divisor,
       PrecisionContext ctx) {
-      return math.DivideToIntegerZeroScale(this, divisor, ctx);
+      return MathValue.DivideToIntegerZeroScale(this, divisor, ctx);
     }
 
     /**
@@ -1470,7 +1464,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat Remainder(
       ExtendedFloat divisor,
       PrecisionContext ctx) {
-      return math.Remainder(this, divisor, ctx);
+      return MathValue.Remainder(this, divisor, ctx);
     }
 
     /**
@@ -1503,7 +1497,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat RemainderNear(
       ExtendedFloat divisor,
       PrecisionContext ctx) {
-      return math.RemainderNear(this, divisor, ctx);
+      return MathValue.RemainderNear(this, divisor, ctx);
     }
 
     /**
@@ -1521,7 +1515,7 @@ at: http://upokecenter.com/d/
      */
     public ExtendedFloat NextMinus(
       PrecisionContext ctx) {
-      return math.NextMinus(this, ctx);
+      return MathValue.NextMinus(this, ctx);
     }
 
     /**
@@ -1539,7 +1533,7 @@ at: http://upokecenter.com/d/
      */
     public ExtendedFloat NextPlus(
       PrecisionContext ctx) {
-      return math.NextPlus(this, ctx);
+      return MathValue.NextPlus(this, ctx);
     }
 
     /**
@@ -1560,7 +1554,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat NextToward(
       ExtendedFloat otherValue,
       PrecisionContext ctx) {
-      return math.NextToward(this, otherValue, ctx);
+      return MathValue.NextToward(this, otherValue, ctx);
     }
 
     /**
@@ -1577,7 +1571,7 @@ at: http://upokecenter.com/d/
       ExtendedFloat first,
       ExtendedFloat second,
       PrecisionContext ctx) {
-      return math.Max(first, second, ctx);
+      return MathValue.Max(first, second, ctx);
     }
 
     /**
@@ -1594,7 +1588,7 @@ at: http://upokecenter.com/d/
       ExtendedFloat first,
       ExtendedFloat second,
       PrecisionContext ctx) {
-      return math.Min(first, second, ctx);
+      return MathValue.Min(first, second, ctx);
     }
 
     /**
@@ -1612,7 +1606,7 @@ at: http://upokecenter.com/d/
       ExtendedFloat first,
       ExtendedFloat second,
       PrecisionContext ctx) {
-      return math.MaxMagnitude(first, second, ctx);
+      return MathValue.MaxMagnitude(first, second, ctx);
     }
 
     /**
@@ -1630,7 +1624,7 @@ at: http://upokecenter.com/d/
       ExtendedFloat first,
       ExtendedFloat second,
       PrecisionContext ctx) {
-      return math.MinMagnitude(first, second, ctx);
+      return MathValue.MinMagnitude(first, second, ctx);
     }
 
     /**
@@ -1700,7 +1694,7 @@ at: http://upokecenter.com/d/
      */
     public int compareTo(
       ExtendedFloat other) {
-      return math.compareTo(this, other);
+      return MathValue.compareTo(this, other);
     }
 
     /**
@@ -1721,7 +1715,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat CompareToWithContext(
       ExtendedFloat other,
       PrecisionContext ctx) {
-      return math.CompareToWithContext(this, other, false, ctx);
+      return MathValue.CompareToWithContext(this, other, false, ctx);
     }
 
     /**
@@ -1742,7 +1736,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat CompareToSignal(
       ExtendedFloat other,
       PrecisionContext ctx) {
-      return math.CompareToWithContext(this, other, true, ctx);
+      return MathValue.CompareToWithContext(this, other, true, ctx);
     }
 
     /**
@@ -1758,7 +1752,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat Add(
       ExtendedFloat otherValue,
       PrecisionContext ctx) {
-      return math.Add(this, otherValue, ctx);
+      return MathValue.Add(this, otherValue, ctx);
     }
 
     /**
@@ -1818,7 +1812,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat Quantize(
       ExtendedFloat otherValue,
       PrecisionContext ctx) {
-      return math.Quantize(this, otherValue, ctx);
+      return MathValue.Quantize(this, otherValue, ctx);
     }
 
     /**
@@ -1838,7 +1832,7 @@ at: http://upokecenter.com/d/
      */
     public ExtendedFloat RoundToIntegralExact(
       PrecisionContext ctx) {
-      return math.RoundToExponentExact(this, BigInteger.ZERO, ctx);
+      return MathValue.RoundToExponentExact(this, BigInteger.ZERO, ctx);
     }
 
     /**
@@ -1860,7 +1854,7 @@ at: http://upokecenter.com/d/
      */
     public ExtendedFloat RoundToIntegralNoRoundedFlag(
       PrecisionContext ctx) {
-      return math.RoundToExponentNoRoundedFlag(this, BigInteger.ZERO, ctx);
+      return MathValue.RoundToExponentNoRoundedFlag(this, BigInteger.ZERO, ctx);
     }
 
     /**
@@ -1878,7 +1872,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat RoundToExponentExact(
       BigInteger exponent,
       PrecisionContext ctx) {
-      return math.RoundToExponentExact(this, exponent, ctx);
+      return MathValue.RoundToExponentExact(this, exponent, ctx);
     }
 
     /**
@@ -1905,7 +1899,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat RoundToExponent(
       BigInteger exponent,
       PrecisionContext ctx) {
-      return math.RoundToExponentSimple(this, exponent, ctx);
+      return MathValue.RoundToExponentSimple(this, exponent, ctx);
     }
 
     /**
@@ -1923,7 +1917,7 @@ at: http://upokecenter.com/d/
     public ExtendedFloat Multiply(
       ExtendedFloat op,
       PrecisionContext ctx) {
-      return math.Multiply(this, op, ctx);
+      return MathValue.Multiply(this, op, ctx);
     }
 
     /**
@@ -1940,7 +1934,7 @@ at: http://upokecenter.com/d/
       ExtendedFloat op,
       ExtendedFloat augend,
       PrecisionContext ctx) {
-      return math.MultiplyAndAdd(this, op, augend, ctx);
+      return MathValue.MultiplyAndAdd(this, op, augend, ctx);
     }
 
     /**
@@ -1967,7 +1961,7 @@ at: http://upokecenter.com/d/
         int newflags = subtrahend.flags ^ BigNumberFlags.FlagNegative;
         negated = CreateWithFlags(subtrahend.unsignedMantissa, subtrahend.exponent, newflags);
       }
-      return math.MultiplyAndAdd(this, op, negated, ctx);
+      return MathValue.MultiplyAndAdd(this, op, negated, ctx);
     }
 
     /**
@@ -1981,7 +1975,7 @@ at: http://upokecenter.com/d/
      */
     public ExtendedFloat RoundToPrecision(
       PrecisionContext ctx) {
-      return math.RoundToPrecision(this, ctx);
+      return MathValue.RoundToPrecision(this, ctx);
     }
 
     /**
@@ -1996,7 +1990,7 @@ at: http://upokecenter.com/d/
      */
     public ExtendedFloat Plus(
       PrecisionContext ctx) {
-      return math.Plus(this, ctx);
+      return MathValue.Plus(this, ctx);
     }
 
     /**
@@ -2017,7 +2011,7 @@ at: http://upokecenter.com/d/
         return this;
       }
       PrecisionContext ctx2 = ctx.Copy().WithPrecisionInBits(true);
-      ExtendedFloat ret = math.RoundToPrecision(this, ctx2);
+      ExtendedFloat ret = MathValue.RoundToPrecision(this, ctx2);
       if (ctx2.getHasFlags()) {
         ctx.setFlags(ctx2.getFlags());
       }
@@ -2040,7 +2034,7 @@ at: http://upokecenter.com/d/
      * is 0).
      */
     public ExtendedFloat SquareRoot(PrecisionContext ctx) {
-      return math.SquareRoot(this, ctx);
+      return MathValue.SquareRoot(this, ctx);
     }
 
     /**
@@ -2059,7 +2053,7 @@ at: http://upokecenter.com/d/
      * is 0).
      */
     public ExtendedFloat Exp(PrecisionContext ctx) {
-      return math.Exp(this, ctx);
+      return MathValue.Exp(this, ctx);
     }
 
     /**
@@ -2080,7 +2074,7 @@ at: http://upokecenter.com/d/
      * is 0).
      */
     public ExtendedFloat Log(PrecisionContext ctx) {
-      return math.Ln(this, ctx);
+      return MathValue.Ln(this, ctx);
     }
 
     /**
@@ -2098,7 +2092,7 @@ at: http://upokecenter.com/d/
      * unlimited (the context's Precision property is 0).
      */
     public ExtendedFloat Log10(PrecisionContext ctx) {
-      return math.Log10(this, ctx);
+      return MathValue.Log10(this, ctx);
     }
 
     /**
@@ -2113,7 +2107,7 @@ at: http://upokecenter.com/d/
      * is 0), and the exponent has a fractional part.
      */
     public ExtendedFloat Pow(ExtendedFloat exponent, PrecisionContext ctx) {
-      return math.Power(this, exponent, ctx);
+      return MathValue.Power(this, exponent, ctx);
     }
 
     /**
@@ -2153,6 +2147,6 @@ at: http://upokecenter.com/d/
      * is 0).
      */
     public static ExtendedFloat PI(PrecisionContext ctx) {
-      return math.Pi(ctx);
+      return MathValue.Pi(ctx);
     }
   }

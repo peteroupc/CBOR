@@ -1,4 +1,4 @@
-/*
+﻿/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -8,7 +8,6 @@ at: http://upokecenter.com/d/
 #region Using directives
 using System;
 using System.Reflection;
-using System.Runtime.InteropServices;
 #endregion
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information

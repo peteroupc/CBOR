@@ -1,16 +1,13 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
-
 using ClariusLabs.NuDoc;
 
 namespace PeterO.DocGen {
 /// <summary>A documentation generator.</summary>
-public class DocGenerator {
+public static class DocGenerator {
     public static void Generate(string assemblyFile, string docdir) {
       var directory = Path.GetFullPath(docdir);
       Directory.CreateDirectory(directory);

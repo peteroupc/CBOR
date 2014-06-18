@@ -6,13 +6,13 @@
 
 Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049. There are many ways to get a CBOR object, including from bytes, objects, streams and JSON, as described below.
 
-To and from byte arrays:The CBORObject.DecodeToBytes ethod converts a byte array in CBOR format to a CBOR object. The EncodeToBytes ethod converts a CBOR object to its corresponding byte array in CBOR ormat.
+To and from byte arrays:The CBORObject.DecodeToBytes method converts a byte array in CBOR format to a CBOR object. The EncodeToBytes method converts a CBOR object to its corresponding byte array in CBOR format.
 
-To and from data streams:The CBORObject.Write ethods write many kinds of objects to a data stream, including numbers, BOR objects, strings, and arrays of numbers and strings. The CBORObject.Read ethod reads a CBOR object from a data stream.
+To and from data streams:The CBORObject.Write methods write many kinds of objects to a data stream, including numbers, CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read method reads a CBOR object from a data stream.
 
-To and from other objects:The CBORObject.FromObject methods onverts many kinds of objects to a CBOR object, including numbers, trings, and arrays and maps of numbers and strings. Methods like sDouble, AsByte, and AsString convert a CBOR object to different ypes of object.
+To and from other objects:The CBORObject.FromObject methods converts many kinds of objects to a CBOR object, including numbers, strings, and arrays and maps of numbers and strings. Methods like AsDouble, AsByte, and AsString convert a CBOR object to different types of object.
 
-To and from JSON:This class lso doubles as a reader and writer of JavaScript Object Notation JSON). The CBORObject.FromJSONString method converts JSON to CBOR object, and the ToJSONString method converts a CBOR object o a JSON string.
+To and from JSON:This class also doubles as a reader and writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString method converts JSON to a CBOR object, and the ToJSONString method converts a CBOR object to a JSON string.
 
 Thread Safety: CBOR objects that are numbers, "simple values", and text strings are immutable (their values can't be changed), so they are inherently safe for use by multiple threads. CBOR objects that are arrays, maps, and byte strings are mutable, but this class doesn't attempt to synchronize reads and writes to those objects by multiple threads, so those objects are not thread safe without such synchronization.
 
@@ -846,7 +846,7 @@ Writes a binary floating-point number in CBOR format to a data stream as follows
 
  * If the value is null, writes the byte 0xF6.
 
- * If the value is negative zero, infinity, or NaN, converts the number to a  `double` and writes hat  `double` . If negative zero should not be written this way, se the Plus method to convert the value beforehand.
+ * If the value is negative zero, infinity, or NaN, converts the number to a  `double` and writes that  `double` . If negative zero should not be written this way, use the Plus method to convert the value beforehand.
 
  * If the value has an exponent of zero, writes the value as an unsigned integer or signed integer if the number can fit either type or as a big integer otherwise.
 
@@ -900,7 +900,7 @@ Writes a decimal floating-point number in CBOR format to a data stream, as follo
 
  * If the value is null, writes the byte 0xF6.
 
- * If the value is negative zero, infinity, or NaN, converts the number to a  `double` and rites that  `double` . If negative zero should not be written his way, use the Plus method to convert the value beforehand.
+ * If the value is negative zero, infinity, or NaN, converts the number to a  `double` and writes that  `double` . If negative zero should not be written this way, use the Plus method to convert the value beforehand.
 
  * If the value has an exponent of zero, writes the value as an unsigned integer or signed integer if the number can fit either type or as a big integer otherwise.
 
@@ -1266,7 +1266,7 @@ The data stream contains invalid UTF-8 or is not in JSON format.
 
 ### WriteJSON
 
-    public void WriteJSON(
+    public static void WriteJSON(
         object obj,
         System.IO.Stream outputStream);
 
@@ -1288,6 +1288,11 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, as
 <b>Parameters:</b>
 
  * <i>outputStream</i>: A writable data stream.
+
+<b>Exceptions:</b>
+
+ * System.IO.IOException: 
+An I/O error occurred.
 
 ### ToJSONString
 
@@ -1799,11 +1804,11 @@ A CBOR object where each key and value of the given map is converted to a CBOR o
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
-Generates a CBORObject from an arbitrary object. The following types are specially handled by this method:  `null` , primitive types, strings,  `CBORObject` ,  `ExtendedDecimal` ,  `ExtendedFloat` , the custom  `BigInteger` , lists, rrays, enumerations (  `Enum` objects), and maps.
+Generates a CBORObject from an arbitrary object. The following types are specially handled by this method:  `null` , primitive types, strings,  `CBORObject` ,  `ExtendedDecimal` ,  `ExtendedFloat` , the custom  `BigInteger` , lists, arrays, enumerations (  `Enum` objects), and maps.
 
 In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET  `Enum` objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays. The .NET value DBNull.Value is converted to CBORObject.Undefined.
 
-In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum` objects will be converted to the result of heir  `name` method.
+In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum` objects will be converted to the result of their  `name` method.
 
 <b>Parameters:</b>
 

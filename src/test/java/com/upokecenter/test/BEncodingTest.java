@@ -41,7 +41,7 @@ try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    public void doTestLong(long value) {
+    public static void doTestLong(long value) {
       String b = "i" + value + "e";
       CBORObject beo = EncodingFromBytes(com.upokecenter.util.DataUtilities.GetUtf8Bytes(b,true));
       Assert.assertEquals(value, beo.AsInt64());
@@ -49,7 +49,7 @@ try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals(b, newb);
     }
 
-    public void doTestString(String value) {
+    public static void doTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
       CBORObject beo = EncodingFromBytes(com.upokecenter.util.DataUtilities.GetUtf8Bytes(b,true));
       Assert.assertEquals(value, beo.AsString());
@@ -59,12 +59,12 @@ try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
 
     @Test
     public void testLong() {
-      this.doTestLong(0);
-      this.doTestLong(-1);
-      this.doTestLong(Integer.MIN_VALUE);
-      this.doTestLong(Integer.MAX_VALUE);
-      this.doTestLong(Long.MIN_VALUE);
-      this.doTestLong(Long.MAX_VALUE);
+      doTestLong(0);
+      doTestLong(-1);
+      doTestLong(Integer.MIN_VALUE);
+      doTestLong(Integer.MAX_VALUE);
+      doTestLong(Long.MIN_VALUE);
+      doTestLong(Long.MAX_VALUE);
     }
 
     @Test
@@ -111,21 +111,21 @@ try { if(s!=null)s.close(); } catch (java.io.IOException ex){}
 
     @Test
     public void testString() {
-      this.doTestString("");
-      this.doTestString(" ");
-      this.doTestString("test");
-      this.doTestString("testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods");
-      this.doTestString("te\u007fst");
-      this.doTestString("te\u0080st");
-      this.doTestString("te\u3000st");
-      this.doTestString("te\u07ffst");
-      this.doTestString("te\u0800st");
-      this.doTestString("te\uffffst");
-      this.doTestString("te\ud7ffst");
-      this.doTestString("te\ue000st");
-      this.doTestString("te\ud800\udc00st");
-      this.doTestString("te\udbff\udc00st");
-      this.doTestString("te\ud800\udfffst");
-      this.doTestString("te\udbff\udfffst");
+      doTestString("");
+      doTestString(" ");
+      doTestString("test");
+      doTestString("testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods");
+      doTestString("te\u007fst");
+      doTestString("te\u0080st");
+      doTestString("te\u3000st");
+      doTestString("te\u07ffst");
+      doTestString("te\u0800st");
+      doTestString("te\uffffst");
+      doTestString("te\ud7ffst");
+      doTestString("te\ue000st");
+      doTestString("te\ud800\udc00st");
+      doTestString("te\udbff\udc00st");
+      doTestString("te\ud800\udfffst");
+      doTestString("te\udbff\udfffst");
     }
   }

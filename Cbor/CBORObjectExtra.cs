@@ -81,7 +81,7 @@ namespace PeterO.Cbor {
       if (neg) {
         d |= 1 << 31;
       }
-      return new Decimal(new int[] { a, b, c, d });
+      return new Decimal(new[] { a, b, c, d });
     }
 
     private static readonly BigInteger DecimalMaxValue = (BigInteger.One << 96) - BigInteger.One;
@@ -103,7 +103,7 @@ namespace PeterO.Cbor {
 
     private static BigInteger DecimalToBigInteger(decimal dec) {
       int[] bits = Decimal.GetBits(dec);
-      byte[] data = new byte[13];
+      var data = new byte[13];
       data[0] = (byte)(bits[0] & 0xff);
       data[1] = (byte)((bits[0] >> 8) & 0xff);
       data[2] = (byte)((bits[0] >> 16) & 0xff);
@@ -171,13 +171,7 @@ namespace PeterO.Cbor {
     /// exceeds the range of a .NET decimal.</exception>
     [CLSCompliant(false)]
     public decimal AsDecimal() {
-      if (this.ItemType == CBORObjectTypeInteger) {
-        return (decimal)(long)this.ThisItem;
-  } else if (this.ItemType == CBORObjectTypeExtendedRational) {
-        return ExtendedRationalToDecimal((ExtendedRational)this.ThisItem);
-      } else {
-        return ExtendedDecimalToDecimal(this.AsExtendedDecimal());
-      }
+      return (this.ItemType == CBORObjectTypeInteger) ? ((decimal)(long)this.ThisItem) : ((this.ItemType == CBORObjectTypeExtendedRational) ? ExtendedRationalToDecimal((ExtendedRational)this.ThisItem) : ExtendedDecimalToDecimal(this.AsExtendedDecimal()));
     }
 
     /// <summary>Converts this object to a 64-bit unsigned integer. Floating
@@ -255,15 +249,9 @@ namespace PeterO.Cbor {
       int scale = (bits[3] >> 16) & 0xff;
       if (scale == 0 && Math.Round(value) == value) {
         // This is an integer
-        if (value >= 0 && value <= UInt64.MaxValue) {
-          return FromObject((ulong)value);
-        } else if (value >= Int64.MinValue && value <= Int64.MaxValue) {
-          return FromObject((long)value);
-        } else {
-          return FromObject(DecimalToBigInteger(value));
-        }
+        return (value >= 0 && value <= UInt64.MaxValue) ? FromObject((ulong)value) : ((value >= Int64.MinValue && value <= Int64.MaxValue) ? FromObject((long)value) : FromObject(DecimalToBigInteger(value)));
       }
-      byte[] data = new byte[13];
+      var data = new byte[13];
       data[0] = (byte)(bits[0] & 0xff);
       data[1] = (byte)((bits[0] >> 8) & 0xff);
       data[2] = (byte)((bits[0] >> 16) & 0xff);
@@ -283,7 +271,7 @@ namespace PeterO.Cbor {
         mantissa = -mantissa;
       }
       return FromObjectAndTag(
-        new CBORObject[] { FromObject(-scale),
+        new[] { FromObject(-scale),
         FromObject(mantissa) },
         4);
     }
@@ -315,7 +303,7 @@ namespace PeterO.Cbor {
     }
 
     private static BigInteger UInt64ToBigInteger(ulong value) {
-      byte[] data = new byte[9];
+      var data = new byte[9];
       ulong uvalue = value;
       data[0] = (byte)(uvalue & 0xff);
       data[1] = (byte)((uvalue >> 8) & 0xff);

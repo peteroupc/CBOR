@@ -484,7 +484,7 @@ True if this context defines a maximum precision; otherwise, false.
 
     public PeterO.BigInteger EMin { get; }
 
-Gets the lowest exponent possible when a converted number is expressed in scientific notation with one digit before the decimal point. For example, with a precision of 3 and an EMin of -100, the next value that comes after 0 is 0.001E-100. (This is not the same as the lowest possible Exponent property.) If HasExponentRange is false, this value will be 0.
+Gets the lowest exponent possible when a converted number is expressed in scientific notation with one digit before the decimal point. For example, with a precision of 3 and an EMin of -100, the next value that comes after 0 is 0.001E-100. (If AdjustExponent is false, this property specifies the lowest possible Exponent property instead.) If HasExponentRange is false, this value will be 0.
 
 <b>Returns:</b>
 

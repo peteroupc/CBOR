@@ -6,7 +6,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using System.Reflection;
 
 namespace PeterO {
   internal static class DebugUtility
@@ -14,7 +13,7 @@ namespace PeterO {
     [System.Diagnostics.Conditional("DEBUG")]
     public static void Log(string str) {
       Type type = Type.GetType("System.Console");
-      type.GetMethod("WriteLine", new Type[] { typeof(String) }).Invoke(type, new object[] { str });
+      type.GetMethod("WriteLine", new[] { typeof(String) }).Invoke(type, new object[] { str });
     }
     [System.Diagnostics.Conditional("DEBUG")]
     public static void Log(string format, params object[] args) {

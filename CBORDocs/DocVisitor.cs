@@ -9,7 +9,6 @@ at: http://upokecenter.com/d/
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -19,10 +18,12 @@ using ClariusLabs.NuDoc;
 namespace PeterO.DocGen {
     /// <summary>A documentation visitor.</summary>
   internal class DocVisitor : Visitor {
+    private const string FourSpaces = " " + " " + " " + " ";
+
     private StringBuilder paramStr = new StringBuilder();
     private StringBuilder returnStr = new StringBuilder();
     private StringBuilder exceptionStr = new StringBuilder();
-    private StringBuilder currentBuffer = null;
+    private StringBuilder currentBuffer;
     private StringBuilder buffer = new StringBuilder();
 
     public override string ToString() {
@@ -34,7 +35,7 @@ namespace PeterO.DocGen {
       var builder = new StringBuilder();
       for (int i = 0; i < name.Length; ++i) {
         UnicodeCategory cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
-        int cp = PeterO.DataUtilities.CodePointAt(name, i);
+        int cp = DataUtilities.CodePointAt(name, i);
         if (cp >= 0x10000) {
           ++i;
         }
@@ -86,42 +87,40 @@ namespace PeterO.DocGen {
       return sb.ToString();
     }
 
-    private static string valueFourSpaces = " " + " " + " " + " ";
-
     private static IDictionary<string, string> operators = OperatorList();
 
     private static IDictionary<string, string> OperatorList() {
-      var operators = new Dictionary<string, string>();
-      operators["op_Addition"] = "+";
-      operators["op_UnaryPlus"] = "+";
-      operators["op_Subtraction"] = "-";
-      operators["op_UnaryNegation"] = "-";
-      operators["op_Multiply"] = "*";
-      operators["op_Division"] = "/";
-      operators["op_LeftShift"] = "<<";
-      operators["op_RightShift"] = ">>";
-      operators["op_BitwiseAnd"] = "&";
-      operators["op_BitwiseOr"] = "|";
-      operators["op_ExclusiveOr"] = "^";
-      operators["op_LogicalNot"] = "!";
-      operators["op_OnesComplement"] = "~";
-      operators["op_True"] = "true";
-      operators["op_False"] = "false";
-      operators["op_Modulus"] = "%";
-      operators["op_Decrement"] = "--";
-      operators["op_Increment"] = "++";
-      operators["op_Equality"] = "==";
-      operators["op_Inequality"] = "!=";
-      operators["op_GreaterThan"] = ">";
-      operators["op_GreaterThanOrEqual"] = ">=";
-      operators["op_LessThan"] = "<";
-      operators["op_LessThanOrEqual"] = "<=";
-      return operators;
+      var ops = new Dictionary<string, string>();
+      ops["op_Addition"] = "+";
+      ops["op_UnaryPlus"] = "+";
+      ops["op_Subtraction"] = "-";
+      ops["op_UnaryNegation"] = "-";
+      ops["op_Multiply"] = "*";
+      ops["op_Division"] = "/";
+      ops["op_LeftShift"] = "<<";
+      ops["op_RightShift"] = ">>";
+      ops["op_BitwiseAnd"] = "&";
+      ops["op_BitwiseOr"] = "|";
+      ops["op_ExclusiveOr"] = "^";
+      ops["op_LogicalNot"] = "!";
+      ops["op_OnesComplement"] = "~";
+      ops["op_True"] = "true";
+      ops["op_False"] = "false";
+      ops["op_Modulus"] = "%";
+      ops["op_Decrement"] = "--";
+      ops["op_Increment"] = "++";
+      ops["op_Equality"] = "==";
+      ops["op_Inequality"] = "!=";
+      ops["op_GreaterThan"] = ">";
+      ops["op_GreaterThanOrEqual"] = ">=";
+      ops["op_LessThan"] = "<";
+      ops["op_LessThanOrEqual"] = "<=";
+      return ops;
     }
 
     public static string FormatTypeSig(Type typeInfo) {
       var builder = new StringBuilder();
-      builder.Append(valueFourSpaces);
+      builder.Append(FourSpaces);
       if (typeInfo.IsPublic) {
         builder.Append("public ");
       } else {
@@ -163,17 +162,17 @@ namespace PeterO.DocGen {
         derived = null;
       }
       if (derived != null || ifaces.Length > 0) {
-        builder.Append(" :\r\n" + valueFourSpaces);
+        builder.Append(" :\r\n" + FourSpaces);
         if (derived != null) {
-          builder.Append(valueFourSpaces + FormatType(derived));
+          builder.Append(FourSpaces + FormatType(derived));
           first = false;
         }
         if (ifaces.Length > 0) {
           foreach (var iface in ifaces) {
             if (!first) {
-              builder.Append(",\r\n" + valueFourSpaces);
+              builder.Append(",\r\n" + FourSpaces);
             }
-            builder.Append(valueFourSpaces + FormatType(iface));
+            builder.Append(FourSpaces + FormatType(iface));
             first = false;
           }
         }
@@ -192,7 +191,7 @@ namespace PeterO.DocGen {
             GenericParameterAttributes.DefaultConstructorConstraint)) == GenericParameterAttributes.None) {
             continue;
           }
-          builder.Append("\r\n" + valueFourSpaces + valueFourSpaces + "where ");
+          builder.Append("\r\n" + FourSpaces + FourSpaces + "where ");
           builder.Append(UndecorateTypeName(arg.Name));
           builder.Append(" : ");
           bool first = true;
@@ -234,7 +233,7 @@ namespace PeterO.DocGen {
 
     public static string FormatMethod(MethodBase method) {
       var builder = new StringBuilder();
-      builder.Append(valueFourSpaces);
+      builder.Append(FourSpaces);
       if (!method.ReflectedType.IsInterface) {
         if (method.IsPublic) {
           builder.Append("public ");
@@ -295,9 +294,9 @@ namespace PeterO.DocGen {
       first = true;
       foreach (var param in method.GetParameters()) {
         if (!first) {
-          builder.Append(",\r\n" + valueFourSpaces + valueFourSpaces);
+          builder.Append(",\r\n" + FourSpaces + FourSpaces);
         } else {
-          builder.Append("\r\n" + valueFourSpaces + valueFourSpaces);
+          builder.Append("\r\n" + FourSpaces + FourSpaces);
         }
         Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null) {
@@ -319,47 +318,41 @@ namespace PeterO.DocGen {
     private static bool PropertyIsPublicOrFamily(PropertyInfo property) {
       MethodInfo getter = property.GetGetMethod();
       MethodInfo setter = property.GetSetMethod();
-      if ((getter == null ? false : getter.IsPublic) ||
-         (setter == null ? false : setter.IsPublic)) {
-        return true;
-      } else if ((getter == null ? false : getter.IsFamily) ||
-        (setter == null ? false : setter.IsFamily)) {
-        return true;
-      }
-      return false;
+      return ((getter != null && getter.IsPublic) ||
+             (setter != null && setter.IsPublic)) ? true : ((getter != null && getter.IsFamily) || (setter != null && setter.IsFamily));
     }
 
     public static string FormatProperty(PropertyInfo property) {
       var builder = new StringBuilder();
       MethodInfo getter = property.GetGetMethod();
       MethodInfo setter = property.GetSetMethod();
-      builder.Append(valueFourSpaces);
+      builder.Append(FourSpaces);
       if (!property.ReflectedType.IsInterface) {
-        if ((getter == null ? false : getter.IsPublic) ||
-          (setter == null ? false : setter.IsPublic)) {
+        if ((getter != null && getter.IsPublic) ||
+          (setter != null && setter.IsPublic)) {
           builder.Append("public ");
-        } else if ((getter == null ? false : getter.IsAssembly) ||
-          (setter == null ? false : setter.IsAssembly)) {
+        } else if ((getter != null && getter.IsAssembly) ||
+          (setter != null && setter.IsAssembly)) {
           builder.Append("internal ");
-        } else if ((getter == null ? false : getter.IsFamily) ||
-          (setter == null ? false : setter.IsFamily)) {
+        } else if ((getter != null && getter.IsFamily) ||
+          (setter != null && setter.IsFamily)) {
           builder.Append("protected ");
         }
-        if ((getter == null ? false : getter.IsStatic) ||
-          (setter == null ? false : setter.IsStatic)) {
+        if ((getter != null && getter.IsStatic) ||
+          (setter != null && setter.IsStatic)) {
           builder.Append("static ");
         }
-        if ((getter == null ? false : getter.IsAbstract) ||
-          (setter == null ? false : setter.IsAbstract)) {
+        if ((getter != null && getter.IsAbstract) ||
+          (setter != null && setter.IsAbstract)) {
           builder.Append("abstract ");
         }
-        if ((getter == null ? false : getter.IsFinal) ||
-          (setter == null ? false : setter.IsFinal)) {
+        if ((getter != null && getter.IsFinal) ||
+          (setter != null && setter.IsFinal)) {
           builder.Append("sealed ");
-        } else if (IsMethodOverride(getter ?? setter)) {
+        } else if (IsMethodOverride(getter)) {
           builder.Append("override ");
-        } else if ((getter == null ? false : getter.IsVirtual) ||
-          (setter == null ? false : setter.IsVirtual)) {
+        } else if ((getter != null && getter.IsVirtual) ||
+          (setter != null && setter.IsVirtual)) {
           builder.Append("virtual ");
         }
       }
@@ -375,10 +368,10 @@ namespace PeterO.DocGen {
       first = true;
       foreach (var param in indexParams) {
         if (!first) {
-          builder.Append(",\r\n" + valueFourSpaces + valueFourSpaces);
+          builder.Append(",\r\n" + FourSpaces + FourSpaces);
         } else {
           builder.Append(indexParams.Length == 1 ?
-            String.Empty : "\r\n" + valueFourSpaces + valueFourSpaces);
+            String.Empty : "\r\n" + FourSpaces + FourSpaces);
         }
         Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null) {
@@ -411,7 +404,7 @@ namespace PeterO.DocGen {
 
     public static string FormatField(FieldInfo field) {
       var builder = new StringBuilder();
-      builder.Append(valueFourSpaces);
+      builder.Append(FourSpaces);
       if (field.IsPublic) {
         builder.Append("public ");
       }
@@ -470,75 +463,27 @@ namespace PeterO.DocGen {
       if (name.Equals("System.Int32")) {
         return "int";
       }
-      if (name.Equals("System.Int64")) {
-        return "long";
-      }
-      if (name.Equals("System.Int16")) {
-        return "short";
-      }
-      if (name.Equals("System.UInt32")) {
-        return "uint";
-      }
-      if (name.Equals("System.UInt64")) {
-        return "ulong";
-      }
-      if (name.Equals("System.UInt16")) {
-        return "ushort";
-      }
-      if (name.Equals("System.Char")) {
-        return "char";
-      }
-      if (name.Equals("System.Object")) {
-        return "object";
-      }
-      if (name.Equals("System.Void")) {
-        return "void";
-      }
-      if (name.Equals("System.Byte")) {
-        return "byte";
-      }
-      if (name.Equals("System.SByte")) {
-        return "sbyte";
-      }
-      if (name.Equals("System.String")) {
-        return "string";
-      }
-      if (name.Equals("System.Boolean")) {
-        return "bool";
-      }
-      if (name.Equals("System.Single")) {
-        return "float";
-      }
-      if (name.Equals("System.Double")) {
-        return "double";
-      }
-      return name;
+      return name.Equals("System.Int64") ? "long" : (name.Equals("System.Int16") ? "short" : (name.Equals("System.UInt32") ? "uint" : (name.Equals("System.UInt64") ? "ulong" : (name.Equals("System.UInt16") ? "ushort" : (name.Equals("System.Char") ? "char" : (name.Equals("System.Object") ? "object" : (name.Equals("System.Void") ? "void" : (name.Equals("System.Byte") ? "byte" : (name.Equals("System.SByte") ? "sbyte" : (name.Equals("System.String") ? "string" : (name.Equals("System.Boolean") ? "bool" : (name.Equals("System.Single") ? "float" : (name.Equals("System.Double") ? "double" : (name))))))))))))));
     }
 
     public static bool IsMethodOverride(MethodInfo method) {
       Type type = method.DeclaringType;
       MethodInfo baseMethod = method.GetBaseDefinition();
-      if (baseMethod == null) {
-        return false;
-      }
-      if (method.Equals(baseMethod)) {
-        return false;
-      }
-      return true;
+      return (baseMethod != null) && (!method.Equals(baseMethod));
     }
 
-    public override void VisitReturns(Returns param) {
+    public override void VisitReturns(Returns returns) {
       this.currentBuffer = this.returnStr;
       this.WriteLine("<b>Returns:</b>\r\n");
-      base.VisitReturns(param);
+      base.VisitReturns(returns);
       this.WriteLine("\r\n\r\n");
       this.currentBuffer = null;
     }
 
-    public override void VisitValue(Value param) {
+    public override void VisitValue(Value value) {
       this.currentBuffer = this.returnStr;
       this.WriteLine("<b>Returns:</b>\r\n");
-      base.VisitValue(param);
+      base.VisitValue(value);
       this.WriteLine("\r\n\r\n");
       this.currentBuffer = null;
     }
@@ -546,7 +491,7 @@ namespace PeterO.DocGen {
     public override void VisitException(ClariusLabs.NuDoc.Exception exception) {
       this.currentBuffer = this.exceptionStr;
       string cref = exception.Cref;
-      if (cref.StartsWith("T:")) {
+      if (cref.StartsWith("T:", StringComparison.Ordinal)) {
         cref = cref.Substring(2);
       }
       this.WriteLine(" * " + cref + ": ");
@@ -574,17 +519,17 @@ namespace PeterO.DocGen {
       this.WriteLine("\r\n\r\n");
     }
 
-    public override void VisitTypeParam(TypeParam param) {
+    public override void VisitTypeParam(TypeParam typeParam) {
       this.currentBuffer = this.paramStr;
-      this.Write(" * &lt;" + param.Name + "&gt;: ");
-      base.VisitTypeParam(param);
+      this.Write(" * &lt;" + typeParam.Name + "&gt;: ");
+      base.VisitTypeParam(typeParam);
       this.WriteLine("\r\n\r\n");
       this.currentBuffer = null;
     }
 
-    public override void VisitParamRef(ParamRef param) {
-      this.WriteLine(" <i>" + param.Name + "</i>");
-      base.VisitParamRef(param);
+    public override void VisitParamRef(ParamRef paramRef) {
+      this.WriteLine(" <i>" + paramRef.Name + "</i>");
+      base.VisitParamRef(paramRef);
     }
 
     public override void VisitMember(Member member) {
@@ -678,9 +623,11 @@ namespace PeterO.DocGen {
     private static string MethodNameHeading(string p) {
       if (operators.ContainsKey(p)) {
         return "Operator `" + operators[p] + "`";
-      } else if (p.Equals("op_Explicit")) {
+      }
+      if (p.Equals("op_Explicit")) {
         return "Explicit Operator";
-      } else if (p.Equals("op_Implicit")) {
+      }
+      if (p.Equals("op_Implicit")) {
         return "Implicit Operator";
       } else {
         return p;
@@ -707,7 +654,7 @@ namespace PeterO.DocGen {
 
     public override void VisitCode(Code code) {
       foreach (var line in code.Content.Split('\n')) {
-        this.WriteLine(valueFourSpaces + line.TrimEnd());
+        this.WriteLine(FourSpaces + line.TrimEnd());
       }
       this.WriteLine("\r\n\r\n");
       base.VisitCode(code);

@@ -12,8 +12,8 @@ at: http://upokecenter.com/d/
      */
   public class TrapException extends ArithmeticException {
 private static final long serialVersionUID=1L;
-    private Object result;
-    private PrecisionContext ctx;
+    private final Object result;
+    private final PrecisionContext ctx;
 
     /**
      * Gets the precision context used during the operation that triggered
@@ -25,7 +25,7 @@ private static final long serialVersionUID=1L;
         return this.ctx;
       }
 
-    private int error;
+    private final int error;
 
     /**
      * Gets the defined result of the operation that caused the trap.
@@ -48,11 +48,14 @@ private static final long serialVersionUID=1L;
     private static String FlagToMessage(int flag) {
       if (flag == PrecisionContext.FlagClamped) {
         return "Clamped";
-      } else if (flag == PrecisionContext.FlagDivideByZero) {
+      }
+      if (flag == PrecisionContext.FlagDivideByZero) {
         return "DivideByZero";
-      } else if (flag == PrecisionContext.FlagInexact) {
+      }
+      if (flag == PrecisionContext.FlagInexact) {
         return "Inexact";
-      } else if (flag == PrecisionContext.FlagInvalid) {
+      }
+      if (flag == PrecisionContext.FlagInvalid) {
         return "Invalid";
       } else if (flag == PrecisionContext.FlagOverflow) {
         return "Overflow";
@@ -60,10 +63,9 @@ private static final long serialVersionUID=1L;
         return "Rounded";
       } else if (flag == PrecisionContext.FlagSubnormal) {
         return "Subnormal";
-      } else if (flag == PrecisionContext.FlagUnderflow) {
-        return "Underflow";
+      } else {
+        return (flag == PrecisionContext.FlagUnderflow) ? "Underflow" : "Trap";
       }
-      return "Trap";
     }
 
     /**

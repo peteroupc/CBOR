@@ -52,15 +52,15 @@ import java.io.*;
               if (bytesNeeded != 0) {
                 bytesNeeded = 0;
                 throw this.NewError("Invalid UTF-8");
-              } else {
-                return -1;
               }
+              return -1;
             }
             if (bytesNeeded == 0) {
               if ((b & 0x7f) == b) {
                 ++this.offset;
                 return b;
-              } else if (b >= 0xc2 && b <= 0xdf) {
+              }
+              if (b >= 0xc2 && b <= 0xdf) {
                 bytesNeeded = 1;
                 lower = 0x80;
                 upper = 0xbf;

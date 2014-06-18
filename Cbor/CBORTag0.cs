@@ -6,7 +6,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using PeterO;
 
 namespace PeterO.Cbor {
   internal class CBORTag0 : ICBORTag, ICBORConverter<DateTime>
@@ -20,7 +19,7 @@ namespace PeterO.Cbor {
       int minute = dt.Minute;
       int second = dt.Second;
       int millisecond = dt.Millisecond;
-      char[] charbuf = new char[millisecond > 0 ? 24 : 20];
+      var charbuf = new char[millisecond > 0 ? 24 : 20];
       charbuf[0] = (char)('0' + ((year / 1000) % 10));
       charbuf[1] = (char)('0' + ((year / 100) % 10));
       charbuf[2] = (char)('0' + ((year / 10) % 10));

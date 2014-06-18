@@ -12,7 +12,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 using ClariusLabs.NuDoc;
 
@@ -34,8 +33,8 @@ namespace PeterO.DocGen {
         typeName = typeName.Replace("<", "&lt;");
         typeName = typeName.Replace(">", "&gt;");
         typeName = "[" + typeName + "](" + DocVisitor.GetTypeID(key) + ".md)";
-        if (finalString.IndexOf(".") >= 0) {
-          finalString = finalString.Substring(0, finalString.IndexOf(".") + 1);
+        if (finalString.IndexOf(".", StringComparison.Ordinal) >= 0) {
+          finalString = finalString.Substring(0, finalString.IndexOf(".", StringComparison.Ordinal) + 1);
         }
         finalString = Regex.Replace(finalString, @"\r?\n(\r?\n)+", "\r\n\r\n");
         this.writer.Write(" * " + typeName + " - ");
@@ -69,14 +68,13 @@ namespace PeterO.DocGen {
 
     /// <summary>Compares a Type object with a Type.</summary>
     /// <summary>Compares a Type object with a Type.</summary>
-    /// <summary>Compares a Type object with a Type.</summary>
     /// <param name='x'>A Type object.</param>
     /// <param name='y'>A Type object. (2).</param>
     /// <returns>Zero if both values are equal; a negative number if <paramref
     /// name='x'/> is less than <paramref name='y'/> , or a positive number
     /// if <paramref name='x'/> is greater than <paramref name='y'/> .</returns>
     public int Compare(Type x, Type y) {
-      return x.FullName.CompareTo(y.FullName);
+      return string.Compare(x.FullName, y.FullName, StringComparison.Ordinal);
     }
   }
 }

@@ -67,18 +67,12 @@ namespace PeterO.Cbor {
 
     public bool CanFitInSingle(object obj) {
       var ef = (ExtendedDecimal)obj;
-      if (!ef.IsFinite) {
-        return true;
-      }
-      return ef.CompareTo(ExtendedDecimal.FromSingle(ef.ToSingle())) == 0;
+      return (!ef.IsFinite) || (ef.CompareTo(ExtendedDecimal.FromSingle(ef.ToSingle())) == 0);
     }
 
     public bool CanFitInDouble(object obj) {
       var ef = (ExtendedDecimal)obj;
-      if (!ef.IsFinite) {
-        return true;
-      }
-      return ef.CompareTo(ExtendedDecimal.FromDouble(ef.ToDouble())) == 0;
+      return (!ef.IsFinite) || (ef.CompareTo(ExtendedDecimal.FromDouble(ef.ToDouble())) == 0);
     }
 
     public bool CanFitInInt32(object obj) {
@@ -126,21 +120,12 @@ namespace PeterO.Cbor {
 
     public int Sign(object obj) {
       var ed = (ExtendedDecimal)obj;
-      if (ed.IsNaN()) {
-        return 2;
-      }
-      return ed.Sign;
+      return ed.IsNaN() ? 2 : ed.Sign;
     }
 
     public bool IsIntegral(object obj) {
       var ed = (ExtendedDecimal)obj;
-      if (!ed.IsFinite) {
-        return false;
-      }
-      if (ed.Exponent.Sign >= 0) {
-        return true;
-      }
-      return ed.CompareTo(ExtendedDecimal.FromBigInteger(ed.ToBigInteger())) == 0;
+      return ed.IsFinite && ((ed.Exponent.Sign >= 0) || (ed.CompareTo(ExtendedDecimal.FromBigInteger(ed.ToBigInteger())) == 0));
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {

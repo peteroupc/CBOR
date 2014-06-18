@@ -9,9 +9,9 @@ using System;
 
 namespace PeterO {
     /// <summary>Exception thrown for arithmetic trap errors.</summary>
-  public partial class TrapException : ArithmeticException {
-    private Object result;
-    private PrecisionContext ctx;
+  public class TrapException : ArithmeticException {
+    private readonly Object result;
+    private readonly PrecisionContext ctx;
 
     /// <summary>Gets the precision context used during the operation that
     /// triggered the trap. May be null.</summary>
@@ -23,7 +23,7 @@ namespace PeterO {
       }
     }
 
-    private int error;
+    private readonly int error;
 
     /// <summary>Gets the defined result of the operation that caused the
     /// trap.</summary>
@@ -47,11 +47,14 @@ namespace PeterO {
     private static string FlagToMessage(int flag) {
       if (flag == PrecisionContext.FlagClamped) {
         return "Clamped";
-      } else if (flag == PrecisionContext.FlagDivideByZero) {
+      }
+      if (flag == PrecisionContext.FlagDivideByZero) {
         return "DivideByZero";
-      } else if (flag == PrecisionContext.FlagInexact) {
+      }
+      if (flag == PrecisionContext.FlagInexact) {
         return "Inexact";
-      } else if (flag == PrecisionContext.FlagInvalid) {
+      }
+      if (flag == PrecisionContext.FlagInvalid) {
         return "Invalid";
       } else if (flag == PrecisionContext.FlagOverflow) {
         return "Overflow";
@@ -59,10 +62,9 @@ namespace PeterO {
         return "Rounded";
       } else if (flag == PrecisionContext.FlagSubnormal) {
         return "Subnormal";
-      } else if (flag == PrecisionContext.FlagUnderflow) {
-        return "Underflow";
+      } else {
+        return (flag == PrecisionContext.FlagUnderflow) ? "Underflow" : "Trap";
       }
-      return "Trap";
     }
 
     /// <summary>Initializes a new instance of the TrapException class.</summary>

@@ -19,6 +19,7 @@ private BigNumberFlags() {
     static final int UnderflowFlags = PrecisionContext.FlagInexact | PrecisionContext.FlagSubnormal |
                 PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
 
+    static final int LostDigitsFlags = PrecisionContext.FlagLostDigits | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
     static final int FiniteOnly = 0;
     static final int FiniteAndNonFinite = 1;
   }

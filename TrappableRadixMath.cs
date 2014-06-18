@@ -14,13 +14,7 @@ namespace PeterO {
   internal class TrappableRadixMath<T> : IRadixMath<T>
   {
     private static PrecisionContext GetTrappableContext(PrecisionContext ctx) {
-      if (ctx == null) {
-        return null;
-      }
-      if (ctx.Traps == 0) {
-        return ctx;
-      }
-      return ctx.WithBlankFlags();
+      return (ctx == null) ? null : ((ctx.Traps == 0) ? ctx : ctx.WithBlankFlags());
     }
 
     private T TriggerTraps(T result, PrecisionContext src, PrecisionContext dst) {
@@ -96,7 +90,6 @@ namespace PeterO {
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    /// <summary>Finds the remainder that results when dividing two T objects.</summary>
     /// <summary>Finds the remainder that results when dividing two T objects.</summary>
     /// <summary>Finds the remainder that results when dividing two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
@@ -181,7 +174,6 @@ namespace PeterO {
 
     /// <summary>Divides two T objects.</summary>
     /// <summary>Divides two T objects.</summary>
-    /// <summary>Divides two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='divisor'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
@@ -216,6 +208,7 @@ namespace PeterO {
       return this.TriggerTraps(result, tctx, ctx);
     }
 
+    /// <summary>Multiplies two T objects.</summary>
     /// <summary>Multiplies two T objects.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='other'>A T object. (2).</param>
@@ -283,7 +276,6 @@ namespace PeterO {
 
     /// <summary>Compares a T object with this instance.</summary>
     /// <summary>Compares a T object with this instance.</summary>
-    /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>
     /// <param name='otherValue'>A T object. (2).</param>
     /// <param name='treatQuietNansAsSignaling'>A Boolean object.</param>
@@ -300,7 +292,6 @@ namespace PeterO {
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    /// <summary>Compares a T object with this instance.</summary>
     /// <summary>Compares a T object with this instance.</summary>
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>A T object.</param>

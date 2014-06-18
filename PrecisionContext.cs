@@ -40,7 +40,7 @@ namespace PeterO {
     /// will be thrown if an operation's return value is not the same as the
     /// exact result (FlagInexact) or if the return value's exponent is lower
     /// than the lowest allowed (FlagSubnormal).</para>
-    ///  </summary>
+    /// </summary>
     /// <value>The traps that are set for each flag in the context.</value>
     public int Traps {
       get {
@@ -76,9 +76,9 @@ namespace PeterO {
     /// <summary>Gets the lowest exponent possible when a converted number
     /// is expressed in scientific notation with one digit before the decimal
     /// point. For example, with a precision of 3 and an EMin of -100, the next
-    /// value that comes after 0 is 0.001E-100. (This is not the same as the
-    /// lowest possible Exponent property.) If HasExponentRange is false,
-    /// this value will be 0.</summary>
+    /// value that comes after 0 is 0.001E-100. (If AdjustExponent is false,
+    /// this property specifies the lowest possible Exponent property instead.)
+    /// If HasExponentRange is false, this value will be 0.</summary>
     /// <value>The lowest exponent possible when a converted number is expressed
     /// in scientific notation with one digit before the decimal point.</value>
     public BigInteger EMin {
@@ -185,7 +185,7 @@ namespace PeterO {
     /// flag, use the AND operation on the return value of this method. For
     /// example: <c>(this.Flags &amp; PrecisionContext.FlagInexact)
     /// != 0</c>
-    ///  returns TRUE if the Inexact flag is set.</summary>
+    /// returns TRUE if the Inexact flag is set.</summary>
     /// <value>The flags that are set from converting numbers according
     /// to this precision context. If HasFlags is false, this value will be
     /// 0.</value>
@@ -231,10 +231,7 @@ namespace PeterO {
           bigint += (BigInteger)this.bigintPrecision;
           bigint -= BigInteger.One;
         }
-        if (bigint.CompareTo(this.EMin) < 0) {
-          return false;
-        }
-        return exponent.CompareTo(this.EMax) <= 0;
+        return (bigint.CompareTo(this.EMin) >= 0) && (exponent.CompareTo(this.EMax) <= 0);
       }
     }
 

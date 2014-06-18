@@ -67,18 +67,12 @@ import com.upokecenter.util.*;
 
     public boolean CanFitInSingle(Object obj) {
       ExtendedDecimal ef = (ExtendedDecimal)obj;
-      if (!ef.isFinite()) {
-        return true;
-      }
-      return ef.compareTo(ExtendedDecimal.FromSingle(ef.ToSingle())) == 0;
+      return (!ef.isFinite()) || (ef.compareTo(ExtendedDecimal.FromSingle(ef.ToSingle())) == 0);
     }
 
     public boolean CanFitInDouble(Object obj) {
       ExtendedDecimal ef = (ExtendedDecimal)obj;
-      if (!ef.isFinite()) {
-        return true;
-      }
-      return ef.compareTo(ExtendedDecimal.FromDouble(ef.ToDouble())) == 0;
+      return (!ef.isFinite()) || (ef.compareTo(ExtendedDecimal.FromDouble(ef.ToDouble())) == 0);
     }
 
     public boolean CanFitInInt32(Object obj) {
@@ -126,21 +120,12 @@ import com.upokecenter.util.*;
 
     public int Sign(Object obj) {
       ExtendedDecimal ed = (ExtendedDecimal)obj;
-      if (ed.IsNaN()) {
-        return 2;
-      }
-      return ed.signum();
+      return ed.IsNaN() ? 2 : ed.signum();
     }
 
     public boolean IsIntegral(Object obj) {
       ExtendedDecimal ed = (ExtendedDecimal)obj;
-      if (!ed.isFinite()) {
-        return false;
-      }
-      if (ed.getExponent().signum() >= 0) {
-        return true;
-      }
-      return ed.compareTo(ExtendedDecimal.FromBigInteger(ed.ToBigInteger())) == 0;
+      return ed.isFinite() && ((ed.getExponent().signum() >= 0) || (ed.compareTo(ExtendedDecimal.FromBigInteger(ed.ToBigInteger())) == 0));
     }
 
     public int AsInt32(Object obj, int minValue, int maxValue) {

@@ -51,10 +51,7 @@ at: http://upokecenter.com/d/
      */
     @Override public boolean equals(Object obj) {
       ExtendedRational other = ((obj instanceof ExtendedRational) ? (ExtendedRational)obj : null);
-      if (other == null) {
-        return false;
-      }
-      return (((this.unsignedNumerator)==null) ? ((other.unsignedNumerator)==null) : (this.unsignedNumerator).equals(other.unsignedNumerator)) && (((this.denominator)==null) ? ((other.denominator)==null) : (this.denominator).equals(other.denominator)) && this.flags == other.flags;
+      return (other != null) && ((((this.unsignedNumerator)==null) ? ((other.unsignedNumerator)==null) : (this.unsignedNumerator).equals(other.unsignedNumerator)) && (((this.denominator)==null) ? ((other.denominator)==null) : (this.denominator).equals(other.denominator)) && this.flags == other.flags);
     }
 
     /**
@@ -137,18 +134,16 @@ at: http://upokecenter.com/d/
         if (this.IsSignalingNaN()) {
           if (this.unsignedNumerator.signum()==0) {
             return this.isNegative() ? "-sNaN" : "sNaN";
-          } else {
-            return this.isNegative() ? "-sNaN" + this.unsignedNumerator.toString() :
-              "sNaN" + this.unsignedNumerator.toString();
           }
+          return this.isNegative() ? "-sNaN" + this.unsignedNumerator :
+              "sNaN" + this.unsignedNumerator;
         }
         if (this.IsQuietNaN()) {
           if (this.unsignedNumerator.signum()==0) {
             return this.isNegative() ? "-NaN" : "NaN";
-          } else {
-            return this.isNegative() ? "-NaN" + this.unsignedNumerator.toString() :
-              "NaN" + this.unsignedNumerator.toString();
           }
+          return this.isNegative() ? "-NaN" + this.unsignedNumerator :
+              "NaN" + this.unsignedNumerator;
         }
         if (this.IsInfinity()) {
           return this.isNegative() ? "-Infinity" : "Infinity";
@@ -599,10 +594,7 @@ rem=divrem[1]; }
      * @return True if this object's value equals 0; otherwise, false.
      */
     public boolean isZero() {
-        if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
-          return false;
-        }
-        return this.unsignedNumerator.signum()==0;
+        return ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0) && this.unsignedNumerator.signum()==0;
       }
 
     /**
@@ -611,13 +603,7 @@ rem=divrem[1]; }
      * is less than 0; and 1 if this value is greater than 0.
      */
     public int signum() {
-        if ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) {
-          return this.isNegative() ? -1 : 1;
-        }
-        if (this.unsignedNumerator.signum()==0) {
-          return 0;
-        }
-        return this.isNegative() ? -1 : 1;
+        return ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) ? (this.isNegative() ? -1 : 1) : (this.unsignedNumerator.signum()==0 ? 0 : (this.isNegative() ? -1 : 1));
       }
 
     /**
@@ -634,10 +620,7 @@ rem=divrem[1]; }
         return 0;
       }
       if (this.IsNaN()) {
-        if (other.IsNaN()) {
-          return 0;
-        }
-        return 1;
+        return other.IsNaN() ? 0 : 1;
       }
       if (other.IsNaN()) {
         return -1;
@@ -698,10 +681,7 @@ rem=divrem[1]; }
         return 1;
       }
       if (this.IsNaN()) {
-        if (other.IsNaN()) {
-          return 0;
-        }
-        return 1;
+        return other.IsNaN() ? 0 : 1;
       }
       int signA = this.signum();
       int signB = other.signum();
@@ -807,10 +787,7 @@ thisRem=divrem[1]; }
         return 1;
       }
       if (this.IsNaN()) {
-        if (other.IsNaN()) {
-          return 0;
-        }
-        return 1;
+        return other.IsNaN() ? 0 : 1;
       }
       int signA = this.signum();
       int signB = other.signum();
@@ -1045,10 +1022,7 @@ thisRem=divrem[1]; }
         return otherValue;
       }
       if (this.IsInfinity()) {
-        if (otherValue.IsInfinity()) {
-          return (this.isNegative() == otherValue.isNegative()) ? this : NaN;
-        }
-        return this;
+        return otherValue.IsInfinity() ? ((this.isNegative() == otherValue.isNegative()) ? this : NaN) : this;
       }
       if (otherValue.IsInfinity()) {
         return otherValue;
@@ -1132,10 +1106,7 @@ thisRem=divrem[1]; }
       }
       BigInteger ac = this.getNumerator().multiply(otherValue.getNumerator());
       BigInteger bd = this.getDenominator().multiply(otherValue.getDenominator());
-      if (ac.signum()==0) {
-        return resultNeg ? NegativeZero : Zero;
-      }
-      return new ExtendedRational(ac, bd).Simplify().ChangeSign(resultNeg);
+      return ac.signum()==0 ? (resultNeg ? NegativeZero : Zero) : new ExtendedRational(ac, bd).Simplify().ChangeSign(resultNeg);
     }
 
     /**

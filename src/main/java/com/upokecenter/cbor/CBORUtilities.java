@@ -74,10 +74,7 @@ private CBORUtilities() {
           return (a[i] < b[i]) ? -1 : 1;
         }
       }
-      if (a.length != b.length) {
-        return (a.length < b.length) ? -1 : 1;
-      }
-      return 0;
+      return (a.length != b.length) ? ((a.length < b.length) ? -1 : 1) : 0;
     }
 
     public static BigInteger BigIntegerFromSingle(float flt) {
@@ -106,7 +103,8 @@ private CBORUtilities() {
           mantissa = -mantissa;
         }
         return BigInteger.valueOf(mantissa);
-      } else if (fpexponent > 0) {
+      }
+      if (fpexponent > 0) {
         // Value is an integer
         BigInteger bigmantissa = BigInteger.valueOf(mantissa);
         bigmantissa=bigmantissa.shiftLeft(fpexponent);
@@ -169,7 +167,8 @@ private CBORUtilities() {
           bigmantissa=bigmantissa.negate();
         }
         return bigmantissa;
-      } else if (floatExponent > 0) {
+      }
+      if (floatExponent > 0) {
         // Value is an integer
         bigmantissa=bigmantissa.shiftLeft(floatExponent);
         if (neg) {
@@ -192,9 +191,11 @@ private CBORUtilities() {
       value &= 0x7fff;
       if (value >= 0x7c00) {
         return Float.intBitsToFloat((0x3fc00 | (value & 0x3ff)) << 13 | negvalue);
-      } else if (value > 0x400) {
+      }
+      if (value > 0x400) {
         return Float.intBitsToFloat(((value + 0x1c000) << 13) | negvalue);
-      } else if ((value & 0x400) == value) {
+      }
+      if ((value & 0x400) == value) {
         return Float.intBitsToFloat(((value == 0) ? 0 : 0x38800000) | negvalue);
       } else {
         // denormalized
