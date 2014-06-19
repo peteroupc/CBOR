@@ -4328,7 +4328,7 @@ namespace PeterO.Cbor {
     /// , <c>ExtendedFloat</c>
     /// , the custom <c>BigInteger</c>
     /// , lists,
-    /// arrays, enumerations (<c>Enum</c>
+    /// arrays, enumerations ( <c>Enum</c>
     /// objects), and maps.</para>
     /// <para>In the .NET version, if the object is a type not specially handled
     /// by this method, returns a CBOR map with the values of each of its read/write
