@@ -477,11 +477,11 @@ namespace Test {
     private static string ObjectMessages(CBORObject o1, CBORObject o2, String s) {
       if (o1.Type == CBORType.Number && o2.Type == CBORType.Number) {
         return s + ":\n" + o1.ToString() + " and\n" + o2.ToString() + "\nOR\n" +
-        o1.AsExtendedDecimal().ToString() + " and\n" + o2.AsExtendedDecimal().ToString() + "\nOR\n" +
-        "AddSubCompare(" + ToByteArrayString(o1) + ",\n" + ToByteArrayString(o2) + ");";
+          o1.AsExtendedDecimal().ToString() + " and\n" + o2.AsExtendedDecimal().ToString() + "\nOR\n" +
+          "AddSubCompare(" + ToByteArrayString(o1) + ",\n" + ToByteArrayString(o2) + ");";
       }
       return s + ":\n" + o1.ToString() + " and\n" + o2.ToString() + "\nOR\n" +
-      ToByteArrayString(o1) + " and\n" + ToByteArrayString(o2);
+        ToByteArrayString(o1) + " and\n" + ToByteArrayString(o2);
     }
 
     public static void CompareTestEqual(CBORObject o1, CBORObject o2) {
@@ -676,6 +676,11 @@ namespace Test {
     }
 
     [TestMethod]
+    public void TestJSONLineSep() {
+      Assert.AreEqual("\"\u2027\\u2028\\u2029\u202a\"", CBORObject.FromObject("\u2027\u2028\u2029\u202a").ToJSONString());
+    }
+
+    [TestMethod]
     // [Timeout(10000)]
     public void TestCompare() {
       var r = new FastRandom();
@@ -709,6 +714,13 @@ namespace Test {
         o1 = CBORObject.FromObject(Double.NaN);
         CompareTestLess(o2, o1);
       }
+      byte[] bytes1 = { 0, 1 };
+      byte[] bytes2 = { 0, 2 };
+      byte[] bytes3 = { 0, 2, 0 };
+      byte[] bytes4 = { 1, 1 };
+      byte[] bytes5 = { 1, 1, 4 };
+      byte[] bytes6 = { 1, 2 };
+      byte[] bytes7 = { 1, 2, 6 };
       CBORObject[] sortedObjects = {
         CBORObject.Undefined,
         CBORObject.Null,
@@ -731,13 +743,13 @@ namespace Test {
         CBORObject.FromSimpleValue(19),
         CBORObject.FromSimpleValue(32),
         CBORObject.FromSimpleValue(255),
-        CBORObject.FromObject(new byte[] { 0, 1 }),
-        CBORObject.FromObject(new byte[] { 0, 2 }),
-        CBORObject.FromObject(new byte[] { 0, 2, 0 }),
-        CBORObject.FromObject(new byte[] { 1, 1 }),
-        CBORObject.FromObject(new byte[] { 1, 1, 4 }),
-        CBORObject.FromObject(new byte[] { 1, 2 }),
-        CBORObject.FromObject(new byte[] { 1, 2, 6 }),
+        CBORObject.FromObject(bytes1),
+        CBORObject.FromObject(bytes2),
+        CBORObject.FromObject(bytes3),
+        CBORObject.FromObject(bytes4),
+        CBORObject.FromObject(bytes5),
+        CBORObject.FromObject(bytes6),
+        CBORObject.FromObject(bytes7),
         CBORObject.FromObject("aa"),
         CBORObject.FromObject("ab"),
         CBORObject.FromObject("abc"),
@@ -1256,11 +1268,11 @@ namespace Test {
       // The following creates a CBOR map and adds
       // several kinds of objects to it
       CBORObject cbor = CBORObject.NewMap()
-         .Add("item", "any string")
-         .Add("number", 42)
-         .Add("map", CBORObject.NewMap().Add("number", 42))
-         .Add("array", CBORObject.NewArray().Add(999f).Add("xyz"))
-         .Add("bytes", new byte[] { 0, 1, 2 });
+        .Add("item", "any string")
+        .Add("number", 42)
+        .Add("map", CBORObject.NewMap().Add("number", 42))
+        .Add("array", CBORObject.NewArray().Add(999f).Add("xyz"))
+        .Add("bytes", new byte[] { 0, 1, 2 });
       // The following converts the map to CBOR
       byte[] bytes = cbor.EncodeToBytes();
       // The following converts the map to JSON
@@ -1269,7 +1281,7 @@ namespace Test {
 
     private void TestWriteToJSON(CBORObject obj) {
       CBORObject objA = null;
-      using (MemoryStream ms = new MemoryStream()) {
+      using (var ms = new MemoryStream()) {
         try {
           obj.WriteJSONTo(ms);
           objA = CBORObject.FromJSONString(DataUtilities.GetUtf8String(ms.ToArray(), true));
@@ -1301,7 +1313,7 @@ namespace Test {
             array[j] = (byte)rand.NextValue(256);
           }
         }
-        using (MemoryStream ms = new MemoryStream(array)) {
+        using (var ms = new MemoryStream(array)) {
           while (ms.Position != ms.Length) {
             try {
               CBORObject o = CBORObject.Read(ms);
@@ -1362,7 +1374,7 @@ namespace Test {
           int index = rand.NextValue(array.Length);
           array[index] = unchecked((byte)rand.NextValue(256));
         }
-        using (MemoryStream ms = new MemoryStream(array)) {
+        using (var ms = new MemoryStream(array)) {
           while (ms.Position != ms.Length) {
             try {
               CBORObject o = CBORObject.Read(ms);
@@ -1813,7 +1825,7 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      using (MemoryStream ms = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
+      using (var ms = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
         try {
           CBORObject.ReadJSON(ms);
         } catch (Exception ex) {
@@ -1822,7 +1834,7 @@ namespace Test {
         }
       }
       // whitespace followed by BOM
-      using (MemoryStream ms2 = new MemoryStream(new byte[] { 0x20, 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
+      using (var ms2 = new MemoryStream(new byte[] { 0x20, 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
         try {
           CBORObject.ReadJSON(ms2);
           Assert.Fail("Should have failed");
@@ -1833,7 +1845,7 @@ namespace Test {
         }
       }
       // two BOMs
-      using (MemoryStream ms3 = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
+      using (var ms3 = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0xef, 0xbb, 0xbf, 0x7b, 0x7d })) {
         try {
           CBORObject.ReadJSON(ms3);
           Assert.Fail("Should have failed");
@@ -1851,7 +1863,7 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      using (MemoryStream ms2a = new MemoryStream(new byte[] { })) {
+      using (var ms2a = new MemoryStream(new byte[] { })) {
         try {
           CBORObject.ReadJSON(ms2a);
           Assert.Fail("Should have failed");
@@ -1861,7 +1873,7 @@ namespace Test {
           throw new InvalidOperationException(String.Empty, ex);
         }
       }
-      using (MemoryStream ms2b = new MemoryStream(new byte[] { 0x20 })) {
+      using (var ms2b = new MemoryStream(new byte[] { 0x20 })) {
         try {
           CBORObject.ReadJSON(ms2b);
           Assert.Fail("Should have failed");
@@ -1928,11 +1940,11 @@ namespace Test {
     }
 
     public void DoTestReadUtf8(
-     byte[] bytes,
-     int expectedRet,
-     string expectedString,
-     int noReplaceRet,
-     string noReplaceString) {
+      byte[] bytes,
+      int expectedRet,
+      string expectedString,
+      int noReplaceRet,
+      string noReplaceString) {
       this.DoTestReadUtf8(
         bytes,
         bytes.Length,
@@ -1952,7 +1964,7 @@ namespace Test {
       try {
         var builder = new StringBuilder();
         int ret = 0;
-        using (MemoryStream ms = new MemoryStream(bytes)) {
+        using (var ms = new MemoryStream(bytes)) {
           ret = DataUtilities.ReadUtf8(ms, length, builder, true);
           Assert.AreEqual(expectedRet, ret);
           if (expectedRet == 0) {

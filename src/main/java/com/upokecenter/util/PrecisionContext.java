@@ -206,13 +206,7 @@ at: http://upokecenter.com/d/
     public int getFlags() {
         return this.flags;
       }
-
-    /**
-     * Sets the flags that occur from converting numbers according to this
-     * precision context.
-     * @throws IllegalStateException HasFlags is false.
-     */
-      public void setFlags(int value) {
+public void setFlags(int value) {
         if (!this.getHasFlags()) {
           throw new IllegalStateException("Can't set flags");
         }

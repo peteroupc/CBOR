@@ -307,7 +307,7 @@ import com.upokecenter.util.*;
       if (bigLength == null) {
         throw new NullPointerException("bigLength");
       }
-      return ((this.types & (1 << 4)) == 0) && (this.anyArrayLength || ((!this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) == 0) ? true : (this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) >= 0)));
+      return ((this.types & (1 << 4)) == 0) && (this.anyArrayLength || ((!this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) == 0) || (this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) >= 0)));
     }
 
     /**

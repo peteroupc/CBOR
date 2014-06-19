@@ -455,13 +455,14 @@ private URIUtility() {
           continue;
         }
         if (index + 2 == len && c == '/' &&
-                  path.charAt(index + 1) == '.') {
+                path.charAt(index + 1) == '.') {
           // is "/."; append '/' and break
           builder.append('/');
           break;
-        } else if (index + 3 == len && c == '/' &&
-                       path.charAt(index + 1) == '.' &&
-                       path.charAt(index + 2) == '.') {
+        }
+        if (index + 3 == len && c == '/' &&
+                  path.charAt(index + 1) == '.' &&
+                  path.charAt(index + 2) == '.') {
           // is "/.."; remove last segment,
           // append "/" and return
           int index2 = builder.length() - 1;
@@ -537,12 +538,13 @@ int delim) {
         return 200 + ((s.charAt(index + 1) - '0') * 10) + (s.charAt(index + 2) - '0');
       }
       if (c == '1' && index + 3 < endOffset &&
-               s.charAt(index + 1) >= '0' && s.charAt(index + 1) <= '9' &&
-               s.charAt(index + 2) >= '0' && s.charAt(index + 2) <= '9' &&
-               s.charAt(index + 3) == delim) {
+             s.charAt(index + 1) >= '0' && s.charAt(index + 1) <= '9' &&
+             s.charAt(index + 2) >= '0' && s.charAt(index + 2) <= '9' &&
+             s.charAt(index + 3) == delim) {
         return 100 + ((s.charAt(index + 1) - '0') * 10) + (s.charAt(index + 2) - '0');
-      } else if (c >= '0' && c <= '9' && index + 1 < endOffset &&
-                    s.charAt(index + 1) == delim) {
+      }
+      if (c >= '0' && c <= '9' && index + 1 < endOffset &&
+               s.charAt(index + 1) == delim) {
         return c - '0';
       } else {
         return -1;

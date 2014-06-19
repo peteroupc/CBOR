@@ -450,13 +450,14 @@ namespace PeterO.Cbor {
           continue;
         }
         if (index + 2 == len && c == '/' &&
-                  path[index + 1] == '.') {
+                path[index + 1] == '.') {
           // is "/."; append '/' and break
           builder.Append('/');
           break;
-        } else if (index + 3 == len && c == '/' &&
-                       path[index + 1] == '.' &&
-                       path[index + 2] == '.') {
+        }
+        if (index + 3 == len && c == '/' &&
+                  path[index + 1] == '.' &&
+                  path[index + 2] == '.') {
           // is "/.."; remove last segment,
           // append "/" and return
           int index2 = builder.Length - 1;
@@ -532,12 +533,13 @@ int delim) {
         return 200 + ((s[index + 1] - '0') * 10) + (s[index + 2] - '0');
       }
       if (c == '1' && index + 3 < endOffset &&
-               s[index + 1] >= '0' && s[index + 1] <= '9' &&
-               s[index + 2] >= '0' && s[index + 2] <= '9' &&
-               s[index + 3] == delim) {
+             s[index + 1] >= '0' && s[index + 1] <= '9' &&
+             s[index + 2] >= '0' && s[index + 2] <= '9' &&
+             s[index + 3] == delim) {
         return 100 + ((s[index + 1] - '0') * 10) + (s[index + 2] - '0');
-      } else if (c >= '0' && c <= '9' && index + 1 < endOffset &&
-                    s[index + 1] == delim) {
+      }
+      if (c >= '0' && c <= '9' && index + 1 < endOffset &&
+               s[index + 1] == delim) {
         return c - '0';
       } else {
         return -1;

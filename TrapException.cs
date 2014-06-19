@@ -56,7 +56,8 @@ namespace PeterO {
       }
       if (flag == PrecisionContext.FlagInvalid) {
         return "Invalid";
-      } else if (flag == PrecisionContext.FlagOverflow) {
+      }
+      if (flag == PrecisionContext.FlagOverflow) {
         return "Overflow";
       } else if (flag == PrecisionContext.FlagRounded) {
         return "Rounded";

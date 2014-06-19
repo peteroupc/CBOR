@@ -31,7 +31,8 @@ private MiniCBOR() {
       }
       if (value > 0x400) {
         return ToSingle((int)((value + 0x1c000) << 13) | negvalue);
-      } else if ((value & 0x400) == value) {
+      }
+      if ((value & 0x400) == value) {
         return ToSingle((int)((value == 0) ? 0 : 0x38800000) | negvalue);
       } else {
         // denormalized

@@ -490,7 +490,8 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           cbor.set(key,value);
         }
         return cbor;
-      } else if (type == 6) {  // Tagged item
+      }
+      if (type == 6) {  // Tagged item
         CBORObject o;
         ICBORTag taginfo = null;
         boolean haveFirstByte = false;

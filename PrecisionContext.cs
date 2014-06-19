@@ -194,9 +194,6 @@ namespace PeterO {
         return this.flags;
       }
 
-    /// <summary>Sets the flags that occur from converting numbers according
-    /// to this precision context.</summary>
-    /// <exception cref='InvalidOperationException'>HasFlags is false.</exception>
       set {
         if (!this.HasFlags) {
           throw new InvalidOperationException("Can't set flags");

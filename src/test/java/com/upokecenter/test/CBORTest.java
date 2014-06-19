@@ -467,11 +467,11 @@ import com.upokecenter.cbor.*;
     private static String ObjectMessages(CBORObject o1, CBORObject o2, String s) {
       if (o1.getType() == CBORType.Number && o2.getType() == CBORType.Number) {
         return s + ":\n" + o1.toString() + " and\n" + o2.toString() + "\nOR\n" +
-        o1.AsExtendedDecimal().toString() + " and\n" + o2.AsExtendedDecimal().toString() + "\nOR\n" +
-        "AddSubCompare(" + ToByteArrayString(o1) + ",\n" + ToByteArrayString(o2) + ");";
+          o1.AsExtendedDecimal().toString() + " and\n" + o2.AsExtendedDecimal().toString() + "\nOR\n" +
+          "AddSubCompare(" + ToByteArrayString(o1) + ",\n" + ToByteArrayString(o2) + ");";
       }
       return s + ":\n" + o1.toString() + " and\n" + o2.toString() + "\nOR\n" +
-      ToByteArrayString(o1) + " and\n" + ToByteArrayString(o2);
+        ToByteArrayString(o1) + " and\n" + ToByteArrayString(o2);
     }
 
     public static void CompareTestEqual(CBORObject o1, CBORObject o2) {
@@ -657,6 +657,11 @@ import com.upokecenter.cbor.*;
     }
 
     @Test
+    public void TestJSONLineSep() {
+      Assert.assertEquals("\"\u2027\\u2028\\u2029\u202a\"", CBORObject.FromObject("\u2027\u2028\u2029\u202a").ToJSONString());
+    }
+
+    @Test
     // [Timeout(10000)]
     public void TestCompare() {
       FastRandom r = new FastRandom();
@@ -690,6 +695,13 @@ import com.upokecenter.cbor.*;
         o1 = CBORObject.FromObject(Double.NaN);
         CompareTestLess(o2, o1);
       }
+      byte[] bytes1 = {  0, 1  };
+      byte[] bytes2 = {  0, 2  };
+      byte[] bytes3 = {  0, 2, 0  };
+      byte[] bytes4 = {  1, 1  };
+      byte[] bytes5 = {  1, 1, 4  };
+      byte[] bytes6 = {  1, 2  };
+      byte[] bytes7 = {  1, 2, 6  };
       CBORObject[] sortedObjects = {
         CBORObject.Undefined,
         CBORObject.Null,
@@ -712,13 +724,13 @@ import com.upokecenter.cbor.*;
         CBORObject.FromSimpleValue(19),
         CBORObject.FromSimpleValue(32),
         CBORObject.FromSimpleValue(255),
-        CBORObject.FromObject(new byte[] {  0, 1  }),
-        CBORObject.FromObject(new byte[] {  0, 2  }),
-        CBORObject.FromObject(new byte[] {  0, 2, 0  }),
-        CBORObject.FromObject(new byte[] {  1, 1  }),
-        CBORObject.FromObject(new byte[] {  1, 1, 4  }),
-        CBORObject.FromObject(new byte[] {  1, 2  }),
-        CBORObject.FromObject(new byte[] {  1, 2, 6  }),
+        CBORObject.FromObject(bytes1),
+        CBORObject.FromObject(bytes2),
+        CBORObject.FromObject(bytes3),
+        CBORObject.FromObject(bytes4),
+        CBORObject.FromObject(bytes5),
+        CBORObject.FromObject(bytes6),
+        CBORObject.FromObject(bytes7),
         CBORObject.FromObject("aa"),
         CBORObject.FromObject("ab"),
         CBORObject.FromObject("abc"),
@@ -1260,11 +1272,11 @@ try { if(ms3!=null)ms3.close(); } catch (java.io.IOException ex){}
       // The following creates a CBOR map and adds
       // several kinds of objects to it
       CBORObject cbor = CBORObject.NewMap()
-         .Add("item", "any String")
-         .Add("number", 42)
-         .Add("map", CBORObject.NewMap().Add("number", 42))
-         .Add("array", CBORObject.NewArray().Add(999f).Add("xyz"))
-         .Add("bytes", new byte[] {  0, 1, 2  });
+        .Add("item", "any String")
+        .Add("number", 42)
+        .Add("map", CBORObject.NewMap().Add("number", 42))
+        .Add("array", CBORObject.NewArray().Add(999f).Add("xyz"))
+        .Add("bytes", new byte[] {  0, 1, 2  });
       // The following converts the map to CBOR
       byte[] bytes = cbor.EncodeToBytes();
       // The following converts the map to JSON
@@ -1980,11 +1992,11 @@ try { if(ms2b!=null)ms2b.close(); } catch (java.io.IOException ex){}
     }
 
     public void DoTestReadUtf8(
-     byte[] bytes,
-     int expectedRet,
-     String expectedString,
-     int noReplaceRet,
-     String noReplaceString) {
+      byte[] bytes,
+      int expectedRet,
+      String expectedString,
+      int noReplaceRet,
+      String noReplaceString) {
       this.DoTestReadUtf8(
         bytes,
         bytes.length,

@@ -1789,8 +1789,9 @@ remainder=divrem[1]; }
 
     /**
      * Removes trailing zeros from this object&apos;s mantissa. For example,
-     * 1.000 becomes 1. Unlike the "stripTrailingZeros" method of Java's
-     * BigDecimal, if this object's value is 0, changes the exponent to 0.
+     * 1.000 becomes 1. <p>If this object's value is 0, changes the exponent
+     * to 0. (This is unlike the behavior in Java's BigDecimal method "stripTrailingZeros"
+     * in Java 7 and earlier.)</p>
      * @param ctx A precision context to control precision, rounding, and
      * exponent range of the result. If HasFlags of the context is true, will
      * also store the flags resulting from the operation (the flags are in

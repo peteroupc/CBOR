@@ -25,15 +25,18 @@ import com.upokecenter.util.*;
      * methods write many kinds of objects to a data stream, including numbers,
      * CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read
      * method reads a CBOR object from a data stream.</p> <p><b>To and from
-     * other objects:</b> The CBORObject.FromObject methods converts
+     * other objects:</b> The CBORObject.FromObject method converts
      * many kinds of objects to a CBOR object, including numbers, strings,
      * and arrays and maps of numbers and strings. Methods like AsDouble,
      * AsByte, and AsString convert a CBOR object to different types of object.</p>
      * <p><b>To and from JSON:</b> This class also doubles as a reader and
      * writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString
      * method converts JSON to a CBOR object, and the ToJSONString method
-     * converts a CBOR object to a JSON string.</p> <p>Thread Safety: CBOR
-     * objects that are numbers, "simple values", and text strings are immutable
+     * converts a CBOR object to a JSON string.</p> <p>Instances of CBORObject
+     * should not be compared for equality using the "==" operator; it's
+     * possible to create two CBOR objects with the same value but not the
+     * same reference.</p> <p><b>Thread Safety:</b> </p> <p>CBOR objects
+     * that are numbers, "simple values", and text strings are immutable
      * (their values can't be changed), so they are inherently safe for use
      * by multiple threads. CBOR objects that are arrays, maps, and byte
      * strings are mutable, but this class doesn't attempt to synchronize
@@ -1156,9 +1159,8 @@ public boolean equals(CBORObject other) {
               return new CBORObject(
                 CBORObjectTypeSimpleValue,
                 (int)uadditional);
-            } else {
-              throw new CBORException("Unexpected data encountered");
             }
+            throw new CBORException("Unexpected data encountered");
           default:
             throw new CBORException("Unexpected data encountered");
         }
@@ -1176,7 +1178,8 @@ public boolean equals(CBORObject other) {
       if (firstbyte == 0x80) {
         // empty array
         return FromObject(new ArrayList<CBORObject>());
-      } else if (firstbyte == 0xa0) {
+      }
+      if (firstbyte == 0xa0) {
         // empty map
         return FromObject(new HashMap<CBORObject, CBORObject>());
       } else {
@@ -1434,7 +1437,7 @@ private List<CBORObject> AsList() {
      * @throws java.lang.IllegalStateException This object is not an
      * array.
      * @throws java.lang.NullPointerException The parameter "value" is
-     * null.
+     * null (as opposed to CBORObject.Null).
      */
     public CBORObject get(int index) {
         if (this.getItemType() == CBORObjectTypeArray) {
@@ -1449,12 +1452,14 @@ private List<CBORObject> AsList() {
 
     /**
      * Sets the value of a CBOR object by integer index in this array.
+     * @param index Zero-based index of the element.
+     * @return A CBORObject object.
      * @throws java.lang.IllegalStateException This object is not an
      * array.
-     * @throws java.lang.NullPointerException Value is null (as opposed
-     * to CBORObject.Null).
+     * @throws java.lang.NullPointerException The parameter "value" is
+     * null (as opposed to CBORObject.Null).
      */
-public void set(int index, CBORObject value) {
+    public void set(int index, CBORObject value) {
         if (this.getItemType() == CBORObjectTypeArray) {
           if (value == null) {
             throw new NullPointerException("value");
@@ -1506,7 +1511,7 @@ public void set(int index, CBORObject value) {
      * @param key A CBORObject object. (2).
      * @return A CBORObject object.
      * @throws java.lang.NullPointerException The key is null (as opposed
-     * to CBORObject.Null).
+     * to CBORObject.Null); or the set method is called and the value is null.
      * @throws java.lang.IllegalStateException This object is not a map.
      */
     public CBORObject get(CBORObject key) {
@@ -1523,11 +1528,13 @@ public void set(int index, CBORObject value) {
     /**
      * Sets the value of a CBOR object in this map, using a CBOR object as the
      * key.
-     * @throws java.lang.NullPointerException The key or value is null (as
-     * opposed to CBORObject.Null).
+     * @param key A CBORObject object. (2).
+     * @return A CBORObject object.
+     * @throws java.lang.NullPointerException The key is null (as opposed
+     * to CBORObject.Null); or the set method is called and the value is null.
      * @throws java.lang.IllegalStateException This object is not a map.
      */
-public void set(CBORObject key, CBORObject value) {
+    public void set(CBORObject key, CBORObject value) {
         if (key == null) {
           throw new NullPointerException("value");
         }
@@ -1559,11 +1566,12 @@ public void set(CBORObject key, CBORObject value) {
 
     /**
      * Sets the value of a CBOR object in this map, using a string as the key.
-     * @throws java.lang.NullPointerException The key or value is null (as
-     * opposed to CBORObject.Null).
+     * @param key A key that points to the desired value.
+     * @return A CBORObject object.
+     * @throws java.lang.NullPointerException The key is null.
      * @throws java.lang.IllegalStateException This object is not a map.
      */
-public void set(String key, CBORObject value) {
+    public void set(String key, CBORObject value) {
         if (key == null) {
           throw new NullPointerException("value");
         }
@@ -2209,18 +2217,17 @@ public void set(String key, CBORObject value) {
           (byte)((value >> 8) & 0xff),
           (byte)(value & 0xff)
          };
-      } else {
-        return new byte[] { (byte)(27 | (type << 5)),
-          (byte)((value >> 56) & 0xff),
-          (byte)((value >> 48) & 0xff),
-          (byte)((value >> 40) & 0xff),
-          (byte)((value >> 32) & 0xff),
-          (byte)((value >> 24) & 0xff),
-          (byte)((value >> 16) & 0xff),
-          (byte)((value >> 8) & 0xff),
-          (byte)(value & 0xff)
-         };
       }
+      return new byte[] { (byte)(27 | (type << 5)),
+        (byte)((value >> 56) & 0xff),
+        (byte)((value >> 48) & 0xff),
+        (byte)((value >> 40) & 0xff),
+        (byte)((value >> 32) & 0xff),
+        (byte)((value >> 24) & 0xff),
+        (byte)((value >> 16) & 0xff),
+        (byte)((value >> 8) & 0xff),
+        (byte)(value & 0xff)
+       };
     }
 
     private static void WritePositiveInt64(int type, long value, OutputStream s) throws IOException {
@@ -3180,7 +3187,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         }
         nextChar[0] = SkipWhitespaceJSON(reader);
         return CBORObject.True;
-      } else if (c == 'f') {
+      }
+      if (c == 'f') {
         // Parse false
         if (reader.NextChar() != 'a' ||
                 reader.NextChar() != 'l' ||
@@ -3415,7 +3423,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           buffer[0] = (byte)'\\';
           buffer[1] = (byte)c;
           outputStream.write(buffer,0,2);
-        } else if (c < 0x20) {
+        } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
+          // Control characters, and also the line and paragraph separators
+          // which apparently can't appear in JavaScript (as opposed to JSON) strings
           if (buffer == null) {
             buffer = new byte[6];
           }
@@ -3444,6 +3454,14 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             buffer[0] = (byte)'\\';
             buffer[1] = (byte)'t';
             bufferSize = 2;
+          } else if (c == 0x2028 || c == 0x2029) {
+            buffer[0] = (byte)'\\';
+            buffer[1] = (byte)'u';
+            buffer[2] = (byte)'2';
+            buffer[3] = (byte)'0';
+            buffer[4] = (byte)'2';
+            buffer[5] = (byte)(c == 0x2028 ? '8' : '9');
+            bufferSize = 6;
           } else {
             buffer[0] = (byte)'\\';
             buffer[1] = (byte)'u';
@@ -3477,7 +3495,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           }
           sb.append('\\');
           sb.append(c);
-        } else if (c < 0x20) {
+        } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
+          // Control characters, and also the line and paragraph separators
+          // which apparently can't appear in JavaScript (as opposed to JSON) strings
           if (first) {
             first = false;
             sb.append(str,0,(0)+(i));
@@ -3492,6 +3512,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             sb.append("\\f");
           } else if (c == 0x09) {
             sb.append("\\t");
+          } else if (c == 0x2029 || c == 0x2028) {
+            sb.append("\\u202");
+            sb.append(c == 0x2028 ? '8' : '9');
           } else {
             sb.append("\\u00");
             sb.append(Hex16.charAt((int)(c >> 4)));
