@@ -289,7 +289,7 @@ namespace PeterO.Cbor {
       if (bigLength == null) {
         throw new ArgumentNullException("bigLength");
       }
-      return ((this.types & (1 << 4)) == 0) && (this.anyArrayLength || ((!this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) == 0) ? true : (this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) >= 0)));
+      return ((this.types & (1 << 4)) == 0) && (this.anyArrayLength || ((!this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) == 0) || (this.arrayMinLength && bigLength.CompareTo((BigInteger)this.arrayLength) >= 0)));
     }
 
     /// <summary>Gets a value indicating whether CBOR objects can have the

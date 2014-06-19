@@ -318,8 +318,7 @@ namespace PeterO.DocGen {
     private static bool PropertyIsPublicOrFamily(PropertyInfo property) {
       MethodInfo getter = property.GetGetMethod();
       MethodInfo setter = property.GetSetMethod();
-      return ((getter != null && getter.IsPublic) ||
-             (setter != null && setter.IsPublic)) ? true : ((getter != null && getter.IsFamily) || (setter != null && setter.IsFamily));
+      return ((getter != null && getter.IsPublic) || (setter != null && setter.IsPublic)) || ((getter != null && getter.IsFamily) || (setter != null && setter.IsFamily));
     }
 
     public static string FormatProperty(PropertyInfo property) {
@@ -460,10 +459,7 @@ namespace PeterO.DocGen {
         return name;
       }
       name = type.Namespace + "." + name;
-      if (name.Equals("System.Int32")) {
-        return "int";
-      }
-      return name.Equals("System.Int64") ? "long" : (name.Equals("System.Int16") ? "short" : (name.Equals("System.UInt32") ? "uint" : (name.Equals("System.UInt64") ? "ulong" : (name.Equals("System.UInt16") ? "ushort" : (name.Equals("System.Char") ? "char" : (name.Equals("System.Object") ? "object" : (name.Equals("System.Void") ? "void" : (name.Equals("System.Byte") ? "byte" : (name.Equals("System.SByte") ? "sbyte" : (name.Equals("System.String") ? "string" : (name.Equals("System.Boolean") ? "bool" : (name.Equals("System.Single") ? "float" : (name.Equals("System.Double") ? "double" : (name))))))))))))));
+      return name.Equals("System.Int32") ? "int" : (name.Equals("System.Int64") ? "long" : (name.Equals("System.Int16") ? "short" : (name.Equals("System.UInt32") ? "uint" : (name.Equals("System.UInt64") ? "ulong" : (name.Equals("System.UInt16") ? "ushort" : (name.Equals("System.Char") ? "char" : (name.Equals("System.Object") ? "object" : (name.Equals("System.Void") ? "void" : (name.Equals("System.Byte") ? "byte" : (name.Equals("System.SByte") ? "sbyte" : (name.Equals("System.String") ? "string" : (name.Equals("System.Boolean") ? "bool" : (name.Equals("System.Single") ? "float" : (name.Equals("System.Double") ? "double" : name))))))))))))));
     }
 
     public static bool IsMethodOverride(MethodInfo method) {
@@ -621,17 +617,7 @@ namespace PeterO.DocGen {
     }
 
     private static string MethodNameHeading(string p) {
-      if (operators.ContainsKey(p)) {
-        return "Operator `" + operators[p] + "`";
-      }
-      if (p.Equals("op_Explicit")) {
-        return "Explicit Operator";
-      }
-      if (p.Equals("op_Implicit")) {
-        return "Implicit Operator";
-      } else {
-        return p;
-      }
+      return operators.ContainsKey(p) ? ("Operator `" + operators[p] + "`") : (p.Equals("op_Explicit") ? "Explicit Operator" : (p.Equals("op_Implicit") ? "Implicit Operator" : p));
     }
 
     public override void VisitSummary(Summary summary) {

@@ -29,24 +29,27 @@ namespace PeterO.Cbor {
     /// method reads a CBOR object from a data stream.</para>
     /// <para><b>To
     /// and from other objects:</b>
-    /// The CBORObject.FromObject methods
-    /// converts many kinds of objects to a CBOR object, including numbers,
-    /// strings, and arrays and maps of numbers and strings. Methods like
-    /// AsDouble, AsByte, and AsString convert a CBOR object to different
-    /// types of object.</para>
+    /// The CBORObject.FromObject method converts
+    /// many kinds of objects to a CBOR object, including numbers, strings,
+    /// and arrays and maps of numbers and strings. Methods like AsDouble,
+    /// AsByte, and AsString convert a CBOR object to different types of object.</para>
     /// <para><b>To and from JSON:</b>
-    /// This class
-    /// also doubles as a reader and writer of JavaScript Object Notation
-    /// (JSON). The CBORObject.FromJSONString method converts JSON to
-    /// a CBOR object, and the ToJSONString method converts a CBOR object
-    /// to a JSON string.</para>
-    /// <para>Thread Safety: CBOR objects that
-    /// are numbers, "simple values", and text strings are immutable (their
-    /// values can't be changed), so they are inherently safe for use by multiple
-    /// threads. CBOR objects that are arrays, maps, and byte strings are
-    /// mutable, but this class doesn't attempt to synchronize reads and
-    /// writes to those objects by multiple threads, so those objects are
-    /// not thread safe without such synchronization.</para>
+    /// This class also doubles as a reader
+    /// and writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString
+    /// method converts JSON to a CBOR object, and the ToJSONString method
+    /// converts a CBOR object to a JSON string.</para>
+    /// <para>Instances
+    /// of CBORObject should not be compared for equality using the "==" operator;
+    /// it's possible to create two CBOR objects with the same value but not
+    /// the same reference.</para>
+    /// <para><b>Thread Safety:</b>
+    /// </para>
+    /// <para>CBOR objects that are numbers, "simple values", and text strings
+    /// are immutable (their values can't be changed), so they are inherently
+    /// safe for use by multiple threads. CBOR objects that are arrays, maps,
+    /// and byte strings are mutable, but this class doesn't attempt to synchronize
+    /// reads and writes to those objects by multiple threads, so those objects
+    /// are not thread safe without such synchronization.</para>
     /// <para>One
     /// kind of CBOR object is called a map, or a list of key-value pairs. Keys
     /// can be any kind of CBOR object, including numbers, strings, arrays,
@@ -1194,9 +1197,8 @@ namespace PeterO.Cbor {
               return new CBORObject(
                 CBORObjectTypeSimpleValue,
                 (int)uadditional);
-            } else {
-              throw new CBORException("Unexpected data encountered");
             }
+            throw new CBORException("Unexpected data encountered");
           default:
             throw new CBORException("Unexpected data encountered");
         }
@@ -1214,7 +1216,8 @@ namespace PeterO.Cbor {
       if (firstbyte == 0x80) {
         // empty array
         return FromObject(new List<CBORObject>());
-      } else if (firstbyte == 0xa0) {
+      }
+      if (firstbyte == 0xa0) {
         // empty map
         return FromObject(new Dictionary<CBORObject, CBORObject>());
       } else {
@@ -1464,7 +1467,7 @@ namespace PeterO.Cbor {
     /// <exception cref='System.InvalidOperationException'>This object
     /// is not an array.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
-    /// "value" is null.</exception>
+    /// "value" is null (as opposed to CBORObject.Null).</exception>
     public CBORObject this[int index] {
       get {
         if (this.ItemType == CBORObjectTypeArray) {
@@ -1477,11 +1480,6 @@ namespace PeterO.Cbor {
         throw new InvalidOperationException("Not an array");
       }
 
-    /// <summary>Sets the value of a CBOR object by integer index in this array.</summary>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not an array.</exception>
-    /// <exception cref='System.ArgumentNullException'>Value is null
-    /// (as opposed to CBORObject.Null).</exception>
       set {
         if (this.ItemType == CBORObjectTypeArray) {
           if (value == null) {
@@ -1536,7 +1534,8 @@ namespace PeterO.Cbor {
     /// <param name='key'>A CBORObject object. (2).</param>
     /// <returns>A CBORObject object.</returns>
     /// <exception cref='System.ArgumentNullException'>The key is null
-    /// (as opposed to CBORObject.Null).</exception>
+    /// (as opposed to CBORObject.Null); or the set method is called and the
+    /// value is null.</exception>
     /// <exception cref='System.InvalidOperationException'>This object
     /// is not a map.</exception>
     public CBORObject this[CBORObject key] {
@@ -1551,12 +1550,6 @@ namespace PeterO.Cbor {
         throw new InvalidOperationException("Not a map");
       }
 
-    /// <summary>Sets the value of a CBOR object in this map, using a CBOR object
-    /// as the key.</summary>
-    /// <exception cref='System.ArgumentNullException'>The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("value");
@@ -1589,12 +1582,6 @@ namespace PeterO.Cbor {
         return this[objkey];
       }
 
-    /// <summary>Sets the value of a CBOR object in this map, using a string
-    /// as the key.</summary>
-    /// <exception cref='System.ArgumentNullException'>The key or value
-    /// is null (as opposed to CBORObject.Null).</exception>
-    /// <exception cref='System.InvalidOperationException'>This object
-    /// is not a map.</exception>
       set {
         if (key == null) {
           throw new ArgumentNullException("value");
@@ -2199,18 +2186,17 @@ namespace PeterO.Cbor {
           (byte)((value >> 8) & 0xff),
           (byte)(value & 0xff)
         };
-      } else {
-        return new[] { (byte)(27 | (type << 5)),
-          (byte)((value >> 56) & 0xff),
-          (byte)((value >> 48) & 0xff),
-          (byte)((value >> 40) & 0xff),
-          (byte)((value >> 32) & 0xff),
-          (byte)((value >> 24) & 0xff),
-          (byte)((value >> 16) & 0xff),
-          (byte)((value >> 8) & 0xff),
-          (byte)(value & 0xff)
-        };
       }
+      return new[] { (byte)(27 | (type << 5)),
+        (byte)((value >> 56) & 0xff),
+        (byte)((value >> 48) & 0xff),
+        (byte)((value >> 40) & 0xff),
+        (byte)((value >> 32) & 0xff),
+        (byte)((value >> 24) & 0xff),
+        (byte)((value >> 16) & 0xff),
+        (byte)((value >> 8) & 0xff),
+        (byte)(value & 0xff)
+      };
     }
 
     private static void WritePositiveInt64(int type, long value, Stream s) {
@@ -3157,7 +3143,8 @@ namespace PeterO.Cbor {
         }
         nextChar[0] = SkipWhitespaceJSON(reader);
         return CBORObject.True;
-      } else if (c == 'f') {
+      }
+      if (c == 'f') {
         // Parse false
         if (reader.NextChar() != 'a' ||
                 reader.NextChar() != 'l' ||
@@ -3391,7 +3378,9 @@ namespace PeterO.Cbor {
           buffer[0] = (byte)'\\';
           buffer[1] = (byte)c;
           outputStream.Write(buffer, 0, 2);
-        } else if (c < 0x20) {
+        } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
+          // Control characters, and also the line and paragraph separators
+          // which apparently can't appear in JavaScript (as opposed to JSON) strings
           if (buffer == null) {
             buffer = new byte[6];
           }
@@ -3420,6 +3409,14 @@ namespace PeterO.Cbor {
             buffer[0] = (byte)'\\';
             buffer[1] = (byte)'t';
             bufferSize = 2;
+          } else if (c == 0x2028 || c == 0x2029) {
+            buffer[0] = (byte)'\\';
+            buffer[1] = (byte)'u';
+            buffer[2] = (byte)'2';
+            buffer[3] = (byte)'0';
+            buffer[4] = (byte)'2';
+            buffer[5] = (byte)(c == 0x2028 ? '8' : '9');
+            bufferSize = 6;
           } else {
             buffer[0] = (byte)'\\';
             buffer[1] = (byte)'u';
@@ -3453,7 +3450,9 @@ namespace PeterO.Cbor {
           }
           sb.Append('\\');
           sb.Append(c);
-        } else if (c < 0x20) {
+        } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
+          // Control characters, and also the line and paragraph separators
+          // which apparently can't appear in JavaScript (as opposed to JSON) strings
           if (first) {
             first = false;
             sb.Append(str, 0, i);
@@ -3468,6 +3467,9 @@ namespace PeterO.Cbor {
             sb.Append("\\f");
           } else if (c == 0x09) {
             sb.Append("\\t");
+          } else if (c == 0x2029 || c == 0x2028) {
+            sb.Append("\\u202");
+            sb.Append(c == 0x2028 ? '8' : '9');
           } else {
             sb.Append("\\u00");
             sb.Append(Hex16[(int)(c >> 4)]);

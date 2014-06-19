@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -139,9 +139,9 @@ namespace Test {
           ctx = ctx.WithSimplified(true);
         }
         ctx = ctx.WithBlankFlags();
-        ExtendedDecimal d1 = null, d2 = null, d2a = null;
+        ExtendedDecimal d1 = ExtendedDecimal.Zero, d2 = null, d2a = null;
         if (!op.Equals("toSci") && !op.Equals("toEng")) {
-          d1 = String.IsNullOrEmpty(input1) ? null :
+          d1 = String.IsNullOrEmpty(input1) ? ExtendedDecimal.Zero :
             ExtendedDecimal.FromString(input1);
           d2 = String.IsNullOrEmpty(input2) ? null :
             ExtendedDecimal.FromString(input2);
@@ -327,7 +327,7 @@ namespace Test {
           }
           Console.WriteLine(f);
           IDictionary<string, string> context = new Dictionary<string, string>();
-          using (StreamReader w = new StreamReader(f)) {
+          using (var w = new StreamReader(f)) {
             while (!w.EndOfStream) {
               string ln = w.ReadLine();
               {

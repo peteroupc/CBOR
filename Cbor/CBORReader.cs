@@ -480,7 +480,8 @@ namespace PeterO.Cbor {
           cbor[key] = value;
         }
         return cbor;
-      } else if (type == 6) {  // Tagged item
+      }
+      if (type == 6) {  // Tagged item
         CBORObject o;
         ICBORTag taginfo = null;
         bool haveFirstByte = false;

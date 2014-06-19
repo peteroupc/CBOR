@@ -444,7 +444,8 @@ namespace CBOR {
           }
           exponent -= 52;
           return Create(ExtendedFloat.Create(bigmantissa, (BigInteger)exponent));
-        } else if (words.Length == 4) {
+        }
+        if (words.Length == 4) {
           bool neg = (words[0] >> 31) != 0;
           int exponent = (words[0] >> 16) & 0x7fff;
           int mantissa = words[0] & 0xffff;
@@ -1181,7 +1182,7 @@ namespace CBOR {
            !lowerF.Contains(".fptest")) {
           continue;
         }
-        using (StreamReader w = new StreamReader(f)) {
+        using (var w = new StreamReader(f)) {
           while (!w.EndOfStream) {
             var ln = w.ReadLine();
             {

@@ -2667,7 +2667,8 @@ if (bytes.Length <= 0) {
       }
       if (power.wordCount == 1 && power.reg[0] == 2) {
         return thisVar * (BigInteger)thisVar;
-      } else if (power.wordCount == 1 && power.reg[0] == 3) {
+      }
+      if (power.wordCount == 1 && power.reg[0] == 3) {
         return (thisVar * (BigInteger)thisVar) * (BigInteger)thisVar;
       }
       BigInteger r = BigInteger.One;
@@ -2700,7 +2701,8 @@ if (bytes.Length <= 0) {
       }
       if (powerSmall == 2) {
         return thisVar * (BigInteger)thisVar;
-      } else if (powerSmall == 3) {
+      }
+      if (powerSmall == 3) {
         return (thisVar * (BigInteger)thisVar) * (BigInteger)thisVar;
       }
       BigInteger r = BigInteger.One;
@@ -3290,10 +3292,7 @@ if (bytes.Length <= 0) {
           if (((c << 13) & 0xffff) != 0) {
             return retSetBit + 2;
           }
-          if (((c << 12) & 0xffff) != 0) {
-            return retSetBit + 3;
-          }
-          return (((c << 11) & 0xffff) != 0) ? (retSetBit + 4) : ((((c << 10) & 0xffff) != 0) ? (retSetBit + 5) : ((((c << 9) & 0xffff) != 0) ? (retSetBit + 6) : ((((c << 8) & 0xffff) != 0) ? (retSetBit + 7) : ((((c << 7) & 0xffff) != 0) ? (retSetBit + 8) : ((((c << 6) & 0xffff) != 0) ? (retSetBit + 9) : ((((c << 5) & 0xffff) != 0) ? (retSetBit + 10) : ((((c << 4) & 0xffff) != 0) ? (retSetBit + 11) : ((((c << 3) & 0xffff) != 0) ? (retSetBit + 12) : ((((c << 2) & 0xffff) != 0) ? (retSetBit + 13) : ((((c << 1) & 0xffff) != 0) ? (retSetBit + 14) : (retSetBit + 15)))))))))));
+          return (((c << 12) & 0xffff) != 0) ? (retSetBit + 3) : ((((c << 11) & 0xffff) != 0) ? (retSetBit + 4) : ((((c << 10) & 0xffff) != 0) ? (retSetBit + 5) : ((((c << 9) & 0xffff) != 0) ? (retSetBit + 6) : ((((c << 8) & 0xffff) != 0) ? (retSetBit + 7) : ((((c << 7) & 0xffff) != 0) ? (retSetBit + 8) : ((((c << 6) & 0xffff) != 0) ? (retSetBit + 9) : ((((c << 5) & 0xffff) != 0) ? (retSetBit + 10) : ((((c << 4) & 0xffff) != 0) ? (retSetBit + 11) : ((((c << 3) & 0xffff) != 0) ? (retSetBit + 12) : ((((c << 2) & 0xffff) != 0) ? (retSetBit + 13) : ((((c << 1) & 0xffff) != 0) ? (retSetBit + 14) : (retSetBit + 15))))))))))));
         }
       }
       return 0;

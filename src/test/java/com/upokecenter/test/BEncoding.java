@@ -101,7 +101,8 @@ private BEncoding() {
       }
       if (c == 'i') {
         return readInteger(stream);
-      } else if (c >= '0' && c <= '9') {
+      }
+      if (c >= '0' && c <= '9') {
         return readString(stream, (char)c);
       } else {
         throw new CBORException("Object expected");
