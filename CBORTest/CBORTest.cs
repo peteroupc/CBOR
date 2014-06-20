@@ -1413,8 +1413,7 @@ namespace Test {
     public void TestRandomData() {
       var rand = new FastRandom();
       CBORObject obj;
-      const int count = 1000;
-      for (var i = 0; i < count; ++i) {
+      for (var i = 0; i < 1000; ++i) {
         obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
         this.TestWriteToJSON(obj);
@@ -1945,7 +1944,7 @@ namespace Test {
       string expectedString,
       int noReplaceRet,
       string noReplaceString) {
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         bytes,
         bytes.Length,
         expectedRet,
@@ -2131,7 +2130,7 @@ namespace Test {
 
     [TestMethod]
     public void TestReadUtf8() {
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x21,
         0x21,
         0x21 },
@@ -2139,7 +2138,7 @@ namespace Test {
         "!!!",
         0,
         "!!!");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xc2,
         0x80 },
@@ -2147,7 +2146,7 @@ namespace Test {
         " \u0080",
         0,
         " \u0080");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xc2,
         0x80,
@@ -2156,7 +2155,7 @@ namespace Test {
         " \u0080 ",
         0,
         " \u0080 ");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xc2,
         0x80,
@@ -2165,7 +2164,7 @@ namespace Test {
         " \u0080\ufffd",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xc2,
         0x21,
@@ -2174,7 +2173,7 @@ namespace Test {
         " \ufffd!!",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xc2,
         0xff,
@@ -2183,7 +2182,7 @@ namespace Test {
         " \ufffd\ufffd ",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xe0,
         0xa0,
@@ -2192,7 +2191,7 @@ namespace Test {
         " \u0800",
         0,
         " \u0800");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xe0,
         0xa0,
@@ -2202,7 +2201,7 @@ namespace Test {
         " \u0800 ",
         0,
         " \u0800 ");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xf0,
         0x90,
@@ -2212,7 +2211,7 @@ namespace Test {
         " \ud800\udc00",
         0,
         " \ud800\udc00");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xf0,
         0x90,
@@ -2223,7 +2222,7 @@ namespace Test {
         " \ufffd",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xf0,
         0x90 },
@@ -2232,7 +2231,7 @@ namespace Test {
         null,
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0x20,
         0x20 },
@@ -2241,7 +2240,7 @@ namespace Test {
         null,
         -2,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xf0,
         0x90,
@@ -2252,7 +2251,7 @@ namespace Test {
         " \ud800\udc00 ",
         0,
         " \ud800\udc00 ");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xf0,
         0x90,
@@ -2262,7 +2261,7 @@ namespace Test {
         " \ufffd ",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xf0,
         0x90,
@@ -2271,7 +2270,7 @@ namespace Test {
         " \ufffd ",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xf0,
         0x90,
@@ -2281,7 +2280,7 @@ namespace Test {
         " \ufffd\ufffd",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xf0,
         0x90,
@@ -2290,7 +2289,7 @@ namespace Test {
         " \ufffd\ufffd",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xe0,
         0xa0,
@@ -2299,7 +2298,7 @@ namespace Test {
         " \ufffd ",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xe0,
         0x20 },
@@ -2307,7 +2306,7 @@ namespace Test {
         " \ufffd ",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xe0,
         0xa0,
@@ -2316,7 +2315,7 @@ namespace Test {
         " \ufffd\ufffd",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] { 0x20,
         0xe0,
         0xff },
@@ -6451,12 +6450,12 @@ namespace Test {
     }
 
     public void AssertAdd(BigInteger bi, BigInteger bi2, string s) {
-      this.AssertBigIntString(s, bi + (BigInteger)bi2);
-      this.AssertBigIntString(s, bi2 + (BigInteger)bi);
+      AssertBigIntString(s, bi + (BigInteger)bi2);
+      AssertBigIntString(s, bi2 + (BigInteger)bi);
       BigInteger negbi = BigInteger.Zero - (BigInteger)bi;
       BigInteger negbi2 = BigInteger.Zero - (BigInteger)bi2;
-      this.AssertBigIntString(s, bi - (BigInteger)negbi2);
-      this.AssertBigIntString(s, bi2 - (BigInteger)negbi);
+      AssertBigIntString(s, bi - (BigInteger)negbi2);
+      AssertBigIntString(s, bi2 - (BigInteger)negbi);
     }
 
     [TestMethod]
@@ -6480,13 +6479,13 @@ namespace Test {
     [TestMethod]
     public void TestBigInteger() {
       var bi = (BigInteger)3;
-      this.AssertBigIntString("3", bi);
+      AssertBigIntString("3", bi);
       var negseven = (BigInteger)(-7);
-      this.AssertBigIntString("-7", negseven);
+      AssertBigIntString("-7", negseven);
       var other = (BigInteger)(-898989);
-      this.AssertBigIntString("-898989", other);
+      AssertBigIntString("-898989", other);
       other = (BigInteger)898989;
-      this.AssertBigIntString("898989", other);
+      AssertBigIntString("898989", other);
       for (var i = 0; i < 500; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject(bi),

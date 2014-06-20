@@ -315,7 +315,7 @@ namespace Test {
       PrintTime(sw);
     }
 
-    [TestMethod]
+    //[TestMethod]
     public void TestParser() {
       long failures = 0;
       for (var i = 0; i < 1; ++i) {

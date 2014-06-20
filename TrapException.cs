@@ -63,11 +63,7 @@ namespace PeterO {
       if (flag == PrecisionContext.FlagRounded) {
         return "Rounded";
       }
-      if (flag == PrecisionContext.FlagSubnormal) {
-        return "Subnormal";
-      } else {
-        return (flag == PrecisionContext.FlagUnderflow) ? "Underflow" : "Trap";
-      }
+      return (flag == PrecisionContext.FlagSubnormal) ? ("Subnormal") : ((flag == PrecisionContext.FlagUnderflow) ? "Underflow" : "Trap");
     }
 
     /// <summary>Initializes a new instance of the TrapException class.</summary>

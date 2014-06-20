@@ -57,6 +57,7 @@
     <Compile Include="DocVisitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SummaryVisitor.cs" />
+    <Compile Include="TestGenerator.cs" />
     <Compile Include="TypeVisitor.cs" />
   </ItemGroup>
   <ItemGroup>
