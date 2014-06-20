@@ -20,7 +20,7 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("data");
       }
       int length = data.Length;
-      for (int i = 0; i < length; ++i) {
+      for (var i = 0; i < length; ++i) {
         str.Append(HexAlphabet[(data[i] >> 4) & 15]);
         str.Append(HexAlphabet[data[i] & 15]);
       }
@@ -36,7 +36,7 @@ namespace PeterO.Cbor {
       if (a.Length != b.Length) {
         return false;
       }
-      for (int i = 0; i < a.Length; ++i) {
+      for (var i = 0; i < a.Length; ++i) {
         if (a[i] != b[i]) {
           return false;
         }
@@ -51,7 +51,7 @@ namespace PeterO.Cbor {
       int ret = 19;
       unchecked {
         ret = (ret * 31) + a.Length;
-        for (int i = 0; i < a.Length; ++i) {
+        for (var i = 0; i < a.Length; ++i) {
           ret = (ret * 31) + a[i];
         }
       }
@@ -66,7 +66,7 @@ namespace PeterO.Cbor {
         return 1;
       }
       int c = Math.Min(a.Length, b.Length);
-      for (int i = 0; i < c; ++i) {
+      for (var i = 0; i < c; ++i) {
         if (a[i] != b[i]) {
           return (a[i] < b[i]) ? -1 : 1;
         }
@@ -112,7 +112,7 @@ namespace PeterO.Cbor {
       } else {
         // Value has a fractional part
         int exp = -fpexponent;
-        for (int i = 0; i < exp && mantissa != 0; ++i) {
+        for (var i = 0; i < exp && mantissa != 0; ++i) {
           mantissa >>= 1;
         }
         return (BigInteger)mantissa;
@@ -160,7 +160,7 @@ namespace PeterO.Cbor {
       bytes[6] = (byte)((value1 >> 16) & 0xff);
       bytes[7] = (byte)((value1 >> 24) & 0xff);
       bytes[8] = (byte)0;
-      var bigmantissa = new BigInteger((byte[])bytes);
+      var bigmantissa = BigInteger.fromByteArray(bytes, true);
       if (floatExponent == 0) {
         if (neg) {
           bigmantissa = -bigmantissa;

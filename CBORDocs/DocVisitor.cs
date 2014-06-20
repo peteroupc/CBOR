@@ -33,7 +33,7 @@ namespace PeterO.DocGen {
     public static string GetTypeID(Type type) {
       string name = FormatType(type);
       var builder = new StringBuilder();
-      for (int i = 0; i < name.Length; ++i) {
+      for (var i = 0; i < name.Length; ++i) {
         UnicodeCategory cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
         int cp = DataUtilities.CodePointAt(name, i);
         if (cp >= 0x10000) {
@@ -80,7 +80,7 @@ namespace PeterO.DocGen {
         sb.Append('>');
       }
       if (type.IsArray) {
-        for (int i = 0; i < type.GetArrayRank(); ++i) {
+        for (var i = 0; i < type.GetArrayRank(); ++i) {
           sb.Append("[]");
         }
       }
@@ -258,19 +258,20 @@ namespace PeterO.DocGen {
           builder.Append("virtual ");
         }
       }
-      if (method is MethodInfo) {
+      var methodInfo = method as MethodInfo;
+      if (methodInfo != null) {
         if (method.Name.Equals("op_Explicit")) {
           builder.Append("explicit operator ");
-          builder.Append(FormatType(((MethodInfo)method).ReturnType));
+          builder.Append(FormatType(methodInfo.ReturnType));
         } else if (method.Name.Equals("op_Implicit")) {
           builder.Append("implicit operator ");
-          builder.Append(FormatType(((MethodInfo)method).ReturnType));
+          builder.Append(FormatType(methodInfo.ReturnType));
         } else if (operators.ContainsKey(method.Name)) {
-          builder.Append(FormatType(((MethodInfo)method).ReturnType));
+          builder.Append(FormatType(methodInfo.ReturnType));
           builder.Append(" operator ");
           builder.Append(operators[method.Name]);
         } else {
-          builder.Append(FormatType(((MethodInfo)method).ReturnType));
+          builder.Append(FormatType(methodInfo.ReturnType));
           builder.Append(" ");
           builder.Append(method.Name);
         }
@@ -545,7 +546,7 @@ namespace PeterO.DocGen {
         } else {
           this.WriteLine("### " + MethodNameHeading(method.Name) + "\r\n\r\n" + signature + "\r\n\r\n");
         }
-        ObsoleteAttribute attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
+        var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
         if (attr != null) {
           this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
         }
@@ -573,7 +574,7 @@ namespace PeterO.DocGen {
         }
         this.WriteLine("## " + FormatType(type) + "\r\n\r\n");
         this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
-        ObsoleteAttribute attr = type.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
+        var attr = type.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
         if (attr != null) {
           this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
         }
@@ -587,7 +588,7 @@ namespace PeterO.DocGen {
         }
         signature = FormatProperty(property);
         this.WriteLine("### " + property.Name + "\r\n\r\n" + signature + "\r\n\r\n");
-        ObsoleteAttribute attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
+        var attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
         if (attr != null) {
           this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
         }

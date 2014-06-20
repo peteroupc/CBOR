@@ -100,7 +100,7 @@ import com.upokecenter.cbor.*;
     @Test
     public void TestPrecisionContextArgValidation() {
       try {
-        new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false);
+        Assert.assertEquals(null, new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -108,7 +108,7 @@ import com.upokecenter.cbor.*;
         throw new IllegalStateException("", ex);
       }
       try {
-        new PrecisionContext(0, Rounding.HalfEven, 0, -1, false);
+        Assert.assertEquals(null, new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -296,7 +296,7 @@ import com.upokecenter.cbor.*;
 
     private static final class FakeConverter implements ICBORConverter<java.net.URI> {
       public CBORObject ToCBORObject(java.net.URI obj) {
-        throw new UnsupportedOperationException();
+        throw new IllegalStateException();
       }
     }
 

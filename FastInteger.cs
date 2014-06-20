@@ -27,7 +27,7 @@ namespace PeterO {
         }
         mnum.wordCount = newWordCount;
         unchecked {
-          for (int i = 0; i < len; i += 4) {
+          for (var i = 0; i < len; i += 4) {
             int x = ((int)bytes[i]) & 0xff;
             if (i + 1 < len) {
               x |= (((int)bytes[i + 1]) & 0xff) << 8;
@@ -71,14 +71,14 @@ namespace PeterO {
           return (BigInteger)((int)this.data[0]);
         }
         var bytes = new byte[(this.wordCount * 4) + 1];
-        for (int i = 0; i < this.wordCount; ++i) {
+        for (var i = 0; i < this.wordCount; ++i) {
           bytes[i * 4] = (byte)(this.data[i] & 0xff);
           bytes[(i * 4) + 1] = (byte)((this.data[i] >> 8) & 0xff);
           bytes[(i * 4) + 2] = (byte)((this.data[i] >> 16) & 0xff);
           bytes[(i * 4) + 3] = (byte)((this.data[i] >> 24) & 0xff);
         }
         bytes[bytes.Length - 1] = (byte)0;
-        return new BigInteger((byte[])bytes);
+        return BigInteger.fromByteArray(bytes, true);
       }
 
       internal int[] GetLastWordsInternal(int numWords32Bit) {
@@ -125,7 +125,7 @@ namespace PeterO {
           }
           int result0, result1, result2, result3;
           if (multiplicand < 65536) {
-            for (int i = 0; i < this.wordCount; ++i) {
+            for (var i = 0; i < this.wordCount; ++i) {
               int x0 = this.data[i];
               int x1 = x0;
               int y0 = multiplicand;
@@ -155,7 +155,7 @@ namespace PeterO {
               carry = x1;
             }
           } else {
-            for (int i = 0; i < this.wordCount; ++i) {
+            for (var i = 0; i < this.wordCount; ++i) {
               int x0 = this.data[i];
               int x1 = x0;
               int y0 = multiplicand;
@@ -233,11 +233,6 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Compares a 32-bit signed integer with this instance.</summary>
-    /// <summary>Compares a Int32 object with this instance.</summary>
-    /// <param name='val'>A 32-bit signed integer.</param>
-    /// <returns>Zero if the values are equal; a negative number if this instance
-    /// is less, or a positive number if this instance is greater.</returns>
       public int CompareToInt(int val) {
         if (val < 0 || this.wordCount > 1) {
           return 1;
@@ -315,7 +310,7 @@ namespace PeterO {
             neededSize = (this.wordCount < other.wordCount) ? this.wordCount : other.wordCount;
             int u = 0;
             int borrow = 0;
-            for (int i = 0; i < neededSize; ++i) {
+            for (var i = 0; i < neededSize; ++i) {
               int a = this.data[i];
               u = (a - other.data[i]) - borrow;
               borrow = ((((a >> 31) == (u >> 31)) ? ((a & Int32.MaxValue) < (u & Int32.MaxValue)) :
@@ -383,7 +378,7 @@ namespace PeterO {
             this.data[0] = 0;
             this.wordCount = 1;
           }
-          for (int i = 0; i < this.wordCount; ++i) {
+          for (var i = 0; i < this.wordCount; ++i) {
             int u;
             int a = this.data[i];
             u = (a + augend) + carry;
@@ -505,14 +500,14 @@ namespace PeterO {
         return (BigInteger)((int)words[0]);
       }
       var bytes = new byte[(wordCount * 4) + 1];
-      for (int i = 0; i < wordCount; ++i) {
+      for (var i = 0; i < wordCount; ++i) {
         bytes[(i * 4) + 0] = (byte)(words[i] & 0xff);
         bytes[(i * 4) + 1] = (byte)((words[i] >> 8) & 0xff);
         bytes[(i * 4) + 2] = (byte)((words[i] >> 16) & 0xff);
         bytes[(i * 4) + 3] = (byte)((words[i] >> 24) & 0xff);
       }
       bytes[bytes.Length - 1] = (byte)0;
-      return new BigInteger((byte[])bytes);
+      return BigInteger.fromByteArray(bytes, true);
     }
 
     public static int[] GetLastWords(BigInteger bigint, int numWords32Bit) {

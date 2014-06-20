@@ -1182,7 +1182,7 @@ namespace PeterO {
       bigError = error.AsBigInteger();
       PrecisionContext ctxdiv = SetPrecisionIfLimited(ctx, ctx.Precision + bigError)
         .WithRounding(this.thisRadix == 2 ? Rounding.HalfEven : Rounding.ZeroFiveUp).WithBlankFlags();
-      for (int i = 0; i < 9; ++i) {
+      for (var i = 0; i < 9; ++i) {
         thisValue = this.SquareRoot(thisValue, ctxdiv.WithUnlimitedExponents());
       }
       // Find -Ln(1/thisValue)
@@ -1339,7 +1339,7 @@ namespace PeterO {
       BigInteger mant = this.helper.GetMantissa(val);
       var sb = new StringBuilder();
       int len = mant.bitLength();
-      for (int i = 0; i < len; ++i) {
+      for (var i = 0; i < len; ++i) {
         int shift = len-1-i;
         BigInteger m2 = mant >> shift;
         sb.Append(m2.IsEven ? '0' : '1');
@@ -2604,9 +2604,7 @@ namespace PeterO {
 
     // "binaryPrec" means whether "precision" is the number of bits and not digits
     private T RoundToPrecisionInternal(T thisValue, int lastDiscarded, int olderDiscarded, FastInteger shift, bool adjustNegativeZero, PrecisionContext ctx) {
-      if (ctx == null) {
-        ctx = PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven);
-      }
+      ctx = ctx ?? (PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven));
       // If context has unlimited precision and exponent range,
       // and no discarded digits or shifting
       if (!ctx.HasMaxPrecision && !ctx.HasExponentRange && (lastDiscarded | olderDiscarded) == 0 && (shift == null || shift.IsValueZero)) {
@@ -2732,9 +2730,7 @@ namespace PeterO {
       BigInteger maxMantissa = BigInteger.One;
       FastInteger exp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
       int flags = 0;
-      if (accum == null) {
-        accum = this.helper.CreateShiftAccumulatorWithDigits(bigmantissa, lastDiscarded, olderDiscarded);
-      }
+      accum = accum ?? (this.helper.CreateShiftAccumulatorWithDigits(bigmantissa, lastDiscarded, olderDiscarded));
       if (binaryPrec) {
         FastInteger prec = FastInteger.Copy(fastPrecision);
         while (prec.Sign > 0) {

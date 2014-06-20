@@ -161,7 +161,7 @@ private CBORUtilities() {
       bytes[6] = (byte)((value1 >> 16) & 0xff);
       bytes[7] = (byte)((value1 >> 24) & 0xff);
       bytes[8] = (byte)0;
-      BigInteger bigmantissa = BigInteger.fromByteArray((byte[])bytes,true);
+      var bigmantissa = BigInteger.fromByteArray(bytes, true);
       if (floatExponent == 0) {
         if (neg) {
           bigmantissa=bigmantissa.negate();

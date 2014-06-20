@@ -49,7 +49,7 @@ namespace PeterO {
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>True if the objects are equal; otherwise, false.</returns>
     public override bool Equals(object obj) {
-      ExtendedRational other = obj as ExtendedRational;
+      var other = obj as ExtendedRational;
       return (other != null) && (object.Equals(this.unsignedNumerator, other.unsignedNumerator) && object.Equals(this.denominator, other.denominator) && this.flags == other.flags);
     }
 

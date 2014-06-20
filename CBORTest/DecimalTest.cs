@@ -318,7 +318,7 @@ namespace Test {
     [TestMethod]
     public void TestParser() {
       long failures = 0;
-      for (int i = 0; i < 1; ++i) {
+      for (var i = 0; i < 1; ++i) {
         // Reads decimal test files described in:
         // <http://speleotrove.com/decimal/dectest.html>
         foreach (var f in CBOR.ExtensiveTest.GetTestFiles()) {

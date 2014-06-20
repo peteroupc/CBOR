@@ -506,9 +506,7 @@ at: http://upokecenter.com/d/
           haveDigits = true;
           if (haveDecimalPoint) {
             if (newScaleInt == Integer.MIN_VALUE) {
-              if (newScale == null) {
-                newScale = new FastInteger(newScaleInt);
-              }
+              newScale = (newScale == null) ? ((new FastInteger(newScaleInt))) : newScale;
               newScale.Decrement();
             } else {
               --newScaleInt;
@@ -585,18 +583,14 @@ at: http://upokecenter.com/d/
         if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
           newScaleInt = expInt;
         } else if (exp == null) {
-          if (newScale == null) {
-            newScale = new FastInteger(newScaleInt);
-          }
+          newScale = (newScale == null) ? ((new FastInteger(newScaleInt))) : newScale;
           if (offset < 0) {
             newScale.SubtractInt(expInt);
           } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
-          if (newScale == null) {
-            newScale = new FastInteger(newScaleInt);
-          }
+          newScale = (newScale == null) ? ((new FastInteger(newScaleInt))) : newScale;
           if (offset < 0) {
             newScale.Subtract(exp);
           } else {

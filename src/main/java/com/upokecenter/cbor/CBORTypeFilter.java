@@ -423,13 +423,13 @@ import com.upokecenter.util.*;
       if (this.elements == null) {
         return Any;
       }
+      // NOTE: Index shouldn't be greater than Integer.MAX_VALUE,
+      // since the length is an int
       if (index >= this.elements.length) {
         // Index is greater than the number of elements for
         // which a type is defined
         return Any;
       }
-      // NOTE: Index shouldn't be greater than Integer.MAX_VALUE,
-      // since the length is an int
       return this.elements[(int)index];
     }
 

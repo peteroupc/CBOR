@@ -13,8 +13,11 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     * An arbitrary-precision integer. Instances of this class are immutable,
-     * so they are inherently safe for use by multiple threads.
+     * An arbitrary-precision integer. <p>Instances of this class are
+     * immutable, so they are inherently safe for use by multiple threads.
+     * Multiple instances of this object with the same value are interchangeable,
+     * so they should not be compared using the "==" operator (which only
+     * checks if each side of the operator is the same instance).</p>
      */
   public final class BigInteger implements Comparable<BigInteger>
   {
@@ -1326,7 +1329,7 @@ at: http://upokecenter.com/d/
             words1Start,
             words1Count);
         } else if (words1Count + 1 == words2Count ||
-                       (words1Count + 2 == words2Count && words2[words2Start + words2Count - 1] == 0)) {
+                   (words1Count + 2 == words2Count && words2[words2Start + words2Count - 1] == 0)) {
           java.util.Arrays.fill(resultArr,resultStart,(resultStart)+(words1Count + words2Count),(short)0);
           // Multiply the low parts of each operand
           SameSizeMultiply(
@@ -1342,12 +1345,12 @@ at: http://upokecenter.com/d/
           // Multiply the high parts
           // while adding carry from the high part of the product
           short carry = LinearMultiplyAdd(
-                               resultArr,
-                               resultStart + words1Count,
-                               words1,
-                               words1Start,
-                               words2[words2Start + words1Count],
-                               words1Count);
+            resultArr,
+            resultStart + words1Count,
+            words1,
+            words1Start,
+            words2[words2Start + words1Count],
+            words1Count);
           resultArr[resultStart + words1Count + words1Count] = carry;
         } else {
           short[] t2 = new short[words1Count << 2];
@@ -1436,9 +1439,9 @@ at: http://upokecenter.com/d/
 
     private static short DivideUnsigned(int x, short y) {
       {
-        int iy = ((int)y) & 0xffff;
         if ((x >> 31) == 0) {
           // x is already nonnegative
+          int iy = ((int)y) & 0xffff;
           return (short)(((int)x / iy) & 0xffff);
         }
         return Divide32By16(x, y, false);
@@ -1448,11 +1451,7 @@ at: http://upokecenter.com/d/
     private static short RemainderUnsigned(int x, short y) {
       {
         int iy = ((int)y) & 0xffff;
-        if ((x >> 31) == 0) {
-          // x is already nonnegative
-          return (short)(((int)x % iy) & 0xffff);
-        }
-        return Divide32By16(x, y, true);
+        return ((x >> 31) == 0) ? ((short)(((int)x % iy) & 0xffff)) : (Divide32By16(x, y, true));
       }
     }
 
@@ -1799,11 +1798,14 @@ at: http://upokecenter.com/d/
       return n + (n & 1);
     }
 
-    private boolean negative;
-    private int wordCount = -1;
-    private short[] reg;
+    private final boolean negative;
+    private final int wordCount = -1;
+    private final short[] reg;
 
-    private BigInteger() {
+    private BigInteger(int wordCount, short[] reg, boolean negative) {
+      this.wordCount = wordCount;
+      this.reg = reg;
+      this.negative = negative;
     }
 
     /**
@@ -1817,67 +1819,58 @@ at: http://upokecenter.com/d/
      */
     public static BigInteger fromByteArray(byte[] bytes, boolean littleEndian) {
       if (bytes == null) {
- throw new NullPointerException("bytes");
-}
+        throw new NullPointerException("bytes");
+      }
       if (bytes.length == 0) {
- return BigInteger.ZERO;
-}
-      BigInteger bigint = new BigInteger();
-      bigint.fromByteArrayInternal(bytes, littleEndian);
-      return bigint;
-    }
-
-    private void fromByteArrayInternal(byte[] bytes, boolean littleEndian) {
+        return BigInteger.ZERO;
+      }
       if (bytes == null) {
         throw new NullPointerException("bytes");
       }
-
       int len = bytes.length;
       int wordLength = ((int)len + 1) >> 1;
       wordLength = RoundupSize(wordLength);
-      this.reg = new short[wordLength];
+      short[] newreg = new short[wordLength];
       int valueJIndex = littleEndian ? len - 1 : 0;
-      boolean negative = (bytes[valueJIndex] & 0x80) != 0;
-      this.negative = negative;
+      boolean numIsNegative = (bytes[valueJIndex] & 0x80) != 0;
+      boolean newnegative = numIsNegative;
       int j = 0;
-      if (!negative) {
+      if (!numIsNegative) {
         for (int i = 0; i < len; i += 2, j++) {
           int index = littleEndian ? i : len - 1 - i;
           int index2 = littleEndian ? i + 1 : len - 2 - i;
-          this.reg[j] = (short)(((int)bytes[index]) & 0xff);
+          newreg[j] = (short)(((int)bytes[index]) & 0xff);
           if (index2 >= 0 && index2 < len) {
-            this.reg[j] |= ((short)(((short)bytes[index2]) << 8));
+            newreg[j] |= ((short)(((short)bytes[index2]) << 8));
           }
         }
       } else {
         for (int i = 0; i < len; i += 2, j++) {
           int index = littleEndian ? i : len - 1 - i;
           int index2 = littleEndian ? i + 1 : len - 2 - i;
-          this.reg[j] = (short)(((int)bytes[index]) & 0xff);
+          newreg[j] = (short)(((int)bytes[index]) & 0xff);
           if (index2 >= 0 && index2 < len) {
-            this.reg[j] |= ((short)(((short)bytes[index2]) << 8));
+            newreg[j] |= ((short)(((short)bytes[index2]) << 8));
           } else {
             // sign extend the last byte
-            this.reg[j] |= ((short)0xff00);
+            newreg[j] |= ((short)0xff00);
           }
         }
-        for (; j < this.reg.length; ++j) {
-          this.reg[j] = ((short)0xffff);  // sign extend remaining words
+        for (; j < newreg.length; ++j) {
+          newreg[j] = ((short)0xffff);  // sign extend remaining words
         }
-        TwosComplement(this.reg, 0, (int)this.reg.length);
+        TwosComplement(newreg, 0, (int)newreg.length);
       }
-      this.wordCount = this.reg.length;
-      while (this.wordCount != 0 &&
-             this.reg[this.wordCount - 1] == 0) {
-        --this.wordCount;
+      int newwordCount = newreg.length;
+      while (newwordCount != 0 &&
+             newreg[newwordCount - 1] == 0) {
+        --newwordCount;
       }
+      return (newwordCount == 0) ? (BigInteger.ZERO) : (new BigInteger(newwordCount, newreg, newnegative));
     }
 
-    private BigInteger Allocate(int length) {
-      this.reg = new short[RoundupSize(length)];  // will be initialized to 0
-      this.negative = false;
-      this.wordCount = 0;
-      return this;
+    private static BigInteger Allocate(int length) {
+      return new BigInteger(0, new short[RoundupSize(length)], false);
     }
 
     private static short[] GrowForCarry(short[] a, short carry) {
@@ -1894,19 +1887,6 @@ at: http://upokecenter.com/d/
         return newa;
       }
       return a;
-    }
-
-    private void SetBitInternal(int n, boolean value) {
-      if (value) {
-        this.reg = CleanGrow(this.reg, RoundupSize(BitsToWords(n + 1)));
-        this.reg[(n >> 4)] |= (short)((short)1 << (int)(n & 0xf));
-        this.wordCount = this.CalcWordCount();
-      } else {
-        if ((n >> 4) < this.reg.length) {
-          this.reg[(n >> 4)] &= ((short)(~((short)1 << (int)(n % 16))));
-        }
-        this.wordCount = this.CalcWordCount();
-      }
     }
 
     /**
@@ -1948,26 +1928,6 @@ at: http://upokecenter.com/d/
     private boolean GetUnsignedBit(int n) {
 
       return ((n >> 4) < this.reg.length) && ((boolean)(((this.reg[(n >> 4)] >> (int)(n & 15)) & 1) != 0));
-    }
-
-    private BigInteger InitializeInt(int numberValue) {
-      int iut;
-      {
-        this.negative = numberValue < 0;
-        if (numberValue == Integer.MIN_VALUE) {
-          this.reg = new short[2];
-          this.reg[0] = 0;
-          this.reg[1] = (short)0x8000;
-          this.wordCount = 2;
-        } else {
-          iut = ((numberValue < 0) ? -numberValue : numberValue);
-          this.reg = new short[2];
-          this.reg[0] = (short)iut;
-          this.reg[1] = (short)(iut >> 16);
-          this.wordCount = this.reg[1] != 0 ? 2 : (this.reg[0] == 0 ? 0 : 1);
-        }
-      }
-      return this;
     }
 
     /**
@@ -2047,34 +2007,29 @@ at: http://upokecenter.com/d/
      * @return A BigInteger object.
      */
     public BigInteger shiftLeft(int numberBits) {
-      if (numberBits == 0) {
+      if (numberBits == 0 || this.wordCount == 0) {
         return this;
       }
       if (numberBits < 0) {
         return (numberBits == Integer.MIN_VALUE) ? this.shiftRight(1).shiftRight(Integer.MAX_VALUE) : this.shiftRight(-numberBits);
       }
-      BigInteger ret = new BigInteger();
       int numWords = (int)this.wordCount;
       int shiftWords = (int)(numberBits >> 4);
       int shiftBits = (int)(numberBits & 15);
-      boolean neg = numWords > 0 && this.negative;
-      if (!neg) {
-        ret.negative = false;
-        ret.reg = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
-        System.arraycopy(this.reg, 0, ret.reg, shiftWords, numWords);
-        ShiftWordsLeftByBits(ret.reg, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
-        ret.wordCount = ret.CalcWordCount();
+      if (!this.negative) {
+        short[] ret = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
+        System.arraycopy(this.reg, 0, ret, shiftWords, numWords);
+        ShiftWordsLeftByBits(ret, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
+        return new BigInteger(CountWords(ret, ret.length), ret, false);
       } else {
-        ret.negative = true;
-        ret.reg = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
-        System.arraycopy(this.reg, 0, ret.reg, 0, numWords);
-        TwosComplement(ret.reg, 0, (int)ret.reg.length);
-        ShiftWordsLeftByWords(ret.reg, 0, numWords + shiftWords, shiftWords);
-        ShiftWordsLeftByBits(ret.reg, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
-        TwosComplement(ret.reg, 0, (int)ret.reg.length);
-        ret.wordCount = ret.CalcWordCount();
+        short[] ret = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
+        System.arraycopy(this.reg, 0, ret, 0, numWords);
+        TwosComplement(ret, 0, (int)ret.length);
+        ShiftWordsLeftByWords(ret, 0, numWords + shiftWords, shiftWords);
+        ShiftWordsLeftByBits(ret, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
+        TwosComplement(ret, 0, (int)ret.length);
+        return new BigInteger(CountWords(ret, ret.length), ret, true);
       }
-      return ret;
     }
 
     /**
@@ -2089,42 +2044,43 @@ at: http://upokecenter.com/d/
       if (numberBits < 0) {
         return (numberBits == Integer.MIN_VALUE) ? this.shiftLeft(1).shiftLeft(Integer.MAX_VALUE) : this.shiftLeft(-numberBits);
       }
-      BigInteger ret;
       int numWords = (int)this.wordCount;
       int shiftWords = (int)(numberBits >> 4);
       int shiftBits = (int)(numberBits & 15);
+      short[] ret;
+      int retWordCount;
       if (this.negative) {
-        ret = new BigInteger();
-        ret.reg = new short[this.reg.length];
-        System.arraycopy(this.reg, 0, ret.reg, 0, numWords);
-        TwosComplement(ret.reg, 0, (int)ret.reg.length);
-        ShiftWordsRightByWordsSignExtend(ret.reg, 0, numWords, shiftWords);
+        ret = new short[this.reg.length];
+        System.arraycopy(this.reg, 0, ret, 0, numWords);
+        TwosComplement(ret, 0, (int)ret.length);
+        ShiftWordsRightByWordsSignExtend(ret, 0, numWords, shiftWords);
         if (numWords > shiftWords) {
-          ShiftWordsRightByBitsSignExtend(ret.reg, 0, numWords - shiftWords, shiftBits);
+          ShiftWordsRightByBitsSignExtend(ret, 0, numWords - shiftWords, shiftBits);
         }
-        TwosComplement(ret.reg, 0, (int)ret.reg.length);
-        ret.wordCount = ret.reg.length;
+        TwosComplement(ret, 0, (int)ret.length);
+        retWordCount = ret.length;
       } else {
         if (shiftWords >= numWords) {
           return BigInteger.ZERO;
         }
-        ret = new BigInteger();
-        ret.reg = new short[this.reg.length];
-        System.arraycopy(this.reg, shiftWords, ret.reg, 0, numWords - shiftWords);
+        ret = new short[this.reg.length];
+        System.arraycopy(this.reg, shiftWords, ret, 0, numWords - shiftWords);
         if (shiftBits != 0) {
-          ShiftWordsRightByBits(ret.reg, 0, numWords - shiftWords, shiftBits);
+          ShiftWordsRightByBits(ret, 0, numWords - shiftWords, shiftBits);
         }
-        ret.wordCount = numWords - shiftWords;
+        retWordCount = numWords - shiftWords;
       }
-      ret.negative = this.negative;
-      while (ret.wordCount != 0 &&
-             ret.reg[ret.wordCount - 1] == 0) {
-        --ret.wordCount;
+      while (retWordCount != 0 &&
+             ret[retWordCount - 1] == 0) {
+        --retWordCount;
       }
+      if (retWordCount == 0) {
+ return BigInteger.ZERO;
+}
       if (shiftWords > 2) {
-        this.ShortenArray();
+        ret = ShortenArray(ret, retWordCount);
       }
-      return ret;
+      return new BigInteger(retWordCount, ret, this.negative);
     }
 
     /**
@@ -2139,38 +2095,40 @@ at: http://upokecenter.com/d/
       if (longerValue == 1) {
         return BigInteger.ONE;
       }
-      BigInteger ret = new BigInteger();
+      short[] retreg;
+      boolean retnegative;
+      int retwordcount;
       {
-        ret.negative = longerValue < 0;
-        ret.reg = new short[4];
+        retnegative = longerValue < 0;
+        retreg = new short[4];
         if (longerValue == Long.MIN_VALUE) {
-          ret.reg[0] = 0;
-          ret.reg[1] = 0;
-          ret.reg[2] = 0;
-          ret.reg[3] = (short)0x8000;
-          ret.wordCount = 4;
+          retreg[0] = 0;
+          retreg[1] = 0;
+          retreg[2] = 0;
+          retreg[3] = (short)0x8000;
+          retwordcount = 4;
         } else {
           long ut = longerValue;
           if (ut < 0) {
             ut = -ut;
           }
-          ret.reg[0] = (short)(ut & 0xffff);
+          retreg[0] = (short)(ut & 0xffff);
           ut >>= 16;
-          ret.reg[1] = (short)(ut & 0xffff);
+          retreg[1] = (short)(ut & 0xffff);
           ut >>= 16;
-          ret.reg[2] = (short)(ut & 0xffff);
+          retreg[2] = (short)(ut & 0xffff);
           ut >>= 16;
-          ret.reg[3] = (short)(ut & 0xffff);
+          retreg[3] = (short)(ut & 0xffff);
           // at this point, the word count can't
           // be 0 (the check for 0 was already done above)
-          ret.wordCount = 4;
-          while (ret.wordCount != 0 &&
-                 ret.reg[ret.wordCount - 1] == 0) {
-            --ret.wordCount;
+          retwordcount = 4;
+          while (retwordcount != 0 &&
+                 retreg[retwordcount - 1] == 0) {
+            --retwordcount;
           }
         }
       }
-      return ret;
+      return new BigInteger(retwordcount, retreg, retnegative);
     }
 
     /**
@@ -2189,7 +2147,7 @@ at: http://upokecenter.com/d/
       }
       if (count == 2 && (this.reg[1] & 0x8000) != 0) {
         if (this.negative && this.reg[1] == ((short)0x8000) &&
-                this.reg[0] == 0) {
+            this.reg[0] == 0) {
           return Integer.MIN_VALUE;
         }
         throw new ArithmeticException();
@@ -2236,9 +2194,9 @@ at: http://upokecenter.com/d/
       }
       if (count == 4 && (this.reg[3] & 0x8000) != 0) {
         if (this.negative && this.reg[3] == ((short)0x8000) &&
-                this.reg[2] == 0 &&
-                this.reg[1] == 0 &&
-                this.reg[0] == 0) {
+            this.reg[2] == 0 &&
+            this.reg[1] == 0 &&
+            this.reg[0] == 0) {
           return Long.MIN_VALUE;
         }
         throw new ArithmeticException();
@@ -2330,12 +2288,6 @@ at: http://upokecenter.com/d/
       return this.longValueChecked();
     }
 
-    private static BigInteger Power2(int e) {
-      BigInteger r = new BigInteger().Allocate(BitsToWords((int)(e + 1)));
-      r.SetBitInternal((int)e, true);  // NOTE: Will recalculate word count
-      return r;
-    }
-
     /**
      * Not documented yet.
      * @param power A BigInteger object. (2).
@@ -2418,11 +2370,7 @@ at: http://upokecenter.com/d/
      * @return This object's value with the sign reversed.
      */
     public BigInteger negate() {
-      BigInteger bigintRet = new BigInteger();
-      bigintRet.reg = this.reg;  // use the same reference
-      bigintRet.wordCount = this.wordCount;
-      bigintRet.negative = (this.wordCount != 0) && (!this.negative);
-      return bigintRet;
+      return this.wordCount == 0 ? this : new BigInteger(this.wordCount, this.reg, !this.negative);
     }
 
     /**
@@ -2430,13 +2378,8 @@ at: http://upokecenter.com/d/
      * @return This object's value with the sign removed.
      */
     public BigInteger abs() {
-      return (this.wordCount == 0 || !this.negative) ? this : this.negate();
+      return (this.wordCount == 0 || !this.negative) ? this : new BigInteger(this.wordCount, this.reg, false);
     }
-
-    private int CalcWordCount() {
-      return (int)CountWords(this.reg, this.reg.length);
-    }
-
     private int ByteCount() {
       int wc = this.wordCount;
       if (wc == 0) {
@@ -2726,7 +2669,7 @@ at: http://upokecenter.com/d/
           while ((wci--) > 0) {
             int curValue = ((int)dividend[wci]) & 0xffff;
             int currentDividend = ((int)(curValue |
-                                        ((int)remainderShort << 16)));
+                                                  ((int)remainderShort << 16)));
             quo = currentDividend / 10000;
             if (!firstdigit && quo != 0) {
               firstdigit = true;
@@ -2797,14 +2740,14 @@ at: http://upokecenter.com/d/
       }
       short[] tempReg = new short[this.wordCount];
       System.arraycopy(this.reg, 0, tempReg, 0, tempReg.length);
-      int wordCount = tempReg.length;
-      while (wordCount != 0 && tempReg[wordCount - 1] == 0) {
-        --wordCount;
+      int numWordCount = tempReg.length;
+      while (numWordCount != 0 && tempReg[numWordCount - 1] == 0) {
+        --numWordCount;
       }
       int i = 0;
-      char[] s = new char[(wordCount << 4) + 1];
-      while (wordCount != 0) {
-        if (wordCount == 1 && tempReg[0] > 0 && tempReg[0] <= 0x7fff) {
+      char[] s = new char[(numWordCount << 4) + 1];
+      while (numWordCount != 0) {
+        if (numWordCount == 1 && tempReg[0] > 0 && tempReg[0] <= 0x7fff) {
           int rest = tempReg[0];
           while (rest != 0) {
             // accurate approximation to rest/10 up to 43698,
@@ -2815,7 +2758,7 @@ at: http://upokecenter.com/d/
           }
           break;
         }
-        if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 0x7fff) {
+        if (numWordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 0x7fff) {
           int rest = ((int)tempReg[0]) & 0xffff;
           rest |= (((int)tempReg[1]) & 0xffff) << 16;
           while (rest != 0) {
@@ -2825,13 +2768,13 @@ at: http://upokecenter.com/d/
           }
           break;
         } else {
-          int wci = wordCount;
+          int wci = numWordCount;
           short remainderShort = 0;
           int quo, rem;
           // Divide by 10000
           while ((wci--) > 0) {
             int currentDividend = ((int)((((int)tempReg[wci]) & 0xffff) |
-                                  ((int)remainderShort << 16)));
+                                                  ((int)remainderShort << 16)));
             quo = currentDividend / 10000;
             tempReg[wci] = ((short)quo);
             rem = currentDividend - (10000 * quo);
@@ -2839,8 +2782,8 @@ at: http://upokecenter.com/d/
           }
           int remainderSmall = remainderShort;
           // Recalculate word count
-          while (wordCount != 0 && tempReg[wordCount - 1] == 0) {
-            --wordCount;
+          while (numWordCount != 0 && tempReg[numWordCount - 1] == 0) {
+            --numWordCount;
           }
           // accurate approximation to rest/10 up to 16388,
           // and rest can go up to 9999
@@ -2924,7 +2867,7 @@ at: http://upokecenter.com/d/
         ++index;
         negative = true;
       }
-      BigInteger bigint = new BigInteger().Allocate(4);
+      short[] bigint = new short[4];
       boolean haveDigits = false;
       boolean haveSmallInt = true;
       int smallInt = 0;
@@ -2940,32 +2883,32 @@ at: http://upokecenter.com/d/
           smallInt += digit;
         } else {
           if (haveSmallInt) {
-            bigint.reg[0] = ((short)(smallInt & 0xffff));
-            bigint.reg[1] = ((short)((smallInt >> 16) & 0xffff));
+            bigint[0] = ((short)(smallInt & 0xffff));
+            bigint[1] = ((short)((smallInt >> 16) & 0xffff));
             haveSmallInt = false;
           }
           // Multiply by 10
           short carry = 0;
-          int n = bigint.reg.length;
+          int n = bigint.length;
           for (int j = 0; j < n; ++j) {
             int p;
             {
-              p = (((int)bigint.reg[j]) & 0xffff) * 10;
+              p = (((int)bigint[j]) & 0xffff) * 10;
               p += ((int)carry) & 0xffff;
-              bigint.reg[j] = (short)p;
+              bigint[j] = (short)p;
               carry = (short)(p >> 16);
             }
           }
           if (carry != 0) {
-            bigint.reg = GrowForCarry(bigint.reg, carry);
+            bigint = GrowForCarry(bigint, carry);
           }
           // Add the parsed digit
           if (digit != 0) {
-            int d = bigint.reg[0] & 0xffff;
+            int d = bigint[0] & 0xffff;
             if (d <= 65526) {
-              bigint.reg[0] = ((short)(d + digit));
-            } else if (Increment(bigint.reg, 0, bigint.reg.length, (short)digit) != 0) {
-              bigint.reg = GrowForCarry(bigint.reg, (short)1);
+              bigint[0] = ((short)(d + digit));
+            } else if (Increment(bigint, 0, bigint.length, (short)digit) != 0) {
+              bigint = GrowForCarry(bigint, (short)1);
             }
           }
         }
@@ -2974,12 +2917,11 @@ at: http://upokecenter.com/d/
         throw new NumberFormatException("No digits");
       }
       if (haveSmallInt) {
-        bigint.reg[0] = ((short)(smallInt & 0xffff));
-        bigint.reg[1] = ((short)((smallInt >> 16) & 0xffff));
+        bigint[0] = ((short)(smallInt & 0xffff));
+        bigint[1] = ((short)((smallInt >> 16) & 0xffff));
       }
-      bigint.wordCount = bigint.CalcWordCount();
-      bigint.negative = bigint.wordCount != 0 && negative;
-      return bigint;
+      int count = CountWords(bigint, bigint.length);
+      return (count == 0) ? BigInteger.ZERO : new BigInteger(count, bigint, negative);
     }
 
     /**
@@ -2993,16 +2935,7 @@ at: http://upokecenter.com/d/
         if (c == (short)0) {
           retSetBit += 16;
         } else {
-          if (((c << 15) & 0xffff) != 0) {
-            return retSetBit + 0;
-          }
-          if (((c << 14) & 0xffff) != 0) {
-            return retSetBit + 1;
-          }
-          if (((c << 13) & 0xffff) != 0) {
-            return retSetBit + 2;
-          }
-          return (((c << 12) & 0xffff) != 0) ? (retSetBit + 3) : ((((c << 11) & 0xffff) != 0) ? (retSetBit + 4) : ((((c << 10) & 0xffff) != 0) ? (retSetBit + 5) : ((((c << 9) & 0xffff) != 0) ? (retSetBit + 6) : ((((c << 8) & 0xffff) != 0) ? (retSetBit + 7) : ((((c << 7) & 0xffff) != 0) ? (retSetBit + 8) : ((((c << 6) & 0xffff) != 0) ? (retSetBit + 9) : ((((c << 5) & 0xffff) != 0) ? (retSetBit + 10) : ((((c << 4) & 0xffff) != 0) ? (retSetBit + 11) : ((((c << 3) & 0xffff) != 0) ? (retSetBit + 12) : ((((c << 2) & 0xffff) != 0) ? (retSetBit + 13) : ((((c << 1) & 0xffff) != 0) ? (retSetBit + 14) : (retSetBit + 15))))))))))));
+          return (((c << 15) & 0xffff) != 0) ? (retSetBit + 0) : ((((c << 14) & 0xffff) != 0) ? (retSetBit + 1) : ((((c << 13) & 0xffff) != 0) ? (retSetBit + 2) : ((((c << 12) & 0xffff) != 0) ? (retSetBit + 3) : ((((c << 11) & 0xffff) != 0) ? (retSetBit + 4) : ((((c << 10) & 0xffff) != 0) ? (retSetBit + 5) : ((((c << 9) & 0xffff) != 0) ? (retSetBit + 6) : ((((c << 8) & 0xffff) != 0) ? (retSetBit + 7) : ((((c << 7) & 0xffff) != 0) ? (retSetBit + 8) : ((((c << 6) & 0xffff) != 0) ? (retSetBit + 9) : ((((c << 5) & 0xffff) != 0) ? (retSetBit + 10) : ((((c << 4) & 0xffff) != 0) ? (retSetBit + 11) : ((((c << 3) & 0xffff) != 0) ? (retSetBit + 12) : ((((c << 2) & 0xffff) != 0) ? (retSetBit + 13) : ((((c << 1) & 0xffff) != 0) ? (retSetBit + 14) : (retSetBit + 15)))))))))))))));
         }
       }
       return 0;
@@ -3098,7 +3031,7 @@ at: http://upokecenter.com/d/
       return r;
     }
 
-    private static void PositiveSubtract(
+    private static BigInteger PositiveSubtract(
       BigInteger bigintDiff,
       BigInteger minuend,
       BigInteger subtrahend) {
@@ -3106,36 +3039,32 @@ at: http://upokecenter.com/d/
       words1Size += words1Size & 1;
       int words2Size = subtrahend.wordCount;
       words2Size += words2Size & 1;
+      boolean diffNeg = false;
+      short[] diffReg = new short[(int)Math.max(minuend.reg.length, subtrahend.reg.length)];
       if (words1Size == words2Size) {
         if (Compare(minuend.reg, 0, subtrahend.reg, 0, (int)words1Size) >= 0) {
           // words1 is at least as high as words2
           Subtract(bigintDiff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words1Size);
-          bigintDiff.negative = false;  // difference will not be negative at this point
         } else {
           // words1 is less than words2
           Subtract(bigintDiff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
-          bigintDiff.negative = true;  // difference will be negative
+          diffNeg = true;  // difference will be negative
         }
       } else if (words1Size > words2Size) {
         // words1 is greater than words2
         short borrow = (short)Subtract(bigintDiff.reg, 0, minuend.reg, 0, subtrahend.reg, 0, (int)words2Size);
         System.arraycopy(minuend.reg, words2Size, bigintDiff.reg, words2Size, words1Size - words2Size);
-        borrow = (short)Decrement(bigintDiff.reg, words2Size, (int)(words1Size - words2Size), borrow);
-        // Debugif(!(borrow==0))Assert.fail("{0} line {1}: !borrow","integer.cpp",3524);
-        bigintDiff.negative = false;
+        Decrement(bigintDiff.reg, words2Size, (int)(words1Size - words2Size), borrow);
       } else {
         // words1 is less than words2
         short borrow = (short)Subtract(bigintDiff.reg, 0, subtrahend.reg, 0, minuend.reg, 0, (int)words1Size);
         System.arraycopy(subtrahend.reg, words1Size, bigintDiff.reg, words1Size, words2Size - words1Size);
-        borrow = (short)Decrement(bigintDiff.reg, words1Size, (int)(words2Size - words1Size), borrow);
-        // Debugif(!(borrow==0))Assert.fail("{0} line {1}: !borrow","integer.cpp",3532);
-        bigintDiff.negative = true;
+        Decrement(bigintDiff.reg, words1Size, (int)(words2Size - words1Size), borrow);
+        diffNeg = true;
       }
-      bigintDiff.wordCount = bigintDiff.CalcWordCount();
-      bigintDiff.ShortenArray();
-      if (bigintDiff.wordCount == 0) {
-        bigintDiff.negative = false;
-      }
+      int count = CountWords(diffReg, diffReg.length);
+      diffReg = ShortenArray(diffReg, count);
+      return new BigInteger(count, diffReg, diffNeg);
     }
 
     /**
@@ -3197,16 +3126,14 @@ at: http://upokecenter.com/d/
       if (bigintAugend.wordCount == 0) {
         return this;
       }
+      short[] sumreg;
       if (bigintAugend.wordCount == 1 && this.wordCount == 1) {
         if (this.negative == bigintAugend.negative) {
           int intSum = (((int)this.reg[0]) & 0xffff) + (((int)bigintAugend.reg[0]) & 0xffff);
-          sum = new BigInteger();
-          sum.reg = new short[2];
-          sum.reg[0] = ((short)intSum);
-          sum.reg[1] = ((short)(intSum >> 16));
-          sum.wordCount = ((intSum >> 16) == 0) ? 1 : 2;
-          sum.negative = this.negative;
-          return sum;
+          sumreg = new short[2];
+          sumreg[0] = ((short)intSum);
+          sumreg[1] = ((short)(intSum >> 16));
+          return new BigInteger(((intSum >> 16) == 0) ? 1 : 2, sumreg, this.negative);
         } else {
           int a = ((int)this.reg[0]) & 0xffff;
           int b = ((int)bigintAugend.reg[0]) & 0xffff;
@@ -3215,35 +3142,30 @@ at: http://upokecenter.com/d/
           }
           if (a > b) {
             a -= b;
-            sum = new BigInteger();
-            sum.reg = new short[2];
-            sum.reg[0] = ((short)a);
-            sum.wordCount = 1;
-            sum.negative = this.negative;
-            return sum;
+            sumreg = new short[2];
+            sumreg[0] = ((short)a);
+            return new BigInteger(1, sumreg, this.negative);
           }
           b -= a;
-          sum = new BigInteger();
-          sum.reg = new short[2];
-          sum.reg[0] = ((short)b);
-          sum.wordCount = 1;
-          sum.negative = !this.negative;
-          return sum;
+          sumreg = new short[2];
+          sumreg[0] = ((short)b);
+          return new BigInteger(1, sumreg, !this.negative);
         }
       }
-      sum = new BigInteger().Allocate((int)Math.max(this.reg.length, bigintAugend.reg.length));
+      sum = BigInteger.Allocate((int)Math.max(this.reg.length, bigintAugend.reg.length));
       if ((!this.negative) == (!bigintAugend.negative)) {
+        sumreg = new short[(int)Math.max(this.reg.length, bigintAugend.reg.length)];
         // both nonnegative or both negative
         int carry;
         int addendCount = this.wordCount;
         int augendCount = bigintAugend.wordCount;
         int desiredLength = Math.max(addendCount, augendCount);
         if (addendCount == augendCount) {
-          carry = AddOneByOne(sum.reg, 0, this.reg, 0, bigintAugend.reg, 0, (int)addendCount);
+          carry = AddOneByOne(sumreg, 0, this.reg, 0, bigintAugend.reg, 0, (int)addendCount);
         } else if (addendCount > augendCount) {
           // Addend is bigger
           carry = AddOneByOne(
-            sum.reg,
+            sumreg,
             0,
             this.reg,
             0,
@@ -3253,12 +3175,12 @@ at: http://upokecenter.com/d/
           System.arraycopy(
             this.reg,
             augendCount,
-            sum.reg,
+            sumreg,
             augendCount,
             addendCount - augendCount);
           if (carry != 0) {
             carry = Increment(
-              sum.reg,
+              sumreg,
               augendCount,
               addendCount - augendCount,
               (short)carry);
@@ -3266,7 +3188,7 @@ at: http://upokecenter.com/d/
         } else {
           // Augend is bigger
           carry = AddOneByOne(
-            sum.reg,
+            sumreg,
             0,
             this.reg,
             0,
@@ -3276,12 +3198,12 @@ at: http://upokecenter.com/d/
           System.arraycopy(
             bigintAugend.reg,
             addendCount,
-            sum.reg,
+            sumreg,
             addendCount,
             augendCount - addendCount);
           if (carry != 0) {
             carry = Increment(
-              sum.reg,
+              sumreg,
               addendCount,
               (int)(augendCount - addendCount),
               (short)carry);
@@ -3291,19 +3213,23 @@ at: http://upokecenter.com/d/
         if (carry != 0) {
           int nextIndex = desiredLength;
           int len = RoundupSize(nextIndex + 1);
-          sum.reg = CleanGrow(sum.reg, len);
-          sum.reg[nextIndex] = (short)carry;
+          sumreg = CleanGrow(sumreg, len);
+          sumreg[nextIndex] = (short)carry;
           needShorten = false;
         }
-        sum.negative = false;
-        sum.wordCount = sum.CalcWordCount();
-        if (needShorten) {
-          sum.ShortenArray();
+        int sumwordCount = CountWords(sumreg, sumreg.length);
+        if (sumwordCount == 0) {
+          return BigInteger.ZERO;
         }
-        sum.negative = this.negative && sum.signum()!=0;
+        if (needShorten) {
+          sumreg = ShortenArray(sumreg, sumwordCount);
+        }
+        return new BigInteger(sumwordCount, sumreg, this.negative);
       } else if (this.negative) {
+        sum = BigInteger.Allocate((int)Math.max(this.reg.length, bigintAugend.reg.length));
         PositiveSubtract(sum, bigintAugend, this);  // this is negative, b is nonnegative
       } else {
+        sum = BigInteger.Allocate((int)Math.max(this.reg.length, bigintAugend.reg.length));
         PositiveSubtract(sum, this, bigintAugend);  // this is nonnegative, b is negative
       }
       return sum;
@@ -3323,18 +3249,19 @@ at: http://upokecenter.com/d/
       return (this.wordCount == 0) ? subtrahend.negate() : ((subtrahend.wordCount == 0) ? this : this.add(subtrahend.negate()));
     }
 
-    private void ShortenArray() {
-      if (this.reg.length > 32) {
-        int newLength = RoundupSize(this.wordCount);
-        if (newLength < this.reg.length &&
-            (this.reg.length - newLength) >= 16) {
+    private static short[] ShortenArray(short[] reg, int wordCount) {
+      if (reg.length > 32) {
+        int newLength = RoundupSize(wordCount);
+        if (newLength < reg.length &&
+            (reg.length - newLength) >= 16) {
           // Reallocate the array if the rounded length
           // is much smaller than the current length
           short[] newreg = new short[newLength];
-          System.arraycopy(this.reg, 0, newreg, 0, Math.min(newLength, this.reg.length));
-          this.reg = newreg;
+          System.arraycopy(reg, 0, newreg, 0, Math.min(newLength, reg.length));
+          reg = newreg;
         }
       }
+      return reg;
     }
 
     /**
@@ -3357,32 +3284,30 @@ at: http://upokecenter.com/d/
       if (bigintMult.wordCount == 1 && bigintMult.reg[0] == 1) {
         return bigintMult.negative ? this.negate() : this;
       }
-      BigInteger product = new BigInteger();
+      short[] productreg;
+      int productwordCount;
       boolean needShorten = true;
       if (this.wordCount == 1) {
         int wc = bigintMult.wordCount;
         int regLength = RoundupSize(wc + 1);
-        product.reg = new short[regLength];
-        product.reg[wc] = LinearMultiply(product.reg, 0, bigintMult.reg, 0, this.reg[0], wc);
-        product.negative = false;
-        product.wordCount = product.reg.length;
+        productreg = new short[regLength];
+        productreg[wc] = LinearMultiply(productreg, 0, bigintMult.reg, 0, this.reg[0], wc);
+        productwordCount = productreg.length;
         needShorten = false;
       } else if (bigintMult.wordCount == 1) {
         int wc = this.wordCount;
         int regLength = RoundupSize(wc + 1);
-        product.reg = new short[regLength];
-        product.reg[wc] = LinearMultiply(product.reg, 0, this.reg, 0, bigintMult.reg[0], wc);
-        product.negative = false;
-        product.wordCount = product.reg.length;
+        productreg = new short[regLength];
+        productreg[wc] = LinearMultiply(productreg, 0, this.reg, 0, bigintMult.reg[0], wc);
+        productwordCount = productreg.length;
         needShorten = false;
       } else if (this.equals(bigintMult)) {
         int words1Size = RoundupSize(this.wordCount);
-        product.reg = new short[words1Size + words1Size];
-        product.wordCount = product.reg.length;
-        product.negative = false;
+        productreg = new short[words1Size + words1Size];
+        productwordCount = productreg.length;
         short[] workspace = new short[words1Size + words1Size];
         RecursiveSquare(
-          product.reg,
+          productreg,
           0,
           workspace,
           0,
@@ -3392,11 +3317,10 @@ at: http://upokecenter.com/d/
       } else if (this.wordCount <= 10 && bigintMult.wordCount <= 10) {
         int wc = this.wordCount + bigintMult.wordCount;
         wc = RoundupSize(wc);
-        product.reg = new short[wc];
-        product.negative = false;
-        product.wordCount = product.reg.length;
+        productreg = new short[wc];
+        productwordCount = productreg.length;
         SchoolbookMultiply(
-          product.reg,
+          productreg,
           0,
           this.reg,
           0,
@@ -3410,12 +3334,11 @@ at: http://upokecenter.com/d/
         int words2Size = bigintMult.wordCount;
         words1Size = RoundupSize(words1Size);
         words2Size = RoundupSize(words2Size);
-        product.reg = new short[RoundupSize(words1Size + words2Size)];
-        product.negative = false;
+        productreg = new short[RoundupSize(words1Size + words2Size)];
         short[] workspace = new short[words1Size + words2Size];
-        product.wordCount = product.reg.length;
+        productwordCount = productreg.length;
         AsymmetricMultiply(
-          product.reg,
+          productreg,
           0,
           workspace,
           0,
@@ -3427,16 +3350,13 @@ at: http://upokecenter.com/d/
           words2Size);
       }
       // Recalculate word count
-      while (product.wordCount != 0 && product.reg[product.wordCount - 1] == 0) {
-        --product.wordCount;
+      while (productwordCount != 0 && productreg[productwordCount - 1] == 0) {
+        --productwordCount;
       }
       if (needShorten) {
-        product.ShortenArray();
+        productreg = ShortenArray(productreg, productwordCount);
       }
-      if (this.negative != bigintMult.negative) {
-        product.NegateInternal();
-      }
-      return product;
+      return new BigInteger(productwordCount, productreg, this.negative ^ bigintMult.negative);
     }
 
     private static int BitsToWords(int bitCount) {
@@ -3538,38 +3458,31 @@ at: http://upokecenter.com/d/
         int valueBSmall = bigintDivisor.intValue();
         if (valueASmall != Integer.MIN_VALUE || valueBSmall != -1) {
           int result = valueASmall / valueBSmall;
-          return new BigInteger().InitializeInt(result);
+          return BigInteger.valueOf(result);
         }
       }
-      BigInteger quotient;
+      short[] quotReg;
+      int quotwordCount;
       if (words2Size == 1) {
         // divisor is small, use a fast path
-        quotient = new BigInteger();
-        quotient.reg = new short[this.reg.length];
-        quotient.wordCount = this.wordCount;
-        quotient.negative = this.negative;
-        FastDivide(quotient.reg, this.reg, words1Size, bigintDivisor.reg[0]);
-        while (quotient.wordCount != 0 &&
-                   quotient.reg[quotient.wordCount - 1] == 0) {
-          --quotient.wordCount;
+        quotReg = new short[this.reg.length];
+        quotwordCount = this.wordCount;
+        FastDivide(quotReg, this.reg, words1Size, bigintDivisor.reg[0]);
+        while (quotwordCount != 0 &&
+               quotReg[quotwordCount - 1] == 0) {
+          --quotwordCount;
         }
-        if (quotient.wordCount != 0) {
-          quotient.negative = this.negative ^ bigintDivisor.negative;
-          return quotient;
-        }
-        return BigInteger.ZERO;
+        return (quotwordCount != 0) ? (new BigInteger(quotwordCount, quotReg, this.negative ^ bigintDivisor.negative)) : (BigInteger.ZERO);
       }
       // ---- General case
-      quotient = new BigInteger();
       words1Size += words1Size & 1;
       words2Size += words2Size & 1;
-      quotient.reg = new short[RoundupSize((int)(words1Size - words2Size + 2))];
-      quotient.negative = false;
+      quotReg = new short[RoundupSize((int)(words1Size - words2Size + 2))];
       short[] tempbuf = new short[words1Size + (3 * (words2Size + 2))];
       Divide(
         null,
         0,
-        quotient.reg,
+        quotReg,
         0,
         tempbuf,
         0,
@@ -3579,12 +3492,9 @@ at: http://upokecenter.com/d/
         bigintDivisor.reg,
         0,
         words2Size);
-      quotient.wordCount = quotient.CalcWordCount();
-      quotient.ShortenArray();
-      if ((this.signum() < 0) ^ (bigintDivisor.signum() < 0)) {
-        quotient.NegateInternal();
-      }
-      return quotient;
+      quotwordCount = CountWords(quotReg, quotReg.length);
+      quotReg = ShortenArray(quotReg, quotwordCount);
+      return (quotwordCount != 0) ? (new BigInteger(quotwordCount, quotReg, this.negative ^ bigintDivisor.negative)) : (BigInteger.ZERO);
     }
 
     /**
@@ -3602,7 +3512,6 @@ at: http://upokecenter.com/d/
       if (divisor == null) {
         throw new NullPointerException("divisor");
       }
-      BigInteger quotient;
       int words1Size = this.wordCount;
       int words2Size = divisor.wordCount;
       if (words2Size == 0) {
@@ -3616,31 +3525,28 @@ at: http://upokecenter.com/d/
       }
       if (words2Size == 1) {
         // divisor is small, use a fast path
-        quotient = new BigInteger();
-        quotient.reg = new short[this.reg.length];
-        quotient.wordCount = this.wordCount;
-        quotient.negative = this.negative;
+        short[] quotient = new short[this.reg.length];
         int smallRemainder = ((int)FastDivideAndRemainder(
-          quotient.reg,
+          quotient,
           0,
           this.reg,
           0,
           words1Size,
           divisor.reg[0])) & 0xffff;
-        while (quotient.wordCount != 0 &&
-               quotient.reg[quotient.wordCount - 1] == 0) {
-          --quotient.wordCount;
+        int count = this.wordCount;
+        while (count != 0 &&
+               quotient[count - 1] == 0) {
+          --count;
         }
-        quotient.ShortenArray();
-        if (quotient.wordCount != 0) {
-          quotient.negative = this.negative ^ divisor.negative;
-        } else {
-          quotient = BigInteger.ZERO;
+        if (count == 0) {
+          return new BigInteger[] { BigInteger.ZERO, divisor };
         }
+        quotient = ShortenArray(quotient, count);
+        BigInteger bigquo = new BigInteger(count, quotient, this.negative ^ divisor.negative);
         if (this.negative) {
           smallRemainder = -smallRemainder;
         }
-        return new BigInteger[] {quotient, new BigInteger().InitializeInt(smallRemainder) };
+        return new BigInteger[] {bigquo, BigInteger.valueOf(smallRemainder) };
       }
       if (this.wordCount == 2 && divisor.wordCount == 2 &&
           (this.reg[1] >> 15) != 0 &&
@@ -3656,24 +3562,20 @@ at: http://upokecenter.com/d/
           }
           int rem = a - (b * quo);
           BigInteger[] ret = new BigInteger[2];
-          ret[0] = new BigInteger().InitializeInt(quo);
-          ret[1] = new BigInteger().InitializeInt(rem);
+          ret[0] = BigInteger.valueOf(quo);
+          ret[1] = BigInteger.valueOf(rem);
           return ret;
         }
       }
-      BigInteger remainder = new BigInteger();
-      quotient = new BigInteger();
       words1Size += words1Size & 1;
       words2Size += words2Size & 1;
-      remainder.reg = new short[RoundupSize((int)words2Size)];
-      remainder.negative = false;
-      quotient.reg = new short[RoundupSize((int)(words1Size - words2Size + 2))];
-      quotient.negative = false;
+      short[] bigRemainderreg = new short[RoundupSize((int)words2Size)];
+      short[] quotientreg = new short[RoundupSize((int)(words1Size - words2Size + 2))];
       short[] tempbuf = new short[words1Size + (3 * (words2Size + 2))];
       Divide(
-        remainder.reg,
+        bigRemainderreg,
         0,
-        quotient.reg,
+        quotientreg,
         0,
         tempbuf,
         0,
@@ -3683,21 +3585,13 @@ at: http://upokecenter.com/d/
         divisor.reg,
         0,
         words2Size);
-      remainder.wordCount = remainder.CalcWordCount();
-      quotient.wordCount = quotient.CalcWordCount();
-      // System.out.println("Divd=" + this.wordCount + " divs=" + divisor.wordCount + " quo=" + quotient.wordCount + " rem=" + (remainder.wordCount));
-      remainder.ShortenArray();
-      quotient.ShortenArray();
-      if (this.signum() < 0) {
-        quotient.NegateInternal();
-        if (remainder.signum()!=0) {
-          remainder.NegateInternal();
-        }
-      }
-      if (divisor.signum() < 0) {
-        quotient.NegateInternal();
-      }
-      return new BigInteger[] {quotient, remainder };
+      int remCount = CountWords(bigRemainderreg, bigRemainderreg.length);
+      int quoCount = CountWords(quotientreg, quotientreg.length);
+      bigRemainderreg = ShortenArray(bigRemainderreg, remCount);
+      quotientreg = ShortenArray(quotientreg, quoCount);
+      BigInteger bigrem=(remCount == 0) ? BigInteger.ZERO : new BigInteger(remCount, bigRemainderreg, this.negative);
+      BigInteger bigquo2=(quoCount == 0) ? BigInteger.ZERO : new BigInteger(quoCount, quotientreg, this.negative ^ divisor.negative);
+      return new BigInteger[] {bigquo2, bigrem };
     }
 
     /**
@@ -3756,19 +3650,17 @@ at: http://upokecenter.com/d/
         if (this.negative) {
           smallRemainder = -smallRemainder;
         }
-        return new BigInteger().InitializeInt(smallRemainder);
+        return BigInteger.valueOf(smallRemainder);
       }
       if (this.PositiveCompare(divisor) < 0) {
         return this;
       }
-      BigInteger remainder = new BigInteger();
       words1Size += words1Size & 1;
       words2Size += words2Size & 1;
-      remainder.reg = new short[RoundupSize((int)words2Size)];
-      remainder.negative = false;
+      short[] remainderReg = new short[RoundupSize((int)words2Size)];
       short[] tempbuf = new short[words1Size + (3 * (words2Size + 2))];
       Divide(
-        remainder.reg,
+        remainderReg,
         0,
         null,
         0,
@@ -3780,18 +3672,12 @@ at: http://upokecenter.com/d/
         divisor.reg,
         0,
         words2Size);
-      remainder.wordCount = remainder.CalcWordCount();
-      remainder.ShortenArray();
-      if (this.signum() < 0 && remainder.signum()!=0) {
-        remainder.NegateInternal();
-      }
-      return remainder;
-    }
-
-    private void NegateInternal() {
-      if (this.wordCount != 0) {
-        this.negative = this.signum() > 0;
-      }
+      int count = CountWords(remainderReg, remainderReg.length);
+      if (count == 0) {
+ return BigInteger.ZERO;
+}
+      remainderReg = ShortenArray(remainderReg, count);
+      return new BigInteger(count, remainderReg, this.negative);
     }
 
     private int PositiveCompare(BigInteger t) {
@@ -3904,79 +3790,18 @@ at: http://upokecenter.com/d/
         return new BigInteger[] { BigInteger.valueOf(smallintX), BigInteger.valueOf(smallintY)
         };
       }
-      bigintX = null;
-      bigintY = Power2(powerBits);
+      bigintX = BigInteger.ZERO;
+      bigintY = BigInteger.ONE.shiftLeft(powerBits);
       do {
         bigintX = bigintY;
         bigintY = thisValue.divide(bigintX);
         bigintY=bigintY.add(bigintX);
         bigintY=bigintY.shiftRight(1);
-      } while (bigintY.compareTo(bigintX) < 0);
+      } while (bigintY != null && bigintY.compareTo(bigintX) < 0);
       bigintY = bigintX.multiply(bigintX);
       bigintY = thisValue.subtract(bigintY);
       return new BigInteger[] {bigintX, bigintY
       };
-      /*
-      // Use Johnson's bisection algorithm to find the square root
-      int bitSet = this.getUnsignedBitLength();
-      --bitSet;
-      int lastBit = bitSet >> 1;
-      int count = ((lastBit + 15) >> 4) + 1;
-      short[] result = new short[RoundupSize(count)];
-      short[] dataTmp2 = new short[RoundupSize((count * 2) + 2)];
-      short[] dataTmp = new short[RoundupSize((count * 2) + 2)];
-      int lastVshiftBit = lastBit << 1;
-      BigInteger bid = BigInteger.ONE.shiftLeft(lastVshiftBit);
-      result[lastBit >> 4] |= ((short)(1 << (lastBit & 15)));
-      lastVshiftBit = 0;
-      for (int i = lastBit - 1; i >= 0; --i) {
-        int valueVShift;
-        java.util.Arrays.fill(dataTmp,0,(0)+(dataTmp.length),(short)0);
-        // Left shift by i + 1
-        valueVShift = (i + 1);
-        // Note: Copying the result in this way also shifts left, due
-        // to the way the number is stored
-        System.arraycopy(result, 0, dataTmp, valueVShift >> 4, count);
-        if ((valueVShift & 15) != 0) {
-          ShiftWordsLeftByBits(dataTmp, 0, dataTmp.length, valueVShift & 15);
-        }
-        // Add bid (do this first since it's often what
-        // affects the comparison the most)
-        if (dataTmp.length >= bid.wordCount) {
-          AddUnevenSize(dataTmp, 0, dataTmp, 0, dataTmp.length, bid.reg, 0, bid.wordCount);
-        } else {
-          AddUnevenSize(dataTmp, 0, bid.reg, 0, bid.wordCount, dataTmp, 0, dataTmp.length);
-        }
-        if (CompareUnevenSize(dataTmp, 0, dataTmp.length, this.reg, 0, this.wordCount) > 0) {
-          continue;
-        }
-        // Add 1<<(i << 1)
-        valueVShift = (i << 1);
-        if ((((int)dataTmp[valueVShift >> 4]) & (1 << (valueVShift & 15))) == 0) {
-          // Add bit directly, the augend has just one bit
-          dataTmp[valueVShift >> 4] |= ((short)(1 << (valueVShift & 15)));
-        } else {
-          dataTmp2[lastVshiftBit] = (short)0;
-          dataTmp2[valueVShift >> 4] |= ((short)(1 << (valueVShift & 15)));
-          lastVshiftBit = valueVShift >> 4;
-          AddOneByOne(dataTmp, 0, dataTmp, 0, dataTmp2, 0, dataTmp.length);
-        }
-        // System.out.println("3. " + (WordsToBigInt(dataTmp, 0, dataTmp.length)) + " cmp " + (this));
-        if (CompareUnevenSize(dataTmp, 0, dataTmp.length, this.reg, 0, this.wordCount) > 0) {
-          continue;
-        }
-        bid = WordsToBigInt(dataTmp, 0, dataTmp.length);
-        result[i >> 4] |= ((short)(1 << (i & 15)));
-      }
-      bigintX = new BigInteger();
-      bigintX.reg = result;
-      bigintX.wordCount = bigintX.CalcWordCount();
-      bigintY = bigintX.multiply(bigintX);
-      bigintY = this.subtract(bigintY);
-      return new BigInteger[] {
-        bigintX, bigintY
-      };
-       */
     }
 
     /**
@@ -3991,17 +3816,17 @@ at: http://upokecenter.com/d/
      * BigInteger object for the number zero.
      */
 
-    public static final BigInteger ZERO = new BigInteger().InitializeInt(0);
+    public static final BigInteger ZERO = new BigInteger(0, new short[] { 0, 0}, false);
 
     /**
      * BigInteger object for the number one.
      */
 
-    public static final BigInteger ONE = new BigInteger().InitializeInt(1);
+    public static final BigInteger ONE = new BigInteger(1, new short[] { 1, 0}, false);
 
     /**
      * BigInteger object for the number ten.
      */
 
-    public static final BigInteger TEN = new BigInteger().InitializeInt(10);
+    public static final BigInteger TEN = BigInteger.valueOf(10);
   }

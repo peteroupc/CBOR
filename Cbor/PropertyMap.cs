@@ -83,7 +83,7 @@ namespace PeterO.Cbor {
       CBORObject obj) {
       int dimLength = arr.GetLength(dimension);
       int rank = index.Length;
-      for (int i = 0; i < dimLength; ++i) {
+      for (var i = 0; i < dimLength; ++i) {
         if (dimension + 1 == rank) {
           index[dimension] = i;
           obj.Add(CBORObject.FromObject(arr.GetValue(index)));
@@ -109,7 +109,7 @@ namespace PeterO.Cbor {
         // Most common case: the array is one-dimensional
         obj = CBORObject.NewArray();
         int len = arr.GetLength(0);
-        for (int i = 0; i < len; ++i) {
+        for (var i = 0; i < len; ++i) {
           obj.Add(CBORObject.FromObject(arr.GetValue(i)));
         }
         return obj;

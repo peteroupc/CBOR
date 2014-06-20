@@ -485,9 +485,8 @@ namespace CBOR {
           }
           exponent -= 112;
           return Create(ExtendedFloat.Create(bigmantissa, (BigInteger)exponent));
-        } else {
-          throw new ArgumentException("words has a bad length");
         }
+        throw new ArgumentException("words has a bad length");
       }
 
       #region Equals and GetHashCode implementation
@@ -651,43 +650,43 @@ namespace CBOR {
         if (chunks.Length < 6) {
           return 0;
         }
-        op1 = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[4]) });
-        op2 = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[5]) });
+        op1 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[4]) });
+        op2 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[5]) });
         if (chunks.Length == 6 || chunks[6].Length == 0) {
           result = op2;
           op2 = null;
         } else {
-          result = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[6]) });
+          result = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[6]) });
         }
       } else if (size == 1) {
         // double
         if (chunks.Length < 8) {
           return 0;
         }
-        op1 = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[4]), this.HexInt(chunks[5]) });
-        op2 = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[6]), this.HexInt(chunks[7]) });
+        op1 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[4]), this.HexInt(chunks[5]) });
+        op2 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[6]), this.HexInt(chunks[7]) });
         if (chunks.Length == 8 || chunks[8].Length == 0) {
           result = op2;
           op2 = null;
           return 0;
         }
-        result = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[8]), this.HexInt(chunks[9]) });
+        result = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[8]), this.HexInt(chunks[9]) });
       } else if (size == 2) {
         // quad
         if (chunks.Length < 12) {
           return 0;
         }
-        op1 = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[4]), this.HexInt(chunks[5]),
+        op1 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[4]), this.HexInt(chunks[5]),
                                             this.HexInt(chunks[6]),
                                             this.HexInt(chunks[7]) });
-        op2 = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[8]), this.HexInt(chunks[9]),
+        op2 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[8]), this.HexInt(chunks[9]),
                                             this.HexInt(chunks[10]),
                                             this.HexInt(chunks[11]) });
         if (chunks.Length == 12 || chunks[12].Length == 0) {
           result = op2;
           op2 = null;
         } else {
-          result = BinaryNumber.FromFloatWords(new [] { this.HexInt(chunks[12]), this.HexInt(chunks[13]),
+          result = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[12]), this.HexInt(chunks[13]),
                                                  this.HexInt(chunks[14]),
                                                  this.HexInt(chunks[15]) });
         }

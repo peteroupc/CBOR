@@ -508,9 +508,7 @@ namespace PeterO {
           haveDigits = true;
           if (haveDecimalPoint) {
             if (newScaleInt == Int32.MinValue) {
-              if (newScale == null) {
-                newScale = new FastInteger(newScaleInt);
-              }
+              newScale = newScale ?? (new FastInteger(newScaleInt));
               newScale.Decrement();
             } else {
               --newScaleInt;
@@ -587,18 +585,14 @@ namespace PeterO {
         if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
           newScaleInt = expInt;
         } else if (exp == null) {
-          if (newScale == null) {
-            newScale = new FastInteger(newScaleInt);
-          }
+          newScale = newScale ?? (new FastInteger(newScaleInt));
           if (offset < 0) {
             newScale.SubtractInt(expInt);
           } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
-          if (newScale == null) {
-            newScale = new FastInteger(newScaleInt);
-          }
+          newScale = newScale ?? (new FastInteger(newScaleInt));
           if (offset < 0) {
             newScale.Subtract(exp);
           } else {
@@ -969,7 +963,7 @@ namespace PeterO {
             adjustedExponent.Divide(10);
           }
           int count = builderReversed.Length;
-          for (int i = 0; i < count; ++i) {
+          for (var i = 0; i < count; ++i) {
             builder.Append(builderReversed[count - 1 - i]);
           }
         }

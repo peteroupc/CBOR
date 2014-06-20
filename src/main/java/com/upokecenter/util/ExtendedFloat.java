@@ -32,9 +32,9 @@ at: http://upokecenter.com/d/
      * ExtendedFloat value.</li> </ul>
      */
   public final class ExtendedFloat implements Comparable<ExtendedFloat> {
-    private BigInteger exponent;
-    private BigInteger unsignedMantissa;
-    private int flags;
+    private final BigInteger exponent;
+    private final BigInteger unsignedMantissa;
+    private final int flags;
 
     /**
      * Gets this object&apos;s exponent. This object&apos;s value will
@@ -160,9 +160,10 @@ at: http://upokecenter.com/d/
       if (ctx != null && ctx.getHasMaxPrecision()) {
         flags |= BigNumberFlags.FlagQuietNaN;
         ExtendedFloat ef = CreateWithFlags(diag, BigInteger.ZERO, flags).RoundToPrecision(ctx);
-        ef.flags &= ~BigNumberFlags.FlagQuietNaN;
-        ef.flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
-        return ef;
+        int newFlags = ef.flags;
+        newFlags &= ~BigNumberFlags.FlagQuietNaN;
+        newFlags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+        return new ExtendedFloat(ef.getMantissa(), ef.exponent, newFlags);
       }
       flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
       return CreateWithFlags(diag, BigInteger.ZERO, flags);
@@ -193,24 +194,34 @@ at: http://upokecenter.com/d/
       if (exponent == null) {
         throw new NullPointerException("exponent");
       }
-      ExtendedFloat ex = new ExtendedFloat();
-      ex.exponent = exponent;
       int sign = mantissa == null ? 0 : mantissa.signum();
-      ex.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
-      ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
-      return ex;
+      return new ExtendedFloat(
+        exponent,
+        sign < 0 ? ((mantissa).negate()) : mantissa,
+        (sign < 0) ? BigNumberFlags.FlagNegative : 0);
     }
 
-    private ExtendedFloat() {
+    private ExtendedFloat(BigInteger unsignedMantissa, BigInteger exponent, int flags) {
+      this.unsignedMantissa = unsignedMantissa;
+      this.exponent = exponent;
+      this.flags = flags;
     }
 
     static ExtendedFloat CreateWithFlags(
       BigInteger mantissa,
       BigInteger exponent,
       int flags) {
-      ExtendedFloat ext = ExtendedFloat.Create(mantissa, exponent);
-      ext.flags = flags;
-      return ext;
+      if (mantissa == null) {
+        throw new NullPointerException("mantissa");
+      }
+      if (exponent == null) {
+        throw new NullPointerException("exponent");
+      }
+      int sign = mantissa == null ? 0 : mantissa.signum();
+      return new ExtendedFloat(
+        exponent,
+        sign < 0 ? ((mantissa).negate()) : mantissa,
+        flags);
     }
 
     /**
