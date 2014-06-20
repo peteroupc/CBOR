@@ -30,6 +30,7 @@ namespace PeterO {
         return this.hasExponentRange ? this.exponentMax : BigInteger.Zero;
       }
     }
+    
 
     private int traps;
 
@@ -304,9 +305,14 @@ namespace PeterO {
     /// <returns>A PrecisionContext object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='exponentMin'/> is null.</exception>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='exponentMax'/> is null.</exception>
     public PrecisionContext WithBigExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
       if (exponentMin == null) {
         throw new ArgumentNullException("exponentMin");
+      }
+      if (exponentMax == null) {
+        throw new ArgumentNullException("exponentMax");
       }
       if (exponentMin.CompareTo(exponentMax) > 0) {
         throw new ArgumentException("exponentMin greater than exponentMax");

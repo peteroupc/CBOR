@@ -390,7 +390,7 @@ namespace PeterO {
         throw new ArgumentNullException("bytes");
       }
       BigInteger bi = fromByteArray(bytes, true);
-      this.reg = bi.reg;
+      this.words = bi.words;
       this.wordCount = bi.wordCount;
       this.negative = bi.negative;
     }
@@ -415,7 +415,7 @@ namespace PeterO {
         return BigInteger.One.negate();
       }
       bool xaNegative = false; int xaWordCount = 0; short[] xaReg = new short[valueA.wordCount];
-      Array.Copy(valueA.reg, xaReg, xaReg.Length);
+      Array.Copy(valueA.words, xaReg, xaReg.Length);
       xaWordCount = valueA.wordCount;
       if (valueA.negative) {
           TwosComplement(xaReg, 0, (int)xaReg.Length);
@@ -448,10 +448,10 @@ namespace PeterO {
         return Zero;
       }
       bool xaNegative = false; int xaWordCount = 0;
-      short[] xaReg = new short[a.wordCount];
-      Array.Copy(a.reg, xaReg, xaReg.Length);
+      var xaReg = new short[a.wordCount];
+      Array.Copy(a.words, xaReg, xaReg.Length);
       bool xbNegative = false; int xbWordCount = 0; short[] xbReg = new short[b.wordCount];
-      Array.Copy(b.reg, xbReg, xbReg.Length);
+      Array.Copy(b.words, xbReg, xbReg.Length);
       xaNegative = a.negative;
       xaWordCount = a.wordCount;
       xbNegative = b.negative;
@@ -501,9 +501,9 @@ namespace PeterO {
         return first;
       }
       bool xaNegative = false; int xaWordCount = 0; short[] xaReg = new short[first.wordCount];
-      Array.Copy(first.reg, xaReg, xaReg.Length);
+      Array.Copy(first.words, xaReg, xaReg.Length);
       bool xbNegative = false; int xbWordCount = 0; short[] xbReg = new short[second.wordCount];
-      Array.Copy(second.reg, xbReg, xbReg.Length);
+      Array.Copy(second.words, xbReg, xbReg.Length);
       xaNegative = first.negative;
       xaWordCount = first.wordCount;
       xbNegative = second.negative;
@@ -550,9 +550,9 @@ namespace PeterO {
         return a;
       }
       bool xaNegative = false; int xaWordCount = 0; short[] xaReg = new short[a.wordCount];
-      Array.Copy(a.reg, xaReg, xaReg.Length);
+      Array.Copy(a.words, xaReg, xaReg.Length);
       bool xbNegative = false; int xbWordCount = 0; short[] xbReg = new short[b.wordCount];
-      Array.Copy(b.reg, xbReg, xbReg.Length);
+      Array.Copy(b.words, xbReg, xbReg.Length);
       xaNegative = a.negative;
       xaWordCount = a.wordCount;
       xbNegative = b.negative;
@@ -560,14 +560,10 @@ namespace PeterO {
       xaReg = CleanGrow(xaReg, Math.Max(xaReg.Length, xbReg.Length));
       xbReg = CleanGrow(xbReg, Math.Max(xaReg.Length, xbReg.Length));
       if (xaNegative) {
-        {
           TwosComplement(xaReg, 0, (int)xaReg.Length);
-        }
       }
       if (xbNegative) {
-        {
           TwosComplement(xbReg, 0, (int)xbReg.Length);
-        }
       }
       xaNegative ^= xbNegative;
       XorWords(xaReg, xaReg, xbReg, (int)xaReg.Length);

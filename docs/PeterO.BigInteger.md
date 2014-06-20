@@ -4,7 +4,7 @@
         System.IComparable,
         System.IEquatable
 
-An arbitrary-precision integer. Instances of this class are immutable, so they are inherently safe for use by multiple threads.
+An arbitrary-precision integer. Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
 
 An arbitrary-precision integer.
 
@@ -1071,6 +1071,8 @@ The parameter <i>bigValue</i>
 
     public BigInteger(
         byte[] bytes);
+
+<b>Deprecated.</b> Use BigInteger.fromByteArray(bytes,true) instead.  This method may be removed in version 2.0.
 
 Initializes a new instance of the BigInteger class.
 

@@ -493,9 +493,8 @@ namespace PeterO.Cbor {
           }
           // Tag 256: String namespace
           if (uadditional == 256) {
-            this.stringRefs = this.stringRefs ?? (new StringRefs()); else {
+            this.stringRefs = this.stringRefs ?? (new StringRefs()); 
               this.stringRefs.Push();
-            }
           } else if (uadditional == 25) {
             // String reference
             if (this.stringRefs == null) {

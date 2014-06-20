@@ -578,7 +578,7 @@ at: http://upokecenter.com/d/
       }
       // Round half-even
       if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-             !fastSmallMant.isEvenNumber())) {
+                              !fastSmallMant.isEvenNumber())) {
         fastSmallMant.Increment();
         if (fastSmallMant.CompareToInt(1 << 24) == 0) {
           fastSmallMant = new FastInteger(1 << 23);
@@ -605,7 +605,7 @@ at: http://upokecenter.com/d/
         fastSmallMant = accum.getShiftedIntFast();
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-                !fastSmallMant.isEvenNumber())) {
+                                !fastSmallMant.isEvenNumber())) {
           fastSmallMant.Increment();
           if (fastSmallMant.CompareToInt(1 << 24) == 0) {
             fastSmallMant = new FastInteger(1 << 23);
@@ -656,11 +656,11 @@ at: http://upokecenter.com/d/
         if (this.isNegative()) {
           nan[1] |= ((int)(1 << 31));
         }
+        // 0x40000 is not really the signaling bit, but done to keep
+        // the mantissa from being zero
         if (this.IsQuietNaN()) {
           nan[1] |= 0x80000;
         } else {
-          // not really the signaling bit, but done to keep
-          // the mantissa from being zero
           nan[1] |= 0x40000;
         }
         if (this.getUnsignedMantissa().signum()!=0) {
@@ -701,7 +701,7 @@ at: http://upokecenter.com/d/
       }
       // Round half-even
       if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-          DecimalUtility.HasBitSet(mantissaBits, 0))) {
+                              DecimalUtility.HasBitSet(mantissaBits, 0))) {
         // Add 1 to the bits
         mantissaBits[0] = ((int)(mantissaBits[0] + 1));
         if (mantissaBits[0] == 0) {
@@ -725,9 +725,9 @@ at: http://upokecenter.com/d/
         subnormal = true;
         // Shift while number remains subnormal
         BitShiftAccumulator accum = new BitShiftAccumulator(
-                      FastInteger.WordsToBigInteger(mantissaBits),
-                      0,
-                      0);
+          FastInteger.WordsToBigInteger(mantissaBits),
+          0,
+          0);
         FastInteger fi = FastInteger.Copy(bigexponent).SubtractInt(-1074).Abs();
         accum.ShiftRight(fi);
         bitsAfterLeftmost = accum.getOlderDiscardedDigits();
@@ -736,7 +736,7 @@ at: http://upokecenter.com/d/
         mantissaBits = FastInteger.GetLastWords(accum.getShiftedInt(), 2);
         // Round half-even
         if (bitLeftmost > 0 && (bitsAfterLeftmost > 0 ||
-            DecimalUtility.HasBitSet(mantissaBits, 0))) {
+                                DecimalUtility.HasBitSet(mantissaBits, 0))) {
           // Add 1 to the bits
           mantissaBits[0] = ((int)(mantissaBits[0] + 1));
           if (mantissaBits[0] == 0) {
