@@ -98,7 +98,7 @@ namespace PeterO {
         throw new ArgumentNullException("str");
       }
       try {
-        using (MemoryStream ms = new MemoryStream()) {
+        using (var ms = new MemoryStream()) {
           if (WriteUtf8(str, ms, replace) != 0) {
             throw new ArgumentException("Unpaired surrogate code point");
           }
@@ -125,7 +125,7 @@ namespace PeterO {
         throw new ArgumentNullException("str");
       }
       long size = 0;
-      for (int i = 0; i < str.Length; ++i) {
+      for (var i = 0; i < str.Length; ++i) {
         int c = str[i];
         if (c <= 0x7f) {
           ++size;
@@ -268,7 +268,7 @@ namespace PeterO {
       int len = str.Length;
       var c = (char)0;
       bool hasUpperCase = false;
-      for (int i = 0; i < len; ++i) {
+      for (var i = 0; i < len; ++i) {
         c = str[i];
         if (c >= 'A' && c <= 'Z') {
           hasUpperCase = true;
@@ -279,7 +279,7 @@ namespace PeterO {
         return str;
       }
       var builder = new StringBuilder();
-      for (int i = 0; i < len; ++i) {
+      for (var i = 0; i < len; ++i) {
         c = str[i];
         if (c >= 'A' && c <= 'Z') {
           builder.Append((char)(c + 0x20));
@@ -308,7 +308,7 @@ namespace PeterO {
         return 1;
       }
       int len = Math.Min(strA.Length, strB.Length);
-      for (int i = 0; i < len; ++i) {
+      for (var i = 0; i < len; ++i) {
         int ca = strA[i];
         int cb = strB[i];
         if (ca == cb) {

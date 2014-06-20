@@ -19,8 +19,6 @@ namespace PeterO {
     /// This class accepts BEncoded strings in UTF-8, and outputs BEncoded
     /// strings in UTF-8. This class also demonstrates how CBORObject supports
     /// predefined serialization formats.</summary>
-    /// <param name='stream'>A readable data stream.</param>
-    /// <returns>A CBORObject object.</returns>
   public static class BEncoding {
     private static void writeUtf8(string s, Stream stream) {
       if (DataUtilities.WriteUtf8(s, stream, false) != 0) {
@@ -100,9 +98,8 @@ namespace PeterO {
       }
       if (c >= '0' && c <= '9') {
         return readString(stream, (char)c);
-      } else {
-        throw new CBORException("Object expected");
       }
+      throw new CBORException("Object expected");
     }
 
     private static CBORObject readString(Stream stream, char firstChar) {
@@ -208,7 +205,7 @@ namespace PeterO {
         }
       } else if (obj.Type == CBORType.Array) {
         stream.WriteByte(unchecked((byte)((byte)'l')));
-        for (int i = 0; i < obj.Count; ++i) {
+        for (var i = 0; i < obj.Count; ++i) {
           Write(obj[i], stream);
         }
         stream.WriteByte(unchecked((byte)((byte)'e')));

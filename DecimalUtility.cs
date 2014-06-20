@@ -30,7 +30,7 @@ namespace PeterO {
     internal static int ShiftLeftOne(int[] arr) {
       unchecked {
         int carry = 0;
-        for (int i = 0; i < arr.Length; ++i) {
+        for (var i = 0; i < arr.Length; ++i) {
           int item = arr[i];
           arr[i] = (int)(arr[i] << 1) | (int)carry;
           carry = ((item >> 31) != 0) ? 1 : 0;
@@ -197,7 +197,7 @@ namespace PeterO {
         BigInteger[] ret = null;
         BigInteger minValue = null;
         lock (this.outputs) {
-          for (int i = 0; i < this.size; ++i) {
+          for (var i = 0; i < this.size; ++i) {
             if (this.inputs[i].CompareTo(bi) <= 0 && (minValue == null || this.inputs[i].CompareTo(minValue) >= 0)) {
               // Console.WriteLine("Have cached power (" + inputs[i] + ", " + bi + ")");
               ret = new BigInteger[2];
@@ -212,7 +212,7 @@ namespace PeterO {
 
       public BigInteger GetCachedPower(BigInteger bi) {
         lock (this.outputs) {
-          for (int i = 0; i < this.size; ++i) {
+          for (var i = 0; i < this.size; ++i) {
             if (bi.Equals(this.inputs[i])) {
               if (i != 0) {
                 BigInteger tmp;
@@ -236,7 +236,7 @@ namespace PeterO {
 
       public BigInteger GetCachedPowerInt(int bi) {
         lock (this.outputs) {
-          for (int i = 0; i < this.size; ++i) {
+          for (var i = 0; i < this.size; ++i) {
             if (this.inputsInts[i] >= 0 && this.inputsInts[i] == bi) {
               if (i != 0) {
                 BigInteger tmp;

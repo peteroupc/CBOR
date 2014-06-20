@@ -42,7 +42,7 @@ namespace Test {
     [TestMethod]
     public void TestCBORObjectDecimal() {
       var rand = new FastRandom();
-      for (int i = 0; i <= 28; ++i) {  // Try a random decimal with a given exponent
+      for (var i = 0; i <= 28; ++i) {  // Try a random decimal with a given exponent
         for (int j = 0; j < 8; ++j) {
           decimal d = this.RandomDecimal(rand, i);
           CBORObject obj = CBORObject.FromObject(d);
@@ -4204,7 +4204,7 @@ namespace Test {
         0x7FFFFFFFFFFFF000UL, 0x8000000000000400UL,
         UInt64.MaxValue - 1000, UInt64.MaxValue
       };
-      for (int i = 0; i < ranges.Length; i += 2) {
+      for (var i = 0; i < ranges.Length; i += 2) {
         ulong j = ranges[i];
         while (true) {
           TestCommon.AssertSer(
@@ -4222,7 +4222,7 @@ namespace Test {
       int t;
       int dividendHigh = 0;
       int intDivisor = ((int)divisor) & 0xffff;
-      for (int i = 0; i < 32; ++i) {
+      for (var i = 0; i < 32; ++i) {
         t = dividendHigh >> 31;
         dividendHigh <<= 1;
         dividendHigh = unchecked((int)(dividendHigh | ((int)((dividendLow >> 31) & 1))));
@@ -4274,7 +4274,7 @@ namespace Test {
     public void TestDivideUnsigned() {
       var fr = new FastRandom();
       unchecked {
-        for (int i = 0; i < 1000; ++i) {
+        for (var i = 0; i < 1000; ++i) {
           var x = (uint)fr.NextValue(0x10000);
           x |= ((uint)fr.NextValue(0x10000)) << 16;
           var y = (ushort)fr.NextValue(0x10000);
@@ -4297,7 +4297,7 @@ namespace Test {
       uint[] ranges = { 0, 65539,
         0x7FFFF000U, 0x80000400U,
         UInt32.MaxValue - 1000, UInt32.MaxValue };
-      for (int i = 0; i < ranges.Length; i += 2) {
+      for (var i = 0; i < ranges.Length; i += 2) {
         uint j = ranges[i];
         while (true) {
           TestCommon.AssertSer(
@@ -4406,7 +4406,7 @@ namespace Test {
         new DateTime(9998, 1, 1, 0, 0, 0, DateTimeKind.Utc),
         new DateTime(9999, 12, 31, 23, 59, 59, DateTimeKind.Utc)
       };
-      for (int i = 0; i < ranges.Length; i += 2) {
+      for (var i = 0; i < ranges.Length; i += 2) {
         DateTime j = ranges[i];
         while (true) {
           TestCommon.AssertSer(

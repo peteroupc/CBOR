@@ -100,7 +100,7 @@ namespace Test {
     [TestMethod]
     public void TestPrecisionContextArgValidation() {
       try {
-        new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false);
+        Assert.AreEqual(null, new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -108,7 +108,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        new PrecisionContext(0, Rounding.HalfEven, 0, -1, false);
+        Assert.AreEqual(null, new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -296,7 +296,7 @@ namespace Test {
 
     private sealed class FakeConverter : ICBORConverter<Uri> {
       public CBORObject ToCBORObject(Uri obj) {
-        throw new NotImplementedException();
+        throw new InvalidOperationException();
       }
     }
 
@@ -1224,11 +1224,11 @@ namespace Test {
     public void TestNestingDepth() {
       try {
         using (var ms = new MemoryStream()) {
-          for (int i = 0; i < 2000; ++i) {
+          for (var i = 0; i < 2000; ++i) {
             // Write beginning of indefinite-length array
             ms.WriteByte((byte)0x9f);
           }
-          for (int i = 0; i < 2000; ++i) {
+          for (var i = 0; i < 2000; ++i) {
             // Write end of indefinite-length array
             ms.WriteByte((byte)0xff);
           }
@@ -1244,11 +1244,11 @@ namespace Test {
           }
         }
         using (var ms2 = new MemoryStream()) {
-          for (int i = 0; i < 495; ++i) {
+          for (var i = 0; i < 495; ++i) {
             // Write beginning of indefinite-length array
             ms2.WriteByte((byte)0x9f);
           }
-          for (int i = 0; i < 495; ++i) {
+          for (var i = 0; i < 495; ++i) {
             // Write end of indefinite-length array
             ms2.WriteByte((byte)0xff);
           }
@@ -1355,7 +1355,7 @@ namespace Test {
       var fr = new FastRandom();
       // var sw1 = new System.Diagnostics.Stopwatch();
       // var sw2 = new System.Diagnostics.Stopwatch();
-      for (int i = 0; i < 100; ++i) {
+      for (var i = 0; i < 100; ++i) {
         ExtendedRational er = CBORTest.RandomRational(fr);
         int exp = -100000 + fr.NextValue(200000);
         ExtendedDecimal ed = ExtendedDecimal.Create(
@@ -1376,7 +1376,7 @@ namespace Test {
     [TestMethod]
     public void TestRationalDivide() {
       var fr = new FastRandom();
-      for (int i = 0; i < 100; ++i) {
+      for (var i = 0; i < 100; ++i) {
         ExtendedRational er = CBORTest.RandomRational(fr);
         ExtendedRational er2 = CBORTest.RandomRational(fr);
         if (er2.IsZero || !er2.IsFinite) {
@@ -1397,7 +1397,7 @@ namespace Test {
     [TestMethod]
     public void TestRationalRemainder() {
       var fr = new FastRandom();
-      for (int i = 0; i < 100; ++i) {
+      for (var i = 0; i < 100; ++i) {
         ExtendedRational er;
         ExtendedRational er2;
         er = new ExtendedRational(CBORTest.RandomBigInteger(fr), BigInteger.One);
@@ -1426,7 +1426,7 @@ namespace Test {
     [TestMethod]
     public void TestRationalCompare() {
       var fr = new FastRandom();
-      for (int i = 0; i < 100; ++i) {
+      for (var i = 0; i < 100; ++i) {
         BigInteger num = CBORTest.RandomBigInteger(fr);
         if (num.IsZero) {
           // Skip if number is 0; 0/1 and 0/2 are
@@ -1447,7 +1447,7 @@ namespace Test {
         -1,
         new ExtendedRational(BigInteger.One, (BigInteger)2).CompareTo(
           new ExtendedRational((BigInteger)4, BigInteger.One)));
-      for (int i = 0; i < 100; ++i) {
+      for (var i = 0; i < 100; ++i) {
         BigInteger num = CBORTest.RandomBigInteger(fr);
         BigInteger den = CBORTest.RandomBigInteger(fr);
         if (den.IsZero) {

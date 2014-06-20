@@ -67,13 +67,9 @@ import com.upokecenter.util.*;
         }
       }
       if (extended) {
-        if (negative) {
-          bytes[bytes.length - 1] = (byte)0xff;
-        } else {
-          bytes[bytes.length - 1] = 0;
-        }
+          bytes[bytes.length - 1] = negative ? (byte)0xff : (byte)0;
       }
-      BigInteger bi = BigInteger.fromByteArray((byte[])bytes,true);
+      var bi = BigInteger.fromByteArray(bytes, true);
       // NOTE: Here, any tags are discarded; when called from
       // the Read method, "o" will have no tags anyway (beyond tag 2),
       // and when called from FromObjectAndTag, we prefer

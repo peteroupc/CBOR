@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -108,9 +108,7 @@ namespace PeterO.Cbor {
           haveDigits = true;
           if (haveDecimalPoint) {
             if (newScaleInt == Int32.MinValue) {
-              if (newScale == null) {
-                newScale = new FastInteger(newScaleInt);
-              }
+              newScale = newScale ?? (new FastInteger(newScaleInt));
               newScale.AddInt(-1);
             } else {
               --newScaleInt;
@@ -191,18 +189,14 @@ namespace PeterO.Cbor {
         if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
           newScaleInt = expInt;
   } else if (exp == null) {
-          if (newScale == null) {
-            newScale = new FastInteger(newScaleInt);
-          }
+          newScale = newScale ?? (new FastInteger(newScaleInt));
           if (offset < 0) {
             newScale.SubtractInt(expInt);
   } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
-          if (newScale == null) {
-            newScale = new FastInteger(newScaleInt);
-          }
+          newScale = newScale ?? (new FastInteger(newScaleInt));
           if (offset < 0) {
             newScale.Subtract(exp);
           } else {

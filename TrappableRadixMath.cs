@@ -32,7 +32,7 @@ namespace PeterO {
       int mutexConditions = traps & (~(
         PrecisionContext.FlagClamped | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded | PrecisionContext.FlagSubnormal));
       if (mutexConditions != 0) {
-        for (int i = 0; i < 32; ++i) {
+        for (var i = 0; i < 32; ++i) {
           int flag = mutexConditions & (i << 1);
           if (flag != 0) {
             throw new TrapException(flag, dst, result);

@@ -38,7 +38,7 @@ namespace PeterO.Cbor {
       byte[] data = o.GetByteString();
       if (data.Length <= 7) {
         long x = 0;
-        for (int i = 0; i < data.Length; ++i) {
+        for (var i = 0; i < data.Length; ++i) {
           x <<= 8;
           x |= ((long)data[i]) & 0xff;
         }
@@ -60,20 +60,16 @@ namespace PeterO.Cbor {
         extended = true;
       }
       bytes = new byte[neededLength];
-      for (int i = 0; i < data.Length; ++i) {
+      for (var i = 0; i < data.Length; ++i) {
         bytes[i] = data[data.Length - 1 - i];
         if (negative) {
           bytes[i] = (byte)((~((int)bytes[i])) & 0xff);
         }
       }
       if (extended) {
-        if (negative) {
-          bytes[bytes.Length - 1] = (byte)0xff;
-        } else {
-          bytes[bytes.Length - 1] = 0;
-        }
+          bytes[bytes.Length - 1] = negative ? (byte)0xff : (byte)0;
       }
-      var bi = new BigInteger((byte[])bytes);
+      var bi = BigInteger.fromByteArray(bytes, true);
       // NOTE: Here, any tags are discarded; when called from
       // the Read method, "o" will have no tags anyway (beyond tag 2),
       // and when called from FromObjectAndTag, we prefer

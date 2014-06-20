@@ -82,11 +82,8 @@ namespace PeterO.Cbor {
         throw new CBORException("Index " + index + " is not valid");
       }
       CBORObject ret = lastList[index];
-      if (ret.Type == CBORType.ByteString) {
         // Byte strings are mutable, so make a copy
-        return CBORObject.FromObject(ret.GetByteString());
-      }
-      return ret;
+      return (ret.Type == CBORType.ByteString) ? (CBORObject.FromObject(ret.GetByteString())) : (ret);
     }
 
     public CBORObject GetString(BigInteger bigIndex) {
@@ -102,11 +99,8 @@ namespace PeterO.Cbor {
         throw new CBORException("Index " + index + " is not valid");
       }
       CBORObject ret = lastList[index];
-      if (ret.Type == CBORType.ByteString) {
         // Byte strings are mutable, so make a copy
-        return CBORObject.FromObject(ret.GetByteString());
-      }
-      return ret;
+      return (ret.Type == CBORType.ByteString) ? (CBORObject.FromObject(ret.GetByteString())) : (ret);
     }
   }
 }

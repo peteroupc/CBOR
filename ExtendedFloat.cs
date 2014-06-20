@@ -39,9 +39,9 @@ namespace PeterO {
     /// </list>
     /// </summary>
   public sealed class ExtendedFloat : IComparable<ExtendedFloat>, IEquatable<ExtendedFloat> {
-    private BigInteger exponent;
-    private BigInteger unsignedMantissa;
-    private int flags;
+    private readonly BigInteger exponent;
+    private readonly BigInteger unsignedMantissa;
+    private readonly int flags;
 
     /// <summary>Gets this object&apos;s exponent. This object&apos;s
     /// value will be an integer if the exponent is positive or zero.</summary>
@@ -158,9 +158,10 @@ namespace PeterO {
       if (ctx != null && ctx.HasMaxPrecision) {
         flags |= BigNumberFlags.FlagQuietNaN;
         ExtendedFloat ef = CreateWithFlags(diag, BigInteger.Zero, flags).RoundToPrecision(ctx);
-        ef.flags &= ~BigNumberFlags.FlagQuietNaN;
-        ef.flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
-        return ef;
+        int newFlags = ef.flags;
+        newFlags &= ~BigNumberFlags.FlagQuietNaN;
+        newFlags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+        return new ExtendedFloat(ef.Mantissa, ef.exponent, newFlags);
       }
       flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
       return CreateWithFlags(diag, BigInteger.Zero, flags);
@@ -188,24 +189,34 @@ namespace PeterO {
       if (exponent == null) {
         throw new ArgumentNullException("exponent");
       }
-      var ex = new ExtendedFloat();
-      ex.exponent = exponent;
       int sign = mantissa == null ? 0 : mantissa.Sign;
-      ex.unsignedMantissa = sign < 0 ? (-(BigInteger)mantissa) : mantissa;
-      ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
-      return ex;
+      return new ExtendedFloat(
+        exponent,
+        sign < 0 ? (-(BigInteger)mantissa) : mantissa,
+        (sign < 0) ? BigNumberFlags.FlagNegative : 0);
     }
 
-    private ExtendedFloat() {
+    private ExtendedFloat(BigInteger unsignedMantissa, BigInteger exponent, int flags) {
+      this.unsignedMantissa = unsignedMantissa;
+      this.exponent = exponent;
+      this.flags = flags;
     }
 
     internal static ExtendedFloat CreateWithFlags(
       BigInteger mantissa,
       BigInteger exponent,
       int flags) {
-      ExtendedFloat ext = ExtendedFloat.Create(mantissa, exponent);
-      ext.flags = flags;
-      return ext;
+      if (mantissa == null) {
+        throw new ArgumentNullException("mantissa");
+      }
+      if (exponent == null) {
+        throw new ArgumentNullException("exponent");
+      }
+      int sign = mantissa == null ? 0 : mantissa.Sign;
+      return new ExtendedFloat(
+        exponent,
+        sign < 0 ? (-(BigInteger)mantissa) : mantissa,
+        flags);
     }
 
     /// <summary>Creates a binary float from a string that represents a number.

@@ -20,8 +20,6 @@ import com.upokecenter.cbor.*;
      * This class accepts BEncoded strings in UTF-8, and outputs BEncoded
      * strings in UTF-8. This class also demonstrates how CBORObject supports
      * predefined serialization formats.
-     * @param stream A readable data stream.
-     * @return A CBORObject object.
      */
   public final class BEncoding {
 private BEncoding() {
@@ -104,9 +102,8 @@ private BEncoding() {
       }
       if (c >= '0' && c <= '9') {
         return readString(stream, (char)c);
-      } else {
-        throw new CBORException("Object expected");
       }
+      throw new CBORException("Object expected");
     }
 
     private static CBORObject readString(InputStream stream, char firstChar) throws IOException {

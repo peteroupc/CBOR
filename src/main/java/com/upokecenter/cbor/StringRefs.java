@@ -67,11 +67,8 @@ import com.upokecenter.util.*;
         throw new CBORException("Index " + index + " is not valid");
       }
       CBORObject ret = lastList.get(index);
-      if (ret.getType() == CBORType.ByteString) {
         // Byte strings are mutable, so make a copy
-        return CBORObject.FromObject(ret.GetByteString());
-      }
-      return ret;
+      return (ret.getType() == CBORType.ByteString) ? (CBORObject.FromObject(ret.GetByteString())) : (ret);
     }
 
     public CBORObject GetString(BigInteger bigIndex) {
@@ -87,10 +84,7 @@ import com.upokecenter.util.*;
         throw new CBORException("Index " + index + " is not valid");
       }
       CBORObject ret = lastList.get(index);
-      if (ret.getType() == CBORType.ByteString) {
         // Byte strings are mutable, so make a copy
-        return CBORObject.FromObject(ret.GetByteString());
-      }
-      return ret;
+      return (ret.getType() == CBORType.ByteString) ? (CBORObject.FromObject(ret.GetByteString())) : (ret);
     }
   }

@@ -115,9 +115,7 @@ private CBORDataUtilities() {
           haveDigits = true;
           if (haveDecimalPoint) {
             if (newScaleInt == Integer.MIN_VALUE) {
-              if (newScale == null) {
-                newScale = new FastInteger(newScaleInt);
-              }
+              newScale = (newScale == null) ? ((new FastInteger(newScaleInt))) : newScale;
               newScale.AddInt(-1);
             } else {
               --newScaleInt;
@@ -198,18 +196,14 @@ private CBORDataUtilities() {
         if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
           newScaleInt = expInt;
   } else if (exp == null) {
-          if (newScale == null) {
-            newScale = new FastInteger(newScaleInt);
-          }
+          newScale = (newScale == null) ? ((new FastInteger(newScaleInt))) : newScale;
           if (offset < 0) {
             newScale.SubtractInt(expInt);
   } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
-          if (newScale == null) {
-            newScale = new FastInteger(newScaleInt);
-          }
+          newScale = (newScale == null) ? ((new FastInteger(newScaleInt))) : newScale;
           if (offset < 0) {
             newScale.Subtract(exp);
           } else {

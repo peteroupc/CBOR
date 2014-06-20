@@ -91,7 +91,7 @@ namespace PeterO {
         throw new ArgumentException("length (" + Convert.ToString((int)length, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + "9");
       }
       int ret = 0;
-      for (int i = 0; i < length; ++i) {
+      for (var i = 0; i < length; ++i) {
         var digit = (int)(str[offset + i] - '0');
         ret *= 10;
         ret += digit;
@@ -322,7 +322,7 @@ namespace PeterO {
                                   out bigrem);
         var rem = (int)bigrem;
         this.bitsAfterLeftmost |= this.bitLeftmost;
-        for (int i = 0; i < diffInt; ++i) {
+        for (var i = 0; i < diffInt; ++i) {
           if (i == diffInt - 1) {
             this.bitLeftmost = rem % 10;
           } else {
@@ -520,7 +520,7 @@ namespace PeterO {
         } else {
           this.discardedBitCount.AddInt(digitShift);
         }
-        for (int i = 0; i < digitShift; ++i) {
+        for (var i = 0; i < digitShift; ++i) {
           var digit = (int)(this.shiftedSmall % 10);
           this.shiftedSmall /= 10;
           this.bitsAfterLeftmost |= this.bitLeftmost;

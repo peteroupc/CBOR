@@ -77,7 +77,7 @@ at: http://upokecenter.com/d/
           bytes[(i * 4) + 3] = (byte)((this.data[i] >> 24) & 0xff);
         }
         bytes[bytes.length - 1] = (byte)0;
-        return BigInteger.fromByteArray((byte[])bytes,true);
+        return BigInteger.fromByteArray(bytes, true);
       }
 
       int[] GetLastWordsInternal(int numWords32Bit) {
@@ -230,12 +230,6 @@ at: http://upokecenter.com/d/
           return this.wordCount == 0 || (this.data[0] & 1) == 0;
         }
 
-    /**
-     * Compares a 32-bit signed integer with this instance.
-     * @param val A 32-bit signed integer.
-     * @return Zero if the values are equal; a negative number if this instance
-     * is less, or a positive number if this instance is greater.
-     */
       public int CompareToInt(int val) {
         if (val < 0 || this.wordCount > 1) {
           return 1;
@@ -517,7 +511,7 @@ at: http://upokecenter.com/d/
         bytes[(i * 4) + 3] = (byte)((words[i] >> 24) & 0xff);
       }
       bytes[bytes.length - 1] = (byte)0;
-      return BigInteger.fromByteArray((byte[])bytes,true);
+      return BigInteger.fromByteArray(bytes, true);
     }
 
     public static int[] GetLastWords(BigInteger bigint, int numWords32Bit) {

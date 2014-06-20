@@ -68,7 +68,7 @@ namespace PeterO.Cbor {
       int a = 0;
       int b = 0;
       int c = 0;
-      for (int i = 0; i < Math.Min(4, data.Length); ++i) {
+      for (var i = 0; i < Math.Min(4, data.Length); ++i) {
         a |= (((int)data[i]) & 0xff) << (i * 8);
       }
       for (int i = 4; i < Math.Min(8, data.Length); ++i) {
@@ -118,8 +118,8 @@ namespace PeterO.Cbor {
       data[11] = (byte)((bits[2] >> 24) & 0xff);
       data[12] = 0;
       int scale = (bits[3] >> 16) & 0xff;
-      var bigint = new BigInteger((byte[])data);
-      for (int i = 0; i < scale; ++i) {
+      var bigint = BigInteger.fromByteArray(data, true);
+      for (var i = 0; i < scale; ++i) {
         bigint /= (BigInteger)10;
       }
       if ((bits[3] >> 31) != 0) {
@@ -190,7 +190,7 @@ namespace PeterO.Cbor {
       byte[] data = bigint.ToByteArray();
       int a = 0;
       int b = 0;
-      for (int i = 0; i < Math.Min(4, data.Length); ++i) {
+      for (var i = 0; i < Math.Min(4, data.Length); ++i) {
         a |= (((int)data[i]) & 0xff) << (i * 8);
       }
       for (int i = 4; i < Math.Min(8, data.Length); ++i) {
@@ -265,7 +265,7 @@ namespace PeterO.Cbor {
       data[10] = (byte)((bits[2] >> 16) & 0xff);
       data[11] = (byte)((bits[2] >> 24) & 0xff);
       data[12] = 0;
-      var mantissa = new BigInteger((byte[])data);
+      var mantissa = BigInteger.fromByteArray(data, true);
       bool negative = (bits[3] >> 31) != 0;
       if (negative) {
         mantissa = -mantissa;

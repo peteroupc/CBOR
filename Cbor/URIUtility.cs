@@ -456,8 +456,8 @@ namespace PeterO.Cbor {
           break;
         }
         if (index + 3 == len && c == '/' &&
-                  path[index + 1] == '.' &&
-                  path[index + 2] == '.') {
+                path[index + 1] == '.' &&
+                path[index + 2] == '.') {
           // is "/.."; remove last segment,
           // append "/" and return
           int index2 = builder.Length - 1;
@@ -473,10 +473,11 @@ namespace PeterO.Cbor {
           builder.Length = index2;
           builder.Append('/');
           break;
-        } else if (index + 4 <= len && c == '/' &&
-                       path[index + 1] == '.' &&
-                       path[index + 2] == '.' &&
-                       path[index + 3] == '/') {
+        }
+        if (index + 4 <= len && c == '/' &&
+                path[index + 1] == '.' &&
+                path[index + 2] == '.' &&
+                path[index + 3] == '/') {
           // begins with "/../"; remove last segment
           int index2 = builder.Length - 1;
           while (index2 >= 0) {
@@ -491,19 +492,18 @@ namespace PeterO.Cbor {
           builder.Length = index2;
           index += 3;
           continue;
-        } else {
+        }
+        builder.Append(c);
+        ++index;
+        while (index < len) {
+          // Move the rest of the
+          // path segment until the next '/'
+          c = path[index];
+          if (c == '/') {
+            break;
+          }
           builder.Append(c);
           ++index;
-          while (index < len) {
-            // Move the rest of the
-            // path segment until the next '/'
-            c = path[index];
-            if (c == '/') {
-              break;
-            }
-            builder.Append(c);
-            ++index;
-          }
         }
       }
       return builder.ToString();
@@ -538,12 +538,8 @@ int delim) {
              s[index + 3] == delim) {
         return 100 + ((s[index + 1] - '0') * 10) + (s[index + 2] - '0');
       }
-      if (c >= '0' && c <= '9' && index + 1 < endOffset &&
-               s[index + 1] == delim) {
-        return c - '0';
-      } else {
-        return -1;
-      }
+      return (c >= '0' && c <= '9' && index + 1 < endOffset &&
+             s[index + 1] == delim) ? (c - '0') : (-1);
     }
 
     private static int parseIPLiteral(string s, int offset, int endOffset) {
@@ -692,7 +688,7 @@ int delim) {
               ++phase1;
             }
             ++index;
-            for (int i = 0; i < 3; ++i) {
+            for (var i = 0; i < 3; ++i) {
               if (index < endOffset && isHexChar(s[index])) {
                 ++index;
               } else {

@@ -107,7 +107,7 @@ namespace PeterO.Cbor {
       } else {
         filter.tags = new BigInteger[tags.Length];
       }
-      for (int i = 0; i < tags.Length; ++i) {
+      for (var i = 0; i < tags.Length; ++i) {
         filter.tags[startIndex + i] = (BigInteger)tags[i];
       }
       return filter;
@@ -122,7 +122,7 @@ namespace PeterO.Cbor {
       if (this.any) {
         return this;
       }
-      for (int i = 0; i < tags.Length; ++i) {
+      for (var i = 0; i < tags.Length; ++i) {
         if (tags[i] == null) {
           throw new ArgumentNullException("tags");
         }
@@ -396,13 +396,13 @@ namespace PeterO.Cbor {
       if (this.elements == null) {
         return Any;
       }
+      // NOTE: Index shouldn't be greater than Int32.MaxValue,
+      // since the length is an int
       if (index >= this.elements.Length) {
         // Index is greater than the number of elements for
         // which a type is defined
         return Any;
       }
-      // NOTE: Index shouldn't be greater than Int32.MaxValue,
-      // since the length is an int
       return this.elements[(int)index];
     }
 

@@ -305,7 +305,7 @@ import com.upokecenter.cbor.*;
       for (int i = 0; i < count; ++i) {
         bytes[i] = (byte)((int)r.NextValue(256));
       }
-      return BigInteger.fromByteArray((byte[])bytes,true);
+      return BigInteger.fromByteArray(bytes, true);
     }
 
     public static ExtendedFloat RandomExtendedFloat(FastRandom r) {
@@ -466,11 +466,11 @@ import com.upokecenter.cbor.*;
 
     private static String ObjectMessages(CBORObject o1, CBORObject o2, String s) {
       if (o1.getType() == CBORType.Number && o2.getType() == CBORType.Number) {
-        return s + ":\n" + o1.toString() + " and\n" + o2.toString() + "\nOR\n" +
-          o1.AsExtendedDecimal().toString() + " and\n" + o2.AsExtendedDecimal().toString() + "\nOR\n" +
+        return s + ":\n" + o1 + " and\n" + o2 + "\nOR\n" +
+          o1.AsExtendedDecimal() + " and\n" + o2.AsExtendedDecimal() + "\nOR\n" +
           "AddSubCompare(" + ToByteArrayString(o1) + ",\n" + ToByteArrayString(o2) + ");";
       }
-      return s + ":\n" + o1.toString() + " and\n" + o2.toString() + "\nOR\n" +
+      return s + ":\n" + o1 + " and\n" + o2 + "\nOR\n" +
         ToByteArrayString(o1) + " and\n" + ToByteArrayString(o2);
     }
 
@@ -1348,7 +1348,7 @@ int startingAvailable=ms.available();
                   this.TestWriteToJSON(o);
                 }
               } catch (Exception ex) {
-                Assert.fail(jsonString + "\n" + ex.toString());
+                Assert.fail(jsonString + "\n" + ex);
                 throw new IllegalStateException("", ex);
               }
             } catch (CBORException ex) {
@@ -1362,7 +1362,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    public void TestCBORMapAdd() {
+    public static void TestCBORMapAdd() {
       CBORObject cbor = CBORObject.NewMap();
       cbor.Add(1, 2);
       if(!(cbor.ContainsKey(CBORObject.FromObject(1))))Assert.fail();
@@ -1417,7 +1417,7 @@ int startingAvailable=ms.available();
                   this.TestWriteToJSON(o);
                 }
               } catch (Exception ex) {
-                Assert.fail(jsonString + "\n" + ex.toString());
+                Assert.fail(jsonString + "\n" + ex);
                 throw new IllegalStateException("", ex);
               }
             } catch (CBORException ex) {
@@ -2006,7 +2006,7 @@ try { if(ms2b!=null)ms2b.close(); } catch (java.io.IOException ex){}
         noReplaceString);
     }
 
-    public void DoTestReadUtf8(
+    public static void DoTestReadUtf8(
       byte[] bytes,
       int length,
       int expectedRet,
@@ -6492,7 +6492,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    public void AssertBigIntString(String s, BigInteger bi) {
+    public static void AssertBigIntString(String s, BigInteger bi) {
       Assert.assertEquals(s, bi.toString());
     }
 

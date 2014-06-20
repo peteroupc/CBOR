@@ -32,7 +32,7 @@ namespace Test {
     [TestMethod]
     public void TestToString() {
       var r = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
+      for (var i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         String s = bigintA.ToString();
         BigInteger big2 = BigInteger.fromString(s);
@@ -43,7 +43,7 @@ namespace Test {
     [TestMethod]
     public void TestShiftLeft() {
       var r = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
+      for (var i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
@@ -62,7 +62,7 @@ namespace Test {
     [TestMethod]
     public void TestShiftRight() {
       var r = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
+      for (var i = 0; i < 1000; ++i) {
         int smallint = r.NextValue(0x7fffffff);
         var bigintA = (BigInteger)smallint;
         string str = bigintA.ToString();
@@ -71,7 +71,7 @@ namespace Test {
           TestCommon.DoTestShiftRight("-" + str, j, "-1");
         }
       }
-      for (int i = 0; i < 1000; ++i) {
+      for (var i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         bigintA = BigInteger.Abs(bigintA);
         BigInteger bigintB = bigintA;
@@ -91,7 +91,7 @@ namespace Test {
     [TestMethod]
     public void TestDigitCount() {
       var r = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
+      for (var i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         String str = BigInteger.Abs(bigintA).ToString();
         Assert.AreEqual(str.Length, bigintA.getDigitCount());
@@ -101,7 +101,7 @@ namespace Test {
     [TestMethod]
     public void TestMultiply() {
       var r = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
+      for (var i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = bigintA + BigInteger.One;
         BigInteger bigintC = bigintA * (BigInteger)bigintB;
@@ -133,7 +133,7 @@ namespace Test {
     [TestMethod]
     public void TestMultiplyDivide() {
       var r = new FastRandom();
-      for (int i = 0; i < 4000; ++i) {
+      for (var i = 0; i < 4000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
         // Test that A*B/A = B and A*B/B = A
@@ -185,7 +185,7 @@ namespace Test {
     [TestMethod]
     public void TestPow() {
       var r = new FastRandom();
-      for (int i = 0; i < 200; ++i) {
+      for (var i = 0; i < 200; ++i) {
         int power = 1 + r.NextValue(8);
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = bigintA;
@@ -199,7 +199,7 @@ namespace Test {
     [TestMethod]
     public void TestSquareRoot() {
       var r = new FastRandom();
-      for (int i = 0; i < 10000; ++i) {
+      for (var i = 0; i < 10000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         if (bigintA.Sign < 0) {
           bigintA = -bigintA;
@@ -224,7 +224,7 @@ namespace Test {
     public void TestSmallIntDivide() {
       int a, b;
       var fr = new FastRandom();
-      for (int i = 0; i < 10000; ++i) {
+      for (var i = 0; i < 10000; ++i) {
         a = fr.NextValue(0x1000000);
         b = fr.NextValue(0x1000000);
         if (b == 0) {
@@ -562,7 +562,7 @@ namespace Test {
     [TestMethod]
     public void TestAddSubtract() {
       var r = new FastRandom();
-      for (int i = 0; i < 10000; ++i) {
+      for (var i = 0; i < 10000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = CBORTest.RandomBigInteger(r);
         BigInteger bigintC = bigintA + (BigInteger)bigintB;
@@ -668,7 +668,7 @@ namespace Test {
     public void TestGcd() {
       int prime = 0;
       var rand = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
+      for (var i = 0; i < 1000; ++i) {
         while (true) {
           prime = rand.NextValue(0x7fffffff);
           prime |= 1;

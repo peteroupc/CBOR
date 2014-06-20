@@ -461,8 +461,8 @@ private URIUtility() {
           break;
         }
         if (index + 3 == len && c == '/' &&
-                  path.charAt(index + 1) == '.' &&
-                  path.charAt(index + 2) == '.') {
+                path.charAt(index + 1) == '.' &&
+                path.charAt(index + 2) == '.') {
           // is "/.."; remove last segment,
           // append "/" and return
           int index2 = builder.length() - 1;
@@ -478,10 +478,11 @@ private URIUtility() {
           builder.setLength(index2);
           builder.append('/');
           break;
-        } else if (index + 4 <= len && c == '/' &&
-                       path.charAt(index + 1) == '.' &&
-                       path.charAt(index + 2) == '.' &&
-                       path.charAt(index + 3) == '/') {
+        }
+        if (index + 4 <= len && c == '/' &&
+                path.charAt(index + 1) == '.' &&
+                path.charAt(index + 2) == '.' &&
+                path.charAt(index + 3) == '/') {
           // begins with "/../"; remove last segment
           int index2 = builder.length() - 1;
           while (index2 >= 0) {
@@ -496,19 +497,18 @@ private URIUtility() {
           builder.setLength(index2);
           index += 3;
           continue;
-        } else {
+        }
+        builder.append(c);
+        ++index;
+        while (index < len) {
+          // Move the rest of the
+          // path segment until the next '/'
+          c = path.charAt(index);
+          if (c == '/') {
+            break;
+          }
           builder.append(c);
           ++index;
-          while (index < len) {
-            // Move the rest of the
-            // path segment until the next '/'
-            c = path.charAt(index);
-            if (c == '/') {
-              break;
-            }
-            builder.append(c);
-            ++index;
-          }
         }
       }
       return builder.toString();
@@ -543,12 +543,8 @@ int delim) {
              s.charAt(index + 3) == delim) {
         return 100 + ((s.charAt(index + 1) - '0') * 10) + (s.charAt(index + 2) - '0');
       }
-      if (c >= '0' && c <= '9' && index + 1 < endOffset &&
-               s.charAt(index + 1) == delim) {
-        return c - '0';
-      } else {
-        return -1;
-      }
+      return (c >= '0' && c <= '9' && index + 1 < endOffset &&
+             s.charAt(index + 1) == delim) ? (c - '0') : (-1);
     }
 
     private static int parseIPLiteral(String s, int offset, int endOffset) {

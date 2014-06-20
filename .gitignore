@@ -5,6 +5,7 @@ packages/
 Help/
 *.user
 *.nupkg
+*.sdsettings
 TestResults/
 CBORTest/bin/
 CBORTest/obj/

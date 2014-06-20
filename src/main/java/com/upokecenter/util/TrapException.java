@@ -60,9 +60,11 @@ private static final long serialVersionUID=1L;
       }
       if (flag == PrecisionContext.FlagOverflow) {
         return "Overflow";
-      } else if (flag == PrecisionContext.FlagRounded) {
+      }
+      if (flag == PrecisionContext.FlagRounded) {
         return "Rounded";
-      } else if (flag == PrecisionContext.FlagSubnormal) {
+      }
+      if (flag == PrecisionContext.FlagSubnormal) {
         return "Subnormal";
       } else {
         return (flag == PrecisionContext.FlagUnderflow) ? "Underflow" : "Trap";

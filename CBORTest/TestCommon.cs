@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -163,7 +163,7 @@ namespace Test {
     }
 
     private static CBORObject FromBytesB(byte[] b) {
-      using (System.IO.MemoryStream ms = new System.IO.MemoryStream(b)) {
+      using (var ms = new System.IO.MemoryStream(b)) {
         CBORObject o = CBORObject.Read(ms);
         if (ms.Position != ms.Length) {
           throw new CBORException("not at EOF");
