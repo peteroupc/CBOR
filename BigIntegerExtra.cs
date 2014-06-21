@@ -384,7 +384,7 @@ namespace PeterO {
     /// <param name='bytes'>A byte array.</param>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='bytes'/> is null.</exception>
-    [Obsolete("Use BigInteger.fromByteArray(bytes,true) instead.  This method may be removed in version 2.0.")]
+    [Obsolete("Use BigInteger.fromByteArray(bytes,true) instead. This method may be removed in version 2.0.")]
     public BigInteger(byte[] bytes) {
       if (bytes == null) {
         throw new ArgumentNullException("bytes");
@@ -414,19 +414,20 @@ namespace PeterO {
       if (valueA.wordCount == 0) {
         return BigInteger.One.negate();
       }
-      bool xaNegative = false; int xaWordCount = 0; short[] xaReg = new short[valueA.wordCount];
-      Array.Copy(valueA.words, xaReg, xaReg.Length);
-      xaWordCount = valueA.wordCount;
+      bool valueXaNegative = false; int valueXaWordCount = 0;
+      var valueXaReg = new short[valueA.wordCount];
+      Array.Copy(valueA.words, valueXaReg, valueXaReg.Length);
+      valueXaWordCount = valueA.wordCount;
       if (valueA.negative) {
-          TwosComplement(xaReg, 0, (int)xaReg.Length);
+        TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
       }
-      NotWords(xaReg, (int)xaReg.Length);
+      NotWords(valueXaReg, (int)valueXaReg.Length);
       if (valueA.negative) {
-          TwosComplement(xaReg, 0, (int)xaReg.Length);
+        TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
       }
-      xaNegative = !valueA.negative;
-      xaWordCount = CountWords(xaReg, xaReg.Length);
-      return (xaWordCount == 0) ? (BigInteger.Zero) : (new BigInteger(xaWordCount, xaReg, xaNegative));
+      valueXaNegative = !valueA.negative;
+      valueXaWordCount = CountWords(valueXaReg, valueXaReg.Length);
+      return (valueXaWordCount == 0) ? BigInteger.Zero : (new BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
     /// <summary>Does an AND operation between two BigInteger values.</summary>
@@ -447,36 +448,37 @@ namespace PeterO {
       if (b.IsZero || a.IsZero) {
         return Zero;
       }
-      bool xaNegative = false; int xaWordCount = 0;
-      var xaReg = new short[a.wordCount];
-      Array.Copy(a.words, xaReg, xaReg.Length);
-      bool xbNegative = false; int xbWordCount = 0; short[] xbReg = new short[b.wordCount];
-      Array.Copy(b.words, xbReg, xbReg.Length);
-      xaNegative = a.negative;
-      xaWordCount = a.wordCount;
-      xbNegative = b.negative;
-      xbWordCount = b.wordCount;
-      xaReg = CleanGrow(xaReg, Math.Max(xaReg.Length, xbReg.Length));
-      xbReg = CleanGrow(xbReg, Math.Max(xaReg.Length, xbReg.Length));
-      if (xaNegative) {
+      bool valueXaNegative = false; int valueXaWordCount = 0;
+      var valueXaReg = new short[a.wordCount];
+      Array.Copy(a.words, valueXaReg, valueXaReg.Length);
+      bool valueXbNegative = false; int valueXbWordCount = 0;
+      var valueXbReg = new short[b.wordCount];
+      Array.Copy(b.words, valueXbReg, valueXbReg.Length);
+      valueXaNegative = a.negative;
+      valueXaWordCount = a.wordCount;
+      valueXbNegative = b.negative;
+      valueXbWordCount = b.wordCount;
+      valueXaReg = CleanGrow(valueXaReg, Math.Max(valueXaReg.Length, valueXbReg.Length));
+      valueXbReg = CleanGrow(valueXbReg, Math.Max(valueXaReg.Length, valueXbReg.Length));
+      if (valueXaNegative) {
         {
-          TwosComplement(xaReg, 0, (int)xaReg.Length);
+          TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
         }
       }
-      if (xbNegative) {
+      if (valueXbNegative) {
         {
-          TwosComplement(xbReg, 0, (int)xbReg.Length);
+          TwosComplement(valueXbReg, 0, (int)valueXbReg.Length);
         }
       }
-      xaNegative &= xbNegative;
-      AndWords(xaReg, xaReg, xbReg, (int)xaReg.Length);
-      if (xaNegative) {
+      valueXaNegative &= valueXbNegative;
+      AndWords(valueXaReg, valueXaReg, valueXbReg, (int)valueXaReg.Length);
+      if (valueXaNegative) {
         {
-          TwosComplement(xaReg, 0, (int)xaReg.Length);
+          TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
         }
       }
-      xaWordCount = CountWords(xaReg, xaReg.Length);
-      return (xaWordCount == 0) ? (BigInteger.Zero) : (new BigInteger(xaWordCount, xaReg, xaNegative));
+      valueXaWordCount = CountWords(valueXaReg, valueXaReg.Length);
+      return (valueXaWordCount == 0) ? BigInteger.Zero : (new BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
     /// <summary>Does an OR operation between two BigInteger instances.</summary>
@@ -500,29 +502,31 @@ namespace PeterO {
       if (second.wordCount == 0) {
         return first;
       }
-      bool xaNegative = false; int xaWordCount = 0; short[] xaReg = new short[first.wordCount];
-      Array.Copy(first.words, xaReg, xaReg.Length);
-      bool xbNegative = false; int xbWordCount = 0; short[] xbReg = new short[second.wordCount];
-      Array.Copy(second.words, xbReg, xbReg.Length);
-      xaNegative = first.negative;
-      xaWordCount = first.wordCount;
-      xbNegative = second.negative;
-      xbWordCount = second.wordCount;
-      xaReg = CleanGrow(xaReg, Math.Max(xaReg.Length, xbReg.Length));
-      xbReg = CleanGrow(xbReg, Math.Max(xaReg.Length, xbReg.Length));
-      if (xaNegative) {
-        TwosComplement(xaReg, 0, (int)xaReg.Length);
+      bool valueXaNegative = false; int valueXaWordCount = 0;
+      var valueXaReg = new short[first.wordCount];
+      Array.Copy(first.words, valueXaReg, valueXaReg.Length);
+      bool valueXbNegative = false; int valueXbWordCount = 0;
+      var valueXbReg = new short[second.wordCount];
+      Array.Copy(second.words, valueXbReg, valueXbReg.Length);
+      valueXaNegative = first.negative;
+      valueXaWordCount = first.wordCount;
+      valueXbNegative = second.negative;
+      valueXbWordCount = second.wordCount;
+      valueXaReg = CleanGrow(valueXaReg, Math.Max(valueXaReg.Length, valueXbReg.Length));
+      valueXbReg = CleanGrow(valueXbReg, Math.Max(valueXaReg.Length, valueXbReg.Length));
+      if (valueXaNegative) {
+        TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
       }
-      if (xbNegative) {
-        TwosComplement(xbReg, 0, (int)xbReg.Length);
+      if (valueXbNegative) {
+        TwosComplement(valueXbReg, 0, (int)valueXbReg.Length);
       }
-      xaNegative |= xbNegative;
-      OrWords(xaReg, xaReg, xbReg, (int)xaReg.Length);
-      if (xaNegative) {
-        TwosComplement(xaReg, 0, (int)xaReg.Length);
+      valueXaNegative |= valueXbNegative;
+      OrWords(valueXaReg, valueXaReg, valueXbReg, (int)valueXaReg.Length);
+      if (valueXaNegative) {
+        TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
       }
-      xaWordCount = CountWords(xaReg, xaReg.Length);
-      return (xaWordCount == 0) ? (BigInteger.Zero) : (new BigInteger(xaWordCount, xaReg, xaNegative));
+      valueXaWordCount = CountWords(valueXaReg, valueXaReg.Length);
+      return (valueXaWordCount == 0) ? BigInteger.Zero : (new BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
     /// <summary>Finds the exclusive "or" of two BigInteger objects.</summary>
@@ -549,29 +553,31 @@ namespace PeterO {
       if (b.wordCount == 0) {
         return a;
       }
-      bool xaNegative = false; int xaWordCount = 0; short[] xaReg = new short[a.wordCount];
-      Array.Copy(a.words, xaReg, xaReg.Length);
-      bool xbNegative = false; int xbWordCount = 0; short[] xbReg = new short[b.wordCount];
-      Array.Copy(b.words, xbReg, xbReg.Length);
-      xaNegative = a.negative;
-      xaWordCount = a.wordCount;
-      xbNegative = b.negative;
-      xbWordCount = b.wordCount;
-      xaReg = CleanGrow(xaReg, Math.Max(xaReg.Length, xbReg.Length));
-      xbReg = CleanGrow(xbReg, Math.Max(xaReg.Length, xbReg.Length));
-      if (xaNegative) {
-          TwosComplement(xaReg, 0, (int)xaReg.Length);
+      bool valueXaNegative = false; int valueXaWordCount = 0;
+      var valueXaReg = new short[a.wordCount];
+      Array.Copy(a.words, valueXaReg, valueXaReg.Length);
+      bool valueXbNegative = false; int valueXbWordCount = 0;
+      var valueXbReg = new short[b.wordCount];
+      Array.Copy(b.words, valueXbReg, valueXbReg.Length);
+      valueXaNegative = a.negative;
+      valueXaWordCount = a.wordCount;
+      valueXbNegative = b.negative;
+      valueXbWordCount = b.wordCount;
+      valueXaReg = CleanGrow(valueXaReg, Math.Max(valueXaReg.Length, valueXbReg.Length));
+      valueXbReg = CleanGrow(valueXbReg, Math.Max(valueXaReg.Length, valueXbReg.Length));
+      if (valueXaNegative) {
+        TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
       }
-      if (xbNegative) {
-          TwosComplement(xbReg, 0, (int)xbReg.Length);
+      if (valueXbNegative) {
+        TwosComplement(valueXbReg, 0, (int)valueXbReg.Length);
       }
-      xaNegative ^= xbNegative;
-      XorWords(xaReg, xaReg, xbReg, (int)xaReg.Length);
-      if (xaNegative) {
-        TwosComplement(xaReg, 0, (int)xaReg.Length);
+      valueXaNegative ^= valueXbNegative;
+      XorWords(valueXaReg, valueXaReg, valueXbReg, (int)valueXaReg.Length);
+      if (valueXaNegative) {
+        TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
       }
-      xaWordCount = CountWords(xaReg, xaReg.Length);
-      return (xaWordCount == 0) ? (BigInteger.Zero) : (new BigInteger(xaWordCount, xaReg, xaNegative));
+      valueXaWordCount = CountWords(valueXaReg, valueXaReg.Length);
+      return (valueXaWordCount == 0) ? BigInteger.Zero : (new BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
   }
 }

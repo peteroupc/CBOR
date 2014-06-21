@@ -5,6 +5,7 @@ packages/
 Help/
 *.user
 *.nupkg
+*.versionsBackup
 *.sdsettings
 TestResults/
 CBORTest/bin/

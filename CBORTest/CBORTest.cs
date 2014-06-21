@@ -808,25 +808,6 @@ namespace Test {
     }
 
     [TestMethod]
-    public void TestParseJSONNumber() {
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(null, false, false));
-      Assert.IsTrue(CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false) != null);
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(String.Empty, false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("xyz", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("true", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(".1", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0..1", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0xyz", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.1xyz", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.xyz", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5exyz", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5q+88", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5ee88", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5e+xyz", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5e+88xyz", false, false));
-    }
-
-    [TestMethod]
     public void TestParseDecimalStrings() {
       var rand = new FastRandom();
       for (var i = 0; i < 3000; ++i) {
@@ -837,11 +818,9 @@ namespace Test {
 
     [TestMethod]
     public void TestExtendedInfinity() {
-      Assert.IsTrue(ExtendedDecimal.PositiveInfinity.IsInfinity());
       Assert.IsTrue(ExtendedDecimal.PositiveInfinity.IsPositiveInfinity());
       Assert.IsFalse(ExtendedDecimal.PositiveInfinity.IsNegativeInfinity());
       Assert.IsFalse(ExtendedDecimal.PositiveInfinity.IsNegative);
-      Assert.IsTrue(ExtendedDecimal.NegativeInfinity.IsInfinity());
       Assert.IsFalse(ExtendedDecimal.NegativeInfinity.IsPositiveInfinity());
       Assert.IsTrue(ExtendedDecimal.NegativeInfinity.IsNegativeInfinity());
       Assert.IsTrue(ExtendedDecimal.NegativeInfinity.IsNegative);
@@ -986,22 +965,6 @@ namespace Test {
     [TestMethod]
     public void TestCBORExceptions() {
       try {
-        CBORObject.NewArray().AsExtendedDecimal();
-        Assert.Fail("Should have failed");
-      } catch (InvalidOperationException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.NewMap().AsExtendedDecimal();
-        Assert.Fail("Should have failed");
-      } catch (InvalidOperationException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
         CBORObject.DecodeFromBytes(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
@@ -1081,38 +1044,6 @@ namespace Test {
       }
       try {
         CBORObject.FromObject(String.Empty).Remove(CBORObject.True);
-        Assert.Fail("Should have failed");
-      } catch (InvalidOperationException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.True.AsExtendedDecimal();
-        Assert.Fail("Should have failed");
-      } catch (InvalidOperationException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.False.AsExtendedDecimal();
-        Assert.Fail("Should have failed");
-      } catch (InvalidOperationException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.Undefined.AsExtendedDecimal();
-        Assert.Fail("Should have failed");
-      } catch (InvalidOperationException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromObject(String.Empty).AsExtendedDecimal();
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException) {
       } catch (Exception ex) {
@@ -1293,7 +1224,7 @@ namespace Test {
       if (!objA.Equals(objB)) {
         Console.WriteLine(objA);
         Console.WriteLine(objB);
-        Assert.Fail("WriteToJSON gives different results from ToJSONString");
+        Assert.Fail("WriteJSONTo gives different results from ToJSONString");
       }
     }
 
@@ -1378,10 +1309,7 @@ namespace Test {
           while (ms.Position != ms.Length) {
             try {
               CBORObject o = CBORObject.Read(ms);
-              if (o == null) {
-                Assert.Fail("object read is null");
-              }
-              byte[] encodedBytes = o.EncodeToBytes();
+              byte[] encodedBytes = (o == null) ? null : o.EncodeToBytes();
               try {
                 CBORObject.DecodeFromBytes(encodedBytes);
               } catch (Exception ex) {
@@ -1409,7 +1337,7 @@ namespace Test {
     }
 
     [TestMethod]
-    // [Timeout(20000)]
+    [Timeout(50000)]
     public void TestRandomData() {
       var rand = new FastRandom();
       CBORObject obj;
@@ -1454,53 +1382,6 @@ namespace Test {
     }
 
     [TestMethod]
-    public void TestJSONSurrogates() {
-      try {
-        CBORObject.FromJSONString("[\"\ud800\udc00\"]");
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"\\ud800\\udc00\"]");
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"\ud800\\udc00\"]");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"\\ud800\udc00\"]");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"\\udc00\ud800\udc00\"]");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"\\ud800\\udc00\ud800\udc00\"]");
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-    }
-
-    [TestMethod]
     public void TestJSONEscapedChars() {
       CBORObject o = CBORObject.FromJSONString(
         "[\"\\r\\n\\u0006\\u000E\\u001A\\\\\\\"\"]");
@@ -1525,219 +1406,6 @@ namespace Test {
     [TestMethod]
     public void TestJSON() {
       CBORObject o;
-      try {
-        CBORObject.FromJSONString("[\"\\ud800\"]"); Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[1,2,"); Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[1,2,3"); Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{,\"0\":0,\"1\":1}");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"0\":0,,\"1\":1}"); Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"0\":0,\"1\":1,}"); Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[,0,1,2]"); Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[0,,1,2]"); Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[0,1,,2]"); Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[0,1,2,]"); Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[0001]");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{a:true}");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\"://comment\ntrue}");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\":/*comment*/true}");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{'a':true}");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\":'b'}");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\t\":true}");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\r\":true}");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\n\":true}");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("['a']");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\":\"a\t\"}");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"a\\'\"]");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[NaN]");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[+Infinity]");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[-Infinity]");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[Infinity]");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\":\"a\r\"}");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\":\"a\n\"}");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"a\t\"]");
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
       o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       Assert.AreEqual(6, o.Count);
       Assert.AreEqual(1, o[0].AsInt32());
@@ -1994,16 +1662,6 @@ namespace Test {
       } catch (IOException ex) {
         throw new CBORException(String.Empty, ex);
       }
-    }
-
-    [TestMethod]
-    public void TestDecFracOverflow() {
-      Assert.AreEqual(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Single.PositiveInfinity).AsExtendedDecimal());
-      Assert.AreEqual(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Single.NegativeInfinity).AsExtendedDecimal());
-      Assert.IsTrue(CBORObject.FromObject(Single.NaN).AsExtendedDecimal().IsNaN());
-      Assert.AreEqual(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Double.PositiveInfinity).AsExtendedDecimal());
-      Assert.AreEqual(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Double.NegativeInfinity).AsExtendedDecimal());
-      Assert.IsTrue(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN());
     }
 
     [TestMethod]
@@ -6127,19 +5785,6 @@ namespace Test {
     }
 
     [TestMethod]
-    public void TestCanFitInForExtendedFloat() {
-      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 11)).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 12)).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 13)).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 14)).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 15)).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 16)).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 17)).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 18)).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(CBORObject.FromObject(ExtendedFloat.Create(-2, 19)).CanTruncatedIntFitInInt32());
-    }
-
-    [TestMethod]
     public void TestCanFitInSpecificCases() {
       CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xfb, 0x41, (byte)0xe0, (byte)0x85, 0x48, 0x2d, 0x14, 0x47, 0x7a });  // 2217361768.63373
       Assert.AreEqual(BigInteger.fromString("2217361768"), cbor.AsBigInteger());
@@ -6449,7 +6094,7 @@ namespace Test {
       Assert.AreEqual(BigInteger.fromString("-14907577049884506536"), o.AsBigInteger());
     }
 
-    public void AssertAdd(BigInteger bi, BigInteger bi2, string s) {
+    public static void AssertAdd(BigInteger bi, BigInteger bi2, string s) {
       AssertBigIntString(s, bi + (BigInteger)bi2);
       AssertBigIntString(s, bi2 + (BigInteger)bi);
       BigInteger negbi = BigInteger.Zero - (BigInteger)bi;
@@ -6464,16 +6109,16 @@ namespace Test {
       BigInteger negSmall = -(BigInteger)5;
       var posLarge = (BigInteger)5555555;
       BigInteger negLarge = -(BigInteger)5555555;
-      this.AssertAdd(posSmall, posSmall, "10");
-      this.AssertAdd(posSmall, negSmall, "0");
-      this.AssertAdd(posSmall, posLarge, "5555560");
-      this.AssertAdd(posSmall, negLarge, "-5555550");
-      this.AssertAdd(negSmall, negSmall, "-10");
-      this.AssertAdd(negSmall, posLarge, "5555550");
-      this.AssertAdd(negSmall, negLarge, "-5555560");
-      this.AssertAdd(posLarge, posLarge, "11111110");
-      this.AssertAdd(posLarge, negLarge, "0");
-      this.AssertAdd(negLarge, negLarge, "-11111110");
+      AssertAdd(posSmall, posSmall, "10");
+      AssertAdd(posSmall, negSmall, "0");
+      AssertAdd(posSmall, posLarge, "5555560");
+      AssertAdd(posSmall, negLarge, "-5555550");
+      AssertAdd(negSmall, negSmall, "-10");
+      AssertAdd(negSmall, posLarge, "5555550");
+      AssertAdd(negSmall, negLarge, "-5555560");
+      AssertAdd(posLarge, posLarge, "11111110");
+      AssertAdd(posLarge, negLarge, "0");
+      AssertAdd(negLarge, negLarge, "-11111110");
     }
 
     [TestMethod]

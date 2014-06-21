@@ -326,13 +326,7 @@ at: http://upokecenter.com/d/
         }
       }
 
-    /**
-     * Compares a MutableNumber object with this instance.
-     * @param other A MutableNumber object.
-     * @return Zero if the values are equal; a negative number if this instance
-     * is less, or a positive number if this instance is greater.
-     */
-      int compareTo(MutableNumber other) {
+      public int compareTo(MutableNumber other) {
         if (this.wordCount != other.wordCount) {
           return (this.wordCount < other.wordCount) ? -1 : 1;
         }
@@ -459,7 +453,7 @@ at: http://upokecenter.com/d/
      * @return Zero if the values are equal; a negative number if this instance
      * is less, or a positive number if this instance is greater.
      */
-    int compareTo(FastInteger val) {
+    public int compareTo(FastInteger val) {
       switch ((this.integerMode << 2) | val.integerMode) {
           case (0 << 2) | 0: {
             int vsv = val.smallValue;
@@ -1014,7 +1008,7 @@ bigrem=divrem[1]; }
      * Converts this object to a text string.
      * @return A string representation of this object.
      */
-    internal override String toString() {
+    @Override public String toString() {
       switch (this.integerMode) {
         case 0:
           return Integer.toString((int)this.smallValue);

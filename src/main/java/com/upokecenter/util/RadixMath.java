@@ -2604,7 +2604,7 @@ rem=divrem[1]; }
 
     // "binaryPrec" means whether "precision" is the number of bits and not digits
     private T RoundToPrecisionInternal(T thisValue, int lastDiscarded, int olderDiscarded, FastInteger shift, boolean adjustNegativeZero, PrecisionContext ctx) {
-      ctx = (ctx == null) ? ((PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven))) : ctx;
+      ctx = (ctx == null) ? (PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven)) : ctx;
       // If context has unlimited precision and exponent range,
       // and no discarded digits or shifting
       if (!ctx.getHasMaxPrecision() && !ctx.getHasExponentRange() && (lastDiscarded | olderDiscarded) == 0 && (shift == null || shift.isValueZero())) {
@@ -2725,7 +2725,7 @@ rem=divrem[1]; }
       BigInteger maxMantissa = BigInteger.ONE;
       FastInteger exp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
       int flags = 0;
-      accum = (accum == null) ? ((this.helper.CreateShiftAccumulatorWithDigits(bigmantissa, lastDiscarded, olderDiscarded))) : accum;
+      accum = (accum == null) ? (this.helper.CreateShiftAccumulatorWithDigits(bigmantissa, lastDiscarded, olderDiscarded)) : accum;
       if (binaryPrec) {
         FastInteger prec = FastInteger.Copy(fastPrecision);
         while (prec.signum() > 0) {

@@ -68,7 +68,7 @@ import com.upokecenter.util.*;
       }
       CBORObject ret = lastList.get(index);
         // Byte strings are mutable, so make a copy
-      return (ret.getType() == CBORType.ByteString) ? (CBORObject.FromObject(ret.GetByteString())) : (ret);
+      return (ret.getType() == CBORType.ByteString) ? CBORObject.FromObject(ret.GetByteString()) : ret;
     }
 
     public CBORObject GetString(BigInteger bigIndex) {
@@ -85,6 +85,6 @@ import com.upokecenter.util.*;
       }
       CBORObject ret = lastList.get(index);
         // Byte strings are mutable, so make a copy
-      return (ret.getType() == CBORType.ByteString) ? (CBORObject.FromObject(ret.GetByteString())) : (ret);
+      return (ret.getType() == CBORType.ByteString) ? CBORObject.FromObject(ret.GetByteString()) : ret;
     }
   }

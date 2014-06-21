@@ -1607,6 +1607,38 @@ namespace PeterO.Cbor {
       }
     }
 
+    /// <summary>Inserts an object at the specified position in this CBOR
+    /// array.</summary>
+    /// <param name='index'>Zero-based index to insert at.</param>
+    /// <param name='valueOb'>An object representing the value, which
+    /// will be converted to a CBORObject. Can be null, in which case this value
+    /// is converted to CBORObject.Null.</param>
+    /// <returns>This object.</returns>
+    /// <exception cref='InvalidOperationException'>This object is
+    /// not an array.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='valueOb'/> has an unsupported type; or <paramref name='index'/>
+    /// is not a valid index into this array.</exception>
+    public CBORObject Insert(int index, object valueOb) {
+      if (this.ItemType == CBORObjectTypeArray) {
+        CBORObject mapValue;
+        IList<CBORObject> list = this.AsList();
+        if (index < 0 || index > list.Count) {
+          throw new ArgumentException("index");
+        }
+        if (valueOb == null) {
+          mapValue = CBORObject.Null;
+        } else {
+          mapValue = valueOb as CBORObject;
+          mapValue = mapValue ?? CBORObject.FromObject(valueOb);
+        }
+        list.Insert(index, mapValue);
+      } else {
+        throw new InvalidOperationException("Not an array");
+      }
+      return this;
+    }
+
     /// <summary>Maps an object to a key in this CBOR map, or adds the value
     /// if the key doesn't exist.</summary>
     /// <param name='key'>An object representing the key, which will be
@@ -1629,13 +1661,13 @@ namespace PeterO.Cbor {
           mapKey = CBORObject.Null;
         } else {
           mapKey = key as CBORObject;
-          mapKey = mapKey ?? (CBORObject.FromObject(key));
+          mapKey = mapKey ?? CBORObject.FromObject(key);
         }
         if (valueOb == null) {
           mapValue = CBORObject.Null;
         } else {
           mapValue = valueOb as CBORObject;
-          mapValue = mapValue ?? (CBORObject.FromObject(valueOb));
+          mapValue = mapValue ?? CBORObject.FromObject(valueOb);
         }
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         if (map.ContainsKey(mapKey)) {
@@ -1673,13 +1705,13 @@ namespace PeterO.Cbor {
           mapKey = CBORObject.Null;
         } else {
           mapKey = key as CBORObject;
-          mapKey = mapKey ?? (CBORObject.FromObject(key));
+          mapKey = mapKey ?? CBORObject.FromObject(key);
         }
         if (valueOb == null) {
           mapValue = CBORObject.Null;
         } else {
           mapValue = valueOb as CBORObject;
-          mapValue = mapValue ?? (CBORObject.FromObject(valueOb));
+          mapValue = mapValue ?? CBORObject.FromObject(valueOb);
         }
         IDictionary<CBORObject, CBORObject> map = this.AsMap();
         if (map.ContainsKey(mapKey)) {
@@ -1881,7 +1913,8 @@ namespace PeterO.Cbor {
 
     /// <summary>Returns false if this object is False, Null, or Undefined;
     /// otherwise, true.</summary>
-    /// <returns>A Boolean object.</returns>
+    /// <returns>False if this object is False, Null, or Undefined; otherwise,
+    /// true.</returns>
     public bool AsBoolean() {
       return !this.IsFalse && !this.IsNull && !this.IsUndefined;
     }
@@ -2809,14 +2842,14 @@ namespace PeterO.Cbor {
         }
       }
       if (!hasComplexTag) {
-        switch(this.ItemType) { case (CBORObjectTypeTextString): {
+         switch (this.ItemType) { case CBORObjectTypeTextString: {
               byte[] ret = GetOptimizedBytesIfShortAscii(
                 this.AsString(),
                 tagged ? (((int)tagbyte) & 0xff) : -1);
               if (ret != null) {
                 return ret;
               }
-              break; } case (CBORObjectTypeSimpleValue): {
+              break; } case CBORObjectTypeSimpleValue: {
               if (tagged) {
                 if (this.IsFalse) {
                   return new[] { tagbyte, (byte)0xf4 };
@@ -2844,7 +2877,7 @@ namespace PeterO.Cbor {
                   return new[] { (byte)0xf7 };
                 }
               }
-              break; } case (CBORObjectTypeInteger): {
+              break; } case CBORObjectTypeInteger: {
               var value = (long)this.ThisItem;
               byte[] intBytes = null;
               if (value >= 0) {
@@ -2861,7 +2894,7 @@ namespace PeterO.Cbor {
               Array.Copy(intBytes, 0, ret2, 1, intBytes.Length);
               ret2[0] = tagbyte;
               return ret2;
-              } case (CBORObjectTypeSingle): {
+              } case CBORObjectTypeSingle: {
               var value = (float)this.ThisItem;
               int bits = BitConverter.ToInt32(BitConverter.GetBytes(value), 0);
               return tagged ?
@@ -2875,7 +2908,7 @@ namespace PeterO.Cbor {
                 (byte)((bits >> 16) & 0xff),
                 (byte)((bits >> 8) & 0xff),
                 (byte)(bits & 0xff) };
-              } case (CBORObjectTypeDouble): {
+              } case CBORObjectTypeDouble: {
               var value = (double)this.ThisItem;
               long bits = BitConverter.ToInt64(BitConverter.GetBytes(value), 0);
               return tagged ?
@@ -2955,11 +2988,13 @@ namespace PeterO.Cbor {
       }
       if (objValue is IList<CBORObject>) {
         WriteObjectArray((IList<CBORObject>)objValue, stream);
-      } else if (objValue is IDictionary<CBORObject, CBORObject>) {
-        WriteObjectMap((IDictionary<CBORObject, CBORObject>)objValue, stream);
-      } else {
-        FromObject(objValue).WriteTo(stream);
+        return;
       }
+      if (objValue is IDictionary<CBORObject, CBORObject>) {
+        WriteObjectMap((IDictionary<CBORObject, CBORObject>)objValue, stream);
+        return;
+      }
+      FromObject(objValue).WriteTo(stream);
     }
 
     // JSON parsing methods
@@ -3072,12 +3107,12 @@ namespace PeterO.Cbor {
         }
         if (c == quote && !escaped) {
           // End quote reached
-          return (sb == null) ? (String.Empty) : (sb.ToString());
+          return (sb == null) ? String.Empty : sb.ToString();
         }
         sb = sb ?? (new StringBuilder());
         if (c <= 0xffff) {
           sb.Append((char)c);
-        } else if (c <= 0x10ffff) {
+        } else {
           sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
           sb.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
         }
@@ -3334,8 +3369,9 @@ namespace PeterO.Cbor {
         }
         return obj;
       } catch (CBORException ex) {
-        if (ex.InnerException is IOException) {
-          throw (IOException)ex.InnerException;
+        var ioex = ex.InnerException as IOException;
+        if (ioex != null) {
+          throw ioex;
         }
         throw;
       }
@@ -3764,7 +3800,7 @@ namespace PeterO.Cbor {
       int type = this.ItemType;
       switch (type) {
           case CBORObjectTypeSimpleValue: {
-            return (this.IsTrue) ? ("true") : ((this.IsFalse) ? ("false") : ("null"));
+            return this.IsTrue ? "true" : (this.IsFalse ? "false" : "null");
           }
           case CBORObjectTypeSingle: {
             var f = (float)this.ThisItem;
@@ -4298,7 +4334,7 @@ namespace PeterO.Cbor {
     /// , <c>ExtendedFloat</c>
     /// , the custom <c>BigInteger</c>
     /// , lists,
-    /// arrays, enumerations ( <c>Enum</c>
+    /// arrays, enumerations (<c>Enum</c>
     /// objects), and maps.</para>
     /// <para>In the .NET version, if the object is a type not specially handled
     /// by this method, returns a CBOR map with the values of each of its read/write

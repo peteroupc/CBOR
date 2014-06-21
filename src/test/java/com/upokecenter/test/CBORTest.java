@@ -789,25 +789,6 @@ import com.upokecenter.cbor.*;
     }
 
     @Test
-    public void TestParseJSONNumber() {
-      if((CBORDataUtilities.ParseJSONNumber(null, false, false))!=null)Assert.fail();
-      if(!(CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false) != null))Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("", false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("xyz", false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("true", false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber(".1", false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0..1", false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0xyz", false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.1xyz", false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.xyz", false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5exyz", false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5q+88", false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5ee88", false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5e+xyz", false, false))!=null)Assert.fail();
-      if((CBORDataUtilities.ParseJSONNumber("0.5e+88xyz", false, false))!=null)Assert.fail();
-    }
-
-    @Test
     public void TestParseDecimalStrings() {
       FastRandom rand = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
@@ -818,11 +799,9 @@ import com.upokecenter.cbor.*;
 
     @Test
     public void TestExtendedInfinity() {
-      if(!(ExtendedDecimal.PositiveInfinity.IsInfinity()))Assert.fail();
       if(!(ExtendedDecimal.PositiveInfinity.IsPositiveInfinity()))Assert.fail();
       if(ExtendedDecimal.PositiveInfinity.IsNegativeInfinity())Assert.fail();
       if(ExtendedDecimal.PositiveInfinity.isNegative())Assert.fail();
-      if(!(ExtendedDecimal.NegativeInfinity.IsInfinity()))Assert.fail();
       if(ExtendedDecimal.NegativeInfinity.IsPositiveInfinity())Assert.fail();
       if(!(ExtendedDecimal.NegativeInfinity.IsNegativeInfinity()))Assert.fail();
       if(!(ExtendedDecimal.NegativeInfinity.isNegative()))Assert.fail();
@@ -967,22 +946,6 @@ import com.upokecenter.cbor.*;
     @Test
     public void TestCBORExceptions() {
       try {
-        CBORObject.NewArray().AsExtendedDecimal();
-        Assert.fail("Should have failed");
-      } catch (IllegalStateException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.NewMap().AsExtendedDecimal();
-        Assert.fail("Should have failed");
-      } catch (IllegalStateException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
         CBORObject.DecodeFromBytes(null);
         Assert.fail("Should have failed");
       } catch (NullPointerException ex) {
@@ -1062,38 +1025,6 @@ import com.upokecenter.cbor.*;
       }
       try {
         CBORObject.FromObject("").Remove(CBORObject.True);
-        Assert.fail("Should have failed");
-      } catch (IllegalStateException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.True.AsExtendedDecimal();
-        Assert.fail("Should have failed");
-      } catch (IllegalStateException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.False.AsExtendedDecimal();
-        Assert.fail("Should have failed");
-      } catch (IllegalStateException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.Undefined.AsExtendedDecimal();
-        Assert.fail("Should have failed");
-      } catch (IllegalStateException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromObject("").AsExtendedDecimal();
         Assert.fail("Should have failed");
       } catch (IllegalStateException ex) {
       } catch (Exception ex) {
@@ -1303,7 +1234,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       if (!objA.equals(objB)) {
         System.out.println(objA);
         System.out.println(objB);
-        Assert.fail("WriteToJSON gives different results from ToJSONString");
+        Assert.fail("WriteJSONTo gives different results from ToJSONString");
       }
     }
 
@@ -1398,10 +1329,7 @@ int startingAvailable=ms.available();
           while ((startingAvailable-ms.available()) != startingAvailable) {
             try {
               CBORObject o = CBORObject.Read(ms);
-              if (o == null) {
-                Assert.fail("Object read is null");
-              }
-              byte[] encodedBytes = o.EncodeToBytes();
+              byte[] encodedBytes = (o == null) ? null : o.EncodeToBytes();
               try {
                 CBORObject.DecodeFromBytes(encodedBytes);
               } catch (Exception ex) {
@@ -1431,13 +1359,11 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       }
     }
 
-    @Test
-    // [Timeout(20000)]
+    @Test(timeout=50000)
     public void TestRandomData() {
       FastRandom rand = new FastRandom();
       CBORObject obj;
-      int count = 1000;
-      for (int i = 0; i < count; ++i) {
+      for (int i = 0; i < 1000; ++i) {
         obj = RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
         this.TestWriteToJSON(obj);
@@ -1477,53 +1403,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     }
 
     @Test
-    public void TestJSONSurrogates() {
-      try {
-        CBORObject.FromJSONString("[\"\ud800\udc00\"]");
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"\\ud800\\udc00\"]");
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"\ud800\\udc00\"]");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"\\ud800\udc00\"]");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"\\udc00\ud800\udc00\"]");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"\\ud800\\udc00\ud800\udc00\"]");
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-    }
-
-    @Test
     public void TestJSONEscapedChars() {
       CBORObject o = CBORObject.FromJSONString(
         "[\"\\r\\n\\u0006\\u000E\\u001A\\\\\\\"\"]");
@@ -1548,219 +1427,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     @Test
     public void TestJSON() {
       CBORObject o;
-      try {
-        CBORObject.FromJSONString("[\"\\ud800\"]"); Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[1,2,"); Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[1,2,3"); Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{,\"0\":0,\"1\":1}");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"0\":0,,\"1\":1}"); Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"0\":0,\"1\":1,}"); Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[,0,1,2]"); Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[0,,1,2]"); Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[0,1,,2]"); Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[0,1,2,]"); Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[0001]");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{a:true}");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\"://comment\ntrue}");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\":/*comment*/true}");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{'a':true}");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\":'b'}");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\t\":true}");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\r\":true}");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\n\":true}");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("['a']");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\":\"a\t\"}");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"a\\'\"]");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[NaN]");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[+Infinity]");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[-Infinity]");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[Infinity]");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\":\"a\r\"}");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("{\"a\":\"a\n\"}");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromJSONString("[\"a\t\"]");
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
       o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
       Assert.assertEquals(6, o.size());
       Assert.assertEquals(1, o.get(0).AsInt32());
@@ -1997,7 +1663,7 @@ try { if(ms2b!=null)ms2b.close(); } catch (java.io.IOException ex){}
       String expectedString,
       int noReplaceRet,
       String noReplaceString) {
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         bytes,
         bytes.length,
         expectedRet,
@@ -2053,16 +1719,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       } catch (IOException ex) {
         throw new CBORException("", ex);
       }
-    }
-
-    @Test
-    public void TestDecFracOverflow() {
-      Assert.assertEquals(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedDecimal());
-      Assert.assertEquals(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedDecimal());
-      if(!(CBORObject.FromObject(Float.NaN).AsExtendedDecimal().IsNaN()))Assert.fail();
-      Assert.assertEquals(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedDecimal());
-      Assert.assertEquals(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedDecimal());
-      if(!(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN()))Assert.fail();
     }
 
     @Test
@@ -2189,7 +1845,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
 
     @Test
     public void TestReadUtf8() {
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x21,
         0x21,
         0x21  },
@@ -2197,7 +1853,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         "!!!",
         0,
         "!!!");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xc2,
         (byte)0x80  },
@@ -2205,7 +1861,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \u0080",
         0,
         " \u0080");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xc2,
         (byte)0x80,
@@ -2214,7 +1870,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \u0080 ",
         0,
         " \u0080 ");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xc2,
         (byte)0x80,
@@ -2223,7 +1879,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \u0080\ufffd",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xc2,
         0x21,
@@ -2232,7 +1888,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \ufffd!!",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xc2,
         (byte)0xff,
@@ -2241,7 +1897,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \ufffd\ufffd ",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xe0,
         (byte)0xa0,
@@ -2250,7 +1906,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \u0800",
         0,
         " \u0800");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xe0,
         (byte)0xa0,
@@ -2260,7 +1916,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \u0800 ",
         0,
         " \u0800 ");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xf0,
         (byte)0x90,
@@ -2270,7 +1926,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \ud800\udc00",
         0,
         " \ud800\udc00");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xf0,
         (byte)0x90,
@@ -2281,7 +1937,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \ufffd",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xf0,
         (byte)0x90  },
@@ -2290,7 +1946,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         null,
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         0x20,
         0x20  },
@@ -2299,7 +1955,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         null,
         -2,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xf0,
         (byte)0x90,
@@ -2310,7 +1966,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \ud800\udc00 ",
         0,
         " \ud800\udc00 ");
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xf0,
         (byte)0x90,
@@ -2320,7 +1976,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \ufffd ",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xf0,
         (byte)0x90,
@@ -2329,7 +1985,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \ufffd ",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xf0,
         (byte)0x90,
@@ -2339,7 +1995,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \ufffd\ufffd",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xf0,
         (byte)0x90,
@@ -2348,7 +2004,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \ufffd\ufffd",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xe0,
         (byte)0xa0,
@@ -2357,7 +2013,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \ufffd ",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xe0,
         0x20  },
@@ -2365,7 +2021,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \ufffd ",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xe0,
         (byte)0xa0,
@@ -2374,7 +2030,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
         " \ufffd\ufffd",
         -1,
         null);
-      this.DoTestReadUtf8(
+      DoTestReadUtf8(
         new byte[] {  0x20,
         (byte)0xe0,
         (byte)0xff  },
@@ -6182,19 +5838,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     }
 
     @Test
-    public void TestCanFitInForExtendedFloat() {
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 11)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 12)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 13)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 14)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 15)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 16)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 17)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 18)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 19)).CanTruncatedIntFitInInt32()))Assert.fail();
-    }
-
-    @Test
     public void TestCanFitInSpecificCases() {
       CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfb, 0x41, (byte)0xe0, (byte)0x85, 0x48, 0x2d, 0x14, 0x47, 0x7a  });  // 2217361768.63373
       Assert.assertEquals(BigInteger.fromString("2217361768"), cbor.AsBigInteger());
@@ -6502,13 +6145,13 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       Assert.assertEquals(BigInteger.fromString("-14907577049884506536"), o.AsBigInteger());
     }
 
-    public void AssertAdd(BigInteger bi, BigInteger bi2, String s) {
-      this.AssertBigIntString(s, bi.add(bi2));
-      this.AssertBigIntString(s, bi2.add(bi));
+    public static void AssertAdd(BigInteger bi, BigInteger bi2, String s) {
+      AssertBigIntString(s, bi.add(bi2));
+      AssertBigIntString(s, bi2.add(bi));
       BigInteger negbi = BigInteger.ZERO.subtract(bi);
       BigInteger negbi2 = BigInteger.ZERO.subtract(bi2);
-      this.AssertBigIntString(s, bi.subtract(negbi2));
-      this.AssertBigIntString(s, bi2.subtract(negbi));
+      AssertBigIntString(s, bi.subtract(negbi2));
+      AssertBigIntString(s, bi2.subtract(negbi));
     }
 
     @Test
@@ -6517,28 +6160,28 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       BigInteger negSmall=(BigInteger.valueOf(5)).negate();
       BigInteger posLarge = BigInteger.valueOf(5555555);
       BigInteger negLarge=(BigInteger.valueOf(5555555)).negate();
-      this.AssertAdd(posSmall, posSmall, "10");
-      this.AssertAdd(posSmall, negSmall, "0");
-      this.AssertAdd(posSmall, posLarge, "5555560");
-      this.AssertAdd(posSmall, negLarge, "-5555550");
-      this.AssertAdd(negSmall, negSmall, "-10");
-      this.AssertAdd(negSmall, posLarge, "5555550");
-      this.AssertAdd(negSmall, negLarge, "-5555560");
-      this.AssertAdd(posLarge, posLarge, "11111110");
-      this.AssertAdd(posLarge, negLarge, "0");
-      this.AssertAdd(negLarge, negLarge, "-11111110");
+      AssertAdd(posSmall, posSmall, "10");
+      AssertAdd(posSmall, negSmall, "0");
+      AssertAdd(posSmall, posLarge, "5555560");
+      AssertAdd(posSmall, negLarge, "-5555550");
+      AssertAdd(negSmall, negSmall, "-10");
+      AssertAdd(negSmall, posLarge, "5555550");
+      AssertAdd(negSmall, negLarge, "-5555560");
+      AssertAdd(posLarge, posLarge, "11111110");
+      AssertAdd(posLarge, negLarge, "0");
+      AssertAdd(negLarge, negLarge, "-11111110");
     }
 
     @Test
     public void TestBigInteger() {
       BigInteger bi = BigInteger.valueOf(3);
-      this.AssertBigIntString("3", bi);
+      AssertBigIntString("3", bi);
       BigInteger negseven = BigInteger.valueOf(-7);
-      this.AssertBigIntString("-7", negseven);
+      AssertBigIntString("-7", negseven);
       BigInteger other = BigInteger.valueOf(-898989);
-      this.AssertBigIntString("-898989", other);
+      AssertBigIntString("-898989", other);
       other = BigInteger.valueOf(898989);
-      this.AssertBigIntString("898989", other);
+      AssertBigIntString("898989", other);
       for (int i = 0; i < 500; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject(bi),

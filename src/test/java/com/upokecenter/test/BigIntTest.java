@@ -524,22 +524,6 @@ bigintRem=divrem[1]; }
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
-      try {
-        BigInteger.ONE.mod(null);
-        Assert.fail("Should have failed");
-      } catch (NullPointerException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        BigInteger.ONE.divideAndRemainder(null);
-        Assert.fail("Should have failed");
-      } catch (NullPointerException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
       Assert.assertEquals(BigInteger.ONE, (BigInteger.valueOf(13)).mod(BigInteger.valueOf(4)));
       Assert.assertEquals(BigInteger.valueOf(3), (BigInteger.valueOf(-13)).mod(BigInteger.valueOf(4)));
       try {

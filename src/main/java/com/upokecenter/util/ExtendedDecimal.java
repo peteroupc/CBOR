@@ -55,9 +55,9 @@ at: http://upokecenter.com/d/
   public final class ExtendedDecimal implements Comparable<ExtendedDecimal> {
     private static final int MaxSafeInt = 214748363;
 
-    private BigInteger exponent;
-    private BigInteger unsignedMantissa;
-    private int flags;
+    private final BigInteger exponent;
+    private final BigInteger unsignedMantissa;
+    private final int flags;
 
     /**
      * Gets this object&apos;s exponent. This object&apos;s value will
@@ -127,13 +127,59 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Creates a decimal number with the value exponent*10^mantissa.
+     * Creates a number with the value exponent*10^mantissa.
      * @param mantissaSmall The un-scaled value.
      * @param exponentSmall The decimal exponent.
      * @return An ExtendedDecimal object.
      */
     public static ExtendedDecimal Create(int mantissaSmall, int exponentSmall) {
       return Create(BigInteger.valueOf(mantissaSmall), BigInteger.valueOf(exponentSmall));
+    }
+
+    /**
+     * Creates a number with the value exponent*10^mantissa.
+     * @param mantissa The un-scaled value.
+     * @param exponent The decimal exponent.
+     * @return An ExtendedDecimal object.
+     * @throws java.lang.NullPointerException The parameter {@code mantissa}
+     * or {@code exponent} is null.
+     */
+    public static ExtendedDecimal Create(BigInteger mantissa, BigInteger exponent) {
+      if (mantissa == null) {
+        throw new NullPointerException("mantissa");
+      }
+      if (exponent == null) {
+        throw new NullPointerException("exponent");
+      }
+      int sign = mantissa.signum();
+      return new ExtendedDecimal(
+        sign < 0 ? ((mantissa).negate()) : mantissa,
+        exponent,
+        (sign < 0) ? BigNumberFlags.FlagNegative : 0);
+    }
+
+    private ExtendedDecimal(BigInteger unsignedMantissa, BigInteger exponent, int flags) {
+
+      this.unsignedMantissa = unsignedMantissa;
+      this.exponent = exponent;
+      this.flags = flags;
+    }
+
+    static ExtendedDecimal CreateWithFlags(
+      BigInteger mantissa,
+      BigInteger exponent,
+      int flags) {
+      if (mantissa == null) {
+        throw new NullPointerException("mantissa");
+      }
+      if (exponent == null) {
+        throw new NullPointerException("exponent");
+      }
+      int sign = mantissa == null ? 0 : mantissa.signum();
+      return new ExtendedDecimal(
+        sign < 0 ? ((mantissa).negate()) : mantissa,
+        exponent,
+        flags);
     }
 
     /**
@@ -177,44 +223,13 @@ at: http://upokecenter.com/d/
       if (ctx != null && ctx.getHasMaxPrecision()) {
         flags |= BigNumberFlags.FlagQuietNaN;
         ExtendedDecimal ef = CreateWithFlags(diag, BigInteger.ZERO, flags).RoundToPrecision(ctx);
-        ef.flags &= ~BigNumberFlags.FlagQuietNaN;
-        ef.flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
-        return ef;
+        int newFlags = ef.flags;
+        newFlags &= ~BigNumberFlags.FlagQuietNaN;
+        newFlags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+        return new ExtendedDecimal(ef.unsignedMantissa, ef.exponent, newFlags);
       }
       flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
       return CreateWithFlags(diag, BigInteger.ZERO, flags);
-    }
-
-    /**
-     * Creates a decimal number with the value exponent*10^mantissa.
-     * @param mantissa The un-scaled value.
-     * @param exponent The decimal exponent.
-     * @return An ExtendedDecimal object.
-     * @throws java.lang.NullPointerException The parameter {@code mantissa}
-     * or {@code exponent} is null.
-     */
-    public static ExtendedDecimal Create(BigInteger mantissa, BigInteger exponent) {
-      if (mantissa == null) {
-        throw new NullPointerException("mantissa");
-      }
-      if (exponent == null) {
-        throw new NullPointerException("exponent");
-      }
-      ExtendedDecimal ex = new ExtendedDecimal();
-      ex.exponent = exponent;
-      int sign = mantissa == null ? 0 : mantissa.signum();
-      ex.unsignedMantissa = sign < 0 ? ((mantissa).negate()) : mantissa;
-      ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
-      return ex;
-    }
-
-    private ExtendedDecimal() {
-    }
-
-    private static ExtendedDecimal CreateWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
-      ExtendedDecimal ext = ExtendedDecimal.Create(mantissa, exponent);
-      ext.flags = flags;
-      return ext;
     }
 
     /**
@@ -601,10 +616,10 @@ at: http://upokecenter.com/d/
       if (i != endStr) {
         throw new NumberFormatException();
       }
-      ExtendedDecimal ret = new ExtendedDecimal();
-      ret.unsignedMantissa = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
-      ret.exponent = (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger();
-      ret.flags = negative ? BigNumberFlags.FlagNegative : 0;
+      ExtendedDecimal ret = new ExtendedDecimal(
+        (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger(),
+        (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger(),
+        negative ? BigNumberFlags.FlagNegative : 0);
       if (ctx != null) {
         ret = MathValue.RoundAfterConversion(ret, ctx);
       }

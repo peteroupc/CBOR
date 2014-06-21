@@ -30,7 +30,6 @@ namespace PeterO {
         return this.hasExponentRange ? this.exponentMax : BigInteger.Zero;
       }
     }
-    
 
     private int traps;
 

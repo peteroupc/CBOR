@@ -69,9 +69,9 @@ namespace PeterO {
   public sealed class ExtendedDecimal : IComparable<ExtendedDecimal>, IEquatable<ExtendedDecimal> {
     private const int MaxSafeInt = 214748363;
 
-    private BigInteger exponent;
-    private BigInteger unsignedMantissa;
-    private int flags;
+    private readonly BigInteger exponent;
+    private readonly BigInteger unsignedMantissa;
+    private readonly int flags;
 
     /// <summary>Gets this object&apos;s exponent. This object&apos;s
     /// value will be an integer if the exponent is positive or zero.</summary>
@@ -137,12 +137,67 @@ namespace PeterO {
     }
     #endregion
 
-    /// <summary>Creates a decimal number with the value exponent*10^mantissa.</summary>
+    /// <summary>Creates a number with the value exponent*10^mantissa.</summary>
     /// <param name='mantissaSmall'>The un-scaled value.</param>
     /// <param name='exponentSmall'>The decimal exponent.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public static ExtendedDecimal Create(int mantissaSmall, int exponentSmall) {
       return Create((BigInteger)mantissaSmall, (BigInteger)exponentSmall);
+    }
+
+    /// <summary>Creates a number with the value exponent*10^mantissa.</summary>
+    /// <param name='mantissa'>The un-scaled value.</param>
+    /// <param name='exponent'>The decimal exponent.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
+    /// <exception cref='System.ArgumentNullException'>The parameter
+    /// <paramref name='mantissa'/> or <paramref name='exponent'/> is
+    /// null.</exception>
+    public static ExtendedDecimal Create(BigInteger mantissa, BigInteger exponent) {
+      if (mantissa == null) {
+        throw new ArgumentNullException("mantissa");
+      }
+      if (exponent == null) {
+        throw new ArgumentNullException("exponent");
+      }
+      int sign = mantissa.Sign;
+      return new ExtendedDecimal(
+        sign < 0 ? (-(BigInteger)mantissa) : mantissa,
+        exponent,
+        (sign < 0) ? BigNumberFlags.FlagNegative : 0);
+    }
+
+    private ExtendedDecimal(BigInteger unsignedMantissa, BigInteger exponent, int flags) {
+#if DEBUG
+      if (unsignedMantissa == null) {
+        throw new ArgumentNullException("unsignedMantissa");
+      }
+      if (exponent == null) {
+        throw new ArgumentNullException("exponent");
+      }
+      if (unsignedMantissa.Sign < 0) {
+        throw new ArgumentException("unsignedMantissa is less than 0.");
+      }
+#endif
+      this.unsignedMantissa = unsignedMantissa;
+      this.exponent = exponent;
+      this.flags = flags;
+    }
+
+    internal static ExtendedDecimal CreateWithFlags(
+      BigInteger mantissa,
+      BigInteger exponent,
+      int flags) {
+      if (mantissa == null) {
+        throw new ArgumentNullException("mantissa");
+      }
+      if (exponent == null) {
+        throw new ArgumentNullException("exponent");
+      }
+      int sign = mantissa == null ? 0 : mantissa.Sign;
+      return new ExtendedDecimal(
+        sign < 0 ? (-(BigInteger)mantissa) : mantissa,
+        exponent,
+        flags);
     }
 
     /// <summary>Creates a not-a-number ExtendedDecimal object.</summary>
@@ -182,43 +237,13 @@ namespace PeterO {
       if (ctx != null && ctx.HasMaxPrecision) {
         flags |= BigNumberFlags.FlagQuietNaN;
         ExtendedDecimal ef = CreateWithFlags(diag, BigInteger.Zero, flags).RoundToPrecision(ctx);
-        ef.flags &= ~BigNumberFlags.FlagQuietNaN;
-        ef.flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
-        return ef;
+        int newFlags = ef.flags;
+        newFlags &= ~BigNumberFlags.FlagQuietNaN;
+        newFlags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+        return new ExtendedDecimal(ef.unsignedMantissa, ef.exponent, newFlags);
       }
       flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
       return CreateWithFlags(diag, BigInteger.Zero, flags);
-    }
-
-    /// <summary>Creates a decimal number with the value exponent*10^mantissa.</summary>
-    /// <param name='mantissa'>The un-scaled value.</param>
-    /// <param name='exponent'>The decimal exponent.</param>
-    /// <returns>An ExtendedDecimal object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='mantissa'/> or <paramref name='exponent'/> is
-    /// null.</exception>
-    public static ExtendedDecimal Create(BigInteger mantissa, BigInteger exponent) {
-      if (mantissa == null) {
-        throw new ArgumentNullException("mantissa");
-      }
-      if (exponent == null) {
-        throw new ArgumentNullException("exponent");
-      }
-      var ex = new ExtendedDecimal();
-      ex.exponent = exponent;
-      int sign = mantissa == null ? 0 : mantissa.Sign;
-      ex.unsignedMantissa = sign < 0 ? (-(BigInteger)mantissa) : mantissa;
-      ex.flags = (sign < 0) ? BigNumberFlags.FlagNegative : 0;
-      return ex;
-    }
-
-    private ExtendedDecimal() {
-    }
-
-    private static ExtendedDecimal CreateWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
-      ExtendedDecimal ext = ExtendedDecimal.Create(mantissa, exponent);
-      ext.flags = flags;
-      return ext;
     }
 
     /// <summary>Creates a decimal number from a string that represents
@@ -603,10 +628,10 @@ namespace PeterO {
       if (i != endStr) {
         throw new FormatException();
       }
-      var ret = new ExtendedDecimal();
-      ret.unsignedMantissa = (mant == null) ? ((BigInteger)mantInt) : mant.AsBigInteger();
-      ret.exponent = (newScale == null) ? ((BigInteger)newScaleInt) : newScale.AsBigInteger();
-      ret.flags = negative ? BigNumberFlags.FlagNegative : 0;
+      var ret = new ExtendedDecimal(
+        (mant == null) ? ((BigInteger)mantInt) : mant.AsBigInteger(),
+        (newScale == null) ? ((BigInteger)newScaleInt) : newScale.AsBigInteger(),
+        negative ? BigNumberFlags.FlagNegative : 0);
       if (ctx != null) {
         ret = MathValue.RoundAfterConversion(ret, ctx);
       }
