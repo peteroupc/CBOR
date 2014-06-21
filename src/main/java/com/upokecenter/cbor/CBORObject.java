@@ -1596,6 +1596,38 @@ private List<CBORObject> AsList() {
       }
 
     /**
+     * Inserts an object at the specified position in this CBOR array.
+     * @param index Zero-based index to insert at.
+     * @param valueOb An object representing the value, which will be converted
+     * to a CBORObject. Can be null, in which case this value is converted
+     * to CBORObject.Null.
+     * @return This object.
+     * @throws IllegalStateException This object is not an array.
+     * @throws java.lang.IllegalArgumentException The parameter {@code valueOb}
+     * has an unsupported type; or {@code index} is not a valid index into
+     * this array.
+     */
+    public CBORObject Insert(int index, Object valueOb) {
+      if (this.getItemType() == CBORObjectTypeArray) {
+        CBORObject mapValue;
+        List<CBORObject> list = this.AsList();
+        if (index < 0 || index > list.size()) {
+          throw new IllegalArgumentException("index");
+        }
+        if (valueOb == null) {
+          mapValue = CBORObject.Null;
+        } else {
+          mapValue = ((valueOb instanceof CBORObject) ? (CBORObject)valueOb : null);
+          mapValue = (mapValue == null) ? (CBORObject.FromObject(valueOb)) : mapValue;
+        }
+        list.insert(index, mapValue);
+      } else {
+        throw new IllegalStateException("Not an array");
+      }
+      return this;
+    }
+
+    /**
      * Maps an object to a key in this CBOR map, or adds the value if the key doesn't
      * exist.
      * @param key An object representing the key, which will be converted
@@ -1617,13 +1649,13 @@ private List<CBORObject> AsList() {
           mapKey = CBORObject.Null;
         } else {
           mapKey = ((key instanceof CBORObject) ? (CBORObject)key : null);
-          mapKey = (mapKey == null) ? ((CBORObject.FromObject(key))) : mapKey;
+          mapKey = (mapKey == null) ? (CBORObject.FromObject(key)) : mapKey;
         }
         if (valueOb == null) {
           mapValue = CBORObject.Null;
         } else {
           mapValue = ((valueOb instanceof CBORObject) ? (CBORObject)valueOb : null);
-          mapValue = (mapValue == null) ? ((CBORObject.FromObject(valueOb))) : mapValue;
+          mapValue = (mapValue == null) ? (CBORObject.FromObject(valueOb)) : mapValue;
         }
         Map<CBORObject, CBORObject> map = this.AsMap();
         if (map.containsKey(mapKey)) {
@@ -1661,13 +1693,13 @@ private List<CBORObject> AsList() {
           mapKey = CBORObject.Null;
         } else {
           mapKey = ((key instanceof CBORObject) ? (CBORObject)key : null);
-          mapKey = (mapKey == null) ? ((CBORObject.FromObject(key))) : mapKey;
+          mapKey = (mapKey == null) ? (CBORObject.FromObject(key)) : mapKey;
         }
         if (valueOb == null) {
           mapValue = CBORObject.Null;
         } else {
           mapValue = ((valueOb instanceof CBORObject) ? (CBORObject)valueOb : null);
-          mapValue = (mapValue == null) ? ((CBORObject.FromObject(valueOb))) : mapValue;
+          mapValue = (mapValue == null) ? (CBORObject.FromObject(valueOb)) : mapValue;
         }
         Map<CBORObject, CBORObject> map = this.AsMap();
         if (map.containsKey(mapKey)) {
@@ -1888,7 +1920,8 @@ private List<CBORObject> AsList() {
     /**
      * Returns false if this object is False, Null, or Undefined; otherwise,
      * true.
-     * @return A Boolean object.
+     * @return False if this object is False, Null, or Undefined; otherwise,
+     * true.
      */
     public boolean AsBoolean() {
       return !this.isFalse() && !this.isNull() && !this.isUndefined();
@@ -2847,14 +2880,14 @@ private List<CBORObject> AsList() {
         }
       }
       if (!hasComplexTag) {
-        switch(this.getItemType()) { case (CBORObjectTypeTextString): {
+         switch (this.getItemType()) { case CBORObjectTypeTextString: {
               byte[] ret = GetOptimizedBytesIfShortAscii(
                 this.AsString(),
                 tagged ? (((int)tagbyte) & 0xff) : -1);
               if (ret != null) {
                 return ret;
               }
-              break; } case (CBORObjectTypeSimpleValue): {
+              break; } case CBORObjectTypeSimpleValue: {
               if (tagged) {
                 if (this.isFalse()) {
                   return new byte[] { tagbyte, (byte)0xf4  };
@@ -2882,7 +2915,7 @@ private List<CBORObject> AsList() {
                   return new byte[] { (byte)0xf7  };
                 }
               }
-              break; } case (CBORObjectTypeInteger): {
+              break; } case CBORObjectTypeInteger: {
               long value = (((Long)this.getThisItem()).longValue());
               byte[] intBytes = null;
               if (value >= 0) {
@@ -2899,7 +2932,7 @@ private List<CBORObject> AsList() {
               System.arraycopy(intBytes, 0, ret2, 1, intBytes.length);
               ret2[0] = tagbyte;
               return ret2;
-              } case (CBORObjectTypeSingle): {
+              } case CBORObjectTypeSingle: {
               float value = ((Float)this.getThisItem()).floatValue();
               int bits = Float.floatToRawIntBits(value);
               return tagged ?
@@ -2913,7 +2946,7 @@ private List<CBORObject> AsList() {
                 (byte)((bits >> 16) & 0xff),
                 (byte)((bits >> 8) & 0xff),
                 (byte)(bits & 0xff)  };
-              } case (CBORObjectTypeDouble): {
+              } case CBORObjectTypeDouble: {
               double value = ((Double)this.getThisItem()).doubleValue();
               long bits = Double.doubleToRawLongBits(value);
               return tagged ?
@@ -2999,11 +3032,13 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
       if(objValue instanceof List<?>) {
         WriteObjectArray((List<CBORObject>)objValue, stream);
-      } else if(objValue instanceof Map<?,?>) {
-        WriteObjectMap((Map<CBORObject, CBORObject>)objValue, stream);
-      } else {
-        FromObject(objValue).WriteTo(stream);
+        return;
       }
+      if(objValue instanceof Map<?,?>) {
+        WriteObjectMap((Map<CBORObject, CBORObject>)objValue, stream);
+        return;
+      }
+      FromObject(objValue).WriteTo(stream);
     }
 
     // JSON parsing methods
@@ -3116,12 +3151,12 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         }
         if (c == quote && !escaped) {
           // End quote reached
-          return (sb == null) ? ("") : (sb.toString());
+          return (sb == null) ? "" : sb.toString();
         }
         sb = (sb == null) ? ((new StringBuilder())) : sb;
         if (c <= 0xffff) {
           sb.append((char)c);
-        } else if (c <= 0x10ffff) {
+        } else {
           sb.append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
           sb.append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
         }
@@ -3379,8 +3414,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         }
         return obj;
       } catch (CBORException ex) {
-        if (ex.getCause() instanceof IOException) {
-          throw (IOException)ex.getCause();
+        IOException ioex = ((ex.getCause() instanceof IOException) ? (IOException)ex.getCause() : null);
+        if (ioex != null) {
+          throw ioex;
         }
         throw ex;
       }
@@ -3808,7 +3844,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       int type = this.getItemType();
       switch (type) {
           case CBORObjectTypeSimpleValue: {
-            return (this.isTrue()) ? ("true") : ((this.isFalse()) ? ("false") : ("null"));
+            return this.isTrue() ? "true" : (this.isFalse() ? "false" : "null");
           }
           case CBORObjectTypeSingle: {
             float f = ((Float)this.getThisItem()).floatValue();

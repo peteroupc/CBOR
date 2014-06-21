@@ -515,22 +515,6 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      try {
-        BigInteger.One.mod(null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        BigInteger.One.divideAndRemainder(null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
       Assert.AreEqual(BigInteger.One, ((BigInteger)13).mod((BigInteger)4));
       Assert.AreEqual((BigInteger)3, ((BigInteger)(-13)).mod((BigInteger)4));
       try {

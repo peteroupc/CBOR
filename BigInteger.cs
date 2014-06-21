@@ -1758,7 +1758,7 @@ namespace PeterO {
     private static short RemainderUnsigned(int x, short y) {
       unchecked {
         int iy = ((int)y) & 0xffff;
-        return ((x >> 31) == 0) ? ((short)(((int)x % iy) & 0xffff)) : (Divide32By16(x, y, true));
+        return ((x >> 31) == 0) ? ((short)(((int)x % iy) & 0xffff)) : Divide32By16(x, y, true);
       }
     }
 
@@ -2189,7 +2189,7 @@ namespace PeterO {
              newreg[newwordCount - 1] == 0) {
         --newwordCount;
       }
-      return (newwordCount == 0) ? (BigInteger.Zero) : (new BigInteger(newwordCount, newreg, newnegative));
+      return (newwordCount == 0) ? BigInteger.Zero : (new BigInteger(newwordCount, newreg, newnegative));
     }
 
     private static BigInteger Allocate(int length) {
@@ -2677,6 +2677,7 @@ namespace PeterO {
     public BigInteger abs() {
       return (this.wordCount == 0 || !this.negative) ? this : new BigInteger(this.wordCount, this.words, false);
     }
+
     private int ByteCount() {
       int wc = this.wordCount;
       if (wc == 0) {
@@ -3505,7 +3506,9 @@ namespace PeterO {
         diffNeg = true;
       }
       int count = CountWords(diffReg, diffReg.Length);
-      if (count == 0) return BigInteger.Zero;
+      if (count == 0) {
+ return BigInteger.Zero;
+}
       diffReg = ShortenArray(diffReg, count);
       return new BigInteger(count, diffReg, diffNeg);
     }
@@ -3742,7 +3745,7 @@ namespace PeterO {
                quotReg[quotwordCount - 1] == 0) {
           --quotwordCount;
         }
-        return (quotwordCount != 0) ? (new BigInteger(quotwordCount, quotReg, this.negative ^ bigintDivisor.negative)) : (BigInteger.Zero);
+        return (quotwordCount != 0) ? (new BigInteger(quotwordCount, quotReg, this.negative ^ bigintDivisor.negative)) : BigInteger.Zero;
       }
       // ---- General case
       words1Size += words1Size & 1;
@@ -3764,7 +3767,7 @@ namespace PeterO {
         words2Size);
       quotwordCount = CountWords(quotReg, quotReg.Length);
       quotReg = ShortenArray(quotReg, quotwordCount);
-      return (quotwordCount != 0) ? (new BigInteger(quotwordCount, quotReg, this.negative ^ bigintDivisor.negative)) : (BigInteger.Zero);
+      return (quotwordCount != 0) ? (new BigInteger(quotwordCount, quotReg, this.negative ^ bigintDivisor.negative)) : BigInteger.Zero;
     }
 
     /// <summary>Divides this object by another big integer and returns
@@ -3859,8 +3862,8 @@ namespace PeterO {
       int quoCount = CountWords(quotientreg, quotientreg.Length);
       bigRemainderreg = ShortenArray(bigRemainderreg, remCount);
       quotientreg = ShortenArray(quotientreg, quoCount);
-      BigInteger bigrem=(remCount == 0) ? BigInteger.Zero : new BigInteger(remCount, bigRemainderreg, this.negative);
-      BigInteger bigquo2=(quoCount == 0) ? BigInteger.Zero : new BigInteger(quoCount, quotientreg, this.negative ^ divisor.negative);
+      BigInteger bigrem = (remCount == 0) ? BigInteger.Zero : new BigInteger(remCount, bigRemainderreg, this.negative);
+      BigInteger bigquo2 = (quoCount == 0) ? BigInteger.Zero : new BigInteger(quoCount, quotientreg, this.negative ^ divisor.negative);
       return new[] { bigquo2, bigrem };
     }
 
@@ -4085,7 +4088,7 @@ namespace PeterO {
       "CA2104",
       Justification = "BigInteger is immutable")]
     #endif
-    public static readonly BigInteger ZERO = new BigInteger(0, new short[] { 0, 0}, false);
+    public static readonly BigInteger ZERO = new BigInteger(0, new short[] { 0, 0 }, false);
 
     /// <summary>BigInteger object for the number one.</summary>
     #if CODE_ANALYSIS
@@ -4095,7 +4098,7 @@ namespace PeterO {
       Justification = "BigInteger is immutable")]
     #endif
 
-    public static readonly BigInteger ONE = new BigInteger(1, new short[] { 1, 0}, false);
+    public static readonly BigInteger ONE = new BigInteger(1, new short[] { 1, 0 }, false);
 
     /// <summary>BigInteger object for the number ten.</summary>
     #if CODE_ANALYSIS

@@ -8,36 +8,36 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO {
-  /// <summary>Represents an arbitrary-precision binary floating-point
-  /// number. Consists of an integer mantissa and an integer exponent,
-  /// both arbitrary-precision. The value of the number equals mantissa
-  /// * 2^exponent. This class also supports values for negative zero,
-  /// not-a-number (NaN) values, and infinity. <para>Passing a signaling
-  /// NaN to any arithmetic operation shown here will signal the flag FlagInvalid
-  /// and return a quiet NaN, even if another operand to that operation is
-  /// a quiet NaN, unless noted otherwise.</para>
-  /// <para>Passing a quiet
-  /// NaN to any arithmetic operation shown here will return a quiet NaN,
-  /// unless noted otherwise.</para>
-  /// <para>Unless noted otherwise,
-  /// passing a null ExtendedFloat argument to any method here will throw
-  /// an exception.</para>
-  /// <para>When an arithmetic operation signals
-  /// the flag FlagInvalid, FlagOverflow, or FlagDivideByZero, it will
-  /// not throw an exception too, unless the operation's trap is enabled
-  /// in the precision context (see PrecisionContext's Traps property).</para>
-  /// <para>An ExtendedFloat value can be serialized in one of the following
-  /// ways:</para>
-  /// <list><item>By calling the toString() method. However,
-  /// not all strings can be converted back to an ExtendedFloat without
-  /// loss, especially if the string has a fractional part.</item>
-  /// <item>By
-  /// calling the UnsignedMantissa, Exponent, and IsNegative properties,
-  /// and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN methods.
-  /// The return values combined will uniquely identify a particular ExtendedFloat
-  /// value.</item>
-  /// </list>
-  /// </summary>
+    /// <summary>Represents an arbitrary-precision binary floating-point
+    /// number. Consists of an integer mantissa and an integer exponent,
+    /// both arbitrary-precision. The value of the number equals mantissa
+    /// * 2^exponent. This class also supports values for negative zero,
+    /// not-a-number (NaN) values, and infinity. <para>Passing a signaling
+    /// NaN to any arithmetic operation shown here will signal the flag FlagInvalid
+    /// and return a quiet NaN, even if another operand to that operation is
+    /// a quiet NaN, unless noted otherwise.</para>
+    /// <para>Passing a quiet
+    /// NaN to any arithmetic operation shown here will return a quiet NaN,
+    /// unless noted otherwise.</para>
+    /// <para>Unless noted otherwise,
+    /// passing a null ExtendedFloat argument to any method here will throw
+    /// an exception.</para>
+    /// <para>When an arithmetic operation signals
+    /// the flag FlagInvalid, FlagOverflow, or FlagDivideByZero, it will
+    /// not throw an exception too, unless the operation's trap is enabled
+    /// in the precision context (see PrecisionContext's Traps property).</para>
+    /// <para>An ExtendedFloat value can be serialized in one of the following
+    /// ways:</para>
+    /// <list><item>By calling the toString() method. However,
+    /// not all strings can be converted back to an ExtendedFloat without
+    /// loss, especially if the string has a fractional part.</item>
+    /// <item>By
+    /// calling the UnsignedMantissa, Exponent, and IsNegative properties,
+    /// and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN methods.
+    /// The return values combined will uniquely identify a particular ExtendedFloat
+    /// value.</item>
+    /// </list>
+    /// </summary>
   public sealed class ExtendedFloat : IComparable<ExtendedFloat>, IEquatable<ExtendedFloat> {
     private readonly BigInteger exponent;
     private readonly BigInteger unsignedMantissa;
@@ -306,53 +306,53 @@ namespace PeterO {
     }
 
     private sealed class BinaryMathHelper : IRadixMathHelper<ExtendedFloat> {
-      /// <summary>This is an internal method.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /// <summary>This is an internal method.</summary>
+    /// <returns>A 32-bit signed integer.</returns>
       public int GetRadix() {
         return 2;
       }
 
-      /// <summary>This is an internal method.</summary>
-      /// <param name='value'>An ExtendedFloat object.</param>
-      /// <returns>A 32-bit signed integer.</returns>
+    /// <summary>This is an internal method.</summary>
+    /// <param name='value'>An ExtendedFloat object.</param>
+    /// <returns>A 32-bit signed integer.</returns>
       public int GetSign(ExtendedFloat value) {
         return value.Sign;
       }
 
-      /// <summary>This is an internal method.</summary>
-      /// <param name='value'>An ExtendedFloat object.</param>
-      /// <returns>A BigInteger object.</returns>
+    /// <summary>This is an internal method.</summary>
+    /// <param name='value'>An ExtendedFloat object.</param>
+    /// <returns>A BigInteger object.</returns>
       public BigInteger GetMantissa(ExtendedFloat value) {
         return value.Mantissa;
       }
 
-      /// <summary>This is an internal method.</summary>
-      /// <param name='value'>An ExtendedFloat object.</param>
-      /// <returns>A BigInteger object.</returns>
+    /// <summary>This is an internal method.</summary>
+    /// <param name='value'>An ExtendedFloat object.</param>
+    /// <returns>A BigInteger object.</returns>
       public BigInteger GetExponent(ExtendedFloat value) {
         return value.exponent;
       }
 
-      /// <summary>This is an internal method.</summary>
-      /// <param name='bigint'>A BigInteger object.</param>
-      /// <param name='lastDigit'>A 32-bit signed integer.</param>
-      /// <param name='olderDigits'>A 32-bit signed integer. (2).</param>
-      /// <returns>An IShiftAccumulator object.</returns>
+    /// <summary>This is an internal method.</summary>
+    /// <param name='bigint'>A BigInteger object.</param>
+    /// <param name='lastDigit'>A 32-bit signed integer.</param>
+    /// <param name='olderDigits'>A 32-bit signed integer. (2).</param>
+    /// <returns>An IShiftAccumulator object.</returns>
       public IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger bigint, int lastDigit, int olderDigits) {
         return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
-      /// <summary>This is an internal method.</summary>
-      /// <param name='bigint'>A BigInteger object.</param>
-      /// <returns>An IShiftAccumulator object.</returns>
+    /// <summary>This is an internal method.</summary>
+    /// <param name='bigint'>A BigInteger object.</param>
+    /// <returns>An IShiftAccumulator object.</returns>
       public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
         return new BitShiftAccumulator(bigint, 0, 0);
       }
 
-      /// <summary>This is an internal method.</summary>
-      /// <param name='num'>A BigInteger object.</param>
-      /// <param name='den'>A BigInteger object. (2).</param>
-      /// <returns>A Boolean object.</returns>
+    /// <summary>This is an internal method.</summary>
+    /// <param name='num'>A BigInteger object.</param>
+    /// <param name='den'>A BigInteger object. (2).</param>
+    /// <returns>A Boolean object.</returns>
       public bool HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
         BigInteger gcd = BigInteger.GreatestCommonDivisor(num, den);
         if (gcd.IsZero) {
@@ -365,10 +365,10 @@ namespace PeterO {
         return den.Equals(BigInteger.One);
       }
 
-      /// <summary>This is an internal method.</summary>
-      /// <param name='bigint'>A BigInteger object. (2).</param>
-      /// <param name='power'>A FastInteger object.</param>
-      /// <returns>A BigInteger object.</returns>
+    /// <summary>This is an internal method.</summary>
+    /// <param name='bigint'>A BigInteger object. (2).</param>
+    /// <param name='power'>A FastInteger object.</param>
+    /// <returns>A BigInteger object.</returns>
       public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
         if (power.Sign <= 0) {
           return bigint;
@@ -387,31 +387,31 @@ namespace PeterO {
         return power.CanFitInInt32() ? DecimalUtility.ShiftLeftInt(bigint, power.AsInt32()) : DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
       }
 
-      /// <summary>This is an internal method.</summary>
-      /// <param name='value'>An ExtendedFloat object.</param>
-      /// <returns>A 32-bit signed integer.</returns>
+    /// <summary>This is an internal method.</summary>
+    /// <param name='value'>An ExtendedFloat object.</param>
+    /// <returns>A 32-bit signed integer.</returns>
       public int GetFlags(ExtendedFloat value) {
         return value.flags;
       }
 
-      /// <summary>This is an internal method.</summary>
-      /// <param name='mantissa'>A BigInteger object.</param>
-      /// <param name='exponent'>A BigInteger object. (2).</param>
-      /// <param name='flags'>A 32-bit signed integer.</param>
-      /// <returns>An ExtendedFloat object.</returns>
+    /// <summary>This is an internal method.</summary>
+    /// <param name='mantissa'>A BigInteger object.</param>
+    /// <param name='exponent'>A BigInteger object. (2).</param>
+    /// <param name='flags'>A 32-bit signed integer.</param>
+    /// <returns>An ExtendedFloat object.</returns>
       public ExtendedFloat CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
         return ExtendedFloat.CreateWithFlags(mantissa, exponent, flags);
       }
 
-      /// <summary>This is an internal method.</summary>
-      /// <returns>A 32-bit signed integer.</returns>
+    /// <summary>This is an internal method.</summary>
+    /// <returns>A 32-bit signed integer.</returns>
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteAndNonFinite;
       }
 
-      /// <summary>This is an internal method.</summary>
-      /// <param name='val'>A 32-bit signed integer.</param>
-      /// <returns>An ExtendedFloat object.</returns>
+    /// <summary>This is an internal method.</summary>
+    /// <param name='val'>A 32-bit signed integer.</param>
+    /// <returns>An ExtendedFloat object.</returns>
       public ExtendedFloat ValueOf(int val) {
         return FromInt64(val);
       }

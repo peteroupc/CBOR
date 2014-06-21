@@ -29,7 +29,7 @@ private TestCommon() {
       if (bigintB.signum()==0) {
         try {
           bigintA.divide(bigintB); Assert.fail("Expected divide by 0 error");
-        } catch (Exception ex) {
+        } catch (ArithmeticException ex) {
         }
       } else {
         AssertBigIntegersEqual(result, bigintA.divide(bigintB));
@@ -42,7 +42,7 @@ private TestCommon() {
       if (bigintB.signum()==0) {
         try {
           bigintA.remainder(bigintB); Assert.fail("Expected divide by 0 error");
-        } catch (Exception ex) {
+        } catch (ArithmeticException ex) {
         }
       } else {
         AssertBigIntegersEqual(result, bigintA.remainder(bigintB));
@@ -64,7 +64,7 @@ rembi=divrem[1]; }
             Assert.fail();
           }
           Assert.fail("Expected divide by 0 error");
-        } catch (Exception ex) {
+        } catch (ArithmeticException ex) {
         }
       } else {
         BigInteger quo;

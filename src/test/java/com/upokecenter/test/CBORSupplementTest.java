@@ -301,14 +301,6 @@ import com.upokecenter.cbor.*;
     }
 
     @Test
-    public void TestCBORObjectCount() {
-      Assert.assertEquals(0, CBORObject.True.size());
-      Assert.assertEquals(0, CBORObject.False.size());
-      Assert.assertEquals(0, CBORObject.NewArray().size());
-      Assert.assertEquals(0, CBORObject.NewMap().size());
-    }
-
-    @Test
     public void TestCBORObjectGetByteString() {
       try {
         CBORObject.True.GetByteString();

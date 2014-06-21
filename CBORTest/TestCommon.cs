@@ -27,7 +27,7 @@ namespace Test {
       if (bigintB.IsZero) {
         try {
           bigintA.divide(bigintB); Assert.Fail("Expected divide by 0 error");
-        } catch (Exception) {
+        } catch (ArithmeticException) {
         }
       } else {
         AssertBigIntegersEqual(result, bigintA.divide(bigintB));
@@ -40,7 +40,7 @@ namespace Test {
       if (bigintB.IsZero) {
         try {
           bigintA.remainder(bigintB); Assert.Fail("Expected divide by 0 error");
-        } catch (Exception) {
+        } catch (ArithmeticException) {
         }
       } else {
         AssertBigIntegersEqual(result, bigintA.remainder(bigintB));
@@ -58,7 +58,7 @@ namespace Test {
             Assert.Fail();
           }
           Assert.Fail("Expected divide by 0 error");
-        } catch (Exception) {
+        } catch (ArithmeticException) {
         }
       } else {
         BigInteger quo = BigInteger.DivRem(bigintA, bigintB, out rembi);

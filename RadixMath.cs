@@ -2604,7 +2604,7 @@ namespace PeterO {
 
     // "binaryPrec" means whether "precision" is the number of bits and not digits
     private T RoundToPrecisionInternal(T thisValue, int lastDiscarded, int olderDiscarded, FastInteger shift, bool adjustNegativeZero, PrecisionContext ctx) {
-      ctx = ctx ?? (PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven));
+      ctx = ctx ?? PrecisionContext.Unlimited.WithRounding(Rounding.HalfEven);
       // If context has unlimited precision and exponent range,
       // and no discarded digits or shifting
       if (!ctx.HasMaxPrecision && !ctx.HasExponentRange && (lastDiscarded | olderDiscarded) == 0 && (shift == null || shift.IsValueZero)) {
@@ -2730,7 +2730,7 @@ namespace PeterO {
       BigInteger maxMantissa = BigInteger.One;
       FastInteger exp = FastInteger.FromBig(this.helper.GetExponent(thisValue));
       int flags = 0;
-      accum = accum ?? (this.helper.CreateShiftAccumulatorWithDigits(bigmantissa, lastDiscarded, olderDiscarded));
+      accum = accum ?? this.helper.CreateShiftAccumulatorWithDigits(bigmantissa, lastDiscarded, olderDiscarded);
       if (binaryPrec) {
         FastInteger prec = FastInteger.Copy(fastPrecision);
         while (prec.Sign > 0) {

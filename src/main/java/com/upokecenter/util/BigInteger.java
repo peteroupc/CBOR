@@ -1451,7 +1451,7 @@ at: http://upokecenter.com/d/
     private static short RemainderUnsigned(int x, short y) {
       {
         int iy = ((int)y) & 0xffff;
-        return ((x >> 31) == 0) ? ((short)(((int)x % iy) & 0xffff)) : (Divide32By16(x, y, true));
+        return ((x >> 31) == 0) ? ((short)(((int)x % iy) & 0xffff)) : Divide32By16(x, y, true);
       }
     }
 
@@ -1866,7 +1866,7 @@ at: http://upokecenter.com/d/
              newreg[newwordCount - 1] == 0) {
         --newwordCount;
       }
-      return (newwordCount == 0) ? (BigInteger.ZERO) : (new BigInteger(newwordCount, newreg, newnegative));
+      return (newwordCount == 0) ? BigInteger.ZERO : (new BigInteger(newwordCount, newreg, newnegative));
     }
 
     private static BigInteger Allocate(int length) {
@@ -2380,6 +2380,7 @@ at: http://upokecenter.com/d/
     public BigInteger abs() {
       return (this.wordCount == 0 || !this.negative) ? this : new BigInteger(this.wordCount, this.words, false);
     }
+
     private int ByteCount() {
       int wc = this.wordCount;
       if (wc == 0) {
@@ -3031,42 +3032,6 @@ at: http://upokecenter.com/d/
       return r;
     }
 
-    private static BigInteger PositiveSubtract(
-      BigInteger bigintDiff,
-      BigInteger minuend,
-      BigInteger subtrahend) {
-      int words1Size = minuend.wordCount;
-      words1Size += words1Size & 1;
-      int words2Size = subtrahend.wordCount;
-      words2Size += words2Size & 1;
-      boolean diffNeg = false;
-      short[] diffReg = new short[(int)Math.max(minuend.words.length, subtrahend.words.length)];
-      if (words1Size == words2Size) {
-        if (Compare(minuend.words, 0, subtrahend.words, 0, (int)words1Size) >= 0) {
-          // words1 is at least as high as words2
-          Subtract(bigintDiff.words, 0, minuend.words, 0, subtrahend.words, 0, (int)words1Size);
-        } else {
-          // words1 is less than words2
-          Subtract(bigintDiff.words, 0, subtrahend.words, 0, minuend.words, 0, (int)words1Size);
-          diffNeg = true;  // difference will be negative
-        }
-      } else if (words1Size > words2Size) {
-        // words1 is greater than words2
-        short borrow = (short)Subtract(bigintDiff.words, 0, minuend.words, 0, subtrahend.words, 0, (int)words2Size);
-        System.arraycopy(minuend.words, words2Size, bigintDiff.words, words2Size, words1Size - words2Size);
-        Decrement(bigintDiff.words, words2Size, (int)(words1Size - words2Size), borrow);
-      } else {
-        // words1 is less than words2
-        short borrow = (short)Subtract(bigintDiff.words, 0, subtrahend.words, 0, minuend.words, 0, (int)words1Size);
-        System.arraycopy(subtrahend.words, words1Size, bigintDiff.words, words1Size, words2Size - words1Size);
-        Decrement(bigintDiff.words, words1Size, (int)(words2Size - words1Size), borrow);
-        diffNeg = true;
-      }
-      int count = CountWords(diffReg, diffReg.length);
-      diffReg = ShortenArray(diffReg, count);
-      return new BigInteger(count, diffReg, diffNeg);
-    }
-
     /**
      * Determines whether this object and another object are equal.
      * @param obj An arbitrary object.
@@ -3119,7 +3084,6 @@ at: http://upokecenter.com/d/
       if (bigintAugend == null) {
         throw new NullPointerException("bigintAugend");
       }
-      BigInteger sum;
       if (this.wordCount == 0) {
         return bigintAugend;
       }
@@ -3152,7 +3116,6 @@ at: http://upokecenter.com/d/
           return new BigInteger(1, sumreg, !this.negative);
         }
       }
-      sum = BigInteger.Allocate((int)Math.max(this.words.length, bigintAugend.words.length));
       if ((!this.negative) == (!bigintAugend.negative)) {
         sumreg = new short[(int)Math.max(this.words.length, bigintAugend.words.length)];
         // both nonnegative or both negative
@@ -3226,14 +3189,47 @@ at: http://upokecenter.com/d/
         }
         return new BigInteger(sumwordCount, sumreg, this.negative);
       }
+      BigInteger minuend = this;
+      BigInteger subtrahend = bigintAugend;
       if (this.negative) {
-        sum = BigInteger.Allocate((int)Math.max(this.words.length, bigintAugend.words.length));
-        PositiveSubtract(sum, bigintAugend, this);  // this is negative, b is nonnegative
-      } else {
-        sum = BigInteger.Allocate((int)Math.max(this.words.length, bigintAugend.words.length));
-        PositiveSubtract(sum, this, bigintAugend);  // this is nonnegative, b is negative
+        // this is negative, b is nonnegative
+        minuend = bigintAugend;
+        subtrahend = this;
       }
-      return sum;
+      // Do a subtraction
+      int words1Size = minuend.wordCount;
+      words1Size += words1Size & 1;
+      int words2Size = subtrahend.wordCount;
+      words2Size += words2Size & 1;
+      boolean diffNeg = false;
+      short[] diffReg = new short[(int)Math.max(minuend.words.length, subtrahend.words.length)];
+      if (words1Size == words2Size) {
+        if (Compare(minuend.words, 0, subtrahend.words, 0, (int)words1Size) >= 0) {
+          // words1 is at least as high as words2
+          Subtract(diffReg, 0, minuend.words, 0, subtrahend.words, 0, (int)words1Size);
+        } else {
+          // words1 is less than words2
+          Subtract(diffReg, 0, subtrahend.words, 0, minuend.words, 0, (int)words1Size);
+          diffNeg = true;  // difference will be negative
+        }
+      } else if (words1Size > words2Size) {
+        // words1 is greater than words2
+        short borrow = (short)Subtract(diffReg, 0, minuend.words, 0, subtrahend.words, 0, (int)words2Size);
+        System.arraycopy(minuend.words, words2Size, diffReg, words2Size, words1Size - words2Size);
+        Decrement(diffReg, words2Size, (int)(words1Size - words2Size), borrow);
+      } else {
+        // words1 is less than words2
+        short borrow = (short)Subtract(diffReg, 0, subtrahend.words, 0, minuend.words, 0, (int)words1Size);
+        System.arraycopy(subtrahend.words, words1Size, diffReg, words1Size, words2Size - words1Size);
+        Decrement(diffReg, words1Size, (int)(words2Size - words1Size), borrow);
+        diffNeg = true;
+      }
+      int count = CountWords(diffReg, diffReg.length);
+      if (count == 0) {
+ return BigInteger.ZERO;
+}
+      diffReg = ShortenArray(diffReg, count);
+      return new BigInteger(count, diffReg, diffNeg);
     }
 
     /**
@@ -3473,7 +3469,7 @@ at: http://upokecenter.com/d/
                quotReg[quotwordCount - 1] == 0) {
           --quotwordCount;
         }
-        return (quotwordCount != 0) ? (new BigInteger(quotwordCount, quotReg, this.negative ^ bigintDivisor.negative)) : (BigInteger.ZERO);
+        return (quotwordCount != 0) ? (new BigInteger(quotwordCount, quotReg, this.negative ^ bigintDivisor.negative)) : BigInteger.ZERO;
       }
       // ---- General case
       words1Size += words1Size & 1;
@@ -3495,7 +3491,7 @@ at: http://upokecenter.com/d/
         words2Size);
       quotwordCount = CountWords(quotReg, quotReg.length);
       quotReg = ShortenArray(quotReg, quotwordCount);
-      return (quotwordCount != 0) ? (new BigInteger(quotwordCount, quotReg, this.negative ^ bigintDivisor.negative)) : (BigInteger.ZERO);
+      return (quotwordCount != 0) ? (new BigInteger(quotwordCount, quotReg, this.negative ^ bigintDivisor.negative)) : BigInteger.ZERO;
     }
 
     /**
@@ -3540,7 +3536,7 @@ at: http://upokecenter.com/d/
           --count;
         }
         if (count == 0) {
-          return new BigInteger[] { BigInteger.ZERO, divisor };
+          return new BigInteger[] { BigInteger.ZERO, this };
         }
         quotient = ShortenArray(quotient, count);
         BigInteger bigquo = new BigInteger(count, quotient, this.negative ^ divisor.negative);
@@ -3590,8 +3586,8 @@ at: http://upokecenter.com/d/
       int quoCount = CountWords(quotientreg, quotientreg.length);
       bigRemainderreg = ShortenArray(bigRemainderreg, remCount);
       quotientreg = ShortenArray(quotientreg, quoCount);
-      BigInteger bigrem=(remCount == 0) ? BigInteger.ZERO : new BigInteger(remCount, bigRemainderreg, this.negative);
-      BigInteger bigquo2=(quoCount == 0) ? BigInteger.ZERO : new BigInteger(quoCount, quotientreg, this.negative ^ divisor.negative);
+      BigInteger bigrem = (remCount == 0) ? BigInteger.ZERO : new BigInteger(remCount, bigRemainderreg, this.negative);
+      BigInteger bigquo2 = (quoCount == 0) ? BigInteger.ZERO : new BigInteger(quoCount, quotientreg, this.negative ^ divisor.negative);
       return new BigInteger[] {bigquo2, bigrem };
     }
 
@@ -3817,13 +3813,13 @@ at: http://upokecenter.com/d/
      * BigInteger object for the number zero.
      */
 
-    public static final BigInteger ZERO = new BigInteger(0, new short[] { 0, 0}, false);
+    public static final BigInteger ZERO = new BigInteger(0, new short[] { 0, 0 }, false);
 
     /**
      * BigInteger object for the number one.
      */
 
-    public static final BigInteger ONE = new BigInteger(1, new short[] { 1, 0}, false);
+    public static final BigInteger ONE = new BigInteger(1, new short[] { 1, 0 }, false);
 
     /**
      * BigInteger object for the number ten.

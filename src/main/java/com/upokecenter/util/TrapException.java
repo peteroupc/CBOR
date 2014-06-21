@@ -52,19 +52,7 @@ private static final long serialVersionUID=1L;
       if (flag == PrecisionContext.FlagDivideByZero) {
         return "DivideByZero";
       }
-      if (flag == PrecisionContext.FlagInexact) {
-        return "Inexact";
-      }
-      if (flag == PrecisionContext.FlagInvalid) {
-        return "Invalid";
-      }
-      if (flag == PrecisionContext.FlagOverflow) {
-        return "Overflow";
-      }
-      if (flag == PrecisionContext.FlagRounded) {
-        return "Rounded";
-      }
-      return (flag == PrecisionContext.FlagSubnormal) ? ("Subnormal") : ((flag == PrecisionContext.FlagUnderflow) ? "Underflow" : "Trap");
+      return (flag == PrecisionContext.FlagInexact) ? "Inexact" : ((flag == PrecisionContext.FlagInvalid) ? "Invalid" : ((flag == PrecisionContext.FlagOverflow) ? "Overflow" : ((flag == PrecisionContext.FlagRounded) ? "Rounded" : ((flag == PrecisionContext.FlagSubnormal) ? "Subnormal" : ((flag == PrecisionContext.FlagUnderflow) ? "Underflow" : "Trap")))));
     }
 
     /**

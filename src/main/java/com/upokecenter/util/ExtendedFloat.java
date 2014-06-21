@@ -163,7 +163,7 @@ at: http://upokecenter.com/d/
         int newFlags = ef.flags;
         newFlags &= ~BigNumberFlags.FlagQuietNaN;
         newFlags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
-        return new ExtendedFloat(ef.getMantissa(), ef.exponent, newFlags);
+        return new ExtendedFloat(ef.unsignedMantissa, ef.exponent, newFlags);
       }
       flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
       return CreateWithFlags(diag, BigInteger.ZERO, flags);
@@ -194,14 +194,15 @@ at: http://upokecenter.com/d/
       if (exponent == null) {
         throw new NullPointerException("exponent");
       }
-      int sign = mantissa == null ? 0 : mantissa.signum();
+      int sign = mantissa.signum();
       return new ExtendedFloat(
-        exponent,
         sign < 0 ? ((mantissa).negate()) : mantissa,
+        exponent,
         (sign < 0) ? BigNumberFlags.FlagNegative : 0);
     }
 
     private ExtendedFloat(BigInteger unsignedMantissa, BigInteger exponent, int flags) {
+
       this.unsignedMantissa = unsignedMantissa;
       this.exponent = exponent;
       this.flags = flags;
@@ -219,8 +220,8 @@ at: http://upokecenter.com/d/
       }
       int sign = mantissa == null ? 0 : mantissa.signum();
       return new ExtendedFloat(
-        exponent,
         sign < 0 ? ((mantissa).negate()) : mantissa,
+        exponent,
         flags);
     }
 

@@ -327,10 +327,15 @@ public void setFlags(int value) {
      * @return A PrecisionContext object.
      * @throws java.lang.NullPointerException The parameter {@code exponentMin}
      * is null.
+     * @throws java.lang.NullPointerException The parameter {@code exponentMax}
+     * is null.
      */
     public PrecisionContext WithBigExponentRange(BigInteger exponentMin, BigInteger exponentMax) {
       if (exponentMin == null) {
         throw new NullPointerException("exponentMin");
+      }
+      if (exponentMax == null) {
+        throw new NullPointerException("exponentMax");
       }
       if (exponentMin.compareTo(exponentMax) > 0) {
         throw new IllegalArgumentException("exponentMin greater than exponentMax");

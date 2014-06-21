@@ -301,14 +301,6 @@ namespace Test {
     }
 
     [TestMethod]
-    public void TestCBORObjectCount() {
-      Assert.AreEqual(0, CBORObject.True.Count);
-      Assert.AreEqual(0, CBORObject.False.Count);
-      Assert.AreEqual(0, CBORObject.NewArray().Count);
-      Assert.AreEqual(0, CBORObject.NewMap().Count);
-    }
-
-    [TestMethod]
     public void TestCBORObjectGetByteString() {
       try {
         CBORObject.True.GetByteString();

@@ -503,9 +503,8 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           }
           // Tag 256: String namespace
           if (uadditional == 256) {
-            this.stringRefs = (this.stringRefs == null) ? ((new StringRefs())) : this.stringRefs; else {
+            this.stringRefs = (this.stringRefs == null) ? ((new StringRefs())) : this.stringRefs;
               this.stringRefs.Push();
-            }
           } else if (uadditional == 25) {
             // String reference
             if (this.stringRefs == null) {

@@ -315,8 +315,8 @@ namespace Test {
       PrintTime(sw);
     }
 
-    //[TestMethod]
-    public void TestParser() {
+    // [TestMethod]
+    public static void TestParser() {
       long failures = 0;
       for (var i = 0; i < 1; ++i) {
         // Reads decimal test files described in:
