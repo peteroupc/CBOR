@@ -168,7 +168,7 @@ namespace Test {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"].AsString()));
         if (numberinfo["byte"].AsBoolean()) {
-          Assert.AreEqual(BigInteger.fromString(numberinfo["integer"].AsString()).intValue(), ((int)cbornumber.AsByte()) &0xff);
+          Assert.AreEqual(BigInteger.fromString(numberinfo["integer"].AsString()).intValue(), ((int)cbornumber.AsByte()) & 0xff);
         } else {
           try {
             cbornumber.AsByte();
@@ -775,9 +775,61 @@ namespace Test {
       Assert.AreEqual(0, CBORObject.NewArray().Count);
       Assert.AreEqual(0, CBORObject.NewMap().Count);
     }
+
+    // TODO: For 2.0
+    public static void TestDecodeFromBytesVersion2Dot0() {
+      try {
+        CBORObject.DecodeFromBytes(new byte[] { });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
     [TestMethod]
     public void TestDecodeFromBytes() {
-      // not implemented yet
+      try {
+        CBORObject.DecodeFromBytes(new byte[] { 0x1c });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] { 0x1e });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] { 0xfe });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] { 0xff });
+        Assert.Fail("Should have failed");
+      } catch (CBORException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [TestMethod]
     public void TestDivide() {
@@ -1193,7 +1245,9 @@ namespace Test {
     }
     [TestMethod]
     public void TestFromObject() {
-      CBORObject[] cborarray = { CBORObject.False, CBORObject.True};
+      var cborarray = new CBORObject[2];
+      cborarray[0] = CBORObject.False;
+      cborarray[1] = CBORObject.True;
       CBORObject cbor = CBORObject.FromObject(cborarray);
       Assert.AreEqual(2, cbor.Count);
       Assert.AreEqual(CBORObject.False, cbor[0]);
@@ -1555,7 +1609,6 @@ namespace Test {
     }
     [TestMethod]
     public void TestSign() {
-      // TODO: Use number database
       try {
         int sign = CBORObject.True.Sign;
         Assert.Fail("Should have failed");
@@ -1587,6 +1640,27 @@ namespace Test {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
+      }
+      CBORObject numbers = GetNumberData();
+      for (int i = 0; i < numbers.Count; ++i) {
+        CBORObject numberinfo = numbers[i];
+        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"].AsString()));
+        if (cbornumber.IsNaN()) {
+          try {
+            Assert.Fail(String.Empty + cbornumber.Sign);
+            Assert.Fail("Should have failed");
+          } catch (InvalidOperationException) {
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        } else if (numberinfo["number"].AsString().IndexOf('-') == 0) {
+          Assert.AreEqual(-1, cbornumber.Sign);
+        } else if (numberinfo["number"].AsString().Equals("0")) {
+          Assert.AreEqual(0, cbornumber.Sign);
+        } else {
+          Assert.AreEqual(1, cbornumber.Sign);
+        }
       }
     }
     [TestMethod]

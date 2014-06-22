@@ -227,46 +227,6 @@ import com.upokecenter.cbor.*;
       Assert.assertEquals(CBORObject.False, CBORObject.FromObject(false));
       Assert.assertEquals(CBORObject.FromObject(8), CBORObject.FromObject((byte)8));
       try {
-        CBORObject.DecodeFromBytes(null);
-        Assert.fail("Should have failed");
-      } catch (NullPointerException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] {   });
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] {  0x1e  });
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfe  });
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xff  });
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
         CBORObject.AddConverter(null, new FakeConverter());
         Assert.fail("Should have failed");
       } catch (NullPointerException ex) {

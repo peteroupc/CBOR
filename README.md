@@ -25,7 +25,7 @@ project, add the following to the `dependencies` section in your `pom.xml` file:
 <dependency>
   <groupId>com.upokecenter</groupId>
   <artifactId>cbor</artifactId>
-  <version>1.2.0</version>
+  <version>1.3.0</version>
 </dependency>
 ```
 
@@ -259,6 +259,14 @@ The following are some clarifications to RFC 7049.
 
 Release Notes
 -----------
+
+In version 1.3:
+
+- Added a CompareToIgnoreTags method to CBORObject
+- The BigInteger constructor in the C# version is deprecated
+- Fixed bugs in converting from CBOR float and double to integers in some corner cases
+- Fixed a bug where CBORObject's OutermostTag returns 0 instead of the correct -1 for untagged objects
+- Fixed a bug where BigInteger's bitLength return value can be wrong in some corner cases
 
 In version 1.2:
 

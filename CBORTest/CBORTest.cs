@@ -949,22 +949,6 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] { });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0x1c });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
         CBORObject.NewArray().Remove(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {

@@ -57,6 +57,7 @@ end
 
 ##################
 
+Dir.chdir(File.dirname(__FILE__))
 Dir.glob("*.cs"){|f|
   utf8edit(f){|data|
     data=data.gsub(/\[Test\]/,"[TestMethod]")

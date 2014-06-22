@@ -227,46 +227,6 @@ namespace Test {
       Assert.AreEqual(CBORObject.False, CBORObject.FromObject(false));
       Assert.AreEqual(CBORObject.FromObject(8), CBORObject.FromObject((byte)8));
       try {
-        CBORObject.DecodeFromBytes(null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0x1e });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xfe });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] { 0xff });
-        Assert.Fail("Should have failed");
-      } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
         CBORObject.AddConverter(null, new FakeConverter());
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {

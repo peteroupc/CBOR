@@ -930,22 +930,6 @@ import com.upokecenter.cbor.*;
         throw new IllegalStateException("", ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] {   });
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.DecodeFromBytes(new byte[] {  0x1c  });
-        Assert.fail("Should have failed");
-      } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
         CBORObject.NewArray().Remove(null);
         Assert.fail("Should have failed");
       } catch (NullPointerException ex) {
