@@ -13,11 +13,6 @@ namespace Test {
   [TestClass]
   public class BigIntTest
   {
-    [TestMethod]
-    public void TestBigIntegerFromByteArray() {
-      Assert.AreEqual(BigInteger.Zero, BigInteger.fromByteArray(new byte[] { }, false));
-    }
-
     // Test some specific cases
     [TestMethod]
     public void TestSpecificCases() {
@@ -85,16 +80,6 @@ namespace Test {
           Assert.AreEqual(bigintB, ba);
           bigintB /= (BigInteger)2;
         }
-      }
-    }
-
-    [TestMethod]
-    public void TestDigitCount() {
-      var r = new FastRandom();
-      for (var i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
-        String str = BigInteger.Abs(bigintA).ToString();
-        Assert.AreEqual(str.Length, bigintA.getDigitCount());
       }
     }
 
@@ -563,92 +548,6 @@ namespace Test {
         if (!bigintD.Equals(bigintA)) {
           Assert.AreEqual(bigintA, bigintD, "TestAddSubtract " + bigintA + "; " + bigintB);
         }
-      }
-    }
-
-    public static int ModPow(int x, int pow, int mod) {
-      if (x < 0) {
-        throw new ArgumentException("x (" + Convert.ToString((int)x, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-      }
-      if (pow <= 0) {
-        throw new ArgumentException("pow (" + Convert.ToString((int)pow, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
-      }
-      if (mod <= 0) {
-        throw new ArgumentException("mod (" + Convert.ToString((int)mod, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
-      }
-      int r = 1;
-      int v = x;
-      while (pow != 0) {
-        if ((pow & 1) != 0) {
-          r = (int)(((long)r * (long)v) % mod);
-        }
-        pow >>= 1;
-        if (pow != 0) {
-          v = (int)(((long)v * (long)v) % mod);
-        }
-      }
-      return r;
-    }
-
-    public static bool IsPrime(int n) {
-      // Use a deterministic Rabin-Miller test
-      if (n < 2) {
-        return false;
-      }
-      if (n == 2) {
-        return true;
-      }
-      if (n % 2 == 0) {
-        return false;
-      }
-      int d = n - 1;
-      while ((d & 1) == 0) {
-        d >>= 1;
-      }
-      int mp = 0;
-      // For all 32-bit integers it's enough
-      // to check the strong pseudoprime
-      // bases 2, 7, and 61
-      if (n > 2) {
-        mp = ModPow(2, d, n);
-        if (mp != 1 && mp + 1 != n) {
-          return false;
-        }
-      }
-      if (n > 7) {
-        mp = ModPow(7, d, n);
-        if (mp != 1 && mp + 1 != n) {
-          return false;
-        }
-      }
-      if (n > 61) {
-        mp = ModPow(61, d, n);
-        if (mp != 1 && mp + 1 != n) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    [TestMethod]
-    public void TestGcd() {
-      int prime = 0;
-      var rand = new FastRandom();
-      for (var i = 0; i < 1000; ++i) {
-        while (true) {
-          prime = rand.NextValue(0x7fffffff);
-          prime |= 1;
-          if (IsPrime(prime)) {
-            break;
-          }
-        }
-        var bigprime = (BigInteger)prime;
-        BigInteger ba = CBORTest.RandomBigInteger(rand);
-        if (ba.IsZero) {
-          continue;
-        }
-        ba *= (BigInteger)bigprime;
-        Assert.AreEqual(bigprime, BigInteger.GreatestCommonDivisor(bigprime, ba));
       }
     }
   }

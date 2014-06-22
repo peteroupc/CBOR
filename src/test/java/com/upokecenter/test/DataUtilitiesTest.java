@@ -9,15 +9,37 @@ import com.upokecenter.util.*;
   public class DataUtilitiesTest {
     @Test
     public void TestCodePointAt() {
-      // not implemented yet
+      try {
+ DataUtilities.CodePointAt(null, 0);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      Assert.assertEquals(-1, DataUtilities.CodePointAt("A", -1));
+      Assert.assertEquals(-1, DataUtilities.CodePointAt("A", 1));
+      Assert.assertEquals(0x41, DataUtilities.CodePointAt("A", 0));
     }
     @Test
     public void TestCodePointBefore() {
+      try {
+ DataUtilities.CodePointBefore(null, 0);
+Assert.fail("Should have failed");
+} catch (NullPointerException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
       // not implemented yet
     }
     @Test
     public void TestCodePointCompare() {
-      // not implemented yet
+      Assert.assertEquals(0, ((DataUtilities.CodePointCompare("abc", "abc")==0) ? 0 : ((DataUtilities.CodePointCompare("abc", "abc")<0) ? -1 : 1)));
+      Assert.assertEquals(0, ((DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")<0) ? -1 : 1)));
+      Assert.assertEquals(-1, ((DataUtilities.CodePointCompare("abc", "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("abc", "\ud800\udc00")<0) ? -1 : 1)));
+      Assert.assertEquals(-1, ((DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")<0) ? -1 : 1)));
+      Assert.assertEquals(1, ((DataUtilities.CodePointCompare("\uf000", "\ud800")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000", "\ud800")<0) ? -1 : 1)));
     }
     @Test
     public void TestGetUtf8Bytes() {
@@ -42,6 +64,23 @@ import com.upokecenter.util.*;
       }
       Assert.assertEquals(6, DataUtilities.GetUtf8Length("ABC\ud800", true));
       Assert.assertEquals(-1, DataUtilities.GetUtf8Length("ABC\ud800", false));
+      try {
+        DataUtilities.GetUtf8Length(null, true);
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+      }
+      try {
+        DataUtilities.GetUtf8Length(null, false);
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+      }
+      Assert.assertEquals(3, DataUtilities.GetUtf8Length("abc", true));
+      Assert.assertEquals(4, DataUtilities.GetUtf8Length("\u0300\u0300", true));
+      Assert.assertEquals(6, DataUtilities.GetUtf8Length("\u3000\u3000", true));
+      Assert.assertEquals(6, DataUtilities.GetUtf8Length("\ud800\ud800", true));
+      Assert.assertEquals(-1, DataUtilities.GetUtf8Length("\ud800\ud800", false));
     }
     @Test
     public void TestGetUtf8String() {

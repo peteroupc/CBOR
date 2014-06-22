@@ -13,11 +13,6 @@ import com.upokecenter.util.*;
 
   public class BigIntTest
   {
-    @Test
-    public void TestBigIntegerFromByteArray() {
-      Assert.assertEquals(BigInteger.ZERO, BigInteger.fromByteArray(new byte[] {   }, false));
-    }
-
     // Test some specific cases
     @Test
     public void TestSpecificCases() {
@@ -85,16 +80,6 @@ import com.upokecenter.util.*;
           Assert.assertEquals(bigintB, ba);
           bigintB=bigintB.divide(BigInteger.valueOf(2));
         }
-      }
-    }
-
-    @Test
-    public void TestDigitCount() {
-      FastRandom r = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
-        String str = (bigintA).abs().toString();
-        Assert.assertEquals(str.length(), bigintA.getDigitCount());
       }
     }
 
@@ -572,92 +557,6 @@ bigintRem=divrem[1]; }
         if (!bigintD.equals(bigintA)) {
           Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintA,bigintD);
         }
-      }
-    }
-
-    public static int ModPow(int x, int pow, int mod) {
-      if (x < 0) {
-        throw new IllegalArgumentException("x (" + Integer.toString((int)x) + ") is less than " + "0");
-      }
-      if (pow <= 0) {
-        throw new IllegalArgumentException("pow (" + Integer.toString((int)pow) + ") is not greater than " + "0");
-      }
-      if (mod <= 0) {
-        throw new IllegalArgumentException("mod (" + Integer.toString((int)mod) + ") is not greater than " + "0");
-      }
-      int r = 1;
-      int v = x;
-      while (pow != 0) {
-        if ((pow & 1) != 0) {
-          r = (int)(((long)r * (long)v) % mod);
-        }
-        pow >>= 1;
-        if (pow != 0) {
-          v = (int)(((long)v * (long)v) % mod);
-        }
-      }
-      return r;
-    }
-
-    public static boolean IsPrime(int n) {
-      // Use a deterministic Rabin-Miller test
-      if (n < 2) {
-        return false;
-      }
-      if (n == 2) {
-        return true;
-      }
-      if (n % 2 == 0) {
-        return false;
-      }
-      int d = n - 1;
-      while ((d & 1) == 0) {
-        d >>= 1;
-      }
-      int mp = 0;
-      // For all 32-bit integers it's enough
-      // to check the strong pseudoprime
-      // bases 2, 7, and 61
-      if (n > 2) {
-        mp = ModPow(2, d, n);
-        if (mp != 1 && mp + 1 != n) {
-          return false;
-        }
-      }
-      if (n > 7) {
-        mp = ModPow(7, d, n);
-        if (mp != 1 && mp + 1 != n) {
-          return false;
-        }
-      }
-      if (n > 61) {
-        mp = ModPow(61, d, n);
-        if (mp != 1 && mp + 1 != n) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    @Test
-    public void TestGcd() {
-      int prime = 0;
-      FastRandom rand = new FastRandom();
-      for (int i = 0; i < 1000; ++i) {
-        while (true) {
-          prime = rand.NextValue(0x7fffffff);
-          prime |= 1;
-          if (IsPrime(prime)) {
-            break;
-          }
-        }
-        BigInteger bigprime = BigInteger.valueOf(prime);
-        BigInteger ba = CBORTest.RandomBigInteger(rand);
-        if (ba.signum()==0) {
-          continue;
-        }
-        ba=ba.multiply(bigprime);
-        Assert.assertEquals(bigprime, bigprime.gcd(ba));
       }
     }
   }

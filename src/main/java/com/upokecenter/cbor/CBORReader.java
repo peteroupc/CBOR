@@ -460,12 +460,6 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             }
             ++this.depth;
             CBORObject key = this.ReadForFirstByte(headByte, null);
-            --this.depth;
-            if (key == null) {
-              // break if the "break" code was read
-              break;
-            }
-            ++this.depth;
             CBORObject value = this.Read(null);
             --this.depth;
             cbor.set(key,value);

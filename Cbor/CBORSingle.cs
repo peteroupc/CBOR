@@ -53,7 +53,7 @@ namespace PeterO.Cbor {
         throw new OverflowException("This object's value is out of range");
       }
       fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
-      if (fltItem >= Int64.MinValue && fltItem <= Int64.MaxValue) {
+      if (fltItem >= -9223372036854775808f && fltItem < 9223372036854775808f) {
         return (long)fltItem;
       }
       throw new OverflowException("This object's value is out of range");
@@ -81,7 +81,7 @@ namespace PeterO.Cbor {
         return false;
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
-      return fltItem2 >= Int64.MinValue && fltItem2 <= Int64.MaxValue;
+      return fltItem2 >= -9223372036854775808f && fltItem2 < 9223372036854775808f;
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
@@ -90,7 +90,9 @@ namespace PeterO.Cbor {
         return false;
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
-      return fltItem2 >= Int32.MinValue && fltItem2 <= Int32.MaxValue;
+      // Convert float to double to avoid precision loss when
+      // converting Int32.MinValue/MaxValue to float
+      return (double)fltItem2 >= Int32.MinValue && (double)fltItem2 <= Int32.MaxValue;
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
@@ -99,7 +101,9 @@ namespace PeterO.Cbor {
         throw new OverflowException("This object's value is out of range");
       }
       fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
-      if (fltItem >= Int32.MinValue && fltItem <= Int32.MaxValue) {
+      // Convert float to double to avoid precision loss when
+      // converting Int32.MinValue/MaxValue to float
+      if ((double)fltItem >= Int32.MinValue && (double)fltItem <= Int32.MaxValue) {
         var ret = (int)fltItem;
         return ret;
       }

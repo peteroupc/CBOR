@@ -1869,10 +1869,6 @@ at: http://upokecenter.com/d/
       return (newwordCount == 0) ? BigInteger.ZERO : (new BigInteger(newwordCount, newreg, newnegative));
     }
 
-    private static BigInteger Allocate(int length) {
-      return new BigInteger(0, new short[RoundupSize(length)], false);
-    }
-
     private static short[] GrowForCarry(short[] a, short carry) {
       int oldLength = a.length;
       short[] ret = CleanGrow(a, RoundupSize(oldLength + 1));
@@ -2234,9 +2230,9 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Converts this object's value to a 32-bit signed integer. This method
-     * is obsoleted by the <code>intValueChecked</code> and <code>intValueUnchecked</code>
-     * methods, which should be used instead.
+     * Converts this object's value to a 32-bit signed integer. To make the
+     * conversion intention clearer, use the <code>intValueChecked</code>
+     * and <code>intValueUnchecked</code> methods instead.
      * @return A 32-bit signed integer.
      * @throws ArithmeticException This object's value is too big to fit a
      * 32-bit signed integer.
@@ -2277,9 +2273,9 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Converts this object's value to a 64-bit signed integer. This method
-     * is obsoleted by the longValueChecked and longValueUnchecked methods,
-     * which should be used instead.
+     * Converts this object's value to a 64-bit signed integer. To make the
+     * conversion intention clearer, use the <code>longValueChecked</code>
+     * and <code>longValueUnchecked</code> methods instead.
      * @return A 64-bit signed integer.
      * @throws ArithmeticException This object's value is too big to fit a
      * 64-bit signed integer.
@@ -2835,7 +2831,12 @@ at: http://upokecenter.com/d/
      * portion.
      * @throws java.lang.NullPointerException The parameter {@code str}
      * is null.
-     * @throws NumberFormatException The string portion is in an invalid format.
+     * @throws java.lang.IllegalArgumentException The parameter {@code index}
+     * is less than 0, {@code endIndex} is less than 0, or either is greater
+     * than the string's length, or {@code endIndex} is less than {@code
+     * index} .
+     * @throws NumberFormatException The string portion is empty or in an invalid
+     * format.
      */
     public static BigInteger fromSubstring(String str, int index, int endIndex) {
       if (str == null) {
@@ -2939,7 +2940,8 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Returns the greatest common divisor of two integers.
+     * Returns the greatest common divisor of two integers. The greatest
+     * common divisor (GCD) is also known as the greatest common factor (GCF).
      * @param bigintSecond A BigInteger object. (2).
      * @return A BigInteger object.
      * @throws java.lang.NullPointerException The parameter {@code bigintSecond}

@@ -163,7 +163,25 @@ import com.upokecenter.cbor.*;
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
+      CBORObject numbers = GetNumberData();
+      for (int i = 0; i < numbers.size(); ++i) {
+        CBORObject numberinfo = numbers.get(i);
+        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        if (numberinfo.get("byte").AsBoolean()) {
+          Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(), ((int)cbornumber.AsByte()) &0xff);
+        } else {
+          try {
+            cbornumber.AsByte();
+            Assert.fail("Should have failed " + cbornumber);
+          } catch (ArithmeticException ex) {
+          } catch (Exception ex) {
+            Assert.fail(ex.toString() + cbornumber);
+            throw new IllegalStateException("", ex);
+          }
+        }
+      }
     }
+
     @Test
     public void TestAsDouble() {
       try {
@@ -340,6 +358,23 @@ import com.upokecenter.cbor.*;
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
+      CBORObject numbers = GetNumberData();
+      for (int i = 0; i < numbers.size(); ++i) {
+        CBORObject numberinfo = numbers.get(i);
+        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        if (numberinfo.get("int16").AsBoolean()) {
+          Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(), cbornumber.AsInt16());
+        } else {
+          try {
+            cbornumber.AsInt16();
+            Assert.fail("Should have failed " + cbornumber);
+          } catch (ArithmeticException ex) {
+          } catch (Exception ex) {
+            Assert.fail(ex.toString() + cbornumber);
+            throw new IllegalStateException("", ex);
+          }
+        }
+      }
     }
 
     @Test
@@ -395,9 +430,20 @@ import com.upokecenter.cbor.*;
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        ExtendedDecimal edec = ExtendedDecimal.FromString(numberinfo.get("number").AsString());
+        CBORObject cbornumber = CBORObject.FromObject(edec);
+        boolean isdouble = numberinfo.get("double").AsBoolean();
+        CBORObject cbornumberdouble = CBORObject.FromObject(edec.ToDouble());
+        boolean issingle = numberinfo.get("single").AsBoolean();
+        CBORObject cbornumbersingle = CBORObject.FromObject(edec.ToSingle());
         if (numberinfo.get("int32").AsBoolean()) {
           Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(), cbornumber.AsInt32());
+          if (isdouble) {
+            Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(), cbornumberdouble.AsInt32());
+          }
+          if (issingle) {
+            Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(), cbornumbersingle.AsInt32());
+          }
         } else {
           try {
             cbornumber.AsInt32();
@@ -406,6 +452,26 @@ import com.upokecenter.cbor.*;
           } catch (Exception ex) {
             Assert.fail(ex.toString() + cbornumber);
             throw new IllegalStateException("", ex);
+          }
+          if (isdouble) {
+            try {
+              cbornumberdouble.AsInt32();
+              Assert.fail("Should have failed");
+            } catch (ArithmeticException ex) {
+            } catch (Exception ex) {
+              Assert.fail(ex.toString());
+              throw new IllegalStateException("", ex);
+            }
+          }
+          if (issingle) {
+            try {
+              cbornumbersingle.AsInt32();
+              Assert.fail("Should have failed");
+            } catch (ArithmeticException ex) {
+            } catch (Exception ex) {
+              Assert.fail(ex.toString());
+              throw new IllegalStateException("", ex);
+            }
           }
         }
       }
@@ -463,9 +529,20 @@ import com.upokecenter.cbor.*;
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        ExtendedDecimal edec = ExtendedDecimal.FromString(numberinfo.get("number").AsString());
+        CBORObject cbornumber = CBORObject.FromObject(edec);
+        boolean isdouble = numberinfo.get("double").AsBoolean();
+        CBORObject cbornumberdouble = CBORObject.FromObject(edec.ToDouble());
+        boolean issingle = numberinfo.get("single").AsBoolean();
+        CBORObject cbornumbersingle = CBORObject.FromObject(edec.ToSingle());
         if (numberinfo.get("int64").AsBoolean()) {
           Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).longValue(), cbornumber.AsInt64());
+          if (isdouble) {
+            Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).longValue(), cbornumberdouble.AsInt64());
+          }
+          if (issingle) {
+            Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).longValue(), cbornumbersingle.AsInt64());
+          }
         } else {
           try {
             cbornumber.AsInt64();
@@ -474,6 +551,26 @@ import com.upokecenter.cbor.*;
           } catch (Exception ex) {
             Assert.fail(ex.toString() + cbornumber);
             throw new IllegalStateException("", ex);
+          }
+          if (isdouble) {
+            try {
+              cbornumberdouble.AsInt64();
+              Assert.fail("Should have failed");
+            } catch (ArithmeticException ex) {
+            } catch (Exception ex) {
+              Assert.fail(ex.toString());
+              throw new IllegalStateException("", ex);
+            }
+          }
+          if (issingle) {
+            try {
+              cbornumbersingle.AsInt64();
+              Assert.fail("Should have failed");
+            } catch (ArithmeticException ex) {
+            } catch (Exception ex) {
+              Assert.fail(ex.toString());
+              throw new IllegalStateException("", ex);
+            }
           }
         }
       }
@@ -539,6 +636,7 @@ import com.upokecenter.cbor.*;
         CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
         if (numberinfo.get("int32").AsBoolean() && numberinfo.get("isintegral").AsBoolean()) {
           if(!(cbornumber.CanFitInInt32()))Assert.fail();
+          if(!(CBORObject.FromObject(cbornumber.AsInt32()).CanFitInInt32()))Assert.fail();
         } else {
           if(cbornumber.CanFitInInt32())Assert.fail();
         }
@@ -560,6 +658,7 @@ import com.upokecenter.cbor.*;
         CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
         if (numberinfo.get("int64").AsBoolean() && numberinfo.get("isintegral").AsBoolean()) {
           if(!(cbornumber.CanFitInInt64()))Assert.fail();
+          if(!(CBORObject.FromObject(cbornumber.AsInt64()).CanFitInInt64()))Assert.fail();
         } else {
           if(cbornumber.CanFitInInt64())Assert.fail();
         }
@@ -648,7 +747,22 @@ import com.upokecenter.cbor.*;
     }
     @Test
     public void TestCompareTo() {
-      // not implemented yet
+      Assert.assertEquals(1, CBORObject.True.compareTo(null));
+      Assert.assertEquals(1, CBORObject.False.compareTo(null));
+      Assert.assertEquals(1, CBORObject.Null.compareTo(null));
+      Assert.assertEquals(1, CBORObject.NewArray().compareTo(null));
+      Assert.assertEquals(1, CBORObject.NewMap().compareTo(null));
+      Assert.assertEquals(1, CBORObject.FromObject(100).compareTo(null));
+      Assert.assertEquals(1, CBORObject.FromObject(Double.NaN).compareTo(null));
+      CBORTest.CompareTestLess(CBORObject.Undefined, CBORObject.Null);
+      CBORTest.CompareTestLess(CBORObject.Null, CBORObject.False);
+      CBORTest.CompareTestLess(CBORObject.False, CBORObject.True);
+      CBORTest.CompareTestLess(CBORObject.False, CBORObject.FromObject(0));
+      CBORTest.CompareTestLess(CBORObject.False, CBORObject.FromSimpleValue(0));
+      CBORTest.CompareTestLess(CBORObject.FromSimpleValue(0), CBORObject.FromSimpleValue(1));
+      CBORTest.CompareTestLess(CBORObject.FromObject(0), CBORObject.FromObject(1));
+      CBORTest.CompareTestLess(CBORObject.FromObject(0.0f), CBORObject.FromObject(1.0f));
+      CBORTest.CompareTestLess(CBORObject.FromObject(0.0), CBORObject.FromObject(1.0));
     }
     @Test
     public void TestContainsKey() {
@@ -1079,11 +1193,70 @@ import com.upokecenter.cbor.*;
     }
     @Test
     public void TestFromObject() {
-      // not implemented yet
+      CBORObject[] cborarray = { CBORObject.False, CBORObject.True};
+      CBORObject cbor = CBORObject.FromObject(cborarray);
+      Assert.assertEquals(2, cbor.size());
+      Assert.assertEquals(CBORObject.False, cbor.get(0));
+      Assert.assertEquals(CBORObject.True, cbor.get(1));
+      TestCommon.AssertRoundTrip(cbor);
+      Assert.assertEquals(CBORObject.Null, CBORObject.FromObject((int[])null));
+      long[] longarray = { 2, 3 };
+      cbor = CBORObject.FromObject(longarray);
+      Assert.assertEquals(2, cbor.size());
+      if(!(CBORObject.FromObject(2).compareTo(cbor.get(0)) == 0))Assert.fail();
+      if(!(CBORObject.FromObject(3).compareTo(cbor.get(1)) == 0))Assert.fail();
+      TestCommon.AssertRoundTrip(cbor);
     }
     @Test
     public void TestFromObjectAndTag() {
-      CBORObject.FromObjectAndTag(CBORObject.Null, (BigInteger.ONE.shiftLeft(64)).subtract(BigInteger.ONE));
+      try {
+        CBORObject.True.GetByteString();
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromObject(0).GetByteString();
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromObject("test").GetByteString();
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.False.GetByteString();
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.NewArray().GetByteString();
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.NewMap().GetByteString();
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
     @Test
     public void TestFromSimpleValue() {
@@ -1092,6 +1265,7 @@ import com.upokecenter.cbor.*;
     @Test
     public void TestGetByteString() {
       // not implemented yet
+      Assert.assertEquals(CBORObject.Null, CBORObject.FromObject((ExtendedRational)null));
     }
     @Test
     public void TestGetHashCode() {
@@ -1150,7 +1324,7 @@ import com.upokecenter.cbor.*;
       if(CBORObject.FromObject("").isFinite())Assert.fail();
       if(CBORObject.NewArray().isFinite())Assert.fail();
       if(CBORObject.NewMap().isFinite())Assert.fail();
-     cbor = CBORObject.True;
+      cbor = CBORObject.True;
       if(cbor.isFinite())Assert.fail();
       cbor = CBORObject.False;
       if(cbor.isFinite())Assert.fail();
@@ -1158,7 +1332,7 @@ import com.upokecenter.cbor.*;
       if(cbor.isFinite())Assert.fail();
       cbor = CBORObject.Undefined;
       if(cbor.isFinite())Assert.fail();
-        CBORObject numbers = GetNumberData();
+      CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
         CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
@@ -1185,6 +1359,19 @@ import com.upokecenter.cbor.*;
       if(CBORObject.FromObject("").isIntegral())Assert.fail();
       if(CBORObject.NewArray().isIntegral())Assert.fail();
       if(CBORObject.NewMap().isIntegral())Assert.fail();
+      if(!(CBORObject.FromObject(BigInteger.ONE.shiftLeft(63)).isIntegral()))Assert.fail();
+      if(!(CBORObject.FromObject(BigInteger.ONE.shiftLeft(64)).isIntegral()))Assert.fail();
+      if(!(CBORObject.FromObject(BigInteger.ONE.shiftLeft(80)).isIntegral()))Assert.fail();
+      if(!(CBORObject.FromObject(ExtendedDecimal.FromString("4444e+800")).isIntegral()))Assert.fail();
+      if(CBORObject.FromObject(ExtendedDecimal.FromString("4444e-800")).isIntegral())Assert.fail();
+      if(CBORObject.FromObject(2.5).isIntegral())Assert.fail();
+      if(CBORObject.FromObject(999.99).isIntegral())Assert.fail();
+      if(CBORObject.FromObject(Double.POSITIVE_INFINITY).isIntegral())Assert.fail();
+      if(CBORObject.FromObject(Double.NEGATIVE_INFINITY).isIntegral())Assert.fail();
+      if(CBORObject.FromObject(Double.NaN).isIntegral())Assert.fail();
+      if(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity).isIntegral())Assert.fail();
+      if(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity).isIntegral())Assert.fail();
+      if(CBORObject.FromObject(ExtendedDecimal.NaN).isIntegral())Assert.fail();
       cbor = CBORObject.True;
       if(cbor.isIntegral())Assert.fail();
       cbor = CBORObject.False;
@@ -1213,6 +1400,9 @@ import com.upokecenter.cbor.*;
       if(CBORObject.False.IsNaN())Assert.fail();
       if(CBORObject.Null.IsNaN())Assert.fail();
       if(CBORObject.Undefined.IsNaN())Assert.fail();
+      if(CBORObject.PositiveInfinity.IsNaN())Assert.fail();
+      if(CBORObject.PositiveInfinity.IsNaN())Assert.fail();
+      if(!(CBORObject.NaN.IsNaN()))Assert.fail();
     }
     @Test
     public void TestIsNegativeInfinity() {
@@ -1244,7 +1434,51 @@ import com.upokecenter.cbor.*;
     }
     @Test
     public void TestItem() {
-      // not implemented yet
+      CBORObject cbor = CBORObject.True;
+      try {
+        CBORObject cbor2 = cbor.get(0);
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      cbor = CBORObject.False;
+      try {
+        CBORObject cbor2 = cbor.get(0);
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      cbor = CBORObject.FromObject(0);
+      try {
+        CBORObject cbor2 = cbor.get(0);
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      cbor = CBORObject.FromObject(2);
+      try {
+        CBORObject cbor2 = cbor.get(0);
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      cbor = CBORObject.NewArray();
+      try {
+        CBORObject cbor2 = cbor.get(0);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
     @Test
     public void TestKeys() {
@@ -1288,7 +1522,11 @@ import com.upokecenter.cbor.*;
     }
     @Test
     public void TestOutermostTag() {
-      // not implemented yet
+      CBORObject cbor = CBORObject.FromObjectAndTag(CBORObject.True, 999);
+      cbor = CBORObject.FromObjectAndTag(CBORObject.True, 1000);
+      Assert.assertEquals(BigInteger.valueOf(1000), cbor.getOutermostTag());
+      cbor = CBORObject.True;
+      Assert.assertEquals(BigInteger.valueOf(-1), cbor.getOutermostTag());
     }
     @Test
     public void TestRead() {
@@ -1308,11 +1546,48 @@ import com.upokecenter.cbor.*;
     }
     @Test
     public void TestSet() {
-      // not implemented yet
+      CBORObject cbor = CBORObject.NewMap().Add("x", 0).Add("y", 1);
+      Assert.assertEquals(0, cbor.get("x").AsInt32());
+      Assert.assertEquals(1, cbor.get("y").AsInt32());
+      cbor.Set("x", 5).Set("z", 6);
+      Assert.assertEquals(5, cbor.get("x").AsInt32());
+      Assert.assertEquals(6, cbor.get("z").AsInt32());
     }
     @Test
     public void TestSign() {
-      // not implemented yet
+      // TODO: Use number database
+      try {
+        int sign = CBORObject.True.signum();
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        int sign = CBORObject.False.signum();
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        int sign = CBORObject.NewArray().signum();
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        int sign = CBORObject.NewMap().signum();
+        Assert.fail("Should have failed");
+      } catch (IllegalStateException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
     @Test
     public void TestSimpleValue() {
@@ -1322,6 +1597,12 @@ import com.upokecenter.cbor.*;
     public void TestSubtract() {
       // not implemented yet
     }
+
+    // TODO: Enable this test for 2.0
+    public static void TestToJSONStringFor2Dot0() {
+      Assert.assertEquals("\"\u2027\\u2028\\u2029\u202a\"", CBORObject.FromObject("\u2027\u2028\u2029\u202a").ToJSONString());
+    }
+
     @Test
     public void TestToJSONString() {
       Assert.assertEquals("true", CBORObject.True.ToJSONString());
@@ -1333,10 +1614,22 @@ import com.upokecenter.cbor.*;
       Assert.assertEquals("null", CBORObject.FromObject(Double.POSITIVE_INFINITY).ToJSONString());
       Assert.assertEquals("null", CBORObject.FromObject(Double.NEGATIVE_INFINITY).ToJSONString());
       Assert.assertEquals("null", CBORObject.FromObject(Double.NaN).ToJSONString());
+      // Base64 tests
+      CBORObject o;
+      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  }, 22);
+      Assert.assertEquals("\"mtbw6A\"", o.ToJSONString());
+      o = CBORObject.FromObject(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  });
+      Assert.assertEquals("\"mtbw6A\"", o.ToJSONString());
+      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  }, 23);
+      Assert.assertEquals("\"9AD6F0E8\"", o.ToJSONString());
+      o = CBORObject.FromObject(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8  });
+      Assert.assertEquals("\"mtb_6A\"", o.ToJSONString());  // Encode with Base64URL by default
+      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8  }, 22);
+      Assert.assertEquals("\"mtb/6A\"", o.ToJSONString());  // Encode with Base64
     }
     @Test
     public void TestToString() {
-      // not implemented yet
+      Assert.assertEquals("undefined", CBORObject.Undefined.toString());
     }
     @Test
     public void TestType() {

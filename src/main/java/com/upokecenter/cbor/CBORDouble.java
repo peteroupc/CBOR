@@ -53,7 +53,7 @@ import com.upokecenter.util.*;
         throw new ArithmeticException("This Object's value is out of range");
       }
       fltItem = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
-      if (fltItem >= Long.MIN_VALUE && fltItem <= Long.MAX_VALUE) {
+      if (fltItem >= -9223372036854775808.0 && fltItem < 9223372036854775808.0) {
         return (long)fltItem;
       }
       throw new ArithmeticException("This Object's value is out of range");
@@ -65,7 +65,7 @@ import com.upokecenter.util.*;
         return true;
       }
       float sing = (float)fltItem;
-      return (double)sing == fltItem;
+      return (double)sing == (double)fltItem;
     }
 
     public boolean CanFitInDouble(Object obj) {
@@ -86,7 +86,7 @@ import com.upokecenter.util.*;
         return false;
       }
       double fltItem2 = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
-      return fltItem2 >= Long.MIN_VALUE && fltItem2 <= Long.MAX_VALUE;
+      return fltItem2 >= -9223372036854775808.0 && fltItem2 < 9223372036854775808.0;
     }
 
     public boolean CanTruncatedIntFitInInt32(Object obj) {
@@ -139,7 +139,7 @@ import com.upokecenter.util.*;
       return (val < 0) ? -val : obj;
     }
 
-public ExtendedRational AsExtendedRational(Object obj) {
+    public ExtendedRational AsExtendedRational(Object obj) {
       return ExtendedRational.FromDouble(((Double)obj).doubleValue());
     }
   }

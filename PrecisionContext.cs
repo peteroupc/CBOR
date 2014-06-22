@@ -207,7 +207,9 @@ namespace PeterO {
     /// <param name='exponent'>A BigInteger object indicating the desired
     /// exponent.</param>
     /// <returns>True if a number can have the given Exponent property under
-    /// this precision context; otherwise, false.</returns>
+    /// this precision context; otherwise, false. If this context allows
+    /// unlimited precision, returns true for the exponent EMax and any exponent
+    /// less than EMax.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='exponent'/> is null.</exception>
     public bool ExponentWithinRange(BigInteger exponent) {

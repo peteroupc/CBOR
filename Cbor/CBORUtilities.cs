@@ -6,6 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
+using System.IO;
 using System.Text;
 using PeterO;
 
@@ -23,6 +24,17 @@ namespace PeterO.Cbor {
       for (var i = 0; i < length; ++i) {
         str.Append(HexAlphabet[(data[i] >> 4) & 15]);
         str.Append(HexAlphabet[data[i] & 15]);
+      }
+    }
+
+    public static void WriteBase16(Stream outputStream, byte[] data) {
+      if (data == null) {
+        throw new ArgumentNullException("data");
+      }
+      int length = data.Length;
+      for (var i = 0; i < length; ++i) {
+        outputStream.WriteByte((byte)HexAlphabet[(data[i] >> 4) & 15]);
+        outputStream.WriteByte((byte)HexAlphabet[data[i] & 15]);
       }
     }
 
@@ -125,8 +137,8 @@ namespace PeterO.Cbor {
 
     public static BigInteger BigIntegerFromDouble(double dbl) {
       long lvalue = BitConverter.ToInt64(
-                         BitConverter.GetBytes((double)dbl),
-                         0);
+        BitConverter.GetBytes((double)dbl),
+        0);
       int value0 = unchecked((int)(lvalue & 0xFFFFFFFFL));
       int value1 = unchecked((int)((lvalue >> 32) & 0xFFFFFFFFL));
       var floatExponent = (int)((value1 >> 20) & 0x7ff);

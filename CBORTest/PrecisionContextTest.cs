@@ -1,8 +1,6 @@
 using System;
-using PeterO;
-using System.Collections.Generic;
-using PeterO.Cbor;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PeterO;
 
 namespace Test {
   [TestClass]
@@ -79,7 +77,11 @@ namespace Test {
     }
     [TestMethod]
     public void TestForRounding() {
-      // not implemented yet
+      PrecisionContext ctx;
+      ctx = PrecisionContext.ForRounding(Rounding.HalfEven);
+      Assert.AreEqual(Rounding.HalfEven, ctx.Rounding);
+      ctx = PrecisionContext.ForRounding(Rounding.HalfUp);
+      Assert.AreEqual(Rounding.HalfUp, ctx.Rounding);
     }
     [TestMethod]
     public void TestHasExponentRange() {
@@ -127,7 +129,14 @@ namespace Test {
     }
     [TestMethod]
     public void TestWithBigPrecision() {
-      // not implemented yet
+      try {
+ PrecisionContext.Unlimited.WithBigPrecision(BigInteger.One.negate());
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [TestMethod]
     public void TestWithBlankFlags() {
@@ -179,7 +188,17 @@ namespace Test {
     }
     [TestMethod]
     public void TestWithPrecision() {
-      // not implemented yet
+      try {
+ PrecisionContext.Unlimited.WithPrecision(-1);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      PrecisionContext ctx;
+      ctx = PrecisionContext.Unlimited.WithPrecision(6);
+      Assert.AreEqual((BigInteger)6, ctx.Precision);
     }
     [TestMethod]
     public void TestWithPrecisionInBits() {

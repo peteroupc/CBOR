@@ -218,7 +218,9 @@ public void setFlags(int value) {
      * under this precision context.
      * @param exponent A BigInteger object indicating the desired exponent.
      * @return True if a number can have the given Exponent property under
-     * this precision context; otherwise, false.
+     * this precision context; otherwise, false. If this context allows
+     * unlimited precision, returns true for the exponent EMax and any exponent
+     * less than EMax.
      * @throws java.lang.NullPointerException The parameter {@code exponent}
      * is null.
      */

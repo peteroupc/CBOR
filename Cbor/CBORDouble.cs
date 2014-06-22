@@ -53,7 +53,7 @@ namespace PeterO.Cbor {
         throw new OverflowException("This object's value is out of range");
       }
       fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
-      if (fltItem >= Int64.MinValue && fltItem <= Int64.MaxValue) {
+      if (fltItem >= -9223372036854775808.0 && fltItem < 9223372036854775808.0) {
         return (long)fltItem;
       }
       throw new OverflowException("This object's value is out of range");
@@ -65,7 +65,7 @@ namespace PeterO.Cbor {
         return true;
       }
       var sing = (float)fltItem;
-      return (double)sing == fltItem;
+      return (double)sing == (double)fltItem;
     }
 
     public bool CanFitInDouble(object obj) {
@@ -86,7 +86,7 @@ namespace PeterO.Cbor {
         return false;
       }
       double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
-      return fltItem2 >= Int64.MinValue && fltItem2 <= Int64.MaxValue;
+      return fltItem2 >= -9223372036854775808.0 && fltItem2 < 9223372036854775808.0;
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
@@ -139,7 +139,7 @@ namespace PeterO.Cbor {
       return (val < 0) ? -val : obj;
     }
 
-public ExtendedRational AsExtendedRational(object obj) {
+    public ExtendedRational AsExtendedRational(object obj) {
       return ExtendedRational.FromDouble((double)obj);
     }
   }
