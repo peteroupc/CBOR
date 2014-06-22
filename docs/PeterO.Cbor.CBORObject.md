@@ -14,13 +14,19 @@ To and from other objects:The CBORObject.FromObject method converts many kinds o
 
 To and from JSON:This class also doubles as a reader and writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString method converts JSON to a CBOR object, and the ToJSONString method converts a CBOR object to a JSON string.
 
+In addition, the CBORObject.WriteJSON method writes many kinds of objects as JSON to a data stream, including numbers, CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read method reads a CBOR object from a JSON data stream.
+
 Instances of CBORObject should not be compared for equality using the "==" operator; it's possible to create two CBOR objects with the same value but not the same reference.
 
 Thread Safety:
 
-CBOR objects that are numbers, "simple values", and text strings are immutable (their values can't be changed), so they are inherently safe for use by multiple threads. CBOR objects that are arrays, maps, and byte strings are mutable, but this class doesn't attempt to synchronize reads and writes to those objects by multiple threads, so those objects are not thread safe without such synchronization.
+CBOR objects that are numbers, "simple values", and text strings are immutable (their values can't be changed), so they are inherently safe for use by multiple threads. There could be multiple instances of these kinds of objects with the same value, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
+
+CBOR objects that are arrays, maps, and byte strings are mutable, but this class doesn't attempt to synchronize reads and writes to those objects by multiple threads, so those objects are not thread safe without such synchronization.
 
 One kind of CBOR object is called a map, or a list of key-value pairs. Keys can be any kind of CBOR object, including numbers, strings, arrays, and maps. However, since byte strings, arrays, and maps are mutable, it is not advisable to use these three kinds of object as keys; they are much better used as map values instead, keeping in mind that they are not thread safe without synchronizing reads and writes to them.
+
+To find the type of a CBOR object, call its Type property (or "getType()" in Java). The return value can be Number, Boolean, SimpleValue, or TextString for immutable CBOR objects, and Array, Map, or ByteString for mutable CBOR objects.
 
 ### False
 
@@ -372,6 +378,34 @@ Gets a list of all tags, from outermost to innermost.
 
 An array of tags, or the empty string if this object is untagged.
 
+### Insert
+
+    public PeterO.Cbor.CBORObject Insert(
+        int index,
+        object valueOb);
+
+Inserts an object at the specified position in this CBOR array.
+
+<b>Parameters:</b>
+
+ * <i>index</i>: Zero-based index to insert at.
+
+ * <i>valueOb</i>: An object representing the value, which will be converted to a CBORObject. Can be null, in which case this value is converted to CBORObject.Null.
+
+<b>Returns:</b>
+
+This object.
+
+<b>Exceptions:</b>
+
+ * System.InvalidOperationException: 
+This object is not an array.
+
+ * System.ArgumentException: 
+The parameter  <i>valueOb</i>
+ has an unsupported type; or  <i>index</i>
+is not a valid index into this array.
+
 ### Set
 
     public PeterO.Cbor.CBORObject Set(
@@ -571,7 +605,7 @@ A decimal number for this object's value. If this object is a rational number wi
 <b>Exceptions:</b>
 
  * System.InvalidOperationException: 
-This object's type is not a number type.
+This object's type is not a number type, including if this object is CBORObject.Null.
 
 ### AsExtendedRational
 
@@ -586,7 +620,7 @@ A rational number for this object's value.
 <b>Exceptions:</b>
 
  * System.InvalidOperationException: 
-This object's type is not a number type.
+This object's type is not a number type, including if this object is CBORObject.Null.
 
 ### AsExtendedFloat
 
@@ -601,7 +635,7 @@ An arbitrary-precision binary floating point number for this object's value. Not
 <b>Exceptions:</b>
 
  * System.InvalidOperationException: 
-This object's type is not a number type.
+This object's type is not a number type, including if this object is CBORObject.Null.
 
 ### AsSingle
 
@@ -631,7 +665,7 @@ The closest big integer to this object.
 <b>Exceptions:</b>
 
  * System.InvalidOperationException: 
-This object's type is not a number type.
+This object's type is not a number type, including if this object is CBORObject.Null.
 
  * System.OverflowException: 
 This object's value is infinity or not-a-number (NaN).
@@ -644,7 +678,7 @@ Returns false if this object is False, Null, or Undefined; otherwise, true.
 
 <b>Returns:</b>
 
-A Boolean object.
+False if this object is False, Null, or Undefined; otherwise, true.
 
 ### AsInt16
 
@@ -724,11 +758,11 @@ Whether this object's value can be converted to a 64-bit floating point number w
 
     public bool CanFitInInt32();
 
-Returns whether this object's value is an integral value, is -(2^32) or greater, and is less than 2^32.
+Returns whether this object's value is an integral value, is -(2^31) or greater, and is less than 2^31.
 
 <b>Returns:</b>
 
-True if this object's value is an integral value, is -(2^32) or greater, and is less than 2^32; otherwise, false.
+True if this object's value is an integral value, is -(2^31) or greater, and is less than 2^31; otherwise, false.
 
 ### CanFitInInt64
 
@@ -791,7 +825,7 @@ Gets this object's string.
 <b>Exceptions:</b>
 
  * System.InvalidOperationException: 
-This object's type is not a string.
+This object's type is not a string, including if this object is CBORObject.Null.
 
 ### Read
 
@@ -1808,7 +1842,7 @@ A CBOR object where each key and value of the given map is converted to a CBOR o
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
-Generates a CBORObject from an arbitrary object. The following types are specially handled by this method:  `null` , primitive types, strings,  `CBORObject` ,  `ExtendedDecimal` ,  `ExtendedFloat` , the custom  `BigInteger` , lists, arrays, enumerations (  `Enum` objects), and maps.
+Generates a CBORObject from an arbitrary object. The following types are specially handled by this method:  `null` , primitive types, strings,  `CBORObject` ,  `ExtendedDecimal` ,  `ExtendedFloat` , the custom  `BigInteger` , lists, arrays, enumerations ( `Enum` objects), and maps.
 
 In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET  `Enum` objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays. The .NET value DBNull.Value is converted to CBORObject.Undefined.
 

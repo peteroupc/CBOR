@@ -186,6 +186,10 @@ A PrecisionContext object.
 The parameter <i>exponentMin</i>
  is null.
 
+ * System.ArgumentNullException: 
+The parameter <i>exponentMax</i>
+ is null.
+
 ### WithNoFlags
 
     public PeterO.PrecisionContext WithNoFlags();

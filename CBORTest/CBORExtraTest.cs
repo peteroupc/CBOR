@@ -217,13 +217,6 @@ namespace Test {
       return new String(charbuf);
     }
 
-    /*
-    [TestMethod]
-    public void TestDBNull() {
-      Assert.AreEqual(CBORObject.Undefined, CBORObject.FromObject(DBNull.Value));
-    }
-    */
-
     [TestMethod]
     public void TestFloatCloseToEdge() {
       try {

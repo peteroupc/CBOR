@@ -151,6 +151,7 @@ namespace PeterO.Cbor {
       }
       floatExponent -= 1075;
       var bytes = new byte[9];
+      BigInteger bigmantissa;
       bytes[0] = (byte)(value0 & 0xff);
       bytes[1] = (byte)((value0 >> 8) & 0xff);
       bytes[2] = (byte)((value0 >> 16) & 0xff);
@@ -160,7 +161,7 @@ namespace PeterO.Cbor {
       bytes[6] = (byte)((value1 >> 16) & 0xff);
       bytes[7] = (byte)((value1 >> 24) & 0xff);
       bytes[8] = (byte)0;
-      var bigmantissa = BigInteger.fromByteArray(bytes, true);
+      bigmantissa = BigInteger.fromByteArray(bytes, true);
       if (floatExponent == 0) {
         if (neg) {
           bigmantissa = -bigmantissa;

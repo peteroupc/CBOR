@@ -32,22 +32,32 @@ import com.upokecenter.util.*;
      * <p><b>To and from JSON:</b> This class also doubles as a reader and
      * writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString
      * method converts JSON to a CBOR object, and the ToJSONString method
-     * converts a CBOR object to a JSON string.</p> <p>Instances of CBORObject
-     * should not be compared for equality using the "==" operator; it's
-     * possible to create two CBOR objects with the same value but not the
-     * same reference.</p> <p><b>Thread Safety:</b> </p> <p>CBOR objects
-     * that are numbers, "simple values", and text strings are immutable
-     * (their values can't be changed), so they are inherently safe for use
-     * by multiple threads. CBOR objects that are arrays, maps, and byte
-     * strings are mutable, but this class doesn't attempt to synchronize
-     * reads and writes to those objects by multiple threads, so those objects
-     * are not thread safe without such synchronization.</p> <p>One kind
-     * of CBOR object is called a map, or a list of key-value pairs. Keys can
-     * be any kind of CBOR object, including numbers, strings, arrays, and
-     * maps. However, since byte strings, arrays, and maps are mutable,
+     * converts a CBOR object to a JSON string.</p> <p>In addition, the CBORObject.WriteJSON
+     * method writes many kinds of objects as JSON to a data stream, including
+     * numbers, CBOR objects, strings, and arrays of numbers and strings.
+     * The CBORObject.Read method reads a CBOR object from a JSON data stream.</p>
+     * <p>Instances of CBORObject should not be compared for equality using
+     * the "==" operator; it's possible to create two CBOR objects with the
+     * same value but not the same reference.</p> <p><b>Thread Safety:</b>
+     * </p> <p>CBOR objects that are numbers, "simple values", and text
+     * strings are immutable (their values can't be changed), so they are
+     * inherently safe for use by multiple threads. There could be multiple
+     * instances of these kinds of objects with the same value, so they should
+     * not be compared using the "==" operator (which only checks if each
+     * side of the operator is the same instance).</p> <p>CBOR objects that
+     * are arrays, maps, and byte strings are mutable, but this class doesn't
+     * attempt to synchronize reads and writes to those objects by multiple
+     * threads, so those objects are not thread safe without such synchronization.</p>
+     * <p>One kind of CBOR object is called a map, or a list of key-value pairs.
+     * Keys can be any kind of CBOR object, including numbers, strings, arrays,
+     * and maps. However, since byte strings, arrays, and maps are mutable,
      * it is not advisable to use these three kinds of object as keys; they
      * are much better used as map values instead, keeping in mind that they
      * are not thread safe without synchronizing reads and writes to them.</p>
+     * <p>To find the type of a CBOR object, call its Type property (or "getType()"
+     * in Java). The return value can be Number, Boolean, SimpleValue, or
+     * TextString for immutable CBOR objects, and Array, Map, or ByteString
+     * for mutable CBOR objects.</p>
      */
   public final class CBORObject implements Comparable<CBORObject> {
     int getItemType(){
@@ -1620,7 +1630,7 @@ private List<CBORObject> AsList() {
           mapValue = ((valueOb instanceof CBORObject) ? (CBORObject)valueOb : null);
           mapValue = (mapValue == null) ? (CBORObject.FromObject(valueOb)) : mapValue;
         }
-        list.insert(index, mapValue);
+        list.add(index, mapValue);
       } else {
         throw new IllegalStateException("Not an array");
       }
@@ -1841,7 +1851,7 @@ private List<CBORObject> AsList() {
      * a rational number with a nonterminating decimal expansion, returns
      * a decimal number rounded to 34 digits.
      * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
+     * not a number type, including if this object is CBORObject.Null.
      */
     public ExtendedDecimal AsExtendedDecimal() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -1855,7 +1865,7 @@ private List<CBORObject> AsList() {
      * Converts this object to a rational number.
      * @return A rational number for this object's value.
      * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
+     * not a number type, including if this object is CBORObject.Null.
      */
     public ExtendedRational AsExtendedRational() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -1874,7 +1884,7 @@ private List<CBORObject> AsList() {
      * on the number. If this object is a rational number with a nonterminating
      * binary expansion, returns a decimal number rounded to 113 digits.
      * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
+     * not a number type, including if this object is CBORObject.Null.
      */
     public ExtendedFloat AsExtendedFloat() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
@@ -1905,7 +1915,7 @@ private List<CBORObject> AsList() {
      * values are truncated to an integer.
      * @return The closest big integer to this object.
      * @throws java.lang.IllegalStateException This object's type is
-     * not a number type.
+     * not a number type, including if this object is CBORObject.Null.
      * @throws ArithmeticException This object's value is infinity or not-a-number
      * (NaN).
      */
@@ -1998,10 +2008,10 @@ private List<CBORObject> AsList() {
     }
 
     /**
-     * Returns whether this object's value is an integral value, is -(2^32)
-     * or greater, and is less than 2^32.
-     * @return True if this object's value is an integral value, is -(2^32)
-     * or greater, and is less than 2^32; otherwise, false.
+     * Returns whether this object's value is an integral value, is -(2^31)
+     * or greater, and is less than 2^31.
+     * @return True if this object's value is an integral value, is -(2^31)
+     * or greater, and is less than 2^31; otherwise, false.
      */
     public boolean CanFitInInt32() {
       if (!this.CanFitInInt64()) {
@@ -2080,7 +2090,8 @@ private List<CBORObject> AsList() {
     /**
      * Gets the value of this object as a string object.
      * @return Gets this object's string.
-     * @throws IllegalStateException This object's type is not a string.
+     * @throws IllegalStateException This object's type is not a string,
+     * including if this object is CBORObject.Null.
      */
     public String AsString() {
       int type = this.getItemType();
@@ -2880,14 +2891,17 @@ private List<CBORObject> AsList() {
         }
       }
       if (!hasComplexTag) {
-         switch (this.getItemType()) { case CBORObjectTypeTextString: {
+        switch (this.getItemType()) {
+            case CBORObjectTypeTextString: {
               byte[] ret = GetOptimizedBytesIfShortAscii(
                 this.AsString(),
                 tagged ? (((int)tagbyte) & 0xff) : -1);
               if (ret != null) {
                 return ret;
               }
-              break; } case CBORObjectTypeSimpleValue: {
+              break;
+            }
+            case CBORObjectTypeSimpleValue: {
               if (tagged) {
                 if (this.isFalse()) {
                   return new byte[] { tagbyte, (byte)0xf4  };
@@ -2915,7 +2929,9 @@ private List<CBORObject> AsList() {
                   return new byte[] { (byte)0xf7  };
                 }
               }
-              break; } case CBORObjectTypeInteger: {
+              break;
+            }
+            case CBORObjectTypeInteger: {
               long value = (((Long)this.getThisItem()).longValue());
               byte[] intBytes = null;
               if (value >= 0) {
@@ -2932,7 +2948,8 @@ private List<CBORObject> AsList() {
               System.arraycopy(intBytes, 0, ret2, 1, intBytes.length);
               ret2[0] = tagbyte;
               return ret2;
-              } case CBORObjectTypeSingle: {
+            }
+            case CBORObjectTypeSingle: {
               float value = ((Float)this.getThisItem()).floatValue();
               int bits = Float.floatToRawIntBits(value);
               return tagged ?
@@ -2946,7 +2963,7 @@ private List<CBORObject> AsList() {
                 (byte)((bits >> 16) & 0xff),
                 (byte)((bits >> 8) & 0xff),
                 (byte)(bits & 0xff)  };
-              } case CBORObjectTypeDouble: {
+            } case CBORObjectTypeDouble: {
               double value = ((Double)this.getThisItem()).doubleValue();
               long bits = Double.doubleToRawLongBits(value);
               return tagged ?
@@ -2968,7 +2985,8 @@ private List<CBORObject> AsList() {
                 (byte)((bits >> 16) & 0xff),
                 (byte)((bits >> 8) & 0xff),
                 (byte)(bits & 0xff)  };
-              }}
+            }
+        }
       }
       try {
         java.io.ByteArrayOutputStream ms=null;

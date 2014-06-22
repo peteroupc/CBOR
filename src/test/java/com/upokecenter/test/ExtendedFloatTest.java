@@ -1,5 +1,6 @@
 package com.upokecenter.test;
 
+import com.upokecenter.util.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -146,20 +147,63 @@ import org.junit.Test;
     }
     @Test
     public void TestMax() {
-      // not implemented yet
-    }
+try {
+        ExtendedFloat.Max(null, ExtendedFloat.One);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.Max(ExtendedFloat.One, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      } }
     @Test
     public void TestMaxMagnitude() {
       // not implemented yet
     }
     @Test
     public void TestMin() {
-      // not implemented yet
+      try {
+        ExtendedFloat.Min(null, ExtendedFloat.One);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.Min(ExtendedFloat.One, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
     @Test
     public void TestMinMagnitude() {
-      // not implemented yet
-    }
+try {
+        ExtendedFloat.MinMagnitude(null, ExtendedFloat.One);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        ExtendedFloat.MinMagnitude(ExtendedFloat.One, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      } }
     @Test
     public void TestMultiply() {
       // not implemented yet

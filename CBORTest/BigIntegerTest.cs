@@ -23,7 +23,28 @@ namespace Test {
     }
     [TestMethod]
     public void TestBitLength() {
-      // not implemented yet
+      Assert.AreEqual(31, BigInteger.valueOf(-2147483647L).bitLength());
+      Assert.AreEqual(31, BigInteger.valueOf(-2147483648L).bitLength());
+      Assert.AreEqual(32, BigInteger.valueOf(-2147483649L).bitLength());
+      Assert.AreEqual(32, BigInteger.valueOf(-2147483650L).bitLength());
+      Assert.AreEqual(31, BigInteger.valueOf(2147483647L).bitLength());
+      Assert.AreEqual(32, BigInteger.valueOf(2147483648L).bitLength());
+      Assert.AreEqual(32, BigInteger.valueOf(2147483649L).bitLength());
+      Assert.AreEqual(32, BigInteger.valueOf(2147483650L).bitLength());
+      Assert.AreEqual(0, BigInteger.valueOf(0).bitLength());
+      Assert.AreEqual(1, BigInteger.valueOf(1).bitLength());
+      Assert.AreEqual(2, BigInteger.valueOf(2).bitLength());
+      Assert.AreEqual(2, BigInteger.valueOf(2).bitLength());
+      Assert.AreEqual(31, BigInteger.valueOf(Int32.MaxValue).bitLength());
+      Assert.AreEqual(31, BigInteger.valueOf(Int32.MinValue).bitLength());
+      Assert.AreEqual(16, BigInteger.valueOf(65535).bitLength());
+      Assert.AreEqual(16, BigInteger.valueOf(-65535).bitLength());
+      Assert.AreEqual(17, BigInteger.valueOf(65536).bitLength());
+      Assert.AreEqual(16, BigInteger.valueOf(-65536).bitLength());
+      Assert.AreEqual(65, BigInteger.fromString("19084941898444092059").bitLength());
+      Assert.AreEqual(65, BigInteger.fromString("-19084941898444092059").bitLength());
+      Assert.AreEqual(0, BigInteger.valueOf(-1).bitLength());
+      Assert.AreEqual(1, BigInteger.valueOf(-2).bitLength());
     }
     [TestMethod]
     public void TestCanFitInInt() {

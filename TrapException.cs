@@ -45,13 +45,7 @@ namespace PeterO {
     }
 
     private static string FlagToMessage(int flag) {
-      if (flag == PrecisionContext.FlagClamped) {
-        return "Clamped";
-      }
-      if (flag == PrecisionContext.FlagDivideByZero) {
-        return "DivideByZero";
-      }
-      return (flag == PrecisionContext.FlagInexact) ? "Inexact" : ((flag == PrecisionContext.FlagInvalid) ? "Invalid" : ((flag == PrecisionContext.FlagOverflow) ? "Overflow" : ((flag == PrecisionContext.FlagRounded) ? "Rounded" : ((flag == PrecisionContext.FlagSubnormal) ? "Subnormal" : ((flag == PrecisionContext.FlagUnderflow) ? "Underflow" : "Trap")))));
+      return (flag == PrecisionContext.FlagClamped) ? "Clamped" : ((flag == PrecisionContext.FlagDivideByZero) ? "DivideByZero" : ((flag == PrecisionContext.FlagInexact) ? "Inexact" : ((flag == PrecisionContext.FlagInvalid) ? "Invalid" : ((flag == PrecisionContext.FlagOverflow) ? "Overflow" : ((flag == PrecisionContext.FlagRounded) ? "Rounded" : ((flag == PrecisionContext.FlagSubnormal) ? "Subnormal" : ((flag == PrecisionContext.FlagUnderflow) ? "Underflow" : "Trap")))))));
     }
 
     /// <summary>Initializes a new instance of the TrapException class.</summary>

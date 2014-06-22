@@ -1,4 +1,5 @@
 using System;
+using PeterO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test {
@@ -146,20 +147,63 @@ namespace Test {
     }
     [TestMethod]
     public void TestMax() {
-      // not implemented yet
-    }
+try {
+        ExtendedFloat.Max(null, ExtendedFloat.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.Max(ExtendedFloat.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      } }
     [TestMethod]
     public void TestMaxMagnitude() {
       // not implemented yet
     }
     [TestMethod]
     public void TestMin() {
-      // not implemented yet
+      try {
+        ExtendedFloat.Min(null, ExtendedFloat.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.Min(ExtendedFloat.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [TestMethod]
     public void TestMinMagnitude() {
-      // not implemented yet
-    }
+try {
+        ExtendedFloat.MinMagnitude(null, ExtendedFloat.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedFloat.MinMagnitude(ExtendedFloat.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      } }
     [TestMethod]
     public void TestMultiply() {
       // not implemented yet

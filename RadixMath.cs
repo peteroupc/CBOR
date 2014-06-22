@@ -3200,14 +3200,12 @@ namespace PeterO {
                       op2MantAbs -= BigInteger.One;
                       other = this.helper.CreateNewWithFlags(op2MantAbs, op2Exponent, this.helper.GetFlags(other));
                       FastInteger shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                      // Console.WriteLine("line3325");
                       return this.RoundToPrecisionWithShift(other, ctx, 0, 0, shift, false);
                     } else {
                       FastInteger shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
                       if (!sameSign && ctx != null && ctx.HasFlags) {
                         ctx.Flags |= PrecisionContext.FlagRounded;
                       }
-                      // Console.WriteLine("line3332");
                       return this.RoundToPrecisionWithShift(other, ctx, 0, sameSign ? 1 : 0, shift2, false);
                     }
                   }
@@ -3253,7 +3251,6 @@ namespace PeterO {
                       if (oneOpIsZero && ctx != null && ctx.HasFlags) {
                         ctx.Flags |= PrecisionContext.FlagRounded;
                       }
-                      // Console.WriteLine("line3375");
                       return this.RoundToPrecisionWithShift(thisValue, ctx, (oneOpIsZero || sameSign) ? 0 : 1, (oneOpIsZero && !sameSign) ? 0 : 1, shift, false);
                     }
                     if (!oneOpIsZero && !sameSign) {
@@ -3265,14 +3262,12 @@ namespace PeterO {
                       op1MantAbs -= BigInteger.One;
                       thisValue = this.helper.CreateNewWithFlags(op1MantAbs, op1Exponent, this.helper.GetFlags(thisValue));
                       FastInteger shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                      // Console.WriteLine("line3386");
                       return this.RoundToPrecisionWithShift(thisValue, ctx, 0, 0, shift, false);
                     } else {
                       FastInteger shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
                       if (!sameSign && ctx != null && ctx.HasFlags) {
                         ctx.Flags |= PrecisionContext.FlagRounded;
                       }
-                      // Console.WriteLine("line3393");
                       return this.RoundToPrecisionWithShift(thisValue, ctx, 0, sameSign ? 1 : 0, shift2, false);
                     }
                   }
