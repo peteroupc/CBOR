@@ -2192,10 +2192,6 @@ namespace PeterO {
       return (newwordCount == 0) ? BigInteger.Zero : (new BigInteger(newwordCount, newreg, newnegative));
     }
 
-    private static BigInteger Allocate(int length) {
-      return new BigInteger(0, new short[RoundupSize(length)], false);
-    }
-
     private static short[] GrowForCarry(short[] a, short carry) {
       int oldLength = a.Length;
       short[] ret = CleanGrow(a, RoundupSize(oldLength + 1));
@@ -2543,9 +2539,9 @@ namespace PeterO {
     }
 
     /// <summary>Converts this object's value to a 32-bit signed integer.
-    /// This method is obsoleted by the <c>intValueChecked</c>
+    /// To make the conversion intention clearer, use the <c>intValueChecked</c>
     /// and <c>intValueUnchecked</c>
-    /// methods, which should be used instead.</summary>
+    /// methods instead.</summary>
     /// <returns>A 32-bit signed integer.</returns>
     /// <exception cref='OverflowException'>This object's value is too
     /// big to fit a 32-bit signed integer.</exception>
@@ -2584,8 +2580,9 @@ namespace PeterO {
     }
 
     /// <summary>Converts this object's value to a 64-bit signed integer.
-    /// This method is obsoleted by the longValueChecked and longValueUnchecked
-    /// methods, which should be used instead.</summary>
+    /// To make the conversion intention clearer, use the <c>longValueChecked</c>
+    /// and <c>longValueUnchecked</c>
+    /// methods instead.</summary>
     /// <returns>A 64-bit signed integer.</returns>
     /// <exception cref='OverflowException'>This object's value is too
     /// big to fit a 64-bit signed integer.</exception>
@@ -3124,8 +3121,12 @@ namespace PeterO {
     /// portion.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null.</exception>
-    /// <exception cref='FormatException'>The string portion is in an
-    /// invalid format.</exception>
+    /// <exception cref='System.ArgumentException'>The parameter <paramref
+    /// name='index'/> is less than 0, <paramref name='endIndex'/> is less
+    /// than 0, or either is greater than the string's length, or <paramref
+    /// name='endIndex'/> is less than <paramref name='index'/> .</exception>
+    /// <exception cref='FormatException'>The string portion is empty
+    /// or in an invalid format.</exception>
     public static BigInteger fromSubstring(string str, int index, int endIndex) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -3225,13 +3226,13 @@ namespace PeterO {
       return 0;
     }
 
-    /// <summary>Returns the greatest common divisor of two integers.</summary>
+    /// <summary>Returns the greatest common divisor of two integers. The
+    /// greatest common divisor (GCD) is also known as the greatest common
+    /// factor (GCF).</summary>
     /// <param name='bigintSecond'>A BigInteger object. (2).</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='bigintSecond'/> is null.</exception>
-    /// <remarks>The greatest common divisor (GCD) is also known as the greatest
-    /// common factor (GCF).</remarks>
     public BigInteger gcd(BigInteger bigintSecond) {
       if (bigintSecond == null) {
         throw new ArgumentNullException("bigintSecond");

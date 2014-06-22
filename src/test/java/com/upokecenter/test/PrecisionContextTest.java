@@ -1,10 +1,8 @@
 package com.upokecenter.test;
 
-import com.upokecenter.util.*;
-import java.util.*;
-import com.upokecenter.cbor.*;
 import org.junit.Assert;
 import org.junit.Test;
+import com.upokecenter.util.*;
 
   public class PrecisionContextTest {
     @Test
@@ -79,7 +77,11 @@ import org.junit.Test;
     }
     @Test
     public void TestForRounding() {
-      // not implemented yet
+      PrecisionContext ctx;
+      ctx = PrecisionContext.ForRounding(Rounding.HalfEven);
+      Assert.assertEquals(Rounding.HalfEven, ctx.getRounding());
+      ctx = PrecisionContext.ForRounding(Rounding.HalfUp);
+      Assert.assertEquals(Rounding.HalfUp, ctx.getRounding());
     }
     @Test
     public void TestHasExponentRange() {
@@ -127,7 +129,14 @@ import org.junit.Test;
     }
     @Test
     public void TestWithBigPrecision() {
-      // not implemented yet
+      try {
+ PrecisionContext.Unlimited.WithBigPrecision(BigInteger.ONE.negate());
+Assert.fail("Should have failed");
+} catch (IllegalArgumentException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
     }
     @Test
     public void TestWithBlankFlags() {
@@ -179,7 +188,17 @@ import org.junit.Test;
     }
     @Test
     public void TestWithPrecision() {
-      // not implemented yet
+      try {
+ PrecisionContext.Unlimited.WithPrecision(-1);
+Assert.fail("Should have failed");
+} catch (IllegalArgumentException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      PrecisionContext ctx;
+      ctx = PrecisionContext.Unlimited.WithPrecision(6);
+      Assert.assertEquals(BigInteger.valueOf(6), ctx.getPrecision());
     }
     @Test
     public void TestWithPrecisionInBits() {

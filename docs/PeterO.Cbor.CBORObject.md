@@ -4,7 +4,9 @@
         System.IComparable,
         System.IEquatable
 
-Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049. There are many ways to get a CBOR object, including from bytes, objects, streams and JSON, as described below.
+Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049. Converting CBOR objects
+
+There are many ways to get a CBOR object, including from bytes, objects, streams and JSON, as described below.
 
 To and from byte arrays:The CBORObject.DecodeToBytes method converts a byte array in CBOR format to a CBOR object. The EncodeToBytes method converts a CBOR object to its corresponding byte array in CBOR format.
 
@@ -16,15 +18,25 @@ To and from JSON:This class also doubles as a reader and writer of JavaScript Ob
 
 In addition, the CBORObject.WriteJSON method writes many kinds of objects as JSON to a data stream, including numbers, CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read method reads a CBOR object from a JSON data stream.
 
-Instances of CBORObject should not be compared for equality using the "==" operator; it's possible to create two CBOR objects with the same value but not the same reference.
+Comparison Considerations:
+
+Instances of CBORObject should not be compared for equality using the "==" operator; it's possible to create two CBOR objects with the same value but not the same reference. (The "==" operator only checks if each side of the operator is the same instance.)
+
+This class's natural ordering (under the CompareTo method) is not consistent with the Equals method. This means that two values that compare as equal under the CompareTo method might not be equal under the Equals method. This is important to consider especially if an application wants to compare numbers, since the CBOR number type supports numbers of different formats, such as big integers, rational numbers, and decimal fractions.
+
+Another consideration is that two values that are otherwise equal may have different tags. To strip the tags from a CBOR object before comparing, use the  `Untag` method.
+
+To compare two numbers, the CompareToIgnoreTags or CompareTo method should be used. Which method to use depends on whether two equal values should still be considered equal if they have different tags.
+
+Although this class is inconsistent with the Equals method, it is safe to use CBORObject instances as hash keys as long as all of the keys are untagged text strings (which means GetTags returns an empty array and the Type property, or "getType()" in Java, returns TextString). This is because the natural ordering of these instances is consistent with the Equals method.
 
 Thread Safety:
 
-CBOR objects that are numbers, "simple values", and text strings are immutable (their values can't be changed), so they are inherently safe for use by multiple threads. There could be multiple instances of these kinds of objects with the same value, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
+CBOR objects that are numbers, "simple values", and text strings are immutable (their values can't be changed), so they are inherently safe for use by multiple threads.
 
 CBOR objects that are arrays, maps, and byte strings are mutable, but this class doesn't attempt to synchronize reads and writes to those objects by multiple threads, so those objects are not thread safe without such synchronization.
 
-One kind of CBOR object is called a map, or a list of key-value pairs. Keys can be any kind of CBOR object, including numbers, strings, arrays, and maps. However, since byte strings, arrays, and maps are mutable, it is not advisable to use these three kinds of object as keys; they are much better used as map values instead, keeping in mind that they are not thread safe without synchronizing reads and writes to them.
+One kind of CBOR object is called a map, or a list of key-value pairs. Keys can be any kind of CBOR object, including numbers, strings, arrays, and maps. However, text strings are the most suitable to use as keys; other kinds of CBOR object are much better used as map values instead, keeping in mind that some of them are not thread safe without synchronizing reads and writes to them.
 
 To find the type of a CBOR object, call its Type property (or "getType()" in Java). The return value can be Number, Boolean, SimpleValue, or TextString for immutable CBOR objects, and Array, Map, or ByteString for mutable CBOR objects.
 
@@ -183,6 +195,21 @@ Gets a value indicating whether this CBOR object represents a not-a-number value
 <b>Returns:</b>
 
 True if this CBOR object represents a not-a-number value (as opposed to whether this object's type is not a number type); otherwise, false.
+
+### CompareToIgnoreTags
+
+    public int CompareToIgnoreTags(
+        PeterO.Cbor.CBORObject other);
+
+Compares this object and another CBOR object, ignoring the tags they have, if any. See the CompareTo method for more information on the comparison function.
+
+<b>Parameters:</b>
+
+ * <i>other</i>: A value to compare with.
+
+<b>Returns:</b>
+
+Less than 0, if this value is less than the other object; or 0, if both values are equal; or greater than 0, if this value is less than the other object or if the other object is null.
 
 ### CompareTo
 
@@ -1842,7 +1869,7 @@ A CBOR object where each key and value of the given map is converted to a CBOR o
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
-Generates a CBORObject from an arbitrary object. The following types are specially handled by this method:  `null` , primitive types, strings,  `CBORObject` ,  `ExtendedDecimal` ,  `ExtendedFloat` , the custom  `BigInteger` , lists, arrays, enumerations (  `Enum` objects), and maps.
+Generates a CBORObject from an arbitrary object. The following types are specially handled by this method:  `null` , primitive types, strings,  `CBORObject` ,  `ExtendedDecimal` ,  `ExtendedFloat` , the custom  `BigInteger` , lists, arrays, enumerations ( `Enum` objects), and maps.
 
 In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET  `Enum` objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays. The .NET value DBNull.Value is converted to CBORObject.Undefined.
 

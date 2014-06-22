@@ -71,7 +71,7 @@ Determines whether a number can have the given Exponent property under this prec
 
 <b>Returns:</b>
 
-True if a number can have the given Exponent property under this precision context; otherwise, false.
+True if a number can have the given Exponent property under this precision context; otherwise, false. If this context allows unlimited precision, returns true for the exponent EMax and any exponent less than EMax.
 
 <b>Exceptions:</b>
 

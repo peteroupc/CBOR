@@ -79,27 +79,129 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestFromByteArray() {
-      // not implemented yet
+      Assert.assertEquals(BigInteger.ZERO, BigInteger.fromByteArray(new byte[] {   }, false));
     }
     @Test
     public void TestFromString() {
-      // not implemented yet
+      try {
+        BigInteger.fromString(null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
     @Test
     public void TestFromSubstring() {
-      // not implemented yet
+      try {
+        BigInteger.fromSubstring(null, 0, 1);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
+
+    public static int ModPow(int x, int pow, int intMod) {
+      if (x < 0) {
+        throw new IllegalArgumentException("x (" + Integer.toString((int)x) + ") is less than " + "0");
+      }
+      if (pow <= 0) {
+        throw new IllegalArgumentException("pow (" + Integer.toString((int)pow) + ") is not greater than " + "0");
+      }
+      if (intMod <= 0) {
+        throw new IllegalArgumentException("mod (" + Integer.toString((int)intMod) + ") is not greater than " + "0");
+      }
+      int r = 1;
+      int v = x;
+      while (pow != 0) {
+        if ((pow & 1) != 0) {
+          r = (int)(((long)r * (long)v) % intMod);
+        }
+        pow >>= 1;
+        if (pow != 0) {
+          v = (int)(((long)v * (long)v) % intMod);
+        }
+      }
+      return r;
+    }
+
+    public static boolean IsPrime(int n) {
+      // Use a deterministic Rabin-Miller test
+      if (n < 2) {
+        return false;
+      }
+      if (n == 2) {
+        return true;
+      }
+      if (n % 2 == 0) {
+        return false;
+      }
+      int d = n - 1;
+      while ((d & 1) == 0) {
+        d >>= 1;
+      }
+      int mp = 0;
+      // For all 32-bit integers it's enough
+      // to check the strong pseudoprime
+      // bases 2, 7, and 61
+      if (n > 2) {
+        mp = ModPow(2, d, n);
+        if (mp != 1 && mp + 1 != n) {
+          return false;
+        }
+      }
+      if (n > 7) {
+        mp = ModPow(7, d, n);
+        if (mp != 1 && mp + 1 != n) {
+          return false;
+        }
+      }
+      if (n > 61) {
+        mp = ModPow(61, d, n);
+        if (mp != 1 && mp + 1 != n) {
+          return false;
+        }
+      }
+      return true;
+    }
+
     @Test
     public void TestGcd() {
-      // not implemented yet
+      int prime = 0;
+      FastRandom rand = new FastRandom();
+      for (int i = 0; i < 1000; ++i) {
+        while (true) {
+          prime = rand.NextValue(0x7fffffff);
+          prime |= 1;
+          if (IsPrime(prime)) {
+            break;
+          }
+        }
+        BigInteger bigprime = BigInteger.valueOf(prime);
+        BigInteger ba = CBORTest.RandomBigInteger(rand);
+        if (ba.signum()==0) {
+          continue;
+        }
+        ba=ba.multiply(bigprime);
+        Assert.assertEquals(bigprime, bigprime.gcd(ba));
+      }
     }
+
     @Test
     public void TestGetBits() {
       // not implemented yet
     }
     @Test
     public void TestGetDigitCount() {
-      // not implemented yet
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 1000; ++i) {
+        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        String str = (bigintA).abs().toString();
+        Assert.assertEquals(str.length(), bigintA.getDigitCount());
+      }
     }
     @Test
     public void TestGetHashCode() {
@@ -131,7 +233,12 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestIsEven() {
-      // not implemented yet
+      FastRandom r = new FastRandom();
+      for (int i = 0; i < 1000; ++i) {
+        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger mod = bigintA.remainder(BigInteger.valueOf(2));
+        Assert.assertEquals(mod.signum()==0, bigintA.testBit(0)==false);
+      }
     }
     @Test
     public void TestIsPowerOfTwo() {
@@ -293,7 +400,7 @@ import com.upokecenter.util.*;
       if(!(BigInteger.ONE.testBit(0)))Assert.fail();
       if(BigInteger.ONE.testBit(1))Assert.fail();
       for (int i = 0; i < 32; ++i) {
-       if(!(BigInteger.ONE.negate().testBit(i)))Assert.fail();
+        if(!(BigInteger.ONE.negate().testBit(i)))Assert.fail();
       }
     }
     @Test

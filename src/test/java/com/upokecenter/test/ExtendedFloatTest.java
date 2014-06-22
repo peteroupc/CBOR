@@ -1,8 +1,8 @@
 package com.upokecenter.test;
 
-import com.upokecenter.util.*;
 import org.junit.Assert;
 import org.junit.Test;
+import com.upokecenter.util.*;
 
   public class ExtendedFloatTest {
     @Test

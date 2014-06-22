@@ -9,15 +9,37 @@ namespace Test {
   public class DataUtilitiesTest {
     [TestMethod]
     public void TestCodePointAt() {
-      // not implemented yet
+      try {
+ DataUtilities.CodePointAt(null, 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      Assert.AreEqual(-1, DataUtilities.CodePointAt("A", -1));
+      Assert.AreEqual(-1, DataUtilities.CodePointAt("A", 1));
+      Assert.AreEqual(0x41, DataUtilities.CodePointAt("A", 0));
     }
     [TestMethod]
     public void TestCodePointBefore() {
+      try {
+ DataUtilities.CodePointBefore(null, 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       // not implemented yet
     }
     [TestMethod]
     public void TestCodePointCompare() {
-      // not implemented yet
+      Assert.AreEqual(0, Math.Sign(DataUtilities.CodePointCompare("abc", "abc")));
+      Assert.AreEqual(0, Math.Sign(DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")));
+      Assert.AreEqual(-1, Math.Sign(DataUtilities.CodePointCompare("abc", "\ud800\udc00")));
+      Assert.AreEqual(-1, Math.Sign(DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")));
+      Assert.AreEqual(1, Math.Sign(DataUtilities.CodePointCompare("\uf000", "\ud800")));
     }
     [TestMethod]
     public void TestGetUtf8Bytes() {
@@ -42,6 +64,23 @@ namespace Test {
       }
       Assert.AreEqual(6, DataUtilities.GetUtf8Length("ABC\ud800", true));
       Assert.AreEqual(-1, DataUtilities.GetUtf8Length("ABC\ud800", false));
+      try {
+        DataUtilities.GetUtf8Length(null, true);
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8Length(null, false);
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+      }
+      Assert.AreEqual(3, DataUtilities.GetUtf8Length("abc", true));
+      Assert.AreEqual(4, DataUtilities.GetUtf8Length("\u0300\u0300", true));
+      Assert.AreEqual(6, DataUtilities.GetUtf8Length("\u3000\u3000", true));
+      Assert.AreEqual(6, DataUtilities.GetUtf8Length("\ud800\ud800", true));
+      Assert.AreEqual(-1, DataUtilities.GetUtf8Length("\ud800\ud800", false));
     }
     [TestMethod]
     public void TestGetUtf8String() {

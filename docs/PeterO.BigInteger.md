@@ -161,7 +161,7 @@ A 64-bit signed integer.
 
     public int intValue();
 
-Converts this object's value to a 32-bit signed integer. This method is obsoleted by the  `intValueChecked` and  `intValueUnchecked` methods, which should be used instead.
+Converts this object's value to a 32-bit signed integer. To make the conversion intention clearer, use the  `intValueChecked` and  `intValueUnchecked` methods instead.
 
 <b>Returns:</b>
 
@@ -186,7 +186,7 @@ True if this object's value is MinValue or greater, and MaxValue or less; otherw
 
     public long longValue();
 
-Converts this object's value to a 64-bit signed integer. This method is obsoleted by the longValueChecked and longValueUnchecked methods, which should be used instead.
+Converts this object's value to a 64-bit signed integer. To make the conversion intention clearer, use the  `longValueChecked` and  `longValueUnchecked` methods instead.
 
 <b>Returns:</b>
 
@@ -345,8 +345,15 @@ A BigInteger object with the same value as given in the string portion.
 The parameter <i>str</i>
  is null.
 
+ * System.ArgumentException: 
+The parameter  <i>index</i>
+ is less than 0,  <i>endIndex</i>
+ is less than 0, or either is greater than the string's length, or  <i>endIndex</i>
+ is less than  <i>index</i>
+ .
+
  * System.FormatException: 
-The string portion is in an invalid format.
+The string portion is empty or in an invalid format.
 
 ### getLowestSetBit
 
@@ -363,9 +370,9 @@ A 32-bit signed integer.
     public PeterO.BigInteger gcd(
         PeterO.BigInteger bigintSecond);
 
-Returns the greatest common divisor of two integers.
+Returns the greatest common divisor of two integers. The greatest common divisor (GCD) is also known as the greatest common factor (GCF).
 
-The greatest common divisor (GCD) is also known as the greatest common factor (GCF).<b>Parameters:</b>
+<b>Parameters:</b>
 
  * <i>bigintSecond</i>: A BigInteger object. (2).
 

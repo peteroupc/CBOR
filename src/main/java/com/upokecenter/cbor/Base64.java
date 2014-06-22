@@ -7,6 +7,8 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
+import java.io.*;
+
   final class Base64 {
 private Base64() {
 }
@@ -33,6 +35,14 @@ private Base64() {
 
     public static void ToBase64URL(StringBuilder str, byte[] data, int offset, int count, boolean padding) {
       ToBase64(str, data, offset, count, Base64URL, padding);
+    }
+
+    public static void WriteBase64(OutputStream outputStream, byte[] data, int offset, int count, boolean padding) throws IOException {
+      WriteBase64(outputStream, data, offset, count, Base64Classic, padding);
+    }
+
+    public static void WriteBase64URL(OutputStream outputStream, byte[] data, int offset, int count, boolean padding) throws IOException {
+      WriteBase64(outputStream, data, offset, count, Base64URL, padding);
     }
 
     public static String ToBase64String(byte[] data, boolean padding) {
@@ -62,6 +72,9 @@ private Base64() {
     }
 
     private static void ToBase64(StringBuilder str, byte[] data, int offset, int count, String alphabet, boolean padding) {
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
       if (data == null) {
         throw new NullPointerException("data");
       }
@@ -102,6 +115,61 @@ private Base64() {
           str.append(alphabet.charAt((data[i] & 3) << 4));
           if (padding) {
             str.append("==");
+          }
+        }
+      }
+    }
+
+    private static void WriteBase64(OutputStream outputStream, byte[] data, int offset, int count, String alphabet, boolean padding) throws IOException {
+      if (outputStream == null) {
+        throw new NullPointerException("outputStream");
+      }
+      if (offset < 0) {
+        throw new IllegalArgumentException("offset (" + Integer.toString((int)offset) + ") is less than " + "0");
+      }
+      if (offset > data.length) {
+        throw new IllegalArgumentException("offset (" + Integer.toString((int)offset) + ") is more than " + Integer.toString((int)data.length));
+      }
+      if (count < 0) {
+        throw new IllegalArgumentException("count (" + Integer.toString((int)count) + ") is less than " + "0");
+      }
+      if (count > data.length) {
+        throw new IllegalArgumentException("count (" + Integer.toString((int)count) + ") is more than " + Integer.toString((int)data.length));
+      }
+      if (data.length - offset < count) {
+        throw new IllegalArgumentException("data's length minus " + offset + " (" + Integer.toString((int)(data.length - offset)) + ") is less than " + Integer.toString((int)count));
+      }
+      int length = offset + count;
+      int i = offset;
+      byte[] buffer = new byte[4];
+      for (i = offset; i < (length - 2); i += 3) {
+        buffer[0] = (byte)alphabet.charAt((data[i] >> 2) & 63);
+        buffer[1] = (byte)alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 15));
+        buffer[2] = (byte)alphabet.charAt(((data[i + 1] & 15) << 2) + ((data[i + 2] >> 6) & 3));
+        buffer[3] = (byte)alphabet.charAt(data[i + 2] & 63);
+        outputStream.write(buffer,0,4);
+      }
+      int lenmod3 = count % 3;
+      if (lenmod3 != 0) {
+        i = length - lenmod3;
+        buffer[0] = (byte)alphabet.charAt((data[i] >> 2) & 63);
+        if (lenmod3 == 2) {
+          buffer[1] = (byte)alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 15));
+          buffer[2] = (byte)alphabet.charAt((data[i + 1] & 15) << 2);
+          if (padding) {
+            buffer[3] = (byte)'=';
+            outputStream.write(buffer,0,4);
+          } else {
+            outputStream.write(buffer,0,3);
+          }
+        } else {
+          buffer[1] = (byte)alphabet.charAt((data[i] & 3) << 4);
+          if (padding) {
+            buffer[2] = (byte)'=';
+            buffer[3] = (byte)'=';
+            outputStream.write(buffer,0,4);
+          } else {
+            outputStream.write(buffer,0,2);
           }
         }
       }

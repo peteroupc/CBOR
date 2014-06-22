@@ -1,6 +1,6 @@
 using System;
-using PeterO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using PeterO;
 
 namespace Test {
   [TestClass]

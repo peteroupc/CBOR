@@ -53,7 +53,7 @@ import com.upokecenter.util.*;
         throw new ArithmeticException("This Object's value is out of range");
       }
       fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
-      if (fltItem >= Long.MIN_VALUE && fltItem <= Long.MAX_VALUE) {
+      if (fltItem >= -9223372036854775808f && fltItem < 9223372036854775808f) {
         return (long)fltItem;
       }
       throw new ArithmeticException("This Object's value is out of range");
@@ -81,7 +81,7 @@ import com.upokecenter.util.*;
         return false;
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
-      return fltItem2 >= Long.MIN_VALUE && fltItem2 <= Long.MAX_VALUE;
+      return fltItem2 >= -9223372036854775808f && fltItem2 < 9223372036854775808f;
     }
 
     public boolean CanTruncatedIntFitInInt32(Object obj) {
@@ -90,7 +90,9 @@ import com.upokecenter.util.*;
         return false;
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
-      return fltItem2 >= Integer.MIN_VALUE && fltItem2 <= Integer.MAX_VALUE;
+      // Convert float to double to avoid precision loss when
+      // converting Integer.MIN_VALUE/MaxValue to float
+      return (double)fltItem2 >= Integer.MIN_VALUE && (double)fltItem2 <= Integer.MAX_VALUE;
     }
 
     public int AsInt32(Object obj, int minValue, int maxValue) {
@@ -99,7 +101,9 @@ import com.upokecenter.util.*;
         throw new ArithmeticException("This Object's value is out of range");
       }
       fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
-      if (fltItem >= Integer.MIN_VALUE && fltItem <= Integer.MAX_VALUE) {
+      // Convert float to double to avoid precision loss when
+      // converting Integer.MIN_VALUE/MaxValue to float
+      if ((double)fltItem >= Integer.MIN_VALUE && (double)fltItem <= Integer.MAX_VALUE) {
         int ret = (int)fltItem;
         return ret;
       }

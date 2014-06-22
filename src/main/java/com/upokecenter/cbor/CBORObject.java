@@ -16,14 +16,15 @@ import com.upokecenter.util.*;
     /**
      * Represents an object in Concise Binary Object Representation (CBOR)
      * and contains methods for reading and writing CBOR data. CBOR is defined
-     * in RFC 7049. <p>There are many ways to get a CBOR object, including
-     * from bytes, objects, streams and JSON, as described below.</p> <p><b>To
-     * and from byte arrays:</b> The CBORObject.DecodeToBytes method
-     * converts a byte array in CBOR format to a CBOR object. The EncodeToBytes
-     * method converts a CBOR object to its corresponding byte array in CBOR
-     * format.</p> <p><b>To and from data streams:</b> The CBORObject.Write
-     * methods write many kinds of objects to a data stream, including numbers,
-     * CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read
+     * in RFC 7049. <p><b>Converting CBOR objects</b> </p> <p>There are
+     * many ways to get a CBOR object, including from bytes, objects, streams
+     * and JSON, as described below.</p> <p><b>To and from byte arrays:</b>
+     * The CBORObject.DecodeToBytes method converts a byte array in CBOR
+     * format to a CBOR object. The EncodeToBytes method converts a CBOR
+     * object to its corresponding byte array in CBOR format.</p> <p><b>To
+     * and from data streams:</b> The CBORObject.Write methods write many
+     * kinds of objects to a data stream, including numbers, CBOR objects,
+     * strings, and arrays of numbers and strings. The CBORObject.Read
      * method reads a CBOR object from a data stream.</p> <p><b>To and from
      * other objects:</b> The CBORObject.FromObject method converts
      * many kinds of objects to a CBOR object, including numbers, strings,
@@ -36,28 +37,44 @@ import com.upokecenter.util.*;
      * method writes many kinds of objects as JSON to a data stream, including
      * numbers, CBOR objects, strings, and arrays of numbers and strings.
      * The CBORObject.Read method reads a CBOR object from a JSON data stream.</p>
-     * <p>Instances of CBORObject should not be compared for equality using
-     * the "==" operator; it's possible to create two CBOR objects with the
-     * same value but not the same reference.</p> <p><b>Thread Safety:</b>
-     * </p> <p>CBOR objects that are numbers, "simple values", and text
-     * strings are immutable (their values can't be changed), so they are
-     * inherently safe for use by multiple threads. There could be multiple
-     * instances of these kinds of objects with the same value, so they should
-     * not be compared using the "==" operator (which only checks if each
-     * side of the operator is the same instance).</p> <p>CBOR objects that
-     * are arrays, maps, and byte strings are mutable, but this class doesn't
-     * attempt to synchronize reads and writes to those objects by multiple
-     * threads, so those objects are not thread safe without such synchronization.</p>
-     * <p>One kind of CBOR object is called a map, or a list of key-value pairs.
-     * Keys can be any kind of CBOR object, including numbers, strings, arrays,
-     * and maps. However, since byte strings, arrays, and maps are mutable,
-     * it is not advisable to use these three kinds of object as keys; they
-     * are much better used as map values instead, keeping in mind that they
-     * are not thread safe without synchronizing reads and writes to them.</p>
-     * <p>To find the type of a CBOR object, call its Type property (or "getType()"
-     * in Java). The return value can be Number, Boolean, SimpleValue, or
-     * TextString for immutable CBOR objects, and Array, Map, or ByteString
-     * for mutable CBOR objects.</p>
+     * <p><b>Comparison Considerations:</b> </p> <p>Instances of CBORObject
+     * should not be compared for equality using the "==" operator; it's
+     * possible to create two CBOR objects with the same value but not the
+     * same reference. (The "==" operator only checks if each side of the
+     * operator is the same instance.)</p> <p>This class's natural ordering
+     * (under the compareTo method) is not consistent with the Equals method.
+     * This means that two values that compare as equal under the compareTo
+     * method might not be equal under the Equals method. This is important
+     * to consider especially if an application wants to compare numbers,
+     * since the CBOR number type supports numbers of different formats,
+     * such as big integers, rational numbers, and decimal fractions.</p>
+     * <p>Another consideration is that two values that are otherwise equal
+     * may have different tags. To strip the tags from a CBOR object before
+     * comparing, use the <code>Untag</code> method.</p> <p>To compare two numbers,
+     * the CompareToIgnoreTags or compareTo method should be used. Which
+     * method to use depends on whether two equal values should still be considered
+     * equal if they have different tags.</p> <p>Although this class is
+     * inconsistent with the Equals method, it is safe to use CBORObject
+     * instances as hash keys as long as all of the keys are untagged text strings
+     * (which means GetTags returns an empty array and the Type property,
+     * or "getType()" in Java, returns TextString). This is because the
+     * natural ordering of these instances is consistent with the Equals
+     * method.</p> <p><b>Thread Safety:</b> </p> <p>CBOR objects that
+     * are numbers, "simple values", and text strings are immutable (their
+     * values can't be changed), so they are inherently safe for use by multiple
+     * threads.</p> <p>CBOR objects that are arrays, maps, and byte strings
+     * are mutable, but this class doesn't attempt to synchronize reads
+     * and writes to those objects by multiple threads, so those objects
+     * are not thread safe without such synchronization.</p> <p>One kind
+     * of CBOR object is called a map, or a list of key-value pairs. Keys can
+     * be any kind of CBOR object, including numbers, strings, arrays, and
+     * maps. However, text strings are the most suitable to use as keys; other
+     * kinds of CBOR object are much better used as map values instead, keeping
+     * in mind that some of them are not thread safe without synchronizing
+     * reads and writes to them.</p> <p>To find the type of a CBOR object,
+     * call its Type property (or "getType()" in Java). The return value
+     * can be Number, Boolean, SimpleValue, or TextString for immutable
+     * CBOR objects, and Array, Map, or ByteString for mutable CBOR objects.</p>
      */
   public final class CBORObject implements Comparable<CBORObject> {
     int getItemType(){
@@ -459,6 +476,19 @@ public void setConverter(Object value) {
     public boolean IsNaN() {
       ICBORNumber cn = NumberInterfaces[this.getItemType()];
       return cn != null && cn.IsNaN(this.getThisItem());
+    }
+
+    /**
+     * Compares this object and another CBOR object, ignoring the tags they
+     * have, if any. See the compareTo method for more information on the
+     * comparison function.
+     * @param other A value to compare with.
+     * @return Less than 0, if this value is less than the other object; or
+     * 0, if both values are equal; or greater than 0, if this value is less
+     * than the other object or if the other object is null.
+     */
+    public int CompareToIgnoreTags(CBORObject other) {
+      return (other == null) ? 1 : ((this == other) ? 0 : this.Untag().compareTo(other.Untag()));
     }
 
     /**
@@ -1390,7 +1420,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
      */
     public BigInteger getOutermostTag() {
         if (!this.isTagged()) {
-          return BigInteger.ZERO;
+          return BigInteger.ZERO.subtract(BigInteger.ONE);
         }
         if (this.tagHigh == 0 &&
             this.tagLow >= 0 &&
@@ -3459,8 +3489,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           buffer[0] = (byte)'\\';
           buffer[1] = (byte)c;
           outputStream.write(buffer,0,2);
-        } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
-          // Control characters, and also the line and paragraph separators
+// } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {  // TODO: For 2.0
+        } else if (c < 0x20) {
+          // Control characters, and for 2.0, also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to JSON) strings
           buffer = (buffer == null) ? ((new byte[6])) : buffer;
           if (startIndex != i) {
@@ -3529,8 +3560,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           }
           sb.append('\\');
           sb.append(c);
-        } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
-          // Control characters, and also the line and paragraph separators
+// } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {  // TODO: For 2.0
+        } else if (c < 0x20) {
+          // Control characters, and for 2.0, also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to JSON) strings
           if (first) {
             first = false;
@@ -3724,13 +3756,12 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             } else {
               outputStream.write((byte)'\"');
               StringBuilder sb = new StringBuilder();
-              // TODO: Support base64 streaming
               if (this.HasTag(22)) {
-                Base64.ToBase64(sb, (byte[])this.getThisItem(), false);
+                Base64.WriteBase64(outputStream, byteArray, 0, byteArray.length, false);
               } else if (this.HasTag(23)) {
-                CBORUtilities.ToBase16(sb, (byte[])this.getThisItem());
+                CBORUtilities.WriteBase16(outputStream, byteArray);
               } else {
-                Base64.ToBase64URL(sb, (byte[])this.getThisItem(), false);
+                Base64.WriteBase64URL(outputStream, byteArray, 0, byteArray.length, false);
               }
               DataUtilities.WriteUtf8(sb.toString(), outputStream, true);
               outputStream.write((byte)'\"');
