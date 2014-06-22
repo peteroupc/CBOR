@@ -1229,10 +1229,12 @@ public boolean equals(CBORObject other) {
      * Generates a CBOR object from an array of CBOR-encoded bytes.
      * @param data A byte array.
      * @return A CBOR object corresponding to the data.
-     * @throws java.lang.IllegalArgumentException Data is null or empty.
+     * @throws java.lang.IllegalArgumentException Data is empty. Note: In version
+     * 2.0, this method may change to throw CBORException instead if the
+     * data is empty.
      * @throws CBORException There was an error in reading or parsing the
      * data. This includes cases where not all of the byte array represents
-     * a CBOR object, and cases where {@code data} is empty.
+     * a CBOR object.
      * @throws java.lang.NullPointerException The parameter {@code data}
      * is null.
      */
@@ -1241,7 +1243,7 @@ public boolean equals(CBORObject other) {
         throw new NullPointerException("data");
       }
       if (data.length == 0) {
-        throw new CBORException("data is empty.");
+        throw new IllegalArgumentException("data is empty.");
       }
       int firstbyte = (int)(data[0] & (int)0xff);
       int expectedLength = valueExpectedLengths[firstbyte];
@@ -1491,7 +1493,6 @@ private List<CBORObject> AsList() {
     /**
      * Sets the value of a CBOR object by integer index in this array.
      * @param index Zero-based index of the element.
-     * @return A CBORObject object.
      * @throws java.lang.IllegalStateException This object is not an
      * array.
      * @throws java.lang.NullPointerException The parameter "value" is
@@ -1567,7 +1568,6 @@ private List<CBORObject> AsList() {
      * Sets the value of a CBOR object in this map, using a CBOR object as the
      * key.
      * @param key A CBORObject object. (2).
-     * @return A CBORObject object.
      * @throws java.lang.NullPointerException The key is null (as opposed
      * to CBORObject.Null); or the set method is called and the value is null.
      * @throws java.lang.IllegalStateException This object is not a map.
@@ -1605,7 +1605,6 @@ private List<CBORObject> AsList() {
     /**
      * Sets the value of a CBOR object in this map, using a string as the key.
      * @param key A key that points to the desired value.
-     * @return A CBORObject object.
      * @throws java.lang.NullPointerException The key is null.
      * @throws java.lang.IllegalStateException This object is not a map.
      */

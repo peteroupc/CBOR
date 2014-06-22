@@ -56,7 +56,7 @@ def utf8edit(file,createIfNotFound=false)
 end
 
 ##################
-
+Dir.chdir(File.dirname(__FILE__))
 Dir.glob("*.cs"){|f|
   utf8edit(f){|data|
     data=data.gsub(/\[TestMethod\]/,"[Test]")

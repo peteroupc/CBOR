@@ -7,7 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using PeterO.DocGen;
 
 namespace CBORDocs {
   internal class Program {

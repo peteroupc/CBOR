@@ -168,7 +168,7 @@ import com.upokecenter.cbor.*;
         CBORObject numberinfo = numbers.get(i);
         CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
         if (numberinfo.get("byte").AsBoolean()) {
-          Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(), ((int)cbornumber.AsByte()) &0xff);
+          Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(), ((int)cbornumber.AsByte()) & 0xff);
         } else {
           try {
             cbornumber.AsByte();
@@ -775,9 +775,61 @@ import com.upokecenter.cbor.*;
       Assert.assertEquals(0, CBORObject.NewArray().size());
       Assert.assertEquals(0, CBORObject.NewMap().size());
     }
+
+    // TODO: For 2.0
+    public static void TestDecodeFromBytesVersion2Dot0() {
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {   });
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+    }
+
     @Test
     public void TestDecodeFromBytes() {
-      // not implemented yet
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {  0x1c  });
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {  0x1e  });
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfe  });
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xff  });
+        Assert.fail("Should have failed");
+      } catch (CBORException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
     @Test
     public void TestDivide() {
@@ -1193,7 +1245,9 @@ import com.upokecenter.cbor.*;
     }
     @Test
     public void TestFromObject() {
-      CBORObject[] cborarray = { CBORObject.False, CBORObject.True};
+      CBORObject[] cborarray = new CBORObject[2];
+      cborarray[0] = CBORObject.False;
+      cborarray[1] = CBORObject.True;
       CBORObject cbor = CBORObject.FromObject(cborarray);
       Assert.assertEquals(2, cbor.size());
       Assert.assertEquals(CBORObject.False, cbor.get(0));
@@ -1555,7 +1609,6 @@ import com.upokecenter.cbor.*;
     }
     @Test
     public void TestSign() {
-      // TODO: Use number database
       try {
         int sign = CBORObject.True.signum();
         Assert.fail("Should have failed");
@@ -1587,6 +1640,27 @@ import com.upokecenter.cbor.*;
       } catch (Exception ex) {
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
+      }
+      CBORObject numbers = GetNumberData();
+      for (int i = 0; i < numbers.size(); ++i) {
+        CBORObject numberinfo = numbers.get(i);
+        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        if (cbornumber.IsNaN()) {
+          try {
+            Assert.fail("" + cbornumber.signum());
+            Assert.fail("Should have failed");
+          } catch (IllegalStateException ex) {
+          } catch (Exception ex) {
+            Assert.fail(ex.toString());
+            throw new IllegalStateException("", ex);
+          }
+        } else if (numberinfo.get("number").AsString().indexOf('-') == 0) {
+          Assert.assertEquals(-1, cbornumber.signum());
+        } else if (numberinfo.get("number").AsString().equals("0")) {
+          Assert.assertEquals(0, cbornumber.signum());
+        } else {
+          Assert.assertEquals(1, cbornumber.signum());
+        }
       }
     }
     @Test
