@@ -575,24 +575,6 @@ bigintRem=divrem[1]; }
       }
     }
 
-    @Test
-    public void TestBitLength() {
-      Assert.assertEquals(0, BigInteger.valueOf(0).bitLength());
-      Assert.assertEquals(1, BigInteger.valueOf(1).bitLength());
-      Assert.assertEquals(2, BigInteger.valueOf(2).bitLength());
-      Assert.assertEquals(2, BigInteger.valueOf(2).bitLength());
-      Assert.assertEquals(31, BigInteger.valueOf(Integer.MAX_VALUE).bitLength());
-      Assert.assertEquals(31, BigInteger.valueOf(Integer.MIN_VALUE).bitLength());
-      Assert.assertEquals(16, BigInteger.valueOf(65535).bitLength());
-      Assert.assertEquals(16, BigInteger.valueOf(-65535).bitLength());
-      Assert.assertEquals(17, BigInteger.valueOf(65536).bitLength());
-      Assert.assertEquals(16, BigInteger.valueOf(-65536).bitLength());
-      Assert.assertEquals(65, BigInteger.fromString("19084941898444092059").bitLength());
-      Assert.assertEquals(65, BigInteger.fromString("-19084941898444092059").bitLength());
-      Assert.assertEquals(0, BigInteger.valueOf(-1).bitLength());
-      Assert.assertEquals(1, BigInteger.valueOf(-2).bitLength());
-    }
-
     public static int ModPow(int x, int pow, int mod) {
       if (x < 0) {
         throw new IllegalArgumentException("x (" + Integer.toString((int)x) + ") is less than " + "0");

@@ -191,7 +191,7 @@ namespace Test {
     }
     [TestMethod]
     public void TestWithSimplified() {
-      PrecisionContext pc = new PrecisionContext(0, Rounding.HalfUp, 0, 5, true);
+      var pc = new PrecisionContext(0, Rounding.HalfUp, 0, 5, true);
       Assert.IsFalse(pc.IsSimplified);
       pc = pc.WithSimplified(true);
       Assert.IsTrue(pc.IsSimplified);
@@ -204,7 +204,7 @@ namespace Test {
     }
     [TestMethod]
     public void TestWithUnlimitedExponents() {
-      PrecisionContext pc = new PrecisionContext(0, Rounding.HalfUp, 0, 5, true);
+      var pc = new PrecisionContext(0, Rounding.HalfUp, 0, 5, true);
       Assert.IsTrue(pc.HasExponentRange);
       pc = pc.WithUnlimitedExponents();
       Assert.IsFalse(pc.HasExponentRange);

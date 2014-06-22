@@ -8,7 +8,7 @@ using System.Text;
 using PeterO.Cbor;
 
 namespace Test {
-  internal class AppResources {
+  internal sealed class AppResources {
     private readonly ResourceManager mgr;
 
     public AppResources(string name) {

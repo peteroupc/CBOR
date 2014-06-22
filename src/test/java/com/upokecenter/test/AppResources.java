@@ -3,19 +3,19 @@ package com.upokecenter.test;
 import java.util.*;
 import com.upokecenter.cbor.CBORObject;
 
-  class AppResources {
+  final class AppResources {
 
     ResourceBundle mgr;
 
-    public AppResources(string name) {
-      mgr = new ResourceBundle(name);
+    public AppResources(String name) {
+      mgr = ResourceBundle.getBundle(name);
     }
 
-    public CBORObject GetJSON(string name) {
-      return CBORObject.FromJSONString(mgr.getString(name));
+    public CBORObject GetJSON(String name) {
+      return CBORObject.FromJSONString(GetString(name));
     }
 
-    public string GetString(string name) {
+    public String GetString(String name) {
       return mgr.getString(name);
     }
   }

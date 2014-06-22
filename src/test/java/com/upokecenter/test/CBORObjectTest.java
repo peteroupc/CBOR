@@ -1145,15 +1145,20 @@ import com.upokecenter.cbor.*;
     }
     @Test
     public void TestIsFinite() {
+      CBORObject cbor;
       if(!(CBORObject.FromObject(0).isFinite()))Assert.fail();
-      if(CBORObject.True.IsFinite)Assert.fail();
       if(CBORObject.FromObject("").isFinite())Assert.fail();
       if(CBORObject.NewArray().isFinite())Assert.fail();
       if(CBORObject.NewMap().isFinite())Assert.fail();
-      if(CBORObject.False.IsFinite)Assert.fail();
-      if(CBORObject.Null.IsFinite)Assert.fail();
-      if(CBORObject.Undefined.IsFinite)Assert.fail();
-      CBORObject numbers = GetNumberData();
+     cbor = CBORObject.True;
+      if(cbor.isFinite())Assert.fail();
+      cbor = CBORObject.False;
+      if(cbor.isFinite())Assert.fail();
+      cbor = CBORObject.Null;
+      if(cbor.isFinite())Assert.fail();
+      cbor = CBORObject.Undefined;
+      if(cbor.isFinite())Assert.fail();
+        CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
         CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
@@ -1175,14 +1180,19 @@ import com.upokecenter.cbor.*;
 
     @Test
     public void TestIsIntegral() {
+      CBORObject cbor;
       if(!(CBORObject.FromObject(0).isIntegral()))Assert.fail();
-      if(CBORObject.True.IsIntegral)Assert.fail();
       if(CBORObject.FromObject("").isIntegral())Assert.fail();
       if(CBORObject.NewArray().isIntegral())Assert.fail();
       if(CBORObject.NewMap().isIntegral())Assert.fail();
-      if(CBORObject.False.IsIntegral)Assert.fail();
-      if(CBORObject.Null.IsIntegral)Assert.fail();
-      if(CBORObject.Undefined.IsIntegral)Assert.fail();
+      cbor = CBORObject.True;
+      if(cbor.isIntegral())Assert.fail();
+      cbor = CBORObject.False;
+      if(cbor.isIntegral())Assert.fail();
+      cbor = CBORObject.Null;
+      if(cbor.isIntegral())Assert.fail();
+      cbor = CBORObject.Undefined;
+      if(cbor.isIntegral())Assert.fail();
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);

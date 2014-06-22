@@ -23,7 +23,28 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestBitLength() {
-      // not implemented yet
+      Assert.assertEquals(31, BigInteger.valueOf(-2147483647L).bitLength());
+      Assert.assertEquals(31, BigInteger.valueOf(-2147483648L).bitLength());
+      Assert.assertEquals(32, BigInteger.valueOf(-2147483649L).bitLength());
+      Assert.assertEquals(32, BigInteger.valueOf(-2147483650L).bitLength());
+      Assert.assertEquals(31, BigInteger.valueOf(2147483647L).bitLength());
+      Assert.assertEquals(32, BigInteger.valueOf(2147483648L).bitLength());
+      Assert.assertEquals(32, BigInteger.valueOf(2147483649L).bitLength());
+      Assert.assertEquals(32, BigInteger.valueOf(2147483650L).bitLength());
+      Assert.assertEquals(0, BigInteger.valueOf(0).bitLength());
+      Assert.assertEquals(1, BigInteger.valueOf(1).bitLength());
+      Assert.assertEquals(2, BigInteger.valueOf(2).bitLength());
+      Assert.assertEquals(2, BigInteger.valueOf(2).bitLength());
+      Assert.assertEquals(31, BigInteger.valueOf(Integer.MAX_VALUE).bitLength());
+      Assert.assertEquals(31, BigInteger.valueOf(Integer.MIN_VALUE).bitLength());
+      Assert.assertEquals(16, BigInteger.valueOf(65535).bitLength());
+      Assert.assertEquals(16, BigInteger.valueOf(-65535).bitLength());
+      Assert.assertEquals(17, BigInteger.valueOf(65536).bitLength());
+      Assert.assertEquals(16, BigInteger.valueOf(-65536).bitLength());
+      Assert.assertEquals(65, BigInteger.fromString("19084941898444092059").bitLength());
+      Assert.assertEquals(65, BigInteger.fromString("-19084941898444092059").bitLength());
+      Assert.assertEquals(0, BigInteger.valueOf(-1).bitLength());
+      Assert.assertEquals(1, BigInteger.valueOf(-2).bitLength());
     }
     @Test
     public void TestCanFitInInt() {
