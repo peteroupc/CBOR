@@ -111,7 +111,7 @@ import org.junit.Test;
     }
     @Test
     public void TestToString() {
-      Assert.IsNotNull(PrecisionContext.Unlimited.toString());
+      if((PrecisionContext.Unlimited.toString())==null)Assert.fail();
     }
     @Test
     public void TestTraps() {

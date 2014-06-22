@@ -36,9 +36,7 @@ namespace PeterO {
     private FastInteger knownBitLength;
 
     public FastInteger GetDigitLength() {
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.CalcKnownDigitLength();
-      }
+      this.knownBitLength = this.knownBitLength ?? this.CalcKnownDigitLength();
       return FastInteger.Copy(this.knownBitLength);
     }
 
@@ -49,9 +47,7 @@ namespace PeterO {
 
     public FastInteger DiscardedDigitCount {
       get {
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         return this.discardedBitCount;
       }
     }
@@ -135,9 +131,7 @@ namespace PeterO {
         return;
       }
       if (this.shiftedBigInt.IsZero) {
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         this.discardedBitCount.AddInt(digits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = 0;
@@ -154,9 +148,7 @@ namespace PeterO {
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
         this.shiftedBigInt = bigquo;
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         this.discardedBitCount.AddInt(digits);
         if (this.knownBitLength != null) {
           if (bigquo.IsZero) {
@@ -180,9 +172,7 @@ namespace PeterO {
         }
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.shiftedBigInt = bigquo;
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         this.discardedBitCount.AddInt(startCount);
         digits -= startCount;
         if (this.shiftedBigInt.IsZero) {
@@ -201,30 +191,20 @@ namespace PeterO {
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
         this.shiftedBigInt = bigquo;
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         this.discardedBitCount.Increment();
-        if (this.knownBitLength == null) {
-          this.knownBitLength = this.GetDigitLength();
-        } else {
-          this.knownBitLength.Decrement();
-        }
+        this.knownBitLength = (this.knownBitLength != null) ? this.knownBitLength.Decrement() : this.GetDigitLength();
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
         return;
       }
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.GetDigitLength();
-      }
+      this.knownBitLength = this.knownBitLength ?? this.GetDigitLength();
       if (new FastInteger(digits).Decrement().CompareTo(this.knownBitLength) >= 0) {
         // Shifting more bits than available
         this.bitsAfterLeftmost |= this.shiftedBigInt.IsZero ? 0 : 1;
         this.isSmall = true;
         this.shiftedSmall = 0;
         this.knownBitLength = new FastInteger(1);
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         this.discardedBitCount.AddInt(digits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = 0;
@@ -243,9 +223,7 @@ namespace PeterO {
       if (digits > digitLength) {
         bitDiff = digits - digitLength;
       }
-      if (this.discardedBitCount == null) {
-        this.discardedBitCount = new FastInteger(0);
-      }
+      this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
       this.discardedBitCount.AddInt(digits);
       this.bitsAfterLeftmost |= this.bitLeftmost;
       int digitShift = Math.Min(digitLength, digits);
@@ -291,9 +269,7 @@ namespace PeterO {
         }
       }
       String str;
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.GetDigitLength();
-      }
+      this.knownBitLength = this.knownBitLength ?? this.GetDigitLength();
       if (this.knownBitLength.CompareToInt(digits) <= 0) {
         return;
       }
@@ -304,9 +280,7 @@ namespace PeterO {
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
         this.shiftedBigInt = bigquo;
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         this.discardedBitCount.Add(digitDiff);
         this.knownBitLength.Subtract(digitDiff);
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
@@ -331,9 +305,7 @@ namespace PeterO {
           }
         }
         this.shiftedBigInt = bigquo;
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         this.discardedBitCount.Add(digitDiff);
         this.knownBitLength.Subtract(digitDiff);
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
@@ -355,9 +327,7 @@ namespace PeterO {
           this.bitLeftmost = (int)bigrem;
           this.shiftedBigInt = bigquo2;
         }
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         this.discardedBitCount.Add(digitDiff);
         this.knownBitLength.Subtract(digitDiff);
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
@@ -373,9 +343,7 @@ namespace PeterO {
         this.knownBitLength.SubtractInt(digitShift);
         var newLength = (int)(digitLength - digitShift);
         // Console.WriteLine("dlen=" + digitLength + " dshift=" + digitShift + " newlen=" + (newLength));
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         if (digitShift <= Int32.MaxValue) {
           this.discardedBitCount.AddInt((int)digitShift);
         } else {
@@ -417,9 +385,7 @@ namespace PeterO {
         return;
       }
       if (this.shiftedSmall == 0) {
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         this.discardedBitCount.AddInt(digits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = 0;
@@ -438,9 +404,7 @@ namespace PeterO {
         ++kb;
       }
       this.knownBitLength = new FastInteger(kb);
-      if (this.discardedBitCount == null) {
-        this.discardedBitCount = new FastInteger(0);
-      }
+      this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
       this.discardedBitCount.AddInt(digits);
       while (digits > 0) {
         if (this.shiftedSmall == 0) {
@@ -515,11 +479,9 @@ namespace PeterO {
         var digitShift = (int)(kb - digits);
         var newLength = (int)(kb - digitShift);
         this.knownBitLength = new FastInteger(Math.Max(1, newLength));
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(digitShift);
-        } else {
-          this.discardedBitCount.AddInt(digitShift);
-        }
+        this.discardedBitCount = this.discardedBitCount != null ?
+          this.discardedBitCount.AddInt(digitShift) :
+          (new FastInteger(digitShift));
         for (var i = 0; i < digitShift; ++i) {
           var digit = (int)(this.shiftedSmall % 10);
           this.shiftedSmall /= 10;

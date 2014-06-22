@@ -43,9 +43,7 @@ namespace PeterO {
     private FastInteger knownBitLength;
 
     public FastInteger GetDigitLength() {
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.CalcKnownBitLength();
-      }
+      this.knownBitLength = this.knownBitLength ?? this.CalcKnownBitLength();
       return FastInteger.Copy(this.knownBitLength);
     }
 
@@ -161,9 +159,7 @@ namespace PeterO {
         this.knownBitLength = new FastInteger(1);
         return;
       }
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.GetDigitLength();
-      }
+      this.knownBitLength = this.knownBitLength ?? this.GetDigitLength();
       this.discardedBitCount.AddInt(bits);
       int cmp = this.knownBitLength.CompareToInt(bits);
       if (cmp < 0) {
@@ -239,9 +235,7 @@ namespace PeterO {
           return;
         }
       }
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.GetDigitLength();
-      }
+      this.knownBitLength = this.knownBitLength ?? this.GetDigitLength();
       if (this.knownBitLength.CompareToInt(bits) <= 0) {
         return;
       }
@@ -365,9 +359,7 @@ namespace PeterO {
           return;
         }
       }
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.GetDigitLength();
-      }
+      this.knownBitLength = this.knownBitLength ?? this.GetDigitLength();
       if (this.knownBitLength.CompareToInt(bits) <= 0) {
         return;
       }

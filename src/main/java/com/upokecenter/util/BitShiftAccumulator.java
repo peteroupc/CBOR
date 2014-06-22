@@ -37,9 +37,7 @@ at: http://upokecenter.com/d/
     private FastInteger knownBitLength;
 
     public FastInteger GetDigitLength() {
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.CalcKnownBitLength();
-      }
+      this.knownBitLength = (this.knownBitLength == null) ? (this.CalcKnownBitLength()) : this.knownBitLength;
       return FastInteger.Copy(this.knownBitLength);
     }
 
@@ -147,9 +145,7 @@ at: http://upokecenter.com/d/
         this.knownBitLength = new FastInteger(1);
         return;
       }
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.GetDigitLength();
-      }
+      this.knownBitLength = (this.knownBitLength == null) ? (this.GetDigitLength()) : this.knownBitLength;
       this.discardedBitCount.AddInt(bits);
       int cmp = this.knownBitLength.CompareToInt(bits);
       if (cmp < 0) {
@@ -225,9 +221,7 @@ at: http://upokecenter.com/d/
           return;
         }
       }
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.GetDigitLength();
-      }
+      this.knownBitLength = (this.knownBitLength == null) ? (this.GetDigitLength()) : this.knownBitLength;
       if (this.knownBitLength.CompareToInt(bits) <= 0) {
         return;
       }
@@ -354,9 +348,7 @@ at: http://upokecenter.com/d/
           return;
         }
       }
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.GetDigitLength();
-      }
+      this.knownBitLength = (this.knownBitLength == null) ? (this.GetDigitLength()) : this.knownBitLength;
       if (this.knownBitLength.CompareToInt(bits) <= 0) {
         return;
       }

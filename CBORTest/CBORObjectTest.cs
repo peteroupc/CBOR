@@ -1145,15 +1145,20 @@ namespace Test {
     }
     [TestMethod]
     public void TestIsFinite() {
+      CBORObject cbor;
       Assert.IsTrue(CBORObject.FromObject(0).IsFinite);
-      Assert.IsFalse(CBORObject.True.IsFinite);
       Assert.IsFalse(CBORObject.FromObject(String.Empty).IsFinite);
       Assert.IsFalse(CBORObject.NewArray().IsFinite);
       Assert.IsFalse(CBORObject.NewMap().IsFinite);
-      Assert.IsFalse(CBORObject.False.IsFinite);
-      Assert.IsFalse(CBORObject.Null.IsFinite);
-      Assert.IsFalse(CBORObject.Undefined.IsFinite);
-      CBORObject numbers = GetNumberData();
+     cbor = CBORObject.True;
+      Assert.IsFalse(cbor.IsFinite);
+      cbor = CBORObject.False;
+      Assert.IsFalse(cbor.IsFinite);
+      cbor = CBORObject.Null;
+      Assert.IsFalse(cbor.IsFinite);
+      cbor = CBORObject.Undefined;
+      Assert.IsFalse(cbor.IsFinite);
+        CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"].AsString()));
@@ -1175,14 +1180,19 @@ namespace Test {
 
     [TestMethod]
     public void TestIsIntegral() {
+      CBORObject cbor;
       Assert.IsTrue(CBORObject.FromObject(0).IsIntegral);
-      Assert.IsFalse(CBORObject.True.IsIntegral);
       Assert.IsFalse(CBORObject.FromObject(String.Empty).IsIntegral);
       Assert.IsFalse(CBORObject.NewArray().IsIntegral);
       Assert.IsFalse(CBORObject.NewMap().IsIntegral);
-      Assert.IsFalse(CBORObject.False.IsIntegral);
-      Assert.IsFalse(CBORObject.Null.IsIntegral);
-      Assert.IsFalse(CBORObject.Undefined.IsIntegral);
+      cbor = CBORObject.True;
+      Assert.IsFalse(cbor.IsIntegral);
+      cbor = CBORObject.False;
+      Assert.IsFalse(cbor.IsIntegral);
+      cbor = CBORObject.Null;
+      Assert.IsFalse(cbor.IsIntegral);
+      cbor = CBORObject.Undefined;
+      Assert.IsFalse(cbor.IsIntegral);
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];

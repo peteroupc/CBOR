@@ -34,9 +34,7 @@ at: http://upokecenter.com/d/
     private FastInteger knownBitLength;
 
     public FastInteger GetDigitLength() {
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.CalcKnownDigitLength();
-      }
+      this.knownBitLength = (this.knownBitLength == null) ? (this.CalcKnownDigitLength()) : this.knownBitLength;
       return FastInteger.Copy(this.knownBitLength);
     }
 
@@ -46,9 +44,7 @@ at: http://upokecenter.com/d/
     private FastInteger discardedBitCount;
 
     public FastInteger getDiscardedDigitCount() {
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
         return this.discardedBitCount;
       }
 
@@ -129,9 +125,7 @@ at: http://upokecenter.com/d/
         return;
       }
       if (this.shiftedBigInt.signum()==0) {
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
         this.discardedBitCount.AddInt(digits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = 0;
@@ -149,9 +143,7 @@ bigrem=divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = bigrem.intValue();
         this.shiftedBigInt = bigquo;
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
         this.discardedBitCount.AddInt(digits);
         if (this.knownBitLength != null) {
           if (bigquo.signum()==0) {
@@ -176,9 +168,7 @@ bigrem=divrem[1]; }
         }
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.shiftedBigInt = bigquo;
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
         this.discardedBitCount.AddInt(startCount);
         digits -= startCount;
         if (this.shiftedBigInt.signum()==0) {
@@ -201,30 +191,20 @@ bigrem=divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = bigrem.intValue();
         this.shiftedBigInt = bigquo;
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
         this.discardedBitCount.Increment();
-        if (this.knownBitLength == null) {
-          this.knownBitLength = this.GetDigitLength();
-        } else {
-          this.knownBitLength.Decrement();
-        }
+        this.knownBitLength = (this.knownBitLength != null) ? this.knownBitLength.Decrement() : this.GetDigitLength();
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
         return;
       }
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.GetDigitLength();
-      }
+      this.knownBitLength = (this.knownBitLength == null) ? (this.GetDigitLength()) : this.knownBitLength;
       if (new FastInteger(digits).Decrement().compareTo(this.knownBitLength) >= 0) {
         // Shifting more bits than available
         this.bitsAfterLeftmost |= this.shiftedBigInt.signum()==0 ? 0 : 1;
         this.isSmall = true;
         this.shiftedSmall = 0;
         this.knownBitLength = new FastInteger(1);
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
         this.discardedBitCount.AddInt(digits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = 0;
@@ -243,9 +223,7 @@ bigrem=divrem[1]; }
       if (digits > digitLength) {
         bitDiff = digits - digitLength;
       }
-      if (this.discardedBitCount == null) {
-        this.discardedBitCount = new FastInteger(0);
-      }
+      this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
       this.discardedBitCount.AddInt(digits);
       this.bitsAfterLeftmost |= this.bitLeftmost;
       int digitShift = Math.min(digitLength, digits);
@@ -291,9 +269,7 @@ bigrem=divrem[1]; }
         }
       }
       String str;
-      if (this.knownBitLength == null) {
-        this.knownBitLength = this.GetDigitLength();
-      }
+      this.knownBitLength = (this.knownBitLength == null) ? (this.GetDigitLength()) : this.knownBitLength;
       if (this.knownBitLength.CompareToInt(digits) <= 0) {
         return;
       }
@@ -308,9 +284,7 @@ bigrem=divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = bigrem.intValue();
         this.shiftedBigInt = bigquo;
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
         this.discardedBitCount.Add(digitDiff);
         this.knownBitLength.Subtract(digitDiff);
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
@@ -336,9 +310,7 @@ bigrem=divrem[1]; }
           }
         }
         this.shiftedBigInt = bigquo;
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
         this.discardedBitCount.Add(digitDiff);
         this.knownBitLength.Subtract(digitDiff);
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
@@ -365,9 +337,7 @@ bigrem=divrem[1]; }
           this.bitLeftmost = bigrem.intValue();
           this.shiftedBigInt = bigquo2;
         }
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
         this.discardedBitCount.Add(digitDiff);
         this.knownBitLength.Subtract(digitDiff);
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
@@ -383,9 +353,7 @@ bigrem=divrem[1]; }
         this.knownBitLength.SubtractInt(digitShift);
         int newLength = (int)(digitLength - digitShift);
         // System.out.println("dlen=" + digitLength + " dshift=" + digitShift + " newlen=" + (newLength));
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
         if (digitShift <= Integer.MAX_VALUE) {
           this.discardedBitCount.AddInt((int)digitShift);
         } else {
@@ -429,9 +397,7 @@ bigrem=divrem[1]; }
         return;
       }
       if (this.shiftedSmall == 0) {
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(0);
-        }
+        this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
         this.discardedBitCount.AddInt(digits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = 0;
@@ -450,9 +416,7 @@ bigrem=divrem[1]; }
         ++kb;
       }
       this.knownBitLength = new FastInteger(kb);
-      if (this.discardedBitCount == null) {
-        this.discardedBitCount = new FastInteger(0);
-      }
+      this.discardedBitCount = (this.discardedBitCount == null) ? ((new FastInteger(0))) : this.discardedBitCount;
       this.discardedBitCount.AddInt(digits);
       while (digits > 0) {
         if (this.shiftedSmall == 0) {
@@ -529,11 +493,9 @@ bigrem=divrem[1]; }
         int digitShift = (int)(kb - digits);
         int newLength = (int)(kb - digitShift);
         this.knownBitLength = new FastInteger(Math.max(1, newLength));
-        if (this.discardedBitCount == null) {
-          this.discardedBitCount = new FastInteger(digitShift);
-        } else {
-          this.discardedBitCount.AddInt(digitShift);
-        }
+        this.discardedBitCount = this.discardedBitCount != null ?
+          this.discardedBitCount.AddInt(digitShift) :
+          (new FastInteger(digitShift));
         for (int i = 0; i < digitShift; ++i) {
           int digit = (int)(this.shiftedSmall % 10);
           this.shiftedSmall /= 10;
