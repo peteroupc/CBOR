@@ -72,7 +72,7 @@ This object's hash code.
         int mantissaSmall,
         int exponentSmall);
 
-Creates a decimal number with the value exponent*10^mantissa.
+Creates a number with the value exponent*10^mantissa.
 
 <b>Parameters:</b>
 
@@ -83,6 +83,31 @@ Creates a decimal number with the value exponent*10^mantissa.
 <b>Returns:</b>
 
 An ExtendedDecimal object.
+
+### Create
+
+    public static PeterO.ExtendedDecimal Create(
+        PeterO.BigInteger mantissa,
+        PeterO.BigInteger exponent);
+
+Creates a number with the value exponent*10^mantissa.
+
+<b>Parameters:</b>
+
+ * <i>mantissa</i>: The un-scaled value.
+
+ * <i>exponent</i>: The decimal exponent.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter <i>mantissa</i>
+ or  <i>exponent</i>
+ is null.
 
 ### CreateNaN
 
@@ -134,31 +159,6 @@ An ExtendedDecimal object.
  * System.ArgumentNullException: 
 The parameter <i>diag</i>
  is null or is less than 0.
-
-### Create
-
-    public static PeterO.ExtendedDecimal Create(
-        PeterO.BigInteger mantissa,
-        PeterO.BigInteger exponent);
-
-Creates a decimal number with the value exponent*10^mantissa.
-
-<b>Parameters:</b>
-
- * <i>mantissa</i>: The un-scaled value.
-
- * <i>exponent</i>: The decimal exponent.
-
-<b>Returns:</b>
-
-An ExtendedDecimal object.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException: 
-The parameter <i>mantissa</i>
- or  <i>exponent</i>
- is null.
 
 ### FromString
 

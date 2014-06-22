@@ -18,11 +18,11 @@ ProfilingSessions/
 CBORTest/ProfilingSessions/
 .project
 .classpath
+release.properties
 *.shf*
 *.Settings
 *.class
 *.suo
-*.properties
 *.log
 .pmd
 /target

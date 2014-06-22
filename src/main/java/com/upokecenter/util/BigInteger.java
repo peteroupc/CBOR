@@ -1799,7 +1799,7 @@ at: http://upokecenter.com/d/
     }
 
     private final boolean negative;
-    private final int wordCount = -1;
+    private final int wordCount;
     private final short[] words;
 
     private BigInteger(int wordCount, short[] reg, boolean negative) {
@@ -2461,14 +2461,14 @@ at: http://upokecenter.com/d/
     /**
      * Finds the minimum number of bits needed to represent this object&apos;s
      * value, except for its sign. If the value is negative, finds the number
-     * of bits in (its absolute value minus 1).
+     * of bits in a value equal to this object's absolute value minus 1.
      * @return The number of bits in this object's value. Returns 0 if this
      * object's value is 0 or negative 1.
      */
     public int bitLength() {
       int wc = this.wordCount;
       if (wc != 0) {
-        if (this.negative && !(wc >= 2 && this.words[0] != 0)) {
+        if (this.negative) {
           return this.abs().subtract(BigInteger.ONE).bitLength();
         }
         int numberValue = ((int)this.words[wc - 1]) & 0xffff;
@@ -2478,10 +2478,6 @@ at: http://upokecenter.com/d/
         }
         wc += 16;
         {
-          if (this.negative) {
-            --numberValue;
-            numberValue &= 0xffff;
-          }
           if ((numberValue >> 8) == 0) {
             numberValue <<= 8;
             wc -= 8;
@@ -2617,10 +2613,10 @@ at: http://upokecenter.com/d/
         }
       }
       short[] tempReg = null;
-      int wordCount = this.wordCount;
+      int currentCount = this.wordCount;
       int i = 0;
-      while (wordCount != 0) {
-        if (wordCount == 1 || (wordCount == 2 && tempReg[1] == 0)) {
+      while (currentCount != 0) {
+        if (currentCount == 1 || (currentCount == 2 && tempReg[1] == 0)) {
           int rest = ((int)tempReg[0]) & 0xffff;
           if (rest >= 10000) {
             i += 5;
@@ -2635,7 +2631,7 @@ at: http://upokecenter.com/d/
           }
           break;
         }
-        if (wordCount == 2 && tempReg[1] > 0 && tempReg[1] <= 0x7fff) {
+        if (currentCount == 2 && tempReg[1] > 0 && tempReg[1] <= 0x7fff) {
           int rest = ((int)tempReg[0]) & 0xffff;
           rest |= (((int)tempReg[1]) & 0xffff) << 16;
           if (rest >= 1000000000) {
@@ -2661,7 +2657,7 @@ at: http://upokecenter.com/d/
           }
           break;
         } else {
-          int wci = wordCount;
+          int wci = currentCount;
           short remainderShort = 0;
           int quo, rem;
           boolean firstdigit = false;
@@ -2709,7 +2705,7 @@ at: http://upokecenter.com/d/
                 // Use the calculated word count during division;
                 // zeros that may have occurred in division
                 // are not incorporated in the tempReg
-                wordCount = wci + 1;
+                currentCount = wci + 1;
                 tempReg[wci] = ((short)quo);
               }
             } else {
@@ -2719,8 +2715,8 @@ at: http://upokecenter.com/d/
             remainderShort = ((short)rem);
           }
           // Recalculate word count
-          while (wordCount != 0 && tempReg[wordCount - 1] == 0) {
-            --wordCount;
+          while (currentCount != 0 && tempReg[currentCount - 1] == 0) {
+            --currentCount;
           }
           i += 4;
         }

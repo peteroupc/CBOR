@@ -50,6 +50,7 @@ namespace PeterO.Cbor {
       }
       int neededLength = data.Length;
       byte[] bytes;
+      BigInteger bi;
       bool extended = false;
       if (((data[0] >> 7) & 1) != 0) {
         // Increase the needed length
@@ -69,7 +70,7 @@ namespace PeterO.Cbor {
       if (extended) {
           bytes[bytes.Length - 1] = negative ? (byte)0xff : (byte)0;
       }
-      var bi = BigInteger.fromByteArray(bytes, true);
+      bi = BigInteger.fromByteArray(bytes, true);
       // NOTE: Here, any tags are discarded; when called from
       // the Read method, "o" will have no tags anyway (beyond tag 2),
       // and when called from FromObjectAndTag, we prefer

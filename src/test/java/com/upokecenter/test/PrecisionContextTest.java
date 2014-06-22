@@ -1,6 +1,8 @@
 package com.upokecenter.test;
 
 import com.upokecenter.util.*;
+import java.util.*;
+import com.upokecenter.cbor.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,14 +25,16 @@ import org.junit.Test;
     }
     @Test
     public void TestEMax() {
-      Assert.assertEquals(BigInteger.ZERO, PrecisionContext.Unlimited.EMax);
-      PrecisionContext ctx = PrecisionContext.Unlimited.WithExponentRange(-5, 5);
+      PrecisionContext ctx = PrecisionContext.Unlimited;
+      Assert.assertEquals(BigInteger.ZERO, ctx.getEMax());
+      ctx = PrecisionContext.Unlimited.WithExponentRange(-5, 5);
       Assert.assertEquals(BigInteger.valueOf(5), ctx.getEMax());
     }
     @Test
     public void TestEMin() {
-      Assert.assertEquals(BigInteger.ZERO, PrecisionContext.Unlimited.EMin);
-      PrecisionContext ctx = PrecisionContext.Unlimited.WithExponentRange(-5, 5);
+      PrecisionContext ctx = PrecisionContext.Unlimited;
+      Assert.assertEquals(BigInteger.ZERO, ctx.getEMin());
+      ctx = PrecisionContext.Unlimited.WithExponentRange(-5, 5);
       Assert.assertEquals(BigInteger.valueOf(-5), ctx.getEMin());
     }
     @Test
@@ -107,7 +111,7 @@ import org.junit.Test;
     }
     @Test
     public void TestToString() {
-      if(!(PrecisionContext.Unlimited.toString().Contains("PrecisionContext")))Assert.fail();
+      Assert.IsNotNull(PrecisionContext.Unlimited.toString());
     }
     @Test
     public void TestTraps() {
@@ -160,7 +164,8 @@ import org.junit.Test;
         throw new IllegalStateException("", ex);
       }
       try {
-        PrecisionContext.Unlimited.WithExponentRange((int)BigInteger.ONE, (int)BigInteger.ZERO);
+        BigInteger bigintBig = BigInteger.ONE.shiftLeft(64);
+        PrecisionContext.Unlimited.WithBigExponentRange(bigintBig, BigInteger.ZERO);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -186,7 +191,12 @@ import org.junit.Test;
     }
     @Test
     public void TestWithSimplified() {
-      // not implemented yet
+      PrecisionContext pc = new PrecisionContext(0, Rounding.HalfUp, 0, 5, true);
+      if(pc.isSimplified())Assert.fail();
+      pc = pc.WithSimplified(true);
+      if(!(pc.isSimplified()))Assert.fail();
+      pc = pc.WithSimplified(false);
+      if(pc.isSimplified())Assert.fail();
     }
     @Test
     public void TestWithTraps() {
@@ -194,6 +204,9 @@ import org.junit.Test;
     }
     @Test
     public void TestWithUnlimitedExponents() {
-      // not implemented yet
+      PrecisionContext pc = new PrecisionContext(0, Rounding.HalfUp, 0, 5, true);
+      if(!(pc.getHasExponentRange()))Assert.fail();
+      pc = pc.WithUnlimitedExponents();
+      if(pc.getHasExponentRange())Assert.fail();
     }
   }

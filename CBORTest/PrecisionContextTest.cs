@@ -1,5 +1,7 @@
 using System;
 using PeterO;
+using System.Collections.Generic;
+using PeterO.Cbor;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test {
@@ -23,14 +25,16 @@ namespace Test {
     }
     [TestMethod]
     public void TestEMax() {
-      Assert.AreEqual(BigInteger.Zero, PrecisionContext.Unlimited.EMax);
-      PrecisionContext ctx = PrecisionContext.Unlimited.WithExponentRange(-5, 5);
+      PrecisionContext ctx = PrecisionContext.Unlimited;
+      Assert.AreEqual(BigInteger.Zero, ctx.EMax);
+      ctx = PrecisionContext.Unlimited.WithExponentRange(-5, 5);
       Assert.AreEqual((BigInteger)5, ctx.EMax);
     }
     [TestMethod]
     public void TestEMin() {
-      Assert.AreEqual(BigInteger.Zero, PrecisionContext.Unlimited.EMin);
-      PrecisionContext ctx = PrecisionContext.Unlimited.WithExponentRange(-5, 5);
+      PrecisionContext ctx = PrecisionContext.Unlimited;
+      Assert.AreEqual(BigInteger.Zero, ctx.EMin);
+      ctx = PrecisionContext.Unlimited.WithExponentRange(-5, 5);
       Assert.AreEqual((BigInteger)(-5), ctx.EMin);
     }
     [TestMethod]
@@ -107,7 +111,7 @@ namespace Test {
     }
     [TestMethod]
     public void TestToString() {
-      Assert.IsTrue(PrecisionContext.Unlimited.ToString().Contains("PrecisionContext"));
+      Assert.IsNotNull(PrecisionContext.Unlimited.ToString());
     }
     [TestMethod]
     public void TestTraps() {
@@ -160,7 +164,8 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        PrecisionContext.Unlimited.WithExponentRange((int)BigInteger.One, (int)BigInteger.Zero);
+        BigInteger bigintBig = BigInteger.One << 64;
+        PrecisionContext.Unlimited.WithBigExponentRange(bigintBig, BigInteger.Zero);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -186,7 +191,12 @@ namespace Test {
     }
     [TestMethod]
     public void TestWithSimplified() {
-      // not implemented yet
+      PrecisionContext pc = new PrecisionContext(0, Rounding.HalfUp, 0, 5, true);
+      Assert.IsFalse(pc.IsSimplified);
+      pc = pc.WithSimplified(true);
+      Assert.IsTrue(pc.IsSimplified);
+      pc = pc.WithSimplified(false);
+      Assert.IsFalse(pc.IsSimplified);
     }
     [TestMethod]
     public void TestWithTraps() {
@@ -194,7 +204,10 @@ namespace Test {
     }
     [TestMethod]
     public void TestWithUnlimitedExponents() {
-      // not implemented yet
+      PrecisionContext pc = new PrecisionContext(0, Rounding.HalfUp, 0, 5, true);
+      Assert.IsTrue(pc.HasExponentRange);
+      pc = pc.WithUnlimitedExponents();
+      Assert.IsFalse(pc.HasExponentRange);
     }
   }
 }

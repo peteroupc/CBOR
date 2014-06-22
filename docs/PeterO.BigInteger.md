@@ -267,7 +267,7 @@ The number of bits in this object's value. Returns 0 if this object's value is 0
 
     public int bitLength();
 
-Finds the minimum number of bits needed to represent this object's value, except for its sign. If the value is negative, finds the number of bits in (its absolute value minus 1).
+Finds the minimum number of bits needed to represent this object's value, except for its sign. If the value is negative, finds the number of bits in a value equal to this object's absolute value minus 1.
 
 <b>Returns:</b>
 
@@ -1072,7 +1072,7 @@ The parameter <i>bigValue</i>
     public BigInteger(
         byte[] bytes);
 
-<b>Deprecated.</b> Use BigInteger.fromByteArray(bytes,true) instead.  This method may be removed in version 2.0.
+<b>Deprecated.</b> Use BigInteger.fromByteArray(bytes,true) instead. This method may be removed in version 2.0.
 
 Initializes a new instance of the BigInteger class.
 

@@ -795,10 +795,6 @@ namespace Test {
     [TestMethod]
     public void TestTags264And265() {
       CBORObject cbor;
-      cbor = CBORDataUtilities.ParseJSONNumber("1e+99999999999999999999999999", false, false);
-      Assert.IsTrue(cbor != null);
-      Assert.IsFalse(cbor.CanFitInDouble());
-      TestCommon.AssertRoundTrip(cbor);
       // Tag 264
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xd9, 0x01, 0x08, 0x82, 0xc2, 0x42, 2, 2, 0xc2, 0x42, 2, 2 });
       TestCommon.AssertRoundTrip(cbor);
@@ -1417,15 +1413,6 @@ namespace Test {
       o = CBORObject.FromJSONString("[1.5,2.6,3.7,4.0,222.22]");
       double actual = o[0].AsDouble();
       Assert.AreEqual((double)1.5, actual);
-      Assert.AreEqual("true", CBORObject.True.ToJSONString());
-      Assert.AreEqual("false", CBORObject.False.ToJSONString());
-      Assert.AreEqual("null", CBORObject.Null.ToJSONString());
-      Assert.AreEqual("null", CBORObject.FromObject(Single.PositiveInfinity).ToJSONString());
-      Assert.AreEqual("null", CBORObject.FromObject(Single.NegativeInfinity).ToJSONString());
-      Assert.AreEqual("null", CBORObject.FromObject(Single.NaN).ToJSONString());
-      Assert.AreEqual("null", CBORObject.FromObject(Double.PositiveInfinity).ToJSONString());
-      Assert.AreEqual("null", CBORObject.FromObject(Double.NegativeInfinity).ToJSONString());
-      Assert.AreEqual("null", CBORObject.FromObject(Double.NaN).ToJSONString());
       try {
         CBORObject.FromJSONString("[0]");
       } catch (Exception ex) {
@@ -1716,74 +1703,6 @@ namespace Test {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
       }
-    }
-
-    [TestMethod]
-    public void TestDecFracFP() {
-      Assert.AreEqual("0.75", ExtendedDecimal.FromDouble(0.75).ToString());
-      Assert.AreEqual("0.5", ExtendedDecimal.FromDouble(0.5).ToString());
-      Assert.AreEqual("0.25", ExtendedDecimal.FromDouble(0.25).ToString());
-      Assert.AreEqual("0.875", ExtendedDecimal.FromDouble(0.875).ToString());
-      Assert.AreEqual("0.125", ExtendedDecimal.FromDouble(0.125).ToString());
-      Assert.AreEqual("0.75", ExtendedDecimal.FromSingle(0.75f).ToString());
-      Assert.AreEqual("0.5", ExtendedDecimal.FromSingle(0.5f).ToString());
-      Assert.AreEqual("0.25", ExtendedDecimal.FromSingle(0.25f).ToString());
-      Assert.AreEqual("0.875", ExtendedDecimal.FromSingle(0.875f).ToString());
-      Assert.AreEqual("0.125", ExtendedDecimal.FromSingle(0.125f).ToString());
-    }
-
-    [TestMethod]
-    public void ScaleTest() {
-      Assert.AreEqual(-(BigInteger)7, ExtendedDecimal.FromString("1.265e-4").Exponent);
-      Assert.AreEqual(-(BigInteger)4, ExtendedDecimal.FromString("0.000E-1").Exponent);
-      Assert.AreEqual(-(BigInteger)16, ExtendedDecimal.FromString("0.57484848535648e-2").Exponent);
-      Assert.AreEqual(-(BigInteger)22, ExtendedDecimal.FromString("0.485448e-16").Exponent);
-      Assert.AreEqual(-(BigInteger)20, ExtendedDecimal.FromString("0.5657575351495151495649565150e+8").Exponent);
-      Assert.AreEqual(-(BigInteger)10, ExtendedDecimal.FromString("0e-10").Exponent);
-      Assert.AreEqual(-(BigInteger)17, ExtendedDecimal.FromString("0.504952e-11").Exponent);
-      Assert.AreEqual(-(BigInteger)13, ExtendedDecimal.FromString("0e-13").Exponent);
-      Assert.AreEqual(-(BigInteger)43, ExtendedDecimal.FromString("0.49495052535648555757515648e-17").Exponent);
-      Assert.AreEqual((BigInteger)7, ExtendedDecimal.FromString("0.485654575150e+19").Exponent);
-      Assert.AreEqual(BigInteger.Zero, ExtendedDecimal.FromString("0.48515648e+8").Exponent);
-      Assert.AreEqual(-(BigInteger)45, ExtendedDecimal.FromString("0.49485251485649535552535451544956e-13").Exponent);
-      Assert.AreEqual(-(BigInteger)6, ExtendedDecimal.FromString("0.565754515152575448505257e+18").Exponent);
-      Assert.AreEqual((BigInteger)16, ExtendedDecimal.FromString("0e+16").Exponent);
-      Assert.AreEqual((BigInteger)6, ExtendedDecimal.FromString("0.5650e+10").Exponent);
-      Assert.AreEqual(-(BigInteger)5, ExtendedDecimal.FromString("0.49555554575756575556e+15").Exponent);
-      Assert.AreEqual(-(BigInteger)37, ExtendedDecimal.FromString("0.57494855545057534955e-17").Exponent);
-      Assert.AreEqual(-(BigInteger)25, ExtendedDecimal.FromString("0.4956504855525748575456e-3").Exponent);
-      Assert.AreEqual(-(BigInteger)26, ExtendedDecimal.FromString("0.55575355495654484948525354545053494854e+12").Exponent);
-      Assert.AreEqual(-(BigInteger)22, ExtendedDecimal.FromString("0.484853575350494950575749545057e+8").Exponent);
-      Assert.AreEqual((BigInteger)11, ExtendedDecimal.FromString("0.52545451e+19").Exponent);
-      Assert.AreEqual(-(BigInteger)29, ExtendedDecimal.FromString("0.48485654495751485754e-9").Exponent);
-      Assert.AreEqual(-(BigInteger)38, ExtendedDecimal.FromString("0.56525456555549545257535556495655574848e+0").Exponent);
-      Assert.AreEqual(-(BigInteger)15, ExtendedDecimal.FromString("0.485456485657545752495450554857e+15").Exponent);
-      Assert.AreEqual(-(BigInteger)37, ExtendedDecimal.FromString("0.485448525554495048e-19").Exponent);
-      Assert.AreEqual(-(BigInteger)29, ExtendedDecimal.FromString("0.494952485550514953565655e-5").Exponent);
-      Assert.AreEqual(-(BigInteger)8, ExtendedDecimal.FromString("0.50495454554854505051534950e+18").Exponent);
-      Assert.AreEqual(-(BigInteger)37, ExtendedDecimal.FromString("0.5156524853575655535351554949525449e-3").Exponent);
-      Assert.AreEqual((BigInteger)3, ExtendedDecimal.FromString("0e+3").Exponent);
-      Assert.AreEqual(-(BigInteger)8, ExtendedDecimal.FromString("0.51505056554957575255555250e+18").Exponent);
-      Assert.AreEqual(-(BigInteger)14, ExtendedDecimal.FromString("0.5456e-10").Exponent);
-      Assert.AreEqual(-(BigInteger)36, ExtendedDecimal.FromString("0.494850515656505252555154e-12").Exponent);
-      Assert.AreEqual(-(BigInteger)42, ExtendedDecimal.FromString("0.535155525253485757525253555749575749e-6").Exponent);
-      Assert.AreEqual(-(BigInteger)29, ExtendedDecimal.FromString("0.56554952554850525552515549564948e+3").Exponent);
-      Assert.AreEqual(-(BigInteger)40, ExtendedDecimal.FromString("0.494855545257545656515554495057e-10").Exponent);
-      Assert.AreEqual(-(BigInteger)18, ExtendedDecimal.FromString("0.5656504948515252555456e+4").Exponent);
-      Assert.AreEqual(-(BigInteger)17, ExtendedDecimal.FromString("0e-17").Exponent);
-      Assert.AreEqual(-(BigInteger)32, ExtendedDecimal.FromString("0.55535551515249535049495256e-6").Exponent);
-      Assert.AreEqual(-(BigInteger)31, ExtendedDecimal.FromString("0.4948534853564853565654514855e-3").Exponent);
-      Assert.AreEqual(-(BigInteger)38, ExtendedDecimal.FromString("0.5048485057535249555455e-16").Exponent);
-      Assert.AreEqual(-(BigInteger)16, ExtendedDecimal.FromString("0e-16").Exponent);
-      Assert.AreEqual((BigInteger)5, ExtendedDecimal.FromString("0.5354e+9").Exponent);
-      Assert.AreEqual(BigInteger.One, ExtendedDecimal.FromString("0.54e+3").Exponent);
-      Assert.AreEqual(-(BigInteger)38, ExtendedDecimal.FromString("0.4849525755545751574853494948e-10").Exponent);
-      Assert.AreEqual(-(BigInteger)33, ExtendedDecimal.FromString("0.52514853565252565251565548e-7").Exponent);
-      Assert.AreEqual(-(BigInteger)13, ExtendedDecimal.FromString("0.575151545652e-1").Exponent);
-      Assert.AreEqual(-(BigInteger)22, ExtendedDecimal.FromString("0.49515354514852e-8").Exponent);
-      Assert.AreEqual(-(BigInteger)24, ExtendedDecimal.FromString("0.54535357515356545554e-4").Exponent);
-      Assert.AreEqual(-(BigInteger)11, ExtendedDecimal.FromString("0.574848e-5").Exponent);
-      Assert.AreEqual(-(BigInteger)3, ExtendedDecimal.FromString("0.565055e+3").Exponent);
     }
 
     [TestMethod]
@@ -4766,214 +4685,6 @@ namespace Test {
     }
 
     [TestMethod]
-    public void FromDoubleTest() {
-      Assert.AreEqual("0.213299999999999989608312489508534781634807586669921875", ExtendedDecimal.FromDouble(0.2133).ToString());
-      Assert.AreEqual("2.29360000000000010330982488752915582352898127282969653606414794921875E-7", ExtendedDecimal.FromDouble(2.2936E-7).ToString());
-      Assert.AreEqual("3893200000", ExtendedDecimal.FromDouble(3.8932E9).ToString());
-      Assert.AreEqual("128230", ExtendedDecimal.FromDouble(128230.0).ToString());
-      Assert.AreEqual("127210", ExtendedDecimal.FromDouble(127210.0).ToString());
-      Assert.AreEqual("0.267230000000000023074875343809253536164760589599609375", ExtendedDecimal.FromDouble(0.26723).ToString());
-      Assert.AreEqual("0.302329999999999987636556397774256765842437744140625", ExtendedDecimal.FromDouble(0.30233).ToString());
-      Assert.AreEqual("0.0000019512000000000000548530838806460252499164198525249958038330078125", ExtendedDecimal.FromDouble(1.9512E-6).ToString());
-      Assert.AreEqual("199500", ExtendedDecimal.FromDouble(199500.0).ToString());
-      Assert.AreEqual("36214000", ExtendedDecimal.FromDouble(3.6214E7).ToString());
-      Assert.AreEqual("1913300000000", ExtendedDecimal.FromDouble(1.9133E12).ToString());
-      Assert.AreEqual("0.0002173499999999999976289799530349000633577816188335418701171875", ExtendedDecimal.FromDouble(2.1735E-4).ToString());
-      Assert.AreEqual("0.0000310349999999999967797807698399736864303122274577617645263671875", ExtendedDecimal.FromDouble(3.1035E-5).ToString());
-      Assert.AreEqual("1.274999999999999911182158029987476766109466552734375", ExtendedDecimal.FromDouble(1.275).ToString());
-      Assert.AreEqual("214190", ExtendedDecimal.FromDouble(214190.0).ToString());
-      Assert.AreEqual("3981300000", ExtendedDecimal.FromDouble(3.9813E9).ToString());
-      Assert.AreEqual("1092700", ExtendedDecimal.FromDouble(1092700.0).ToString());
-      Assert.AreEqual("0.023609999999999999042987752773115062154829502105712890625", ExtendedDecimal.FromDouble(0.02361).ToString());
-      Assert.AreEqual("12.321999999999999175770426518283784389495849609375", ExtendedDecimal.FromDouble(12.322).ToString());
-      Assert.AreEqual("0.002586999999999999889921387108415729016996920108795166015625", ExtendedDecimal.FromDouble(0.002587).ToString());
-      Assert.AreEqual("1322000000", ExtendedDecimal.FromDouble(1.322E9).ToString());
-      Assert.AreEqual("95310000000", ExtendedDecimal.FromDouble(9.531E10).ToString());
-      Assert.AreEqual("142.3799999999999954525264911353588104248046875", ExtendedDecimal.FromDouble(142.38).ToString());
-      Assert.AreEqual("2252.5", ExtendedDecimal.FromDouble(2252.5).ToString());
-      Assert.AreEqual("363600000000", ExtendedDecimal.FromDouble(3.636E11).ToString());
-      Assert.AreEqual("0.00000323700000000000009386523676380154057596882921643555164337158203125", ExtendedDecimal.FromDouble(3.237E-6).ToString());
-      Assert.AreEqual("728000", ExtendedDecimal.FromDouble(728000.0).ToString());
-      Assert.AreEqual("25818000", ExtendedDecimal.FromDouble(2.5818E7).ToString());
-      Assert.AreEqual("1090000", ExtendedDecimal.FromDouble(1090000.0).ToString());
-      Assert.AreEqual("1.5509999999999999342747969421907328069210052490234375", ExtendedDecimal.FromDouble(1.551).ToString());
-      Assert.AreEqual("26.035000000000000142108547152020037174224853515625", ExtendedDecimal.FromDouble(26.035).ToString());
-      Assert.AreEqual("833000000", ExtendedDecimal.FromDouble(8.33E8).ToString());
-      Assert.AreEqual("812300000000", ExtendedDecimal.FromDouble(8.123E11).ToString());
-      Assert.AreEqual("2622.90000000000009094947017729282379150390625", ExtendedDecimal.FromDouble(2622.9).ToString());
-      Assert.AreEqual("1.290999999999999925393012745189480483531951904296875", ExtendedDecimal.FromDouble(1.291).ToString());
-      Assert.AreEqual("286140", ExtendedDecimal.FromDouble(286140.0).ToString());
-      Assert.AreEqual("0.06733000000000000095923269327613525092601776123046875", ExtendedDecimal.FromDouble(0.06733).ToString());
-      Assert.AreEqual("0.000325160000000000010654532811571471029310487210750579833984375", ExtendedDecimal.FromDouble(3.2516E-4).ToString());
-      Assert.AreEqual("383230000", ExtendedDecimal.FromDouble(3.8323E8).ToString());
-      Assert.AreEqual("0.02843299999999999994049204588009160943329334259033203125", ExtendedDecimal.FromDouble(0.028433).ToString());
-      Assert.AreEqual("837000000", ExtendedDecimal.FromDouble(8.37E8).ToString());
-      Assert.AreEqual("0.0160800000000000005428990590417015482671558856964111328125", ExtendedDecimal.FromDouble(0.01608).ToString());
-      Assert.AreEqual("3621000000000", ExtendedDecimal.FromDouble(3.621E12).ToString());
-      Assert.AreEqual("78.1200000000000045474735088646411895751953125", ExtendedDecimal.FromDouble(78.12).ToString());
-      Assert.AreEqual("1308000000", ExtendedDecimal.FromDouble(1.308E9).ToString());
-      Assert.AreEqual("0.031937000000000000110578213252665591426193714141845703125", ExtendedDecimal.FromDouble(0.031937).ToString());
-      Assert.AreEqual("1581500", ExtendedDecimal.FromDouble(1581500.0).ToString());
-      Assert.AreEqual("244200", ExtendedDecimal.FromDouble(244200.0).ToString());
-      Assert.AreEqual("2.28179999999999995794237200343046456652018605382181704044342041015625E-7", ExtendedDecimal.FromDouble(2.2818E-7).ToString());
-      Assert.AreEqual("39.73400000000000176214598468504846096038818359375", ExtendedDecimal.FromDouble(39.734).ToString());
-      Assert.AreEqual("1614", ExtendedDecimal.FromDouble(1614.0).ToString());
-      Assert.AreEqual("0.0003831899999999999954607143859419693399104289710521697998046875", ExtendedDecimal.FromDouble(3.8319E-4).ToString());
-      Assert.AreEqual("543.3999999999999772626324556767940521240234375", ExtendedDecimal.FromDouble(543.4).ToString());
-      Assert.AreEqual("319310000", ExtendedDecimal.FromDouble(3.1931E8).ToString());
-      Assert.AreEqual("1429000", ExtendedDecimal.FromDouble(1429000.0).ToString());
-      Assert.AreEqual("2653700000000", ExtendedDecimal.FromDouble(2.6537E12).ToString());
-      Assert.AreEqual("722000000", ExtendedDecimal.FromDouble(7.22E8).ToString());
-      Assert.AreEqual("27.199999999999999289457264239899814128875732421875", ExtendedDecimal.FromDouble(27.2).ToString());
-      Assert.AreEqual("0.00000380250000000000001586513038998038638283105683512985706329345703125", ExtendedDecimal.FromDouble(3.8025E-6).ToString());
-      Assert.AreEqual("0.0000364159999999999982843446044711299691698513925075531005859375", ExtendedDecimal.FromDouble(3.6416E-5).ToString());
-      Assert.AreEqual("2006000", ExtendedDecimal.FromDouble(2006000.0).ToString());
-      Assert.AreEqual("2681200000", ExtendedDecimal.FromDouble(2.6812E9).ToString());
-      Assert.AreEqual("27534000000", ExtendedDecimal.FromDouble(2.7534E10).ToString());
-      Assert.AreEqual("3.911600000000000165617541382501176627783934236504137516021728515625E-7", ExtendedDecimal.FromDouble(3.9116E-7).ToString());
-      Assert.AreEqual("0.0028135000000000000286437540353290387429296970367431640625", ExtendedDecimal.FromDouble(0.0028135).ToString());
-      Assert.AreEqual("0.91190000000000004387601393318618647754192352294921875", ExtendedDecimal.FromDouble(0.9119).ToString());
-      Assert.AreEqual("2241200", ExtendedDecimal.FromDouble(2241200.0).ToString());
-      Assert.AreEqual("32.4500000000000028421709430404007434844970703125", ExtendedDecimal.FromDouble(32.45).ToString());
-      Assert.AreEqual("13800000000", ExtendedDecimal.FromDouble(1.38E10).ToString());
-      Assert.AreEqual("0.047300000000000001765254609153998899273574352264404296875", ExtendedDecimal.FromDouble(0.0473).ToString());
-      Assert.AreEqual("205.340000000000003410605131648480892181396484375", ExtendedDecimal.FromDouble(205.34).ToString());
-      Assert.AreEqual("3.981899999999999995026200849679298698902130126953125", ExtendedDecimal.FromDouble(3.9819).ToString());
-      Assert.AreEqual("1152.799999999999954525264911353588104248046875", ExtendedDecimal.FromDouble(1152.8).ToString());
-      Assert.AreEqual("1322000", ExtendedDecimal.FromDouble(1322000.0).ToString());
-      Assert.AreEqual("0.00013414000000000001334814203612921801322954706847667694091796875", ExtendedDecimal.FromDouble(1.3414E-4).ToString());
-      Assert.AreEqual("3.4449999999999999446924077266263264363033158588223159313201904296875E-7", ExtendedDecimal.FromDouble(3.445E-7).ToString());
-      Assert.AreEqual("1.3610000000000000771138253079228785935583800892345607280731201171875E-7", ExtendedDecimal.FromDouble(1.361E-7).ToString());
-      Assert.AreEqual("26090000", ExtendedDecimal.FromDouble(2.609E7).ToString());
-      Assert.AreEqual("9.93599999999999994315658113919198513031005859375", ExtendedDecimal.FromDouble(9.936).ToString());
-      Assert.AreEqual("0.00000600000000000000015200514458246772164784488268196582794189453125", ExtendedDecimal.FromDouble(6.0E-6).ToString());
-      Assert.AreEqual("260.31000000000000227373675443232059478759765625", ExtendedDecimal.FromDouble(260.31).ToString());
-      Assert.AreEqual("344.6000000000000227373675443232059478759765625", ExtendedDecimal.FromDouble(344.6).ToString());
-      Assert.AreEqual("3.423700000000000187583282240666449069976806640625", ExtendedDecimal.FromDouble(3.4237).ToString());
-      Assert.AreEqual("2342100000", ExtendedDecimal.FromDouble(2.3421E9).ToString());
-      Assert.AreEqual("0.00023310000000000000099260877295392901942250318825244903564453125", ExtendedDecimal.FromDouble(2.331E-4).ToString());
-      Assert.AreEqual("0.7339999999999999857891452847979962825775146484375", ExtendedDecimal.FromDouble(0.734).ToString());
-      Assert.AreEqual("0.01541499999999999988287147090204598498530685901641845703125", ExtendedDecimal.FromDouble(0.015415).ToString());
-      Assert.AreEqual("0.0035311000000000001240729741169843691750429570674896240234375", ExtendedDecimal.FromDouble(0.0035311).ToString());
-      Assert.AreEqual("1221700000000", ExtendedDecimal.FromDouble(1.2217E12).ToString());
-      Assert.AreEqual("0.48299999999999998490096686509787105023860931396484375", ExtendedDecimal.FromDouble(0.483).ToString());
-      Assert.AreEqual("0.0002871999999999999878506906636488338335766457021236419677734375", ExtendedDecimal.FromDouble(2.872E-4).ToString());
-      Assert.AreEqual("96.1099999999999994315658113919198513031005859375", ExtendedDecimal.FromDouble(96.11).ToString());
-      Assert.AreEqual("36570", ExtendedDecimal.FromDouble(36570.0).ToString());
-      Assert.AreEqual("0.00001830000000000000097183545932910675446692039258778095245361328125", ExtendedDecimal.FromDouble(1.83E-5).ToString());
-      Assert.AreEqual("301310000", ExtendedDecimal.FromDouble(3.0131E8).ToString());
-      Assert.AreEqual("382200", ExtendedDecimal.FromDouble(382200.0).ToString());
-      Assert.AreEqual("248350000", ExtendedDecimal.FromDouble(2.4835E8).ToString());
-      Assert.AreEqual("0.0015839999999999999046040866090834242640994489192962646484375", ExtendedDecimal.FromDouble(0.001584).ToString());
-      Assert.AreEqual("0.000761999999999999982035203682784185730270110070705413818359375", ExtendedDecimal.FromDouble(7.62E-4).ToString());
-      Assert.AreEqual("313300000000", ExtendedDecimal.FromDouble(3.133E11).ToString());
-    }
-
-    [TestMethod]
-    public void ToPlainStringTest() {
-      Assert.AreEqual("277220000000", ExtendedDecimal.FromString("277.22E9").ToPlainString());
-      Assert.AreEqual("3911900", ExtendedDecimal.FromString("391.19E4").ToPlainString());
-      Assert.AreEqual("0.00000038327", ExtendedDecimal.FromString("383.27E-9").ToPlainString());
-      Assert.AreEqual("47330000000", ExtendedDecimal.FromString("47.33E9").ToPlainString());
-      Assert.AreEqual("322210", ExtendedDecimal.FromString("322.21E3").ToPlainString());
-      Assert.AreEqual("1.913", ExtendedDecimal.FromString("191.3E-2").ToPlainString());
-      Assert.AreEqual("11917", ExtendedDecimal.FromString("119.17E2").ToPlainString());
-      Assert.AreEqual("0.0001596", ExtendedDecimal.FromString("159.6E-6").ToPlainString());
-      Assert.AreEqual("70160000000", ExtendedDecimal.FromString("70.16E9").ToPlainString());
-      Assert.AreEqual("166240000000", ExtendedDecimal.FromString("166.24E9").ToPlainString());
-      Assert.AreEqual("235250", ExtendedDecimal.FromString("235.25E3").ToPlainString());
-      Assert.AreEqual("372200000", ExtendedDecimal.FromString("37.22E7").ToPlainString());
-      Assert.AreEqual("32026000000", ExtendedDecimal.FromString("320.26E8").ToPlainString());
-      Assert.AreEqual("0.00000012711", ExtendedDecimal.FromString("127.11E-9").ToPlainString());
-      Assert.AreEqual("0.000009729", ExtendedDecimal.FromString("97.29E-7").ToPlainString());
-      Assert.AreEqual("175130000000", ExtendedDecimal.FromString("175.13E9").ToPlainString());
-      Assert.AreEqual("0.000003821", ExtendedDecimal.FromString("38.21E-7").ToPlainString());
-      Assert.AreEqual("62.8", ExtendedDecimal.FromString("6.28E1").ToPlainString());
-      Assert.AreEqual("138290000", ExtendedDecimal.FromString("138.29E6").ToPlainString());
-      Assert.AreEqual("1601.9", ExtendedDecimal.FromString("160.19E1").ToPlainString());
-      Assert.AreEqual("35812", ExtendedDecimal.FromString("358.12E2").ToPlainString());
-      Assert.AreEqual("2492800000000", ExtendedDecimal.FromString("249.28E10").ToPlainString());
-      Assert.AreEqual("0.00031123", ExtendedDecimal.FromString("311.23E-6").ToPlainString());
-      Assert.AreEqual("0.16433", ExtendedDecimal.FromString("164.33E-3").ToPlainString());
-      Assert.AreEqual("29.920", ExtendedDecimal.FromString("299.20E-1").ToPlainString());
-      Assert.AreEqual("105390", ExtendedDecimal.FromString("105.39E3").ToPlainString());
-      Assert.AreEqual("3825000", ExtendedDecimal.FromString("382.5E4").ToPlainString());
-      Assert.AreEqual("909", ExtendedDecimal.FromString("90.9E1").ToPlainString());
-      Assert.AreEqual("32915000000", ExtendedDecimal.FromString("329.15E8").ToPlainString());
-      Assert.AreEqual("24523000000", ExtendedDecimal.FromString("245.23E8").ToPlainString());
-      Assert.AreEqual("0.0000009719", ExtendedDecimal.FromString("97.19E-8").ToPlainString());
-      Assert.AreEqual("551200000", ExtendedDecimal.FromString("55.12E7").ToPlainString());
-      Assert.AreEqual("1238", ExtendedDecimal.FromString("12.38E2").ToPlainString());
-      Assert.AreEqual("0.0025020", ExtendedDecimal.FromString("250.20E-5").ToPlainString());
-      Assert.AreEqual("5320", ExtendedDecimal.FromString("53.20E2").ToPlainString());
-      Assert.AreEqual("14150000000", ExtendedDecimal.FromString("141.5E8").ToPlainString());
-      Assert.AreEqual("0.0033834", ExtendedDecimal.FromString("338.34E-5").ToPlainString());
-      Assert.AreEqual("160390000000", ExtendedDecimal.FromString("160.39E9").ToPlainString());
-      Assert.AreEqual("152170000", ExtendedDecimal.FromString("152.17E6").ToPlainString());
-      Assert.AreEqual("13300000000", ExtendedDecimal.FromString("13.3E9").ToPlainString());
-      Assert.AreEqual("13.8", ExtendedDecimal.FromString("1.38E1").ToPlainString());
-      Assert.AreEqual("0.00000034821", ExtendedDecimal.FromString("348.21E-9").ToPlainString());
-      Assert.AreEqual("525000000", ExtendedDecimal.FromString("52.5E7").ToPlainString());
-      Assert.AreEqual("2152100000000", ExtendedDecimal.FromString("215.21E10").ToPlainString());
-      Assert.AreEqual("234280000000", ExtendedDecimal.FromString("234.28E9").ToPlainString());
-      Assert.AreEqual("310240000000", ExtendedDecimal.FromString("310.24E9").ToPlainString());
-      Assert.AreEqual("345390000000", ExtendedDecimal.FromString("345.39E9").ToPlainString());
-      Assert.AreEqual("0.00000011638", ExtendedDecimal.FromString("116.38E-9").ToPlainString());
-      Assert.AreEqual("2762500000000", ExtendedDecimal.FromString("276.25E10").ToPlainString());
-      Assert.AreEqual("0.0000015832", ExtendedDecimal.FromString("158.32E-8").ToPlainString());
-      Assert.AreEqual("27250", ExtendedDecimal.FromString("272.5E2").ToPlainString());
-      Assert.AreEqual("0.00000038933", ExtendedDecimal.FromString("389.33E-9").ToPlainString());
-      Assert.AreEqual("3811500000", ExtendedDecimal.FromString("381.15E7").ToPlainString());
-      Assert.AreEqual("280000", ExtendedDecimal.FromString("280.0E3").ToPlainString());
-      Assert.AreEqual("0.0002742", ExtendedDecimal.FromString("274.2E-6").ToPlainString());
-      Assert.AreEqual("0.000038714", ExtendedDecimal.FromString("387.14E-7").ToPlainString());
-      Assert.AreEqual("0.00002277", ExtendedDecimal.FromString("227.7E-7").ToPlainString());
-      Assert.AreEqual("20121", ExtendedDecimal.FromString("201.21E2").ToPlainString());
-      Assert.AreEqual("255400", ExtendedDecimal.FromString("255.4E3").ToPlainString());
-      Assert.AreEqual("0.000018727", ExtendedDecimal.FromString("187.27E-7").ToPlainString());
-      Assert.AreEqual("0.01697", ExtendedDecimal.FromString("169.7E-4").ToPlainString());
-      Assert.AreEqual("69900000000", ExtendedDecimal.FromString("69.9E9").ToPlainString());
-      Assert.AreEqual("0.0320", ExtendedDecimal.FromString("3.20E-2").ToPlainString());
-      Assert.AreEqual("23630", ExtendedDecimal.FromString("236.30E2").ToPlainString());
-      Assert.AreEqual("0.00000022022", ExtendedDecimal.FromString("220.22E-9").ToPlainString());
-      Assert.AreEqual("28.730", ExtendedDecimal.FromString("287.30E-1").ToPlainString());
-      Assert.AreEqual("0.0000001563", ExtendedDecimal.FromString("156.3E-9").ToPlainString());
-      Assert.AreEqual("13.623", ExtendedDecimal.FromString("136.23E-1").ToPlainString());
-      Assert.AreEqual("12527000000", ExtendedDecimal.FromString("125.27E8").ToPlainString());
-      Assert.AreEqual("0.000018030", ExtendedDecimal.FromString("180.30E-7").ToPlainString());
-      Assert.AreEqual("3515000000", ExtendedDecimal.FromString("351.5E7").ToPlainString());
-      Assert.AreEqual("28280000000", ExtendedDecimal.FromString("28.28E9").ToPlainString());
-      Assert.AreEqual("0.2884", ExtendedDecimal.FromString("288.4E-3").ToPlainString());
-      Assert.AreEqual("122200", ExtendedDecimal.FromString("12.22E4").ToPlainString());
-      Assert.AreEqual("0.002575", ExtendedDecimal.FromString("257.5E-5").ToPlainString());
-      Assert.AreEqual("389200", ExtendedDecimal.FromString("389.20E3").ToPlainString());
-      Assert.AreEqual("0.03949", ExtendedDecimal.FromString("394.9E-4").ToPlainString());
-      Assert.AreEqual("0.000013426", ExtendedDecimal.FromString("134.26E-7").ToPlainString());
-      Assert.AreEqual("5829000", ExtendedDecimal.FromString("58.29E5").ToPlainString());
-      Assert.AreEqual("0.000885", ExtendedDecimal.FromString("88.5E-5").ToPlainString());
-      Assert.AreEqual("0.019329", ExtendedDecimal.FromString("193.29E-4").ToPlainString());
-      Assert.AreEqual("713500000000", ExtendedDecimal.FromString("71.35E10").ToPlainString());
-      Assert.AreEqual("2520", ExtendedDecimal.FromString("252.0E1").ToPlainString());
-      Assert.AreEqual("0.000000532", ExtendedDecimal.FromString("53.2E-8").ToPlainString());
-      Assert.AreEqual("18.120", ExtendedDecimal.FromString("181.20E-1").ToPlainString());
-      Assert.AreEqual("0.00000005521", ExtendedDecimal.FromString("55.21E-9").ToPlainString());
-      Assert.AreEqual("57.31", ExtendedDecimal.FromString("57.31E0").ToPlainString());
-      Assert.AreEqual("0.00000011313", ExtendedDecimal.FromString("113.13E-9").ToPlainString());
-      Assert.AreEqual("532.3", ExtendedDecimal.FromString("53.23E1").ToPlainString());
-      Assert.AreEqual("0.000036837", ExtendedDecimal.FromString("368.37E-7").ToPlainString());
-      Assert.AreEqual("0.01874", ExtendedDecimal.FromString("187.4E-4").ToPlainString());
-      Assert.AreEqual("526000000", ExtendedDecimal.FromString("5.26E8").ToPlainString());
-      Assert.AreEqual("3083200", ExtendedDecimal.FromString("308.32E4").ToPlainString());
-      Assert.AreEqual("0.7615", ExtendedDecimal.FromString("76.15E-2").ToPlainString());
-      Assert.AreEqual("1173800000", ExtendedDecimal.FromString("117.38E7").ToPlainString());
-      Assert.AreEqual("0.001537", ExtendedDecimal.FromString("15.37E-4").ToPlainString());
-      Assert.AreEqual("145.3", ExtendedDecimal.FromString("145.3E0").ToPlainString());
-      Assert.AreEqual("22629000000", ExtendedDecimal.FromString("226.29E8").ToPlainString());
-      Assert.AreEqual("2242600000000", ExtendedDecimal.FromString("224.26E10").ToPlainString());
-      Assert.AreEqual("0.00000026818", ExtendedDecimal.FromString("268.18E-9").ToPlainString());
-    }
-
-    [TestMethod]
     public void ToEngineeringStringTest() {
       Assert.AreEqual("8.912", ExtendedDecimal.FromString("89.12E-1").ToEngineeringString());
       Assert.AreEqual("0.024231", ExtendedDecimal.FromString("242.31E-4").ToEngineeringString());
@@ -5485,23 +5196,6 @@ namespace Test {
     [TestMethod]
     public void TestExtendedDecimalExceptions() {
       try {
-        ExtendedDecimal.Min(null, ExtendedDecimal.One);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedDecimal.Min(ExtendedDecimal.One, null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-
-      try {
         ExtendedDecimal.Max(null, ExtendedDecimal.One);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
@@ -5870,73 +5564,6 @@ namespace Test {
         2,
         3,
         4 });
-    }
-
-    [TestMethod]
-    public void TestDoubleToOther() {
-      CBORObject dbl1 = CBORObject.FromObject((double)Int32.MinValue);
-      CBORObject dbl2 = CBORObject.FromObject((double)Int32.MaxValue);
-      try {
-        dbl1.AsInt16(); Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        dbl1.AsByte(); Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        Assert.IsTrue(dbl1.CanFitInInt32());
-        dbl1.AsInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        Assert.IsTrue(dbl1.CanFitInInt64());
-        dbl1.AsInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        dbl1.AsBigInteger();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        dbl2.AsInt16(); Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        dbl2.AsByte(); Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        dbl2.AsInt32();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        dbl2.AsInt64();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        dbl2.AsBigInteger();
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
-      }
-    }
-
-    [TestMethod]
-    public void TestBigTag() {
-      CBORObject.FromObjectAndTag(CBORObject.Null, (BigInteger.One << 64) - BigInteger.One);
     }
     [TestMethod]
     [ExpectedException(typeof(CBORException))]

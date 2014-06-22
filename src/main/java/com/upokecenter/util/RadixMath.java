@@ -3188,14 +3188,12 @@ rem=divrem[1]; }
                       op2MantAbs=op2MantAbs.subtract(BigInteger.ONE);
                       other = this.helper.CreateNewWithFlags(op2MantAbs, op2Exponent, this.helper.GetFlags(other));
                       FastInteger shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                      // System.out.println("line3325");
                       return this.RoundToPrecisionWithShift(other, ctx, 0, 0, shift, false);
                     } else {
                       FastInteger shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
                       if (!sameSign && ctx != null && ctx.getHasFlags()) {
                         ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
                       }
-                      // System.out.println("line3332");
                       return this.RoundToPrecisionWithShift(other, ctx, 0, sameSign ? 1 : 0, shift2, false);
                     }
                   }
@@ -3241,7 +3239,6 @@ rem=divrem[1]; }
                       if (oneOpIsZero && ctx != null && ctx.getHasFlags()) {
                         ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
                       }
-                      // System.out.println("line3375");
                       return this.RoundToPrecisionWithShift(thisValue, ctx, (oneOpIsZero || sameSign) ? 0 : 1, (oneOpIsZero && !sameSign) ? 0 : 1, shift, false);
                     }
                     if (!oneOpIsZero && !sameSign) {
@@ -3253,14 +3250,12 @@ rem=divrem[1]; }
                       op1MantAbs=op1MantAbs.subtract(BigInteger.ONE);
                       thisValue = this.helper.CreateNewWithFlags(op1MantAbs, op1Exponent, this.helper.GetFlags(thisValue));
                       FastInteger shift = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                      // System.out.println("line3386");
                       return this.RoundToPrecisionWithShift(thisValue, ctx, 0, 0, shift, false);
                     } else {
                       FastInteger shift2 = FastInteger.Copy(digitLength2).Subtract(fastPrecision);
                       if (!sameSign && ctx != null && ctx.getHasFlags()) {
                         ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
                       }
-                      // System.out.println("line3393");
                       return this.RoundToPrecisionWithShift(thisValue, ctx, 0, sameSign ? 1 : 0, shift2, false);
                     }
                   }
