@@ -667,18 +667,13 @@ namespace PeterO {
 
 /// <summary>Precision context for Java's BigDecimal format. The default
 /// rounding mode is HalfUp.</summary>
-    [Obsolete("This context has the wrong settings. Use BigDecimalJava instead in the meantime. It may be corrected in version 2.")]
+    [Obsolete("This context had the wrong settings in previous versions. Use BigDecimalJava instead.")]
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification = "This PrecisionContext is immutable")]
 #endif
-    public static readonly PrecisionContext JavaBigDecimal =
-      new PrecisionContext(0, Rounding.HalfEven, 0, 0, true)
-        .WithExponentClamp(true)
-        .WithBigExponentRange(
-           BigInteger.Zero - (BigInteger)Int32.MaxValue,
-           BigInteger.One + (BigInteger)Int32.MaxValue);
+    public static readonly PrecisionContext JavaBigDecimal = BigDecimalJava;
   }
 }
