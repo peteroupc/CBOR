@@ -15,28 +15,6 @@ namespace Test {
   [TestClass]
   public class CBORSupplementTest {
     [TestMethod]
-    public void TestCBORObjectAbs() {
-      Assert.AreEqual(
-        CBORObject.FromObject(2),
-        CBORObject.FromObject(-2).Abs());
-      Assert.AreEqual(
-        CBORObject.FromObject(2),
-        CBORObject.FromObject(2).Abs());
-      Assert.AreEqual(
-        CBORObject.FromObject(2.5),
-        CBORObject.FromObject(-2.5).Abs());
-      Assert.AreEqual(
-        CBORObject.FromObject(ExtendedDecimal.FromString("6.63")),
-        CBORObject.FromObject(ExtendedDecimal.FromString("-6.63")).Abs());
-      Assert.AreEqual(
-        CBORObject.FromObject(ExtendedFloat.FromString("2.75")),
-        CBORObject.FromObject(ExtendedFloat.FromString("-2.75")).Abs());
-      Assert.AreEqual(
-        CBORObject.FromObject(ExtendedRational.FromDouble(2.5)),
-        CBORObject.FromObject(ExtendedRational.FromDouble(-2.5)).Abs());
-    }
-
-    [TestMethod]
     public void IncorrectDecimalFrac() {
       byte[] bytes;
       // string instead of array
@@ -91,26 +69,6 @@ namespace Test {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
       } catch (CBORException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-    }
-
-    [TestMethod]
-    public void TestPrecisionContextArgValidation() {
-      try {
-        Assert.AreEqual(null, new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        Assert.AreEqual(null, new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -185,34 +143,7 @@ namespace Test {
     }
 
     [TestMethod]
-    public void TestCBORObjectMisc() {
-      Assert.AreEqual(CBORObject.Null, CBORObject.FromObject((ExtendedRational)null));
-      Assert.AreEqual(CBORObject.Null, CBORObject.FromObject((ExtendedDecimal)null));
-      Assert.AreEqual(CBORObject.FromObject(10), CBORObject.FromObject(ExtendedRational.Create(10, 1)));
-      try {
-        CBORObject.FromObject(ExtendedRational.Create(10, 2));
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-    }
-
-    [TestMethod]
     public void TestCBORObjectArgumentValidation() {
-      try {
-        CBORObject.FromObjectAndTag(CBORObject.Null, -1);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        CBORObject.FromObjectAndTag(CBORObject.Null, 999999);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
       try {
         CBORObject.FromObject('\udddd');
         Assert.Fail("Should have failed");

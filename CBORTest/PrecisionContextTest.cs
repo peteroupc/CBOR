@@ -7,7 +7,22 @@ namespace Test {
   public class PrecisionContextTest {
     [TestMethod]
     public void TestConstructor() {
-      // not implemented yet
+      try {
+        Assert.AreEqual(null, new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        Assert.AreEqual(null, new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [TestMethod]
     public void TestAdjustExponent() {

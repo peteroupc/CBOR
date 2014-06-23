@@ -2476,15 +2476,15 @@ namespace PeterO {
       if (c == 0) {
         return 0;
       }
-      int ivv = ((int)this.words[0]) & 0xffff;
+      int intRetValue = ((int)this.words[0]) & 0xffff;
       if (c > 1) {
-        ivv |= (((int)this.words[1]) & 0xffff) << 16;
+        intRetValue |= (((int)this.words[1]) & 0xffff) << 16;
       }
       if (this.negative) {
-        ivv = unchecked(ivv - 1);
-        ivv = unchecked(~ivv);
+        intRetValue = unchecked(intRetValue - 1);
+        intRetValue = unchecked(~intRetValue);
       }
-      return ivv;
+      return intRetValue;
     }
 
     /// <summary>Converts this object's value to a 64-bit signed integer.</summary>

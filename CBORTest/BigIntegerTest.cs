@@ -6,10 +6,6 @@ namespace Test {
   [TestClass]
   public class BigIntegerTest {
     [TestMethod]
-    public void TestConstructor() {
-      // not implemented yet
-    }
-    [TestMethod]
     public void TestAbs() {
       // not implemented yet
     }
@@ -221,15 +217,52 @@ namespace Test {
     }
     [TestMethod]
     public void TestIntValue() {
-      // not implemented yet
+      Assert.AreEqual(Int32.MinValue, BigInteger.valueOf(Int32.MinValue).intValue());
+      Assert.AreEqual(Int32.MaxValue, BigInteger.valueOf(Int32.MaxValue).intValue());
+      try {
+ BigInteger.valueOf(Int32.MinValue - 1L).intValue();
+Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.valueOf(Int32.MaxValue + 1L).intValue();
+Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [TestMethod]
     public void TestIntValueChecked() {
-      // not implemented yet
+      Assert.AreEqual(Int32.MinValue, BigInteger.valueOf(Int32.MinValue).intValueChecked());
+      Assert.AreEqual(Int32.MaxValue, BigInteger.valueOf(Int32.MaxValue).intValueChecked());
+      try {
+ BigInteger.valueOf(Int32.MinValue - 1L).intValueChecked();
+Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.valueOf(Int32.MaxValue + 1L).intValueChecked();
+Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [TestMethod]
     public void TestIntValueUnchecked() {
-      // not implemented yet
+      Assert.AreEqual(Int32.MinValue, BigInteger.valueOf(Int32.MinValue).intValueUnchecked());
+      Assert.AreEqual(Int32.MaxValue, BigInteger.valueOf(Int32.MaxValue).intValueUnchecked());
+      Assert.AreEqual(Int32.MaxValue, BigInteger.valueOf(Int32.MinValue - 1L).intValueUnchecked());
+      Assert.AreEqual(Int32.MinValue, BigInteger.valueOf(Int32.MaxValue + 1L).intValueUnchecked());
     }
     [TestMethod]
     public void TestIsEven() {
@@ -250,15 +283,52 @@ namespace Test {
     }
     [TestMethod]
     public void TestLongValue() {
-      // not implemented yet
+      Assert.AreEqual(Int64.MinValue, BigInteger.valueOf(Int64.MinValue).longValue());
+      Assert.AreEqual(Int64.MaxValue, BigInteger.valueOf(Int64.MaxValue).longValue());
+      try {
+ BigInteger.valueOf(Int64.MinValue).subtract(BigInteger.One).longValue();
+Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One).longValue();
+Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [TestMethod]
     public void TestLongValueChecked() {
-      // not implemented yet
+      Assert.AreEqual(Int64.MinValue, BigInteger.valueOf(Int64.MinValue).longValueChecked());
+      Assert.AreEqual(Int64.MaxValue, BigInteger.valueOf(Int64.MaxValue).longValueChecked());
+      try {
+ BigInteger.valueOf(Int64.MinValue).subtract(BigInteger.One).longValueChecked();
+Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One).longValueChecked();
+Assert.Fail("Should have failed");
+} catch (OverflowException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [TestMethod]
     public void TestLongValueUnchecked() {
-      // not implemented yet
+      Assert.AreEqual(Int64.MinValue, BigInteger.valueOf(Int64.MinValue).longValueUnchecked());
+      Assert.AreEqual(Int64.MaxValue, BigInteger.valueOf(Int64.MaxValue).longValueUnchecked());
+      Assert.AreEqual(Int64.MaxValue, BigInteger.valueOf(Int64.MinValue).subtract(BigInteger.One).longValueUnchecked());
+      Assert.AreEqual(Int64.MinValue, BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One).longValueUnchecked());
     }
     [TestMethod]
     public void TestMod() {

@@ -7,7 +7,22 @@ import com.upokecenter.util.*;
   public class PrecisionContextTest {
     @Test
     public void TestConstructor() {
-      // not implemented yet
+      try {
+        Assert.assertEquals(null, new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        Assert.assertEquals(null, new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
     @Test
     public void TestAdjustExponent() {

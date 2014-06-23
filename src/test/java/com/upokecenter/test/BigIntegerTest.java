@@ -6,10 +6,6 @@ import com.upokecenter.util.*;
 
   public class BigIntegerTest {
     @Test
-    public void TestConstructor() {
-      // not implemented yet
-    }
-    @Test
     public void TestAbs() {
       // not implemented yet
     }
@@ -221,15 +217,52 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestIntValue() {
-      // not implemented yet
+      Assert.assertEquals(Integer.MIN_VALUE, BigInteger.valueOf(Integer.MIN_VALUE).intValue());
+      Assert.assertEquals(Integer.MAX_VALUE, BigInteger.valueOf(Integer.MAX_VALUE).intValue());
+      try {
+ BigInteger.valueOf(Integer.MIN_VALUE - 1L).intValue();
+Assert.fail("Should have failed");
+} catch (ArithmeticException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ BigInteger.valueOf(Integer.MAX_VALUE + 1L).intValue();
+Assert.fail("Should have failed");
+} catch (ArithmeticException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
     }
     @Test
     public void TestIntValueChecked() {
-      // not implemented yet
+      Assert.assertEquals(Integer.MIN_VALUE, BigInteger.valueOf(Integer.MIN_VALUE).intValueChecked());
+      Assert.assertEquals(Integer.MAX_VALUE, BigInteger.valueOf(Integer.MAX_VALUE).intValueChecked());
+      try {
+ BigInteger.valueOf(Integer.MIN_VALUE - 1L).intValueChecked();
+Assert.fail("Should have failed");
+} catch (ArithmeticException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ BigInteger.valueOf(Integer.MAX_VALUE + 1L).intValueChecked();
+Assert.fail("Should have failed");
+} catch (ArithmeticException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
     }
     @Test
     public void TestIntValueUnchecked() {
-      // not implemented yet
+      Assert.assertEquals(Integer.MIN_VALUE, BigInteger.valueOf(Integer.MIN_VALUE).intValueUnchecked());
+      Assert.assertEquals(Integer.MAX_VALUE, BigInteger.valueOf(Integer.MAX_VALUE).intValueUnchecked());
+      Assert.assertEquals(Integer.MAX_VALUE, BigInteger.valueOf(Integer.MIN_VALUE - 1L).intValueUnchecked());
+      Assert.assertEquals(Integer.MIN_VALUE, BigInteger.valueOf(Integer.MAX_VALUE + 1L).intValueUnchecked());
     }
     @Test
     public void TestIsEven() {
@@ -250,15 +283,52 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestLongValue() {
-      // not implemented yet
+      Assert.assertEquals(Long.MIN_VALUE, BigInteger.valueOf(Long.MIN_VALUE).longValue());
+      Assert.assertEquals(Long.MAX_VALUE, BigInteger.valueOf(Long.MAX_VALUE).longValue());
+      try {
+ BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE).longValue();
+Assert.fail("Should have failed");
+} catch (ArithmeticException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE).longValue();
+Assert.fail("Should have failed");
+} catch (ArithmeticException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
     }
     @Test
     public void TestLongValueChecked() {
-      // not implemented yet
+      Assert.assertEquals(Long.MIN_VALUE, BigInteger.valueOf(Long.MIN_VALUE).longValueChecked());
+      Assert.assertEquals(Long.MAX_VALUE, BigInteger.valueOf(Long.MAX_VALUE).longValueChecked());
+      try {
+ BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE).longValueChecked();
+Assert.fail("Should have failed");
+} catch (ArithmeticException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      try {
+ BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE).longValueChecked();
+Assert.fail("Should have failed");
+} catch (ArithmeticException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
     }
     @Test
     public void TestLongValueUnchecked() {
-      // not implemented yet
+      Assert.assertEquals(Long.MIN_VALUE, BigInteger.valueOf(Long.MIN_VALUE).longValueUnchecked());
+      Assert.assertEquals(Long.MAX_VALUE, BigInteger.valueOf(Long.MAX_VALUE).longValueUnchecked());
+      Assert.assertEquals(Long.MAX_VALUE, BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE).longValueUnchecked());
+      Assert.assertEquals(Long.MIN_VALUE, BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE).longValueUnchecked());
     }
     @Test
     public void TestMod() {
