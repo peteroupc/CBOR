@@ -380,21 +380,6 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Initializes a new instance of the BigInteger class.</summary>
-    /// <param name='bytes'>A byte array.</param>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='bytes'/> is null.</exception>
-    [Obsolete("Use BigInteger.fromByteArray(bytes,true) instead. This method may be removed in version 2.0.")]
-    public BigInteger(byte[] bytes) {
-      if (bytes == null) {
-        throw new ArgumentNullException("bytes");
-      }
-      BigInteger bi = fromByteArray(bytes, true);
-      this.words = bi.words;
-      this.wordCount = bi.wordCount;
-      this.negative = bi.negative;
-    }
-
     /// <summary>Not documented yet.</summary>
     /// <param name='other'>A BigInteger object.</param>
     /// <returns>A Boolean object.</returns>

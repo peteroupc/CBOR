@@ -672,14 +672,9 @@ public void setFlags(int value) {
 /// rounding mode is HalfUp.</summary>
 
 /**
- * @deprecated This context has the wrong settings. Use BigDecimalJava instead in the meantime. It may be corrected in version 2.
+ * @deprecated This context had the wrong settings in previous versions. Use BigDecimalJava instead.
  */
 @Deprecated
 
-    public static final PrecisionContext JavaBigDecimal =
-      new PrecisionContext(0, Rounding.HalfEven, 0, 0, true)
-        .WithExponentClamp(true)
-        .WithBigExponentRange(
-           BigInteger.ZERO.subtract(BigInteger.valueOf(Integer.MAX_VALUE)),
-           BigInteger.ONE.add(BigInteger.valueOf(Integer.MAX_VALUE)));
+    public static final PrecisionContext JavaBigDecimal = BigDecimalJava;
   }
