@@ -15,28 +15,6 @@ import com.upokecenter.cbor.*;
 
   public class CBORSupplementTest {
     @Test
-    public void TestCBORObjectAbs() {
-      Assert.assertEquals(
-        CBORObject.FromObject(2),
-        CBORObject.FromObject(-2).Abs());
-      Assert.assertEquals(
-        CBORObject.FromObject(2),
-        CBORObject.FromObject(2).Abs());
-      Assert.assertEquals(
-        CBORObject.FromObject(2.5),
-        CBORObject.FromObject(-2.5).Abs());
-      Assert.assertEquals(
-        CBORObject.FromObject(ExtendedDecimal.FromString("6.63")),
-        CBORObject.FromObject(ExtendedDecimal.FromString("-6.63")).Abs());
-      Assert.assertEquals(
-        CBORObject.FromObject(ExtendedFloat.FromString("2.75")),
-        CBORObject.FromObject(ExtendedFloat.FromString("-2.75")).Abs());
-      Assert.assertEquals(
-        CBORObject.FromObject(ExtendedRational.FromDouble(2.5)),
-        CBORObject.FromObject(ExtendedRational.FromDouble(-2.5)).Abs());
-    }
-
-    @Test
     public void IncorrectDecimalFrac() {
       byte[] bytes;
       // String instead of array
@@ -91,26 +69,6 @@ import com.upokecenter.cbor.*;
         CBORObject.DecodeFromBytes(bytes);
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-    }
-
-    @Test
-    public void TestPrecisionContextArgValidation() {
-      try {
-        Assert.assertEquals(null, new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
-        Assert.fail("Should have failed");
-      } catch (IllegalArgumentException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        Assert.assertEquals(null, new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
-        Assert.fail("Should have failed");
-      } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
@@ -185,34 +143,7 @@ import com.upokecenter.cbor.*;
     }
 
     @Test
-    public void TestCBORObjectMisc() {
-      Assert.assertEquals(CBORObject.Null, CBORObject.FromObject((ExtendedRational)null));
-      Assert.assertEquals(CBORObject.Null, CBORObject.FromObject((ExtendedDecimal)null));
-      Assert.assertEquals(CBORObject.FromObject(10), CBORObject.FromObject(ExtendedRational.Create(10, 1)));
-      try {
-        CBORObject.FromObject(ExtendedRational.Create(10, 2));
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-    }
-
-    @Test
     public void TestCBORObjectArgumentValidation() {
-      try {
-        CBORObject.FromObjectAndTag(CBORObject.Null, -1);
-        Assert.fail("Should have failed");
-      } catch (IllegalArgumentException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.FromObjectAndTag(CBORObject.Null, 999999);
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
       try {
         CBORObject.FromObject('\udddd');
         Assert.fail("Should have failed");

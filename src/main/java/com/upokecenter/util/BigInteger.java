@@ -2163,15 +2163,15 @@ at: http://upokecenter.com/d/
       if (c == 0) {
         return 0;
       }
-      int ivv = ((int)this.words[0]) & 0xffff;
+      int intRetValue = ((int)this.words[0]) & 0xffff;
       if (c > 1) {
-        ivv |= (((int)this.words[1]) & 0xffff) << 16;
+        intRetValue |= (((int)this.words[1]) & 0xffff) << 16;
       }
       if (this.negative) {
-        ivv = (ivv - 1);
-        ivv = (~ivv);
+        intRetValue = (intRetValue - 1);
+        intRetValue = (~intRetValue);
       }
-      return ivv;
+      return intRetValue;
     }
 
     /**

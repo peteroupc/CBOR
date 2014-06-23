@@ -8,7 +8,24 @@ namespace Test {
   public class CBORObjectTest {
     [TestMethod]
     public void TestAbs() {
-      // not implemented yet
+      Assert.AreEqual(
+        CBORObject.FromObject(2),
+        CBORObject.FromObject(-2).Abs());
+      Assert.AreEqual(
+        CBORObject.FromObject(2),
+        CBORObject.FromObject(2).Abs());
+      Assert.AreEqual(
+        CBORObject.FromObject(2.5),
+        CBORObject.FromObject(-2.5).Abs());
+      Assert.AreEqual(
+        CBORObject.FromObject(ExtendedDecimal.FromString("6.63")),
+        CBORObject.FromObject(ExtendedDecimal.FromString("-6.63")).Abs());
+      Assert.AreEqual(
+        CBORObject.FromObject(ExtendedFloat.FromString("2.75")),
+        CBORObject.FromObject(ExtendedFloat.FromString("-2.75")).Abs());
+      Assert.AreEqual(
+        CBORObject.FromObject(ExtendedRational.FromDouble(2.5)),
+        CBORObject.FromObject(ExtendedRational.FromDouble(-2.5)).Abs());
     }
     [TestMethod]
     public void TestAdd() {
@@ -581,7 +598,60 @@ namespace Test {
     }
     [TestMethod]
     public void TestAsSingle() {
-      // not implemented yet
+      try {
+        CBORObject.NewArray().AsSingle();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewMap().AsSingle();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.True.AsSingle();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.False.AsSingle();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.Undefined.AsSingle();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObject(String.Empty).AsSingle();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      CBORObject numbers = GetNumberData();
+      for (int i = 0; i < numbers.Count; ++i) {
+        CBORObject numberinfo = numbers[i];
+        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"].AsString()));
+        Assert.AreEqual(ExtendedDecimal.FromString(numberinfo["number"].AsString()).ToSingle(), cbornumber.AsSingle());
+      }
     }
     [TestMethod]
     public void TestAsString() {
@@ -1260,9 +1330,39 @@ namespace Test {
       Assert.IsTrue(CBORObject.FromObject(2).CompareTo(cbor[0]) == 0);
       Assert.IsTrue(CBORObject.FromObject(3).CompareTo(cbor[1]) == 0);
       TestCommon.AssertRoundTrip(cbor);
+      Assert.AreEqual(CBORObject.Null, CBORObject.FromObject((ExtendedRational)null));
+      Assert.AreEqual(CBORObject.Null, CBORObject.FromObject((ExtendedDecimal)null));
+      Assert.AreEqual(CBORObject.FromObject(10), CBORObject.FromObject(ExtendedRational.Create(10, 1)));
+      try {
+        CBORObject.FromObject(ExtendedRational.Create(10, 2));
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [TestMethod]
     public void TestFromObjectAndTag() {
+      try {
+        CBORObject.FromObjectAndTag(CBORObject.Null, -1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObjectAndTag(CBORObject.Null, 999999);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+    [TestMethod]
+    public void TestFromSimpleValue() {
+      // not implemented yet
+    }
+    [TestMethod]
+    public void TestGetByteString() {
       try {
         CBORObject.True.GetByteString();
         Assert.Fail("Should have failed");
@@ -1311,15 +1411,6 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-    }
-    [TestMethod]
-    public void TestFromSimpleValue() {
-      // not implemented yet
-    }
-    [TestMethod]
-    public void TestGetByteString() {
-      // not implemented yet
-      Assert.AreEqual(CBORObject.Null, CBORObject.FromObject((ExtendedRational)null));
     }
     [TestMethod]
     public void TestGetHashCode() {
