@@ -94,8 +94,10 @@ namespace PeterO {
             }
             BigInteger bigexp = ctx.EMin;
             BigInteger bigprec = ctx.Precision;
-            bigexp -= (BigInteger)bigprec;
-            bigexp += BigInteger.One;
+            if (ctx.AdjustExponent) {
+              bigexp -= (BigInteger)bigprec;
+              bigexp += BigInteger.One;
+            }
             thisFlags = (thisFlags ^ otherFlags) & BigNumberFlags.FlagNegative;
             return this.helper.CreateNewWithFlags(BigInteger.Zero, bigexp, thisFlags);
           }
@@ -1049,9 +1051,6 @@ namespace PeterO {
       // Now use original precision and rounding mode
       ctxdiv = ctx.WithBlankFlags();
       lnresult = this.Exp(lnresult, ctxdiv);
-      /* Console.WriteLine("expOut " + lnresult);
-      Console.WriteLine("expOut[m]"+this.NextMinus(lnresult,ctxdiv));
-      Console.WriteLine("expOut[n]"+this.NextPlus(lnresult,ctxdiv));*/
       if ((ctxdiv.Flags & (PrecisionContext.FlagClamped | PrecisionContext.FlagOverflow)) != 0) {
         if (!this.IsWithinExponentRangeForPow(thisValue, ctx)) {
           return this.SignalInvalid(ctx);
@@ -1334,19 +1333,6 @@ namespace PeterO {
       }
       return thisValue;
     }
-    /*
-    private string BitMantissa(T val) {
-      BigInteger mant = this.helper.GetMantissa(val);
-      var sb = new StringBuilder();
-      int len = mant.bitLength();
-      for (var i = 0; i < len; ++i) {
-        int shift = len-1-i;
-        BigInteger m2 = mant >> shift;
-        sb.Append(m2.IsEven ? '0' : '1');
-      }
-      return sb.ToString();
-    }
-     */
 
     public T Exp(T thisValue, PrecisionContext ctx) {
       if (ctx == null) {
@@ -1411,8 +1397,10 @@ namespace PeterO {
             // rounding
             BigInteger ctxdivPrec = ctxdiv.Precision;
             newMax = ctx.EMin;
-            newMax -= (BigInteger)ctxdivPrec;
-            newMax += BigInteger.One;
+            if (ctx.AdjustExponent) {
+              newMax -= (BigInteger)ctxdivPrec;
+              newMax += BigInteger.One;
+            }
             thisValue = this.helper.CreateNewWithFlags(BigInteger.Zero, newMax, 0);
             return this.RoundToPrecisionInternal(
               thisValue,
@@ -1425,11 +1413,6 @@ namespace PeterO {
         } else {
           thisValue = val;
         }
-        /*
-        Console.WriteLine("val=" + (thisValue));
-        Console.WriteLine("valbit "+this.BitMantissa(thisValue));
-        Console.WriteLine("end2= " + (this.Divide(one, thisValue, ctxdiv)));
-        Console.WriteLine("end2bit "+this.BitMantissa(this.Divide(one, thisValue, ctxdiv)));*/
         thisValue = this.Divide(one, thisValue, ctxCopy);
         // Console.WriteLine("end= " + (thisValue));
         // Console.WriteLine("endbit "+this.BitMantissa(thisValue));
@@ -1480,50 +1463,6 @@ namespace PeterO {
       }
       return thisValue;
     }
-
-    /*
-    private static BigInteger[] NthRootWithRemainder(BigInteger value, int root) {
-      if (root <= 0) {
- throw new ArgumentException("root (" + Convert.ToString((int)root, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
-}
-      if (value.Sign < 0) {
- throw new ArgumentException("value's sign (" + Convert.ToString((int)value.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
-}
-      if (value.Sign == 0) {
-        return new BigInteger[] { BigInteger.Zero, BigInteger.Zero };
-      }
-      if (value.Equals(BigInteger.One)) {
-        return new BigInteger[] { BigInteger.One, BigInteger.Zero };
-      }
-      if (root == 1) {
-        return new BigInteger[] { value, BigInteger.Zero };
-      }
-      if (root == 2) {
-        return value.sqrtWithRemainder();
-      }
-      int nm1 = root - 1;
-      int bits = value.bitLength();
-      int bitsdn = bits / root;
-      BigInteger bigintGuess = BigInteger.One << bitsdn;
-      BigInteger lastGuess = bigintGuess;
-      while (true) {
-        BigInteger bigintTmp = value;
-        bigintTmp /= (BigInteger)BigInteger.Pow(bigintGuess, nm1);
-        BigInteger bigintTmp2 = bigintGuess;
-        bigintGuess *= (BigInteger)nm1;
-        bigintGuess = bigintTmp + (BigInteger)bigintTmp2;
-        bigintGuess /= (BigInteger)root;
-        if (bigintGuess.Equals(lastGuess)) {
-          // Find the remainder, the difference between
-          // value and guess**root
-          lastGuess = BigInteger.Pow(bigintGuess, root);
-          lastGuess = value - (BigInteger)lastGuess;
-          return new BigInteger[] { bigintGuess, lastGuess };
-        }
-        lastGuess = bigintGuess;
-      }
-    }
-     */
 
     public T SquareRoot(T thisValue, PrecisionContext ctx) {
       if (ctx == null) {
@@ -1652,8 +1591,10 @@ namespace PeterO {
         } else {
           BigInteger bigexp2 = ctx.EMax;
           BigInteger bigprec = ctx.Precision;
-          bigexp2 += BigInteger.One;
-          bigexp2 -= (BigInteger)bigprec;
+          if (ctx.AdjustExponent) {
+            bigexp2 += BigInteger.One;
+            bigexp2 -= (BigInteger)bigprec;
+          }
           BigInteger overflowMant = this.TryMultiplyByRadixPower(BigInteger.One, FastInteger.FromBig(ctx.Precision));
           if (overflowMant == null) {
             return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
@@ -1708,8 +1649,10 @@ namespace PeterO {
           } else {
             BigInteger bigexp2 = ctx.EMax;
             BigInteger bigprec = ctx.Precision;
-            bigexp2 += BigInteger.One;
-            bigexp2 -= (BigInteger)bigprec;
+            if (ctx.AdjustExponent) {
+              bigexp2 += BigInteger.One;
+              bigexp2 -= (BigInteger)bigprec;
+            }
             BigInteger overflowMant = this.TryMultiplyByRadixPower(BigInteger.One, FastInteger.FromBig(ctx.Precision));
             if (overflowMant == null) {
               return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
@@ -1782,8 +1725,10 @@ namespace PeterO {
         if ((flags & BigNumberFlags.FlagNegative) != 0) {
           BigInteger bigexp2 = ctx.EMax;
           BigInteger bigprec = ctx.Precision;
-          bigexp2 += BigInteger.One;
-          bigexp2 -= (BigInteger)bigprec;
+          if (ctx.AdjustExponent) {
+            bigexp2 += BigInteger.One;
+            bigexp2 -= (BigInteger)bigprec;
+          }
           BigInteger overflowMant = this.TryMultiplyByRadixPower(BigInteger.One, FastInteger.FromBig(ctx.Precision));
           if (overflowMant == null) {
             return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
@@ -1810,12 +1755,6 @@ namespace PeterO {
       return this.Add(val, quantum, ctx2);
     }
 
-    /// <summary>Divides two T objects.</summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='divisor'>A T object. (2).</param>
-    /// <param name='desiredExponent'>A BigInteger object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>The quotient of the two objects.</returns>
     public T DivideToExponent(T thisValue, T divisor, BigInteger desiredExponent, PrecisionContext ctx) {
       if (ctx != null && !ctx.ExponentWithinRange(desiredExponent)) {
         return this.SignalInvalidWithMessage(ctx, "Exponent not within exponent range: " + desiredExponent);
@@ -1837,12 +1776,6 @@ namespace PeterO {
       return ret;
     }
 
-    /// <summary>Divides two T objects.</summary>
-    /// <summary>Divides two T objects.</summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='divisor'>A T object. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>The quotient of the two objects.</returns>
     public T Divide(T thisValue, T divisor, PrecisionContext ctx) {
       return this.DivideInternal(thisValue, divisor, ctx, IntegerModeRegular, BigInteger.Zero);
     }

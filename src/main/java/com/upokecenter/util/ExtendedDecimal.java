@@ -245,10 +245,7 @@ at: http://upokecenter.com/d/
      * formatted number string.
      */
     public static ExtendedDecimal FromString(String str) {
-      if (str == null) {
-        throw new NullPointerException("str");
-      }
-      return FromString(str, 0, str.length(), null);
+      return FromString(str, 0, str == null ? 0 : str.length(), null);
     }
 
     /**
@@ -265,10 +262,7 @@ at: http://upokecenter.com/d/
      * formatted number string.
      */
     public static ExtendedDecimal FromString(String str, PrecisionContext ctx) {
-      if (str == null) {
-        throw new NullPointerException("str");
-      }
-      return FromString(str, 0, str.length(), ctx);
+      return FromString(str, 0, str == null ? 0 : str.length(), ctx);
     }
 
     /**
@@ -286,9 +280,6 @@ at: http://upokecenter.com/d/
      * formatted number string.
      */
     public static ExtendedDecimal FromString(String str, int offset, int length) {
-      if (str == null) {
-        throw new NullPointerException("str");
-      }
       return FromString(str, offset, length, null);
     }
 

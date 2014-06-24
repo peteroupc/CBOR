@@ -2212,21 +2212,36 @@ at: http://upokecenter.com/d/
       if (c == 0) {
         return (long)0;
       }
-      long ivv = ((long)this.words[0]) & 0xffffL;
+      long ivv;
+      int intRetValue = ((int)this.words[0]) & 0xffff;
       if (c > 1) {
-        ivv |= (((long)this.words[1]) & 0xffffL) << 16;
-        if (c > 2) {
-          ivv |= (((long)this.words[2]) & 0xffffL) << 32;
-          if (c > 3) {
-            ivv |= (((long)this.words[3]) & 0xffffL) << 48;
-          }
+        intRetValue |= (((int)this.words[1]) & 0xffff) << 16;
+      }
+      if (c > 2) {
+        int intRetValue2 = ((int)this.words[2]) & 0xffff;
+        if (c > 3) {
+          intRetValue2 |= (((int)this.words[3]) & 0xffff) << 16;
         }
+        if (this.negative) {
+          if (intRetValue == 0) {
+            intRetValue = (intRetValue - 1);
+            intRetValue2 = (intRetValue2 - 1);
+          } else {
+            intRetValue = (intRetValue - 1);
+          }
+          intRetValue = (~intRetValue);
+          intRetValue2 = (~intRetValue2);
+        }
+        ivv = ((long)intRetValue) & 0xFFFFFFFFL;
+        ivv |= ((long)intRetValue2) << 32;
+        return ivv;
+      } else {
+        ivv = ((long)intRetValue) & 0xFFFFFFFFL;
+        if (this.negative) {
+          ivv = -ivv;
+        }
+        return ivv;
       }
-      if (this.negative) {
-        ivv = (ivv - 1L);
-        ivv = (~ivv);
-      }
-      return ivv;
     }
 
     /**
@@ -3224,8 +3239,8 @@ at: http://upokecenter.com/d/
       }
       int count = CountWords(diffReg, diffReg.length);
       if (count == 0) {
- return BigInteger.ZERO;
-}
+        return BigInteger.ZERO;
+      }
       diffReg = ShortenArray(diffReg, count);
       return new BigInteger(count, diffReg, diffNeg);
     }
@@ -3556,10 +3571,10 @@ at: http://upokecenter.com/d/
             quo = -quo;
           }
           int rem = a - (b * quo);
-          BigInteger[] ret = new BigInteger[2];
-          ret[0] = BigInteger.valueOf(quo);
-          ret[1] = BigInteger.valueOf(rem);
-          return ret;
+          BigInteger[] quotAndRem = new BigInteger[2];
+          quotAndRem[0] = BigInteger.valueOf(quo);
+          quotAndRem[1] = BigInteger.valueOf(rem);
+          return quotAndRem;
         }
       }
       words1Size += words1Size & 1;

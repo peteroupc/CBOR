@@ -1278,12 +1278,10 @@ namespace PeterO.Cbor {
     /// <summary>Generates a CBOR object from an array of CBOR-encoded bytes.</summary>
     /// <param name='data'>A byte array.</param>
     /// <returns>A CBOR object corresponding to the data.</returns>
-    /// <exception cref='System.ArgumentException'>Data is empty. Note:
-    /// In version 2.0, this method may change to throw CBORException instead
-    /// if the data is empty.</exception>
     /// <exception cref='CBORException'>There was an error in reading
     /// or parsing the data. This includes cases where not all of the byte array
-    /// represents a CBOR object.</exception>
+    /// represents a CBOR object. This exception is also thrown if the parameter
+    /// <paramref name='data'/> is empty.</exception>
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='data'/> is null.</exception>
     public static CBORObject DecodeFromBytes(byte[] data) {
@@ -1291,7 +1289,7 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("data");
       }
       if (data.Length == 0) {
-        throw new ArgumentException("data is empty.");
+        throw new CBORException("data is empty.");
       }
       var firstbyte = (int)(data[0] & (int)0xff);
       int expectedLength = valueExpectedLengths[firstbyte];
@@ -3456,9 +3454,8 @@ namespace PeterO.Cbor {
           buffer[0] = (byte)'\\';
           buffer[1] = (byte)c;
           outputStream.Write(buffer, 0, 2);
-// } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {  // TODO: For 2.0
-        } else if (c < 0x20) {
-          // Control characters, and for 2.0, also the line and paragraph separators
+ } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
+          // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to JSON) strings
           buffer = buffer ?? (new byte[6]);
           if (startIndex != i) {
@@ -3527,9 +3524,8 @@ namespace PeterO.Cbor {
           }
           sb.Append('\\');
           sb.Append(c);
-// } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {  // TODO: For 2.0
-        } else if (c < 0x20) {
-          // Control characters, and for 2.0, also the line and paragraph separators
+ } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
+          // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to JSON) strings
           if (first) {
             first = false;

@@ -249,6 +249,12 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+      CBORObject numbers = GetNumberData();
+      for (int i = 0; i < numbers.Count; ++i) {
+        CBORObject numberinfo = numbers[i];
+        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"].AsString()));
+        Assert.AreEqual((double)ExtendedDecimal.FromString(numberinfo["number"].AsString()).ToDouble(), cbornumber.AsDouble());
+      }
     }
     [TestMethod]
     public void TestAsExtendedDecimal() {
@@ -650,7 +656,7 @@ namespace Test {
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"].AsString()));
-        Assert.AreEqual(ExtendedDecimal.FromString(numberinfo["number"].AsString()).ToSingle(), cbornumber.AsSingle());
+        Assert.AreEqual((float)ExtendedDecimal.FromString(numberinfo["number"].AsString()).ToSingle(), cbornumber.AsSingle());
       }
     }
     [TestMethod]
@@ -846,8 +852,8 @@ namespace Test {
       Assert.AreEqual(0, CBORObject.NewMap().Count);
     }
 
-    // TODO: For 2.0
-    public static void TestDecodeFromBytesVersion2Dot0() {
+    [TestMethod]
+    public void TestDecodeFromBytesVersion2Dot0() {
       try {
         CBORObject.DecodeFromBytes(new byte[] { });
         Assert.Fail("Should have failed");
@@ -1342,6 +1348,23 @@ namespace Test {
     }
     [TestMethod]
     public void TestFromObjectAndTag() {
+      BigInteger bigvalue = BigInteger.One << 100;
+      try {
+        CBORObject.FromObjectAndTag(2, bigvalue);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObjectAndTag(2, -1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
         CBORObject.FromObjectAndTag(CBORObject.Null, -1);
         Assert.Fail("Should have failed");
@@ -1356,10 +1379,56 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+      try {
+        CBORObject.FromObjectAndTag(2, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromObjectAndTag(2, BigInteger.Zero - BigInteger.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [TestMethod]
     public void TestFromSimpleValue() {
-      // not implemented yet
+      try {
+        CBORObject.FromSimpleValue(-1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.FromSimpleValue(256);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      for (int i = 0; i < 256; ++i) {
+        if (i >= 24 && i < 32) {
+          try {
+            CBORObject.FromSimpleValue(i);
+            Assert.Fail("Should have failed");
+          } catch (ArgumentException) {
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        } else {
+          CBORObject cbor = CBORObject.FromSimpleValue(i);
+          Assert.AreEqual(i, cbor.SimpleValue);
+        }
+      }
     }
     [TestMethod]
     public void TestGetByteString() {
@@ -1763,8 +1832,8 @@ namespace Test {
       // not implemented yet
     }
 
-    // TODO: Enable this test for 2.0
-    public static void TestToJSONStringFor2Dot0() {
+    [TestMethod]
+    public void TestToJSONStringFor2Dot0() {
       Assert.AreEqual("\"\u2027\\u2028\\u2029\u202a\"", CBORObject.FromObject("\u2027\u2028\u2029\u202a").ToJSONString());
     }
 
@@ -1795,6 +1864,7 @@ namespace Test {
     [TestMethod]
     public void TestToString() {
       Assert.AreEqual("undefined", CBORObject.Undefined.ToString());
+      Assert.AreEqual("simple(50)", CBORObject.FromSimpleValue(50).ToString());
     }
     [TestMethod]
     public void TestType() {

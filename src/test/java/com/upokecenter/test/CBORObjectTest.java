@@ -249,6 +249,12 @@ import com.upokecenter.cbor.*;
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
+      CBORObject numbers = GetNumberData();
+      for (int i = 0; i < numbers.size(); ++i) {
+        CBORObject numberinfo = numbers.get(i);
+        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        Assert.assertEquals((double)ExtendedDecimal.FromString(numberinfo.get("number").AsString()).ToDouble(),cbornumber.AsDouble(),0);
+      }
     }
     @Test
     public void TestAsExtendedDecimal() {
@@ -650,7 +656,7 @@ import com.upokecenter.cbor.*;
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
         CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
-        Assert.assertEquals(ExtendedDecimal.FromString(numberinfo.get("number").AsString()).ToSingle(), cbornumber.AsSingle());
+        Assert.assertEquals((float)ExtendedDecimal.FromString(numberinfo.get("number").AsString()).ToSingle(),cbornumber.AsSingle(),0f);
       }
     }
     @Test
@@ -846,8 +852,8 @@ import com.upokecenter.cbor.*;
       Assert.assertEquals(0, CBORObject.NewMap().size());
     }
 
-    // TODO: For 2.0
-    public static void TestDecodeFromBytesVersion2Dot0() {
+    @Test
+    public void TestDecodeFromBytesVersion2Dot0() {
       try {
         CBORObject.DecodeFromBytes(new byte[] {   });
         Assert.fail("Should have failed");
@@ -1342,6 +1348,23 @@ import com.upokecenter.cbor.*;
     }
     @Test
     public void TestFromObjectAndTag() {
+      BigInteger bigvalue = BigInteger.ONE.shiftLeft(100);
+      try {
+        CBORObject.FromObjectAndTag(2, bigvalue);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromObjectAndTag(2, -1);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
       try {
         CBORObject.FromObjectAndTag(CBORObject.Null, -1);
         Assert.fail("Should have failed");
@@ -1356,10 +1379,56 @@ import com.upokecenter.cbor.*;
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
+      try {
+        CBORObject.FromObjectAndTag(2, null);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromObjectAndTag(2, BigInteger.ZERO.subtract(BigInteger.ONE));
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
     @Test
     public void TestFromSimpleValue() {
-      // not implemented yet
+      try {
+        CBORObject.FromSimpleValue(-1);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      try {
+        CBORObject.FromSimpleValue(256);
+        Assert.fail("Should have failed");
+      } catch (IllegalArgumentException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
+      for (int i = 0; i < 256; ++i) {
+        if (i >= 24 && i < 32) {
+          try {
+            CBORObject.FromSimpleValue(i);
+            Assert.fail("Should have failed");
+          } catch (IllegalArgumentException ex) {
+          } catch (Exception ex) {
+            Assert.fail(ex.toString());
+            throw new IllegalStateException("", ex);
+          }
+        } else {
+          CBORObject cbor = CBORObject.FromSimpleValue(i);
+          Assert.assertEquals(i, cbor.getSimpleValue());
+        }
+      }
     }
     @Test
     public void TestGetByteString() {
@@ -1763,8 +1832,8 @@ import com.upokecenter.cbor.*;
       // not implemented yet
     }
 
-    // TODO: Enable this test for 2.0
-    public static void TestToJSONStringFor2Dot0() {
+    @Test
+    public void TestToJSONStringFor2Dot0() {
       Assert.assertEquals("\"\u2027\\u2028\\u2029\u202a\"", CBORObject.FromObject("\u2027\u2028\u2029\u202a").ToJSONString());
     }
 
@@ -1795,6 +1864,7 @@ import com.upokecenter.cbor.*;
     @Test
     public void TestToString() {
       Assert.assertEquals("undefined", CBORObject.Undefined.toString());
+      Assert.assertEquals("simple(50)", CBORObject.FromSimpleValue(50).toString());
     }
     @Test
     public void TestType() {
