@@ -323,11 +323,9 @@ A CBOR object corresponding to the data.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
-Data is empty. Note: In version 2.0, this method may change to throw CBORException instead if the data is empty.
-
  * PeterO.Cbor.CBORException: 
-There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object.
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter <i>data</i>
+ is empty.
 
  * System.ArgumentNullException: 
 The parameter <i>data</i>

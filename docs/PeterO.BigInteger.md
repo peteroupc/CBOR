@@ -1074,25 +1074,6 @@ A BigInteger object.
 The parameter <i>bigValue</i>
  is null.
 
-### BigInteger Constructor
-
-    public BigInteger(
-        byte[] bytes);
-
-<b>Deprecated.</b> Use BigInteger.fromByteArray(bytes,true) instead. This method may be removed in version 2.0.
-
-Initializes a new instance of the BigInteger class.
-
-<b>Parameters:</b>
-
- * <i>bytes</i>: A byte array.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException: 
-The parameter <i>bytes</i>
- is null.
-
 ### Equals
 
     public sealed bool Equals(

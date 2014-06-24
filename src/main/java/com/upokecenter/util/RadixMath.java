@@ -94,8 +94,10 @@ at: http://upokecenter.com/d/
             }
             BigInteger bigexp = ctx.getEMin();
             BigInteger bigprec = ctx.getPrecision();
-            bigexp=bigexp.subtract(bigprec);
-            bigexp=bigexp.add(BigInteger.ONE);
+            if (ctx.getAdjustExponent()) {
+              bigexp=bigexp.subtract(bigprec);
+              bigexp=bigexp.add(BigInteger.ONE);
+            }
             thisFlags = (thisFlags ^ otherFlags) & BigNumberFlags.FlagNegative;
             return this.helper.CreateNewWithFlags(BigInteger.ZERO, bigexp, thisFlags);
           }
@@ -1041,9 +1043,6 @@ bigrem=divrem[1]; }
       // Now use original precision and rounding mode
       ctxdiv = ctx.WithBlankFlags();
       lnresult = this.Exp(lnresult, ctxdiv);
-      /* System.out.println("expOut " + lnresult);
-      System.out.println("expOut.get(m)"+this.NextMinus(lnresult,ctxdiv));
-      System.out.println("expOut.get(n)"+this.NextPlus(lnresult,ctxdiv));*/
       if ((ctxdiv.getFlags() & (PrecisionContext.FlagClamped | PrecisionContext.FlagOverflow)) != 0) {
         if (!this.IsWithinExponentRangeForPow(thisValue, ctx)) {
           return this.SignalInvalid(ctx);
@@ -1326,19 +1325,6 @@ bigrem=divrem[1]; }
       }
       return thisValue;
     }
-    /*
-    private String BitMantissa(T val) {
-      BigInteger mant = this.helper.GetMantissa(val);
-      StringBuilder sb = new StringBuilder();
-      int len = mant.bitLength();
-      for (int i = 0; i < len; ++i) {
-        int shift = len-1-i;
-        BigInteger m2 = mant >> shift;
-        sb.append(m2.testBit(0)==false ? '0' : '1');
-      }
-      return sb.toString();
-    }
-     */
 
     public T Exp(T thisValue, PrecisionContext ctx) {
       if (ctx == null) {
@@ -1403,8 +1389,10 @@ bigrem=divrem[1]; }
             // rounding
             BigInteger ctxdivPrec = ctxdiv.getPrecision();
             newMax = ctx.getEMin();
-            newMax=newMax.subtract(ctxdivPrec);
-            newMax=newMax.add(BigInteger.ONE);
+            if (ctx.getAdjustExponent()) {
+              newMax=newMax.subtract(ctxdivPrec);
+              newMax=newMax.add(BigInteger.ONE);
+            }
             thisValue = this.helper.CreateNewWithFlags(BigInteger.ZERO, newMax, 0);
             return this.RoundToPrecisionInternal(
               thisValue,
@@ -1417,11 +1405,6 @@ bigrem=divrem[1]; }
         } else {
           thisValue = val;
         }
-        /*
-        System.out.println("val=" + (thisValue));
-        System.out.println("valbit "+this.BitMantissa(thisValue));
-        System.out.println("end2= " + (this.Divide(one, thisValue, ctxdiv)));
-        System.out.println("end2bit "+this.BitMantissa(this.Divide(one, thisValue, ctxdiv)));*/
         thisValue = this.Divide(one, thisValue, ctxCopy);
         // System.out.println("end= " + (thisValue));
         // System.out.println("endbit "+this.BitMantissa(thisValue));
@@ -1472,50 +1455,6 @@ bigrem=divrem[1]; }
       }
       return thisValue;
     }
-
-    /*
-    private static BigInteger[] NthRootWithRemainder(BigInteger value, int root) {
-      if (root <= 0) {
- throw new IllegalArgumentException("root (" + Integer.toString((int)root) + ") is not greater than " + "0");
-}
-      if (value.signum() < 0) {
- throw new IllegalArgumentException("value's sign (" + Integer.toString((int)value.signum()) + ") is less than " + "0");
-}
-      if (value.signum() == 0) {
-        return new BigInteger[] { BigInteger.ZERO, BigInteger.ZERO };
-      }
-      if (value.equals(BigInteger.ONE)) {
-        return new BigInteger[] { BigInteger.ONE, BigInteger.ZERO };
-      }
-      if (root == 1) {
-        return new BigInteger[] { value, BigInteger.ZERO };
-      }
-      if (root == 2) {
-        return value.sqrtWithRemainder();
-      }
-      int nm1 = root - 1;
-      int bits = value.bitLength();
-      int bitsdn = bits / root;
-      BigInteger bigintGuess = BigInteger.ONE.shiftLeft(bitsdn);
-      BigInteger lastGuess = bigintGuess;
-      while (true) {
-        BigInteger bigintTmp = value;
-        bigintTmp=bigintTmp.divide(bigintGuess).pow(nm1);
-        BigInteger bigintTmp2 = bigintGuess;
-        bigintGuess=bigintGuess.multiply(BigInteger.valueOf(nm1));
-        bigintGuess = bigintTmp.add(bigintTmp2);
-        bigintGuess=bigintGuess.divide(BigInteger.valueOf(root));
-        if (bigintGuess.equals(lastGuess)) {
-          // Find the remainder, the difference between
-          // value and guess**root
-          lastGuess = (bigintGuess).pow(root);
-          lastGuess = value.subtract(lastGuess);
-          return new BigInteger[] { bigintGuess, lastGuess };
-        }
-        lastGuess = bigintGuess;
-      }
-    }
-     */
 
     public T SquareRoot(T thisValue, PrecisionContext ctx) {
       if (ctx == null) {
@@ -1644,8 +1583,10 @@ bigrem=divrem[1]; }
         } else {
           BigInteger bigexp2 = ctx.getEMax();
           BigInteger bigprec = ctx.getPrecision();
-          bigexp2=bigexp2.add(BigInteger.ONE);
-          bigexp2=bigexp2.subtract(bigprec);
+          if (ctx.getAdjustExponent()) {
+            bigexp2=bigexp2.add(BigInteger.ONE);
+            bigexp2=bigexp2.subtract(bigprec);
+          }
           BigInteger overflowMant = this.TryMultiplyByRadixPower(BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()));
           if (overflowMant == null) {
             return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
@@ -1700,8 +1641,10 @@ bigrem=divrem[1]; }
           } else {
             BigInteger bigexp2 = ctx.getEMax();
             BigInteger bigprec = ctx.getPrecision();
-            bigexp2=bigexp2.add(BigInteger.ONE);
-            bigexp2=bigexp2.subtract(bigprec);
+            if (ctx.getAdjustExponent()) {
+              bigexp2=bigexp2.add(BigInteger.ONE);
+              bigexp2=bigexp2.subtract(bigprec);
+            }
             BigInteger overflowMant = this.TryMultiplyByRadixPower(BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()));
             if (overflowMant == null) {
               return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
@@ -1774,8 +1717,10 @@ bigrem=divrem[1]; }
         if ((flags & BigNumberFlags.FlagNegative) != 0) {
           BigInteger bigexp2 = ctx.getEMax();
           BigInteger bigprec = ctx.getPrecision();
-          bigexp2=bigexp2.add(BigInteger.ONE);
-          bigexp2=bigexp2.subtract(bigprec);
+          if (ctx.getAdjustExponent()) {
+            bigexp2=bigexp2.add(BigInteger.ONE);
+            bigexp2=bigexp2.subtract(bigprec);
+          }
           BigInteger overflowMant = this.TryMultiplyByRadixPower(BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()));
           if (overflowMant == null) {
             return this.SignalInvalidWithMessage(ctx, "Result requires too much memory");
@@ -1802,14 +1747,6 @@ bigrem=divrem[1]; }
       return this.Add(val, quantum, ctx2);
     }
 
-    /**
-     * Divides two T objects.
-     * @param thisValue A T object.
-     * @param divisor A T object. (2).
-     * @param desiredExponent A BigInteger object.
-     * @param ctx A PrecisionContext object.
-     * @return The quotient of the two objects.
-     */
     public T DivideToExponent(T thisValue, T divisor, BigInteger desiredExponent, PrecisionContext ctx) {
       if (ctx != null && !ctx.ExponentWithinRange(desiredExponent)) {
         return this.SignalInvalidWithMessage(ctx, "Exponent not within exponent range: " + desiredExponent);
@@ -1831,13 +1768,6 @@ bigrem=divrem[1]; }
       return ret;
     }
 
-    /**
-     * Divides two T objects.
-     * @param thisValue A T object.
-     * @param divisor A T object. (2).
-     * @param ctx A PrecisionContext object.
-     * @return The quotient of the two objects.
-     */
     public T Divide(T thisValue, T divisor, PrecisionContext ctx) {
       return this.DivideInternal(thisValue, divisor, ctx, IntegerModeRegular, BigInteger.ZERO);
     }

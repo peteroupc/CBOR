@@ -257,10 +257,7 @@ namespace PeterO {
     /// <exception cref='FormatException'>The parameter <paramref name='str'/>
     /// is not a correctly formatted number string.</exception>
     public static ExtendedDecimal FromString(String str) {
-      if (str == null) {
-        throw new ArgumentNullException("str");
-      }
-      return FromString(str, 0, str.Length, null);
+      return FromString(str, 0, str == null ? 0 : str.Length, null);
     }
 
     /// <summary>Creates a decimal number from a string that represents
@@ -275,10 +272,7 @@ namespace PeterO {
     /// <exception cref='FormatException'>The parameter <paramref name='str'/>
     /// is not a correctly formatted number string.</exception>
     public static ExtendedDecimal FromString(String str, PrecisionContext ctx) {
-      if (str == null) {
-        throw new ArgumentNullException("str");
-      }
-      return FromString(str, 0, str.Length, ctx);
+      return FromString(str, 0, str == null ? 0 : str.Length, ctx);
     }
 
     /// <summary>Creates a decimal number from a string that represents
@@ -294,9 +288,6 @@ namespace PeterO {
     /// <exception cref='FormatException'>The parameter <paramref name='str'/>
     /// is not a correctly formatted number string.</exception>
     public static ExtendedDecimal FromString(String str, int offset, int length) {
-      if (str == null) {
-        throw new ArgumentNullException("str");
-      }
       return FromString(str, offset, length, null);
     }
 

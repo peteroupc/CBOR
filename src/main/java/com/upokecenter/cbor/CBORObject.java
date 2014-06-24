@@ -1229,12 +1229,10 @@ public boolean equals(CBORObject other) {
      * Generates a CBOR object from an array of CBOR-encoded bytes.
      * @param data A byte array.
      * @return A CBOR object corresponding to the data.
-     * @throws java.lang.IllegalArgumentException Data is empty. Note: In version
-     * 2.0, this method may change to throw CBORException instead if the
-     * data is empty.
      * @throws CBORException There was an error in reading or parsing the
      * data. This includes cases where not all of the byte array represents
-     * a CBOR object.
+     * a CBOR object. This exception is also thrown if the parameter {@code
+     * data} is empty.
      * @throws java.lang.NullPointerException The parameter {@code data}
      * is null.
      */
@@ -1243,7 +1241,7 @@ public boolean equals(CBORObject other) {
         throw new NullPointerException("data");
       }
       if (data.length == 0) {
-        throw new IllegalArgumentException("data is empty.");
+        throw new CBORException("data is empty.");
       }
       int firstbyte = (int)(data[0] & (int)0xff);
       int expectedLength = valueExpectedLengths[firstbyte];
@@ -3488,9 +3486,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           buffer[0] = (byte)'\\';
           buffer[1] = (byte)c;
           outputStream.write(buffer,0,2);
-// } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {  // TODO: For 2.0
-        } else if (c < 0x20) {
-          // Control characters, and for 2.0, also the line and paragraph separators
+ } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
+          // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to JSON) strings
           buffer = (buffer == null) ? ((new byte[6])) : buffer;
           if (startIndex != i) {
@@ -3559,9 +3556,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           }
           sb.append('\\');
           sb.append(c);
-// } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {  // TODO: For 2.0
-        } else if (c < 0x20) {
-          // Control characters, and for 2.0, also the line and paragraph separators
+ } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
+          // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to JSON) strings
           if (first) {
             first = false;

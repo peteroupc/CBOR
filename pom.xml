@@ -11,6 +11,7 @@
     This implementation also doubles as a reader and writer of JSON, and can convert data from JSON to CBOR and back.
     Finally, this implementation supports arbitrary-precision binary and decimal floating-point numbers and rational numbers with arbitrary-precision components, and supports arithmetic with these numbers.
 	</description>
+	<url>https://github.com/peteroupc/CBOR</url>
 	<profiles>
 		<profile>
 			<id>release</id>
@@ -79,7 +80,6 @@
 			<email>poccil14@gmail.com</email>
 		</developer>
 	</developers>
-	<url>https://github.com/peteroupc/CBOR</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

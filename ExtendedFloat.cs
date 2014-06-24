@@ -272,10 +272,7 @@ namespace PeterO {
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null.</exception>
     public static ExtendedFloat FromString(String str) {
-      if (str == null) {
-        throw new ArgumentNullException("str");
-      }
-      return FromString(str, 0, str.Length, null);
+      return FromString(str, 0, str == null ? 0 : str.Length, null);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -285,10 +282,7 @@ namespace PeterO {
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null.</exception>
     public static ExtendedFloat FromString(String str, PrecisionContext ctx) {
-      if (str == null) {
-        throw new ArgumentNullException("str");
-      }
-      return FromString(str, 0, str.Length, ctx);
+      return FromString(str, 0, str == null ? 0 : str.Length, ctx);
     }
 
     /// <summary>Not documented yet.</summary>
@@ -299,9 +293,6 @@ namespace PeterO {
     /// <exception cref='System.ArgumentNullException'>The parameter
     /// <paramref name='str'/> is null.</exception>
     public static ExtendedFloat FromString(String str, int offset, int length) {
-      if (str == null) {
-        throw new ArgumentNullException("str");
-      }
       return FromString(str, offset, length, null);
     }
 
