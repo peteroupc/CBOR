@@ -18,11 +18,11 @@ import com.upokecenter.util.*;
       this.sharedObjects = new ArrayList<CBORObject>();
     }
 
-    public void AddObject(CBORObject obj) {
+    public void AddObject(final CBORObject obj) {
         this.sharedObjects.add(obj);
     }
 
-    public CBORObject GetObject(long smallIndex) {
+    public CBORObject GetObject(final long smallIndex) {
       if (smallIndex < 0) {
         throw new CBORException("Unexpected index");
       }
@@ -36,7 +36,7 @@ import com.upokecenter.util.*;
       return this.sharedObjects.get(index);
     }
 
-    public CBORObject GetObject(BigInteger bigIndex) {
+    public CBORObject GetObject(final BigInteger bigIndex) {
       if (bigIndex.signum() < 0) {
         throw new CBORException("Unexpected index");
       }

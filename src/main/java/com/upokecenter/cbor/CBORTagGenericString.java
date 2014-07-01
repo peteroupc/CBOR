@@ -16,7 +16,7 @@ at: http://upokecenter.com/d/
       return CBORTypeFilter.TextString;
     }
 
-    public CBORObject ValidateObject(CBORObject obj) {
+    public CBORObject ValidateObject(final CBORObject obj) {
       if (obj.getType() == CBORType.TextString) {
         throw new CBORException("Not a text String");
       }

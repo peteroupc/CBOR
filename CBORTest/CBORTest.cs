@@ -1208,10 +1208,10 @@ namespace Test {
           while (ms.Position != ms.Length) {
             try {
               CBORObject o = CBORObject.Read(ms);
-              if (o == null) {
-                Assert.Fail("object read is null");
-              }
               try {
+                if (o == null) {
+                  Assert.Fail("object read is null");
+                }
                 CBORObject.DecodeFromBytes(o.EncodeToBytes());
               } catch (Exception ex) {
                 Assert.Fail(ex.ToString());

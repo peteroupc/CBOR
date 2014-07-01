@@ -19,12 +19,12 @@ import com.upokecenter.util.*;
     private boolean addSharedRef;
     private int depth;
 
-    public CBORReader (InputStream stream) {
+    public CBORReader (final InputStream stream) {
       this.stream = stream;
       this.sharedRefs = new SharedRefs();
     }
 
-    private static long ReadDataLength(InputStream stream, int headByte, int expectedType) throws IOException {
+    private static long ReadDataLength(final InputStream stream, int headByte, int expectedType) throws IOException {
       if (headByte < 0) {
         throw new CBORException("Unexpected data encountered");
       }
@@ -88,16 +88,16 @@ import com.upokecenter.util.*;
       }
     }
 
-    private static BigInteger ToUnsignedBigInteger(long val) {
+    private static BigInteger ToUnsignedBigInteger(final long val) {
       BigInteger lval = BigInteger.valueOf(val & ~(1L << 63));
       if ((val >> 63) != 0) {
         BigInteger bigintAdd = BigInteger.ONE.shiftLeft(63);
-        lval=lval.add(bigintAdd);
+        lval = lval.add(bigintAdd);
       }
       return lval;
     }
 
-    private static byte[] ReadByteData(InputStream stream, long uadditional, OutputStream outputStream) throws IOException {
+    private static byte[] ReadByteData(final InputStream stream, long uadditional, OutputStream outputStream) throws IOException {
       if ((uadditional >> 63) != 0 || uadditional > Integer.MAX_VALUE) {
         throw new CBORException("Length " + ToUnsignedBigInteger(uadditional) + " is bigger than supported");
       }
@@ -108,7 +108,7 @@ import com.upokecenter.util.*;
           throw new CBORException("Premature end of stream");
         }
         if (outputStream != null) {
-          outputStream.write(data,0,data.length);
+          outputStream.write(data, , ,data.length);
           return null;
         }
         return data;
@@ -121,33 +121,33 @@ import com.upokecenter.util.*;
             if (stream.read(tmpdata, 0, bufsize) != bufsize) {
               throw new CBORException("Premature end of stream");
             }
-            outputStream.write(tmpdata,0,bufsize);
+            outputStream.write(tmpdata, , ,bufsize);
             total -= bufsize;
           }
           return null;
         }
-        java.io.ByteArrayOutputStream ms=null;
+        java.io.ByteArrayOutputStream ms = null;
 try {
-ms=new java.io.ByteArrayOutputStream();
+ms = new java.io.ByteArrayOutputStream();
 
           while (total > 0) {
             int bufsize = Math.min(tmpdata.length, total);
             if (stream.read(tmpdata, 0, bufsize) != bufsize) {
               throw new CBORException("Premature end of stream");
             }
-            ms.write(tmpdata,0,bufsize);
+            ms.write(tmpdata, , ,bufsize);
             total -= bufsize;
           }
           return ms.toByteArray();
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
+try { if if s!=null)ms.close(); } catch (java.io.IOException ex){}
 }
       }
     }
 
     public CBORObject Read(
-      CBORTypeFilter filter) throws IOException {
+      final CBORTypeFilter filter) throws IOException {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
@@ -159,8 +159,8 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
     }
 
     public CBORObject ReadForFirstByte(
-      int firstbyte,
-      CBORTypeFilter filter) throws IOException {
+      final int firstbyte,
+      final CBORTypeFilter filter) throws IOException {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
@@ -285,9 +285,9 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
       if (type == 2) {  // Byte String
         if (additional == 31) {
           // Streaming byte String
-          java.io.ByteArrayOutputStream ms=null;
+          java.io.ByteArrayOutputStream ms = null;
 try {
-ms=new java.io.ByteArrayOutputStream();
+ms = new java.io.ByteArrayOutputStream();
 
             // Requires same type as this one
             while (true) {
@@ -313,7 +313,7 @@ ms=new java.io.ByteArrayOutputStream();
               data);
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
+try { if if s!=null)ms.close(); } catch (java.io.IOException ex){}
 }
         } else {
           if (hasBigAdditional) {
@@ -462,7 +462,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
             CBORObject key = this.ReadForFirstByte(headByte, null);
             CBORObject value = this.Read(null);
             --this.depth;
-            cbor.set(key,value);
+            cbor.set(key, , alue);
           }
           return cbor;
         }
@@ -481,7 +481,7 @@ try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
           CBORObject key = this.Read(null);
           CBORObject value = this.Read(null);
           --this.depth;
-          cbor.set(key,value);
+          cbor.set(key, , alue);
         }
         return cbor;
       }

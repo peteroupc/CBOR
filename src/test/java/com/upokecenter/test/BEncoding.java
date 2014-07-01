@@ -39,7 +39,7 @@ private BEncoding() {
         }
         CBORObject s = readString(stream, (char)c);
         CBORObject o = readObject(stream, false);
-        obj.set(s,o);
+        obj.set(s, o);
       }
       return obj;
     }
@@ -161,7 +161,7 @@ private BEncoding() {
         writeUtf8(s, stream);
       } else if (obj.getType() == CBORType.Map) {
         boolean hasNonStringKeys = false;
-        for(CBORObject key : obj.getKeys()) {
+        for (CBORObject key : obj.getKeys()) {
           if (key.getType() != CBORType.TextString) {
             hasNonStringKeys = true;
             break;
@@ -172,14 +172,14 @@ private BEncoding() {
           // Copy to a map with String keys, since
           // some keys could be duplicates
           // when serialized to strings
-          for(CBORObject key : obj.getKeys()) {
+          for (CBORObject key : obj.getKeys()) {
             CBORObject value = obj.get(key);
             String str = (key.getType() == CBORType.TextString) ?
               key.AsString() : key.ToJSONString();
-            valueSMap.put(str,value);
+            valueSMap.put(str, value);
           }
           stream.write(((byte)((byte)'d')));
-          for(Map.Entry<String, CBORObject> entry : valueSMap.entrySet()) {
+          for (Map.Entry<String, CBORObject> entry : valueSMap.entrySet()) {
             String key = entry.getKey();
             CBORObject value = entry.getValue();
             long length = DataUtilities.GetUtf8Length(key, false);
@@ -194,7 +194,7 @@ private BEncoding() {
           stream.write(((byte)((byte)'e')));
         } else {
           stream.write(((byte)((byte)'d')));
-          for(CBORObject key : obj.getKeys()) {
+          for (CBORObject key : obj.getKeys()) {
             String str = key.AsString();
             long length = DataUtilities.GetUtf8Length(str, false);
             if (length < 0) {

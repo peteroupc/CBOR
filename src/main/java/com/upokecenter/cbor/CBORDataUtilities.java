@@ -25,7 +25,7 @@ private CBORDataUtilities() {
      * @return A CBOR object that represents the parsed number. Returns
      * null if the parsing fails.
      */
-    public static CBORObject ParseJSONNumber(String str) {
+    public static CBORObject ParseJSONNumber(final String str) {
       return ParseJSONNumber(str, false, false);
     }
 
@@ -45,10 +45,10 @@ private CBORDataUtilities() {
      * null if the parsing fails.
      */
     public static CBORObject ParseJSONNumber(
-      String str,
-      boolean integersOnly,
-      boolean positiveOnly) {
-      if (((str)==null || (str).length()==0)) {
+      final String str,
+      final boolean integersOnly,
+      final boolean positiveOnly) {
+      if (((str) == null || (str).length() == 0)) {
         return null;
       }
       int offset = 0;
@@ -231,7 +231,7 @@ private CBORDataUtilities() {
         } else {
           BigInteger bigmant2 = mant.AsBigInteger();
           if (negative) {
-            bigmant2=(bigmant2).negate();
+            bigmant2 = (bigmant2).negate();
           }
           return CBORObject.FromObject(bigmant2);
         }
@@ -239,7 +239,7 @@ private CBORDataUtilities() {
         BigInteger bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
         BigInteger bigexp = (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger();
         if (negative) {
-          bigmant=(bigmant).negate();
+          bigmant = (bigmant).negate();
         }
         return CBORObject.FromObject(ExtendedDecimal.Create(
           bigmant,

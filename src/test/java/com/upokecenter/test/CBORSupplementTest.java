@@ -182,38 +182,6 @@ import com.upokecenter.cbor.*;
         throw new IllegalStateException("", ex);
       }
       try {
-        CBORObject.True.Negate();
-        Assert.fail("Should have failed");
-      } catch (IllegalStateException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.False.Negate();
-        Assert.fail("Should have failed");
-      } catch (IllegalStateException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.NewArray().Negate();
-        Assert.fail("Should have failed");
-      } catch (IllegalStateException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
-        CBORObject.NewMap().Negate();
-        Assert.fail("Should have failed");
-      } catch (IllegalStateException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
         CBORObject.True.Abs();
         Assert.fail("Should have failed");
       } catch (IllegalStateException ex) {

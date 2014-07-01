@@ -1222,10 +1222,10 @@ int startingAvailable=ms.available();
           while ((startingAvailable-ms.available()) != startingAvailable) {
             try {
               CBORObject o = CBORObject.Read(ms);
-              if (o == null) {
-                Assert.fail("Object read is null");
-              }
               try {
+                if (o == null) {
+                  Assert.fail("Object read is null");
+                }
                 CBORObject.DecodeFromBytes(o.EncodeToBytes());
               } catch (Exception ex) {
                 Assert.fail(ex.toString());

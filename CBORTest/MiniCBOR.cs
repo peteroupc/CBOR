@@ -60,13 +60,13 @@ namespace Test {
         // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.ReadByte();
-  } else if (b == 0xd9) {
+        } else if (b == 0xd9) {
           stream.Position += 2;
-  } else if (b == 0xda) {
+        } else if (b == 0xda) {
           stream.Position += 4;
-  } else if (b == 0xdb) {
+        } else if (b == 0xdb) {
           stream.Position += 8;
-  } else if (b > 0xdb) {
+        } else if (b > 0xdb) {
           throw new IOException("Not a boolean");
         }
         b = stream.ReadByte();
@@ -100,10 +100,10 @@ namespace Test {
       }
       if (value < 24) {
         stream.WriteByte((byte)(value | type));
-  } else if (value <= 0xff) {
+      } else if (value <= 0xff) {
         bytes = new[] { (byte)(24 | type), (byte)(value & 0xff) };
         stream.Write(bytes, 0, 2);
-  } else if (value <= 0xffff) {
+      } else if (value <= 0xffff) {
         bytes = new[] { (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff) };
         stream.Write(bytes, 0, 3);
       } else {
@@ -258,13 +258,13 @@ namespace Test {
         // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.ReadByte();
-  } else if (b == 0xd9) {
+        } else if (b == 0xd9) {
           stream.Position += 2;
-  } else if (b == 0xda) {
+        } else if (b == 0xda) {
           stream.Position += 4;
-  } else if (b == 0xdb) {
+        } else if (b == 0xdb) {
           stream.Position += 8;
-  } else if (b > 0xdb) {
+        } else if (b > 0xdb) {
           throw new IOException("Not a 32-bit integer");
         }
         b = stream.ReadByte();
@@ -312,13 +312,13 @@ namespace Test {
         // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.ReadByte();
-  } else if (b == 0xd9) {
+        } else if (b == 0xd9) {
           stream.Position += 2;
-  } else if (b == 0xda) {
+        } else if (b == 0xda) {
           stream.Position += 4;
-  } else if (b == 0xdb) {
+        } else if (b == 0xdb) {
           stream.Position += 8;
-  } else if (b > 0xdb) {
+        } else if (b > 0xdb) {
           throw new IOException("Not a 32-bit integer");
         }
         b = stream.ReadByte();

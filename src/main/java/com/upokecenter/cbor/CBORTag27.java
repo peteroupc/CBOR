@@ -13,7 +13,7 @@ at: http://upokecenter.com/d/
       return new CBORTypeFilter().WithArrayMinLength(1, CBORTypeFilter.Any);
     }
 
-    public CBORObject ValidateObject(CBORObject obj) {
+    public CBORObject ValidateObject(final CBORObject obj) {
       if (obj.getType() != CBORType.Array || obj.size() < 1) {
         throw new CBORException("Not an array, or is an empty array.");
       }

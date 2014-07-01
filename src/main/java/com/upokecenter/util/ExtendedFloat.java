@@ -70,7 +70,7 @@ at: http://upokecenter.com/d/
      * @return True if this object's mantissa and exponent are equal to those
      * of another object; otherwise, false.
      */
-    public boolean EqualsInternal(ExtendedFloat otherValue) {
+    public boolean EqualsInternal(final ExtendedFloat otherValue) {
       if (otherValue == null) {
         return false;
       }
@@ -86,7 +86,7 @@ at: http://upokecenter.com/d/
      * @return True if this object's mantissa and exponent are equal to those
      * of another object; otherwise, false.
      */
-    public boolean equals(ExtendedFloat other) {
+    public boolean equals(final ExtendedFloat other) {
       return this.EqualsInternal(other);
     }
 
@@ -97,7 +97,7 @@ at: http://upokecenter.com/d/
      * @param obj An arbitrary object.
      * @return True if the objects are equal; otherwise, false.
      */
-    @Override public boolean equals(Object obj) {
+    @Override public boolean equals(final Object obj) {
       return this.EqualsInternal(((obj instanceof ExtendedFloat) ? (ExtendedFloat)obj : null));
     }
 
@@ -125,7 +125,7 @@ at: http://upokecenter.com/d/
      * @throws java.lang.IllegalArgumentException The parameter {@code diag} is
      * less than 0.
      */
-    public static ExtendedFloat CreateNaN(BigInteger diag) {
+    public static ExtendedFloat CreateNaN(final BigInteger diag) {
       return CreateNaN(diag, false, false, null);
     }
 
@@ -143,14 +143,14 @@ at: http://upokecenter.com/d/
      * @throws java.lang.IllegalArgumentException The parameter {@code diag} is
      * less than 0.
      */
-    public static ExtendedFloat CreateNaN(BigInteger diag, boolean signaling, boolean negative, PrecisionContext ctx) {
+    public static ExtendedFloat CreateNaN(final BigInteger diag, final boolean signaling, final boolean negative, final PrecisionContext ctx) {
       if (diag == null) {
         throw new NullPointerException("diag");
       }
       if (diag.signum() < 0) {
         throw new IllegalArgumentException("Diagnostic information must be 0 or greater, was: " + diag);
       }
-      if (diag.signum()==0 && !negative) {
+      if (diag.signum() == 0 && !negative) {
         return signaling ? SignalingNaN : NaN;
       }
       int flags = 0;
@@ -175,7 +175,7 @@ at: http://upokecenter.com/d/
      * @param exponentSmall The binary exponent.
      * @return An ExtendedFloat object.
      */
-    public static ExtendedFloat Create(int mantissaSmall, int exponentSmall) {
+    public static ExtendedFloat Create(final int mantissaSmall, final int exponentSmall) {
       return Create(BigInteger.valueOf(mantissaSmall), BigInteger.valueOf(exponentSmall));
     }
 
@@ -187,7 +187,7 @@ at: http://upokecenter.com/d/
      * @throws java.lang.NullPointerException The parameter {@code mantissa}
      * or {@code exponent} is null.
      */
-    public static ExtendedFloat Create(BigInteger mantissa, BigInteger exponent) {
+    public static ExtendedFloat Create(final BigInteger mantissa, final BigInteger exponent) {
       if (mantissa == null) {
         throw new NullPointerException("mantissa");
       }
@@ -201,7 +201,7 @@ at: http://upokecenter.com/d/
         (sign < 0) ? BigNumberFlags.FlagNegative : 0);
     }
 
-    private ExtendedFloat(BigInteger unsignedMantissa, BigInteger exponent, int flags) {
+    private ExtendedFloat(final BigInteger unsignedMantissa, final BigInteger exponent, final int flags) {
 
       this.unsignedMantissa = unsignedMantissa;
       this.exponent = exponent;
@@ -209,9 +209,9 @@ at: http://upokecenter.com/d/
     }
 
     static ExtendedFloat CreateWithFlags(
-      BigInteger mantissa,
-      BigInteger exponent,
-      int flags) {
+      final BigInteger mantissa,
+      final BigInteger exponent,
+      final int flags) {
       if (mantissa == null) {
         throw new NullPointerException("mantissa");
       }
@@ -250,7 +250,7 @@ at: http://upokecenter.com/d/
      * @throws java.lang.NullPointerException The parameter {@code str}
      * is null.
      */
-    public static ExtendedFloat FromString(String str, int offset, int length, PrecisionContext ctx) {
+    public static ExtendedFloat FromString(final String str, final int offset, final int length, final PrecisionContext ctx) {
       if (str == null) {
         throw new NullPointerException("str");
       }
@@ -264,11 +264,8 @@ at: http://upokecenter.com/d/
      * @throws java.lang.NullPointerException The parameter {@code str}
      * is null.
      */
-    public static ExtendedFloat FromString(String str) {
-      if (str == null) {
-        throw new NullPointerException("str");
-      }
-      return FromString(str, 0, str.length(), null);
+    public static ExtendedFloat FromString(final String str) {
+      return FromString(str, 0, str == null ? 0 : str.length(), null);
     }
 
     /**
@@ -279,11 +276,8 @@ at: http://upokecenter.com/d/
      * @throws java.lang.NullPointerException The parameter {@code str}
      * is null.
      */
-    public static ExtendedFloat FromString(String str, PrecisionContext ctx) {
-      if (str == null) {
-        throw new NullPointerException("str");
-      }
-      return FromString(str, 0, str.length(), ctx);
+    public static ExtendedFloat FromString(final String str, final PrecisionContext ctx) {
+      return FromString(str, 0, str == null ? 0 : str.length(), ctx);
     }
 
     /**
@@ -295,10 +289,7 @@ at: http://upokecenter.com/d/
      * @throws java.lang.NullPointerException The parameter {@code str}
      * is null.
      */
-    public static ExtendedFloat FromString(String str, int offset, int length) {
-      if (str == null) {
-        throw new NullPointerException("str");
-      }
+    public static ExtendedFloat FromString(final String str, final int offset, final int length) {
       return FromString(str, offset, length, null);
     }
 
@@ -316,7 +307,7 @@ at: http://upokecenter.com/d/
      * @param value An ExtendedFloat object.
      * @return A 32-bit signed integer.
      */
-      public int GetSign(ExtendedFloat value) {
+      public int GetSign(final ExtendedFloat value) {
         return value.signum();
       }
 
@@ -325,7 +316,7 @@ at: http://upokecenter.com/d/
      * @param value An ExtendedFloat object.
      * @return A BigInteger object.
      */
-      public BigInteger GetMantissa(ExtendedFloat value) {
+      public BigInteger GetMantissa(final ExtendedFloat value) {
         return value.getMantissa();
       }
 
@@ -334,7 +325,7 @@ at: http://upokecenter.com/d/
      * @param value An ExtendedFloat object.
      * @return A BigInteger object.
      */
-      public BigInteger GetExponent(ExtendedFloat value) {
+      public BigInteger GetExponent(final ExtendedFloat value) {
         return value.exponent;
       }
 
@@ -345,7 +336,7 @@ at: http://upokecenter.com/d/
      * @param olderDigits A 32-bit signed integer. (2).
      * @return An IShiftAccumulator object.
      */
-      public IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger bigint, int lastDigit, int olderDigits) {
+      public IShiftAccumulator CreateShiftAccumulatorWithDigits(final BigInteger bigint, final int lastDigit, final int olderDigits) {
         return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
@@ -354,7 +345,7 @@ at: http://upokecenter.com/d/
      * @param bigint A BigInteger object.
      * @return An IShiftAccumulator object.
      */
-      public IShiftAccumulator CreateShiftAccumulator(BigInteger bigint) {
+      public IShiftAccumulator CreateShiftAccumulator(final BigInteger bigint) {
         return new BitShiftAccumulator(bigint, 0, 0);
       }
 
@@ -364,14 +355,14 @@ at: http://upokecenter.com/d/
      * @param den A BigInteger object. (2).
      * @return A Boolean object.
      */
-      public boolean HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
+      public boolean HasTerminatingRadixExpansion(final BigInteger num, final BigInteger den) {
         BigInteger gcd = num.gcd(den);
-        if (gcd.signum()==0) {
+        if (gcd.signum() == 0) {
           return false;
         }
-        den=den.divide(gcd);
-        while (den.testBit(0)==false) {
-          den=den.shiftRight(1);
+        den = den.divide(gcd);
+        while (den.testBit(0) == false) {
+          den = den.shiftRight(1);
         }
         return den.equals(BigInteger.ONE);
       }
@@ -382,18 +373,18 @@ at: http://upokecenter.com/d/
      * @param power A FastInteger object.
      * @return A BigInteger object.
      */
-      public BigInteger MultiplyByRadixPower(BigInteger bigint, FastInteger power) {
+      public BigInteger MultiplyByRadixPower(final BigInteger bigint, final FastInteger power) {
         if (power.signum() <= 0) {
           return bigint;
         }
         if (bigint.signum() < 0) {
-          bigint=bigint.negate();
+          bigint = bigint.negate();
           if (power.CanFitInInt32()) {
             bigint = DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
-            bigint=bigint.negate();
+            bigint = bigint.negate();
           } else {
             bigint = DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
-            bigint=bigint.negate();
+            bigint = bigint.negate();
           }
           return bigint;
         }
@@ -405,7 +396,7 @@ at: http://upokecenter.com/d/
      * @param value An ExtendedFloat object.
      * @return A 32-bit signed integer.
      */
-      public int GetFlags(ExtendedFloat value) {
+      public int GetFlags(final ExtendedFloat value) {
         return value.flags;
       }
 
@@ -416,7 +407,7 @@ at: http://upokecenter.com/d/
      * @param flags A 32-bit signed integer.
      * @return An ExtendedFloat object.
      */
-      public ExtendedFloat CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags) {
+      public ExtendedFloat CreateNewWithFlags(final BigInteger mantissa, final BigInteger exponent, final int flags) {
         return ExtendedFloat.CreateWithFlags(mantissa, exponent, flags);
       }
 
@@ -433,7 +424,7 @@ at: http://upokecenter.com/d/
      * @param val A 32-bit signed integer.
      * @return An ExtendedFloat object.
      */
-      public ExtendedFloat ValueOf(int val) {
+      public ExtendedFloat ValueOf(final int val) {
         return FromInt64(val);
       }
     }
@@ -460,11 +451,11 @@ at: http://upokecenter.com/d/
       return this.ToBigIntegerInternal(true);
     }
 
-    private BigInteger ToBigIntegerInternal(boolean exact) {
+    private BigInteger ToBigIntegerInternal(final boolean exact) {
       if (!this.isFinite()) {
         throw new ArithmeticException("Value is infinity or NaN");
       }
-      if (this.signum()==0) {
+      if (this.signum() == 0) {
         return BigInteger.ZERO;
       }
       int expsign = this.getExponent().signum();
@@ -476,16 +467,16 @@ at: http://upokecenter.com/d/
         // Integer with trailing zeros
         BigInteger curexp = this.getExponent();
         BigInteger bigmantissa = this.getMantissa();
-        if (bigmantissa.signum()==0) {
+        if (bigmantissa.signum() == 0) {
           return bigmantissa;
         }
         boolean neg = bigmantissa.signum() < 0;
         if (neg) {
-          bigmantissa=bigmantissa.negate();
+          bigmantissa = bigmantissa.negate();
         }
         bigmantissa = DecimalUtility.ShiftLeft(bigmantissa, curexp);
         if (neg) {
-          bigmantissa=bigmantissa.negate();
+          bigmantissa = bigmantissa.negate();
         }
         return bigmantissa;
       } else {
@@ -500,7 +491,7 @@ at: http://upokecenter.com/d/
         }
         bigmantissa = acc.getShiftedInt();
         if (this.isNegative()) {
-          bigmantissa=bigmantissa.negate();
+          bigmantissa = bigmantissa.negate();
         }
         return bigmantissa;
       }
@@ -541,21 +532,21 @@ at: http://upokecenter.com/d/
           // the mantissa from being zero
           nan |= 0x200000;
         }
-        if (this.getUnsignedMantissa().signum()!=0) {
+        if (this.getUnsignedMantissa().signum() != 0) {
           // Transfer diagnostic information
           BigInteger bigdata = this.getUnsignedMantissa().remainder(BigInteger.valueOf(0x200000));
           nan |= bigdata.intValue();
         }
         return Float.intBitsToFloat(nan);
       }
-      if (this.isNegative() && this.signum()==0) {
+      if (this.isNegative() && this.signum() == 0) {
         return Float.intBitsToFloat(1 << 31);
       }
       BigInteger bigmant = (this.unsignedMantissa).abs();
       FastInteger bigexponent = FastInteger.FromBig(this.exponent);
       int bitLeftmost = 0;
       int bitsAfterLeftmost = 0;
-      if (this.unsignedMantissa.signum()==0) {
+      if (this.unsignedMantissa.signum() == 0) {
         return 0.0f;
       }
       int smallmant = 0;
@@ -664,7 +655,7 @@ at: http://upokecenter.com/d/
         } else {
           nan[1] |= 0x40000;
         }
-        if (this.getUnsignedMantissa().signum()!=0) {
+        if (this.getUnsignedMantissa().signum() != 0) {
           // Copy diagnostic information
           int[] words = FastInteger.GetLastWords(this.getUnsignedMantissa(), 2);
           nan[0] = words[0];
@@ -672,14 +663,14 @@ at: http://upokecenter.com/d/
         }
         return Extras.IntegersToDouble(nan);
       }
-      if (this.isNegative() && this.signum()==0) {
+      if (this.isNegative() && this.signum() == 0) {
         return Extras.IntegersToDouble(new int[] {((int)(1 << 31)), 0 });
       }
       BigInteger bigmant = (this.unsignedMantissa).abs();
       FastInteger bigexponent = FastInteger.FromBig(this.exponent);
       int bitLeftmost = 0;
       int bitsAfterLeftmost = 0;
-      if (this.unsignedMantissa.signum()==0) {
+      if (this.unsignedMantissa.signum() == 0) {
         return 0.0d;
       }
       int[] mantissaBits;
@@ -777,7 +768,7 @@ at: http://upokecenter.com/d/
      * @param flt A 32-bit floating-point number.
      * @return A binary float with the same value as {@code flt} .
      */
-    public static ExtendedFloat FromSingle(float flt) {
+    public static ExtendedFloat FromSingle(final float flt) {
       int value = Float.floatToRawIntBits(flt);
       boolean neg = (value >> 31) != 0;
       int floatExponent = (int)((value >> 23) & 0xff);
@@ -791,7 +782,7 @@ at: http://upokecenter.com/d/
         boolean quiet = (valueFpMantissa & 0x400000) != 0;
         valueFpMantissa &= 0x1fffff;
         bigmant = BigInteger.valueOf(valueFpMantissa);
-        if (bigmant.signum()==0) {
+        if (bigmant.signum() == 0) {
           return quiet ? NaN : SignalingNaN;
         }
         return CreateWithFlags(
@@ -825,7 +816,7 @@ at: http://upokecenter.com/d/
      * @param bigint A BigInteger object.
      * @return An ExtendedFloat object.
      */
-    public static ExtendedFloat FromBigInteger(BigInteger bigint) {
+    public static ExtendedFloat FromBigInteger(final BigInteger bigint) {
       return ExtendedFloat.Create(bigint, BigInteger.ZERO);
     }
 
@@ -834,7 +825,7 @@ at: http://upokecenter.com/d/
      * @param valueSmall A 64-bit signed integer.
      * @return An ExtendedFloat object.
      */
-    public static ExtendedFloat FromInt64(long valueSmall) {
+    public static ExtendedFloat FromInt64(final long valueSmall) {
       BigInteger bigint = BigInteger.valueOf(valueSmall);
       return ExtendedFloat.Create(bigint, BigInteger.ZERO);
     }
@@ -844,7 +835,7 @@ at: http://upokecenter.com/d/
      * @param valueSmaller A 32-bit signed integer.
      * @return An ExtendedDecimal object.
      */
-    public static ExtendedFloat FromInt32(int valueSmaller) {
+    public static ExtendedFloat FromInt32(final int valueSmaller) {
       BigInteger bigint = BigInteger.valueOf(valueSmaller);
       return ExtendedFloat.Create(bigint, BigInteger.ZERO);
     }
@@ -857,7 +848,7 @@ at: http://upokecenter.com/d/
      * @param dbl A 64-bit floating-point number.
      * @return A binary float with the same value as {@code dbl} .
      */
-    public static ExtendedFloat FromDouble(double dbl) {
+    public static ExtendedFloat FromDouble(final double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
       int floatExponent = (int)((value[1] >> 20) & 0x7ff);
       boolean neg = (value[1] >> 31) != 0;
@@ -869,7 +860,7 @@ at: http://upokecenter.com/d/
         boolean quiet = (value[1] & 0x80000) != 0;
         value[1] &= 0x3ffff;
         BigInteger info = FastInteger.WordsToBigInteger(value);
-        if (info.signum()==0) {
+        if (info.signum() == 0) {
           return quiet ? NaN : SignalingNaN;
         }
         return CreateWithFlags(
@@ -1074,7 +1065,7 @@ at: http://upokecenter.com/d/
      */
     public int signum() {
         return (((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
-                this.unsignedMantissa.signum()==0) ? 0 :
+                this.unsignedMantissa.signum() == 0) ? 0 :
           (((this.flags & BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
       }
 
@@ -1084,7 +1075,7 @@ at: http://upokecenter.com/d/
      * @return True if this object's value equals 0; otherwise, false.
      */
     public boolean isZero() {
-        return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum()==0;
+        return ((this.flags & BigNumberFlags.FlagSpecial) == 0) && this.unsignedMantissa.signum() == 0;
       }
 
     /**
@@ -1114,7 +1105,7 @@ at: http://upokecenter.com/d/
      * @throws ArithmeticException The result can't be exact because it
      * would have a nonterminating binary expansion.
      */
-    public ExtendedFloat Divide(ExtendedFloat divisor) {
+    public ExtendedFloat Divide(final ExtendedFloat divisor) {
       return this.Divide(divisor, PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
 
@@ -1131,7 +1122,7 @@ at: http://upokecenter.com/d/
      * @throws ArithmeticException The rounding mode is Rounding.Unnecessary
      * and the result is not exact.
      */
-    public ExtendedFloat DivideToSameExponent(ExtendedFloat divisor, Rounding rounding) {
+    public ExtendedFloat DivideToSameExponent(final ExtendedFloat divisor, final Rounding rounding) {
       return this.DivideToExponent(divisor, this.exponent, PrecisionContext.ForRounding(rounding));
     }
 
@@ -1146,7 +1137,7 @@ at: http://upokecenter.com/d/
      * and the dividend are 0.
      */
     public ExtendedFloat DivideToIntegerNaturalScale(
-      ExtendedFloat divisor) {
+      final ExtendedFloat divisor) {
       return this.DivideToIntegerNaturalScale(divisor, PrecisionContext.ForRounding(Rounding.Down));
     }
 
@@ -1164,7 +1155,7 @@ at: http://upokecenter.com/d/
      * there may still be some trailing zeros in the mantissa.
      */
     public ExtendedFloat Reduce(
-      PrecisionContext ctx) {
+      final PrecisionContext ctx) {
       return MathValue.Reduce(this, ctx);
     }
 
@@ -1174,7 +1165,7 @@ at: http://upokecenter.com/d/
      * @return An ExtendedFloat object.
      */
     public ExtendedFloat RemainderNaturalScale(
-      ExtendedFloat divisor) {
+      final ExtendedFloat divisor) {
       return this.RemainderNaturalScale(divisor, null);
     }
 
@@ -1191,7 +1182,7 @@ at: http://upokecenter.com/d/
      * the precision and exponent range without rounding.
      * @return An ExtendedFloat object.
      */
-    public ExtendedFloat RemainderNaturalScale(ExtendedFloat divisor, PrecisionContext ctx) {
+    public ExtendedFloat RemainderNaturalScale(final ExtendedFloat divisor, final PrecisionContext ctx) {
       return this.Subtract(this.DivideToIntegerNaturalScale(divisor, ctx).Multiply(divisor, null), null);
     }
 
@@ -1220,9 +1211,9 @@ at: http://upokecenter.com/d/
      * and the result is not exact.
      */
     public ExtendedFloat DivideToExponent(
-      ExtendedFloat divisor,
-      long desiredExponentSmall,
-      PrecisionContext ctx) {
+      final ExtendedFloat divisor,
+      final long desiredExponentSmall,
+      final PrecisionContext ctx) {
       return this.DivideToExponent(divisor, BigInteger.valueOf(desiredExponentSmall), ctx);
     }
 
@@ -1245,8 +1236,8 @@ at: http://upokecenter.com/d/
      * and the result is not exact.
      */
     public ExtendedFloat Divide(
-      ExtendedFloat divisor,
-      PrecisionContext ctx) {
+      final ExtendedFloat divisor,
+      final PrecisionContext ctx) {
       return MathValue.Divide(this, divisor, ctx);
     }
 
@@ -1267,9 +1258,9 @@ at: http://upokecenter.com/d/
      * and the result is not exact.
      */
     public ExtendedFloat DivideToExponent(
-      ExtendedFloat divisor,
-      long desiredExponentSmall,
-      Rounding rounding) {
+      final ExtendedFloat divisor,
+      final long desiredExponentSmall,
+      final Rounding rounding) {
       return this.DivideToExponent(divisor, BigInteger.valueOf(desiredExponentSmall), PrecisionContext.ForRounding(rounding));
     }
 
@@ -1298,9 +1289,9 @@ at: http://upokecenter.com/d/
      * and the result is not exact.
      */
     public ExtendedFloat DivideToExponent(
-      ExtendedFloat divisor,
-      BigInteger exponent,
-      PrecisionContext ctx) {
+      final ExtendedFloat divisor,
+      final BigInteger exponent,
+      final PrecisionContext ctx) {
       return MathValue.DivideToExponent(this, divisor, exponent, ctx);
     }
 
@@ -1321,9 +1312,9 @@ at: http://upokecenter.com/d/
      * and the result is not exact.
      */
     public ExtendedFloat DivideToExponent(
-      ExtendedFloat divisor,
-      BigInteger desiredExponent,
-      Rounding rounding) {
+      final ExtendedFloat divisor,
+      final BigInteger desiredExponent,
+      final Rounding rounding) {
       return this.DivideToExponent(divisor, desiredExponent, PrecisionContext.ForRounding(rounding));
     }
 
@@ -1336,7 +1327,7 @@ at: http://upokecenter.com/d/
      * are in addition to the pre-existing flags). Can be null.
      * @return The absolute value of this object.
      */
-    public ExtendedFloat Abs(PrecisionContext context) {
+    public ExtendedFloat Abs(final PrecisionContext context) {
       return MathValue.Abs(this, context);
     }
 
@@ -1349,7 +1340,7 @@ at: http://upokecenter.com/d/
      * are in addition to the pre-existing flags). Can be null.
      * @return An ExtendedFloat object.
      */
-    public ExtendedFloat Negate(PrecisionContext context) {
+    public ExtendedFloat Negate(final PrecisionContext context) {
       return MathValue.Negate(this, context);
     }
 
@@ -1358,7 +1349,7 @@ at: http://upokecenter.com/d/
      * @param otherValue An ExtendedFloat object.
      * @return The sum of the two objects.
      */
-    public ExtendedFloat Add(ExtendedFloat otherValue) {
+    public ExtendedFloat Add(final ExtendedFloat otherValue) {
       return this.Add(otherValue, PrecisionContext.Unlimited);
     }
 
@@ -1368,7 +1359,7 @@ at: http://upokecenter.com/d/
      * @param otherValue An ExtendedFloat object.
      * @return The difference of the two objects.
      */
-    public ExtendedFloat Subtract(ExtendedFloat otherValue) {
+    public ExtendedFloat Subtract(final ExtendedFloat otherValue) {
       return this.Subtract(otherValue, null);
     }
 
@@ -1383,7 +1374,7 @@ at: http://upokecenter.com/d/
      * @throws java.lang.NullPointerException The parameter {@code otherValue}
      * is null.
      */
-    public ExtendedFloat Subtract(ExtendedFloat otherValue, PrecisionContext ctx) {
+    public ExtendedFloat Subtract(final ExtendedFloat otherValue, final PrecisionContext ctx) {
       if (otherValue == null) {
         throw new NullPointerException("otherValue");
       }
@@ -1401,7 +1392,7 @@ at: http://upokecenter.com/d/
      * @param otherValue Another binary float.
      * @return The product of the two binary floats.
      */
-    public ExtendedFloat Multiply(ExtendedFloat otherValue) {
+    public ExtendedFloat Multiply(final ExtendedFloat otherValue) {
       return this.Multiply(otherValue, PrecisionContext.Unlimited);
     }
 
@@ -1412,8 +1403,8 @@ at: http://upokecenter.com/d/
      * @return The result this * multiplicand + augend.
      */
     public ExtendedFloat MultiplyAndAdd(
-      ExtendedFloat multiplicand,
-      ExtendedFloat augend) {
+      final ExtendedFloat multiplicand,
+      final ExtendedFloat augend) {
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
@@ -1441,8 +1432,8 @@ at: http://upokecenter.com/d/
      * and the integer part of the result is not exact.
      */
     public ExtendedFloat DivideToIntegerNaturalScale(
-      ExtendedFloat divisor,
-      PrecisionContext ctx) {
+      final ExtendedFloat divisor,
+      final PrecisionContext ctx) {
       return MathValue.DivideToIntegerNaturalScale(this, divisor, ctx);
     }
 
@@ -1462,8 +1453,8 @@ at: http://upokecenter.com/d/
      * doesn't fit the given precision.
      */
     public ExtendedFloat DivideToIntegerZeroScale(
-      ExtendedFloat divisor,
-      PrecisionContext ctx) {
+      final ExtendedFloat divisor,
+      final PrecisionContext ctx) {
       return MathValue.DivideToIntegerZeroScale(this, divisor, ctx);
     }
 
@@ -1475,8 +1466,8 @@ at: http://upokecenter.com/d/
      * @return The remainder of the two objects.
      */
     public ExtendedFloat Remainder(
-      ExtendedFloat divisor,
-      PrecisionContext ctx) {
+      final ExtendedFloat divisor,
+      final PrecisionContext ctx) {
       return MathValue.Remainder(this, divisor, ctx);
     }
 
@@ -1508,8 +1499,8 @@ at: http://upokecenter.com/d/
      * division (the quotient) or the remainder wouldn't fit the given precision.
      */
     public ExtendedFloat RemainderNear(
-      ExtendedFloat divisor,
-      PrecisionContext ctx) {
+      final ExtendedFloat divisor,
+      final PrecisionContext ctx) {
       return MathValue.RemainderNear(this, divisor, ctx);
     }
 
@@ -1527,7 +1518,7 @@ at: http://upokecenter.com/d/
      * range.
      */
     public ExtendedFloat NextMinus(
-      PrecisionContext ctx) {
+      final PrecisionContext ctx) {
       return MathValue.NextMinus(this, ctx);
     }
 
@@ -1545,7 +1536,7 @@ at: http://upokecenter.com/d/
      * range.
      */
     public ExtendedFloat NextPlus(
-      PrecisionContext ctx) {
+      final PrecisionContext ctx) {
       return MathValue.NextPlus(this, ctx);
     }
 
@@ -1565,8 +1556,8 @@ at: http://upokecenter.com/d/
      * range.
      */
     public ExtendedFloat NextToward(
-      ExtendedFloat otherValue,
-      PrecisionContext ctx) {
+      final ExtendedFloat otherValue,
+      final PrecisionContext ctx) {
       return MathValue.NextToward(this, otherValue, ctx);
     }
 
@@ -1581,9 +1572,9 @@ at: http://upokecenter.com/d/
      * @return The larger value of the two objects.
      */
     public static ExtendedFloat Max(
-      ExtendedFloat first,
-      ExtendedFloat second,
-      PrecisionContext ctx) {
+      final ExtendedFloat first,
+      final ExtendedFloat second,
+      final PrecisionContext ctx) {
       return MathValue.Max(first, second, ctx);
     }
 
@@ -1598,9 +1589,9 @@ at: http://upokecenter.com/d/
      * @return The smaller value of the two objects.
      */
     public static ExtendedFloat Min(
-      ExtendedFloat first,
-      ExtendedFloat second,
-      PrecisionContext ctx) {
+      final ExtendedFloat first,
+      final ExtendedFloat second,
+      final PrecisionContext ctx) {
       return MathValue.Min(first, second, ctx);
     }
 
@@ -1616,9 +1607,9 @@ at: http://upokecenter.com/d/
      * @return An ExtendedFloat object.
      */
     public static ExtendedFloat MaxMagnitude(
-      ExtendedFloat first,
-      ExtendedFloat second,
-      PrecisionContext ctx) {
+      final ExtendedFloat first,
+      final ExtendedFloat second,
+      final PrecisionContext ctx) {
       return MathValue.MaxMagnitude(first, second, ctx);
     }
 
@@ -1634,9 +1625,9 @@ at: http://upokecenter.com/d/
      * @return An ExtendedFloat object.
      */
     public static ExtendedFloat MinMagnitude(
-      ExtendedFloat first,
-      ExtendedFloat second,
-      PrecisionContext ctx) {
+      final ExtendedFloat first,
+      final ExtendedFloat second,
+      final PrecisionContext ctx) {
       return MathValue.MinMagnitude(first, second, ctx);
     }
 
@@ -1647,8 +1638,8 @@ at: http://upokecenter.com/d/
      * @return The larger value of the two objects.
      */
     public static ExtendedFloat Max(
-      ExtendedFloat first,
-      ExtendedFloat second) {
+      final ExtendedFloat first,
+      final ExtendedFloat second) {
       return Max(first, second, null);
     }
 
@@ -1659,8 +1650,8 @@ at: http://upokecenter.com/d/
      * @return The smaller value of the two objects.
      */
     public static ExtendedFloat Min(
-      ExtendedFloat first,
-      ExtendedFloat second) {
+      final ExtendedFloat first,
+      final ExtendedFloat second) {
       return Min(first, second, null);
     }
 
@@ -1672,8 +1663,8 @@ at: http://upokecenter.com/d/
      * @return An ExtendedFloat object.
      */
     public static ExtendedFloat MaxMagnitude(
-      ExtendedFloat first,
-      ExtendedFloat second) {
+      final ExtendedFloat first,
+      final ExtendedFloat second) {
       return MaxMagnitude(first, second, null);
     }
 
@@ -1685,8 +1676,8 @@ at: http://upokecenter.com/d/
      * @return An ExtendedFloat object.
      */
     public static ExtendedFloat MinMagnitude(
-      ExtendedFloat first,
-      ExtendedFloat second) {
+      final ExtendedFloat first,
+      final ExtendedFloat second) {
       return MinMagnitude(first, second, null);
     }
 
@@ -1706,7 +1697,7 @@ at: http://upokecenter.com/d/
      * or if {@code other} is null, or 0 if both values are equal.
      */
     public int compareTo(
-      ExtendedFloat other) {
+      final ExtendedFloat other) {
       return MathValue.compareTo(this, other);
     }
 
@@ -1726,8 +1717,8 @@ at: http://upokecenter.com/d/
      * value, or 1 if this object is greater.
      */
     public ExtendedFloat CompareToWithContext(
-      ExtendedFloat other,
-      PrecisionContext ctx) {
+      final ExtendedFloat other,
+      final PrecisionContext ctx) {
       return MathValue.CompareToWithContext(this, other, false, ctx);
     }
 
@@ -1747,8 +1738,8 @@ at: http://upokecenter.com/d/
      * value, or 1 if this object is greater.
      */
     public ExtendedFloat CompareToSignal(
-      ExtendedFloat other,
-      PrecisionContext ctx) {
+      final ExtendedFloat other,
+      final PrecisionContext ctx) {
       return MathValue.CompareToWithContext(this, other, true, ctx);
     }
 
@@ -1763,8 +1754,8 @@ at: http://upokecenter.com/d/
      * @return The sum of thisValue and the other object.
      */
     public ExtendedFloat Add(
-      ExtendedFloat otherValue,
-      PrecisionContext ctx) {
+      final ExtendedFloat otherValue,
+      final PrecisionContext ctx) {
       return MathValue.Add(this, otherValue, ctx);
     }
 
@@ -1779,8 +1770,8 @@ at: http://upokecenter.com/d/
      * is outside that range.
      */
     public ExtendedFloat Quantize(
-      BigInteger desiredExponent,
-      PrecisionContext ctx) {
+      final BigInteger desiredExponent,
+      final PrecisionContext ctx) {
       return this.Quantize(ExtendedFloat.Create(BigInteger.ONE, desiredExponent), ctx);
     }
 
@@ -1795,8 +1786,8 @@ at: http://upokecenter.com/d/
      * is outside that range.
      */
     public ExtendedFloat Quantize(
-      int desiredExponentSmall,
-      PrecisionContext ctx) {
+      final int desiredExponentSmall,
+      final PrecisionContext ctx) {
       return this.Quantize(ExtendedFloat.Create(BigInteger.ONE, BigInteger.valueOf(desiredExponentSmall)), ctx);
     }
 
@@ -1823,8 +1814,8 @@ at: http://upokecenter.com/d/
      * an exponent range.
      */
     public ExtendedFloat Quantize(
-      ExtendedFloat otherValue,
-      PrecisionContext ctx) {
+      final ExtendedFloat otherValue,
+      final PrecisionContext ctx) {
       return MathValue.Quantize(this, otherValue, ctx);
     }
 
@@ -1844,7 +1835,7 @@ at: http://upokecenter.com/d/
      * of the precision context, if it defines an exponent range.
      */
     public ExtendedFloat RoundToIntegralExact(
-      PrecisionContext ctx) {
+      final PrecisionContext ctx) {
       return MathValue.RoundToExponentExact(this, BigInteger.ZERO, ctx);
     }
 
@@ -1866,7 +1857,7 @@ at: http://upokecenter.com/d/
      * of the precision context, if it defines an exponent range.
      */
     public ExtendedFloat RoundToIntegralNoRoundedFlag(
-      PrecisionContext ctx) {
+      final PrecisionContext ctx) {
       return MathValue.RoundToExponentNoRoundedFlag(this, BigInteger.ZERO, ctx);
     }
 
@@ -1883,8 +1874,8 @@ at: http://upokecenter.com/d/
      * an exponent range.
      */
     public ExtendedFloat RoundToExponentExact(
-      BigInteger exponent,
-      PrecisionContext ctx) {
+      final BigInteger exponent,
+      final PrecisionContext ctx) {
       return MathValue.RoundToExponentExact(this, exponent, ctx);
     }
 
@@ -1910,8 +1901,8 @@ at: http://upokecenter.com/d/
      * if it defines an exponent range.
      */
     public ExtendedFloat RoundToExponent(
-      BigInteger exponent,
-      PrecisionContext ctx) {
+      final BigInteger exponent,
+      final PrecisionContext ctx) {
       return MathValue.RoundToExponentSimple(this, exponent, ctx);
     }
 
@@ -1928,8 +1919,8 @@ at: http://upokecenter.com/d/
      * @return The product of the two binary floats.
      */
     public ExtendedFloat Multiply(
-      ExtendedFloat op,
-      PrecisionContext ctx) {
+      final ExtendedFloat op,
+      final PrecisionContext ctx) {
       return MathValue.Multiply(this, op, ctx);
     }
 
@@ -1944,9 +1935,9 @@ at: http://upokecenter.com/d/
      * @return The result thisValue * multiplicand + augend.
      */
     public ExtendedFloat MultiplyAndAdd(
-      ExtendedFloat op,
-      ExtendedFloat augend,
-      PrecisionContext ctx) {
+      final ExtendedFloat op,
+      final ExtendedFloat augend,
+      final PrecisionContext ctx) {
       return MathValue.MultiplyAndAdd(this, op, augend, ctx);
     }
 
@@ -1963,9 +1954,9 @@ at: http://upokecenter.com/d/
      * is null.
      */
     public ExtendedFloat MultiplyAndSubtract(
-      ExtendedFloat op,
-      ExtendedFloat subtrahend,
-      PrecisionContext ctx) {
+      final ExtendedFloat op,
+      final ExtendedFloat subtrahend,
+      final PrecisionContext ctx) {
       if (subtrahend == null) {
         throw new NullPointerException("subtrahend");
       }
@@ -1987,7 +1978,7 @@ at: http://upokecenter.com/d/
      * null or the precision and exponent range are unlimited.
      */
     public ExtendedFloat RoundToPrecision(
-      PrecisionContext ctx) {
+      final PrecisionContext ctx) {
       return MathValue.RoundToPrecision(this, ctx);
     }
 
@@ -2002,7 +1993,7 @@ at: http://upokecenter.com/d/
      * null or the precision and exponent range are unlimited.
      */
     public ExtendedFloat Plus(
-      PrecisionContext ctx) {
+      final PrecisionContext ctx) {
       return MathValue.Plus(this, ctx);
     }
 
@@ -2019,7 +2010,7 @@ at: http://upokecenter.com/d/
  */
 @Deprecated
     public ExtendedFloat RoundToBinaryPrecision(
-      PrecisionContext ctx) {
+      final PrecisionContext ctx) {
       if (ctx == null) {
         return this;
       }
@@ -2046,7 +2037,7 @@ at: http://upokecenter.com/d/
      * null or the precision is unlimited (the context's Precision property
      * is 0).
      */
-    public ExtendedFloat SquareRoot(PrecisionContext ctx) {
+    public ExtendedFloat SquareRoot(final PrecisionContext ctx) {
       return MathValue.SquareRoot(this, ctx);
     }
 
@@ -2065,7 +2056,7 @@ at: http://upokecenter.com/d/
      * null or the precision is unlimited (the context's Precision property
      * is 0).
      */
-    public ExtendedFloat Exp(PrecisionContext ctx) {
+    public ExtendedFloat Exp(final PrecisionContext ctx) {
       return MathValue.Exp(this, ctx);
     }
 
@@ -2086,7 +2077,7 @@ at: http://upokecenter.com/d/
      * null or the precision is unlimited (the context's Precision property
      * is 0).
      */
-    public ExtendedFloat Log(PrecisionContext ctx) {
+    public ExtendedFloat Log(final PrecisionContext ctx) {
       return MathValue.Ln(this, ctx);
     }
 
@@ -2104,7 +2095,7 @@ at: http://upokecenter.com/d/
      * returns NaN if the parameter {@code ctx} is null or the precision is
      * unlimited (the context's Precision property is 0).
      */
-    public ExtendedFloat Log10(PrecisionContext ctx) {
+    public ExtendedFloat Log10(final PrecisionContext ctx) {
       return MathValue.Log10(this, ctx);
     }
 
@@ -2119,7 +2110,7 @@ at: http://upokecenter.com/d/
      * null or the precision is unlimited (the context's Precision property
      * is 0), and the exponent has a fractional part.
      */
-    public ExtendedFloat Pow(ExtendedFloat exponent, PrecisionContext ctx) {
+    public ExtendedFloat Pow(final ExtendedFloat exponent, final PrecisionContext ctx) {
       return MathValue.Power(this, exponent, ctx);
     }
 
@@ -2133,7 +2124,7 @@ at: http://upokecenter.com/d/
      * @return This^exponent. Signals the flag FlagInvalid and returns
      * NaN if this object and exponent are both 0.
      */
-    public ExtendedFloat Pow(int exponentSmall, PrecisionContext ctx) {
+    public ExtendedFloat Pow(final int exponentSmall, final PrecisionContext ctx) {
       return this.Pow(ExtendedFloat.FromInt64(exponentSmall), ctx);
     }
 
@@ -2143,7 +2134,7 @@ at: http://upokecenter.com/d/
      * @return This^exponent. Returns NaN if this object and exponent are
      * both 0.
      */
-    public ExtendedFloat Pow(int exponentSmall) {
+    public ExtendedFloat Pow(final int exponentSmall) {
       return this.Pow(ExtendedFloat.FromInt64(exponentSmall), null);
     }
 
@@ -2159,7 +2150,7 @@ at: http://upokecenter.com/d/
      * null or the precision is unlimited (the context's Precision property
      * is 0).
      */
-    public static ExtendedFloat PI(PrecisionContext ctx) {
+    public static ExtendedFloat PI(final PrecisionContext ctx) {
       return MathValue.Pi(ctx);
     }
   }

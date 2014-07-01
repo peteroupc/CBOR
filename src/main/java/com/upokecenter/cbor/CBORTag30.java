@@ -18,7 +18,7 @@ import com.upokecenter.util.*;
         CBORTypeFilter.UnsignedInteger.WithTags(2));
     }
 
-    public CBORObject ValidateObject(CBORObject obj) {
+    public CBORObject ValidateObject(final CBORObject obj) {
       if (obj.getType() != CBORType.Array) {
         throw new CBORException("Rational number must be an array");
       }

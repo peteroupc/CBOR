@@ -48,7 +48,7 @@ import com.upokecenter.util.*;
       return filter;
     }
 
-    private CBORTypeFilter WithType(int type) {
+    private CBORTypeFilter WithType(final int type) {
       if (this.any) {
         return this;
       }
@@ -102,7 +102,7 @@ import com.upokecenter.util.*;
      * @param tags An integer array of tags allowed.
      * @return A CBORTypeFilter object.
      */
-    public CBORTypeFilter WithTags(int... tags) {
+    public CBORTypeFilter WithTags(final int... tags) {
       if (this.any) {
         return this;
       }
@@ -130,7 +130,7 @@ import com.upokecenter.util.*;
      * @throws java.lang.NullPointerException The parameter "tags[i]"
      * is null.
      */
-    public CBORTypeFilter WithTags(BigInteger... tags) {
+    public CBORTypeFilter WithTags(final BigInteger... tags) {
       if (this.any) {
         return this;
       }
@@ -169,7 +169,7 @@ import com.upokecenter.util.*;
      * @throws java.lang.IllegalArgumentException The parameter elements has fewer
      * elements than specified in arrayLength.
      */
-    public CBORTypeFilter WithArrayExactLength(int arrayLength, CBORTypeFilter... elements) {
+    public CBORTypeFilter WithArrayExactLength(final int arrayLength, CBORTypeFilter... elements) {
       if (this.any) {
         return this;
       }
@@ -206,7 +206,7 @@ import com.upokecenter.util.*;
      * @throws java.lang.IllegalArgumentException The parameter elements has fewer
      * elements than specified in arrayLength.
      */
-    public CBORTypeFilter WithArrayMinLength(int arrayLength, CBORTypeFilter... elements) {
+    public CBORTypeFilter WithArrayMinLength(final int arrayLength, CBORTypeFilter... elements) {
       if (this.any) {
         return this;
       }
@@ -268,7 +268,7 @@ import com.upokecenter.util.*;
      * @param type A 32-bit signed integer.
      * @return A Boolean object.
      */
-    public boolean MajorTypeMatches(int type) {
+    public boolean MajorTypeMatches(final int type) {
 
       return type >= 0 && type <= 7 && (this.types & (1 << type)) != 0;
     }
@@ -279,7 +279,7 @@ import com.upokecenter.util.*;
      * @return True if this filter allows CBOR arrays and an array's length
      * is allowed under this filter; otherwise, false.
      */
-    public boolean ArrayLengthMatches(int length) {
+    public boolean ArrayLengthMatches(final int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                                               (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
     }
@@ -290,7 +290,7 @@ import com.upokecenter.util.*;
      * @return True if this filter allows CBOR arrays and an array's length
      * is allowed under a filter; otherwise, false.
      */
-    public boolean ArrayLengthMatches(long length) {
+    public boolean ArrayLengthMatches(final long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                                               (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
     }
@@ -303,7 +303,7 @@ import com.upokecenter.util.*;
      * @throws java.lang.NullPointerException The parameter {@code bigLength}
      * is null.
      */
-    public boolean ArrayLengthMatches(BigInteger bigLength) {
+    public boolean ArrayLengthMatches(final BigInteger bigLength) {
       if (bigLength == null) {
         throw new NullPointerException("bigLength");
       }
@@ -317,7 +317,7 @@ import com.upokecenter.util.*;
      * @return True if CBOR objects can have the given tag number; otherwise,
      * false.
      */
-    public boolean TagAllowed(int tag) {
+    public boolean TagAllowed(final int tag) {
       return this.any || this.TagAllowed(BigInteger.valueOf(tag));
     }
 
@@ -328,7 +328,7 @@ import com.upokecenter.util.*;
      * @return True if CBOR objects can have the given tag number; otherwise,
      * false.
      */
-    public boolean TagAllowed(long tag) {
+    public boolean TagAllowed(final long tag) {
       return this.any || this.TagAllowed(BigInteger.valueOf(tag));
     }
 
@@ -341,7 +341,7 @@ import com.upokecenter.util.*;
      * @throws java.lang.NullPointerException The parameter {@code bigTag}
      * is null.
      */
-    public boolean TagAllowed(BigInteger bigTag) {
+    public boolean TagAllowed(final BigInteger bigTag) {
       if (bigTag == null) {
         throw new NullPointerException("bigTag");
       }
@@ -357,7 +357,7 @@ import com.upokecenter.util.*;
       if (this.tags == null) {
         return true;
       }
-      for(BigInteger tag : this.tags) {
+      for for gInteger tag : this.tags) {
         if (bigTag.equals(tag)) {
           return true;
         }
@@ -372,7 +372,7 @@ import com.upokecenter.util.*;
      * @return True if this type filter allows CBOR arrays and the given array
      * index is allowed under this type filter; otherwise, false.
      */
-    public boolean ArrayIndexAllowed(int index) {
+    public boolean ArrayIndexAllowed(final int index) {
       return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength ||
                                               ((this.arrayMinLength || index < this.arrayLength) && index >= 0));
     }
@@ -382,7 +382,7 @@ import com.upokecenter.util.*;
      * @param index A 32-bit signed integer.
      * @return A CBORTypeFilter object.
      */
-    public CBORTypeFilter GetSubFilter(int index) {
+    public CBORTypeFilter GetSubFilter(final int index) {
       if (this.anyArrayLength || this.any) {
         return Any;
       }
@@ -409,7 +409,7 @@ import com.upokecenter.util.*;
      * @param index A 64-bit signed integer.
      * @return A CBORTypeFilter object.
      */
-    public CBORTypeFilter GetSubFilter(long index) {
+    public CBORTypeFilter GetSubFilter(final long index) {
       if (this.anyArrayLength || this.any) {
         return Any;
       }

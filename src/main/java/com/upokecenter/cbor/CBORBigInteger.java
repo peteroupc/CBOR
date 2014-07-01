@@ -11,43 +11,43 @@ import com.upokecenter.util.*;
 
   class CBORBigInteger implements ICBORNumber
   {
-    public boolean IsPositiveInfinity(Object obj) {
+    public boolean IsPositiveInfinity(final Object obj) {
       return false;
     }
 
-    public boolean IsInfinity(Object obj) {
+    public boolean IsInfinity(final Object obj) {
       return false;
     }
 
-    public boolean IsNegativeInfinity(Object obj) {
+    public boolean IsNegativeInfinity(final Object obj) {
       return false;
     }
 
-    public boolean IsNaN(Object obj) {
+    public boolean IsNaN(final Object obj) {
       return false;
     }
 
-    public double AsDouble(Object obj) {
+    public double AsDouble(final Object obj) {
       return ExtendedFloat.FromBigInteger((BigInteger)obj).ToDouble();
     }
 
-    public ExtendedDecimal AsExtendedDecimal(Object obj) {
+    public ExtendedDecimal AsExtendedDecimal(final Object obj) {
       return ExtendedDecimal.FromBigInteger((BigInteger)obj);
     }
 
-    public ExtendedFloat AsExtendedFloat(Object obj) {
+    public ExtendedFloat AsExtendedFloat(final Object obj) {
       return ExtendedFloat.FromBigInteger((BigInteger)obj);
     }
 
-    public float AsSingle(Object obj) {
+    public float AsSingle(final Object obj) {
       return ExtendedFloat.FromBigInteger((BigInteger)obj).ToSingle();
     }
 
-    public BigInteger AsBigInteger(Object obj) {
+    public BigInteger AsBigInteger(final Object obj) {
       return (BigInteger)obj;
     }
 
-    public long AsInt64(Object obj) {
+    public long AsInt64(final Object obj) {
       BigInteger bi = (BigInteger)obj;
       if (bi.compareTo(CBORObject.Int64MaxValue) > 0 ||
           bi.compareTo(CBORObject.Int64MinValue) < 0) {
@@ -56,51 +56,51 @@ import com.upokecenter.util.*;
       return bi.longValue();
     }
 
-    public boolean CanFitInSingle(Object obj) {
+    public boolean CanFitInSingle(final Object obj) {
       BigInteger bigintItem = (BigInteger)obj;
       ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
       ExtendedFloat ef2 = ExtendedFloat.FromSingle(ef.ToSingle());
       return ef.compareTo(ef2) == 0;
     }
 
-    public boolean CanFitInDouble(Object obj) {
+    public boolean CanFitInDouble(final Object obj) {
       BigInteger bigintItem = (BigInteger)obj;
       ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
       ExtendedFloat ef2 = ExtendedFloat.FromDouble(ef.ToDouble());
       return ef.compareTo(ef2) == 0;
     }
 
-    public boolean CanFitInInt32(Object obj) {
+    public boolean CanFitInInt32(final Object obj) {
       BigInteger bi = (BigInteger)obj;
       return bi.canFitInInt();
     }
 
-    public boolean CanFitInInt64(Object obj) {
+    public boolean CanFitInInt64(final Object obj) {
       BigInteger bi = (BigInteger)obj;
       return bi.bitLength() <= 63;
     }
 
-    public boolean CanTruncatedIntFitInInt64(Object obj) {
+    public boolean CanTruncatedIntFitInInt64(final Object obj) {
       return this.CanFitInInt64(obj);
     }
 
-    public boolean CanTruncatedIntFitInInt32(Object obj) {
+    public boolean CanTruncatedIntFitInInt32(final Object obj) {
       return this.CanFitInInt32(obj);
     }
 
-    public boolean IsZero(Object obj) {
-      return ((BigInteger)obj).signum()==0;
+    public boolean IsZero(final Object obj) {
+      return ((BigInteger)obj).signum() == 0;
     }
 
-    public int Sign(Object obj) {
+    public int Sign(final Object obj) {
       return ((BigInteger)obj).signum();
     }
 
-    public boolean IsIntegral(Object obj) {
+    public boolean IsIntegral(final Object obj) {
       return true;
     }
 
-    public int AsInt32(Object obj, int minValue, int maxValue) {
+    public int AsInt32(final Object obj, final int minValue, final int maxValue) {
       BigInteger bi = (BigInteger)obj;
       if (bi.canFitInInt()) {
         int ret = bi.intValue();
@@ -111,17 +111,17 @@ import com.upokecenter.util.*;
       throw new ArithmeticException("This Object's value is out of range");
     }
 
-    public Object Negate(Object obj) {
+    public Object Negate(final Object obj) {
       BigInteger bigobj = (BigInteger)obj;
-      bigobj=(bigobj).negate();
+      bigobj = (bigobj).negate();
       return bigobj;
     }
 
-    public Object Abs(Object obj) {
+    public Object Abs(final Object obj) {
       return ((BigInteger)obj).abs();
     }
 
-    public ExtendedRational AsExtendedRational(Object obj) {
+    public ExtendedRational AsExtendedRational(final Object obj) {
       return ExtendedRational.FromBigInteger((BigInteger)obj);
     }
   }

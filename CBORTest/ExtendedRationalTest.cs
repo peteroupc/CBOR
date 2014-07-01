@@ -87,11 +87,17 @@ namespace Test {
     }
     [TestMethod]
     public void TestIsInfinity() {
-      // not implemented yet
+      Assert.IsTrue(ExtendedRational.PositiveInfinity.IsNaN());
+      Assert.IsTrue(ExtendedRational.NegativeInfinity.IsNaN());
+      Assert.IsFalse(ExtendedRational.Zero.IsNaN());
+      Assert.IsFalse(ExtendedRational.NaN.IsNaN());
     }
     [TestMethod]
     public void TestIsNaN() {
-      // not implemented yet
+      Assert.IsFalse(ExtendedRational.PositiveInfinity.IsNaN());
+      Assert.IsFalse(ExtendedRational.NegativeInfinity.IsNaN());
+      Assert.IsFalse(ExtendedRational.Zero.IsNaN());
+      Assert.IsTrue(ExtendedRational.NaN.IsNaN());
     }
     [TestMethod]
     public void TestIsNegative() {

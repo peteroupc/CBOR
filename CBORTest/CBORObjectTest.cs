@@ -1704,7 +1704,38 @@ namespace Test {
     }
     [TestMethod]
     public void TestNegate() {
-      // not implemented yet
+      try {
+        CBORObject.True.Negate();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.False.Negate();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewArray().Negate();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        CBORObject.NewMap().Negate();
+        Assert.Fail("Should have failed");
+      } catch (InvalidOperationException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [TestMethod]
     public void TestNewArray() {
