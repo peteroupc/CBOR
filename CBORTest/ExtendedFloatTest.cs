@@ -147,7 +147,7 @@ namespace Test {
     }
     [TestMethod]
     public void TestMax() {
-try {
+      try {
         ExtendedFloat.Max(null, ExtendedFloat.One);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
@@ -188,7 +188,7 @@ try {
     }
     [TestMethod]
     public void TestMinMagnitude() {
-try {
+      try {
         ExtendedFloat.MinMagnitude(null, ExtendedFloat.One);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
@@ -203,7 +203,8 @@ try {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-      } }
+      }
+    }
     [TestMethod]
     public void TestMultiply() {
       // not implemented yet

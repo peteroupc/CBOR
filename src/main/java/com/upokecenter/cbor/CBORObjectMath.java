@@ -15,7 +15,7 @@ import com.upokecenter.util.*;
   final class CBORObjectMath {
 private CBORObjectMath() {
 }
-    public static CBORObject Addition(CBORObject a, CBORObject b) {
+    public static CBORObject Addition(final CBORObject a, final CBORObject b) {
       if (a == null) {
         throw new NullPointerException("a");
       }
@@ -67,7 +67,7 @@ private CBORObjectMath() {
       }
     }
 
-    public static CBORObject Subtract(CBORObject a, CBORObject b) {
+    public static CBORObject Subtract(final CBORObject a, final CBORObject b) {
       if (a == null) {
         throw new NullPointerException("a");
       }
@@ -119,7 +119,7 @@ private CBORObjectMath() {
       }
     }
 
-    public static CBORObject Multiply(CBORObject a, CBORObject b) {
+    public static CBORObject Multiply(final CBORObject a, final CBORObject b) {
       if (a == null) {
         throw new NullPointerException("a");
       }
@@ -179,7 +179,7 @@ private CBORObjectMath() {
       }
     }
 
-    public static CBORObject Divide(CBORObject a, CBORObject b) {
+    public static CBORObject Divide(final CBORObject a, final CBORObject b) {
       if (a == null) {
         throw new NullPointerException("a");
       }
@@ -220,7 +220,7 @@ private CBORObjectMath() {
              typeB == CBORObject.CBORObjectTypeExtendedDecimal) {
         ExtendedDecimal e1 = CBORObject.GetNumberInterface(typeA).AsExtendedDecimal(objA);
         ExtendedDecimal e2 = CBORObject.GetNumberInterface(typeB).AsExtendedDecimal(objB);
-        if (e1.signum()==0 && e2.signum()==0) {
+        if (e1.signum() == 0 && e2.signum() == 0) {
           return CBORObject.NaN;
         }
         ExtendedDecimal eret = e1.Divide(e2, null);
@@ -238,7 +238,7 @@ private CBORObjectMath() {
                typeA == CBORObject.CBORObjectTypeSingle || typeB == CBORObject.CBORObjectTypeSingle) {
         ExtendedFloat e1 = CBORObject.GetNumberInterface(typeA).AsExtendedFloat(objA);
         ExtendedFloat e2 = CBORObject.GetNumberInterface(typeB).AsExtendedFloat(objB);
-        if (e1.signum()==0 && e2.signum()==0) {
+        if (e1.signum() == 0 && e2.signum() == 0) {
           return CBORObject.NaN;
         }
         ExtendedFloat eret = e1.Divide(e2, null);
@@ -253,21 +253,21 @@ private CBORObjectMath() {
       } else {
         BigInteger b1 = CBORObject.GetNumberInterface(typeA).AsBigInteger(objA);
         BigInteger b2 = CBORObject.GetNumberInterface(typeB).AsBigInteger(objB);
-        if (b2.signum()==0) {
-          return b1.signum()==0 ? CBORObject.NaN : ((b1.signum() < 0) ?
+        if (b2.signum() == 0) {
+          return b1.signum() == 0 ? CBORObject.NaN : ((b1.signum() < 0) ?
                                                  CBORObject.NegativeInfinity : CBORObject.PositiveInfinity);
         }
         BigInteger bigrem;
         BigInteger bigquo;
 {
-BigInteger[] divrem=(b1).divideAndRemainder(b2);
-bigquo=divrem[0];
-bigrem=divrem[1]; }
-        return bigrem.signum()==0 ? CBORObject.FromObject(bigquo) : CBORObject.FromObject(new ExtendedRational(b1, b2));
+BigInteger[] divrem = (b1).divideAndRemainder(b2);
+bigquo = divrem[0];
+bigrem = divrem[1]; }
+        return bigrem.signum() == 0 ? CBORObject.FromObject(bigquo) : CBORObject.FromObject(new ExtendedRational(b1, b2));
       }
     }
 
-    public static CBORObject Remainder(CBORObject a, CBORObject b) {
+    public static CBORObject Remainder(final CBORObject a, final CBORObject b) {
       if (a == null) {
         throw new NullPointerException("a");
       }

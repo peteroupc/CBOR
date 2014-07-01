@@ -3454,7 +3454,7 @@ namespace PeterO.Cbor {
           buffer[0] = (byte)'\\';
           buffer[1] = (byte)c;
           outputStream.Write(buffer, 0, 2);
- } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
+        } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
           // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to JSON) strings
           buffer = buffer ?? (new byte[6]);
@@ -3524,7 +3524,7 @@ namespace PeterO.Cbor {
           }
           sb.Append('\\');
           sb.Append(c);
- } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
+        } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
           // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to JSON) strings
           if (first) {
@@ -4738,23 +4738,33 @@ namespace PeterO.Cbor {
       if (type == CBORObjectTypeSimpleValue) {
         if (this.IsTrue) {
           simvalue = "true";
+          if (sb == null) {
+            return simvalue;
+          }
+          sb.Append(simvalue);
         } else if (this.IsFalse) {
           simvalue = "false";
+          if (sb == null) {
+            return simvalue;
+          }
+          sb.Append(simvalue);
         } else if (this.IsNull) {
           simvalue = "null";
+          if (sb == null) {
+            return simvalue;
+          }
+          sb.Append(simvalue);
         } else if (this.IsUndefined) {
           simvalue = "undefined";
+          if (sb == null) {
+            return simvalue;
+          }
+          sb.Append(simvalue);
         } else {
           sb = sb ?? (new StringBuilder());
           sb.Append("simple(");
           sb.Append(Convert.ToString((int)this.ThisItem, CultureInfo.InvariantCulture));
           sb.Append(")");
-        }
-        if (simvalue != null) {
-          if (sb == null) {
-            return simvalue;
-          }
-          sb.Append(simvalue);
         }
       } else if (type == CBORObjectTypeSingle) {
         var f = (float)this.ThisItem;

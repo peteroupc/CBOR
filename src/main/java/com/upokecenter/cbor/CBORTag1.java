@@ -13,7 +13,7 @@ at: http://upokecenter.com/d/
       return CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithFloatingPoint();
     }
 
-    public CBORObject ValidateObject(CBORObject obj) {
+    public CBORObject ValidateObject(final CBORObject obj) {
       if (!obj.isFinite()) {
         throw new CBORException("Not a valid date");
       }

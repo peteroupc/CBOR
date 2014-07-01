@@ -62,13 +62,13 @@ private MiniCBOR() {
         // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.read();
-  } else if (b == 0xd9) {
+        } else if (b == 0xd9) {
           stream.skip(2);
-  } else if (b == 0xda) {
+        } else if (b == 0xda) {
           stream.skip(4);
-  } else if (b == 0xdb) {
+        } else if (b == 0xdb) {
           stream.skip(8);
-  } else if (b > 0xdb) {
+        } else if (b > 0xdb) {
           throw new IOException("Not a boolean");
         }
         b = stream.read();
@@ -102,10 +102,10 @@ private MiniCBOR() {
       }
       if (value < 24) {
         stream.write((byte)(value | type));
-  } else if (value <= 0xff) {
+      } else if (value <= 0xff) {
         bytes = new byte[] { (byte)(24 | type), (byte)(value & 0xff)  };
         stream.write(bytes,0,2);
-  } else if (value <= 0xffff) {
+      } else if (value <= 0xffff) {
         bytes = new byte[] { (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  };
         stream.write(bytes,0,3);
       } else {
@@ -262,13 +262,13 @@ private MiniCBOR() {
         // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.read();
-  } else if (b == 0xd9) {
+        } else if (b == 0xd9) {
           stream.skip(2);
-  } else if (b == 0xda) {
+        } else if (b == 0xda) {
           stream.skip(4);
-  } else if (b == 0xdb) {
+        } else if (b == 0xdb) {
           stream.skip(8);
-  } else if (b > 0xdb) {
+        } else if (b > 0xdb) {
           throw new IOException("Not a 32-bit integer");
         }
         b = stream.read();
@@ -316,13 +316,13 @@ private MiniCBOR() {
         // Skip tags until a tag character is no longer read
         if (b == 0xd8) {
           stream.read();
-  } else if (b == 0xd9) {
+        } else if (b == 0xd9) {
           stream.skip(2);
-  } else if (b == 0xda) {
+        } else if (b == 0xda) {
           stream.skip(4);
-  } else if (b == 0xdb) {
+        } else if (b == 0xdb) {
           stream.skip(8);
-  } else if (b > 0xdb) {
+        } else if (b > 0xdb) {
           throw new IOException("Not a 32-bit integer");
         }
         b = stream.read();

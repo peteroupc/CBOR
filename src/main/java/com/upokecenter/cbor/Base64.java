@@ -15,63 +15,63 @@ private Base64() {
     private static final String Base64URL = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
     private static final String Base64Classic = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    public static void ToBase64(StringBuilder str, byte[] data, boolean padding) {
+    public static void ToBase64(final StringBuilder str, byte[] data, boolean padding) {
       if (data == null) {
         throw new NullPointerException("data");
       }
       ToBase64(str, data, 0, data.length, Base64Classic, padding);
     }
 
-    public static void ToBase64URL(StringBuilder str, byte[] data, boolean padding) {
+    public static void ToBase64URL(final StringBuilder str, byte[] data, boolean padding) {
       if (data == null) {
         throw new NullPointerException("data");
       }
       ToBase64(str, data, 0, data.length, Base64URL, padding);
     }
 
-    public static void ToBase64(StringBuilder str, byte[] data, int offset, int count, boolean padding) {
+    public static void ToBase64(final StringBuilder str, byte[] data, int offset, int count, boolean padding) {
       ToBase64(str, data, offset, count, Base64Classic, padding);
     }
 
-    public static void ToBase64URL(StringBuilder str, byte[] data, int offset, int count, boolean padding) {
+    public static void ToBase64URL(final StringBuilder str, byte[] data, int offset, int count, boolean padding) {
       ToBase64(str, data, offset, count, Base64URL, padding);
     }
 
-    public static void WriteBase64(OutputStream outputStream, byte[] data, int offset, int count, boolean padding) throws IOException {
+    public static void WriteBase64(final OutputStream outputStream, byte[] data, int offset, int count, boolean padding) throws IOException {
       WriteBase64(outputStream, data, offset, count, Base64Classic, padding);
     }
 
-    public static void WriteBase64URL(OutputStream outputStream, byte[] data, int offset, int count, boolean padding) throws IOException {
+    public static void WriteBase64URL(final OutputStream outputStream, byte[] data, int offset, int count, boolean padding) throws IOException {
       WriteBase64(outputStream, data, offset, count, Base64URL, padding);
     }
 
-    public static String ToBase64String(byte[] data, boolean padding) {
+    public static String ToBase64String(final byte[] data, boolean padding) {
       if (data == null) {
         throw new NullPointerException("data");
       }
       return ToBase64String(data, 0, data.length, padding);
     }
 
-    public static String ToBase64URLString(byte[] data, boolean padding) {
+    public static String ToBase64URLString(final byte[] data, boolean padding) {
       if (data == null) {
         throw new NullPointerException("data");
       }
       return ToBase64String(data, 0, data.length, padding);
     }
 
-    public static String ToBase64String(byte[] data, int offset, int count, boolean padding) {
+    public static String ToBase64String(final byte[] data, int offset, int count, boolean padding) {
       StringBuilder builder = new StringBuilder();
       ToBase64(builder, data, offset, count, Base64Classic, padding);
       return builder.toString();
     }
 
-    public static String ToBase64URLString(byte[] data, int offset, int count, boolean padding) {
+    public static String ToBase64URLString(final byte[] data, int offset, int count, boolean padding) {
       StringBuilder builder = new StringBuilder();
       ToBase64(builder, data, offset, count, Base64Classic, padding);
       return builder.toString();
     }
 
-    private static void ToBase64(StringBuilder str, byte[] data, int offset, int count, String alphabet, boolean padding) {
+    private static void ToBase64(final StringBuilder str, byte[] data, int offset, int count, String alphabet, boolean padding) {
       if (str == null) {
         throw new NullPointerException("str");
       }
@@ -120,7 +120,7 @@ private Base64() {
       }
     }
 
-    private static void WriteBase64(OutputStream outputStream, byte[] data, int offset, int count, String alphabet, boolean padding) throws IOException {
+    private static void WriteBase64(final OutputStream outputStream, byte[] data, int offset, int count, String alphabet, boolean padding) throws IOException {
       if (outputStream == null) {
         throw new NullPointerException("outputStream");
       }
@@ -147,7 +147,7 @@ private Base64() {
         buffer[1] = (byte)alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 15));
         buffer[2] = (byte)alphabet.charAt(((data[i + 1] & 15) << 2) + ((data[i + 2] >> 6) & 3));
         buffer[3] = (byte)alphabet.charAt(data[i + 2] & 63);
-        outputStream.write(buffer,0,4);
+        outputStream.write(buffer, , ,4);
       }
       int lenmod3 = count % 3;
       if (lenmod3 != 0) {
@@ -158,18 +158,18 @@ private Base64() {
           buffer[2] = (byte)alphabet.charAt((data[i + 1] & 15) << 2);
           if (padding) {
             buffer[3] = (byte)'=';
-            outputStream.write(buffer,0,4);
+            outputStream.write(buffer, , ,4);
           } else {
-            outputStream.write(buffer,0,3);
+            outputStream.write(buffer, , ,3);
           }
         } else {
           buffer[1] = (byte)alphabet.charAt((data[i] & 3) << 4);
           if (padding) {
             buffer[2] = (byte)'=';
             buffer[3] = (byte)'=';
-            outputStream.write(buffer,0,4);
+            outputStream.write(buffer, , ,4);
           } else {
-            outputStream.write(buffer,0,2);
+            outputStream.write(buffer, , ,2);
           }
         }
       }

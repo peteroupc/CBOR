@@ -10,7 +10,7 @@ at: http://upokecenter.com/d/
      * Exception thrown for errors involving CBOR data.
      */
   public class CBORException extends RuntimeException {
-private static final long serialVersionUID=1L;
+private static final long serialVersionUID = 1L;
     /**
      * Initializes a new instance of the CBORException class.
      */
@@ -21,7 +21,7 @@ private static final long serialVersionUID=1L;
      * Initializes a new instance of the CBORException class.
      * @param message A string object.
      */
-    public CBORException (String message) {
+    public CBORException (final String message) {
  super(message);
     }
 
@@ -31,7 +31,7 @@ private static final long serialVersionUID=1L;
      * @param message A string object.
      * @param innerException An Exception object.
      */
-    public CBORException (String message, Throwable innerException) {
- super(message,innerException);
+    public CBORException (final String message, Throwable innerException) {
+ super(message, , nnerException);
     }
   }

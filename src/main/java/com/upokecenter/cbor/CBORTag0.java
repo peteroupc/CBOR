@@ -13,7 +13,7 @@ package com.upokecenter.cbor;
      */
   class CBORTag0 implements ICBORTag
   {
-    static void AddConverter() {  
+    static void AddConverter() {
       }
 /**
  * Not documented yet.
@@ -29,7 +29,7 @@ public CBORTypeFilter GetTypeFilter() {
  *
  * Not documented yet.
  */
-public CBORObject ValidateObject(CBORObject obj) {
+public CBORObject ValidateObject(final CBORObject obj) {
       if (obj.getType() != CBORType.TextString) {
  throw new CBORException("Not a text String");
 }

@@ -147,7 +147,7 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestMax() {
-try {
+      try {
         ExtendedFloat.Max(null, ExtendedFloat.One);
         Assert.fail("Should have failed");
       } catch (NullPointerException ex) {
@@ -188,7 +188,7 @@ try {
     }
     @Test
     public void TestMinMagnitude() {
-try {
+      try {
         ExtendedFloat.MinMagnitude(null, ExtendedFloat.One);
         Assert.fail("Should have failed");
       } catch (NullPointerException ex) {
@@ -203,7 +203,8 @@ try {
       } catch (Exception ex) {
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
-      } }
+      }
+    }
     @Test
     public void TestMultiply() {
       // not implemented yet
