@@ -10,16 +10,16 @@ using System;
 namespace PeterO.Cbor {
     /// <summary>Represents a type that a CBOR object can have.</summary>
   public enum CBORType {
-    /// <summary>A number of any kind, including integers, big integers,
-    /// floating point numbers, and decimal numbers. The floating-point
-    /// value Not-a-Number is also included in the Number type.</summary>
+    /// <summary>A number of any kind, including integers, big integers, floating
+    /// point numbers, and decimal numbers. The floating-point value Not-a-Number is
+    /// also included in the Number type.</summary>
     Number,
 
     /// <summary>The simple values true and false.</summary>
     Boolean,
 
-    /// <summary>A &quot;simple value&quot; other than floating point
-    /// values, true, and false.</summary>
+    /// <summary>A &quot;simple value&quot; other than floating point values, true,
+    /// and false.</summary>
     SimpleValue,
 
     /// <summary>An array of bytes.</summary>

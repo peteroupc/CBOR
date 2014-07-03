@@ -8,7 +8,8 @@ import com.upokecenter.util.*;
     @Test
     public void TestConstructor() {
       try {
-        Assert.assertEquals(null, new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
+        Assert.assertEquals(null, new PrecisionContext(-1, Rounding.HalfEven, 0,
+          0, false));
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -16,7 +17,8 @@ import com.upokecenter.util.*;
         throw new IllegalStateException("", ex);
       }
       try {
-        Assert.assertEquals(null, new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
+        Assert.assertEquals(null, new PrecisionContext(0, Rounding.HalfEven, 0,
+          -1, false));
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -128,7 +130,7 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestToString() {
-      if((PrecisionContext.Unlimited.toString())==null)Assert.fail();
+      if ((PrecisionContext.Unlimited.toString()) == null)Assert.fail();
     }
     @Test
     public void TestTraps() {
@@ -189,7 +191,8 @@ throw new IllegalStateException("", ex);
       }
       try {
         BigInteger bigintBig = BigInteger.ONE.shiftLeft(64);
-        PrecisionContext.Unlimited.WithBigExponentRange(bigintBig, BigInteger.ZERO);
+   PrecisionContext.Unlimited.WithBigExponentRange(bigintBig,
+          BigInteger.ZERO);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -226,11 +229,11 @@ throw new IllegalStateException("", ex);
     @Test
     public void TestWithSimplified() {
       PrecisionContext pc = new PrecisionContext(0, Rounding.HalfUp, 0, 5, true);
-      if(pc.isSimplified())Assert.fail();
+      if (pc.isSimplified())Assert.fail();
       pc = pc.WithSimplified(true);
-      if(!(pc.isSimplified()))Assert.fail();
+      if (!(pc.isSimplified()))Assert.fail();
       pc = pc.WithSimplified(false);
-      if(pc.isSimplified())Assert.fail();
+      if (pc.isSimplified())Assert.fail();
     }
     @Test
     public void TestWithTraps() {
@@ -239,8 +242,8 @@ throw new IllegalStateException("", ex);
     @Test
     public void TestWithUnlimitedExponents() {
       PrecisionContext pc = new PrecisionContext(0, Rounding.HalfUp, 0, 5, true);
-      if(!(pc.getHasExponentRange()))Assert.fail();
+      if (!(pc.getHasExponentRange()))Assert.fail();
       pc = pc.WithUnlimitedExponents();
-      if(pc.getHasExponentRange())Assert.fail();
+      if (pc.getHasExponentRange())Assert.fail();
     }
   }

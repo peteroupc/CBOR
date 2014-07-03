@@ -9,8 +9,8 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-  class CBORTag30 implements ICBORTag
-  {
+  class CBORTag30 implements ICBORTag {
+
     public CBORTypeFilter GetTypeFilter() {
       return new CBORTypeFilter().WithArrayExactLength(
         2,
@@ -34,10 +34,15 @@ import com.upokecenter.util.*;
         throw new CBORException("Rational number requires integer denominator");
       }
       if (second.signum() <= 0) {
-        throw new CBORException("Rational number requires denominator greater than 0");
+throw new CBORException("Rational number requires denominator greater than 0");
       }
       BigInteger denom = second.AsBigInteger();
       // NOTE: Discards tags. See comment in CBORTag2.
-      return denom.equals(BigInteger.ONE) ? CBORObject.FromObject(first.AsBigInteger()) : CBORObject.FromObject(new ExtendedRational(first.AsBigInteger(), denom));
+      return denom.equals(BigInteger.ONE) ?
+      CBORObject.FromObject(first.AsBigInteger()) :
+      CBORObject.FromObject(
+new ExtendedRational(
+first.AsBigInteger(),
+denom));
     }
   }

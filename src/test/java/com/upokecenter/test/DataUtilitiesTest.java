@@ -35,11 +35,22 @@ throw new IllegalStateException("", ex);
     }
     @Test
     public void TestCodePointCompare() {
-      Assert.assertEquals(0, ((DataUtilities.CodePointCompare("abc", "abc")==0) ? 0 : ((DataUtilities.CodePointCompare("abc", "abc")<0) ? -1 : 1)));
-      Assert.assertEquals(0, ((DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")<0) ? -1 : 1)));
-      Assert.assertEquals(-1, ((DataUtilities.CodePointCompare("abc", "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("abc", "\ud800\udc00")<0) ? -1 : 1)));
-      Assert.assertEquals(-1, ((DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")<0) ? -1 : 1)));
-      Assert.assertEquals(1, ((DataUtilities.CodePointCompare("\uf000", "\ud800")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000", "\ud800")<0) ? -1 : 1)));
+   Assert.assertEquals(0, ((DataUtilities.CodePointCompare("abc", "abc"
+)==0) ? 0 : ((DataUtilities.CodePointCompare("abc", "abc"
+)< 0) ? -1 : 1)));
+      Assert.assertEquals(0,
+        ((DataUtilities.CodePointCompare("\ud800\udc00" ,
+        "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("\ud800\udc00" ,
+        "\ud800\udc00")< 0) ? -1 : 1)));
+      Assert.assertEquals(-1, ((DataUtilities.CodePointCompare("abc" ,
+        "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("abc" ,
+        "\ud800\udc00")< 0) ? -1 : 1)));
+      Assert.assertEquals(-1, ((DataUtilities.CodePointCompare("\uf000"
+        , "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000"
+        , "\ud800\udc00")< 0) ? -1 : 1)));
+      Assert.assertEquals(1, ((DataUtilities.CodePointCompare("\uf000" ,
+        "\ud800")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000" ,
+        "\ud800")< 0) ? -1 : 1)));
     }
     @Test
     public void TestGetUtf8Bytes() {
@@ -68,13 +79,15 @@ throw new IllegalStateException("", ex);
         DataUtilities.GetUtf8Length(null, true);
       } catch (NullPointerException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
         DataUtilities.GetUtf8Length(null, false);
       } catch (NullPointerException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       Assert.assertEquals(3, DataUtilities.GetUtf8Length("abc", true));
       Assert.assertEquals(4, DataUtilities.GetUtf8Length("\u0300\u0300", true));
@@ -93,7 +106,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        DataUtilities.GetUtf8String(new byte[] {  0  }, -1, 1, true);
+        DataUtilities.GetUtf8String(new byte[] { 0  }, -1, 1, true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -101,7 +114,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        DataUtilities.GetUtf8String(new byte[] {  0  }, 2, 1, true);
+        DataUtilities.GetUtf8String(new byte[] { 0  }, 2, 1, true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -109,7 +122,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        DataUtilities.GetUtf8String(new byte[] {  0  }, 0, -1, true);
+        DataUtilities.GetUtf8String(new byte[] { 0  }, 0, -1, true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -117,7 +130,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        DataUtilities.GetUtf8String(new byte[] {  0  }, 0, 2, true);
+        DataUtilities.GetUtf8String(new byte[] { 0  }, 0, 2, true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -125,7 +138,7 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        DataUtilities.GetUtf8String(new byte[] {  0  }, 1, 1, true);
+        DataUtilities.GetUtf8String(new byte[] { 0  }, 1, 1, true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -134,12 +147,15 @@ throw new IllegalStateException("", ex);
       }
       Assert.assertEquals(
         "ABC",
-        DataUtilities.GetUtf8String(new byte[] {  0x41, 0x42, 0x43  }, 0, 3, true));
+     DataUtilities.GetUtf8String(new byte[] { 0x41, 0x42, 0x43  }, 0, 3,
+          true));
       Assert.assertEquals(
         "ABC\ufffd",
-        DataUtilities.GetUtf8String(new byte[] {  0x41, 0x42, 0x43, (byte)0x80  }, 0, 4, true));
+        DataUtilities.GetUtf8String(new byte[] { 0x41, 0x42, 0x43, (byte)0x80  },
+          0, 4, true));
       try {
-        DataUtilities.GetUtf8String(new byte[] {  0x41, 0x42, 0x43, (byte)0x80  }, 0, 4, false);
+        DataUtilities.GetUtf8String(new byte[] { 0x41, 0x42, 0x43, (byte)0x80  },
+          0, 4, false);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -177,7 +193,8 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes(new byte[] {  0  }, -1, 1, new StringBuilder(), true);
+        DataUtilities.ReadUtf8FromBytes(new byte[] { 0  }, -1, 1, new
+          StringBuilder(), true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -185,7 +202,8 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes(new byte[] {  0  }, 2, 1, new StringBuilder(), true);
+        DataUtilities.ReadUtf8FromBytes(new byte[] { 0  }, 2, 1, new
+          StringBuilder(), true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -193,7 +211,8 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes(new byte[] {  0  }, 0, -1, new StringBuilder(), true);
+        DataUtilities.ReadUtf8FromBytes(new byte[] { 0  }, 0, -1, new
+          StringBuilder(), true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -201,7 +220,8 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes(new byte[] {  0  }, 0, 2, new StringBuilder(), true);
+        DataUtilities.ReadUtf8FromBytes(new byte[] { 0  }, 0, 2, new
+          StringBuilder(), true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -209,7 +229,8 @@ throw new IllegalStateException("", ex);
         throw new IllegalStateException("", ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes(new byte[] {  0  }, 1, 1, new StringBuilder(), true);
+        DataUtilities.ReadUtf8FromBytes(new byte[] { 0  }, 1, 1, new
+          StringBuilder(), true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -238,16 +259,16 @@ throw new IllegalStateException("", ex);
     }
     @Test
     public void TestToLowerCaseAscii() {
-      if((DataUtilities.ToLowerCaseAscii(null))!=null)Assert.fail();
+      if ((DataUtilities.ToLowerCaseAscii(null)) != null)Assert.fail();
       Assert.assertEquals("abc012-=?", DataUtilities.ToLowerCaseAscii("abc012-=?"));
       Assert.assertEquals("abc012-=?", DataUtilities.ToLowerCaseAscii("ABC012-=?"));
     }
     @Test
     public void TestWriteUtf8() {
       try {
-        java.io.ByteArrayOutputStream ms=null;
+        java.io.ByteArrayOutputStream ms = null;
 try {
-ms=new java.io.ByteArrayOutputStream();
+ms = new java.io.ByteArrayOutputStream();
 
           try {
             DataUtilities.WriteUtf8("x", null, true);
@@ -371,7 +392,7 @@ ms=new java.io.ByteArrayOutputStream();
           }
 }
 finally {
-try { if(ms!=null)ms.close(); } catch (java.io.IOException ex){}
+try { if (ms != null)ms.close(); } catch (java.io.IOException ex) {}
 }
       } catch (Exception ex) {
         throw new IllegalStateException(ex.getMessage(), ex);

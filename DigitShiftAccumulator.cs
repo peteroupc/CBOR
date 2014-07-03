@@ -11,9 +11,10 @@ namespace PeterO {
   internal sealed class DigitShiftAccumulator : IShiftAccumulator {
     private int bitLeftmost;
 
-    /// <summary>Gets a value indicating whether the last discarded digit
-    /// was set.</summary>
-    /// <value>True if the last discarded digit was set; otherwise, false.</value>
+    /// <summary>Gets a value indicating whether the last discarded digit was
+    /// set.</summary>
+    /// <value>True if the last discarded digit was set; otherwise,
+    /// false.</value>
     public int LastDiscardedDigit {
       get {
         return this.bitLeftmost;
@@ -23,9 +24,11 @@ namespace PeterO {
     private int bitsAfterLeftmost;
 
     /// <summary>Gets a value indicating whether any of the discarded digits
-    /// to the right of the last one was set.</summary>
+    /// to the
+    /// right of the last one was set.</summary>
     /// <value>True if any of the discarded digits to the right of the last
-    /// one was set; otherwise, false.</value>
+    /// one was
+    /// set; otherwise, false.</value>
     public int OlderDiscardedDigits {
       get {
         return this.bitsAfterLeftmost;
@@ -42,7 +45,6 @@ namespace PeterO {
 
     private int shiftedSmall;
     private bool isSmall;
-
     private FastInteger discardedBitCount;
 
     public FastInteger DiscardedDigitCount {
@@ -58,7 +60,8 @@ namespace PeterO {
     /// <value>The current integer after shifting.</value>
     public BigInteger ShiftedInt {
       get {
-        return this.isSmall ? ((BigInteger)this.shiftedSmall) : this.shiftedBigInt;
+        return this.isSmall ? ((BigInteger)this.shiftedSmall) :
+        this.shiftedBigInt;
       }
     }
 
@@ -69,7 +72,11 @@ namespace PeterO {
       if (bigint.canFitInInt()) {
         this.shiftedSmall = (int)bigint;
         if (this.shiftedSmall < 0) {
-          throw new ArgumentException("shiftedSmall (" + Convert.ToString((int)this.shiftedSmall, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+          throw new ArgumentException("shiftedSmall (" +
+            Convert.ToString(
+(int)this.shiftedSmall,
+System.Globalization.CultureInfo.InvariantCulture)
+            +") is less than " + "0 ");
         }
         this.isSmall = true;
       } else {
@@ -84,7 +91,11 @@ namespace PeterO {
       // Assumes the string is length 9 or less and contains
       // only the digits '0' through '9'
       if (length > 9) {
-        throw new ArgumentException("length (" + Convert.ToString((int)length, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + "9");
+        throw new ArgumentException("length (" +
+          Convert.ToString(
+(int)length,
+System.Globalization.CultureInfo.InvariantCulture)
+          +") is more than " + "9 ");
       }
       int ret = 0;
       for (var i = 0; i < length; ++i) {
@@ -97,7 +108,8 @@ namespace PeterO {
 
     public FastInteger ShiftedIntFast {
       get {
-        return this.isSmall ? (new FastInteger(this.shiftedSmall)) : FastInteger.FromBig(this.shiftedBigInt);
+        return this.isSmall ? (new FastInteger(this.shiftedSmall)) :
+        FastInteger.FromBig(this.shiftedBigInt);
       }
     }
 
@@ -119,7 +131,8 @@ namespace PeterO {
           }
           this.ShiftRightInt(count);
           bi -= (BigInteger)count;
-          if (this.isSmall ? this.shiftedSmall == 0 : this.shiftedBigInt.IsZero) {
+          if (this.isSmall ? this.shiftedSmall == 0 :
+          this.shiftedBigInt.IsZero) {
             break;
           }
         }
@@ -187,18 +200,23 @@ namespace PeterO {
       }
       if (digits == 1) {
         BigInteger bigrem;
-        BigInteger bigquo = BigInteger.DivRem(this.shiftedBigInt, valueTen, out bigrem);
+        BigInteger bigquo = BigInteger.DivRem(
+this.shiftedBigInt,
+valueTen,
+out bigrem);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
         this.shiftedBigInt = bigquo;
         this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         this.discardedBitCount.Increment();
-        this.knownBitLength = (this.knownBitLength != null) ? this.knownBitLength.Decrement() : this.GetDigitLength();
+        this.knownBitLength = (this.knownBitLength != null) ?
+        this.knownBitLength.Decrement() : this.GetDigitLength();
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
         return;
       }
       this.knownBitLength = this.knownBitLength ?? this.GetDigitLength();
-      if (new FastInteger(digits).Decrement().CompareTo(this.knownBitLength) >= 0) {
+      if (new FastInteger(digits).Decrement().CompareTo(this.knownBitLength)
+      >= 0) {
         // Shifting more bits than available
         this.bitsAfterLeftmost |= this.shiftedBigInt.IsZero ? 0 : 1;
         this.isSmall = true;
@@ -273,10 +291,14 @@ namespace PeterO {
       if (this.knownBitLength.CompareToInt(digits) <= 0) {
         return;
       }
-      FastInteger digitDiff = FastInteger.Copy(this.knownBitLength).SubtractInt(digits);
+      FastInteger digitDiff =
+      FastInteger.Copy(this.knownBitLength).SubtractInt(digits);
       if (digitDiff.CompareToInt(1) == 0) {
         BigInteger bigrem;
-        BigInteger bigquo = BigInteger.DivRem(this.shiftedBigInt, valueTen, out bigrem);
+        BigInteger bigquo = BigInteger.DivRem(
+this.shiftedBigInt,
+valueTen,
+out bigrem);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
         this.shiftedBigInt = bigquo;
@@ -291,9 +313,9 @@ namespace PeterO {
         int diffInt = digitDiff.AsInt32();
         BigInteger radixPower = DecimalUtility.FindPowerOfTen(diffInt);
         BigInteger bigquo = BigInteger.DivRem(
-                                  this.shiftedBigInt,
-                                  radixPower,
-                                  out bigrem);
+this.shiftedBigInt,
+radixPower,
+out bigrem);
         var rem = (int)bigrem;
         this.bitsAfterLeftmost |= this.bitLeftmost;
         for (var i = 0; i < diffInt; ++i) {
@@ -313,11 +335,12 @@ namespace PeterO {
       }
       if (digitDiff.CompareToInt(Int32.MaxValue) <= 0) {
         BigInteger bigrem;
-        BigInteger radixPower = DecimalUtility.FindPowerOfTen(digitDiff.AsInt32() - 1);
+        BigInteger radixPower =
+        DecimalUtility.FindPowerOfTen(digitDiff.AsInt32() - 1);
         BigInteger bigquo = BigInteger.DivRem(
-                                  this.shiftedBigInt,
-                                  radixPower,
-                                  out bigrem);
+this.shiftedBigInt,
+radixPower,
+out bigrem);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         if (!bigrem.IsZero) {
           this.bitsAfterLeftmost |= 1;
@@ -342,7 +365,8 @@ namespace PeterO {
         int digitShift = digitLength - digits;
         this.knownBitLength.SubtractInt(digitShift);
         var newLength = (int)(digitLength - digitShift);
-        // Console.WriteLine("dlen=" + digitLength + " dshift=" + digitShift + " newlen=" + (newLength));
+        // Console.WriteLine("dlen= " + digitLength + " dshift=" +
+        // digitShift + " newlen= " + (newLength));
         this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         if (digitShift <= Int32.MaxValue) {
           this.discardedBitCount.AddInt((int)digitShift);
@@ -368,9 +392,11 @@ namespace PeterO {
     }
 
     /// <summary>Shifts a number to the right, gathering information on
-    /// whether the last digit discarded is set and whether the discarded
-    /// digits to the right of that digit are set. Assumes that the big integer
-    /// being shifted is positive.</summary>
+    /// whether the
+    /// last digit discarded is set and whether the discarded digits to the
+    /// right of
+    /// that digit are set. Assumes that the big integer being shifted is
+    /// positive.</summary>
     /// <param name='digits'>A 32-bit signed integer.</param>
     public void ShiftRightInt(int digits) {
       if (this.isSmall) {
@@ -392,7 +418,6 @@ namespace PeterO {
         this.knownBitLength = new FastInteger(1);
         return;
       }
-
       int kb = 0;
       int tmp = this.shiftedSmall;
       while (tmp > 0) {
@@ -428,12 +453,20 @@ namespace PeterO {
       if (bits.CanFitInInt32()) {
         int intval = bits.AsInt32();
         if (intval < 0) {
-          throw new ArgumentException("intval (" + Convert.ToString((int)intval, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+          throw new ArgumentException("intval (" +
+            Convert.ToString(
+(int)intval,
+System.Globalization.CultureInfo.InvariantCulture)
+            +") is less than " + "0 ");
         }
         this.ShiftToDigitsInt(intval);
       } else {
         if (bits.Sign < 0) {
-          throw new ArgumentException("bits's sign (" + Convert.ToString((int)bits.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+          throw new ArgumentException("bits's sign (" +
+            Convert.ToString(
+(int)bits.Sign,
+System.Globalization.CultureInfo.InvariantCulture)
+            +") is less than " + "0 ");
         }
         this.knownBitLength = this.CalcKnownDigitLength();
         BigInteger bigintDiff = this.knownBitLength.AsBigInteger();
@@ -448,9 +481,11 @@ namespace PeterO {
     }
 
     /// <summary>Shifts a number until it reaches the given number of digits,
-    /// gathering information on whether the last digit discarded is set
-    /// and whether the discarded digits to the right of that digit are set.
-    /// Assumes that the big integer being shifted is positive.</summary>
+    /// gathering information on whether the last digit discarded is set and
+    /// whether
+    /// the discarded digits to the right of that digit are set. Assumes
+    /// that the
+    /// big integer being shifted is positive.</summary>
     /// <param name='digits'>A 32-bit signed integer.</param>
     public void ShiftToDigitsInt(int digits) {
       if (this.isSmall) {
@@ -464,7 +499,10 @@ namespace PeterO {
       if (this.isSmall) {
         int kb = 0;
         int v2 = this.shiftedSmall;
-        kb = (v2 >= 1000000000) ? 10 : ((v2 >= 100000000) ? 9 : ((v2 >= 10000000) ? 8 : ((v2 >= 1000000) ? 7 : ((v2 >= 100000) ? 6 : ((v2 >= 10000) ? 5 : ((v2 >= 1000) ? 4 : ((v2 >= 100) ? 3 : ((v2 >= 10) ? 2 : 1))))))));
+        kb = (v2 >= 1000000000) ? 10 : ((v2 >= 100000000) ? 9 : ((v2 >=
+        10000000) ? 8 : ((v2 >= 1000000) ? 7 : ((v2 >= 100000) ? 6 : ((v2 >=
+        10000) ? 5 : ((v2 >= 1000) ? 4 : ((v2 >= 100) ? 3 : ((v2 >= 10) ? 2 :
+        1))))))));
         return new FastInteger(kb);
       }
       return new FastInteger(this.shiftedBigInt.getDigitCount());
@@ -473,7 +511,10 @@ namespace PeterO {
     private void ShiftToBitsSmall(int digits) {
       int kb = 0;
       int v2 = this.shiftedSmall;
-      kb = (v2 >= 1000000000) ? 10 : ((v2 >= 100000000) ? 9 : ((v2 >= 10000000) ? 8 : ((v2 >= 1000000) ? 7 : ((v2 >= 100000) ? 6 : ((v2 >= 10000) ? 5 : ((v2 >= 1000) ? 4 : ((v2 >= 100) ? 3 : ((v2 >= 10) ? 2 : 1))))))));
+      kb = (v2 >= 1000000000) ? 10 : ((v2 >= 100000000) ? 9 : ((v2 >=
+      10000000) ? 8 : ((v2 >= 1000000) ? 7 : ((v2 >= 100000) ? 6 : ((v2 >=
+      10000) ? 5 : ((v2 >= 1000) ? 4 : ((v2 >= 100) ? 3 : ((v2 >= 10) ? 2 :
+      1))))))));
       this.knownBitLength = new FastInteger(kb);
       if (kb > digits) {
         var digitShift = (int)(kb - digits);

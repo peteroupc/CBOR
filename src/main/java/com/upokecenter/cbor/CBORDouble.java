@@ -9,8 +9,8 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-  class CBORDouble implements ICBORNumber
-  {
+  class CBORDouble implements ICBORNumber {
+
     public boolean IsPositiveInfinity(final Object obj) {
       return ((((Double)obj).doubleValue()) == Double.POSITIVE_INFINITY);
     }
@@ -53,7 +53,8 @@ import com.upokecenter.util.*;
         throw new ArithmeticException("This Object's value is out of range");
       }
       fltItem = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
-      if (fltItem >= -9223372036854775808.0 && fltItem < 9223372036854775808.0) {
+      if (fltItem >= -9223372036854775808.0 && fltItem <
+      9223372036854775808.0) {
         return (long)fltItem;
       }
       throw new ArithmeticException("This Object's value is out of range");
@@ -85,8 +86,10 @@ import com.upokecenter.util.*;
       if (Double.isNaN(fltItem) || ((Double)(fltItem)).isInfinite()) {
         return false;
       }
-      double fltItem2 = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
-      return fltItem2 >= -9223372036854775808.0 && fltItem2 < 9223372036854775808.0;
+      double fltItem2 = (fltItem < 0) ? Math.ceil(fltItem) :
+      Math.floor(fltItem);
+      return fltItem2 >= -9223372036854775808.0 && fltItem2 <
+      9223372036854775808.0;
     }
 
     public boolean CanTruncatedIntFitInInt32(final Object obj) {
@@ -94,11 +97,12 @@ import com.upokecenter.util.*;
       if (Double.isNaN(fltItem) || ((Double)(fltItem)).isInfinite()) {
         return false;
       }
-      double fltItem2 = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
+      double fltItem2 = (fltItem < 0) ? Math.ceil(fltItem) :
+      Math.floor(fltItem);
       return fltItem2 >= Integer.MIN_VALUE && fltItem2 <= Integer.MAX_VALUE;
     }
 
-    public int AsInt32(final Object obj, final int minValue, final int maxValue) {
+    public int AsInt32(final Object obj, int minValue, int maxValue) {
       double fltItem = ((Double)obj).doubleValue();
       if (Double.isNaN(fltItem)) {
         throw new ArithmeticException("This Object's value is out of range");
@@ -117,7 +121,8 @@ import com.upokecenter.util.*;
 
     public int Sign(final Object obj) {
       double flt = ((Double)obj).doubleValue();
-      return Double.isNaN(flt) ? 2 : ((double)flt == 0.0 ? 0 : (flt < 0.0f ? -1 : 1));
+      return Double.isNaN(flt) ? 2 : ((double)flt == 0.0 ? 0 : (flt < 0.0f ?
+      -1 : 1));
     }
 
     public boolean IsIntegral(final Object obj) {
@@ -125,7 +130,8 @@ import com.upokecenter.util.*;
       if (Double.isNaN(fltItem) || ((Double)(fltItem)).isInfinite()) {
         return false;
       }
-      double fltItem2 = (fltItem < 0) ? Math.ceil(fltItem) : Math.floor(fltItem);
+      double fltItem2 = (fltItem < 0) ? Math.ceil(fltItem) :
+      Math.floor(fltItem);
       return fltItem == fltItem2;
     }
 

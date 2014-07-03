@@ -3,23 +3,21 @@ package com.upokecenter.cbor;
 Written in 2013 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
-*/
+ */
 
     /**
-     * Contains utility methods for processing Uniform Resource Identifiers
-     * (URIs) and Internationalized Resource Identifiers (IRIs) under
-     * RFC3986 and RFC3987, respectively. In the following documentation,
-     * URIs and IRIs include URI references and IRI references, for convenience.
+     * Contains utility methods for processing Uniform Resource Identifiers (URIs)
+     * and Internationalized Resource Identifiers (IRIs) under RFC3986 and
+     * RFC3987, respectively. In the following documentation, URIs and IRIs
+     * include URI references and IRI references, for convenience.
      */
   final class URIUtility {
 private URIUtility() {
 }
     /**
-     * Specifies whether certain characters are allowed when parsing IRIs
-     * and URIs.
+     * Specifies whether certain characters are allowed when parsing IRIs and URIs.
      */
     enum ParseMode {
     /**
@@ -36,26 +34,26 @@ private URIUtility() {
       URIStrict,
 
     /**
-     * The rules only check for the appropriate delimiters when splitting
-     * the path, without checking if all the characters in each component
-     * are valid. Even with this mode, strings with unpaired surrogate code
-     * points are considered invalid.
+     * The rules only check for the appropriate delimiters when splitting the path,
+     * without checking if all the characters in each component are valid.
+     * Even with this mode, strings with unpaired surrogate code points are
+     * considered invalid.
      */
       IRILenient,
 
     /**
-     * The rules only check for the appropriate delimiters when splitting
-     * the path, without checking if all the characters in each component
-     * are valid. Non-ASCII characters are not allowed.
+     * The rules only check for the appropriate delimiters when splitting the path,
+     * without checking if all the characters in each component are valid.
+     * Non-ASCII characters are not allowed.
      */
       URILenient,
 
     /**
-     * The rules only check for the appropriate delimiters when splitting
-     * the path, without checking if all the characters in each component
-     * are valid. Unpaired surrogate code points are treated as though they
-     * were replacement characters instead for the purposes of these rules,
-     * so that strings with those code points are not considered invalid
+     * The rules only check for the appropriate delimiters when splitting the path,
+     * without checking if all the characters in each component are valid.
+     * Unpaired surrogate code points are treated as though they were
+     * replacement characters instead for the purposes of these rules, so
+     * that strings with those code points are not considered invalid
      * strings.
      */
       IRISurrogateLenient
@@ -64,89 +62,108 @@ private URIUtility() {
     private static final String HexChars = "0123456789ABCDEF";
 
     private static void appendAuthority(
-        StringBuilder builder,
-        String refValue,
-        int[] segments) {
+      final StringBuilder builder,
+      final String refValue,
+      final int[] segments) {
       if (segments[2] >= 0) {
         builder.append("//");
-        builder.append(refValue.substring(segments[2],(segments[2])+(segments[3] - segments[2])));
+        builder.append(
+          refValue.substring(
+            segments[2], (
+            segments[2]) + (segments[3] - segments[2])));
       }
     }
 
     private static void appendFragment(
-        StringBuilder builder,
-        String refValue,
-        int[] segments) {
+      final StringBuilder builder,
+      final String refValue,
+      final int[] segments) {
       if (segments[8] >= 0) {
         builder.append('#');
-        builder.append(refValue.substring(segments[8],(segments[8])+(segments[9] - segments[8])));
+        builder.append(
+          refValue.substring(
+            segments[8], (
+            segments[8]) + (segments[9] - segments[8])));
       }
     }
 
     private static void appendNormalizedPath(
-        StringBuilder builder,
-        String refValue,
-        int[] segments) {
-      builder.append(normalizePath(refValue.substring(segments[4],(segments[4])+(segments[5] - segments[4]))));
+      final StringBuilder builder,
+      final String refValue,
+      final int[] segments) {
+      builder.append(
+        normalizePath(
+          refValue.substring(
+            segments[4], (
+            segments[4]) + (segments[5] - segments[4]))));
     }
 
     private static void appendPath(
-        StringBuilder builder,
-        String refValue,
-        int[] segments) {
-      builder.append(refValue.substring(segments[4],(segments[4])+(segments[5] - segments[4])));
+      final StringBuilder builder,
+      final String refValue,
+      final int[] segments) {
+      builder.append(
+        refValue.substring(
+          segments[4], (
+          segments[4]) + (segments[5] - segments[4])));
     }
 
     private static void appendQuery(
-        StringBuilder builder,
-        String refValue,
-        int[] segments) {
+      final StringBuilder builder,
+      final String refValue,
+      final int[] segments) {
       if (segments[6] >= 0) {
         builder.append('?');
-        builder.append(refValue.substring(segments[6],(segments[6])+(segments[7] - segments[6])));
+        builder.append(
+          refValue.substring(
+            segments[6], (
+            segments[6]) + (segments[7] - segments[6])));
       }
     }
 
     private static void appendScheme(
-        StringBuilder builder,
-        String refValue,
-        int[] segments) {
+      final StringBuilder builder,
+      final String refValue,
+      final int[] segments) {
       if (segments[0] >= 0) {
-        builder.append(refValue.substring(segments[0],(segments[0])+(segments[1] - segments[0])));
+        builder.append(
+          refValue.substring(
+            segments[0], (
+            segments[0]) + (segments[1] - segments[0])));
         builder.append(':');
       }
     }
 
     /**
-     * Escapes characters that cannot appear in URIs or IRIs. The function
-     * is idempotent; that is, calling the function again on the result with
+     * Escapes characters that cannot appear in URIs or IRIs. The function is
+     * idempotent; that is, calling the function again on the result with
      * the same mode doesn't change the result.
      * @param s A string to escape.
-     * @param mode One of the following values:. <list><item>0 - Non-ASCII
-     * characters and other characters that cannot appear in a URI are escaped,
-     * whether or not the string is a valid URI. Unpaired surrogates are treated
-     * as U + FFFD (Replacement Character). (Note that square brackets "["
-     * and "]" can only appear in the authority component of a URI or IRI; elsewhere
-     * they will be escaped.)</item> <item>1 - Only non-ASCII characters
-     * are escaped. If the string is not a valid IRI, returns null instead.</item>
-     * <item>2 - Only non-ASCII characters are escaped, whether or not the
-     * string is a valid IRI. Unpaired surrogates are treated as U + FFFD (Replacement
-     * Character).</item> <item>3 - Similar to 0, except that illegal percent
-     * encodings are also escaped.</item> </list>
+     * @param mode A 32-bit signed integer.
      * @return A string object.
      */
-    public static String escapeURI(String s, int mode) {
+    public static String escapeURI(final String s, int mode) {
       if (s == null) {
         return null;
       }
       int[] components = null;
       if (mode == 1) {
-        components = (s == null) ? null : splitIRI(s, 0, s.length(), ParseMode.IRIStrict);
+        components = (
+          s == null) ? null : splitIRI(
+          s,
+          0,
+          s.length(),
+          ParseMode.IRIStrict);
         if (components == null) {
           return null;
         }
       } else {
-        components = (s == null) ? null : splitIRI(s, 0, s.length(), ParseMode.IRISurrogateLenient);
+        components = (
+          s == null) ? null : splitIRI(
+          s,
+          0,
+          s.length(),
+          ParseMode.IRISurrogateLenient);
       }
       int index = 0;
       int valueSLength = s.length();
@@ -169,24 +186,29 @@ private URIUtility() {
               percentEncodeUtf8(builder, c);
             } else {
               if (c <= 0xffff) {
-                  builder.append((char)c);
+                builder.append((char)c);
               } else if (c <= 0x10ffff) {
-                builder.append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
+                builder.append((char)((((c - 0x10000) >> 10) & 0x3ff) +
+                                      0xd800));
                 builder.append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
               }
             }
             ++index;
             continue;
           }
-          if (c >= 0x7F || c <= 0x20 || ((c & 0x7F) == c && "{}|^\\`<>\"".indexOf((char)c) >= 0)) {
+          if (c >= 0x7f || c <= 0x20 ||
+              ((c & 0x7f) == c &&
+               "{}|^\\`<>\"".indexOf((char)c) >= 0)) {
             percentEncodeUtf8(builder, c);
           } else if (c == '[' || c == ']') {
-            if (components != null && index >= components[2] && index < components[3]) {
+            if (components != null && index >= components[2] && index <
+                components[3]) {
               // within the authority component, so don't percent-encode
               if (c <= 0xffff) {
-                  builder.append((char)c);
+                builder.append((char)c);
               } else if (c <= 0x10ffff) {
-                builder.append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
+                builder.append((char)((((c - 0x10000) >> 10) & 0x3ff) +
+                                      0xd800));
                 builder.append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
               }
             } else {
@@ -195,7 +217,7 @@ private URIUtility() {
             }
           } else {
             if (c <= 0xffff) {
-                builder.append((char)c);
+              builder.append((char)c);
             } else if (c <= 0x10ffff) {
               builder.append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
               builder.append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
@@ -205,12 +227,14 @@ private URIUtility() {
           if (c >= 0x80) {
             percentEncodeUtf8(builder, c);
           } else if (c == '[' || c == ']') {
-            if (components != null && index >= components[2] && index < components[3]) {
+            if (components != null && index >= components[2] && index <
+                components[3]) {
               // within the authority component, so don't percent-encode
               if (c <= 0xffff) {
-                  builder.append((char)c);
+                builder.append((char)c);
               } else if (c <= 0x10ffff) {
-                builder.append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
+                builder.append((char)((((c - 0x10000) >> 10) & 0x3ff) +
+                                      0xd800));
                 builder.append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
               }
             } else {
@@ -219,7 +243,7 @@ private URIUtility() {
             }
           } else {
             if (c <= 0xffff) {
-                builder.append((char)c);
+              builder.append((char)c);
             } else if (c <= 0x10ffff) {
               builder.append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
               builder.append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
@@ -232,127 +256,150 @@ private URIUtility() {
     }
 
     /**
-     * Determines whether the string is a valid IRI with a scheme component.
-     * This can be used to check for relative IRI references. <p>The following
-     * cases return true:</p> <code> xx-x:mm example:/ww </code> The following
-     * cases return false: <code> x@y:/z /x/y/z example.xyz </code>
-     * @param refValue A string object.
-     * @return True if the string is a valid IRI with a scheme component; otherwise,
-     * false.
-     */
-    public static boolean hasScheme(String refValue) {
-      int[] segments = (refValue == null) ? null : splitIRI(refValue, 0, refValue.length(), ParseMode.IRIStrict);
-      return segments != null && segments[0] >= 0;
-    }
-
-    /**
-     * Determines whether the string is a valid URI with a scheme component.
-     * This can be used to check for relative URI references. The following
-     * cases return true: <code> http://example/z xx-x:mm example:/ww
-     * </code> The following cases return false: <code> x@y:/z /x/y/z example.xyz
+     * Determines whether the string is a valid IRI with a scheme component. This
+     * can be used to check for relative IRI references. <p>The following
+     * cases return true:</p> <code> xx-x:mm example:/ww </code> The
+     * following cases return false: <code> x@y:/z /x/y/z example.xyz
      * </code>
      * @param refValue A string object.
-     * @return True if the string is a valid URI with a scheme component; otherwise,
-     * false.
+     * @return True if the string is a valid IRI with a scheme component;
+     * otherwise, false.
      */
-    public static boolean hasSchemeForURI(String refValue) {
-      int[] segments = (refValue == null) ? null : splitIRI(refValue, 0, refValue.length(), ParseMode.URIStrict);
+    public static boolean hasScheme(final String refValue) {
+      int[] segments = (
+        refValue == null) ? null : splitIRI(
+        refValue,
+        0,
+        refValue.length(),
+        ParseMode.IRIStrict);
       return segments != null && segments[0] >= 0;
     }
 
-    private static boolean isHexChar(char c) {
+    /**
+     * Determines whether the string is a valid URI with a scheme component. This
+     * can be used to check for relative URI references. The following cases
+     * return true: <code> http://example/z xx-x:mm example:/ww </code> The
+     * following cases return false: <code> x@y:/z /x/y/z example.xyz
+     * </code>
+     * @param refValue A string object.
+     * @return True if the string is a valid URI with a scheme component;
+     * otherwise, false.
+     */
+    public static boolean hasSchemeForURI(final String refValue) {
+      int[] segments = (refValue == null) ? null : splitIRI(
+        refValue,
+        0,
+        refValue.length(),
+        ParseMode.URIStrict);
+      return segments != null && segments[0] >= 0;
+    }
+
+    private static boolean isHexChar(final char c) {
       return (c >= 'a' && c <= 'f') ||
-          (c >= 'A' && c <= 'F') ||
-          (c >= '0' && c <= '9');
+        (c >= 'A' && c <= 'F') ||
+        (c >= '0' && c <= '9');
     }
 
-    private static boolean isIfragmentChar(int c) {
+    private static boolean isIfragmentChar(final int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
-          (c >= 'A' && c <= 'Z') ||
-          (c >= '0' && c <= '9') ||
-          ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".indexOf((char)c) >= 0) ||
-          (c >= 0xa0 && c <= 0xd7ff) ||
-          (c >= 0xf900 && c <= 0xfdcf) ||
-          (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
+        (c >= 'A' && c <= 'Z') ||
+        (c >= '0' && c <= '9') ||
+        ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".indexOf((char)c) >= 0) ||
+        (c >= 0xa0 && c <= 0xd7ff) ||
+        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xfdf0 && c <= 0xffef) ||
+        (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
-    private static boolean isIpchar(int c) {
+    private static boolean isIpchar(final int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
-          (c >= 'A' && c <= 'Z') ||
-          (c >= '0' && c <= '9') ||
-          ((c & 0x7F) == c && "/-._~:@!$&'()*+,;=".indexOf((char)c) >= 0) ||
-          (c >= 0xa0 && c <= 0xd7ff) ||
-          (c >= 0xf900 && c <= 0xfdcf) ||
-          (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
+        (c >= 'A' && c <= 'Z') ||
+        (c >= '0' && c <= '9') ||
+        ((c & 0x7F) == c && "/-._~:@!$&'()*+,;=".indexOf((char)c) >= 0) ||
+        (c >= 0xa0 && c <= 0xd7ff) ||
+        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xfdf0 && c <= 0xffef) ||
+        (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
-    private static boolean isIqueryChar(int c) {
+    private static boolean isIqueryChar(final int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
-          (c >= 'A' && c <= 'Z') ||
-          (c >= '0' && c <= '9') ||
-          ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".indexOf((char)c) >= 0) ||
-          (c >= 0xa0 && c <= 0xd7ff) ||
-          (c >= 0xe000 && c <= 0xfdcf) ||
-          (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0x10fffd && (c & 0xfffe) != 0xfffe);
+        (c >= 'A' && c <= 'Z') ||
+        (c >= '0' && c <= '9') ||
+        ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".indexOf((char)c) >= 0) ||
+        (c >= 0xa0 && c <= 0xd7ff) ||
+        (c >= 0xe000 && c <= 0xfdcf) ||
+        (c >= 0xfdf0 && c <= 0xffef) ||
+        (c >= 0x10000 && c <= 0x10fffd && (c & 0xfffe) != 0xfffe);
     }
 
-    private static boolean isIRegNameChar(int c) {
+    private static boolean isIRegNameChar(final int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
-          (c >= 'A' && c <= 'Z') ||
-          (c >= '0' && c <= '9') ||
-          ((c & 0x7F) == c && "-._~!$&'()*+,;=".indexOf((char)c) >= 0) ||
-          (c >= 0xa0 && c <= 0xd7ff) ||
-          (c >= 0xf900 && c <= 0xfdcf) ||
-          (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
+        (c >= 'A' && c <= 'Z') ||
+        (c >= '0' && c <= '9') ||
+        ((c & 0x7F) == c && "-._~!$&'()*+,;=".indexOf((char)c) >= 0) ||
+        (c >= 0xa0 && c <= 0xd7ff) ||
+        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xfdf0 && c <= 0xffef) ||
+        (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
-    private static boolean isIUserInfoChar(int c) {
+    private static boolean isIUserInfoChar(final int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
-          (c >= 'A' && c <= 'Z') ||
-          (c >= '0' && c <= '9') ||
-          ((c & 0x7F) == c && "-._~:!$&'()*+,;=".indexOf((char)c) >= 0) ||
-          (c >= 0xa0 && c <= 0xd7ff) ||
-          (c >= 0xf900 && c <= 0xfdcf) ||
-          (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
+        (c >= 'A' && c <= 'Z') ||
+        (c >= '0' && c <= '9') ||
+        ((c & 0x7F) == c && "-._~:!$&'()*+,;=".indexOf((char)c) >= 0) ||
+        (c >= 0xa0 && c <= 0xd7ff) ||
+        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xfdf0 && c <= 0xffef) ||
+        (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
     /**
-     * Determines whether the substring is a valid CURIE reference under
-     * RDFA 1.1. (The CURIE reference is the part after the colon.).
+     * Determines whether the substring is a valid CURIE reference under RDFA 1.1.
+     * (The CURIE reference is the part after the colon.).
      * @param s A string object.
      * @param offset A 32-bit signed integer.
      * @param length A 32-bit signed integer. (2).
-     * @return True if the substring is a valid CURIE reference under RDFA
-     * 1; otherwise, false.
+     * @return True if the substring is a valid CURIE reference under RDFA 1;
+     * otherwise, false.
      */
-    public static boolean isValidCurieReference(String s, int offset, int length) {
+    public static boolean isValidCurieReference(final String s, int offset, int length) {
       if (s == null) {
         return false;
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + Integer.toString((int)(long)offset) + ") is less than " + "0");
+        throw new IllegalArgumentException("offset (" +
+                                    Integer.toString((int)(long)offset) +
+                                    ") is less than " + "0 ");
       }
       if (offset > s.length()) {
-        throw new IllegalArgumentException("offset (" + Integer.toString((int)(long)offset) + ") is more than " + Integer.toString((int)(long)s.length()));
+        throw new IllegalArgumentException("offset (" +
+                                    Integer.toString((int)(long)offset) +
+                     ") is more than " +
+                                      Integer.toString((int)(long)s.length()));
       }
       if (length < 0) {
-        throw new IllegalArgumentException("length (" + Integer.toString((int)(long)length) + ") is less than " + "0");
+        throw new IllegalArgumentException("length (" +
+                                    Integer.toString((int)(long)length) +
+                                    ") is less than " + "0 ");
       }
       if (length > s.length()) {
-        throw new IllegalArgumentException("length (" + Integer.toString((int)(long)length) + ") is more than " + Integer.toString((int)(long)s.length()));
+        throw new IllegalArgumentException("length (" +
+                                    Integer.toString((int)(long)length) +
+                     ") is more than " +
+                                      Integer.toString((int)(long)s.length()));
       }
       if (s.length() - offset < length) {
-        throw new IllegalArgumentException("s's length minus " + offset + " (" + Integer.toString((int)(long)(s.length() - offset)) + ") is less than " + Integer.toString((int)(long)length));
+        throw new IllegalArgumentException("s's length minus " + offset + " (" +
+                               Integer.toString((int)(long)(s.length() - offset)) +
+                       ") is less than " +
+                                      Integer.toString((int)(long)length));
       }
       if (length == 0) {
         return true;
@@ -380,7 +427,7 @@ private URIUtility() {
         if (c == '%') {
           // Percent encoded character
           if (index + 2 < valueSLength && isHexChar(s.charAt(index + 1)) &&
-                   isHexChar(s.charAt(index + 2))) {
+              isHexChar(s.charAt(index + 2))) {
             index += 3;
             continue;
           }
@@ -412,16 +459,22 @@ private URIUtility() {
       return true;
     }
 
-    public static boolean isValidIRI(String s) {
-      return ((s == null) ? null : splitIRI(s, 0, s.length(), ParseMode.IRIStrict)) != null;
+    public static boolean isValidIRI(final String s) {
+      return ((
+        s == null) ? null : splitIRI(
+                s,
+                0,
+                s.length(),
+                ParseMode.IRIStrict)) != null;
     }
 
-    private static String normalizePath(String path) {
+    private static String normalizePath(final String path) {
       int len = path.length();
       if (len == 0 || path.equals("..") || path.equals(".")) {
         return "";
       }
-      if (path.indexOf("/.") < 0 && path.indexOf("./") < 0) {
+      if (path.indexOf("/. ") < 0 &&
+          path.indexOf("./ ") < 0) {
         return path;
       }
       StringBuilder builder = new StringBuilder();
@@ -429,40 +482,40 @@ private URIUtility() {
       while (index < len) {
         char c = path.charAt(index);
         if ((index + 3 <= len && c == '/' &&
-                path.charAt(index + 1) == '.' &&
-                path.charAt(index + 2) == '/') ||
-                (index + 2 == len && c == '.' &&
-                path.charAt(index + 1) == '.')) {
+             path.charAt(index + 1) == '.' &&
+             path.charAt(index + 2) == '/') ||
+            (index + 2 == len && c == '.' &&
+             path.charAt(index + 1) == '.')) {
           // begins with "/./" or is "..";
           // move index by 2
           index += 2;
           continue;
         }
         if (index + 3 <= len && c == '.' &&
-                path.charAt(index + 1) == '.' &&
-                path.charAt(index + 2) == '/') {
+            path.charAt(index + 1) == '.' &&
+            path.charAt(index + 2) == '/') {
           // begins with "../";
           // move index by 3
           index += 3;
           continue;
         }
         if ((index + 2 <= len && c == '.' &&
-                path.charAt(index + 1) == '/') ||
-                (index + 1 == len && c == '.')) {
+             path.charAt(index + 1) == '/') ||
+            (index + 1 == len && c == '.')) {
           // begins with "./" or is ".";
           // move index by 1
           ++index;
           continue;
         }
         if (index + 2 == len && c == '/' &&
-                path.charAt(index + 1) == '.') {
+            path.charAt(index + 1) == '.') {
           // is "/."; append '/' and break
           builder.append('/');
           break;
         }
         if (index + 3 == len && c == '/' &&
-                path.charAt(index + 1) == '.' &&
-                path.charAt(index + 2) == '.') {
+            path.charAt(index + 1) == '.' &&
+            path.charAt(index + 2) == '.') {
           // is "/.."; remove last segment,
           // append "/" and return
           int index2 = builder.length() - 1;
@@ -480,9 +533,9 @@ private URIUtility() {
           break;
         }
         if (index + 4 <= len && c == '/' &&
-                path.charAt(index + 1) == '.' &&
-                path.charAt(index + 2) == '.' &&
-                path.charAt(index + 3) == '/') {
+            path.charAt(index + 1) == '.' &&
+            path.charAt(index + 2) == '.' &&
+            path.charAt(index + 3) == '/') {
           // begins with "/../"; remove last segment
           int index2 = builder.length() - 1;
           while (index2 >= 0) {
@@ -515,39 +568,39 @@ private URIUtility() {
     }
 
     private static int parseDecOctet(
-String s,
-int index,
-int endOffset,
-int c,
-int delim) {
+      final String s,
+      final int index,
+      final int endOffset,
+      final int c,
+      final int delim) {
       if (c >= '1' && c <= '9' && index + 2 < endOffset &&
-             s.charAt(index + 1) >= '0' && s.charAt(index + 1) <= '9' &&
-             s.charAt(index + 2) == delim) {
+          s.charAt(index + 1) >= '0' && s.charAt(index + 1) <= '9' &&
+          s.charAt(index + 2) == delim) {
         return ((c - '0') * 10) + (s.charAt(index + 1) - '0');
       }
       if (c == '2' && index + 3 < endOffset &&
-             (s.charAt(index + 1) == '5') &&
-             (s.charAt(index + 2) >= '0' && s.charAt(index + 2) <= '5') &&
-             s.charAt(index + 3) == delim) {
+          (s.charAt(index + 1) == '5') &&
+          (s.charAt(index + 2) >= '0' && s.charAt(index + 2) <= '5') &&
+          s.charAt(index + 3) == delim) {
         return 250 + (s.charAt(index + 2) - '0');
       }
       if (c == '2' && index + 3 < endOffset &&
-             s.charAt(index + 1) >= '0' && s.charAt(index + 1) <= '4' &&
-             s.charAt(index + 2) >= '0' && s.charAt(index + 2) <= '9' &&
-             s.charAt(index + 3) == delim) {
+          s.charAt(index + 1) >= '0' && s.charAt(index + 1) <= '4' &&
+          s.charAt(index + 2) >= '0' && s.charAt(index + 2) <= '9' &&
+          s.charAt(index + 3) == delim) {
         return 200 + ((s.charAt(index + 1) - '0') * 10) + (s.charAt(index + 2) - '0');
       }
       if (c == '1' && index + 3 < endOffset &&
-             s.charAt(index + 1) >= '0' && s.charAt(index + 1) <= '9' &&
-             s.charAt(index + 2) >= '0' && s.charAt(index + 2) <= '9' &&
-             s.charAt(index + 3) == delim) {
+          s.charAt(index + 1) >= '0' && s.charAt(index + 1) <= '9' &&
+          s.charAt(index + 2) >= '0' && s.charAt(index + 2) <= '9' &&
+          s.charAt(index + 3) == delim) {
         return 100 + ((s.charAt(index + 1) - '0') * 10) + (s.charAt(index + 2) - '0');
       }
       return (c >= '0' && c <= '9' && index + 1 < endOffset &&
-             s.charAt(index + 1) == delim) ? (c - '0') : (-1);
+              s.charAt(index + 1) == delim) ? (c - '0') : (-1);
     }
 
-    private static int parseIPLiteral(String s, int offset, int endOffset) {
+    private static int parseIPLiteral(final String s, int offset, int endOffset) {
       int index = offset;
       if (offset == endOffset) {
         return -1;
@@ -578,9 +631,9 @@ int delim) {
         while (index < endOffset) {
           char c = s.charAt(index);
           if ((c >= 'a' && c <= 'z') ||
-                   (c >= 'A' && c <= 'Z') ||
-                   (c >= '0' && c <= '9') ||
-                   ((c & 0x7F) == c && ":-._~!$&'()*+,;=".indexOf(c) >= 0)) {
+              (c >= 'A' && c <= 'Z') ||
+              (c >= '0' && c <= '9') ||
+              ((c & 0x7F) == c && ":-._~!$&'()*+,;=".indexOf(c) >= 0)) {
             hex = true;
           } else {
             break;
@@ -597,7 +650,7 @@ int delim) {
         return index;
       }
       if (s.charAt(index) == ':' ||
-             isHexChar(s.charAt(index))) {
+          isHexChar(s.charAt(index))) {
         // IPv6 Address
         int phase1 = 0;
         int phase2 = 0;
@@ -623,7 +676,7 @@ int delim) {
             continue;
           }
           if ((c >= '0' && c <= '9') && !expectColon &&
-                   (phased || (phase1 + (phased ? 1 : 0) + phase2) == 6)) {
+              (phased || (phase1 + (phased ? 1 : 0) + phase2) == 6)) {
             // Check for IPv4 address
             int decOctet = parseDecOctet(s, index, endOffset, c, '.');
             if (decOctet >= 0) {
@@ -720,7 +773,7 @@ int delim) {
         }
         if (s.charAt(index) == '%') {
           if (index + 2 < endOffset && s.charAt(index + 1) == '2' &&
-                   s.charAt(index + 2) == '5') {
+              s.charAt(index + 2) == '5') {
             // Zone identifier in an IPv6 address
             // (see RFC6874)
             index += 3;
@@ -732,7 +785,7 @@ int delim) {
               }
               if (c == '%') {
                 if (index + 2 < endOffset && isHexChar(s.charAt(index + 1)) &&
-                            isHexChar(s.charAt(index + 2))) {
+                    isHexChar(s.charAt(index + 2))) {
                   index += 3;
                   haveChar = true;
                   continue;
@@ -740,7 +793,8 @@ int delim) {
                 return -1;
               }
               if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-                         (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-' || c == '~') {
+      (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-' || c ==
+                    '~') {
                 // unreserved character under RFC3986
                 ++index;
                 haveChar = true;
@@ -758,27 +812,30 @@ int delim) {
       return -1;
     }
 
-    private static String pathParent(String refValue, int startIndex, int endIndex) {
+    private static String pathParent(
+      final String refValue,
+      final int startIndex,
+      final int endIndex) {
       if (startIndex > endIndex) {
         return "";
       }
       --endIndex;
       while (endIndex >= startIndex) {
         if (refValue.charAt(endIndex) == '/') {
-          return refValue.substring(startIndex,(startIndex)+((endIndex + 1) - startIndex));
+          return refValue.substring(startIndex, (startIndex) + ((endIndex + 1) - startIndex));
         }
         --endIndex;
       }
       return "";
     }
 
-    private static void percentEncode(StringBuilder buffer, int b) {
+    private static void percentEncode(final StringBuilder buffer, int b) {
       buffer.append('%');
       buffer.append(HexChars.charAt((b >> 4) & 0x0f));
       buffer.append(HexChars.charAt(b & 0x0f));
     }
 
-    private static void percentEncodeUtf8(StringBuilder buffer, int cp) {
+    private static void percentEncodeUtf8(final StringBuilder buffer, int cp) {
       if (cp <= 0x7f) {
         buffer.append('%');
         buffer.append(HexChars.charAt((cp >> 4) & 0x0f));
@@ -804,7 +861,7 @@ int delim) {
      * @param baseURI A string object. (3).
      * @return A string object.
      */
-    public static String relativeResolve(String refValue, String baseURI) {
+    public static String relativeResolve(final String refValue, String baseURI) {
       return relativeResolve(refValue, baseURI, ParseMode.IRIStrict);
     }
 
@@ -813,15 +870,28 @@ int delim) {
      * @param refValue A string object.
      * @param baseURI A string object. (2).
      * @param parseMode A ParseMode object.
-     * @return The resolved IRI, or null if refValue is null or is not a valid
-     * IRI. If base is null or is not a valid IRI, returns refValue.
+     * @return The resolved IRI, or null if refValue is null or is not a valid IRI.
+     * If base is null or is not a valid IRI, returns refValue.
      */
-    public static String relativeResolve(String refValue, String baseURI, ParseMode parseMode) {
-      int[] segments = (refValue == null) ? null : splitIRI(refValue, 0, refValue.length(), parseMode);
+    public static String relativeResolve(
+      final String refValue,
+      final String baseURI,
+      final ParseMode parseMode) {
+      int[] segments = (
+        refValue == null) ? null : splitIRI(
+        refValue,
+        0,
+        refValue.length(),
+        parseMode);
       if (segments == null) {
         return null;
       }
-      int[] segmentsBase = (baseURI == null) ? null : splitIRI(baseURI, 0, baseURI.length(), parseMode);
+      int[] segmentsBase = (
+        baseURI == null) ? null : splitIRI(
+        baseURI,
+        0,
+        baseURI.length(),
+        parseMode);
       if (segmentsBase == null) {
         return refValue;
       }
@@ -860,7 +930,11 @@ int delim) {
             appendPath(merged, refValue, segments);
             builder.append(normalizePath(merged.toString()));
           } else {
-            merged.append(pathParent(baseURI, segmentsBase[4], segmentsBase[5]));
+            merged.append(
+              pathParent(
+                baseURI,
+                segmentsBase[4],
+                segmentsBase[5]));
             appendPath(merged, refValue, segments);
             builder.append(normalizePath(merged.toString()));
           }
@@ -872,47 +946,48 @@ int delim) {
     }
 
     /**
-     * Parses an Internationalized Resource Identifier (IRI) reference
-     * under RFC3987. If the IRI reference is syntactically valid, splits
-     * the string into its components and returns an array containing the
+     * Parses an Internationalized Resource Identifier (IRI) reference under
+     * RFC3987. If the IRI reference is syntactically valid, splits the
+     * string into its components and returns an array containing the
      * indices into the components. <returns>If the string is a valid IRI
      * reference, returns an array of 10 integers. Each of the five pairs
-     * corresponds to the start and end index of the IRI's scheme, authority,
-     * path, query, or fragment component, respectively. If a component
-     * is absent, both indices in that pair will be -1. If the string is null
-     * or is not a valid IRI, returns null.</returns>
+     * corresponds to the start and end index of the IRI's scheme,
+     * authority, path, query, or fragment component, respectively. If a
+     * component is absent, both indices in that pair will be -1. If the
+     * string is null or is not a valid IRI, returns null.</returns>
      * @param s A string object.
-     * @return If the string is a valid IRI reference, returns an array of
-     * 10 integers. Each of the five pairs corresponds to the start and end
-     * index of the IRI's scheme, authority, path, query, or fragment component,
-     * respectively. If a component is absent, both indices in that pair
-     * will be -1. If the string is null or is not a valid IRI, returns null.
+     * @return If the string is a valid IRI reference, returns an array of 10
+     * integers. Each of the five pairs corresponds to the start and end
+     * index of the IRI's scheme, authority, path, query, or fragment
+     * component, respectively. If a component is absent, both indices in
+     * that pair will be -1. If the string is null or is not a valid IRI,
+     * returns null.
      */
-    public static int[] splitIRI(String s) {
+    public static int[] splitIRI(final String s) {
       return (s == null) ? null : splitIRI(s, 0, s.length(), ParseMode.IRIStrict);
     }
 
     /**
-     * Parses a substring that represents an Internationalized Resource
-     * Identifier (IRI) under RFC3987. If the IRI is syntactically valid,
-     * splits the string into its components and returns an array containing
-     * the indices into the components.
+     * Parses a substring that represents an Internationalized Resource Identifier
+     * (IRI) under RFC3987. If the IRI is syntactically valid, splits the
+     * string into its components and returns an array containing the
+     * indices into the components.
      * @param s A string object.
      * @param offset A 32-bit signed integer.
      * @param length A 32-bit signed integer. (2).
      * @param parseMode A ParseMode object.
-     * @return If the string is a valid IRI, returns an array of 10 integers.
-     * Each of the five pairs corresponds to the start and end index of the
-     * IRI's scheme, authority, path, query, or fragment component, respectively.
-     * If a component is absent, both indices in that pair will be -1 (an index
-     * won't be less than 0 in any other case). If the string is null or is not
-     * a valid IRI, returns null.
+     * @return If the string is a valid IRI, returns an array of 10 integers. Each
+     * of the five pairs corresponds to the start and end index of the IRI's
+     * scheme, authority, path, query, or fragment component, respectively.
+     * If a component is absent, both indices in that pair will be -1 (an
+     * index won't be less than 0 in any other case). If the string is null
+     * or is not a valid IRI, returns null.
      */
     public static int[] splitIRI(
-String s,
-int offset,
-int length,
-ParseMode parseMode) {
+      final String s,
+      final int offset,
+      final int length,
+      final ParseMode parseMode) {
       if (s == null) {
         return null;
       }
@@ -925,8 +1000,10 @@ ParseMode parseMode) {
         retval[5] = 0;
         return retval;
       }
-      boolean asciiOnly = parseMode == ParseMode.URILenient || parseMode == ParseMode.URIStrict;
-      boolean strict = parseMode == ParseMode.URIStrict || parseMode == ParseMode.IRIStrict;
+      boolean asciiOnly = parseMode == ParseMode.URILenient || parseMode ==
+        ParseMode.URIStrict;
+      boolean strict = parseMode == ParseMode.URIStrict || parseMode ==
+        ParseMode.IRIStrict;
       int index = offset;
       int valueSLength = offset + length;
       boolean scheme = false;
@@ -940,12 +1017,15 @@ ParseMode parseMode) {
           ++index;
           break;
         }
-        if (strict && index == offset && !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) {
+        if (strict && index == offset && !((c >= 'a' && c <= 'z') || (c >=
+                                                           'A' && c <= 'Z'
+))) {
           break;
         }
         if (strict && index > offset &&
-                !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
-                c == '+' || c == '-' || c == '.')) {
+!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <=
+              '9') ||
+              c == '+' || c == '-' || c == '.')) {
           break;
         }
         if (!strict && (c == '#' || c == ':' || c == '?' || c == '/')) {
@@ -986,7 +1066,7 @@ ParseMode parseMode) {
           if (c == '%' && (state == 0 || state == 1) && strict) {
             // Percent encoded character (except in port)
             if (index + 2 < valueSLength && isHexChar(s.charAt(index + 1)) &&
-                      isHexChar(s.charAt(index + 2))) {
+                isHexChar(s.charAt(index + 2))) {
               index += 3;
               continue;
             }
@@ -1084,7 +1164,7 @@ ParseMode parseMode) {
         if (c == '%' && strict) {
           // Percent encoded character
           if (index + 2 < valueSLength && isHexChar(s.charAt(index + 1)) &&
-                   isHexChar(s.charAt(index + 2))) {
+              isHexChar(s.charAt(index + 2))) {
             index += 3;
             continue;
           }
@@ -1138,19 +1218,20 @@ ParseMode parseMode) {
     }
 
     /**
-     * Parses an Internationalized Resource Identifier (IRI) reference
-     * under RFC3987. If the IRI is syntactically valid, splits the string
-     * into its components and returns an array containing the indices into
-     * the components.
+     * Parses an Internationalized Resource Identifier (IRI) reference under
+     * RFC3987. If the IRI is syntactically valid, splits the string into
+     * its components and returns an array containing the indices into the
+     * components.
      * @param s A string object.
      * @param parseMode A ParseMode object.
-     * @return If the string is a valid IRI reference, returns an array of
-     * 10 integers. Each of the five pairs corresponds to the start and end
-     * index of the IRI's scheme, authority, path, query, or fragment component,
-     * respectively. If a component is absent, both indices in that pair
-     * will be -1. If the string is null or is not a valid IRI, returns null.
+     * @return If the string is a valid IRI reference, returns an array of 10
+     * integers. Each of the five pairs corresponds to the start and end
+     * index of the IRI's scheme, authority, path, query, or fragment
+     * component, respectively. If a component is absent, both indices in
+     * that pair will be -1. If the string is null or is not a valid IRI,
+     * returns null.
      */
-    public static int[] splitIRI(String s, ParseMode parseMode) {
+    public static int[] splitIRI(final String s, ParseMode parseMode) {
       return (s == null) ? null : splitIRI(s, 0, s.length(), parseMode);
     }
   }

@@ -50,8 +50,10 @@ namespace PeterO.Cbor {
         }
         ret = new List<PropertyData>();
         bool anonymous = t.Name.Contains("__AnonymousType");
-        foreach (PropertyInfo pi in t.GetProperties(BindingFlags.Public | BindingFlags.Instance)) {
-          if (pi.CanRead && (pi.CanWrite || anonymous) && pi.GetIndexParameters().Length == 0) {
+        foreach (PropertyInfo pi in t.GetProperties(BindingFlags.Public |
+        BindingFlags.Instance)) {
+          if (pi.CanRead && (pi.CanWrite || anonymous) &&
+          pi.GetIndexParameters().Length == 0) {
             PropertyData pd = new PropertyMap.PropertyData();
             pd.Name = pi.Name;
             // Convert 'IsXYZ' to 'XYZ'
@@ -136,20 +138,31 @@ namespace PeterO.Cbor {
         data[8] = (byte)0;
         return BigInteger.fromByteArray(data, true);
       }
-      return t.Equals(typeof(long)) ? Convert.ToInt64(value) : (t.Equals(typeof(uint)) ? Convert.ToInt64(value) : Convert.ToInt32(value));
+      return t.Equals(typeof(long)) ? Convert.ToInt64(value) :
+      (t.Equals(typeof(uint)) ? Convert.ToInt64(value) :
+      Convert.ToInt32(value));
     }
 
-    public static object FindOneArgumentMethod(object obj, string name, Type argtype) {
+    public static object FindOneArgumentMethod(
+object obj,
+string name,
+Type argtype) {
       return obj.GetType().GetMethod(name, new[] { argtype });
     }
 
-    public static object InvokeOneArgumentMethod(object methodInfo, object obj, object argument) {
+    public static object InvokeOneArgumentMethod(
+object methodInfo,
+object obj,
+object argument) {
       return ((MethodInfo)methodInfo).Invoke(obj, new[] { argument });
     }
 
-    public static IEnumerable<KeyValuePair<string, object>> GetProperties(Object o) {
+    public static IEnumerable<KeyValuePair<string, object>>
+    GetProperties(Object o) {
       foreach (PropertyData key in GetPropertyList(o.GetType())) {
-        yield return new KeyValuePair<string, object>(key.Name, key.Prop.GetValue(o, null));
+        yield return new KeyValuePair<string, object>(
+key.Name,
+key.Prop.GetValue(o, null));
       }
     }
   }

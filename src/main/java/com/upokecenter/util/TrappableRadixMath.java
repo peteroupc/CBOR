@@ -11,18 +11,22 @@ at: http://upokecenter.com/d/
      * Implements arithmetic methods that support traps.
      * @param <T> Data type for a numeric value in a particular radix.
      */
-  class TrappableRadixMath<T> implements IRadixMath<T>
-  {
-    private static PrecisionContext GetTrappableContext(PrecisionContext ctx) {
-      return (ctx == null) ? null : ((ctx.getTraps() == 0) ? ctx : ctx.WithBlankFlags());
+  class TrappableRadixMath<T> implements IRadixMath<T> {
+
+    private static PrecisionContext GetTrappableContext(final PrecisionContext ctx) {
+      return (ctx == null) ? null : ((ctx.getTraps() == 0) ? ctx :
+      ctx.WithBlankFlags());
     }
 
-    private T TriggerTraps(T result, PrecisionContext src, PrecisionContext dst) {
+    private T TriggerTraps(
+final T result,
+final PrecisionContext src,
+final PrecisionContext dst) {
       if (src == null || src.getFlags() == 0) {
         return result;
       }
       if (dst != null && dst.getHasFlags()) {
-        dst.setFlags(dst.getFlags()|(src.getFlags()));
+        dst.setFlags(dst.getFlags() | (src.getFlags()));
       }
       int traps = (dst != null) ? dst.getTraps() : 0;
       traps &= src.getFlags();
@@ -40,46 +44,66 @@ at: http://upokecenter.com/d/
         }
       }
       if ((traps & PrecisionContext.FlagSubnormal) != 0) {
-        throw new TrapException(traps & PrecisionContext.FlagSubnormal, dst, result);
+        throw new TrapException(
+traps & PrecisionContext.FlagSubnormal,
+dst,
+result);
       }
       if ((traps & PrecisionContext.FlagInexact) != 0) {
-        throw new TrapException(traps & PrecisionContext.FlagInexact, dst, result);
+        throw new TrapException(
+traps & PrecisionContext.FlagInexact,
+dst,
+result);
       }
       if ((traps & PrecisionContext.FlagRounded) != 0) {
-        throw new TrapException(traps & PrecisionContext.FlagRounded, dst, result);
+        throw new TrapException(
+traps & PrecisionContext.FlagRounded,
+dst,
+result);
       }
       if ((traps & PrecisionContext.FlagClamped) != 0) {
-        throw new TrapException(traps & PrecisionContext.FlagClamped, dst, result);
+        throw new TrapException(
+traps & PrecisionContext.FlagClamped,
+dst,
+result);
       }
       return result;
     }
 
     private IRadixMath<T> math;
 
-    public TrappableRadixMath (IRadixMath<T> math) {
-
+    public TrappableRadixMath (final IRadixMath<T> math) {
       this.math = math;
     }
 
-    public T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ctx) {
+    public T DivideToIntegerNaturalScale(
+final T thisValue,
+final T divisor,
+final PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
-      T result = this.math.DivideToIntegerNaturalScale(thisValue, divisor, tctx);
+      T result = this.math.DivideToIntegerNaturalScale(
+thisValue,
+divisor,
+tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T DivideToIntegerZeroScale(T thisValue, T divisor, PrecisionContext ctx) {
+    public T DivideToIntegerZeroScale(
+final T thisValue,
+final T divisor,
+final PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.DivideToIntegerZeroScale(thisValue, divisor, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Abs(T value, PrecisionContext ctx) {
+    public T Abs(final T value, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Abs(value, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Negate(T value, PrecisionContext ctx) {
+    public T Negate(final T value, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Negate(value, tctx);
       return this.TriggerTraps(result, tctx, ctx);
@@ -92,7 +116,7 @@ at: http://upokecenter.com/d/
      * @param ctx A PrecisionContext object.
      * @return The remainder of the two objects.
      */
-    public T Remainder(T thisValue, T divisor, PrecisionContext ctx) {
+    public T Remainder(final T thisValue, T divisor, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Remainder(thisValue, divisor, tctx);
       return this.TriggerTraps(result, tctx, ctx);
@@ -102,69 +126,77 @@ at: http://upokecenter.com/d/
       return this.math.GetHelper();
     }
 
-    public T RemainderNear(T thisValue, T divisor, PrecisionContext ctx) {
+    public T RemainderNear(final T thisValue, T divisor, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RemainderNear(thisValue, divisor, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Pi(PrecisionContext ctx) {
+    public T Pi(final PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Pi(tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Power(T thisValue, T pow, PrecisionContext ctx) {
+    public T Power(final T thisValue, T pow, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Power(thisValue, pow, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Log10(T thisValue, PrecisionContext ctx) {
+    public T Log10(final T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Log10(thisValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Ln(T thisValue, PrecisionContext ctx) {
+    public T Ln(final T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Ln(thisValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Exp(T thisValue, PrecisionContext ctx) {
+    public T Exp(final T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Exp(thisValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T SquareRoot(T thisValue, PrecisionContext ctx) {
+    public T SquareRoot(final T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.SquareRoot(thisValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T NextMinus(T thisValue, PrecisionContext ctx) {
+    public T NextMinus(final T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.NextMinus(thisValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T NextToward(T thisValue, T otherValue, PrecisionContext ctx) {
+    public T NextToward(final T thisValue, T otherValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.NextToward(thisValue, otherValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T NextPlus(T thisValue, PrecisionContext ctx) {
+    public T NextPlus(final T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.NextPlus(thisValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T DivideToExponent(T thisValue, T divisor, BigInteger desiredExponent, PrecisionContext ctx) {
+    public T DivideToExponent(
+final T thisValue,
+final T divisor,
+final BigInteger desiredExponent,
+final PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
-      T result = this.math.DivideToExponent(thisValue, divisor, desiredExponent, tctx);
+      T result = this.math.DivideToExponent(
+thisValue,
+divisor,
+desiredExponent,
+tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
@@ -175,31 +207,31 @@ at: http://upokecenter.com/d/
      * @param ctx A PrecisionContext object.
      * @return The quotient of the two objects.
      */
-    public T Divide(T thisValue, T divisor, PrecisionContext ctx) {
+    public T Divide(final T thisValue, T divisor, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Divide(thisValue, divisor, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T MinMagnitude(T a, T b, PrecisionContext ctx) {
+    public T MinMagnitude(final T a, T b, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.MinMagnitude(a, b, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T MaxMagnitude(T a, T b, PrecisionContext ctx) {
+    public T MaxMagnitude(final T a, T b, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.MaxMagnitude(a, b, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Max(T a, T b, PrecisionContext ctx) {
+    public T Max(final T a, T b, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Max(a, b, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Min(T a, T b, PrecisionContext ctx) {
+    public T Min(final T a, T b, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Min(a, b, tctx);
       return this.TriggerTraps(result, tctx, ctx);
@@ -212,61 +244,81 @@ at: http://upokecenter.com/d/
      * @param ctx A PrecisionContext object.
      * @return The product of the two objects.
      */
-    public T Multiply(T thisValue, T other, PrecisionContext ctx) {
+    public T Multiply(final T thisValue, T other, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Multiply(thisValue, other, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext ctx) {
+    public T MultiplyAndAdd(
+final T thisValue,
+final T multiplicand,
+final T augend,
+final PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
-      T result = this.math.MultiplyAndAdd(thisValue, multiplicand, augend, tctx);
+      T result = this.math.MultiplyAndAdd(
+thisValue,
+multiplicand,
+augend,
+tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Plus(T thisValue, PrecisionContext ctx) {
+    public T Plus(final T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Plus(thisValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T RoundToPrecision(T thisValue, PrecisionContext ctx) {
+    public T RoundToPrecision(final T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToPrecision(thisValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Quantize(T thisValue, T otherValue, PrecisionContext ctx) {
+    public T Quantize(final T thisValue, T otherValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Quantize(thisValue, otherValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T RoundToExponentExact(T thisValue, BigInteger expOther, PrecisionContext ctx) {
+    public T RoundToExponentExact(
+final T thisValue,
+final BigInteger expOther,
+final PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToExponentExact(thisValue, expOther, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T RoundToExponentSimple(T thisValue, BigInteger expOther, PrecisionContext ctx) {
+    public T RoundToExponentSimple(
+final T thisValue,
+final BigInteger expOther,
+final PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundToExponentSimple(thisValue, expOther, ctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T RoundToExponentNoRoundedFlag(T thisValue, BigInteger exponent, PrecisionContext ctx) {
+    public T RoundToExponentNoRoundedFlag(
+final T thisValue,
+final BigInteger exponent,
+final PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
-      T result = this.math.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx);
+      T result = this.math.RoundToExponentNoRoundedFlag(
+thisValue,
+exponent,
+ctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Reduce(T thisValue, PrecisionContext ctx) {
+    public T Reduce(final T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Reduce(thisValue, ctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-    public T Add(T thisValue, T other, PrecisionContext ctx) {
+    public T Add(final T thisValue, T other, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.Add(thisValue, other, tctx);
       return this.TriggerTraps(result, tctx, ctx);
@@ -278,10 +330,14 @@ at: http://upokecenter.com/d/
      * @param otherValue A T object. (2).
      * @param treatQuietNansAsSignaling A Boolean object.
      * @param ctx A PrecisionContext object.
-     * @return Zero if the values are equal; a negative number if this instance
-     * is less, or a positive number if this instance is greater.
+     * @return Zero if the values are equal; a negative number if this instance is
+     * less, or a positive number if this instance is greater.
      */
-    public T CompareToWithContext(T thisValue, T otherValue, boolean treatQuietNansAsSignaling, PrecisionContext ctx) {
+    public T CompareToWithContext(
+final T thisValue,
+final T otherValue,
+final boolean treatQuietNansAsSignaling,
+final PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.CompareToWithContext(
         thisValue,
@@ -295,22 +351,30 @@ at: http://upokecenter.com/d/
      * Compares a T object with this instance.
      * @param thisValue A T object.
      * @param otherValue A T object. (2).
-     * @return Zero if the values are equal; a negative number if this instance
-     * is less, or a positive number if this instance is greater.
+     * @return Zero if the values are equal; a negative number if this instance is
+     * less, or a positive number if this instance is greater.
      */
-    public int compareTo(T thisValue, T otherValue) {
+    public int compareTo(final T thisValue, T otherValue) {
       return this.math.compareTo(thisValue, otherValue);
     }
 
-    public T RoundAfterConversion(T thisValue, PrecisionContext ctx) {
+    public T RoundAfterConversion(final T thisValue, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
       T result = this.math.RoundAfterConversion(thisValue, tctx);
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-public T AddEx(T thisValue, T other, PrecisionContext ctx, boolean roundToOperandPrecision) {
+public T AddEx(
+final T thisValue,
+final T other,
+final PrecisionContext ctx,
+final boolean roundToOperandPrecision) {
       PrecisionContext tctx = GetTrappableContext(ctx);
-      T result = this.math.AddEx(thisValue, other, ctx, roundToOperandPrecision);
+      T result = this.math.AddEx(
+thisValue,
+other,
+ctx,
+roundToOperandPrecision);
       return this.TriggerTraps(result, tctx, ctx);
     }
   }

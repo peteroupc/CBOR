@@ -11,7 +11,8 @@ namespace PeterO.Cbor {
   internal class CBORTag1 : ICBORTag
   {
     public CBORTypeFilter GetTypeFilter() {
-      return CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithFloatingPoint();
+      return
+      CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithFloatingPoint();
     }
 
     public CBORObject ValidateObject(CBORObject obj) {

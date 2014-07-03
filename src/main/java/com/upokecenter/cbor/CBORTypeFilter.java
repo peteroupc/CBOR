@@ -10,11 +10,11 @@ at: http://upokecenter.com/d/
 import com.upokecenter.util.*;
 
     /**
-     * Specifies what kinds of CBOR objects a tag can be. This class is used
-     * when a CBOR object is being read from a data stream.
+     * Specifies what kinds of CBOR objects a tag can be. This class is used when a
+     * CBOR object is being read from a data stream.
      */
-  public class CBORTypeFilter
-  {
+  public class CBORTypeFilter {
+
     private boolean any;
     private int types;
     private boolean floatingpoint;
@@ -127,8 +127,7 @@ import com.upokecenter.util.*;
      * Not documented yet.
      * @param tags A BigInteger[] object.
      * @return A CBORTypeFilter object.
-     * @throws java.lang.NullPointerException The parameter "tags[i]"
-     * is null.
+     * @throws NullPointerException The parameter "tags[i]" is null.
      */
     public CBORTypeFilter WithTags(final BigInteger... tags) {
       if (this.any) {
@@ -155,21 +154,21 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Copies this filter and includes CBOR arrays with an exact length to
-     * the new filter.
+     * Copies this filter and includes CBOR arrays with an exact length to the new
+     * filter.
      * @param arrayLength The desired maximum length of an array.
-     * @param elements An array containing the allowed types for each element
-     * in the array. There must be at least as many elements here as given in
+     * @param elements An array containing the allowed types for each element in
+     * the array. There must be at least as many elements here as given in
      * the arrayLength parameter.
      * @return A CBORTypeFilter object.
-     * @throws java.lang.IllegalArgumentException The parameter arrayLength is
-     * less than 0.
-     * @throws java.lang.NullPointerException The parameter elements
-     * is null.
-     * @throws java.lang.IllegalArgumentException The parameter elements has fewer
-     * elements than specified in arrayLength.
+     * @throws IllegalArgumentException The parameter arrayLength is less than 0.
+     * @throws NullPointerException The parameter elements is null.
+     * @throws IllegalArgumentException The parameter elements has fewer elements than
+     * specified in arrayLength.
      */
-    public CBORTypeFilter WithArrayExactLength(final int arrayLength, CBORTypeFilter... elements) {
+    public CBORTypeFilter WithArrayExactLength(
+final int arrayLength,
+final CBORTypeFilter... elements) {
       if (this.any) {
         return this;
       }
@@ -177,10 +176,14 @@ import com.upokecenter.util.*;
         throw new NullPointerException("elements");
       }
       if (arrayLength < 0) {
-        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is less than " + "0");
+        throw new IllegalArgumentException("arrayLength (" +
+          Long.toString((long)arrayLength) +
+          ") is less than " + "0");
       }
       if (arrayLength < elements.length) {
-        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is less than " + Long.toString((long)elements.length));
+        throw new IllegalArgumentException("arrayLength (" +
+          Long.toString((long)arrayLength) +
+          ") is less than " + Long.toString((long)elements.length));
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -192,21 +195,21 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Copies this filter and includes CBOR arrays with at least a given length
-     * to the new filter.
+     * Copies this filter and includes CBOR arrays with at least a given length to
+     * the new filter.
      * @param arrayLength The desired minimum length of an array.
-     * @param elements An array containing the allowed types for each element
-     * in the array. There must be at least as many elements here as given in
+     * @param elements An array containing the allowed types for each element in
+     * the array. There must be at least as many elements here as given in
      * the arrayLength parameter.
      * @return A CBORTypeFilter object.
-     * @throws java.lang.IllegalArgumentException The parameter arrayLength is
-     * less than 0.
-     * @throws java.lang.NullPointerException The parameter elements
-     * is null.
-     * @throws java.lang.IllegalArgumentException The parameter elements has fewer
-     * elements than specified in arrayLength.
+     * @throws IllegalArgumentException The parameter arrayLength is less than 0.
+     * @throws NullPointerException The parameter elements is null.
+     * @throws IllegalArgumentException The parameter elements has fewer elements than
+     * specified in arrayLength.
      */
-    public CBORTypeFilter WithArrayMinLength(final int arrayLength, CBORTypeFilter... elements) {
+    public CBORTypeFilter WithArrayMinLength(
+final int arrayLength,
+final CBORTypeFilter... elements) {
       if (this.any) {
         return this;
       }
@@ -214,10 +217,14 @@ import com.upokecenter.util.*;
         throw new NullPointerException("elements");
       }
       if (arrayLength < 0) {
-        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is less than " + "0");
+        throw new IllegalArgumentException("arrayLength (" +
+          Long.toString((long)arrayLength) +
+          ") is less than " + "0");
       }
       if (arrayLength < elements.length) {
-        throw new IllegalArgumentException("arrayLength (" + Long.toString((long)arrayLength) + ") is less than " + Long.toString((long)elements.length));
+        throw new IllegalArgumentException("arrayLength (" +
+          Long.toString((long)arrayLength) +
+          ") is less than " + Long.toString((long)elements.length));
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -237,10 +244,14 @@ import com.upokecenter.util.*;
         return this;
       }
       if (this.arrayLength < 0) {
-        throw new IllegalArgumentException("this.arrayLength (" + Long.toString((long)this.arrayLength) + ") is less than " + "0");
+        throw new IllegalArgumentException("this.arrayLength (" +
+          Long.toString((long)this.arrayLength) +
+          ") is less than " + "0");
       }
       if (this.arrayLength < this.elements.length) {
-        throw new IllegalArgumentException("this.arrayLength (" + Long.toString((long)this.arrayLength) + ") is less than " + Long.toString((long)this.elements.length));
+        throw new IllegalArgumentException("this.arrayLength (" +
+          Long.toString((long)this.arrayLength) +
+          ") is less than " + Long.toString((long)this.elements.length));
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -249,8 +260,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Copies this filter and includes floating-point numbers in the new
-     * filter.
+     * Copies this filter and includes floating-point numbers in the new filter.
      * @return A CBORTypeFilter object.
      */
     public CBORTypeFilter WithFloatingPoint() {
@@ -269,50 +279,57 @@ import com.upokecenter.util.*;
      * @return A Boolean object.
      */
     public boolean MajorTypeMatches(final int type) {
-
       return type >= 0 && type <= 7 && (this.types & (1 << type)) != 0;
     }
 
     /**
      * Returns whether an array's length is allowed under this filter.
      * @param length The length of a CBOR array.
-     * @return True if this filter allows CBOR arrays and an array's length
-     * is allowed under this filter; otherwise, false.
+     * @return True if this filter allows CBOR arrays and an array's length is
+     * allowed under this filter; otherwise, false.
      */
     public boolean ArrayLengthMatches(final int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
-                                              (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
+                                              (this.arrayMinLength ?
+                                                this.arrayLength >= length :
+                                                this.arrayLength ==
+                                                length));
     }
 
     /**
      * Returns whether an array's length is allowed under a filter.
      * @param length The length of a CBOR array.
-     * @return True if this filter allows CBOR arrays and an array's length
-     * is allowed under a filter; otherwise, false.
+     * @return True if this filter allows CBOR arrays and an array's length is
+     * allowed under a filter; otherwise, false.
      */
     public boolean ArrayLengthMatches(final long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
-                                              (this.arrayMinLength ? this.arrayLength >= length : this.arrayLength == length));
+                                              (this.arrayMinLength ?
+                                                this.arrayLength >= length :
+                                                this.arrayLength ==
+                                                length));
     }
 
     /**
      * Returns whether an array's length is allowed under a filter.
      * @param bigLength A BigInteger object.
-     * @return True if this filter allows CBOR arrays and an array's length
-     * is allowed under a filter; otherwise, false.
-     * @throws java.lang.NullPointerException The parameter {@code bigLength}
-     * is null.
+     * @return True if this filter allows CBOR arrays and an array's length is
+     * allowed under a filter; otherwise, false.
+     * @throws NullPointerException The parameter {@code bigLength} is null.
      */
     public boolean ArrayLengthMatches(final BigInteger bigLength) {
       if (bigLength == null) {
         throw new NullPointerException("bigLength");
       }
-      return ((this.types & (1 << 4)) == 0) && (this.anyArrayLength || ((!this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) == 0) || (this.arrayMinLength && bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) >= 0)));
+      return ((this.types & (1 << 4)) == 0) && (this.anyArrayLength ||
+        ((!this.arrayMinLength &&
+        bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) == 0) ||
+        (this.arrayMinLength &&
+        bigLength.compareTo(BigInteger.valueOf(this.arrayLength)) >= 0)));
     }
 
     /**
-     * Gets a value indicating whether CBOR objects can have the given tag
-     * number.
+     * Gets a value indicating whether CBOR objects can have the given tag number.
      * @param tag A tag number. Returns false if this is less than 0.
      * @return True if CBOR objects can have the given tag number; otherwise,
      * false.
@@ -322,8 +339,7 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Gets a value indicating whether CBOR objects can have the given tag
-     * number.
+     * Gets a value indicating whether CBOR objects can have the given tag number.
      * @param tag A tag number. Returns false if this is less than 0.
      * @return True if CBOR objects can have the given tag number; otherwise,
      * false.
@@ -333,13 +349,11 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Gets a value indicating whether CBOR objects can have the given tag
-     * number.
+     * Gets a value indicating whether CBOR objects can have the given tag number.
      * @param bigTag A tag number. Returns false if this is less than 0.
      * @return True if CBOR objects can have the given tag number; otherwise,
      * false.
-     * @throws java.lang.NullPointerException The parameter {@code bigTag}
-     * is null.
+     * @throws NullPointerException The parameter {@code bigTag} is null.
      */
     public boolean TagAllowed(final BigInteger bigTag) {
       if (bigTag == null) {
@@ -357,7 +371,7 @@ import com.upokecenter.util.*;
       if (this.tags == null) {
         return true;
       }
-      for for gInteger tag : this.tags) {
+      for (BigInteger tag : this.tags) {
         if (bigTag.equals(tag)) {
           return true;
         }
@@ -366,15 +380,17 @@ import com.upokecenter.util.*;
     }
 
     /**
-     * Determines whether this type filter allows CBOR arrays and the given
-     * array index is allowed under this type filter.
+     * Determines whether this type filter allows CBOR arrays and the given array
+     * index is allowed under this type filter.
      * @param index An array index, starting from 0.
      * @return True if this type filter allows CBOR arrays and the given array
      * index is allowed under this type filter; otherwise, false.
      */
     public boolean ArrayIndexAllowed(final int index) {
-      return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength ||
-                                              ((this.arrayMinLength || index < this.arrayLength) && index >= 0));
+   return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength ||
+
+            ((this.arrayMinLength || index < this.arrayLength) && index >=
+                                                0));
     }
 
     /**
@@ -451,12 +467,14 @@ import com.upokecenter.util.*;
     /**
      * A filter that allows unsigned integers.
      */
-    public static final CBORTypeFilter UnsignedInteger = new CBORTypeFilter().WithUnsignedInteger();
+    public static final CBORTypeFilter UnsignedInteger = new
+      CBORTypeFilter().WithUnsignedInteger();
 
     /**
      * A filter that allows negative integers.
      */
-    public static final CBORTypeFilter NegativeInteger = new CBORTypeFilter().WithNegativeInteger();
+    public static final CBORTypeFilter NegativeInteger = new
+      CBORTypeFilter().WithNegativeInteger();
 
     /**
      * A filter that allows any CBOR object.
@@ -466,10 +484,12 @@ import com.upokecenter.util.*;
     /**
      * A filter that allows byte strings.
      */
-    public static final CBORTypeFilter ByteString = new CBORTypeFilter().WithByteString();
+    public static final CBORTypeFilter ByteString = new
+      CBORTypeFilter().WithByteString();
 
     /**
      * A filter that allows text strings.
      */
-    public static final CBORTypeFilter TextString = new CBORTypeFilter().WithTextString();
+    public static final CBORTypeFilter TextString = new
+      CBORTypeFilter().WithTextString();
   }

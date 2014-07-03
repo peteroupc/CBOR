@@ -41,7 +41,9 @@ namespace Test {
     [TestMethod]
     public void TestCBORObjectDecimal() {
       var rand = new FastRandom();
-      for (var i = 0; i <= 28; ++i) {  // Try a random decimal with a given exponent
+      for (var i = 0; i <= 28; ++i) {
+        // Try a random decimal with a given
+        // exponent
         for (int j = 0; j < 8; ++j) {
           decimal d = this.RandomDecimal(rand, i);
           CBORObject obj = CBORObject.FromObject(d);
@@ -50,52 +52,68 @@ namespace Test {
         }
       }
       try {
-        CBORObject.FromObject(ExtendedDecimal.NaN).AsDecimal(); Assert.Fail("Should have failed");
+        CBORObject.FromObject(ExtendedDecimal.NaN).AsDecimal();
+        Assert.Fail("Should have failed");
       } catch (OverflowException) {
       } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail(ex.ToString()); throw new
+          InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedDecimal.SignalingNaN).AsDecimal(); Assert.Fail("Should have failed");
+        CBORObject.FromObject(ExtendedDecimal.SignalingNaN).AsDecimal();
+        Assert.Fail("Should have failed");
       } catch (OverflowException) {
       } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail(ex.ToString()); throw new
+          InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedDecimal.PositiveInfinity).AsDecimal(); Assert.Fail("Should have failed");
+        CBORObject.FromObject(ExtendedDecimal.PositiveInfinity).AsDecimal();
+        Assert.Fail("Should have failed");
       } catch (OverflowException) {
       } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail(ex.ToString()); throw new
+          InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedDecimal.NegativeInfinity).AsDecimal(); Assert.Fail("Should have failed");
+        CBORObject.FromObject(ExtendedDecimal.NegativeInfinity).AsDecimal();
+        Assert.Fail("Should have failed");
       } catch (OverflowException) {
       } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail(ex.ToString()); throw new
+          InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedFloat.NaN).AsDecimal(); Assert.Fail("Should have failed");
+        CBORObject.FromObject(ExtendedFloat.NaN).AsDecimal();
+        Assert.Fail("Should have failed");
       } catch (OverflowException) {
       } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail(ex.ToString()); throw new
+          InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedFloat.SignalingNaN).AsDecimal(); Assert.Fail("Should have failed");
+        CBORObject.FromObject(ExtendedFloat.SignalingNaN).AsDecimal();
+        Assert.Fail("Should have failed");
       } catch (OverflowException) {
       } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail(ex.ToString()); throw new
+          InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedFloat.PositiveInfinity).AsDecimal(); Assert.Fail("Should have failed");
+        CBORObject.FromObject(ExtendedFloat.PositiveInfinity).AsDecimal();
+        Assert.Fail("Should have failed");
       } catch (OverflowException) {
       } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail(ex.ToString()); throw new
+          InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedFloat.NegativeInfinity).AsDecimal(); Assert.Fail("Should have failed");
+        CBORObject.FromObject(ExtendedFloat.NegativeInfinity).AsDecimal();
+        Assert.Fail("Should have failed");
       } catch (OverflowException) {
       } catch (Exception ex) {
-        Assert.Fail(ex.ToString()); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail(ex.ToString()); throw new
+          InvalidOperationException(String.Empty, ex);
       }
     }
 
@@ -140,7 +158,8 @@ namespace Test {
 
     [TestMethod]
     public void TestArbitraryTypes() {
-      CBORObject obj = CBORObject.FromObject(new { AByte.A, B = AInt.A, C = AULong.A });
+      CBORObject obj = CBORObject.FromObject(new { AByte.A, B = AInt.A, C =
+                                                 AULong.A });
       Assert.AreEqual(254, obj["a"].AsInt32());
       Assert.AreEqual(256, obj["b"].AsInt32());
       Assert.AreEqual(999999, obj["c"].AsInt32());
@@ -162,13 +181,15 @@ namespace Test {
       Assert.AreEqual(1, obj[1].AsInt32());
       TestCommon.AssertRoundTrip(obj);
       // Select all even numbers
-      obj = CBORObject.FromObject(from i in RangeExclusive(0, 10) where i % 2 == 0 select i);
+      obj = CBORObject.FromObject(from i in RangeExclusive(0, 10) where i %
+                                  2 == 0 select i);
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(2, obj[1].AsInt32());
       TestCommon.AssertRoundTrip(obj);
       // Select all even numbers
-      obj = CBORObject.FromObject(from i in RangeExclusive(0, 10) where i % 2 == 0 select new { A = i, B = i + 1 });
+      obj = CBORObject.FromObject(from i in RangeExclusive(0, 10) where i %
+                                  2 == 0 select new { A = i, B = i + 1 });
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0]["a"].AsInt32());
       Assert.AreEqual(3, obj[1]["b"].AsInt32());
@@ -4210,14 +4231,16 @@ namespace Test {
       }
     }
 
-    private static short Divide32By16(int dividendLow, short divisor, bool returnRemainder) {
+    private static short Divide32By16(int dividendLow, short divisor, bool
+                                      returnRemainder) {
       int t;
       int dividendHigh = 0;
       int intDivisor = ((int)divisor) & 0xffff;
       for (var i = 0; i < 32; ++i) {
         t = dividendHigh >> 31;
         dividendHigh <<= 1;
-        dividendHigh = unchecked((int)(dividendHigh | ((int)((dividendLow >> 31) & 1))));
+        dividendHigh = unchecked((int)(dividendHigh | ((int)((dividendLow >>
+                                                              31) & 1))));
         dividendLow <<= 1;
         t |= dividendHigh;
         // unsigned greater-than-or-equal check
@@ -4258,7 +4281,8 @@ namespace Test {
     [TestMethod]
     public void TestOther() {
       CBORObject cbor = CBORObject.FromObject(new int[2, 3, 2]);
-      Assert.AreEqual("[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]", cbor.ToJSONString());
+      Assert.AreEqual("[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]" ,
+                      cbor.ToJSONString());
       TestCommon.AssertRoundTrip(cbor);
     }
 
@@ -4323,7 +4347,8 @@ namespace Test {
           String.Format(CultureInfo.InvariantCulture, "{0}", (decimal)i + 0.1m));
         TestCommon.AssertSer(
           CBORObject.FromObject((decimal)i + 0.1111m),
-          String.Format(CultureInfo.InvariantCulture, "{0}", (decimal)i + 0.1111m));
+          String.Format(CultureInfo.InvariantCulture, "{0}", (decimal)i +
+                        0.1111m));
       }
     }
 

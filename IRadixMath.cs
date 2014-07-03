@@ -8,8 +8,7 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO {
-  internal interface IRadixMath<T>
-  {
+  internal interface IRadixMath<T> {
     IRadixMathHelper<T> GetHelper();
 
     T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ctx);
@@ -42,7 +41,11 @@ namespace PeterO {
 
     T NextPlus(T thisValue, PrecisionContext ctx);
 
-    T DivideToExponent(T thisValue, T divisor, BigInteger desiredExponent, PrecisionContext ctx);
+    T DivideToExponent(
+T thisValue,
+T divisor,
+BigInteger desiredExponent,
+PrecisionContext ctx);
 
     T Divide(T thisValue, T divisor, PrecisionContext ctx);
 
@@ -56,7 +59,11 @@ namespace PeterO {
 
     T Multiply(T thisValue, T other, PrecisionContext ctx);
 
-    T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext ctx);
+    T MultiplyAndAdd(
+T thisValue,
+T multiplicand,
+T augend,
+PrecisionContext ctx);
 
     T Plus(T thisValue, PrecisionContext ctx);
 
@@ -66,19 +73,36 @@ namespace PeterO {
 
     T Quantize(T thisValue, T otherValue, PrecisionContext ctx);
 
-    T RoundToExponentExact(T thisValue, BigInteger expOther, PrecisionContext ctx);
+    T RoundToExponentExact(
+T thisValue,
+BigInteger expOther,
+PrecisionContext ctx);
 
-    T RoundToExponentSimple(T thisValue, BigInteger expOther, PrecisionContext ctx);
+    T RoundToExponentSimple(
+T thisValue,
+BigInteger expOther,
+PrecisionContext ctx);
 
-    T RoundToExponentNoRoundedFlag(T thisValue, BigInteger exponent, PrecisionContext ctx);
+    T RoundToExponentNoRoundedFlag(
+T thisValue,
+BigInteger exponent,
+PrecisionContext ctx);
 
     T Reduce(T thisValue, PrecisionContext ctx);
 
     T Add(T thisValue, T other, PrecisionContext ctx);
 
-    T AddEx(T thisValue, T other, PrecisionContext ctx, bool roundToOperandPrecision);
+    T AddEx(
+T thisValue,
+T other,
+PrecisionContext ctx,
+bool roundToOperandPrecision);
 
-    T CompareToWithContext(T thisValue, T otherValue, bool treatQuietNansAsSignaling, PrecisionContext ctx);
+    T CompareToWithContext(
+T thisValue,
+T otherValue,
+bool treatQuietNansAsSignaling,
+PrecisionContext ctx);
 
     int CompareTo(T thisValue, T otherValue);
   }

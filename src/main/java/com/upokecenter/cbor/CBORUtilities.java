@@ -12,15 +12,14 @@ import java.io.*;
 import com.upokecenter.util.*;
 
     /**
-     * Contains utility methods that may have use outside of the CBORObject
-     * class.
+     * Contains utility methods that may have use outside of the CBORObject class.
      */
   final class CBORUtilities {
 private CBORUtilities() {
 }
     private static final String HexAlphabet = "0123456789ABCDEF";
 
-    public static void ToBase16(final StringBuilder str, final byte[] data) {
+    public static void ToBase16(final StringBuilder str, byte[] data) {
       if (data == null) {
         throw new NullPointerException("data");
       }
@@ -31,7 +30,7 @@ private CBORUtilities() {
       }
     }
 
-    public static void WriteBase16(final OutputStream outputStream, final byte[] data) throws IOException {
+    public static void WriteBase16(final OutputStream outputStream, byte[] data) throws IOException {
       if (data == null) {
         throw new NullPointerException("data");
       }
@@ -42,7 +41,7 @@ private CBORUtilities() {
       }
     }
 
-    public static boolean ByteArrayEquals(final byte[] a, final byte[] b) {
+    public static boolean ByteArrayEquals(final byte[] a, byte[] b) {
       if (a == null) {
         return b == null;
       }
@@ -74,7 +73,7 @@ private CBORUtilities() {
       return ret;
     }
 
-    public static int ByteArrayCompare(final byte[] a, final byte[] b) {
+    public static int ByteArrayCompare(final byte[] a, byte[] b) {
       if (a == null) {
         return (b == null) ? 0 : -1;
       }
@@ -204,13 +203,18 @@ private CBORUtilities() {
       int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
       value &= 0x7fff;
       if (value >= 0x7c00) {
-        return Float.intBitsToFloat((0x3fc00 | (value & 0x3ff)) << 13 | negvalue);
+        value = (int)(0x3fc00 |
+                      (value & 0x3ff)) << 13 | negvalue;
+        return Float.intBitsToFloat(value);
       }
       if (value > 0x400) {
-        return Float.intBitsToFloat(((value + 0x1c000) << 13) | negvalue);
+        value = (int)((value + 0x1c000) << 13) | negvalue;
+        return Float.intBitsToFloat(value);
       }
       if ((value & 0x400) == value) {
-        return Float.intBitsToFloat(((value == 0) ? 0 : 0x38800000) | negvalue);
+        value = (int)((value ==
+                       0) ? 0 : 0x38800000) | negvalue;
+        return Float.intBitsToFloat(value);
       } else {
         // denormalized
         int m = value & 0x3ff;

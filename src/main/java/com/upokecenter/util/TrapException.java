@@ -11,17 +11,17 @@ at: http://upokecenter.com/d/
      * Exception thrown for arithmetic trap errors.
      */
   public class TrapException extends ArithmeticException {
-private static final long serialVersionUID=1L;
+private static final long serialVersionUID = 1L;
     private final Object result;
     private final PrecisionContext ctx;
 
     /**
-     * Gets the precision context used during the operation that triggered
-     * the trap. May be null.
-     * @return The precision context used during the operation that triggered
-     * the trap. May be null.
+     * Gets the precision context used during the operation that triggered the
+     * trap. May be null.
+     * @return The precision context used during the operation that triggered the
+     * trap. May be null.
      */
-    public PrecisionContext getContext() {
+    public final PrecisionContext getContext() {
         return this.ctx;
       }
 
@@ -31,22 +31,30 @@ private static final long serialVersionUID=1L;
      * Gets the defined result of the operation that caused the trap.
      * @return The defined result of the operation that caused the trap.
      */
-    public Object getResult() {
+    public final Object getResult() {
         return this.result;
       }
 
     /**
      * Gets the flag that specifies the kind of error (PrecisionContext.FlagXXX).
      * This will only be one flag, such as FlagInexact or FlagSubnormal.
-     * @return The flag that specifies the kind of error (PrecisionContext.FlagXXX).
-     * This will only be one flag, such as FlagInexact or FlagSubnormal.
+     * @return The flag that specifies the kind of error
+     * (PrecisionContext.FlagXXX). This will only be one flag, such as
+     * FlagInexact or FlagSubnormal.
      */
-    public int getError() {
+    public final int getError() {
         return this.error;
       }
 
-    private static String FlagToMessage(int flag) {
-      return (flag == PrecisionContext.FlagClamped) ? "Clamped" : ((flag == PrecisionContext.FlagDivideByZero) ? "DivideByZero" : ((flag == PrecisionContext.FlagInexact) ? "Inexact" : ((flag == PrecisionContext.FlagInvalid) ? "Invalid" : ((flag == PrecisionContext.FlagOverflow) ? "Overflow" : ((flag == PrecisionContext.FlagRounded) ? "Rounded" : ((flag == PrecisionContext.FlagSubnormal) ? "Subnormal" : ((flag == PrecisionContext.FlagUnderflow) ? "Underflow" : "Trap")))))));
+    private static String FlagToMessage(final int flag) {
+      return (flag == PrecisionContext.FlagClamped) ? "Clamped" : ((flag ==
+        PrecisionContext.FlagDivideByZero) ? "DivideByZero" : ((flag ==
+        PrecisionContext.FlagInexact) ? "Inexact" : ((flag ==
+        PrecisionContext.FlagInvalid) ? "Invalid" : ((flag ==
+        PrecisionContext.FlagOverflow) ? "Overflow" : ((flag ==
+        PrecisionContext.FlagRounded) ? "Rounded" : ((flag ==
+        PrecisionContext.FlagSubnormal) ? "Subnormal" : ((flag ==
+        PrecisionContext.FlagUnderflow) ? "Underflow" : "Trap")))))));
     }
 
     /**
@@ -55,7 +63,7 @@ private static final long serialVersionUID=1L;
      * @param ctx A PrecisionContext object.
      * @param result An arbitrary object.
      */
-    public TrapException (int flag, PrecisionContext ctx, Object result) {
+    public TrapException (final int flag, PrecisionContext ctx, Object result) {
  super(FlagToMessage(flag));
       this.error = flag;
       this.ctx = (ctx == null) ? null : ctx.Copy();
@@ -70,7 +78,7 @@ private static final long serialVersionUID=1L;
     }
 
     public TrapException (String message, Throwable innerException) {
- super(message,innerException);
+ super(message, innerException);
     }
   */
   }

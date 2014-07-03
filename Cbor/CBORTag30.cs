@@ -34,11 +34,16 @@ namespace PeterO.Cbor {
         throw new CBORException("Rational number requires integer denominator");
       }
       if (second.Sign <= 0) {
-        throw new CBORException("Rational number requires denominator greater than 0");
+throw new CBORException("Rational number requires denominator greater than 0");
       }
       BigInteger denom = second.AsBigInteger();
       // NOTE: Discards tags. See comment in CBORTag2.
-      return denom.Equals(BigInteger.One) ? CBORObject.FromObject(first.AsBigInteger()) : CBORObject.FromObject(new ExtendedRational(first.AsBigInteger(), denom));
+      return denom.Equals(BigInteger.One) ?
+      CBORObject.FromObject(first.AsBigInteger()) :
+      CBORObject.FromObject(
+new ExtendedRational(
+first.AsBigInteger(),
+denom));
     }
   }
 }

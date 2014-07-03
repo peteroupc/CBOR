@@ -37,8 +37,10 @@ import com.upokecenter.util.*;
       Assert.assertEquals(16, BigInteger.valueOf(-65535).bitLength());
       Assert.assertEquals(17, BigInteger.valueOf(65536).bitLength());
       Assert.assertEquals(16, BigInteger.valueOf(-65536).bitLength());
-      Assert.assertEquals(65, BigInteger.fromString("19084941898444092059").bitLength());
-      Assert.assertEquals(65, BigInteger.fromString("-19084941898444092059").bitLength());
+Assert.assertEquals(65, BigInteger.fromString("19084941898444092059"
+).bitLength());
+      Assert.assertEquals(65, BigInteger.fromString("-19084941898444092059"
+).bitLength());
       Assert.assertEquals(0, BigInteger.valueOf(-1).bitLength());
       Assert.assertEquals(1, BigInteger.valueOf(-2).bitLength());
     }
@@ -75,7 +77,8 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestFromByteArray() {
-      Assert.assertEquals(BigInteger.ZERO, BigInteger.fromByteArray(new byte[] {   }, false));
+      Assert.assertEquals(BigInteger.ZERO, BigInteger.fromByteArray(new byte[] {
+         }, false));
     }
     @Test
     public void TestFromString() {
@@ -102,13 +105,16 @@ import com.upokecenter.util.*;
 
     public static int ModPow(int x, int pow, int intMod) {
       if (x < 0) {
-        throw new IllegalArgumentException("x (" + Integer.toString((int)x) + ") is less than " + "0");
+        throw new IllegalArgumentException("x (" + Integer.toString((int)x) +
+          ") is less than " + "0");
       }
       if (pow <= 0) {
-        throw new IllegalArgumentException("pow (" + Integer.toString((int)pow) + ") is not greater than " + "0");
+        throw new IllegalArgumentException("pow (" + Integer.toString((int)pow) +
+          ") is not greater than " + "0");
       }
       if (intMod <= 0) {
-        throw new IllegalArgumentException("mod (" + Integer.toString((int)intMod) + ") is not greater than " + "0");
+        throw new IllegalArgumentException("mod (" + Integer.toString((int)intMod) +
+          ") is not greater than " + "0");
       }
       int r = 1;
       int v = x;
@@ -178,11 +184,11 @@ import com.upokecenter.util.*;
         }
         BigInteger bigprime = BigInteger.valueOf(prime);
         BigInteger ba = CBORTest.RandomBigInteger(rand);
-        if (ba.signum()==0) {
+        if (ba.signum() == 0) {
           continue;
         }
-        ba=ba.multiply(bigprime);
-        Assert.assertEquals(bigprime, bigprime.gcd(ba));
+        ba = ba.multiply(bigprime);
+     Assert.assertEquals(bigprime, bigprime.gcd(ba));
       }
     }
 
@@ -217,8 +223,10 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestIntValue() {
-      Assert.assertEquals(Integer.MIN_VALUE, BigInteger.valueOf(Integer.MIN_VALUE).intValue());
-      Assert.assertEquals(Integer.MAX_VALUE, BigInteger.valueOf(Integer.MAX_VALUE).intValue());
+Assert.assertEquals(Integer.MIN_VALUE,
+        BigInteger.valueOf(Integer.MIN_VALUE).intValue());
+Assert.assertEquals(Integer.MAX_VALUE,
+        BigInteger.valueOf(Integer.MAX_VALUE).intValue());
       try {
         BigInteger.valueOf(Integer.MIN_VALUE - 1L).intValue();
         Assert.fail("Should have failed");
@@ -238,8 +246,10 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestIntValueChecked() {
-      Assert.assertEquals(Integer.MIN_VALUE, BigInteger.valueOf(Integer.MIN_VALUE).intValueChecked());
-      Assert.assertEquals(Integer.MAX_VALUE, BigInteger.valueOf(Integer.MAX_VALUE).intValueChecked());
+      Assert.assertEquals(Integer.MIN_VALUE,
+        BigInteger.valueOf(Integer.MIN_VALUE).intValueChecked());
+      Assert.assertEquals(Integer.MAX_VALUE,
+        BigInteger.valueOf(Integer.MAX_VALUE).intValueChecked());
       try {
         BigInteger.valueOf(Integer.MIN_VALUE - 1L).intValueChecked();
         Assert.fail("Should have failed");
@@ -259,10 +269,14 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestIntValueUnchecked() {
-      Assert.assertEquals(Integer.MIN_VALUE, BigInteger.valueOf(Integer.MIN_VALUE).intValueUnchecked());
-      Assert.assertEquals(Integer.MAX_VALUE, BigInteger.valueOf(Integer.MAX_VALUE).intValueUnchecked());
-      Assert.assertEquals(Integer.MAX_VALUE, BigInteger.valueOf(Integer.MIN_VALUE - 1L).intValueUnchecked());
-      Assert.assertEquals(Integer.MIN_VALUE, BigInteger.valueOf(Integer.MAX_VALUE + 1L).intValueUnchecked());
+      Assert.assertEquals(Integer.MIN_VALUE,
+        BigInteger.valueOf(Integer.MIN_VALUE).intValueUnchecked());
+      Assert.assertEquals(Integer.MAX_VALUE,
+        BigInteger.valueOf(Integer.MAX_VALUE).intValueUnchecked());
+      Assert.assertEquals(Integer.MAX_VALUE, BigInteger.valueOf(Integer.MIN_VALUE -
+        1L).intValueUnchecked());
+      Assert.assertEquals(Integer.MIN_VALUE, BigInteger.valueOf(Integer.MAX_VALUE +
+        1L).intValueUnchecked());
     }
     @Test
     public void TestIsEven() {
@@ -270,7 +284,7 @@ import com.upokecenter.util.*;
       for (int i = 0; i < 1000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger mod = bigintA.remainder(BigInteger.valueOf(2));
-        Assert.assertEquals(mod.signum()==0, bigintA.testBit(0)==false);
+        Assert.assertEquals(mod.signum() == 0, bigintA.testBit(0) == false);
       }
     }
     @Test
@@ -283,8 +297,10 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestLongValue() {
-      Assert.assertEquals(Long.MIN_VALUE, BigInteger.valueOf(Long.MIN_VALUE).longValue());
-      Assert.assertEquals(Long.MAX_VALUE, BigInteger.valueOf(Long.MAX_VALUE).longValue());
+      Assert.assertEquals(Long.MIN_VALUE,
+        BigInteger.valueOf(Long.MIN_VALUE).longValue());
+      Assert.assertEquals(Long.MAX_VALUE,
+        BigInteger.valueOf(Long.MAX_VALUE).longValue());
       try {
         BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE).longValue();
         Assert.fail("Should have failed");
@@ -301,25 +317,36 @@ import com.upokecenter.util.*;
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
-      Assert.assertEquals(((long)0xFFFFFFF200000000L), BigInteger.valueOf(((long)0xFFFFFFF200000000L)).longValue());
-      Assert.assertEquals(((long)0xFFFFFFF280000000L), BigInteger.valueOf(((long)0xFFFFFFF280000000L)).longValue());
-      Assert.assertEquals(((long)0xFFFFFFF280000001L), BigInteger.valueOf(((long)0xFFFFFFF280000001L)).longValue());
-      Assert.assertEquals(((long)0xFFFFFFF27FFFFFFFL), BigInteger.valueOf(((long)0xFFFFFFF27FFFFFFFL)).longValue());
-      Assert.assertEquals(0x0000000380000001L, BigInteger.valueOf(0x0000000380000001L).longValue());
-      Assert.assertEquals(0x0000000382222222L, BigInteger.valueOf(0x0000000382222222L).longValue());
+      Assert.assertEquals(((long)0xFFFFFFF200000000L),
+  BigInteger.valueOf(((long)0xFFFFFFF200000000L)).longValue());
+      Assert.assertEquals(((long)0xFFFFFFF280000000L),
+  BigInteger.valueOf(((long)0xFFFFFFF280000000L)).longValue());
+      Assert.assertEquals(((long)0xFFFFFFF280000001L),
+  BigInteger.valueOf(((long)0xFFFFFFF280000001L)).longValue());
+      Assert.assertEquals(((long)0xFFFFFFF27FFFFFFFL),
+  BigInteger.valueOf(((long)0xFFFFFFF27FFFFFFFL)).longValue());
+      Assert.assertEquals(0x0000000380000001L,
+        BigInteger.valueOf(0x0000000380000001L).longValue());
+      Assert.assertEquals(0x0000000382222222L,
+        BigInteger.valueOf(0x0000000382222222L).longValue());
       Assert.assertEquals(-8L, BigInteger.valueOf(-8L).longValue());
       Assert.assertEquals(-32768L, BigInteger.valueOf(-32768L).longValue());
-      Assert.assertEquals(Integer.MIN_VALUE, BigInteger.valueOf(Integer.MIN_VALUE).longValue());
-      Assert.assertEquals(Integer.MAX_VALUE, BigInteger.valueOf(Integer.MAX_VALUE).longValue());
+      Assert.assertEquals(Integer.MIN_VALUE,
+        BigInteger.valueOf(Integer.MIN_VALUE).longValue());
+      Assert.assertEquals(Integer.MAX_VALUE,
+        BigInteger.valueOf(Integer.MAX_VALUE).longValue());
       Assert.assertEquals(0x80000000L, BigInteger.valueOf(0x80000000L).longValue());
       Assert.assertEquals(0x90000000L, BigInteger.valueOf(0x90000000L).longValue());
     }
     @Test
     public void TestLongValueChecked() {
-      Assert.assertEquals(Long.MIN_VALUE, BigInteger.valueOf(Long.MIN_VALUE).longValueChecked());
-      Assert.assertEquals(Long.MAX_VALUE, BigInteger.valueOf(Long.MAX_VALUE).longValueChecked());
+      Assert.assertEquals(Long.MIN_VALUE,
+        BigInteger.valueOf(Long.MIN_VALUE).longValueChecked());
+      Assert.assertEquals(Long.MAX_VALUE,
+        BigInteger.valueOf(Long.MAX_VALUE).longValueChecked());
       try {
-        BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE).longValueChecked();
+BigInteger.valueOf(Long.MIN_VALUE) .subtract(BigInteger.ONE)
+          .longValueChecked();
         Assert.fail("Should have failed");
       } catch (ArithmeticException ex) {
       } catch (Exception ex) {
@@ -327,44 +354,77 @@ import com.upokecenter.util.*;
         throw new IllegalStateException("", ex);
       }
       try {
-        BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE).longValueChecked();
+BigInteger.valueOf(Long.MAX_VALUE) .add(BigInteger.ONE) .longValueChecked();
         Assert.fail("Should have failed");
       } catch (ArithmeticException ex) {
       } catch (Exception ex) {
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
-      Assert.assertEquals(((long)0xFFFFFFF200000000L), BigInteger.valueOf(((long)0xFFFFFFF200000000L)).longValueChecked());
-      Assert.assertEquals(((long)0xFFFFFFF280000000L), BigInteger.valueOf(((long)0xFFFFFFF280000000L)).longValueChecked());
-      Assert.assertEquals(((long)0xFFFFFFF280000001L), BigInteger.valueOf(((long)0xFFFFFFF280000001L)).longValueChecked());
-      Assert.assertEquals(((long)0xFFFFFFF27FFFFFFFL), BigInteger.valueOf(((long)0xFFFFFFF27FFFFFFFL)).longValueChecked());
-      Assert.assertEquals(0x0000000380000001L, BigInteger.valueOf(0x0000000380000001L).longValueChecked());
-      Assert.assertEquals(0x0000000382222222L, BigInteger.valueOf(0x0000000382222222L).longValueChecked());
+      Assert.assertEquals(((long)0xFFFFFFF200000000L),
+        BigInteger.valueOf(((long)0xFFFFFFF200000000L))
+        .longValueChecked());
+      Assert.assertEquals(((long)0xFFFFFFF280000000L),
+        BigInteger.valueOf(((long)0xFFFFFFF280000000L))
+        .longValueChecked());
+      Assert.assertEquals(((long)0xFFFFFFF280000001L),
+        BigInteger.valueOf(((long)0xFFFFFFF280000001L))
+        .longValueChecked());
+      Assert.assertEquals(((long)0xFFFFFFF27FFFFFFFL),
+        BigInteger.valueOf(((long)0xFFFFFFF27FFFFFFFL))
+        .longValueChecked());
+      Assert.assertEquals(0x0000000380000001L,
+        BigInteger.valueOf(0x0000000380000001L).longValueChecked());
+      Assert.assertEquals(0x0000000382222222L,
+        BigInteger.valueOf(0x0000000382222222L).longValueChecked());
       Assert.assertEquals(-8L, BigInteger.valueOf(-8L).longValueChecked());
       Assert.assertEquals(-32768L, BigInteger.valueOf(-32768L).longValueChecked());
-      Assert.assertEquals(Integer.MIN_VALUE, BigInteger.valueOf(Integer.MIN_VALUE).longValueChecked());
-      Assert.assertEquals(Integer.MAX_VALUE, BigInteger.valueOf(Integer.MAX_VALUE).longValueChecked());
-      Assert.assertEquals(0x80000000L, BigInteger.valueOf(0x80000000L).longValueChecked());
-      Assert.assertEquals(0x90000000L, BigInteger.valueOf(0x90000000L).longValueChecked());
+      Assert.assertEquals(Integer.MIN_VALUE,
+        BigInteger.valueOf(Integer.MIN_VALUE).longValueChecked());
+      Assert.assertEquals(Integer.MAX_VALUE,
+        BigInteger.valueOf(Integer.MAX_VALUE).longValueChecked());
+      Assert.assertEquals(0x80000000L,
+        BigInteger.valueOf(0x80000000L).longValueChecked());
+      Assert.assertEquals(0x90000000L,
+        BigInteger.valueOf(0x90000000L).longValueChecked());
     }
     @Test
     public void TestLongValueUnchecked() {
-      Assert.assertEquals(Long.MIN_VALUE, BigInteger.valueOf(Long.MIN_VALUE).longValueUnchecked());
-      Assert.assertEquals(Long.MAX_VALUE, BigInteger.valueOf(Long.MAX_VALUE).longValueUnchecked());
-      Assert.assertEquals(Long.MAX_VALUE, BigInteger.valueOf(Long.MIN_VALUE).subtract(BigInteger.ONE).longValueUnchecked());
-      Assert.assertEquals(Long.MIN_VALUE, BigInteger.valueOf(Long.MAX_VALUE).add(BigInteger.ONE).longValueUnchecked());
-      Assert.assertEquals(((long)0xFFFFFFF200000000L), BigInteger.valueOf(((long)0xFFFFFFF200000000L)).longValueUnchecked());
-      Assert.assertEquals(((long)0xFFFFFFF280000000L), BigInteger.valueOf(((long)0xFFFFFFF280000000L)).longValueUnchecked());
-      Assert.assertEquals(((long)0xFFFFFFF280000001L), BigInteger.valueOf(((long)0xFFFFFFF280000001L)).longValueUnchecked());
-      Assert.assertEquals(((long)0xFFFFFFF27FFFFFFFL), BigInteger.valueOf(((long)0xFFFFFFF27FFFFFFFL)).longValueUnchecked());
-      Assert.assertEquals(0x0000000380000001L, BigInteger.valueOf(0x0000000380000001L).longValueUnchecked());
-      Assert.assertEquals(0x0000000382222222L, BigInteger.valueOf(0x0000000382222222L).longValueUnchecked());
+      Assert.assertEquals(Long.MIN_VALUE,
+        BigInteger.valueOf(Long.MIN_VALUE).longValueUnchecked());
+      Assert.assertEquals(Long.MAX_VALUE,
+        BigInteger.valueOf(Long.MAX_VALUE).longValueUnchecked());
+      Assert.assertEquals(Long.MAX_VALUE, BigInteger.valueOf(Long.MIN_VALUE)
+        .subtract(BigInteger.ONE) .longValueUnchecked());
+      Assert.assertEquals(Long.MIN_VALUE, BigInteger.valueOf(Long.MAX_VALUE)
+        .add(BigInteger.ONE) .longValueUnchecked());
+      Assert.assertEquals(((long)0xFFFFFFF200000000L),
+        BigInteger.valueOf(((long)0xFFFFFFF200000000L))
+        .longValueUnchecked());
+      Assert.assertEquals(((long)0xFFFFFFF280000000L),
+        BigInteger.valueOf(((long)0xFFFFFFF280000000L))
+        .longValueUnchecked());
+      Assert.assertEquals(((long)0xFFFFFFF280000001L),
+        BigInteger.valueOf(((long)0xFFFFFFF280000001L))
+        .longValueUnchecked());
+      Assert.assertEquals(((long)0xFFFFFFF27FFFFFFFL),
+        BigInteger.valueOf(((long)0xFFFFFFF27FFFFFFFL))
+        .longValueUnchecked());
+      Assert.assertEquals(0x0000000380000001L,
+        BigInteger.valueOf(0x0000000380000001L).longValueUnchecked());
+      Assert.assertEquals(0x0000000382222222L,
+        BigInteger.valueOf(0x0000000382222222L).longValueUnchecked());
       Assert.assertEquals(-8L, BigInteger.valueOf(-8L).longValueUnchecked());
-      Assert.assertEquals(-32768L, BigInteger.valueOf(-32768L).longValueUnchecked());
-      Assert.assertEquals(Integer.MIN_VALUE, BigInteger.valueOf(Integer.MIN_VALUE).longValueUnchecked());
-      Assert.assertEquals(Integer.MAX_VALUE, BigInteger.valueOf(Integer.MAX_VALUE).longValueUnchecked());
-      Assert.assertEquals(0x80000000L, BigInteger.valueOf(0x80000000L).longValueUnchecked());
-      Assert.assertEquals(0x90000000L, BigInteger.valueOf(0x90000000L).longValueUnchecked());
+    Assert.assertEquals(-32768L,
+        BigInteger.valueOf(-32768L).longValueUnchecked());
+      Assert.assertEquals(Integer.MIN_VALUE,
+        BigInteger.valueOf(Integer.MIN_VALUE).longValueUnchecked());
+      Assert.assertEquals(Integer.MAX_VALUE,
+        BigInteger.valueOf(Integer.MAX_VALUE).longValueUnchecked());
+      Assert.assertEquals(0x80000000L,
+        BigInteger.valueOf(0x80000000L).longValueUnchecked());
+      Assert.assertEquals(0x90000000L,
+        BigInteger.valueOf(0x90000000L).longValueUnchecked());
     }
     @Test
     public void TestMod() {
@@ -472,14 +532,14 @@ import com.upokecenter.util.*;
     @Test
     public void TestShiftLeft() {
       BigInteger bigint = BigInteger.ONE;
-      bigint=bigint.shiftLeft(100);
+      bigint = bigint.shiftLeft(100);
       Assert.assertEquals(bigint.shiftLeft(12), bigint.shiftRight(-12));
       Assert.assertEquals(bigint.shiftLeft(-12), bigint.shiftRight(12));
     }
     @Test
     public void TestShiftRight() {
       BigInteger bigint = BigInteger.ONE;
-      bigint=bigint.shiftLeft(80);
+      bigint = bigint.shiftLeft(80);
       Assert.assertEquals(bigint.shiftLeft(12), bigint.shiftRight(-12));
       Assert.assertEquals(bigint.shiftLeft(-12), bigint.shiftRight(12));
     }
@@ -501,12 +561,12 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestTestBit() {
-      if(BigInteger.ZERO.testBit(0))Assert.fail();
-      if(BigInteger.ZERO.testBit(1))Assert.fail();
-      if(!(BigInteger.ONE.testBit(0)))Assert.fail();
-      if(BigInteger.ONE.testBit(1))Assert.fail();
+      if (BigInteger.ZERO.testBit(0))Assert.fail();
+      if (BigInteger.ZERO.testBit(1))Assert.fail();
+      if (!(BigInteger.ONE.testBit(0)))Assert.fail();
+      if (BigInteger.ONE.testBit(1))Assert.fail();
       for (int i = 0; i < 32; ++i) {
-        if(!(BigInteger.ONE.negate().testBit(i)))Assert.fail();
+        if (!(BigInteger.ONE.negate().testBit(i)))Assert.fail();
       }
     }
     @Test

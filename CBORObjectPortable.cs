@@ -104,7 +104,6 @@ namespace PeterO {
         }
       }
     }
-
     private static void PortableDigitCount(BigInteger bi) {
         int kb = 0;
         if (!bi.IsZero) {
@@ -136,10 +135,10 @@ namespace PeterO {
         }
         return kb;
     }
-
     // This is a more "portable" version of ConvertToBigNum,
     // but it's much slower on relatively large BigIntegers.
-    private static CBORObject ConvertToBigNumPortable(CBORObject o, bool negative) {
+    private static CBORObject ConvertToBigNumPortable(CBORObject o, bool
+    negative) {
       if (o.ItemType != CBORObjectType_ByteString) {
  throw new CBORException("Byte array expected");
 }

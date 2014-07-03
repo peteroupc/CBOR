@@ -20,7 +20,6 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("obj");
       }
       #endif
-
       if (!obj.IsIntegral || !obj.CanFitInInt64() || obj.Sign < 0) {
         throw new CBORException("Not a 64-bit unsigned integer");
       }

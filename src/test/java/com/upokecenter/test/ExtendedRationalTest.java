@@ -87,17 +87,17 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestIsInfinity() {
-      if(!(ExtendedRational.PositiveInfinity.IsNaN()))Assert.fail();
-      if(!(ExtendedRational.NegativeInfinity.IsNaN()))Assert.fail();
-      if(ExtendedRational.Zero.IsNaN())Assert.fail();
-      if(ExtendedRational.NaN.IsNaN())Assert.fail();
+      if (!(ExtendedRational.PositiveInfinity.IsNaN()))Assert.fail();
+      if (!(ExtendedRational.NegativeInfinity.IsNaN()))Assert.fail();
+      if (ExtendedRational.Zero.IsNaN())Assert.fail();
+      if (ExtendedRational.NaN.IsNaN())Assert.fail();
     }
     @Test
     public void TestIsNaN() {
-      if(ExtendedRational.PositiveInfinity.IsNaN())Assert.fail();
-      if(ExtendedRational.NegativeInfinity.IsNaN())Assert.fail();
-      if(ExtendedRational.Zero.IsNaN())Assert.fail();
-      if(!(ExtendedRational.NaN.IsNaN()))Assert.fail();
+      if (ExtendedRational.PositiveInfinity.IsNaN())Assert.fail();
+      if (ExtendedRational.NegativeInfinity.IsNaN())Assert.fail();
+      if (ExtendedRational.Zero.IsNaN())Assert.fail();
+      if (!(ExtendedRational.NaN.IsNaN()))Assert.fail();
     }
     @Test
     public void TestIsNegative() {
@@ -121,11 +121,11 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestIsZero() {
-      if(!(ExtendedRational.NegativeZero.signum()==0))Assert.fail();
-      if(!(ExtendedRational.Zero.signum()==0))Assert.fail();
-      if(ExtendedRational.One.signum()==0)Assert.fail();
-      if(ExtendedRational.NegativeInfinity.signum()==0)Assert.fail();
-      if(ExtendedRational.PositiveInfinity.signum()==0)Assert.fail();
+      if (!(ExtendedRational.NegativeZero.signum() == 0))Assert.fail();
+      if (!(ExtendedRational.Zero.signum() == 0))Assert.fail();
+      if (ExtendedRational.One.signum() == 0)Assert.fail();
+      if (ExtendedRational.NegativeInfinity.signum() == 0)Assert.fail();
+      if (ExtendedRational.PositiveInfinity.signum() == 0)Assert.fail();
     }
     @Test
     public void TestMultiply() {

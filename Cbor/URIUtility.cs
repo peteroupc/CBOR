@@ -2,130 +2,145 @@
 Written in 2013 by Peter Occil.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
-
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
-*/
+ */
 namespace PeterO.Cbor {
   using System;
   using System.Text;
 
     /// <summary>Contains utility methods for processing Uniform Resource
-    /// Identifiers (URIs) and Internationalized Resource Identifiers
-    /// (IRIs) under RFC3986 and RFC3987, respectively. In the following
-    /// documentation, URIs and IRIs include URI references and IRI references,
-    /// for convenience.</summary>
+    /// Identifiers (URIs) and Internationalized Resource Identifiers (IRIs)
+    /// under
+    /// RFC3986 and RFC3987, respectively. In the following documentation,
+    /// URIs and
+    /// IRIs include URI references and IRI references, for
+    /// convenience.</summary>
   internal static class URIUtility {
     /// <summary>Specifies whether certain characters are allowed when
-    /// parsing IRIs and URIs.</summary>
+    /// parsing IRIs
+    /// and URIs.</summary>
     internal enum ParseMode {
-    /// <summary>The rules follow the syntax for parsing IRIs. In particular,
-    /// many internationalized characters are allowed. Strings with unpaired
-    /// surrogate code points are considered invalid.</summary>
+    /// <summary>The rules follow the syntax for parsing IRIs. In
+    /// particular, many
+    /// internationalized characters are allowed. Strings with unpaired
+    /// surrogate
+    /// code points are considered invalid.</summary>
       IRIStrict,
 
     /// <summary>The rules follow the syntax for parsing IRIs, except that
-    /// non-ASCII characters are not allowed.</summary>
+    /// non-ASCII
+    /// characters are not allowed.</summary>
       URIStrict,
 
     /// <summary>The rules only check for the appropriate delimiters when
-    /// splitting the path, without checking if all the characters in each
-    /// component are valid. Even with this mode, strings with unpaired surrogate
-    /// code points are considered invalid.</summary>
+    /// splitting
+    /// the path, without checking if all the characters in each component are
+    /// valid. Even with this mode, strings with unpaired surrogate code
+    /// points are
+    /// considered invalid.</summary>
       IRILenient,
 
     /// <summary>The rules only check for the appropriate delimiters when
-    /// splitting the path, without checking if all the characters in each
-    /// component are valid. Non-ASCII characters are not allowed.</summary>
+    /// splitting
+    /// the path, without checking if all the characters in each component are
+    /// valid. Non-ASCII characters are not allowed.</summary>
       URILenient,
 
     /// <summary>The rules only check for the appropriate delimiters when
-    /// splitting the path, without checking if all the characters in each
-    /// component are valid. Unpaired surrogate code points are treated
-    /// as though they were replacement characters instead for the purposes
-    /// of these rules, so that strings with those code points are not considered
-    /// invalid strings.</summary>
+    /// splitting
+    /// the path, without checking if all the characters in each component are
+    /// valid. Unpaired surrogate code points are treated as though they were
+    /// replacement characters instead for the purposes of these rules, so that
+    /// strings with those code points are not considered invalid
+    /// strings.</summary>
       IRISurrogateLenient
     }
 
     private const string HexChars = "0123456789ABCDEF";
 
     private static void appendAuthority(
-        StringBuilder builder,
-        string refValue,
-        int[] segments) {
+      StringBuilder builder,
+      string refValue,
+      int[] segments) {
       if (segments[2] >= 0) {
         builder.Append("//");
-        builder.Append(refValue.Substring(segments[2], segments[3] - segments[2]));
+        builder.Append(
+          refValue.Substring(
+            segments[2],
+            segments[3] - segments[2]));
       }
     }
 
     private static void appendFragment(
-        StringBuilder builder,
-        string refValue,
-        int[] segments) {
+      StringBuilder builder,
+      string refValue,
+      int[] segments) {
       if (segments[8] >= 0) {
         builder.Append('#');
-        builder.Append(refValue.Substring(segments[8], segments[9] - segments[8]));
+        builder.Append(
+          refValue.Substring(
+            segments[8],
+            segments[9] - segments[8]));
       }
     }
 
     private static void appendNormalizedPath(
-        StringBuilder builder,
-        string refValue,
-        int[] segments) {
-      builder.Append(normalizePath(refValue.Substring(segments[4], segments[5] - segments[4])));
+      StringBuilder builder,
+      string refValue,
+      int[] segments) {
+      builder.Append(
+        normalizePath(
+          refValue.Substring(
+            segments[4],
+            segments[5] - segments[4])));
     }
 
     private static void appendPath(
-        StringBuilder builder,
-        string refValue,
-        int[] segments) {
-      builder.Append(refValue.Substring(segments[4], segments[5] - segments[4]));
+      StringBuilder builder,
+      string refValue,
+      int[] segments) {
+      builder.Append(
+        refValue.Substring(
+          segments[4],
+          segments[5] - segments[4]));
     }
 
     private static void appendQuery(
-        StringBuilder builder,
-        string refValue,
-        int[] segments) {
+      StringBuilder builder,
+      string refValue,
+      int[] segments) {
       if (segments[6] >= 0) {
         builder.Append('?');
-        builder.Append(refValue.Substring(segments[6], segments[7] - segments[6]));
+        builder.Append(
+          refValue.Substring(
+            segments[6],
+            segments[7] - segments[6]));
       }
     }
 
     private static void appendScheme(
-        StringBuilder builder,
-        string refValue,
-        int[] segments) {
+      StringBuilder builder,
+      string refValue,
+      int[] segments) {
       if (segments[0] >= 0) {
-        builder.Append(refValue.Substring(segments[0], segments[1] - segments[0]));
+        builder.Append(
+          refValue.Substring(
+            segments[0],
+            segments[1] - segments[0]));
         builder.Append(':');
       }
     }
 
-    /// <return>a string possibly containing escaped characters, or null
-    /// if s is null.</return>
-    /// <summary>Escapes characters that cannot appear in URIs or IRIs.
-    /// The function is idempotent; that is, calling the function again on
-    /// the result with the same mode doesn't change the result.</summary>
+    /// <return>a string possibly containing escaped characters, or null if s is
+    /// null.</return>
+    /// <summary>Escapes characters that cannot appear in URIs or IRIs. The
+    /// function
+    /// is idempotent; that is, calling the function again on the result
+    /// with the
+    /// same mode doesn't change the result.</summary>
     /// <param name='s'>A string to escape.</param>
-    /// <param name='mode'>One of the following values:. <list><item>0
-    /// - Non-ASCII characters and other characters that cannot appear in
-    /// a URI are escaped, whether or not the string is a valid URI. Unpaired
-    /// surrogates are treated as U + FFFD (Replacement Character). (Note
-    /// that square brackets "[" and "]" can only appear in the authority component
-    /// of a URI or IRI; elsewhere they will be escaped.)</item>
-    /// <item>1 -
-    /// Only non-ASCII characters are escaped. If the string is not a valid
-    /// IRI, returns null instead.</item>
-    /// <item>2 - Only non-ASCII characters
-    /// are escaped, whether or not the string is a valid IRI. Unpaired surrogates
-    /// are treated as U + FFFD (Replacement Character).</item>
-    /// <item>3
-    /// - Similar to 0, except that illegal percent encodings are also escaped.</item>
-    /// </list>
-    /// </param>
+    /// <param name='mode'>A 32-bit signed integer.</param>
     /// <returns>A string object.</returns>
     public static string escapeURI(string s, int mode) {
       if (s == null) {
@@ -133,12 +148,22 @@ namespace PeterO.Cbor {
       }
       int[] components = null;
       if (mode == 1) {
-        components = (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict);
+        components = (
+          s == null) ? null : splitIRI(
+          s,
+          0,
+          s.Length,
+          ParseMode.IRIStrict);
         if (components == null) {
           return null;
         }
       } else {
-        components = (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRISurrogateLenient);
+        components = (
+          s == null) ? null : splitIRI(
+          s,
+          0,
+          s.Length,
+          ParseMode.IRISurrogateLenient);
       }
       int index = 0;
       int valueSLength = s.Length;
@@ -161,24 +186,29 @@ namespace PeterO.Cbor {
               percentEncodeUtf8(builder, c);
             } else {
               if (c <= 0xffff) {
-                  builder.Append((char)c);
+                builder.Append((char)c);
               } else if (c <= 0x10ffff) {
-                builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
+                builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) +
+                                      0xd800));
                 builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
               }
             }
             ++index;
             continue;
           }
-          if (c >= 0x7F || c <= 0x20 || ((c & 0x7F) == c && "{}|^\\`<>\"".IndexOf((char)c) >= 0)) {
+          if (c >= 0x7f || c <= 0x20 ||
+              ((c & 0x7f) == c &&
+               "{}|^\\`<>\"".IndexOf((char)c) >= 0)) {
             percentEncodeUtf8(builder, c);
           } else if (c == '[' || c == ']') {
-            if (components != null && index >= components[2] && index < components[3]) {
+            if (components != null && index >= components[2] && index <
+                components[3]) {
               // within the authority component, so don't percent-encode
               if (c <= 0xffff) {
-                  builder.Append((char)c);
+                builder.Append((char)c);
               } else if (c <= 0x10ffff) {
-                builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
+                builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) +
+                                      0xd800));
                 builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
               }
             } else {
@@ -187,7 +217,7 @@ namespace PeterO.Cbor {
             }
           } else {
             if (c <= 0xffff) {
-                builder.Append((char)c);
+              builder.Append((char)c);
             } else if (c <= 0x10ffff) {
               builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
               builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
@@ -197,12 +227,14 @@ namespace PeterO.Cbor {
           if (c >= 0x80) {
             percentEncodeUtf8(builder, c);
           } else if (c == '[' || c == ']') {
-            if (components != null && index >= components[2] && index < components[3]) {
+            if (components != null && index >= components[2] && index <
+                components[3]) {
               // within the authority component, so don't percent-encode
               if (c <= 0xffff) {
-                  builder.Append((char)c);
+                builder.Append((char)c);
               } else if (c <= 0x10ffff) {
-                builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
+                builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) +
+                                      0xd800));
                 builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
               }
             } else {
@@ -211,7 +243,7 @@ namespace PeterO.Cbor {
             }
           } else {
             if (c <= 0xffff) {
-                builder.Append((char)c);
+              builder.Append((char)c);
             } else if (c <= 0x10ffff) {
               builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
               builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
@@ -229,14 +261,19 @@ namespace PeterO.Cbor {
     /// relative IRI references.
     /// <para>The following cases return true:</para>
     /// <code> xx-x:mm example:/ww </code>
-    ///  The following cases return false:
+    /// The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
     /// <param name='refValue'>A string object.</param>
     /// <returns>True if the string is a valid IRI with a scheme component;
     /// otherwise, false.</returns>
     public static bool hasScheme(string refValue) {
-      int[] segments = (refValue == null) ? null : splitIRI(refValue, 0, refValue.Length, ParseMode.IRIStrict);
+      int[] segments = (
+        refValue == null) ? null : splitIRI(
+        refValue,
+        0,
+        refValue.Length,
+        ParseMode.IRIStrict);
       return segments != null && segments[0] >= 0;
     }
 
@@ -246,108 +283,142 @@ namespace PeterO.Cbor {
     /// relative URI references. The following cases return
     /// true:
     /// <code> http://example/z xx-x:mm example:/ww </code>
-    ///  The following cases return false:
+    /// The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
     /// <param name='refValue'>A string object.</param>
     /// <returns>True if the string is a valid URI with a scheme component;
     /// otherwise, false.</returns>
     public static bool hasSchemeForURI(string refValue) {
-      int[] segments = (refValue == null) ? null : splitIRI(refValue, 0, refValue.Length, ParseMode.URIStrict);
+      int[] segments = (refValue == null) ? null : splitIRI(
+        refValue,
+        0,
+        refValue.Length,
+        ParseMode.URIStrict);
       return segments != null && segments[0] >= 0;
     }
 
     private static bool isHexChar(char c) {
       return (c >= 'a' && c <= 'f') ||
-          (c >= 'A' && c <= 'F') ||
-          (c >= '0' && c <= '9');
+        (c >= 'A' && c <= 'F') ||
+        (c >= '0' && c <= '9');
     }
 
     private static bool isIfragmentChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
-          (c >= 'A' && c <= 'Z') ||
-          (c >= '0' && c <= '9') ||
-          ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
-          (c >= 0xa0 && c <= 0xd7ff) ||
-          (c >= 0xf900 && c <= 0xfdcf) ||
-          (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
+        (c >= 'A' && c <= 'Z') ||
+        (c >= '0' && c <= '9') ||
+        ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
+        (c >= 0xa0 && c <= 0xd7ff) ||
+        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xfdf0 && c <= 0xffef) ||
+        (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
     private static bool isIpchar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
-          (c >= 'A' && c <= 'Z') ||
-          (c >= '0' && c <= '9') ||
-          ((c & 0x7F) == c && "/-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
-          (c >= 0xa0 && c <= 0xd7ff) ||
-          (c >= 0xf900 && c <= 0xfdcf) ||
-          (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
+        (c >= 'A' && c <= 'Z') ||
+        (c >= '0' && c <= '9') ||
+        ((c & 0x7F) == c && "/-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
+        (c >= 0xa0 && c <= 0xd7ff) ||
+        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xfdf0 && c <= 0xffef) ||
+        (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
     private static bool isIqueryChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
-          (c >= 'A' && c <= 'Z') ||
-          (c >= '0' && c <= '9') ||
-          ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
-          (c >= 0xa0 && c <= 0xd7ff) ||
-          (c >= 0xe000 && c <= 0xfdcf) ||
-          (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0x10fffd && (c & 0xfffe) != 0xfffe);
+        (c >= 'A' && c <= 'Z') ||
+        (c >= '0' && c <= '9') ||
+        ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
+        (c >= 0xa0 && c <= 0xd7ff) ||
+        (c >= 0xe000 && c <= 0xfdcf) ||
+        (c >= 0xfdf0 && c <= 0xffef) ||
+        (c >= 0x10000 && c <= 0x10fffd && (c & 0xfffe) != 0xfffe);
     }
 
     private static bool isIRegNameChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
-          (c >= 'A' && c <= 'Z') ||
-          (c >= '0' && c <= '9') ||
-          ((c & 0x7F) == c && "-._~!$&'()*+,;=".IndexOf((char)c) >= 0) ||
-          (c >= 0xa0 && c <= 0xd7ff) ||
-          (c >= 0xf900 && c <= 0xfdcf) ||
-          (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
+        (c >= 'A' && c <= 'Z') ||
+        (c >= '0' && c <= '9') ||
+        ((c & 0x7F) == c && "-._~!$&'()*+,;=".IndexOf((char)c) >= 0) ||
+        (c >= 0xa0 && c <= 0xd7ff) ||
+        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xfdf0 && c <= 0xffef) ||
+        (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
     private static bool isIUserInfoChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
-          (c >= 'A' && c <= 'Z') ||
-          (c >= '0' && c <= '9') ||
-          ((c & 0x7F) == c && "-._~:!$&'()*+,;=".IndexOf((char)c) >= 0) ||
-          (c >= 0xa0 && c <= 0xd7ff) ||
-          (c >= 0xf900 && c <= 0xfdcf) ||
-          (c >= 0xfdf0 && c <= 0xffef) ||
-          (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
+        (c >= 'A' && c <= 'Z') ||
+        (c >= '0' && c <= '9') ||
+        ((c & 0x7F) == c && "-._~:!$&'()*+,;=".IndexOf((char)c) >= 0) ||
+        (c >= 0xa0 && c <= 0xd7ff) ||
+        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xfdf0 && c <= 0xffef) ||
+        (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
     /// <summary>Determines whether the substring is a valid CURIE reference
-    /// under RDFA 1.1. (The CURIE reference is the part after the colon.).</summary>
+    /// under
+    /// RDFA 1.1. (The CURIE reference is the part after the colon.).</summary>
     /// <param name='s'>A string object.</param>
     /// <param name='offset'>A 32-bit signed integer.</param>
     /// <param name='length'>A 32-bit signed integer. (2).</param>
-    /// <returns>True if the substring is a valid CURIE reference under RDFA
-    /// 1; otherwise, false.</returns>
+    /// <returns>True if the substring is a valid CURIE reference under RDFA 1;
+    /// otherwise, false.</returns>
     public static bool isValidCurieReference(string s, int offset, int length) {
       if (s == null) {
         return false;
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + Convert.ToString((int)(long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        throw new ArgumentException("offset (" +
+                                    Convert.ToString(
+(int)(long)offset,
+System.Globalization.CultureInfo.InvariantCulture)
+                                    +") is less than " + "0 ");
       }
       if (offset > s.Length) {
-        throw new ArgumentException("offset (" + Convert.ToString((int)(long)offset, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((int)(long)s.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("offset (" +
+                                    Convert.ToString(
+(int)(long)offset,
+System.Globalization.CultureInfo.InvariantCulture)
+                     +") is more than " +
+                                      Convert.ToString(
+(int)(long)s.Length,
+System.Globalization.CultureInfo.InvariantCulture));
       }
       if (length < 0) {
-        throw new ArgumentException("length (" + Convert.ToString((int)(long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        throw new ArgumentException("length (" +
+                                    Convert.ToString(
+(int)(long)length,
+System.Globalization.CultureInfo.InvariantCulture)
+                                    +") is less than " + "0 ");
       }
       if (length > s.Length) {
-        throw new ArgumentException("length (" + Convert.ToString((int)(long)length, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + Convert.ToString((int)(long)s.Length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("length (" +
+                                    Convert.ToString(
+(int)(long)length,
+System.Globalization.CultureInfo.InvariantCulture)
+                     +") is more than " +
+                                      Convert.ToString(
+(int)(long)s.Length,
+System.Globalization.CultureInfo.InvariantCulture));
       }
       if (s.Length - offset < length) {
-        throw new ArgumentException("s's length minus " + offset + " (" + Convert.ToString((int)(long)(s.Length - offset), System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + Convert.ToString((int)(long)length, System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("s's length minus " + offset + " (" +
+                               Convert.ToString(
+(int)(long)(s.Length - offset),
+System.Globalization.CultureInfo.InvariantCulture)
+                       +") is less than " +
+                                      Convert.ToString(
+(int)(long)length,
+System.Globalization.CultureInfo.InvariantCulture));
       }
       if (length == 0) {
         return true;
@@ -375,7 +446,7 @@ namespace PeterO.Cbor {
         if (c == '%') {
           // Percent encoded character
           if (index + 2 < valueSLength && isHexChar(s[index + 1]) &&
-                   isHexChar(s[index + 2])) {
+              isHexChar(s[index + 2])) {
             index += 3;
             continue;
           }
@@ -408,7 +479,12 @@ namespace PeterO.Cbor {
     }
 
     public static bool isValidIRI(string s) {
-      return ((s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict)) != null;
+      return ((
+        s == null) ? null : splitIRI(
+                s,
+                0,
+                s.Length,
+                ParseMode.IRIStrict)) != null;
     }
 
     private static string normalizePath(string path) {
@@ -416,7 +492,9 @@ namespace PeterO.Cbor {
       if (len == 0 || path.Equals("..") || path.Equals(".")) {
         return String.Empty;
       }
-      if (path.IndexOf("/.", StringComparison.Ordinal) < 0 && path.IndexOf("./", StringComparison.Ordinal) < 0) {
+      if (path.IndexOf("/. ", StringComparison.Ordinal) < 0 &&
+          path.IndexOf("./ ",
+                       StringComparison.Ordinal) < 0) {
         return path;
       }
       var builder = new StringBuilder();
@@ -424,40 +502,40 @@ namespace PeterO.Cbor {
       while (index < len) {
         char c = path[index];
         if ((index + 3 <= len && c == '/' &&
-                path[index + 1] == '.' &&
-                path[index + 2] == '/') ||
-                (index + 2 == len && c == '.' &&
-                path[index + 1] == '.')) {
+             path[index + 1] == '.' &&
+             path[index + 2] == '/') ||
+            (index + 2 == len && c == '.' &&
+             path[index + 1] == '.')) {
           // begins with "/./" or is "..";
           // move index by 2
           index += 2;
           continue;
         }
         if (index + 3 <= len && c == '.' &&
-                path[index + 1] == '.' &&
-                path[index + 2] == '/') {
+            path[index + 1] == '.' &&
+            path[index + 2] == '/') {
           // begins with "../";
           // move index by 3
           index += 3;
           continue;
         }
         if ((index + 2 <= len && c == '.' &&
-                path[index + 1] == '/') ||
-                (index + 1 == len && c == '.')) {
+             path[index + 1] == '/') ||
+            (index + 1 == len && c == '.')) {
           // begins with "./" or is ".";
           // move index by 1
           ++index;
           continue;
         }
         if (index + 2 == len && c == '/' &&
-                path[index + 1] == '.') {
+            path[index + 1] == '.') {
           // is "/."; append '/' and break
           builder.Append('/');
           break;
         }
         if (index + 3 == len && c == '/' &&
-                path[index + 1] == '.' &&
-                path[index + 2] == '.') {
+            path[index + 1] == '.' &&
+            path[index + 2] == '.') {
           // is "/.."; remove last segment,
           // append "/" and return
           int index2 = builder.Length - 1;
@@ -475,9 +553,9 @@ namespace PeterO.Cbor {
           break;
         }
         if (index + 4 <= len && c == '/' &&
-                path[index + 1] == '.' &&
-                path[index + 2] == '.' &&
-                path[index + 3] == '/') {
+            path[index + 1] == '.' &&
+            path[index + 2] == '.' &&
+            path[index + 3] == '/') {
           // begins with "/../"; remove last segment
           int index2 = builder.Length - 1;
           while (index2 >= 0) {
@@ -510,36 +588,36 @@ namespace PeterO.Cbor {
     }
 
     private static int parseDecOctet(
-string s,
-int index,
-int endOffset,
-int c,
-int delim) {
+      string s,
+      int index,
+      int endOffset,
+      int c,
+      int delim) {
       if (c >= '1' && c <= '9' && index + 2 < endOffset &&
-             s[index + 1] >= '0' && s[index + 1] <= '9' &&
-             s[index + 2] == delim) {
+          s[index + 1] >= '0' && s[index + 1] <= '9' &&
+          s[index + 2] == delim) {
         return ((c - '0') * 10) + (s[index + 1] - '0');
       }
       if (c == '2' && index + 3 < endOffset &&
-             (s[index + 1] == '5') &&
-             (s[index + 2] >= '0' && s[index + 2] <= '5') &&
-             s[index + 3] == delim) {
+          (s[index + 1] == '5') &&
+          (s[index + 2] >= '0' && s[index + 2] <= '5') &&
+          s[index + 3] == delim) {
         return 250 + (s[index + 2] - '0');
       }
       if (c == '2' && index + 3 < endOffset &&
-             s[index + 1] >= '0' && s[index + 1] <= '4' &&
-             s[index + 2] >= '0' && s[index + 2] <= '9' &&
-             s[index + 3] == delim) {
+          s[index + 1] >= '0' && s[index + 1] <= '4' &&
+          s[index + 2] >= '0' && s[index + 2] <= '9' &&
+          s[index + 3] == delim) {
         return 200 + ((s[index + 1] - '0') * 10) + (s[index + 2] - '0');
       }
       if (c == '1' && index + 3 < endOffset &&
-             s[index + 1] >= '0' && s[index + 1] <= '9' &&
-             s[index + 2] >= '0' && s[index + 2] <= '9' &&
-             s[index + 3] == delim) {
+          s[index + 1] >= '0' && s[index + 1] <= '9' &&
+          s[index + 2] >= '0' && s[index + 2] <= '9' &&
+          s[index + 3] == delim) {
         return 100 + ((s[index + 1] - '0') * 10) + (s[index + 2] - '0');
       }
       return (c >= '0' && c <= '9' && index + 1 < endOffset &&
-             s[index + 1] == delim) ? (c - '0') : (-1);
+              s[index + 1] == delim) ? (c - '0') : (-1);
     }
 
     private static int parseIPLiteral(string s, int offset, int endOffset) {
@@ -573,9 +651,9 @@ int delim) {
         while (index < endOffset) {
           char c = s[index];
           if ((c >= 'a' && c <= 'z') ||
-                   (c >= 'A' && c <= 'Z') ||
-                   (c >= '0' && c <= '9') ||
-                   ((c & 0x7F) == c && ":-._~!$&'()*+,;=".IndexOf(c) >= 0)) {
+              (c >= 'A' && c <= 'Z') ||
+              (c >= '0' && c <= '9') ||
+              ((c & 0x7F) == c && ":-._~!$&'()*+,;=".IndexOf(c) >= 0)) {
             hex = true;
           } else {
             break;
@@ -592,7 +670,7 @@ int delim) {
         return index;
       }
       if (s[index] == ':' ||
-             isHexChar(s[index])) {
+          isHexChar(s[index])) {
         // IPv6 Address
         int phase1 = 0;
         int phase2 = 0;
@@ -618,7 +696,7 @@ int delim) {
             continue;
           }
           if ((c >= '0' && c <= '9') && !expectColon &&
-                   (phased || (phase1 + (phased ? 1 : 0) + phase2) == 6)) {
+              (phased || (phase1 + (phased ? 1 : 0) + phase2) == 6)) {
             // Check for IPv4 address
             int decOctet = parseDecOctet(s, index, endOffset, c, '.');
             if (decOctet >= 0) {
@@ -715,7 +793,7 @@ int delim) {
         }
         if (s[index] == '%') {
           if (index + 2 < endOffset && s[index + 1] == '2' &&
-                   s[index + 2] == '5') {
+              s[index + 2] == '5') {
             // Zone identifier in an IPv6 address
             // (see RFC6874)
             index += 3;
@@ -727,7 +805,7 @@ int delim) {
               }
               if (c == '%') {
                 if (index + 2 < endOffset && isHexChar(s[index + 1]) &&
-                            isHexChar(s[index + 2])) {
+                    isHexChar(s[index + 2])) {
                   index += 3;
                   haveChar = true;
                   continue;
@@ -735,7 +813,8 @@ int delim) {
                 return -1;
               }
               if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-                         (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-' || c == '~') {
+      (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-' || c ==
+                    '~') {
                 // unreserved character under RFC3986
                 ++index;
                 haveChar = true;
@@ -753,7 +832,10 @@ int delim) {
       return -1;
     }
 
-    private static string pathParent(string refValue, int startIndex, int endIndex) {
+    private static string pathParent(
+      string refValue,
+      int startIndex,
+      int endIndex) {
       if (startIndex > endIndex) {
         return String.Empty;
       }
@@ -809,12 +891,25 @@ int delim) {
     /// <param name='parseMode'>A ParseMode object.</param>
     /// <returns>The resolved IRI, or null if refValue is null or is not a valid
     /// IRI. If base is null or is not a valid IRI, returns refValue.</returns>
-    public static string relativeResolve(string refValue, string baseURI, ParseMode parseMode) {
-      int[] segments = (refValue == null) ? null : splitIRI(refValue, 0, refValue.Length, parseMode);
+    public static string relativeResolve(
+      string refValue,
+      string baseURI,
+      ParseMode parseMode) {
+      int[] segments = (
+        refValue == null) ? null : splitIRI(
+        refValue,
+        0,
+        refValue.Length,
+        parseMode);
       if (segments == null) {
         return null;
       }
-      int[] segmentsBase = (baseURI == null) ? null : splitIRI(baseURI, 0, baseURI.Length, parseMode);
+      int[] segmentsBase = (
+        baseURI == null) ? null : splitIRI(
+        baseURI,
+        0,
+        baseURI.Length,
+        parseMode);
       if (segmentsBase == null) {
         return refValue;
       }
@@ -853,7 +948,11 @@ int delim) {
             appendPath(merged, refValue, segments);
             builder.Append(normalizePath(merged.ToString()));
           } else {
-            merged.Append(pathParent(baseURI, segmentsBase[4], segmentsBase[5]));
+            merged.Append(
+              pathParent(
+                baseURI,
+                segmentsBase[4],
+                segmentsBase[5]));
             appendPath(merged, refValue, segments);
             builder.Append(normalizePath(merged.ToString()));
           }
@@ -864,15 +963,19 @@ int delim) {
       return builder.ToString();
     }
 
-    /// <summary>Parses an Internationalized Resource Identifier (IRI)
-    /// reference under RFC3987. If the IRI reference is syntactically valid,
-    /// splits the string into its components and returns an array containing
-    /// the indices into the components. <returns>If the string is a valid
-    /// IRI reference, returns an array of 10 integers. Each of the five pairs
-    /// corresponds to the start and end index of the IRI's scheme, authority,
-    /// path, query, or fragment component, respectively. If a component
-    /// is absent, both indices in that pair will be -1. If the string is null
-    /// or is not a valid IRI, returns null.</returns>
+    /// <summary>Parses an Internationalized Resource Identifier (IRI) reference
+    /// under RFC3987. If the IRI reference is syntactically valid, splits the
+    /// string into its components and returns an array containing the
+    /// indices into
+    /// the components. <returns>If the string is a valid IRI reference,
+    /// returns an
+    /// array of 10 integers. Each of the five pairs corresponds to the
+    /// start and
+    /// end index of the IRI's scheme, authority, path, query, or fragment
+    /// component, respectively. If a component is absent, both indices in
+    /// that pair
+    /// will be -1. If the string is null or is not a valid IRI, returns
+    /// null.</returns>
     /// </summary>
     /// <param name='s'>A string object.</param>
     /// <returns>An array of 32-bit unsigned integers.</returns>
@@ -881,24 +984,31 @@ int delim) {
     }
 
     /// <summary>Parses a substring that represents an Internationalized
-    /// Resource Identifier (IRI) under RFC3987. If the IRI is syntactically
-    /// valid, splits the string into its components and returns an array
-    /// containing the indices into the components.</summary>
+    /// Resource
+    /// Identifier (IRI) under RFC3987. If the IRI is syntactically valid,
+    /// splits
+    /// the string into its components and returns an array containing the
+    /// indices
+    /// into the components.</summary>
     /// <param name='s'>A string object.</param>
     /// <param name='offset'>A 32-bit signed integer.</param>
     /// <param name='length'>A 32-bit signed integer. (2).</param>
     /// <param name='parseMode'>A ParseMode object.</param>
-    /// <returns>If the string is a valid IRI, returns an array of 10 integers.
-    /// Each of the five pairs corresponds to the start and end index of the
-    /// IRI's scheme, authority, path, query, or fragment component, respectively.
-    /// If a component is absent, both indices in that pair will be -1 (an index
-    /// won't be less than 0 in any other case). If the string is null or is not
-    /// a valid IRI, returns null.</returns>
+    /// <returns>If the string is a valid IRI, returns an array of 10
+    /// integers. Each
+    /// of the five pairs corresponds to the start and end index of the IRI's
+    /// scheme, authority, path, query, or fragment component, respectively.
+    /// If a
+    /// component is absent, both indices in that pair will be -1 (an index
+    /// won't be
+    /// less than 0 in any other case). If the string is null or is not a
+    /// valid IRI,
+    /// returns null.</returns>
     public static int[] splitIRI(
-string s,
-int offset,
-int length,
-ParseMode parseMode) {
+      string s,
+      int offset,
+      int length,
+      ParseMode parseMode) {
       if (s == null) {
         return null;
       }
@@ -911,8 +1021,10 @@ ParseMode parseMode) {
         retval[5] = 0;
         return retval;
       }
-      bool asciiOnly = parseMode == ParseMode.URILenient || parseMode == ParseMode.URIStrict;
-      bool strict = parseMode == ParseMode.URIStrict || parseMode == ParseMode.IRIStrict;
+      bool asciiOnly = parseMode == ParseMode.URILenient || parseMode ==
+        ParseMode.URIStrict;
+      bool strict = parseMode == ParseMode.URIStrict || parseMode ==
+        ParseMode.IRIStrict;
       int index = offset;
       int valueSLength = offset + length;
       bool scheme = false;
@@ -926,12 +1038,15 @@ ParseMode parseMode) {
           ++index;
           break;
         }
-        if (strict && index == offset && !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) {
+        if (strict && index == offset && !((c >= 'a' && c <= 'z') || (c >=
+                                                           'A' && c <= 'Z'
+))) {
           break;
         }
         if (strict && index > offset &&
-                !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9') ||
-                c == '+' || c == '-' || c == '.')) {
+!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <=
+              '9') ||
+              c == '+' || c == '-' || c == '.')) {
           break;
         }
         if (!strict && (c == '#' || c == ':' || c == '?' || c == '/')) {
@@ -972,7 +1087,7 @@ ParseMode parseMode) {
           if (c == '%' && (state == 0 || state == 1) && strict) {
             // Percent encoded character (except in port)
             if (index + 2 < valueSLength && isHexChar(s[index + 1]) &&
-                      isHexChar(s[index + 2])) {
+                isHexChar(s[index + 2])) {
               index += 3;
               continue;
             }
@@ -1070,7 +1185,7 @@ ParseMode parseMode) {
         if (c == '%' && strict) {
           // Percent encoded character
           if (index + 2 < valueSLength && isHexChar(s[index + 1]) &&
-                   isHexChar(s[index + 2])) {
+              isHexChar(s[index + 2])) {
             index += 3;
             continue;
           }
@@ -1123,18 +1238,20 @@ ParseMode parseMode) {
       return retval;
     }
 
-    /// <summary>Parses an Internationalized Resource Identifier (IRI)
-    /// reference under RFC3987. If the IRI is syntactically valid, splits
-    /// the string into its components and returns an array containing the
-    /// indices into the components.</summary>
+    /// <summary>Parses an Internationalized Resource Identifier (IRI) reference
+    /// under RFC3987. If the IRI is syntactically valid, splits the string
+    /// into its
+    /// components and returns an array containing the indices into the
+    /// components.</summary>
     /// <param name='s'>A string object.</param>
     /// <param name='parseMode'>A ParseMode object.</param>
-    /// <returns>If the string is a valid IRI reference, returns an array
-    /// of 10 integers. Each of the five pairs corresponds to the start and
-    /// end index of the IRI's scheme, authority, path, query, or fragment
-    /// component, respectively. If a component is absent, both indices
-    /// in that pair will be -1. If the string is null or is not a valid IRI, returns
-    /// null.</returns>
+    /// <returns>If the string is a valid IRI reference, returns an array of 10
+    /// integers. Each of the five pairs corresponds to the start and end
+    /// index of
+    /// the IRI's scheme, authority, path, query, or fragment component,
+    /// respectively. If a component is absent, both indices in that pair
+    /// will be
+    /// -1. If the string is null or is not a valid IRI, returns null.</returns>
     public static int[] splitIRI(string s, ParseMode parseMode) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, parseMode);
     }

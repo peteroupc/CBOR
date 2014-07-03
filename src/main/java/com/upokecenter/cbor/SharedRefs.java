@@ -10,8 +10,8 @@ at: http://upokecenter.com/d/
 import java.util.*;
 import com.upokecenter.util.*;
 
-  class SharedRefs
-  {
+  class SharedRefs {
+
     private List<CBORObject> sharedObjects;
 
     public SharedRefs () {
@@ -19,7 +19,7 @@ import com.upokecenter.util.*;
     }
 
     public void AddObject(final CBORObject obj) {
-        this.sharedObjects.add(obj);
+      this.sharedObjects.add(obj);
     }
 
     public CBORObject GetObject(final long smallIndex) {
@@ -27,7 +27,8 @@ import com.upokecenter.util.*;
         throw new CBORException("Unexpected index");
       }
       if (smallIndex > Integer.MAX_VALUE) {
-        throw new CBORException("Index " + smallIndex + " is bigger than supported");
+        throw new CBORException("Index " + smallIndex +
+                                " is bigger than supported ");
       }
       int index = (int)smallIndex;
       if (index >= this.sharedObjects.size()) {
@@ -41,7 +42,8 @@ import com.upokecenter.util.*;
         throw new CBORException("Unexpected index");
       }
       if (!bigIndex.canFitInInt()) {
-        throw new CBORException("Index " + bigIndex + " is bigger than supported");
+        throw new CBORException("Index " + bigIndex +
+                                " is bigger than supported ");
       }
       int index = bigIndex.intValue();
       if (index >= this.sharedObjects.size()) {

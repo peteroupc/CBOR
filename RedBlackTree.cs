@@ -9,7 +9,8 @@ using System.Collections.Generic;
 
 namespace PeterO {
     /// <summary>Red-black tree, modified by Peter O. from public-domain
-    /// Java code originally written by Doug Lea.</summary>
+    /// Java code
+    /// originally written by Doug Lea.</summary>
     /// <typeparam name='T'>Type of each element in the tree.</typeparam>
   internal sealed class RedBlackTree<T> : ICollection<T> {
     private sealed class RBCell {
@@ -31,9 +32,9 @@ namespace PeterO {
     /// <summary>Pointer to parent (null if root).</summary>
       private RBCell parentValue;
 
-    /// <summary>Initializes a new instance of the RBCell class. Make a new
-    /// cell with given element, null links, and BLACK color. Normally only
-    /// called to establish a new root.</summary>
+    /// <summary>Initializes a new instance of the RBCell class. Make a new cell
+    /// with given element, null links, and BLACK color. Normally only called to
+    /// establish a new root.</summary>
     /// <param name='element'>A T object.</param>
       public RBCell(T element) {
         this.elementValue = element;
@@ -137,7 +138,8 @@ namespace PeterO {
         return p;
       }
 
-    /// <summary>Return true if node is a root (i.e., has a null parent).</summary>
+    /// <summary>Return true if node is a root (i.e., has a null
+    /// parent).</summary>
     /// <returns>A Boolean object.</returns>
       public bool isRoot() {
         return this.parentValue == null;
@@ -187,8 +189,10 @@ namespace PeterO {
       }
 
     /// <summary>Return node of current sub-tree containing element as
-    /// element(), if it exists, else null. Uses IComparer <paramref name='cmp'/>
-    /// to find and to check equality.</summary>
+    /// element(), if
+    /// it exists, else null. Uses IComparer <paramref name='cmp ' /> to
+    /// find and to
+    /// check equality.</summary>
     /// <param name='element'>A T object.</param>
     /// <param name='cmp'>An IComparer object.</param>
     /// <returns>A RBCell object.</returns>
@@ -207,7 +211,8 @@ namespace PeterO {
       }
 
     /// <summary>Return number of nodes of current sub-tree containing
-    /// element. Uses IComparer <paramref name='cmp'/> to find and to check
+    /// element. Uses
+    /// IComparer <paramref name='cmp ' /> to find and to check
     /// equality.</summary>
     /// <param name='element'>A T object.</param>
     /// <param name='cmp'>An IComparer object.</param>
@@ -234,8 +239,10 @@ namespace PeterO {
         return c;
       }
 
-    /// <summary>Insert cell as the left child of current node, and then rebalance
-    /// the tree it is in. @return the new root of the current tree. (Rebalancing
+    /// <summary>Insert cell as the left child of current node, and then
+    /// rebalance
+    /// the tree it is in. @return the new root of the current tree.
+    /// (Rebalancing
     /// can change the root!).</summary>
     /// <param name='cell'>The cell to add.</param>
     /// <param name='root'>Root, the root of the current tree.</param>
@@ -247,22 +254,23 @@ namespace PeterO {
       }
 
     /// <summary>Insert cell as the right child of current node, and then
-    /// rebalance the tree it is in.</summary>
+    /// rebalance
+    /// the tree it is in.</summary>
     /// <param name='cell'>The cell to add.</param>
     /// <param name='root'>The root of the current tree.</param>
-    /// <returns>The new root of the current tree. (Rebalancing can change
-    /// the root!).</returns>
+    /// <returns>The new root of the current tree. (Rebalancing can change the
+    /// root!).</returns>
       public RBCell insertRight(RBCell cell, RBCell root) {
         this.rightValue = cell;
         cell.parentValue = this;
         return cell.fixAfterInsertion(root);
       }
 
-    /// <summary>Delete the current node, and then rebalance the tree it
-    /// is in.</summary>
+    /// <summary>Delete the current node, and then rebalance the tree it is
+    /// in.</summary>
     /// <param name='root'>The root of the current tree.</param>
-    /// <returns>The new root of the current tree. Rebalancing can change
-    /// the root.</returns>
+    /// <returns>The new root of the current tree. Rebalancing can change the
+    /// root.</returns>
       public RBCell delete(RBCell root) {
         // if strictly private, swap contents with successor and then delete it
         if (this.leftValue != null && this.rightValue != null) {
@@ -270,10 +278,8 @@ namespace PeterO {
           this.copyContents(s);
           return s.delete(root);
         }
-
         // Start fixup at replacement node, if it exists
         RBCell replacement = this.leftValue ?? this.rightValue;
-
         if (replacement != null) {
           // link replacement to parent
           replacement.parentValue = this.parentValue;
@@ -284,12 +290,10 @@ namespace PeterO {
           } else {
             this.parentValue.rightValue = replacement;
           }
-
           // null out links so they are OK to use by fixAfterDeletion
           this.leftValue = null;
           this.rightValue = null;
           this.parentValue = null;
-
           // fix replacement
           if (this.colorValue == BLACK) {
             root = replacement.fixAfterDeletion(root);
@@ -297,13 +301,13 @@ namespace PeterO {
           return root;
         }
         if (this.parentValue == null) {  // exit if we are the only node
-          return null;  // if no children, use self as phantom replacement and then unlink
+          // if no children, use self as phantom replacement
+          // and then unlink
+          return null;
         }
-
         if (this.colorValue == BLACK) {
           root = this.fixAfterDeletion(root);
         }
-
         // Unlink (Couldn't before since fixAfterDeletion needs parent ptr)
         if (this.parentValue != null) {
           if (this == this.parentValue.leftValue) {
@@ -313,10 +317,8 @@ namespace PeterO {
           }
           this.parentValue = null;
         }
-
         return root;
       }
-
       /** From CLR **/
       private RBCell rotateLeft(RBCell rootValue) {
         RBCell r = this.rightValue;
@@ -336,7 +338,6 @@ namespace PeterO {
         this.parentValue = r;
         return rootValue;
       }
-
       /** From CLR **/
       private RBCell rotateRight(RBCell rootValue) {
         RBCell l = this.leftValue;
@@ -356,16 +357,13 @@ namespace PeterO {
         this.parentValue = l;
         return rootValue;
       }
-
       /** From CLR **/
       private RBCell fixAfterInsertion(RBCell rootValue) {
         this.colorValue = RED;
         RBCell x = this;
-
         while (x != null && x != rootValue && x.parentValue.colorValue == RED) {
           if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
             RBCell y = rightOf(parentOf(parentOf(x)));
-
             if (colorOf(y) == RED) {
               setColor(parentOf(x), BLACK);
               setColor(y, BLACK);
@@ -384,7 +382,6 @@ namespace PeterO {
             }
           } else {
             RBCell y = leftOf(parentOf(parentOf(x)));
-
             if (colorOf(y) == RED) {
               setColor(parentOf(x), BLACK);
               setColor(y, BLACK);
@@ -412,15 +409,14 @@ namespace PeterO {
         while (x != rootValue && colorOf(x) == BLACK) {
           if (x == leftOf(parentOf(x))) {
             RBCell sib = rightOf(parentOf(x));
-
             if (colorOf(sib) == RED) {
               setColor(sib, BLACK);
               setColor(parentOf(x), RED);
               rootValue = parentOf(x).rotateLeft(rootValue);
               sib = rightOf(parentOf(x));
             }
-
-            if (colorOf(leftOf(sib)) == BLACK && colorOf(rightOf(sib)) == BLACK) {
+            if (colorOf(leftOf(sib)) == BLACK && colorOf(rightOf(sib)) ==
+            BLACK) {
               setColor(sib, RED);
               x = parentOf(x);
             } else {
@@ -437,17 +433,15 @@ namespace PeterO {
               x = rootValue;
             }
           } else {  // symmetric
-
             RBCell sib = leftOf(parentOf(x));
-
             if (colorOf(sib) == RED) {
               setColor(sib, BLACK);
               setColor(parentOf(x), RED);
               rootValue = parentOf(x).rotateRight(rootValue);
               sib = leftOf(parentOf(x));
             }
-
-            if (colorOf(rightOf(sib)) == BLACK && colorOf(leftOf(sib)) == BLACK) {
+            if (colorOf(rightOf(sib)) == BLACK && colorOf(leftOf(sib)) ==
+            BLACK) {
               setColor(sib, RED);
               x = parentOf(x);
             } else {
@@ -469,7 +463,6 @@ namespace PeterO {
         return rootValue;
       }
     }
-
     // instance variables
 
     /// <summary>The root of the tree. Null if empty.</summary>
@@ -477,22 +470,22 @@ namespace PeterO {
 
     /// <summary>The comparator to use for ordering.</summary>
     private IComparer<T> cmpValue;
-
     // constructors
-
-    /// <summary>Initializes a new instance of the RedBlackTree class.
-    /// Make an empty tree. Initialize to use DefaultIComparer for ordering.</summary>
+    /// <summary>Initializes a new instance of the RedBlackTree class. Make
+    /// an empty
+    /// tree. Initialize to use DefaultIComparer for ordering.</summary>
     public RedBlackTree() : this(null, null, 0) {
     }
 
-    /// <summary>Initializes a new instance of the RedBlackTree class.
-    /// Make an empty tree, using the supplied element comparator for ordering.</summary>
+    /// <summary>Initializes a new instance of the RedBlackTree class. Make
+    /// an empty
+    /// tree, using the supplied element comparator for ordering.</summary>
     /// <param name='c'>An IComparer object.</param>
     public RedBlackTree(IComparer<T> c) : this(c, null, 0) {
     }
 
-    /// <summary>Initializes a new instance of the RedBlackTree class.
-    /// Special version of constructor needed by clone().</summary>
+    /// <summary>Initializes a new instance of the RedBlackTree class. Special
+    /// version of constructor needed by clone().</summary>
     /// <param name='cmp'>An IComparer object.</param>
     /// <param name='t'>A RBCell object.</param>
     /// <param name='n'>A 32-bit signed integer.</param>
@@ -501,15 +494,18 @@ namespace PeterO {
       this.treeValue = t;
         this.cmpValue = cmp ?? Comparer<T>.Default;
     }
-
     // Collection methods
-
     /// <summary>Implements collections.Collection.includes. Time
-    /// complexity: O(log n).</summary>
+    /// complexity: O(log
+    /// n).</summary>
     /// <param name='element'>A T object.</param>
     /// <returns>A Boolean object.</returns>
     public bool Contains(T element) {
-      return (this.countValue != 0) && (this.treeValue.find(element, this.cmpValue) != null);
+      return (
+this.countValue != 0) && (
+this.treeValue.find(
+element,
+this.cmpValue) != null);
     }
 
     public bool Find(T element, out T outval) {
@@ -527,11 +523,15 @@ namespace PeterO {
     }
 
     public int OccurrencesOf(T element) {
-      return (this.countValue == 0) ? 0 : this.treeValue.count(element, this.cmpValue);
+      return (
+this.countValue == 0) ? 0 : this.treeValue.count(
+element,
+this.cmpValue);
     }
 
-    /// <summary>Implements collections.UpdatableCollection.clear.
-    /// Time complexity: O(1). @see collections.UpdatableCollection#clear.</summary>
+    /// <summary>Implements collections.UpdatableCollection.clear. Time
+    /// complexity:
+    /// O(1). @see collections.UpdatableCollection#clear.</summary>
     public void Clear() {
       this.countValue = 0;
       this.treeValue = null;
@@ -545,8 +545,10 @@ namespace PeterO {
       return this.remove_(element, false);
     }
 
-    /// <summary>Implements collections.UpdatableCollection.take.
-    /// Time complexity: O(log n). Takes the least element. @see collections.UpdatableCollection#take.</summary>
+    /// <summary>Implements collections.UpdatableCollection.take. Time
+    /// complexity:
+    /// O(log n). Takes the least element. @see
+    /// collections.UpdatableCollection#take.</summary>
     /// <returns>A T object.</returns>
     public T Pop() {
       if (this.countValue != 0) {
@@ -566,7 +568,8 @@ namespace PeterO {
     /// <summary>Add the element only if it exists.</summary>
       AddIfMissing,
 
-    /// <summary>Add the element and remove the existing element if any.</summary>
+    /// <summary>Add the element and remove the existing element if
+    /// any.</summary>
       OverwriteIfExisting
     }
 
@@ -581,7 +584,6 @@ namespace PeterO {
     public void Add(T element) {
       this.addInternal(element, OccurrenceMode.AlwaysAdd);
     }
-
     // helper methods
     private bool addInternal(T element, OccurrenceMode checkOccurrence) {
       if (this.treeValue == null) {
@@ -594,7 +596,8 @@ namespace PeterO {
           if (diff == 0 && checkOccurrence == OccurrenceMode.AddIfMissing) {
             return false;
           }
-          if (diff == 0 && checkOccurrence == OccurrenceMode.OverwriteIfExisting) {
+          if (diff == 0 && checkOccurrence ==
+          OccurrenceMode.OverwriteIfExisting) {
             t.element(element);
             return false;
           }
@@ -602,7 +605,9 @@ namespace PeterO {
             if (t.left() != null) {
               t = t.left();
             } else {
-              this.treeValue = t.insertLeft(new RBCell(element), this.treeValue);
+              this.treeValue = t.insertLeft(
+new RBCell(element),
+this.treeValue);
               this.incCount();
               return true;
             }
@@ -610,7 +615,9 @@ namespace PeterO {
             if (t.right() != null) {
               t = t.right();
             } else {
-              this.treeValue = t.insertRight(new RBCell(element), this.treeValue);
+              this.treeValue = t.insertRight(
+new RBCell(element),
+this.treeValue);
               this.incCount();
               return true;
             }
@@ -665,7 +672,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets a value indicating whether this map is read-only.</summary>
+    /// <summary>Gets a value indicating whether this map is
+    /// read-only.</summary>
     /// <value>Always false.</value>
     public bool IsReadOnly {
       get {
@@ -694,7 +702,8 @@ namespace PeterO {
       return this.Iterator().GetEnumerator();
     }
 
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+    System.Collections.IEnumerator
+    System.Collections.IEnumerable.GetEnumerator() {
       return this.Iterator().GetEnumerator();
     }
   }

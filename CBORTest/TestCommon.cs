@@ -20,7 +20,8 @@ namespace Test {
       AssertEqualsHashCode(a2, b);
     }
 
-    public static void DoTestDivide(string dividend, string divisor, string result) {
+    public static void DoTestDivide(string dividend, string divisor, string
+      result) {
       BigInteger bigintA = BigInteger.fromString(dividend);
       BigInteger bigintB = BigInteger.fromString(divisor);
       if (bigintB.IsZero) {
@@ -33,7 +34,8 @@ namespace Test {
       }
     }
 
-    public static void DoTestRemainder(string dividend, string divisor, string result) {
+    public static void DoTestRemainder(string dividend, string divisor,
+      string result) {
       BigInteger bigintA = BigInteger.fromString(dividend);
       BigInteger bigintB = BigInteger.fromString(divisor);
       if (bigintB.IsZero) {
@@ -46,7 +48,8 @@ namespace Test {
       }
     }
 
-    public static void DoTestDivideAndRemainder(string dividend, string divisor, string result, string rem) {
+    public static void DoTestDivideAndRemainder(string dividend, string
+      divisor, string result, string rem) {
       BigInteger bigintA = BigInteger.fromString(dividend);
       BigInteger bigintB = BigInteger.fromString(divisor);
       BigInteger rembi;
@@ -102,7 +105,8 @@ namespace Test {
       AssertBigIntegersEqual(result, bigintA.shiftLeft(-m2));
     }
 
-    public static void AssertDecFrac(ExtendedDecimal d3, string output, string name) {
+    public static void AssertDecFrac(ExtendedDecimal d3, string output,
+      string name) {
       if (output == null && d3 != null) {
         Assert.Fail(name + ": d3 must be null");
       }
@@ -111,7 +115,9 @@ namespace Test {
         Assert.AreEqual(
           output,
           d3.ToString(),
-          name + ": expected: [" + d4.UnsignedMantissa + " " + d4.Exponent + "]\\n" + "but was: [" + d3.UnsignedMantissa + " " + d3.Exponent + "]");
+          name + ": expected: [" + d4.UnsignedMantissa + " " + d4.Exponent +
+            "]\\n" + "but was: [" + d3.UnsignedMantissa + " " + d3.Exponent+
+            "]");
       }
     }
 
@@ -225,28 +231,32 @@ namespace Test {
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex); throw new
+            InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt16();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex); throw new
+            InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt32();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex); throw new
+            InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt64();
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex); throw new
+            InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsSingle();
@@ -265,19 +275,22 @@ namespace Test {
           Assert.Fail("Should have failed");
         } catch (OverflowException) {
         } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
+          Assert.Fail("Object: " + o + ", " + ex); throw new
+            InvalidOperationException(String.Empty, ex);
         }
         return;
       }
       try {
         o.AsSingle();
       } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail("Object: " + o + ", " + ex); throw new
+          InvalidOperationException(String.Empty, ex);
       }
       try {
         o.AsDouble();
       } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex); throw new InvalidOperationException(String.Empty, ex);
+        Assert.Fail("Object: " + o + ", " + ex); throw new
+          InvalidOperationException(String.Empty, ex);
       }
     }
 

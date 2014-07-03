@@ -9,8 +9,8 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-  class CBORExtendedDecimal implements ICBORNumber
-  {
+  class CBORExtendedDecimal implements ICBORNumber {
+
     public boolean IsPositiveInfinity(final Object obj) {
       ExtendedDecimal ed = (ExtendedDecimal)obj;
       return ed.IsPositiveInfinity();
@@ -67,12 +67,14 @@ import com.upokecenter.util.*;
 
     public boolean CanFitInSingle(final Object obj) {
       ExtendedDecimal ef = (ExtendedDecimal)obj;
-      return (!ef.isFinite()) || (ef.compareTo(ExtendedDecimal.FromSingle(ef.ToSingle())) == 0);
+      return (!ef.isFinite()) ||
+      (ef.compareTo(ExtendedDecimal.FromSingle(ef.ToSingle())) == 0);
     }
 
     public boolean CanFitInDouble(final Object obj) {
       ExtendedDecimal ef = (ExtendedDecimal)obj;
-      return (!ef.isFinite()) || (ef.compareTo(ExtendedDecimal.FromDouble(ef.ToDouble())) == 0);
+      return (!ef.isFinite()) ||
+      (ef.compareTo(ExtendedDecimal.FromDouble(ef.ToDouble())) == 0);
     }
 
     public boolean CanFitInInt32(final Object obj) {
@@ -125,10 +127,12 @@ import com.upokecenter.util.*;
 
     public boolean IsIntegral(final Object obj) {
       ExtendedDecimal ed = (ExtendedDecimal)obj;
-      return ed.isFinite() && ((ed.getExponent().signum() >= 0) || (ed.compareTo(ExtendedDecimal.FromBigInteger(ed.ToBigInteger())) == 0));
+      return ed.isFinite() && ((ed.getExponent().signum() >= 0) ||
+      (ed.compareTo(ExtendedDecimal.FromBigInteger(ed.ToBigInteger())) ==
+      0));
     }
 
-    public int AsInt32(final Object obj, final int minValue, final int maxValue) {
+    public int AsInt32(final Object obj, int minValue, int maxValue) {
       ExtendedDecimal ef = (ExtendedDecimal)obj;
       if (this.CanTruncatedIntFitInInt32(obj)) {
         BigInteger bi = ef.ToBigInteger();

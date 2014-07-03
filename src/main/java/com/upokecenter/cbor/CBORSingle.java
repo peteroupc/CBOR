@@ -9,8 +9,8 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-  final class CBORSingle implements ICBORNumber
-  {
+  final class CBORSingle implements ICBORNumber {
+
     public boolean IsPositiveInfinity(final Object obj) {
       return ((((Float)obj).floatValue()) == Float.POSITIVE_INFINITY);
     }
@@ -52,7 +52,8 @@ import com.upokecenter.util.*;
       if (Float.isNaN(fltItem)) {
         throw new ArithmeticException("This Object's value is out of range");
       }
-      fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
+      fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) :
+      (float)Math.floor(fltItem);
       if (fltItem >= -9223372036854775808f && fltItem < 9223372036854775808f) {
         return (long)fltItem;
       }
@@ -80,8 +81,10 @@ import com.upokecenter.util.*;
       if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
         return false;
       }
-      float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
-      return fltItem2 >= -9223372036854775808f && fltItem2 < 9223372036854775808f;
+      float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) :
+      (float)Math.floor(fltItem);
+      return fltItem2 >= -9223372036854775808f && fltItem2 <
+      9223372036854775808f;
     }
 
     public boolean CanTruncatedIntFitInInt32(final Object obj) {
@@ -89,21 +92,25 @@ import com.upokecenter.util.*;
       if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
         return false;
       }
-      float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
+      float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) :
+      (float)Math.floor(fltItem);
       // Convert float to double to avoid precision loss when
       // converting Integer.MIN_VALUE/MaxValue to float
-      return (double)fltItem2 >= Integer.MIN_VALUE && (double)fltItem2 <= Integer.MAX_VALUE;
+      return (double)fltItem2 >= Integer.MIN_VALUE && (double)fltItem2 <=
+      Integer.MAX_VALUE;
     }
 
-    public int AsInt32(final Object obj, final int minValue, final int maxValue) {
+    public int AsInt32(final Object obj, int minValue, int maxValue) {
       float fltItem = ((Float)obj).floatValue();
       if (Float.isNaN(fltItem)) {
         throw new ArithmeticException("This Object's value is out of range");
       }
-      fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
+      fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) :
+      (float)Math.floor(fltItem);
       // Convert float to double to avoid precision loss when
       // converting Integer.MIN_VALUE/MaxValue to float
-      if ((double)fltItem >= Integer.MIN_VALUE && (double)fltItem <= Integer.MAX_VALUE) {
+      if ((double)fltItem >= Integer.MIN_VALUE && (double)fltItem <=
+      Integer.MAX_VALUE) {
         int ret = (int)fltItem;
         return ret;
       }
@@ -124,7 +131,8 @@ import com.upokecenter.util.*;
       if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
         return false;
       }
-      float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) : (float)Math.floor(fltItem);
+      float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) :
+      (float)Math.floor(fltItem);
       return fltItem == fltItem2;
     }
 

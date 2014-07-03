@@ -7,14 +7,13 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-  class CBORTag28 implements ICBORTag
-  {
+  class CBORTag28 implements ICBORTag {
+
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.Any;
     }
 
     public CBORObject ValidateObject(final CBORObject obj) {
-
       // Return this object without tag 28
 
       return obj.UntagOne();

@@ -52,7 +52,8 @@ namespace PeterO.Cbor {
       if (Single.IsNaN(fltItem)) {
         throw new OverflowException("This object's value is out of range");
       }
-      fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
+      fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
+      (float)Math.Floor(fltItem);
       if (fltItem >= -9223372036854775808f && fltItem < 9223372036854775808f) {
         return (long)fltItem;
       }
@@ -80,8 +81,10 @@ namespace PeterO.Cbor {
       if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
         return false;
       }
-      float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
-      return fltItem2 >= -9223372036854775808f && fltItem2 < 9223372036854775808f;
+      float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
+      (float)Math.Floor(fltItem);
+      return fltItem2 >= -9223372036854775808f && fltItem2 <
+      9223372036854775808f;
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
@@ -89,10 +92,12 @@ namespace PeterO.Cbor {
       if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
         return false;
       }
-      float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
+      float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
+      (float)Math.Floor(fltItem);
       // Convert float to double to avoid precision loss when
       // converting Int32.MinValue/MaxValue to float
-      return (double)fltItem2 >= Int32.MinValue && (double)fltItem2 <= Int32.MaxValue;
+      return (double)fltItem2 >= Int32.MinValue && (double)fltItem2 <=
+      Int32.MaxValue;
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
@@ -100,10 +105,12 @@ namespace PeterO.Cbor {
       if (Single.IsNaN(fltItem)) {
         throw new OverflowException("This object's value is out of range");
       }
-      fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
+      fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
+      (float)Math.Floor(fltItem);
       // Convert float to double to avoid precision loss when
       // converting Int32.MinValue/MaxValue to float
-      if ((double)fltItem >= Int32.MinValue && (double)fltItem <= Int32.MaxValue) {
+      if ((double)fltItem >= Int32.MinValue && (double)fltItem <=
+      Int32.MaxValue) {
         var ret = (int)fltItem;
         return ret;
       }
@@ -124,7 +131,8 @@ namespace PeterO.Cbor {
       if (Single.IsNaN(fltItem) || Single.IsInfinity(fltItem)) {
         return false;
       }
-      float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) : (float)Math.Floor(fltItem);
+      float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
+      (float)Math.Floor(fltItem);
       return fltItem == fltItem2;
     }
 

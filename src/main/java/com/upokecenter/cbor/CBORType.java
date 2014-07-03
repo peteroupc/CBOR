@@ -12,8 +12,8 @@ at: http://upokecenter.com/d/
      */
   public enum CBORType {
     /**
-     * A number of any kind, including integers, big integers, floating
-     * point numbers, and decimal numbers. The floating-point value Not-a-Number
+     * A number of any kind, including integers, big integers, floating point
+     * numbers, and decimal numbers. The floating-point value Not-a-Number
      * is also included in the Number type.
      */
     Number,
@@ -24,8 +24,8 @@ at: http://upokecenter.com/d/
     Boolean,
 
     /**
-     * A &quot;simple value&quot; other than floating point values, true,
-     * and false.
+     * A &quot;simple value&quot; other than floating point values, true, and
+     * false.
      */
     SimpleValue,
 

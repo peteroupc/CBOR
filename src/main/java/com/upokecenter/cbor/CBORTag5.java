@@ -9,14 +9,16 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-  class CBORTag5 implements ICBORTag
-  {
-    static final CBORTypeFilter Filter = new CBORTypeFilter().WithArrayExactLength(
+  class CBORTag5 implements ICBORTag {
+
+    static final CBORTypeFilter Filter = new
+    CBORTypeFilter().WithArrayExactLength(
       2,
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger(),
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
 
-    static final CBORTypeFilter ExtendedFilter = new CBORTypeFilter().WithArrayExactLength(
+    static final CBORTypeFilter ExtendedFilter = new
+    CBORTypeFilter().WithArrayExactLength(
       2,
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3),
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
@@ -61,7 +63,9 @@ import com.upokecenter.util.*;
         return CBORObject.FromObject(mantissa);
       }
       // NOTE: Discards tags. See comment in CBORTag2.
-      return isDecimal ? CBORObject.FromObject(ExtendedDecimal.Create(mantissa, exponent)) : CBORObject.FromObject(ExtendedFloat.Create(mantissa, exponent));
+      return isDecimal ?
+      CBORObject.FromObject(ExtendedDecimal.Create(mantissa, exponent)) :
+      CBORObject.FromObject(ExtendedFloat.Create(mantissa, exponent));
     }
 
     public CBORObject ValidateObject(final CBORObject obj) {

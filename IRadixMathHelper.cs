@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2014 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -25,7 +25,10 @@ namespace PeterO {
 
     T CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags);
 
-    IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger value, int lastDigit, int olderDigits);
+    IShiftAccumulator CreateShiftAccumulatorWithDigits(
+BigInteger value,
+int lastDigit,
+int olderDigits);
 
     IShiftAccumulator CreateShiftAccumulator(BigInteger value);
 

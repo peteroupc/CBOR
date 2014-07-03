@@ -11,8 +11,8 @@ package com.upokecenter.cbor;
     /**
      * Description of CBORTag0.
      */
-  class CBORTag0 implements ICBORTag
-  {
+  class CBORTag0 implements ICBORTag {
+
     static void AddConverter() {
       }
 /**

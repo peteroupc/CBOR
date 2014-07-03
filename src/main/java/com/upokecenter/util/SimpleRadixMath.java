@@ -8,11 +8,11 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     * Implements the simplified arithmetic in Appendix A of the General
-     * Decimal Arithmetic Specification. Unfortunately, it doesn't pass
-     * all the test cases, since some aspects of the spec are left open. For
-     * example: in which cases is the Clamped flag set? The test cases set
-     * the Clamped flag in only a handful of test cases, all within the <code>exp</code>
+     * Implements the simplified arithmetic in Appendix A of the General Decimal
+     * Arithmetic Specification. Unfortunately, it doesn't pass all the test
+     * cases, since some aspects of the spec are left open. For example: in
+     * which cases is the Clamped flag set? The test cases set the Clamped
+     * flag in only a handful of test cases, all within the <code>exp</code>
      * operation.
      * @param <T> Data type for a numeric value in a particular radix.
      */
@@ -28,28 +28,46 @@ at: http://upokecenter.com/d/
     }
 
     private T SignalInvalid(PrecisionContext ctx) {
-      if (this.GetHelper().GetArithmeticSupport() == BigNumberFlags.FiniteOnly) {
+      if (this.GetHelper().GetArithmeticSupport() ==
+          BigNumberFlags.FiniteOnly) {
         throw new ArithmeticException("Invalid operation");
       }
       if (ctx != null && ctx.getHasFlags()) {
         ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInvalid));
       }
-      return this.GetHelper().CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, BigNumberFlags.FlagQuietNaN);
+      return this.GetHelper().CreateNewWithFlags(
+        BigInteger.ZERO,
+        BigInteger.ZERO,
+        BigNumberFlags.FlagQuietNaN);
     }
 
-    private T PostProcess(T thisValue, PrecisionContext ctxDest, PrecisionContext ctxSrc) {
+    private T PostProcess(
+      T thisValue,
+      PrecisionContext ctxDest,
+      PrecisionContext ctxSrc) {
       return this.PostProcessEx(thisValue, ctxDest, ctxSrc, false, false);
     }
 
-    private T PostProcessAfterDivision(T thisValue, PrecisionContext ctxDest, PrecisionContext ctxSrc) {
+    private T PostProcessAfterDivision(
+      T thisValue,
+      PrecisionContext ctxDest,
+      PrecisionContext ctxSrc) {
       return this.PostProcessEx(thisValue, ctxDest, ctxSrc, true, false);
     }
 
-    private T PostProcessAfterQuantize(T thisValue, PrecisionContext ctxDest, PrecisionContext ctxSrc) {
+    private T PostProcessAfterQuantize(
+      T thisValue,
+      PrecisionContext ctxDest,
+      PrecisionContext ctxSrc) {
       return this.PostProcessEx(thisValue, ctxDest, ctxSrc, false, true);
     }
 
-    private T PostProcessEx(T thisValue, PrecisionContext ctxDest, PrecisionContext ctxSrc, boolean afterDivision, boolean afterQuantize) {
+    private T PostProcessEx(
+      T thisValue,
+      PrecisionContext ctxDest,
+      PrecisionContext ctxSrc,
+      boolean afterDivision,
+      boolean afterQuantize) {
       int thisFlags = this.GetHelper().GetFlags(thisValue);
       if (ctxDest != null && ctxSrc != null) {
         if (ctxDest.getHasFlags()) {
@@ -67,8 +85,12 @@ at: http://upokecenter.com/d/
         return (ctxDest.getFlags() == 0) ? this.SignalInvalid(ctxDest) : thisValue;
       }
       BigInteger mant = (this.GetHelper().GetMantissa(thisValue)).abs();
-      if (mant.signum()==0) {
-        return afterQuantize ? this.GetHelper().CreateNewWithFlags(mant, this.GetHelper().GetExponent(thisValue), 0) : this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctxDest);
+      if (mant.signum() == 0) {
+        return afterQuantize ? this.GetHelper().CreateNewWithFlags(
+          mant,
+          this.GetHelper().GetExponent(thisValue),
+          0) :
+          this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctxDest);
       }
       if (afterQuantize) {
         return thisValue;
@@ -78,26 +100,48 @@ at: http://upokecenter.com/d/
         FastInteger fastExp = FastInteger.FromBig(exp);
         if (ctxDest == null || !ctxDest.getHasMaxPrecision()) {
           mant = this.GetHelper().MultiplyByRadixPower(mant, fastExp);
-          return this.GetHelper().CreateNewWithFlags(mant, BigInteger.ZERO, thisFlags);
+          return this.GetHelper().CreateNewWithFlags(
+            mant,
+            BigInteger.ZERO,
+            thisFlags);
         }
         if (!ctxDest.ExponentWithinRange(exp)) {
           return thisValue;
         }
         FastInteger prec = FastInteger.FromBig(ctxDest.getPrecision());
-        FastInteger digits = this.GetHelper().CreateShiftAccumulator(mant).GetDigitLength();
+        FastInteger digits =
+          this.GetHelper().CreateShiftAccumulator(mant).GetDigitLength();
         prec.Subtract(digits);
         if (prec.signum() > 0 && prec.compareTo(fastExp) >= 0) {
           mant = this.GetHelper().MultiplyByRadixPower(mant, fastExp);
-          return this.GetHelper().CreateNewWithFlags(mant, BigInteger.ZERO, thisFlags);
+          return this.GetHelper().CreateNewWithFlags(
+            mant,
+            BigInteger.ZERO,
+            thisFlags);
         }
         if (afterDivision) {
-          mant = DecimalUtility.ReduceTrailingZeros(mant, fastExp, this.GetHelper().GetRadix(), null, null, null);
-          thisValue = this.GetHelper().CreateNewWithFlags(mant, fastExp.AsBigInteger(), thisFlags);
+          int radix = this.GetHelper().GetRadix();
+          mant = DecimalUtility.ReduceTrailingZeros(
+            mant,
+            fastExp,
+            radix,
+            null,
+            null,
+            null);
+          thisValue = this.GetHelper().CreateNewWithFlags(
+            mant,
+            fastExp.AsBigInteger(),
+            thisFlags);
         }
       } else if (afterDivision && exp.signum() < 0) {
         FastInteger fastExp = FastInteger.FromBig(exp);
-        mant = DecimalUtility.ReduceTrailingZeros(mant, fastExp, this.GetHelper().GetRadix(), null, null, new FastInteger(0));
-        thisValue = this.GetHelper().CreateNewWithFlags(mant, fastExp.AsBigInteger(), thisFlags);
+          int radix = this.GetHelper().GetRadix();
+        mant = DecimalUtility.ReduceTrailingZeros(
+          mant, fastExp, radix, null, null, new FastInteger(0));
+        thisValue = this.GetHelper().CreateNewWithFlags(
+          mant,
+          fastExp.AsBigInteger(),
+          thisFlags);
       }
       return thisValue;
     }
@@ -105,10 +149,13 @@ at: http://upokecenter.com/d/
     private T ReturnQuietNaN(T thisValue, PrecisionContext ctx) {
       BigInteger mant = (this.GetHelper().GetMantissa(thisValue)).abs();
       boolean mantChanged = false;
-      if (mant.signum()!=0 && ctx != null && ctx.getHasMaxPrecision()) {
-        BigInteger limit = this.GetHelper().MultiplyByRadixPower(BigInteger.ONE, FastInteger.FromBig(ctx.getPrecision()));
+      if (mant.signum() != 0 && ctx != null && ctx.getHasMaxPrecision()) {
+        BigInteger limit =
+          this.GetHelper().MultiplyByRadixPower(
+            BigInteger.ONE,
+            FastInteger.FromBig(ctx.getPrecision()));
         if (mant.compareTo(limit) >= 0) {
-          mant=mant.remainder(limit);
+          mant = mant.remainder(limit);
           mantChanged = true;
         }
       }
@@ -132,10 +179,18 @@ at: http://upokecenter.com/d/
         return this.SignalingNaNInvalid(other, ctx);
       }
       // Check this value then the other value for quiet NaN
-      return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(other, ctx) : null);
+      return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ?
+        this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags &
+         BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(
+other,
+ctx) : null);
     }
 
-    private T CheckNotANumber3(T thisValue, T other, T other2, PrecisionContext ctx) {
+    private T CheckNotANumber3(
+      T thisValue,
+      T other,
+      T other2,
+      PrecisionContext ctx) {
       int thisFlags = this.GetHelper().GetFlags(thisValue);
       int otherFlags = this.GetHelper().GetFlags(other);
       int other2Flags = this.GetHelper().GetFlags(other2);
@@ -150,7 +205,14 @@ at: http://upokecenter.com/d/
         return this.SignalingNaNInvalid(other, ctx);
       }
       // Check this value then the other value for quiet NaN
-      return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(other, ctx) : (((other2Flags & BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(other, ctx) : null));
+      return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ?
+        this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags &
+         BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(
+other,
+ctx) :
+                          (((other2Flags & BigNumberFlags.FlagQuietNaN) !=
+                            0) ? this.ReturnQuietNaN(other, ctx) :
+                            null));
     }
 
     private T SignalingNaNInvalid(T value, PrecisionContext ctx) {
@@ -178,7 +240,8 @@ at: http://upokecenter.com/d/
       }
       FastInteger fastPrecision = FastInteger.FromBig(ctx.getPrecision());
       BigInteger mant = (this.GetHelper().GetMantissa(val)).abs();
-      FastInteger digits = this.GetHelper().CreateShiftAccumulator(mant).GetDigitLength();
+      FastInteger digits =
+        this.GetHelper().CreateShiftAccumulator(mant).GetDigitLength();
       PrecisionContext ctx2 = ctx.WithBlankFlags().WithTraps(0);
       if (digits.compareTo(fastPrecision) <= 0) {
         // Rounding is only to be done if the digit count is
@@ -215,7 +278,10 @@ at: http://upokecenter.com/d/
       return val;
     }
 
-    public T DivideToIntegerNaturalScale(T thisValue, T divisor, PrecisionContext ctx) {
+    public T DivideToIntegerNaturalScale(
+      T thisValue,
+      T divisor,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((Object)ret != (Object)null) {
         return ret;
@@ -223,11 +289,17 @@ at: http://upokecenter.com/d/
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
-      thisValue = this.wrapper.DivideToIntegerNaturalScale(thisValue, divisor, ctx2);
+      thisValue = this.wrapper.DivideToIntegerNaturalScale(
+        thisValue,
+        divisor,
+        ctx2);
       return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
-    public T DivideToIntegerZeroScale(T thisValue, T divisor, PrecisionContext ctx) {
+    public T DivideToIntegerZeroScale(
+      T thisValue,
+      T divisor,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((Object)ret != (Object)null) {
         return ret;
@@ -235,7 +307,10 @@ at: http://upokecenter.com/d/
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
-      thisValue = this.wrapper.DivideToIntegerZeroScale(thisValue, divisor, ctx2);
+      thisValue = this.wrapper.DivideToIntegerZeroScale(
+        thisValue,
+        divisor,
+        ctx2);
       return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
@@ -300,23 +375,38 @@ at: http://upokecenter.com/d/
       if (pc != null) {
         Rounding roundingOnOverflow = pc.getRounding();
         if (pc.getHasFlags()) {
-          pc.setFlags(pc.getFlags()|(PrecisionContext.FlagOverflow | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
+          pc.setFlags(pc.getFlags()|(PrecisionContext.FlagOverflow |))
+            PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
         }
         if (pc.getHasMaxPrecision() && pc.getHasExponentRange() &&
-            (roundingOnOverflow == Rounding.Down || roundingOnOverflow == Rounding.ZeroFiveUp ||
-             (roundingOnOverflow == Rounding.Ceiling && neg) || (roundingOnOverflow == Rounding.Floor && !neg))) {
+            (roundingOnOverflow == Rounding.Down || roundingOnOverflow ==
+             Rounding.ZeroFiveUp ||
+             (roundingOnOverflow == Rounding.Ceiling && neg) ||
+             (roundingOnOverflow == Rounding.Floor && !neg))) {
           // Set to the highest possible value for
           // the given precision
           BigInteger overflowMant = BigInteger.ZERO;
           FastInteger fastPrecision = FastInteger.FromBig(pc.getPrecision());
-          overflowMant = this.GetHelper().MultiplyByRadixPower(BigInteger.ONE, fastPrecision);
-          overflowMant=overflowMant.subtract(BigInteger.ONE);
-          FastInteger clamp = FastInteger.FromBig(pc.getEMax()).Increment().Subtract(fastPrecision);
-          return this.GetHelper().CreateNewWithFlags(overflowMant, clamp.AsBigInteger(), neg ? BigNumberFlags.FlagNegative : 0);
+          overflowMant =
+            this.GetHelper().MultiplyByRadixPower(
+              BigInteger.ONE,
+              fastPrecision);
+          overflowMant = overflowMant.subtract(BigInteger.ONE);
+          FastInteger clamp =
+            FastInteger.FromBig(pc.getEMax()).Increment().Subtract(fastPrecision);
+          return this.GetHelper().CreateNewWithFlags(
+            overflowMant,
+            clamp.AsBigInteger(),
+            neg ? BigNumberFlags.FlagNegative : 0);
         }
       }
-      return this.GetHelper().GetArithmeticSupport() == BigNumberFlags.FiniteOnly ?
-        null : this.GetHelper().CreateNewWithFlags(BigInteger.ZERO, BigInteger.ZERO, (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
+      return this.GetHelper().GetArithmeticSupport() ==
+        BigNumberFlags.FiniteOnly ?
+        default(
+          T) : this.GetHelper().CreateNewWithFlags(
+        BigInteger.ZERO,
+        BigInteger.ZERO,
+        (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
     }
 
     public T Power(T thisValue, T pow, PrecisionContext ctx) {
@@ -331,11 +421,13 @@ at: http://upokecenter.com/d/
       // System.out.println("op now " + thisValue + ", "+pow);
       int powSign = this.GetHelper().GetSign(pow);
       if (powSign == 0 && this.GetHelper().GetSign(thisValue) == 0) {
-        thisValue = this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(1), ctx2);
+        thisValue =
+          this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(1), ctx2);
       } else {
         // System.out.println("was " + thisValue);
         // BigInteger powExponent = this.GetHelper().GetExponent(pow);
-        // BigInteger powInteger = (this.GetHelper().GetMantissa(pow)).abs();
+        // BigInteger powInteger =
+        (this.GetHelper().GetMantissa(pow)).abs();
         {
           thisValue = this.wrapper.Power(thisValue, pow, ctx2);
         }
@@ -435,7 +527,11 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    public T DivideToExponent(T thisValue, T divisor, BigInteger desiredExponent, PrecisionContext ctx) {
+    public T DivideToExponent(
+      T thisValue,
+      T divisor,
+      BigInteger desiredExponent,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((Object)ret != (Object)null) {
         return ret;
@@ -443,7 +539,11 @@ at: http://upokecenter.com/d/
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
       divisor = this.RoundBeforeOp(divisor, ctx2);
-      thisValue = this.wrapper.DivideToExponent(thisValue, divisor, desiredExponent, ctx2);
+      thisValue = this.wrapper.DivideToExponent(
+        thisValue,
+        divisor,
+        desiredExponent,
+        ctx2);
       return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
@@ -535,7 +635,11 @@ at: http://upokecenter.com/d/
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    public T MultiplyAndAdd(T thisValue, T multiplicand, T augend, PrecisionContext ctx) {
+    public T MultiplyAndAdd(
+      T thisValue,
+      T multiplicand,
+      T augend,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber3(thisValue, multiplicand, augend, ctx);
       if ((Object)ret != (Object)null) {
         return ret;
@@ -551,10 +655,16 @@ at: http://upokecenter.com/d/
         this.GetHelper().GetSign(multiplicand) == 0;
       boolean zeroB = this.GetHelper().GetSign(augend) == 0;
       if (zeroA) {
-        thisValue = zeroB ? this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) : augend;
+        thisValue = zeroB ?
+          this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) :
+          augend;
         thisValue = this.RoundToPrecision(thisValue, ctx2);
       } else if (!zeroB) {
-        thisValue = this.wrapper.MultiplyAndAdd(thisValue, multiplicand, augend, ctx2);
+        thisValue = this.wrapper.MultiplyAndAdd(
+          thisValue,
+          multiplicand,
+          augend,
+          ctx2);
       } else {
         // Augend is 0, so it's the same as calling Multiply
         thisValue = this.wrapper.Multiply(thisValue, multiplicand, ctx2);
@@ -606,7 +716,10 @@ at: http://upokecenter.com/d/
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    public T RoundToExponentExact(T thisValue, BigInteger expOther, PrecisionContext ctx) {
+    public T RoundToExponentExact(
+      T thisValue,
+      BigInteger expOther,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
         return ret;
@@ -617,7 +730,10 @@ at: http://upokecenter.com/d/
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    public T RoundToExponentSimple(T thisValue, BigInteger expOther, PrecisionContext ctx) {
+    public T RoundToExponentSimple(
+      T thisValue,
+      BigInteger expOther,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
         return ret;
@@ -628,14 +744,20 @@ at: http://upokecenter.com/d/
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
-    public T RoundToExponentNoRoundedFlag(T thisValue, BigInteger exponent, PrecisionContext ctx) {
+    public T RoundToExponentNoRoundedFlag(
+      T thisValue,
+      BigInteger exponent,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((Object)ret != (Object)null) {
         return ret;
       }
       PrecisionContext ctx2 = GetContextWithFlags(ctx);
       thisValue = this.RoundBeforeOp(thisValue, ctx2);
-      thisValue = this.wrapper.RoundToExponentNoRoundedFlag(thisValue, exponent, ctx);
+      thisValue = this.wrapper.RoundToExponentNoRoundedFlag(
+        thisValue,
+        exponent,
+        ctx);
       return this.PostProcessAfterQuantize(thisValue, ctx, ctx2);
     }
 
@@ -661,15 +783,26 @@ at: http://upokecenter.com/d/
       boolean zeroA = this.GetHelper().GetSign(thisValue) == 0;
       boolean zeroB = this.GetHelper().GetSign(other) == 0;
       if (zeroA) {
-        thisValue = zeroB ? this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) : other;
+        thisValue = zeroB ?
+          this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) :
+          other;
         thisValue = this.RoundToPrecision(thisValue, ctx2);
       } else {
- thisValue = (!zeroB) ? this.wrapper.AddEx(thisValue, other, ctx2, true) : this.RoundToPrecision(thisValue, ctx2);
-}
+      thisValue = (!zeroB) ? this.wrapper.AddEx(
+thisValue,
+other,
+ctx2,
+true) :
+          this.RoundToPrecision(thisValue, ctx2);
+      }
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
-    public T AddEx(T thisValue, T other, PrecisionContext ctx, boolean roundToOperandPrecision) {
+    public T AddEx(
+      T thisValue,
+      T other,
+      PrecisionContext ctx,
+      boolean roundToOperandPrecision) {
       // NOTE: Ignores roundToOperandPrecision
       return this.Add(thisValue, other, ctx);
     }
@@ -680,10 +813,14 @@ at: http://upokecenter.com/d/
      * @param otherValue A T object. (2).
      * @param treatQuietNansAsSignaling A Boolean object.
      * @param ctx A PrecisionContext object.
-     * @return Zero if the values are equal; a negative number if this instance
-     * is less, or a positive number if this instance is greater.
+     * @return Zero if the values are equal; a negative number if this instance is
+     * less, or a positive number if this instance is greater.
      */
-    public T CompareToWithContext(T thisValue, T otherValue, boolean treatQuietNansAsSignaling, PrecisionContext ctx) {
+    public T CompareToWithContext(
+      T thisValue,
+      T otherValue,
+      boolean treatQuietNansAsSignaling,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, otherValue, ctx);
       if ((Object)ret != (Object)null) {
         return ret;
@@ -701,8 +838,8 @@ at: http://upokecenter.com/d/
      * Compares a T object with this instance.
      * @param thisValue A T object.
      * @param otherValue A T object. (2).
-     * @return Zero if the values are equal; a negative number if this instance
-     * is less, or a positive number if this instance is greater.
+     * @return Zero if the values are equal; a negative number if this instance is
+     * less, or a positive number if this instance is greater.
      */
     public int compareTo(T thisValue, T otherValue) {
       return this.wrapper.compareTo(thisValue, otherValue);

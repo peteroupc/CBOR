@@ -11,18 +11,20 @@ using PeterO;
 namespace PeterO.Cbor {
   internal class CBORTag5 : ICBORTag
   {
-    internal static readonly CBORTypeFilter Filter = new CBORTypeFilter().WithArrayExactLength(
+    internal static readonly CBORTypeFilter Filter = new
+    CBORTypeFilter().WithArrayExactLength(
       2,
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger(),
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
 
-    internal static readonly CBORTypeFilter ExtendedFilter = new CBORTypeFilter().WithArrayExactLength(
+    internal static readonly CBORTypeFilter ExtendedFilter = new
+    CBORTypeFilter().WithArrayExactLength(
       2,
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3),
       CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
 
-    public CBORTag5()
-      : this(false) {
+    public CBORTag5() :
+      this(false) {
     }
 
     private bool extended;
@@ -61,7 +63,9 @@ namespace PeterO.Cbor {
         return CBORObject.FromObject(mantissa);
       }
       // NOTE: Discards tags. See comment in CBORTag2.
-      return isDecimal ? CBORObject.FromObject(ExtendedDecimal.Create(mantissa, exponent)) : CBORObject.FromObject(ExtendedFloat.Create(mantissa, exponent));
+      return isDecimal ?
+      CBORObject.FromObject(ExtendedDecimal.Create(mantissa, exponent)) :
+      CBORObject.FromObject(ExtendedFloat.Create(mantissa, exponent));
     }
 
     public CBORObject ValidateObject(CBORObject obj) {

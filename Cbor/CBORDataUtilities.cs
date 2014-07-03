@@ -9,34 +9,34 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Contains methods useful for reading and writing data,
-    /// with a focus on CBOR.</summary>
+    /// <summary>Contains methods useful for reading and writing data, with a focus
+    /// on CBOR.</summary>
   public static class CBORDataUtilities {
     private const int MaxSafeInt = 214748363;
 
-    /// <summary>Parses a number whose format follows the JSON specification.
-    /// See #ParseJSONNumber(String, integersOnly, parseOnly) for more
+    /// <summary>Parses a number whose format follows the JSON specification. See
+    /// #ParseJSONNumber(String, integersOnly, parseOnly) for more
     /// information.</summary>
     /// <param name='str'>A string to parse.</param>
-    /// <returns>A CBOR object that represents the parsed number. Returns
-    /// null if the parsing fails.</returns>
+    /// <returns>A CBOR object that represents the parsed number. Returns null if
+    /// the parsing fails.</returns>
     public static CBORObject ParseJSONNumber(string str) {
       return ParseJSONNumber(str, false, false);
     }
 
-    /// <summary>Parses a number whose format follows the JSON specification
-    /// (RFC 7159). Roughly speaking, a valid number consists of an optional
-    /// minus sign, one or more digits (starting with 1 to 9 unless the only
-    /// digit is 0), an optional decimal point with one or more digits, and
-    /// an optional letter E or e with an optional plus or minus sign and one
-    /// or more digits (the exponent).</summary>
+    /// <summary>Parses a number whose format follows the JSON specification (RFC
+    /// 7159). Roughly speaking, a valid number consists of an optional minus sign,
+    /// one or more digits (starting with 1 to 9 unless the only digit is 0), an
+    /// optional decimal point with one or more digits, and an optional letter E or
+    /// e with an optional plus or minus sign and one or more digits (the
+    /// exponent).</summary>
     /// <param name='str'>A string to parse.</param>
-    /// <param name='integersOnly'>If true, no decimal points or exponents
-    /// are allowed in the string.</param>
-    /// <param name='positiveOnly'>If true, only positive numbers are
-    /// allowed (the leading minus is disallowed).</param>
-    /// <returns>A CBOR object that represents the parsed number. Returns
-    /// null if the parsing fails.</returns>
+    /// <param name='integersOnly'>If true, no decimal points or exponents are
+    /// allowed in the string.</param>
+    /// <param name='positiveOnly'>If true, only positive numbers are allowed (the
+    /// leading minus is disallowed).</param>
+    /// <returns>A CBOR object that represents the parsed number. Returns null if
+    /// the parsing fails.</returns>
     public static CBORObject ParseJSONNumber(
       string str,
       bool integersOnly,
@@ -186,7 +186,8 @@ namespace PeterO.Cbor {
         if (exp != null && (expBufferMult != 1 || expBuffer != 0)) {
           exp.Multiply(expBufferMult).AddInt(expBuffer);
         }
-        if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
+      if (offset >= 0 && newScaleInt == 0 && newScale == null && exp ==
+          null) {
           newScaleInt = expInt;
   } else if (exp == null) {
           newScale = newScale ?? (new FastInteger(newScaleInt));
@@ -208,7 +209,8 @@ namespace PeterO.Cbor {
         // End of the string wasn't reached, so isn't a number
         return null;
       }
-      if ((newScale == null && newScaleInt == 0) || (newScale != null && newScale.Sign == 0)) {
+      if ((newScale == null && newScaleInt == 0) || (newScale != null &&
+        newScale.Sign == 0)) {
         // No fractional part
         if (mant != null && mant.CanFitInInt32()) {
           mantInt = mant.AsInt32();
@@ -218,7 +220,10 @@ namespace PeterO.Cbor {
           // NOTE: mantInt can only be positive, so overflow is impossible
 #if DEBUG
           if (mantInt < 0) {
-            throw new ArgumentException("mantInt (" + Convert.ToString((int)mantInt, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+            throw new ArgumentException("mantInt (" +
+              Convert.ToString((int)mantInt,
+              System.Globalization.CultureInfo.InvariantCulture) +
+              ") is less than " + "0");
           }
 #endif
 
@@ -234,8 +239,10 @@ namespace PeterO.Cbor {
           return CBORObject.FromObject(bigmant2);
         }
       } else {
-        BigInteger bigmant = (mant == null) ? ((BigInteger)mantInt) : mant.AsBigInteger();
-        BigInteger bigexp = (newScale == null) ? ((BigInteger)newScaleInt) : newScale.AsBigInteger();
+        BigInteger bigmant = (mant == null) ? ((BigInteger)mantInt) :
+          mant.AsBigInteger();
+        BigInteger bigexp = (newScale == null) ? ((BigInteger)newScaleInt) :
+          newScale.AsBigInteger();
         if (negative) {
           bigmant = -(BigInteger)bigmant;
         }

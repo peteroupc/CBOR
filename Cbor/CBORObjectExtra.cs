@@ -16,10 +16,12 @@ namespace PeterO.Cbor {
   public sealed partial class CBORObject
   {
     /// <summary>Converts this object to a 16-bit unsigned integer. The
-    /// return value will be truncated as necessary.</summary>
+    /// return value
+    /// will be truncated as necessary.</summary>
     /// <returns>A 16-bit unsigned integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is outside
-    /// the range of a 16-bit unsigned integer.</exception>
+    /// <exception cref='OverflowException' >This object's value is outside
+    /// the range
+    /// of a 16-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ushort AsUInt16() {
       int v = this.AsInt32();
@@ -30,10 +32,12 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Converts this object to a 32-bit unsigned integer. The
-    /// return value will be truncated as necessary.</summary>
+    /// return value
+    /// will be truncated as necessary.</summary>
     /// <returns>A 32-bit unsigned integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is outside
-    /// the range of a 32-bit unsigned integer.</exception>
+    /// <exception cref='OverflowException' >This object's value is outside
+    /// the range
+    /// of a 32-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public uint AsUInt32() {
       ulong v = this.AsUInt64();
@@ -59,10 +63,14 @@ namespace PeterO.Cbor {
       int scale,
       bool neg) {
       if (scale < 0) {
-        throw new ArgumentException("scale (" + Convert.ToString((int)scale, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        throw new ArgumentException("scale (" + Convert.ToString((int)scale,
+          System.Globalization.CultureInfo.InvariantCulture) +
+          ") is less than " + "0");
       }
       if (scale > 28) {
-        throw new ArgumentException("scale (" + Convert.ToString((int)scale, System.Globalization.CultureInfo.InvariantCulture) + ") is more than " + "28");
+        throw new ArgumentException("scale (" + Convert.ToString((int)scale,
+          System.Globalization.CultureInfo.InvariantCulture) +
+          ") is more than " + "28");
       }
       byte[] data = bigmant.ToByteArray();
       int a = 0;
@@ -84,8 +92,11 @@ namespace PeterO.Cbor {
       return new Decimal(new[] { a, b, c, d });
     }
 
-    private static readonly BigInteger DecimalMaxValue = (BigInteger.One << 96) - BigInteger.One;
-    private static readonly BigInteger DecimalMinValue = -((BigInteger.One << 96) - BigInteger.One);
+    private static readonly BigInteger DecimalMaxValue = (BigInteger.One <<
+      96) - BigInteger.One;
+
+    private static readonly BigInteger DecimalMinValue = -((BigInteger.One <<
+      96) - BigInteger.One);
 
     private static decimal BigIntegerToDecimal(BigInteger bi) {
       if (bi.Sign < 0) {
@@ -128,7 +139,8 @@ namespace PeterO.Cbor {
       return bigint;
     }
 
-    private static decimal ExtendedRationalToDecimal(ExtendedRational extendedNumber) {
+    private static decimal ExtendedRationalToDecimal(ExtendedRational
+      extendedNumber) {
       if (extendedNumber.IsInfinity() || extendedNumber.IsNaN()) {
         throw new OverflowException("This object's value is out of range");
       }
@@ -137,7 +149,7 @@ namespace PeterO.Cbor {
           ExtendedDecimal.FromBigInteger(extendedNumber.Numerator)
           .Divide(
             ExtendedDecimal.FromBigInteger(extendedNumber.Denominator),
-            PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
+  PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
         return EncodeDecimal(
           BigInteger.Abs(newDecimal.Mantissa),
           -((int)newDecimal.Exponent),
@@ -147,7 +159,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static decimal ExtendedDecimalToDecimal(ExtendedDecimal extendedNumber) {
+    private static decimal ExtendedDecimalToDecimal(ExtendedDecimal
+      extendedNumber) {
       if (extendedNumber.IsInfinity() || extendedNumber.IsNaN()) {
         throw new OverflowException("This object's value is out of range");
       }
@@ -165,22 +178,31 @@ namespace PeterO.Cbor {
 
     /// <summary>Converts this object to a .NET decimal.</summary>
     /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object's
-    /// type is not a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object's value
-    /// exceeds the range of a .NET decimal.</exception>
+    /// <exception cref='System.InvalidOperationException' >This object's
+    /// type is not
+    /// a number type.</exception>
+    /// <exception cref='System.OverflowException' >This object's value
+    /// exceeds the
+    /// range of a .NET decimal.</exception>
     [CLSCompliant(false)]
     public decimal AsDecimal() {
-      return (this.ItemType == CBORObjectTypeInteger) ? ((decimal)(long)this.ThisItem) : ((this.ItemType == CBORObjectTypeExtendedRational) ? ExtendedRationalToDecimal((ExtendedRational)this.ThisItem) : ExtendedDecimalToDecimal(this.AsExtendedDecimal()));
+      return (this.ItemType == CBORObjectTypeInteger) ?
+        ((decimal)(long)this.ThisItem) : ((this.ItemType ==
+        CBORObjectTypeExtendedRational) ?
+        ExtendedRationalToDecimal((ExtendedRational)this.ThisItem) :
+        ExtendedDecimalToDecimal(this.AsExtendedDecimal()));
     }
 
     /// <summary>Converts this object to a 64-bit unsigned integer. Floating
-    /// point values are truncated to an integer.</summary>
+    /// point
+    /// values are truncated to an integer.</summary>
     /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object's
-    /// type is not a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object's value
-    /// exceeds the range of a 64-bit unsigned integer.</exception>
+    /// <exception cref='System.InvalidOperationException' >This object's
+    /// type is not
+    /// a number type.</exception>
+    /// <exception cref='System.OverflowException' >This object's value
+    /// exceeds the
+    /// range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       BigInteger bigint = this.AsBigInteger();
@@ -207,7 +229,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Writes an 8-bit signed integer in CBOR format to a data stream.</summary>
+    /// <summary>Writes an 8-bit signed integer in CBOR format to a data
+    /// stream.</summary>
     /// <param name='value'>An 8-bit signed integer.</param>
     /// <param name='stream'>A writable data stream.</param>
     [CLSCompliant(false)]
@@ -219,8 +242,8 @@ namespace PeterO.Cbor {
     /// stream.</summary>
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <param name='stream'>A writable data stream.</param>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='stream'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
     [CLSCompliant(false)]
     public static void Write(ulong value, Stream stream) {
       if (stream == null) {
@@ -243,13 +266,17 @@ namespace PeterO.Cbor {
 
     /// <summary>Converts a .NET decimal to a CBOR object.</summary>
     /// <param name='value'>A Decimal object.</param>
-    /// <returns>A CBORObject object with the same value as the .NET decimal.</returns>
+    /// <returns>A CBORObject object with the same value as the .NET
+    /// decimal.</returns>
     public static CBORObject FromObject(decimal value) {
       int[] bits = Decimal.GetBits(value);
       int scale = (bits[3] >> 16) & 0xff;
       if (scale == 0 && Math.Round(value) == value) {
         // This is an integer
-        return (value >= 0 && value <= UInt64.MaxValue) ? FromObject((ulong)value) : ((value >= Int64.MinValue && value <= Int64.MaxValue) ? FromObject((long)value) : FromObject(DecimalToBigInteger(value)));
+        return (value >= 0 && value <= UInt64.MaxValue) ?
+          FromObject((ulong)value) : ((value >= Int64.MinValue && value <=
+          Int64.MaxValue) ? FromObject((long)value) :
+          FromObject(DecimalToBigInteger(value)));
       }
       var data = new byte[13];
       data[0] = (byte)(bits[0] & 0xff);
@@ -341,13 +368,13 @@ namespace PeterO.Cbor {
       return FromObject((long)value);
     }
 
-    /// <summary>Generates a CBOR object from an arbitrary object and gives
-    /// the resulting object a tag.</summary>
+    /// <summary>Generates a CBOR object from an arbitrary object and gives the
+    /// resulting object a tag.</summary>
     /// <param name='o'>An arbitrary object.</param>
     /// <param name='tag'>A 64-bit unsigned integer.</param>
-    /// <returns>A CBOR object where the object <paramref name='o'/> is
-    /// converted to a CBOR object and given the tag <paramref name='tag'/>
-    /// .</returns>
+    /// <returns>A CBOR object where the object <paramref name='o' /> is
+    /// converted to
+    /// a CBOR object and given the tag <paramref name='tag'/> .</returns>
     [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
       return FromObjectAndTag(o, UInt64ToBigInteger(tag));
@@ -361,7 +388,8 @@ namespace PeterO.Cbor {
       return Addition(a, b);
     }
 
-    /// <summary>Subtracts a CBORObject object from a CBORObject object.</summary>
+    /// <summary>Subtracts a CBORObject object from a CBORObject
+    /// object.</summary>
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>A CBORObject object. (2).</param>
     /// <returns>The difference of the two objects.</returns>
@@ -387,8 +415,8 @@ namespace PeterO.Cbor {
       return Divide(a, b);
     }
 
-    /// <summary>Finds the remainder that results when a CBORObject object
-    /// is divided by the value of a CBORObject object.</summary>
+    /// <summary>Finds the remainder that results when a CBORObject object is
+    /// divided by the value of a CBORObject object.</summary>
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>A CBORObject object. (2).</param>
     /// <returns>The remainder of the two objects.</returns>

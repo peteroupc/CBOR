@@ -8,12 +8,12 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     * Interface implemented by classes that convert objects of arbitrary
-     * types to CBOR objects.
+     * Interface implemented by classes that convert objects of arbitrary types to
+     * CBOR objects.
      * @param <T> Type to convert to a CBOR object.
      */
-  public interface ICBORConverter<T>
-  {
+  public interface ICBORConverter<T> {
+
     /**
      * Converts an object to a CBOR object.
      * @param obj An object to convert to a CBOR object.

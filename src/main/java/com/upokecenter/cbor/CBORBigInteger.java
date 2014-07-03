@@ -9,8 +9,8 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-  class CBORBigInteger implements ICBORNumber
-  {
+  class CBORBigInteger implements ICBORNumber {
+
     public boolean IsPositiveInfinity(final Object obj) {
       return false;
     }
@@ -100,7 +100,7 @@ import com.upokecenter.util.*;
       return true;
     }
 
-    public int AsInt32(final Object obj, final int minValue, final int maxValue) {
+    public int AsInt32(final Object obj, int minValue, int maxValue) {
       BigInteger bi = (BigInteger)obj;
       if (bi.canFitInInt()) {
         int ret = bi.intValue();

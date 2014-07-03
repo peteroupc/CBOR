@@ -53,7 +53,8 @@ namespace PeterO.Cbor {
         throw new OverflowException("This object's value is out of range");
       }
       fltItem = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
-      if (fltItem >= -9223372036854775808.0 && fltItem < 9223372036854775808.0) {
+      if (fltItem >= -9223372036854775808.0 && fltItem <
+      9223372036854775808.0) {
         return (long)fltItem;
       }
       throw new OverflowException("This object's value is out of range");
@@ -85,8 +86,10 @@ namespace PeterO.Cbor {
       if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
         return false;
       }
-      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
-      return fltItem2 >= -9223372036854775808.0 && fltItem2 < 9223372036854775808.0;
+      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) :
+      Math.Floor(fltItem);
+      return fltItem2 >= -9223372036854775808.0 && fltItem2 <
+      9223372036854775808.0;
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
@@ -94,7 +97,8 @@ namespace PeterO.Cbor {
       if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
         return false;
       }
-      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) :
+      Math.Floor(fltItem);
       return fltItem2 >= Int32.MinValue && fltItem2 <= Int32.MaxValue;
     }
 
@@ -117,7 +121,8 @@ namespace PeterO.Cbor {
 
     public int Sign(object obj) {
       var flt = (double)obj;
-      return Double.IsNaN(flt) ? 2 : ((double)flt == 0.0 ? 0 : (flt < 0.0f ? -1 : 1));
+      return Double.IsNaN(flt) ? 2 : ((double)flt == 0.0 ? 0 : (flt < 0.0f ?
+      -1 : 1));
     }
 
     public bool IsIntegral(object obj) {
@@ -125,7 +130,8 @@ namespace PeterO.Cbor {
       if (Double.IsNaN(fltItem) || Double.IsInfinity(fltItem)) {
         return false;
       }
-      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) : Math.Floor(fltItem);
+      double fltItem2 = (fltItem < 0) ? Math.Ceiling(fltItem) :
+      Math.Floor(fltItem);
       return fltItem == fltItem2;
     }
 

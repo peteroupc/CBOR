@@ -9,8 +9,8 @@ at: http://upokecenter.com/d/
 
 import java.io.*;
 
-  class CharacterReader
-  {
+  class CharacterReader {
+
     private String str;
     private InputStream stream;
     private int offset;
@@ -35,8 +35,8 @@ import java.io.*;
 
     /**
      * Reads the next character from a UTF-8 stream or a string.
-     * @return The next character, or -1 if the end of the string or stream
-     * was reached.
+     * @return The next character, or -1 if the end of the string or stream was
+     * reached.
      */
     public int NextChar() {
       if (this.stream != null) {
@@ -99,14 +99,18 @@ import java.io.*;
             return ret;
           }
         } catch (IOException ex) {
-          throw new CBORException("I/O error occurred (offset " + this.offset + ")", ex);
+          throw new CBORException(
+            "I/O error occurred (offset " + this.offset + ")",
+            ex);
         }
       } else {
         int c = (this.offset < this.str.length()) ? this.str.charAt(this.offset) : -1;
         if ((c & 0xfc00) == 0xd800 && this.offset + 1 < this.str.length() &&
-            this.str.charAt(this.offset + 1) >= 0xdc00 && this.str.charAt(this.offset + 1) <= 0xdfff) {
+            this.str.charAt(this.offset + 1) >= 0xdc00 && this.str.charAt(this.offset + 1) <=
+            0xdfff) {
           // Get the Unicode code point for the surrogate pair
-          c = 0x10000 + ((c - 0xd800) << 10) + (this.str.charAt(this.offset + 1) - 0xdc00);
+          c = 0x10000 + ((c - 0xd800) << 10) + (this.str.charAt(this.offset + 1) -
+                                                0xdc00);
           ++this.offset;
         } else if ((c & 0xf800) == 0xd800) {
           // unpaired surrogate

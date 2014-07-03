@@ -202,13 +202,24 @@ namespace PeterO.Cbor {
       int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
       value &= 0x7fff;
       if (value >= 0x7c00) {
-        return BitConverter.ToSingle(BitConverter.GetBytes((int)(0x3fc00 | (value & 0x3ff)) << 13 | negvalue), 0);
+        value = (int)(0x3fc00 |
+                      (value & 0x3ff)) << 13 | negvalue;
+        return BitConverter.ToSingle(
+          BitConverter.GetBytes(value),
+          0);
       }
       if (value > 0x400) {
-        return BitConverter.ToSingle(BitConverter.GetBytes((int)((value + 0x1c000) << 13) | negvalue), 0);
+        value = (int)((value + 0x1c000) << 13) | negvalue;
+        return BitConverter.ToSingle(
+          BitConverter.GetBytes(value),
+          0);
       }
       if ((value & 0x400) == value) {
-        return BitConverter.ToSingle(BitConverter.GetBytes((int)((value == 0) ? 0 : 0x38800000) | negvalue), 0);
+        value = (int)((value ==
+                       0) ? 0 : 0x38800000) | negvalue;
+        return BitConverter.ToSingle(
+          BitConverter.GetBytes(value),
+          0);
       } else {
         // denormalized
         int m = value & 0x3ff;

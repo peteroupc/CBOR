@@ -20,7 +20,6 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("obj");
       }
       #endif
-
       return obj;
     }
   }
