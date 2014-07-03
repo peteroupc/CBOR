@@ -32,6 +32,6 @@ private static final long serialVersionUID = 1L;
      * @param innerException An Exception object.
      */
     public CBORException (final String message, Throwable innerException) {
- super(message, , nnerException);
+ super(message, innerException);
     }
   }

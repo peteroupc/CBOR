@@ -5,7 +5,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
-
 using System;
 using PeterO;
 
@@ -86,7 +85,8 @@ namespace PeterO.Cbor {
     }
 
     public object Negate(object obj) {
-      return (((long)obj) == Int64.MinValue) ? (BigInteger.One << 63) : (-((long)obj));
+      return (((long)obj) == Int64.MinValue) ? (BigInteger.One << 63) :
+      (-((long)obj));
     }
 
     public bool CanTruncatedIntFitInInt64(object obj) {
@@ -121,7 +121,8 @@ namespace PeterO.Cbor {
 
     public object Abs(object obj) {
       var val = (long)obj;
-      return (val == Int32.MinValue) ? (BigInteger.One << 63) : ((val < 0) ? -val : obj);
+      return (val == Int32.MinValue) ? (BigInteger.One << 63) : ((val < 0) ?
+      -val : obj);
     }
 
 public ExtendedRational AsExtendedRational(object obj) {

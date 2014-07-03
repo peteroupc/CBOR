@@ -14,11 +14,11 @@ import java.io.*;
 import com.upokecenter.cbor.*;
 
     /**
-     * Contains methods for reading and writing objects represented in
-     * BEncode, a serialization format used in the BitTorrent protocol.
-     * For more information, see: http://wiki.theory.org/BitTorrentSpecification
-     * This class accepts BEncoded strings in UTF-8, and outputs BEncoded
-     * strings in UTF-8. This class also demonstrates how CBORObject supports
+     * Contains methods for reading and writing objects represented in BEncode, a
+     * serialization format used in the BitTorrent protocol. For more
+     * information, see: http://wiki.theory.org/BitTorrentSpecification This
+     * class accepts BEncoded strings in UTF-8, and outputs BEncoded strings
+     * in UTF-8. This class also demonstrates how CBORObject supports
      * predefined serialization formats.
      */
   public final class BEncoding {

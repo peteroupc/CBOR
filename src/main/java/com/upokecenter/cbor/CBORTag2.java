@@ -9,13 +9,15 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-  class CBORTag2 implements ICBORTag
-  {
+  class CBORTag2 implements ICBORTag {
+
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.ByteString;
     }
 
-    private static CBORObject FromObjectAndInnerTags(final Object objectValue, final CBORObject objectWithTags) {
+    private static CBORObject FromObjectAndInnerTags(
+final Object objectValue,
+final CBORObject objectWithTags) {
       CBORObject newObject = CBORObject.FromObject(objectValue);
       if (!objectWithTags.isTagged()) {
         return newObject;
@@ -31,7 +33,7 @@ import com.upokecenter.util.*;
       return newObject;
     }
 
-    static CBORObject ConvertToBigNum(final CBORObject o, final boolean negative) {
+    static CBORObject ConvertToBigNum(final CBORObject o, boolean negative) {
       if (o.getType() != CBORType.ByteString) {
         throw new CBORException("Byte array expected");
       }

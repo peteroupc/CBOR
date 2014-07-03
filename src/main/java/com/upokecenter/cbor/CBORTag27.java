@@ -7,8 +7,8 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-  class CBORTag27 implements ICBORTag
-  {
+  class CBORTag27 implements ICBORTag {
+
     public CBORTypeFilter GetTypeFilter() {
       return new CBORTypeFilter().WithArrayMinLength(1, CBORTypeFilter.Any);
     }

@@ -8,25 +8,25 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     * Implemented by classes that validate CBOR objects belonging to a
-     * specific tag.
+     * Implemented by classes that validate CBOR objects belonging to a specific
+     * tag.
      */
-  public interface ICBORTag
-  {
+  public interface ICBORTag {
+
     /**
-     * Gets a type filter specifying what kinds of CBOR objects are supported
-     * by this tag.
+     * Gets a type filter specifying what kinds of CBOR objects are supported by
+     * this tag.
      * @return A CBOR type filter.
      */
     CBORTypeFilter GetTypeFilter();
 
     /**
-     * Generates a CBOR object based on the data of another object. If the
-     * data is not valid, should throw a CBORException.
-     * @param obj A CBOR object with the corresponding tag handled by the
-     * ICBORTag object.
-     * @return A CBORObject object. Note that this method may choose to return
-     * the same object as the parameter.
+     * Generates a CBOR object based on the data of another object. If the data is
+     * not valid, should throw a CBORException.
+     * @param obj A CBOR object with the corresponding tag handled by the ICBORTag
+     * object.
+     * @return A CBORObject object. Note that this method may choose to return the
+     * same object as the parameter.
      */
     CBORObject ValidateObject(CBORObject obj);
   }

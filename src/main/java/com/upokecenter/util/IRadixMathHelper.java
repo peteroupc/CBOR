@@ -24,7 +24,10 @@ at: http://upokecenter.com/d/
 
     T CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags);
 
-    IShiftAccumulator CreateShiftAccumulatorWithDigits(BigInteger value, int lastDigit, int olderDigits);
+    IShiftAccumulator CreateShiftAccumulatorWithDigits(
+BigInteger value,
+int lastDigit,
+int olderDigits);
 
     IShiftAccumulator CreateShiftAccumulator(BigInteger value);
 

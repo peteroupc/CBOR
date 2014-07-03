@@ -7,14 +7,13 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-  class CBORTagUnsigned implements ICBORTag
-  {
+  class CBORTagUnsigned implements ICBORTag {
+
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.UnsignedInteger;
     }
 
     public CBORObject ValidateObject(final CBORObject obj) {
-
       if (!obj.isIntegral() || !obj.CanFitInInt64() || obj.signum() < 0) {
         throw new CBORException("Not a 64-bit unsigned integer");
       }

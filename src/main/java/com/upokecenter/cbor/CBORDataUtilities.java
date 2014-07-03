@@ -10,8 +10,7 @@ at: http://upokecenter.com/d/
 import com.upokecenter.util.*;
 
     /**
-     * Contains methods useful for reading and writing data, with a focus
-     * on CBOR.
+     * Contains methods useful for reading and writing data, with a focus on CBOR.
      */
   public final class CBORDataUtilities {
 private CBORDataUtilities() {
@@ -20,29 +19,30 @@ private CBORDataUtilities() {
 
     /**
      * Parses a number whose format follows the JSON specification. See
-     * #ParseJSONNumber(string, integersOnly, parseOnly) for more information.
+     * #ParseJSONNumber(string, integersOnly, parseOnly) for more
+     * information.
      * @param str A string to parse.
-     * @return A CBOR object that represents the parsed number. Returns
-     * null if the parsing fails.
+     * @return A CBOR object that represents the parsed number. Returns null if the
+     * parsing fails.
      */
     public static CBORObject ParseJSONNumber(final String str) {
       return ParseJSONNumber(str, false, false);
     }
 
     /**
-     * Parses a number whose format follows the JSON specification (RFC
-     * 7159). Roughly speaking, a valid number consists of an optional minus
-     * sign, one or more digits (starting with 1 to 9 unless the only digit
-     * is 0), an optional decimal point with one or more digits, and an optional
-     * letter E or e with an optional plus or minus sign and one or more digits
-     * (the exponent).
+     * Parses a number whose format follows the JSON specification (RFC 7159).
+     * Roughly speaking, a valid number consists of an optional minus sign,
+     * one or more digits (starting with 1 to 9 unless the only digit is 0),
+     * an optional decimal point with one or more digits, and an optional
+     * letter E or e with an optional plus or minus sign and one or more
+     * digits (the exponent).
      * @param str A string to parse.
-     * @param integersOnly If true, no decimal points or exponents are allowed
-     * in the string.
-     * @param positiveOnly If true, only positive numbers are allowed (the
-     * leading minus is disallowed).
-     * @return A CBOR object that represents the parsed number. Returns
-     * null if the parsing fails.
+     * @param integersOnly If true, no decimal points or exponents are allowed in
+     * the string.
+     * @param positiveOnly If true, only positive numbers are allowed (the leading
+     * minus is disallowed).
+     * @return A CBOR object that represents the parsed number. Returns null if the
+     * parsing fails.
      */
     public static CBORObject ParseJSONNumber(
       final String str,
@@ -193,7 +193,8 @@ private CBORDataUtilities() {
         if (exp != null && (expBufferMult != 1 || expBuffer != 0)) {
           exp.Multiply(expBufferMult).AddInt(expBuffer);
         }
-        if (offset >= 0 && newScaleInt == 0 && newScale == null && exp == null) {
+      if (offset >= 0 && newScaleInt == 0 && newScale == null && exp ==
+          null) {
           newScaleInt = expInt;
   } else if (exp == null) {
           newScale = (newScale == null) ? ((new FastInteger(newScaleInt))) : newScale;
@@ -215,7 +216,8 @@ private CBORDataUtilities() {
         // End of the String wasn't reached, so isn't a number
         return null;
       }
-      if ((newScale == null && newScaleInt == 0) || (newScale != null && newScale.signum() == 0)) {
+      if ((newScale == null && newScaleInt == 0) || (newScale != null &&
+        newScale.signum() == 0)) {
         // No fractional part
         if (mant != null && mant.CanFitInInt32()) {
           mantInt = mant.AsInt32();
@@ -236,8 +238,10 @@ private CBORDataUtilities() {
           return CBORObject.FromObject(bigmant2);
         }
       } else {
-        BigInteger bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) : mant.AsBigInteger();
-        BigInteger bigexp = (newScale == null) ? (BigInteger.valueOf(newScaleInt)) : newScale.AsBigInteger();
+        BigInteger bigmant = (mant == null) ? (BigInteger.valueOf(mantInt)) :
+          mant.AsBigInteger();
+        BigInteger bigexp = (newScale == null) ? (BigInteger.valueOf(newScaleInt)) :
+          newScale.AsBigInteger();
         if (negative) {
           bigmant = (bigmant).negate();
         }

@@ -14,12 +14,17 @@ namespace PeterO {
     internal const int FlagQuietNaN = 4;
     internal const int FlagSignalingNaN = 8;
     internal const int FlagInfinity = 2;
-    internal const int FlagSpecial = FlagQuietNaN | FlagSignalingNaN | FlagInfinity;
+    internal const int FlagSpecial = FlagQuietNaN | FlagSignalingNaN |
+    FlagInfinity;
+
     internal const int FlagNaN = FlagQuietNaN | FlagSignalingNaN;
-    internal const int UnderflowFlags = PrecisionContext.FlagInexact | PrecisionContext.FlagSubnormal |
+    internal const int UnderflowFlags = PrecisionContext.FlagInexact |
+    PrecisionContext.FlagSubnormal |
                 PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
 
-    internal const int LostDigitsFlags = PrecisionContext.FlagLostDigits | PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
+    internal const int LostDigitsFlags = PrecisionContext.FlagLostDigits |
+    PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
+
     internal const int FiniteOnly = 0;
     internal const int FiniteAndNonFinite = 1;
   }

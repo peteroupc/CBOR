@@ -102,7 +102,9 @@ namespace Test {
       doTestString(String.Empty);
       doTestString(" ");
       doTestString("test");
-      doTestString("testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods");
+
+  doTestString("testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods"
+);
       doTestString("te\u007fst");
       doTestString("te\u0080st");
       doTestString("te\u3000st");

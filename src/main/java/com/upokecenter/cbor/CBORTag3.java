@@ -10,8 +10,8 @@ at: http://upokecenter.com/d/
     /**
      * Implements CBOR tag 3.
      */
-  class CBORTag3 implements ICBORTag
-  {
+  class CBORTag3 implements ICBORTag {
+
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.ByteString;
     }

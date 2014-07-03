@@ -9,8 +9,8 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-  interface ICBORNumber
-  {
+  interface ICBORNumber {
+
     boolean IsPositiveInfinity(Object obj);
 
     boolean IsInfinity(Object obj);

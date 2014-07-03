@@ -5,13 +5,12 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
-
 using System;
 
 namespace PeterO {
-    /// <summary>Common interface for classes that shift a number of digits
-    /// and record information on whether a non-zero digit was discarded
-    /// this way.</summary>
+    /// <summary>Common interface for classes that shift a number of digits and
+    /// record information on whether a non-zero digit was discarded this
+    /// way.</summary>
   internal interface IShiftAccumulator {
     BigInteger ShiftedInt { get; }
 

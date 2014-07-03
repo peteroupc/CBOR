@@ -9,8 +9,8 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-  class CBORInteger implements ICBORNumber
-  {
+  class CBORInteger implements ICBORNumber {
+
     public boolean IsPositiveInfinity(final Object obj) {
       return false;
     }
@@ -85,7 +85,8 @@ import com.upokecenter.util.*;
     }
 
     public Object Negate(final Object obj) {
-      return (((((Long)obj).longValue())) == Long.MIN_VALUE) ? (BigInteger.ONE.shiftLeft(63)) : (-((((Long)obj).longValue())));
+      return (((((Long)obj).longValue())) == Long.MIN_VALUE) ? (BigInteger.ONE.shiftLeft(63)) :
+      (-((((Long)obj).longValue())));
     }
 
     public boolean CanTruncatedIntFitInInt64(final Object obj) {
@@ -110,7 +111,7 @@ import com.upokecenter.util.*;
       return true;
     }
 
-    public int AsInt32(final Object obj, final int minValue, final int maxValue) {
+    public int AsInt32(final Object obj, int minValue, int maxValue) {
       long val = (((Long)obj).longValue());
       if (val >= minValue && val <= maxValue) {
         return (int)val;
@@ -120,7 +121,8 @@ import com.upokecenter.util.*;
 
     public Object Abs(final Object obj) {
       long val = (((Long)obj).longValue());
-      return (val == Integer.MIN_VALUE) ? (BigInteger.ONE.shiftLeft(63)) : ((val < 0) ? -val : obj);
+      return (val == Integer.MIN_VALUE) ? (BigInteger.ONE.shiftLeft(63)) : ((val < 0) ?
+      -val : obj);
     }
 
 public ExtendedRational AsExtendedRational(final Object obj) {

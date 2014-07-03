@@ -8,8 +8,8 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     * The system&apos;s random number generator will be called many times
-     * during testing. Unfortunately it can be very slow. So we use this wrapper
+     * The system&apos;s random number generator will be called many times during
+     * testing. Unfortunately it can be very slow. So we use this wrapper
      * class.
      */
   public class FastRandom
@@ -43,7 +43,8 @@ at: http://upokecenter.com/d/
      */
     public int NextValue(int v) {
       if (v <= 0) {
-        throw new IllegalArgumentException("v (" + Integer.toString((int)v) + ") is not greater than " + "0");
+        throw new IllegalArgumentException("v (" + Integer.toString((int)v) +
+          ") is not greater than " + "0");
       }
       if (v <= 1) {
         return 0;

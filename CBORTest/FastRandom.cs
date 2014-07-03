@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written by Peter O. in 2013.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -8,9 +8,9 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace Test {
-    /// <summary>The system&apos;s random number generator will be called
-    /// many times during testing. Unfortunately it can be very slow. So we
-    /// use this wrapper class.</summary>
+    /// <summary>The system&apos;s random number generator will be called many times
+    /// during testing. Unfortunately it can be very slow. So we use this wrapper
+    /// class.</summary>
   public class FastRandom
   {
     private const int ReseedCount = 10000;
@@ -36,12 +36,14 @@ namespace Test {
     }
 
     /// <summary>Generates a random number.</summary>
-    /// <param name='v'>The return value will be 0 or greater, and less than
-    /// this number.</param>
+    /// <param name='v'>The return value will be 0 or greater, and less than this
+    /// number.</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int NextValue(int v) {
       if (v <= 0) {
-        throw new ArgumentException("v (" + Convert.ToString((int)v, System.Globalization.CultureInfo.InvariantCulture) + ") is not greater than " + "0");
+        throw new ArgumentException("v (" + Convert.ToString((int)v,
+          System.Globalization.CultureInfo.InvariantCulture) +
+          ") is not greater than " + "0");
       }
       if (v <= 1) {
         return 0;

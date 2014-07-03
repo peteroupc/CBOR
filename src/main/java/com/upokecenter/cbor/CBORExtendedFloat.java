@@ -9,8 +9,8 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-  class CBORExtendedFloat implements ICBORNumber
-  {
+  class CBORExtendedFloat implements ICBORNumber {
+
     public boolean IsPositiveInfinity(final Object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
       return ef.IsPositiveInfinity();
@@ -67,12 +67,14 @@ import com.upokecenter.util.*;
 
     public boolean CanFitInSingle(final Object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
-      return (!ef.isFinite()) || (ef.compareTo(ExtendedFloat.FromSingle(ef.ToSingle())) == 0);
+      return (!ef.isFinite()) ||
+      (ef.compareTo(ExtendedFloat.FromSingle(ef.ToSingle())) == 0);
     }
 
     public boolean CanFitInDouble(final Object obj) {
       ExtendedFloat ef = (ExtendedFloat)obj;
-      return (!ef.isFinite()) || (ef.compareTo(ExtendedFloat.FromDouble(ef.ToDouble())) == 0);
+      return (!ef.isFinite()) ||
+      (ef.compareTo(ExtendedFloat.FromDouble(ef.ToDouble())) == 0);
     }
 
     public boolean CanFitInInt32(final Object obj) {
@@ -135,7 +137,7 @@ import com.upokecenter.util.*;
       return ef2.compareTo(ef) == 0;
     }
 
-    public int AsInt32(final Object obj, final int minValue, final int maxValue) {
+    public int AsInt32(final Object obj, int minValue, int maxValue) {
       ExtendedFloat ef = (ExtendedFloat)obj;
       if (this.CanTruncatedIntFitInInt32(obj)) {
         BigInteger bi = ef.ToBigInteger();

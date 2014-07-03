@@ -26,7 +26,6 @@ namespace PeterO.Cbor {
         throw new ArgumentException("doesn't satisfy obj.HasTag(28)");
       }
       #endif
-
       return obj.UntagOne();
     }
   }

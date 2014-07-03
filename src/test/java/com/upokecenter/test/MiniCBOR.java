@@ -104,17 +104,21 @@ private MiniCBOR() {
         stream.write((byte)(value | type));
       } else if (value <= 0xff) {
         bytes = new byte[] { (byte)(24 | type), (byte)(value & 0xff)  };
-        stream.write(bytes,0,2);
+        stream.write(bytes, 0, 2);
       } else if (value <= 0xffff) {
-        bytes = new byte[] { (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  };
-        stream.write(bytes,0,3);
+        bytes = new byte[] { (byte)(25 | type), (byte)((value >> 8) & 0xff),
+          (byte)(value & 0xff)  };
+        stream.write(bytes, 0, 3);
       } else {
-        bytes = new byte[] { (byte)(26 | type), (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff), (byte)(value & 0xff)  };
-        stream.write(bytes,0,5);
+        bytes = new byte[] { (byte)(26 | type), (byte)((value >> 24) & 0xff),
+          (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
+          (byte)(value & 0xff)  };
+        stream.write(bytes, 0, 5);
       }
     }
 
-    private static long ReadInteger(InputStream stream, int headByte, boolean check32bit) throws IOException {
+private static long ReadInteger(InputStream stream, int headByte, boolean
+      check32bit) throws IOException {
       int kind = headByte & 0x1f;
       if (kind == 0x18) {
         int b = stream.read();
@@ -156,7 +160,8 @@ private MiniCBOR() {
           throw new IOException("Premature end of stream");
         }
         long b;
-        if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0 || bytes[3] != 0)) {
+        if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0||
+          bytes[3] != 0)) {
           throw new IOException("Not a 32-bit integer");
         }
         if (!check32bit) {
@@ -238,14 +243,13 @@ private MiniCBOR() {
     }
 
     /**
-     * Reads a double-precision floating point number in CBOR format from
-     * a data stream.
+     * Reads a double-precision floating point number in CBOR format from a data
+     * stream.
      * @param stream A data stream.
      * @return A 64-bit floating-point number.
-     * @throws java.io.IOException The end of the stream was reached,
-     * or the object read isn't a number.
-     * @throws java.lang.NullPointerException The parameter {@code stream}
-     * is null.
+     * @throws java.io.IOException The end of the stream was reached, or the
+     * object read isn't a number.
+     * @throws NullPointerException The parameter {@code stream} is null.
      */
     public static double ReadDouble(InputStream stream) throws IOException {
       if (stream == null) {
@@ -292,14 +296,13 @@ private MiniCBOR() {
     }
 
     /**
-     * Reads a 32-bit integer in CBOR format from a data stream. If the object
-     * read is a floating-point number, it is truncated to an integer.
+     * Reads a 32-bit integer in CBOR format from a data stream. If the object read
+     * is a floating-point number, it is truncated to an integer.
      * @param stream A data stream.
      * @return A 32-bit signed integer.
-     * @throws java.io.IOException The end of the stream was reached,
-     * or the object read isn't a number, or can't fit a 32-bit integer.
-     * @throws java.lang.NullPointerException The parameter {@code stream}
-     * is null.
+     * @throws java.io.IOException The end of the stream was reached, or the
+     * object read isn't a number, or can't fit a 32-bit integer.
+     * @throws NullPointerException The parameter {@code stream} is null.
      */
     public static int ReadInt32(InputStream stream) throws IOException {
       if (stream == null) {

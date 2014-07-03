@@ -13,12 +13,12 @@ using System.Text;
 using PeterO.Cbor;
 
 namespace PeterO {
-    /// <summary>Contains methods for reading and writing objects represented
-    /// in BEncode, a serialization format used in the BitTorrent protocol.
-    /// For more information, see: http://wiki.theory.org/BitTorrentSpecification
-    /// This class accepts BEncoded strings in UTF-8, and outputs BEncoded
-    /// strings in UTF-8. This class also demonstrates how CBORObject supports
-    /// predefined serialization formats.</summary>
+    /// <summary>Contains methods for reading and writing objects represented in
+    /// BEncode, a serialization format used in the BitTorrent protocol. For more
+    /// information, see: http://wiki.theory.org/BitTorrentSpecification This class
+    /// accepts BEncoded strings in UTF-8, and outputs BEncoded strings in UTF-8.
+    /// This class also demonstrates how CBORObject supports predefined
+    /// serialization formats.</summary>
   public static class BEncoding {
     private static void writeUtf8(string s, Stream stream) {
       if (DataUtilities.WriteUtf8(s, stream, false) != 0) {
@@ -152,7 +152,8 @@ namespace PeterO {
         if (length < 0) {
           throw new CBORException("invalid string");
         }
-        writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
+        writeUtf8(Convert.ToString((long)length,
+          CultureInfo.InvariantCulture), stream);
         stream.WriteByte(unchecked((byte)((byte)':')));
         writeUtf8(s, stream);
       } else if (obj.Type == CBORType.Map) {
@@ -182,7 +183,8 @@ namespace PeterO {
             if (length < 0) {
               throw new CBORException("invalid string");
             }
-            writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
+            writeUtf8(Convert.ToString((long)length,
+              CultureInfo.InvariantCulture), stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
             writeUtf8(key, stream);
             Write(value, stream);
@@ -196,7 +198,8 @@ namespace PeterO {
             if (length < 0) {
               throw new CBORException("invalid string");
             }
-            writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
+            writeUtf8(Convert.ToString((long)length,
+              CultureInfo.InvariantCulture), stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
             writeUtf8(str, stream);
             Write(obj[key], stream);
@@ -215,7 +218,8 @@ namespace PeterO {
         if (length < 0) {
           throw new CBORException("invalid string");
         }
-        writeUtf8(Convert.ToString((long)length, CultureInfo.InvariantCulture), stream);
+        writeUtf8(Convert.ToString((long)length,
+          CultureInfo.InvariantCulture), stream);
         stream.WriteByte(unchecked((byte)((byte)':')));
         writeUtf8(str, stream);
       }

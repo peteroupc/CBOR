@@ -13,29 +13,33 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     * An arbitrary-precision integer. <p>Instances of this class are
-     * immutable, so they are inherently safe for use by multiple threads.
-     * Multiple instances of this object with the same value are interchangeable,
-     * so they should not be compared using the "==" operator (which only
+     * An arbitrary-precision integer. <p>Instances of this class are immutable, so
+     * they are inherently safe for use by multiple threads. Multiple
+     * instances of this object with the same value are interchangeable, so
+     * they should not be compared using the "==" operator (which only
      * checks if each side of the operator is the same instance).</p>
      */
-  public final class BigInteger implements Comparable<BigInteger>
-  {
-    private static int CountWords(short[] array, int n) {
+  public final class BigInteger implements Comparable<BigInteger> {
+
+    private static int CountWords(final short[] array, int n) {
       while (n != 0 && array[n - 1] == 0) {
         --n;
       }
       return (int)n;
     }
 
-    private static short ShiftWordsLeftByBits(short[] r, int rstart, int n, int shiftBits) {
-
+    private static short ShiftWordsLeftByBits(
+final short[] r,
+final int rstart,
+final int n,
+final int shiftBits) {
       {
         short u, carry = 0;
         if (shiftBits != 0) {
           for (int i = 0; i < n; ++i) {
             u = r[rstart + i];
-            r[rstart + i] = (short)((int)(u << (int)shiftBits) | (((int)carry) & 0xffff));
+ r[rstart + i] = (short)((int)(u << (int)shiftBits) | (((int)carry) &
+              0xffff));
             carry = (short)((((int)u) & 0xffff) >> (int)(16 - shiftBits));
           }
         }
@@ -43,14 +47,20 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static short ShiftWordsRightByBits(short[] r, int rstart, int n, int shiftBits) {
-      // Debugif(!(shiftBits<16))Assert.fail("{0} line {1}: shiftBits<16","words.h",67);
+    private static short ShiftWordsRightByBits(
+final short[] r,
+final int rstart,
+final int n,
+final int shiftBits) {
+      // Debugif(!(shiftBits< 16))Assert.fail("{0} line {1}: shiftBits<16"
+      // ,"words.h" ,67);
       short u, carry = 0;
       {
         if (shiftBits != 0) {
           for (int i = n; i > 0; --i) {
             u = r[rstart + i - 1];
-            r[rstart + i - 1] = (short)((((((int)u) & 0xffff) >> (int)shiftBits) & 0xffff) | (((int)carry) & 0xffff));
+            r[rstart + i - 1] = (short)((((((int)u) & 0xffff) >>
+              (int)shiftBits) & 0xffff) | (((int)carry) & 0xffff));
             carry = (short)((((int)u) & 0xffff) << (int)(16 - shiftBits));
           }
         }
@@ -58,14 +68,20 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static short ShiftWordsRightByBitsSignExtend(short[] r, int rstart, int n, int shiftBits) {
-      // Debugif(!(shiftBits<16))Assert.fail("{0} line {1}: shiftBits<16","words.h",67);
+    private static short ShiftWordsRightByBitsSignExtend(
+final short[] r,
+final int rstart,
+final int n,
+final int shiftBits) {
+      // Debugif(!(shiftBits< 16))Assert.fail("{0} line {1}: shiftBits<16"
+      // ,"words.h" ,67);
       {
         short u, carry = (short)((int)0xffff << (int)(16 - shiftBits));
         if (shiftBits != 0) {
           for (int i = n; i > 0; --i) {
             u = r[rstart + i - 1];
-            r[rstart + i - 1] = (short)(((((int)u) & 0xffff) >> (int)shiftBits) | (((int)carry) & 0xffff));
+            r[rstart + i - 1] = (short)(((((int)u) & 0xffff) >>
+              (int)shiftBits) | (((int)carry) & 0xffff));
             carry = (short)((((int)u) & 0xffff) << (int)(16 - shiftBits));
           }
         }
@@ -73,17 +89,25 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static void ShiftWordsLeftByWords(short[] r, int rstart, int n, int shiftWords) {
+    private static void ShiftWordsLeftByWords(
+final short[] r,
+final int rstart,
+final int n,
+final int shiftWords) {
       shiftWords = Math.min(shiftWords, n);
       if (shiftWords != 0) {
         for (int i = n - 1; i >= shiftWords; --i) {
           r[rstart + i] = r[rstart + i - shiftWords];
         }
-        java.util.Arrays.fill(r,rstart,(rstart)+(shiftWords),(short)0);
+        java.util.Arrays.fill(r, rstart, (rstart) + (shiftWords), (short)0);
       }
     }
 
-    private static void ShiftWordsRightByWordsSignExtend(short[] r, int rstart, int n, int shiftWords) {
+    private static void ShiftWordsRightByWordsSignExtend(
+final short[] r,
+final int rstart,
+final int n,
+final int shiftWords) {
       shiftWords = Math.min(shiftWords, n);
       if (shiftWords != 0) {
         for (int i = 0; i + shiftWords < n; ++i) {
@@ -97,7 +121,12 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static int Compare(short[] words1, int astart, short[] words2, int bstart, int n) {
+    private static int Compare(
+final short[] words1,
+final int astart,
+final short[] words2,
+final int bstart,
+final int n) {
       while ((n--) != 0) {
         int an = ((int)words1[astart + n]) & 0xffff;
         int bn = ((int)words2[bstart + n]) & 0xffff;
@@ -148,7 +177,12 @@ at: http://upokecenter.com/d/
     }
      */
 
-    private static int CompareWithOneBiggerWords1(short[] words1, int astart, short[] words2, int bstart, int words1Count) {
+    private static int CompareWithOneBiggerWords1(
+final short[] words1,
+final int astart,
+final short[] words2,
+final int bstart,
+final int words1Count) {
       // NOTE: Assumes that words2's count is 1 less
       if (words1[astart + words1Count - 1] != 0) {
         return 1;
@@ -167,7 +201,11 @@ at: http://upokecenter.com/d/
       return 0;
     }
 
-    private static int Increment(short[] words1, int words1Start, int n, short words2) {
+    private static int Increment(
+final short[] words1,
+final int words1Start,
+final int n,
+final short words2) {
       {
         // Debugif(!(n!=0))Assert.fail("{0} line {1}: n","integer.cpp",63);
         short tmp = words1[words1Start];
@@ -185,7 +223,11 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static int Decrement(short[] words1, int words1Start, int n, short words2) {
+    private static int Decrement(
+final short[] words1,
+final int words1Start,
+final int n,
+final short words2) {
       // Debugif(!(n!=0))Assert.fail("{0} line {1}: n","integer.cpp",76);
       {
         short tmp = words1[words1Start];
@@ -204,7 +246,7 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static void TwosComplement(short[] words1, int words1Start, int n) {
+    private static void TwosComplement(final short[] words1, int words1Start, int n) {
       Decrement(words1, words1Start, n, (short)1);
       for (int i = 0; i < n; ++i) {
         words1[words1Start + i] = ((short)(~words1[words1Start + i]));
@@ -212,21 +254,24 @@ at: http://upokecenter.com/d/
     }
 
     private static int Add(
-      short[] c,
-      int cstart,
-      short[] words1,
-      int astart,
-      short[] words2,
-      int bstart,
-      int n) {
-      // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0","integer.cpp",799);
+      final short[] c,
+      final int cstart,
+      final short[] words1,
+      final int astart,
+      final short[] words2,
+      final int bstart,
+      final int n) {
+      // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0" ,"integer.cpp"
+      // , 799);
       {
         int u;
         u = 0;
         for (int i = 0; i < n; i += 2) {
-          u = (((int)words1[astart + i]) & 0xffff) + (((int)words2[bstart + i]) & 0xffff) + (short)(u >> 16);
+          u = (((int)words1[astart + i]) & 0xffff) + (((int)words2[bstart +
+            i]) & 0xffff) + (short)(u >> 16);
           c[cstart + i] = (short)u;
-          u = (((int)words1[astart + i + 1]) & 0xffff) + (((int)words2[bstart + i + 1]) & 0xffff) + (short)(u >> 16);
+          u = (((int)words1[astart + i + 1]) & 0xffff) +
+            (((int)words2[bstart + i + 1]) & 0xffff) + (short)(u >> 16);
           c[cstart + i + 1] = (short)u;
         }
         return ((int)u >> 16) & 0xffff;
@@ -234,19 +279,21 @@ at: http://upokecenter.com/d/
     }
 
     private static int AddOneByOne(
-      short[] c,
-      int cstart,
-      short[] words1,
-      int astart,
-      short[] words2,
-      int bstart,
-      int n) {
-      // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0","integer.cpp",799);
+      final short[] c,
+      final int cstart,
+      final short[] words1,
+      final int astart,
+      final short[] words2,
+      final int bstart,
+      final int n) {
+      // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0" ,"integer.cpp"
+      // , 799);
       {
         int u;
         u = 0;
         for (int i = 0; i < n; i += 1) {
-          u = (((int)words1[astart + i]) & 0xffff) + (((int)words2[bstart + i]) & 0xffff) + (short)(u >> 16);
+          u = (((int)words1[astart + i]) & 0xffff) + (((int)words2[bstart +
+            i]) & 0xffff) + (short)(u >> 16);
           c[cstart + i] = (short)u;
         }
         return ((int)u >> 16) & 0xffff;
@@ -254,20 +301,21 @@ at: http://upokecenter.com/d/
     }
 
     private static int SubtractOneBiggerWords1(
-      short[] c,
-      int cstart,
-      short[] words1,
-      int astart,
-      short[] words2,
-      int bstart,
-      int words1Count) {
+      final short[] c,
+      final int cstart,
+      final short[] words1,
+      final int astart,
+      final short[] words2,
+      final int bstart,
+      final int words1Count) {
       // Assumes that words2's count is 1 less
       {
         int u;
         u = 0;
         int cm1 = words1Count - 1;
         for (int i = 0; i < cm1; i += 1) {
-          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) & 0xffff) - (int)((u >> 31) & 1);
+          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) &
+            0xffff) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
           ++astart;
           ++bstart;
@@ -279,20 +327,21 @@ at: http://upokecenter.com/d/
     }
 
     private static int SubtractOneBiggerWords2(
-      short[] c,
-      int cstart,
-      short[] words1,
-      int astart,
-      short[] words2,
-      int bstart,
-      int words2Count) {
+      final short[] c,
+      final int cstart,
+      final short[] words1,
+      final int astart,
+      final short[] words2,
+      final int bstart,
+      final int words2Count) {
       // Assumes that words1's count is 1 less
       {
         int u;
         u = 0;
         int cm1 = words2Count - 1;
         for (int i = 0; i < cm1; i += 1) {
-          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) & 0xffff) - (int)((u >> 31) & 1);
+          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) &
+            0xffff) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
           ++astart;
           ++bstart;
@@ -304,20 +353,20 @@ at: http://upokecenter.com/d/
     }
 
     private static int AddUnevenSize(
-      short[] c,
-      int cstart,
-      short[] wordsBigger,
-      int astart,
-      int acount,
-      short[] wordsSmaller,
-      int bstart,
-      int bcount) {
-
+      final short[] c,
+      final int cstart,
+      final short[] wordsBigger,
+      final int astart,
+      final int acount,
+      final short[] wordsSmaller,
+      final int bstart,
+      final int bcount) {
       {
         int u;
         u = 0;
         for (int i = 0; i < bcount; i += 1) {
-          u = (((int)wordsBigger[astart + i]) & 0xffff) + (((int)wordsSmaller[bstart + i]) & 0xffff) + (short)(u >> 16);
+          u = (((int)wordsBigger[astart + i]) & 0xffff) +
+            (((int)wordsSmaller[bstart + i]) & 0xffff) + (short)(u >> 16);
           c[cstart + i] = (short)u;
         }
         for (int i = bcount; i < acount; i += 1) {
@@ -329,23 +378,26 @@ at: http://upokecenter.com/d/
     }
 
     private static int Subtract(
-      short[] c,
-      int cstart,
-      short[] words1,
-      int astart,
-      short[] words2,
-      int bstart,
-      int n) {
-      // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0","integer.cpp",799);
+      final short[] c,
+      final int cstart,
+      final short[] words1,
+      final int astart,
+      final short[] words2,
+      final int bstart,
+      final int n) {
+      // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0" ,"integer.cpp"
+      // , 799);
       {
         int u;
         u = 0;
         for (int i = 0; i < n; i += 2) {
-          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) & 0xffff) - (int)((u >> 31) & 1);
+          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) &
+            0xffff) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
           ++astart;
           ++bstart;
-          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) & 0xffff) - (int)((u >> 31) & 1);
+          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) &
+            0xffff) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
           ++astart;
           ++bstart;
@@ -355,19 +407,21 @@ at: http://upokecenter.com/d/
     }
 
     private static int SubtractOneByOne(
-      short[] c,
-      int cstart,
-      short[] words1,
-      int astart,
-      short[] words2,
-      int bstart,
-      int n) {
-      // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0","integer.cpp",799);
+      final short[] c,
+      final int cstart,
+      final short[] words1,
+      final int astart,
+      final short[] words2,
+      final int bstart,
+      final int n) {
+      // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0" ,"integer.cpp"
+      // , 799);
       {
         int u;
         u = 0;
         for (int i = 0; i < n; i += 1) {
-          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) & 0xffff) - (int)((u >> 31) & 1);
+          u = (((int)words1[astart]) & 0xffff) - (((int)words2[bstart]) &
+            0xffff) - (int)((u >> 31) & 1);
           c[cstart++] = (short)u;
           ++astart;
           ++bstart;
@@ -377,12 +431,12 @@ at: http://upokecenter.com/d/
     }
 
     private static short LinearMultiplyAdd(
-      short[] productArr,
-      int cstart,
-      short[] words1,
-      int astart,
-      short words2,
-      int n) {
+      final short[] productArr,
+      final int cstart,
+      final short[] words1,
+      final int astart,
+      final short words2,
+      final int n) {
       {
         short carry = 0;
         int bint = ((int)words2) & 0xffff;
@@ -399,12 +453,12 @@ at: http://upokecenter.com/d/
     }
 
     private static short LinearMultiply(
-      short[] productArr,
-      int cstart,
-      short[] words1,
-      int astart,
-      short words2,
-      int n) {
+      final short[] productArr,
+      final int cstart,
+      final short[] words1,
+      final int astart,
+      final short words2,
+      final int n) {
       {
         short carry = 0;
         int bint = ((int)words2) & 0xffff;
@@ -422,140 +476,242 @@ at: http://upokecenter.com/d/
     // Baseline Square
     //-----------------------------
 
-    private static void Baseline_Square2(short[] result, int rstart, short[] words1, int astart) {
+    private static void Baseline_Square2(
+final short[] result,
+final int rstart,
+final short[] words1,
+final int astart) {
       {
         int p; short c; int d; int e;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart]) & 0xffff); result[rstart] = (short)p; e = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 1]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 1] = c;
-        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 1]) & 0xffff);
-        p += e; result[rstart + 2] = (short)p; result[rstart + 3] = (short)(p >> 16);
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart]) &
+          0xffff); result[rstart] = (short)p; e = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 1]) &
+          0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d <<
+          1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 1] = c;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart +
+          1]) & 0xffff);
+  p += e; result[rstart + 2] = (short)p; result[rstart + 3] = (short)(p >>
+          16);
       }
     }
 
-    private static void Baseline_Square4(short[] result, int rstart, short[] words1, int astart) {
+    private static void Baseline_Square4(
+final short[] result,
+final int rstart,
+final short[] words1,
+final int astart) {
       {
         int p; short c; int d; int e;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart]) & 0xffff); result[rstart] = (short)p; e = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 1]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 1] = c;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 2]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 1]) & 0xffff);
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart]) &
+          0xffff); result[rstart] = (short)p; e = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 1]) &
+          0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d <<
+          1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 1] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 2]) &
+          0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d <<
+          1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart +
+          1]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 2] = c;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 2]) & 0xffff);
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 2] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 3]) &
+          0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart +
+          2]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 3] = c;
-        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 2]) & 0xffff);
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) &
+          1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 3] = c;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart +
+          3]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d =
+          (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart +
+          2]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 4] = c;
-        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + (2 * 4) - 3] = c;
-        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff);
-        p += e; result[rstart + 6] = (short)p; result[rstart + 7] = (short)(p >> 16);
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 4] = c;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart +
+          3]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d =
+          (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + (2 * 4) - 3] = c;
+        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart +
+          3]) & 0xffff);
+  p += e; result[rstart + 6] = (short)p; result[rstart + 7] = (short)(p >>
+          16);
       }
     }
 
-    private static void Baseline_Square8(short[] result, int rstart, short[] words1, int astart) {
+    private static void Baseline_Square8(
+final short[] result,
+final int rstart,
+final short[] words1,
+final int astart) {
       {
         int p; short c; int d; int e;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart]) & 0xffff); result[rstart] = (short)p; e = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 1]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 1] = c;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 2]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 1]) & 0xffff);
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart]) &
+          0xffff); result[rstart] = (short)p; e = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 1]) &
+          0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d <<
+          1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 1] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 2]) &
+          0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d <<
+          1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart +
+          1]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 2] = c;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 2]) & 0xffff);
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 2] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 3]) &
+          0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart +
+          2]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 3] = c;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 4]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff);
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) &
+          1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 3] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 4]) &
+          0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart +
+          3]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 2]) & 0xffff);
-        p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 4] = c;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 5]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 4]) & 0xffff);
-        p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff);
-        p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 5] = c;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 5]) & 0xffff);
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) &
+          1)); c <<= 1;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart +
+          2]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 4]) & 0xffff);
-        p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart + 3]) & 0xffff);
-        p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 6] = c;
-        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff);
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 4] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 5]) &
+          0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart +
+          4]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 5]) & 0xffff);
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart +
+          3]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) &
+          1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 5] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 6]) &
+          0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart +
+          5]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart + 4]) & 0xffff);
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart +
+          4]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 7] = c;
-        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff);
-        p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart + 5]) & 0xffff);
-        p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 4]) & 0xffff) * (((int)words1[astart + 4]) & 0xffff);
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) &
+          1)); c <<= 1;
+        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart +
+          3]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 8] = c;
-        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff);
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 6] = c;
+        p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart + 7]) &
+          0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart +
+          6]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 4]) & 0xffff) * (((int)words1[astart + 5]) & 0xffff);
-        p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 9] = c;
-        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 4]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff);
-        p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 5]) & 0xffff) * (((int)words1[astart + 5]) & 0xffff);
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart +
+          5]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 10] = c;
-        p = (((int)words1[astart + 4]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
-        p = (((int)words1[astart + 5]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff);
+        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart +
+          4]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
-        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 11] = c;
-        p = (((int)words1[astart + 5]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        p = (((int)words1[astart + 6]) & 0xffff) * (((int)words1[astart + 6]) & 0xffff);
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) &
+          1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 7] = c;
+        p = (((int)words1[astart + 1]) & 0xffff) * (((int)words1[astart +
+          7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart +
+          6]) & 0xffff);
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 12] = c;
-        p = (((int)words1[astart + 6]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
-        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) & 0xffff); result[rstart + 13] = c;
-        p = (((int)words1[astart + 7]) & 0xffff) * (((int)words1[astart + 7]) & 0xffff);
-        p += e; result[rstart + 14] = (short)p; result[rstart + 15] = (short)(p >> 16);
+        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart +
+          5]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) &
+          1)); c <<= 1;
+        p = (((int)words1[astart + 4]) & 0xffff) * (((int)words1[astart +
+          4]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 8] = c;
+        p = (((int)words1[astart + 2]) & 0xffff) * (((int)words1[astart +
+          7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart +
+          6]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 4]) & 0xffff) * (((int)words1[astart +
+          5]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) &
+          1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 9] = c;
+        p = (((int)words1[astart + 3]) & 0xffff) * (((int)words1[astart +
+          7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 4]) & 0xffff) * (((int)words1[astart +
+          6]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) &
+          1)); c <<= 1;
+        p = (((int)words1[astart + 5]) & 0xffff) * (((int)words1[astart +
+          5]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 10] = c;
+        p = (((int)words1[astart + 4]) & 0xffff) * (((int)words1[astart +
+          7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff;
+        p = (((int)words1[astart + 5]) & 0xffff) * (((int)words1[astart +
+          6]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff; d = (int)((d << 1) + (((int)c >> 15) &
+          1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 11] = c;
+        p = (((int)words1[astart + 5]) & 0xffff) * (((int)words1[astart +
+          7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d =
+          (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        p = (((int)words1[astart + 6]) & 0xffff) * (((int)words1[astart +
+          6]) & 0xffff);
+        p += ((int)c) & 0xffff; c = (short)p;
+        d += ((int)p >> 16) & 0xffff;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 12] = c;
+        p = (((int)words1[astart + 6]) & 0xffff) * (((int)words1[astart +
+          7]) & 0xffff); c = (short)p; d = ((int)p >> 16) & 0xffff; d =
+          (int)((d << 1) + (((int)c >> 15) & 1)); c <<= 1;
+        e += ((int)c) & 0xffff; c = (short)e; e = d + (((int)e >> 16) &
+          0xffff); result[rstart + 13] = c;
+        p = (((int)words1[astart + 7]) & 0xffff) * (((int)words1[astart +
+          7]) & 0xffff);
+p += e; result[rstart + 14] = (short)p; result[rstart + 15] = (short)(p >>
+          16);
       }
     }
 
@@ -563,14 +719,21 @@ at: http://upokecenter.com/d/
     // Baseline multiply
     //---------------------
 
-    private static void Baseline_Multiply2(short[] result, int rstart, short[] words1, int astart, short[] words2, int bstart) {
+    private static void Baseline_Multiply2(
+final short[] result,
+final int rstart,
+final short[] words1,
+final int astart,
+final short[] words2,
+final int bstart) {
       {
         int p; short c; int d;
         int a0 = ((int)words1[astart]) & 0xffff;
         int a1 = ((int)words1[astart + 1]) & 0xffff;
         int b0 = ((int)words2[bstart]) & 0xffff;
         int b1 = ((int)words2[bstart + 1]) & 0xffff;
-        p = a0 * b0; c = (short)p; d = ((int)p >> 16) & 0xffff; result[rstart] = c; c = (short)d; d = ((int)d >> 16) & 0xffff;
+        p = a0 * b0; c = (short)p; d = ((int)p >> 16) & 0xffff;
+          result[rstart] = c; c = (short)d; d = ((int)d >> 16) & 0xffff;
         p = a0 * b1;
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
@@ -578,259 +741,365 @@ at: http://upokecenter.com/d/
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff; result[rstart + 1] = c;
         p = a1 * b1;
-        p += d; result[rstart + 2] = (short)p; result[rstart + 3] = (short)(p >> 16);
+  p += d; result[rstart + 2] = (short)p; result[rstart + 3] = (short)(p >>
+          16);
       }
     }
 
     private static final int ShortMask = 0xffff;
 
-    private static void Baseline_Multiply4(short[] result, int rstart, short[] words1, int astart, short[] words2, int bstart) {
+    private static void Baseline_Multiply4(
+final short[] result,
+final int rstart,
+final short[] words1,
+final int astart,
+final short[] words2,
+final int bstart) {
       {
         int p; short c; int d;
         int a0 = ((int)words1[astart]) & ShortMask;
         int b0 = ((int)words2[bstart]) & ShortMask;
-        p = a0 * b0; c = (short)p; d = ((int)p >> 16) & ShortMask; result[rstart] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
+        p = a0 * b0; c = (short)p; d = ((int)p >> 16) & ShortMask;
+          result[rstart] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
         p = a0 * (((int)words2[bstart + 1]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
         p = (((int)words1[astart + 1]) & ShortMask) * b0;
         p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 1] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
+        d += ((int)p >> 16) & ShortMask; result[rstart + 1] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
         p = a0 * (((int)words2[bstart + 2]) & ShortMask);
 
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart + 1]) & ShortMask);
+        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart +
+          1]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
         p = (((int)words1[astart + 2]) & ShortMask) * b0;
         p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 2] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
+        d += ((int)p >> 16) & ShortMask; result[rstart + 2] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
         p = a0 * (((int)words2[bstart + 3]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart + 2]) & ShortMask);
+        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart +
+          2]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
 
-        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart + 1]) & ShortMask);
+        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart +
+          1]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
         p = (((int)words1[astart + 3]) & ShortMask) * b0;
         p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 3] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart + 3]) & ShortMask);
+        d += ((int)p >> 16) & ShortMask; result[rstart + 3] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart +
+          3]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart + 2]) & ShortMask);
+        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart +
+          2]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart + 1]) & ShortMask);
+        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart +
+          1]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 4] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart + 3]) & ShortMask);
+        d += ((int)p >> 16) & ShortMask; result[rstart + 4] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart +
+          3]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart + 2]) & ShortMask);
+        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart +
+          2]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask; result[rstart + 5] = c;
-        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart + 3]) & ShortMask);
-        p += d; result[rstart + 6] = (short)p; result[rstart + 7] = (short)(p >> 16);
+        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart +
+          3]) & ShortMask);
+  p += d; result[rstart + 6] = (short)p; result[rstart + 7] = (short)(p >>
+          16);
       }
     }
 
-    private static void Baseline_Multiply8(short[] result, int rstart, short[] words1, int astart, short[] words2, int bstart) {
+    private static void Baseline_Multiply8(
+final short[] result,
+final int rstart,
+final short[] words1,
+final int astart,
+final short[] words2,
+final int bstart) {
       {
         int p; short c; int d;
-        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart]) & ShortMask); c = (short)p; d = ((int)p >> 16) & ShortMask; result[rstart] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 1]) & ShortMask);
+        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart]) &
+          ShortMask); c = (short)p; d = ((int)p >> 16) & ShortMask;
+          result[rstart] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 1]) &
+          ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart]) & ShortMask);
+        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart]) &
+          ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 1] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 2]) & ShortMask);
-        p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart + 1]) & ShortMask);
-        p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart]) & ShortMask);
-        p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 2] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 3]) & ShortMask);
+        d += ((int)p >> 16) & ShortMask; result[rstart + 1] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 2]) &
+          ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart + 2]) & ShortMask);
+        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart +
+          1]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart + 1]) & ShortMask);
+        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart]) &
+          ShortMask);
+        p += ((int)c) & ShortMask; c = (short)p;
+        d += ((int)p >> 16) & ShortMask; result[rstart + 2] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 3]) &
+          ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart]) & ShortMask);
-        p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 3] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 4]) & ShortMask);
+        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart +
+          2]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart + 3]) & ShortMask);
+        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart +
+          1]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart + 2]) & ShortMask);
+        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart]) &
+          ShortMask);
+        p += ((int)c) & ShortMask; c = (short)p;
+        d += ((int)p >> 16) & ShortMask; result[rstart + 3] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 4]) &
+          ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart + 1]) & ShortMask);
+        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart +
+          3]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart]) & ShortMask);
-        p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 4] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 5]) & ShortMask);
+        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart +
+          2]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart + 4]) & ShortMask);
+        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart +
+          1]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart + 3]) & ShortMask);
+        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart]) &
+          ShortMask);
+        p += ((int)c) & ShortMask; c = (short)p;
+        d += ((int)p >> 16) & ShortMask; result[rstart + 4] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 5]) &
+          ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart + 2]) & ShortMask);
+        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart +
+          4]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart + 1]) & ShortMask);
+        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart +
+          3]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart]) & ShortMask);
-        p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 5] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 6]) & ShortMask);
+        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart +
+          2]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart + 5]) & ShortMask);
+        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart +
+          1]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart + 4]) & ShortMask);
+        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart]) &
+          ShortMask);
+        p += ((int)c) & ShortMask; c = (short)p;
+        d += ((int)p >> 16) & ShortMask; result[rstart + 5] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 6]) &
+          ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart + 3]) & ShortMask);
+        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart +
+          5]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart + 2]) & ShortMask);
+        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart +
+          4]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart + 1]) & ShortMask);
+        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart +
+          3]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart]) & ShortMask);
-        p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 6] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 7]) & ShortMask);
+        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart +
+          2]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart + 6]) & ShortMask);
+        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart +
+          1]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart + 5]) & ShortMask);
+        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart]) &
+          ShortMask);
+        p += ((int)c) & ShortMask; c = (short)p;
+        d += ((int)p >> 16) & ShortMask; result[rstart + 6] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart + 7]) &
+          ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart + 4]) & ShortMask);
+        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart +
+          6]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart + 3]) & ShortMask);
+        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart +
+          5]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart + 2]) & ShortMask);
+        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart +
+          4]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart + 1]) & ShortMask);
+        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart +
+          3]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart]) & ShortMask);
-        p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 7] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart + 7]) & ShortMask);
+        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart +
+          2]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart + 6]) & ShortMask);
+        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart +
+          1]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart + 5]) & ShortMask);
+        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart]) &
+          ShortMask);
+        p += ((int)c) & ShortMask; c = (short)p;
+        d += ((int)p >> 16) & ShortMask; result[rstart + 7] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart + 1]) & ShortMask) * (((int)words2[bstart +
+          7]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart + 4]) & ShortMask);
+        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart +
+          6]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart + 3]) & ShortMask);
+        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart +
+          5]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart + 2]) & ShortMask);
+        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart +
+          4]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart + 1]) & ShortMask);
-        p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 8] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart + 7]) & ShortMask);
+        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart +
+          3]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart + 6]) & ShortMask);
+        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart +
+          2]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart + 5]) & ShortMask);
+        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart +
+          1]) & ShortMask);
+        p += ((int)c) & ShortMask; c = (short)p;
+        d += ((int)p >> 16) & ShortMask; result[rstart + 8] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart + 2]) & ShortMask) * (((int)words2[bstart +
+          7]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart + 4]) & ShortMask);
+        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart +
+          6]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart + 3]) & ShortMask);
+        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart +
+          5]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart + 2]) & ShortMask);
-        p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 9] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart + 7]) & ShortMask);
+        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart +
+          4]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart + 6]) & ShortMask);
+        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart +
+          3]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart + 5]) & ShortMask);
+        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart +
+          2]) & ShortMask);
+        p += ((int)c) & ShortMask; c = (short)p;
+        d += ((int)p >> 16) & ShortMask; result[rstart + 9] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart + 3]) & ShortMask) * (((int)words2[bstart +
+          7]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart + 4]) & ShortMask);
+        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart +
+          6]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart + 3]) & ShortMask);
-        p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 10] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart + 7]) & ShortMask);
+        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart +
+          5]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart + 6]) & ShortMask);
+        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart +
+          4]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart + 5]) & ShortMask);
+        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart +
+          3]) & ShortMask);
+        p += ((int)c) & ShortMask; c = (short)p;
+        d += ((int)p >> 16) & ShortMask; result[rstart + 10] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart + 4]) & ShortMask) * (((int)words2[bstart +
+          7]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart + 4]) & ShortMask);
-        p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 11] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart + 7]) & ShortMask);
+        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart +
+          6]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart + 6]) & ShortMask);
+        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart +
+          5]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart + 5]) & ShortMask);
+        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart +
+          4]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
-        d += ((int)p >> 16) & ShortMask; result[rstart + 12] = c; c = (short)d; d = ((int)d >> 16) & ShortMask;
-        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart + 7]) & ShortMask);
+        d += ((int)p >> 16) & ShortMask; result[rstart + 11] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart + 5]) & ShortMask) * (((int)words2[bstart +
+          7]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask;
-        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart + 6]) & ShortMask);
+        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart +
+          6]) & ShortMask);
+        p += ((int)c) & ShortMask; c = (short)p;
+        d += ((int)p >> 16) & ShortMask;
+        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart +
+          5]) & ShortMask);
+        p += ((int)c) & ShortMask; c = (short)p;
+        d += ((int)p >> 16) & ShortMask; result[rstart + 12] = c; c =
+          (short)d; d = ((int)d >> 16) & ShortMask;
+        p = (((int)words1[astart + 6]) & ShortMask) * (((int)words2[bstart +
+          7]) & ShortMask);
+        p += ((int)c) & ShortMask; c = (short)p;
+        d += ((int)p >> 16) & ShortMask;
+        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart +
+          6]) & ShortMask);
         p += ((int)c) & ShortMask; c = (short)p;
         d += ((int)p >> 16) & ShortMask; result[rstart + 13] = c;
-        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart + 7]) & ShortMask);
-        p += d; result[rstart + 14] = (short)p; result[rstart + 15] = (short)(p >> 16);
+        p = (((int)words1[astart + 7]) & ShortMask) * (((int)words2[bstart +
+          7]) & ShortMask);
+p += d; result[rstart + 14] = (short)p; result[rstart + 15] = (short)(p >>
+          16);
       }
     }
 
@@ -840,26 +1109,54 @@ at: http://upokecenter.com/d/
     // this function only takes operands of the same size, as opposed
     // to AsymmetricMultiply.
     private static void SameSizeMultiply(
-      short[] resultArr,  // size 2*count
-      int resultStart,
-      short[] tempArr,  // size 2*count
-      int tempStart,
-      short[] words1,
-      int words1Start,  // size count
-      short[] words2,
-      int words2Start,  // size count
-      int count) {
-      // System.out.println("RecursiveMultiply " + count + " " + count + " [r=" + resultStart + " t=" + tempStart + " a=" + words1Start + " b=" + words2Start + "]");
+      final short[] resultArr,  // size 2*count
+      final int resultStart,
+      final short[] tempArr,  // size 2*count
+      final int tempStart,
+      final short[] words1,
+      final int words1Start,  // size count
+      final short[] words2,
+      final int words2Start,  // size count
+      final int count) {
+      // System.out.println("RecursiveMultiply " + count + " " + count +
+      // " [r=" + resultStart + " t=" + tempStart + " a=" + words1Start +
+      // " b=" + words2Start + "]");
 
       if (count <= RecursionLimit) {
         if (count == 2) {
-          Baseline_Multiply2(resultArr, resultStart, words1, words1Start, words2, words2Start);
+          Baseline_Multiply2(
+resultArr,
+resultStart,
+words1,
+words1Start,
+words2,
+words2Start);
         } else if (count == 4) {
-          Baseline_Multiply4(resultArr, resultStart, words1, words1Start, words2, words2Start);
+          Baseline_Multiply4(
+resultArr,
+resultStart,
+words1,
+words1Start,
+words2,
+words2Start);
         } else if (count == 8) {
-          Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
+          Baseline_Multiply8(
+resultArr,
+resultStart,
+words1,
+words1Start,
+words2,
+words2Start);
         } else {
-          SchoolbookMultiply(resultArr, resultStart, words1, words1Start, count, words2, words2Start, count);
+          SchoolbookMultiply(
+resultArr,
+resultStart,
+words1,
+words1Start,
+count,
+words2,
+words2Start,
+count);
         }
       } else {
         int countA = count;
@@ -874,19 +1171,35 @@ at: http://upokecenter.com/d/
         int offset2For2 = 0;
         if (countA == 0 || countB == 0) {
           // words1 or words2 is empty, so result is 0
-          java.util.Arrays.fill(resultArr,resultStart,(resultStart)+(count << 1),(short)0);
+          java.util.Arrays.fill(resultArr, resultStart, (resultStart) + (count << 1), (short)0);
           return;
         }
         // Split words1 and words2 in two parts each
         if ((count & 1) == 0) {
           int count2 = count >> 1;
           if (countA <= count2 && countB <= count2) {
-            // System.out.println("Can be smaller: " + AN + "," + BN + "," + (count2));
-            java.util.Arrays.fill(resultArr,resultStart + count,(resultStart + count)+(count),(short)0);
+            // System.out.println("Can be smaller: " + AN + "," + BN + "," +
+            // (count2));
+            java.util.Arrays.fill(resultArr, resultStart + count, (resultStart + count) + (count), (short)0);
             if (count2 == 8) {
-              Baseline_Multiply8(resultArr, resultStart, words1, words1Start, words2, words2Start);
+              Baseline_Multiply8(
+resultArr,
+resultStart,
+words1,
+words1Start,
+words2,
+words2Start);
             } else {
-              SameSizeMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, count2);
+              SameSizeMultiply(
+resultArr,
+resultStart,
+tempArr,
+tempStart,
+words1,
+words1Start,
+words2,
+words2Start,
+count2);
             }
             return;
           }
@@ -894,27 +1207,92 @@ at: http://upokecenter.com/d/
           int resultHigh = resultMediumHigh + count2;
           int resultMediumLow = resultStart + count2;
           int tsn = tempStart + count;
-          offset2For1 = Compare(words1, words1Start, words1, words1Start + count2, count2) > 0 ? 0 : count2;
+          offset2For1 = Compare(
+words1,
+words1Start,
+words1,
+words1Start + count2,
+count2) > 0 ? 0 : count2;
           // Absolute value of low part minus high part of words1
-          SubtractOneByOne(resultArr, resultStart, words1, words1Start + offset2For1, words1, (int)(words1Start + (count2 ^ offset2For1)), count2);
-          offset2For2 = Compare(words2, words2Start, words2, (int)(words2Start + count2), count2) > 0 ? 0 : count2;
+          SubtractOneByOne(
+resultArr, resultStart, words1, words1Start +
+            offset2For1, words1, (int)(words1Start + (count2 ^
+            offset2For1)), count2);
+          offset2For2 = Compare(
+words2,
+words2Start,
+words2,
+(int)(words2Start + count2),
+count2) > 0 ? 0 : count2;
           // Absolute value of low part minus high part of words2
-          SubtractOneByOne(resultArr, resultMediumLow, words2, words2Start + offset2For2, words2, (int)(words2Start + (count2 ^ offset2For2)), count2);
+          SubtractOneByOne(
+resultArr, resultMediumLow, words2, words2Start +
+            offset2For2, words2, (int)(words2Start + (count2 ^
+            offset2For2)), count2);
           //---------
           // HighA * HighB
-          SameSizeMultiply(resultArr, resultMediumHigh, tempArr, tsn, words1, (int)(words1Start + count2), words2, (int)(words2Start + count2), count2);
+          SameSizeMultiply(
+resultArr, resultMediumHigh, tempArr, tsn,
+            words1, (int)(words1Start + count2), words2, (int)(words2Start +
+            count2), count2);
           // Medium high result = Abs(LowA-HighA) * Abs(LowB-HighB)
-          SameSizeMultiply(tempArr, tempStart, tempArr, tsn, resultArr, resultStart, resultArr, (int)resultMediumLow, count2);
+          SameSizeMultiply(
+tempArr, tempStart, tempArr, tsn, resultArr,
+            resultStart, resultArr, (int)resultMediumLow, count2);
           // Low result = LowA * LowB
-          SameSizeMultiply(resultArr, resultStart, tempArr, tsn, words1, words1Start, words2, words2Start, count2);
-          int c2 = AddOneByOne(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultMediumLow, count2);
+          SameSizeMultiply(
+resultArr,
+resultStart,
+tempArr,
+tsn,
+words1,
+words1Start,
+words2,
+words2Start,
+count2);
+          int c2 = AddOneByOne(
+resultArr,
+resultMediumHigh,
+resultArr,
+resultMediumHigh,
+resultArr,
+resultMediumLow,
+count2);
           int c3 = c2;
-          c2 += AddOneByOne(resultArr, resultMediumLow, resultArr, resultMediumHigh, resultArr, resultStart, count2);
-          c3 += AddOneByOne(resultArr, resultMediumHigh, resultArr, resultMediumHigh, resultArr, resultHigh, count2);
+          c2 += AddOneByOne(
+resultArr,
+resultMediumLow,
+resultArr,
+resultMediumHigh,
+resultArr,
+resultStart,
+count2);
+          c3 += AddOneByOne(
+resultArr,
+resultMediumHigh,
+resultArr,
+resultMediumHigh,
+resultArr,
+resultHigh,
+count2);
           if (offset2For1 == offset2For2) {
-            c3 -= SubtractOneByOne(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
+            c3 -= SubtractOneByOne(
+resultArr,
+resultMediumLow,
+resultArr,
+resultMediumLow,
+tempArr,
+tempStart,
+count);
           } else {
-            c3 += AddOneByOne(resultArr, resultMediumLow, resultArr, resultMediumLow, tempArr, tempStart, count);
+            c3 += AddOneByOne(
+resultArr,
+resultMediumLow,
+resultArr,
+resultMediumLow,
+tempArr,
+tempStart,
+count);
           }
           c3 += Increment(resultArr, resultMediumHigh, count2, (short)c2);
           // DebugWords(resultArr,resultStart,count*2,"p6");
@@ -926,17 +1304,55 @@ at: http://upokecenter.com/d/
           // Count is odd, high part will be 1 shorter
           int countHigh = count >> 1;  // Shorter part
           int countLow = count - countHigh;  // Longer part
-          offset2For1 = CompareWithOneBiggerWords1(words1, words1Start, words1, words1Start + countLow, countLow) > 0 ? 0 : countLow;
+          offset2For1 = CompareWithOneBiggerWords1(
+words1,
+words1Start,
+words1,
+words1Start + countLow,
+countLow) > 0 ? 0 : countLow;
           if (offset2For1 == 0) {
-            SubtractOneBiggerWords1(resultArr, resultStart, words1, words1Start, words1, words1Start + countLow, countLow);
+            SubtractOneBiggerWords1(
+resultArr,
+resultStart,
+words1,
+words1Start,
+words1,
+words1Start + countLow,
+countLow);
           } else {
-            SubtractOneBiggerWords2(resultArr, resultStart, words1, words1Start + countLow, words1, words1Start, countLow);
+            SubtractOneBiggerWords2(
+resultArr,
+resultStart,
+words1,
+words1Start + countLow,
+words1,
+words1Start,
+countLow);
           }
-          offset2For2 = CompareWithOneBiggerWords1(words2, words2Start, words2, words2Start + countLow, countLow) > 0 ? 0 : countLow;
+          offset2For2 = CompareWithOneBiggerWords1(
+words2,
+words2Start,
+words2,
+words2Start + countLow,
+countLow) > 0 ? 0 : countLow;
           if (offset2For2 == 0) {
-            SubtractOneBiggerWords1(tempArr, tempStart, words2, words2Start, words2, words2Start + countLow, countLow);
+            SubtractOneBiggerWords1(
+tempArr,
+tempStart,
+words2,
+words2Start,
+words2,
+words2Start + countLow,
+countLow);
           } else {
-            SubtractOneBiggerWords2(tempArr, tempStart, words2, words2Start + countLow, words2, words2Start, countLow);
+            SubtractOneBiggerWords2(
+tempArr,
+tempStart,
+words2,
+words2Start + countLow,
+words2,
+words2Start,
+countLow);
           }
           // Abs(LowA-HighA) * Abs(LowB-HighB)
           int shorterOffset = countHigh << 1;
@@ -951,7 +1367,8 @@ at: http://upokecenter.com/d/
             tempArr,
             tempStart,
             countLow);
-          // DebugWords(resultArr, resultStart+shorterOffset,countLow << 1,"w1*w2");
+          // DebugWords(resultArr, resultStart + shorterOffset, countLow <<
+          // 1,"w1*w2");
           short resultTmp0 = tempArr[tempStart + shorterOffset];
           short resultTmp1 = tempArr[tempStart + shorterOffset + 1];
           // HighA * HighB
@@ -980,10 +1397,24 @@ at: http://upokecenter.com/d/
           tempArr[tempStart + shorterOffset + 1] = resultTmp1;
           int countMiddle = countLow << 1;
           // DebugWords(resultArr,resultStart,count*2,"q1");
-          int c2 = AddOneByOne(resultArr, resultStart + countMiddle, resultArr, resultStart + countMiddle, resultArr, resultStart + countLow, countLow);
+          int c2 = AddOneByOne(
+resultArr,
+resultStart + countMiddle,
+resultArr,
+resultStart + countMiddle,
+resultArr,
+resultStart + countLow,
+countLow);
           int c3 = c2;
           // DebugWords(resultArr,resultStart,count*2,"q2");
-          c2 += AddOneByOne(resultArr, resultStart + countLow, resultArr, resultStart + countMiddle, resultArr, resultStart, countLow);
+          c2 += AddOneByOne(
+resultArr,
+resultStart + countLow,
+resultArr,
+resultStart + countMiddle,
+resultArr,
+resultStart,
+countLow);
           // DebugWords(resultArr,resultStart,count*2,"q3");
           c3 += AddUnevenSize(
             resultArr,
@@ -996,15 +1427,29 @@ at: http://upokecenter.com/d/
             countLow - 2);
           // DebugWords(resultArr,resultStart,count*2,"q4");
           if (offset2For1 == offset2For2) {
-            c3 -= SubtractOneByOne(resultArr, resultStart + countLow, resultArr, resultStart + countLow, tempArr, tempStart + shorterOffset, countLow << 1);
+            c3 -= SubtractOneByOne(
+resultArr, resultStart + countLow,
+              resultArr, resultStart + countLow, tempArr, tempStart +
+              shorterOffset, countLow << 1);
           } else {
-            c3 += AddOneByOne(resultArr, resultStart + countLow, resultArr, resultStart + countLow, tempArr, tempStart + shorterOffset, countLow << 1);
+            c3 += AddOneByOne(
+resultArr, resultStart + countLow, resultArr,
+              resultStart + countLow, tempArr, tempStart + shorterOffset,
+              countLow << 1);
           }
           // DebugWords(resultArr,resultStart,count*2,"q5");
-          c3 += Increment(resultArr, resultStart + countMiddle, countLow, (short)c2);
+    c3 += Increment(
+resultArr,
+resultStart + countMiddle,
+countLow,
+(short)c2);
           // DebugWords(resultArr,resultStart,count*2,"q6");
           if (c3 != 0) {
-            Increment(resultArr, resultStart + countMiddle + countLow, countLow - 2, (short)c3);
+            Increment(
+resultArr,
+resultStart + countMiddle + countLow,
+countLow - 2,
+(short)c3);
           }
           // DebugWords(resultArr,resultStart,count*2,"q7");
         }
@@ -1012,13 +1457,13 @@ at: http://upokecenter.com/d/
     }
 
     private static void RecursiveSquare(
-      short[] resultArr,
-      int resultStart,
-      short[] tempArr,
-      int tempStart,
-      short[] words1,
-      int words1Start,
-      int count) {
+      final short[] resultArr,
+      final int resultStart,
+      final short[] tempArr,
+      final int tempStart,
+      final short[] words1,
+      final int words1Start,
+      final int count) {
       if (count <= RecursionLimit) {
         if (count == 2) {
           Baseline_Square2(resultArr, resultStart, words1, words1Start);
@@ -1031,8 +1476,22 @@ at: http://upokecenter.com/d/
         }
       } else if ((count & 1) == 0) {
         int count2 = count >> 1;
-        RecursiveSquare(resultArr, resultStart, tempArr, tempStart + count, words1, words1Start, count2);
-        RecursiveSquare(resultArr, resultStart + count, tempArr, tempStart + count, words1, words1Start + count2, count2);
+        RecursiveSquare(
+resultArr,
+resultStart,
+tempArr,
+tempStart + count,
+words1,
+words1Start,
+count2);
+        RecursiveSquare(
+resultArr,
+resultStart + count,
+tempArr,
+tempStart + count,
+words1,
+words1Start + count2,
+count2);
         SameSizeMultiply(
           tempArr,
           tempStart,
@@ -1043,20 +1502,39 @@ at: http://upokecenter.com/d/
           words1,
           words1Start + count2,
           count2);
-        int carry = AddOneByOne(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, count);
-        carry += AddOneByOne(resultArr, (int)(resultStart + count2), resultArr, (int)(resultStart + count2), tempArr, tempStart, count);
-        Increment(resultArr, (int)(resultStart + count + count2), count2, (short)carry);
+        int carry = AddOneByOne(
+resultArr, (int)(resultStart + count2),
+          resultArr, (int)(resultStart + count2), tempArr, tempStart,
+          count);
+        carry += AddOneByOne(
+resultArr, (int)(resultStart + count2),
+          resultArr, (int)(resultStart + count2), tempArr, tempStart,
+          count);
+        Increment(
+resultArr,
+(int)(resultStart + count + count2),
+count2,
+(short)carry);
       } else {
-        SameSizeMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words1, words1Start, count);
+        SameSizeMultiply(
+resultArr,
+resultStart,
+tempArr,
+tempStart,
+words1,
+words1Start,
+words1,
+words1Start,
+count);
       }
     }
 
     private static void SchoolbookSquare(
-      short[] resultArr,
-      int resultStart,
-      short[] words1,
-      int words1Start,
-      int words1Count) {
+      final short[] resultArr,
+      final int resultStart,
+      final short[] words1,
+      final int words1Start,
+      final int words1Count) {
       // Method assumes that resultArr was already zeroed,
       // if resultArr is the same as words1
       int cstart;
@@ -1081,14 +1559,14 @@ at: http://upokecenter.com/d/
     }
 
     private static void SchoolbookMultiply(
-      short[] resultArr,
-      int resultStart,
-      short[] words1,
-      int words1Start,
-      int words1Count,
-      short[] words2,
-      int words2Start,
-      int words2Count) {
+      final short[] resultArr,
+      final int resultStart,
+      final short[] words1,
+      final int words1Start,
+      final int words1Count,
+      final short[] words2,
+      final int words2Start,
+      final int words2Count) {
       // Method assumes that resultArr was already zeroed,
       // if resultArr is the same as words1 or words2
       int cstart;
@@ -1135,7 +1613,8 @@ at: http://upokecenter.com/d/
       }
     }
     /*
-    private static void DebugWords(short[] a, int astart, int count, String msg) {
+ private static void DebugWords(short[] a, int astart, int count, String
+      msg) {
       Console.Write("Words(" + msg + "): ");
       for (int i = 0; i < count; ++i) {
         Console.Write("{0:X4} ", a[astart + i]);
@@ -1149,21 +1628,20 @@ at: http://upokecenter.com/d/
     }
      */
     private static void ChunkedLinearMultiply(
-      short[] productArr,
-      int cstart,
-      short[] tempArr,
-      int tempStart,  // uses bcount*4 space
-      short[] words1,
-      int astart,
-      int acount,  // Equal size or longer
-      short[] words2,
-      int bstart,
-      int bcount) {
-
+      final short[] productArr,
+      final int cstart,
+      final short[] tempArr,
+      final int tempStart,  // uses bcount*4 space
+      final short[] words1,
+      final int astart,
+      final int acount,  // Equal size or longer
+      final short[] words2,
+      final int bstart,
+      final int bcount) {
       {
         int carryPos = 0;
         // Set carry to zero
-        java.util.Arrays.fill(productArr,cstart,(cstart)+(bcount),(short)0);
+        java.util.Arrays.fill(productArr, cstart, (cstart) + (bcount), (short)0);
         for (int i = 0; i < acount; i += bcount) {
           int diff = acount - i;
           if (diff > bcount) {
@@ -1188,7 +1666,12 @@ at: http://upokecenter.com/d/
               cstart + carryPos,
               bcount);
             // Copy product and carry
-            System.arraycopy(tempArr, tempStart, productArr, cstart + i, bcount + bcount);
+       System.arraycopy(
+tempArr,
+tempStart,
+productArr,
+cstart + i,
+bcount + bcount);
             carryPos += bcount;
           } else {
             AsymmetricMultiply(
@@ -1213,7 +1696,12 @@ at: http://upokecenter.com/d/
               cstart + carryPos,
               bcount);
             // Copy product without carry
-            System.arraycopy(tempArr, tempStart, productArr, cstart + i, diff + bcount);
+         System.arraycopy(
+tempArr,
+tempStart,
+productArr,
+cstart + i,
+diff + bcount);
           }
         }
       }
@@ -1221,28 +1709,52 @@ at: http://upokecenter.com/d/
 
     // Multiplies two operands of different sizes
     private static void AsymmetricMultiply(
-      short[] resultArr,
-      int resultStart,  // uses words1Count + words2Count space
-      short[] tempArr,
-      int tempStart,  // uses words1Count + words2Count space
-      short[] words1,
-      int words1Start,
-      int words1Count,
-      short[] words2,
-      int words2Start,
-      int words2Count) {
-      // System.out.println("AsymmetricMultiply " + words1Count + " " + words2Count + " [r=" + resultStart + " t=" + tempStart + " a=" + words1Start + " b=" + words2Start + "]");
+      final short[] resultArr,
+      final int resultStart,  // uses words1Count + words2Count space
+      final short[] tempArr,
+      final int tempStart,  // uses words1Count + words2Count space
+      final short[] words1,
+      final int words1Start,
+      final int words1Count,
+      final short[] words2,
+      final int words2Start,
+      final int words2Count) {
+      // System.out.println("AsymmetricMultiply " + words1Count + " " +
+      // words2Count + " [r=" + resultStart + " t=" + tempStart + " a=" +
+      // words1Start + " b=" + words2Start + "]");
 
       if (words1Count == words2Count) {
         if (words1Start == words2Start && words1 == words2) {
           // Both operands have the same value and the same word count
-          RecursiveSquare(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words1Count);
+          RecursiveSquare(
+resultArr,
+resultStart,
+tempArr,
+tempStart,
+words1,
+words1Start,
+words1Count);
         } else if (words1Count == 2) {
           // Both operands have a word count of 2
-          Baseline_Multiply2(resultArr, resultStart, words1, words1Start, words2, words2Start);
+          Baseline_Multiply2(
+resultArr,
+resultStart,
+words1,
+words1Start,
+words2,
+words2Start);
         } else {
           // Other cases where both operands have the same word count
-          SameSizeMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
+          SameSizeMultiply(
+resultArr,
+resultStart,
+tempArr,
+tempStart,
+words1,
+words1Start,
+words2,
+words2Start,
+words1Count);
         }
 
         return;
@@ -1260,19 +1772,31 @@ at: http://upokecenter.com/d/
         words2Count = tmp2;
       }
 
-      if (words1Count == 1 || (words1Count == 2 && words1[words1Start + 1] == 0)) {
+  if (words1Count == 1 || (words1Count == 2 && words1[words1Start + 1] ==
+        0)) {
         switch (words1[words1Start]) {
           case 0:
             // words1 is zero, so result is 0
-            java.util.Arrays.fill(resultArr,resultStart,(resultStart)+(words2Count + 2),(short)0);
+            java.util.Arrays.fill(resultArr, resultStart, (resultStart) + (words2Count + 2), (short)0);
             return;
           case 1:
-            System.arraycopy(words2, words2Start, resultArr, resultStart, (int)words2Count);
+     System.arraycopy(
+words2,
+words2Start,
+resultArr,
+resultStart,
+(int)words2Count);
             resultArr[resultStart + words2Count] = (short)0;
             resultArr[resultStart + words2Count + 1] = (short)0;
             return;
           default:
-            resultArr[resultStart + words2Count] = LinearMultiply(resultArr, resultStart, words2, words2Start, words1[words1Start], words2Count);
+            resultArr[resultStart + words2Count] = LinearMultiply(
+resultArr,
+resultStart,
+words2,
+words2Start,
+words1[words1Start],
+words2Count);
             resultArr[resultStart + words2Count + 1] = (short)0;
             return;
         }
@@ -1282,38 +1806,122 @@ at: http://upokecenter.com/d/
         int a1 = ((int)words1[words1Start + 1]) & 0xffff;
         resultArr[resultStart + words2Count] = (short)0;
         resultArr[resultStart + words2Count + 1] = (short)0;
-        AtomicMultiplyOpt(resultArr, resultStart, a0, a1, words2, words2Start, 0, words2Count);
-        AtomicMultiplyAddOpt(resultArr, resultStart, a0, a1, words2, words2Start, 2, words2Count);
+        AtomicMultiplyOpt(
+resultArr,
+resultStart,
+a0,
+a1,
+words2,
+words2Start,
+0,
+words2Count);
+        AtomicMultiplyAddOpt(
+resultArr,
+resultStart,
+a0,
+a1,
+words2,
+words2Start,
+2,
+words2Count);
         return;
       }
       if (words1Count <= 10 && words2Count <= 10) {
-        SchoolbookMultiply(resultArr, resultStart, words1, words1Start, words1Count, words2, words2Start, words2Count);
+        SchoolbookMultiply(
+resultArr,
+resultStart,
+words1,
+words1Start,
+words1Count,
+words2,
+words2Start,
+words2Count);
       } else {
         int wordsRem = words2Count % words1Count;
         int evenmult = (words2Count / words1Count) & 1;
         int i;
-        // System.out.println("counts=" + words1Count + "," + words2Count + " res=" + (resultStart + words1Count) + " temp=" + (tempStart + (words1Count << 1)) + " rem=" + wordsRem + " evenwc=" + evenmult);
+        // System.out.println("counts=" + words1Count + "," + words2Count +
+        // " res=" + (resultStart + words1Count) + " temp=" + (tempStart +
+        // (words1Count << 1)) + " rem=" + wordsRem + " evenwc=" + evenmult);
         if (wordsRem == 0) {
           // words2Count is divisible by words1count
           if (evenmult == 0) {
-            SameSizeMultiply(resultArr, resultStart, tempArr, tempStart, words1, words1Start, words2, words2Start, words1Count);
-            System.arraycopy(resultArr, resultStart + words1Count, tempArr, (int)(tempStart + (words1Count << 1)), words1Count);
+            SameSizeMultiply(
+resultArr,
+resultStart,
+tempArr,
+tempStart,
+words1,
+words1Start,
+words2,
+words2Start,
+words1Count);
+            System.arraycopy(
+resultArr,
+resultStart + words1Count,
+tempArr,
+(int)(tempStart + (words1Count << 1)),
+words1Count);
             for (i = words1Count << 1; i < words2Count; i += words1Count << 1) {
-              SameSizeMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+              SameSizeMultiply(
+tempArr,
+tempStart + words1Count + i,
+tempArr,
+tempStart,
+words1,
+words1Start,
+words2,
+words2Start + i,
+words1Count);
             }
             for (i = words1Count; i < words2Count; i += words1Count << 1) {
-              SameSizeMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+              SameSizeMultiply(
+resultArr,
+resultStart + i,
+tempArr,
+tempStart,
+words1,
+words1Start,
+words2,
+words2Start + i,
+words1Count);
             }
           } else {
             for (i = 0; i < words2Count; i += words1Count << 1) {
-              SameSizeMultiply(resultArr, resultStart + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+              SameSizeMultiply(
+resultArr,
+resultStart + i,
+tempArr,
+tempStart,
+words1,
+words1Start,
+words2,
+words2Start + i,
+words1Count);
             }
             for (i = words1Count; i < words2Count; i += words1Count << 1) {
-              SameSizeMultiply(tempArr, tempStart + words1Count + i, tempArr, tempStart, words1, words1Start, words2, words2Start + i, words1Count);
+              SameSizeMultiply(
+tempArr,
+tempStart + words1Count + i,
+tempArr,
+tempStart,
+words1,
+words1Start,
+words2,
+words2Start + i,
+words1Count);
             }
           }
-          if (Add(resultArr, resultStart + words1Count, resultArr, resultStart + words1Count, tempArr, tempStart + (words1Count << 1), words2Count - words1Count) != 0) {
-            Increment(resultArr, (int)(resultStart + words2Count), words1Count, (short)1);
+          if (
+Add(
+resultArr, resultStart + words1Count, resultArr,
+            resultStart + words1Count, tempArr, tempStart + (words1Count <<
+            1), words2Count - words1Count) != 0) {
+ Increment(
+resultArr,
+(int)(resultStart + words2Count),
+words1Count,
+(short)1);
           }
         } else if ((words1Count + words2Count) >= (words1Count << 2)) {
           // System.out.println("Chunked Linear Multiply Long");
@@ -1329,8 +1937,10 @@ at: http://upokecenter.com/d/
             words1Start,
             words1Count);
         } else if (words1Count + 1 == words2Count ||
-                   (words1Count + 2 == words2Count && words2[words2Start + words2Count - 1] == 0)) {
-          java.util.Arrays.fill(resultArr,resultStart,(resultStart)+(words1Count + words2Count),(short)0);
+                   (words1Count + 2 == words2Count && words2[words2Start +
+                     words2Count - 1] == 0)) {
+       java.util.Arrays.fill(
+(short[])resultArr, resultStart, (resultStart) + (words1Count + words2Count), 0);
           // Multiply the low parts of each operand
           SameSizeMultiply(
             resultArr,
@@ -1370,23 +1980,23 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static int MakeUint(short first, short second) {
+    private static int MakeUint(final short first, short second) {
       return ((int)((((int)first) & 0xffff) | ((int)second << 16)));
     }
 
-    private static short GetLowHalf(int val) {
+    private static short GetLowHalf(final int val) {
       return ((short)(val & 0xffff));
     }
 
-    private static short GetHighHalf(int val) {
+    private static short GetHighHalf(final int val) {
       return ((short)((val >> 16) & 0xffff));
     }
 
-    private static short GetHighHalfAsBorrow(int val) {
+    private static short GetHighHalfAsBorrow(final int val) {
       return ((short)(0 - ((val >> 16) & 0xffff)));
     }
 
-    private static int BitPrecision(short numberValue) {
+    private static int BitPrecision(final short numberValue) {
       if (numberValue == 0) {
         return 0;
       }
@@ -1414,14 +2024,18 @@ at: http://upokecenter.com/d/
       return i;
     }
 
-    private static short Divide32By16(int dividendLow, short divisorShort, boolean returnRemainder) {
+    private static short Divide32By16(
+final int dividendLow,
+final short divisorShort,
+final boolean returnRemainder) {
       int tmpInt;
       int dividendHigh = 0;
       int intDivisor = ((int)divisorShort) & 0xffff;
       for (int i = 0; i < 32; ++i) {
         tmpInt = dividendHigh >> 31;
         dividendHigh <<= 1;
-        dividendHigh = ((int)(dividendHigh | ((int)((dividendLow >> 31) & 1))));
+        dividendHigh = ((int)(dividendHigh | ((int)((dividendLow >>
+          31) & 1))));
         dividendLow <<= 1;
         tmpInt |= dividendHigh;
         // unsigned greater-than-or-equal check
@@ -1437,7 +2051,7 @@ at: http://upokecenter.com/d/
         ((short)(((int)dividendLow) & 0xffff));
     }
 
-    private static short DivideUnsigned(int x, short y) {
+    private static short DivideUnsigned(final int x, short y) {
       {
         if ((x >> 31) == 0) {
           // x is already nonnegative
@@ -1448,18 +2062,36 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static short RemainderUnsigned(int x, short y) {
+    private static short RemainderUnsigned(final int x, short y) {
       {
         int iy = ((int)y) & 0xffff;
-        return ((x >> 31) == 0) ? ((short)(((int)x % iy) & 0xffff)) : Divide32By16(x, y, true);
+        return ((x >> 31) == 0) ? ((short)(((int)x % iy) & 0xffff)) :
+          Divide32By16(x, y, true);
       }
     }
 
-    private static short DivideThreeWordsByTwo(short[] words1, int words1Start, short valueB0, short valueB1) {
-      // Debugif(!(words1[2] < valueB1 || (words1[2]==valueB1 && words1[1] < valueB0)))Assert.fail("{0} line {1}: words1[2] < valueB1 || (words1[2]==valueB1 && words1[1] < valueB0)","integer.cpp",360);
+    private static short DivideThreeWordsByTwo(
+final short[] words1,
+final int words1Start,
+final short valueB0,
+final short valueB1) {
+      // Debugif(!(words1[2] < valueB1 || (words1[2]==valueB1 &&
+      // words1[1] <
+
+  // //
+  //
+  //valueB0)))Assert.fail("{0} line {1}: words1[2] < valueB1 || (words1[2]==valueB1 && words1[1] < valueB0)"
+      // ,"integer.cpp" ,360);
       short valueQ;
       {
-        valueQ = ((short)(valueB1 + 1) == 0) ? words1[words1Start + 2] : ((valueB1 != 0) ? DivideUnsigned(MakeUint(words1[words1Start + 1], words1[words1Start + 2]), (short)(((int)valueB1 + 1) & 0xffff)) : DivideUnsigned(MakeUint(words1[words1Start], words1[words1Start + 1]), valueB0));
+        valueQ = ((short)(valueB1 + 1) == 0) ? words1[words1Start + 2] :
+          (
+(
+valueB1 != 0) ? DivideUnsigned(MakeUint(words1[words1Start + 1],
+          words1[words1Start + 2]), (short)(((int)valueB1 + 1) & 0xffff)) :
+          DivideUnsigned(
+MakeUint(words1[words1Start], words1[words1Start + 1]),
+valueB0));
 
         int valueQint = ((int)valueQ) & 0xffff;
         int valueB0int = ((int)valueB0) & 0xffff;
@@ -1472,11 +2104,15 @@ at: http://upokecenter.com/d/
         words1[words1Start + 1] = GetLowHalf(u);
         words1[words1Start + 2] += GetHighHalf(u);
         while (words1[words1Start + 2] != 0 ||
-               (((int)words1[words1Start + 1]) & 0xffff) > (((int)valueB1) & 0xffff) ||
-               (words1[words1Start + 1] == valueB1 && (((int)words1[words1Start]) & 0xffff) >= (((int)valueB0) & 0xffff))) {
+       (((int)words1[words1Start + 1]) & 0xffff) > (((int)valueB1) & 0xffff) ||
+
+               (words1[words1Start + 1] == valueB1 &&
+                 (((int)words1[words1Start]) & 0xffff) >= (((int)valueB0) &
+                 0xffff))) {
           u = (((int)words1[words1Start]) & 0xffff) - valueB0int;
           words1[words1Start] = GetLowHalf(u);
-          u = (((int)words1[words1Start + 1]) & 0xffff) - valueB1int - (((int)GetHighHalfAsBorrow(u)) & 0xffff);
+          u = (((int)words1[words1Start + 1]) & 0xffff) - valueB1int -
+            (((int)GetHighHalfAsBorrow(u)) & 0xffff);
           words1[words1Start + 1] = GetLowHalf(u);
           words1[words1Start + 2] += GetHighHalf(u);
           ++valueQ;
@@ -1486,15 +2122,15 @@ at: http://upokecenter.com/d/
     }
 
     private static void DivideFourWordsByTwo(
-      short[] quotient,
-      int quotientStart,
-      short[] words1,
-      int words1Start,
-      short word2A,
-      short word2B,
-      short[] temp) {
+      final short[] quotient,
+      final int quotientStart,
+      final short[] words1,
+      final int words1Start,
+      final short word2A,
+      final short word2B,
+      final short[] temp) {
       if (word2A == 0 && word2B == 0) {
-        // if divisor is 0, we assume divisor.compareTo(BigInteger.valueOf(2))==0**32
+        // if divisor is 0, we assume divisor.compareTo(BigInteger.valueOf(2)) == 0**32
         quotient[quotientStart] = words1[words1Start + 2];
         quotient[quotientStart + 1] = words1[words1Start + 3];
       } else {
@@ -1509,7 +2145,15 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static void AtomicMultiplyOpt(short[] c, int valueCstart, int valueA0, int valueA1, short[] words2, int words2Start, int istart, int iend) {
+    private static void AtomicMultiplyOpt(
+final short[] c,
+final int valueCstart,
+final int valueA0,
+final int valueA1,
+final short[] words2,
+final int words2Start,
+final int istart,
+final int iend) {
       short s;
       int d;
       int first1MinusFirst0 = ((int)valueA1 - valueA0) & 0xffff;
@@ -1534,11 +2178,13 @@ at: http://upokecenter.com/d/
             int valueA1B1 = valueA1 * valueB1;
             int tempInt;
             tempInt = a0b0high +
-              (((int)valueA0B0) & 0xffff) + (((int)d) & 0xffff) + (((int)valueA1B1) & 0xffff);
+              (((int)valueA0B0) & 0xffff) + (((int)d) & 0xffff) +
+                (((int)valueA1B1) & 0xffff);
             c[csi + 1] = (short)(((int)tempInt) & 0xffff);
 
             tempInt = valueA1B1 + (((int)(tempInt >> 16)) & 0xffff) +
-              a0b0high + (((int)(d >> 16)) & 0xffff) + (((int)(valueA1B1 >> 16)) & 0xffff) -
+ a0b0high + (((int)(d >> 16)) & 0xffff) + (((int)(valueA1B1 >> 16)) &
+                0xffff) -
               (((int)s) & 0xffff);
 
             c[csi + 2] = (short)(((int)tempInt) & 0xffff);
@@ -1554,7 +2200,8 @@ at: http://upokecenter.com/d/
               d = first1MinusFirst0 * (((int)s) & 0xffff);
             } else {
               s = (short)0;
-              d = (((int)valueA0 - valueA1) & 0xffff) * (((int)valueB1 - valueB0) & 0xffff);
+ d = (((int)valueA0 - valueA1) & 0xffff) * (((int)valueB1 - valueB0) &
+                0xffff);
             }
             int valueA0B0 = valueA0 * valueB0;
             int a0b0high = (valueA0B0 >> 16) & 0xffff;
@@ -1563,11 +2210,13 @@ at: http://upokecenter.com/d/
             int valueA1B1 = valueA1 * valueB1;
             int tempInt;
             tempInt = a0b0high +
-              (((int)valueA0B0) & 0xffff) + (((int)d) & 0xffff) + (((int)valueA1B1) & 0xffff);
+              (((int)valueA0B0) & 0xffff) + (((int)d) & 0xffff) +
+                (((int)valueA1B1) & 0xffff);
             c[csi + 1] = (short)(((int)tempInt) & 0xffff);
 
             tempInt = valueA1B1 + (((int)(tempInt >> 16)) & 0xffff) +
-              a0b0high + (((int)(d >> 16)) & 0xffff) + (((int)(valueA1B1 >> 16)) & 0xffff) -
+ a0b0high + (((int)(d >> 16)) & 0xffff) + (((int)(valueA1B1 >> 16)) &
+                0xffff) -
               (((int)s) & 0xffff);
 
             c[csi + 2] = (short)(((int)tempInt) & 0xffff);
@@ -1577,7 +2226,15 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static void AtomicMultiplyAddOpt(short[] c, int valueCstart, int valueA0, int valueA1, short[] words2, int words2Start, int istart, int iend) {
+    private static void AtomicMultiplyAddOpt(
+final short[] c,
+final int valueCstart,
+final int valueA0,
+final int valueA1,
+final short[] words2,
+final int words2Start,
+final int istart,
+final int iend) {
       short s;
       int d;
       int first1MinusFirst0 = ((int)valueA1 - valueA0) & 0xffff;
@@ -1605,14 +2262,18 @@ at: http://upokecenter.com/d/
             int valueA1B1 = valueA1 * b1;
             int a1b1low = valueA1B1 & 0xffff;
             int a1b1high = ((int)(valueA1B1 >> 16)) & 0xffff;
-            tempInt = (((int)(tempInt >> 16)) & 0xffff) + (((int)valueA0B0) & 0xffff) + (((int)d) & 0xffff) + a1b1low + (((int)c[csi + 1]) & 0xffff);
+            tempInt = (((int)(tempInt >> 16)) & 0xffff) + (((int)valueA0B0) &
+              0xffff) + (((int)d) & 0xffff) + a1b1low + (((int)c[csi + 1]) &
+              0xffff);
             c[csi + 1] = (short)(((int)tempInt) & 0xffff);
 
-            tempInt = (((int)(tempInt >> 16)) & 0xffff) + a1b1low + a0b0high + (((int)(d >> 16)) & 0xffff) +
+            tempInt = (((int)(tempInt >> 16)) & 0xffff) + a1b1low + a0b0high +
+              (((int)(d >> 16)) & 0xffff) +
               a1b1high - (((int)s) & 0xffff) + (((int)c[csi + 2]) & 0xffff);
             c[csi + 2] = (short)(((int)tempInt) & 0xffff);
 
-            tempInt = (((int)(tempInt >> 16)) & 0xffff) + a1b1high + (((int)c[csi + 3]) & 0xffff);
+            tempInt = (((int)(tempInt >> 16)) & 0xffff) + a1b1high +
+              (((int)c[csi + 3]) & 0xffff);
             c[csi + 3] = (short)(((int)tempInt) & 0xffff);
             if ((tempInt >> 16) != 0) {
               ++c[csi + 4];
@@ -1629,7 +2290,8 @@ at: http://upokecenter.com/d/
               d = first1MinusFirst0 * (((int)s) & 0xffff);
             } else {
               s = (short)0;
-              d = (((int)valueA0 - valueA1) & 0xffff) * (((int)valueB1 - valueB0) & 0xffff);
+ d = (((int)valueA0 - valueA1) & 0xffff) * (((int)valueB1 - valueB0) &
+                0xffff);
             }
             int valueA0B0 = valueA0 * valueB0;
             int a0b0high = (valueA0B0 >> 16) & 0xffff;
@@ -1640,14 +2302,18 @@ at: http://upokecenter.com/d/
             int valueA1B1 = valueA1 * valueB1;
             int a1b1low = valueA1B1 & 0xffff;
             int a1b1high = (valueA1B1 >> 16) & 0xffff;
-            tempInt = (((int)(tempInt >> 16)) & 0xffff) + (((int)valueA0B0) & 0xffff) + (((int)d) & 0xffff) + a1b1low + (((int)c[csi + 1]) & 0xffff);
+            tempInt = (((int)(tempInt >> 16)) & 0xffff) + (((int)valueA0B0) &
+              0xffff) + (((int)d) & 0xffff) + a1b1low + (((int)c[csi + 1]) &
+              0xffff);
             c[csi + 1] = (short)(((int)tempInt) & 0xffff);
 
-            tempInt = (((int)(tempInt >> 16)) & 0xffff) + a1b1low + a0b0high + (((int)(d >> 16)) & 0xffff) +
+            tempInt = (((int)(tempInt >> 16)) & 0xffff) + a1b1low + a0b0high +
+              (((int)(d >> 16)) & 0xffff) +
               a1b1high - (((int)s) & 0xffff) + (((int)c[csi + 2]) & 0xffff);
             c[csi + 2] = (short)(((int)tempInt) & 0xffff);
 
-            tempInt = (((int)(tempInt >> 16)) & 0xffff) + a1b1high + (((int)c[csi + 3]) & 0xffff);
+            tempInt = (((int)(tempInt >> 16)) & 0xffff) + a1b1high +
+              (((int)c[csi + 3]) & 0xffff);
             c[csi + 3] = (short)(((int)tempInt) & 0xffff);
             if ((tempInt >> 16) != 0) {
               ++c[csi + 4];
@@ -1659,18 +2325,18 @@ at: http://upokecenter.com/d/
     }
 
     private static void Divide(
-      short[] remainderArr,
-      int remainderStart,  // remainder; size: words2Count
-      short[] quotientArr,
-      int quotientStart,  // quotient
-      short[] tempArr,
-      int tempStart,  // scratch space
-      short[] words1,
-      int words1Start,
-      int words1Count,  // dividend
-      short[] words2,
-      int words2Start,
-      int words2Count) {
+      final short[] remainderArr,
+      final int remainderStart,  // remainder; size: words2Count
+      final short[] quotientArr,
+      final int quotientStart,  // quotient
+      final short[] tempArr,
+      final int tempStart,  // scratch space
+      final short[] words1,
+      final int words1Start,
+      final int words1Count,  // dividend
+      final short[] words2,
+      final int words2Start,
+      final int words2Count) {
       // set up temporary work space
 
       if (words2Count == 0) {
@@ -1698,12 +2364,20 @@ at: http://upokecenter.com/d/
       int valueTBstart = (int)(tempStart + (words1Count + 2));
       int valueTPstart = (int)(tempStart + (words1Count + 2 + words2Count));
       {
-        // copy words2 into TB and normalize it so that TB has highest bit set to 1
-        int shiftWords = (short)(words2[words2Start + words2Count - 1] == 0 ? 1 : 0);
+        // copy words2 into TB and normalize it so that TB has highest bit
+        // set to 1
+  int shiftWords = (short)(words2[words2Start + words2Count - 1] == 0 ? 1 :
+          0);
         tempArr[valueTBstart] = (short)0;
         tempArr[valueTBstart + words2Count - 1] = (short)0;
-        System.arraycopy(words2, words2Start, tempArr, (int)(valueTBstart + shiftWords), words2Count - shiftWords);
-        short shiftBits = (short)((short)16 - BitPrecision(tempArr[valueTBstart + words2Count - 1]));
+        System.arraycopy(
+words2,
+words2Start,
+tempArr,
+(int)(valueTBstart + shiftWords),
+words2Count - shiftWords);
+        short shiftBits = (short)((short)16 -
+          BitPrecision(tempArr[valueTBstart + words2Count - 1]));
         ShiftWordsLeftByBits(
           tempArr,
           valueTBstart,
@@ -1713,16 +2387,23 @@ at: http://upokecenter.com/d/
         tempArr[0] = (short)0;
         tempArr[words1Count] = (short)0;
         tempArr[words1Count + 1] = (short)0;
-        System.arraycopy(words1, words1Start, tempArr, (int)(tempStart + shiftWords), words1Count);
+        System.arraycopy(
+words1,
+words1Start,
+tempArr,
+(int)(tempStart + shiftWords),
+words1Count);
         ShiftWordsLeftByBits(
           tempArr,
           tempStart,
           words1Count + 2,
           shiftBits);
 
-        if (tempArr[tempStart + words1Count + 1] == 0 && (((int)tempArr[tempStart + words1Count]) & 0xffff) <= 1) {
+        if (tempArr[tempStart + words1Count + 1] == 0 &&
+          (((int)tempArr[tempStart + words1Count]) & 0xffff) <= 1) {
           if (quotientArr != null) {
-            quotientArr[quotientStart + words1Count - words2Count + 1] = (short)0;
+         quotientArr[quotientStart + words1Count - words2Count + 1] =
+              (short)0;
             quotientArr[quotientStart + words1Count - words2Count] = (short)0;
           }
           while (
@@ -1741,21 +2422,26 @@ at: http://upokecenter.com/d/
               valueTBstart,
               words2Count);
             if (quotientArr != null) {
-              quotientArr[quotientStart + words1Count - words2Count] += (short)1;
+            quotientArr[quotientStart + words1Count - words2Count] +=
+                (short)1;
             }
           }
         } else {
           words1Count += 2;
         }
 
-        short valueBT0 = (short)(tempArr[valueTBstart + words2Count - 2] + (short)1);
-        short valueBT1 = (short)(tempArr[valueTBstart + words2Count - 1] + (short)(valueBT0 == (short)0 ? 1 : 0));
+    short valueBT0 = (short)(tempArr[valueTBstart + words2Count - 2] +
+          (short)1);
+        short valueBT1 = (short)(tempArr[valueTBstart + words2Count - 1] +
+          (short)(valueBT0 == (short)0 ? 1 : 0));
 
         // start reducing valueTA mod TB, 2 words at a time
         short[] valueTAtomic = new short[4];
         for (int i = words1Count - 2; i >= words2Count; i -= 2) {
           int qs = (quotientArr == null) ? 0 : quotientStart + i - words2Count;
-          DivideFourWordsByTwo(quot, qs, tempArr, (int)(tempStart + i - 2), valueBT0, valueBT1, valueTAtomic);
+          DivideFourWordsByTwo(
+quot, qs, tempArr, (int)(tempStart + i - 2),
+            valueBT0, valueBT1, valueTAtomic);
           // now correct the underestimated quotient
           int valueRstart2 = tempStart + i - words2Count;
           int n = words2Count;
@@ -1763,22 +2449,67 @@ at: http://upokecenter.com/d/
             int quotient0 = quot[qs];
             int quotient1 = quot[qs + 1];
             if (quotient1 == 0) {
-              short carry = LinearMultiply(tempArr, valueTPstart, tempArr, valueTBstart, (short)quotient0, n);
+              short carry = LinearMultiply(
+tempArr, valueTPstart, tempArr,
+                valueTBstart, (short)quotient0, n);
               tempArr[valueTPstart + n] = carry;
               tempArr[valueTPstart + n + 1] = 0;
             } else if (n == 2) {
-              Baseline_Multiply2(tempArr, valueTPstart, quot, qs, tempArr, valueTBstart);
+    Baseline_Multiply2(
+tempArr,
+valueTPstart,
+quot,
+qs,
+tempArr,
+valueTBstart);
             } else {
               tempArr[valueTPstart + n] = (short)0;
               tempArr[valueTPstart + n + 1] = (short)0;
               quotient0 &= 0xffff;
               quotient1 &= 0xffff;
-              AtomicMultiplyOpt(tempArr, valueTPstart, quotient0, quotient1, tempArr, valueTBstart, 0, n);
-              AtomicMultiplyAddOpt(tempArr, valueTPstart, quotient0, quotient1, tempArr, valueTBstart, 2, n);
+              AtomicMultiplyOpt(
+tempArr,
+valueTPstart,
+quotient0,
+quotient1,
+tempArr,
+valueTBstart,
+0,
+n);
+              AtomicMultiplyAddOpt(
+tempArr,
+valueTPstart,
+quotient0,
+quotient1,
+tempArr,
+valueTBstart,
+2,
+n);
             }
-            Subtract(tempArr, valueRstart2, tempArr, valueRstart2, tempArr, valueTPstart, n + 2);
-            while (tempArr[valueRstart2 + n] != 0 || Compare(tempArr, valueRstart2, tempArr, valueTBstart, n) >= 0) {
-              tempArr[valueRstart2 + n] -= (short)Subtract(tempArr, valueRstart2, tempArr, valueRstart2, tempArr, valueTBstart, n);
+            Subtract(
+tempArr,
+valueRstart2,
+tempArr,
+valueRstart2,
+tempArr,
+valueTPstart,
+n + 2);
+            while (
+tempArr[valueRstart2 + n] != 0 || Compare(
+tempArr,
+valueRstart2,
+tempArr,
+valueTBstart,
+n) >= 0) {
+              tempArr[valueRstart2 + n] -= (
+short)Subtract(
+tempArr,
+valueRstart2,
+tempArr,
+valueRstart2,
+tempArr,
+valueTBstart,
+n);
               if (quotientArr != null) {
                 ++quotientArr[qs];
                 quotientArr[qs + 1] += (short)((quotientArr[qs] == 0) ? 1 : 0);
@@ -1788,13 +2519,22 @@ at: http://upokecenter.com/d/
         }
         if (remainderArr != null) {  // If the remainder is non-null
           // copy valueTA into result, and denormalize it
-          System.arraycopy(tempArr, (int)(tempStart + shiftWords), remainderArr, remainderStart, words2Count);
-          ShiftWordsRightByBits(remainderArr, remainderStart, words2Count, shiftBits);
+          System.arraycopy(
+tempArr,
+(int)(tempStart + shiftWords),
+remainderArr,
+remainderStart,
+words2Count);
+   ShiftWordsRightByBits(
+remainderArr,
+remainderStart,
+words2Count,
+shiftBits);
         }
       }
     }
 
-    private static int RoundupSize(int n) {
+    private static int RoundupSize(final int n) {
       return n + (n & 1);
     }
 
@@ -1802,7 +2542,7 @@ at: http://upokecenter.com/d/
     private final int wordCount;
     private final short[] words;
 
-    private BigInteger(int wordCount, short[] reg, boolean negative) {
+    private BigInteger(final int wordCount, short[] reg, boolean negative) {
       this.wordCount = wordCount;
       this.words = reg;
       this.negative = negative;
@@ -1810,14 +2550,13 @@ at: http://upokecenter.com/d/
 
     /**
      * Initializes a BigInteger object from an array of bytes.
-     * @param bytes A byte array. Can be empty, in which case the return value
-     * is 0.
+     * @param bytes A byte array. Can be empty, in which case the return value is
+     * 0.
      * @param littleEndian A Boolean object.
      * @return A BigInteger object.
-     * @throws java.lang.NullPointerException The parameter {@code bytes}
-     * is null.
+     * @throws NullPointerException The parameter {@code bytes} is null.
      */
-    public static BigInteger fromByteArray(byte[] bytes, boolean littleEndian) {
+    public static BigInteger fromByteArray(final byte[] bytes, boolean littleEndian) {
       if (bytes == null) {
         throw new NullPointerException("bytes");
       }
@@ -1866,17 +2605,18 @@ at: http://upokecenter.com/d/
              newreg[newwordCount - 1] == 0) {
         --newwordCount;
       }
-      return (newwordCount == 0) ? BigInteger.ZERO : (new BigInteger(newwordCount, newreg, newnegative));
+      return (newwordCount == 0) ? BigInteger.ZERO : (new
+        BigInteger(newwordCount, newreg, newnegative));
     }
 
-    private static short[] GrowForCarry(short[] a, short carry) {
+    private static short[] GrowForCarry(final short[] a, short carry) {
       int oldLength = a.length;
       short[] ret = CleanGrow(a, RoundupSize(oldLength + 1));
       ret[oldLength] = carry;
       return ret;
     }
 
-    private static short[] CleanGrow(short[] a, int size) {
+    private static short[] CleanGrow(final short[] a, int size) {
       if (size > a.length) {
         short[] newa = new short[size];
         System.arraycopy(a, 0, newa, 0, a.length);
@@ -1886,13 +2626,13 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Returns whether a bit is set in the two's-complement representation
-     * of this object's value.
-     * @param index Zero based index of the bit to test. 0 means the least significant
-     * bit.
+     * Returns whether a bit is set in the two's-complement representation of this
+     * object's value.
+     * @param index Zero based index of the bit to test. 0 means the least
+     * significant bit.
      * @return True if the specified bit is set; otherwise, false.
      */
-    public boolean testBit(int index) {
+    public boolean testBit(final int index) {
       if (index < 0) {
         throw new IllegalArgumentException("index");
       }
@@ -1921,9 +2661,9 @@ at: http://upokecenter.com/d/
       return this.GetUnsignedBit(index);
     }
 
-    private boolean GetUnsignedBit(int n) {
-
-      return ((n >> 4) < this.words.length) && ((boolean)(((this.words[(n >> 4)] >> (int)(n & 15)) & 1) != 0));
+    private boolean GetUnsignedBit(final int n) {
+      return ((n >> 4) < this.words.length) && ((boolean)(((this.words[(n >>
+        4)] >> (int)(n & 15)) & 1) != 0));
     }
 
     /**
@@ -1931,7 +2671,7 @@ at: http://upokecenter.com/d/
      * @param littleEndian A Boolean object.
      * @return A byte array that represents the value of this object.
      */
-    public byte[] toByteArray(boolean littleEndian) {
+    public byte[] toByteArray(final boolean littleEndian) {
       int sign = this.signum();
       if (sign == 0) {
         return new byte[] { (byte)0  };
@@ -1995,34 +2735,46 @@ at: http://upokecenter.com/d/
 
     /**
      * Shifts this object&apos;s value by a number of bits. A value of 1 doubles
-     * this value, a value of 2 multiplies it by 4, a value of 3 by 8, a value of
-     * 4 by 16, and so on.
-     * @param numberBits The number of bits to shift. Can be negative, in
-     * which case this is the same as shiftRight with the absolute value of
+     * this value, a value of 2 multiplies it by 4, a value of 3 by 8, a
+     * value of 4 by 16, and so on.
+     * @param numberBits The number of bits to shift. Can be negative, in which
+     * case this is the same as shiftRight with the absolute value of
      * numberBits.
      * @return A BigInteger object.
      */
-    public BigInteger shiftLeft(int numberBits) {
+    public BigInteger shiftLeft(final int numberBits) {
       if (numberBits == 0 || this.wordCount == 0) {
         return this;
       }
       if (numberBits < 0) {
-        return (numberBits == Integer.MIN_VALUE) ? this.shiftRight(1).shiftRight(Integer.MAX_VALUE) : this.shiftRight(-numberBits);
+        return (numberBits == Integer.MIN_VALUE) ?
+          this.shiftRight(1).shiftRight(Integer.MAX_VALUE) :
+          this.shiftRight(-numberBits);
       }
       int numWords = (int)this.wordCount;
       int shiftWords = (int)(numberBits >> 4);
       int shiftBits = (int)(numberBits & 15);
       if (!this.negative) {
-        short[] ret = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
+     short[] ret = new short[RoundupSize(numWords +
+          BitsToWords((int)numberBits))];
         System.arraycopy(this.words, 0, ret, shiftWords, numWords);
-        ShiftWordsLeftByBits(ret, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
+        ShiftWordsLeftByBits(
+ret,
+(int)shiftWords,
+numWords + BitsToWords(shiftBits),
+shiftBits);
         return new BigInteger(CountWords(ret, ret.length), ret, false);
       } else {
-        short[] ret = new short[RoundupSize(numWords + BitsToWords((int)numberBits))];
+     short[] ret = new short[RoundupSize(numWords +
+          BitsToWords((int)numberBits))];
         System.arraycopy(this.words, 0, ret, 0, numWords);
         TwosComplement(ret, 0, (int)ret.length);
         ShiftWordsLeftByWords(ret, 0, numWords + shiftWords, shiftWords);
-        ShiftWordsLeftByBits(ret, (int)shiftWords, numWords + BitsToWords(shiftBits), shiftBits);
+        ShiftWordsLeftByBits(
+ret,
+(int)shiftWords,
+numWords + BitsToWords(shiftBits),
+shiftBits);
         TwosComplement(ret, 0, (int)ret.length);
         return new BigInteger(CountWords(ret, ret.length), ret, true);
       }
@@ -2033,12 +2785,14 @@ at: http://upokecenter.com/d/
      * @param numberBits Number of bits to shift right.
      * @return A BigInteger object.
      */
-    public BigInteger shiftRight(int numberBits) {
+    public BigInteger shiftRight(final int numberBits) {
       if (numberBits == 0 || this.wordCount == 0) {
         return this;
       }
       if (numberBits < 0) {
-        return (numberBits == Integer.MIN_VALUE) ? this.shiftLeft(1).shiftLeft(Integer.MAX_VALUE) : this.shiftLeft(-numberBits);
+        return (numberBits == Integer.MIN_VALUE) ?
+          this.shiftLeft(1).shiftLeft(Integer.MAX_VALUE) :
+          this.shiftLeft(-numberBits);
       }
       int numWords = (int)this.wordCount;
       int shiftWords = (int)(numberBits >> 4);
@@ -2051,7 +2805,11 @@ at: http://upokecenter.com/d/
         TwosComplement(ret, 0, (int)ret.length);
         ShiftWordsRightByWordsSignExtend(ret, 0, numWords, shiftWords);
         if (numWords > shiftWords) {
-          ShiftWordsRightByBitsSignExtend(ret, 0, numWords - shiftWords, shiftBits);
+     ShiftWordsRightByBitsSignExtend(
+ret,
+0,
+numWords - shiftWords,
+shiftBits);
         }
         TwosComplement(ret, 0, (int)ret.length);
         retWordCount = ret.length;
@@ -2084,7 +2842,7 @@ at: http://upokecenter.com/d/
      * @param longerValue A 64-bit signed integer.
      * @return A BigInteger object with the same value as the 64-bit number.
      */
-    public static BigInteger valueOf(long longerValue) {
+    public static BigInteger valueOf(final long longerValue) {
       if (longerValue == 0) {
         return BigInteger.ZERO;
       }
@@ -2130,8 +2888,8 @@ at: http://upokecenter.com/d/
     /**
      * Converts this object's value to a 32-bit signed integer.
      * @return A 32-bit signed integer.
-     * @throws ArithmeticException This object's value is too big to fit a
-     * 32-bit signed integer.
+     * @throws ArithmeticException This object's value is too big to fit a 32-bit
+     * signed integer.
      */
     public int intValueChecked() {
       int count = this.wordCount;
@@ -2152,10 +2910,10 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Converts this object's value to a 32-bit signed integer. If the value
-     * can't fit in a 32-bit integer, returns the lower 32 bits of this object's
-     * two's complement representation (in which case the return value
-     * might have a different sign than this object's value).
+     * Converts this object's value to a 32-bit signed integer. If the value can't
+     * fit in a 32-bit integer, returns the lower 32 bits of this object's
+     * two's complement representation (in which case the return value might
+     * have a different sign than this object's value).
      * @return A 32-bit signed integer.
      */
     public int intValueUnchecked() {
@@ -2177,8 +2935,8 @@ at: http://upokecenter.com/d/
     /**
      * Converts this object's value to a 64-bit signed integer.
      * @return A 64-bit signed integer.
-     * @throws ArithmeticException This object's value is too big to fit a
-     * 64-bit signed integer.
+     * @throws ArithmeticException This object's value is too big to fit a 64-bit
+     * signed integer.
      */
     public long longValueChecked() {
       int count = this.wordCount;
@@ -2201,10 +2959,10 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Converts this object's value to a 64-bit signed integer. If the value
-     * can't fit in a 64-bit integer, returns the lower 64 bits of this object's
-     * two's complement representation (in which case the return value
-     * might have a different sign than this object's value).
+     * Converts this object's value to a 64-bit signed integer. If the value can't
+     * fit in a 64-bit integer, returns the lower 64 bits of this object's
+     * two's complement representation (in which case the return value might
+     * have a different sign than this object's value).
      * @return A 64-bit signed integer.
      */
     public long longValueUnchecked() {
@@ -2235,22 +2993,21 @@ at: http://upokecenter.com/d/
         ivv = ((long)intRetValue) & 0xFFFFFFFFL;
         ivv |= ((long)intRetValue2) << 32;
         return ivv;
-      } else {
-        ivv = ((long)intRetValue) & 0xFFFFFFFFL;
-        if (this.negative) {
-          ivv = -ivv;
-        }
-        return ivv;
       }
+      ivv = ((long)intRetValue) & 0xFFFFFFFFL;
+      if (this.negative) {
+        ivv = -ivv;
+      }
+      return ivv;
     }
 
     /**
      * Converts this object's value to a 32-bit signed integer. To make the
-     * conversion intention clearer, use the <code>intValueChecked</code>
-     * and <code>intValueUnchecked</code> methods instead.
+     * conversion intention clearer, use the <code>intValueChecked</code> and
+     * <code>intValueUnchecked</code> methods instead.
      * @return A 32-bit signed integer.
-     * @throws ArithmeticException This object's value is too big to fit a
-     * 32-bit signed integer.
+     * @throws ArithmeticException This object's value is too big to fit a 32-bit
+     * signed integer.
      */
     public int intValue() {
       return this.intValueChecked();
@@ -2258,8 +3015,8 @@ at: http://upokecenter.com/d/
 
     /**
      * Returns whether this object's value can fit in a 32-bit signed integer.
-     * @return True if this object's value is MinValue or greater, and MaxValue
-     * or less; otherwise, false.
+     * @return True if this object's value is MinValue or greater, and MaxValue or
+     * less; otherwise, false.
      */
     public boolean canFitInInt() {
       int c = (int)this.wordCount;
@@ -2289,11 +3046,11 @@ at: http://upokecenter.com/d/
 
     /**
      * Converts this object's value to a 64-bit signed integer. To make the
-     * conversion intention clearer, use the <code>longValueChecked</code>
-     * and <code>longValueUnchecked</code> methods instead.
+     * conversion intention clearer, use the <code>longValueChecked</code> and
+     * <code>longValueUnchecked</code> methods instead.
      * @return A 64-bit signed integer.
-     * @throws ArithmeticException This object's value is too big to fit a
-     * 64-bit signed integer.
+     * @throws ArithmeticException This object's value is too big to fit a 64-bit
+     * signed integer.
      */
     public long longValue() {
       return this.longValueChecked();
@@ -2303,16 +3060,16 @@ at: http://upokecenter.com/d/
      * Not documented yet.
      * @param power A BigInteger object. (2).
      * @return A BigInteger object.
-     * @throws java.lang.NullPointerException The parameter {@code power}
-     * is null.
+     * @throws NullPointerException The parameter {@code power} is null.
      */
-    public BigInteger PowBigIntVar(BigInteger power) {
+    public BigInteger PowBigIntVar(final BigInteger power) {
       if (power == null) {
         throw new NullPointerException("power");
       }
       int sign = power.signum();
       if (sign < 0) {
-        throw new IllegalArgumentException("sign (" + Long.toString((long)sign) + ") is less than " + "0");
+        throw new IllegalArgumentException("sign (" + Long.toString((long)sign) +
+          ") is less than " + "0");
       }
       BigInteger thisVar = this;
       if (sign == 0) {
@@ -2328,13 +3085,13 @@ at: http://upokecenter.com/d/
         return (thisVar.multiply(thisVar)).multiply(thisVar);
       }
       BigInteger r = BigInteger.ONE;
-      while (power.signum()!=0) {
+      while (power.signum() != 0) {
         if (power.testBit(0)) {
-          r=r.multiply(thisVar);
+          r = r.multiply(thisVar);
         }
-        power=power.shiftRight(1);
-        if (power.signum()!=0) {
-          thisVar=thisVar.multiply(thisVar);
+        power = power.shiftRight(1);
+        if (power.signum() != 0) {
+          thisVar = thisVar.multiply(thisVar);
         }
       }
       return r;
@@ -2345,9 +3102,11 @@ at: http://upokecenter.com/d/
      * @param powerSmall A 32-bit signed integer.
      * @return A BigInteger object.
      */
-    public BigInteger pow(int powerSmall) {
+    public BigInteger pow(final int powerSmall) {
       if (powerSmall < 0) {
-        throw new IllegalArgumentException("powerSmall (" + Long.toString((long)powerSmall) + ") is less than " + "0");
+        throw new IllegalArgumentException("powerSmall (" +
+          Long.toString((long)powerSmall) +
+          ") is less than " + "0");
       }
       BigInteger thisVar = this;
       if (powerSmall == 0) {
@@ -2366,11 +3125,11 @@ at: http://upokecenter.com/d/
       BigInteger r = BigInteger.ONE;
       while (powerSmall != 0) {
         if ((powerSmall & 1) != 0) {
-          r=r.multiply(thisVar);
+          r = r.multiply(thisVar);
         }
         powerSmall >>= 1;
         if (powerSmall != 0) {
-          thisVar=thisVar.multiply(thisVar);
+          thisVar = thisVar.multiply(thisVar);
         }
       }
       return r;
@@ -2381,7 +3140,10 @@ at: http://upokecenter.com/d/
      * @return This object's value with the sign reversed.
      */
     public BigInteger negate() {
-      return this.wordCount == 0 ? this : new BigInteger(this.wordCount, this.words, !this.negative);
+      return this.wordCount == 0 ? this : new BigInteger(
+this.wordCount,
+this.words,
+!this.negative);
     }
 
     /**
@@ -2389,7 +3151,8 @@ at: http://upokecenter.com/d/
      * @return This object's value with the sign removed.
      */
     public BigInteger abs() {
-      return (this.wordCount == 0 || !this.negative) ? this : new BigInteger(this.wordCount, this.words, false);
+      return (this.wordCount == 0 || !this.negative) ? this : new
+        BigInteger(this.wordCount, this.words, false);
     }
 
     private int ByteCount() {
@@ -2439,7 +3202,7 @@ at: http://upokecenter.com/d/
       return 0;
     }
 
-    private static int getUnsignedBitLengthEx(int numberValue, int wordCount) {
+    private static int getUnsignedBitLengthEx(final int numberValue, int wordCount) {
       int wc = wordCount;
       if (wc != 0) {
         wc = (wc - 1) << 4;
@@ -2471,8 +3234,9 @@ at: http://upokecenter.com/d/
 
     /**
      * Finds the minimum number of bits needed to represent this object&apos;s
-     * value, except for its sign. If the value is negative, finds the number
-     * of bits in a value equal to this object's absolute value minus 1.
+     * value, except for its sign. If the value is negative, finds the
+     * number of bits in a value equal to this object's absolute value minus
+     * 1.
      * @return The number of bits in this object's value. Returns 0 if this
      * object's value is 0 or negative 1.
      */
@@ -2509,7 +3273,7 @@ at: http://upokecenter.com/d/
 
     private static final String HexChars = "0123456789ABCDEF";
 
-    private static void ReverseChars(char[] chars, int offset, int length) {
+    private static void ReverseChars(final char[] chars, int offset, int length) {
       int half = length >> 1;
       int right = offset + length - 1;
       for (int i = 0; i < half; i++, right--) {
@@ -2545,14 +3309,15 @@ at: http://upokecenter.com/d/
       return new String(chars, 0, count);
     }
 
-    private static int ApproxLogTenOfTwo(int bitlen) {
+    private static int ApproxLogTenOfTwo(final int bitlen) {
       int bitlenLow = bitlen & 0xffff;
       int bitlenHigh = (bitlen >> 16) & 0xffff;
       short resultLow = 0;
       short resultHigh = 0;
       {
         int p; short c; int d;
-        p = bitlenLow * 0x84fb; d = ((int)p >> 16) & 0xffff; c = (short)d; d = ((int)d >> 16) & 0xffff;
+        p = bitlenLow * 0x84fb; d = ((int)p >> 16) & 0xffff; c = (short)d; d
+          = ((int)d >> 16) & 0xffff;
         p = bitlenLow * 0x209a;
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
@@ -2565,7 +3330,8 @@ at: http://upokecenter.com/d/
         p = bitlenHigh * 0x209a;
         p += ((int)c) & 0xffff; c = (short)p;
         d += ((int)p >> 16) & 0xffff;
-        p = ((int)c) & 0xffff; c = (short)p; resultLow = c; c = (short)d; d = ((int)d >> 16) & 0xffff;
+        p = ((int)c) & 0xffff; c = (short)p; resultLow = c; c = (short)d; d
+          = ((int)d >> 16) & 0xffff;
         p = bitlenHigh * 0x9a;
         p += ((int)c) & 0xffff;
         resultHigh = (short)p;
@@ -2577,11 +3343,11 @@ at: http://upokecenter.com/d/
 
     /**
      * Finds the number of decimal digits this number has.
-     * @return The number of decimal digits. Returns 1 if this object' s value
-     * is 0.
+     * @return The number of decimal digits. Returns 1 if this object' s value is
+     * 0.
      */
     public int getDigitCount() {
-      if (this.signum()==0) {
+      if (this.signum() == 0) {
         return 1;
       }
       if (this.HasSmallValue()) {
@@ -2593,10 +3359,18 @@ at: http://upokecenter.com/d/
           value = -value;
         }
         if (value >= 1000000000L) {
-          return (value >= 1000000000000000000L) ? 19 : ((value >= 100000000000000000L) ? 18 : ((value >= 10000000000000000L) ? 17 : ((value >= 1000000000000000L) ? 16 : ((value >= 100000000000000L) ? 15 : ((value >= 10000000000000L) ? 14 : ((value >= 1000000000000L) ? 13 : ((value >= 100000000000L) ? 12 : ((value >= 10000000000L) ? 11 : ((value >= 1000000000L) ? 10 : 9)))))))));
+          return (value >= 1000000000000000000L) ? 19 : ((value >=
+            100000000000000000L) ? 18 : ((value >= 10000000000000000L) ? 17 :
+            ((value >= 1000000000000000L) ? 16 : ((value >=
+            100000000000000L) ? 15 : ((value >= 10000000000000L) ? 14 :
+            ((value >= 1000000000000L) ? 13 : ((value >= 100000000000L) ? 12 :
+            ((value >= 10000000000L) ? 11 : ((value >= 1000000000L) ? 10 :
+            9)))))))));
         } else {
           int v2 = (int)value;
-          return (v2 >= 100000000) ? 9 : ((v2 >= 10000000) ? 8 : ((v2 >= 1000000) ? 7 : ((v2 >= 100000) ? 6 : ((v2 >= 10000) ? 5 : ((v2 >= 1000) ? 4 : ((v2 >= 100) ? 3 : ((v2 >= 10) ? 2 : 1)))))));
+          return (v2 >= 100000000) ? 9 : ((v2 >= 10000000) ? 8 : ((v2 >=
+            1000000) ? 7 : ((v2 >= 100000) ? 6 : ((v2 >= 10000) ? 5 : ((v2 >=
+            1000) ? 4 : ((v2 >= 100) ? 3 : ((v2 >= 10) ? 2 : 1)))))));
         }
       }
       int bitlen = this.getUnsignedBitLength();
@@ -2740,7 +3514,7 @@ at: http://upokecenter.com/d/
      * @return A string representation of this object.
      */
     @Override public String toString() {
-      if (this.signum()==0) {
+      if (this.signum() == 0) {
         return "0";
       }
       if (this.HasSmallValue()) {
@@ -2781,7 +3555,8 @@ at: http://upokecenter.com/d/
           int quo, rem;
           // Divide by 10000
           while ((wci--) > 0) {
-            int currentDividend = ((int)((((int)tempReg[wci]) & 0xffff) |
+         int currentDividend = ((int)((((int)tempReg[wci]) &
+              0xffff) |
                                                   ((int)remainderShort << 16)));
             quo = currentDividend / 10000;
             tempReg[wci] = ((short)quo);
@@ -2811,7 +3586,7 @@ at: http://upokecenter.com/d/
       if (this.negative) {
         StringBuilder sb = new StringBuilder(i + 1);
         sb.append('-');
-        sb.append(s,0,(0)+(i));
+        sb.append(s, 0, (0) + (i));
         return sb.toString();
       }
       return new String(s, 0, i);
@@ -2819,15 +3594,13 @@ at: http://upokecenter.com/d/
 
     /**
      * Converts a string to an arbitrary-precision integer.
-     * @param str A string containing only digits, except that it may start
-     * with a minus sign.
+     * @param str A string containing only digits, except that it may start with a
+     * minus sign.
      * @return A BigInteger object with the same value as given in the string.
-     * @throws java.lang.NullPointerException The parameter {@code str}
-     * is null.
-     * @throws NumberFormatException The parameter {@code str} is in an invalid
-     * format.
+     * @throws NullPointerException The parameter {@code str} is null.
+     * @throws NumberFormatException The parameter {@code str} is in an invalid format.
      */
-    public static BigInteger fromString(String str) {
+    public static BigInteger fromString(final String str) {
       if (str == null) {
         throw new NullPointerException("str");
       }
@@ -2840,37 +3613,47 @@ at: http://upokecenter.com/d/
      * Converts a portion of a string to an arbitrary-precision integer.
      * @param str A string object.
      * @param index The index of the string that starts the string portion.
-     * @param endIndex The index of the string that ends the string portion.
-     * The length will be index + endIndex - 1.
+     * @param endIndex The index of the string that ends the string portion. The
+     * length will be index + endIndex - 1.
      * @return A BigInteger object with the same value as given in the string
      * portion.
-     * @throws java.lang.NullPointerException The parameter {@code str}
-     * is null.
-     * @throws java.lang.IllegalArgumentException The parameter {@code index}
-     * is less than 0, {@code endIndex} is less than 0, or either is greater
-     * than the string's length, or {@code endIndex} is less than {@code
-     * index} .
-     * @throws NumberFormatException The string portion is empty or in an invalid
-     * format.
+     * @throws NullPointerException The parameter {@code str} is null.
+     * @throws IllegalArgumentException The parameter {@code index} is less than 0, {@code
+     * endIndex} is less than 0, or either is greater than the string's
+     * length, or {@code endIndex} is less than {@code index} .
+     * @throws NumberFormatException The string portion is empty or in an invalid format.
      */
-    public static BigInteger fromSubstring(String str, int index, int endIndex) {
+  public static BigInteger fromSubstring(
+final String str,
+final int index,
+final int endIndex) {
       if (str == null) {
         throw new NullPointerException("str");
       }
       if (index < 0) {
-        throw new IllegalArgumentException("index (" + Long.toString((long)index) + ") is less than " + "0");
+        throw new IllegalArgumentException("index (" +
+          Long.toString((long)index) +
+          ") is less than " + "0");
       }
       if (index > str.length()) {
-        throw new IllegalArgumentException("index (" + Long.toString((long)index) + ") is more than " + Long.toString((long)str.length()));
+        throw new IllegalArgumentException("index (" +
+          Long.toString((long)index) +
+          ") is more than " + Long.toString((long)str.length()));
       }
       if (endIndex < 0) {
-        throw new IllegalArgumentException("endIndex (" + Long.toString((long)endIndex) + ") is less than " + "0");
+        throw new IllegalArgumentException("endIndex (" +
+          Long.toString((long)endIndex) +
+          ") is less than " + "0");
       }
       if (endIndex > str.length()) {
-        throw new IllegalArgumentException("endIndex (" + Long.toString((long)endIndex) + ") is more than " + Long.toString((long)str.length()));
+        throw new IllegalArgumentException("endIndex (" +
+          Long.toString((long)endIndex) +
+          ") is more than " + Long.toString((long)str.length()));
       }
       if (endIndex < index) {
-        throw new IllegalArgumentException("endIndex (" + Long.toString((long)endIndex) + ") is less than " + Long.toString((long)index));
+        throw new IllegalArgumentException("endIndex (" +
+          Long.toString((long)endIndex) +
+          ") is less than " + Long.toString((long)index));
       }
       if (index == endIndex) {
         throw new NumberFormatException("No digits");
@@ -2934,7 +3717,11 @@ at: http://upokecenter.com/d/
         bigint[1] = ((short)((smallInt >> 16) & 0xffff));
       }
       int count = CountWords(bigint, bigint.length);
-      return (count == 0) ? BigInteger.ZERO : new BigInteger(count, bigint, negative);
+      return (
+count == 0) ? BigInteger.ZERO : new BigInteger(
+count,
+bigint,
+negative);
     }
 
     /**
@@ -2948,28 +3735,39 @@ at: http://upokecenter.com/d/
         if (c == (short)0) {
           retSetBit += 16;
         } else {
-          return (((c << 15) & 0xffff) != 0) ? (retSetBit + 0) : ((((c << 14) & 0xffff) != 0) ? (retSetBit + 1) : ((((c << 13) & 0xffff) != 0) ? (retSetBit + 2) : ((((c << 12) & 0xffff) != 0) ? (retSetBit + 3) : ((((c << 11) & 0xffff) != 0) ? (retSetBit + 4) : ((((c << 10) & 0xffff) != 0) ? (retSetBit + 5) : ((((c << 9) & 0xffff) != 0) ? (retSetBit + 6) : ((((c << 8) & 0xffff) != 0) ? (retSetBit + 7) : ((((c << 7) & 0xffff) != 0) ? (retSetBit + 8) : ((((c << 6) & 0xffff) != 0) ? (retSetBit + 9) : ((((c << 5) & 0xffff) != 0) ? (retSetBit + 10) : ((((c << 4) & 0xffff) != 0) ? (retSetBit + 11) : ((((c << 3) & 0xffff) != 0) ? (retSetBit + 12) : ((((c << 2) & 0xffff) != 0) ? (retSetBit + 13) : ((((c << 1) & 0xffff) != 0) ? (retSetBit + 14) : (retSetBit + 15)))))))))))))));
+          return (((c << 15) & 0xffff) != 0) ? (retSetBit + 0) : ((((c <<
+            14) & 0xffff) != 0) ? (retSetBit + 1) : ((((c << 13) & 0xffff) !=
+            0) ? (retSetBit + 2) : ((((c << 12) & 0xffff) != 0) ?
+            (retSetBit + 3) : ((((c << 11) & 0xffff) != 0) ? (retSetBit + 4) :
+            ((((c << 10) & 0xffff) != 0) ? (retSetBit + 5) : ((((c << 9) &
+            0xffff) != 0) ? (retSetBit + 6) : ((((c << 8) & 0xffff) != 0) ?
+            (retSetBit + 7) : ((((c << 7) & 0xffff) != 0) ? (retSetBit + 8) :
+            ((((c << 6) & 0xffff) != 0) ? (retSetBit + 9) : ((((c << 5) &
+            0xffff) != 0) ? (retSetBit + 10) : ((((c << 4) & 0xffff) != 0) ?
+            (retSetBit + 11) : ((((c << 3) & 0xffff) != 0) ? (retSetBit +
+            12) : ((((c << 2) & 0xffff) != 0) ? (retSetBit + 13) : ((((c <<
+            1) & 0xffff) != 0) ? (retSetBit + 14) : (retSetBit +
+            15)))))))))))))));
         }
       }
       return 0;
     }
 
     /**
-     * Returns the greatest common divisor of two integers. The greatest
-     * common divisor (GCD) is also known as the greatest common factor (GCF).
+     * Returns the greatest common divisor of two integers. The greatest common
+     * divisor (GCD) is also known as the greatest common factor (GCF).
      * @param bigintSecond A BigInteger object. (2).
      * @return A BigInteger object.
-     * @throws java.lang.NullPointerException The parameter {@code bigintSecond}
-     * is null.
+     * @throws NullPointerException The parameter {@code bigintSecond} is null.
      */
-    public BigInteger gcd(BigInteger bigintSecond) {
+    public BigInteger gcd(final BigInteger bigintSecond) {
       if (bigintSecond == null) {
         throw new NullPointerException("bigintSecond");
       }
-      if (this.signum()==0) {
+      if (this.signum() == 0) {
         return (bigintSecond).abs();
       }
-      if (bigintSecond.signum()==0) {
+      if (bigintSecond.signum() == 0) {
         return (this).abs();
       }
       BigInteger thisValue = this.abs();
@@ -2987,41 +3785,41 @@ at: http://upokecenter.com/d/
       if (thisValue.wordCount <= 10 && bigintSecond.wordCount <= 10) {
         while (true) {
           BigInteger bigintA = (thisValue.subtract(bigintSecond)).abs();
-          if (bigintA.signum()==0) {
+          if (bigintA.signum() == 0) {
             if (expOfTwo != 0) {
-              thisValue=thisValue.shiftLeft(expOfTwo);
+              thisValue = thisValue.shiftLeft(expOfTwo);
             }
             return thisValue;
           }
           int setbit = bigintA.getLowestSetBit();
-          bigintA=bigintA.shiftRight(setbit);
-          bigintSecond = (thisValue.compareTo(bigintSecond) < 0) ? thisValue : bigintSecond;
+          bigintA = bigintA.shiftRight(setbit);
+          bigintSecond = (thisValue.compareTo(bigintSecond) < 0) ? thisValue :
+            bigintSecond;
           thisValue = bigintA;
         }
       } else {
         BigInteger temp;
-        while (thisValue.signum()!=0) {
+        while (thisValue.signum() != 0) {
           if (thisValue.compareTo(bigintSecond) < 0) {
             temp = thisValue;
             thisValue = bigintSecond;
             bigintSecond = temp;
           }
-          thisValue=thisValue.remainder(bigintSecond);
+          thisValue = thisValue.remainder(bigintSecond);
         }
         return bigintSecond;
       }
     }
 
     /**
-     * Calculates the remainder when a BigInteger raised to a certain power
-     * is divided by another BigInteger.
+     * Calculates the remainder when a BigInteger raised to a certain power is
+     * divided by another BigInteger.
      * @param pow A BigInteger object. (2).
      * @param mod A BigInteger object. (3).
      * @return A BigInteger object.
-     * @throws java.lang.NullPointerException The parameter {@code pow}
-     * is null.
+     * @throws NullPointerException The parameter {@code pow} is null.
      */
-    public BigInteger ModPow(BigInteger pow, BigInteger mod) {
+    public BigInteger ModPow(final BigInteger pow, BigInteger mod) {
       if (pow == null) {
         throw new NullPointerException("pow");
       }
@@ -3033,12 +3831,12 @@ at: http://upokecenter.com/d/
       }
       BigInteger r = BigInteger.ONE;
       BigInteger v = this;
-      while (pow.signum()!=0) {
+      while (pow.signum() != 0) {
         if (pow.testBit(0)) {
           r = (r.multiply(v)).mod(mod);
         }
-        pow=pow.shiftRight(1);
-        if (pow.signum()!=0) {
+        pow = pow.shiftRight(1);
+        if (pow.signum() != 0) {
           v = (v.multiply(v)).mod(mod);
         }
       }
@@ -3050,7 +3848,7 @@ at: http://upokecenter.com/d/
      * @param obj An arbitrary object.
      * @return True if the objects are equal; otherwise, false.
      */
-    @Override public boolean equals(Object obj) {
+    @Override public boolean equals(final Object obj) {
       BigInteger other = ((obj instanceof BigInteger) ? (BigInteger)obj : null);
       if (other == null) {
         return false;
@@ -3090,10 +3888,9 @@ at: http://upokecenter.com/d/
      * Adds this object and another object.
      * @param bigintAugend A BigInteger object.
      * @return The sum of the two objects.
-     * @throws java.lang.NullPointerException The parameter {@code bigintAugend}
-     * is null.
+     * @throws NullPointerException The parameter {@code bigintAugend} is null.
      */
-    public BigInteger add(BigInteger bigintAugend) {
+    public BigInteger add(final BigInteger bigintAugend) {
       if (bigintAugend == null) {
         throw new NullPointerException("bigintAugend");
       }
@@ -3106,11 +3903,15 @@ at: http://upokecenter.com/d/
       short[] sumreg;
       if (bigintAugend.wordCount == 1 && this.wordCount == 1) {
         if (this.negative == bigintAugend.negative) {
-          int intSum = (((int)this.words[0]) & 0xffff) + (((int)bigintAugend.words[0]) & 0xffff);
+          int intSum = (((int)this.words[0]) & 0xffff) +
+            (((int)bigintAugend.words[0]) & 0xffff);
           sumreg = new short[2];
           sumreg[0] = ((short)intSum);
           sumreg[1] = ((short)(intSum >> 16));
-          return new BigInteger(((intSum >> 16) == 0) ? 1 : 2, sumreg, this.negative);
+   return new BigInteger(
+((intSum >> 16) == 0) ? 1 : 2,
+sumreg,
+this.negative);
         } else {
           int a = ((int)this.words[0]) & 0xffff;
           int b = ((int)bigintAugend.words[0]) & 0xffff;
@@ -3130,14 +3931,19 @@ at: http://upokecenter.com/d/
         }
       }
       if ((!this.negative) == (!bigintAugend.negative)) {
-        sumreg = new short[(int)Math.max(this.words.length, bigintAugend.words.length)];
+        sumreg = new short[(
+int)Math.max(
+this.words.length,
+bigintAugend.words.length)];
         // both nonnegative or both negative
         int carry;
         int addendCount = this.wordCount;
         int augendCount = bigintAugend.wordCount;
         int desiredLength = Math.max(addendCount, augendCount);
         if (addendCount == augendCount) {
-          carry = AddOneByOne(sumreg, 0, this.words, 0, bigintAugend.words, 0, (int)addendCount);
+          carry = AddOneByOne(
+sumreg, 0, this.words, 0, bigintAugend.words,
+            0, (int)addendCount);
         } else if (addendCount > augendCount) {
           // Addend is bigger
           carry = AddOneByOne(
@@ -3215,25 +4021,49 @@ at: http://upokecenter.com/d/
       int words2Size = subtrahend.wordCount;
       words2Size += words2Size & 1;
       boolean diffNeg = false;
-      short[] diffReg = new short[(int)Math.max(minuend.words.length, subtrahend.words.length)];
+      short[] diffReg = new short[(
+int)Math.max(
+minuend.words.length,
+subtrahend.words.length)];
       if (words1Size == words2Size) {
-        if (Compare(minuend.words, 0, subtrahend.words, 0, (int)words1Size) >= 0) {
+    if (Compare(minuend.words, 0, subtrahend.words, 0, (int)words1Size) >=
+          0) {
           // words1 is at least as high as words2
-          Subtract(diffReg, 0, minuend.words, 0, subtrahend.words, 0, (int)words1Size);
+  Subtract(
+diffReg, 0, minuend.words, 0, subtrahend.words, 0,
+            (int)words1Size);
         } else {
           // words1 is less than words2
-          Subtract(diffReg, 0, subtrahend.words, 0, minuend.words, 0, (int)words1Size);
+  Subtract(
+diffReg, 0, subtrahend.words, 0, minuend.words, 0,
+            (int)words1Size);
           diffNeg = true;  // difference will be negative
         }
       } else if (words1Size > words2Size) {
         // words1 is greater than words2
-        short borrow = (short)Subtract(diffReg, 0, minuend.words, 0, subtrahend.words, 0, (int)words2Size);
-        System.arraycopy(minuend.words, words2Size, diffReg, words2Size, words1Size - words2Size);
+        var borrow = (
+short)Subtract(
+diffReg, 0, minuend.words, 0,
+          subtrahend.words, 0, (int)words2Size);
+        System.arraycopy(
+minuend.words,
+words2Size,
+diffReg,
+words2Size,
+words1Size - words2Size);
         Decrement(diffReg, words2Size, (int)(words1Size - words2Size), borrow);
       } else {
         // words1 is less than words2
-        short borrow = (short)Subtract(diffReg, 0, subtrahend.words, 0, minuend.words, 0, (int)words1Size);
-        System.arraycopy(subtrahend.words, words1Size, diffReg, words1Size, words2Size - words1Size);
+        var borrow = (
+short)Subtract(
+diffReg, 0, subtrahend.words, 0,
+          minuend.words, 0, (int)words1Size);
+        System.arraycopy(
+subtrahend.words,
+words1Size,
+diffReg,
+words1Size,
+words2Size - words1Size);
         Decrement(diffReg, words1Size, (int)(words2Size - words1Size), borrow);
         diffNeg = true;
       }
@@ -3249,17 +4079,18 @@ at: http://upokecenter.com/d/
      * Subtracts a BigInteger from this BigInteger.
      * @param subtrahend A BigInteger object.
      * @return The difference of the two objects.
-     * @throws java.lang.NullPointerException The parameter {@code subtrahend}
-     * is null.
+     * @throws NullPointerException The parameter {@code subtrahend} is null.
      */
-    public BigInteger subtract(BigInteger subtrahend) {
+    public BigInteger subtract(final BigInteger subtrahend) {
       if (subtrahend == null) {
         throw new NullPointerException("subtrahend");
       }
-      return (this.wordCount == 0) ? subtrahend.negate() : ((subtrahend.wordCount == 0) ? this : this.add(subtrahend.negate()));
+      return (this.wordCount == 0) ? subtrahend.negate() :
+        ((subtrahend.wordCount == 0) ? this :
+        this.add(subtrahend.negate()));
     }
 
-    private static short[] ShortenArray(short[] reg, int wordCount) {
+    private static short[] ShortenArray(final short[] reg, int wordCount) {
       if (reg.length > 32) {
         int newLength = RoundupSize(wordCount);
         if (newLength < reg.length &&
@@ -3278,10 +4109,9 @@ at: http://upokecenter.com/d/
      * Multiplies this instance by the value of a BigInteger object.
      * @param bigintMult A BigInteger object.
      * @return The product of the two objects.
-     * @throws java.lang.NullPointerException The parameter {@code bigintMult}
-     * is null.
+     * @throws NullPointerException The parameter {@code bigintMult} is null.
      */
-    public BigInteger multiply(BigInteger bigintMult) {
+    public BigInteger multiply(final BigInteger bigintMult) {
       if (bigintMult == null) {
         throw new NullPointerException("bigintMult");
       }
@@ -3301,14 +4131,26 @@ at: http://upokecenter.com/d/
         int wc = bigintMult.wordCount;
         int regLength = RoundupSize(wc + 1);
         productreg = new short[regLength];
-        productreg[wc] = LinearMultiply(productreg, 0, bigintMult.words, 0, this.words[0], wc);
+        productreg[wc] = LinearMultiply(
+productreg,
+0,
+bigintMult.words,
+0,
+this.words[0],
+wc);
         productwordCount = productreg.length;
         needShorten = false;
       } else if (bigintMult.wordCount == 1) {
         int wc = this.wordCount;
         int regLength = RoundupSize(wc + 1);
         productreg = new short[regLength];
-        productreg[wc] = LinearMultiply(productreg, 0, this.words, 0, bigintMult.words[0], wc);
+        productreg[wc] = LinearMultiply(
+productreg,
+0,
+this.words,
+0,
+bigintMult.words[0],
+wc);
         productwordCount = productreg.length;
         needShorten = false;
       } else if (this.equals(bigintMult)) {
@@ -3366,14 +4208,20 @@ at: http://upokecenter.com/d/
       if (needShorten) {
         productreg = ShortenArray(productreg, productwordCount);
       }
-      return new BigInteger(productwordCount, productreg, this.negative ^ bigintMult.negative);
+      return new BigInteger(
+productwordCount,
+productreg,
+this.negative ^ bigintMult.negative);
     }
 
-    private static int BitsToWords(int bitCount) {
+    private static int BitsToWords(final int bitCount) {
       return (bitCount + 15) >> 4;
     }
 
-    private static short FastRemainder(short[] dividendReg, int count, short divisorSmall) {
+    private static short FastRemainder(
+final short[] dividendReg,
+final int count,
+final short divisorSmall) {
       int i = count;
       short remainder = 0;
       while ((i--) > 0) {
@@ -3384,7 +4232,11 @@ at: http://upokecenter.com/d/
       return remainder;
     }
 
-    private static void FastDivide(short[] quotientReg, short[] dividendReg, int count, short divisorSmall) {
+    private static void FastDivide(
+final short[] quotientReg,
+final short[] dividendReg,
+final int count,
+final short divisorSmall) {
       int i = count;
       short remainderShort = 0;
       int idivisor = ((int)divisorSmall) & 0xffff;
@@ -3409,18 +4261,19 @@ at: http://upokecenter.com/d/
     }
 
     private static short FastDivideAndRemainder(
-      short[] quotientReg,
-      int quotientStart,
-      short[] dividendReg,
-      int dividendStart,
-      int count,
-      short divisorSmall) {
+      final short[] quotientReg,
+      final int quotientStart,
+      final short[] dividendReg,
+      final int dividendStart,
+      final int count,
+      final short divisorSmall) {
       int i = count;
       short remainderShort = 0;
       int idivisor = ((int)divisorSmall) & 0xffff;
       int quo, rem;
       while ((i--) > 0) {
-        int currentDividend = ((int)((((int)dividendReg[dividendStart + i]) & 0xffff) |
+        int currentDividend =
+          ((int)((((int)dividendReg[dividendStart + i]) & 0xffff) |
                                               ((int)remainderShort << 16)));
         if ((currentDividend >> 31) == 0) {
           quo = currentDividend / idivisor;
@@ -3428,7 +4281,9 @@ at: http://upokecenter.com/d/
           rem = currentDividend - (idivisor * quo);
           remainderShort = ((short)rem);
         } else {
-          quotientReg[quotientStart + i] = DivideUnsigned(currentDividend, divisorSmall);
+quotientReg[quotientStart + i] = DivideUnsigned(
+currentDividend,
+divisorSmall);
           remainderShort = RemainderUnsigned(currentDividend, divisorSmall);
         }
       }
@@ -3436,19 +4291,18 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Divides this instance by the value of a BigInteger object. The result
-     * is rounded down (the fractional part is discarded). Except if the
-     * result is 0, it will be negative if this object is positive and the other
-     * is negative, or vice versa, and will be positive if both are positive
-     * or both are negative.
+     * Divides this instance by the value of a BigInteger object. The result is
+     * rounded down (the fractional part is discarded). Except if the result
+     * is 0, it will be negative if this object is positive and the other is
+     * negative, or vice versa, and will be positive if both are positive or
+     * both are negative.
      * @param bigintDivisor A BigInteger object.
      * @return The quotient of the two objects.
      * @throws ArithmeticException The divisor is zero.
-     * @throws java.lang.NullPointerException The parameter {@code bigintDivisor}
-     * is null.
+     * @throws NullPointerException The parameter {@code bigintDivisor} is null.
      * @throws ArithmeticException Attempted to divide by zero.
      */
-    public BigInteger divide(BigInteger bigintDivisor) {
+    public BigInteger divide(final BigInteger bigintDivisor) {
       if (bigintDivisor == null) {
         throw new NullPointerException("bigintDivisor");
       }
@@ -3463,7 +4317,8 @@ at: http://upokecenter.com/d/
         // where dividend is 0)
         return BigInteger.ZERO;
       }
-      if (words1Size <= 2 && words2Size <= 2 && this.canFitInInt() && bigintDivisor.canFitInInt()) {
+      if (words1Size <= 2 && words2Size <= 2 && this.canFitInInt() &&
+        bigintDivisor.canFitInInt()) {
         int valueASmall = this.intValue();
         int valueBSmall = bigintDivisor.intValue();
         if (valueASmall != Integer.MIN_VALUE || valueBSmall != -1) {
@@ -3482,7 +4337,11 @@ at: http://upokecenter.com/d/
                quotReg[quotwordCount - 1] == 0) {
           --quotwordCount;
         }
-        return (quotwordCount != 0) ? (new BigInteger(quotwordCount, quotReg, this.negative ^ bigintDivisor.negative)) : BigInteger.ZERO;
+        return (
+quotwordCount != 0) ? (
+new BigInteger(quotwordCount,
+          quotReg, this.negative ^ bigintDivisor.negative)) :
+          BigInteger.ZERO;
       }
       // ---- General case
       words1Size += words1Size & 1;
@@ -3504,21 +4363,23 @@ at: http://upokecenter.com/d/
         words2Size);
       quotwordCount = CountWords(quotReg, quotReg.length);
       quotReg = ShortenArray(quotReg, quotwordCount);
-      return (quotwordCount != 0) ? (new BigInteger(quotwordCount, quotReg, this.negative ^ bigintDivisor.negative)) : BigInteger.ZERO;
+      return (
+quotwordCount != 0) ? (
+new BigInteger(quotwordCount, quotReg,
+        this.negative ^ bigintDivisor.negative)) : BigInteger.ZERO;
     }
 
     /**
-     * Divides this object by another big integer and returns the quotient
-     * and remainder.
+     * Divides this object by another big integer and returns the quotient and
+     * remainder.
      * @param divisor The divisor.
-     * @return An array with two big integers: the first is the quotient,
-     * and the second is the remainder.
-     * @throws java.lang.NullPointerException The parameter divisor is
-     * null.
+     * @return An array with two big integers: the first is the quotient, and the
+     * second is the remainder.
+     * @throws NullPointerException The parameter divisor is null.
      * @throws ArithmeticException The parameter divisor is 0.
      * @throws ArithmeticException Attempted to divide by zero.
      */
-    public BigInteger[] divideAndRemainder(BigInteger divisor) {
+    public BigInteger[] divideAndRemainder(final BigInteger divisor) {
       if (divisor == null) {
         throw new NullPointerException("divisor");
       }
@@ -3552,11 +4413,14 @@ at: http://upokecenter.com/d/
           return new BigInteger[] { BigInteger.ZERO, this };
         }
         quotient = ShortenArray(quotient, count);
-        BigInteger bigquo = new BigInteger(count, quotient, this.negative ^ divisor.negative);
+BigInteger bigquo = new BigInteger(
+count,
+quotient,
+this.negative ^ divisor.negative);
         if (this.negative) {
           smallRemainder = -smallRemainder;
         }
-        return new BigInteger[] {bigquo, BigInteger.valueOf(smallRemainder) };
+        return new BigInteger[] { bigquo, BigInteger.valueOf(smallRemainder) };
       }
       if (this.wordCount == 2 && divisor.wordCount == 2 &&
           (this.words[1] >> 15) != 0 &&
@@ -3580,7 +4444,8 @@ at: http://upokecenter.com/d/
       words1Size += words1Size & 1;
       words2Size += words2Size & 1;
       short[] bigRemainderreg = new short[RoundupSize((int)words2Size)];
-      short[] quotientreg = new short[RoundupSize((int)(words1Size - words2Size + 2))];
+  short[] quotientreg = new short[RoundupSize((int)(words1Size - words2Size +
+        2))];
       short[] tempbuf = new short[words1Size + (3 * (words2Size + 2))];
       Divide(
         bigRemainderreg,
@@ -3599,23 +4464,25 @@ at: http://upokecenter.com/d/
       int quoCount = CountWords(quotientreg, quotientreg.length);
       bigRemainderreg = ShortenArray(bigRemainderreg, remCount);
       quotientreg = ShortenArray(quotientreg, quoCount);
-      BigInteger bigrem = (remCount == 0) ? BigInteger.ZERO : new BigInteger(remCount, bigRemainderreg, this.negative);
-      BigInteger bigquo2 = (quoCount == 0) ? BigInteger.ZERO : new BigInteger(quoCount, quotientreg, this.negative ^ divisor.negative);
-      return new BigInteger[] {bigquo2, bigrem };
+      BigInteger bigrem = (remCount == 0) ? BigInteger.ZERO : new
+        BigInteger(remCount, bigRemainderreg, this.negative);
+      BigInteger bigquo2 = (quoCount == 0) ? BigInteger.ZERO : new
+        BigInteger(quoCount, quotientreg, this.negative ^ divisor.negative);
+      return new BigInteger[] { bigquo2, bigrem };
     }
 
     /**
-     * Finds the modulus remainder that results when this instance is divided
-     * by the value of a BigInteger object. The modulus remainder is the same
-     * as the normal remainder if the normal remainder is positive, and equals
-     * divisor plus normal remainder if the normal remainder is negative.
+     * Finds the modulus remainder that results when this instance is divided by
+     * the value of a BigInteger object. The modulus remainder is the same
+     * as the normal remainder if the normal remainder is positive, and
+     * equals divisor plus normal remainder if the normal remainder is
+     * negative.
      * @param divisor A divisor greater than 0 (the modulus).
      * @return A BigInteger object.
      * @throws ArithmeticException The parameter {@code divisor} is negative.
-     * @throws java.lang.NullPointerException The parameter {@code divisor}
-     * is null.
+     * @throws NullPointerException The parameter {@code divisor} is null.
      */
-    public BigInteger mod(BigInteger divisor) {
+    public BigInteger mod(final BigInteger divisor) {
       if (divisor == null) {
         throw new NullPointerException("divisor");
       }
@@ -3630,18 +4497,17 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Finds the remainder that results when this instance is divided by
-     * the value of a BigInteger object. The remainder is the value that remains
-     * when the absolute value of this object is divided by the absolute value
-     * of the other object; the remainder has the same sign (positive or negative)
-     * as this object.
+     * Finds the remainder that results when this instance is divided by the value
+     * of a BigInteger object. The remainder is the value that remains when
+     * the absolute value of this object is divided by the absolute value of
+     * the other object; the remainder has the same sign (positive or
+     * negative) as this object.
      * @param divisor A BigInteger object.
      * @return The remainder of the two objects.
-     * @throws java.lang.NullPointerException The parameter {@code divisor}
-     * is null.
+     * @throws NullPointerException The parameter {@code divisor} is null.
      * @throws ArithmeticException Attempted to divide by zero.
      */
-    public BigInteger remainder(BigInteger divisor) {
+    public BigInteger remainder(final BigInteger divisor) {
       if (divisor == null) {
         throw new NullPointerException("divisor");
       }
@@ -3655,7 +4521,10 @@ at: http://upokecenter.com/d/
         return this;
       }
       if (words2Size == 1) {
-        short shortRemainder = FastRemainder(this.words, this.wordCount, divisor.words[0]);
+        short shortRemainder = FastRemainder(
+this.words,
+this.wordCount,
+divisor.words[0]);
         int smallRemainder = ((int)shortRemainder) & 0xffff;
         if (this.negative) {
           smallRemainder = -smallRemainder;
@@ -3690,18 +4559,24 @@ at: http://upokecenter.com/d/
       return new BigInteger(count, remainderReg, this.negative);
     }
 
-    private int PositiveCompare(BigInteger t) {
+    private int PositiveCompare(final BigInteger t) {
       int size = this.wordCount, tempSize = t.wordCount;
-      return (size == tempSize) ? Compare(this.words, 0, t.words, 0, (int)size) : (size > tempSize ? 1 : -1);
+      return (
+size == tempSize) ? Compare(
+this.words,
+0,
+t.words,
+0,
+(int)size) : (size > tempSize ? 1 : -1);
     }
 
     /**
      * Compares a BigInteger object with this instance.
      * @param other A BigInteger object.
-     * @return Zero if the values are equal; a negative number if this instance
-     * is less, or a positive number if this instance is greater.
+     * @return Zero if the values are equal; a negative number if this instance is
+     * less, or a positive number if this instance is greater.
      */
-    public int compareTo(BigInteger other) {
+    public int compareTo(final BigInteger other) {
       if (other == null) {
         return 1;
       }
@@ -3741,10 +4616,10 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets the sign of this object's value.
-     * @return 0 if this value is zero; -1 if this value is negative, or 1 if
-     * this value is positive.
+     * @return 0 if this value is zero; -1 if this value is negative, or 1 if this
+     * value is positive.
      */
-    public int signum() {
+    public final int signum() {
         return (this.wordCount == 0) ? 0 : (this.negative ? -1 : 1);
       }
 
@@ -3752,14 +4627,14 @@ at: http://upokecenter.com/d/
      * Gets a value indicating whether this value is 0.
      * @return True if this value is 0; otherwise, false.
      */
-    public boolean isZero() {
+    public final boolean isZero() {
         return this.wordCount == 0;
       }
 
     /**
      * Finds the square root of this instance&apos;s value, rounded down.
-     * @return The square root of this object's value. Returns 0 if this value
-     * is 0 or less.
+     * @return The square root of this object's value. Returns 0 if this value is 0
+     * or less.
      */
     public BigInteger sqrt() {
       BigInteger[] srrem = this.sqrtWithRemainder();
@@ -3768,9 +4643,9 @@ at: http://upokecenter.com/d/
 
     /**
      * Calculates the square root and the remainder.
-     * @return An array of two big integers: the first integer is the square
-     * root, and the second is the difference between this value and the square
-     * of the first integer. Returns two zeros if this value is 0 or less, or
+     * @return An array of two big integers: the first integer is the square root,
+     * and the second is the difference between this value and the square of
+     * the first integer. Returns two zeros if this value is 0 or less, or
      * one and zero if this value equals 1.
      */
     public BigInteger[] sqrtWithRemainder() {
@@ -3805,12 +4680,12 @@ at: http://upokecenter.com/d/
       do {
         bigintX = bigintY;
         bigintY = thisValue.divide(bigintX);
-        bigintY=bigintY.add(bigintX);
-        bigintY=bigintY.shiftRight(1);
+        bigintY = bigintY.add(bigintX);
+        bigintY = bigintY.shiftRight(1);
       } while (bigintY != null && bigintY.compareTo(bigintX) < 0);
       bigintY = bigintX.multiply(bigintX);
       bigintY = thisValue.subtract(bigintY);
-      return new BigInteger[] {bigintX, bigintY
+      return new BigInteger[] { bigintX, bigintY
       };
     }
 
@@ -3818,7 +4693,7 @@ at: http://upokecenter.com/d/
      * Gets a value indicating whether this value is even.
      * @return True if this value is even; otherwise, false.
      */
-    public boolean isEven() {
+    public final boolean isEven() {
         return !this.GetUnsignedBit(0);
       }
 
@@ -3826,13 +4701,21 @@ at: http://upokecenter.com/d/
      * BigInteger object for the number zero.
      */
 
-    public static final BigInteger ZERO = new BigInteger(0, new short[] { 0, 0 }, false);
+    public static final BigInteger ZERO = new BigInteger(
+0,
+new short[] { 0,
+0 },
+false);
 
     /**
      * BigInteger object for the number one.
      */
 
-    public static final BigInteger ONE = new BigInteger(1, new short[] { 1, 0 }, false);
+    public static final BigInteger ONE = new BigInteger(
+1,
+new short[] { 1,
+0 },
+false);
 
     /**
      * BigInteger object for the number ten.

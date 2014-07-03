@@ -19,7 +19,7 @@ namespace PeterO.Cbor {
     }
 
     public void AddObject(CBORObject obj) {
-        this.sharedObjects.Add(obj);
+      this.sharedObjects.Add(obj);
     }
 
     public CBORObject GetObject(long smallIndex) {
@@ -27,7 +27,8 @@ namespace PeterO.Cbor {
         throw new CBORException("Unexpected index");
       }
       if (smallIndex > Int32.MaxValue) {
-        throw new CBORException("Index " + smallIndex + " is bigger than supported");
+        throw new CBORException("Index " + smallIndex +
+                                " is bigger than supported ");
       }
       var index = (int)smallIndex;
       if (index >= this.sharedObjects.Count) {
@@ -41,7 +42,8 @@ namespace PeterO.Cbor {
         throw new CBORException("Unexpected index");
       }
       if (!bigIndex.canFitInInt()) {
-        throw new CBORException("Index " + bigIndex + " is bigger than supported");
+        throw new CBORException("Index " + bigIndex +
+                                " is bigger than supported ");
       }
       var index = (int)bigIndex;
       if (index >= this.sharedObjects.Count) {

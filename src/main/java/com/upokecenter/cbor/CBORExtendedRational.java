@@ -9,8 +9,8 @@ at: http://upokecenter.com/d/
 
 import com.upokecenter.util.*;
 
-  class CBORExtendedRational implements ICBORNumber
-  {
+  class CBORExtendedRational implements ICBORNumber {
+
     public boolean IsPositiveInfinity(final Object obj) {
       return ((ExtendedRational)obj).IsPositiveInfinity();
     }
@@ -34,12 +34,16 @@ import com.upokecenter.util.*;
 
     public ExtendedDecimal AsExtendedDecimal(final Object obj) {
       ExtendedRational er = (ExtendedRational)obj;
-      return er.ToExtendedDecimalExactIfPossible(PrecisionContext.Decimal128.WithUnlimitedExponents());
+      return
+
+  er.ToExtendedDecimalExactIfPossible(PrecisionContext.Decimal128.WithUnlimitedExponents());
     }
 
     public ExtendedFloat AsExtendedFloat(final Object obj) {
       ExtendedRational er = (ExtendedRational)obj;
-      return er.ToExtendedFloatExactIfPossible(PrecisionContext.Binary128.WithUnlimitedExponents());
+      return
+
+  er.ToExtendedFloatExactIfPossible(PrecisionContext.Binary128.WithUnlimitedExponents());
     }
 
     public float AsSingle(final Object obj) {
@@ -65,12 +69,14 @@ import com.upokecenter.util.*;
 
     public boolean CanFitInSingle(final Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
-      return (!ef.isFinite()) || (ef.compareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0);
+      return (!ef.isFinite()) ||
+      (ef.compareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0);
     }
 
     public boolean CanFitInDouble(final Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
-      return (!ef.isFinite()) || (ef.compareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0);
+      return (!ef.isFinite()) ||
+      (ef.compareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0);
     }
 
     public boolean CanFitInInt32(final Object obj) {
@@ -124,7 +130,7 @@ import com.upokecenter.util.*;
       return rem.signum() == 0;
     }
 
-    public int AsInt32(final Object obj, final int minValue, final int maxValue) {
+    public int AsInt32(final Object obj, int minValue, int maxValue) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (ef.isFinite()) {
         BigInteger bi = ef.ToBigInteger();

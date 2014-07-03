@@ -25,14 +25,17 @@ namespace Test {
       RegexOptions.Compiled);
 
     private static Regex valueTestLine = new Regex(
-      "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\'[^\\']*\\'|\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)",
-      RegexOptions.Compiled);
+  "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\'[^\\']*\\'|\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)" ,
+  RegexOptions.Compiled);
 
-    private static TValue GetKeyOrDefault<TKey, TValue>(IDictionary<TKey, TValue> dict, TKey key, TValue defaultValue) {
+    private static TValue GetKeyOrDefault<TKey, TValue>(IDictionary<TKey,
+                                 TValue> dict, TKey key, TValue
+                                                          defaultValue) {
       return (!dict.ContainsKey(key)) ? defaultValue : dict[key];
     }
 
-    public static void ParseDecTest(string ln, IDictionary<string, string> context) {
+    public static void ParseDecTest(string ln, IDictionary<string, string>
+                                    context) {
       Match match;
       if (ln.Contains("-- ")) {
         ln = ln.Substring(0, ln.IndexOf("-- ", StringComparison.Ordinal));
@@ -80,15 +83,19 @@ namespace Test {
         // (all simplified arithmetic test cases)
         if (!extended) {
           if (name.Equals("ln116") ||
-              name.Equals("qua530") || // assumes that the input will underflow to 0
-              name.Equals("qua531") || // assumes that the input will underflow to 0
+              name.Equals("qua530") || // assumes that the input will underflow
+              // to 0
+              name.Equals("qua531") || // assumes that the input will underflow
+              // to 0
               name.Equals("rpow068") ||
               name.Equals("rpow159") ||
               name.Equals("rpow217") ||
               name.Equals("rpow272") ||
               name.Equals("rpow324") ||
               name.Equals("rpow327") ||
-              name.Equals("sqtx2207") || // following cases incorrectly remove trailing zeros
+      name.Equals("sqtx2207") || // following cases incorrectly remove
+                trailing
+              // zeros
               name.Equals("sqtx2231") ||
               name.Equals("sqtx2271") ||
               name.Equals("sqtx2327") ||
@@ -303,7 +310,8 @@ namespace Test {
     }
 
     private static void PrintTime(System.Diagnostics.Stopwatch sw) {
-      Console.WriteLine("Elapsed time: " + (sw.ElapsedMilliseconds / 1000.0) + " s");
+      Console.WriteLine("Elapsed time: " + (sw.ElapsedMilliseconds / 1000.0) +
+                        " s");
     }
 
     [TestMethod]
@@ -326,7 +334,8 @@ namespace Test {
             continue;
           }
           Console.WriteLine(f);
-          IDictionary<string, string> context = new Dictionary<string, string>();
+          IDictionary<string, string> context = new Dictionary<string,
+          string>();
           using (var w = new StreamReader(f)) {
             while (!w.EndOfStream) {
               string ln = w.ReadLine();

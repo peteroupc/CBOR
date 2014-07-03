@@ -10,8 +10,8 @@ at: http://upokecenter.com/d/
     /**
      * A generic CBOR tag class for strings.
      */
-  class CBORTagGenericString implements ICBORTag
-  {
+  class CBORTagGenericString implements ICBORTag {
+
     public CBORTypeFilter GetTypeFilter() {
       return CBORTypeFilter.TextString;
     }

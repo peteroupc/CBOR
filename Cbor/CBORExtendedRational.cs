@@ -5,7 +5,6 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
-
 using System;
 using PeterO;
 
@@ -35,12 +34,16 @@ namespace PeterO.Cbor {
 
     public ExtendedDecimal AsExtendedDecimal(object obj) {
       var er = (ExtendedRational)obj;
-      return er.ToExtendedDecimalExactIfPossible(PrecisionContext.Decimal128.WithUnlimitedExponents());
+      return
+
+  er.ToExtendedDecimalExactIfPossible(PrecisionContext.Decimal128.WithUnlimitedExponents());
     }
 
     public ExtendedFloat AsExtendedFloat(object obj) {
       var er = (ExtendedRational)obj;
-      return er.ToExtendedFloatExactIfPossible(PrecisionContext.Binary128.WithUnlimitedExponents());
+      return
+
+  er.ToExtendedFloatExactIfPossible(PrecisionContext.Binary128.WithUnlimitedExponents());
     }
 
     public float AsSingle(object obj) {
@@ -66,12 +69,14 @@ namespace PeterO.Cbor {
 
     public bool CanFitInSingle(object obj) {
       var ef = (ExtendedRational)obj;
-      return (!ef.IsFinite) || (ef.CompareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0);
+      return (!ef.IsFinite) ||
+      (ef.CompareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0);
     }
 
     public bool CanFitInDouble(object obj) {
       var ef = (ExtendedRational)obj;
-      return (!ef.IsFinite) || (ef.CompareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0);
+      return (!ef.IsFinite) ||
+      (ef.CompareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0);
     }
 
     public bool CanFitInInt32(object obj) {

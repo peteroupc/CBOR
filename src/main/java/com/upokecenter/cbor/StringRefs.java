@@ -11,10 +11,11 @@ import java.util.*;
 import com.upokecenter.util.*;
 
     /**
-     * Implements CBOR string references, described at <code>http://cbor.schmorp.de/stringref</code>
+     * Implements CBOR string references, described at
+     * <code>http://cbor.schmorp.de/stringref</code>
      */
-  class StringRefs
-  {
+  class StringRefs {
+
     private ArrayList<ArrayList<CBORObject>> stack;
 
     public StringRefs () {
@@ -29,12 +30,10 @@ import com.upokecenter.util.*;
     }
 
     public void Pop() {
-
       this.stack.remove(this.stack.size() - 1);
     }
 
-    public void AddStringIfNeeded(final CBORObject str, final int lengthHint) {
-
+    public void AddStringIfNeeded(final CBORObject str, int lengthHint) {
       boolean addStr = false;
       ArrayList<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
       if (lastList.size() < 24) {
@@ -59,7 +58,8 @@ import com.upokecenter.util.*;
         throw new CBORException("Unexpected index");
       }
       if (smallIndex > Integer.MAX_VALUE) {
-        throw new CBORException("Index " + smallIndex + " is bigger than supported");
+  throw new CBORException("Index " + smallIndex +
+          " is bigger than supported ");
       }
       int index = (int)smallIndex;
       ArrayList<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
@@ -67,8 +67,9 @@ import com.upokecenter.util.*;
         throw new CBORException("Index " + index + " is not valid");
       }
       CBORObject ret = lastList.get(index);
-        // Byte strings are mutable, so make a copy
-      return (ret.getType() == CBORType.ByteString) ? CBORObject.FromObject(ret.GetByteString()) : ret;
+      // Byte strings are mutable, so make a copy
+      return (ret.getType() == CBORType.ByteString) ?
+        CBORObject.FromObject(ret.GetByteString()) : ret;
     }
 
     public CBORObject GetString(final BigInteger bigIndex) {
@@ -76,7 +77,8 @@ import com.upokecenter.util.*;
         throw new CBORException("Unexpected index");
       }
       if (!bigIndex.canFitInInt()) {
-        throw new CBORException("Index " + bigIndex + " is bigger than supported");
+    throw new CBORException("Index " + bigIndex +
+          " is bigger than supported ");
       }
       int index = bigIndex.intValue();
       ArrayList<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
@@ -84,7 +86,8 @@ import com.upokecenter.util.*;
         throw new CBORException("Index " + index + " is not valid");
       }
       CBORObject ret = lastList.get(index);
-        // Byte strings are mutable, so make a copy
-      return (ret.getType() == CBORType.ByteString) ? CBORObject.FromObject(ret.GetByteString()) : ret;
+      // Byte strings are mutable, so make a copy
+      return (ret.getType() == CBORType.ByteString) ?
+        CBORObject.FromObject(ret.GetByteString()) : ret;
     }
   }

@@ -11,9 +11,11 @@ namespace PeterO {
     /// <summary>An arbitrary-precision integer.</summary>
   public sealed partial class BigInteger
   {
-    /// <summary>Converts the value of a 64-bit signed integer to BigInteger.</summary>
+    /// <summary>Converts the value of a 64-bit signed integer to
+    /// BigInteger.</summary>
     /// <param name='bigValue'>A 64-bit signed integer.</param>
-    /// <returns>A BigInteger object with the same value as the Int64 object.</returns>
+    /// <returns>A BigInteger object with the same value as the Int64
+    /// object.</returns>
     public static implicit operator BigInteger(long bigValue) {
       return valueOf(bigValue);
     }
@@ -22,8 +24,8 @@ namespace PeterO {
     /// <param name='bthis'>A BigInteger object.</param>
     /// <param name='augend'>A BigInteger object. (2).</param>
     /// <returns>The sum of the two objects.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='bthis'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bthis'/> is null.</exception>
     public static BigInteger operator +(BigInteger bthis, BigInteger augend) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
@@ -35,9 +37,11 @@ namespace PeterO {
     /// <param name='bthis'>A BigInteger value.</param>
     /// <param name='subtrahend'>A BigInteger object.</param>
     /// <returns>The difference of the two objects.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='bthis'/> is null.</exception>
-    public static BigInteger operator -(BigInteger bthis, BigInteger subtrahend) {
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bthis'/> is null.</exception>
+ public static BigInteger operator -(
+BigInteger bthis,
+BigInteger subtrahend) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
       }
@@ -49,9 +53,11 @@ namespace PeterO {
     /// <param name='operand1'>A BigInteger object.</param>
     /// <param name='operand2'>A BigInteger object. (2).</param>
     /// <returns>The product of the two objects.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='operand1'/> is null.</exception>
-    public static BigInteger operator *(BigInteger operand1, BigInteger operand2) {
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='operand1'/> is null.</exception>
+public static BigInteger operator *(
+BigInteger operand1,
+BigInteger operand2) {
       if (operand1 == null) {
         throw new ArgumentNullException("operand1");
       }
@@ -63,23 +69,27 @@ namespace PeterO {
     /// <param name='dividend'>A BigInteger object.</param>
     /// <param name='divisor'>A BigInteger object. (2).</param>
     /// <returns>The quotient of the two objects.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='dividend'/> is null.</exception>
-    public static BigInteger operator /(BigInteger dividend, BigInteger divisor) {
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='dividend'/> is null.</exception>
+ public static BigInteger operator /(
+BigInteger dividend,
+BigInteger divisor) {
       if (dividend == null) {
         throw new ArgumentNullException("dividend");
       }
       return dividend.divide(divisor);
     }
 
-    /// <summary>Finds the remainder that results when a BigInteger object
-    /// is divided by the value of a BigInteger object.</summary>
+    /// <summary>Finds the remainder that results when a BigInteger object is
+    /// divided by the value of a BigInteger object.</summary>
     /// <param name='dividend'>A BigInteger object.</param>
     /// <param name='divisor'>A BigInteger object. (2).</param>
     /// <returns>The remainder of the two objects.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='dividend'/> is null.</exception>
-    public static BigInteger operator %(BigInteger dividend, BigInteger divisor) {
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='dividend'/> is null.</exception>
+ public static BigInteger operator %(
+BigInteger dividend,
+BigInteger divisor) {
       if (dividend == null) {
         throw new ArgumentNullException("dividend");
       }
@@ -90,8 +100,8 @@ namespace PeterO {
     /// <param name='bthis'>A BigInteger object. (2).</param>
     /// <param name='bitCount'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='bthis'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bthis'/> is null.</exception>
     public static BigInteger operator <<(BigInteger bthis, int bitCount) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
@@ -99,31 +109,37 @@ namespace PeterO {
       return bthis.shiftLeft(bitCount);
     }
 
-    /// <summary>Calculates the remainder when a BigInteger raised to a
-    /// certain power is divided by another BigInteger.</summary>
+    /// <summary>Calculates the remainder when a BigInteger raised to a certain
+    /// power is divided by another BigInteger.</summary>
     /// <param name='bigintValue'>A BigInteger object.</param>
     /// <param name='pow'>A BigInteger object. (2).</param>
     /// <param name='mod'>A BigInteger object. (3).</param>
-    /// <returns>The value ( <paramref name='bigintValue'/> ^ <paramref
-    /// name='pow'/> )% <paramref name='mod'/> .</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='bigintValue'/> is null.</exception>
-    public static BigInteger ModPow(BigInteger bigintValue, BigInteger pow, BigInteger mod) {
+    /// <returns>The value (<paramref name='bigintValue' /> ^ <paramref
+    /// name='pow' />
+    ///)% <paramref name='mod'/> .</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bigintValue'/> is null.</exception>
+    public static BigInteger ModPow(
+BigInteger bigintValue,
+BigInteger pow,
+BigInteger mod) {
       if (bigintValue == null) {
         throw new ArgumentNullException("bigintValue");
       }
       return bigintValue.ModPow(pow, mod);
     }
 
-    /// <summary>Shifts the bits of a BigInteger instance to the right.</summary>
+    /// <summary>Shifts the bits of a BigInteger instance to the
+    /// right.</summary>
     /// <param name='bthis'>A BigInteger object. (2).</param>
     /// <param name='bigValue'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='bthis'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bthis'/> is null.</exception>
     /// <remarks>For this operation, the BigInteger is treated as a two's
-    /// complement representation. Thus, for negative values, the BigInteger
-    /// is sign-extended.</remarks>
+    /// complement
+    /// representation. Thus, for negative values, the BigInteger is
+    /// sign-extended.</remarks>
     public static BigInteger operator >>(BigInteger bthis, int bigValue) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
@@ -134,8 +150,8 @@ namespace PeterO {
     /// <summary>Negates a BigInteger object.</summary>
     /// <param name='bigValue'>A BigInteger object. (2).</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='bigValue'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bigValue'/> is null.</exception>
     public static BigInteger operator -(BigInteger bigValue) {
       if (bigValue == null) {
         throw new ArgumentNullException("bigValue");
@@ -148,8 +164,9 @@ namespace PeterO {
     /// <param name='bigValue'>A BigInteger object.</param>
     /// <returns>A 64-bit signed integer with the same value as the BigInteger
     /// object.</returns>
-    /// <exception cref='OverflowException'>This object's value is too
-    /// big to fit a 64-bit signed integer.</exception>
+    /// <exception cref='OverflowException' >This object's value is too big
+    /// to fit a
+    /// 64-bit signed integer.</exception>
     public static explicit operator long(BigInteger bigValue) {
       return bigValue.longValueChecked();
     }
@@ -159,54 +176,64 @@ namespace PeterO {
     /// <param name='bigValue'>A BigInteger object.</param>
     /// <returns>A 32-bit signed integer with the same value as the BigInteger
     /// object.</returns>
-    /// <exception cref='OverflowException'>This object's value is too
-    /// big to fit a 32-bit signed integer.</exception>
+    /// <exception cref='OverflowException' >This object's value is too big
+    /// to fit a
+    /// 32-bit signed integer.</exception>
     public static explicit operator int(BigInteger bigValue) {
       return bigValue.intValueChecked();
     }
 
-    /// <summary>Determines whether a BigInteger instance is less than
-    /// another BigInteger instance.</summary>
+    /// <summary>Determines whether a BigInteger instance is less than another
+    /// BigInteger instance.</summary>
     /// <param name='thisValue'>The first BigInteger object.</param>
     /// <param name='otherValue'>The second BigInteger object.</param>
     /// <returns>True if <paramref name='thisValue'/> is less than <paramref
     /// name='otherValue'/> ; otherwise, false.</returns>
     public static bool operator <(BigInteger thisValue, BigInteger otherValue) {
-      return (thisValue == null) ? (otherValue != null) : (thisValue.CompareTo(otherValue) < 0);
+      return (thisValue == null) ? (otherValue != null) :
+        (thisValue.CompareTo(otherValue) < 0);
     }
 
-    /// <summary>Determines whether a BigInteger instance is less than
-    /// or equal to another BigInteger instance.</summary>
+    /// <summary>Determines whether a BigInteger instance is less than or
+    /// equal to
+    /// another BigInteger instance.</summary>
     /// <param name='thisValue'>The first BigInteger object.</param>
     /// <param name='otherValue'>The second BigInteger object.</param>
     /// <returns>True if <paramref name='thisValue'/> is up to <paramref
     /// name='otherValue'/> ; otherwise, false.</returns>
-    public static bool operator <=(BigInteger thisValue, BigInteger otherValue) {
+  public static bool operator <=(
+BigInteger thisValue,
+BigInteger otherValue) {
       return (thisValue == null) || (thisValue.CompareTo(otherValue) <= 0);
     }
 
     /// <summary>Determines whether a BigInteger instance is greater than
-    /// another BigInteger instance.</summary>
+    /// another
+    /// BigInteger instance.</summary>
     /// <param name='thisValue'>The first BigInteger object.</param>
     /// <param name='otherValue'>The second BigInteger object.</param>
-    /// <returns>True if <paramref name='thisValue'/> is greater than
-    /// <paramref name='otherValue'/> ; otherwise, false.</returns>
+    /// <returns>True if <paramref name='thisValue'/> is greater than <paramref
+    /// name='otherValue'/> ; otherwise, false.</returns>
     public static bool operator >(BigInteger thisValue, BigInteger otherValue) {
       return (thisValue != null) && (thisValue.CompareTo(otherValue) > 0);
     }
 
-    /// <summary>Determines whether a BigInteger value is greater than
-    /// another BigInteger value.</summary>
+    /// <summary>Determines whether a BigInteger value is greater than another
+    /// BigInteger value.</summary>
     /// <param name='thisValue'>The first BigInteger object.</param>
     /// <param name='otherValue'>The second BigInteger object.</param>
     /// <returns>True if <paramref name='thisValue'/> is at least <paramref
     /// name='otherValue'/> ; otherwise, false.</returns>
-    public static bool operator >=(BigInteger thisValue, BigInteger otherValue) {
-      return (thisValue == null) ? (otherValue == null) : (thisValue.CompareTo(otherValue) >= 0);
+  public static bool operator >=(
+BigInteger thisValue,
+BigInteger otherValue) {
+      return (thisValue == null) ? (otherValue == null) :
+        (thisValue.CompareTo(otherValue) >= 0);
     }
 
-    /// <summary>Gets a value indicating whether this object&apos;s value
-    /// is a power of two.</summary>
+    /// <summary>Gets a value indicating whether this object&apos;s value is
+    /// a power
+    /// of two.</summary>
     /// <value>True if this object&apos;s value is a power of two; otherwise,
     /// false.</value>
     public bool IsPowerOfTwo
@@ -228,8 +255,8 @@ namespace PeterO {
     /// <summary>Not documented yet.</summary>
     /// <param name='thisValue'>A BigInteger object. (2).</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='thisValue'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='thisValue'/> is null.</exception>
     [CLSCompliant(false)]
     public static BigInteger Abs(BigInteger thisValue) {
       if (thisValue == null) {
@@ -269,7 +296,8 @@ namespace PeterO {
         throw new ArgumentOutOfRangeException("numberBits");
       }
       long v = 0;
-      // DebugAssert.IsTrue(n <= 8*8,"{0} line {1}: n <= sizeof(v)*8","integer.cpp",2939);
+      // DebugAssert.IsTrue(n <= 8*8,"{0} line {1}: n <= sizeof(v)*8"
+      // ,"integer.cpp" ,2939);
       for (int j = 0; j < numberBits; ++j) {
         v |= (long)(this.testBit((int)(index + j)) ? 1 : 0) << j;
       }
@@ -281,9 +309,12 @@ namespace PeterO {
     /// <param name='divisor'>A BigInteger object. (3).</param>
     /// <param name='remainder'>A BigInteger object. (4).</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='dividend'/> is null.</exception>
-    public static BigInteger DivRem(BigInteger dividend, BigInteger divisor, out BigInteger remainder) {
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='dividend'/> is null.</exception>
+    public static BigInteger DivRem(
+BigInteger dividend,
+BigInteger divisor,
+out BigInteger remainder) {
       if (dividend == null) {
         throw new ArgumentNullException("dividend");
       }
@@ -296,9 +327,11 @@ namespace PeterO {
     /// <param name='bigintFirst'>A BigInteger object. (2).</param>
     /// <param name='bigintSecond'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='bigintFirst'/> is null.</exception>
-    public static BigInteger GreatestCommonDivisor(BigInteger bigintFirst, BigInteger bigintSecond) {
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bigintFirst'/> is null.</exception>
+    public static BigInteger GreatestCommonDivisor(
+BigInteger bigintFirst,
+BigInteger bigintSecond) {
       if (bigintFirst == null) {
         throw new ArgumentNullException("bigintFirst");
       }
@@ -316,8 +349,8 @@ namespace PeterO {
     /// <param name='bigValue'>A BigInteger object. (2).</param>
     /// <param name='power'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='bigValue'/> or <paramref name='power'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bigValue'/> or <paramref name='power'/> is null.</exception>
     [CLSCompliant(false)]
     public static BigInteger Pow(BigInteger bigValue, BigInteger power) {
       if (bigValue == null) {
@@ -327,7 +360,11 @@ namespace PeterO {
         throw new ArgumentNullException("power");
       }
       if (power.Sign < 0) {
-        throw new ArgumentException("power's sign (" + Convert.ToString((long)power.Sign, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        throw new ArgumentException("power's sign (" +
+          Convert.ToString(
+(long)power.Sign,
+System.Globalization.CultureInfo.InvariantCulture) +
+          ") is less than " + "0");
       }
       BigInteger val = BigInteger.One;
       while (power.Sign > 0) {
@@ -343,15 +380,19 @@ namespace PeterO {
     /// <param name='bigValue'>A BigInteger object. (2).</param>
     /// <param name='power'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='bigValue'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bigValue'/> is null.</exception>
     [CLSCompliant(false)]
     public static BigInteger Pow(BigInteger bigValue, int power) {
       if (bigValue == null) {
         throw new ArgumentNullException("bigValue");
       }
       if (power < 0) {
-        throw new ArgumentException("power (" + Convert.ToString((long)power, System.Globalization.CultureInfo.InvariantCulture) + ") is less than " + "0");
+        throw new ArgumentException("power (" +
+          Convert.ToString(
+(long)power,
+System.Globalization.CultureInfo.InvariantCulture) +
+          ") is less than " + "0");
       }
       return bigValue.pow(power);
     }
@@ -390,8 +431,8 @@ namespace PeterO {
     /// <summary>Returns a BigInteger with every bit flipped.</summary>
     /// <param name='valueA'>A BigInteger object. (2).</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='valueA'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='valueA'/> is null.</exception>
     public static BigInteger Not(BigInteger valueA) {
       if (valueA == null) {
         throw new ArgumentNullException("valueA");
@@ -412,15 +453,17 @@ namespace PeterO {
       }
       valueXaNegative = !valueA.negative;
       valueXaWordCount = CountWords(valueXaReg, valueXaReg.Length);
-      return (valueXaWordCount == 0) ? BigInteger.Zero : (new BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
+      return (valueXaWordCount == 0) ? BigInteger.Zero : (new
+        BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
     /// <summary>Does an AND operation between two BigInteger values.</summary>
     /// <param name='a'>A BigInteger instance.</param>
     /// <param name='b'>Another BigInteger instance.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='a' />
+    /// or <paramref name='b'/> is null.</exception>
     /// <remarks>Each BigInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
     public static BigInteger And(BigInteger a, BigInteger b) {
@@ -443,8 +486,12 @@ namespace PeterO {
       valueXaWordCount = a.wordCount;
       valueXbNegative = b.negative;
       valueXbWordCount = b.wordCount;
-      valueXaReg = CleanGrow(valueXaReg, Math.Max(valueXaReg.Length, valueXbReg.Length));
-      valueXbReg = CleanGrow(valueXbReg, Math.Max(valueXaReg.Length, valueXbReg.Length));
+      valueXaReg = CleanGrow(
+valueXaReg,
+Math.Max(valueXaReg.Length, valueXbReg.Length));
+      valueXbReg = CleanGrow(
+valueXbReg,
+Math.Max(valueXaReg.Length, valueXbReg.Length));
       if (valueXaNegative) {
         {
           TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
@@ -463,15 +510,17 @@ namespace PeterO {
         }
       }
       valueXaWordCount = CountWords(valueXaReg, valueXaReg.Length);
-      return (valueXaWordCount == 0) ? BigInteger.Zero : (new BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
+      return (valueXaWordCount == 0) ? BigInteger.Zero : (new
+        BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
-    /// <summary>Does an OR operation between two BigInteger instances.</summary>
+    /// <summary>Does an OR operation between two BigInteger
+    /// instances.</summary>
     /// <param name='first'>A BigInteger object. (2).</param>
     /// <param name='second'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='first'/> or <paramref name='second'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='first'/> or <paramref name='second'/> is null.</exception>
     /// <remarks>Each BigInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
     public static BigInteger Or(BigInteger first, BigInteger second) {
@@ -497,8 +546,12 @@ namespace PeterO {
       valueXaWordCount = first.wordCount;
       valueXbNegative = second.negative;
       valueXbWordCount = second.wordCount;
-      valueXaReg = CleanGrow(valueXaReg, Math.Max(valueXaReg.Length, valueXbReg.Length));
-      valueXbReg = CleanGrow(valueXbReg, Math.Max(valueXaReg.Length, valueXbReg.Length));
+      valueXaReg = CleanGrow(
+valueXaReg,
+Math.Max(valueXaReg.Length, valueXbReg.Length));
+      valueXbReg = CleanGrow(
+valueXbReg,
+Math.Max(valueXaReg.Length, valueXbReg.Length));
       if (valueXaNegative) {
         TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
       }
@@ -511,15 +564,17 @@ namespace PeterO {
         TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
       }
       valueXaWordCount = CountWords(valueXaReg, valueXaReg.Length);
-      return (valueXaWordCount == 0) ? BigInteger.Zero : (new BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
+      return (valueXaWordCount == 0) ? BigInteger.Zero : (new
+        BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
     /// <summary>Finds the exclusive "or" of two BigInteger objects.</summary>
     /// <param name='a'>A BigInteger instance.</param>
     /// <param name='b'>Another BigInteger instance.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='a'/> or <paramref name='b'/> is null.</exception>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='a' />
+    /// or <paramref name='b'/> is null.</exception>
     /// <remarks>Each BigInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
     public static BigInteger Xor(BigInteger a, BigInteger b) {
@@ -548,8 +603,12 @@ namespace PeterO {
       valueXaWordCount = a.wordCount;
       valueXbNegative = b.negative;
       valueXbWordCount = b.wordCount;
-      valueXaReg = CleanGrow(valueXaReg, Math.Max(valueXaReg.Length, valueXbReg.Length));
-      valueXbReg = CleanGrow(valueXbReg, Math.Max(valueXaReg.Length, valueXbReg.Length));
+      valueXaReg = CleanGrow(
+valueXaReg,
+Math.Max(valueXaReg.Length, valueXbReg.Length));
+      valueXbReg = CleanGrow(
+valueXbReg,
+Math.Max(valueXaReg.Length, valueXbReg.Length));
       if (valueXaNegative) {
         TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
       }
@@ -562,7 +621,8 @@ namespace PeterO {
         TwosComplement(valueXaReg, 0, (int)valueXaReg.Length);
       }
       valueXaWordCount = CountWords(valueXaReg, valueXaReg.Length);
-      return (valueXaWordCount == 0) ? BigInteger.Zero : (new BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
+      return (valueXaWordCount == 0) ? BigInteger.Zero : (new
+        BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
   }
 }

@@ -9,8 +9,8 @@ using System;
 using System.IO;
 
 namespace Test {
-    /// <summary>Contains lightweight methods for reading and writing
-    /// CBOR data.</summary>
+    /// <summary>Contains lightweight methods for reading and writing CBOR
+    /// data.</summary>
   public static class MiniCBOR
   {
     private static float ToSingle(int value) {
@@ -104,15 +104,19 @@ namespace Test {
         bytes = new[] { (byte)(24 | type), (byte)(value & 0xff) };
         stream.Write(bytes, 0, 2);
       } else if (value <= 0xffff) {
-        bytes = new[] { (byte)(25 | type), (byte)((value >> 8) & 0xff), (byte)(value & 0xff) };
+        bytes = new[] { (byte)(25 | type), (byte)((value >> 8) & 0xff),
+          (byte)(value & 0xff) };
         stream.Write(bytes, 0, 3);
       } else {
-        bytes = new[] { (byte)(26 | type), (byte)((value >> 24) & 0xff), (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff), (byte)(value & 0xff) };
+        bytes = new[] { (byte)(26 | type), (byte)((value >> 24) & 0xff),
+          (byte)((value >> 16) & 0xff), (byte)((value >> 8) & 0xff),
+          (byte)(value & 0xff) };
         stream.Write(bytes, 0, 5);
       }
     }
 
-    private static long ReadInteger(Stream stream, int headByte, bool check32bit) {
+private static long ReadInteger(Stream stream, int headByte, bool
+      check32bit) {
       int kind = headByte & 0x1f;
       if (kind == 0x18) {
         int b = stream.ReadByte();
@@ -154,7 +158,8 @@ namespace Test {
           throw new IOException("Premature end of stream");
         }
         long b;
-        if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0 || bytes[3] != 0)) {
+        if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0||
+          bytes[3] != 0)) {
           throw new IOException("Not a 32-bit integer");
         }
         if (!check32bit) {
@@ -235,14 +240,14 @@ namespace Test {
       throw new IOException("Not a valid headbyte for ReadFP");
     }
 
-    /// <summary>Reads a double-precision floating point number in CBOR
-    /// format from a data stream.</summary>
+    /// <summary>Reads a double-precision floating point number in CBOR format from
+    /// a data stream.</summary>
     /// <param name='stream'>A data stream.</param>
     /// <returns>A 64-bit floating-point number.</returns>
-    /// <exception cref='System.IO.IOException'>The end of the stream
-    /// was reached, or the object read isn't a number.</exception>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='stream'/> is null.</exception>
+    /// <exception cref='System.IO.IOException'>The end of the stream was reached,
+    /// or the object read isn't a number.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
     public static double ReadDouble(Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -287,16 +292,16 @@ namespace Test {
       throw new IOException("Not a double");
     }
 
-    /// <summary>Reads a 32-bit integer in CBOR format from a data stream.
-    /// If the object read is a floating-point number, it is truncated to an
+    /// <summary>Reads a 32-bit integer in CBOR format from a data stream. If the
+    /// object read is a floating-point number, it is truncated to an
     /// integer.</summary>
     /// <param name='stream'>A data stream.</param>
     /// <returns>A 32-bit signed integer.</returns>
-    /// <exception cref='System.IO.IOException'>The end of the stream
-    /// was reached, or the object read isn't a number, or can't fit a 32-bit
+    /// <exception cref='System.IO.IOException'>The end of the stream was reached,
+    /// or the object read isn't a number, or can't fit a 32-bit
     /// integer.</exception>
-    /// <exception cref='System.ArgumentNullException'>The parameter
-    /// <paramref name='stream'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
     public static int ReadInt32(Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");

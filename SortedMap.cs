@@ -9,14 +9,13 @@ using System;
 using System.Collections.Generic;
 
 namespace PeterO {
-    /// <summary>A dictionary sorted by key. It is here because the Portable
-    /// Class Library subset used by CBOR doesn't include the System.Collections.Generic.SortedDictionary
-    /// class.</summary>
+    /// <summary>A dictionary sorted by key. It is here because the Portable Class
+    /// Library subset used by CBOR doesn't include the
+    /// System.Collections.Generic.SortedDictionary class.</summary>
     /// <typeparam name='T1'>The type of each key.</typeparam>
     /// <typeparam name='T2'>The type of each value.</typeparam>
   internal class SortedMap<T1, T2> : IDictionary<T1, T2> {
     private RedBlackTree<KeyValuePair<T1, T2>> tree;
-
     private static IComparer<KeyValuePair<T1, T2>> comp = new KeyComparer();
 
     private sealed class KeyComparer : IComparer<KeyValuePair<T1, T2>> {
@@ -88,7 +87,11 @@ namespace PeterO {
     public T2 this[T1 key] {
       get {
         KeyValuePair<T1, T2> kvp;
-        if (this.tree.Find(new KeyValuePair<T1, T2>(key, default(T2)), out kvp)) {
+        KeyValuePair<T1, T2> kvpIn;
+        kvpIn = new KeyValuePair<T1, T2>(key, default(T2));
+        if (this.tree.Find(
+            kvpIn,
+            out kvp)) {
           return kvp.Value;
         }
         throw new KeyNotFoundException("Key not found: " + key);
@@ -140,7 +143,8 @@ namespace PeterO {
       return this.tree.GetEnumerator();
     }
 
-    System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() {
+    System.Collections.IEnumerator
+      System.Collections.IEnumerable.GetEnumerator() {
       return this.tree.GetEnumerator();
     }
   }

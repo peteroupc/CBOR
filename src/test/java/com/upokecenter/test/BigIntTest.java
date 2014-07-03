@@ -16,12 +16,17 @@ import com.upokecenter.util.*;
     // Test some specific cases
     @Test
     public void TestSpecificCases() {
-      TestCommon.DoTestMultiply("39258416159456516340113264558732499166970244380745050", "39258416159456516340113264558732499166970244380745051", "1541223239349076530208308657654362309553698742116222355477449713742236585667505604058123112521437480247550");
+  TestCommon.DoTestMultiply("39258416159456516340113264558732499166970244380745050"
+        , "39258416159456516340113264558732499166970244380745051" ,
+
+  "1541223239349076530208308657654362309553698742116222355477449713742236585667505604058123112521437480247550"
+);
       TestCommon.DoTestMultiply(
-        "5786426269322750882632312999752639738983363095641642905722171221986067189342123124290107105663618428969517616421742429671402859775667602123564",
-        "331378991485809774307751183645559883724387697397707434271522313077548174328632968616330900320595966360728317363190772921",
-        "1917500101435169880779183578665955372346028226046021044867189027856189131730889958057717187493786883422516390996639766012958050987359732634213213442579444095928862861132583117668061032227577386757036981448703231972963300147061503108512300577364845823910107210444");
-      TestCommon.DoTestDivide("9999999999999999999999", "281474976710655", "35527136");
+  "5786426269322750882632312999752639738983363095641642905722171221986067189342123124290107105663618428969517616421742429671402859775667602123564",
+  "331378991485809774307751183645559883724387697397707434271522313077548174328632968616330900320595966360728317363190772921",
+  "1917500101435169880779183578665955372346028226046021044867189027856189131730889958057717187493786883422516390996639766012958050987359732634213213442579444095928862861132583117668061032227577386757036981448703231972963300147061503108512300577364845823910107210444");
+      TestCommon.DoTestDivide("9999999999999999999999", "281474976710655" ,
+        "35527136");
     }
 
     @Test
@@ -43,13 +48,13 @@ import com.upokecenter.util.*;
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
           BigInteger ba = bigintA;
-          ba=ba.shiftLeft(j);
+          ba = ba.shiftLeft(j);
           Assert.assertEquals(bigintB, ba);
           int negj = -j;
           ba = bigintA;
-          ba=ba.shiftRight(negj);
+          ba = ba.shiftRight(negj);
           Assert.assertEquals(bigintB, ba);
-          bigintB=bigintB.multiply(BigInteger.valueOf(2));
+          bigintB = bigintB.multiply(BigInteger.valueOf(2));
         }
       }
     }
@@ -72,13 +77,13 @@ import com.upokecenter.util.*;
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
           BigInteger ba = bigintA;
-          ba=ba.shiftRight(j);
+          ba = ba.shiftRight(j);
           Assert.assertEquals(bigintB, ba);
           int negj = -j;
           ba = bigintA;
-          ba=ba.shiftLeft(negj);
+          ba = ba.shiftLeft(negj);
           Assert.assertEquals(bigintB, ba);
-          bigintB=bigintB.divide(BigInteger.valueOf(2));
+          bigintB = bigintB.divide(BigInteger.valueOf(2));
         }
       }
     }
@@ -91,7 +96,7 @@ import com.upokecenter.util.*;
         BigInteger bigintB = bigintA .add(BigInteger.ONE);
         BigInteger bigintC = bigintA.multiply(bigintB);
         // Test near-squaring
-        if (bigintA.signum()==0 || bigintB.signum()==0) {
+        if (bigintA.signum() == 0 || bigintB.signum() == 0) {
           Assert.assertEquals(BigInteger.ZERO, bigintC);
         }
         if (bigintA.equals(BigInteger.ONE)) {
@@ -103,7 +108,7 @@ import com.upokecenter.util.*;
         bigintB = bigintA;
         // Test squaring
         bigintC = bigintA.multiply(bigintB);
-        if (bigintA.signum()==0 || bigintB.signum()==0) {
+        if (bigintA.signum() == 0 || bigintB.signum() == 0) {
           Assert.assertEquals(BigInteger.ZERO, bigintC);
         }
         if (bigintA.equals(BigInteger.ONE)) {
@@ -126,51 +131,58 @@ import com.upokecenter.util.*;
         BigInteger bigintRem;
         BigInteger bigintE;
         BigInteger bigintD;
-        if (bigintB.signum()!=0) {
+        if (bigintB.signum() != 0) {
           {
 BigInteger[] divrem=(bigintC).divideAndRemainder(bigintB);
-bigintD=divrem[0];
-bigintRem=divrem[1]; }
+bigintD = divrem[0];
+bigintRem = divrem[1]; }
           if (!bigintD.equals(bigintA)) {
-            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC,bigintA,bigintD);
+            Assert.assertEquals("TestMultiplyDivide " +
+              bigintA + "; " + bigintB + ";\n" + bigintC,bigintA,bigintD);
           }
-          if (bigintRem.signum()!=0) {
+          if (bigintRem.signum() != 0) {
             Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,BigInteger.ZERO,bigintRem);
           }
           bigintE = bigintC.divide(bigintB);
           if (!bigintD.equals(bigintE)) {
-            // Testing that divideWithRemainder and division method return the same value
-            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC,bigintD,bigintE);
+            // Testing that divideWithRemainder and division method return
+            //the same value
+            Assert.assertEquals("TestMultiplyDivide " +
+              bigintA + "; " + bigintB + ";\n" + bigintC,bigintD,bigintE);
           }
           bigintE = bigintC.remainder(bigintB);
           if (!bigintRem.equals(bigintE)) {
-            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC,bigintRem,bigintE);
+            Assert.assertEquals("TestMultiplyDivide " +
+              bigintA + "; " + bigintB + ";\n" + bigintC,bigintRem,bigintE);
           }
           if (bigintE.signum() > 0 && !bigintC.mod(bigintB).equals(bigintE)) {
-            Assert.fail("TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC);
+            Assert.fail("TestMultiplyDivide " + bigintA + "; " + bigintB +
+              ";\n" + bigintC);
           }
         }
-        if (bigintA.signum()!=0) {
+        if (bigintA.signum() != 0) {
           {
 BigInteger[] divrem=(bigintC).divideAndRemainder(bigintA);
-bigintD=divrem[0];
-bigintRem=divrem[1]; }
+bigintD = divrem[0];
+bigintRem = divrem[1]; }
           if (!bigintD.equals(bigintB)) {
-            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,bigintB,bigintD);
+            Assert.assertEquals("TestMultiplyDivide " +
+              bigintA + "; " + bigintB,bigintB,bigintD);
           }
-          if (bigintRem.signum()!=0) {
+          if (bigintRem.signum() != 0) {
             Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,BigInteger.ZERO,bigintRem);
           }
         }
-        if (bigintB.signum()!=0) {
+        if (bigintB.signum() != 0) {
           {
 BigInteger[] divrem=(bigintA).divideAndRemainder(bigintB);
-bigintC=divrem[0];
-bigintRem=divrem[1]; }
+bigintC = divrem[0];
+bigintRem = divrem[1]; }
           bigintD = bigintB.multiply(bigintC);
-          bigintD=bigintD.add(bigintRem);
+          bigintD = bigintD.add(bigintRem);
           if (!bigintD.equals(bigintA)) {
-            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,bigintA,bigintD);
+            Assert.assertEquals("TestMultiplyDivide " +
+              bigintA + "; " + bigintB,bigintA,bigintD);
           }
         }
       }
@@ -184,7 +196,7 @@ bigintRem=divrem[1]; }
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         BigInteger bigintB = bigintA;
         for (int j = 1; j < power; ++j) {
-          bigintB=bigintB.multiply(bigintA);
+          bigintB = bigintB.multiply(bigintA);
         }
         TestCommon.DoTestPow(bigintA.toString(), power, bigintB.toString());
       }
@@ -196,20 +208,22 @@ bigintRem=divrem[1]; }
       for (int i = 0; i < 10000; ++i) {
         BigInteger bigintA = CBORTest.RandomBigInteger(r);
         if (bigintA.signum() < 0) {
-          bigintA=bigintA.negate();
+          bigintA = bigintA.negate();
         }
         if (bigintA.signum() == 0) {
           bigintA = BigInteger.ONE;
         }
         BigInteger sr = bigintA.sqrt();
         BigInteger srsqr = sr.multiply(sr);
-        sr=sr.add(BigInteger.ONE);
+        sr = sr.add(BigInteger.ONE);
         BigInteger sronesqr = sr.multiply(sr);
         if (srsqr.compareTo(bigintA) > 0) {
-          Assert.fail(srsqr + " not " + bigintA + " or less (TestSqrt, sqrt=" + sr + ")");
+          Assert.fail(srsqr + " not " + bigintA +
+            " or less (TestSqrt, sqrt=" + sr + ")");
         }
         if (sronesqr.compareTo(bigintA) <= 0) {
-          Assert.fail(srsqr + " not greater than " + bigintA + " (TestSqrt, sqrt=" + sr + ")");
+          Assert.fail(srsqr + " not greater than " + bigintA +
+            " (TestSqrt, sqrt=" + sr + ")");
         }
       }
     }
@@ -295,9 +309,9 @@ bigintRem=divrem[1]; }
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
-      if(BigInteger.ONE.equals(BigInteger.ZERO))Assert.fail();
-      if(verybig.equals(BigInteger.ZERO))Assert.fail();
-      if(BigInteger.ONE.equals(BigInteger.ZERO.subtract(BigInteger.ONE)))Assert.fail();
+      if (BigInteger.ONE.equals(BigInteger.ZERO))Assert.fail();
+      if (verybig.equals(BigInteger.ZERO))Assert.fail();
+      if (BigInteger.ONE.equals(BigInteger.ZERO.subtract(BigInteger.ONE)))Assert.fail();
       Assert.assertEquals(1, BigInteger.ONE.compareTo(null));
       BigInteger[] tmpsqrt = BigInteger.ZERO.sqrtWithRemainder();
       Assert.assertEquals(BigInteger.ZERO, tmpsqrt[0]);
@@ -546,16 +560,19 @@ bigintRem=divrem[1]; }
         BigInteger bigintC = bigintA.add(bigintB);
         BigInteger bigintD = bigintC.subtract(bigintB);
         if (!bigintD.equals(bigintA)) {
-          Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintA,bigintD);
+          Assert.assertEquals("TestAddSubtract " + bigintA +
+            "; " + bigintB,bigintA,bigintD);
         }
         bigintD = bigintC.subtract(bigintA);
         if (!bigintD.equals(bigintB)) {
-          Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintB,bigintD);
+          Assert.assertEquals("TestAddSubtract " + bigintA +
+            "; " + bigintB,bigintB,bigintD);
         }
         bigintC = bigintA.subtract(bigintB);
         bigintD = bigintC.add(bigintB);
         if (!bigintD.equals(bigintA)) {
-          Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintA,bigintD);
+          Assert.assertEquals("TestAddSubtract " + bigintA +
+            "; " + bigintB,bigintA,bigintD);
         }
       }
     }

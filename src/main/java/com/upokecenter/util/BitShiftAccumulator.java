@@ -7,29 +7,28 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-  final class BitShiftAccumulator implements IShiftAccumulator
-  {
-    private static final int SmallBitLength = 32;
+  final class BitShiftAccumulator implements IShiftAccumulator {
 
+    private static final int SmallBitLength = 32;
     private int bitLeftmost;
 
     /**
      * Gets a value indicating whether the last discarded bit was set.
      * @return True if the last discarded bit was set; otherwise, false.
      */
-    public int getLastDiscardedDigit() {
+    public final int getLastDiscardedDigit() {
         return this.bitLeftmost;
       }
 
     private int bitsAfterLeftmost;
 
     /**
-     * Gets a value indicating whether any of the discarded bits to the right
-     * of the last one was set.
-     * @return True if any of the discarded bits to the right of the last one
-     * was set; otherwise, false.
+     * Gets a value indicating whether any of the discarded bits to the right of
+     * the last one was set.
+     * @return True if any of the discarded bits to the right of the last one was
+     * set; otherwise, false.
      */
-    public int getOlderDiscardedDigits() {
+    public final int getOlderDiscardedDigits() {
         return this.bitsAfterLeftmost;
       }
 
@@ -41,9 +40,11 @@ at: http://upokecenter.com/d/
       return FastInteger.Copy(this.knownBitLength);
     }
 
-    public void ShiftToDigits(FastInteger bits) {
+    public void ShiftToDigits(final FastInteger bits) {
       if (bits.signum() < 0) {
-        throw new IllegalArgumentException("bits's sign (" + Integer.toString((int)bits.signum()) + ") is less than " + "0");
+        throw new IllegalArgumentException("bits's sign (" +
+          Integer.toString((int)bits.signum()) +
+          ") is less than " + "0 ");
       }
       if (bits.CanFitInInt32()) {
         this.ShiftToDigitsInt(bits.AsInt32());
@@ -51,7 +52,7 @@ at: http://upokecenter.com/d/
         this.knownBitLength = this.CalcKnownBitLength();
         BigInteger bigintDiff = this.knownBitLength.AsBigInteger();
         BigInteger bitsBig = bits.AsBigInteger();
-        bigintDiff=bigintDiff.subtract(bitsBig);
+        bigintDiff = bigintDiff.subtract(bitsBig);
         if (bigintDiff.signum() > 0) {
           // current length is greater than the
           // desired bit length
@@ -63,12 +64,14 @@ at: http://upokecenter.com/d/
     private int shiftedSmall;
     private boolean isSmall;
 
-    public BigInteger getShiftedInt() {
-        return this.isSmall ? (BigInteger.valueOf(this.shiftedSmall)) : this.shiftedBigInt;
+    public final BigInteger getShiftedInt() {
+        return this.isSmall ? (BigInteger.valueOf(this.shiftedSmall)) :
+        this.shiftedBigInt;
       }
 
-    public FastInteger getShiftedIntFast() {
-        return this.isSmall ? (new FastInteger(this.shiftedSmall)) : FastInteger.FromBig(this.shiftedBigInt);
+    public final FastInteger getShiftedIntFast() {
+        return this.isSmall ? (new FastInteger(this.shiftedSmall)) :
+        FastInteger.FromBig(this.shiftedBigInt);
       }
 
     private FastInteger discardedBitCount;
@@ -77,16 +80,18 @@ at: http://upokecenter.com/d/
      * Gets the number of digits discarded.
      * @return The number of digits discarded.
      */
-    public FastInteger getDiscardedDigitCount() {
+    public final FastInteger getDiscardedDigitCount() {
         return this.discardedBitCount;
       }
 
     public BitShiftAccumulator (
-      BigInteger bigint,
-      int lastDiscarded,
-      int olderDiscarded) {
+      final BigInteger bigint,
+      final int lastDiscarded,
+      final int olderDiscarded) {
       if (bigint.signum() < 0) {
-        throw new IllegalArgumentException("bigint's sign (" + Integer.toString((int)bigint.signum()) + ") is less than " + "0");
+        throw new IllegalArgumentException("bigint's sign (" +
+          Integer.toString((int)bigint.signum()) +
+          ") is less than " + "0 ");
       }
       if (bigint.canFitInInt()) {
         this.isSmall = true;
@@ -99,9 +104,11 @@ at: http://upokecenter.com/d/
       this.bitLeftmost = (lastDiscarded != 0) ? 1 : 0;
     }
 
-    public static BitShiftAccumulator FromInt32(int smallNumber) {
+    public static BitShiftAccumulator FromInt32(final int smallNumber) {
       if (smallNumber < 0) {
-        throw new IllegalArgumentException("smallNumber (" + Integer.toString((int)smallNumber) + ") is less than " + "0");
+        throw new IllegalArgumentException("smallNumber (" +
+          Integer.toString((int)smallNumber) +
+          ") is less than " + "0 ");
       }
       BitShiftAccumulator bsa = new BitShiftAccumulator(BigInteger.ZERO, 0, 0);
       bsa.shiftedSmall = smallNumber;
@@ -110,7 +117,7 @@ at: http://upokecenter.com/d/
       return bsa;
     }
 
-    public void ShiftRight(FastInteger fastint) {
+    public void ShiftRight(final FastInteger fastint) {
       if (fastint.signum() <= 0) {
         return;
       }
@@ -124,19 +131,20 @@ at: http://upokecenter.com/d/
             count = bi.intValue();
           }
           this.ShiftRightInt(count);
-          bi=bi.subtract(BigInteger.valueOf(count));
-          if (this.isSmall ? this.shiftedSmall == 0 : this.shiftedBigInt.signum()==0) {
+          bi = bi.subtract(BigInteger.valueOf(count));
+          if (this.isSmall ? this.shiftedSmall == 0 :
+          this.shiftedBigInt.signum() == 0) {
             break;
           }
         }
       }
     }
 
-    private void ShiftRightBig(int bits) {
+    private void ShiftRightBig(final int bits) {
       if (bits <= 0) {
         return;
       }
-      if (this.shiftedBigInt.signum()==0) {
+      if (this.shiftedBigInt.signum() == 0) {
         this.discardedBitCount.AddInt(bits);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = 0;
@@ -151,7 +159,7 @@ at: http://upokecenter.com/d/
       if (cmp < 0) {
         // too few bits
         this.bitsAfterLeftmost |= this.bitLeftmost;
-        this.bitsAfterLeftmost |= this.shiftedBigInt.signum()==0 ? 0 : 1;
+        this.bitsAfterLeftmost |= this.shiftedBigInt.signum() == 0 ? 0 : 1;
         this.bitLeftmost = 0;
         this.isSmall = true;
         this.shiftedSmall = 0;
@@ -161,8 +169,8 @@ at: http://upokecenter.com/d/
         int bs = bits;
         this.knownBitLength.SubtractInt(bits);
         if (bs == 1) {
-          boolean odd = !this.shiftedBigInt.testBit(0)==false;
-          this.shiftedBigInt=shiftedBigInt.shiftRight(1);
+          boolean odd = !this.shiftedBigInt.testBit(0) == false;
+          this.shiftedBigInt = shiftedBigInt.shiftRight(1);
           this.bitsAfterLeftmost |= this.bitLeftmost;
           this.bitLeftmost = odd ? 1 : 0;
         } else {
@@ -180,7 +188,7 @@ at: http://upokecenter.com/d/
             // Only the last discarded bit is set
             this.bitLeftmost = 1;
           }
-          this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
+          this.shiftedBigInt = shiftedBigInt.shiftRight(bs);
         }
         if (this.knownBitLength.CompareToInt(SmallBitLength) < 0) {
           // Shifting to small number of bits,
@@ -208,10 +216,11 @@ at: http://upokecenter.com/d/
         // System.out.println("{0:X8} kbl=" + (kb));
         return new FastInteger(kb);
       }
-      return new FastInteger(this.shiftedBigInt.signum()==0 ? 1 : this.shiftedBigInt.bitLength());
+      return new FastInteger(this.shiftedBigInt.signum() == 0 ? 1 :
+      this.shiftedBigInt.bitLength());
     }
 
-    private void ShiftBigToBits(int bits) {
+    private void ShiftBigToBits(final int bits) {
       // Shifts a number until it reaches the given number of bits,
       // gathering information on whether the last bit discarded is set and
       // whether the discarded bits to the right of that bit are set. Assumes
@@ -232,7 +241,8 @@ at: http://upokecenter.com/d/
           bs = this.knownBitLength.AsInt32();
           bs -= bits;
         } else {
-          FastInteger bitShift = FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
+          FastInteger bitShift =
+          FastInteger.Copy(this.knownBitLength).SubtractInt(bits);
           if (!bitShift.CanFitInInt32()) {
             this.ShiftRight(bitShift);
             return;
@@ -242,8 +252,8 @@ at: http://upokecenter.com/d/
         this.knownBitLength.SetInt(bits);
         this.discardedBitCount.AddInt(bs);
         if (bs == 1) {
-          boolean odd = !this.shiftedBigInt.testBit(0)==false;
-          this.shiftedBigInt=shiftedBigInt.shiftRight(1);
+          boolean odd = !this.shiftedBigInt.testBit(0) == false;
+          this.shiftedBigInt = shiftedBigInt.shiftRight(1);
           this.bitsAfterLeftmost |= this.bitLeftmost;
           this.bitLeftmost = odd ? 1 : 0;
         } else {
@@ -261,7 +271,7 @@ at: http://upokecenter.com/d/
             // Only the last discarded bit is set
             this.bitLeftmost = 1;
           }
-          this.shiftedBigInt=shiftedBigInt.shiftRight(bs);
+          this.shiftedBigInt = shiftedBigInt.shiftRight(bs);
         }
         if (bits < SmallBitLength) {
           // Shifting to small number of bits,
@@ -274,12 +284,12 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Shifts a number to the right, gathering information on whether the
-     * last bit discarded is set and whether the discarded bits to the right
-     * of that bit are set. Assumes that the big integer being shifted is positive.
+     * Shifts a number to the right, gathering information on whether the last bit
+     * discarded is set and whether the discarded bits to the right of that
+     * bit are set. Assumes that the big integer being shifted is positive.
      * @param bits A 32-bit signed integer.
      */
-    public void ShiftRightInt(int bits) {
+    public void ShiftRightInt(final int bits) {
       if (this.isSmall) {
         this.ShiftRightSmall(bits);
       } else {
@@ -287,7 +297,7 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private void ShiftRightSmall(int bits) {
+    private void ShiftRightSmall(final int bits) {
       if (bits <= 0) {
         return;
       }
@@ -312,7 +322,8 @@ at: http://upokecenter.com/d/
       this.discardedBitCount.AddInt(bits);
       this.bitsAfterLeftmost |= this.bitLeftmost;
       // Get the bottommost shift minus 1 bits
-      this.bitsAfterLeftmost |= (shift > 1 && (this.shiftedSmall << (SmallBitLength - shift + 1)) != 0) ? 1 : 0;
+      this.bitsAfterLeftmost |= (shift > 1 && (this.shiftedSmall <<
+      (SmallBitLength - shift + 1)) != 0) ? 1 : 0;
       // Get the bit just above that bit
       this.bitLeftmost = (int)((this.shiftedSmall >> (shift - 1)) & 0x01);
       this.shiftedSmall >>= shift;
@@ -331,9 +342,10 @@ at: http://upokecenter.com/d/
      * integer being shifted is positive.
      * @param bits A 32-bit signed integer.
      */
-    public void ShiftToDigitsInt(int bits) {
+    public void ShiftToDigitsInt(final int bits) {
       if (bits < 0) {
-        throw new IllegalArgumentException("bits (" + Integer.toString((int)bits) + ") is less than " + "0");
+        throw new IllegalArgumentException("bits (" + Integer.toString((int)bits) +
+          ") is less than " + "0 ");
       }
       if (this.isSmall) {
         this.ShiftSmallToBits(bits);
@@ -342,7 +354,7 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private void ShiftSmallToBits(int bits) {
+    private void ShiftSmallToBits(final int bits) {
       if (this.knownBitLength != null) {
         if (this.knownBitLength.CompareToInt(bits) <= 0) {
           return;
@@ -361,7 +373,8 @@ at: http://upokecenter.com/d/
         this.discardedBitCount.AddInt(bitShift);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         // Get the bottommost shift minus 1 bits
-        this.bitsAfterLeftmost |= (shift > 1 && (this.shiftedSmall << (SmallBitLength - shift + 1)) != 0) ? 1 : 0;
+        this.bitsAfterLeftmost |= (shift > 1 && (this.shiftedSmall <<
+        (SmallBitLength - shift + 1)) != 0) ? 1 : 0;
         // Get the bit just above that bit
         this.bitLeftmost = (int)((this.shiftedSmall >> (shift - 1)) & 0x01);
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;

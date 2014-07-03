@@ -15,20 +15,21 @@ at: http://upokecenter.com/d/
 
     /**
      * Gets this object's numerator.
-     * @return This object's numerator. If this object is a not-a-number
-     * value, returns the diagnostic information (which will be negative
-     * if this object is negative).
+     * @return This object's numerator. If this object is a not-a-number value,
+     * returns the diagnostic information (which will be negative if this
+     * object is negative).
      */
-    public BigInteger getNumerator() {
-        return this.isNegative() ? ((this.unsignedNumerator).negate()) : this.unsignedNumerator;
+    public final BigInteger getNumerator() {
+        return this.isNegative() ? ((this.unsignedNumerator).negate()) :
+          this.unsignedNumerator;
       }
 
     /**
      * Gets this object's numerator with the sign removed.
-     * @return This object's numerator. If this object is a not-a-number
-     * value, returns the diagnostic information.
+     * @return This object's numerator. If this object is a not-a-number value,
+     * returns the diagnostic information.
      */
-    public BigInteger getUnsignedNumerator() {
+    public final BigInteger getUnsignedNumerator() {
         return this.unsignedNumerator;
       }
 
@@ -38,7 +39,7 @@ at: http://upokecenter.com/d/
      * Gets this object's denominator.
      * @return This object's denominator.
      */
-    public BigInteger getDenominator() {
+    public final BigInteger getDenominator() {
         return this.denominator;
       }
 
@@ -49,9 +50,13 @@ at: http://upokecenter.com/d/
      * @param obj An arbitrary object.
      * @return True if the objects are equal; otherwise, false.
      */
-    @Override public boolean equals(Object obj) {
+    @Override public boolean equals(final Object obj) {
       ExtendedRational other = ((obj instanceof ExtendedRational) ? (ExtendedRational)obj : null);
-      return (other != null) && ((((this.unsignedNumerator)==null) ? ((other.unsignedNumerator)==null) : (this.unsignedNumerator).equals(other.unsignedNumerator)) && (((this.denominator)==null) ? ((other.denominator)==null) : (this.denominator).equals(other.denominator)) && this.flags == other.flags);
+      return (
+other != null) && (
+(((this.unsignedNumerator) == null) ? ((other.unsignedNumerator) == null) : (this.unsignedNumerator).equals(other.unsignedNumerator)) && (((
+this.denominator) == null) ? ((other.denominator) == null) : (
+this.denominator).equals(other.denominator)) && this.flags == other.flags);
     }
 
     /**
@@ -78,7 +83,9 @@ at: http://upokecenter.com/d/
      * @param denominatorSmall A 32-bit signed integer. (2).
      * @return An ExtendedRational object.
      */
-    public static ExtendedRational Create(int numeratorSmall, int denominatorSmall) {
+    public static ExtendedRational Create(
+final int numeratorSmall,
+final int denominatorSmall) {
       return Create(BigInteger.valueOf(numeratorSmall), BigInteger.valueOf(denominatorSmall));
     }
 
@@ -88,7 +95,9 @@ at: http://upokecenter.com/d/
      * @param denominator A BigInteger object. (2).
      * @return An ExtendedRational object.
      */
-    public static ExtendedRational Create(BigInteger numerator, BigInteger denominator) {
+    public static ExtendedRational Create(
+final BigInteger numerator,
+final BigInteger denominator) {
       return new ExtendedRational(numerator, denominator);
     }
 
@@ -96,27 +105,28 @@ at: http://upokecenter.com/d/
      * Initializes a new instance of the ExtendedRational class.
      * @param numerator A BigInteger object.
      * @param denominator A BigInteger object. (2).
-     * @throws java.lang.NullPointerException The parameter {@code numerator}
-     * or {@code denominator} is null.
+     * @throws NullPointerException The parameter {@code numerator} or {@code
+     * denominator} is null.
      */
-    public ExtendedRational (BigInteger numerator, BigInteger denominator) {
+    public ExtendedRational (final BigInteger numerator, BigInteger denominator) {
       if (numerator == null) {
         throw new NullPointerException("numerator");
       }
       if (denominator == null) {
         throw new NullPointerException("denominator");
       }
-      if (denominator.signum()==0) {
+      if (denominator.signum() == 0) {
         throw new IllegalArgumentException("denominator is zero");
       }
       boolean numNegative = numerator.signum() < 0;
       boolean denNegative = denominator.signum() < 0;
-      this.flags = (numNegative != denNegative) ? BigNumberFlags.FlagNegative : 0;
+   this.flags = (numNegative != denNegative) ? BigNumberFlags.FlagNegative :
+        0;
       if (numNegative) {
-        numerator=numerator.negate();
+        numerator = numerator.negate();
       }
       if (denNegative) {
-        denominator=denominator.negate();
+        denominator = denominator.negate();
       }
 
       this.unsignedNumerator = numerator;
@@ -125,21 +135,21 @@ at: http://upokecenter.com/d/
 
     /**
      * Converts this object to a text string.
-     * @return A string representation of this object. The result can be
-     * Infinity, NaN, or sNaN (with a minus sign before it for negative values),
-     * or a number of the following form: [-]numerator/denominator.
+     * @return A string representation of this object. The result can be Infinity,
+     * NaN, or sNaN (with a minus sign before it for negative values), or a
+     * number of the following form: [-]numerator/denominator.
      */
     @Override public String toString() {
       if (!this.isFinite()) {
         if (this.IsSignalingNaN()) {
-          if (this.unsignedNumerator.signum()==0) {
+          if (this.unsignedNumerator.signum() == 0) {
             return this.isNegative() ? "-sNaN" : "sNaN";
           }
           return this.isNegative() ? "-sNaN" + this.unsignedNumerator :
               "sNaN" + this.unsignedNumerator;
         }
         if (this.IsQuietNaN()) {
-          if (this.unsignedNumerator.signum()==0) {
+          if (this.unsignedNumerator.signum() == 0) {
             return this.isNegative() ? "-NaN" : "NaN";
           }
           return this.isNegative() ? "-NaN" + this.unsignedNumerator :
@@ -157,14 +167,14 @@ at: http://upokecenter.com/d/
      * @param bigint A BigInteger object.
      * @return An ExtendedRational object.
      */
-    public static ExtendedRational FromBigInteger(BigInteger bigint) {
+    public static ExtendedRational FromBigInteger(final BigInteger bigint) {
       return new ExtendedRational(bigint, BigInteger.ONE);
     }
 
     /**
      * Converts this rational number to a decimal number.
-     * @return The exact value of the rational number, or not-a-number (NaN)
-     * if the result can't be exact because it has a nonterminating decimal
+     * @return The exact value of the rational number, or not-a-number (NaN) if the
+     * result can't be exact because it has a nonterminating decimal
      * expansion.
      */
     public ExtendedDecimal ToExtendedDecimal() {
@@ -172,44 +182,45 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Converts a 32-bit floating-point number to a rational number. This
-     * method computes the exact value of the floating point number, not
-     * an approximation, as is often the case by converting the number to
-     * a string.
+     * Converts a 32-bit floating-point number to a rational number. This method
+     * computes the exact value of the floating point number, not an
+     * approximation, as is often the case by converting the number to a
+     * string.
      * @param flt A 32-bit floating-point number.
      * @return A rational number with the same value as {@code flt} .
      */
-    public static ExtendedRational FromSingle(float flt) {
+    public static ExtendedRational FromSingle(final float flt) {
       return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
     }
 
     /**
-     * Converts a 64-bit floating-point number to a rational number. This
-     * method computes the exact value of the floating point number, not
-     * an approximation, as is often the case by converting the number to
-     * a string.
+     * Converts a 64-bit floating-point number to a rational number. This method
+     * computes the exact value of the floating point number, not an
+     * approximation, as is often the case by converting the number to a
+     * string.
      * @param flt A 64-bit floating-point number.
      * @return A rational number with the same value as {@code flt} .
      */
-    public static ExtendedRational FromDouble(double flt) {
+    public static ExtendedRational FromDouble(final double flt) {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
     }
 
     /**
      * Creates a not-a-number ExtendedRational object.
-     * @param diag A number to use as diagnostic information associated
-     * with this object. If none is needed, should be zero.
+     * @param diag A number to use as diagnostic information associated with this
+     * object. If none is needed, should be zero.
      * @return An ExtendedRational object.
-     * @throws java.lang.NullPointerException The parameter {@code diag}
-     * is null.
-     * @throws java.lang.IllegalArgumentException The parameter {@code diag} is
-     * less than 0.
+     * @throws NullPointerException The parameter {@code diag} is null.
+     * @throws IllegalArgumentException The parameter {@code diag} is less than 0.
      */
-    public static ExtendedRational CreateNaN(BigInteger diag) {
+    public static ExtendedRational CreateNaN(final BigInteger diag) {
       return CreateNaN(diag, false, false);
     }
 
-    private static ExtendedRational CreateWithFlags(BigInteger numerator, BigInteger denominator, int flags) {
+    private static ExtendedRational CreateWithFlags(
+final BigInteger numerator,
+final BigInteger denominator,
+final int flags) {
       ExtendedRational er = new ExtendedRational(numerator, denominator);
       er.flags = flags;
       return er;
@@ -217,32 +228,36 @@ at: http://upokecenter.com/d/
 
     /**
      * Creates a not-a-number ExtendedRational object.
-     * @param diag A number to use as diagnostic information associated
-     * with this object. If none is needed, should be zero.
-     * @param signaling Whether the return value will be signaling (true)
-     * or quiet (false).
+     * @param diag A number to use as diagnostic information associated with this
+     * object. If none is needed, should be zero.
+     * @param signaling Whether the return value will be signaling (true) or quiet
+     * (false).
      * @param negative Whether the return value is negative.
      * @return An ExtendedRational object.
-     * @throws java.lang.NullPointerException The parameter {@code diag}
-     * is null.
-     * @throws java.lang.IllegalArgumentException The parameter {@code diag} is
-     * less than 0.
+     * @throws NullPointerException The parameter {@code diag} is null.
+     * @throws IllegalArgumentException The parameter {@code diag} is less than 0.
      */
-    public static ExtendedRational CreateNaN(BigInteger diag, boolean signaling, boolean negative) {
+    public static ExtendedRational CreateNaN(
+final BigInteger diag,
+final boolean signaling,
+final boolean negative) {
       if (diag == null) {
         throw new NullPointerException("diag");
       }
       if (diag.signum() < 0) {
-        throw new IllegalArgumentException("Diagnostic information must be 0 or greater, was: " + diag);
+        throw new
+  IllegalArgumentException("Diagnostic information must be 0 or greater, was: " +
+          diag);
       }
-      if (diag.signum()==0 && !negative) {
+      if (diag.signum() == 0 && !negative) {
         return signaling ? SignalingNaN : NaN;
       }
       int flags = 0;
       if (negative) {
         flags |= BigNumberFlags.FlagNegative;
       }
-      flags |= signaling ? BigNumberFlags.FlagSignalingNaN : BigNumberFlags.FlagQuietNaN;
+      flags |= signaling ? BigNumberFlags.FlagSignalingNaN :
+        BigNumberFlags.FlagQuietNaN;
       ExtendedRational er = new ExtendedRational(diag, BigInteger.ZERO);
       er.flags = flags;
       return er;
@@ -252,10 +267,9 @@ at: http://upokecenter.com/d/
      * Not documented yet.
      * @param ef An ExtendedFloat object.
      * @return An ExtendedRational object.
-     * @throws java.lang.NullPointerException The parameter {@code ef}
-     * is null.
+     * @throws NullPointerException The parameter {@code ef} is null.
      */
-    public static ExtendedRational FromExtendedFloat(ExtendedFloat ef) {
+    public static ExtendedRational FromExtendedFloat(final ExtendedFloat ef) {
       if (ef == null) {
         throw new NullPointerException("ef");
       }
@@ -279,20 +293,20 @@ at: http://upokecenter.com/d/
       }
       BigInteger num = ef.getMantissa();
       BigInteger exp = ef.getExponent();
-      if (exp.signum()==0) {
+      if (exp.signum() == 0) {
         return FromBigInteger(num);
       }
       boolean neg = num.signum() < 0;
       num = (num).abs();
       BigInteger den = BigInteger.ONE;
       if (exp.signum() < 0) {
-        exp=(exp).negate();
+        exp = (exp).negate();
         den = DecimalUtility.ShiftLeft(den, exp);
       } else {
         num = DecimalUtility.ShiftLeft(num, exp);
       }
       if (neg) {
-        num=(num).negate();
+        num = (num).negate();
       }
       return new ExtendedRational(num, den);
     }
@@ -301,10 +315,9 @@ at: http://upokecenter.com/d/
      * Not documented yet.
      * @param ef An ExtendedDecimal object.
      * @return An ExtendedRational object.
-     * @throws java.lang.NullPointerException The parameter {@code ef}
-     * is null.
+     * @throws NullPointerException The parameter {@code ef} is null.
      */
-    public static ExtendedRational FromExtendedDecimal(ExtendedDecimal ef) {
+    public static ExtendedRational FromExtendedDecimal(final ExtendedDecimal ef) {
       if (ef == null) {
         throw new NullPointerException("ef");
       }
@@ -328,34 +341,38 @@ at: http://upokecenter.com/d/
       }
       BigInteger num = ef.getMantissa();
       BigInteger exp = ef.getExponent();
-      if (exp.signum()==0) {
+      if (exp.signum() == 0) {
         return FromBigInteger(num);
       }
       boolean neg = num.signum() < 0;
       num = (num).abs();
       BigInteger den = BigInteger.ONE;
       if (exp.signum() < 0) {
-        exp=(exp).negate();
+        exp = (exp).negate();
         den = DecimalUtility.FindPowerOfTenFromBig(exp);
       } else {
         BigInteger powerOfTen = DecimalUtility.FindPowerOfTenFromBig(exp);
-        num=num.multiply(powerOfTen);
+        num = num.multiply(powerOfTen);
       }
       if (neg) {
-        num=(num).negate();
+        num = (num).negate();
       }
       return new ExtendedRational(num, den);
     }
 
     /**
-     * Converts this rational number to a decimal number and rounds the result
-     * to the given precision.
+     * Converts this rational number to a decimal number and rounds the result to
+     * the given precision.
      * @param ctx A PrecisionContext object.
      * @return An ExtendedDecimal object.
      */
-    public ExtendedDecimal ToExtendedDecimal(PrecisionContext ctx) {
+    public ExtendedDecimal ToExtendedDecimal(final PrecisionContext ctx) {
       if (this.IsNaN()) {
-        return ExtendedDecimal.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.isNegative(), ctx);
+        return ExtendedDecimal.CreateNaN(
+this.unsignedNumerator,
+this.IsSignalingNaN(),
+this.isNegative(),
+ctx);
       }
       if (this.IsPositiveInfinity()) {
         return ExtendedDecimal.PositiveInfinity;
@@ -363,30 +380,36 @@ at: http://upokecenter.com/d/
       if (this.IsNegativeInfinity()) {
         return ExtendedDecimal.NegativeInfinity;
       }
-      ExtendedDecimal ef = (this.isNegative() && this.signum()==0) ?
-        ExtendedDecimal.NegativeZero : ExtendedDecimal.FromBigInteger(this.getNumerator());
+      ExtendedDecimal ef = (this.isNegative() && this.signum() == 0) ?
+ ExtendedDecimal.NegativeZero :
+          ExtendedDecimal.FromBigInteger(this.getNumerator());
       return ef.Divide(ExtendedDecimal.FromBigInteger(this.getDenominator()), ctx);
     }
 
     /**
-     * Converts this rational number to a decimal number, but if the result
-     * would have a nonterminating decimal expansion, rounds that result
-     * to the given precision.
-     * @param ctx A precision context object to control the precision. The
-     * rounding and exponent range settings of this context are ignored.
-     * This context will be used only if the exact result would have a nonterminating
-     * decimal expansion. If HasFlags of the context is true, will also store
-     * the flags resulting from the operation (the flags are in addition
-     * to the pre-existing flags). Can be null, in which case this method
-     * is the same as ToExtendedDecimal.
+     * Converts this rational number to a decimal number, but if the result would
+     * have a nonterminating decimal expansion, rounds that result to the
+     * given precision.
+     * @param ctx A precision context object to control the precision. The rounding
+     * and exponent range settings of this context are ignored. This context
+     * will be used only if the exact result would have a nonterminating
+     * decimal expansion. If HasFlags of the context is true, will also
+     * store the flags resulting from the operation (the flags are in
+     * addition to the pre-existing flags). Can be null, in which case this
+     * method is the same as ToExtendedDecimal.
      * @return An ExtendedDecimal object.
      */
-    public ExtendedDecimal ToExtendedDecimalExactIfPossible(PrecisionContext ctx) {
+public ExtendedDecimal ToExtendedDecimalExactIfPossible(final PrecisionContext
+      ctx) {
       if (ctx == null) {
         return this.ToExtendedDecimal(null);
       }
       if (this.IsNaN()) {
-        return ExtendedDecimal.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.isNegative(), ctx);
+        return ExtendedDecimal.CreateNaN(
+this.unsignedNumerator,
+this.IsSignalingNaN(),
+this.isNegative(),
+ctx);
       }
       if (this.IsPositiveInfinity()) {
         return ExtendedDecimal.PositiveInfinity;
@@ -394,12 +417,14 @@ at: http://upokecenter.com/d/
       if (this.IsNegativeInfinity()) {
         return ExtendedDecimal.NegativeInfinity;
       }
-      if (this.isNegative() && this.signum()==0) {
+      if (this.isNegative() && this.signum() == 0) {
         return ExtendedDecimal.NegativeZero;
       }
-      ExtendedDecimal valueEdNum = (this.isNegative() && this.signum()==0) ?
-        ExtendedDecimal.NegativeZero : ExtendedDecimal.FromBigInteger(this.getNumerator());
-      ExtendedDecimal valueEdDen = ExtendedDecimal.FromBigInteger(this.getDenominator());
+      ExtendedDecimal valueEdNum = (this.isNegative() && this.signum() == 0) ?
+ ExtendedDecimal.NegativeZero :
+          ExtendedDecimal.FromBigInteger(this.getNumerator());
+ ExtendedDecimal valueEdDen =
+        ExtendedDecimal.FromBigInteger(this.getDenominator());
       ExtendedDecimal ed = valueEdNum.Divide(valueEdDen, null);
       if (ed.IsNaN()) {
         // Result would be inexact, try again using the precision context
@@ -410,8 +435,8 @@ at: http://upokecenter.com/d/
 
     /**
      * Converts this rational number to a binary number.
-     * @return The exact value of the rational number, or not-a-number (NaN)
-     * if the result can't be exact because it has a nonterminating binary
+     * @return The exact value of the rational number, or not-a-number (NaN) if the
+     * result can't be exact because it has a nonterminating binary
      * expansion.
      */
     public ExtendedFloat ToExtendedFloat() {
@@ -419,14 +444,18 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Converts this rational number to a binary number and rounds the result
-     * to the given precision.
+     * Converts this rational number to a binary number and rounds the result to
+     * the given precision.
      * @param ctx A PrecisionContext object.
      * @return An ExtendedFloat object.
      */
-    public ExtendedFloat ToExtendedFloat(PrecisionContext ctx) {
+    public ExtendedFloat ToExtendedFloat(final PrecisionContext ctx) {
       if (this.IsNaN()) {
-        return ExtendedFloat.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.isNegative(), ctx);
+        return ExtendedFloat.CreateNaN(
+this.unsignedNumerator,
+this.IsSignalingNaN(),
+this.isNegative(),
+ctx);
       }
       if (this.IsPositiveInfinity()) {
         return ExtendedFloat.PositiveInfinity;
@@ -434,30 +463,35 @@ at: http://upokecenter.com/d/
       if (this.IsNegativeInfinity()) {
         return ExtendedFloat.NegativeInfinity;
       }
-      ExtendedFloat ef = (this.isNegative() && this.signum()==0) ?
-        ExtendedFloat.NegativeZero : ExtendedFloat.FromBigInteger(this.getNumerator());
+      ExtendedFloat ef = (this.isNegative() && this.signum() == 0) ?
+     ExtendedFloat.NegativeZero :
+          ExtendedFloat.FromBigInteger(this.getNumerator());
       return ef.Divide(ExtendedFloat.FromBigInteger(this.getDenominator()), ctx);
     }
 
     /**
-     * Converts this rational number to a binary number, but if the result
-     * would have a nonterminating binary expansion, rounds that result
-     * to the given precision.
-     * @param ctx A precision context object to control the precision. The
-     * rounding and exponent range settings of this context are ignored.
-     * This context will be used only if the exact result would have a nonterminating
+     * Converts this rational number to a binary number, but if the result would
+     * have a nonterminating binary expansion, rounds that result to the
+     * given precision.
+     * @param ctx A precision context object to control the precision. The rounding
+     * and exponent range settings of this context are ignored. This context
+     * will be used only if the exact result would have a nonterminating
      * binary expansion. If HasFlags of the context is true, will also store
-     * the flags resulting from the operation (the flags are in addition
-     * to the pre-existing flags). Can be null, in which case this method
-     * is the same as ToExtendedFloat.
+     * the flags resulting from the operation (the flags are in addition to
+     * the pre-existing flags). Can be null, in which case this method is
+     * the same as ToExtendedFloat.
      * @return An ExtendedFloat object.
      */
-    public ExtendedFloat ToExtendedFloatExactIfPossible(PrecisionContext ctx) {
+    public ExtendedFloat ToExtendedFloatExactIfPossible(final PrecisionContext ctx) {
       if (ctx == null) {
         return this.ToExtendedFloat(null);
       }
       if (this.IsNaN()) {
-        return ExtendedFloat.CreateNaN(this.unsignedNumerator, this.IsSignalingNaN(), this.isNegative(), ctx);
+        return ExtendedFloat.CreateNaN(
+this.unsignedNumerator,
+this.IsSignalingNaN(),
+this.isNegative(),
+ctx);
       }
       if (this.IsPositiveInfinity()) {
         return ExtendedFloat.PositiveInfinity;
@@ -465,11 +499,13 @@ at: http://upokecenter.com/d/
       if (this.IsNegativeInfinity()) {
         return ExtendedFloat.NegativeInfinity;
       }
-      if (this.signum()==0) {
-        return this.isNegative() ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
+      if (this.signum() == 0) {
+      return this.isNegative() ? ExtendedFloat.NegativeZero :
+          ExtendedFloat.Zero;
       }
-      ExtendedFloat valueEdNum = (this.isNegative() && this.signum()==0) ?
-        ExtendedFloat.NegativeZero : ExtendedFloat.FromBigInteger(this.getNumerator());
+      ExtendedFloat valueEdNum = (this.isNegative() && this.signum() == 0) ?
+     ExtendedFloat.NegativeZero :
+          ExtendedFloat.FromBigInteger(this.getNumerator());
       ExtendedFloat valueEdDen = ExtendedFloat.FromBigInteger(this.getDenominator());
       ExtendedFloat ed = valueEdNum.Divide(valueEdDen, null);
       if (ed.IsNaN()) {
@@ -480,18 +516,17 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Gets a value indicating whether this object is finite (not infinity
-     * or NaN).
+     * Gets a value indicating whether this object is finite (not infinity or NaN).
      * @return True if this object is finite (not infinity or NaN); otherwise,
      * false.
      */
-    public boolean isFinite() {
+    public final boolean isFinite() {
         return !this.IsNaN() && !this.IsInfinity();
       }
 
     /**
-     * Converts this value to an arbitrary-precision integer. Any fractional
-     * part in this value will be discarded when converting to a big integer.
+     * Converts this value to an arbitrary-precision integer. Any fractional part
+     * in this value will be discarded when converting to a big integer.
      * @return A BigInteger object.
      * @throws ArithmeticException This object's value is infinity or NaN.
      */
@@ -503,24 +538,23 @@ at: http://upokecenter.com/d/
     }
 
     /**
-     * Converts this value to an arbitrary-precision integer, checking
-     * whether the value is an exact integer.
+     * Converts this value to an arbitrary-precision integer, checking whether the
+     * value is an exact integer.
      * @return A BigInteger object.
      * @throws ArithmeticException This object's value is infinity or NaN.
-     * @throws ArithmeticException This object's value is not an exact
-     * integer.
+     * @throws ArithmeticException This object's value is not an exact integer.
      */
     public BigInteger ToBigIntegerExact() {
       if (!this.isFinite()) {
         throw new ArithmeticException("Value is infinity or NaN");
       }
       BigInteger rem;
-      BigInteger quo;
+ BigInteger quo;
 {
-BigInteger[] divrem=(this.getNumerator()).divideAndRemainder(this.denominator);
-quo=divrem[0];
-rem=divrem[1]; }
-      if (rem.signum()!=0) {
+BigInteger[] divrem = (this.getNumerator()).divideAndRemainder(this.denominator);
+quo = divrem[0];
+rem = divrem[1]; }
+      if (rem.signum() != 0) {
         throw new ArithmeticException("Value is not an integral value");
       }
       return quo;
@@ -531,7 +565,7 @@ rem=divrem[1]; }
      * @param smallint A 32-bit signed integer.
      * @return An ExtendedRational object.
      */
-    public static ExtendedRational FromInt32(int smallint) {
+    public static ExtendedRational FromInt32(final int smallint) {
       return new ExtendedRational(BigInteger.valueOf(smallint), BigInteger.ONE);
     }
 
@@ -540,16 +574,16 @@ rem=divrem[1]; }
      * @param longInt A 64-bit signed integer.
      * @return An ExtendedRational object.
      */
-    public static ExtendedRational FromInt64(long longInt) {
+    public static ExtendedRational FromInt64(final long longInt) {
       return new ExtendedRational(BigInteger.valueOf(longInt), BigInteger.ONE);
     }
 
     /**
      * Converts this value to a 64-bit floating-point number. The half-even
      * rounding mode is used.
-     * @return The closest 64-bit floating-point number to this value.
-     * The return value can be positive infinity or negative infinity if
-     * this value exceeds the range of a 64-bit floating point number.
+     * @return The closest 64-bit floating-point number to this value. The return
+     * value can be positive infinity or negative infinity if this value
+     * exceeds the range of a 64-bit floating point number.
      */
     public double ToDouble() {
       return this.ToExtendedFloat(PrecisionContext.Binary64).ToDouble();
@@ -558,9 +592,9 @@ rem=divrem[1]; }
     /**
      * Converts this value to a 32-bit floating-point number. The half-even
      * rounding mode is used.
-     * @return The closest 32-bit floating-point number to this value.
-     * The return value can be positive infinity or negative infinity if
-     * this value exceeds the range of a 32-bit floating point number.
+     * @return The closest 32-bit floating-point number to this value. The return
+     * value can be positive infinity or negative infinity if this value
+     * exceeds the range of a 32-bit floating point number.
      */
     public float ToSingle() {
       return this.ToExtendedFloat(PrecisionContext.Binary32).ToSingle();
@@ -593,26 +627,29 @@ rem=divrem[1]; }
      * Gets a value indicating whether this object's value equals 0.
      * @return True if this object's value equals 0; otherwise, false.
      */
-    public boolean isZero() {
-        return ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) == 0) && this.unsignedNumerator.signum()==0;
+    public final boolean isZero() {
+        return ((this.flags & (BigNumberFlags.FlagInfinity |
+          BigNumberFlags.FlagNaN)) == 0) && this.unsignedNumerator.signum() == 0;
       }
 
     /**
      * Gets the sign of this rational number.
-     * @return Zero if this value is zero or negative zero; -1 if this value
-     * is less than 0; and 1 if this value is greater than 0.
+     * @return Zero if this value is zero or negative zero; -1 if this value is
+     * less than 0; and 1 if this value is greater than 0.
      */
-    public int signum() {
-        return ((this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNaN)) != 0) ? (this.isNegative() ? -1 : 1) : (this.unsignedNumerator.signum()==0 ? 0 : (this.isNegative() ? -1 : 1));
+    public final int signum() {
+        return ((this.flags & (BigNumberFlags.FlagInfinity |
+          BigNumberFlags.FlagNaN)) != 0) ? (this.isNegative() ? -1 : 1) :
+          (this.unsignedNumerator.signum() == 0 ? 0 : (this.isNegative() ? -1 : 1));
       }
 
     /**
      * Compares an ExtendedRational object with this instance.
      * @param other An ExtendedRational object.
-     * @return Zero if the values are equal; a negative number if this instance
-     * is less, or a positive number if this instance is greater.
+     * @return Zero if the values are equal; a negative number if this instance is
+     * less, or a positive number if this instance is greater.
      */
-    public int compareTo(ExtendedRational other) {
+    public int compareTo(final ExtendedRational other) {
       if (other == null) {
         return 1;
       }
@@ -673,10 +710,10 @@ rem=divrem[1]; }
     /**
      * Compares an ExtendedFloat object with this instance.
      * @param other An ExtendedFloat object.
-     * @return Zero if the values are equal; a negative number if this instance
-     * is less, or a positive number if this instance is greater.
+     * @return Zero if the values are equal; a negative number if this instance is
+     * less, or a positive number if this instance is greater.
      */
-    public int CompareToBinary(ExtendedFloat other) {
+    public int CompareToBinary(final ExtendedFloat other) {
       if (other == null) {
         return 1;
       }
@@ -707,47 +744,52 @@ rem=divrem[1]; }
       // At this point, both numbers are finite and
       // have the same sign
 
-      if (other.getExponent().signum()==0) {
+      if (other.getExponent().signum() == 0) {
         // Special case: other has exponent 0
         BigInteger otherMant = other.getMantissa();
         BigInteger bcx = this.getDenominator().multiply(otherMant);
         return this.getNumerator().compareTo(bcx);
       }
       if ((other.getExponent()).abs().compareTo(BigInteger.valueOf(1000)) > 0) {
-        // Other has a high absolute value of exponent, so try different approaches to
+        // Other has a high absolute value of exponent, so try different
+        // approaches to
         // comparison
         BigInteger thisRem;
         BigInteger thisInt;
 {
-BigInteger[] divrem=(this.getUnsignedNumerator()).divideAndRemainder(this.getDenominator());
-thisInt=divrem[0];
-thisRem=divrem[1]; }
+BigInteger[] divrem = (this.getUnsignedNumerator()).divideAndRemainder(this.getDenominator());
+thisInt = divrem[0];
+thisRem = divrem[1]; }
         ExtendedFloat otherAbs = other.Abs();
         ExtendedFloat thisIntDec = ExtendedFloat.FromBigInteger(thisInt);
-        if (thisRem.signum()==0) {
+        if (thisRem.signum() == 0) {
           // This Object's value is an integer
           // System.out.println("Shortcircuit IV");
           int ret = thisIntDec.compareTo(otherAbs);
           return this.isNegative() ? -ret : ret;
         }
         if (thisIntDec.compareTo(otherAbs) > 0) {
-          // Truncated absolute value is greater than other's untruncated absolute value
+          // Truncated absolute value is greater than other's untruncated
+          // absolute value
           // System.out.println("Shortcircuit I");
           return this.isNegative() ? -1 : 1;
         }
         // Round up
-        thisInt=thisInt.add(BigInteger.ONE);
+        thisInt = thisInt.add(BigInteger.ONE);
         thisIntDec = ExtendedFloat.FromBigInteger(thisInt);
         if (thisIntDec.compareTo(otherAbs) < 0) {
-          // Absolute value rounded up is less than other's unrounded absolute value
+          // Absolute value rounded up is less than other's unrounded
+          // absolute value
           // System.out.println("Shortcircuit II");
           return this.isNegative() ? 1 : -1;
         }
-        thisIntDec = ExtendedFloat.FromBigInteger(this.getUnsignedNumerator()).Divide(
+      thisIntDec =
+          ExtendedFloat.FromBigInteger(this.getUnsignedNumerator()).Divide(
           ExtendedFloat.FromBigInteger(this.getDenominator()),
           PrecisionContext.ForPrecisionAndRounding(256, Rounding.Down));
         if (thisIntDec.compareTo(otherAbs) > 0) {
-          // Truncated absolute value is greater than other's untruncated absolute value
+          // Truncated absolute value is greater than other's untruncated
+          // absolute value
           // System.out.println("Shortcircuit III");
           return this.isNegative() ? -1 : 1;
         }
@@ -758,7 +800,8 @@ thisRem=divrem[1]; }
           --digitCount;
           BigInteger bigDigitCount = BigInteger.valueOf(digitCount);
           if (bigDigitCount.compareTo(other.getExponent()) < 0) {
-            // Numerator's digit count minus 1 is less than the other's exponent,
+            // Numerator's digit count minus 1 is less than the other' s
+            // exponent,
             // and other's exponent is positive, so this value's absolute
             // value is less
             return this.isNegative() ? 1 : -1;
@@ -770,7 +813,8 @@ thisRem=divrem[1]; }
       // System.out.println("no shortcircuit");
       // System.out.println(this);
       // System.out.println(other);
-      ExtendedRational otherRational = ExtendedRational.FromExtendedFloat(other);
+    ExtendedRational otherRational =
+        ExtendedRational.FromExtendedFloat(other);
       BigInteger ad = this.getNumerator().multiply(otherRational.getDenominator());
       BigInteger bc = this.getDenominator().multiply(otherRational.getNumerator());
       return ad.compareTo(bc);
@@ -779,10 +823,10 @@ thisRem=divrem[1]; }
     /**
      * Compares an ExtendedDecimal object with this instance.
      * @param other An ExtendedDecimal object.
-     * @return Zero if the values are equal; a negative number if this instance
-     * is less, or a positive number if this instance is greater.
+     * @return Zero if the values are equal; a negative number if this instance is
+     * less, or a positive number if this instance is greater.
      */
-    public int CompareToDecimal(ExtendedDecimal other) {
+    public int CompareToDecimal(final ExtendedDecimal other) {
       if (other == null) {
         return 1;
       }
@@ -813,49 +857,54 @@ thisRem=divrem[1]; }
       // At this point, both numbers are finite and
       // have the same sign
 
-      if (other.getExponent().signum()==0) {
+      if (other.getExponent().signum() == 0) {
         // Special case: other has exponent 0
         BigInteger otherMant = other.getMantissa();
         BigInteger bcx = this.getDenominator().multiply(otherMant);
         return this.getNumerator().compareTo(bcx);
       }
       if ((other.getExponent()).abs().compareTo(BigInteger.valueOf(50)) > 0) {
-        // Other has a high absolute value of exponent, so try different approaches to
+        // Other has a high absolute value of exponent, so try different
+        // approaches to
         // comparison
         BigInteger thisRem;
         BigInteger thisInt;
 {
-BigInteger[] divrem=(this.getUnsignedNumerator()).divideAndRemainder(this.getDenominator());
-thisInt=divrem[0];
-thisRem=divrem[1]; }
+BigInteger[] divrem = (this.getUnsignedNumerator()).divideAndRemainder(this.getDenominator());
+thisInt = divrem[0];
+thisRem = divrem[1]; }
         ExtendedDecimal otherAbs = other.Abs();
         ExtendedDecimal thisIntDec = ExtendedDecimal.FromBigInteger(thisInt);
-        if (thisRem.signum()==0) {
+        if (thisRem.signum() == 0) {
           // This Object's value is an integer
           // System.out.println("Shortcircuit IV");
           int ret = thisIntDec.compareTo(otherAbs);
           return this.isNegative() ? -ret : ret;
         }
         if (thisIntDec.compareTo(otherAbs) > 0) {
-          // Truncated absolute value is greater than other's untruncated absolute value
+          // Truncated absolute value is greater than other's untruncated
+          // absolute value
           // System.out.println("Shortcircuit I");
           return this.isNegative() ? -1 : 1;
         }
         // Round up
-        thisInt=thisInt.add(BigInteger.ONE);
+        thisInt = thisInt.add(BigInteger.ONE);
         thisIntDec = ExtendedDecimal.FromBigInteger(thisInt);
         if (thisIntDec.compareTo(otherAbs) < 0) {
-          // Absolute value rounded up is less than other's unrounded absolute value
+          // Absolute value rounded up is less than other's unrounded
+          // absolute value
           // System.out.println("Shortcircuit II");
           return this.isNegative() ? 1 : -1;
         }
         // Conservative approximation of this rational number's absolute value,
         // as a decimal number. The true value will be greater or equal.
-        thisIntDec = ExtendedDecimal.FromBigInteger(this.getUnsignedNumerator()).Divide(
+    thisIntDec =
+          ExtendedDecimal.FromBigInteger(this.getUnsignedNumerator()).Divide(
           ExtendedDecimal.FromBigInteger(this.getDenominator()),
           PrecisionContext.ForPrecisionAndRounding(20, Rounding.Down));
         if (thisIntDec.compareTo(otherAbs) > 0) {
-          // Truncated absolute value is greater than other's untruncated absolute value
+          // Truncated absolute value is greater than other's untruncated
+          // absolute value
           // System.out.println("Shortcircuit III");
           return this.isNegative() ? -1 : 1;
         }
@@ -865,7 +914,8 @@ thisRem=divrem[1]; }
           --digitCount;
           BigInteger bigDigitCount = BigInteger.valueOf(digitCount);
           if (bigDigitCount.compareTo(other.getExponent()) < 0) {
-            // Numerator's digit count minus 1 is less than the other's exponent,
+            // Numerator's digit count minus 1 is less than the other' s
+            // exponent,
             // and other's exponent is positive, so this value's absolute
             // value is less
             return this.isNegative() ? 1 : -1;
@@ -877,7 +927,8 @@ thisRem=divrem[1]; }
       // System.out.println("no shortcircuit");
       // System.out.println(this);
       // System.out.println(other);
-      ExtendedRational otherRational = ExtendedRational.FromExtendedDecimal(other);
+  ExtendedRational otherRational =
+        ExtendedRational.FromExtendedDecimal(other);
       BigInteger ad = this.getNumerator().multiply(otherRational.getDenominator());
       BigInteger bc = this.getDenominator().multiply(otherRational.getNumerator());
       return ad.compareTo(bc);
@@ -888,7 +939,7 @@ thisRem=divrem[1]; }
      * @param other An ExtendedRational object.
      * @return A Boolean object.
      */
-    public boolean equals(ExtendedRational other) {
+    public boolean equals(final ExtendedRational other) {
       return this.equals((Object)other);
     }
 
@@ -897,7 +948,8 @@ thisRem=divrem[1]; }
      * @return True if this object is negative infinity; otherwise, false.
      */
     public boolean IsNegativeInfinity() {
-      return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
+      return (this.flags & (BigNumberFlags.FlagInfinity |
+        BigNumberFlags.FlagNegative)) ==
         (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
@@ -906,7 +958,8 @@ thisRem=divrem[1]; }
      * @return True if this object is positive infinity; otherwise, false.
      */
     public boolean IsPositiveInfinity() {
-      return (this.flags & (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative)) ==
+      return (this.flags & (BigNumberFlags.FlagInfinity |
+        BigNumberFlags.FlagNegative)) ==
         BigNumberFlags.FlagInfinity;
     }
 
@@ -923,7 +976,7 @@ thisRem=divrem[1]; }
      * negative zero).
      * @return True if this object's value is negative; otherwise, false.
      */
-    public boolean isNegative() {
+    public final boolean isNegative() {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
       }
 
@@ -937,20 +990,19 @@ thisRem=divrem[1]; }
 
     /**
      * Returns whether this object is a quiet not-a-number value.
-     * @return True if this object is a quiet not-a-number value; otherwise,
-     * false.
+     * @return True if this object is a quiet not-a-number value; otherwise, false.
      */
     public boolean IsQuietNaN() {
       return (this.flags & BigNumberFlags.FlagQuietNaN) != 0;
     }
 
     /**
-     * Returns whether this object is a signaling not-a-number value (which
-     * causes an error if the value is passed to any arithmetic operation
-     * in this class).
-     * @return True if this object is a signaling not-a-number value (which
-     * causes an error if the value is passed to any arithmetic operation
-     * in this class); otherwise, false.
+     * Returns whether this object is a signaling not-a-number value (which causes
+     * an error if the value is passed to any arithmetic operation in this
+     * class).
+     * @return True if this object is a signaling not-a-number value (which causes
+     * an error if the value is passed to any arithmetic operation in this
+     * class); otherwise, false.
      */
     public boolean IsSignalingNaN() {
       return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
@@ -959,24 +1011,40 @@ thisRem=divrem[1]; }
     /**
      * A not-a-number value.
      */
-    public static final ExtendedRational NaN = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagQuietNaN);
+    public static final ExtendedRational NaN =
+      CreateWithFlags(
+BigInteger.ZERO,
+BigInteger.ONE,
+BigNumberFlags.FlagQuietNaN);
 
     /**
      * A signaling not-a-number value.
      */
-    public static final ExtendedRational SignalingNaN = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagSignalingNaN);
+    public static final ExtendedRational SignalingNaN =
+      CreateWithFlags(
+BigInteger.ZERO,
+BigInteger.ONE,
+BigNumberFlags.FlagSignalingNaN);
 
     /**
      * Positive infinity, greater than any other number.
      */
-    public static final ExtendedRational PositiveInfinity = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagInfinity);
+    public static final ExtendedRational PositiveInfinity =
+      CreateWithFlags(
+BigInteger.ZERO,
+BigInteger.ONE,
+BigNumberFlags.FlagInfinity);
 
     /**
      * Negative infinity, less than any other number.
      */
-    public static final ExtendedRational NegativeInfinity = CreateWithFlags(BigInteger.ZERO, BigInteger.ONE, BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
+    public static final ExtendedRational NegativeInfinity =
+      CreateWithFlags(
+BigInteger.ZERO,
+BigInteger.ONE,
+BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
-    private ExtendedRational ChangeSign(boolean negative) {
+    private ExtendedRational ChangeSign(final boolean negative) {
       if (negative) {
         this.flags |= BigNumberFlags.FlagNegative;
       } else {
@@ -990,8 +1058,8 @@ thisRem=divrem[1]; }
         int lowBit = this.unsignedNumerator.getLowestSetBit();
         lowBit = Math.min(lowBit, this.denominator.getLowestSetBit());
         if (lowBit > 0) {
-          this.unsignedNumerator=unsignedNumerator.shiftRight(lowBit);
-          this.denominator=denominator.shiftRight(lowBit);
+          this.unsignedNumerator = unsignedNumerator.shiftRight(lowBit);
+          this.denominator = denominator.shiftRight(lowBit);
         }
       }
       return this;
@@ -1000,12 +1068,10 @@ thisRem=divrem[1]; }
     /**
      * Adds two rational numbers.
      * @param otherValue An ExtendedRational object. (2).
-     * @return The sum of the two numbers. Returns NaN if either operand is
-     * NaN.
-     * @throws java.lang.NullPointerException The parameter {@code otherValue}
-     * is null.
+     * @return The sum of the two numbers. Returns NaN if either operand is NaN.
+     * @throws NullPointerException The parameter {@code otherValue} is null.
      */
-    public ExtendedRational Add(ExtendedRational otherValue) {
+    public ExtendedRational Add(final ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new NullPointerException("otherValue");
       }
@@ -1013,7 +1079,10 @@ thisRem=divrem[1]; }
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
       }
       if (otherValue.IsSignalingNaN()) {
-        return CreateNaN(otherValue.unsignedNumerator, false, otherValue.isNegative());
+  return CreateNaN(
+otherValue.unsignedNumerator,
+false,
+otherValue.isNegative());
       }
       if (this.IsQuietNaN()) {
         return this;
@@ -1022,7 +1091,8 @@ thisRem=divrem[1]; }
         return otherValue;
       }
       if (this.IsInfinity()) {
-        return otherValue.IsInfinity() ? ((this.isNegative() == otherValue.isNegative()) ? this : NaN) : this;
+        return otherValue.IsInfinity() ? ((this.isNegative() ==
+          otherValue.isNegative()) ? this : NaN) : this;
       }
       if (otherValue.IsInfinity()) {
         return otherValue;
@@ -1030,7 +1100,7 @@ thisRem=divrem[1]; }
       BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
       BigInteger bc = this.getDenominator().multiply(otherValue.getNumerator());
       BigInteger bd = this.getDenominator().multiply(otherValue.getDenominator());
-      ad=ad.add(bc);
+      ad = ad.add(bc);
       return new ExtendedRational(ad, bd).Simplify();
     }
 
@@ -1038,10 +1108,9 @@ thisRem=divrem[1]; }
      * Subtracts an ExtendedRational object from this instance.
      * @param otherValue An ExtendedRational object.
      * @return The difference of the two objects.
-     * @throws java.lang.NullPointerException The parameter {@code otherValue}
-     * is null.
+     * @throws NullPointerException The parameter {@code otherValue} is null.
      */
-    public ExtendedRational Subtract(ExtendedRational otherValue) {
+    public ExtendedRational Subtract(final ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new NullPointerException("otherValue");
       }
@@ -1049,7 +1118,10 @@ thisRem=divrem[1]; }
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
       }
       if (otherValue.IsSignalingNaN()) {
-        return CreateNaN(otherValue.unsignedNumerator, false, otherValue.isNegative());
+  return CreateNaN(
+otherValue.unsignedNumerator,
+false,
+otherValue.isNegative());
       }
       if (this.IsQuietNaN()) {
         return this;
@@ -1070,7 +1142,7 @@ thisRem=divrem[1]; }
       BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
       BigInteger bc = this.getDenominator().multiply(otherValue.getNumerator());
       BigInteger bd = this.getDenominator().multiply(otherValue.getDenominator());
-      ad=ad.subtract(bc);
+      ad = ad.subtract(bc);
       return new ExtendedRational(ad, bd).Simplify();
     }
 
@@ -1078,10 +1150,9 @@ thisRem=divrem[1]; }
      * Multiplies this instance by the value of an ExtendedRational object.
      * @param otherValue An ExtendedRational object.
      * @return The product of the two objects.
-     * @throws java.lang.NullPointerException The parameter {@code otherValue}
-     * is null.
+     * @throws NullPointerException The parameter {@code otherValue} is null.
      */
-    public ExtendedRational Multiply(ExtendedRational otherValue) {
+    public ExtendedRational Multiply(final ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new NullPointerException("otherValue");
       }
@@ -1089,7 +1160,10 @@ thisRem=divrem[1]; }
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
       }
       if (otherValue.IsSignalingNaN()) {
-        return CreateNaN(otherValue.unsignedNumerator, false, otherValue.isNegative());
+  return CreateNaN(
+otherValue.unsignedNumerator,
+false,
+otherValue.isNegative());
       }
       if (this.IsQuietNaN()) {
         return this;
@@ -1099,24 +1173,26 @@ thisRem=divrem[1]; }
       }
       boolean resultNeg = this.isNegative() ^ otherValue.isNegative();
       if (this.IsInfinity()) {
-        return otherValue.signum()==0 ? NaN : (resultNeg ? NegativeInfinity : PositiveInfinity);
+        return otherValue.signum() == 0 ? NaN : (resultNeg ? NegativeInfinity :
+          PositiveInfinity);
       }
       if (otherValue.IsInfinity()) {
-        return this.signum()==0 ? NaN : (resultNeg ? NegativeInfinity : PositiveInfinity);
+  return this.signum() == 0 ? NaN : (resultNeg ? NegativeInfinity :
+          PositiveInfinity);
       }
       BigInteger ac = this.getNumerator().multiply(otherValue.getNumerator());
       BigInteger bd = this.getDenominator().multiply(otherValue.getDenominator());
-      return ac.signum()==0 ? (resultNeg ? NegativeZero : Zero) : new ExtendedRational(ac, bd).Simplify().ChangeSign(resultNeg);
+      return ac.signum() == 0 ? (resultNeg ? NegativeZero : Zero) : new
+        ExtendedRational(ac, bd).Simplify().ChangeSign(resultNeg);
     }
 
     /**
      * Divides this instance by the value of an ExtendedRational object.
      * @param otherValue An ExtendedRational object.
      * @return The quotient of the two objects.
-     * @throws java.lang.NullPointerException The parameter {@code otherValue}
-     * is null.
+     * @throws NullPointerException The parameter {@code otherValue} is null.
      */
-    public ExtendedRational Divide(ExtendedRational otherValue) {
+    public ExtendedRational Divide(final ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new NullPointerException("otherValue");
       }
@@ -1124,7 +1200,10 @@ thisRem=divrem[1]; }
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
       }
       if (otherValue.IsSignalingNaN()) {
-        return CreateNaN(otherValue.unsignedNumerator, false, otherValue.isNegative());
+  return CreateNaN(
+otherValue.unsignedNumerator,
+false,
+otherValue.isNegative());
       }
       if (this.IsQuietNaN()) {
         return this;
@@ -1134,15 +1213,17 @@ thisRem=divrem[1]; }
       }
       boolean resultNeg = this.isNegative() ^ otherValue.isNegative();
       if (this.IsInfinity()) {
-        return otherValue.IsInfinity() ? NaN : (resultNeg ? NegativeInfinity : PositiveInfinity);
+        return otherValue.IsInfinity() ? NaN : (resultNeg ? NegativeInfinity :
+          PositiveInfinity);
       }
       if (otherValue.IsInfinity()) {
         return resultNeg ? NegativeZero : Zero;
       }
-      if (otherValue.signum()==0) {
-        return this.signum()==0 ? NaN : (resultNeg ? NegativeInfinity : PositiveInfinity);
+      if (otherValue.signum() == 0) {
+  return this.signum() == 0 ? NaN : (resultNeg ? NegativeInfinity :
+          PositiveInfinity);
       }
-      if (this.signum()==0) {
+      if (this.signum() == 0) {
         return resultNeg ? NegativeZero : Zero;
       }
       BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
@@ -1151,14 +1232,13 @@ thisRem=divrem[1]; }
     }
 
     /**
-     * Finds the remainder that results when this instance is divided by
-     * the value of a ExtendedRational object.
+     * Finds the remainder that results when this instance is divided by the value
+     * of a ExtendedRational object.
      * @param otherValue An ExtendedRational object.
      * @return The remainder of the two objects.
-     * @throws java.lang.NullPointerException The parameter {@code otherValue}
-     * is null.
+     * @throws NullPointerException The parameter {@code otherValue} is null.
      */
-    public ExtendedRational Remainder(ExtendedRational otherValue) {
+    public ExtendedRational Remainder(final ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new NullPointerException("otherValue");
       }
@@ -1166,7 +1246,10 @@ thisRem=divrem[1]; }
         return CreateNaN(this.unsignedNumerator, false, this.isNegative());
       }
       if (otherValue.IsSignalingNaN()) {
-        return CreateNaN(otherValue.unsignedNumerator, false, otherValue.isNegative());
+  return CreateNaN(
+otherValue.unsignedNumerator,
+false,
+otherValue.isNegative());
       }
       if (this.IsQuietNaN()) {
         return this;
@@ -1181,10 +1264,10 @@ thisRem=divrem[1]; }
       if (otherValue.IsInfinity()) {
         return this;
       }
-      if (otherValue.signum()==0) {
+      if (otherValue.signum() == 0) {
         return NaN;
       }
-      if (this.signum()==0) {
+      if (this.signum() == 0) {
         return this;
       }
       BigInteger ad = this.getNumerator().multiply(otherValue.getDenominator());
@@ -1195,28 +1278,32 @@ thisRem=divrem[1]; }
       BigInteger thisDen = this.getDenominator();
       ad = this.getNumerator().multiply(tden);
       bc = thisDen.multiply(tnum);
-      tden=tden.multiply(thisDen);
-      ad=ad.subtract(bc);
+      tden = tden.multiply(thisDen);
+      ad = ad.subtract(bc);
       return new ExtendedRational(ad, tden).Simplify().ChangeSign(resultNeg);
     }
 
     /**
      * A rational number for zero.
      */
-    public static final ExtendedRational Zero = FromBigInteger(BigInteger.ZERO);
+public static final ExtendedRational Zero =
+      FromBigInteger(BigInteger.ZERO);
 
     /**
      * A rational number for negative zero.
      */
-    public static final ExtendedRational NegativeZero = FromBigInteger(BigInteger.ZERO).ChangeSign(false);
+    public static final ExtendedRational NegativeZero =
+      FromBigInteger(BigInteger.ZERO).ChangeSign(false);
 
     /**
      * The rational number one.
      */
-    public static final ExtendedRational One = FromBigInteger(BigInteger.ONE);
+  public static final ExtendedRational One =
+      FromBigInteger(BigInteger.ONE);
 
     /**
      * The rational number ten.
      */
-    public static final ExtendedRational Ten = FromBigInteger(BigInteger.TEN);
+  public static final ExtendedRational Ten =
+      FromBigInteger(BigInteger.TEN);
   }

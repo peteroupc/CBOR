@@ -104,9 +104,12 @@ import com.upokecenter.cbor.*;
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
         if (!numberinfo.get("integer").equals(CBORObject.Null)) {
-          Assert.assertEquals(numberinfo.get("integer").AsString(), cbornumber.AsBigInteger().toString());
+          Assert.assertEquals(numberinfo.get("integer").AsString(),
+                          cbornumber.AsBigInteger().toString());
         } else {
           try {
             cbornumber.AsBigInteger();
@@ -121,14 +124,14 @@ import com.upokecenter.cbor.*;
     }
     @Test
     public void TestAsBoolean() {
-      if(!(CBORObject.True.AsBoolean()))Assert.fail();
-      if(!(CBORObject.FromObject(0).AsBoolean()))Assert.fail();
-      if(!(CBORObject.FromObject("").AsBoolean()))Assert.fail();
-      if(CBORObject.False.AsBoolean())Assert.fail();
-      if(CBORObject.Null.AsBoolean())Assert.fail();
-      if(CBORObject.Undefined.AsBoolean())Assert.fail();
-      if(!(CBORObject.NewArray().AsBoolean()))Assert.fail();
-      if(!(CBORObject.NewMap().AsBoolean()))Assert.fail();
+      if (!(CBORObject.True.AsBoolean()))Assert.fail();
+      if (!(CBORObject.FromObject(0).AsBoolean()))Assert.fail();
+      if (!(CBORObject.FromObject("").AsBoolean()))Assert.fail();
+      if (CBORObject.False.AsBoolean())Assert.fail();
+      if (CBORObject.Null.AsBoolean())Assert.fail();
+      if (CBORObject.Undefined.AsBoolean())Assert.fail();
+      if (!(CBORObject.NewArray().AsBoolean()))Assert.fail();
+      if (!(CBORObject.NewMap().AsBoolean()))Assert.fail();
     }
     @Test
     public void TestAsByte() {
@@ -183,9 +186,13 @@ import com.upokecenter.cbor.*;
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
         if (numberinfo.get("byte").AsBoolean()) {
-          Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(), ((int)cbornumber.AsByte()) & 0xff);
+          Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer"
+).AsString()).intValue(), ((int)cbornumber.AsByte()) &
+                                                            0xff);
         } else {
           try {
             cbornumber.AsByte();
@@ -252,18 +259,27 @@ import com.upokecenter.cbor.*;
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
-        Assert.assertEquals((double)ExtendedDecimal.FromString(numberinfo.get("number").AsString()).ToDouble(),cbornumber.AsDouble(),0);
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
+        Assert.assertEquals((double)ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()).ToDouble(), cbornumber.AsDouble(), 0);
       }
     }
     @Test
     public void TestAsExtendedDecimal() {
-      Assert.assertEquals(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedDecimal());
-      Assert.assertEquals(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedDecimal());
-      if(!(CBORObject.FromObject(Float.NaN).AsExtendedDecimal().IsNaN()))Assert.fail();
-      Assert.assertEquals(ExtendedDecimal.PositiveInfinity, CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedDecimal());
-      Assert.assertEquals(ExtendedDecimal.NegativeInfinity, CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedDecimal());
-      if(!(CBORObject.FromObject(Double.NaN).AsExtendedDecimal().IsNaN()))Assert.fail();
+      Assert.assertEquals(ExtendedDecimal.PositiveInfinity,
+CBORObject.FromObject(Float.POSITIVE_INFINITY) .AsExtendedDecimal());
+      Assert.assertEquals(ExtendedDecimal.NegativeInfinity,
+CBORObject.FromObject(Float.NEGATIVE_INFINITY) .AsExtendedDecimal());
+      if (!(CBORObject.FromObject(Float.NaN) .AsExtendedDecimal()
+                    .IsNaN()))Assert.fail();
+      Assert.assertEquals(ExtendedDecimal.PositiveInfinity,
+CBORObject.FromObject(Double.POSITIVE_INFINITY) .AsExtendedDecimal());
+      Assert.assertEquals(ExtendedDecimal.NegativeInfinity,
+CBORObject.FromObject(Double.NEGATIVE_INFINITY) .AsExtendedDecimal());
+      if (!(CBORObject.FromObject(Double.NaN) .AsExtendedDecimal()
+                    .IsNaN()))Assert.fail();
       try {
         CBORObject.NewArray().AsExtendedDecimal();
         Assert.fail("Should have failed");
@@ -315,21 +331,33 @@ import com.upokecenter.cbor.*;
     }
     @Test
     public void TestAsExtendedFloat() {
-      Assert.assertEquals(ExtendedFloat.PositiveInfinity, CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedFloat());
-      Assert.assertEquals(ExtendedFloat.NegativeInfinity, CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedFloat());
-      if(!(CBORObject.FromObject(Float.NaN).AsExtendedFloat().IsNaN()))Assert.fail();
-      Assert.assertEquals(ExtendedFloat.PositiveInfinity, CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedFloat());
-      Assert.assertEquals(ExtendedFloat.NegativeInfinity, CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedFloat());
-      if(!(CBORObject.FromObject(Double.NaN).AsExtendedFloat().IsNaN()))Assert.fail();
+      Assert.assertEquals(ExtendedFloat.PositiveInfinity,
+CBORObject.FromObject(Float.POSITIVE_INFINITY) .AsExtendedFloat());
+      Assert.assertEquals(ExtendedFloat.NegativeInfinity,
+CBORObject.FromObject(Float.NEGATIVE_INFINITY) .AsExtendedFloat());
+      if (!(CBORObject.FromObject(Float.NaN) .AsExtendedFloat()
+                    .IsNaN()))Assert.fail();
+      Assert.assertEquals(ExtendedFloat.PositiveInfinity,
+CBORObject.FromObject(Double.POSITIVE_INFINITY) .AsExtendedFloat());
+      Assert.assertEquals(ExtendedFloat.NegativeInfinity,
+CBORObject.FromObject(Double.NEGATIVE_INFINITY) .AsExtendedFloat());
+      if (!(CBORObject.FromObject(Double.NaN) .AsExtendedFloat()
+                    .IsNaN()))Assert.fail();
     }
     @Test
     public void TestAsExtendedRational() {
-      Assert.assertEquals(ExtendedRational.PositiveInfinity, CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedRational());
-      Assert.assertEquals(ExtendedRational.NegativeInfinity, CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedRational());
-      if(!(CBORObject.FromObject(Float.NaN).AsExtendedRational().IsNaN()))Assert.fail();
-      Assert.assertEquals(ExtendedRational.PositiveInfinity, CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedRational());
-      Assert.assertEquals(ExtendedRational.NegativeInfinity, CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedRational());
-      if(!(CBORObject.FromObject(Double.NaN).AsExtendedRational().IsNaN()))Assert.fail();
+      Assert.assertEquals(ExtendedRational.PositiveInfinity,
+CBORObject.FromObject(Float.POSITIVE_INFINITY) .AsExtendedRational());
+      Assert.assertEquals(ExtendedRational.NegativeInfinity,
+CBORObject.FromObject(Float.NEGATIVE_INFINITY) .AsExtendedRational());
+      if (!(CBORObject.FromObject(Float.NaN) .AsExtendedRational()
+                    .IsNaN()))Assert.fail();
+      Assert.assertEquals(ExtendedRational.PositiveInfinity,
+CBORObject.FromObject(Double.POSITIVE_INFINITY) .AsExtendedRational());
+      Assert.assertEquals(ExtendedRational.NegativeInfinity,
+CBORObject.FromObject(Double.NEGATIVE_INFINITY) .AsExtendedRational());
+      if (!(CBORObject.FromObject(Double.NaN) .AsExtendedRational()
+                    .IsNaN()))Assert.fail();
     }
     @Test
     public void TestAsInt16() {
@@ -384,9 +412,13 @@ import com.upokecenter.cbor.*;
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
         if (numberinfo.get("int16").AsBoolean()) {
-          Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(), cbornumber.AsInt16());
+          Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer"
+).AsString()).intValue(),
+  cbornumber.AsInt16());
         } else {
           try {
             cbornumber.AsInt16();
@@ -453,19 +485,26 @@ import com.upokecenter.cbor.*;
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        ExtendedDecimal edec = ExtendedDecimal.FromString(numberinfo.get("number").AsString());
+        ExtendedDecimal edec =
+          ExtendedDecimal.FromString(numberinfo.get("number").AsString());
         CBORObject cbornumber = CBORObject.FromObject(edec);
         boolean isdouble = numberinfo.get("double").AsBoolean();
         CBORObject cbornumberdouble = CBORObject.FromObject(edec.ToDouble());
         boolean issingle = numberinfo.get("single").AsBoolean();
         CBORObject cbornumbersingle = CBORObject.FromObject(edec.ToSingle());
         if (numberinfo.get("int32").AsBoolean()) {
-          Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(), cbornumber.AsInt32());
+          Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer"
+).AsString()).intValue(),
+  cbornumber.AsInt32());
           if (isdouble) {
-            Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(), cbornumberdouble.AsInt32());
+            Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer"
+).AsString()).intValue(),
+  cbornumberdouble.AsInt32());
           }
           if (issingle) {
-            Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(), cbornumbersingle.AsInt32());
+            Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer"
+).AsString()).intValue(),
+  cbornumbersingle.AsInt32());
           }
         } else {
           try {
@@ -552,19 +591,26 @@ import com.upokecenter.cbor.*;
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        ExtendedDecimal edec = ExtendedDecimal.FromString(numberinfo.get("number").AsString());
+        ExtendedDecimal edec =
+          ExtendedDecimal.FromString(numberinfo.get("number").AsString());
         CBORObject cbornumber = CBORObject.FromObject(edec);
         boolean isdouble = numberinfo.get("double").AsBoolean();
         CBORObject cbornumberdouble = CBORObject.FromObject(edec.ToDouble());
         boolean issingle = numberinfo.get("single").AsBoolean();
         CBORObject cbornumbersingle = CBORObject.FromObject(edec.ToSingle());
         if (numberinfo.get("int64").AsBoolean()) {
-          Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).longValue(), cbornumber.AsInt64());
+          Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer"
+).AsString()).longValue(),
+  cbornumber.AsInt64());
           if (isdouble) {
-            Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).longValue(), cbornumberdouble.AsInt64());
+            Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer"
+).AsString()).longValue(),
+  cbornumberdouble.AsInt64());
           }
           if (issingle) {
-            Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer").AsString()).longValue(), cbornumbersingle.AsInt64());
+            Assert.assertEquals(BigInteger.fromString(numberinfo.get("integer"
+).AsString()).longValue(),
+  cbornumbersingle.AsInt64());
           }
         } else {
           try {
@@ -655,8 +701,11 @@ import com.upokecenter.cbor.*;
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
-        Assert.assertEquals((float)ExtendedDecimal.FromString(numberinfo.get("number").AsString()).ToSingle(),cbornumber.AsSingle(),0f);
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
+        Assert.assertEquals((float)ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()).ToSingle(), cbornumber.AsSingle(), 0f);
       }
     }
     @Test
@@ -677,147 +726,183 @@ import com.upokecenter.cbor.*;
     }
     @Test
     public void TestCanFitInDouble() {
-      if(!(CBORObject.FromObject(0).CanFitInDouble()))Assert.fail();
-      if(CBORObject.True.CanFitInDouble())Assert.fail();
-      if(CBORObject.FromObject("").CanFitInDouble())Assert.fail();
-      if(CBORObject.NewArray().CanFitInDouble())Assert.fail();
-      if(CBORObject.NewMap().CanFitInDouble())Assert.fail();
-      if(CBORObject.False.CanFitInDouble())Assert.fail();
-      if(CBORObject.Null.CanFitInDouble())Assert.fail();
-      if(CBORObject.Undefined.CanFitInDouble())Assert.fail();
+      if (!(CBORObject.FromObject(0).CanFitInDouble()))Assert.fail();
+      if (CBORObject.True.CanFitInDouble())Assert.fail();
+      if (CBORObject.FromObject("").CanFitInDouble())Assert.fail();
+      if (CBORObject.NewArray().CanFitInDouble())Assert.fail();
+      if (CBORObject.NewMap().CanFitInDouble())Assert.fail();
+      if (CBORObject.False.CanFitInDouble())Assert.fail();
+      if (CBORObject.Null.CanFitInDouble())Assert.fail();
+      if (CBORObject.Undefined.CanFitInDouble())Assert.fail();
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
         if (numberinfo.get("double").AsBoolean()) {
-          if(!(cbornumber.CanFitInDouble()))Assert.fail();
+          if (!(cbornumber.CanFitInDouble()))Assert.fail();
         } else {
-          if(cbornumber.CanFitInDouble())Assert.fail();
+          if (cbornumber.CanFitInDouble())Assert.fail();
         }
       }
     }
     @Test
     public void TestCanFitInInt32() {
-      if(!(CBORObject.FromObject(0).CanFitInInt32()))Assert.fail();
-      if(CBORObject.True.CanFitInInt32())Assert.fail();
-      if(CBORObject.FromObject("").CanFitInInt32())Assert.fail();
-      if(CBORObject.NewArray().CanFitInInt32())Assert.fail();
-      if(CBORObject.NewMap().CanFitInInt32())Assert.fail();
-      if(CBORObject.False.CanFitInInt32())Assert.fail();
-      if(CBORObject.Null.CanFitInInt32())Assert.fail();
-      if(CBORObject.Undefined.CanFitInInt32())Assert.fail();
+      if (!(CBORObject.FromObject(0).CanFitInInt32()))Assert.fail();
+      if (CBORObject.True.CanFitInInt32())Assert.fail();
+      if (CBORObject.FromObject("").CanFitInInt32())Assert.fail();
+      if (CBORObject.NewArray().CanFitInInt32())Assert.fail();
+      if (CBORObject.NewMap().CanFitInInt32())Assert.fail();
+      if (CBORObject.False.CanFitInInt32())Assert.fail();
+      if (CBORObject.Null.CanFitInInt32())Assert.fail();
+      if (CBORObject.Undefined.CanFitInInt32())Assert.fail();
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
-        if (numberinfo.get("int32").AsBoolean() && numberinfo.get("isintegral").AsBoolean()) {
-          if(!(cbornumber.CanFitInInt32()))Assert.fail();
-          if(!(CBORObject.FromObject(cbornumber.AsInt32()).CanFitInInt32()))Assert.fail();
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
+        if (numberinfo.get("int32").AsBoolean() && numberinfo.get("isintegral"
+).AsBoolean()) {
+          if (!(cbornumber.CanFitInInt32()))Assert.fail();
+   if (!(CBORObject.FromObject(cbornumber.AsInt32())
+            .CanFitInInt32()))Assert.fail();
         } else {
-          if(cbornumber.CanFitInInt32())Assert.fail();
+          if (cbornumber.CanFitInInt32())Assert.fail();
         }
       }
     }
     @Test
     public void TestCanFitInInt64() {
-      if(!(CBORObject.FromObject(0).CanFitInSingle()))Assert.fail();
-      if(CBORObject.True.CanFitInSingle())Assert.fail();
-      if(CBORObject.FromObject("").CanFitInSingle())Assert.fail();
-      if(CBORObject.NewArray().CanFitInSingle())Assert.fail();
-      if(CBORObject.NewMap().CanFitInSingle())Assert.fail();
-      if(CBORObject.False.CanFitInSingle())Assert.fail();
-      if(CBORObject.Null.CanFitInSingle())Assert.fail();
-      if(CBORObject.Undefined.CanFitInSingle())Assert.fail();
+      if (!(CBORObject.FromObject(0).CanFitInSingle()))Assert.fail();
+      if (CBORObject.True.CanFitInSingle())Assert.fail();
+      if (CBORObject.FromObject("").CanFitInSingle())Assert.fail();
+      if (CBORObject.NewArray().CanFitInSingle())Assert.fail();
+      if (CBORObject.NewMap().CanFitInSingle())Assert.fail();
+      if (CBORObject.False.CanFitInSingle())Assert.fail();
+      if (CBORObject.Null.CanFitInSingle())Assert.fail();
+      if (CBORObject.Undefined.CanFitInSingle())Assert.fail();
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
-        if (numberinfo.get("int64").AsBoolean() && numberinfo.get("isintegral").AsBoolean()) {
-          if(!(cbornumber.CanFitInInt64()))Assert.fail();
-          if(!(CBORObject.FromObject(cbornumber.AsInt64()).CanFitInInt64()))Assert.fail();
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
+        if (numberinfo.get("int64").AsBoolean() && numberinfo.get("isintegral"
+).AsBoolean()) {
+          if (!(cbornumber.CanFitInInt64()))Assert.fail();
+   if (!(CBORObject.FromObject(cbornumber.AsInt64())
+            .CanFitInInt64()))Assert.fail();
         } else {
-          if(cbornumber.CanFitInInt64())Assert.fail();
+          if (cbornumber.CanFitInInt64())Assert.fail();
         }
       }
     }
     @Test
     public void TestCanFitInSingle() {
-      if(!(CBORObject.FromObject(0).CanFitInSingle()))Assert.fail();
-      if(CBORObject.True.CanFitInSingle())Assert.fail();
-      if(CBORObject.FromObject("").CanFitInSingle())Assert.fail();
-      if(CBORObject.NewArray().CanFitInSingle())Assert.fail();
-      if(CBORObject.NewMap().CanFitInSingle())Assert.fail();
-      if(CBORObject.False.CanFitInSingle())Assert.fail();
-      if(CBORObject.Null.CanFitInSingle())Assert.fail();
-      if(CBORObject.Undefined.CanFitInSingle())Assert.fail();
+      if (!(CBORObject.FromObject(0).CanFitInSingle()))Assert.fail();
+      if (CBORObject.True.CanFitInSingle())Assert.fail();
+      if (CBORObject.FromObject("").CanFitInSingle())Assert.fail();
+      if (CBORObject.NewArray().CanFitInSingle())Assert.fail();
+      if (CBORObject.NewMap().CanFitInSingle())Assert.fail();
+      if (CBORObject.False.CanFitInSingle())Assert.fail();
+      if (CBORObject.Null.CanFitInSingle())Assert.fail();
+      if (CBORObject.Undefined.CanFitInSingle())Assert.fail();
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
         if (numberinfo.get("single").AsBoolean()) {
-          if(!(cbornumber.CanFitInSingle()))Assert.fail();
+          if (!(cbornumber.CanFitInSingle()))Assert.fail();
         } else {
-          if(cbornumber.CanFitInSingle())Assert.fail();
+          if (cbornumber.CanFitInSingle())Assert.fail();
         }
       }
     }
     @Test
     public void TestCanTruncatedIntFitInInt32() {
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 11)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 12)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 13)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 14)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 15)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 16)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 17)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 18)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 19)).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(!(CBORObject.FromObject(0).CanTruncatedIntFitInInt32()))Assert.fail();
-      if(CBORObject.True.CanTruncatedIntFitInInt32())Assert.fail();
-      if(CBORObject.FromObject("").CanTruncatedIntFitInInt32())Assert.fail();
-      if(CBORObject.NewArray().CanTruncatedIntFitInInt32())Assert.fail();
-      if(CBORObject.NewMap().CanTruncatedIntFitInInt32())Assert.fail();
-      if(CBORObject.False.CanTruncatedIntFitInInt32())Assert.fail();
-      if(CBORObject.Null.CanTruncatedIntFitInInt32())Assert.fail();
-      if(CBORObject.Undefined.CanTruncatedIntFitInInt32())Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+11)) .CanTruncatedIntFitInInt32()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+12)) .CanTruncatedIntFitInInt32()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+13)) .CanTruncatedIntFitInInt32()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+14)) .CanTruncatedIntFitInInt32()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+15)) .CanTruncatedIntFitInInt32()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+16)) .CanTruncatedIntFitInInt32()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+17)) .CanTruncatedIntFitInInt32()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+18)) .CanTruncatedIntFitInInt32()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+19)) .CanTruncatedIntFitInInt32()))Assert.fail();
+      if (!(CBORObject.FromObject(0).CanTruncatedIntFitInInt32()))Assert.fail();
+      if (CBORObject.True.CanTruncatedIntFitInInt32())Assert.fail();
+      if (CBORObject.FromObject("")
+                     .CanTruncatedIntFitInInt32())Assert.fail();
+      if (CBORObject.NewArray().CanTruncatedIntFitInInt32())Assert.fail();
+      if (CBORObject.NewMap().CanTruncatedIntFitInInt32())Assert.fail();
+      if (CBORObject.False.CanTruncatedIntFitInInt32())Assert.fail();
+      if (CBORObject.Null.CanTruncatedIntFitInInt32())Assert.fail();
+      if (CBORObject.Undefined.CanTruncatedIntFitInInt32())Assert.fail();
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
         if (numberinfo.get("int32").AsBoolean()) {
-          if(!(cbornumber.CanTruncatedIntFitInInt32()))Assert.fail();
+          if (!(cbornumber.CanTruncatedIntFitInInt32()))Assert.fail();
         } else {
-          if(cbornumber.CanTruncatedIntFitInInt32())Assert.fail();
+          if (cbornumber.CanTruncatedIntFitInInt32())Assert.fail();
         }
       }
     }
     @Test
     public void TestCanTruncatedIntFitInInt64() {
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 11)).CanTruncatedIntFitInInt64()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 12)).CanTruncatedIntFitInInt64()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 13)).CanTruncatedIntFitInInt64()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 14)).CanTruncatedIntFitInInt64()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 15)).CanTruncatedIntFitInInt64()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 16)).CanTruncatedIntFitInInt64()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 17)).CanTruncatedIntFitInInt64()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 18)).CanTruncatedIntFitInInt64()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedFloat.Create(-2, 19)).CanTruncatedIntFitInInt64()))Assert.fail();
-      if(!(CBORObject.FromObject(0).CanTruncatedIntFitInInt64()))Assert.fail();
-      if(CBORObject.True.CanTruncatedIntFitInInt64())Assert.fail();
-      if(CBORObject.FromObject("").CanTruncatedIntFitInInt64())Assert.fail();
-      if(CBORObject.NewArray().CanTruncatedIntFitInInt64())Assert.fail();
-      if(CBORObject.NewMap().CanTruncatedIntFitInInt64())Assert.fail();
-      if(CBORObject.False.CanTruncatedIntFitInInt64())Assert.fail();
-      if(CBORObject.Null.CanTruncatedIntFitInInt64())Assert.fail();
-      if(CBORObject.Undefined.CanTruncatedIntFitInInt64())Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+11)) .CanTruncatedIntFitInInt64()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+12)) .CanTruncatedIntFitInInt64()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+13)) .CanTruncatedIntFitInInt64()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+14)) .CanTruncatedIntFitInInt64()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+15)) .CanTruncatedIntFitInInt64()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+16)) .CanTruncatedIntFitInInt64()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+17)) .CanTruncatedIntFitInInt64()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+18)) .CanTruncatedIntFitInInt64()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedFloat.Create(-2,
+19)) .CanTruncatedIntFitInInt64()))Assert.fail();
+      if (!(CBORObject.FromObject(0).CanTruncatedIntFitInInt64()))Assert.fail();
+      if (CBORObject.True.CanTruncatedIntFitInInt64())Assert.fail();
+      if (CBORObject.FromObject("")
+                     .CanTruncatedIntFitInInt64())Assert.fail();
+      if (CBORObject.NewArray().CanTruncatedIntFitInInt64())Assert.fail();
+      if (CBORObject.NewMap().CanTruncatedIntFitInInt64())Assert.fail();
+      if (CBORObject.False.CanTruncatedIntFitInInt64())Assert.fail();
+      if (CBORObject.Null.CanTruncatedIntFitInInt64())Assert.fail();
+      if (CBORObject.Undefined.CanTruncatedIntFitInInt64())Assert.fail();
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
         if (numberinfo.get("int64").AsBoolean()) {
-          if(!(cbornumber.CanTruncatedIntFitInInt64()))Assert.fail();
+          if (!(cbornumber.CanTruncatedIntFitInInt64()))Assert.fail();
         } else {
-          if(cbornumber.CanTruncatedIntFitInInt64())Assert.fail();
+          if (cbornumber.CanTruncatedIntFitInInt64())Assert.fail();
         }
       }
     }
@@ -835,10 +920,14 @@ import com.upokecenter.cbor.*;
       CBORTest.CompareTestLess(CBORObject.False, CBORObject.True);
       CBORTest.CompareTestLess(CBORObject.False, CBORObject.FromObject(0));
       CBORTest.CompareTestLess(CBORObject.False, CBORObject.FromSimpleValue(0));
-      CBORTest.CompareTestLess(CBORObject.FromSimpleValue(0), CBORObject.FromSimpleValue(1));
-      CBORTest.CompareTestLess(CBORObject.FromObject(0), CBORObject.FromObject(1));
-      CBORTest.CompareTestLess(CBORObject.FromObject(0.0f), CBORObject.FromObject(1.0f));
-      CBORTest.CompareTestLess(CBORObject.FromObject(0.0), CBORObject.FromObject(1.0));
+      CBORTest.CompareTestLess(CBORObject.FromSimpleValue(0),
+                               CBORObject.FromSimpleValue(1));
+      CBORTest.CompareTestLess(CBORObject.FromObject(0),
+                               CBORObject.FromObject(1));
+      CBORTest.CompareTestLess(CBORObject.FromObject(0.0f),
+                               CBORObject.FromObject(1.0f));
+      CBORTest.CompareTestLess(CBORObject.FromObject(0.0),
+                               CBORObject.FromObject(1.0));
     }
     @Test
     public void TestContainsKey() {
@@ -855,7 +944,7 @@ import com.upokecenter.cbor.*;
     @Test
     public void TestDecodeFromBytesVersion2Dot0() {
       try {
-        CBORObject.DecodeFromBytes(new byte[] {   });
+        CBORObject.DecodeFromBytes(new byte[] { });
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
@@ -867,7 +956,7 @@ import com.upokecenter.cbor.*;
     @Test
     public void TestDecodeFromBytes() {
       try {
-        CBORObject.DecodeFromBytes(new byte[] {  0x1c  });
+        CBORObject.DecodeFromBytes(new byte[] { 0x1c  });
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
@@ -883,7 +972,7 @@ import com.upokecenter.cbor.*;
         throw new IllegalStateException("", ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] {  0x1e  });
+        CBORObject.DecodeFromBytes(new byte[] { 0x1e  });
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
@@ -891,7 +980,7 @@ import com.upokecenter.cbor.*;
         throw new IllegalStateException("", ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xfe  });
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xfe  });
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
@@ -899,7 +988,7 @@ import com.upokecenter.cbor.*;
         throw new IllegalStateException("", ex);
       }
       try {
-        CBORObject.DecodeFromBytes(new byte[] {  (byte)0xff  });
+        CBORObject.DecodeFromBytes(new byte[] { (byte)0xff  });
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
@@ -1060,106 +1149,130 @@ import com.upokecenter.cbor.*;
       try {
         CBORObject.FromJSONString("[\"\ud800\udc00\"]");
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("[\"\\ud800\\udc00\"]");
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("[\"\ud800\\udc00\"]");
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("[\"\\ud800\udc00\"]");
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("[\"\\udc00\ud800\udc00\"]");
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("[\"\\ud800\ud800\udc00\"]");
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("[\"\\ud800\\udc00\ud800\udc00\"]");
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
-        CBORObject.FromJSONString("[\"\\ud800\"]"); Assert.fail("Should have failed");
+        CBORObject.FromJSONString("[\"\\ud800\"]");
+        Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("[1,2,"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("[1,2,3"); Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("{,\"0\":0,\"1\":1}");
         Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
-        CBORObject.FromJSONString("{\"0\":0,,\"1\":1}"); Assert.fail("Should have failed");
+        CBORObject.FromJSONString("{\"0\":0,,\"1\":1}");
+        Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
-        CBORObject.FromJSONString("{\"0\":0,\"1\":1,}"); Assert.fail("Should have failed");
+        CBORObject.FromJSONString("{\"0\":0,\"1\":1,}");
+        Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
-        CBORObject.FromJSONString("[,0,1,2]"); Assert.fail("Should have failed");
+        CBORObject.FromJSONString("[,0,1,2]");
+        Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
-        CBORObject.FromJSONString("[0,,1,2]"); Assert.fail("Should have failed");
+        CBORObject.FromJSONString("[0,,1,2]");
+        Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
-        CBORObject.FromJSONString("[0,1,,2]"); Assert.fail("Should have failed");
+        CBORObject.FromJSONString("[0,1,,2]");
+        Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
-        CBORObject.FromJSONString("[0,1,2,]"); Assert.fail("Should have failed");
+        CBORObject.FromJSONString("[0,1,2,]");
+        Assert.fail("Should have failed");
       } catch (CBORException ex) {
       } catch (Exception ex) {
-        Assert.fail(ex.toString()); throw new IllegalStateException("", ex);
+        Assert.fail(ex.toString()); throw new
+          IllegalStateException("", ex);
       }
       try {
         CBORObject.FromJSONString("[0001]");
@@ -1317,7 +1430,8 @@ import com.upokecenter.cbor.*;
       Assert.assertEquals(CBORObject.False, CBORObject.FromJSONString("false"));
       Assert.assertEquals(CBORObject.Null, CBORObject.FromJSONString("null"));
       Assert.assertEquals(5, CBORObject.FromJSONString(" 5 ").AsInt32());
-      Assert.assertEquals("/\b", CBORObject.FromJSONString("\"\\/\\b\"").AsString());
+      Assert.assertEquals("/\b", CBORObject.FromJSONString("\"\\/\\b\""
+).AsString());
     }
     @Test
     public void TestFromObject() {
@@ -1333,12 +1447,15 @@ import com.upokecenter.cbor.*;
       long[] longarray = { 2, 3 };
       cbor = CBORObject.FromObject(longarray);
       Assert.assertEquals(2, cbor.size());
-      if(!(CBORObject.FromObject(2).compareTo(cbor.get(0)) == 0))Assert.fail();
-      if(!(CBORObject.FromObject(3).compareTo(cbor.get(1)) == 0))Assert.fail();
+      if (!(CBORObject.FromObject(2).compareTo(cbor.get(0)) == 0))Assert.fail();
+      if (!(CBORObject.FromObject(3).compareTo(cbor.get(1)) == 0))Assert.fail();
       TestCommon.AssertRoundTrip(cbor);
-      Assert.assertEquals(CBORObject.Null, CBORObject.FromObject((ExtendedRational)null));
-      Assert.assertEquals(CBORObject.Null, CBORObject.FromObject((ExtendedDecimal)null));
-      Assert.assertEquals(CBORObject.FromObject(10), CBORObject.FromObject(ExtendedRational.Create(10, 1)));
+      Assert.assertEquals(CBORObject.Null,
+                      CBORObject.FromObject((ExtendedRational)null));
+      Assert.assertEquals(CBORObject.Null,
+                      CBORObject.FromObject((ExtendedDecimal)null));
+      Assert.assertEquals(CBORObject.FromObject(10),
+                      CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       try {
         CBORObject.FromObject(ExtendedRational.Create(10, 2));
       } catch (Exception ex) {
@@ -1516,8 +1633,8 @@ import com.upokecenter.cbor.*;
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
-      if(CBORObject.True.HasTag(0))Assert.fail();
-      if(CBORObject.True.HasTag(BigInteger.ZERO))Assert.fail();
+      if (CBORObject.True.HasTag(0))Assert.fail();
+      if (CBORObject.True.HasTag(BigInteger.ZERO))Assert.fail();
     }
     @Test
     public void TestInnermostTag() {
@@ -1534,26 +1651,28 @@ import com.upokecenter.cbor.*;
     @Test
     public void TestIsFinite() {
       CBORObject cbor;
-      if(!(CBORObject.FromObject(0).isFinite()))Assert.fail();
-      if(CBORObject.FromObject("").isFinite())Assert.fail();
-      if(CBORObject.NewArray().isFinite())Assert.fail();
-      if(CBORObject.NewMap().isFinite())Assert.fail();
+      if (!(CBORObject.FromObject(0).isFinite()))Assert.fail();
+      if (CBORObject.FromObject("").isFinite())Assert.fail();
+      if (CBORObject.NewArray().isFinite())Assert.fail();
+      if (CBORObject.NewMap().isFinite())Assert.fail();
       cbor = CBORObject.True;
-      if(cbor.isFinite())Assert.fail();
+      if (cbor.isFinite())Assert.fail();
       cbor = CBORObject.False;
-      if(cbor.isFinite())Assert.fail();
+      if (cbor.isFinite())Assert.fail();
       cbor = CBORObject.Null;
-      if(cbor.isFinite())Assert.fail();
+      if (cbor.isFinite())Assert.fail();
       cbor = CBORObject.Undefined;
-      if(cbor.isFinite())Assert.fail();
+      if (cbor.isFinite())Assert.fail();
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
         if (!numberinfo.get("integer").equals(CBORObject.Null)) {
-          if(!(cbornumber.isFinite()))Assert.fail();
+          if (!(cbornumber.isFinite()))Assert.fail();
         } else {
-          if(cbornumber.isFinite())Assert.fail();
+          if (cbornumber.isFinite())Assert.fail();
         }
       }
     }
@@ -1569,54 +1688,61 @@ import com.upokecenter.cbor.*;
     @Test
     public void TestIsIntegral() {
       CBORObject cbor;
-      if(!(CBORObject.FromObject(0).isIntegral()))Assert.fail();
-      if(CBORObject.FromObject("").isIntegral())Assert.fail();
-      if(CBORObject.NewArray().isIntegral())Assert.fail();
-      if(CBORObject.NewMap().isIntegral())Assert.fail();
-      if(!(CBORObject.FromObject(BigInteger.ONE.shiftLeft(63)).isIntegral()))Assert.fail();
-      if(!(CBORObject.FromObject(BigInteger.ONE.shiftLeft(64)).isIntegral()))Assert.fail();
-      if(!(CBORObject.FromObject(BigInteger.ONE.shiftLeft(80)).isIntegral()))Assert.fail();
-      if(!(CBORObject.FromObject(ExtendedDecimal.FromString("4444e+800")).isIntegral()))Assert.fail();
-      if(CBORObject.FromObject(ExtendedDecimal.FromString("4444e-800")).isIntegral())Assert.fail();
-      if(CBORObject.FromObject(2.5).isIntegral())Assert.fail();
-      if(CBORObject.FromObject(999.99).isIntegral())Assert.fail();
-      if(CBORObject.FromObject(Double.POSITIVE_INFINITY).isIntegral())Assert.fail();
-      if(CBORObject.FromObject(Double.NEGATIVE_INFINITY).isIntegral())Assert.fail();
-      if(CBORObject.FromObject(Double.NaN).isIntegral())Assert.fail();
-      if(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity).isIntegral())Assert.fail();
-      if(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity).isIntegral())Assert.fail();
-      if(CBORObject.FromObject(ExtendedDecimal.NaN).isIntegral())Assert.fail();
+      if (!(CBORObject.FromObject(0).isIntegral()))Assert.fail();
+      if (CBORObject.FromObject("").isIntegral())Assert.fail();
+      if (CBORObject.NewArray().isIntegral())Assert.fail();
+      if (CBORObject.NewMap().isIntegral())Assert.fail();
+      if (!(CBORObject.FromObject(BigInteger.ONE.shiftLeft(63)).isIntegral()))Assert.fail();
+      if (!(CBORObject.FromObject(BigInteger.ONE.shiftLeft(64)).isIntegral()))Assert.fail();
+      if (!(CBORObject.FromObject(BigInteger.ONE.shiftLeft(80)).isIntegral()))Assert.fail();
+      if (!(CBORObject.FromObject(ExtendedDecimal.FromString("4444e+800"
+)) .IsIntegral))Assert.fail();
+
+  if (CBORObject.FromObject(ExtendedDecimal.FromString("4444e-800"
+)) .IsIntegral)Assert.fail();
+      if (CBORObject.FromObject(2.5).isIntegral())Assert.fail();
+      if (CBORObject.FromObject(999.99).isIntegral())Assert.fail();
+      if (CBORObject.FromObject(Double.POSITIVE_INFINITY).isIntegral())Assert.fail();
+      if (CBORObject.FromObject(Double.NEGATIVE_INFINITY).isIntegral())Assert.fail();
+      if (CBORObject.FromObject(Double.NaN).isIntegral())Assert.fail();
+      if (CBORObject.FromObject(ExtendedDecimal.PositiveInfinity)
+                     .IsIntegral)Assert.fail();
+      if (CBORObject.FromObject(ExtendedDecimal.NegativeInfinity)
+                     .IsIntegral)Assert.fail();
+      if (CBORObject.FromObject(ExtendedDecimal.NaN).isIntegral())Assert.fail();
       cbor = CBORObject.True;
-      if(cbor.isIntegral())Assert.fail();
+      if (cbor.isIntegral())Assert.fail();
       cbor = CBORObject.False;
-      if(cbor.isIntegral())Assert.fail();
+      if (cbor.isIntegral())Assert.fail();
       cbor = CBORObject.Null;
-      if(cbor.isIntegral())Assert.fail();
+      if (cbor.isIntegral())Assert.fail();
       cbor = CBORObject.Undefined;
-      if(cbor.isIntegral())Assert.fail();
+      if (cbor.isIntegral())Assert.fail();
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
         if (numberinfo.get("isintegral").AsBoolean()) {
-          if(!(cbornumber.isIntegral()))Assert.fail();
+          if (!(cbornumber.isIntegral()))Assert.fail();
         } else {
-          if(cbornumber.isIntegral())Assert.fail();
+          if (cbornumber.isIntegral())Assert.fail();
         }
       }
     }
     @Test
     public void TestIsNaN() {
-      if(CBORObject.True.IsNaN())Assert.fail();
-      if(CBORObject.FromObject("").IsNaN())Assert.fail();
-      if(CBORObject.NewArray().IsNaN())Assert.fail();
-      if(CBORObject.NewMap().IsNaN())Assert.fail();
-      if(CBORObject.False.IsNaN())Assert.fail();
-      if(CBORObject.Null.IsNaN())Assert.fail();
-      if(CBORObject.Undefined.IsNaN())Assert.fail();
-      if(CBORObject.PositiveInfinity.IsNaN())Assert.fail();
-      if(CBORObject.PositiveInfinity.IsNaN())Assert.fail();
-      if(!(CBORObject.NaN.IsNaN()))Assert.fail();
+      if (CBORObject.True.IsNaN())Assert.fail();
+      if (CBORObject.FromObject("").IsNaN())Assert.fail();
+      if (CBORObject.NewArray().IsNaN())Assert.fail();
+      if (CBORObject.NewMap().IsNaN())Assert.fail();
+      if (CBORObject.False.IsNaN())Assert.fail();
+      if (CBORObject.Null.IsNaN())Assert.fail();
+      if (CBORObject.Undefined.IsNaN())Assert.fail();
+      if (CBORObject.PositiveInfinity.IsNaN())Assert.fail();
+      if (CBORObject.PositiveInfinity.IsNaN())Assert.fail();
+      if (!(CBORObject.NaN.IsNaN()))Assert.fail();
     }
     @Test
     public void TestIsNegativeInfinity() {
@@ -1835,7 +1961,9 @@ import com.upokecenter.cbor.*;
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
-        CBORObject cbornumber = CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number").AsString()));
+        CBORObject cbornumber =
+          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
+).AsString()));
         if (cbornumber.IsNaN()) {
           try {
             Assert.fail("" + cbornumber.signum());
@@ -1865,7 +1993,9 @@ import com.upokecenter.cbor.*;
 
     @Test
     public void TestToJSONStringFor2Dot0() {
-      Assert.assertEquals("\"\u2027\\u2028\\u2029\u202a\"", CBORObject.FromObject("\u2027\u2028\u2029\u202a").ToJSONString());
+      Assert.assertEquals("\"\u2027\\u2028\\u2029\u202a\"" ,
+             CBORObject.FromObject("\u2027\u2028\u2029\u202a"
+).ToJSONString());
     }
 
     @Test
@@ -1873,24 +2003,33 @@ import com.upokecenter.cbor.*;
       Assert.assertEquals("true", CBORObject.True.ToJSONString());
       Assert.assertEquals("false", CBORObject.False.ToJSONString());
       Assert.assertEquals("null", CBORObject.Null.ToJSONString());
-      Assert.assertEquals("null", CBORObject.FromObject(Float.POSITIVE_INFINITY).ToJSONString());
-      Assert.assertEquals("null", CBORObject.FromObject(Float.NEGATIVE_INFINITY).ToJSONString());
+      Assert.assertEquals("null" ,
+CBORObject.FromObject(Float.POSITIVE_INFINITY) .ToJSONString());
+      Assert.assertEquals("null" ,
+CBORObject.FromObject(Float.NEGATIVE_INFINITY) .ToJSONString());
       Assert.assertEquals("null", CBORObject.FromObject(Float.NaN).ToJSONString());
-      Assert.assertEquals("null", CBORObject.FromObject(Double.POSITIVE_INFINITY).ToJSONString());
-      Assert.assertEquals("null", CBORObject.FromObject(Double.NEGATIVE_INFINITY).ToJSONString());
+      Assert.assertEquals("null" ,
+CBORObject.FromObject(Double.POSITIVE_INFINITY) .ToJSONString());
+      Assert.assertEquals("null" ,
+CBORObject.FromObject(Double.NEGATIVE_INFINITY) .ToJSONString());
       Assert.assertEquals("null", CBORObject.FromObject(Double.NaN).ToJSONString());
       // Base64 tests
       CBORObject o;
-      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  }, 22);
+      o = CBORObject.FromObjectAndTag(new byte[] { (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  },
+                                      22);
       Assert.assertEquals("\"mtbw6A\"", o.ToJSONString());
-      o = CBORObject.FromObject(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  });
+      o = CBORObject.FromObject(new byte[] { (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  });
       Assert.assertEquals("\"mtbw6A\"", o.ToJSONString());
-      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  }, 23);
+      o = CBORObject.FromObjectAndTag(new byte[] { (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  },
+                                      23);
       Assert.assertEquals("\"9AD6F0E8\"", o.ToJSONString());
-      o = CBORObject.FromObject(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8  });
-      Assert.assertEquals("\"mtb_6A\"", o.ToJSONString());  // Encode with Base64URL by default
-      o = CBORObject.FromObjectAndTag(new byte[] {  (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8  }, 22);
-      Assert.assertEquals("\"mtb/6A\"", o.ToJSONString());  // Encode with Base64
+      o = CBORObject.FromObject(new byte[] { (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8  });
+      // Encode with Base64URL by default
+      Assert.assertEquals("\"mtb_6A\"", o.ToJSONString());
+      o = CBORObject.FromObjectAndTag(new byte[] { (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8  },
+                                      22);
+      // Encode with Base64
+      Assert.assertEquals("\"mtb/6A\"", o.ToJSONString());
     }
     @Test
     public void TestToString() {
