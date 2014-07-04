@@ -25,7 +25,7 @@ private CBORDataUtilities() {
      * @return A CBOR object that represents the parsed number. Returns null if the
      * parsing fails.
      */
-    public static CBORObject ParseJSONNumber(final String str) {
+    public static CBORObject ParseJSONNumber(String str) {
       return ParseJSONNumber(str, false, false);
     }
 
@@ -45,9 +45,9 @@ private CBORDataUtilities() {
      * parsing fails.
      */
     public static CBORObject ParseJSONNumber(
-      final String str,
-      final boolean integersOnly,
-      final boolean positiveOnly) {
+      String str,
+      boolean integersOnly,
+      boolean positiveOnly) {
       if (((str) == null || (str).length() == 0)) {
         return null;
       }

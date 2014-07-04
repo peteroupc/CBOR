@@ -36,7 +36,7 @@ namespace PeterO {
     /// </list>
     /// </summary>
   public sealed class ExtendedFloat : IComparable<ExtendedFloat>,
-    IEquatable<ExtendedFloat> {
+  IEquatable<ExtendedFloat> {
     private readonly BigInteger exponent;
     private readonly BigInteger unsignedMantissa;
     private readonly int flags;
@@ -141,17 +141,17 @@ namespace PeterO {
     /// <exception cref='ArgumentException'>The parameter <paramref name='diag'/> is
     /// less than 0.</exception>
     public static ExtendedFloat CreateNaN(
-BigInteger diag,
-bool signaling,
-bool negative,
-PrecisionContext ctx) {
+      BigInteger diag,
+      bool signaling,
+      bool negative,
+      PrecisionContext ctx) {
       if (diag == null) {
         throw new ArgumentNullException("diag");
       }
       if (diag.Sign < 0) {
         throw new
   ArgumentException("Diagnostic information must be 0 or greater, was: " +
-          diag);
+                            diag);
       }
       if (diag.IsZero && !negative) {
         return signaling ? SignalingNaN : NaN;
@@ -163,9 +163,9 @@ PrecisionContext ctx) {
       if (ctx != null && ctx.HasMaxPrecision) {
         flags |= BigNumberFlags.FlagQuietNaN;
         ExtendedFloat ef = CreateWithFlags(
-diag,
-BigInteger.Zero,
-flags).RoundToPrecision(ctx);
+          diag,
+          BigInteger.Zero,
+          flags).RoundToPrecision(ctx);
         int newFlags = ef.flags;
         newFlags &= ~BigNumberFlags.FlagQuietNaN;
         newFlags |= signaling ? BigNumberFlags.FlagSignalingNaN :
@@ -191,9 +191,9 @@ flags).RoundToPrecision(ctx);
     /// <returns>An ExtendedFloat object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='mantissa'/> or <paramref name='exponent'/> is null.</exception>
- public static ExtendedFloat Create(
-BigInteger mantissa,
-BigInteger exponent) {
+    public static ExtendedFloat Create(
+      BigInteger mantissa,
+      BigInteger exponent) {
       if (mantissa == null) {
         throw new ArgumentNullException("mantissa");
       }
@@ -208,10 +208,10 @@ BigInteger exponent) {
     }
 
     private ExtendedFloat(
-BigInteger unsignedMantissa,
-BigInteger exponent,
-int flags) {
-#if DEBUG
+      BigInteger unsignedMantissa,
+      BigInteger exponent,
+      int flags) {
+      #if DEBUG
       if (unsignedMantissa == null) {
         throw new ArgumentNullException("unsignedMantissa");
       }
@@ -221,7 +221,7 @@ int flags) {
       if (unsignedMantissa.Sign < 0) {
         throw new ArgumentException("unsignedMantissa is less than 0.");
       }
-#endif
+      #endif
       this.unsignedMantissa = unsignedMantissa;
       this.exponent = exponent;
       this.flags = flags;
@@ -274,18 +274,18 @@ int flags) {
     /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
     /// is null.</exception>
     public static ExtendedFloat FromString(
-String str,
-int offset,
-int length,
-PrecisionContext ctx) {
+      String str,
+      int offset,
+      int length,
+      PrecisionContext ctx) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
- return ExtendedDecimal.FromString(
-str,
-offset,
-length,
-ctx).ToExtendedFloat();
+      return ExtendedDecimal.FromString(
+        str,
+        offset,
+        length,
+        ctx).ToExtendedFloat();
     }
 
     /// <summary>Not documented yet.</summary>
@@ -352,9 +352,9 @@ ctx).ToExtendedFloat();
     /// <param name='olderDigits'>A 32-bit signed integer. (2).</param>
     /// <returns>An IShiftAccumulator object.</returns>
       public IShiftAccumulator CreateShiftAccumulatorWithDigits(
-BigInteger bigint,
-int lastDigit,
-int olderDigits) {
+        BigInteger bigint,
+        int lastDigit,
+        int olderDigits) {
         return new BitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
@@ -385,28 +385,31 @@ int olderDigits) {
     /// <param name='bigint'>A BigInteger object. (2).</param>
     /// <param name='power'>A FastInteger object.</param>
     /// <returns>A BigInteger object.</returns>
- public BigInteger MultiplyByRadixPower(
-BigInteger bigint,
-FastInteger power) {
+      public BigInteger MultiplyByRadixPower(
+        BigInteger bigint,
+        FastInteger power) {
+        BigInteger tmpbigint = bigint;
         if (power.Sign <= 0) {
-          return bigint;
+          return tmpbigint;
         }
-        if (bigint.Sign < 0) {
-          bigint = -bigint;
+        if (tmpbigint.Sign < 0) {
+          tmpbigint = -tmpbigint;
           if (power.CanFitInInt32()) {
-            bigint = DecimalUtility.ShiftLeftInt(bigint, power.AsInt32());
-            bigint = -bigint;
+            tmpbigint = DecimalUtility.ShiftLeftInt(tmpbigint, power.AsInt32());
+            tmpbigint = -tmpbigint;
           } else {
-            bigint = DecimalUtility.ShiftLeft(bigint, power.AsBigInteger());
-            bigint = -bigint;
+         tmpbigint = DecimalUtility.ShiftLeft(
+tmpbigint,
+power.AsBigInteger());
+            tmpbigint = -tmpbigint;
           }
-          return bigint;
+          return tmpbigint;
         }
         return power.CanFitInInt32() ? DecimalUtility.ShiftLeftInt(
-bigint,
-power.AsInt32()) : DecimalUtility.ShiftLeft(
-bigint,
-power.AsBigInteger());
+          tmpbigint,
+          power.AsInt32()) : DecimalUtility.ShiftLeft(
+          tmpbigint,
+          power.AsBigInteger());
       }
 
     /// <summary>This is an internal method.</summary>
@@ -422,9 +425,9 @@ power.AsBigInteger());
     /// <param name='flags'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedFloat object.</returns>
       public ExtendedFloat CreateNewWithFlags(
-BigInteger mantissa,
-BigInteger exponent,
-int flags) {
+        BigInteger mantissa,
+        BigInteger exponent,
+        int flags) {
         return ExtendedFloat.CreateWithFlags(mantissa, exponent, flags);
       }
 
@@ -497,8 +500,8 @@ int flags) {
         bigmantissa = BigInteger.Abs(bigmantissa);
         var acc = new BitShiftAccumulator(bigmantissa, 0, 0);
         acc.ShiftRight(bigexponent);
- if (exact && (acc.LastDiscardedDigit != 0 || acc.OlderDiscardedDigits !=
-          0)) {
+        if (exact && (acc.LastDiscardedDigit != 0 || acc.OlderDiscardedDigits !=
+                      0)) {
           // Some digits were discarded
           throw new ArithmeticException("Not an exact integer");
         }
@@ -633,9 +636,9 @@ int flags) {
         if (this.IsNegative) {
           smallmantissa |= 1 << 31;
         }
-    return BitConverter.ToSingle(
-BitConverter.GetBytes((int)smallmantissa),
-0);
+        return BitConverter.ToSingle(
+          BitConverter.GetBytes((int)smallmantissa),
+          0);
       }
     }
 
@@ -796,7 +799,7 @@ BitConverter.GetBytes((int)smallmantissa),
         valueFpMantissa &= 0x1fffff;
         bigmant = (BigInteger)valueFpMantissa;
         value = (neg ? BigNumberFlags.FlagNegative : 0) | (quiet ?
-                                                   BigNumberFlags.FlagQuietNaN :
+  BigNumberFlags.FlagQuietNaN :
   BigNumberFlags.FlagSignalingNaN);
         if (bigmant.IsZero) {
           return quiet ? NaN : SignalingNaN;
@@ -873,8 +876,8 @@ BitConverter.GetBytes((int)smallmantissa),
           return quiet ? NaN : SignalingNaN;
         }
         value[0] = (neg ? BigNumberFlags.FlagNegative : 0) |
-       (quiet ? BigNumberFlags.FlagQuietNaN :
-            BigNumberFlags.FlagSignalingNaN);
+          (quiet ? BigNumberFlags.FlagQuietNaN :
+           BigNumberFlags.FlagSignalingNaN);
         return CreateWithFlags(
           info,
           BigInteger.Zero,
@@ -887,7 +890,7 @@ BitConverter.GetBytes((int)smallmantissa),
         value[1] |= 0x100000;
       }
       if ((value[1] | value[0]) != 0) {
-      floatExponent +=
+        floatExponent +=
           DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
       } else {
         return neg ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
@@ -927,44 +930,44 @@ BitConverter.GetBytes((int)smallmantissa),
     }
 
     /// <summary>Represents the number 1.</summary>
-#if CODE_ANALYSIS
+    #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification = "ExtendedFloat is immutable")]
-#endif
+    #endif
     public static readonly ExtendedFloat One =
       ExtendedFloat.Create(BigInteger.One, BigInteger.Zero);
 
     /// <summary>Represents the number 0.</summary>
-#if CODE_ANALYSIS
+    #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification = "ExtendedFloat is immutable")]
-#endif
+    #endif
     public static readonly ExtendedFloat Zero =
       ExtendedFloat.Create(BigInteger.Zero, BigInteger.Zero);
 
     /// <summary>Represents the number negative zero.</summary>
-#if CODE_ANALYSIS
+    #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification = "ExtendedFloat is immutable")]
-#endif
+    #endif
     public static readonly ExtendedFloat NegativeZero = CreateWithFlags(
       BigInteger.Zero,
       BigInteger.Zero,
       BigNumberFlags.FlagNegative);
 
     /// <summary>Represents the number 10.</summary>
-#if CODE_ANALYSIS
+    #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
       "CA2104",
       Justification = "ExtendedFloat is immutable")]
-#endif
+    #endif
 
     public static readonly ExtendedFloat Ten =
       ExtendedFloat.Create((BigInteger)10, BigInteger.Zero);
@@ -1002,7 +1005,7 @@ BitConverter.GetBytes((int)smallmantissa),
     /// false.</returns>
     public bool IsNegativeInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity |
-        BigNumberFlags.FlagNegative)) ==
+                            BigNumberFlags.FlagNegative)) ==
         (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
@@ -1011,7 +1014,7 @@ BitConverter.GetBytes((int)smallmantissa),
     /// false.</returns>
     public bool IsPositiveInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity |
-        BigNumberFlags.FlagNegative)) ==
+                            BigNumberFlags.FlagNegative)) ==
         BigNumberFlags.FlagInfinity;
     }
 
@@ -1020,7 +1023,7 @@ BitConverter.GetBytes((int)smallmantissa),
     /// false.</returns>
     public bool IsNaN() {
       return (this.flags & (BigNumberFlags.FlagQuietNaN |
-        BigNumberFlags.FlagSignalingNaN)) != 0;
+                            BigNumberFlags.FlagSignalingNaN)) != 0;
     }
 
     /// <summary>Gets a value indicating whether this object is positive or negative
@@ -1038,7 +1041,7 @@ BitConverter.GetBytes((int)smallmantissa),
     public bool IsFinite {
       get {
         return (this.flags & (BigNumberFlags.FlagInfinity |
-          BigNumberFlags.FlagNaN)) == 0;
+                              BigNumberFlags.FlagNaN)) == 0;
       }
     }
 
@@ -1113,8 +1116,8 @@ BitConverter.GetBytes((int)smallmantissa),
     /// would have a nonterminating binary expansion.</exception>
     public ExtendedFloat Divide(ExtendedFloat divisor) {
       return this.Divide(
-divisor,
-PrecisionContext.ForRounding(Rounding.Unnecessary));
+        divisor,
+        PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
 
     /// <summary>Divides this object by another binary float and returns a result
@@ -1128,12 +1131,12 @@ PrecisionContext.ForRounding(Rounding.Unnecessary));
     /// <exception cref='ArithmeticException'>The rounding mode is
     /// Rounding.Unnecessary and the result is not exact.</exception>
     public ExtendedFloat DivideToSameExponent(
-ExtendedFloat divisor,
-Rounding rounding) {
+      ExtendedFloat divisor,
+      Rounding rounding) {
       return this.DivideToExponent(
-divisor,
-this.exponent,
-PrecisionContext.ForRounding(rounding));
+        divisor,
+        this.exponent,
+        PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary>Divides two ExtendedFloat objects, and returns the integer part of
@@ -1147,8 +1150,8 @@ PrecisionContext.ForRounding(rounding));
     public ExtendedFloat DivideToIntegerNaturalScale(
       ExtendedFloat divisor) {
       return this.DivideToIntegerNaturalScale(
-divisor,
-PrecisionContext.ForRounding(Rounding.Down));
+        divisor,
+        PrecisionContext.ForRounding(Rounding.Down));
     }
 
     /// <summary>Removes trailing zeros from this object&apos;s mantissa. For
@@ -1188,11 +1191,11 @@ PrecisionContext.ForRounding(Rounding.Down));
     /// precision and exponent range without rounding.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat RemainderNaturalScale(
-ExtendedFloat divisor,
-PrecisionContext ctx) {
+      ExtendedFloat divisor,
+      PrecisionContext ctx) {
       return this.Subtract(
-this.DivideToIntegerNaturalScale(divisor, ctx).Multiply(divisor, null),
-null);
+        this.DivideToIntegerNaturalScale(divisor, ctx).Multiply(divisor, null),
+        null);
     }
 
     /// <summary>Divides two ExtendedFloat objects, and gives a particular exponent
@@ -1222,10 +1225,10 @@ null);
       ExtendedFloat divisor,
       long desiredExponentSmall,
       PrecisionContext ctx) {
-  return this.DivideToExponent(
-divisor,
-(BigInteger)desiredExponentSmall,
-ctx);
+      return this.DivideToExponent(
+        divisor,
+        (BigInteger)desiredExponentSmall,
+        ctx);
     }
 
     /// <summary>Divides this ExtendedFloat object by another ExtendedFloat object.
@@ -1268,9 +1271,9 @@ ctx);
       long desiredExponentSmall,
       Rounding rounding) {
       return this.DivideToExponent(
-divisor,
-(BigInteger)desiredExponentSmall,
-PrecisionContext.ForRounding(rounding));
+        divisor,
+        (BigInteger)desiredExponentSmall,
+        PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary>Divides two ExtendedFloat objects, and gives a particular exponent
@@ -1320,9 +1323,9 @@ PrecisionContext.ForRounding(rounding));
       BigInteger desiredExponent,
       Rounding rounding) {
       return this.DivideToExponent(
-divisor,
-desiredExponent,
-PrecisionContext.ForRounding(rounding));
+        divisor,
+        desiredExponent,
+        PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary>Finds the absolute value of this object (if it&apos;s negative, it
@@ -1372,9 +1375,9 @@ PrecisionContext.ForRounding(rounding));
     /// <returns>The difference of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='otherValue'/> is null.</exception>
-public ExtendedFloat Subtract(
-ExtendedFloat otherValue,
-PrecisionContext ctx) {
+    public ExtendedFloat Subtract(
+      ExtendedFloat otherValue,
+      PrecisionContext ctx) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
       }
@@ -1382,9 +1385,9 @@ PrecisionContext ctx) {
       if ((otherValue.flags & BigNumberFlags.FlagNaN) == 0) {
         int newflags = otherValue.flags ^ BigNumberFlags.FlagNegative;
         negated = CreateWithFlags(
-otherValue.unsignedMantissa,
-otherValue.exponent,
-newflags);
+          otherValue.unsignedMantissa,
+          otherValue.exponent,
+          newflags);
       }
       return this.Add(negated, ctx);
     }
@@ -1410,7 +1413,7 @@ newflags);
     //----------------------------------------------------------------
     private static readonly IRadixMath<ExtendedFloat> MathValue = new
       TrappableRadixMath<ExtendedFloat>(
-      new ExtendedOrSimpleRadixMath<ExtendedFloat>(new BinaryMathHelper()));
+        new ExtendedOrSimpleRadixMath<ExtendedFloat>(new BinaryMathHelper()));
 
     /// <summary>Divides this object by another object, and returns the integer part
     /// of the result, with the preferred exponent set to this value&apos;s exponent
@@ -1748,8 +1751,8 @@ newflags);
       BigInteger desiredExponent,
       PrecisionContext ctx) {
       return this.Quantize(
-ExtendedFloat.Create(BigInteger.One, desiredExponent),
-ctx);
+        ExtendedFloat.Create(BigInteger.One, desiredExponent),
+        ctx);
     }
 
     /// <summary>Returns a binary float with the same value but a new
@@ -1765,8 +1768,8 @@ ctx);
       int desiredExponentSmall,
       PrecisionContext ctx) {
       return this.Quantize(
-ExtendedFloat.Create(BigInteger.One, (BigInteger)desiredExponentSmall),
-ctx);
+        ExtendedFloat.Create(BigInteger.One, (BigInteger)desiredExponentSmall),
+        ctx);
     }
 
     /// <summary>Returns a binary float with the same value as this object but with
@@ -1926,9 +1929,9 @@ ctx);
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
         int newflags = subtrahend.flags ^ BigNumberFlags.FlagNegative;
         negated = CreateWithFlags(
-subtrahend.unsignedMantissa,
-subtrahend.exponent,
-newflags);
+          subtrahend.unsignedMantissa,
+          subtrahend.exponent,
+          newflags);
       }
       return MathValue.MultiplyAndAdd(this, op, negated, ctx);
     }
@@ -1966,8 +1969,8 @@ newflags);
     /// <returns>The closest value to this object's value, rounded to the specified
     /// precision. Returns the same value as this object if <paramref name='ctx'/>
     /// is null or the precision and exponent range are unlimited.</returns>
-  [Obsolete(
-  "Instead of this method use RoundToPrecision and pass a precision " + "context with the IsPrecisionInBits property set.")]
+    [Obsolete(
+      "Instead of this method use RoundToPrecision and pass a precision " + "context with the IsPrecisionInBits property set.")]
     public ExtendedFloat RoundToBinaryPrecision(
       PrecisionContext ctx) {
       if (ctx == null) {

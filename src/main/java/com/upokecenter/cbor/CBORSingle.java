@@ -13,43 +13,43 @@ import com.upokecenter.util.*;
 
     private static final float SingleOneLsh64 = 9223372036854775808f;
 
-    public boolean IsPositiveInfinity(final Object obj) {
+    public boolean IsPositiveInfinity(Object obj) {
       return ((((Float)obj).floatValue()) == Float.POSITIVE_INFINITY);
     }
 
-    public boolean IsInfinity(final Object obj) {
+    public boolean IsInfinity(Object obj) {
       return ((Float)(((Float)obj).floatValue())).isInfinite();
     }
 
-    public boolean IsNegativeInfinity(final Object obj) {
+    public boolean IsNegativeInfinity(Object obj) {
       return ((((Float)obj).floatValue()) == Float.NEGATIVE_INFINITY);
     }
 
-    public boolean IsNaN(final Object obj) {
+    public boolean IsNaN(Object obj) {
       return Float.isNaN(((Float)obj).floatValue());
     }
 
-    public double AsDouble(final Object obj) {
+    public double AsDouble(Object obj) {
       return ((Float)obj).doubleValue();
     }
 
-    public ExtendedDecimal AsExtendedDecimal(final Object obj) {
+    public ExtendedDecimal AsExtendedDecimal(Object obj) {
       return ExtendedDecimal.FromSingle(((Float)obj).floatValue());
     }
 
-    public ExtendedFloat AsExtendedFloat(final Object obj) {
+    public ExtendedFloat AsExtendedFloat(Object obj) {
       return ExtendedFloat.FromSingle(((Float)obj).floatValue());
     }
 
-    public float AsSingle(final Object obj) {
+    public float AsSingle(Object obj) {
       return ((Float)obj).floatValue();
     }
 
-    public BigInteger AsBigInteger(final Object obj) {
+    public BigInteger AsBigInteger(Object obj) {
       return CBORUtilities.BigIntegerFromSingle(((Float)obj).floatValue());
     }
 
-    public long AsInt64(final Object obj) {
+    public long AsInt64(Object obj) {
       float fltItem = ((Float)obj).floatValue();
       if (Float.isNaN(fltItem)) {
         throw new ArithmeticException("This Object's value is out of range");
@@ -62,23 +62,23 @@ import com.upokecenter.util.*;
       throw new ArithmeticException("This Object's value is out of range");
     }
 
-    public boolean CanFitInSingle(final Object obj) {
+    public boolean CanFitInSingle(Object obj) {
       return true;
     }
 
-    public boolean CanFitInDouble(final Object obj) {
+    public boolean CanFitInDouble(Object obj) {
       return true;
     }
 
-    public boolean CanFitInInt32(final Object obj) {
+    public boolean CanFitInInt32(Object obj) {
       return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt32(obj);
     }
 
-    public boolean CanFitInInt64(final Object obj) {
+    public boolean CanFitInInt64(Object obj) {
       return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt64(obj);
     }
 
-    public boolean CanTruncatedIntFitInInt64(final Object obj) {
+    public boolean CanTruncatedIntFitInInt64(Object obj) {
       float fltItem = ((Float)obj).floatValue();
       if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
         return false;
@@ -89,7 +89,7 @@ import com.upokecenter.util.*;
       SingleOneLsh64;
     }
 
-    public boolean CanTruncatedIntFitInInt32(final Object obj) {
+    public boolean CanTruncatedIntFitInInt32(Object obj) {
       float fltItem = ((Float)obj).floatValue();
       if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
         return false;
@@ -102,7 +102,7 @@ import com.upokecenter.util.*;
       Integer.MAX_VALUE;
     }
 
-    public int AsInt32(final Object obj, int minValue, int maxValue) {
+    public int AsInt32(Object obj, int minValue, int maxValue) {
       float fltItem = ((Float)obj).floatValue();
       if (Float.isNaN(fltItem)) {
         throw new ArithmeticException("This Object's value is out of range");
@@ -119,16 +119,16 @@ import com.upokecenter.util.*;
       throw new ArithmeticException("This Object's value is out of range");
     }
 
-    public boolean IsZero(final Object obj) {
+    public boolean IsZero(Object obj) {
       return ((Float)obj).floatValue() == 0.0f;
     }
 
-    public int Sign(final Object obj) {
+    public int Sign(Object obj) {
       float flt = ((Float)obj).floatValue();
       return Float.isNaN(flt) ? 2 : (flt == 0.0f ? 0 : (flt < 0.0f ? -1 : 1));
     }
 
-    public boolean IsIntegral(final Object obj) {
+    public boolean IsIntegral(Object obj) {
       float fltItem = ((Float)obj).floatValue();
       if (Float.isNaN(fltItem) || ((Float)(fltItem)).isInfinite()) {
         return false;
@@ -138,17 +138,17 @@ import com.upokecenter.util.*;
       return fltItem == fltItem2;
     }
 
-    public Object Negate(final Object obj) {
+    public Object Negate(Object obj) {
       float val = ((Float)obj).floatValue();
       return -val;
     }
 
-    public Object Abs(final Object obj) {
+    public Object Abs(Object obj) {
       float val = ((Float)obj).floatValue();
       return (val < 0) ? -val : obj;
     }
 
-public ExtendedRational AsExtendedRational(final Object obj) {
+public ExtendedRational AsExtendedRational(Object obj) {
       return ExtendedRational.FromSingle(((Float)obj).floatValue());
     }
   }

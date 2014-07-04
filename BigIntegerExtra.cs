@@ -352,7 +352,8 @@ BigInteger bigintSecond) {
         throw new ArgumentNullException("power");
       }
       if (power.Sign < 0) {
-        throw new ArgumentException("power's sign (" + power.Sign + ") is less than " + "0");
+        throw new ArgumentException("power's sign (" + power.Sign +
+          ") is less than " + "0");
       }
       BigInteger val = BigInteger.One;
       while (power.Sign > 0) {
@@ -376,7 +377,8 @@ BigInteger bigintSecond) {
         throw new ArgumentNullException("bigValue");
       }
       if (power < 0) {
-        throw new ArgumentException("power (" + power + ") is less than " + "0");
+      throw new ArgumentException("power (" + power + ") is less than " +
+          "0");
       }
       return bigValue.pow(power);
     }

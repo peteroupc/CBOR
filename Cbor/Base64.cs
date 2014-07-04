@@ -127,7 +127,8 @@ namespace PeterO.Cbor {
           "offset (" + offset + ") is more than " + data.Length);
       }
       if (count < 0) {
-        throw new ArgumentException("count (" + count + ") is less than " + "0 ");
+     throw new ArgumentException("count (" + count + ") is less than " +
+          "0 ");
       }
       if (count > data.Length) {
         throw new ArgumentException(
@@ -178,16 +179,20 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("outputStream");
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + offset + ") is less than " + "0 ");
+   throw new ArgumentException("offset (" + offset + ") is less than " +
+          "0 ");
       }
       if (offset > data.Length) {
-        throw new ArgumentException("offset (" + offset + ") is more than " + data.Length);
+        throw new ArgumentException("offset (" + offset + ") is more than " +
+          data.Length);
       }
       if (count < 0) {
-        throw new ArgumentException("count (" + count + ") is less than " + "0 ");
+     throw new ArgumentException("count (" + count + ") is less than " +
+          "0 ");
       }
       if (count > data.Length) {
-        throw new ArgumentException("count (" + count + ") is more than " + data.Length);
+        throw new ArgumentException("count (" + count + ") is more than " +
+          data.Length);
       }
       if (data.Length - offset < count) {
         throw new ArgumentException("data's length minus " + offset + " (" +

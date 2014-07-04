@@ -410,8 +410,7 @@ ctx) :
       }
       return this.GetHelper().GetArithmeticSupport() ==
         BigNumberFlags.FiniteOnly ?
-        default(
-          T) : this.GetHelper().CreateNewWithFlags(
+        default(T) : this.GetHelper().CreateNewWithFlags(
         BigInteger.Zero,
         BigInteger.Zero,
         (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);

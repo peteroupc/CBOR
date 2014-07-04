@@ -52,7 +52,7 @@ at: http://upokecenter.com/d/
      * @param obj An arbitrary object.
      * @return True if the objects are equal; otherwise, false.
      */
-    @Override public boolean equals(final Object obj) {
+    @Override public boolean equals(Object obj) {
       ExtendedRational other = ((obj instanceof ExtendedRational) ? (ExtendedRational)obj : null);
       return (
 other != null) && (
@@ -88,8 +88,8 @@ this.denominator).equals(other.denominator)) && this.flags == other.flags);
      * @return An ExtendedRational object.
      */
     public static ExtendedRational Create(
-final int numeratorSmall,
-final int denominatorSmall) {
+int numeratorSmall,
+int denominatorSmall) {
       return Create(BigInteger.valueOf(numeratorSmall), BigInteger.valueOf(denominatorSmall));
     }
 
@@ -100,8 +100,8 @@ final int denominatorSmall) {
      * @return An ExtendedRational object.
      */
     public static ExtendedRational Create(
-final BigInteger numerator,
-final BigInteger denominator) {
+BigInteger numerator,
+BigInteger denominator) {
       return new ExtendedRational(numerator, denominator);
     }
 
@@ -112,7 +112,7 @@ final BigInteger denominator) {
      * @throws NullPointerException The parameter {@code numerator} or {@code
      * denominator} is null.
      */
-    public ExtendedRational (final BigInteger numerator, BigInteger denominator) {
+    public ExtendedRational (BigInteger numerator, BigInteger denominator) {
       if (numerator == null) {
         throw new NullPointerException("numerator");
       }
@@ -171,7 +171,7 @@ final BigInteger denominator) {
      * @param bigint A BigInteger object.
      * @return An ExtendedRational object.
      */
-    public static ExtendedRational FromBigInteger(final BigInteger bigint) {
+    public static ExtendedRational FromBigInteger(BigInteger bigint) {
       return new ExtendedRational(bigint, BigInteger.ONE);
     }
 
@@ -193,7 +193,7 @@ final BigInteger denominator) {
      * @param flt A 32-bit floating-point number.
      * @return A rational number with the same value as {@code flt} .
      */
-    public static ExtendedRational FromSingle(final float flt) {
+    public static ExtendedRational FromSingle(float flt) {
       return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
     }
 
@@ -205,7 +205,7 @@ final BigInteger denominator) {
      * @param flt A 64-bit floating-point number.
      * @return A rational number with the same value as {@code flt} .
      */
-    public static ExtendedRational FromDouble(final double flt) {
+    public static ExtendedRational FromDouble(double flt) {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
     }
 
@@ -217,14 +217,14 @@ final BigInteger denominator) {
      * @throws NullPointerException The parameter {@code diag} is null.
      * @throws IllegalArgumentException The parameter {@code diag} is less than 0.
      */
-    public static ExtendedRational CreateNaN(final BigInteger diag) {
+    public static ExtendedRational CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false);
     }
 
     private static ExtendedRational CreateWithFlags(
-final BigInteger numerator,
-final BigInteger denominator,
-final int flags) {
+BigInteger numerator,
+BigInteger denominator,
+int flags) {
       ExtendedRational er = new ExtendedRational(numerator, denominator);
       er.flags = flags;
       return er;
@@ -242,9 +242,9 @@ final int flags) {
      * @throws IllegalArgumentException The parameter {@code diag} is less than 0.
      */
     public static ExtendedRational CreateNaN(
-final BigInteger diag,
-final boolean signaling,
-final boolean negative) {
+BigInteger diag,
+boolean signaling,
+boolean negative) {
       if (diag == null) {
         throw new NullPointerException("diag");
       }
@@ -273,7 +273,7 @@ final boolean negative) {
      * @return An ExtendedRational object.
      * @throws NullPointerException The parameter {@code ef} is null.
      */
-    public static ExtendedRational FromExtendedFloat(final ExtendedFloat ef) {
+    public static ExtendedRational FromExtendedFloat(ExtendedFloat ef) {
       if (ef == null) {
         throw new NullPointerException("ef");
       }
@@ -321,7 +321,7 @@ final boolean negative) {
      * @return An ExtendedRational object.
      * @throws NullPointerException The parameter {@code ef} is null.
      */
-    public static ExtendedRational FromExtendedDecimal(final ExtendedDecimal ef) {
+    public static ExtendedRational FromExtendedDecimal(ExtendedDecimal ef) {
       if (ef == null) {
         throw new NullPointerException("ef");
       }
@@ -370,7 +370,7 @@ final boolean negative) {
      * @param ctx A PrecisionContext object.
      * @return An ExtendedDecimal object.
      */
-    public ExtendedDecimal ToExtendedDecimal(final PrecisionContext ctx) {
+    public ExtendedDecimal ToExtendedDecimal(PrecisionContext ctx) {
       if (this.IsNaN()) {
         return ExtendedDecimal.CreateNaN(
 this.unsignedNumerator,
@@ -403,7 +403,7 @@ ctx);
      * method is the same as ToExtendedDecimal.
      * @return An ExtendedDecimal object.
      */
-public ExtendedDecimal ToExtendedDecimalExactIfPossible(final PrecisionContext
+public ExtendedDecimal ToExtendedDecimalExactIfPossible(PrecisionContext
       ctx) {
       if (ctx == null) {
         return this.ToExtendedDecimal(null);
@@ -453,7 +453,7 @@ ctx);
      * @param ctx A PrecisionContext object.
      * @return An ExtendedFloat object.
      */
-    public ExtendedFloat ToExtendedFloat(final PrecisionContext ctx) {
+    public ExtendedFloat ToExtendedFloat(PrecisionContext ctx) {
       if (this.IsNaN()) {
         return ExtendedFloat.CreateNaN(
 this.unsignedNumerator,
@@ -486,7 +486,7 @@ ctx);
      * the same as ToExtendedFloat.
      * @return An ExtendedFloat object.
      */
-    public ExtendedFloat ToExtendedFloatExactIfPossible(final PrecisionContext ctx) {
+    public ExtendedFloat ToExtendedFloatExactIfPossible(PrecisionContext ctx) {
       if (ctx == null) {
         return this.ToExtendedFloat(null);
       }
@@ -569,7 +569,7 @@ rem = divrem[1]; }
      * @param smallint A 32-bit signed integer.
      * @return An ExtendedRational object.
      */
-    public static ExtendedRational FromInt32(final int smallint) {
+    public static ExtendedRational FromInt32(int smallint) {
       return new ExtendedRational(BigInteger.valueOf(smallint), BigInteger.ONE);
     }
 
@@ -578,7 +578,7 @@ rem = divrem[1]; }
      * @param longInt A 64-bit signed integer.
      * @return An ExtendedRational object.
      */
-    public static ExtendedRational FromInt64(final long longInt) {
+    public static ExtendedRational FromInt64(long longInt) {
       return new ExtendedRational(BigInteger.valueOf(longInt), BigInteger.ONE);
     }
 
@@ -653,7 +653,7 @@ rem = divrem[1]; }
      * @return Zero if the values are equal; a negative number if this instance is
      * less, or a positive number if this instance is greater.
      */
-    public int compareTo(final ExtendedRational other) {
+    public int compareTo(ExtendedRational other) {
       if (other == null) {
         return 1;
       }
@@ -717,7 +717,7 @@ rem = divrem[1]; }
      * @return Zero if the values are equal; a negative number if this instance is
      * less, or a positive number if this instance is greater.
      */
-    public int CompareToBinary(final ExtendedFloat other) {
+    public int CompareToBinary(ExtendedFloat other) {
       if (other == null) {
         return 1;
       }
@@ -830,7 +830,7 @@ thisRem = divrem[1]; }
      * @return Zero if the values are equal; a negative number if this instance is
      * less, or a positive number if this instance is greater.
      */
-    public int CompareToDecimal(final ExtendedDecimal other) {
+    public int CompareToDecimal(ExtendedDecimal other) {
       if (other == null) {
         return 1;
       }
@@ -943,7 +943,7 @@ thisRem = divrem[1]; }
      * @param other An ExtendedRational object.
      * @return A Boolean object.
      */
-    public boolean equals(final ExtendedRational other) {
+    public boolean equals(ExtendedRational other) {
       return this.equals((Object)other);
     }
 
@@ -1048,7 +1048,7 @@ BigInteger.ZERO,
 BigInteger.ONE,
 BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
-    private ExtendedRational ChangeSign(final boolean negative) {
+    private ExtendedRational ChangeSign(boolean negative) {
       if (negative) {
         this.flags |= BigNumberFlags.FlagNegative;
       } else {
@@ -1075,7 +1075,7 @@ BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
      * @return The sum of the two numbers. Returns NaN if either operand is NaN.
      * @throws NullPointerException The parameter {@code otherValue} is null.
      */
-    public ExtendedRational Add(final ExtendedRational otherValue) {
+    public ExtendedRational Add(ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new NullPointerException("otherValue");
       }
@@ -1114,7 +1114,7 @@ otherValue.isNegative());
      * @return The difference of the two objects.
      * @throws NullPointerException The parameter {@code otherValue} is null.
      */
-    public ExtendedRational Subtract(final ExtendedRational otherValue) {
+    public ExtendedRational Subtract(ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new NullPointerException("otherValue");
       }
@@ -1156,7 +1156,7 @@ otherValue.isNegative());
      * @return The product of the two objects.
      * @throws NullPointerException The parameter {@code otherValue} is null.
      */
-    public ExtendedRational Multiply(final ExtendedRational otherValue) {
+    public ExtendedRational Multiply(ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new NullPointerException("otherValue");
       }
@@ -1196,7 +1196,7 @@ otherValue.isNegative());
      * @return The quotient of the two objects.
      * @throws NullPointerException The parameter {@code otherValue} is null.
      */
-    public ExtendedRational Divide(final ExtendedRational otherValue) {
+    public ExtendedRational Divide(ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new NullPointerException("otherValue");
       }
@@ -1242,7 +1242,7 @@ otherValue.isNegative());
      * @return The remainder of the two objects.
      * @throws NullPointerException The parameter {@code otherValue} is null.
      */
-    public ExtendedRational Remainder(final ExtendedRational otherValue) {
+    public ExtendedRational Remainder(ExtendedRational otherValue) {
       if (otherValue == null) {
         throw new NullPointerException("otherValue");
       }

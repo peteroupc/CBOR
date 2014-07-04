@@ -16,7 +16,7 @@ at: http://upokecenter.com/d/
       return CBORTypeFilter.ByteString;
     }
 
-    public CBORObject ValidateObject(final CBORObject obj) {
+    public CBORObject ValidateObject(CBORObject obj) {
       return CBORTag2.ConvertToBigNum(obj, true);
     }
   }

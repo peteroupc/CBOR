@@ -11,47 +11,47 @@ import com.upokecenter.util.*;
 
   class CBORInteger implements ICBORNumber {
 
-    public boolean IsPositiveInfinity(final Object obj) {
+    public boolean IsPositiveInfinity(Object obj) {
       return false;
     }
 
-    public boolean IsInfinity(final Object obj) {
+    public boolean IsInfinity(Object obj) {
       return false;
     }
 
-    public boolean IsNegativeInfinity(final Object obj) {
+    public boolean IsNegativeInfinity(Object obj) {
       return false;
     }
 
-    public boolean IsNaN(final Object obj) {
+    public boolean IsNaN(Object obj) {
       return false;
     }
 
-    public double AsDouble(final Object obj) {
+    public double AsDouble(Object obj) {
       return ((Long)obj).doubleValue();
     }
 
-    public ExtendedDecimal AsExtendedDecimal(final Object obj) {
+    public ExtendedDecimal AsExtendedDecimal(Object obj) {
       return ExtendedDecimal.FromInt64((((Long)obj).longValue()));
     }
 
-    public ExtendedFloat AsExtendedFloat(final Object obj) {
+    public ExtendedFloat AsExtendedFloat(Object obj) {
       return ExtendedFloat.FromInt64((((Long)obj).longValue()));
     }
 
-    public float AsSingle(final Object obj) {
+    public float AsSingle(Object obj) {
       return ((Long)obj).floatValue();
     }
 
-    public BigInteger AsBigInteger(final Object obj) {
+    public BigInteger AsBigInteger(Object obj) {
       return BigInteger.valueOf((((Long)obj).longValue()));
     }
 
-    public long AsInt64(final Object obj) {
+    public long AsInt64(Object obj) {
       return (((Long)obj).longValue());
     }
 
-    public boolean CanFitInSingle(final Object obj) {
+    public boolean CanFitInSingle(Object obj) {
       long intItem = (((Long)obj).longValue());
       if (intItem == Long.MIN_VALUE) {
         return true;
@@ -63,7 +63,7 @@ import com.upokecenter.util.*;
       return intItem < (1L << 24);
     }
 
-    public boolean CanFitInDouble(final Object obj) {
+    public boolean CanFitInDouble(Object obj) {
       long intItem = (((Long)obj).longValue());
       if (intItem == Long.MIN_VALUE) {
         return true;
@@ -75,43 +75,43 @@ import com.upokecenter.util.*;
       return intItem < (1L << 53);
     }
 
-    public boolean CanFitInInt32(final Object obj) {
+    public boolean CanFitInInt32(Object obj) {
       long val = (((Long)obj).longValue());
       return val >= Integer.MIN_VALUE && val <= Integer.MAX_VALUE;
     }
 
-    public boolean CanFitInInt64(final Object obj) {
+    public boolean CanFitInInt64(Object obj) {
       return true;
     }
 
-    public Object Negate(final Object obj) {
+    public Object Negate(Object obj) {
       return (((((Long)obj).longValue())) == Long.MIN_VALUE) ? (BigInteger.ONE.shiftLeft(63)) :
       (-((((Long)obj).longValue())));
     }
 
-    public boolean CanTruncatedIntFitInInt64(final Object obj) {
+    public boolean CanTruncatedIntFitInInt64(Object obj) {
       return true;
     }
 
-    public boolean CanTruncatedIntFitInInt32(final Object obj) {
+    public boolean CanTruncatedIntFitInInt32(Object obj) {
       long val = (((Long)obj).longValue());
       return val >= Integer.MIN_VALUE && val <= Integer.MAX_VALUE;
     }
 
-    public boolean IsZero(final Object obj) {
+    public boolean IsZero(Object obj) {
       return ((((Long)obj).longValue())) == 0;
     }
 
-    public int Sign(final Object obj) {
+    public int Sign(Object obj) {
       long val = (((Long)obj).longValue());
       return (val == 0) ? 0 : ((val < 0) ? -1 : 1);
     }
 
-    public boolean IsIntegral(final Object obj) {
+    public boolean IsIntegral(Object obj) {
       return true;
     }
 
-    public int AsInt32(final Object obj, int minValue, int maxValue) {
+    public int AsInt32(Object obj, int minValue, int maxValue) {
       long val = (((Long)obj).longValue());
       if (val >= minValue && val <= maxValue) {
         return (int)val;
@@ -119,13 +119,13 @@ import com.upokecenter.util.*;
       throw new ArithmeticException("This Object's value is out of range");
     }
 
-    public Object Abs(final Object obj) {
+    public Object Abs(Object obj) {
       long val = (((Long)obj).longValue());
       return (val == Integer.MIN_VALUE) ? (BigInteger.ONE.shiftLeft(63)) : ((val < 0) ?
       -val : obj);
     }
 
-public ExtendedRational AsExtendedRational(final Object obj) {
+public ExtendedRational AsExtendedRational(Object obj) {
       return ExtendedRational.FromInt64((((Long)obj).longValue()));
     }
   }

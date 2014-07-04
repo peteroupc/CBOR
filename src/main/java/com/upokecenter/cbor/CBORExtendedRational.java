@@ -11,52 +11,52 @@ import com.upokecenter.util.*;
 
   class CBORExtendedRational implements ICBORNumber {
 
-    public boolean IsPositiveInfinity(final Object obj) {
+    public boolean IsPositiveInfinity(Object obj) {
       return ((ExtendedRational)obj).IsPositiveInfinity();
     }
 
-    public boolean IsInfinity(final Object obj) {
+    public boolean IsInfinity(Object obj) {
       return ((ExtendedRational)obj).IsInfinity();
     }
 
-    public boolean IsNegativeInfinity(final Object obj) {
+    public boolean IsNegativeInfinity(Object obj) {
       return ((ExtendedRational)obj).IsNegativeInfinity();
     }
 
-    public boolean IsNaN(final Object obj) {
+    public boolean IsNaN(Object obj) {
       return ((ExtendedRational)obj).IsNaN();
     }
 
-    public double AsDouble(final Object obj) {
+    public double AsDouble(Object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return er.ToDouble();
     }
 
-    public ExtendedDecimal AsExtendedDecimal(final Object obj) {
+    public ExtendedDecimal AsExtendedDecimal(Object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return
 
   er.ToExtendedDecimalExactIfPossible(PrecisionContext.Decimal128.WithUnlimitedExponents());
     }
 
-    public ExtendedFloat AsExtendedFloat(final Object obj) {
+    public ExtendedFloat AsExtendedFloat(Object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return
 
   er.ToExtendedFloatExactIfPossible(PrecisionContext.Binary128.WithUnlimitedExponents());
     }
 
-    public float AsSingle(final Object obj) {
+    public float AsSingle(Object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return er.ToSingle();
     }
 
-    public BigInteger AsBigInteger(final Object obj) {
+    public BigInteger AsBigInteger(Object obj) {
       ExtendedRational er = (ExtendedRational)obj;
       return er.ToBigInteger();
     }
 
-    public long AsInt64(final Object obj) {
+    public long AsInt64(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (ef.isFinite()) {
         BigInteger bi = ef.ToBigInteger();
@@ -67,27 +67,27 @@ import com.upokecenter.util.*;
       throw new ArithmeticException("This Object's value is out of range");
     }
 
-    public boolean CanFitInSingle(final Object obj) {
+    public boolean CanFitInSingle(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       return (!ef.isFinite()) ||
       (ef.compareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0);
     }
 
-    public boolean CanFitInDouble(final Object obj) {
+    public boolean CanFitInDouble(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       return (!ef.isFinite()) ||
       (ef.compareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0);
     }
 
-    public boolean CanFitInInt32(final Object obj) {
+    public boolean CanFitInInt32(Object obj) {
       return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt32(obj);
     }
 
-    public boolean CanFitInInt64(final Object obj) {
+    public boolean CanFitInInt64(Object obj) {
       return this.IsIntegral(obj) && this.CanTruncatedIntFitInInt64(obj);
     }
 
-    public boolean CanTruncatedIntFitInInt64(final Object obj) {
+    public boolean CanTruncatedIntFitInInt64(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (!ef.isFinite()) {
         return false;
@@ -96,7 +96,7 @@ import com.upokecenter.util.*;
       return bi.bitLength() <= 63;
     }
 
-    public boolean CanTruncatedIntFitInInt32(final Object obj) {
+    public boolean CanTruncatedIntFitInInt32(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (!ef.isFinite()) {
         return false;
@@ -105,17 +105,17 @@ import com.upokecenter.util.*;
       return bi.canFitInInt();
     }
 
-    public boolean IsZero(final Object obj) {
+    public boolean IsZero(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       return ef.signum() == 0;
     }
 
-    public int Sign(final Object obj) {
+    public int Sign(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       return ef.signum();
     }
 
-    public boolean IsIntegral(final Object obj) {
+    public boolean IsIntegral(Object obj) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (!ef.isFinite()) {
         return false;
@@ -130,7 +130,7 @@ import com.upokecenter.util.*;
       return rem.signum() == 0;
     }
 
-    public int AsInt32(final Object obj, int minValue, int maxValue) {
+    public int AsInt32(Object obj, int minValue, int maxValue) {
       ExtendedRational ef = (ExtendedRational)obj;
       if (ef.isFinite()) {
         BigInteger bi = ef.ToBigInteger();
@@ -144,17 +144,17 @@ import com.upokecenter.util.*;
       throw new ArithmeticException("This Object's value is out of range");
     }
 
-    public Object Negate(final Object obj) {
+    public Object Negate(Object obj) {
       ExtendedRational ed = (ExtendedRational)obj;
       return ed.Negate();
     }
 
-    public Object Abs(final Object obj) {
+    public Object Abs(Object obj) {
       ExtendedRational ed = (ExtendedRational)obj;
       return ed.Abs();
     }
 
-    public ExtendedRational AsExtendedRational(final Object obj) {
+    public ExtendedRational AsExtendedRational(Object obj) {
       return (ExtendedRational)obj;
     }
   }

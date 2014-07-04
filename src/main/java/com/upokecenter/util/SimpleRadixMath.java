@@ -33,7 +33,7 @@ at: http://upokecenter.com/d/
         throw new ArithmeticException("Invalid operation");
       }
       if (ctx != null && ctx.getHasFlags()) {
-        ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInvalid));
+        ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInvalid));
       }
       return this.GetHelper().CreateNewWithFlags(
         BigInteger.ZERO,
@@ -72,12 +72,12 @@ at: http://upokecenter.com/d/
       if (ctxDest != null && ctxSrc != null) {
         if (ctxDest.getHasFlags()) {
           if (!ctxSrc.getClampNormalExponents()) {
-            ctxSrc.setFlags(ctxSrc.getFlags()&~(PrecisionContext.FlagClamped));
+            ctxSrc.setFlags(ctxSrc.getFlags() & ~(PrecisionContext.FlagClamped));
           }
-          ctxDest.setFlags(ctxDest.getFlags()|(ctxSrc.getFlags()));
+          ctxDest.setFlags(ctxDest.getFlags() | (ctxSrc.getFlags()));
           if ((ctxSrc.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
             // Treat subnormal numbers as underflows
-            ctxDest.setFlags(ctxDest.getFlags()|(BigNumberFlags.UnderflowFlags));
+            ctxDest.setFlags(ctxDest.getFlags() | (BigNumberFlags.UnderflowFlags));
           }
         }
       }
@@ -217,7 +217,7 @@ ctx) :
 
     private T SignalingNaNInvalid(T value, PrecisionContext ctx) {
       if (ctx != null && ctx.getHasFlags()) {
-        ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagInvalid));
+        ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagInvalid));
       }
       return this.ReturnQuietNaN(value, ctx);
     }
@@ -256,12 +256,12 @@ ctx) :
 
       if ((ctx2.getFlags() & PrecisionContext.FlagInexact) != 0) {
         if (ctx.getHasFlags()) {
-          ctx.setFlags(ctx.getFlags()|(BigNumberFlags.LostDigitsFlags));
+          ctx.setFlags(ctx.getFlags() | (BigNumberFlags.LostDigitsFlags));
         }
       }
       if ((ctx2.getFlags() & PrecisionContext.FlagRounded) != 0) {
         if (ctx.getHasFlags()) {
-          ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagRounded));
+          ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagRounded));
         }
       }
       if ((ctx2.getFlags() & PrecisionContext.FlagSubnormal) != 0) {
@@ -272,7 +272,7 @@ ctx) :
       }
       if ((ctx2.getFlags() & PrecisionContext.FlagOverflow) != 0) {
         boolean neg = (thisFlags & BigNumberFlags.FlagNegative) != 0;
-        ctx.setFlags(ctx.getFlags()|(PrecisionContext.FlagLostDigits));
+        ctx.setFlags(ctx.getFlags() | (PrecisionContext.FlagLostDigits));
         return this.SignalOverflow2(ctx, neg);
       }
       return val;
@@ -375,8 +375,8 @@ ctx) :
       if (pc != null) {
         Rounding roundingOnOverflow = pc.getRounding();
         if (pc.getHasFlags()) {
-          pc.setFlags(pc.getFlags()|(PrecisionContext.FlagOverflow |))
-            PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
+          pc.setFlags(pc.getFlags() | (PrecisionContext.FlagOverflow |
+            PrecisionContext.FlagInexact | PrecisionContext.FlagRounded));
         }
         if (pc.getHasMaxPrecision() && pc.getHasExponentRange() &&
             (roundingOnOverflow == Rounding.Down || roundingOnOverflow ==
@@ -402,8 +402,7 @@ ctx) :
       }
       return this.GetHelper().GetArithmeticSupport() ==
         BigNumberFlags.FiniteOnly ?
-        default(
-          T) : this.GetHelper().CreateNewWithFlags(
+        null : this.GetHelper().CreateNewWithFlags(
         BigInteger.ZERO,
         BigInteger.ZERO,
         (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);

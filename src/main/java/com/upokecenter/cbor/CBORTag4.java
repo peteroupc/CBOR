@@ -15,7 +15,7 @@ at: http://upokecenter.com/d/
 
     private boolean extended;
 
-    public CBORTag4 (final boolean extended) {
+    public CBORTag4 (boolean extended) {
       this.extended = extended;
     }
 
@@ -23,7 +23,7 @@ at: http://upokecenter.com/d/
       return this.extended ? CBORTag5.ExtendedFilter : CBORTag5.Filter;
     }
 
-    public CBORObject ValidateObject(final CBORObject obj) {
+    public CBORObject ValidateObject(CBORObject obj) {
       return CBORTag5.ConvertToDecimalFrac(obj, true, this.extended);
     }
   }

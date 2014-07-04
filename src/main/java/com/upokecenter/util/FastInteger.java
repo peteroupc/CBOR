@@ -12,10 +12,11 @@ at: http://upokecenter.com/d/
       private int[] data;
       private int wordCount;
 
-      static MutableNumber FromBigInteger(final BigInteger bigintVal) {
+      static MutableNumber FromBigInteger(BigInteger bigintVal) {
         MutableNumber mnum = new MutableNumber(0);
         if (bigintVal.signum() < 0) {
-          throw new IllegalArgumentException("bigintVal's sign (" + bigintVal.signum() + ") is less than " + "0 ");
+          throw new IllegalArgumentException("bigintVal's sign (" + bigintVal.signum() +
+            ") is less than " + "0 ");
         }
         byte[] bytes = bigintVal.toByteArray(true);
         int len = bytes.length;
@@ -46,7 +47,7 @@ at: http://upokecenter.com/d/
         return mnum;
       }
 
-      MutableNumber(final int val) {
+      MutableNumber(int val) {
         if (val < 0) {
           throw new IllegalArgumentException("val (" + val + ") is less than " + "0 ");
         }
@@ -55,7 +56,7 @@ at: http://upokecenter.com/d/
         this.data[0] = ((int)(val & 0xFFFFFFFFL));
       }
 
-      MutableNumber SetInt(final int val) {
+      MutableNumber SetInt(int val) {
         if (val < 0) {
           throw new IllegalArgumentException("val (" + val + ") is less than " + "0 ");
         }
@@ -79,7 +80,7 @@ at: http://upokecenter.com/d/
         return BigInteger.fromByteArray(bytes, true);
       }
 
-      int[] GetLastWordsInternal(final int numWords32Bit) {
+      int[] GetLastWordsInternal(int numWords32Bit) {
         int[] ret = new int[numWords32Bit];
         System.arraycopy(this.data, 0, ret, 0, Math.min(numWords32Bit, this.wordCount));
         return ret;
@@ -109,9 +110,10 @@ at: http://upokecenter.com/d/
      * @param multiplicand A 32-bit signed integer.
      * @return The product of the two objects.
      */
-      MutableNumber Multiply(final int multiplicand) {
+      MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
-          throw new IllegalArgumentException("multiplicand (" + multiplicand + ") is less than " + "0 ");
+          throw new IllegalArgumentException("multiplicand (" + multiplicand +
+            ") is less than " + "0 ");
         }
         if (multiplicand != 0) {
           int carry = 0;
@@ -228,7 +230,7 @@ at: http://upokecenter.com/d/
           return this.wordCount == 0 || (this.data[0] & 1) == 0;
         }
 
-      int CompareToInt(final int val) {
+      int CompareToInt(int val) {
         if (val < 0 || this.wordCount > 1) {
           return 1;
         }
@@ -245,9 +247,10 @@ at: http://upokecenter.com/d/
       }
 
       MutableNumber SubtractInt(
-        final int other) {
+        int other) {
         if (other < 0) {
-          throw new IllegalArgumentException("other (" + other + ") is less than " + "0 ");
+     throw new IllegalArgumentException("other (" + other + ") is less than " +
+            "0 ");
         }
       if (other != 0) {
           {
@@ -292,7 +295,7 @@ at: http://upokecenter.com/d/
      * @return The difference of the two objects.
      */
       MutableNumber Subtract(
-        final MutableNumber other) {
+        MutableNumber other) {
         {
           {
        // System.out.println("" + this.data.length + " " +
@@ -337,7 +340,7 @@ at: http://upokecenter.com/d/
         }
       }
 
-      public int compareTo(final MutableNumber other) {
+      public int compareTo(MutableNumber other) {
         if (this.wordCount != other.wordCount) {
           return (this.wordCount < other.wordCount) ? -1 : 1;
         }
@@ -363,9 +366,10 @@ at: http://upokecenter.com/d/
      * @param augend A 32-bit signed integer.
      * @return This instance.
      */
-      MutableNumber Add(final int augend) {
+      MutableNumber Add(int augend) {
         if (augend < 0) {
-          throw new IllegalArgumentException("augend (" + augend + ") is less than " + "0 ");
+   throw new IllegalArgumentException("augend (" + augend + ") is less than " +
+            "0 ");
         }
         if (augend != 0) {
           int carry = 0;
@@ -416,11 +420,11 @@ at: http://upokecenter.com/d/
     private static BigInteger valueInt32MaxValue = BigInteger.valueOf(Integer.MAX_VALUE);
     private static BigInteger valueNegativeInt32MinValue = (valueInt32MinValue).negate();
 
-    FastInteger(final int value) {
+    FastInteger(int value) {
       this.smallValue = value;
     }
 
-    static FastInteger Copy(final FastInteger value) {
+    static FastInteger Copy(FastInteger value) {
       FastInteger fi = new FastInteger(value.smallValue);
       fi.integerMode = value.integerMode;
       fi.largeValue = value.largeValue;
@@ -429,7 +433,7 @@ at: http://upokecenter.com/d/
       return fi;
     }
 
-    static FastInteger FromBig(final BigInteger bigintVal) {
+    static FastInteger FromBig(BigInteger bigintVal) {
       if (bigintVal.canFitInInt()) {
         return new FastInteger(bigintVal.intValue());
       }
@@ -465,7 +469,7 @@ at: http://upokecenter.com/d/
      * @return Zero if the values are equal; a negative number if this instance is
      * less, or a positive number if this instance is greater.
      */
-    public int compareTo(final FastInteger val) {
+    public int compareTo(FastInteger val) {
       switch ((this.integerMode << 2) | val.integerMode) {
           case (0 << 2) | 0: {
             int vsv = val.smallValue;
@@ -495,7 +499,7 @@ at: http://upokecenter.com/d/
       return (this.signum() < 0) ? this.Negate() : this;
     }
 
-    static BigInteger WordsToBigInteger(final int[] words) {
+    static BigInteger WordsToBigInteger(int[] words) {
       int wordCount = words.length;
       if (wordCount == 1 && (words[0] >> 31) == 0) {
         return BigInteger.valueOf((int)words[0]);
@@ -511,18 +515,18 @@ at: http://upokecenter.com/d/
       return BigInteger.fromByteArray(bytes, true);
     }
 
-    static int[] GetLastWords(final BigInteger bigint, int numWords32Bit) {
+    static int[] GetLastWords(BigInteger bigint, int numWords32Bit) {
       return
       MutableNumber.FromBigInteger(bigint).GetLastWordsInternal(numWords32Bit);
     }
 
-    FastInteger SetInt(final int val) {
+    FastInteger SetInt(int val) {
       this.smallValue = val;
       this.integerMode = 0;
       return this;
     }
 
-    int RepeatedSubtract(final FastInteger divisor) {
+    int RepeatedSubtract(FastInteger divisor) {
       if (this.integerMode == 1) {
         int count = 0;
         if (divisor.integerMode == 1) {
@@ -576,7 +580,7 @@ bigrem = divrem[1]; }
      * @param val The integer to multiply by.
      * @return This object.
      */
-    FastInteger Multiply(final int val) {
+    FastInteger Multiply(int val) {
       if (val == 0) {
         this.smallValue = 0;
         this.integerMode = 0;
@@ -665,7 +669,7 @@ bigrem = divrem[1]; }
      * @param val The subtrahend.
      * @return This object.
      */
-    FastInteger Subtract(final FastInteger val) {
+    FastInteger Subtract(FastInteger val) {
       BigInteger valValue;
       switch (this.integerMode) {
         case 0:
@@ -716,7 +720,7 @@ bigrem = divrem[1]; }
      * @param val The subtrahend.
      * @return This object.
      */
-    FastInteger SubtractInt(final int val) {
+    FastInteger SubtractInt(int val) {
       if (val == Integer.MIN_VALUE) {
         return this.AddBig(valueNegativeInt32MinValue);
       }
@@ -740,7 +744,7 @@ bigrem = divrem[1]; }
      * @param bigintVal The number to add.
      * @return This object.
      */
-    FastInteger AddBig(final BigInteger bigintVal) {
+    FastInteger AddBig(BigInteger bigintVal) {
       switch (this.integerMode) {
           case 0: {
             return bigintVal.canFitInInt() ? this.AddInt(bigintVal.intValue()) :
@@ -765,7 +769,7 @@ bigrem = divrem[1]; }
      * @param bigintVal The subtrahend.
      * @return This object.
      */
-    FastInteger SubtractBig(final BigInteger bigintVal) {
+    FastInteger SubtractBig(BigInteger bigintVal) {
       if (this.integerMode == 2) {
         this.largeValue = this.largeValue.subtract(bigintVal);
         return this;
@@ -787,7 +791,7 @@ bigrem = divrem[1]; }
       }
     }
 
-    FastInteger Add(final FastInteger val) {
+    FastInteger Add(FastInteger val) {
       BigInteger valValue;
       switch (this.integerMode) {
         case 0:
@@ -843,7 +847,7 @@ bigrem = divrem[1]; }
      * @return This object.
      * @throws ArithmeticException Attempted to divide by zero.
      */
-    FastInteger Remainder(final int divisor) {
+    FastInteger Remainder(int divisor) {
       // Mod operator will always result in a
       // number that fits an int for int divisors
       if (divisor != 0) {
@@ -904,7 +908,7 @@ bigrem = divrem[1]; }
      * @return The quotient of the two objects.
      * @throws ArithmeticException Attempted to divide by zero.
      */
-    FastInteger Divide(final int divisor) {
+    FastInteger Divide(int divisor) {
       if (divisor != 0) {
         switch (this.integerMode) {
           case 0:
@@ -964,7 +968,7 @@ bigrem = divrem[1]; }
      * @param val A 32-bit signed integer.
      * @return This instance.
      */
-    FastInteger AddInt(final int val) {
+    FastInteger AddInt(int val) {
       BigInteger valValue;
       switch (this.integerMode) {
         case 0:
@@ -1077,7 +1081,7 @@ bigrem = divrem[1]; }
      * @return Zero if the values are equal; a negative number if this instance is
      * less, or a positive number if this instance is greater.
      */
-    int CompareToInt(final int val) {
+    int CompareToInt(int val) {
       switch (this.integerMode) {
         case 0:
           return (val == this.smallValue) ? 0 : (this.smallValue < val ? -1 :

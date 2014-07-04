@@ -15,21 +15,21 @@ import java.io.*;
     private InputStream stream;
     private int offset;
 
-    public CharacterReader (final String str) {
+    public CharacterReader (String str) {
       if (str == null) {
         throw new NullPointerException("str");
       }
       this.str = str;
     }
 
-    public CharacterReader (final InputStream stream) {
+    public CharacterReader (InputStream stream) {
       if (stream == null) {
         throw new NullPointerException("stream");
       }
       this.stream = stream;
     }
 
-    public CBORException NewError(final String str) {
+    public CBORException NewError(String str) {
       return new CBORException(str + " (offset " + this.offset + ")");
     }
 

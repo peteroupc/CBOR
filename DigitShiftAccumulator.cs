@@ -69,7 +69,8 @@ namespace PeterO {
       if (bigint.canFitInInt()) {
         this.shiftedSmall = (int)bigint;
         if (this.shiftedSmall < 0) {
-          throw new ArgumentException("shiftedSmall (" + this.shiftedSmall + ") is less than " + "0 ");
+          throw new ArgumentException("shiftedSmall (" + this.shiftedSmall +
+            ") is less than " + "0");
         }
         this.isSmall = true;
       } else {
@@ -84,7 +85,8 @@ namespace PeterO {
       // Assumes the string is length 9 or less and contains
       // only the digits '0' through '9'
       if (length > 9) {
-        throw new ArgumentException("length (" + length + ") is more than " + "9 ");
+   throw new ArgumentException("length (" + length + ") is more than " +
+          "9 ");
       }
       int ret = 0;
       for (var i = 0; i < length; ++i) {
@@ -440,12 +442,14 @@ out bigrem);
       if (bits.CanFitInInt32()) {
         int intval = bits.AsInt32();
         if (intval < 0) {
-          throw new ArgumentException("intval (" + intval + ") is less than " + "0 ");
+   throw new ArgumentException("intval (" + intval + ") is less than " +
+            "0");
         }
         this.ShiftToDigitsInt(intval);
       } else {
         if (bits.Sign < 0) {
-          throw new ArgumentException("bits's sign (" + bits.Sign + ") is less than " + "0 ");
+          throw new ArgumentException("bits's sign (" + bits.Sign +
+            ") is less than " + "0");
         }
         this.knownBitLength = this.CalcKnownDigitLength();
         BigInteger bigintDiff = this.knownBitLength.AsBigInteger();

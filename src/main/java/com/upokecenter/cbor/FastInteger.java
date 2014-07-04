@@ -26,10 +26,10 @@ final class FastInteger {
 
     private int wordCount;
 
-    private static MutableNumber FromBigInteger(BigInteger bigfinal intVal) {
+    private static MutableNumber FromBigInteger(final BigInteger bigintVal) {
       MutableNumber mnum = new MutableNumber(0);
       if (bigintVal.signum() < 0) {
-        throw new IllegalArgumentException("bigintVal's sign (" + Long.toString((long)bigintVal.signum()) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("bigintVal's sign (" + bigintVal + ") is not greater or equal to " + "0");
       }
       byte[] bytes = bigintVal.toByteArray(true);
       int len = bytes.length;
@@ -60,7 +60,7 @@ final class FastInteger {
       return mnum;
     }
 
-    private MutableNumber (int val) {final
+    private MutableNumber (final int val) {
       if (val < 0) {
         throw new IllegalArgumentException("val (" + Long.toString((long)val) + ") is not greater or equal to " + "0");
       }
@@ -109,7 +109,7 @@ final class FastInteger {
      * @param multiplicand A 32-bit signed integer.
      * @return The product of the two objects.
      */
-    private MutableNumber Multiply(int multiplicafinal nd) {
+    private MutableNumber Multiply(final int multiplicand) {
       if (multiplicand < 0) {
         throw new IllegalArgumentException("multiplicand (" + Long.toString((long)multiplicand) + ") is not greater or equal to " + "0");
       } else if (multiplicand != 0) {
@@ -225,7 +225,7 @@ final class FastInteger {
      * @return The difference of the two objects.
      */
     private MutableNumber SubtractInt(
-        int other) {final
+        final int other) {
       if (other < 0) {
         throw new IllegalArgumentException("other (" + Long.toString((long)other) + ") is not greater or equal to " + "0");
       } else if (other != 0) {
@@ -270,7 +270,7 @@ final class FastInteger {
      * @return The difference of the two objects.
      */
     private MutableNumber Subtract(
-        MutableNumber other) {final
+        final MutableNumber other) {
       {
         {
           // System.out.println("" + this.data.length + " " + (other.data.length));
@@ -313,9 +313,9 @@ final class FastInteger {
      * @param augend A 32-bit signed integer.
      * @return This instance.
      */
-    private MutableNumber Add(int augend) {final
+    private MutableNumber Add(final int augend) {
       if (augend < 0) {
-        throw new IllegalArgumentException("augend (" + Long.toString((long)augend) + ") is not greater or equal to " + "0");
+        throw new IllegalArgumentException("augend (" + augend + ") is not greater or equal to " + "0");
       } else if (augend != 0) {
         int carry = 0;
         // Ensure a length of at least 1
@@ -326,17 +326,18 @@ final class FastInteger {
           this.data[0] = 0;
           this.wordCount = 1;
         }
+        int aug = augend;
         for (int i = 0; i < this.wordCount; ++i) {
           int u;
           int a = this.data[i];
-          u = (a + augend) + carry;
+          u = (a + aug) + carry;
           carry = ((((u >> 31) == (a >> 31)) ? ((u & Integer.MAX_VALUE) < (a & Integer.MAX_VALUE)) :
-            ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
+            ((u >> 31) == 0)) || (u == a && aug != 0)) ? 1 : 0;
           this.data[i] = u;
           if (carry == 0) {
             return this;
           }
-          augend = 0;
+          aug = 0;
         }
         if (carry != 0) {
           if (this.wordCount >= this.data.length) {
@@ -362,13 +363,13 @@ final class FastInteger {
   private int integerMode = 0;
 
   private static BigInteger valueInt32MinValue = BigInteger.valueOf(Integer.MIN_VALUE);
-  private static BigInteger valueNegativeInt32MinValue=(valueInt32MinValue).negate();
+  private static BigInteger valueNegativeInt32MinValue = (valueInt32MinValue).negate();
 
-  FastInteger (int valfinal ue) {
+  FastInteger (final int value) {
     this.smallValue = value;
   }
 
-  private static FastInteger FromBig(BigIntefinal ger bigintVal) {
+  private static FastInteger FromBig(final BigInteger bigintVal) {
     if (bigintVal.canFitInInt()) {
       return new FastInteger(bigintVal.intValue());
     } else if (bigintVal.signum() > 0) {
@@ -407,7 +408,7 @@ final class FastInteger {
     * @param val The integer to multiply by.
     * @return This object.
     */
-   FastInteger Multiply(int valfinal ) {
+   FastInteger Multiply(final int val) {
      if (val == 0) {
        this.smallValue = 0;
        this.integerMode = 0;
@@ -434,7 +435,7 @@ final class FastInteger {
              // convert to big integer
              this.integerMode = 2;
              this.largeValue = BigInteger.valueOf(this.smallValue);
-             this.largeValue=this.largeValue.multiply(BigInteger.valueOf(val));
+             this.largeValue = this.largeValue.multiply(BigInteger.valueOf(val));
            }
          } else {
            smallValue *= val;
@@ -444,13 +445,13 @@ final class FastInteger {
          if (val < 0) {
            this.integerMode = 2;
            this.largeValue = this.mnum.ToBigInteger();
-           this.largeValue=this.largeValue.multiply(BigInteger.valueOf(val));
+           this.largeValue = this.largeValue.multiply(BigInteger.valueOf(val));
          } else {
            mnum.Multiply(val);
          }
          break;
        case 2:
-         this.largeValue=this.largeValue.multiply(BigInteger.valueOf(val));
+         this.largeValue = this.largeValue.multiply(BigInteger.valueOf(val));
          break;
        default:
          throw new IllegalStateException();
@@ -465,7 +466,7 @@ final class FastInteger {
     * @param val The subtrahend.
     * @return This object.
     */
-   FastInteger Subtract(FastIntfinal eger val) {
+   FastInteger Subtract(final FastInteger val) {
      BigInteger valValue;
      switch (this.integerMode) {
      case 0:
@@ -476,7 +477,7 @@ final class FastInteger {
            // would overflow, convert to large
            this.integerMode = 2;
            this.largeValue = BigInteger.valueOf(this.smallValue);
-           this.largeValue=this.largeValue.subtract(BigInteger.valueOf(vsv));
+           this.largeValue = this.largeValue.subtract(BigInteger.valueOf(vsv));
          } else {
            this.smallValue -= vsv;
          }
@@ -484,7 +485,7 @@ final class FastInteger {
          integerMode = 2;
          largeValue = BigInteger.valueOf(smallValue);
          valValue = val.AsBigInteger();
-         largeValue=largeValue.subtract(valValue);
+         largeValue = largeValue.subtract(valValue);
        }
        break;
      case 1:
@@ -498,12 +499,12 @@ final class FastInteger {
          integerMode = 2;
          largeValue = mnum.ToBigInteger();
          valValue = val.AsBigInteger();
-         largeValue=largeValue.subtract(valValue);
+         largeValue = largeValue.subtract(valValue);
        }
        break;
      case 2:
        valValue = val.AsBigInteger();
-       this.largeValue=this.largeValue.subtract(valValue);
+       this.largeValue = this.largeValue.subtract(valValue);
        break;
      default:
        throw new IllegalStateException();
@@ -517,7 +518,7 @@ final class FastInteger {
     * @param val The subtrahend.
     * @return This object.
     */
-   FastInteger SubtractInt(int valfinal ) {
+   FastInteger SubtractInt(final int val) {
      if (val == Integer.MIN_VALUE) {
        return this.AddBig(valueNegativeInt32MinValue);
      } else if (this.integerMode == 0) {
@@ -526,7 +527,7 @@ final class FastInteger {
          // would overflow, convert to large
          this.integerMode = 2;
          this.largeValue = BigInteger.valueOf(this.smallValue);
-         this.largeValue=this.largeValue.subtract(BigInteger.valueOf(val));
+         this.largeValue = this.largeValue.subtract(BigInteger.valueOf(val));
        } else {
          this.smallValue -= val;
        }
@@ -542,7 +543,7 @@ final class FastInteger {
     * @param bigintVal The number to add.
     * @return This object.
     */
-   private FastInteger AddBig(BigIntefinal ger bigintVal) {
+   private FastInteger AddBig(final BigInteger bigintVal) {
      switch (this.integerMode) {
      case 0: {
        if (bigintVal.canFitInInt()) {
@@ -553,10 +554,10 @@ final class FastInteger {
      case 1:
        this.integerMode = 2;
        this.largeValue = this.mnum.ToBigInteger();
-       this.largeValue=largeValue.add(bigintVal);
+       this.largeValue = largeValue.add(bigintVal);
        break;
      case 2:
-       this.largeValue=largeValue.add(bigintVal);
+       this.largeValue = largeValue.add(bigintVal);
        break;
      default:
        throw new IllegalStateException();
@@ -569,7 +570,7 @@ final class FastInteger {
     * @param val A FastInteger object. (2).
     * @return A FastInteger object.
     */
-   FastInteger Add(FastIntfinal eger val) {
+   FastInteger Add(final FastInteger val) {
      BigInteger valValue;
      switch (this.integerMode) {
      case 0:
@@ -584,7 +585,7 @@ final class FastInteger {
            } else {
              this.integerMode = 2;
              this.largeValue = BigInteger.valueOf(this.smallValue);
-             this.largeValue=this.largeValue.add(BigInteger.valueOf(val.smallValue));
+             this.largeValue = this.largeValue.add(BigInteger.valueOf(val.smallValue));
            }
          } else {
            this.smallValue += val.smallValue;
@@ -593,7 +594,7 @@ final class FastInteger {
          integerMode = 2;
          largeValue = BigInteger.valueOf(smallValue);
          valValue = val.AsBigInteger();
-         largeValue=largeValue.add(valValue);
+         largeValue = largeValue.add(valValue);
        }
        break;
      case 1:
@@ -603,12 +604,12 @@ final class FastInteger {
          integerMode = 2;
          largeValue = mnum.ToBigInteger();
          valValue = val.AsBigInteger();
-         largeValue=largeValue.add(valValue);
+         largeValue = largeValue.add(valValue);
        }
        break;
      case 2:
        valValue = val.AsBigInteger();
-       this.largeValue=this.largeValue.add(valValue);
+       this.largeValue = this.largeValue.add(valValue);
        break;
      default:
        throw new IllegalStateException();
@@ -621,7 +622,7 @@ final class FastInteger {
     * @param val A 32-bit signed integer.
     * @return This instance.
     */
-   FastInteger AddInt(int valfinal ) {
+   FastInteger AddInt(final int val) {
      BigInteger valValue;
      switch (this.integerMode) {
      case 0:
@@ -635,7 +636,7 @@ final class FastInteger {
          } else {
            this.integerMode = 2;
            this.largeValue = BigInteger.valueOf(this.smallValue);
-           this.largeValue=this.largeValue.add(BigInteger.valueOf(val));
+           this.largeValue = this.largeValue.add(BigInteger.valueOf(val));
          }
        } else {
          smallValue += val;
@@ -648,12 +649,12 @@ final class FastInteger {
          integerMode = 2;
          largeValue = mnum.ToBigInteger();
          valValue = BigInteger.valueOf(val);
-         largeValue=largeValue.add(valValue);
+         largeValue = largeValue.add(valValue);
        }
        break;
      case 2:
        valValue = BigInteger.valueOf(val);
-       this.largeValue=this.largeValue.add(valValue);
+       this.largeValue = this.largeValue.add(valValue);
        break;
      default:
        throw new IllegalStateException();
@@ -704,7 +705,7 @@ final class FastInteger {
    int signum() {
      switch (this.integerMode) {
      case 0:
-       return ((this.smallValue==0) ? 0 : ((this.smallValue<0) ? -1 : 1));
+       return ((this.smallValue == 0) ? 0 : ((this.smallValue < 0) ? -1 : 1));
      case 1:
        return this.mnum.signum();
      case 2:

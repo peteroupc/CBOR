@@ -1740,6 +1740,17 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       Assert.IsFalse(cbor.IsFinite);
       cbor = CBORObject.Undefined;
       Assert.IsFalse(cbor.IsFinite);
+      Assert.IsFalse(CBORObject.NewMap().IsFinite);
+      Assert.IsTrue(CBORObject.FromObject(0).IsFinite);
+      Assert.IsTrue(CBORObject.FromObject(2.5).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(Double.PositiveInfinity).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(Double.NegativeInfinity).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(Double.NaN).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(
+       ExtendedDecimal.PositiveInfinity).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(
+        ExtendedDecimal.NegativeInfinity).IsFinite);
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN).IsFinite);
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
@@ -1772,20 +1783,20 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       Assert.IsTrue(CBORObject.FromObject(BigInteger.One << 63).IsIntegral);
       Assert.IsTrue(CBORObject.FromObject(BigInteger.One << 64).IsIntegral);
       Assert.IsTrue(CBORObject.FromObject(BigInteger.One << 80).IsIntegral);
-  Assert.IsTrue(CBORObject.FromObject(ExtendedDecimal.FromString("4444e+800"
-)).IsIntegral);
+      Assert.IsTrue(CBORObject.FromObject(
+        ExtendedDecimal.FromString("4444e+800")).IsIntegral);
 
-  Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.FromString("4444e-800"
-)).IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(
+         ExtendedDecimal.FromString("4444e-800")).IsIntegral);
       Assert.IsFalse(CBORObject.FromObject(2.5).IsIntegral);
       Assert.IsFalse(CBORObject.FromObject(999.99).IsIntegral);
       Assert.IsFalse(CBORObject.FromObject(Double.PositiveInfinity).IsIntegral);
       Assert.IsFalse(CBORObject.FromObject(Double.NegativeInfinity).IsIntegral);
       Assert.IsFalse(CBORObject.FromObject(Double.NaN).IsIntegral);
-      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity)
-                     .IsIntegral);
-      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity)
-                     .IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(
+      ExtendedDecimal.PositiveInfinity).IsIntegral);
+      Assert.IsFalse(CBORObject.FromObject(
+         ExtendedDecimal.NegativeInfinity).IsIntegral);
       Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN).IsIntegral);
       cbor = CBORObject.True;
       Assert.IsFalse(cbor.IsIntegral);

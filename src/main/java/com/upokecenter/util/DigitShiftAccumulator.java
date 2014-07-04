@@ -59,13 +59,14 @@ at: http://upokecenter.com/d/
       }
 
     public DigitShiftAccumulator (
-      final BigInteger bigint,
-      final int lastDiscarded,
-      final int olderDiscarded) {
+      BigInteger bigint,
+      int lastDiscarded,
+      int olderDiscarded) {
       if (bigint.canFitInInt()) {
         this.shiftedSmall = bigint.intValue();
         if (this.shiftedSmall < 0) {
-          throw new IllegalArgumentException("shiftedSmall (" + this.shiftedSmall + ") is less than " + "0 ");
+          throw new IllegalArgumentException("shiftedSmall (" + this.shiftedSmall +
+            ") is less than " + "0");
         }
         this.isSmall = true;
       } else {
@@ -76,11 +77,12 @@ at: http://upokecenter.com/d/
       this.bitLeftmost = lastDiscarded;
     }
 
-    private static int FastParseLong(final String str, int offset, int length) {
+    private static int FastParseLong(String str, int offset, int length) {
       // Assumes the String is length 9 or less and contains
       // only the digits '0' through '9'
       if (length > 9) {
-        throw new IllegalArgumentException("length (" + length + ") is more than " + "9 ");
+   throw new IllegalArgumentException("length (" + length + ") is more than " +
+          "9 ");
       }
       int ret = 0;
       for (int i = 0; i < length; ++i) {
@@ -96,7 +98,7 @@ at: http://upokecenter.com/d/
         FastInteger.FromBig(this.shiftedBigInt);
       }
 
-    public void ShiftRight(final FastInteger fastint) {
+    public void ShiftRight(FastInteger fastint) {
       if (fastint == null) {
         throw new NullPointerException("fastint");
       }
@@ -122,7 +124,7 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private void ShiftRightBig(final int digits) {
+    private void ShiftRightBig(int digits) {
       if (digits <= 0) {
         return;
       }
@@ -262,7 +264,7 @@ bigrem = divrem[1]; }
       }
     }
 
-    private void ShiftToBitsBig(final int digits) {
+    private void ShiftToBitsBig(int digits) {
       // Shifts a number until it reaches the given number of digits,
       // gathering information on whether the last digit discarded is set
       // and whether the discarded digits to the right of that digit are set.
@@ -391,7 +393,7 @@ bigrem = divrem[1]; }
      * positive.
      * @param digits A 32-bit signed integer.
      */
-    public void ShiftRightInt(final int digits) {
+    public void ShiftRightInt(int digits) {
       if (this.isSmall) {
         this.ShiftRightSmall(digits);
       } else {
@@ -399,7 +401,7 @@ bigrem = divrem[1]; }
       }
     }
 
-    private void ShiftRightSmall(final int digits) {
+    private void ShiftRightSmall(int digits) {
       if (digits <= 0) {
         return;
       }
@@ -442,16 +444,18 @@ bigrem = divrem[1]; }
       this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
     }
 
-    public void ShiftToDigits(final FastInteger bits) {
+    public void ShiftToDigits(FastInteger bits) {
       if (bits.CanFitInInt32()) {
         int intval = bits.AsInt32();
         if (intval < 0) {
-          throw new IllegalArgumentException("intval (" + intval + ") is less than " + "0 ");
+   throw new IllegalArgumentException("intval (" + intval + ") is less than " +
+            "0");
         }
         this.ShiftToDigitsInt(intval);
       } else {
         if (bits.signum() < 0) {
-          throw new IllegalArgumentException("bits's sign (" + bits.signum() + ") is less than " + "0 ");
+          throw new IllegalArgumentException("bits's sign (" + bits.signum() +
+            ") is less than " + "0");
         }
         this.knownBitLength = this.CalcKnownDigitLength();
         BigInteger bigintDiff = this.knownBitLength.AsBigInteger();
@@ -472,7 +476,7 @@ bigrem = divrem[1]; }
      * the big integer being shifted is positive.
      * @param digits A 32-bit signed integer.
      */
-    public void ShiftToDigitsInt(final int digits) {
+    public void ShiftToDigitsInt(int digits) {
       if (this.isSmall) {
         this.ShiftToBitsSmall(digits);
       } else {
@@ -493,7 +497,7 @@ bigrem = divrem[1]; }
       return new FastInteger(this.shiftedBigInt.getDigitCount());
     }
 
-    private void ShiftToBitsSmall(final int digits) {
+    private void ShiftToBitsSmall(int digits) {
       int kb = 0;
       int v2 = this.shiftedSmall;
       kb = (v2 >= 1000000000) ? 10 : ((v2 >= 100000000) ? 9 : ((v2 >=
