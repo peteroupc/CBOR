@@ -185,7 +185,7 @@ private DecimalUtility() {
       public BigInteger[] FindCachedPowerOrSmaller(final BigInteger bi) {
         BigInteger[] ret = null;
         BigInteger minValue = null;
-        synchronized(this.outputs) {
+        synchronized (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (this.inputs[i].compareTo(bi) <= 0 && (minValue == null ||
             this.inputs[i].compareTo(minValue) >= 0)) {
@@ -201,7 +201,7 @@ private DecimalUtility() {
       }
 
       public BigInteger GetCachedPower(final BigInteger bi) {
-        synchronized(this.outputs) {
+        synchronized (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (bi.equals(this.inputs[i])) {
               if (i != 0) {
@@ -231,7 +231,7 @@ private DecimalUtility() {
       }
 
       public BigInteger GetCachedPowerInt(final int bi) {
-        synchronized(this.outputs) {
+        synchronized (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (this.inputsInts[i] >= 0 && this.inputsInts[i] == bi) {
               if (i != 0) {
@@ -261,7 +261,7 @@ private DecimalUtility() {
       }
 
       public void AddPower(final BigInteger input, BigInteger output) {
-        synchronized(this.outputs) {
+        synchronized (this.outputs) {
           if (this.size < MaxSize) {
             // Shift newer entries down
             for (int i = this.size; i > 0; --i) {

@@ -37,10 +37,12 @@ namespace Test {
       Assert.AreEqual(16, BigInteger.valueOf(-65535).bitLength());
       Assert.AreEqual(17, BigInteger.valueOf(65536).bitLength());
       Assert.AreEqual(16, BigInteger.valueOf(-65536).bitLength());
-Assert.AreEqual(65, BigInteger.fromString("19084941898444092059"
-).bitLength());
-      Assert.AreEqual(65, BigInteger.fromString("-19084941898444092059"
-).bitLength());
+      Assert.AreEqual(
+        65,
+        BigInteger.fromString("19084941898444092059").bitLength());
+      Assert.AreEqual(
+        65,
+        BigInteger.fromString("-19084941898444092059").bitLength());
       Assert.AreEqual(0, BigInteger.valueOf(-1).bitLength());
       Assert.AreEqual(1, BigInteger.valueOf(-2).bitLength());
     }
@@ -77,8 +79,9 @@ Assert.AreEqual(65, BigInteger.fromString("19084941898444092059"
     }
     [TestMethod]
     public void TestFromByteArray() {
-      Assert.AreEqual(BigInteger.Zero, BigInteger.fromByteArray(new byte[] {
-        }, false));
+      Assert.AreEqual(
+        BigInteger.Zero,
+        BigInteger.fromByteArray(new byte[] { }, false));
     }
     [TestMethod]
     public void TestFromString() {
@@ -105,19 +108,16 @@ Assert.AreEqual(65, BigInteger.fromString("19084941898444092059"
 
     public static int ModPow(int x, int pow, int intMod) {
       if (x < 0) {
-        throw new ArgumentException("x (" + Convert.ToString((int)x,
-          System.Globalization.CultureInfo.InvariantCulture) +
-          ") is less than " + "0");
+        throw new ArgumentException(
+          "x (" + x + ") is less than " + "0");
       }
       if (pow <= 0) {
-        throw new ArgumentException("pow (" + Convert.ToString((int)pow,
-          System.Globalization.CultureInfo.InvariantCulture) +
-          ") is not greater than " + "0");
+        throw new ArgumentException(
+          "pow (" + pow + ") is not greater than " + "0");
       }
       if (intMod <= 0) {
-        throw new ArgumentException("mod (" + Convert.ToString((int)intMod,
-          System.Globalization.CultureInfo.InvariantCulture) +
-          ") is not greater than " + "0");
+        throw new ArgumentException(
+          "mod (" + intMod + ") is not greater than " + "0");
       }
       int r = 1;
       int v = x;
@@ -191,8 +191,9 @@ Assert.AreEqual(65, BigInteger.fromString("19084941898444092059"
           continue;
         }
         ba *= (BigInteger)bigprime;
-     Assert.AreEqual(bigprime, BigInteger.GreatestCommonDivisor(bigprime,
-          ba));
+        Assert.AreEqual(
+          bigprime,
+          BigInteger.GreatestCommonDivisor(bigprime, ba));
       }
     }
 
@@ -227,9 +228,11 @@ Assert.AreEqual(65, BigInteger.fromString("19084941898444092059"
     }
     [TestMethod]
     public void TestIntValue() {
-Assert.AreEqual(Int32.MinValue,
+      Assert.AreEqual(
+        Int32.MinValue,
         BigInteger.valueOf(Int32.MinValue).intValue());
-Assert.AreEqual(Int32.MaxValue,
+      Assert.AreEqual(
+        Int32.MaxValue,
         BigInteger.valueOf(Int32.MaxValue).intValue());
       try {
         BigInteger.valueOf(Int32.MinValue - 1L).intValue();
@@ -250,9 +253,11 @@ Assert.AreEqual(Int32.MaxValue,
     }
     [TestMethod]
     public void TestIntValueChecked() {
-      Assert.AreEqual(Int32.MinValue,
+      Assert.AreEqual(
+        Int32.MinValue,
         BigInteger.valueOf(Int32.MinValue).intValueChecked());
-      Assert.AreEqual(Int32.MaxValue,
+      Assert.AreEqual(
+        Int32.MaxValue,
         BigInteger.valueOf(Int32.MaxValue).intValueChecked());
       try {
         BigInteger.valueOf(Int32.MinValue - 1L).intValueChecked();
@@ -273,14 +278,18 @@ Assert.AreEqual(Int32.MaxValue,
     }
     [TestMethod]
     public void TestIntValueUnchecked() {
-      Assert.AreEqual(Int32.MinValue,
+      Assert.AreEqual(
+        Int32.MinValue,
         BigInteger.valueOf(Int32.MinValue).intValueUnchecked());
-      Assert.AreEqual(Int32.MaxValue,
+      Assert.AreEqual(
+        Int32.MaxValue,
         BigInteger.valueOf(Int32.MaxValue).intValueUnchecked());
-      Assert.AreEqual(Int32.MaxValue, BigInteger.valueOf(Int32.MinValue -
-        1L).intValueUnchecked());
-      Assert.AreEqual(Int32.MinValue, BigInteger.valueOf(Int32.MaxValue +
-        1L).intValueUnchecked());
+      Assert.AreEqual(
+        Int32.MaxValue,
+        BigInteger.valueOf(Int32.MinValue - 1L).intValueUnchecked());
+      Assert.AreEqual(
+        Int32.MinValue,
+        BigInteger.valueOf(Int32.MaxValue + 1L).intValueUnchecked());
     }
     [TestMethod]
     public void TestIsEven() {
@@ -301,9 +310,11 @@ Assert.AreEqual(Int32.MaxValue,
     }
     [TestMethod]
     public void TestLongValue() {
-      Assert.AreEqual(Int64.MinValue,
+      Assert.AreEqual(
+        Int64.MinValue,
         BigInteger.valueOf(Int64.MinValue).longValue());
-      Assert.AreEqual(Int64.MaxValue,
+      Assert.AreEqual(
+        Int64.MaxValue,
         BigInteger.valueOf(Int64.MaxValue).longValue());
       try {
         BigInteger.valueOf(Int64.MinValue).subtract(BigInteger.One).longValue();
@@ -321,35 +332,45 @@ Assert.AreEqual(Int32.MaxValue,
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      Assert.AreEqual(unchecked((long)0xFFFFFFF200000000L),
-  BigInteger.valueOf(unchecked((long)0xFFFFFFF200000000L)).longValue());
-      Assert.AreEqual(unchecked((long)0xFFFFFFF280000000L),
-  BigInteger.valueOf(unchecked((long)0xFFFFFFF280000000L)).longValue());
-      Assert.AreEqual(unchecked((long)0xFFFFFFF280000001L),
-  BigInteger.valueOf(unchecked((long)0xFFFFFFF280000001L)).longValue());
-      Assert.AreEqual(unchecked((long)0xFFFFFFF27FFFFFFFL),
-  BigInteger.valueOf(unchecked((long)0xFFFFFFF27FFFFFFFL)).longValue());
-      Assert.AreEqual(0x0000000380000001L,
+      Assert.AreEqual(
+        unchecked((long)0xFFFFFFF200000000L),
+        BigInteger.valueOf(unchecked((long)0xFFFFFFF200000000L)).longValue());
+      Assert.AreEqual(
+        unchecked((long)0xFFFFFFF280000000L),
+        BigInteger.valueOf(unchecked((long)0xFFFFFFF280000000L)).longValue());
+      Assert.AreEqual(
+        unchecked((long)0xFFFFFFF280000001L),
+        BigInteger.valueOf(unchecked((long)0xFFFFFFF280000001L)).longValue());
+      Assert.AreEqual(
+        unchecked((long)0xFFFFFFF27FFFFFFFL),
+        BigInteger.valueOf(unchecked((long)0xFFFFFFF27FFFFFFFL)).longValue());
+      Assert.AreEqual(
+        0x0000000380000001L,
         BigInteger.valueOf(0x0000000380000001L).longValue());
-      Assert.AreEqual(0x0000000382222222L,
+      Assert.AreEqual(
+        0x0000000382222222L,
         BigInteger.valueOf(0x0000000382222222L).longValue());
       Assert.AreEqual(-8L, BigInteger.valueOf(-8L).longValue());
       Assert.AreEqual(-32768L, BigInteger.valueOf(-32768L).longValue());
-      Assert.AreEqual(Int32.MinValue,
+      Assert.AreEqual(
+        Int32.MinValue,
         BigInteger.valueOf(Int32.MinValue).longValue());
-      Assert.AreEqual(Int32.MaxValue,
+      Assert.AreEqual(
+        Int32.MaxValue,
         BigInteger.valueOf(Int32.MaxValue).longValue());
       Assert.AreEqual(0x80000000L, BigInteger.valueOf(0x80000000L).longValue());
       Assert.AreEqual(0x90000000L, BigInteger.valueOf(0x90000000L).longValue());
     }
     [TestMethod]
     public void TestLongValueChecked() {
-      Assert.AreEqual(Int64.MinValue,
+      Assert.AreEqual(
+        Int64.MinValue,
         BigInteger.valueOf(Int64.MinValue).longValueChecked());
-      Assert.AreEqual(Int64.MaxValue,
+      Assert.AreEqual(
+        Int64.MaxValue,
         BigInteger.valueOf(Int64.MaxValue).longValueChecked());
       try {
-BigInteger.valueOf(Int64.MinValue) .subtract(BigInteger.One)
+        BigInteger.valueOf(Int64.MinValue).subtract(BigInteger.One)
           .longValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
@@ -358,76 +379,103 @@ BigInteger.valueOf(Int64.MinValue) .subtract(BigInteger.One)
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-BigInteger.valueOf(Int64.MaxValue) .add(BigInteger.One) .longValueChecked();
+BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One).longValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      Assert.AreEqual(unchecked((long)0xFFFFFFF200000000L),
+      Assert.AreEqual(
+        unchecked((long)0xFFFFFFF200000000L),
         BigInteger.valueOf(unchecked((long)0xFFFFFFF200000000L))
         .longValueChecked());
-      Assert.AreEqual(unchecked((long)0xFFFFFFF280000000L),
+      Assert.AreEqual(
+        unchecked((long)0xFFFFFFF280000000L),
         BigInteger.valueOf(unchecked((long)0xFFFFFFF280000000L))
         .longValueChecked());
-      Assert.AreEqual(unchecked((long)0xFFFFFFF280000001L),
+      Assert.AreEqual(
+        unchecked((long)0xFFFFFFF280000001L),
         BigInteger.valueOf(unchecked((long)0xFFFFFFF280000001L))
         .longValueChecked());
-      Assert.AreEqual(unchecked((long)0xFFFFFFF27FFFFFFFL),
+      Assert.AreEqual(
+        unchecked((long)0xFFFFFFF27FFFFFFFL),
         BigInteger.valueOf(unchecked((long)0xFFFFFFF27FFFFFFFL))
         .longValueChecked());
-      Assert.AreEqual(0x0000000380000001L,
+      Assert.AreEqual(
+        0x0000000380000001L,
         BigInteger.valueOf(0x0000000380000001L).longValueChecked());
-      Assert.AreEqual(0x0000000382222222L,
+      Assert.AreEqual(
+        0x0000000382222222L,
         BigInteger.valueOf(0x0000000382222222L).longValueChecked());
       Assert.AreEqual(-8L, BigInteger.valueOf(-8L).longValueChecked());
       Assert.AreEqual(-32768L, BigInteger.valueOf(-32768L).longValueChecked());
-      Assert.AreEqual(Int32.MinValue,
+      Assert.AreEqual(
+        Int32.MinValue,
         BigInteger.valueOf(Int32.MinValue).longValueChecked());
-      Assert.AreEqual(Int32.MaxValue,
+      Assert.AreEqual(
+        Int32.MaxValue,
         BigInteger.valueOf(Int32.MaxValue).longValueChecked());
-      Assert.AreEqual(0x80000000L,
+      Assert.AreEqual(
+        0x80000000L,
         BigInteger.valueOf(0x80000000L).longValueChecked());
-      Assert.AreEqual(0x90000000L,
+      Assert.AreEqual(
+        0x90000000L,
         BigInteger.valueOf(0x90000000L).longValueChecked());
     }
     [TestMethod]
     public void TestLongValueUnchecked() {
-      Assert.AreEqual(Int64.MinValue,
+      Assert.AreEqual(
+        Int64.MinValue,
         BigInteger.valueOf(Int64.MinValue).longValueUnchecked());
-      Assert.AreEqual(Int64.MaxValue,
+      Assert.AreEqual(
+        Int64.MaxValue,
         BigInteger.valueOf(Int64.MaxValue).longValueUnchecked());
-      Assert.AreEqual(Int64.MaxValue, BigInteger.valueOf(Int64.MinValue)
-        .subtract(BigInteger.One) .longValueUnchecked());
-      Assert.AreEqual(Int64.MinValue, BigInteger.valueOf(Int64.MaxValue)
-        .add(BigInteger.One) .longValueUnchecked());
-      Assert.AreEqual(unchecked((long)0xFFFFFFF200000000L),
+      Assert.AreEqual(
+        Int64.MaxValue,
+ BigInteger.valueOf(Int64.MinValue)
+        .subtract(BigInteger.One).longValueUnchecked());
+      Assert.AreEqual(
+        Int64.MinValue,
+BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One)
+          .longValueUnchecked());
+      Assert.AreEqual(
+        unchecked((long)0xFFFFFFF200000000L),
         BigInteger.valueOf(unchecked((long)0xFFFFFFF200000000L))
         .longValueUnchecked());
-      Assert.AreEqual(unchecked((long)0xFFFFFFF280000000L),
+      Assert.AreEqual(
+        unchecked((long)0xFFFFFFF280000000L),
         BigInteger.valueOf(unchecked((long)0xFFFFFFF280000000L))
         .longValueUnchecked());
-      Assert.AreEqual(unchecked((long)0xFFFFFFF280000001L),
+      Assert.AreEqual(
+        unchecked((long)0xFFFFFFF280000001L),
         BigInteger.valueOf(unchecked((long)0xFFFFFFF280000001L))
         .longValueUnchecked());
-      Assert.AreEqual(unchecked((long)0xFFFFFFF27FFFFFFFL),
+      Assert.AreEqual(
+        unchecked((long)0xFFFFFFF27FFFFFFFL),
         BigInteger.valueOf(unchecked((long)0xFFFFFFF27FFFFFFFL))
         .longValueUnchecked());
-      Assert.AreEqual(0x0000000380000001L,
+      Assert.AreEqual(
+        0x0000000380000001L,
         BigInteger.valueOf(0x0000000380000001L).longValueUnchecked());
-      Assert.AreEqual(0x0000000382222222L,
+      Assert.AreEqual(
+        0x0000000382222222L,
         BigInteger.valueOf(0x0000000382222222L).longValueUnchecked());
       Assert.AreEqual(-8L, BigInteger.valueOf(-8L).longValueUnchecked());
-    Assert.AreEqual(-32768L,
+      Assert.AreEqual(
+        -32768L,
         BigInteger.valueOf(-32768L).longValueUnchecked());
-      Assert.AreEqual(Int32.MinValue,
+      Assert.AreEqual(
+        Int32.MinValue,
         BigInteger.valueOf(Int32.MinValue).longValueUnchecked());
-      Assert.AreEqual(Int32.MaxValue,
+      Assert.AreEqual(
+        Int32.MaxValue,
         BigInteger.valueOf(Int32.MaxValue).longValueUnchecked());
-      Assert.AreEqual(0x80000000L,
+      Assert.AreEqual(
+        0x80000000L,
         BigInteger.valueOf(0x80000000L).longValueUnchecked());
-      Assert.AreEqual(0x90000000L,
+      Assert.AreEqual(
+        0x90000000L,
         BigInteger.valueOf(0x90000000L).longValueUnchecked());
     }
     [TestMethod]

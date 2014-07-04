@@ -28,9 +28,14 @@ namespace PeterO.DocGen {
     public void Finish() {
       foreach (var key in this.docs.Keys) {
         string finalString = this.docs[key].ToString();
-        string filename = Path.Combine(this.directory, DocVisitor.GetTypeID(key) + ".md");
+        string filename = Path.Combine(
+this.directory,
+DocVisitor.GetTypeID(key) + ".md");
         using (var writer = new StreamWriter(filename, false, Encoding.UTF8)) {
-          finalString = Regex.Replace(finalString, @"\r?\n(\r?\n)+", "\r\n\r\n");
+        finalString = Regex.Replace(
+finalString,
+@"\r?\n(\r?\n)+" ,
+"\r\n\r\n");
           writer.WriteLine(finalString);
         }
       }
@@ -62,8 +67,8 @@ namespace PeterO.DocGen {
     /// <param name='x'>A Type object.</param>
     /// <param name='y'>A Type object. (2).</param>
     /// <returns>Zero if both values are equal; a negative number if <paramref
-    /// name='x'/> is less than <paramref name='y'/> , or a positive number
-    /// if <paramref name='x'/> is greater than <paramref name='y'/> .</returns>
+    /// name='x'/> is less than <paramref name='y'/> , or a positive number if
+    /// <paramref name='x'/> is greater than <paramref name='y'/> .</returns>
     public int Compare(Type x, Type y) {
       return string.Compare(x.FullName, y.FullName, StringComparison.Ordinal);
     }

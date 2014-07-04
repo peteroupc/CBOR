@@ -34,7 +34,9 @@ namespace PeterO.DocGen {
         typeName = typeName.Replace(">", "&gt;");
         typeName = "[" + typeName + "](" + DocVisitor.GetTypeID(key) + ".md)";
         if (finalString.IndexOf(".", StringComparison.Ordinal) >= 0) {
-          finalString = finalString.Substring(0, finalString.IndexOf(".", StringComparison.Ordinal) + 1);
+          finalString = finalString.Substring(
+0,
+finalString.IndexOf("." , StringComparison.Ordinal) + 1);
         }
         finalString = Regex.Replace(finalString, @"\r?\n(\r?\n)+", "\r\n\r\n");
         this.writer.Write(" * " + typeName + " - ");
@@ -71,8 +73,8 @@ namespace PeterO.DocGen {
     /// <param name='x'>A Type object.</param>
     /// <param name='y'>A Type object. (2).</param>
     /// <returns>Zero if both values are equal; a negative number if <paramref
-    /// name='x'/> is less than <paramref name='y'/> , or a positive number
-    /// if <paramref name='x'/> is greater than <paramref name='y'/> .</returns>
+    /// name='x'/> is less than <paramref name='y'/> , or a positive number if
+    /// <paramref name='x'/> is greater than <paramref name='y'/> .</returns>
     public int Compare(Type x, Type y) {
       return string.Compare(x.FullName, y.FullName, StringComparison.Ordinal);
     }

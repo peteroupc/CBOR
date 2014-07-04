@@ -31,10 +31,8 @@ namespace PeterO.Cbor {
     public void Pop() {
       #if DEBUG
       if (this.stack.Count <= 0) {
-        throw new ArgumentException("this.stack.Count (" +
-                                    Convert.ToString((long)this.stack.Count,
-  System.Globalization.CultureInfo.InvariantCulture)
-                                    +") is not greater than " + "0 ");
+        throw new ArgumentException("this.stack.Count (" + (this.stack.Count)+
+                                    ") is not greater than " + "0 ");
       }
       #endif
       this.stack.RemoveAt(this.stack.Count - 1);
@@ -53,10 +51,8 @@ namespace PeterO.Cbor {
 );
       }
       if (lengthHint < 0) {
-        throw new ArgumentException("lengthHint (" +
-                                    Convert.ToString((long)lengthHint,
-  System.Globalization.CultureInfo.InvariantCulture)
-                                    +") is less than " + "0 ");
+        throw new ArgumentException("lengthHint (" + (lengthHint)+
+                                    ") is less than " + "0 ");
       }
       #endif
       bool addStr = false;
@@ -83,8 +79,8 @@ namespace PeterO.Cbor {
         throw new CBORException("Unexpected index");
       }
       if (smallIndex > Int32.MaxValue) {
-  throw new CBORException("Index " + smallIndex
-          +" is bigger than supported ");
+  throw new CBORException("Index " + smallIndex +
+          " is bigger than supported ");
       }
       var index = (int)smallIndex;
       List<CBORObject> lastList = this.stack[this.stack.Count - 1];
@@ -102,8 +98,8 @@ namespace PeterO.Cbor {
         throw new CBORException("Unexpected index");
       }
       if (!bigIndex.canFitInInt()) {
-    throw new CBORException("Index " + bigIndex
-          +" is bigger than supported ");
+    throw new CBORException("Index " + bigIndex +
+          " is bigger than supported ");
       }
       var index = (int)bigIndex;
       List<CBORObject> lastList = this.stack[this.stack.Count - 1];

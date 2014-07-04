@@ -8,8 +8,9 @@ namespace Test {
     [TestMethod]
     public void TestConstructor() {
       try {
-        Assert.AreEqual(null, new PrecisionContext(-1, Rounding.HalfEven, 0,
-          0, false));
+        Assert.AreEqual(
+null,
+new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -17,8 +18,9 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        Assert.AreEqual(null, new PrecisionContext(0, Rounding.HalfEven, 0,
-          -1, false));
+        Assert.AreEqual(
+null,
+new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -191,8 +193,9 @@ throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         BigInteger bigintBig = BigInteger.One << 64;
-   PrecisionContext.Unlimited.WithBigExponentRange(bigintBig,
-          BigInteger.Zero);
+   PrecisionContext.Unlimited.WithBigExponentRange(
+bigintBig,
+BigInteger.Zero);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {

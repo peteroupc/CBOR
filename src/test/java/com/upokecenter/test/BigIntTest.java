@@ -16,17 +16,18 @@ import com.upokecenter.util.*;
     // Test some specific cases
     @Test
     public void TestSpecificCases() {
-  TestCommon.DoTestMultiply("39258416159456516340113264558732499166970244380745050"
-        , "39258416159456516340113264558732499166970244380745051" ,
-
-  "1541223239349076530208308657654362309553698742116222355477449713742236585667505604058123112521437480247550"
-);
+  TestCommon.DoTestMultiply(
+"39258416159456516340113264558732499166970244380745050",
+"39258416159456516340113264558732499166970244380745051",
+"1541223239349076530208308657654362309553698742116222355477449713742236585667505604058123112521437480247550");
       TestCommon.DoTestMultiply(
   "5786426269322750882632312999752639738983363095641642905722171221986067189342123124290107105663618428969517616421742429671402859775667602123564",
   "331378991485809774307751183645559883724387697397707434271522313077548174328632968616330900320595966360728317363190772921",
   "1917500101435169880779183578665955372346028226046021044867189027856189131730889958057717187493786883422516390996639766012958050987359732634213213442579444095928862861132583117668061032227577386757036981448703231972963300147061503108512300577364845823910107210444");
-      TestCommon.DoTestDivide("9999999999999999999999", "281474976710655" ,
-        "35527136");
+      TestCommon.DoTestDivide(
+"9999999999999999999999",
+"281474976710655",
+"35527136");
     }
 
     @Test
@@ -137,8 +138,7 @@ BigInteger[] divrem=(bigintC).divideAndRemainder(bigintB);
 bigintD = divrem[0];
 bigintRem = divrem[1]; }
           if (!bigintD.equals(bigintA)) {
-            Assert.assertEquals("TestMultiplyDivide " +
-              bigintA + "; " + bigintB + ";\n" + bigintC,bigintA,bigintD);
+            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC,bigintA,bigintD);
           }
           if (bigintRem.signum() != 0) {
             Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,BigInteger.ZERO,bigintRem);
@@ -146,14 +146,12 @@ bigintRem = divrem[1]; }
           bigintE = bigintC.divide(bigintB);
           if (!bigintD.equals(bigintE)) {
             // Testing that divideWithRemainder and division method return
-            //the same value
-            Assert.assertEquals("TestMultiplyDivide " +
-              bigintA + "; " + bigintB + ";\n" + bigintC,bigintD,bigintE);
+            // the same value
+            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC,bigintD,bigintE);
           }
           bigintE = bigintC.remainder(bigintB);
           if (!bigintRem.equals(bigintE)) {
-            Assert.assertEquals("TestMultiplyDivide " +
-              bigintA + "; " + bigintB + ";\n" + bigintC,bigintRem,bigintE);
+            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC,bigintRem,bigintE);
           }
           if (bigintE.signum() > 0 && !bigintC.mod(bigintB).equals(bigintE)) {
             Assert.fail("TestMultiplyDivide " + bigintA + "; " + bigintB +
@@ -166,8 +164,7 @@ BigInteger[] divrem=(bigintC).divideAndRemainder(bigintA);
 bigintD = divrem[0];
 bigintRem = divrem[1]; }
           if (!bigintD.equals(bigintB)) {
-            Assert.assertEquals("TestMultiplyDivide " +
-              bigintA + "; " + bigintB,bigintB,bigintD);
+            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,bigintB,bigintD);
           }
           if (bigintRem.signum() != 0) {
             Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,BigInteger.ZERO,bigintRem);
@@ -181,8 +178,7 @@ bigintRem = divrem[1]; }
           bigintD = bigintB.multiply(bigintC);
           bigintD = bigintD.add(bigintRem);
           if (!bigintD.equals(bigintA)) {
-            Assert.assertEquals("TestMultiplyDivide " +
-              bigintA + "; " + bigintB,bigintA,bigintD);
+            Assert.assertEquals("TestMultiplyDivide " + bigintA + "; " + bigintB,bigintA,bigintD);
           }
         }
       }
@@ -560,19 +556,16 @@ bigintRem = divrem[1]; }
         BigInteger bigintC = bigintA.add(bigintB);
         BigInteger bigintD = bigintC.subtract(bigintB);
         if (!bigintD.equals(bigintA)) {
-          Assert.assertEquals("TestAddSubtract " + bigintA +
-            "; " + bigintB,bigintA,bigintD);
+          Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintA,bigintD);
         }
         bigintD = bigintC.subtract(bigintA);
         if (!bigintD.equals(bigintB)) {
-          Assert.assertEquals("TestAddSubtract " + bigintA +
-            "; " + bigintB,bigintB,bigintD);
+          Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintB,bigintD);
         }
         bigintC = bigintA.subtract(bigintB);
         bigintD = bigintC.add(bigintB);
         if (!bigintD.equals(bigintA)) {
-          Assert.assertEquals("TestAddSubtract " + bigintA +
-            "; " + bigintB,bigintA,bigintD);
+          Assert.assertEquals("TestAddSubtract " + bigintA + "; " + bigintB,bigintA,bigintD);
         }
       }
     }

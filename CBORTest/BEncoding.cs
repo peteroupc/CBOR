@@ -122,9 +122,9 @@ namespace PeterO {
         }
       }
       CBORObject number = CBORDataUtilities.ParseJSONNumber(
-                               builder.ToString(),
-                               true,
-                               true);
+        builder.ToString(),
+        true,
+        true);
       int length = 0;
       try {
         length = number.AsInt32();
@@ -152,8 +152,9 @@ namespace PeterO {
         if (length < 0) {
           throw new CBORException("invalid string");
         }
-        writeUtf8(Convert.ToString((long)length,
-          CultureInfo.InvariantCulture), stream);
+        writeUtf8(
+          Convert.ToString((long)length, CultureInfo.InvariantCulture),
+          stream);
         stream.WriteByte(unchecked((byte)((byte)':')));
         writeUtf8(s, stream);
       } else if (obj.Type == CBORType.Map) {
@@ -183,8 +184,9 @@ namespace PeterO {
             if (length < 0) {
               throw new CBORException("invalid string");
             }
-            writeUtf8(Convert.ToString((long)length,
-              CultureInfo.InvariantCulture), stream);
+            writeUtf8(
+              Convert.ToString((long)length, CultureInfo.InvariantCulture),
+              stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
             writeUtf8(key, stream);
             Write(value, stream);
@@ -198,8 +200,9 @@ namespace PeterO {
             if (length < 0) {
               throw new CBORException("invalid string");
             }
-            writeUtf8(Convert.ToString((long)length,
-              CultureInfo.InvariantCulture), stream);
+            writeUtf8(
+              Convert.ToString((long)length, CultureInfo.InvariantCulture),
+              stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
             writeUtf8(str, stream);
             Write(obj[key], stream);
@@ -218,8 +221,9 @@ namespace PeterO {
         if (length < 0) {
           throw new CBORException("invalid string");
         }
-        writeUtf8(Convert.ToString((long)length,
-          CultureInfo.InvariantCulture), stream);
+        writeUtf8(
+          Convert.ToString((long)length, CultureInfo.InvariantCulture),
+          stream);
         stream.WriteByte(unchecked((byte)((byte)':')));
         writeUtf8(str, stream);
       }

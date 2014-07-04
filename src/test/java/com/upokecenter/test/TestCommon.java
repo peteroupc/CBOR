@@ -22,8 +22,10 @@ private TestCommon() {
       AssertEqualsHashCode(a2, b);
     }
 
-    public static void DoTestDivide(String dividend, String divisor, String
-      result) {
+    public static void DoTestDivide(
+String dividend,
+String divisor,
+String result) {
       BigInteger bigintA = BigInteger.fromString(dividend);
       BigInteger bigintB = BigInteger.fromString(divisor);
       if (bigintB.signum() == 0) {
@@ -36,8 +38,10 @@ private TestCommon() {
       }
     }
 
-    public static void DoTestRemainder(String dividend, String divisor,
-      String result) {
+    public static void DoTestRemainder(
+String dividend,
+String divisor,
+String result) {
       BigInteger bigintA = BigInteger.fromString(dividend);
       BigInteger bigintB = BigInteger.fromString(divisor);
       if (bigintB.signum() == 0) {
@@ -50,8 +54,11 @@ private TestCommon() {
       }
     }
 
-    public static void DoTestDivideAndRemainder(String dividend, String
-      divisor, String result, String rem) {
+    public static void DoTestDivideAndRemainder(
+String dividend,
+String divisor,
+String result,
+String rem) {
       BigInteger bigintA = BigInteger.fromString(dividend);
       BigInteger bigintB = BigInteger.fromString(divisor);
       BigInteger rembi;
@@ -115,15 +122,17 @@ rembi = divrem[1]; }
       AssertBigIntegersEqual(result, bigintA.shiftLeft(-m2));
     }
 
-    public static void AssertDecFrac(ExtendedDecimal d3, String output,
-      String name) {
+    public static void AssertDecFrac(
+ExtendedDecimal d3,
+String output,
+String name) {
       if (output == null && d3 != null) {
         Assert.fail(name + ": d3 must be null");
       }
       if (output != null && !d3.toString().equals(output)) {
         ExtendedDecimal d4 = ExtendedDecimal.FromString(output);
         Assert.assertEquals(name + ": expected: [" + d4.getUnsignedMantissa() + " " + d4.getExponent() +
-            "]\\n" + "but was: [" + d3.getUnsignedMantissa() + " " + d3.getExponent()+
+            "]\\n" + "but was: [" + d3.getUnsignedMantissa() + " " + d3.getExponent() +
             "]",output,d3.toString());
       }
     }

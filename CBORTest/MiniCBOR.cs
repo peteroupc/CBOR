@@ -115,8 +115,10 @@ namespace Test {
       }
     }
 
-private static long ReadInteger(Stream stream, int headByte, bool
-      check32bit) {
+private static long ReadInteger(
+Stream stream,
+int headByte,
+bool check32bit) {
       int kind = headByte & 0x1f;
       if (kind == 0x18) {
         int b = stream.ReadByte();
@@ -158,7 +160,7 @@ private static long ReadInteger(Stream stream, int headByte, bool
           throw new IOException("Premature end of stream");
         }
         long b;
-        if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0||
+        if (check32bit && (bytes[0] != 0 || bytes[1] != 0 || bytes[2] != 0 ||
           bytes[3] != 0)) {
           throw new IOException("Not a 32-bit integer");
         }

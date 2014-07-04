@@ -15,12 +15,10 @@ namespace PeterO.Cbor {
   // are specific to the .NET framework.
   public sealed partial class CBORObject
   {
-    /// <summary>Converts this object to a 16-bit unsigned integer. The
-    /// return value
+    /// <summary>Converts this object to a 16-bit unsigned integer. The return value
     /// will be truncated as necessary.</summary>
     /// <returns>A 16-bit unsigned integer.</returns>
-    /// <exception cref='OverflowException' >This object's value is outside
-    /// the range
+    /// <exception cref='OverflowException'>This object's value is outside the range
     /// of a 16-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ushort AsUInt16() {
@@ -31,12 +29,10 @@ namespace PeterO.Cbor {
       return (ushort)v;
     }
 
-    /// <summary>Converts this object to a 32-bit unsigned integer. The
-    /// return value
+    /// <summary>Converts this object to a 32-bit unsigned integer. The return value
     /// will be truncated as necessary.</summary>
     /// <returns>A 32-bit unsigned integer.</returns>
-    /// <exception cref='OverflowException' >This object's value is outside
-    /// the range
+    /// <exception cref='OverflowException'>This object's value is outside the range
     /// of a 32-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public uint AsUInt32() {
@@ -63,14 +59,12 @@ namespace PeterO.Cbor {
       int scale,
       bool neg) {
       if (scale < 0) {
-        throw new ArgumentException("scale (" + Convert.ToString((int)scale,
-          System.Globalization.CultureInfo.InvariantCulture) +
-          ") is less than " + "0");
+        throw new ArgumentException(
+"scale (" + scale + ") is less than " + "0");
       }
       if (scale > 28) {
-        throw new ArgumentException("scale (" + Convert.ToString((int)scale,
-          System.Globalization.CultureInfo.InvariantCulture) +
-          ") is more than " + "28");
+        throw new ArgumentException(
+"scale (" + scale + ") is more than " + "28");
       }
       byte[] data = bigmant.ToByteArray();
       int a = 0;
@@ -178,11 +172,9 @@ namespace PeterO.Cbor {
 
     /// <summary>Converts this object to a .NET decimal.</summary>
     /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException' >This object's
-    /// type is not
+    /// <exception cref='System.InvalidOperationException'>This object's type is not
     /// a number type.</exception>
-    /// <exception cref='System.OverflowException' >This object's value
-    /// exceeds the
+    /// <exception cref='System.OverflowException'>This object's value exceeds the
     /// range of a .NET decimal.</exception>
     [CLSCompliant(false)]
     public decimal AsDecimal() {
@@ -193,15 +185,12 @@ namespace PeterO.Cbor {
         ExtendedDecimalToDecimal(this.AsExtendedDecimal()));
     }
 
-    /// <summary>Converts this object to a 64-bit unsigned integer. Floating
-    /// point
+    /// <summary>Converts this object to a 64-bit unsigned integer. Floating point
     /// values are truncated to an integer.</summary>
     /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException' >This object's
-    /// type is not
+    /// <exception cref='System.InvalidOperationException'>This object's type is not
     /// a number type.</exception>
-    /// <exception cref='System.OverflowException' >This object's value
-    /// exceeds the
+    /// <exception cref='System.OverflowException'>This object's value exceeds the
     /// range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
@@ -372,8 +361,7 @@ namespace PeterO.Cbor {
     /// resulting object a tag.</summary>
     /// <param name='o'>An arbitrary object.</param>
     /// <param name='tag'>A 64-bit unsigned integer.</param>
-    /// <returns>A CBOR object where the object <paramref name='o' /> is
-    /// converted to
+    /// <returns>A CBOR object where the object <paramref name='o'/> is converted to
     /// a CBOR object and given the tag <paramref name='tag'/> .</returns>
     [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
@@ -388,8 +376,7 @@ namespace PeterO.Cbor {
       return Addition(a, b);
     }
 
-    /// <summary>Subtracts a CBORObject object from a CBORObject
-    /// object.</summary>
+    /// <summary>Subtracts a CBORObject object from a CBORObject object.</summary>
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>A CBORObject object. (2).</param>
     /// <returns>The difference of the two objects.</returns>

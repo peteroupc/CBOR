@@ -1,8 +1,8 @@
 ﻿## PeterO.Cbor.CBORTypeFilter
 
-    public class CBORTypeFilter
+    public sealed class CBORTypeFilter
 
-Specifies what kinds of CBOR objects a tag can be. This class is used when a CBOR object is being read from a data stream.
+Specifies what kinds of CBOR objects a tag can be. This class is used when a CBOR object is being read from a data stream. This class cannot be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.
 
 ### WithUnsignedInteger
 
@@ -230,7 +230,7 @@ True if this filter allows CBOR arrays and an array's length is allowed under a 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bigLength</i>
+The parameter  <i>bigLength</i>
  is null.
 
 ### TagAllowed
@@ -281,7 +281,7 @@ True if CBOR objects can have the given tag number; otherwise, false.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bigTag</i>
+The parameter  <i>bigTag</i>
  is null.
 
 ### ArrayIndexAllowed

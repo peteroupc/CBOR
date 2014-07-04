@@ -76,7 +76,7 @@ True if a number can have the given Exponent property under this precision conte
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>exponent</i>
+The parameter  <i>exponent</i>
  is null.
 
 ### ToString
@@ -183,11 +183,11 @@ A PrecisionContext object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>exponentMin</i>
+The parameter  <i>exponentMin</i>
  is null.
 
  * System.ArgumentNullException: 
-The parameter <i>exponentMax</i>
+The parameter  <i>exponentMax</i>
  is null.
 
 ### WithNoFlags
@@ -288,7 +288,7 @@ A PrecisionContext object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bigintPrecision</i>
+The parameter  <i>bigintPrecision</i>
  is null.
 
 ### Copy
@@ -538,8 +538,7 @@ True if this context has a mutable Flags field; otherwise, false.
 
     public int Flags { get; set;}
 
-Gets or sets the flags that are set from converting numbers according to this precision context. If HasFlags is false, this value will be 0. This value is a combination of bit fields. To retrieve a particular flag, use the AND operation on the return value of this method. For example:  `(this.Flags & PrecisionContext.FlagInexact)
-            != 0` returns TRUE if the Inexact flag is set.
+Gets or sets the flags that are set from converting numbers according to this precision context. If HasFlags is false, this value will be 0. This value is a combination of bit fields. To retrieve a particular flag, use the AND operation on the return value of this method. For example: `(this.Flags & PrecisionContext.FlagInexact) != 0` returns TRUE if the Inexact flag is set.
 
 <b>Returns:</b>
 

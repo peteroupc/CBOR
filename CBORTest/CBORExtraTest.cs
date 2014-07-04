@@ -4231,8 +4231,10 @@ namespace Test {
       }
     }
 
-    private static short Divide32By16(int dividendLow, short divisor, bool
-                                      returnRemainder) {
+    private static short Divide32By16(
+int dividendLow,
+short divisor,
+bool returnRemainder) {
       int t;
       int dividendHigh = 0;
       int intDivisor = ((int)divisor) & 0xffff;
@@ -4281,7 +4283,8 @@ namespace Test {
     [TestMethod]
     public void TestOther() {
       CBORObject cbor = CBORObject.FromObject(new int[2, 3, 2]);
-      Assert.AreEqual("[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]" ,
+      Assert.AreEqual(
+"[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]" ,
                       cbor.ToJSONString());
       TestCommon.AssertRoundTrip(cbor);
     }
@@ -4344,11 +4347,16 @@ namespace Test {
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
         TestCommon.AssertSer(
           CBORObject.FromObject((decimal)i + 0.1m),
-          String.Format(CultureInfo.InvariantCulture, "{0}", (decimal)i + 0.1m));
+        String.Format(
+CultureInfo.InvariantCulture,
+"{0}" ,
+(decimal)i + 0.1m));
         TestCommon.AssertSer(
           CBORObject.FromObject((decimal)i + 0.1111m),
-          String.Format(CultureInfo.InvariantCulture, "{0}", (decimal)i +
-                        0.1111m));
+          String.Format(
+CultureInfo.InvariantCulture,
+"{0}",
+(decimal)i + 0.1111m));
       }
     }
 

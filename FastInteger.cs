@@ -16,11 +16,7 @@ namespace PeterO {
       internal static MutableNumber FromBigInteger(BigInteger bigintVal) {
         var mnum = new MutableNumber(0);
         if (bigintVal.Sign < 0) {
-          throw new ArgumentException("bigintVal's sign (" +
-            Convert.ToString(
-(int)bigintVal.Sign,
-System.Globalization.CultureInfo.InvariantCulture)
-            +") is less than " + "0 ");
+          throw new ArgumentException("bigintVal's sign (" + bigintVal.Sign + ") is less than " + "0 ");
         }
         byte[] bytes = bigintVal.ToByteArray();
         int len = bytes.Length;
@@ -53,9 +49,7 @@ System.Globalization.CultureInfo.InvariantCulture)
 
       internal MutableNumber(int val) {
         if (val < 0) {
-          throw new ArgumentException("val (" + Convert.ToString((int)val,
-            System.Globalization.CultureInfo.InvariantCulture)
-            +") is less than " + "0 ");
+          throw new ArgumentException("val (" + val + ") is less than " + "0 ");
         }
         this.data = new int[4];
         this.wordCount = (val == 0) ? 0 : 1;
@@ -64,9 +58,7 @@ System.Globalization.CultureInfo.InvariantCulture)
 
       internal MutableNumber SetInt(int val) {
         if (val < 0) {
-          throw new ArgumentException("val (" + Convert.ToString((int)val,
-            System.Globalization.CultureInfo.InvariantCulture)
-            +") is less than " + "0 ");
+          throw new ArgumentException("val (" + val + ") is less than " + "0 ");
         }
         this.wordCount = (val == 0) ? 0 : 1;
         this.data[0] = unchecked((int)(val & 0xFFFFFFFFL));
@@ -115,17 +107,12 @@ System.Globalization.CultureInfo.InvariantCulture)
 
     /// <summary>Multiplies this instance by the value of a 32-bit signed
     /// integer.</summary>
-    /// <summary>Multiplies this instance by the value of a Int32
-    /// object.</summary>
+    /// <summary>Multiplies this instance by the value of a Int32 object.</summary>
     /// <param name='multiplicand'>A 32-bit signed integer.</param>
     /// <returns>The product of the two objects.</returns>
       internal MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
-          throw new ArgumentException("multiplicand (" +
-            Convert.ToString(
-(int)multiplicand,
-System.Globalization.CultureInfo.InvariantCulture)
-            +") is less than " + "0 ");
+          throw new ArgumentException("multiplicand (" + multiplicand + ") is less than " + "0 ");
         }
         if (multiplicand != 0) {
           int carry = 0;
@@ -265,11 +252,7 @@ System.Globalization.CultureInfo.InvariantCulture)
       internal MutableNumber SubtractInt(
         int other) {
         if (other < 0) {
-          throw new ArgumentException("other (" +
-            Convert.ToString(
-(int)other,
-System.Globalization.CultureInfo.InvariantCulture)
-            +") is less than " + "0 ");
+          throw new ArgumentException("other (" + other + ") is less than " + "0 ");
         }
       if (other != 0) {
           unchecked {
@@ -384,11 +367,7 @@ System.Globalization.CultureInfo.InvariantCulture)
     /// <returns>This instance.</returns>
       internal MutableNumber Add(int augend) {
         if (augend < 0) {
-          throw new ArgumentException("augend (" +
-            Convert.ToString(
-(int)augend,
-System.Globalization.CultureInfo.InvariantCulture)
-            +") is less than " + "0 ");
+          throw new ArgumentException("augend (" + augend + ") is less than " + "0 ");
         }
         if (augend != 0) {
           int carry = 0;
@@ -486,8 +465,7 @@ System.Globalization.CultureInfo.InvariantCulture)
     /// <summary>Compares a FastInteger object with this instance.</summary>
     /// <summary>Compares a FastInteger object with this instance.</summary>
     /// <param name='val'>A FastInteger object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is
+    /// <returns>Zero if the values are equal; a negative number if this instance is
     /// less, or a positive number if this instance is greater.</returns>
     public int CompareTo(FastInteger val) {
       switch ((this.integerMode << 2) | val.integerMode) {
@@ -593,8 +571,7 @@ out bigrem);
       }
     }
 
-    /// <summary>Sets this object&apos;s value to the current value times
-    /// another
+    /// <summary>Sets this object&apos;s value to the current value times another
     /// integer.</summary>
     /// <param name='val'>The integer to multiply by.</param>
     /// <returns>This object.</returns>
@@ -679,8 +656,7 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&apos;s value to the current value minus
-    /// the given
+    /// <summary>Sets this object&apos;s value to the current value minus the given
     /// FastInteger value.</summary>
     /// <param name='val'>The subtrahend.</param>
     /// <returns>This object.</returns>
@@ -730,8 +706,7 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&apos;s value to the current value minus
-    /// the given
+    /// <summary>Sets this object&apos;s value to the current value minus the given
     /// integer.</summary>
     /// <param name='val'>The subtrahend.</param>
     /// <returns>This object.</returns>
@@ -754,8 +729,7 @@ out bigrem);
       return this.AddInt(-val);
     }
 
-    /// <summary>Sets this object&apos;s value to the current value plus the
-    /// given
+    /// <summary>Sets this object&apos;s value to the current value plus the given
     /// integer.</summary>
     /// <param name='bigintVal'>The number to add.</param>
     /// <returns>This object.</returns>
@@ -779,8 +753,7 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&apos;s value to the current value minus
-    /// the given
+    /// <summary>Sets this object&apos;s value to the current value minus the given
     /// integer.</summary>
     /// <param name='bigintVal'>The subtrahend.</param>
     /// <returns>This object.</returns>
@@ -855,8 +828,7 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&apos;s value to the remainder of the
-    /// current value
+    /// <summary>Sets this object&apos;s value to the remainder of the current value
     /// divided by the given integer.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <returns>This object.</returns>
@@ -964,8 +936,7 @@ out bigrem);
 
     /// <summary>Gets a value indicating whether this object&apos;s value is
     /// even.</summary>
-    /// <value>True if this object&apos;s value is even; otherwise,
-    /// false.</value>
+    /// <value>True if this object&apos;s value is even; otherwise, false.</value>
     internal bool IsEvenNumber {
       get {
         switch (this.integerMode) {
@@ -1094,8 +1065,7 @@ System.Globalization.CultureInfo.InvariantCulture);
     /// <summary>Compares a 32-bit signed integer with this instance.</summary>
     /// <summary>Compares a Int32 object with this instance.</summary>
     /// <param name='val'>A 32-bit signed integer.</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is
+    /// <returns>Zero if the values are equal; a negative number if this instance is
     /// less, or a positive number if this instance is greater.</returns>
     internal int CompareToInt(int val) {
       switch (this.integerMode) {
