@@ -106,8 +106,8 @@ Stream stream,
 long uadditional,
 Stream outputStream) {
       if ((uadditional >> 63) != 0 || uadditional > Int32.MaxValue) {
-        throw new CBORException("Length" + ToUnsignedBigInteger(uadditional)
-          +" is bigger than supported ");
+        throw new CBORException("Length" + ToUnsignedBigInteger(uadditional) +
+          " is bigger than supported ");
       }
       if (uadditional <= 0x10000) {
         // Simple case: small size
@@ -299,8 +299,8 @@ Stream outputStream) {
               }
               long len = ReadDataLength(this.stream, nextByte, 2);
               if ((len >> 63) != 0 || len > Int32.MaxValue) {
-                throw new CBORException("Length" + ToUnsignedBigInteger(len)
-                  +" is bigger than supported ");
+                throw new CBORException("Length" + ToUnsignedBigInteger(len) +
+                  " is bigger than supported ");
               }
               if (nextByte != 0x40) {  // NOTE: 0x40 means the empty byte string
                 ReadByteData(this.stream, len, ms);
@@ -348,8 +348,8 @@ CultureInfo.InvariantCulture) + " is bigger than supported");
             }
             long len = ReadDataLength(this.stream, nextByte, 3);
             if ((len >> 63) != 0 || len > Int32.MaxValue) {
-              throw new CBORException("Length" + ToUnsignedBigInteger(len)
-                +" is bigger than supported");
+              throw new CBORException("Length" + ToUnsignedBigInteger(len) +
+                " is bigger than supported");
             }
             if (nextByte != 0x60) {  // NOTE: 0x60 means the empty string
               switch (

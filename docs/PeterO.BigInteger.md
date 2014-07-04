@@ -29,7 +29,7 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bytes</i>
+The parameter  <i>bytes</i>
  is null.
 
 ### testBit
@@ -161,7 +161,7 @@ A 64-bit signed integer.
 
     public int intValue();
 
-Converts this object's value to a 32-bit signed integer. To make the conversion intention clearer, use the  `intValueChecked` and  `intValueUnchecked` methods instead.
+Converts this object's value to a 32-bit signed integer. To make the conversion intention clearer, use the  `intValueChecked` and `intValueUnchecked` methods instead.
 
 <b>Returns:</b>
 
@@ -186,7 +186,7 @@ True if this object's value is MinValue or greater, and MaxValue or less; otherw
 
     public long longValue();
 
-Converts this object's value to a 64-bit signed integer. To make the conversion intention clearer, use the  `longValueChecked` and  `longValueUnchecked` methods instead.
+Converts this object's value to a 64-bit signed integer. To make the conversion intention clearer, use the  `longValueChecked` and `longValueUnchecked` methods instead.
 
 <b>Returns:</b>
 
@@ -215,7 +215,7 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>power</i>
+The parameter  <i>power</i>
  is null.
 
 ### pow
@@ -311,12 +311,12 @@ A BigInteger object with the same value as given in the string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>str</i>
- is null.
+The parameter  <i>str</i>
+is null.
 
  * System.FormatException: 
 The parameter  <i>str</i>
-is in an invalid format.
+ is in an invalid format.
 
 ### fromSubstring
 
@@ -342,12 +342,12 @@ A BigInteger object with the same value as given in the string portion.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>str</i>
- is null.
+The parameter  <i>str</i>
+is null.
 
  * System.ArgumentException: 
 The parameter  <i>index</i>
- is less than 0,  <i>endIndex</i>
+is less than 0,  <i>endIndex</i>
  is less than 0, or either is greater than the string's length, or  <i>endIndex</i>
  is less than  <i>index</i>
  .
@@ -383,7 +383,7 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bigintSecond</i>
+The parameter  <i>bigintSecond</i>
  is null.
 
 ### ModPow
@@ -407,8 +407,8 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>pow</i>
- is null.
+The parameter  <i>pow</i>
+is null.
 
 ### Equals
 
@@ -453,7 +453,7 @@ The sum of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bigintAugend</i>
+The parameter  <i>bigintAugend</i>
  is null.
 
 ### subtract
@@ -474,7 +474,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>subtrahend</i>
+The parameter  <i>subtrahend</i>
  is null.
 
 ### multiply
@@ -495,7 +495,7 @@ The product of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bigintMult</i>
+The parameter  <i>bigintMult</i>
  is null.
 
 ### divide
@@ -519,7 +519,7 @@ The quotient of the two objects.
 The divisor is zero.
 
  * System.ArgumentNullException: 
-The parameter <i>bigintDivisor</i>
+The parameter  <i>bigintDivisor</i>
  is null.
 
  * System.DivideByZeroException: 
@@ -573,7 +573,7 @@ The parameter  <i>divisor</i>
  is negative.
 
  * System.ArgumentNullException: 
-The parameter <i>divisor</i>
+The parameter  <i>divisor</i>
  is null.
 
 ### remainder
@@ -594,7 +594,7 @@ The remainder of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>divisor</i>
+The parameter  <i>divisor</i>
  is null.
 
  * System.DivideByZeroException: 
@@ -674,7 +674,7 @@ The sum of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bthis</i>
+The parameter  <i>bthis</i>
  is null.
 
 ### Operator `-`
@@ -698,7 +698,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bthis</i>
+The parameter  <i>bthis</i>
  is null.
 
 ### Operator `*`
@@ -722,7 +722,7 @@ The product of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>operand1</i>
+The parameter  <i>operand1</i>
  is null.
 
 ### Operator `/`
@@ -746,7 +746,7 @@ The quotient of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>dividend</i>
+The parameter  <i>dividend</i>
  is null.
 
 ### Operator `%`
@@ -770,7 +770,7 @@ The remainder of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>dividend</i>
+The parameter  <i>dividend</i>
  is null.
 
 ### Operator `<<`
@@ -794,7 +794,7 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bthis</i>
+The parameter  <i>bthis</i>
  is null.
 
 ### ModPow
@@ -818,13 +818,13 @@ Calculates the remainder when a BigInteger raised to a certain power is divided 
 
 The value (  <i>bigintValue</i>
  ^  <i>pow</i>
- )%  <i>mod</i>
+)%  <i>mod</i>
  .
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bigintValue</i>
+The parameter  <i>bigintValue</i>
  is null.
 
 ### Operator `>>`
@@ -848,7 +848,7 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bthis</i>
+The parameter  <i>bthis</i>
  is null.
 
 ### Operator `-`
@@ -869,7 +869,7 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bigValue</i>
+The parameter  <i>bigValue</i>
  is null.
 
 ### Operator `<`
@@ -929,7 +929,7 @@ Determines whether a BigInteger instance is greater than another BigInteger inst
 <b>Returns:</b>
 
 True if  <i>thisValue</i>
- is greater than <i>otherValue</i>
+ is greater than  <i>otherValue</i>
  ; otherwise, false.
 
 ### Operator `>=`
@@ -970,7 +970,7 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>thisValue</i>
+The parameter  <i>thisValue</i>
  is null.
 
 ### GetBits
@@ -1012,7 +1012,7 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bigintFirst</i>
+The parameter  <i>bigintFirst</i>
  is null.
 
 ### ToByteArray
@@ -1046,7 +1046,7 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bigValue</i>
+The parameter  <i>bigValue</i>
  or  <i>power</i>
  is null.
 
@@ -1071,7 +1071,7 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bigValue</i>
+The parameter  <i>bigValue</i>
  is null.
 
 ### Equals
@@ -1107,7 +1107,7 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>valueA</i>
+The parameter  <i>valueA</i>
  is null.
 
 ### And
@@ -1131,8 +1131,8 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>a</i>
- or  <i>b</i>
+The parameter  <i>a</i>
+or  <i>b</i>
  is null.
 
 ### Or
@@ -1156,7 +1156,7 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>first</i>
+The parameter  <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1181,8 +1181,8 @@ A BigInteger object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>a</i>
- or  <i>b</i>
+The parameter  <i>a</i>
+or  <i>b</i>
  is null.
 
 ### Sign

@@ -374,32 +374,23 @@ private URIUtility() {
         return false;
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" +
-                                    Integer.toString((int)(long)offset) +
-                                    ") is less than " + "0 ");
+        throw new IllegalArgumentException("offset (" + offset + ") is less than " + "0 ");
       }
       if (offset > s.length()) {
-        throw new IllegalArgumentException("offset (" +
-                                    Integer.toString((int)(long)offset) +
-                     ") is more than " +
-                                      Integer.toString((int)(long)s.length()));
+        throw new IllegalArgumentException("offset (" + offset + ") is more than " + s.length());
       }
       if (length < 0) {
-        throw new IllegalArgumentException("length (" +
-                                    Integer.toString((int)(long)length) +
-                                    ") is less than " + "0 ");
+        throw new IllegalArgumentException(
+          "length (" + length + ") is less than " + "0 ");
       }
       if (length > s.length()) {
-        throw new IllegalArgumentException("length (" +
-                                    Integer.toString((int)(long)length) +
-                     ") is more than " +
-                                      Integer.toString((int)(long)s.length()));
+        throw new IllegalArgumentException(
+          "length (" + length + ") is more than " + s.length());
       }
       if (s.length() - offset < length) {
-        throw new IllegalArgumentException("s's length minus " + offset + " (" +
-                               Integer.toString((int)(long)(s.length() - offset)) +
-                       ") is less than " +
-                                      Integer.toString((int)(long)length));
+        throw new IllegalArgumentException(
+          "s's length minus " + offset + " (" + (s.length() - offset) +
+          ") is less than " + length);
       }
       if (length == 0) {
         return true;
@@ -474,7 +465,8 @@ private URIUtility() {
         return "";
       }
       if (path.indexOf("/. ") < 0 &&
-          path.indexOf("./ ") < 0) {
+          path.indexOf(
+"./ ") < 0) {
         return path;
       }
       StringBuilder builder = new StringBuilder();
@@ -793,8 +785,9 @@ private URIUtility() {
                 return -1;
               }
               if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-      (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-' || c ==
-                    '~') {
+             (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-' ||
+                    c ==
+                  '~') {
                 // unreserved character under RFC3986
                 ++index;
                 haveChar = true;
@@ -1017,14 +1010,15 @@ private URIUtility() {
           ++index;
           break;
         }
-        if (strict && index == offset && !((c >= 'a' && c <= 'z') || (c >=
-                                                           'A' && c <= 'Z'
-))) {
+        if (strict && index == offset && !((c >= 'a' && c <= 'z') ||
+                                           (c >= 'A' && c <=
+                                                               'Z'))) {
           break;
         }
         if (strict && index > offset &&
-!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <=
-              '9') ||
+        !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' &&
+              c <=
+                                                                   '9') ||
               c == '+' || c == '-' || c == '.')) {
           break;
         }

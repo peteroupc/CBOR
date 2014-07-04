@@ -19,12 +19,12 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("b");
       }
       if (a.Type != CBORType.Number) {
-        throw new ArgumentException("a.Type (" + a.Type
-          +") is not equal to " + CBORType.Number);
+        throw new ArgumentException("a.Type (" + a.Type +
+          ") is not equal to " + CBORType.Number);
       }
       if (b.Type != CBORType.Number) {
-        throw new ArgumentException("b.Type (" + b.Type
-          +") is not equal to " + CBORType.Number);
+        throw new ArgumentException("b.Type (" + b.Type +
+          ") is not equal to " + CBORType.Number);
       }
       object objA = a.ThisItem;
       object objB = b.ThisItem;
@@ -84,12 +84,12 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("b");
       }
       if (a.Type != CBORType.Number) {
-        throw new ArgumentException("a.Type (" + a.Type
-          +") is not equal to " + CBORType.Number);
+        throw new ArgumentException("a.Type (" + a.Type +
+          ") is not equal to " + CBORType.Number);
       }
       if (b.Type != CBORType.Number) {
-        throw new ArgumentException("b.Type (" + b.Type
-          +") is not equal to " + CBORType.Number);
+        throw new ArgumentException("b.Type (" + b.Type +
+          ") is not equal to " + CBORType.Number);
       }
       object objA = a.ThisItem;
       object objB = b.ThisItem;
@@ -149,12 +149,12 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("b");
       }
       if (a.Type != CBORType.Number) {
-        throw new ArgumentException("a.Type (" + a.Type
-          +") is not equal to " + CBORType.Number);
+        throw new ArgumentException("a.Type (" + a.Type +
+          ") is not equal to " + CBORType.Number);
       }
       if (b.Type != CBORType.Number) {
-        throw new ArgumentException("b.Type (" + b.Type
-          +") is not equal to " + CBORType.Number);
+        throw new ArgumentException("b.Type (" + b.Type +
+          ") is not equal to " + CBORType.Number);
       }
       object objA = a.ThisItem;
       object objB = b.ThisItem;
@@ -221,12 +221,12 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("b");
       }
       if (a.Type != CBORType.Number) {
-        throw new ArgumentException("a.Type (" + a.Type
-          +") is not equal to " + CBORType.Number);
+        throw new ArgumentException("a.Type (" + a.Type +
+          ") is not equal to " + CBORType.Number);
       }
       if (b.Type != CBORType.Number) {
-        throw new ArgumentException("b.Type (" + b.Type
-          +") is not equal to " + CBORType.Number);
+        throw new ArgumentException("b.Type (" + b.Type +
+          ") is not equal to " + CBORType.Number);
       }
       object objA = a.ThisItem;
       object objB = b.ThisItem;
@@ -326,12 +326,12 @@ new ExtendedRational(
         throw new ArgumentNullException("b");
       }
       if (a.Type != CBORType.Number) {
-        throw new ArgumentException("a.Type (" + a.Type
-          +") is not equal to " + CBORType.Number);
+        throw new ArgumentException("a.Type (" + a.Type +
+          ") is not equal to " + CBORType.Number);
       }
       if (b.Type != CBORType.Number) {
-        throw new ArgumentException("b.Type (" + b.Type
-          +") is not equal to " + CBORType.Number);
+        throw new ArgumentException("b.Type (" + b.Type +
+          ") is not equal to " + CBORType.Number);
       }
       object objA = a.ThisItem;
       object objB = b.ThisItem;

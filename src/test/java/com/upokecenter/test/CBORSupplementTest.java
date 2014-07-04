@@ -153,8 +153,9 @@ import com.upokecenter.cbor.*;
         throw new IllegalStateException("", ex);
       }
       Assert.assertEquals(CBORObject.Null, CBORObject.FromObject((byte[])null));
-   Assert.assertEquals(CBORObject.Null,
-        CBORObject.FromObject((CBORObject[])null));
+   Assert.assertEquals(
+CBORObject.Null,
+CBORObject.FromObject((CBORObject[])null));
       Assert.assertEquals(CBORObject.True, CBORObject.FromObject(true));
       Assert.assertEquals(CBORObject.False, CBORObject.FromObject(false));
       Assert.assertEquals(CBORObject.FromObject(8), CBORObject.FromObject((byte)8));
@@ -429,8 +430,9 @@ if (CBORObject.FromObject(ExtendedDecimal.NaN)
         throw new IllegalStateException("", ex);
       }
       Assert.assertEquals(ExtendedDecimal.Zero, ExtendedDecimal.FromString("0"));
-  Assert.assertEquals(ExtendedDecimal.Zero, ExtendedDecimal.FromString("0" ,
-        null));
+  Assert.assertEquals(
+ExtendedDecimal.Zero,
+ExtendedDecimal.FromString("0" , null));
       try {
         ExtendedDecimal.FromString(null, null);
         Assert.fail("Should have failed");
@@ -691,8 +693,9 @@ if (CBORObject.FromObject(ExtendedDecimal.NaN)
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("Infinity" ,
-          PrecisionContext.Unlimited.WithSimplified(true));
+        ExtendedFloat.FromString(
+"Infinity" ,
+PrecisionContext.Unlimited.WithSimplified(true));
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -700,8 +703,9 @@ if (CBORObject.FromObject(ExtendedDecimal.NaN)
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("-Infinity" ,
-          PrecisionContext.Unlimited.WithSimplified(true));
+        ExtendedFloat.FromString(
+"-Infinity" ,
+PrecisionContext.Unlimited.WithSimplified(true));
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -709,8 +713,9 @@ if (CBORObject.FromObject(ExtendedDecimal.NaN)
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("NaN" ,
-          PrecisionContext.Unlimited.WithSimplified(true));
+        ExtendedFloat.FromString(
+"NaN" ,
+PrecisionContext.Unlimited.WithSimplified(true));
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -718,8 +723,9 @@ if (CBORObject.FromObject(ExtendedDecimal.NaN)
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("sNaN" ,
-          PrecisionContext.Unlimited.WithSimplified(true));
+        ExtendedFloat.FromString(
+"sNaN" ,
+PrecisionContext.Unlimited.WithSimplified(true));
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -727,8 +733,9 @@ if (CBORObject.FromObject(ExtendedDecimal.NaN)
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("Infinity" ,
-          PrecisionContext.Unlimited.WithSimplified(true));
+        ExtendedFloat.FromString(
+"Infinity" ,
+PrecisionContext.Unlimited.WithSimplified(true));
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -736,8 +743,9 @@ if (CBORObject.FromObject(ExtendedDecimal.NaN)
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("-Infinity" ,
-          PrecisionContext.Unlimited.WithSimplified(true));
+        ExtendedFloat.FromString(
+"-Infinity" ,
+PrecisionContext.Unlimited.WithSimplified(true));
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -745,8 +753,9 @@ if (CBORObject.FromObject(ExtendedDecimal.NaN)
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("NaN" ,
-          PrecisionContext.Unlimited.WithSimplified(true));
+        ExtendedFloat.FromString(
+"NaN" ,
+PrecisionContext.Unlimited.WithSimplified(true));
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -754,8 +763,9 @@ if (CBORObject.FromObject(ExtendedDecimal.NaN)
         throw new IllegalStateException("", ex);
       }
       try {
-        ExtendedFloat.FromString("sNaN" ,
-          PrecisionContext.Unlimited.WithSimplified(true));
+        ExtendedFloat.FromString(
+"sNaN" ,
+PrecisionContext.Unlimited.WithSimplified(true));
         Assert.fail("Should have failed");
       } catch (NumberFormatException ex) {
       } catch (Exception ex) {
@@ -991,10 +1001,12 @@ try { if (ms2 != null)ms2.close(); } catch (java.io.IOException ex) {}
       co2 = CBORObject.FromObject(Double.POSITIVE_INFINITY);
       Assert.assertEquals(0, co.compareTo(co2));
       Assert.assertEquals(0, co2.compareTo(co));
-      co = CBORObject.NewMap().Add(ExtendedDecimal.PositiveInfinity,
-        CBORObject.Undefined);
-  co2 = CBORObject.NewMap().Add(Double.POSITIVE_INFINITY,
-        CBORObject.Undefined);
+      co = CBORObject.NewMap().Add(
+ExtendedDecimal.PositiveInfinity,
+CBORObject.Undefined);
+  co2 = CBORObject.NewMap().Add(
+Double.POSITIVE_INFINITY,
+CBORObject.Undefined);
       Assert.assertEquals(0, co.compareTo(co2));
       Assert.assertEquals(0, co2.compareTo(co));
     }
@@ -1043,9 +1055,9 @@ bytes = new byte[] { (byte)0x9f, (byte)0xd8, 28, 1, (byte)0xd8, 29, 0, 3, 3, (by
         Assert.assertEquals(c2r, c2d);
       }
       // System.out.println("compareTo: " + (sw1.getElapsedMilliseconds()/1000.0)
-      //+ " s");
+      // + " s");
       // System.out.println("CompareToDecimal: " +
-      //(sw2.getElapsedMilliseconds()/1000.0) + " s");
+      // (sw2.getElapsedMilliseconds()/1000.0) + " s");
     }
 
     @Test
@@ -1075,10 +1087,12 @@ bytes = new byte[] { (byte)0x9f, (byte)0xd8, 28, 1, (byte)0xd8, 29, 0, 3, 3, (by
       for (int i = 0; i < 100; ++i) {
         ExtendedRational er;
         ExtendedRational er2;
-      er = new ExtendedRational(CBORTest.RandomBigInteger(fr),
-          BigInteger.ONE);
-     er2 = new ExtendedRational(CBORTest.RandomBigInteger(fr),
-          BigInteger.ONE);
+      er = new ExtendedRational(
+CBORTest.RandomBigInteger(fr),
+BigInteger.ONE);
+     er2 = new ExtendedRational(
+CBORTest.RandomBigInteger(fr),
+BigInteger.ONE);
         if (er2.signum() == 0 || !er2.isFinite()) {
           continue;
         }
@@ -1446,11 +1460,12 @@ bytes = new byte[] { (byte)0x9f, (byte)0xd8, 28, 1, (byte)0xd8, 29, 0, 3, 3, (by
       }
 
       Assert.assertEquals(BigInteger.ZERO, CBORObject.DecodeFromBytes(new byte[] { (byte)0xc2, 0x40  }).AsBigInteger());
-      Assert.assertEquals(BigInteger.ZERO.subtract(BigInteger.ONE),
-   CBORObject.DecodeFromBytes(new byte[] { (byte)0xc3, 0x41, 0x00
-           }).AsBigInteger());
-      Assert.assertEquals(BigInteger.ZERO.subtract(BigInteger.ONE),
-        CBORObject.DecodeFromBytes(new byte[] { (byte)0xc3, 0x40  }).AsBigInteger());
+      Assert.assertEquals(
+BigInteger.ZERO.subtract(BigInteger.ONE),
+CBORObject.DecodeFromBytes(new byte[] { (byte)0xc3, 0x41, 0x00  }).AsBigInteger());
+      Assert.assertEquals(
+BigInteger.ZERO.subtract(BigInteger.ONE),
+CBORObject.DecodeFromBytes(new byte[] { (byte)0xc3, 0x40  }).AsBigInteger());
     }
 
     @Test
@@ -1667,7 +1682,7 @@ CBORObject.DecodeFromBytes(new byte[] { (byte)0xc3, 0x43, 1, 0, 0  }).AsBigInteg
         0x01,
         (byte)0xff  });
       String expected =
-        "[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]" ;
+        "[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.assertEquals(expected, cbor.ToJSONString());
       cbor = CBORObject.DecodeFromBytes(
         new byte[] { (byte)0xd9,
@@ -1705,7 +1720,7 @@ CBORObject.DecodeFromBytes(new byte[] { (byte)0xc3, 0x43, 1, 0, 0  }).AsBigInteg
         (byte)0xff  });
       expected =
   "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]"
-        ;
+;
       Assert.assertEquals(expected, cbor.ToJSONString());
     }
 

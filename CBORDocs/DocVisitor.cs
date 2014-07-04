@@ -181,14 +181,17 @@ namespace PeterO.DocGen {
       return builder.ToString();
     }
 
-    public static void AppendConstraints(Type[] genericArguments, StringBuilder builder) {
+    public static void AppendConstraints(
+Type[] genericArguments,
+StringBuilder builder) {
       foreach (var arg in genericArguments) {
         if (arg.IsGenericParameter) {
           var constraints = arg.GetGenericParameterConstraints();
           if (constraints.Length == 0 && (arg.GenericParameterAttributes &
             (GenericParameterAttributes.ReferenceTypeConstraint |
             GenericParameterAttributes.NotNullableValueTypeConstraint |
-            GenericParameterAttributes.DefaultConstructorConstraint)) == GenericParameterAttributes.None) {
+            GenericParameterAttributes.DefaultConstructorConstraint)) ==
+              GenericParameterAttributes.None) {
             continue;
           }
           builder.Append("\r\n" + FourSpaces + FourSpaces + "where ");
@@ -196,7 +199,8 @@ namespace PeterO.DocGen {
           builder.Append(" : ");
           bool first = true;
           if ((arg.GenericParameterAttributes &
-            GenericParameterAttributes.ReferenceTypeConstraint) != GenericParameterAttributes.None) {
+            GenericParameterAttributes.ReferenceTypeConstraint) !=
+              GenericParameterAttributes.None) {
             if (!first) {
               builder.Append(", ");
             }
@@ -204,7 +208,8 @@ namespace PeterO.DocGen {
             first = false;
           }
           if ((arg.GenericParameterAttributes &
-            GenericParameterAttributes.NotNullableValueTypeConstraint) != GenericParameterAttributes.None) {
+            GenericParameterAttributes.NotNullableValueTypeConstraint) !=
+              GenericParameterAttributes.None) {
             if (!first) {
               builder.Append(", ");
             }
@@ -212,7 +217,8 @@ namespace PeterO.DocGen {
             first = false;
           }
           if ((arg.GenericParameterAttributes &
-            GenericParameterAttributes.DefaultConstructorConstraint) != GenericParameterAttributes.None) {
+            GenericParameterAttributes.DefaultConstructorConstraint) !=
+              GenericParameterAttributes.None) {
             if (!first) {
               builder.Append(", ");
             }
@@ -252,7 +258,8 @@ namespace PeterO.DocGen {
         }
         if (method.IsFinal) {
           builder.Append("sealed ");
-        } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
+     } else if (method is MethodInfo &&
+          IsMethodOverride((MethodInfo)method)) {
           builder.Append("override ");
         } else if (method.IsVirtual) {
           builder.Append("virtual ");
@@ -319,7 +326,9 @@ namespace PeterO.DocGen {
     private static bool PropertyIsPublicOrFamily(PropertyInfo property) {
       MethodInfo getter = property.GetGetMethod();
       MethodInfo setter = property.GetSetMethod();
-      return ((getter != null && getter.IsPublic) || (setter != null && setter.IsPublic)) || ((getter != null && getter.IsFamily) || (setter != null && setter.IsFamily));
+      return ((getter != null && getter.IsPublic) || (setter != null &&
+        setter.IsPublic)) || ((getter != null && getter.IsFamily) || (setter !=
+        null && setter.IsFamily));
     }
 
     public static string FormatProperty(PropertyInfo property) {
@@ -460,7 +469,18 @@ namespace PeterO.DocGen {
         return name;
       }
       name = type.Namespace + "." + name;
-      return name.Equals("System.Int32") ? "int" : (name.Equals("System.Int64") ? "long" : (name.Equals("System.Int16") ? "short" : (name.Equals("System.UInt32") ? "uint" : (name.Equals("System.UInt64") ? "ulong" : (name.Equals("System.UInt16") ? "ushort" : (name.Equals("System.Char") ? "char" : (name.Equals("System.Object") ? "object" : (name.Equals("System.Void") ? "void" : (name.Equals("System.Byte") ? "byte" : (name.Equals("System.SByte") ? "sbyte" : (name.Equals("System.String") ? "string" : (name.Equals("System.Boolean") ? "bool" : (name.Equals("System.Single") ? "float" : (name.Equals("System.Double") ? "double" : name))))))))))))));
+      return name.Equals("System.Int32") ? "int" :
+        (name.Equals("System.Int64") ? "long" : (name.Equals("System.Int16"
+) ? "short" : (name.Equals("System.UInt32") ? "uint" :
+        (name.Equals("System.UInt64") ? "ulong" :
+        (name.Equals("System.UInt16") ? "ushort" :
+        (name.Equals("System.Char") ? "char" : (name.Equals("System.Object"
+) ? "object" : (name.Equals("System.Void") ? "void" :
+        (name.Equals("System.Byte") ? "byte" : (name.Equals("System.SByte"
+) ? "sbyte" : (name.Equals("System.String") ? "string" :
+        (name.Equals("System.Boolean") ? "bool" :
+        (name.Equals("System.Single") ? "float" :
+        (name.Equals("System.Double") ? "double" : name))))))))))))));
     }
 
     public static bool IsMethodOverride(MethodInfo method) {
@@ -541,12 +561,15 @@ namespace PeterO.DocGen {
         }
         signature = FormatMethod(method);
         if (method is ConstructorInfo) {
-          this.WriteLine("### " + UndecorateTypeName(method.ReflectedType.Name) +
+        this.WriteLine("### " +
+            UndecorateTypeName(method.ReflectedType.Name) +
             " Constructor\r\n\r\n" + signature + "\r\n\r\n");
         } else {
-          this.WriteLine("### " + MethodNameHeading(method.Name) + "\r\n\r\n" + signature + "\r\n\r\n");
+          this.WriteLine("### " + MethodNameHeading(method.Name) +
+            "\r\n\r\n" + signature + "\r\n\r\n");
         }
-        var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
+        var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+          ObsoleteAttribute;
         if (attr != null) {
           this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
         }
@@ -574,7 +597,8 @@ namespace PeterO.DocGen {
         }
         this.WriteLine("## " + FormatType(type) + "\r\n\r\n");
         this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
-        var attr = type.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
+        var attr = type.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+          ObsoleteAttribute;
         if (attr != null) {
           this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
         }
@@ -587,8 +611,10 @@ namespace PeterO.DocGen {
           return;
         }
         signature = FormatProperty(property);
-        this.WriteLine("### " + property.Name + "\r\n\r\n" + signature + "\r\n\r\n");
-        var attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as ObsoleteAttribute;
+  this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
+          "\r\n\r\n");
+        var attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+          ObsoleteAttribute;
         if (attr != null) {
           this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
         }
@@ -612,13 +638,16 @@ namespace PeterO.DocGen {
           return;
         }
         signature = FormatField(field);
-        this.WriteLine("### " + field.Name + "\r\n\r\n" + signature + "\r\n\r\n");
+     this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
+          "\r\n\r\n");
         base.VisitMember(member);
       }
     }
 
     private static string MethodNameHeading(string p) {
-      return operators.ContainsKey(p) ? ("Operator `" + operators[p] + "`") : (p.Equals("op_Explicit") ? "Explicit Operator" : (p.Equals("op_Implicit") ? "Implicit Operator" : p));
+      return operators.ContainsKey(p) ? ("Operator `" + operators[p] + "`") :
+        (p.Equals("op_Explicit") ? "Explicit Operator" :
+        (p.Equals("op_Implicit") ? "Implicit Operator" : p));
     }
 
     public override void VisitSummary(Summary summary) {

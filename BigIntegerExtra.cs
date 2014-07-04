@@ -114,9 +114,8 @@ BigInteger divisor) {
     /// <param name='bigintValue'>A BigInteger object.</param>
     /// <param name='pow'>A BigInteger object. (2).</param>
     /// <param name='mod'>A BigInteger object. (3).</param>
-    /// <returns>The value (<paramref name='bigintValue' /> ^ <paramref
-    /// name='pow' />
-    ///)% <paramref name='mod'/> .</returns>
+    /// <returns>The value ( <paramref name='bigintValue'/> ^ <paramref name='pow'/>
+    /// )% <paramref name='mod'/> .</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintValue'/> is null.</exception>
     public static BigInteger ModPow(
@@ -129,15 +128,13 @@ BigInteger mod) {
       return bigintValue.ModPow(pow, mod);
     }
 
-    /// <summary>Shifts the bits of a BigInteger instance to the
-    /// right.</summary>
+    /// <summary>Shifts the bits of a BigInteger instance to the right.</summary>
     /// <param name='bthis'>A BigInteger object. (2).</param>
     /// <param name='bigValue'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bthis'/> is null.</exception>
-    /// <remarks>For this operation, the BigInteger is treated as a two's
-    /// complement
+    /// <remarks>For this operation, the BigInteger is treated as a two's complement
     /// representation. Thus, for negative values, the BigInteger is
     /// sign-extended.</remarks>
     public static BigInteger operator >>(BigInteger bthis, int bigValue) {
@@ -164,8 +161,7 @@ BigInteger mod) {
     /// <param name='bigValue'>A BigInteger object.</param>
     /// <returns>A 64-bit signed integer with the same value as the BigInteger
     /// object.</returns>
-    /// <exception cref='OverflowException' >This object's value is too big
-    /// to fit a
+    /// <exception cref='OverflowException'>This object's value is too big to fit a
     /// 64-bit signed integer.</exception>
     public static explicit operator long(BigInteger bigValue) {
       return bigValue.longValueChecked();
@@ -176,8 +172,7 @@ BigInteger mod) {
     /// <param name='bigValue'>A BigInteger object.</param>
     /// <returns>A 32-bit signed integer with the same value as the BigInteger
     /// object.</returns>
-    /// <exception cref='OverflowException' >This object's value is too big
-    /// to fit a
+    /// <exception cref='OverflowException'>This object's value is too big to fit a
     /// 32-bit signed integer.</exception>
     public static explicit operator int(BigInteger bigValue) {
       return bigValue.intValueChecked();
@@ -194,8 +189,7 @@ BigInteger mod) {
         (thisValue.CompareTo(otherValue) < 0);
     }
 
-    /// <summary>Determines whether a BigInteger instance is less than or
-    /// equal to
+    /// <summary>Determines whether a BigInteger instance is less than or equal to
     /// another BigInteger instance.</summary>
     /// <param name='thisValue'>The first BigInteger object.</param>
     /// <param name='otherValue'>The second BigInteger object.</param>
@@ -207,8 +201,7 @@ BigInteger otherValue) {
       return (thisValue == null) || (thisValue.CompareTo(otherValue) <= 0);
     }
 
-    /// <summary>Determines whether a BigInteger instance is greater than
-    /// another
+    /// <summary>Determines whether a BigInteger instance is greater than another
     /// BigInteger instance.</summary>
     /// <param name='thisValue'>The first BigInteger object.</param>
     /// <param name='otherValue'>The second BigInteger object.</param>
@@ -231,8 +224,7 @@ BigInteger otherValue) {
         (thisValue.CompareTo(otherValue) >= 0);
     }
 
-    /// <summary>Gets a value indicating whether this object&apos;s value is
-    /// a power
+    /// <summary>Gets a value indicating whether this object&apos;s value is a power
     /// of two.</summary>
     /// <value>True if this object&apos;s value is a power of two; otherwise,
     /// false.</value>
@@ -360,11 +352,7 @@ BigInteger bigintSecond) {
         throw new ArgumentNullException("power");
       }
       if (power.Sign < 0) {
-        throw new ArgumentException("power's sign (" +
-          Convert.ToString(
-(long)power.Sign,
-System.Globalization.CultureInfo.InvariantCulture) +
-          ") is less than " + "0");
+        throw new ArgumentException("power's sign (" + power.Sign + ") is less than " + "0");
       }
       BigInteger val = BigInteger.One;
       while (power.Sign > 0) {
@@ -388,11 +376,7 @@ System.Globalization.CultureInfo.InvariantCulture) +
         throw new ArgumentNullException("bigValue");
       }
       if (power < 0) {
-        throw new ArgumentException("power (" +
-          Convert.ToString(
-(long)power,
-System.Globalization.CultureInfo.InvariantCulture) +
-          ") is less than " + "0");
+        throw new ArgumentException("power (" + power + ") is less than " + "0");
       }
       return bigValue.pow(power);
     }
@@ -461,8 +445,7 @@ System.Globalization.CultureInfo.InvariantCulture) +
     /// <param name='a'>A BigInteger instance.</param>
     /// <param name='b'>Another BigInteger instance.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='ArgumentNullException' >The parameter <paramref
-    /// name='a' />
+    /// <exception cref='ArgumentNullException'>The parameter <paramref name='a'/>
     /// or <paramref name='b'/> is null.</exception>
     /// <remarks>Each BigInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
@@ -514,8 +497,7 @@ Math.Max(valueXaReg.Length, valueXbReg.Length));
         BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
-    /// <summary>Does an OR operation between two BigInteger
-    /// instances.</summary>
+    /// <summary>Does an OR operation between two BigInteger instances.</summary>
     /// <param name='first'>A BigInteger object. (2).</param>
     /// <param name='second'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
@@ -572,8 +554,7 @@ Math.Max(valueXaReg.Length, valueXbReg.Length));
     /// <param name='a'>A BigInteger instance.</param>
     /// <param name='b'>Another BigInteger instance.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='ArgumentNullException' >The parameter <paramref
-    /// name='a' />
+    /// <exception cref='ArgumentNullException'>The parameter <paramref name='a'/>
     /// or <paramref name='b'/> is null.</exception>
     /// <remarks>Each BigInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>

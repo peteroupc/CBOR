@@ -11,9 +11,11 @@ import com.upokecenter.util.*;
 
     /**
      * Specifies what kinds of CBOR objects a tag can be. This class is used when a
-     * CBOR object is being read from a data stream.
+     * CBOR object is being read from a data stream. This class cannot be
+     * inherited; this is a change in version 2.0 from previous versions,
+     * where the class was inadvertently left inheritable.
      */
-  public class CBORTypeFilter {
+  public final class CBORTypeFilter {
 
     private boolean any;
     private int types;
@@ -183,7 +185,7 @@ final CBORTypeFilter... elements) {
       if (arrayLength < elements.length) {
         throw new IllegalArgumentException("arrayLength (" +
           Long.toString((long)arrayLength) +
-          ") is less than " + Long.toString((long)elements.length));
+          ") is less than " + elements.length);
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -224,7 +226,7 @@ final CBORTypeFilter... elements) {
       if (arrayLength < elements.length) {
         throw new IllegalArgumentException("arrayLength (" +
           Long.toString((long)arrayLength) +
-          ") is less than " + Long.toString((long)elements.length));
+          ") is less than " + elements.length);
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -251,7 +253,7 @@ final CBORTypeFilter... elements) {
       if (this.arrayLength < this.elements.length) {
         throw new IllegalArgumentException("this.arrayLength (" +
           Long.toString((long)this.arrayLength) +
-          ") is less than " + Long.toString((long)this.elements.length));
+          ") is less than " + this.elements.length);
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;

@@ -13,8 +13,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether the last discarded digit was
     /// set.</summary>
-    /// <value>True if the last discarded digit was set; otherwise,
-    /// false.</value>
+    /// <value>True if the last discarded digit was set; otherwise, false.</value>
     public int LastDiscardedDigit {
       get {
         return this.bitLeftmost;
@@ -23,11 +22,9 @@ namespace PeterO {
 
     private int bitsAfterLeftmost;
 
-    /// <summary>Gets a value indicating whether any of the discarded digits
-    /// to the
+    /// <summary>Gets a value indicating whether any of the discarded digits to the
     /// right of the last one was set.</summary>
-    /// <value>True if any of the discarded digits to the right of the last
-    /// one was
+    /// <value>True if any of the discarded digits to the right of the last one was
     /// set; otherwise, false.</value>
     public int OlderDiscardedDigits {
       get {
@@ -72,11 +69,7 @@ namespace PeterO {
       if (bigint.canFitInInt()) {
         this.shiftedSmall = (int)bigint;
         if (this.shiftedSmall < 0) {
-          throw new ArgumentException("shiftedSmall (" +
-            Convert.ToString(
-(int)this.shiftedSmall,
-System.Globalization.CultureInfo.InvariantCulture)
-            +") is less than " + "0 ");
+          throw new ArgumentException("shiftedSmall (" + this.shiftedSmall + ") is less than " + "0 ");
         }
         this.isSmall = true;
       } else {
@@ -91,11 +84,7 @@ System.Globalization.CultureInfo.InvariantCulture)
       // Assumes the string is length 9 or less and contains
       // only the digits '0' through '9'
       if (length > 9) {
-        throw new ArgumentException("length (" +
-          Convert.ToString(
-(int)length,
-System.Globalization.CultureInfo.InvariantCulture)
-          +") is more than " + "9 ");
+        throw new ArgumentException("length (" + length + ") is more than " + "9 ");
       }
       int ret = 0;
       for (var i = 0; i < length; ++i) {
@@ -391,10 +380,8 @@ out bigrem);
       }
     }
 
-    /// <summary>Shifts a number to the right, gathering information on
-    /// whether the
-    /// last digit discarded is set and whether the discarded digits to the
-    /// right of
+    /// <summary>Shifts a number to the right, gathering information on whether the
+    /// last digit discarded is set and whether the discarded digits to the right of
     /// that digit are set. Assumes that the big integer being shifted is
     /// positive.</summary>
     /// <param name='digits'>A 32-bit signed integer.</param>
@@ -453,20 +440,12 @@ out bigrem);
       if (bits.CanFitInInt32()) {
         int intval = bits.AsInt32();
         if (intval < 0) {
-          throw new ArgumentException("intval (" +
-            Convert.ToString(
-(int)intval,
-System.Globalization.CultureInfo.InvariantCulture)
-            +") is less than " + "0 ");
+          throw new ArgumentException("intval (" + intval + ") is less than " + "0 ");
         }
         this.ShiftToDigitsInt(intval);
       } else {
         if (bits.Sign < 0) {
-          throw new ArgumentException("bits's sign (" +
-            Convert.ToString(
-(int)bits.Sign,
-System.Globalization.CultureInfo.InvariantCulture)
-            +") is less than " + "0 ");
+          throw new ArgumentException("bits's sign (" + bits.Sign + ") is less than " + "0 ");
         }
         this.knownBitLength = this.CalcKnownDigitLength();
         BigInteger bigintDiff = this.knownBitLength.AsBigInteger();
@@ -481,10 +460,8 @@ System.Globalization.CultureInfo.InvariantCulture)
     }
 
     /// <summary>Shifts a number until it reaches the given number of digits,
-    /// gathering information on whether the last digit discarded is set and
-    /// whether
-    /// the discarded digits to the right of that digit are set. Assumes
-    /// that the
+    /// gathering information on whether the last digit discarded is set and whether
+    /// the discarded digits to the right of that digit are set. Assumes that the
     /// big integer being shifted is positive.</summary>
     /// <param name='digits'>A 32-bit signed integer.</param>
     public void ShiftToDigitsInt(int digits) {

@@ -35,17 +35,21 @@ throw new InvalidOperationException(String.Empty, ex);
     }
     [TestMethod]
     public void TestCodePointCompare() {
-   Assert.AreEqual(0, Math.Sign(DataUtilities.CodePointCompare("abc", "abc"
-)));
-      Assert.AreEqual(0,
-        Math.Sign(DataUtilities.CodePointCompare("\ud800\udc00" ,
-        "\ud800\udc00")));
-      Assert.AreEqual(-1, Math.Sign(DataUtilities.CodePointCompare("abc" ,
-        "\ud800\udc00")));
-      Assert.AreEqual(-1, Math.Sign(DataUtilities.CodePointCompare("\uf000"
-        , "\ud800\udc00")));
-      Assert.AreEqual(1, Math.Sign(DataUtilities.CodePointCompare("\uf000" ,
-        "\ud800")));
+   Assert.AreEqual(
+0,
+Math.Sign(DataUtilities.CodePointCompare("abc", "abc")));
+      Assert.AreEqual(
+0,
+Math.Sign(DataUtilities.CodePointCompare("\ud800\udc00" , "\ud800\udc00")));
+      Assert.AreEqual(
+-1,
+Math.Sign(DataUtilities.CodePointCompare("abc" , "\ud800\udc00")));
+      Assert.AreEqual(
+-1,
+Math.Sign(DataUtilities.CodePointCompare("\uf000" , "\ud800\udc00")));
+      Assert.AreEqual(
+1,
+Math.Sign(DataUtilities.CodePointCompare("\uf000" , "\ud800")));
     }
     [TestMethod]
     public void TestGetUtf8Bytes() {
@@ -142,15 +146,32 @@ throw new InvalidOperationException(String.Empty, ex);
       }
       Assert.AreEqual(
         "ABC",
-     DataUtilities.GetUtf8String(new byte[] { 0x41, 0x42, 0x43 }, 0, 3,
-          true));
+     DataUtilities.GetUtf8String(
+new byte[] { 0x41,
+0x42,
+0x43 },
+0,
+3,
+true));
       Assert.AreEqual(
         "ABC\ufffd",
-        DataUtilities.GetUtf8String(new byte[] { 0x41, 0x42, 0x43, 0x80 },
-          0, 4, true));
+        DataUtilities.GetUtf8String(
+new byte[] { 0x41,
+0x42,
+0x43,
+0x80 },
+0,
+4,
+true));
       try {
-        DataUtilities.GetUtf8String(new byte[] { 0x41, 0x42, 0x43, 0x80 },
-          0, 4, false);
+        DataUtilities.GetUtf8String(
+new byte[] { 0x41,
+0x42,
+0x43,
+0x80 },
+0,
+4,
+false);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -188,8 +209,12 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes(new byte[] { 0 }, -1, 1, new
-          StringBuilder(), true);
+        DataUtilities.ReadUtf8FromBytes(
+new byte[] { 0 },
+-1,
+1,
+new StringBuilder(),
+true);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -197,8 +222,12 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes(new byte[] { 0 }, 2, 1, new
-          StringBuilder(), true);
+        DataUtilities.ReadUtf8FromBytes(
+new byte[] { 0 },
+2,
+1,
+new StringBuilder(),
+true);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -206,8 +235,12 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes(new byte[] { 0 }, 0, -1, new
-          StringBuilder(), true);
+        DataUtilities.ReadUtf8FromBytes(
+new byte[] { 0 },
+0,
+-1,
+new StringBuilder(),
+true);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -215,8 +248,12 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes(new byte[] { 0 }, 0, 2, new
-          StringBuilder(), true);
+        DataUtilities.ReadUtf8FromBytes(
+new byte[] { 0 },
+0,
+2,
+new StringBuilder(),
+true);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -224,8 +261,12 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        DataUtilities.ReadUtf8FromBytes(new byte[] { 0 }, 1, 1, new
-          StringBuilder(), true);
+        DataUtilities.ReadUtf8FromBytes(
+new byte[] { 0 },
+1,
+1,
+new StringBuilder(),
+true);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {

@@ -8,9 +8,11 @@ at: http://upokecenter.com/d/
  */
 
     /**
-     * Arbitrary-precision rational number.
+     * Arbitrary-precision rational number. This class cannot be inherited; this is
+     * a change in version 2.0 from previous versions, where the class was
+     * inadvertently left inheritable.
      */
-  public class ExtendedRational implements Comparable<ExtendedRational> {
+  public final class ExtendedRational implements Comparable<ExtendedRational> {
     private BigInteger unsignedNumerator;
 
     /**
@@ -54,7 +56,9 @@ at: http://upokecenter.com/d/
       ExtendedRational other = ((obj instanceof ExtendedRational) ? (ExtendedRational)obj : null);
       return (
 other != null) && (
-(((this.unsignedNumerator) == null) ? ((other.unsignedNumerator) == null) : (this.unsignedNumerator).equals(other.unsignedNumerator)) && (((
+(((
+this.unsignedNumerator) == null) ? ((other.unsignedNumerator) == null) : (
+this.unsignedNumerator).equals(other.unsignedNumerator)) && (((
 this.denominator) == null) ? ((other.denominator) == null) : (
 this.denominator).equals(other.denominator)) && this.flags == other.flags);
     }

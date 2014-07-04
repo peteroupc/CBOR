@@ -8,8 +8,9 @@ import com.upokecenter.util.*;
     @Test
     public void TestConstructor() {
       try {
-        Assert.assertEquals(null, new PrecisionContext(-1, Rounding.HalfEven, 0,
-          0, false));
+        Assert.assertEquals(
+null,
+new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -17,8 +18,9 @@ import com.upokecenter.util.*;
         throw new IllegalStateException("", ex);
       }
       try {
-        Assert.assertEquals(null, new PrecisionContext(0, Rounding.HalfEven, 0,
-          -1, false));
+        Assert.assertEquals(
+null,
+new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -191,8 +193,9 @@ throw new IllegalStateException("", ex);
       }
       try {
         BigInteger bigintBig = BigInteger.ONE.shiftLeft(64);
-   PrecisionContext.Unlimited.WithBigExponentRange(bigintBig,
-          BigInteger.ZERO);
+   PrecisionContext.Unlimited.WithBigExponentRange(
+bigintBig,
+BigInteger.ZERO);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {

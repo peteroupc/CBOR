@@ -4,13 +4,13 @@
         System.IComparable,
         System.IEquatable
 
-Represents an arbitrary-precision decimal floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 10^exponent. The mantissa is the value of the digits that make up a number, ignoring the decimal point and exponent. For example, in the number 2356.78, the mantissa is 235678. The exponent is where the "floating" decimal point of the number is located. A positive exponent means "move it to the right", and a negative exponent means "move it to the left." In the example 2,356.78, the exponent is -2, since it has 2 decimal places and the decimal point is "moved to the left by 2." Therefore, in the ExtendedDecimal representation, this number would be stored as 235678 * 10^-2.
+Represents an arbitrary-precision decimal floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 10^exponent.The mantissa is the value of the digits that make up a number, ignoring the decimal point and exponent. For example, in the number 2356.78, the mantissa is 235678. The exponent is where the "floating" decimal point of the number is located. A positive exponent means "move it to the right" , and a negative exponent means "move it to the left." In the example 2, 356.78, the exponent is -2, since it has 2 decimal places and the decimal point is "moved to the left by 2." Therefore, in the ExtendedDecimal representation, this number would be stored as 235678 * 10^-2.
 
 The mantissa and exponent format preserves trailing zeros in the number's value. This may give rise to multiple ways to store the same value. For example, 1.00 and 1 would be stored differently, even though they have the same value. In the first case, 100 * 10^-2 (100 with decimal point moved left by 2), and in the second case, 1 * 10^0 (1 with decimal point moved 0).
 
 This class also supports values for negative zero, not-a-number (NaN) values, and infinity. Negative zerois generally used when a negative number is rounded to 0; it has the same mathematical value as positive zero. Infinityis generally used when a non-zero number is divided by zero, or when a very high number can't be represented in a given exponent range. Not-a-numberis generally used to signal errors.
 
-This class implements the General Decimal Arithmetic Specification version 1.70:  `http://speleotrove.com/decimal/decarith.html` 
+This class implements the General Decimal Arithmetic Specification version 1.70: `http://speleotrove.com/decimal/decarith.html` 
 
 Passing a signaling NaN to any arithmetic operation shown here will signal the flag FlagInvalid and return a quiet NaN, even if another operand to that operation is a quiet NaN, unless noted otherwise.
 
@@ -105,7 +105,7 @@ An ExtendedDecimal object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>mantissa</i>
+The parameter  <i>mantissa</i>
  or  <i>exponent</i>
  is null.
 
@@ -127,7 +127,7 @@ A quiet not-a-number object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>diag</i>
+The parameter  <i>diag</i>
  is null or is less than 0.
 
 ### CreateNaN
@@ -157,7 +157,7 @@ An ExtendedDecimal object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>diag</i>
+The parameter  <i>diag</i>
  is null or is less than 0.
 
 ### FromString
@@ -178,12 +178,12 @@ An arbitrary-precision decimal number with the same value as the given string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>str</i>
- is null.
+The parameter  <i>str</i>
+is null.
 
  * System.FormatException: 
 The parameter  <i>str</i>
-is not a correctly formatted number string.
+ is not a correctly formatted number string.
 
 ### FromString
 
@@ -206,12 +206,12 @@ An arbitrary-precision decimal number with the same value as the given string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>str</i>
- is null.
+The parameter  <i>str</i>
+is null.
 
  * System.FormatException: 
 The parameter  <i>str</i>
-is not a correctly formatted number string.
+ is not a correctly formatted number string.
 
 ### FromString
 
@@ -237,12 +237,12 @@ An arbitrary-precision decimal number with the same value as the given string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>str</i>
- is null.
+The parameter  <i>str</i>
+is null.
 
  * System.FormatException: 
 The parameter  <i>str</i>
-is not a correctly formatted number string.
+ is not a correctly formatted number string.
 
 ### FromString
 
@@ -252,7 +252,7 @@ is not a correctly formatted number string.
         int length,
         PeterO.PrecisionContext ctx);
 
-Creates a decimal number from a string that represents a number. The format of the string generally consists of: 
+Creates a decimal number from a string that represents a number.The format of the string generally consists of: 
 
  * An optional '-' or '+' character (if '-', the value is negative.)
 
@@ -260,7 +260,7 @@ Creates a decimal number from a string that represents a number. The format of t
 
  * Optionally, E+ (positive exponent) or E- (negative exponent) plus one or more digits specifying the exponent.
 
-The string can also be "-INF", "-Infinity", "Infinity", "INF", quiet NaN ("qNaN"/"-qNaN") followed by any number of digits, or signaling NaN ("sNaN"/"-sNaN") followed by any number of digits, all in any combination of upper and lower case.
+The string can also be "-INF", "-Infinity" , "Infinity" , "INF" , quiet NaN ("qNaN" /"-qNaN") followed by any number of digits, or signaling NaN ("sNaN" /"-sNaN") followed by any number of digits, all in any combination of upper and lower case.
 
 The format generally follows the definition in java.math.BigDecimal(), except that the digits must be ASCII digits ('0' through '9').
 
@@ -281,12 +281,12 @@ An arbitrary-precision decimal number with the same value as the given string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>str</i>
- is null.
+The parameter  <i>str</i>
+is null.
 
  * System.FormatException: 
 The parameter  <i>str</i>
-is not a correctly formatted number string.
+ is not a correctly formatted number string.
 
 ### CompareToBinary
 
@@ -461,7 +461,7 @@ An ExtendedDecimal object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>bigfloat</i>
+The parameter  <i>bigfloat</i>
  is null.
 
 ### ToString
@@ -757,7 +757,7 @@ Divides this ExtendedDecimal object by another ExtendedDecimal object. The prefe
 
 The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0; or, either  <i>ctx</i>
  is null or  <i>ctx</i>
-'s precision is 0, and the result would have a nonterminating decimal expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
+ 's precision is 0, and the result would have a nonterminating decimal expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
 
 ### DivideToExponent
 
@@ -903,7 +903,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### Multiply
@@ -1007,7 +1007,7 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
  * If the remainder's absolute value is less than half of the divisor's absolute value, the result has the same sign as this object and will be the distance to the closest multiple.
 
- * If the remainder's absolute value is more than half of the divisor's absolute value, the result has the opposite sign of this object and will be the distance to the closest multiple.
+ * If the remainder's absolute value is more than half of the divisor' s absolute value, the result has the opposite sign of this object and will be the distance to the closest multiple.
 
  * If the remainder's absolute value is exactly half of the divisor's absolute value, the result has the opposite sign of this object if the quotient, rounded down, is odd, and has the same sign as this object if the quotient, rounded down, is even, and the result's absolute value is half of the divisor's absolute value.
 
@@ -1037,7 +1037,7 @@ Finds the largest value that's smaller than the given value.
 <b>Returns:</b>
 
 Returns the largest value that's less than the given value. Returns negative infinity if the result is negative infinity. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
-is null, the precision is 0, or  <i>ctx</i>
+ is null, the precision is 0, or  <i>ctx</i>
  has an unlimited exponent range.
 
 ### NextPlus
@@ -1055,7 +1055,7 @@ Finds the smallest value that's greater than the given value.
 
 Returns the smallest value that's greater than the given value.Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
-has an unlimited exponent range.
+ has an unlimited exponent range.
 
 ### NextToward
 
@@ -1074,7 +1074,7 @@ Finds the next value that is closer to the other object's value than this object
 <b>Returns:</b>
 
 Returns the next value that is closer to the other object' s value than this object's value. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
- is null, the precision is 0, or  <i>ctx</i>
+ is null, the precision is 0, or <i>ctx</i>
  has an unlimited exponent range.
 
 ### Max
@@ -1250,7 +1250,7 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
 <b>Returns:</b>
 
-Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if  <i>other</i>
+Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if <i>other</i>
  is null, or 0 if both values are equal.
 
 ### CompareToWithContext
@@ -1259,7 +1259,7 @@ Less than 0 if this object's value is less than the other value, or greater than
         PeterO.ExtendedDecimal other,
         PeterO.PrecisionContext ctx);
 
-Compares the mathematical values of this object and another object. In this method, negative zero and positive zero are considered equal.
+Compares the mathematical values of this object and another object.In this method, negative zero and positive zero are considered equal.
 
 If this object or the other object is a quiet NaN or signaling NaN, this method returns a quiet NaN, and will signal a FlagInvalid flag if either is a signaling NaN.
 
@@ -1564,7 +1564,7 @@ Rounds this object's value to a given precision, using the given rounding mode a
 <b>Returns:</b>
 
 The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if  <i>ctx</i>
- is null or the precision and exponent range are unlimited.
+is null or the precision and exponent range are unlimited.
 
 ### Plus
 
@@ -1580,7 +1580,7 @@ Rounds this object's value to a given precision, using the given rounding mode a
 <b>Returns:</b>
 
 The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if  <i>ctx</i>
- is null or the precision and exponent range are unlimited.
+is null or the precision and exponent range are unlimited.
 
 ### RoundToBinaryPrecision
 
@@ -1598,7 +1598,7 @@ Rounds this object's value to a given maximum bit length, using the given roundi
 <b>Returns:</b>
 
 The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if  <i>ctx</i>
- is null or the precision and exponent range are unlimited.
+is null or the precision and exponent range are unlimited.
 
 ### SquareRoot
 
@@ -1630,7 +1630,7 @@ Finds e (the base of natural logarithms) raised to the power of this object's va
 <b>Returns:</b>
 
 Exponential of this object. If this object's value is 1, returns an approximation to " e" within the given precision. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
-is null or the precision is unlimited (the context's Precision property is 0).
+ is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Log
 
@@ -1681,7 +1681,7 @@ Raises this object's value to the given exponent.
 <b>Returns:</b>
 
 This^exponent. Signals the flag FlagInvalid and returns NaN if this object and exponent are both 0; or if this value is less than 0 and the exponent either has a fractional part or is infinity. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
-is null or the precision is unlimited (the context's Precision property is 0), and the exponent has a fractional part.
+ is null or the precision is unlimited (the context's Precision property is 0), and the exponent has a fractional part.
 
 ### Pow
 

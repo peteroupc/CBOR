@@ -8,8 +8,7 @@ using System;
 using System.Collections.Generic;
 
 namespace PeterO {
-    /// <summary>Red-black tree, modified by Peter O. from public-domain
-    /// Java code
+    /// <summary>Red-black tree, modified by Peter O. from public-domain Java code
     /// originally written by Doug Lea.</summary>
     /// <typeparam name='T'>Type of each element in the tree.</typeparam>
   internal sealed class RedBlackTree<T> : ICollection<T> {
@@ -138,8 +137,7 @@ namespace PeterO {
         return p;
       }
 
-    /// <summary>Return true if node is a root (i.e., has a null
-    /// parent).</summary>
+    /// <summary>Return true if node is a root (i.e., has a null parent).</summary>
     /// <returns>A Boolean object.</returns>
       public bool isRoot() {
         return this.parentValue == null;
@@ -188,10 +186,8 @@ namespace PeterO {
         return c;
       }
 
-    /// <summary>Return node of current sub-tree containing element as
-    /// element(), if
-    /// it exists, else null. Uses IComparer <paramref name='cmp ' /> to
-    /// find and to
+    /// <summary>Return node of current sub-tree containing element as element(), if
+    /// it exists, else null. Uses IComparer <paramref name='cmp '/> to find and to
     /// check equality.</summary>
     /// <param name='element'>A T object.</param>
     /// <param name='cmp'>An IComparer object.</param>
@@ -210,10 +206,8 @@ namespace PeterO {
         }
       }
 
-    /// <summary>Return number of nodes of current sub-tree containing
-    /// element. Uses
-    /// IComparer <paramref name='cmp ' /> to find and to check
-    /// equality.</summary>
+    /// <summary>Return number of nodes of current sub-tree containing element. Uses
+    /// IComparer <paramref name='cmp '/> to find and to check equality.</summary>
     /// <param name='element'>A T object.</param>
     /// <param name='cmp'>An IComparer object.</param>
     /// <returns>A 32-bit signed integer.</returns>
@@ -239,10 +233,8 @@ namespace PeterO {
         return c;
       }
 
-    /// <summary>Insert cell as the left child of current node, and then
-    /// rebalance
-    /// the tree it is in. @return the new root of the current tree.
-    /// (Rebalancing
+    /// <summary>Insert cell as the left child of current node, and then rebalance
+    /// the tree it is in. @return the new root of the current tree. (Rebalancing
     /// can change the root!).</summary>
     /// <param name='cell'>The cell to add.</param>
     /// <param name='root'>Root, the root of the current tree.</param>
@@ -253,8 +245,7 @@ namespace PeterO {
         return cell.fixAfterInsertion(root);
       }
 
-    /// <summary>Insert cell as the right child of current node, and then
-    /// rebalance
+    /// <summary>Insert cell as the right child of current node, and then rebalance
     /// the tree it is in.</summary>
     /// <param name='cell'>The cell to add.</param>
     /// <param name='root'>The root of the current tree.</param>
@@ -470,15 +461,13 @@ namespace PeterO {
 
     /// <summary>The comparator to use for ordering.</summary>
     private IComparer<T> cmpValue;
-    // constructors
-    /// <summary>Initializes a new instance of the RedBlackTree class. Make
-    /// an empty
+
+    /// <summary>Initializes a new instance of the RedBlackTree class. Make an empty
     /// tree. Initialize to use DefaultIComparer for ordering.</summary>
     public RedBlackTree() : this(null, null, 0) {
     }
 
-    /// <summary>Initializes a new instance of the RedBlackTree class. Make
-    /// an empty
+    /// <summary>Initializes a new instance of the RedBlackTree class. Make an empty
     /// tree, using the supplied element comparator for ordering.</summary>
     /// <param name='c'>An IComparer object.</param>
     public RedBlackTree(IComparer<T> c) : this(c, null, 0) {
@@ -494,9 +483,8 @@ namespace PeterO {
       this.treeValue = t;
         this.cmpValue = cmp ?? Comparer<T>.Default;
     }
-    // Collection methods
-    /// <summary>Implements collections.Collection.includes. Time
-    /// complexity: O(log
+
+    /// <summary>Implements collections.Collection.includes. Time complexity: O(log
     /// n).</summary>
     /// <param name='element'>A T object.</param>
     /// <returns>A Boolean object.</returns>
@@ -529,8 +517,7 @@ element,
 this.cmpValue);
     }
 
-    /// <summary>Implements collections.UpdatableCollection.clear. Time
-    /// complexity:
+    /// <summary>Implements collections.UpdatableCollection.clear. Time complexity:
     /// O(1). @see collections.UpdatableCollection#clear.</summary>
     public void Clear() {
       this.countValue = 0;
@@ -545,8 +532,7 @@ this.cmpValue);
       return this.remove_(element, false);
     }
 
-    /// <summary>Implements collections.UpdatableCollection.take. Time
-    /// complexity:
+    /// <summary>Implements collections.UpdatableCollection.take. Time complexity:
     /// O(log n). Takes the least element. @see
     /// collections.UpdatableCollection#take.</summary>
     /// <returns>A T object.</returns>
@@ -568,8 +554,7 @@ this.cmpValue);
     /// <summary>Add the element only if it exists.</summary>
       AddIfMissing,
 
-    /// <summary>Add the element and remove the existing element if
-    /// any.</summary>
+    /// <summary>Add the element and remove the existing element if any.</summary>
       OverwriteIfExisting
     }
 
@@ -672,8 +657,7 @@ this.treeValue);
       }
     }
 
-    /// <summary>Gets a value indicating whether this map is
-    /// read-only.</summary>
+    /// <summary>Gets a value indicating whether this map is read-only.</summary>
     /// <value>Always false.</value>
     public bool IsReadOnly {
       get {

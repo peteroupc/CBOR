@@ -51,7 +51,8 @@ namespace PeterO.DocGen {
         if (methodName.Length == 0) {
           continue;
         }
-        methodName = methodName.Substring(0, 1).ToUpper() + methodName.Substring(1);
+   methodName = methodName.Substring(0, 1).ToUpper() +
+          methodName.Substring(1);
         methods.Add(methodName);
       }
       if (methods.Count == 0) {

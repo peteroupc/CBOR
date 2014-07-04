@@ -1,10 +1,10 @@
 ﻿## PeterO.ExtendedRational
 
-    public class ExtendedRational :
+    public sealed class ExtendedRational :
         System.IComparable,
         System.IEquatable
 
-Arbitrary-precision rational number.
+Arbitrary-precision rational number. This class cannot be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.
 
 ### Equals
 
@@ -84,9 +84,9 @@ Initializes a new instance of the ExtendedRational class.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>numerator</i>
+The parameter  <i>numerator</i>
  or  <i>denominator</i>
-is null.
+ is null.
 
 ### ToString
 
@@ -173,7 +173,7 @@ An ExtendedRational object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>diag</i>
+The parameter  <i>diag</i>
  is null.
 
  * System.ArgumentException: 
@@ -204,7 +204,7 @@ An ExtendedRational object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>diag</i>
+The parameter  <i>diag</i>
  is null.
 
  * System.ArgumentException: 
@@ -229,8 +229,8 @@ An ExtendedRational object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>ef</i>
- is null.
+The parameter  <i>ef</i>
+is null.
 
 ### FromExtendedDecimal
 
@@ -250,8 +250,8 @@ An ExtendedRational object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>ef</i>
- is null.
+The parameter  <i>ef</i>
+is null.
 
 ### ToExtendedDecimal
 
@@ -588,7 +588,7 @@ The sum of the two numbers. Returns NaN if either operand is NaN.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### Subtract
@@ -609,7 +609,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### Multiply
@@ -630,7 +630,7 @@ The product of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### Divide
@@ -651,7 +651,7 @@ The quotient of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### Remainder
@@ -672,7 +672,7 @@ The remainder of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### Zero

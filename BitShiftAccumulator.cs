@@ -26,11 +26,9 @@ namespace PeterO {
 
     private int bitsAfterLeftmost;
 
-    /// <summary>Gets a value indicating whether any of the discarded bits
-    /// to the
+    /// <summary>Gets a value indicating whether any of the discarded bits to the
     /// right of the last one was set.</summary>
-    /// <value>True if any of the discarded bits to the right of the last
-    /// one was
+    /// <value>True if any of the discarded bits to the right of the last one was
     /// set; otherwise, false.</value>
     public int OlderDiscardedDigits
     {
@@ -50,11 +48,7 @@ namespace PeterO {
 
     public void ShiftToDigits(FastInteger bits) {
       if (bits.Sign < 0) {
-        throw new ArgumentException("bits's sign (" +
-          Convert.ToString(
-(int)bits.Sign,
-System.Globalization.CultureInfo.InvariantCulture)
-          +") is less than " + "0 ");
+        throw new ArgumentException("bits's sign (" + bits.Sign + ") is less than " + "0 ");
       }
       if (bits.CanFitInInt32()) {
         this.ShiftToDigitsInt(bits.AsInt32());
@@ -107,11 +101,7 @@ System.Globalization.CultureInfo.InvariantCulture)
       int lastDiscarded,
       int olderDiscarded) {
       if (bigint.Sign < 0) {
-        throw new ArgumentException("bigint's sign (" +
-          Convert.ToString(
-(int)bigint.Sign,
-System.Globalization.CultureInfo.InvariantCulture)
-          +") is less than " + "0 ");
+        throw new ArgumentException("bigint's sign (" + bigint.Sign + ") is less than " + "0 ");
       }
       if (bigint.canFitInInt()) {
         this.isSmall = true;
@@ -126,11 +116,7 @@ System.Globalization.CultureInfo.InvariantCulture)
 
     public static BitShiftAccumulator FromInt32(int smallNumber) {
       if (smallNumber < 0) {
-        throw new ArgumentException("smallNumber (" +
-          Convert.ToString(
-(int)smallNumber,
-System.Globalization.CultureInfo.InvariantCulture)
-          +") is less than " + "0 ");
+        throw new ArgumentException("smallNumber (" + smallNumber + ") is less than " + "0 ");
       }
       var bsa = new BitShiftAccumulator(BigInteger.Zero, 0, 0);
       bsa.shiftedSmall = smallNumber;
@@ -305,8 +291,7 @@ System.Globalization.CultureInfo.InvariantCulture)
       }
     }
 
-    /// <summary>Shifts a number to the right, gathering information on
-    /// whether the
+    /// <summary>Shifts a number to the right, gathering information on whether the
     /// last bit discarded is set and whether the discarded bits to the right of
     /// that bit are set. Assumes that the big integer being shifted is
     /// positive.</summary>
@@ -358,17 +343,13 @@ System.Globalization.CultureInfo.InvariantCulture)
     }
 
     /// <summary>Shifts a number until it reaches the given number of bits,
-    /// gathering information on whether the last bit discarded is set and
-    /// whether
-    /// the discarded bits to the right of that bit are set. Assumes that
-    /// the big
+    /// gathering information on whether the last bit discarded is set and whether
+    /// the discarded bits to the right of that bit are set. Assumes that the big
     /// integer being shifted is positive.</summary>
     /// <param name='bits'>A 32-bit signed integer.</param>
     public void ShiftToDigitsInt(int bits) {
       if (bits < 0) {
-        throw new ArgumentException("bits (" + Convert.ToString((int)bits,
-          System.Globalization.CultureInfo.InvariantCulture)
-          +") is less than " + "0 ");
+        throw new ArgumentException("bits (" + bits + ") is less than " + "0 ");
       }
       if (this.isSmall) {
         this.ShiftSmallToBits(bits);

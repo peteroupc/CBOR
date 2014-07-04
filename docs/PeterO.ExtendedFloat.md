@@ -91,7 +91,7 @@ A quiet not-a-number object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>diag</i>
+The parameter  <i>diag</i>
  is null.
 
  * System.ArgumentException: 
@@ -125,7 +125,7 @@ An ExtendedFloat object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>diag</i>
+The parameter  <i>diag</i>
  is null.
 
  * System.ArgumentException: 
@@ -171,7 +171,7 @@ An ExtendedFloat object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>mantissa</i>
+The parameter  <i>mantissa</i>
  or  <i>exponent</i>
  is null.
 
@@ -185,7 +185,7 @@ The parameter <i>mantissa</i>
 
 Creates a binary float from a string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double). The format of the string generally consists of: 
 
- * An optional '-' or '+' character (if '-', the value is negative.)
+ * An optional '-' or '+' character (if '-' , the value is negative.)
 
  * One or more digits, with a single optional decimal point after the first digit and before the last digit.
 
@@ -212,8 +212,8 @@ An ExtendedFloat object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>str</i>
- is null.
+The parameter  <i>str</i>
+is null.
 
 ### FromString
 
@@ -233,8 +233,8 @@ An ExtendedFloat object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>str</i>
- is null.
+The parameter  <i>str</i>
+is null.
 
 ### FromString
 
@@ -257,8 +257,8 @@ An ExtendedFloat object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>str</i>
- is null.
+The parameter  <i>str</i>
+is null.
 
 ### FromString
 
@@ -284,8 +284,8 @@ An ExtendedFloat object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>str</i>
- is null.
+The parameter  <i>str</i>
+is null.
 
 ### ToBigInteger
 
@@ -739,7 +739,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 
  * System.ArithmeticException: 
 Either  <i>ctx</i>
-is null or  <i>ctx</i>
+ is null or  <i>ctx</i>
  's precision is 0, and the result would have a nonterminating binary expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
 
 ### DivideToExponent
@@ -901,7 +901,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### Multiply
@@ -1008,7 +1008,7 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
  * If the remainder's absolute value is less than half of the divisor's absolute value, the result has the same sign as this object and will be the distance to the closest multiple.
 
- * If the remainder's absolute value is more than half of the divisor's absolute value, the result has the opposite sign of this object and will be the distance to the closest multiple.
+ * If the remainder's absolute value is more than half of the divisor' s absolute value, the result has the opposite sign of this object and will be the distance to the closest multiple.
 
  * If the remainder's absolute value is exactly half of the divisor's absolute value, the result has the opposite sign of this object if the quotient, rounded down, is odd, and has the same sign as this object if the quotient, rounded down, is even, and the result's absolute value is half of the divisor's absolute value.
 
@@ -1044,7 +1044,7 @@ Returns the largest value that's less than the given value. Returns negative inf
  * System.ArgumentException: 
 The parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
-has an unlimited exponent range.
+ has an unlimited exponent range.
 
 ### NextPlus
 
@@ -1066,7 +1066,7 @@ Returns the smallest value that's greater than the given value.
  * System.ArgumentException: 
 The parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
-has an unlimited exponent range.
+ has an unlimited exponent range.
 
 ### NextToward
 
@@ -1091,7 +1091,7 @@ Returns the next value that is closer to the other object' s value than this obj
  * System.ArgumentException: 
 The parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
-has an unlimited exponent range.
+ has an unlimited exponent range.
 
 ### Max
 
@@ -1266,7 +1266,7 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
 <b>Returns:</b>
 
-Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if  <i>other</i>
+Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if <i>other</i>
  is null, or 0 if both values are equal.
 
 ### CompareToWithContext
@@ -1275,7 +1275,7 @@ Less than 0 if this object's value is less than the other value, or greater than
         PeterO.ExtendedFloat other,
         PeterO.PrecisionContext ctx);
 
-Compares the mathematical values of this object and another object. In this method, negative zero and positive zero are considered equal.
+Compares the mathematical values of this object and another object.In this method, negative zero and positive zero are considered equal.
 
 If this object or the other object is a quiet NaN or signaling NaN, this method returns a quiet NaN, and will signal a FlagInvalid flag if either is a signaling NaN.
 
@@ -1526,7 +1526,7 @@ Rounds this object's value to a given precision, using the given rounding mode a
 <b>Returns:</b>
 
 The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if  <i>ctx</i>
- is null or the precision and exponent range are unlimited.
+is null or the precision and exponent range are unlimited.
 
 ### Plus
 
@@ -1542,14 +1542,14 @@ Rounds this object's value to a given precision, using the given rounding mode a
 <b>Returns:</b>
 
 The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if  <i>ctx</i>
- is null or the precision and exponent range are unlimited.
+is null or the precision and exponent range are unlimited.
 
 ### RoundToBinaryPrecision
 
     public PeterO.ExtendedFloat RoundToBinaryPrecision(
         PeterO.PrecisionContext ctx);
 
-<b>Deprecated.</b> Instead of this method, use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.
+<b>Deprecated.</b> Instead of this method use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.
 
 Rounds this object's value to a given maximum bit length, using the given rounding mode and range of exponent.
 
@@ -1560,7 +1560,7 @@ Rounds this object's value to a given maximum bit length, using the given roundi
 <b>Returns:</b>
 
 The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if  <i>ctx</i>
- is null or the precision and exponent range are unlimited.
+is null or the precision and exponent range are unlimited.
 
 ### SquareRoot
 

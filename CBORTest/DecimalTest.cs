@@ -28,13 +28,19 @@ namespace Test {
   "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\'[^\\']*\\'|\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)" ,
   RegexOptions.Compiled);
 
-    private static TValue GetKeyOrDefault<TKey, TValue>(IDictionary<TKey,
-                                 TValue> dict, TKey key, TValue
-                                                          defaultValue) {
+    private static TValue GetKeyOrDefault<TKey, TValue>(
+IDictionary<TKey,
+                                                 TValue> dict,
+ TKey key,
+                                                          TValue
+                                                        defaultValue) {
       return (!dict.ContainsKey(key)) ? defaultValue : dict[key];
     }
 
-    public static void ParseDecTest(string ln, IDictionary<string, string>
+    public static void ParseDecTest(
+string ln,
+ IDictionary<string,
+ string>
                                     context) {
       Match match;
       if (ln.Contains("-- ")) {
@@ -93,9 +99,8 @@ namespace Test {
               name.Equals("rpow272") ||
               name.Equals("rpow324") ||
               name.Equals("rpow327") ||
-      name.Equals("sqtx2207") || // following cases incorrectly remove
-                trailing
-              // zeros
+              // following cases incorrectly remove trailing zeros
+              name.Equals("sqtx2207") ||
               name.Equals("sqtx2231") ||
               name.Equals("sqtx2271") ||
               name.Equals("sqtx2327") ||

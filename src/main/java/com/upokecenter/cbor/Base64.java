@@ -120,30 +120,23 @@ private Base64() {
       }
       if (offset < 0) {
         throw new IllegalArgumentException(
-          "offset (" +
-          Integer.toString((int)offset) +
-          ") is less than " + "0 ");
+          "offset (" + offset + ") is less than " + "0 ");
       }
       if (offset > data.length) {
         throw new IllegalArgumentException(
-          "offset (" +
-          Integer.toString((int)offset) +
-          ") is more than " + Integer.toString((int)data.length));
+          "offset (" + offset + ") is more than " + data.length);
       }
       if (count < 0) {
-        throw new IllegalArgumentException("count (" + Integer.toString((int)count) +
-                                    ") is less than " + "0 ");
+        throw new IllegalArgumentException("count (" + count + ") is less than " + "0 ");
       }
       if (count > data.length) {
         throw new IllegalArgumentException(
-          "count (" + Integer.toString((int)count) +
-          ") is more than " + Integer.toString((int)data.length));
+          "count (" + count + ") is more than " + data.length);
       }
       if (data.length - offset < count) {
         throw new IllegalArgumentException("data's length minus " + offset + " (" +
-                                  Integer.toString((int)(data.length - offset)) +
-                              ") is less than " +
-                                      Integer.toString((int)count));
+          (data.length - offset) +
+                                    ") is less than " + count);
       }
       int length = offset + count;
       int i = offset;
@@ -185,30 +178,21 @@ private Base64() {
         throw new NullPointerException("outputStream");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" +
-                                    Integer.toString((int)offset) +
-                                    ") is less than " + "0 ");
+        throw new IllegalArgumentException("offset (" + offset + ") is less than " + "0 ");
       }
       if (offset > data.length) {
-        throw new IllegalArgumentException("offset (" +
-                                    Integer.toString((int)offset) +
-                        ") is more than " +
-                                      Integer.toString((int)data.length));
+        throw new IllegalArgumentException("offset (" + offset + ") is more than " + data.length);
       }
       if (count < 0) {
-        throw new IllegalArgumentException("count (" + Integer.toString((int)count) +
-                                    ") is less than " + "0 ");
+        throw new IllegalArgumentException("count (" + count + ") is less than " + "0 ");
       }
       if (count > data.length) {
-        throw new IllegalArgumentException("count (" + Integer.toString((int)count) +
-                        ") is more than " +
-                                      Integer.toString((int)data.length));
+        throw new IllegalArgumentException("count (" + count + ") is more than " + data.length);
       }
       if (data.length - offset < count) {
         throw new IllegalArgumentException("data's length minus " + offset + " (" +
-                                  Integer.toString((int)(data.length - offset)) +
-                              ") is less than " +
-                                      Integer.toString((int)count));
+          (data.length - offset) +
+                                    ") is less than " + count);
       }
       int length = offset + count;
       int i = offset;
@@ -219,8 +203,8 @@ private Base64() {
                                    ((data[i + 1] >> 4) &
                                     15));
         buffer[2] = (byte)alphabet.charAt(((data[i + 1] & 15) << 2) + ((data[i +
-                                                                 2] >> 6) &
-                                                                        3));
+                                                                      2] >> 6) &
+                                                                3));
         buffer[3] = (byte)alphabet.charAt(data[i + 2] & 63);
         outputStream.write(buffer, 0, 4);
       }
@@ -229,8 +213,8 @@ private Base64() {
         i = length - lenmod3;
         buffer[0] = (byte)alphabet.charAt((data[i] >> 2) & 63);
         if (lenmod3 == 2) {
-        buffer[1] = (byte)alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >>
-            4) &
+          buffer[1] = (byte)alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >>
+                                                              4) &
                                                              15));
           buffer[2] = (byte)alphabet.charAt((data[i + 1] & 15) << 2);
           if (padding) {

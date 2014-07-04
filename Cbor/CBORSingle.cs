@@ -11,6 +11,8 @@ using PeterO;
 namespace PeterO.Cbor {
   internal sealed class CBORSingle : ICBORNumber
   {
+    private const float SingleOneLsh64 = 9223372036854775808f;
+
     public bool IsPositiveInfinity(object obj) {
       return Single.IsPositiveInfinity((float)obj);
     }
@@ -54,7 +56,7 @@ namespace PeterO.Cbor {
       }
       fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
       (float)Math.Floor(fltItem);
-      if (fltItem >= -9223372036854775808f && fltItem < 9223372036854775808f) {
+      if (fltItem >= -SingleOneLsh64 && fltItem < SingleOneLsh64) {
         return (long)fltItem;
       }
       throw new OverflowException("This object's value is out of range");
@@ -83,8 +85,8 @@ namespace PeterO.Cbor {
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
       (float)Math.Floor(fltItem);
-      return fltItem2 >= -9223372036854775808f && fltItem2 <
-      9223372036854775808f;
+      return fltItem2 >= -SingleOneLsh64 && fltItem2 <
+      SingleOneLsh64;
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {

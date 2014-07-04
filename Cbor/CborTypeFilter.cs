@@ -9,10 +9,11 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Specifies what kinds of CBOR objects a tag can be. This
-    /// class is
-    /// used when a CBOR object is being read from a data stream.</summary>
-  public class CBORTypeFilter
+    /// <summary>Specifies what kinds of CBOR objects a tag can be. This class is
+    /// used when a CBOR object is being read from a data stream. This class cannot
+    /// be inherited; this is a change in version 2.0 from previous versions, where
+    /// the class was inadvertently left inheritable.</summary>
+  public sealed class CBORTypeFilter
   {
     private bool any;
     private int types;
@@ -77,8 +78,7 @@ namespace PeterO.Cbor {
       return this.WithType(2).WithTags(25);
     }
 
-    /// <summary>Copies this filter and includes maps in the new
-    /// filter.</summary>
+    /// <summary>Copies this filter and includes maps in the new filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithMap() {
       return this.WithType(5);
@@ -144,18 +144,14 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Copies this filter and includes CBOR arrays with an exact
-    /// length to
+    /// <summary>Copies this filter and includes CBOR arrays with an exact length to
     /// the new filter.</summary>
-    /// <param name='arrayLength' >The desired maximum length of an
-    /// array.</param>
+    /// <param name='arrayLength'>The desired maximum length of an array.</param>
     /// <param name='elements'>An array containing the allowed types for each
-    /// element in the array. There must be at least as many elements here
-    /// as given
+    /// element in the array. There must be at least as many elements here as given
     /// in the arrayLength parameter.</param>
     /// <returns>A CBORTypeFilter object.</returns>
-    /// <exception cref='ArgumentException' >The parameter arrayLength is
-    /// less than
+    /// <exception cref='ArgumentException'>The parameter arrayLength is less than
     /// 0.</exception>
     /// <exception cref='ArgumentNullException'>The parameter elements is
     /// null.</exception>
@@ -182,8 +178,7 @@ System.Globalization.CultureInfo.InvariantCulture) +
           Convert.ToString(
 (long)arrayLength,
 System.Globalization.CultureInfo.InvariantCulture) +
-          ") is less than " + Convert.ToString((long)elements.Length,
-          System.Globalization.CultureInfo.InvariantCulture));
+          ") is less than " + elements.Length);
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -194,18 +189,14 @@ System.Globalization.CultureInfo.InvariantCulture) +
       return filter;
     }
 
-    /// <summary>Copies this filter and includes CBOR arrays with at least a
-    /// given
+    /// <summary>Copies this filter and includes CBOR arrays with at least a given
     /// length to the new filter.</summary>
-    /// <param name='arrayLength' >The desired minimum length of an
-    /// array.</param>
+    /// <param name='arrayLength'>The desired minimum length of an array.</param>
     /// <param name='elements'>An array containing the allowed types for each
-    /// element in the array. There must be at least as many elements here
-    /// as given
+    /// element in the array. There must be at least as many elements here as given
     /// in the arrayLength parameter.</param>
     /// <returns>A CBORTypeFilter object.</returns>
-    /// <exception cref='ArgumentException' >The parameter arrayLength is
-    /// less than
+    /// <exception cref='ArgumentException'>The parameter arrayLength is less than
     /// 0.</exception>
     /// <exception cref='ArgumentNullException'>The parameter elements is
     /// null.</exception>
@@ -232,8 +223,7 @@ System.Globalization.CultureInfo.InvariantCulture) +
           Convert.ToString(
 (long)arrayLength,
 System.Globalization.CultureInfo.InvariantCulture) +
-          ") is less than " + Convert.ToString((long)elements.Length,
-          System.Globalization.CultureInfo.InvariantCulture));
+          ") is less than " + elements.Length);
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -263,8 +253,7 @@ System.Globalization.CultureInfo.InvariantCulture) +
           Convert.ToString(
 (long)this.arrayLength,
 System.Globalization.CultureInfo.InvariantCulture) +
-          ") is less than " + Convert.ToString((long)this.elements.Length,
-          System.Globalization.CultureInfo.InvariantCulture));
+          ") is less than " + this.elements.Length);
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 4;
@@ -272,8 +261,7 @@ System.Globalization.CultureInfo.InvariantCulture) +
       return filter;
     }
 
-    /// <summary>Copies this filter and includes floating-point numbers in
-    /// the new
+    /// <summary>Copies this filter and includes floating-point numbers in the new
     /// filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithFloatingPoint() {
@@ -350,8 +338,7 @@ System.Globalization.CultureInfo.InvariantCulture) +
         bigLength.CompareTo((BigInteger)this.arrayLength) >= 0)));
     }
 
-    /// <summary>Gets a value indicating whether CBOR objects can have the
-    /// given tag
+    /// <summary>Gets a value indicating whether CBOR objects can have the given tag
     /// number.</summary>
     /// <param name='tag'>A tag number. Returns false if this is less than
     /// 0.</param>
@@ -361,8 +348,7 @@ System.Globalization.CultureInfo.InvariantCulture) +
       return this.any || this.TagAllowed((BigInteger)tag);
     }
 
-    /// <summary>Gets a value indicating whether CBOR objects can have the
-    /// given tag
+    /// <summary>Gets a value indicating whether CBOR objects can have the given tag
     /// number.</summary>
     /// <param name='tag'>A tag number. Returns false if this is less than
     /// 0.</param>
@@ -372,8 +358,7 @@ System.Globalization.CultureInfo.InvariantCulture) +
       return this.any || this.TagAllowed((BigInteger)tag);
     }
 
-    /// <summary>Gets a value indicating whether CBOR objects can have the
-    /// given tag
+    /// <summary>Gets a value indicating whether CBOR objects can have the given tag
     /// number.</summary>
     /// <param name='bigTag'>A tag number. Returns false if this is less than
     /// 0.</param>

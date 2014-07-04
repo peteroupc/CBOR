@@ -94,7 +94,7 @@ namespace CBOR {
     }
 
     private static string ConvertOp(string s) {
-return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ? "NaN":
+return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ? "NaN" :
         s);
     }
 
@@ -111,11 +111,15 @@ return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ? "NaN":
 
       IExtendedNumber SquareRoot(PrecisionContext ctx);
 
-      IExtendedNumber MultiplyAndAdd(IExtendedNumber b, IExtendedNumber c,
-        PrecisionContext ctx);
+      IExtendedNumber MultiplyAndAdd(
+IExtendedNumber b,
+IExtendedNumber c,
+PrecisionContext ctx);
 
-      IExtendedNumber MultiplyAndSubtract(IExtendedNumber b, IExtendedNumber
-        c, PrecisionContext ctx);
+      IExtendedNumber MultiplyAndSubtract(
+IExtendedNumber b,
+IExtendedNumber c,
+PrecisionContext ctx);
 
       bool IsQuietNaN();
 
@@ -166,8 +170,9 @@ return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ? "NaN":
         return (ExtendedDecimal)en.Value;
       }
 
-      public ExtensiveTest.IExtendedNumber Add(ExtensiveTest.IExtendedNumber
-        b, PrecisionContext ctx) {
+      public ExtensiveTest.IExtendedNumber Add(
+ExtensiveTest.IExtendedNumber b,
+PrecisionContext ctx) {
         return Create(this.ed.Add(ToValue(b), ctx));
       }
 
@@ -191,14 +196,18 @@ return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ? "NaN":
       }
 
       public ExtensiveTest.IExtendedNumber
-        MultiplyAndAdd(ExtensiveTest.IExtendedNumber b,
-        ExtensiveTest.IExtendedNumber c, PrecisionContext ctx) {
+        MultiplyAndAdd(
+ExtensiveTest.IExtendedNumber b,
+ExtensiveTest.IExtendedNumber c,
+PrecisionContext ctx) {
         return Create(this.ed.MultiplyAndAdd(ToValue(b), ToValue(c), ctx));
       }
 
       public ExtensiveTest.IExtendedNumber
-        MultiplyAndSubtract(ExtensiveTest.IExtendedNumber b,
-        ExtensiveTest.IExtendedNumber c, PrecisionContext ctx) {
+        MultiplyAndSubtract(
+ExtensiveTest.IExtendedNumber b,
+ExtensiveTest.IExtendedNumber c,
+PrecisionContext ctx) {
         return Create(this.ed.MultiplyAndSubtract(ToValue(b), ToValue(c), ctx));
       }
 
@@ -427,8 +436,10 @@ return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ? "NaN":
             bigmantissa = -bigmantissa;
           }
           exponent -= 23;
-        return Create(ExtendedFloat.Create(bigmantissa,
-            (BigInteger)exponent));
+        return Create(
+ExtendedFloat.Create(
+bigmantissa,
+(BigInteger)exponent));
         }
         if (words.Length == 2) {
           bool neg = (words[0] >> 31) != 0;
@@ -466,8 +477,10 @@ return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ? "NaN":
             bigmantissa = -bigmantissa;
           }
           exponent -= 52;
-        return Create(ExtendedFloat.Create(bigmantissa,
-            (BigInteger)exponent));
+        return Create(
+ExtendedFloat.Create(
+bigmantissa,
+(BigInteger)exponent));
         }
         if (words.Length == 4) {
           bool neg = (words[0] >> 31) != 0;
@@ -513,8 +526,10 @@ return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ? "NaN":
             bigmantissa = -bigmantissa;
           }
           exponent -= 112;
-        return Create(ExtendedFloat.Create(bigmantissa,
-            (BigInteger)exponent));
+        return Create(
+ExtendedFloat.Create(
+bigmantissa,
+(BigInteger)exponent));
         }
         throw new ArgumentException("words has a bad length");
       }
@@ -550,8 +565,9 @@ return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ? "NaN":
         return (ExtendedFloat)en.Value;
       }
 
-      public ExtensiveTest.IExtendedNumber Add(ExtensiveTest.IExtendedNumber
-        b, PrecisionContext ctx) {
+      public ExtensiveTest.IExtendedNumber Add(
+ExtensiveTest.IExtendedNumber b,
+PrecisionContext ctx) {
         return Create(this.ef.Add(ToValue(b), ctx));
       }
 
@@ -570,8 +586,9 @@ return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ? "NaN":
         return Create(this.ef.Divide(ToValue(b), ctx));
       }
 
-      public BinaryNumber Pow(ExtensiveTest.IExtendedNumber b,
-        PrecisionContext ctx) {
+      public BinaryNumber Pow(
+ExtensiveTest.IExtendedNumber b,
+PrecisionContext ctx) {
         return Create(this.ef.Pow(ToValue(b), ctx));
       }
 
@@ -580,21 +597,26 @@ return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ? "NaN":
       }
 
       public ExtensiveTest.IExtendedNumber
-        MultiplyAndAdd(ExtensiveTest.IExtendedNumber b,
-        ExtensiveTest.IExtendedNumber c, PrecisionContext ctx) {
+        MultiplyAndAdd(
+ExtensiveTest.IExtendedNumber b,
+ExtensiveTest.IExtendedNumber c,
+PrecisionContext ctx) {
         return Create(this.ef.MultiplyAndAdd(ToValue(b), ToValue(c), ctx));
       }
 
       public ExtensiveTest.IExtendedNumber
-        MultiplyAndSubtract(ExtensiveTest.IExtendedNumber b,
-        ExtensiveTest.IExtendedNumber c, PrecisionContext ctx) {
+        MultiplyAndSubtract(
+ExtensiveTest.IExtendedNumber b,
+ExtensiveTest.IExtendedNumber c,
+PrecisionContext ctx) {
         return Create(this.ef.MultiplyAndSubtract(ToValue(b), ToValue(c), ctx));
       }
 
       public bool IsNear(IExtendedNumber bn) {
         // ComparePrint(bn);
-        ExtendedFloat ulpdiff = ExtendedFloat.Create((BigInteger)2,
-          ToValue(this).Exponent);
+        ExtendedFloat ulpdiff = ExtendedFloat.Create(
+(BigInteger)2,
+ToValue(this).Exponent);
       return ToValue(this).Subtract(ToValue(bn)).Abs().CompareTo(ulpdiff) <=
           0;
       }

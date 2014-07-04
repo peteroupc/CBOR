@@ -16,17 +16,18 @@ namespace Test {
     // Test some specific cases
     [TestMethod]
     public void TestSpecificCases() {
-  TestCommon.DoTestMultiply("39258416159456516340113264558732499166970244380745050"
-        , "39258416159456516340113264558732499166970244380745051" ,
-
-  "1541223239349076530208308657654362309553698742116222355477449713742236585667505604058123112521437480247550"
-);
+  TestCommon.DoTestMultiply(
+"39258416159456516340113264558732499166970244380745050",
+"39258416159456516340113264558732499166970244380745051",
+"1541223239349076530208308657654362309553698742116222355477449713742236585667505604058123112521437480247550" );
       TestCommon.DoTestMultiply(
   "5786426269322750882632312999752639738983363095641642905722171221986067189342123124290107105663618428969517616421742429671402859775667602123564",
   "331378991485809774307751183645559883724387697397707434271522313077548174328632968616330900320595966360728317363190772921",
   "1917500101435169880779183578665955372346028226046021044867189027856189131730889958057717187493786883422516390996639766012958050987359732634213213442579444095928862861132583117668061032227577386757036981448703231972963300147061503108512300577364845823910107210444" );
-      TestCommon.DoTestDivide("9999999999999999999999", "281474976710655" ,
-        "35527136");
+      TestCommon.DoTestDivide(
+"9999999999999999999999",
+"281474976710655",
+"35527136");
     }
 
     [TestMethod]
@@ -134,24 +135,32 @@ namespace Test {
         if (!bigintB.IsZero) {
           bigintD = BigInteger.DivRem(bigintC, bigintB, out bigintRem);
           if (!bigintD.Equals(bigintA)) {
-            Assert.AreEqual(bigintA, bigintD, "TestMultiplyDivide " +
-              bigintA + "; " + bigintB + ";\n" + bigintC);
+            Assert.AreEqual(
+bigintA,
+bigintD,
+"TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC);
           }
           if (!bigintRem.IsZero) {
-            Assert.AreEqual(BigInteger.Zero, bigintRem,
-              "TestMultiplyDivide " + bigintA + "; " + bigintB);
+            Assert.AreEqual(
+BigInteger.Zero,
+bigintRem,
+"TestMultiplyDivide " + bigintA + "; " + bigintB);
           }
           bigintE = bigintC / (BigInteger)bigintB;
           if (!bigintD.Equals(bigintE)) {
             // Testing that divideWithRemainder and division method return
-            //the same value
-            Assert.AreEqual(bigintD, bigintE, "TestMultiplyDivide " +
-              bigintA + "; " + bigintB + ";\n" + bigintC);
+            // the same value
+            Assert.AreEqual(
+bigintD,
+bigintE,
+"TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC);
           }
           bigintE = bigintC % (BigInteger)bigintB;
           if (!bigintRem.Equals(bigintE)) {
-            Assert.AreEqual(bigintRem, bigintE, "TestMultiplyDivide " +
-              bigintA + "; " + bigintB + ";\n" + bigintC);
+            Assert.AreEqual(
+bigintRem,
+bigintE,
+"TestMultiplyDivide " + bigintA + "; " + bigintB + ";\n" + bigintC);
           }
           if (bigintE.Sign > 0 && !bigintC.mod(bigintB).Equals(bigintE)) {
             Assert.Fail("TestMultiplyDivide " + bigintA + "; " + bigintB +
@@ -161,12 +170,16 @@ namespace Test {
         if (!bigintA.IsZero) {
           bigintD = BigInteger.DivRem(bigintC, bigintA, out bigintRem);
           if (!bigintD.Equals(bigintB)) {
-            Assert.AreEqual(bigintB, bigintD, "TestMultiplyDivide " +
-              bigintA + "; " + bigintB);
+            Assert.AreEqual(
+bigintB,
+bigintD,
+"TestMultiplyDivide " + bigintA + "; " + bigintB);
           }
           if (!bigintRem.IsZero) {
-            Assert.AreEqual(BigInteger.Zero, bigintRem,
-              "TestMultiplyDivide " + bigintA + "; " + bigintB);
+            Assert.AreEqual(
+BigInteger.Zero,
+bigintRem,
+"TestMultiplyDivide " + bigintA + "; " + bigintB);
           }
         }
         if (!bigintB.IsZero) {
@@ -174,8 +187,10 @@ namespace Test {
           bigintD = bigintB * (BigInteger)bigintC;
           bigintD += (BigInteger)bigintRem;
           if (!bigintD.Equals(bigintA)) {
-            Assert.AreEqual(bigintA, bigintD, "TestMultiplyDivide " +
-              bigintA + "; " + bigintB);
+            Assert.AreEqual(
+bigintA,
+bigintD,
+"TestMultiplyDivide " + bigintA + "; " + bigintB);
           }
         }
       }
@@ -553,19 +568,25 @@ namespace Test {
         BigInteger bigintC = bigintA + (BigInteger)bigintB;
         BigInteger bigintD = bigintC - (BigInteger)bigintB;
         if (!bigintD.Equals(bigintA)) {
-          Assert.AreEqual(bigintA, bigintD, "TestAddSubtract " + bigintA +
-            "; " + bigintB);
+          Assert.AreEqual(
+bigintA,
+bigintD,
+"TestAddSubtract " + bigintA + "; " + bigintB);
         }
         bigintD = bigintC - (BigInteger)bigintA;
         if (!bigintD.Equals(bigintB)) {
-          Assert.AreEqual(bigintB, bigintD, "TestAddSubtract " + bigintA +
-            "; " + bigintB);
+          Assert.AreEqual(
+bigintB,
+bigintD,
+"TestAddSubtract " + bigintA + "; " + bigintB);
         }
         bigintC = bigintA - (BigInteger)bigintB;
         bigintD = bigintC + (BigInteger)bigintB;
         if (!bigintD.Equals(bigintA)) {
-          Assert.AreEqual(bigintA, bigintD, "TestAddSubtract " + bigintA +
-            "; " + bigintB);
+          Assert.AreEqual(
+bigintA,
+bigintD,
+"TestAddSubtract " + bigintA + "; " + bigintB);
         }
       }
     }

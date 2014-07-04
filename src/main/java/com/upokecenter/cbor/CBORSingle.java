@@ -11,6 +11,8 @@ import com.upokecenter.util.*;
 
   final class CBORSingle implements ICBORNumber {
 
+    private static final float SingleOneLsh64 = 9223372036854775808f;
+
     public boolean IsPositiveInfinity(final Object obj) {
       return ((((Float)obj).floatValue()) == Float.POSITIVE_INFINITY);
     }
@@ -54,7 +56,7 @@ import com.upokecenter.util.*;
       }
       fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) :
       (float)Math.floor(fltItem);
-      if (fltItem >= -9223372036854775808f && fltItem < 9223372036854775808f) {
+      if (fltItem >= -SingleOneLsh64 && fltItem < SingleOneLsh64) {
         return (long)fltItem;
       }
       throw new ArithmeticException("This Object's value is out of range");
@@ -83,8 +85,8 @@ import com.upokecenter.util.*;
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) :
       (float)Math.floor(fltItem);
-      return fltItem2 >= -9223372036854775808f && fltItem2 <
-      9223372036854775808f;
+      return fltItem2 >= -SingleOneLsh64 && fltItem2 <
+      SingleOneLsh64;
     }
 
     public boolean CanTruncatedIntFitInInt32(final Object obj) {

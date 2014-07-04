@@ -120,42 +120,23 @@ namespace PeterO.Cbor {
       }
       if (offset < 0) {
         throw new ArgumentException(
-          "offset (" +
-          Convert.ToString(
-(int)offset,
-System.Globalization.CultureInfo.InvariantCulture)
-          +") is less than " + "0 ");
+          "offset (" + offset + ") is less than " + "0 ");
       }
       if (offset > data.Length) {
         throw new ArgumentException(
-          "offset (" +
-          Convert.ToString(
-(int)offset,
-System.Globalization.CultureInfo.InvariantCulture)
-          +") is more than " + Convert.ToString((int)data.Length,
-  System.Globalization.CultureInfo.InvariantCulture));
+          "offset (" + offset + ") is more than " + data.Length);
       }
       if (count < 0) {
-        throw new ArgumentException("count (" + Convert.ToString((int)count,
-  System.Globalization.CultureInfo.InvariantCulture)
-                                    +") is less than " + "0 ");
+        throw new ArgumentException("count (" + count + ") is less than " + "0 ");
       }
       if (count > data.Length) {
         throw new ArgumentException(
-          "count (" + Convert.ToString((int)count,
-  System.Globalization.CultureInfo.InvariantCulture)
-          +") is more than " + Convert.ToString((int)data.Length,
-  System.Globalization.CultureInfo.InvariantCulture));
+          "count (" + count + ") is more than " + data.Length);
       }
       if (data.Length - offset < count) {
         throw new ArgumentException("data's length minus " + offset + " (" +
-                                  Convert.ToString(
-(int)(data.Length - offset),
-System.Globalization.CultureInfo.InvariantCulture)
-                              +") is less than " +
-                                      Convert.ToString(
-(int)count,
-System.Globalization.CultureInfo.InvariantCulture));
+          (data.Length - offset) +
+                                    ") is less than " + count);
       }
       int length = offset + count;
       int i = offset;
@@ -197,44 +178,21 @@ System.Globalization.CultureInfo.InvariantCulture));
         throw new ArgumentNullException("outputStream");
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" +
-                                    Convert.ToString(
-(int)offset,
-System.Globalization.CultureInfo.InvariantCulture)
-                                    +") is less than " + "0 ");
+        throw new ArgumentException("offset (" + offset + ") is less than " + "0 ");
       }
       if (offset > data.Length) {
-        throw new ArgumentException("offset (" +
-                                    Convert.ToString(
-(int)offset,
-System.Globalization.CultureInfo.InvariantCulture)
-                        +") is more than " +
-                                      Convert.ToString(
-(int)data.Length,
-System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("offset (" + offset + ") is more than " + data.Length);
       }
       if (count < 0) {
-        throw new ArgumentException("count (" + Convert.ToString((int)count,
-  System.Globalization.CultureInfo.InvariantCulture)
-                                    +") is less than " + "0 ");
+        throw new ArgumentException("count (" + count + ") is less than " + "0 ");
       }
       if (count > data.Length) {
-        throw new ArgumentException("count (" + Convert.ToString((int)count,
-  System.Globalization.CultureInfo.InvariantCulture)
-                        +") is more than " +
-                                      Convert.ToString(
-(int)data.Length,
-System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("count (" + count + ") is more than " + data.Length);
       }
       if (data.Length - offset < count) {
         throw new ArgumentException("data's length minus " + offset + " (" +
-                                  Convert.ToString(
-(int)(data.Length - offset),
-System.Globalization.CultureInfo.InvariantCulture)
-                              +") is less than " +
-                                      Convert.ToString(
-(int)count,
-System.Globalization.CultureInfo.InvariantCulture));
+          (data.Length - offset) +
+                                    ") is less than " + count);
       }
       int length = offset + count;
       int i = offset;
@@ -245,8 +203,8 @@ System.Globalization.CultureInfo.InvariantCulture));
                                    ((data[i + 1] >> 4) &
                                     15)];
         buffer[2] = (byte)alphabet[((data[i + 1] & 15) << 2) + ((data[i +
-                                                                 2] >> 6) &
-                                                                        3)];
+                                                                      2] >> 6) &
+                                                                3)];
         buffer[3] = (byte)alphabet[data[i + 2] & 63];
         outputStream.Write(buffer, 0, 4);
       }
@@ -255,8 +213,8 @@ System.Globalization.CultureInfo.InvariantCulture));
         i = length - lenmod3;
         buffer[0] = (byte)alphabet[(data[i] >> 2) & 63];
         if (lenmod3 == 2) {
-        buffer[1] = (byte)alphabet[((data[i] & 3) << 4) + ((data[i + 1] >>
-            4) &
+          buffer[1] = (byte)alphabet[((data[i] & 3) << 4) + ((data[i + 1] >>
+                                                              4) &
                                                              15)];
           buffer[2] = (byte)alphabet[(data[i + 1] & 15) << 2];
           if (padding) {

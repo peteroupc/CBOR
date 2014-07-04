@@ -10,50 +10,38 @@ namespace PeterO.Cbor {
   using System.Text;
 
     /// <summary>Contains utility methods for processing Uniform Resource
-    /// Identifiers (URIs) and Internationalized Resource Identifiers (IRIs)
-    /// under
-    /// RFC3986 and RFC3987, respectively. In the following documentation,
-    /// URIs and
-    /// IRIs include URI references and IRI references, for
-    /// convenience.</summary>
+    /// Identifiers (URIs) and Internationalized Resource Identifiers (IRIs) under
+    /// RFC3986 and RFC3987, respectively. In the following documentation, URIs and
+    /// IRIs include URI references and IRI references, for convenience.</summary>
   internal static class URIUtility {
-    /// <summary>Specifies whether certain characters are allowed when
-    /// parsing IRIs
+    /// <summary>Specifies whether certain characters are allowed when parsing IRIs
     /// and URIs.</summary>
     internal enum ParseMode {
-    /// <summary>The rules follow the syntax for parsing IRIs. In
-    /// particular, many
-    /// internationalized characters are allowed. Strings with unpaired
-    /// surrogate
+    /// <summary>The rules follow the syntax for parsing IRIs. In particular, many
+    /// internationalized characters are allowed. Strings with unpaired surrogate
     /// code points are considered invalid.</summary>
       IRIStrict,
 
-    /// <summary>The rules follow the syntax for parsing IRIs, except that
-    /// non-ASCII
+    /// <summary>The rules follow the syntax for parsing IRIs, except that non-ASCII
     /// characters are not allowed.</summary>
       URIStrict,
 
-    /// <summary>The rules only check for the appropriate delimiters when
-    /// splitting
+    /// <summary>The rules only check for the appropriate delimiters when splitting
     /// the path, without checking if all the characters in each component are
-    /// valid. Even with this mode, strings with unpaired surrogate code
-    /// points are
+    /// valid. Even with this mode, strings with unpaired surrogate code points are
     /// considered invalid.</summary>
       IRILenient,
 
-    /// <summary>The rules only check for the appropriate delimiters when
-    /// splitting
+    /// <summary>The rules only check for the appropriate delimiters when splitting
     /// the path, without checking if all the characters in each component are
     /// valid. Non-ASCII characters are not allowed.</summary>
       URILenient,
 
-    /// <summary>The rules only check for the appropriate delimiters when
-    /// splitting
+    /// <summary>The rules only check for the appropriate delimiters when splitting
     /// the path, without checking if all the characters in each component are
     /// valid. Unpaired surrogate code points are treated as though they were
     /// replacement characters instead for the purposes of these rules, so that
-    /// strings with those code points are not considered invalid
-    /// strings.</summary>
+    /// strings with those code points are not considered invalid strings.</summary>
       IRISurrogateLenient
     }
 
@@ -134,10 +122,8 @@ namespace PeterO.Cbor {
 
     /// <return>a string possibly containing escaped characters, or null if s is
     /// null.</return>
-    /// <summary>Escapes characters that cannot appear in URIs or IRIs. The
-    /// function
-    /// is idempotent; that is, calling the function again on the result
-    /// with the
+    /// <summary>Escapes characters that cannot appear in URIs or IRIs. The function
+    /// is idempotent; that is, calling the function again on the result with the
     /// same mode doesn't change the result.</summary>
     /// <param name='s'>A string to escape.</param>
     /// <param name='mode'>A 32-bit signed integer.</param>
@@ -261,7 +247,7 @@ namespace PeterO.Cbor {
     /// relative IRI references.
     /// <para>The following cases return true:</para>
     /// <code> xx-x:mm example:/ww </code>
-    /// The following cases return false:
+    ///  The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
     /// <param name='refValue'>A string object.</param>
@@ -283,7 +269,7 @@ namespace PeterO.Cbor {
     /// relative URI references. The following cases return
     /// true:
     /// <code> http://example/z xx-x:mm example:/ww </code>
-    /// The following cases return false:
+    ///  The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
     /// <param name='refValue'>A string object.</param>
@@ -364,8 +350,7 @@ namespace PeterO.Cbor {
         (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
-    /// <summary>Determines whether the substring is a valid CURIE reference
-    /// under
+    /// <summary>Determines whether the substring is a valid CURIE reference under
     /// RDFA 1.1. (The CURIE reference is the part after the colon.).</summary>
     /// <param name='s'>A string object.</param>
     /// <param name='offset'>A 32-bit signed integer.</param>
@@ -377,48 +362,23 @@ namespace PeterO.Cbor {
         return false;
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" +
-                                    Convert.ToString(
-(int)(long)offset,
-System.Globalization.CultureInfo.InvariantCulture)
-                                    +") is less than " + "0 ");
+        throw new ArgumentException("offset (" + offset + ") is less than " + "0 ");
       }
       if (offset > s.Length) {
-        throw new ArgumentException("offset (" +
-                                    Convert.ToString(
-(int)(long)offset,
-System.Globalization.CultureInfo.InvariantCulture)
-                     +") is more than " +
-                                      Convert.ToString(
-(int)(long)s.Length,
-System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException("offset (" + offset + ") is more than " + s.Length);
       }
       if (length < 0) {
-        throw new ArgumentException("length (" +
-                                    Convert.ToString(
-(int)(long)length,
-System.Globalization.CultureInfo.InvariantCulture)
-                                    +") is less than " + "0 ");
+        throw new ArgumentException(
+          "length (" + length + ") is less than " + "0 ");
       }
       if (length > s.Length) {
-        throw new ArgumentException("length (" +
-                                    Convert.ToString(
-(int)(long)length,
-System.Globalization.CultureInfo.InvariantCulture)
-                     +") is more than " +
-                                      Convert.ToString(
-(int)(long)s.Length,
-System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException(
+          "length (" + length + ") is more than " + s.Length);
       }
       if (s.Length - offset < length) {
-        throw new ArgumentException("s's length minus " + offset + " (" +
-                               Convert.ToString(
-(int)(long)(s.Length - offset),
-System.Globalization.CultureInfo.InvariantCulture)
-                       +") is less than " +
-                                      Convert.ToString(
-(int)(long)length,
-System.Globalization.CultureInfo.InvariantCulture));
+        throw new ArgumentException(
+          "s's length minus " + offset + " (" + (s.Length - offset) +
+          ") is less than " + length);
       }
       if (length == 0) {
         return true;
@@ -493,8 +453,9 @@ System.Globalization.CultureInfo.InvariantCulture));
         return String.Empty;
       }
       if (path.IndexOf("/. ", StringComparison.Ordinal) < 0 &&
-          path.IndexOf("./ ",
-                       StringComparison.Ordinal) < 0) {
+          path.IndexOf(
+"./ ",
+StringComparison.Ordinal) < 0) {
         return path;
       }
       var builder = new StringBuilder();
@@ -813,8 +774,9 @@ System.Globalization.CultureInfo.InvariantCulture));
                 return -1;
               }
               if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-      (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-' || c ==
-                    '~') {
+             (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-' ||
+                    c ==
+                  '~') {
                 // unreserved character under RFC3986
                 ++index;
                 haveChar = true;
@@ -965,15 +927,11 @@ System.Globalization.CultureInfo.InvariantCulture));
 
     /// <summary>Parses an Internationalized Resource Identifier (IRI) reference
     /// under RFC3987. If the IRI reference is syntactically valid, splits the
-    /// string into its components and returns an array containing the
-    /// indices into
-    /// the components. <returns>If the string is a valid IRI reference,
-    /// returns an
-    /// array of 10 integers. Each of the five pairs corresponds to the
-    /// start and
+    /// string into its components and returns an array containing the indices into
+    /// the components. <returns>If the string is a valid IRI reference, returns an
+    /// array of 10 integers. Each of the five pairs corresponds to the start and
     /// end index of the IRI's scheme, authority, path, query, or fragment
-    /// component, respectively. If a component is absent, both indices in
-    /// that pair
+    /// component, respectively. If a component is absent, both indices in that pair
     /// will be -1. If the string is null or is not a valid IRI, returns
     /// null.</returns>
     /// </summary>
@@ -983,26 +941,19 @@ System.Globalization.CultureInfo.InvariantCulture));
       return (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict);
     }
 
-    /// <summary>Parses a substring that represents an Internationalized
-    /// Resource
-    /// Identifier (IRI) under RFC3987. If the IRI is syntactically valid,
-    /// splits
-    /// the string into its components and returns an array containing the
-    /// indices
+    /// <summary>Parses a substring that represents an Internationalized Resource
+    /// Identifier (IRI) under RFC3987. If the IRI is syntactically valid, splits
+    /// the string into its components and returns an array containing the indices
     /// into the components.</summary>
     /// <param name='s'>A string object.</param>
     /// <param name='offset'>A 32-bit signed integer.</param>
     /// <param name='length'>A 32-bit signed integer. (2).</param>
     /// <param name='parseMode'>A ParseMode object.</param>
-    /// <returns>If the string is a valid IRI, returns an array of 10
-    /// integers. Each
+    /// <returns>If the string is a valid IRI, returns an array of 10 integers. Each
     /// of the five pairs corresponds to the start and end index of the IRI's
-    /// scheme, authority, path, query, or fragment component, respectively.
-    /// If a
-    /// component is absent, both indices in that pair will be -1 (an index
-    /// won't be
-    /// less than 0 in any other case). If the string is null or is not a
-    /// valid IRI,
+    /// scheme, authority, path, query, or fragment component, respectively. If a
+    /// component is absent, both indices in that pair will be -1 (an index won't be
+    /// less than 0 in any other case). If the string is null or is not a valid IRI,
     /// returns null.</returns>
     public static int[] splitIRI(
       string s,
@@ -1038,14 +989,15 @@ System.Globalization.CultureInfo.InvariantCulture));
           ++index;
           break;
         }
-        if (strict && index == offset && !((c >= 'a' && c <= 'z') || (c >=
-                                                           'A' && c <= 'Z'
-))) {
+        if (strict && index == offset && !((c >= 'a' && c <= 'z') ||
+                                           (c >= 'A' && c <=
+                                                               'Z'))) {
           break;
         }
         if (strict && index > offset &&
-!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' && c <=
-              '9') ||
+        !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' &&
+              c <=
+                                                                   '9') ||
               c == '+' || c == '-' || c == '.')) {
           break;
         }
@@ -1239,18 +1191,15 @@ System.Globalization.CultureInfo.InvariantCulture));
     }
 
     /// <summary>Parses an Internationalized Resource Identifier (IRI) reference
-    /// under RFC3987. If the IRI is syntactically valid, splits the string
-    /// into its
+    /// under RFC3987. If the IRI is syntactically valid, splits the string into its
     /// components and returns an array containing the indices into the
     /// components.</summary>
     /// <param name='s'>A string object.</param>
     /// <param name='parseMode'>A ParseMode object.</param>
     /// <returns>If the string is a valid IRI reference, returns an array of 10
-    /// integers. Each of the five pairs corresponds to the start and end
-    /// index of
+    /// integers. Each of the five pairs corresponds to the start and end index of
     /// the IRI's scheme, authority, path, query, or fragment component,
-    /// respectively. If a component is absent, both indices in that pair
-    /// will be
+    /// respectively. If a component is absent, both indices in that pair will be
     /// -1. If the string is null or is not a valid IRI, returns null.</returns>
     public static int[] splitIRI(string s, ParseMode parseMode) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, parseMode);

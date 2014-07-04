@@ -20,7 +20,11 @@ public static class DocGenerator {
       var visitor = new TypeVisitor(directory);
       members.Accept(visitor);
       visitor.Finish();
-      using (var writer = new StreamWriter(Path.Combine(directory, "APIDocs.md"), false, Encoding.UTF8)) {
+      using (
+var writer = new StreamWriter(
+Path.Combine(directory, "APIDocs.md"),
+false,
+Encoding.UTF8)) {
         var visitor2 = new SummaryVisitor(writer);
         members.Accept(visitor2);
         visitor2.Finish();
