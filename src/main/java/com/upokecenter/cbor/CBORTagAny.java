@@ -13,7 +13,7 @@ at: http://upokecenter.com/d/
       return CBORTypeFilter.Any;
     }
 
-    public CBORObject ValidateObject(final CBORObject obj) {
+    public CBORObject ValidateObject(CBORObject obj) {
       return obj;
     }
   }

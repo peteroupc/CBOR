@@ -349,15 +349,16 @@ namespace PeterO {
       int offset,
       int length,
       PrecisionContext ctx) {
+      int tmpoffset = offset;
       if (str == null) {
         throw new ArgumentNullException("str");
       }
-      if (offset < 0) {
-        throw new FormatException("offset (" + offset + ") is less than " +
+      if (tmpoffset < 0) {
+        throw new FormatException("offset (" + tmpoffset + ") is less than " +
                                   "0");
       }
-      if (offset > str.Length) {
-        throw new FormatException("offset (" + offset + ") is more than " +
+      if (tmpoffset > str.Length) {
+        throw new FormatException("offset (" + tmpoffset + ") is more than " +
                                   str.Length);
       }
       if (length < 0) {
@@ -368,19 +369,19 @@ namespace PeterO {
         throw new FormatException("length (" + length + ") is more than " +
                                   str.Length);
       }
-      if (str.Length - offset < length) {
-        throw new FormatException("str's length minus " + offset + " (" +
-                                  (str.Length - offset) +
+      if (str.Length - tmpoffset < length) {
+        throw new FormatException("str's length minus " + tmpoffset + " (" +
+                                  (str.Length - tmpoffset) +
                                   ") is less than " + length);
       }
       if (length == 0) {
         throw new FormatException();
       }
       bool negative = false;
-      int endStr = offset + length;
+      int endStr = tmpoffset + length;
       if (str[0] == '+' || str[0] == '-') {
         negative = str[0] == '-';
-        ++offset;
+        ++tmpoffset;
       }
       int mantInt = 0;
       FastInteger mant = null;
@@ -393,7 +394,7 @@ namespace PeterO {
       bool haveExponent = false;
       int newScaleInt = 0;
       FastInteger newScale = null;
-      int i = offset;
+      int i = tmpoffset;
       if (i + 8 == endStr) {
         if ((str[i] == 'I' || str[i] == 'i') &&
             (str[i + 1] == 'N' || str[i + 1] == 'n') &&
@@ -631,14 +632,14 @@ namespace PeterO {
       if (haveExponent) {
         FastInteger exp = null;
         int expInt = 0;
-        offset = 1;
+        tmpoffset = 1;
         haveDigits = false;
         if (i == endStr) {
           throw new FormatException();
         }
         if (str[i] == '+' || str[i] == '-') {
           if (str[i] == '-') {
-            offset = -1;
+            tmpoffset = -1;
           }
           ++i;
         }
@@ -677,19 +678,19 @@ namespace PeterO {
         if (exp != null && (expBufferMult != 1 || expBuffer != 0)) {
           exp.Multiply(expBufferMult).AddInt(expBuffer);
         }
-        if (offset >= 0 && newScaleInt == 0 && newScale == null && exp ==
+        if (tmpoffset >= 0 && newScaleInt == 0 && newScale == null && exp ==
             null) {
           newScaleInt = expInt;
         } else if (exp == null) {
           newScale = newScale ?? (new FastInteger(newScaleInt));
-          if (offset < 0) {
+          if (tmpoffset < 0) {
             newScale.SubtractInt(expInt);
           } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
           newScale = newScale ?? (new FastInteger(newScaleInt));
-          if (offset < 0) {
+          if (tmpoffset < 0) {
             newScale.Subtract(exp);
           } else {
             newScale.Add(exp);
@@ -769,27 +770,28 @@ namespace PeterO {
         BigInteger gcd = BigInteger.GreatestCommonDivisor(
           numerator,
           denominator);
-        denominator /= gcd;
-        if (denominator.IsZero) {
+        BigInteger tmpden = denominator;
+        tmpden /= gcd;
+        if (tmpden.IsZero) {
           return false;
         }
         // Eliminate factors of 2
-        while (denominator.IsEven) {
-          denominator >>= 1;
+        while (tmpden.IsEven) {
+          tmpden >>= 1;
         }
         // Eliminate factors of 5
         while (true) {
           BigInteger bigrem;
           BigInteger bigquo = BigInteger.DivRem(
-            denominator,
+            tmpden,
             (BigInteger)5,
             out bigrem);
           if (!bigrem.IsZero) {
             break;
           }
-          denominator = bigquo;
+          tmpden = bigquo;
         }
-        return denominator.CompareTo(BigInteger.One) == 0;
+        return tmpden.CompareTo(BigInteger.One) == 0;
       }
 
     /// <summary>This is an internal method.</summary>
@@ -799,22 +801,23 @@ namespace PeterO {
       public BigInteger MultiplyByRadixPower(
         BigInteger bigint,
         FastInteger power) {
+      BigInteger tmpbigint = bigint;
         if (power.Sign <= 0) {
-          return bigint;
+          return tmpbigint;
         }
-        if (bigint.IsZero) {
-          return bigint;
+        if (tmpbigint.IsZero) {
+          return tmpbigint;
         }
         BigInteger bigtmp = null;
-        if (bigint.CompareTo(BigInteger.One) != 0) {
+        if (tmpbigint.CompareTo(BigInteger.One) != 0) {
           if (power.CanFitInInt32()) {
             bigtmp = DecimalUtility.FindPowerOfTen(power.AsInt32());
-            bigint *= (BigInteger)bigtmp;
+            tmpbigint *= (BigInteger)bigtmp;
           } else {
             bigtmp = DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger());
-            bigint *= (BigInteger)bigtmp;
+            tmpbigint *= (BigInteger)bigtmp;
           }
-          return bigint;
+          return tmpbigint;
         }
         return power.CanFitInInt32() ?
           DecimalUtility.FindPowerOfTen(power.AsInt32()) :
@@ -2856,8 +2859,7 @@ namespace PeterO {
     /// precision. Returns the same value as this object if <paramref name='ctx'/>
     /// is null or the precision and exponent range are unlimited.</returns>
     [Obsolete(
-      "Instead of this method,
-      use RoundToPrecision and pass a " + "precision context with the IsPrecisionInBits property set.")]
+      "Instead of this method use RoundToPrecision and pass a " + "precision context with the IsPrecisionInBits property set.")]
     public ExtendedDecimal RoundToBinaryPrecision(PrecisionContext ctx) {
       if (ctx == null) {
         return this;

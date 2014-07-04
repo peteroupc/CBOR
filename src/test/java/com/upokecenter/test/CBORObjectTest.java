@@ -1740,6 +1740,17 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       if (cbor.isFinite())Assert.fail();
       cbor = CBORObject.Undefined;
       if (cbor.isFinite())Assert.fail();
+      if (CBORObject.NewMap().isFinite())Assert.fail();
+      if (!(CBORObject.FromObject(0).isFinite()))Assert.fail();
+      if (!(CBORObject.FromObject(2.5).isFinite()))Assert.fail();
+      if (CBORObject.FromObject(Double.POSITIVE_INFINITY).isFinite())Assert.fail();
+      if (CBORObject.FromObject(Double.NEGATIVE_INFINITY).isFinite())Assert.fail();
+      if (CBORObject.FromObject(Double.NaN).isFinite())Assert.fail();
+      if (CBORObject.FromObject(
+       ExtendedDecimal.PositiveInfinity).isFinite())Assert.fail();
+      if (CBORObject.FromObject(
+        ExtendedDecimal.NegativeInfinity).isFinite())Assert.fail();
+      if (CBORObject.FromObject(ExtendedDecimal.NaN).isFinite())Assert.fail();
       CBORObject numbers = GetNumberData();
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
@@ -1772,20 +1783,20 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       if (!(CBORObject.FromObject(BigInteger.ONE.shiftLeft(63)).isIntegral()))Assert.fail();
       if (!(CBORObject.FromObject(BigInteger.ONE.shiftLeft(64)).isIntegral()))Assert.fail();
       if (!(CBORObject.FromObject(BigInteger.ONE.shiftLeft(80)).isIntegral()))Assert.fail();
-  if (!(CBORObject.FromObject(ExtendedDecimal.FromString("4444e+800"
-)).isIntegral()))Assert.fail();
+      if (!(CBORObject.FromObject(
+        ExtendedDecimal.FromString("4444e+800")).isIntegral()))Assert.fail();
 
-  if (CBORObject.FromObject(ExtendedDecimal.FromString("4444e-800"
-)).isIntegral())Assert.fail();
+      if (CBORObject.FromObject(
+         ExtendedDecimal.FromString("4444e-800")).isIntegral())Assert.fail();
       if (CBORObject.FromObject(2.5).isIntegral())Assert.fail();
       if (CBORObject.FromObject(999.99).isIntegral())Assert.fail();
       if (CBORObject.FromObject(Double.POSITIVE_INFINITY).isIntegral())Assert.fail();
       if (CBORObject.FromObject(Double.NEGATIVE_INFINITY).isIntegral())Assert.fail();
       if (CBORObject.FromObject(Double.NaN).isIntegral())Assert.fail();
-      if (CBORObject.FromObject(ExtendedDecimal.PositiveInfinity)
-                     .IsIntegral)Assert.fail();
-      if (CBORObject.FromObject(ExtendedDecimal.NegativeInfinity)
-                     .IsIntegral)Assert.fail();
+      if (CBORObject.FromObject(
+      ExtendedDecimal.PositiveInfinity).isIntegral())Assert.fail();
+      if (CBORObject.FromObject(
+         ExtendedDecimal.NegativeInfinity).isIntegral())Assert.fail();
       if (CBORObject.FromObject(ExtendedDecimal.NaN).isIntegral())Assert.fail();
       cbor = CBORObject.True;
       if (cbor.isIntegral())Assert.fail();

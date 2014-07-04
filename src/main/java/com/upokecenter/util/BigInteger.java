@@ -21,7 +21,7 @@ at: http://upokecenter.com/d/
      */
   public final class BigInteger implements Comparable<BigInteger> {
 
-    private static int CountWords(final short[] array, int n) {
+    private static int CountWords(short[] array, int n) {
       while (n != 0 && array[n - 1] == 0) {
         --n;
       }
@@ -29,10 +29,10 @@ at: http://upokecenter.com/d/
     }
 
     private static short ShiftWordsLeftByBits(
-      final short[] r,
-      final int rstart,
-      final int n,
-      final int shiftBits) {
+      short[] r,
+      int rstart,
+      int n,
+      int shiftBits) {
       {
         short u, carry = 0;
         if (shiftBits != 0) {
@@ -48,10 +48,10 @@ at: http://upokecenter.com/d/
     }
 
     private static short ShiftWordsRightByBits(
-      final short[] r,
-      final int rstart,
-      final int n,
-      final int shiftBits) {
+      short[] r,
+      int rstart,
+      int n,
+      int shiftBits) {
       // Debugif(!(shiftBits< 16))Assert.fail("{0} line {1}: shiftBits<16"
       // ,"words.h" ,67);
       short u, carry = 0;
@@ -71,10 +71,10 @@ at: http://upokecenter.com/d/
     }
 
     private static short ShiftWordsRightByBitsSignExtend(
-      final short[] r,
-      final int rstart,
-      final int n,
-      final int shiftBits) {
+      short[] r,
+      int rstart,
+      int n,
+      int shiftBits) {
       // Debugif(!(shiftBits< 16))Assert.fail("{0} line {1}: shiftBits<16"
       // ,"words.h" ,67);
       {
@@ -93,10 +93,10 @@ at: http://upokecenter.com/d/
     }
 
     private static void ShiftWordsLeftByWords(
-      final short[] r,
-      final int rstart,
-      final int n,
-      final int shiftWords) {
+      short[] r,
+      int rstart,
+      int n,
+      int shiftWords) {
       shiftWords = Math.min(shiftWords, n);
       if (shiftWords != 0) {
         for (int i = n - 1; i >= shiftWords; --i) {
@@ -107,10 +107,10 @@ at: http://upokecenter.com/d/
     }
 
     private static void ShiftWordsRightByWordsSignExtend(
-      final short[] r,
-      final int rstart,
-      final int n,
-      final int shiftWords) {
+      short[] r,
+      int rstart,
+      int n,
+      int shiftWords) {
       shiftWords = Math.min(shiftWords, n);
       if (shiftWords != 0) {
         for (int i = 0; i + shiftWords < n; ++i) {
@@ -125,11 +125,11 @@ at: http://upokecenter.com/d/
     }
 
     private static int Compare(
-      final short[] words1,
-      final int astart,
-      final short[] words2,
-      final int bstart,
-      final int n) {
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int n) {
       while ((n--) != 0) {
         int an = ((int)words1[astart + n]) & 0xffff;
         int bn = ((int)words2[bstart + n]) & 0xffff;
@@ -181,19 +181,19 @@ at: http://upokecenter.com/d/
      */
 
     private static int CompareWithOneBiggerWords1(
-      final short[] words1,
-      final int astart,
-      final short[] words2,
-      final int bstart,
-      final int words1Count) {
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int words1Count) {
       // NOTE: Assumes that words2's count is 1 less
       if (words1[astart + words1Count - 1] != 0) {
         return 1;
       }
-      --words1Count;
-      while ((words1Count--) != 0) {
-        int an = ((int)words1[astart + words1Count]) & 0xffff;
-        int bn = ((int)words2[bstart + words1Count]) & 0xffff;
+      int w1c = words1Count;
+      while ((w1c--) != 0) {
+        int an = ((int)words1[astart + w1c]) & 0xffff;
+        int bn = ((int)words2[bstart + w1c]) & 0xffff;
         if (an > bn) {
           return 1;
         }
@@ -205,10 +205,10 @@ at: http://upokecenter.com/d/
     }
 
     private static int Increment(
-      final short[] words1,
-      final int words1Start,
-      final int n,
-      final short words2) {
+      short[] words1,
+      int words1Start,
+      int n,
+      short words2) {
       {
         // Debugif(!(n!=0))Assert.fail("{0} line {1}: n","integer.cpp",63);
         short tmp = words1[words1Start];
@@ -227,10 +227,10 @@ at: http://upokecenter.com/d/
     }
 
     private static int Decrement(
-      final short[] words1,
-      final int words1Start,
-      final int n,
-      final short words2) {
+      short[] words1,
+      int words1Start,
+      int n,
+      short words2) {
       // Debugif(!(n!=0))Assert.fail("{0} line {1}: n","integer.cpp",76);
       {
         short tmp = words1[words1Start];
@@ -249,7 +249,7 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static void TwosComplement(final short[] words1, int words1Start, int n) {
+    private static void TwosComplement(short[] words1, int words1Start, int n) {
       Decrement(words1, words1Start, n, (short)1);
       for (int i = 0; i < n; ++i) {
         words1[words1Start + i] = ((short)(~words1[words1Start + i]));
@@ -257,13 +257,13 @@ at: http://upokecenter.com/d/
     }
 
     private static int Add(
-      final short[] c,
-      final int cstart,
-      final short[] words1,
-      final int astart,
-      final short[] words2,
-      final int bstart,
-      final int n) {
+      short[] c,
+      int cstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int n) {
       // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0" ,"integer.cpp"
       // , 799);
       {
@@ -284,13 +284,13 @@ at: http://upokecenter.com/d/
     }
 
     private static int AddOneByOne(
-      final short[] c,
-      final int cstart,
-      final short[] words1,
-      final int astart,
-      final short[] words2,
-      final int bstart,
-      final int n) {
+      short[] c,
+      int cstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int n) {
       // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0" ,"integer.cpp"
       // , 799);
       {
@@ -308,13 +308,13 @@ at: http://upokecenter.com/d/
     }
 
     private static int SubtractOneBiggerWords1(
-      final short[] c,
-      final int cstart,
-      final short[] words1,
-      final int astart,
-      final short[] words2,
-      final int bstart,
-      final int words1Count) {
+      short[] c,
+      int cstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int words1Count) {
       // Assumes that words2's count is 1 less
       {
         int u;
@@ -335,13 +335,13 @@ at: http://upokecenter.com/d/
     }
 
     private static int SubtractOneBiggerWords2(
-      final short[] c,
-      final int cstart,
-      final short[] words1,
-      final int astart,
-      final short[] words2,
-      final int bstart,
-      final int words2Count) {
+      short[] c,
+      int cstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int words2Count) {
       // Assumes that words1's count is 1 less
       {
         int u;
@@ -362,14 +362,14 @@ at: http://upokecenter.com/d/
     }
 
     private static int AddUnevenSize(
-      final short[] c,
-      final int cstart,
-      final short[] wordsBigger,
-      final int astart,
-      final int acount,
-      final short[] wordsSmaller,
-      final int bstart,
-      final int bcount) {
+      short[] c,
+      int cstart,
+      short[] wordsBigger,
+      int astart,
+      int acount,
+      short[] wordsSmaller,
+      int bstart,
+      int bcount) {
       {
         int u;
         u = 0;
@@ -387,13 +387,13 @@ at: http://upokecenter.com/d/
     }
 
     private static int Subtract(
-      final short[] c,
-      final int cstart,
-      final short[] words1,
-      final int astart,
-      final short[] words2,
-      final int bstart,
-      final int n) {
+      short[] c,
+      int cstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int n) {
       // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0" ,"integer.cpp"
       // , 799);
       {
@@ -418,13 +418,13 @@ at: http://upokecenter.com/d/
     }
 
     private static int SubtractOneByOne(
-      final short[] c,
-      final int cstart,
-      final short[] words1,
-      final int astart,
-      final short[] words2,
-      final int bstart,
-      final int n) {
+      short[] c,
+      int cstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart,
+      int n) {
       // Debugif(!(n%2 == 0))Assert.fail("{0} line {1}: n%2 == 0" ,"integer.cpp"
       // , 799);
       {
@@ -443,12 +443,12 @@ at: http://upokecenter.com/d/
     }
 
     private static short LinearMultiplyAdd(
-      final short[] productArr,
-      final int cstart,
-      final short[] words1,
-      final int astart,
-      final short words2,
-      final int n) {
+      short[] productArr,
+      int cstart,
+      short[] words1,
+      int astart,
+      short words2,
+      int n) {
       {
         short carry = 0;
         int bint = ((int)words2) & 0xffff;
@@ -465,12 +465,12 @@ at: http://upokecenter.com/d/
     }
 
     private static short LinearMultiply(
-      final short[] productArr,
-      final int cstart,
-      final short[] words1,
-      final int astart,
-      final short words2,
-      final int n) {
+      short[] productArr,
+      int cstart,
+      short[] words1,
+      int astart,
+      short words2,
+      int n) {
       {
         short carry = 0;
         int bint = ((int)words2) & 0xffff;
@@ -489,10 +489,10 @@ at: http://upokecenter.com/d/
     //-----------------------------
 
     private static void BaselineSquare2(
-      final short[] result,
-      final int rstart,
-      final short[] words1,
-      final int astart) {
+      short[] result,
+      int rstart,
+      short[] words1,
+      int astart) {
       {
         int p; short c; int d; int e;
         p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart]) &
@@ -518,10 +518,10 @@ at: http://upokecenter.com/d/
     }
 
     private static void BaselineSquare4(
-      final short[] result,
-      final int rstart,
-      final short[] words1,
-      final int astart) {
+      short[] result,
+      int rstart,
+      short[] words1,
+      int astart) {
       {
         int p; short c; int d; int e;
         p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart]) &
@@ -597,10 +597,10 @@ at: http://upokecenter.com/d/
     }
 
     private static void BaselineSquare8(
-      final short[] result,
-      final int rstart,
-      final short[] words1,
-      final int astart) {
+      short[] result,
+      int rstart,
+      short[] words1,
+      int astart) {
       {
         int p; short c; int d; int e;
         p = (((int)words1[astart]) & 0xffff) * (((int)words1[astart]) &
@@ -825,12 +825,12 @@ at: http://upokecenter.com/d/
     //---------------------
 
     private static void BaselineMultiply2(
-      final short[] result,
-      final int rstart,
-      final short[] words1,
-      final int astart,
-      final short[] words2,
-      final int bstart) {
+      short[] result,
+      int rstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart) {
       {
         int p; short c; int d;
         int a0 = ((int)words1[astart]) & 0xffff;
@@ -854,12 +854,12 @@ at: http://upokecenter.com/d/
     private static final int ShortMask = 0xffff;
 
     private static void BaselineMultiply4(
-      final short[] result,
-      final int rstart,
-      final short[] words1,
-      final int astart,
-      final short[] words2,
-      final int bstart) {
+      short[] result,
+      int rstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart) {
       {
         int p; short c; int d;
         int a0 = ((int)words1[astart]) & ShortMask;
@@ -939,12 +939,12 @@ at: http://upokecenter.com/d/
     }
 
     private static void BaselineMultiply8(
-      final short[] result,
-      final int rstart,
-      final short[] words1,
-      final int astart,
-      final short[] words2,
-      final int bstart) {
+      short[] result,
+      int rstart,
+      short[] words1,
+      int astart,
+      short[] words2,
+      int bstart) {
       {
         int p; short c; int d;
         p = (((int)words1[astart]) & ShortMask) * (((int)words2[bstart]) &
@@ -1275,15 +1275,15 @@ at: http://upokecenter.com/d/
     // this function only takes operands of the same size, as opposed
     // to AsymmetricMultiply.
     private static void SameSizeMultiply(
-      final short[] resultArr,  // size 2*count
-      final int resultStart,
-      final short[] tempArr,  // size 2*count
-      final int tempStart,
-      final short[] words1,
-      final int words1Start,  // size count
-      final short[] words2,
-      final int words2Start,  // size count
-      final int count) {
+      short[] resultArr,  // size 2*count
+      int resultStart,
+      short[] tempArr,  // size 2*count
+      int tempStart,
+      short[] words1,
+      int words1Start,  // size count
+      short[] words2,
+      int words2Start,  // size count
+      int count) {
       // System.out.println("RecursiveMultiply " + count + " " + count +
       // " [r=" + resultStart + " t=" + tempStart + " a=" + words1Start +
       // " b=" + words2Start + "]");
@@ -1655,13 +1655,13 @@ at: http://upokecenter.com/d/
     }
 
     private static void RecursiveSquare(
-      final short[] resultArr,
-      final int resultStart,
-      final short[] tempArr,
-      final int tempStart,
-      final short[] words1,
-      final int words1Start,
-      final int count) {
+      short[] resultArr,
+      int resultStart,
+      short[] tempArr,
+      int tempStart,
+      short[] words1,
+      int words1Start,
+      int count) {
       if (count <= RecursionLimit) {
         if (count == 2) {
           BaselineSquare2(resultArr, resultStart, words1, words1Start);
@@ -1736,11 +1736,11 @@ at: http://upokecenter.com/d/
     }
 
     private static void SchoolbookSquare(
-      final short[] resultArr,
-      final int resultStart,
-      final short[] words1,
-      final int words1Start,
-      final int words1Count) {
+      short[] resultArr,
+      int resultStart,
+      short[] words1,
+      int words1Start,
+      int words1Count) {
       // Method assumes that resultArr was already zeroed,
       // if resultArr is the same as words1
       int cstart;
@@ -1765,14 +1765,14 @@ at: http://upokecenter.com/d/
     }
 
     private static void SchoolbookMultiply(
-      final short[] resultArr,
-      final int resultStart,
-      final short[] words1,
-      final int words1Start,
-      final int words1Count,
-      final short[] words2,
-      final int words2Start,
-      final int words2Count) {
+      short[] resultArr,
+      int resultStart,
+      short[] words1,
+      int words1Start,
+      int words1Count,
+      short[] words2,
+      int words2Start,
+      int words2Count) {
       // Method assumes that resultArr was already zeroed,
       // if resultArr is the same as words1 or words2
       int cstart;
@@ -1820,16 +1820,16 @@ at: http://upokecenter.com/d/
     }
 
     private static void ChunkedLinearMultiply(
-      final short[] productArr,
-      final int cstart,
-      final short[] tempArr,
-      final int tempStart,  // uses bcount*4 space
-      final short[] words1,
-      final int astart,
-      final int acount,  // Equal size or longer
-      final short[] words2,
-      final int bstart,
-      final int bcount) {
+      short[] productArr,
+      int cstart,
+      short[] tempArr,
+      int tempStart,  // uses bcount*4 space
+      short[] words1,
+      int astart,
+      int acount,  // Equal size or longer
+      short[] words2,
+      int bstart,
+      int bcount) {
       {
         int carryPos = 0;
         // Set carry to zero
@@ -1901,16 +1901,16 @@ at: http://upokecenter.com/d/
 
     // Multiplies two operands of different sizes
     private static void AsymmetricMultiply(
-      final short[] resultArr,
-      final int resultStart,  // uses words1Count + words2Count space
-      final short[] tempArr,
-      final int tempStart,  // uses words1Count + words2Count space
-      final short[] words1,
-      final int words1Start,
-      final int words1Count,
-      final short[] words2,
-      final int words2Start,
-      final int words2Count) {
+      short[] resultArr,
+      int resultStart,  // uses words1Count + words2Count space
+      short[] tempArr,
+      int tempStart,  // uses words1Count + words2Count space
+      short[] words1,
+      int words1Start,
+      int words1Count,
+      short[] words2,
+      int words2Start,
+      int words2Count) {
       // System.out.println("AsymmetricMultiply " + words1Count + " " +
       // words2Count + " [r=" + resultStart + " t=" + tempStart + " a=" +
       // words1Start + " b=" + words2Start + "]");
@@ -2136,8 +2136,7 @@ at: http://upokecenter.com/d/
                    (words1Count + 2 == words2Count && words2[words2Start +
                                                              words2Count - 1] ==
                     0)) {
-          java.util.Arrays.fill(
-            (short[])resultArr, resultStart, (resultStart) + (words1Count + words2Count), 0);
+          java.util.Arrays.fill(resultArr, resultStart, (resultStart) + (words1Count + words2Count), (short)0);
           // Multiply the low parts of each operand
           SameSizeMultiply(
             resultArr,
@@ -2177,23 +2176,23 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static int MakeUint(final short first, short second) {
+    private static int MakeUint(short first, short second) {
       return ((int)((((int)first) & 0xffff) | ((int)second << 16)));
     }
 
-    private static short GetLowHalf(final int val) {
+    private static short GetLowHalf(int val) {
       return ((short)(val & 0xffff));
     }
 
-    private static short GetHighHalf(final int val) {
+    private static short GetHighHalf(int val) {
       return ((short)((val >> 16) & 0xffff));
     }
 
-    private static short GetHighHalfAsBorrow(final int val) {
+    private static short GetHighHalfAsBorrow(int val) {
       return ((short)(0 - ((val >> 16) & 0xffff)));
     }
 
-    private static int BitPrecision(final short numberValue) {
+    private static int BitPrecision(short numberValue) {
       if (numberValue == 0) {
         return 0;
       }
@@ -2222,9 +2221,9 @@ at: http://upokecenter.com/d/
     }
 
     private static short Divide32By16(
-      final int dividendLow,
-      final short divisorShort,
-      final boolean returnRemainder) {
+      int dividendLow,
+      short divisorShort,
+      boolean returnRemainder) {
       int tmpInt;
       int dividendHigh = 0;
       int intDivisor = ((int)divisorShort) & 0xffff;
@@ -2248,7 +2247,7 @@ at: http://upokecenter.com/d/
         ((short)(((int)dividendLow) & 0xffff));
     }
 
-    private static short DivideUnsigned(final int x, short y) {
+    private static short DivideUnsigned(int x, short y) {
       {
         if ((x >> 31) == 0) {
           // x is already nonnegative
@@ -2259,7 +2258,7 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static short RemainderUnsigned(final int x, short y) {
+    private static short RemainderUnsigned(int x, short y) {
       {
         int iy = ((int)y) & 0xffff;
         return ((x >> 31) == 0) ? ((short)(((int)x % iy) & 0xffff)) :
@@ -2268,10 +2267,10 @@ at: http://upokecenter.com/d/
     }
 
     private static short DivideThreeWordsByTwo(
-      final short[] words1,
-      final int words1Start,
-      final short valueB0,
-      final short valueB1) {
+      short[] words1,
+      int words1Start,
+      short valueB0,
+      short valueB1) {
       short valueQ;
       {
         valueQ = ((short)(valueB1 + 1) == 0) ? words1[words1Start + 2] :
@@ -2314,13 +2313,13 @@ at: http://upokecenter.com/d/
     }
 
     private static void DivideFourWordsByTwo(
-      final short[] quotient,
-      final int quotientStart,
-      final short[] words1,
-      final int words1Start,
-      final short word2A,
-      final short word2B,
-      final short[] temp) {
+      short[] quotient,
+      int quotientStart,
+      short[] words1,
+      int words1Start,
+      short word2A,
+      short word2B,
+      short[] temp) {
       if (word2A == 0 && word2B == 0) {
         // if divisor is 0, we assume divisor.compareTo(BigInteger.valueOf(2)) == 0**32
         quotient[quotientStart] = words1[words1Start + 2];
@@ -2338,14 +2337,14 @@ at: http://upokecenter.com/d/
     }
 
     private static void AtomicMultiplyOpt(
-      final short[] c,
-      final int valueCstart,
-      final int valueA0,
-      final int valueA1,
-      final short[] words2,
-      final int words2Start,
-      final int istart,
-      final int iend) {
+      short[] c,
+      int valueCstart,
+      int valueA0,
+      int valueA1,
+      short[] words2,
+      int words2Start,
+      int istart,
+      int iend) {
       short s;
       int d;
       int first1MinusFirst0 = ((int)valueA1 - valueA0) & 0xffff;
@@ -2422,14 +2421,14 @@ at: http://upokecenter.com/d/
     }
 
     private static void AtomicMultiplyAddOpt(
-      final short[] c,
-      final int valueCstart,
-      final int valueA0,
-      final int valueA1,
-      final short[] words2,
-      final int words2Start,
-      final int istart,
-      final int iend) {
+      short[] c,
+      int valueCstart,
+      int valueA0,
+      int valueA1,
+      short[] words2,
+      int words2Start,
+      int istart,
+      int iend) {
       short s;
       int d;
       int first1MinusFirst0 = ((int)valueA1 - valueA0) & 0xffff;
@@ -2525,18 +2524,18 @@ at: http://upokecenter.com/d/
     }
 
     private static void Divide(
-      final short[] remainderArr,
-      final int remainderStart,  // remainder; size: words2Count
-      final short[] quotientArr,
-      final int quotientStart,  // quotient
-      final short[] tempArr,
-      final int tempStart,  // scratch space
-      final short[] words1,
-      final int words1Start,
-      final int words1Count,  // dividend
-      final short[] words2,
-      final int words2Start,
-      final int words2Count) {
+      short[] remainderArr,
+      int remainderStart,  // remainder; size: words2Count
+      short[] quotientArr,
+      int quotientStart,  // quotient
+      short[] tempArr,
+      int tempStart,  // scratch space
+      short[] words1,
+      int words1Start,
+      int words1Count,  // dividend
+      short[] words2,
+      int words2Start,
+      int words2Count) {
       // set up temporary work space
 
       if (words2Count == 0) {
@@ -2746,7 +2745,7 @@ at: http://upokecenter.com/d/
       }
     }
 
-    private static int RoundupSize(final int n) {
+    private static int RoundupSize(int n) {
       return n + (n & 1);
     }
 
@@ -2754,7 +2753,7 @@ at: http://upokecenter.com/d/
     private final int wordCount;
     private final short[] words;
 
-    private BigInteger(final int wordCount, short[] reg, boolean negative) {
+    private BigInteger(int wordCount, short[] reg, boolean negative) {
       this.wordCount = wordCount;
       this.words = reg;
       this.negative = negative;
@@ -2768,7 +2767,7 @@ at: http://upokecenter.com/d/
      * @return A BigInteger object.
      * @throws NullPointerException The parameter {@code bytes} is null.
      */
-    public static BigInteger fromByteArray(final byte[] bytes, boolean littleEndian) {
+    public static BigInteger fromByteArray(byte[] bytes, boolean littleEndian) {
       if (bytes == null) {
         throw new NullPointerException("bytes");
       }
@@ -2824,14 +2823,14 @@ at: http://upokecenter.com/d/
                                                         newnegative));
     }
 
-    private static short[] GrowForCarry(final short[] a, short carry) {
+    private static short[] GrowForCarry(short[] a, short carry) {
       int oldLength = a.length;
       short[] ret = CleanGrow(a, RoundupSize(oldLength + 1));
       ret[oldLength] = carry;
       return ret;
     }
 
-    private static short[] CleanGrow(final short[] a, int size) {
+    private static short[] CleanGrow(short[] a, int size) {
       if (size > a.length) {
         short[] newa = new short[size];
         System.arraycopy(a, 0, newa, 0, a.length);
@@ -2847,7 +2846,7 @@ at: http://upokecenter.com/d/
      * significant bit.
      * @return True if the specified bit is set; otherwise, false.
      */
-    public boolean testBit(final int index) {
+    public boolean testBit(int index) {
       if (index < 0) {
         throw new IllegalArgumentException("index");
       }
@@ -2876,7 +2875,7 @@ at: http://upokecenter.com/d/
       return this.GetUnsignedBit(index);
     }
 
-    private boolean GetUnsignedBit(final int n) {
+    private boolean GetUnsignedBit(int n) {
       return ((n >> 4) < this.words.length) && ((boolean)(((this.words[(n >>
                                                   4)] >> (int)(n & 15)) & 1) !=
 
@@ -2888,7 +2887,7 @@ at: http://upokecenter.com/d/
      * @param littleEndian A Boolean object.
      * @return A byte array that represents the value of this object.
      */
-    public byte[] toByteArray(final boolean littleEndian) {
+    public byte[] toByteArray(boolean littleEndian) {
       int sign = this.signum();
       if (sign == 0) {
         return new byte[] { (byte)0  };
@@ -2959,7 +2958,7 @@ at: http://upokecenter.com/d/
      * numberBits.
      * @return A BigInteger object.
      */
-    public BigInteger shiftLeft(final int numberBits) {
+    public BigInteger shiftLeft(int numberBits) {
       if (numberBits == 0 || this.wordCount == 0) {
         return this;
       }
@@ -3002,7 +3001,7 @@ at: http://upokecenter.com/d/
      * @param numberBits Number of bits to shift right.
      * @return A BigInteger object.
      */
-    public BigInteger shiftRight(final int numberBits) {
+    public BigInteger shiftRight(int numberBits) {
       if (numberBits == 0 || this.wordCount == 0) {
         return this;
       }
@@ -3059,7 +3058,7 @@ at: http://upokecenter.com/d/
      * @param longerValue A 64-bit signed integer.
      * @return A BigInteger object with the same value as the 64-bit number.
      */
-    public static BigInteger valueOf(final long longerValue) {
+    public static BigInteger valueOf(long longerValue) {
       if (longerValue == 0) {
         return BigInteger.ZERO;
       }
@@ -3279,7 +3278,7 @@ at: http://upokecenter.com/d/
      * @return A BigInteger object.
      * @throws NullPointerException The parameter {@code power} is null.
      */
-    public BigInteger PowBigIntVar(final BigInteger power) {
+    public BigInteger PowBigIntVar(BigInteger power) {
       if (power == null) {
         throw new NullPointerException("power");
       }
@@ -3319,7 +3318,7 @@ at: http://upokecenter.com/d/
      * @param powerSmall A 32-bit signed integer.
      * @return A BigInteger object.
      */
-    public BigInteger pow(final int powerSmall) {
+    public BigInteger pow(int powerSmall) {
       if (powerSmall < 0) {
         throw new IllegalArgumentException("powerSmall (" + powerSmall +
                                     ") is less than " + "0");
@@ -3418,7 +3417,7 @@ at: http://upokecenter.com/d/
       return 0;
     }
 
-    private static int getUnsignedBitLengthEx(final int numberValue, int wordCount) {
+    private static int getUnsignedBitLengthEx(int numberValue, int wordCount) {
       int wc = wordCount;
       if (wc != 0) {
         wc = (wc - 1) << 4;
@@ -3489,7 +3488,7 @@ at: http://upokecenter.com/d/
 
     private static final String HexChars = "0123456789ABCDEF";
 
-    private static void ReverseChars(final char[] chars, int offset, int length) {
+    private static void ReverseChars(char[] chars, int offset, int length) {
       int half = length >> 1;
       int right = offset + length - 1;
       for (int i = 0; i < half; i++, right--) {
@@ -3525,7 +3524,7 @@ at: http://upokecenter.com/d/
       return new String(chars, 0, count);
     }
 
-    private static int ApproxLogTenOfTwo(final int bitlen) {
+    private static int ApproxLogTenOfTwo(int bitlen) {
       int bitlenLow = bitlen & 0xffff;
       int bitlenHigh = (bitlen >> 16) & 0xffff;
       short resultLow = 0;
@@ -3830,7 +3829,7 @@ at: http://upokecenter.com/d/
      * @throws NullPointerException The parameter {@code str} is null.
      * @throws NumberFormatException The parameter {@code str} is in an invalid format.
      */
-    public static BigInteger fromString(final String str) {
+    public static BigInteger fromString(String str) {
       if (str == null) {
         throw new NullPointerException("str");
       }
@@ -3854,9 +3853,9 @@ at: http://upokecenter.com/d/
      * @throws NumberFormatException The string portion is empty or in an invalid format.
      */
     public static BigInteger fromSubstring(
-      final String str,
-      final int index,
-      final int endIndex) {
+      String str,
+      int index,
+      int endIndex) {
       if (str == null) {
         throw new NullPointerException("str");
       }
@@ -4008,7 +4007,7 @@ at: http://upokecenter.com/d/
      * @return A BigInteger object.
      * @throws NullPointerException The parameter {@code bigintSecond} is null.
      */
-    public BigInteger gcd(final BigInteger bigintSecond) {
+    public BigInteger gcd(BigInteger bigintSecond) {
       if (bigintSecond == null) {
         throw new NullPointerException("bigintSecond");
       }
@@ -4067,7 +4066,7 @@ at: http://upokecenter.com/d/
      * @return A BigInteger object.
      * @throws NullPointerException The parameter {@code pow} is null.
      */
-    public BigInteger ModPow(final BigInteger pow, BigInteger mod) {
+    public BigInteger ModPow(BigInteger pow, BigInteger mod) {
       if (pow == null) {
         throw new NullPointerException("pow");
       }
@@ -4096,7 +4095,7 @@ at: http://upokecenter.com/d/
      * @param obj An arbitrary object.
      * @return True if the objects are equal; otherwise, false.
      */
-    @Override public boolean equals(final Object obj) {
+    @Override public boolean equals(Object obj) {
       BigInteger other = ((obj instanceof BigInteger) ? (BigInteger)obj : null);
       if (other == null) {
         return false;
@@ -4138,7 +4137,7 @@ at: http://upokecenter.com/d/
      * @return The sum of the two objects.
      * @throws NullPointerException The parameter {@code bigintAugend} is null.
      */
-    public BigInteger add(final BigInteger bigintAugend) {
+    public BigInteger add(BigInteger bigintAugend) {
       if (bigintAugend == null) {
         throw new NullPointerException("bigintAugend");
       }
@@ -4274,6 +4273,7 @@ at: http://upokecenter.com/d/
       int words2Size = subtrahend.wordCount;
       words2Size += words2Size & 1;
       boolean diffNeg = false;
+      short borrow;
       short[] diffReg = new short[(
         int)Math.max(
                                 minuend.words.length,
@@ -4304,7 +4304,7 @@ at: http://upokecenter.com/d/
         }
       } else if (words1Size > words2Size) {
         // words1 is greater than words2
-        var borrow = (
+        borrow = (
           short)Subtract(
           diffReg,
           0,
@@ -4322,7 +4322,7 @@ at: http://upokecenter.com/d/
         Decrement(diffReg, words2Size, (int)(words1Size - words2Size), borrow);
       } else {
         // words1 is less than words2
-        var borrow = (
+        borrow = (
           short)Subtract(
           diffReg,
           0,
@@ -4354,7 +4354,7 @@ at: http://upokecenter.com/d/
      * @return The difference of the two objects.
      * @throws NullPointerException The parameter {@code subtrahend} is null.
      */
-    public BigInteger subtract(final BigInteger subtrahend) {
+    public BigInteger subtract(BigInteger subtrahend) {
       if (subtrahend == null) {
         throw new NullPointerException("subtrahend");
       }
@@ -4363,7 +4363,7 @@ at: http://upokecenter.com/d/
          this.add(subtrahend.negate()));
     }
 
-    private static short[] ShortenArray(final short[] reg, int wordCount) {
+    private static short[] ShortenArray(short[] reg, int wordCount) {
       if (reg.length > 32) {
         int newLength = RoundupSize(wordCount);
         if (newLength < reg.length &&
@@ -4384,7 +4384,7 @@ at: http://upokecenter.com/d/
      * @return The product of the two objects.
      * @throws NullPointerException The parameter {@code bigintMult} is null.
      */
-    public BigInteger multiply(final BigInteger bigintMult) {
+    public BigInteger multiply(BigInteger bigintMult) {
       if (bigintMult == null) {
         throw new NullPointerException("bigintMult");
       }
@@ -4487,14 +4487,14 @@ at: http://upokecenter.com/d/
         this.negative ^ bigintMult.negative);
     }
 
-    private static int BitsToWords(final int bitCount) {
+    private static int BitsToWords(int bitCount) {
       return (bitCount + 15) >> 4;
     }
 
     private static short FastRemainder(
-      final short[] dividendReg,
-      final int count,
-      final short divisorSmall) {
+      short[] dividendReg,
+      int count,
+      short divisorSmall) {
       int i = count;
       short remainder = 0;
       while ((i--) > 0) {
@@ -4506,10 +4506,10 @@ at: http://upokecenter.com/d/
     }
 
     private static void FastDivide(
-      final short[] quotientReg,
-      final short[] dividendReg,
-      final int count,
-      final short divisorSmall) {
+      short[] quotientReg,
+      short[] dividendReg,
+      int count,
+      short divisorSmall) {
       int i = count;
       short remainderShort = 0;
       int idivisor = ((int)divisorSmall) & 0xffff;
@@ -4534,12 +4534,12 @@ at: http://upokecenter.com/d/
     }
 
     private static short FastDivideAndRemainder(
-      final short[] quotientReg,
-      final int quotientStart,
-      final short[] dividendReg,
-      final int dividendStart,
-      final int count,
-      final short divisorSmall) {
+      short[] quotientReg,
+      int quotientStart,
+      short[] dividendReg,
+      int dividendStart,
+      int count,
+      short divisorSmall) {
       int i = count;
       short remainderShort = 0;
       int idivisor = ((int)divisorSmall) & 0xffff;
@@ -4575,7 +4575,7 @@ at: http://upokecenter.com/d/
      * @throws NullPointerException The parameter {@code bigintDivisor} is null.
      * @throws ArithmeticException Attempted to divide by zero.
      */
-    public BigInteger divide(final BigInteger bigintDivisor) {
+    public BigInteger divide(BigInteger bigintDivisor) {
       if (bigintDivisor == null) {
         throw new NullPointerException("bigintDivisor");
       }
@@ -4656,7 +4656,7 @@ at: http://upokecenter.com/d/
      * @throws ArithmeticException The parameter divisor is 0.
      * @throws ArithmeticException Attempted to divide by zero.
      */
-    public BigInteger[] divideAndRemainder(final BigInteger divisor) {
+    public BigInteger[] divideAndRemainder(BigInteger divisor) {
       if (divisor == null) {
         throw new NullPointerException("divisor");
       }
@@ -4759,7 +4759,7 @@ at: http://upokecenter.com/d/
      * @throws ArithmeticException The parameter {@code divisor} is negative.
      * @throws NullPointerException The parameter {@code divisor} is null.
      */
-    public BigInteger mod(final BigInteger divisor) {
+    public BigInteger mod(BigInteger divisor) {
       if (divisor == null) {
         throw new NullPointerException("divisor");
       }
@@ -4784,7 +4784,7 @@ at: http://upokecenter.com/d/
      * @throws NullPointerException The parameter {@code divisor} is null.
      * @throws ArithmeticException Attempted to divide by zero.
      */
-    public BigInteger remainder(final BigInteger divisor) {
+    public BigInteger remainder(BigInteger divisor) {
       if (divisor == null) {
         throw new NullPointerException("divisor");
       }
@@ -4836,7 +4836,7 @@ at: http://upokecenter.com/d/
       return new BigInteger(count, remainderReg, this.negative);
     }
 
-    private int PositiveCompare(final BigInteger t) {
+    private int PositiveCompare(BigInteger t) {
       int size = this.wordCount, tempSize = t.wordCount;
       return (
         size == tempSize) ? Compare(
@@ -4853,7 +4853,7 @@ at: http://upokecenter.com/d/
      * @return Zero if the values are equal; a negative number if this instance is
      * less, or a positive number if this instance is greater.
      */
-    public int compareTo(final BigInteger other) {
+    public int compareTo(BigInteger other) {
       if (other == null) {
         return 1;
       }

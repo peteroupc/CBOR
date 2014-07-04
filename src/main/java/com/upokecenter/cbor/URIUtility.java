@@ -62,9 +62,9 @@ private URIUtility() {
     private static final String HexChars = "0123456789ABCDEF";
 
     private static void appendAuthority(
-      final StringBuilder builder,
-      final String refValue,
-      final int[] segments) {
+      StringBuilder builder,
+      String refValue,
+      int[] segments) {
       if (segments[2] >= 0) {
         builder.append("//");
         builder.append(
@@ -75,9 +75,9 @@ private URIUtility() {
     }
 
     private static void appendFragment(
-      final StringBuilder builder,
-      final String refValue,
-      final int[] segments) {
+      StringBuilder builder,
+      String refValue,
+      int[] segments) {
       if (segments[8] >= 0) {
         builder.append('#');
         builder.append(
@@ -88,9 +88,9 @@ private URIUtility() {
     }
 
     private static void appendNormalizedPath(
-      final StringBuilder builder,
-      final String refValue,
-      final int[] segments) {
+      StringBuilder builder,
+      String refValue,
+      int[] segments) {
       builder.append(
         normalizePath(
           refValue.substring(
@@ -99,9 +99,9 @@ private URIUtility() {
     }
 
     private static void appendPath(
-      final StringBuilder builder,
-      final String refValue,
-      final int[] segments) {
+      StringBuilder builder,
+      String refValue,
+      int[] segments) {
       builder.append(
         refValue.substring(
           segments[4], (
@@ -109,9 +109,9 @@ private URIUtility() {
     }
 
     private static void appendQuery(
-      final StringBuilder builder,
-      final String refValue,
-      final int[] segments) {
+      StringBuilder builder,
+      String refValue,
+      int[] segments) {
       if (segments[6] >= 0) {
         builder.append('?');
         builder.append(
@@ -122,9 +122,9 @@ private URIUtility() {
     }
 
     private static void appendScheme(
-      final StringBuilder builder,
-      final String refValue,
-      final int[] segments) {
+      StringBuilder builder,
+      String refValue,
+      int[] segments) {
       if (segments[0] >= 0) {
         builder.append(
           refValue.substring(
@@ -142,7 +142,7 @@ private URIUtility() {
      * @param mode A 32-bit signed integer.
      * @return A string object.
      */
-    public static String escapeURI(final String s, int mode) {
+    public static String escapeURI(String s, int mode) {
       if (s == null) {
         return null;
       }
@@ -265,7 +265,7 @@ private URIUtility() {
      * @return True if the string is a valid IRI with a scheme component;
      * otherwise, false.
      */
-    public static boolean hasScheme(final String refValue) {
+    public static boolean hasScheme(String refValue) {
       int[] segments = (
         refValue == null) ? null : splitIRI(
         refValue,
@@ -285,7 +285,7 @@ private URIUtility() {
      * @return True if the string is a valid URI with a scheme component;
      * otherwise, false.
      */
-    public static boolean hasSchemeForURI(final String refValue) {
+    public static boolean hasSchemeForURI(String refValue) {
       int[] segments = (refValue == null) ? null : splitIRI(
         refValue,
         0,
@@ -294,13 +294,13 @@ private URIUtility() {
       return segments != null && segments[0] >= 0;
     }
 
-    private static boolean isHexChar(final char c) {
+    private static boolean isHexChar(char c) {
       return (c >= 'a' && c <= 'f') ||
         (c >= 'A' && c <= 'F') ||
         (c >= '0' && c <= '9');
     }
 
-    private static boolean isIfragmentChar(final int c) {
+    private static boolean isIfragmentChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
         (c >= 'A' && c <= 'Z') ||
@@ -312,7 +312,7 @@ private URIUtility() {
         (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
-    private static boolean isIpchar(final int c) {
+    private static boolean isIpchar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
         (c >= 'A' && c <= 'Z') ||
@@ -324,7 +324,7 @@ private URIUtility() {
         (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
-    private static boolean isIqueryChar(final int c) {
+    private static boolean isIqueryChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
         (c >= 'A' && c <= 'Z') ||
@@ -336,7 +336,7 @@ private URIUtility() {
         (c >= 0x10000 && c <= 0x10fffd && (c & 0xfffe) != 0xfffe);
     }
 
-    private static boolean isIRegNameChar(final int c) {
+    private static boolean isIRegNameChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
         (c >= 'A' && c <= 'Z') ||
@@ -348,7 +348,7 @@ private URIUtility() {
         (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
-    private static boolean isIUserInfoChar(final int c) {
+    private static boolean isIUserInfoChar(int c) {
       // '%' omitted
       return (c >= 'a' && c <= 'z') ||
         (c >= 'A' && c <= 'Z') ||
@@ -369,15 +369,17 @@ private URIUtility() {
      * @return True if the substring is a valid CURIE reference under RDFA 1;
      * otherwise, false.
      */
-    public static boolean isValidCurieReference(final String s, int offset, int length) {
+    public static boolean isValidCurieReference(String s, int offset, int length) {
       if (s == null) {
         return false;
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + offset + ") is less than " + "0 ");
+   throw new IllegalArgumentException("offset (" + offset + ") is less than " +
+          "0 ");
       }
       if (offset > s.length()) {
-        throw new IllegalArgumentException("offset (" + offset + ") is more than " + s.length());
+        throw new IllegalArgumentException("offset (" + offset + ") is more than " +
+          s.length());
       }
       if (length < 0) {
         throw new IllegalArgumentException(
@@ -450,7 +452,7 @@ private URIUtility() {
       return true;
     }
 
-    public static boolean isValidIRI(final String s) {
+    public static boolean isValidIRI(String s) {
       return ((
         s == null) ? null : splitIRI(
                 s,
@@ -459,7 +461,7 @@ private URIUtility() {
                 ParseMode.IRIStrict)) != null;
     }
 
-    private static String normalizePath(final String path) {
+    private static String normalizePath(String path) {
       int len = path.length();
       if (len == 0 || path.equals("..") || path.equals(".")) {
         return "";
@@ -560,11 +562,11 @@ private URIUtility() {
     }
 
     private static int parseDecOctet(
-      final String s,
-      final int index,
-      final int endOffset,
-      final int c,
-      final int delim) {
+      String s,
+      int index,
+      int endOffset,
+      int c,
+      int delim) {
       if (c >= '1' && c <= '9' && index + 2 < endOffset &&
           s.charAt(index + 1) >= '0' && s.charAt(index + 1) <= '9' &&
           s.charAt(index + 2) == delim) {
@@ -592,7 +594,7 @@ private URIUtility() {
               s.charAt(index + 1) == delim) ? (c - '0') : (-1);
     }
 
-    private static int parseIPLiteral(final String s, int offset, int endOffset) {
+    private static int parseIPLiteral(String s, int offset, int endOffset) {
       int index = offset;
       if (offset == endOffset) {
         return -1;
@@ -806,9 +808,9 @@ private URIUtility() {
     }
 
     private static String pathParent(
-      final String refValue,
-      final int startIndex,
-      final int endIndex) {
+      String refValue,
+      int startIndex,
+      int endIndex) {
       if (startIndex > endIndex) {
         return "";
       }
@@ -822,13 +824,13 @@ private URIUtility() {
       return "";
     }
 
-    private static void percentEncode(final StringBuilder buffer, int b) {
+    private static void percentEncode(StringBuilder buffer, int b) {
       buffer.append('%');
       buffer.append(HexChars.charAt((b >> 4) & 0x0f));
       buffer.append(HexChars.charAt(b & 0x0f));
     }
 
-    private static void percentEncodeUtf8(final StringBuilder buffer, int cp) {
+    private static void percentEncodeUtf8(StringBuilder buffer, int cp) {
       if (cp <= 0x7f) {
         buffer.append('%');
         buffer.append(HexChars.charAt((cp >> 4) & 0x0f));
@@ -854,7 +856,7 @@ private URIUtility() {
      * @param baseURI A string object. (3).
      * @return A string object.
      */
-    public static String relativeResolve(final String refValue, String baseURI) {
+    public static String relativeResolve(String refValue, String baseURI) {
       return relativeResolve(refValue, baseURI, ParseMode.IRIStrict);
     }
 
@@ -867,9 +869,9 @@ private URIUtility() {
      * If base is null or is not a valid IRI, returns refValue.
      */
     public static String relativeResolve(
-      final String refValue,
-      final String baseURI,
-      final ParseMode parseMode) {
+      String refValue,
+      String baseURI,
+      ParseMode parseMode) {
       int[] segments = (
         refValue == null) ? null : splitIRI(
         refValue,
@@ -956,7 +958,7 @@ private URIUtility() {
      * that pair will be -1. If the string is null or is not a valid IRI,
      * returns null.
      */
-    public static int[] splitIRI(final String s) {
+    public static int[] splitIRI(String s) {
       return (s == null) ? null : splitIRI(s, 0, s.length(), ParseMode.IRIStrict);
     }
 
@@ -977,10 +979,10 @@ private URIUtility() {
      * or is not a valid IRI, returns null.
      */
     public static int[] splitIRI(
-      final String s,
-      final int offset,
-      final int length,
-      final ParseMode parseMode) {
+      String s,
+      int offset,
+      int length,
+      ParseMode parseMode) {
       if (s == null) {
         return null;
       }
@@ -1225,7 +1227,7 @@ private URIUtility() {
      * that pair will be -1. If the string is null or is not a valid IRI,
      * returns null.
      */
-    public static int[] splitIRI(final String s, ParseMode parseMode) {
+    public static int[] splitIRI(String s, ParseMode parseMode) {
       return (s == null) ? null : splitIRI(s, 0, s.length(), parseMode);
     }
   }

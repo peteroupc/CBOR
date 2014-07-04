@@ -16,8 +16,8 @@ import com.upokecenter.util.*;
     }
 
     private static CBORObject FromObjectAndInnerTags(
-final Object objectValue,
-final CBORObject objectWithTags) {
+Object objectValue,
+CBORObject objectWithTags) {
       CBORObject newObject = CBORObject.FromObject(objectValue);
       if (!objectWithTags.isTagged()) {
         return newObject;
@@ -33,7 +33,7 @@ final CBORObject objectWithTags) {
       return newObject;
     }
 
-    static CBORObject ConvertToBigNum(final CBORObject o, boolean negative) {
+    static CBORObject ConvertToBigNum(CBORObject o, boolean negative) {
       if (o.getType() != CBORType.ByteString) {
         throw new CBORException("Byte array expected");
       }
@@ -82,7 +82,7 @@ final CBORObject objectWithTags) {
       return CBORObject.FromObject(bi);
     }
 
-    public CBORObject ValidateObject(final CBORObject obj) {
+    public CBORObject ValidateObject(CBORObject obj) {
       return ConvertToBigNum(obj, false);
     }
   }

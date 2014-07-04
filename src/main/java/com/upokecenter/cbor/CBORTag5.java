@@ -29,7 +29,7 @@ import com.upokecenter.util.*;
 
     private boolean extended;
 
-    public CBORTag5 (final boolean extended) {
+    public CBORTag5 (boolean extended) {
       this.extended = extended;
     }
 
@@ -38,9 +38,9 @@ import com.upokecenter.util.*;
     }
 
     static CBORObject ConvertToDecimalFrac(
-      final CBORObject o,
-      final boolean isDecimal,
-      final boolean extended) {
+      CBORObject o,
+      boolean isDecimal,
+      boolean extended) {
       if (o.getType() != CBORType.Array) {
         throw new CBORException("Big fraction must be an array");
       }
@@ -68,7 +68,7 @@ import com.upokecenter.util.*;
       CBORObject.FromObject(ExtendedFloat.Create(mantissa, exponent));
     }
 
-    public CBORObject ValidateObject(final CBORObject obj) {
+    public CBORObject ValidateObject(CBORObject obj) {
       return ConvertToDecimalFrac(obj, false, this.extended);
     }
   }

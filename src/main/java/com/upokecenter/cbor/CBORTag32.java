@@ -13,7 +13,7 @@ at: http://upokecenter.com/d/
       return CBORTypeFilter.TextString;
     }
 
-    public CBORObject ValidateObject(final CBORObject obj) {
+    public CBORObject ValidateObject(CBORObject obj) {
       if (obj.getType() != CBORType.TextString) {
         throw new CBORException("URI must be a text String");
       }
@@ -27,7 +27,7 @@ at: http://upokecenter.com/d/
       CBORObject.AddConverter(java.net.URI.class, new CBORTag32());
     }
 
-    public CBORObject ToCBORObject(final java.net.URI uri) {
+    public CBORObject ToCBORObject(java.net.URI uri) {
       if (uri == null) {
         throw new NullPointerException("uri");
       }

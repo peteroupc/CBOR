@@ -107,9 +107,7 @@ ExtendedDecimal.FromString("0.49555554575756575556e+15").getExponent());
 ExtendedDecimal.FromString("0.57494855545057534955e-17").getExponent());
       Assert.assertEquals((BigInteger.valueOf(25)).negate(),
 ExtendedDecimal.FromString("0.4956504855525748575456e-3").getExponent());
-      Assert.assertEquals(
--(
-BigInteger)26,
+      Assert.assertEquals((BigInteger.valueOf(26)).negate(),
   ExtendedDecimal.FromString("0.55575355495654484948525354545053494854e+12"
 ).getExponent());
       Assert.assertEquals((BigInteger.valueOf(22)).negate(),
@@ -119,9 +117,7 @@ BigInteger.valueOf(11),
 ExtendedDecimal.FromString("0.52545451e+19").getExponent());
       Assert.assertEquals((BigInteger.valueOf(29)).negate(),
 ExtendedDecimal.FromString("0.48485654495751485754e-9").getExponent());
-      Assert.assertEquals(
--(
-BigInteger)38,
+      Assert.assertEquals((BigInteger.valueOf(38)).negate(),
   ExtendedDecimal.FromString("0.56525456555549545257535556495655574848e+0"
 ).getExponent());
       Assert.assertEquals((BigInteger.valueOf(15)).negate(),
@@ -143,9 +139,7 @@ ExtendedDecimal.FromString("0.51505056554957575255555250e+18").getExponent());
 ExtendedDecimal.FromString("0.5456e-10").getExponent());
       Assert.assertEquals((BigInteger.valueOf(36)).negate(),
 ExtendedDecimal.FromString("0.494850515656505252555154e-12").getExponent());
-      Assert.assertEquals(
--(
-BigInteger)42,
+      Assert.assertEquals((BigInteger.valueOf(42)).negate(),
   ExtendedDecimal.FromString("0.535155525253485757525253555749575749e-6"
 ).getExponent());
       Assert.assertEquals((BigInteger.valueOf(29)).negate(),

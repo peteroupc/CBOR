@@ -203,7 +203,7 @@ at: http://upokecenter.com/d/
     public final int getFlags() {
         return this.flags;
       }
-public final void setFlags(final int value) {
+public final void setFlags(int value) {
         if (!this.getHasFlags()) {
           throw new IllegalStateException("Can't set flags");
         }
@@ -220,7 +220,7 @@ public final void setFlags(final int value) {
      * than EMax.
      * @throws NullPointerException The parameter {@code exponent} is null.
      */
-    public boolean ExponentWithinRange(final BigInteger exponent) {
+    public boolean ExponentWithinRange(BigInteger exponent) {
       if (exponent == null) {
         throw new NullPointerException("exponent");
       }
@@ -262,7 +262,7 @@ public final void setFlags(final int value) {
      * @param rounding A Rounding object.
      * @return A PrecisionContext object.
      */
-    public PrecisionContext WithRounding(final Rounding rounding) {
+    public PrecisionContext WithRounding(Rounding rounding) {
       PrecisionContext pc = this.Copy();
       pc.rounding = rounding;
       return pc;
@@ -286,7 +286,7 @@ public final void setFlags(final int value) {
      * &quot;Traps&quot;.
      * @return A PrecisionContext object.
      */
-    public PrecisionContext WithTraps(final int traps) {
+    public PrecisionContext WithTraps(int traps) {
       PrecisionContext pc = this.Copy();
       pc.hasFlags = true;
       pc.traps = traps;
@@ -299,7 +299,7 @@ public final void setFlags(final int value) {
      * @param clamp A Boolean object.
      * @return A PrecisionContext object.
      */
-    public PrecisionContext WithExponentClamp(final boolean clamp) {
+    public PrecisionContext WithExponentClamp(boolean clamp) {
       PrecisionContext pc = this.Copy();
       pc.clampNormalExponents = clamp;
       return pc;
@@ -312,8 +312,8 @@ public final void setFlags(final int value) {
      * @return A PrecisionContext object.
      */
     public PrecisionContext WithExponentRange(
-      final int exponentMinSmall,
-      final int exponentMaxSmall) {
+      int exponentMinSmall,
+      int exponentMaxSmall) {
       if (exponentMinSmall > exponentMaxSmall) {
         throw new IllegalArgumentException("exponentMinSmall (" + exponentMinSmall +
           ") is more than " + exponentMaxSmall);
@@ -334,8 +334,8 @@ public final void setFlags(final int value) {
      * @throws NullPointerException The parameter {@code exponentMax} is null.
      */
     public PrecisionContext WithBigExponentRange(
-      final BigInteger exponentMin,
-      final BigInteger exponentMax) {
+      BigInteger exponentMin,
+      BigInteger exponentMax) {
       if (exponentMin == null) {
         throw new NullPointerException("exponentMin");
       }
@@ -382,7 +382,7 @@ public final void setFlags(final int value) {
      * @param isPrecisionBits A Boolean object.
      * @return A PrecisionContext object.
      */
-    public PrecisionContext WithPrecisionInBits(final boolean isPrecisionBits) {
+    public PrecisionContext WithPrecisionInBits(boolean isPrecisionBits) {
       PrecisionContext pc = this.Copy();
       pc.precisionInBits = isPrecisionBits;
       return pc;
@@ -408,7 +408,7 @@ public final void setFlags(final int value) {
      * @param simplified A Boolean object.
      * @return A PrecisionContext object.
      */
-    public PrecisionContext WithSimplified(final boolean simplified) {
+    public PrecisionContext WithSimplified(boolean simplified) {
       PrecisionContext pc = this.Copy();
       pc.simplified = simplified;
       return pc;
@@ -438,7 +438,7 @@ public final void setFlags(final int value) {
      * @param adjustExponent A Boolean object.
      * @return A PrecisionContext object.
      */
-    public PrecisionContext WithAdjustExponent(final boolean adjustExponent) {
+    public PrecisionContext WithAdjustExponent(boolean adjustExponent) {
       PrecisionContext pc = this.Copy();
       pc.adjustExponent = adjustExponent;
       return pc;
@@ -459,7 +459,7 @@ public final void setFlags(final int value) {
      * @param precision Desired precision. 0 means unlimited precision.
      * @return A PrecisionContext object.
      */
-    public PrecisionContext WithPrecision(final int precision) {
+    public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
         throw new IllegalArgumentException("precision (" + precision +
           ") is less than " + "0");
@@ -475,7 +475,7 @@ public final void setFlags(final int value) {
      * @return A PrecisionContext object.
      * @throws NullPointerException The parameter {@code bigintPrecision} is null.
      */
-    public PrecisionContext WithBigPrecision(final BigInteger bigintPrecision) {
+    public PrecisionContext WithBigPrecision(BigInteger bigintPrecision) {
       if (bigintPrecision == null) {
         throw new NullPointerException("bigintPrecision");
       }
@@ -520,7 +520,7 @@ public final void setFlags(final int value) {
      * @param precision Maximum number of digits (precision).
      * @return A PrecisionContext object.
      */
-    public static PrecisionContext ForPrecision(final int precision) {
+    public static PrecisionContext ForPrecision(int precision) {
       return new PrecisionContext(
         precision,
         Rounding.HalfUp,
@@ -535,7 +535,7 @@ public final void setFlags(final int value) {
      * @param rounding The rounding mode for the new precision context.
      * @return A PrecisionContext object.
      */
-    public static PrecisionContext ForRounding(final Rounding rounding) {
+    public static PrecisionContext ForRounding(Rounding rounding) {
       return new PrecisionContext(
         0,
         rounding,
@@ -552,8 +552,8 @@ public final void setFlags(final int value) {
      * @return A PrecisionContext object.
      */
     public static PrecisionContext ForPrecisionAndRounding(
-      final int precision,
-      final Rounding rounding) {
+      int precision,
+      Rounding rounding) {
       return new PrecisionContext(
         precision,
         rounding,
@@ -572,11 +572,11 @@ public final void setFlags(final int value) {
      * @param clampNormalExponents A Boolean object.
      */
     public PrecisionContext (
-      final int precision,
-      final Rounding rounding,
-      final int exponentMinSmall,
-      final int exponentMaxSmall,
-      final boolean clampNormalExponents) {
+      int precision,
+      Rounding rounding,
+      int exponentMinSmall,
+      int exponentMaxSmall,
+      boolean clampNormalExponents) {
       if (precision < 0) {
         throw new IllegalArgumentException("precision (" + precision +
           ") is less than " + "0");

@@ -33,7 +33,7 @@ import com.upokecenter.util.*;
       this.stack.remove(this.stack.size() - 1);
     }
 
-    public void AddStringIfNeeded(final CBORObject str, int lengthHint) {
+    public void AddStringIfNeeded(CBORObject str, int lengthHint) {
       boolean addStr = false;
       ArrayList<CBORObject> lastList = this.stack.get(this.stack.size() - 1);
       if (lastList.size() < 24) {
@@ -53,7 +53,7 @@ import com.upokecenter.util.*;
       }
     }
 
-    public CBORObject GetString(final long smallIndex) {
+    public CBORObject GetString(long smallIndex) {
       if (smallIndex < 0) {
         throw new CBORException("Unexpected index");
       }
@@ -72,7 +72,7 @@ import com.upokecenter.util.*;
         CBORObject.FromObject(ret.GetByteString()) : ret;
     }
 
-    public CBORObject GetString(final BigInteger bigIndex) {
+    public CBORObject GetString(BigInteger bigIndex) {
       if (bigIndex.signum() < 0) {
         throw new CBORException("Unexpected index");
       }

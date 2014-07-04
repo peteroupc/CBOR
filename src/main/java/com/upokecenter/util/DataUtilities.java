@@ -29,7 +29,7 @@ private DataUtilities() {
      * @throws IllegalArgumentException The string is not valid UTF-8 and {@code replace}
      * is false.
      */
-    public static String GetUtf8String(final byte[] bytes, boolean replace) {
+    public static String GetUtf8String(byte[] bytes, boolean replace) {
       if (bytes == null) {
         throw new NullPointerException("bytes");
       }
@@ -57,10 +57,10 @@ private DataUtilities() {
      * greater than the length of "data" .
      */
     public static String GetUtf8String(
-      final byte[] bytes,
-      final int offset,
-      final int bytesCount,
-      final boolean replace) {
+      byte[] bytes,
+      int offset,
+      int bytesCount,
+      boolean replace) {
       if (bytes == null) {
         throw new NullPointerException("bytes");
       }
@@ -106,7 +106,7 @@ private DataUtilities() {
      * "bytesCount" is less than 0, or offset plus bytesCount is greater
      * than the length of "data" .
      */
-    public static byte[] GetUtf8Bytes(final String str, boolean replace) {
+    public static byte[] GetUtf8Bytes(String str, boolean replace) {
       if (str == null) {
         throw new NullPointerException("str");
       }
@@ -138,7 +138,7 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * replace} is false.
      * @throws NullPointerException The parameter {@code str} is null.
      */
-    public static long GetUtf8Length(final String str, boolean replace) {
+    public static long GetUtf8Length(String str, boolean replace) {
       if (str == null) {
         throw new NullPointerException("str");
       }
@@ -184,7 +184,7 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * character is an unpaired surrogate code point.
      * @throws NullPointerException The parameter {@code str} is null.
      */
-    public static int CodePointBefore(final String str, int index) {
+    public static int CodePointBefore(String str, int index) {
       return CodePointBefore(str, index, 0);
     }
 
@@ -203,9 +203,9 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * @throws NullPointerException The parameter {@code str} is null.
      */
     public static int CodePointBefore(
-      final String str,
-      final int index,
-      final int surrogateBehavior) {
+      String str,
+      int index,
+      int surrogateBehavior) {
       if (str == null) {
         throw new NullPointerException("str");
       }
@@ -239,7 +239,7 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * unpaired surrogate code point.
      * @throws NullPointerException The parameter {@code str} is null.
      */
-    public static int CodePointAt(final String str, int index) {
+    public static int CodePointAt(String str, int index) {
       return CodePointAt(str, index, 0);
     }
 
@@ -258,9 +258,9 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * @throws NullPointerException The parameter {@code str} is null.
      */
     public static int CodePointAt(
-      final String str,
-      final int index,
-      final int surrogateBehavior) {
+      String str,
+      int index,
+      int surrogateBehavior) {
       if (str == null) {
         throw new NullPointerException("str");
       }
@@ -290,7 +290,7 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * @param str A string.
      * @return The converted string, or null if {@code str} is null.
      */
-    public static String ToLowerCaseAscii(final String str) {
+    public static String ToLowerCaseAscii(String str) {
       if (str == null) {
         return null;
       }
@@ -331,7 +331,7 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * or the first code point that's different is greater in A than in B;
      * or a starts with b and is longer than b.
      */
-    public static int CodePointCompare(final String strA, String strB) {
+    public static int CodePointCompare(String strA, String strB) {
       if (strA == null) {
         return (strB == null) ? 0 : -1;
       }
@@ -404,11 +404,11 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * @throws java.io.IOException An I/O error occurred.
      */
     public static int WriteUtf8(
-      final String str,
-      final int offset,
-      final int length,
-      final OutputStream stream,
-      final boolean replace) throws IOException {
+      String str,
+      int offset,
+      int length,
+      OutputStream stream,
+      boolean replace) throws IOException {
       return WriteUtf8(str, offset, length, stream, replace, false);
     }
 
@@ -434,12 +434,12 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * @throws java.io.IOException An I/O error occurred.
      */
     public static int WriteUtf8(
-      final String str,
-      final int offset,
-      final int length,
-      final OutputStream stream,
-      final boolean replace,
-      final boolean lenientLineBreaks) throws IOException {
+      String str,
+      int offset,
+      int length,
+      OutputStream stream,
+      boolean replace,
+      boolean lenientLineBreaks) throws IOException {
       if (stream == null) {
         throw new NullPointerException("stream");
       }
@@ -567,7 +567,7 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * stream} is null.
      * @throws java.io.IOException An I/O error occurred.
      */
-    public static int WriteUtf8(final String str, OutputStream stream, boolean replace) throws IOException {
+    public static int WriteUtf8(String str, OutputStream stream, boolean replace) throws IOException {
       if (str == null) {
         throw new NullPointerException("str");
       }
@@ -593,11 +593,11 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * greater than the length of {@code data} .
      */
     public static int ReadUtf8FromBytes(
-      final byte[] data,
-      final int offset,
-      final int bytesCount,
-      final StringBuilder builder,
-      final boolean replace) {
+      byte[] data,
+      int offset,
+      int bytesCount,
+      StringBuilder builder,
+      boolean replace) {
       if (data == null) {
         throw new NullPointerException("data");
       }
@@ -713,7 +713,7 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * @throws NullPointerException The parameter {@code stream} is null.
      */
     public static String ReadUtf8ToString(
-      final InputStream stream) throws IOException {
+      InputStream stream) throws IOException {
       return ReadUtf8ToString(stream, -1, true);
     }
 
@@ -731,9 +731,9 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * @throws NullPointerException The parameter {@code stream} is null.
      */
     public static String ReadUtf8ToString(
-      final InputStream stream,
-      final int bytesCount,
-      final boolean replace) throws IOException {
+      InputStream stream,
+      int bytesCount,
+      boolean replace) throws IOException {
       StringBuilder builder = new StringBuilder();
       int retval = DataUtilities.ReadUtf8(stream, bytesCount, builder, replace);
       if (retval == -1) {
@@ -763,10 +763,10 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * builder} is null.
      */
     public static int ReadUtf8(
-      final InputStream stream,
-      final int bytesCount,
-      final StringBuilder builder,
-      final boolean replace) throws IOException {
+      InputStream stream,
+      int bytesCount,
+      StringBuilder builder,
+      boolean replace) throws IOException {
       if (stream == null) {
         throw new NullPointerException("stream");
       }

@@ -16,7 +16,8 @@ namespace PeterO {
       internal static MutableNumber FromBigInteger(BigInteger bigintVal) {
         var mnum = new MutableNumber(0);
         if (bigintVal.Sign < 0) {
-          throw new ArgumentException("bigintVal's sign (" + bigintVal.Sign + ") is less than " + "0 ");
+          throw new ArgumentException("bigintVal's sign (" + bigintVal.Sign +
+            ") is less than " + "0 ");
         }
         byte[] bytes = bigintVal.ToByteArray();
         int len = bytes.Length;
@@ -112,7 +113,8 @@ namespace PeterO {
     /// <returns>The product of the two objects.</returns>
       internal MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
-          throw new ArgumentException("multiplicand (" + multiplicand + ") is less than " + "0 ");
+          throw new ArgumentException("multiplicand (" + multiplicand +
+            ") is less than " + "0 ");
         }
         if (multiplicand != 0) {
           int carry = 0;
@@ -252,7 +254,8 @@ namespace PeterO {
       internal MutableNumber SubtractInt(
         int other) {
         if (other < 0) {
-          throw new ArgumentException("other (" + other + ") is less than " + "0 ");
+     throw new ArgumentException("other (" + other + ") is less than " +
+            "0 ");
         }
       if (other != 0) {
           unchecked {
@@ -367,7 +370,8 @@ namespace PeterO {
     /// <returns>This instance.</returns>
       internal MutableNumber Add(int augend) {
         if (augend < 0) {
-          throw new ArgumentException("augend (" + augend + ") is less than " + "0 ");
+   throw new ArgumentException("augend (" + augend + ") is less than " +
+            "0 ");
         }
         if (augend != 0) {
           int carry = 0;

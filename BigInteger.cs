@@ -197,10 +197,10 @@ namespace PeterO {
       if (words1[astart + words1Count - 1] != 0) {
         return 1;
       }
-      --words1Count;
-      while (unchecked(words1Count--) != 0) {
-        int an = ((int)words1[astart + words1Count]) & 0xffff;
-        int bn = ((int)words2[bstart + words1Count]) & 0xffff;
+      int w1c = words1Count;
+      while (unchecked(w1c--) != 0) {
+        int an = ((int)words1[astart + w1c]) & 0xffff;
+        int bn = ((int)words2[bstart + w1c]) & 0xffff;
         if (an > bn) {
           return 1;
         }
@@ -4679,6 +4679,7 @@ namespace PeterO {
       int words2Size = subtrahend.wordCount;
       words2Size += words2Size & 1;
       bool diffNeg = false;
+      short borrow;
       var diffReg = new short[(
         int)Math.Max(
                                 minuend.words.Length,
@@ -4709,7 +4710,7 @@ namespace PeterO {
         }
       } else if (words1Size > words2Size) {
         // words1 is greater than words2
-        var borrow = (
+        borrow = (
           short)Subtract(
           diffReg,
           0,
@@ -4727,7 +4728,7 @@ namespace PeterO {
         Decrement(diffReg, words2Size, (int)(words1Size - words2Size), borrow);
       } else {
         // words1 is less than words2
-        var borrow = (
+        borrow = (
           short)Subtract(
           diffReg,
           0,

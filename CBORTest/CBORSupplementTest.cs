@@ -248,25 +248,6 @@ CBORObject.FromObject((CBORObject[])null));
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
-    [TestMethod]
-    public void TestCBORObjectIsFinite() {
-      CBORObject cbor = CBORObject.True;
-      Assert.IsFalse(cbor.IsFinite);
-      cbor = CBORObject.False;
-      Assert.IsFalse(cbor.IsFinite);
-      Assert.IsFalse(CBORObject.NewArray().IsFinite);
-      Assert.IsFalse(CBORObject.NewMap().IsFinite);
-      Assert.IsTrue(CBORObject.FromObject(0).IsFinite);
-      Assert.IsTrue(CBORObject.FromObject(2.5).IsFinite);
-      Assert.IsFalse(CBORObject.FromObject(Double.PositiveInfinity).IsFinite);
-      Assert.IsFalse(CBORObject.FromObject(Double.NegativeInfinity).IsFinite);
-      Assert.IsFalse(CBORObject.FromObject(Double.NaN).IsFinite);
-Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity)
-        .IsFinite);
-Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity)
-        .IsFinite);
-      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN).IsFinite);
-    }
 
     [TestMethod]
     public void TestCBORObjectCanTruncatedIntFitInInt32() {

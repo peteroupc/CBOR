@@ -91,8 +91,8 @@ at: http://upokecenter.com/d/
 
     private boolean EqualsInternal(ExtendedDecimal otherValue) {
       return (otherValue != null) && (this.flags == otherValue.flags &&
-  this.unsignedMantissa.equals(otherValue.unsignedMantissa)
-                                      &&
+  this.unsignedMantissa.equals(otherValue.unsignedMantissa) &&
+
   this.exponent.equals(otherValue.exponent));
     }
 
@@ -332,15 +332,16 @@ at: http://upokecenter.com/d/
       int offset,
       int length,
       PrecisionContext ctx) {
+      int tmpoffset = offset;
       if (str == null) {
         throw new NullPointerException("str");
       }
-      if (offset < 0) {
-        throw new NumberFormatException("offset (" + offset + ") is less than " +
+      if (tmpoffset < 0) {
+        throw new NumberFormatException("offset (" + tmpoffset + ") is less than " +
                                   "0");
       }
-      if (offset > str.length()) {
-        throw new NumberFormatException("offset (" + offset + ") is more than " +
+      if (tmpoffset > str.length()) {
+        throw new NumberFormatException("offset (" + tmpoffset + ") is more than " +
                                   str.length());
       }
       if (length < 0) {
@@ -351,19 +352,19 @@ at: http://upokecenter.com/d/
         throw new NumberFormatException("length (" + length + ") is more than " +
                                   str.length());
       }
-      if (str.length() - offset < length) {
-        throw new NumberFormatException("str's length minus " + offset + " (" +
-                                  (str.length() - offset) +
+      if (str.length() - tmpoffset < length) {
+        throw new NumberFormatException("str's length minus " + tmpoffset + " (" +
+                                  (str.length() - tmpoffset) +
                                   ") is less than " + length);
       }
       if (length == 0) {
         throw new NumberFormatException();
       }
       boolean negative = false;
-      int endStr = offset + length;
+      int endStr = tmpoffset + length;
       if (str.charAt(0) == '+' || str.charAt(0) == '-') {
         negative = str.charAt(0) == '-';
-        ++offset;
+        ++tmpoffset;
       }
       int mantInt = 0;
       FastInteger mant = null;
@@ -376,7 +377,7 @@ at: http://upokecenter.com/d/
       boolean haveExponent = false;
       int newScaleInt = 0;
       FastInteger newScale = null;
-      int i = offset;
+      int i = tmpoffset;
       if (i + 8 == endStr) {
         if ((str.charAt(i) == 'I' || str.charAt(i) == 'i') &&
             (str.charAt(i + 1) == 'N' || str.charAt(i + 1) == 'n') &&
@@ -614,14 +615,14 @@ at: http://upokecenter.com/d/
       if (haveExponent) {
         FastInteger exp = null;
         int expInt = 0;
-        offset = 1;
+        tmpoffset = 1;
         haveDigits = false;
         if (i == endStr) {
           throw new NumberFormatException();
         }
         if (str.charAt(i) == '+' || str.charAt(i) == '-') {
           if (str.charAt(i) == '-') {
-            offset = -1;
+            tmpoffset = -1;
           }
           ++i;
         }
@@ -660,19 +661,19 @@ at: http://upokecenter.com/d/
         if (exp != null && (expBufferMult != 1 || expBuffer != 0)) {
           exp.Multiply(expBufferMult).AddInt(expBuffer);
         }
-        if (offset >= 0 && newScaleInt == 0 && newScale == null && exp ==
+        if (tmpoffset >= 0 && newScaleInt == 0 && newScale == null && exp ==
             null) {
           newScaleInt = expInt;
         } else if (exp == null) {
           newScale = (newScale == null) ? ((new FastInteger(newScaleInt))) : newScale;
-          if (offset < 0) {
+          if (tmpoffset < 0) {
             newScale.SubtractInt(expInt);
           } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
           newScale = (newScale == null) ? ((new FastInteger(newScaleInt))) : newScale;
-          if (offset < 0) {
+          if (tmpoffset < 0) {
             newScale.Subtract(exp);
           } else {
             newScale.Add(exp);
@@ -765,28 +766,29 @@ at: http://upokecenter.com/d/
         // Simplify denominator based on numerator
         BigInteger gcd =
           numerator.gcd(denominator);
-        denominator = denominator.divide(gcd);
-        if (denominator.signum() == 0) {
+        BigInteger tmpden = denominator;
+        tmpden = tmpden.divide(gcd);
+        if (tmpden.signum() == 0) {
           return false;
         }
         // Eliminate factors of 2
-        while (denominator.testBit(0) == false) {
-          denominator = denominator.shiftRight(1);
+        while (tmpden.testBit(0) == false) {
+          tmpden = tmpden.shiftRight(1);
         }
         // Eliminate factors of 5
         while (true) {
           BigInteger bigrem;
           BigInteger bigquo;
 {
-BigInteger[] divrem=(denominator).divideAndRemainder(BigInteger.valueOf(5));
+BigInteger[] divrem = (tmpden).divideAndRemainder(BigInteger.valueOf(5));
 bigquo = divrem[0];
 bigrem = divrem[1]; }
           if (bigrem.signum() != 0) {
             break;
           }
-          denominator = bigquo;
+          tmpden = bigquo;
         }
-        return denominator.compareTo(BigInteger.ONE) == 0;
+        return tmpden.compareTo(BigInteger.ONE) == 0;
       }
 
     /**
@@ -798,22 +800,23 @@ bigrem = divrem[1]; }
       public BigInteger MultiplyByRadixPower(
         BigInteger bigint,
         FastInteger power) {
+      BigInteger tmpbigint = bigint;
         if (power.signum() <= 0) {
-          return bigint;
+          return tmpbigint;
         }
-        if (bigint.signum() == 0) {
-          return bigint;
+        if (tmpbigint.signum() == 0) {
+          return tmpbigint;
         }
         BigInteger bigtmp = null;
-        if (bigint.compareTo(BigInteger.ONE) != 0) {
+        if (tmpbigint.compareTo(BigInteger.ONE) != 0) {
           if (power.CanFitInInt32()) {
             bigtmp = DecimalUtility.FindPowerOfTen(power.AsInt32());
-            bigint = bigint.multiply(bigtmp);
+            tmpbigint = tmpbigint.multiply(bigtmp);
           } else {
             bigtmp = DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger());
-            bigint = bigint.multiply(bigtmp);
+            tmpbigint = tmpbigint.multiply(bigtmp);
           }
-          return bigint;
+          return tmpbigint;
         }
         return power.CanFitInInt32() ?
           DecimalUtility.FindPowerOfTen(power.AsInt32()) :
@@ -883,12 +886,12 @@ bigrem = divrem[1]; }
         return negative ? "-Infinity" : "Infinity";
       }
       if ((this.flags & BigNumberFlags.FlagSignalingNaN) != 0) {
-        return this.unsignedMantissa.signum()==0 ? (negative ? "-sNaN" : "sNaN") :
+        return this.unsignedMantissa.signum() == 0 ? (negative ? "-sNaN" : "sNaN") :
           (negative ? "-sNaN" + (this.unsignedMantissa).abs() :
            "sNaN" + (this.unsignedMantissa).abs());
       }
       if ((this.flags & BigNumberFlags.FlagQuietNaN) != 0) {
-        return this.unsignedMantissa.signum()==0 ? (negative ? "-NaN" : "NaN") :
+        return this.unsignedMantissa.signum() == 0 ? (negative ? "-NaN" : "NaN") :
           (negative ? "-NaN" + (this.unsignedMantissa).abs() : "NaN" +
            (this.unsignedMantissa).abs());
       }
@@ -986,10 +989,10 @@ bigrem = divrem[1]; }
             if (negative) {
               builder.append('-');
             }
-            builder.append(mantissaString, 0, (0)+(tmpInt));
+            builder.append(mantissaString, 0, (0) + (tmpInt));
             builder.append("0.");
             builder.append(
-              mantissaString, tmpInt, (tmpInt)+(mantissaString.length() - tmpInt));
+              mantissaString, tmpInt, (tmpInt) + (mantissaString.length() - tmpInt));
           } else if (decimalPoint.CompareToInt(mantissaString.length()) > 0) {
             FastInteger insertionPoint = builderLength;
             if (!insertionPoint.CanFitInInt32()) {
@@ -1005,14 +1008,14 @@ bigrem = divrem[1]; }
             if (negative) {
               builder.append('-');
             }
-            builder.append(mantissaString, 0, (0)+(tmpInt));
+            builder.append(mantissaString, 0, (0) + (tmpInt));
             AppendString(
               builder,
               '0',
               FastInteger.Copy(decimalPoint).SubtractInt(builder.length()));
             builder.append('.');
             builder.append(
-              mantissaString, tmpInt, (tmpInt)+(mantissaString.length() - tmpInt));
+              mantissaString, tmpInt, (tmpInt) + (mantissaString.length() - tmpInt));
           } else {
             if (!decimalPoint.CanFitInInt32()) {
               throw new UnsupportedOperationException();
@@ -1027,10 +1030,10 @@ bigrem = divrem[1]; }
             if (negative) {
               builder.append('-');
             }
-            builder.append(mantissaString, 0, (0)+(tmpInt));
+            builder.append(mantissaString, 0, (0) + (tmpInt));
             builder.append('.');
             builder.append(
-              mantissaString, tmpInt, (tmpInt)+(mantissaString.length() - tmpInt));
+              mantissaString, tmpInt, (tmpInt) + (mantissaString.length() - tmpInt));
           }
           return builder.toString();
         }
@@ -1084,10 +1087,10 @@ bigrem = divrem[1]; }
             if (negative) {
               builder.append('-');
             }
-            builder.append(mantissaString, 0, (0)+(tmpInt));
+            builder.append(mantissaString, 0, (0) + (tmpInt));
             builder.append('.');
             builder.append(
-              mantissaString, tmpInt, (tmpInt)+(mantissaString.length() - tmpInt));
+              mantissaString, tmpInt, (tmpInt) + (mantissaString.length() - tmpInt));
           } else if (adjustedExponent.signum() == 0 && !negative) {
             return mantissaString;
           } else if (adjustedExponent.signum() == 0 && negative) {
@@ -1314,7 +1317,7 @@ bigrem = divrem[1]; }
         boolean neg = bigmantissa.signum() < 0;
         BigInteger remainder;
         if (neg) {
-          bigmantissa=(bigmantissa).negate();
+          bigmantissa = (bigmantissa).negate();
         }
         FastInteger negscale = FastInteger.Copy(scale).Negate();
         BigInteger divisor =
@@ -1322,7 +1325,7 @@ bigrem = divrem[1]; }
         while (true) {
           BigInteger quotient;
 {
-BigInteger[] divrem=(bigmantissa).divideAndRemainder(divisor);
+BigInteger[] divrem = (bigmantissa).divideAndRemainder(divisor);
 quotient = divrem[0];
 remainder = divrem[1]; }
           // Ensure that the quotient has enough precision
@@ -1365,7 +1368,7 @@ remainder = divrem[1]; }
           bigmantissa = bigmantissa.add(BigInteger.ONE);
         }
         if (neg) {
-          bigmantissa=(bigmantissa).negate();
+          bigmantissa = (bigmantissa).negate();
         }
         return ExtendedFloat.Create(bigmantissa, scale.AsBigInteger());
       }
@@ -1535,7 +1538,7 @@ remainder = divrem[1]; }
         BigInteger bigmantissa = BigInteger.valueOf(valueFpMantissa);
         bigmantissa = bigmantissa.shiftLeft(floatExponent);
         if (neg) {
-          bigmantissa=(bigmantissa).negate();
+          bigmantissa = (bigmantissa).negate();
         }
         return ExtendedDecimal.FromBigInteger(bigmantissa);
       } else {
@@ -1544,7 +1547,7 @@ remainder = divrem[1]; }
         BigInteger bigexponent = DecimalUtility.FindPowerOfFive(-floatExponent);
         bigmantissa = bigmantissa.multiply(bigexponent);
         if (neg) {
-          bigmantissa=(bigmantissa).negate();
+          bigmantissa = (bigmantissa).negate();
         }
         return ExtendedDecimal.Create(bigmantissa, BigInteger.valueOf(floatExponent));
       }
@@ -1635,7 +1638,7 @@ remainder = divrem[1]; }
         BigInteger bigmantissa = valueFpMantissaBig;
         bigmantissa = bigmantissa.shiftLeft(floatExponent);
         if (neg) {
-          bigmantissa=(bigmantissa).negate();
+          bigmantissa = (bigmantissa).negate();
         }
         return ExtendedDecimal.FromBigInteger(bigmantissa);
       } else {
@@ -1644,7 +1647,7 @@ remainder = divrem[1]; }
         BigInteger exp = DecimalUtility.FindPowerOfFive(-floatExponent);
         bigmantissa = bigmantissa.multiply(exp);
         if (neg) {
-          bigmantissa=(bigmantissa).negate();
+          bigmantissa = (bigmantissa).negate();
         }
         return ExtendedDecimal.Create(bigmantissa, BigInteger.valueOf(floatExponent));
       }
@@ -1687,7 +1690,7 @@ remainder = divrem[1]; }
         BigInteger bigmantissa = bigintMant;
         boolean neg = bigmantissa.signum() < 0;
         if (neg) {
-          bigmantissa=(bigmantissa).negate();
+          bigmantissa = (bigmantissa).negate();
         }
         while (intcurexp.signum() > 0) {
           int shift = 1000000;
@@ -1698,13 +1701,13 @@ remainder = divrem[1]; }
           intcurexp.AddInt(-shift);
         }
         if (neg) {
-          bigmantissa=(bigmantissa).negate();
+          bigmantissa = (bigmantissa).negate();
         }
         return ExtendedDecimal.FromBigInteger(bigmantissa);
       } else {
         // Fractional number
         BigInteger bigmantissa = bigintMant;
-        BigInteger negbigintExp=(bigintExp).negate();
+        BigInteger negbigintExp = (bigintExp).negate();
         negbigintExp = DecimalUtility.FindPowerOfFiveFromBig(negbigintExp);
         bigmantissa = bigmantissa.multiply(negbigintExp);
         return ExtendedDecimal.Create(bigmantissa, bigintExp);
@@ -2961,10 +2964,10 @@ remainder = divrem[1]; }
      * @return The closest value to this object's value, rounded to the specified
      * precision. Returns the same value as this object if {@code ctx} is
      * null or the precision and exponent range are unlimited.
-     */
-    [Obsolete(
-      "Instead of this method,
-      use RoundToPrecision and pass a " + "precision context with the IsPrecisionInBits property set.")]
+     * @deprecated Instead of this method use RoundToPrecision and pass a precision context
+* with the IsPrecisionInBits property set.
+ */
+@Deprecated
     public ExtendedDecimal RoundToBinaryPrecision(PrecisionContext ctx) {
       if (ctx == null) {
         return this;

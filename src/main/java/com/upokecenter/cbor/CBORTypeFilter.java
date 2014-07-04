@@ -50,7 +50,7 @@ import com.upokecenter.util.*;
       return filter;
     }
 
-    private CBORTypeFilter WithType(final int type) {
+    private CBORTypeFilter WithType(int type) {
       if (this.any) {
         return this;
       }
@@ -104,7 +104,7 @@ import com.upokecenter.util.*;
      * @param tags An integer array of tags allowed.
      * @return A CBORTypeFilter object.
      */
-    public CBORTypeFilter WithTags(final int... tags) {
+    public CBORTypeFilter WithTags(int... tags) {
       if (this.any) {
         return this;
       }
@@ -131,7 +131,7 @@ import com.upokecenter.util.*;
      * @return A CBORTypeFilter object.
      * @throws NullPointerException The parameter "tags[i]" is null.
      */
-    public CBORTypeFilter WithTags(final BigInteger... tags) {
+    public CBORTypeFilter WithTags(BigInteger... tags) {
       if (this.any) {
         return this;
       }
@@ -169,8 +169,8 @@ import com.upokecenter.util.*;
      * specified in arrayLength.
      */
     public CBORTypeFilter WithArrayExactLength(
-final int arrayLength,
-final CBORTypeFilter... elements) {
+int arrayLength,
+CBORTypeFilter... elements) {
       if (this.any) {
         return this;
       }
@@ -178,13 +178,11 @@ final CBORTypeFilter... elements) {
         throw new NullPointerException("elements");
       }
       if (arrayLength < 0) {
-        throw new IllegalArgumentException("arrayLength (" +
-          Long.toString((long)arrayLength) +
+        throw new IllegalArgumentException("arrayLength (" + arrayLength +
           ") is less than " + "0");
       }
       if (arrayLength < elements.length) {
-        throw new IllegalArgumentException("arrayLength (" +
-          Long.toString((long)arrayLength) +
+        throw new IllegalArgumentException("arrayLength (" + arrayLength +
           ") is less than " + elements.length);
       }
       CBORTypeFilter filter = this.Copy();
@@ -210,8 +208,8 @@ final CBORTypeFilter... elements) {
      * specified in arrayLength.
      */
     public CBORTypeFilter WithArrayMinLength(
-final int arrayLength,
-final CBORTypeFilter... elements) {
+int arrayLength,
+CBORTypeFilter... elements) {
       if (this.any) {
         return this;
       }
@@ -219,13 +217,11 @@ final CBORTypeFilter... elements) {
         throw new NullPointerException("elements");
       }
       if (arrayLength < 0) {
-        throw new IllegalArgumentException("arrayLength (" +
-          Long.toString((long)arrayLength) +
+        throw new IllegalArgumentException("arrayLength (" + arrayLength +
           ") is less than " + "0");
       }
       if (arrayLength < elements.length) {
-        throw new IllegalArgumentException("arrayLength (" +
-          Long.toString((long)arrayLength) +
+        throw new IllegalArgumentException("arrayLength (" + arrayLength +
           ") is less than " + elements.length);
       }
       CBORTypeFilter filter = this.Copy();
@@ -246,13 +242,11 @@ final CBORTypeFilter... elements) {
         return this;
       }
       if (this.arrayLength < 0) {
-        throw new IllegalArgumentException("this.arrayLength (" +
-          Long.toString((long)this.arrayLength) +
+        throw new IllegalArgumentException("this.arrayLength (" + this.arrayLength +
           ") is less than " + "0");
       }
       if (this.arrayLength < this.elements.length) {
-        throw new IllegalArgumentException("this.arrayLength (" +
-          Long.toString((long)this.arrayLength) +
+        throw new IllegalArgumentException("this.arrayLength (" + this.arrayLength +
           ") is less than " + this.elements.length);
       }
       CBORTypeFilter filter = this.Copy();
@@ -280,7 +274,7 @@ final CBORTypeFilter... elements) {
      * @param type A 32-bit signed integer.
      * @return A Boolean object.
      */
-    public boolean MajorTypeMatches(final int type) {
+    public boolean MajorTypeMatches(int type) {
       return type >= 0 && type <= 7 && (this.types & (1 << type)) != 0;
     }
 
@@ -290,7 +284,7 @@ final CBORTypeFilter... elements) {
      * @return True if this filter allows CBOR arrays and an array's length is
      * allowed under this filter; otherwise, false.
      */
-    public boolean ArrayLengthMatches(final int length) {
+    public boolean ArrayLengthMatches(int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                                               (this.arrayMinLength ?
                                                 this.arrayLength >= length :
@@ -304,7 +298,7 @@ final CBORTypeFilter... elements) {
      * @return True if this filter allows CBOR arrays and an array's length is
      * allowed under a filter; otherwise, false.
      */
-    public boolean ArrayLengthMatches(final long length) {
+    public boolean ArrayLengthMatches(long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                                               (this.arrayMinLength ?
                                                 this.arrayLength >= length :
@@ -319,7 +313,7 @@ final CBORTypeFilter... elements) {
      * allowed under a filter; otherwise, false.
      * @throws NullPointerException The parameter {@code bigLength} is null.
      */
-    public boolean ArrayLengthMatches(final BigInteger bigLength) {
+    public boolean ArrayLengthMatches(BigInteger bigLength) {
       if (bigLength == null) {
         throw new NullPointerException("bigLength");
       }
@@ -336,7 +330,7 @@ final CBORTypeFilter... elements) {
      * @return True if CBOR objects can have the given tag number; otherwise,
      * false.
      */
-    public boolean TagAllowed(final int tag) {
+    public boolean TagAllowed(int tag) {
       return this.any || this.TagAllowed(BigInteger.valueOf(tag));
     }
 
@@ -346,7 +340,7 @@ final CBORTypeFilter... elements) {
      * @return True if CBOR objects can have the given tag number; otherwise,
      * false.
      */
-    public boolean TagAllowed(final long tag) {
+    public boolean TagAllowed(long tag) {
       return this.any || this.TagAllowed(BigInteger.valueOf(tag));
     }
 
@@ -357,7 +351,7 @@ final CBORTypeFilter... elements) {
      * false.
      * @throws NullPointerException The parameter {@code bigTag} is null.
      */
-    public boolean TagAllowed(final BigInteger bigTag) {
+    public boolean TagAllowed(BigInteger bigTag) {
       if (bigTag == null) {
         throw new NullPointerException("bigTag");
       }
@@ -388,7 +382,7 @@ final CBORTypeFilter... elements) {
      * @return True if this type filter allows CBOR arrays and the given array
      * index is allowed under this type filter; otherwise, false.
      */
-    public boolean ArrayIndexAllowed(final int index) {
+    public boolean ArrayIndexAllowed(int index) {
    return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength ||
 
             ((this.arrayMinLength || index < this.arrayLength) && index >=
@@ -400,7 +394,7 @@ final CBORTypeFilter... elements) {
      * @param index A 32-bit signed integer.
      * @return A CBORTypeFilter object.
      */
-    public CBORTypeFilter GetSubFilter(final int index) {
+    public CBORTypeFilter GetSubFilter(int index) {
       if (this.anyArrayLength || this.any) {
         return Any;
       }
@@ -427,7 +421,7 @@ final CBORTypeFilter... elements) {
      * @param index A 64-bit signed integer.
      * @return A CBORTypeFilter object.
      */
-    public CBORTypeFilter GetSubFilter(final long index) {
+    public CBORTypeFilter GetSubFilter(long index) {
       if (this.anyArrayLength || this.any) {
         return Any;
       }

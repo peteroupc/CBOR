@@ -15,7 +15,7 @@ import com.upokecenter.util.*;
   final class CBORObjectMath {
 private CBORObjectMath() {
 }
-    public static CBORObject Addition(final CBORObject a, CBORObject b) {
+    public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) {
         throw new NullPointerException("a");
       }
@@ -79,7 +79,7 @@ private CBORObjectMath() {
       }
     }
 
-    public static CBORObject Subtract(final CBORObject a, CBORObject b) {
+    public static CBORObject Subtract(CBORObject a, CBORObject b) {
       if (a == null) {
         throw new NullPointerException("a");
       }
@@ -143,7 +143,7 @@ private CBORObjectMath() {
       }
     }
 
-    public static CBORObject Multiply(final CBORObject a, CBORObject b) {
+    public static CBORObject Multiply(CBORObject a, CBORObject b) {
       if (a == null) {
         throw new NullPointerException("a");
       }
@@ -215,7 +215,7 @@ private CBORObjectMath() {
       }
     }
 
-    public static CBORObject Divide(final CBORObject a, CBORObject b) {
+    public static CBORObject Divide(CBORObject a, CBORObject b) {
       if (a == null) {
         throw new NullPointerException("a");
       }
@@ -324,7 +324,7 @@ bigrem = divrem[1]; }
       }
     }
 
-    public static CBORObject Remainder(final CBORObject a, CBORObject b) {
+    public static CBORObject Remainder(CBORObject a, CBORObject b) {
       if (a == null) {
         throw new NullPointerException("a");
       }

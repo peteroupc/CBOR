@@ -19,15 +19,15 @@ import com.upokecenter.util.*;
     private boolean addSharedRef;
     private int depth;
 
-    public CBORReader (final InputStream stream) {
+    public CBORReader (InputStream stream) {
       this.stream = stream;
       this.sharedRefs = new SharedRefs();
     }
 
     private static long ReadDataLength(
-final InputStream stream,
-final int headByte,
-final int expectedType) throws IOException {
+InputStream stream,
+int headByte,
+int expectedType) throws IOException {
       if (headByte < 0) {
         throw new CBORException("Unexpected data encountered");
       }
@@ -91,7 +91,7 @@ final int expectedType) throws IOException {
       }
     }
 
-    private static BigInteger ToUnsignedBigInteger(final long val) {
+    private static BigInteger ToUnsignedBigInteger(long val) {
       BigInteger lval = BigInteger.valueOf(val & ~(1L << 63));
       if ((val >> 63) != 0) {
         BigInteger bigintAdd = BigInteger.ONE.shiftLeft(63);
@@ -101,9 +101,9 @@ final int expectedType) throws IOException {
     }
 
     private static byte[] ReadByteData(
-final InputStream stream,
-final long uadditional,
-final OutputStream outputStream) throws IOException {
+InputStream stream,
+long uadditional,
+OutputStream outputStream) throws IOException {
       if ((uadditional >> 63) != 0 || uadditional > Integer.MAX_VALUE) {
         throw new CBORException("Length" + ToUnsignedBigInteger(uadditional) +
           " is bigger than supported ");
@@ -154,7 +154,7 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
     }
 
     public CBORObject Read(
-      final CBORTypeFilter filter) throws IOException {
+      CBORTypeFilter filter) throws IOException {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
@@ -166,8 +166,8 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
     }
 
     public CBORObject ReadForFirstByte(
-      final int firstbyte,
-      final CBORTypeFilter filter) throws IOException {
+      int firstbyte,
+      CBORTypeFilter filter) throws IOException {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }

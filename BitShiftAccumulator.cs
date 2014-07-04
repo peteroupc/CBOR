@@ -48,7 +48,8 @@ namespace PeterO {
 
     public void ShiftToDigits(FastInteger bits) {
       if (bits.Sign < 0) {
-        throw new ArgumentException("bits's sign (" + bits.Sign + ") is less than " + "0 ");
+        throw new ArgumentException("bits's sign (" + bits.Sign +
+          ") is less than " + "0");
       }
       if (bits.CanFitInInt32()) {
         this.ShiftToDigitsInt(bits.AsInt32());
@@ -101,7 +102,8 @@ namespace PeterO {
       int lastDiscarded,
       int olderDiscarded) {
       if (bigint.Sign < 0) {
-        throw new ArgumentException("bigint's sign (" + bigint.Sign + ") is less than " + "0 ");
+        throw new ArgumentException("bigint's sign (" + bigint.Sign +
+          ") is less than " + "0");
       }
       if (bigint.canFitInInt()) {
         this.isSmall = true;
@@ -116,7 +118,8 @@ namespace PeterO {
 
     public static BitShiftAccumulator FromInt32(int smallNumber) {
       if (smallNumber < 0) {
-        throw new ArgumentException("smallNumber (" + smallNumber + ") is less than " + "0 ");
+        throw new ArgumentException("smallNumber (" + smallNumber +
+          ") is less than " + "0");
       }
       var bsa = new BitShiftAccumulator(BigInteger.Zero, 0, 0);
       bsa.shiftedSmall = smallNumber;
@@ -349,7 +352,7 @@ namespace PeterO {
     /// <param name='bits'>A 32-bit signed integer.</param>
     public void ShiftToDigitsInt(int bits) {
       if (bits < 0) {
-        throw new ArgumentException("bits (" + bits + ") is less than " + "0 ");
+        throw new ArgumentException("bits (" + bits + ") is less than " + "0");
       }
       if (this.isSmall) {
         this.ShiftSmallToBits(bits);

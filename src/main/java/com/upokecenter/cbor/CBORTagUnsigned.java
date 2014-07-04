@@ -13,7 +13,7 @@ at: http://upokecenter.com/d/
       return CBORTypeFilter.UnsignedInteger;
     }
 
-    public CBORObject ValidateObject(final CBORObject obj) {
+    public CBORObject ValidateObject(CBORObject obj) {
       if (!obj.isIntegral() || !obj.CanFitInInt64() || obj.signum() < 0) {
         throw new CBORException("Not a 64-bit unsigned integer");
       }

@@ -220,10 +220,8 @@ namespace PeterO.Cbor {
           // NOTE: mantInt can only be positive, so overflow is impossible
 #if DEBUG
           if (mantInt < 0) {
-            throw new ArgumentException("mantInt (" +
-              Convert.ToString((int)mantInt,
-              System.Globalization.CultureInfo.InvariantCulture) +
-              ") is less than " + "0");
+  throw new ArgumentException("mantInt (" + mantInt + ") is less than " +
+              "0");
           }
 #endif
 

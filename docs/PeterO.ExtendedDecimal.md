@@ -1074,7 +1074,7 @@ Finds the next value that is closer to the other object's value than this object
 <b>Returns:</b>
 
 Returns the next value that is closer to the other object' s value than this object's value. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
- is null, the precision is 0, or <i>ctx</i>
+ is null, the precision is 0, or  <i>ctx</i>
  has an unlimited exponent range.
 
 ### Max
@@ -1587,7 +1587,7 @@ is null or the precision and exponent range are unlimited.
     public PeterO.ExtendedDecimal RoundToBinaryPrecision(
         PeterO.PrecisionContext ctx);
 
-<b>Deprecated.</b> Instead of this method, use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.
+<b>Deprecated.</b> Instead of this method use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.
 
 Rounds this object's value to a given maximum bit length, using the given rounding mode and range of exponent.
 

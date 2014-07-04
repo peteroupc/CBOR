@@ -87,10 +87,10 @@ import com.upokecenter.util.*;
     }
     @Test
     public void TestIsInfinity() {
-      if (!(ExtendedRational.PositiveInfinity.IsNaN()))Assert.fail();
-      if (!(ExtendedRational.NegativeInfinity.IsNaN()))Assert.fail();
-      if (ExtendedRational.Zero.IsNaN())Assert.fail();
-      if (ExtendedRational.NaN.IsNaN())Assert.fail();
+      if (!(ExtendedRational.PositiveInfinity.IsInfinity()))Assert.fail();
+      if (!(ExtendedRational.NegativeInfinity.IsInfinity()))Assert.fail();
+      if (ExtendedRational.Zero.IsInfinity())Assert.fail();
+      if (ExtendedRational.NaN.IsInfinity())Assert.fail();
     }
     @Test
     public void TestIsNaN() {

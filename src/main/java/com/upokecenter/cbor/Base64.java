@@ -18,7 +18,7 @@ private Base64() {
     private static final String Base64Classic =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/ ";
 
-    public static void ToBase64(final StringBuilder str, byte[] data, boolean padding) {
+    public static void ToBase64(StringBuilder str, byte[] data, boolean padding) {
       if (data == null) {
         throw new NullPointerException("data");
       }
@@ -26,9 +26,9 @@ private Base64() {
     }
 
     public static void ToBase64URL(
-      final StringBuilder str,
-      final byte[] data,
-      final boolean padding) {
+      StringBuilder str,
+      byte[] data,
+      boolean padding) {
       if (data == null) {
         throw new NullPointerException("data");
       }
@@ -36,49 +36,49 @@ private Base64() {
     }
 
     public static void ToBase64(
-      final StringBuilder str,
-      final byte[] data,
-      final int offset,
-      final int count,
-      final boolean padding) {
+      StringBuilder str,
+      byte[] data,
+      int offset,
+      int count,
+      boolean padding) {
       ToBase64(str, data, offset, count, Base64Classic, padding);
     }
 
     public static void ToBase64URL(
-      final StringBuilder str,
-      final byte[] data,
-      final int offset,
-      final int count,
-      final boolean padding) {
+      StringBuilder str,
+      byte[] data,
+      int offset,
+      int count,
+      boolean padding) {
       ToBase64(str, data, offset, count, Base64URL, padding);
     }
 
     public static void WriteBase64(
-      final OutputStream outputStream,
-      final byte[] data,
-      final int offset,
-      final int count,
-      final boolean padding) throws IOException {
+      OutputStream outputStream,
+      byte[] data,
+      int offset,
+      int count,
+      boolean padding) throws IOException {
       WriteBase64(outputStream, data, offset, count, Base64Classic, padding);
     }
 
     public static void WriteBase64URL(
-      final OutputStream outputStream,
-      final byte[] data,
-      final int offset,
-      final int count,
-      final boolean padding) throws IOException {
+      OutputStream outputStream,
+      byte[] data,
+      int offset,
+      int count,
+      boolean padding) throws IOException {
       WriteBase64(outputStream, data, offset, count, Base64URL, padding);
     }
 
-    public static String ToBase64String(final byte[] data, boolean padding) {
+    public static String ToBase64String(byte[] data, boolean padding) {
       if (data == null) {
         throw new NullPointerException("data");
       }
       return ToBase64String(data, 0, data.length, padding);
     }
 
-    public static String ToBase64URLString(final byte[] data, boolean padding) {
+    public static String ToBase64URLString(byte[] data, boolean padding) {
       if (data == null) {
         throw new NullPointerException("data");
       }
@@ -86,32 +86,32 @@ private Base64() {
     }
 
     public static String ToBase64String(
-      final byte[] data,
-      final int offset,
-      final int count,
-      final boolean padding) {
+      byte[] data,
+      int offset,
+      int count,
+      boolean padding) {
       StringBuilder builder = new StringBuilder();
       ToBase64(builder, data, offset, count, Base64Classic, padding);
       return builder.toString();
     }
 
     public static String ToBase64URLString(
-      final byte[] data,
-      final int offset,
-      final int count,
-      final boolean padding) {
+      byte[] data,
+      int offset,
+      int count,
+      boolean padding) {
       StringBuilder builder = new StringBuilder();
       ToBase64(builder, data, offset, count, Base64Classic, padding);
       return builder.toString();
     }
 
     private static void ToBase64(
-      final StringBuilder str,
-      final byte[] data,
-      final int offset,
-      final int count,
-      final String alphabet,
-      final boolean padding) {
+      StringBuilder str,
+      byte[] data,
+      int offset,
+      int count,
+      String alphabet,
+      boolean padding) {
       if (str == null) {
         throw new NullPointerException("str");
       }
@@ -127,7 +127,8 @@ private Base64() {
           "offset (" + offset + ") is more than " + data.length);
       }
       if (count < 0) {
-        throw new IllegalArgumentException("count (" + count + ") is less than " + "0 ");
+     throw new IllegalArgumentException("count (" + count + ") is less than " +
+          "0 ");
       }
       if (count > data.length) {
         throw new IllegalArgumentException(
@@ -168,26 +169,30 @@ private Base64() {
     }
 
     private static void WriteBase64(
-      final OutputStream outputStream,
-      final byte[] data,
-      final int offset,
-      final int count,
-      final String alphabet,
-      final boolean padding) throws IOException {
+      OutputStream outputStream,
+      byte[] data,
+      int offset,
+      int count,
+      String alphabet,
+      boolean padding) throws IOException {
       if (outputStream == null) {
         throw new NullPointerException("outputStream");
       }
       if (offset < 0) {
-        throw new IllegalArgumentException("offset (" + offset + ") is less than " + "0 ");
+   throw new IllegalArgumentException("offset (" + offset + ") is less than " +
+          "0 ");
       }
       if (offset > data.length) {
-        throw new IllegalArgumentException("offset (" + offset + ") is more than " + data.length);
+        throw new IllegalArgumentException("offset (" + offset + ") is more than " +
+          data.length);
       }
       if (count < 0) {
-        throw new IllegalArgumentException("count (" + count + ") is less than " + "0 ");
+     throw new IllegalArgumentException("count (" + count + ") is less than " +
+          "0 ");
       }
       if (count > data.length) {
-        throw new IllegalArgumentException("count (" + count + ") is more than " + data.length);
+        throw new IllegalArgumentException("count (" + count + ") is more than " +
+          data.length);
       }
       if (data.length - offset < count) {
         throw new IllegalArgumentException("data's length minus " + offset + " (" +

@@ -167,17 +167,11 @@ params CBORTypeFilter[] elements) {
         throw new ArgumentNullException("elements");
       }
       if (arrayLength < 0) {
-        throw new ArgumentException("arrayLength (" +
-          Convert.ToString(
-(long)arrayLength,
-System.Globalization.CultureInfo.InvariantCulture) +
+        throw new ArgumentException("arrayLength (" + arrayLength +
           ") is less than " + "0");
       }
       if (arrayLength < elements.Length) {
-        throw new ArgumentException("arrayLength (" +
-          Convert.ToString(
-(long)arrayLength,
-System.Globalization.CultureInfo.InvariantCulture) +
+        throw new ArgumentException("arrayLength (" + arrayLength +
           ") is less than " + elements.Length);
       }
       CBORTypeFilter filter = this.Copy();
@@ -212,17 +206,11 @@ params CBORTypeFilter[] elements) {
         throw new ArgumentNullException("elements");
       }
       if (arrayLength < 0) {
-        throw new ArgumentException("arrayLength (" +
-          Convert.ToString(
-(long)arrayLength,
-System.Globalization.CultureInfo.InvariantCulture) +
+        throw new ArgumentException("arrayLength (" + arrayLength +
           ") is less than " + "0");
       }
       if (arrayLength < elements.Length) {
-        throw new ArgumentException("arrayLength (" +
-          Convert.ToString(
-(long)arrayLength,
-System.Globalization.CultureInfo.InvariantCulture) +
+        throw new ArgumentException("arrayLength (" + arrayLength +
           ") is less than " + elements.Length);
       }
       CBORTypeFilter filter = this.Copy();
@@ -242,17 +230,11 @@ System.Globalization.CultureInfo.InvariantCulture) +
         return this;
       }
       if (this.arrayLength < 0) {
-        throw new ArgumentException("this.arrayLength (" +
-          Convert.ToString(
-(long)this.arrayLength,
-System.Globalization.CultureInfo.InvariantCulture) +
+        throw new ArgumentException("this.arrayLength (" + this.arrayLength +
           ") is less than " + "0");
       }
       if (this.arrayLength < this.elements.Length) {
-        throw new ArgumentException("this.arrayLength (" +
-          Convert.ToString(
-(long)this.arrayLength,
-System.Globalization.CultureInfo.InvariantCulture) +
+        throw new ArgumentException("this.arrayLength (" + this.arrayLength +
           ") is less than " + this.elements.Length);
       }
       CBORTypeFilter filter = this.Copy();
@@ -280,14 +262,10 @@ System.Globalization.CultureInfo.InvariantCulture) +
     public bool MajorTypeMatches(int type) {
       #if DEBUG
       if (type < 0) {
-        throw new ArgumentException("type (" + Convert.ToString((long)type,
-          System.Globalization.CultureInfo.InvariantCulture) +
-          ") is less than " + "0");
+        throw new ArgumentException("type (" + type + ") is less than " + "0");
       }
       if (type > 7) {
-        throw new ArgumentException("type (" + Convert.ToString((long)type,
-          System.Globalization.CultureInfo.InvariantCulture) +
-          ") is more than " + "7");
+        throw new ArgumentException("type (" + type + ") is more than " + "7");
       }
       #endif
 

@@ -362,10 +362,12 @@ namespace PeterO.Cbor {
         return false;
       }
       if (offset < 0) {
-        throw new ArgumentException("offset (" + offset + ") is less than " + "0 ");
+   throw new ArgumentException("offset (" + offset + ") is less than " +
+          "0 ");
       }
       if (offset > s.Length) {
-        throw new ArgumentException("offset (" + offset + ") is more than " + s.Length);
+        throw new ArgumentException("offset (" + offset + ") is more than " +
+          s.Length);
       }
       if (length < 0) {
         throw new ArgumentException(

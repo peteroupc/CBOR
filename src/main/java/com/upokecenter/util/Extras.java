@@ -10,7 +10,7 @@ at: http://upokecenter.com/d/
   final class Extras {
 private Extras() {
 }
-    public static int[] DoubleToIntegers(final double dbl) {
+    public static int[] DoubleToIntegers(double dbl) {
       long value = Double.doubleToRawLongBits(dbl);
       int[] ret = new int[2];
       ret[0] = ((int)(value & 0xFFFFFFFFL));
@@ -18,7 +18,7 @@ private Extras() {
       return ret;
     }
 
-    public static double IntegersToDouble(final int[] integers) {
+    public static double IntegersToDouble(int[] integers) {
       long value = ((long)integers[0]) & 0xFFFFFFFFL;
       value |= (((long)integers[1]) & 0xFFFFFFFFL) << 32;
       return Double.longBitsToDouble(value);

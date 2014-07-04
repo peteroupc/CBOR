@@ -46,7 +46,7 @@ private static final long serialVersionUID = 1L;
         return this.error;
       }
 
-    private static String FlagToMessage(final int flag) {
+    private static String FlagToMessage(int flag) {
       return (flag == PrecisionContext.FlagClamped) ? "Clamped" : ((flag ==
         PrecisionContext.FlagDivideByZero) ? "DivideByZero" : ((flag ==
         PrecisionContext.FlagInexact) ? "Inexact" : ((flag ==
@@ -63,7 +63,7 @@ private static final long serialVersionUID = 1L;
      * @param ctx A PrecisionContext object.
      * @param result An arbitrary object.
      */
-    public TrapException (final int flag, PrecisionContext ctx, Object result) {
+    public TrapException (int flag, PrecisionContext ctx, Object result) {
  super(FlagToMessage(flag));
       this.error = flag;
       this.ctx = (ctx == null) ? null : ctx.Copy();

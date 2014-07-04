@@ -38,7 +38,7 @@ private DecimalUtility() {
       BigInteger.valueOf(7450580596923828125L)
     };
 
-    static int ShiftLeftOne(final int[] arr) {
+    static int ShiftLeftOne(int[] arr) {
       {
         int carry = 0;
         for (int i = 0; i < arr.length; ++i) {
@@ -50,7 +50,7 @@ private DecimalUtility() {
       }
     }
 
-    private static int CountTrailingZeros(final int numberValue) {
+    private static int CountTrailingZeros(int numberValue) {
       if (numberValue == 0) {
         return 32;
       }
@@ -79,7 +79,7 @@ private DecimalUtility() {
       return i;
     }
 
-    static int BitPrecisionInt(final int numberValue) {
+    static int BitPrecisionInt(int numberValue) {
       if (numberValue == 0) {
         return 0;
       }
@@ -108,7 +108,7 @@ private DecimalUtility() {
       return i;
     }
 
-    static int ShiftAwayTrailingZerosTwoElements(final int[] arr) {
+    static int ShiftAwayTrailingZerosTwoElements(int[] arr) {
       int a0 = arr[0];
       int a1 = arr[1];
       int tz = CountTrailingZeros(a0);
@@ -137,7 +137,7 @@ private DecimalUtility() {
 
     private static BigInteger valueBigShiftIteration = BigInteger.valueOf(1000000);
 
-    static BigInteger ShiftLeft(final BigInteger val, BigInteger bigShift) {
+    static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
       if (val.signum() == 0) {
         return val;
       }
@@ -150,7 +150,7 @@ private DecimalUtility() {
       return val;
     }
 
-    static BigInteger ShiftLeftInt(final BigInteger val, int shift) {
+    static BigInteger ShiftLeftInt(BigInteger val, int shift) {
       if (val.signum() == 0) {
         return val;
       }
@@ -163,7 +163,7 @@ private DecimalUtility() {
       return val;
     }
 
-    static boolean HasBitSet(final int[] arr, int bit) {
+    static boolean HasBitSet(int[] arr, int bit) {
       return (bit >> 5) < arr.length && (arr[bit >> 5] & (1 << (bit & 31))) !=
       0;
     }
@@ -182,7 +182,7 @@ private DecimalUtility() {
 
       private int size;
 
-      public BigInteger[] FindCachedPowerOrSmaller(final BigInteger bi) {
+      public BigInteger[] FindCachedPowerOrSmaller(BigInteger bi) {
         BigInteger[] ret = null;
         BigInteger minValue = null;
         synchronized (this.outputs) {
@@ -200,7 +200,7 @@ private DecimalUtility() {
         return ret;
       }
 
-      public BigInteger GetCachedPower(final BigInteger bi) {
+      public BigInteger GetCachedPower(BigInteger bi) {
         synchronized (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (bi.equals(this.inputs[i])) {
@@ -230,7 +230,7 @@ private DecimalUtility() {
         return null;
       }
 
-      public BigInteger GetCachedPowerInt(final int bi) {
+      public BigInteger GetCachedPowerInt(int bi) {
         synchronized (this.outputs) {
           for (int i = 0; i < this.size; ++i) {
             if (this.inputsInts[i] >= 0 && this.inputsInts[i] == bi) {
@@ -260,7 +260,7 @@ private DecimalUtility() {
         return null;
       }
 
-      public void AddPower(final BigInteger input, BigInteger output) {
+      public void AddPower(BigInteger input, BigInteger output) {
         synchronized (this.outputs) {
           if (this.size < MaxSize) {
             // Shift newer entries down
@@ -293,7 +293,7 @@ private DecimalUtility() {
 
     private static PowerCache powerOfTenCache = new DecimalUtility.PowerCache();
 
-    static BigInteger FindPowerOfFiveFromBig(final BigInteger diff) {
+    static BigInteger FindPowerOfFiveFromBig(BigInteger diff) {
       int sign = diff.signum();
       if (sign < 0) {
         return BigInteger.ZERO;
@@ -344,7 +344,7 @@ private DecimalUtility() {
 
     private static BigInteger valueBigInt36 = BigInteger.valueOf(36);
 
-    static BigInteger FindPowerOfTenFromBig(final BigInteger
+    static BigInteger FindPowerOfTenFromBig(BigInteger
     bigintExponent) {
       int sign = bigintExponent.signum();
       if (sign < 0) {
@@ -385,7 +385,7 @@ private DecimalUtility() {
     private static BigInteger valueFivePower40 =
     (BigInteger.valueOf(95367431640625L)).multiply(BigInteger.valueOf(95367431640625L));
 
-    static BigInteger FindPowerOfFive(final int precision) {
+    static BigInteger FindPowerOfFive(int precision) {
       if (precision < 0) {
         return BigInteger.ZERO;
       }
@@ -488,7 +488,7 @@ private DecimalUtility() {
       return ret;
     }
 
-    static BigInteger FindPowerOfTen(final int precision) {
+    static BigInteger FindPowerOfTen(int precision) {
       if (precision < 0) {
         return BigInteger.ZERO;
       }
@@ -590,12 +590,12 @@ private DecimalUtility() {
     }
 
     public static BigInteger ReduceTrailingZeros(
-      final BigInteger bigmant,
-      final FastInteger exponentMutable,
-      final int radix,
-      final FastInteger digits,
-      final FastInteger precision,
-      final FastInteger idealExp) {
+      BigInteger bigmant,
+      FastInteger exponentMutable,
+      int radix,
+      FastInteger digits,
+      FastInteger precision,
+      FastInteger idealExp) {
       if (bigmant.signum() == 0) {
         exponentMutable.SetInt(0);
         return bigmant;

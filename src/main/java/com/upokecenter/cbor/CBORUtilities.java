@@ -19,7 +19,7 @@ private CBORUtilities() {
 }
     private static final String HexAlphabet = "0123456789ABCDEF";
 
-    public static void ToBase16(final StringBuilder str, byte[] data) {
+    public static void ToBase16(StringBuilder str, byte[] data) {
       if (data == null) {
         throw new NullPointerException("data");
       }
@@ -30,7 +30,7 @@ private CBORUtilities() {
       }
     }
 
-    public static void WriteBase16(final OutputStream outputStream, byte[] data) throws IOException {
+    public static void WriteBase16(OutputStream outputStream, byte[] data) throws IOException {
       if (data == null) {
         throw new NullPointerException("data");
       }
@@ -41,7 +41,7 @@ private CBORUtilities() {
       }
     }
 
-    public static boolean ByteArrayEquals(final byte[] a, byte[] b) {
+    public static boolean ByteArrayEquals(byte[] a, byte[] b) {
       if (a == null) {
         return b == null;
       }
@@ -59,7 +59,7 @@ private CBORUtilities() {
       return true;
     }
 
-    public static int ByteArrayHashCode(final byte[] a) {
+    public static int ByteArrayHashCode(byte[] a) {
       if (a == null) {
         return 0;
       }
@@ -73,7 +73,7 @@ private CBORUtilities() {
       return ret;
     }
 
-    public static int ByteArrayCompare(final byte[] a, byte[] b) {
+    public static int ByteArrayCompare(byte[] a, byte[] b) {
       if (a == null) {
         return (b == null) ? 0 : -1;
       }
@@ -89,7 +89,7 @@ private CBORUtilities() {
       return (a.length != b.length) ? ((a.length < b.length) ? -1 : 1) : 0;
     }
 
-    public static BigInteger BigIntegerFromSingle(final float flt) {
+    public static BigInteger BigIntegerFromSingle(float flt) {
       int value = Float.floatToRawIntBits(flt);
       int fpexponent = (int)((value >> 23) & 0xff);
       if (fpexponent == 255) {
@@ -134,11 +134,11 @@ private CBORUtilities() {
       }
     }
 
-    public static String BigIntToString(final BigInteger bigint) {
+    public static String BigIntToString(BigInteger bigint) {
       return bigint.toString();
     }
 
-    public static BigInteger BigIntegerFromDouble(final double dbl) {
+    public static BigInteger BigIntegerFromDouble(double dbl) {
       long lvalue = Double.doubleToRawLongBits(dbl);
       int value0 = ((int)(lvalue & 0xFFFFFFFFL));
       int value1 = ((int)((lvalue >> 32) & 0xFFFFFFFFL));
@@ -199,7 +199,7 @@ private CBORUtilities() {
       }
     }
 
-    public static float HalfPrecisionToSingle(final int value) {
+    public static float HalfPrecisionToSingle(int value) {
       int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
       value &= 0x7fff;
       if (value >= 0x7c00) {
