@@ -207,6 +207,22 @@ BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
       }
     }
 
+    private static void AreEqualExact(double a, double b) {
+      if (Double.isNaN(a)) {
+        if (!(Double.isNaN(b)))Assert.fail();
+      } else if (a != b) {
+        Assert.fail("expected " + a + ", got " + b);
+      }
+    }
+
+    private static void AreEqualExact(float a, float b) {
+      if (Float.isNaN(a)) {
+        if (!(Float.isNaN(b)))Assert.fail();
+      } else if (a != b) {
+        Assert.fail("expected " + a + ", got " + b);
+      }
+    }
+
     @Test
     public void TestAsDouble() {
       try {
@@ -263,7 +279,7 @@ BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
 ).AsString()));
-        Assert.assertEquals(
+        AreEqualExact(
 (double)ExtendedDecimal.FromString(numberinfo.get("number").AsString()).ToDouble(),
 cbornumber.AsDouble());
       }
@@ -718,7 +734,7 @@ cbornumbersingle.AsInt64());
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
 ).AsString()));
-        Assert.assertEquals(
+        AreEqualExact(
 (float)ExtendedDecimal.FromString(numberinfo.get("number").AsString()).ToSingle(),
 cbornumber.AsSingle());
       }
