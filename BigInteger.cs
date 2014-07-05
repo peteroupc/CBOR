@@ -198,6 +198,7 @@ namespace PeterO {
         return 1;
       }
       int w1c = words1Count;
+      --w1c;
       while (unchecked(w1c--) != 0) {
         int an = ((int)words1[astart + w1c]) & 0xffff;
         int bn = ((int)words2[bstart + w1c]) & 0xffff;
