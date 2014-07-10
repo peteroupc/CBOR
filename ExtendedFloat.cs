@@ -398,9 +398,9 @@ namespace PeterO {
             tmpbigint = DecimalUtility.ShiftLeftInt(tmpbigint, power.AsInt32());
             tmpbigint = -tmpbigint;
           } else {
-         tmpbigint = DecimalUtility.ShiftLeft(
-tmpbigint,
-power.AsBigInteger());
+            tmpbigint = DecimalUtility.ShiftLeft(
+              tmpbigint,
+              power.AsBigInteger());
             tmpbigint = -tmpbigint;
           }
           return tmpbigint;

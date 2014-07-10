@@ -3160,20 +3160,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
-    private static int SkipWhitespaceOrByteOrderMarkJSON(CharacterReader
-                                                         reader) {
-      boolean allowBOM = true;
-      while (true) {
-        int c = reader.NextChar();
-        if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-          if (!allowBOM || c != 0xfeff) {
-            return c;
-          }
-        }
-        allowBOM = false;
-      }
-    }
-
     private static String NextJSONString(CharacterReader reader, int quote) {
       int c;
       StringBuilder sb = null;
@@ -3366,20 +3352,13 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     private static CBORObject ParseJSONValue(
       CharacterReader reader,
       boolean noDuplicates,
-      boolean skipByteOrderMark,
       boolean objectOrArrayOnly,
       int depth) {
       if (depth > 1000) {
         throw reader.NewError("Too deeply nested");
       }
       int c;
-      c = skipByteOrderMark ?
-        SkipWhitespaceOrByteOrderMarkJSON(reader) :
-        SkipWhitespaceJSON(reader);
-      if (!skipByteOrderMark && c == (char)0xfeff) {
-        throw
-          reader.NewError("JSON Object began with a byte order mark (U+FEFF)");
-      }
+      c = SkipWhitespaceJSON(reader);
       if (c == '[') {
         return ParseJSONArray(reader, noDuplicates, depth);
       }
@@ -3515,8 +3494,18 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * @throws CBORException The string is not in JSON format.
      */
     public static CBORObject FromJSONString(String str) {
+      /*
+       if ((str) == null) {
+  throw new NullPointerException("str");
+}
+       */
+      if (str.length() > 0 && str.charAt(0) == 0xfeff) {
+         throw new
+  CBORException("JSON Object began with a byte order mark (U+FEFF) (offset 0)"
+);
+      }
       CharacterReader reader = new CharacterReader(str);
-      CBORObject obj = ParseJSONValue(reader, false, false, false, 0);
+      CBORObject obj = ParseJSONValue(reader, false, false, 0);
       if (SkipWhitespaceJSON(reader) != -1) {
         throw reader.NewError("End of String not reached");
       }
@@ -3525,9 +3514,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
 
     /**
      * Generates a CBOR object from a data stream in JavaScript Object Notation
-     * (JSON) format and UTF-8 encoding. The JSON stream may begin with a
-     * byte order mark (U + FEFF). <p>If a JSON object has the same key,
-     * only the last given value will be used for each duplicated key.</p>
+     * (JSON) format. The JSON stream may begin with a byte order mark (U +
+     * FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or
+     * UTF-32 encoding. (In previous versions, only UTF-8 was allowed.)
+     * <p>If a JSON object has the same key, only the last given value will
+     * be used for each duplicated key.</p>
      * @param stream A readable data stream.
      * @return A CBORObject object.
      * @throws NullPointerException The parameter {@code stream} is null.
@@ -3538,7 +3529,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     public static CBORObject ReadJSON(InputStream stream) throws IOException {
       CharacterReader reader = new CharacterReader(stream);
       try {
-        CBORObject obj = ParseJSONValue(reader, false, true, false, 0);
+        CBORObject obj = ParseJSONValue(reader, false, false, 0);
         if (SkipWhitespaceJSON(reader) != -1) {
           throw reader.NewError("End of data stream not reached");
         }
@@ -3578,7 +3569,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           buffer[0] = (byte)'\\';
           buffer[1] = (byte)c;
           outputStream.write(buffer, 0, 2);
-        } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
+        } else if (c < 0x20 || c == 0x2028 || c == 0x2029 || c == 0x85) {
           // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to
           // JSON) strings
@@ -3613,6 +3604,14 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             buffer[0] = (byte)'\\';
             buffer[1] = (byte)'t';
             bufferSize = 2;
+          } else if (c == 0x85) {
+            buffer[0] = (byte)'\\';
+            buffer[1] = (byte)'u';
+            buffer[2] = (byte)'0';
+            buffer[3] = (byte)'0';
+            buffer[4] = (byte)'8';
+            buffer[5] = (byte)'5';
+            bufferSize = 6;
           } else if (c == 0x2028 || c == 0x2029) {
             buffer[0] = (byte)'\\';
             buffer[1] = (byte)'u';
@@ -3661,7 +3660,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           }
           sb.append('\\');
           sb.append(c);
-        } else if (c < 0x20 || c == 0x2028 || c == 0x2029) {
+        } else if (c < 0x20 || c == 0x2028 || c == 0x2029 || c == 0x85) {
           // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to
           // JSON) strings
@@ -3679,6 +3678,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
             sb.append("\\f");
           } else if (c == 0x09) {
             sb.append("\\t");
+          } else if (c == 0x85) {
+            sb.append("\\u0085");
           } else if (c == 0x2029 || c == 0x2028) {
             sb.append("\\u202");
             sb.append(c == 0x2028 ? '8' : '9');

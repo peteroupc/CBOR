@@ -1,5 +1,6 @@
 package com.upokecenter.test;
 
+import java.io.*;
 import org.junit.Assert;
 import org.junit.Test;
 import com.upokecenter.util.*;
@@ -109,8 +110,8 @@ import com.upokecenter.cbor.*;
 ).AsString()));
         if (!numberinfo.get("integer").equals(CBORObject.Null)) {
           Assert.assertEquals(
-numberinfo.get("integer").AsString(),
-cbornumber.AsBigInteger().toString());
+            numberinfo.get("integer").AsString(),
+            cbornumber.AsBigInteger().toString());
         } else {
           try {
             cbornumber.AsBigInteger();
@@ -192,8 +193,8 @@ cbornumber.AsBigInteger().toString());
 ).AsString()));
         if (numberinfo.get("byte").AsBoolean()) {
           Assert.assertEquals(
-BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
-((int)cbornumber.AsByte()) & 0xff);
+            BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
+            ((int)cbornumber.AsByte()) & 0xff);
         } else {
           try {
             cbornumber.AsByte();
@@ -280,26 +281,26 @@ BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
 ).AsString()));
         AreEqualExact(
-(double)ExtendedDecimal.FromString(numberinfo.get("number").AsString()).ToDouble(),
-cbornumber.AsDouble());
+          (double)ExtendedDecimal.FromString(numberinfo.get("number").AsString()).ToDouble(),
+          cbornumber.AsDouble());
       }
     }
     @Test
     public void TestAsExtendedDecimal() {
       Assert.assertEquals(
-ExtendedDecimal.PositiveInfinity,
-CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedDecimal());
+        ExtendedDecimal.PositiveInfinity,
+        CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedDecimal());
       Assert.assertEquals(
-ExtendedDecimal.NegativeInfinity,
-CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedDecimal());
+        ExtendedDecimal.NegativeInfinity,
+        CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedDecimal());
       if (!(CBORObject.FromObject(Float.NaN).AsExtendedDecimal()
                     .IsNaN()))Assert.fail();
       Assert.assertEquals(
-ExtendedDecimal.PositiveInfinity,
-CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedDecimal());
+        ExtendedDecimal.PositiveInfinity,
+        CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedDecimal());
       Assert.assertEquals(
-ExtendedDecimal.NegativeInfinity,
-CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedDecimal());
+        ExtendedDecimal.NegativeInfinity,
+        CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedDecimal());
       if (!(CBORObject.FromObject(Double.NaN).AsExtendedDecimal()
                     .IsNaN()))Assert.fail();
       try {
@@ -354,38 +355,38 @@ CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedDecimal());
     @Test
     public void TestAsExtendedFloat() {
       Assert.assertEquals(
-ExtendedFloat.PositiveInfinity,
-CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedFloat());
+        ExtendedFloat.PositiveInfinity,
+        CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedFloat());
       Assert.assertEquals(
-ExtendedFloat.NegativeInfinity,
-CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedFloat());
+        ExtendedFloat.NegativeInfinity,
+        CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedFloat());
       if (!(CBORObject.FromObject(Float.NaN).AsExtendedFloat()
                     .IsNaN()))Assert.fail();
       Assert.assertEquals(
-ExtendedFloat.PositiveInfinity,
-CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedFloat());
+        ExtendedFloat.PositiveInfinity,
+        CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedFloat());
       Assert.assertEquals(
-ExtendedFloat.NegativeInfinity,
-CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedFloat());
+        ExtendedFloat.NegativeInfinity,
+        CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedFloat());
       if (!(CBORObject.FromObject(Double.NaN).AsExtendedFloat()
                     .IsNaN()))Assert.fail();
     }
     @Test
     public void TestAsExtendedRational() {
       Assert.assertEquals(
-ExtendedRational.PositiveInfinity,
-CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedRational());
+        ExtendedRational.PositiveInfinity,
+        CBORObject.FromObject(Float.POSITIVE_INFINITY).AsExtendedRational());
       Assert.assertEquals(
-ExtendedRational.NegativeInfinity,
-CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedRational());
+        ExtendedRational.NegativeInfinity,
+        CBORObject.FromObject(Float.NEGATIVE_INFINITY).AsExtendedRational());
       if (!(CBORObject.FromObject(Float.NaN).AsExtendedRational()
                     .IsNaN()))Assert.fail();
       Assert.assertEquals(
-ExtendedRational.PositiveInfinity,
-CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedRational());
+        ExtendedRational.PositiveInfinity,
+        CBORObject.FromObject(Double.POSITIVE_INFINITY).AsExtendedRational());
       Assert.assertEquals(
-ExtendedRational.NegativeInfinity,
-CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedRational());
+        ExtendedRational.NegativeInfinity,
+        CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedRational());
       if (!(CBORObject.FromObject(Double.NaN).AsExtendedRational()
                     .IsNaN()))Assert.fail();
     }
@@ -447,8 +448,8 @@ CBORObject.FromObject(Double.NEGATIVE_INFINITY).AsExtendedRational());
 ).AsString()));
         if (numberinfo.get("int16").AsBoolean()) {
           Assert.assertEquals(
-BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
-cbornumber.AsInt16());
+            BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
+            cbornumber.AsInt16());
         } else {
           try {
             cbornumber.AsInt16();
@@ -524,17 +525,17 @@ cbornumber.AsInt16());
         CBORObject cbornumbersingle = CBORObject.FromObject(edec.ToSingle());
         if (numberinfo.get("int32").AsBoolean()) {
           Assert.assertEquals(
-BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
-cbornumber.AsInt32());
+            BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
+            cbornumber.AsInt32());
           if (isdouble) {
             Assert.assertEquals(
-BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
-cbornumberdouble.AsInt32());
+           BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
+           cbornumberdouble.AsInt32());
           }
           if (issingle) {
             Assert.assertEquals(
-BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
-cbornumbersingle.AsInt32());
+           BigInteger.fromString(numberinfo.get("integer").AsString()).intValue(),
+           cbornumbersingle.AsInt32());
           }
         } else {
           try {
@@ -630,17 +631,17 @@ cbornumbersingle.AsInt32());
         CBORObject cbornumbersingle = CBORObject.FromObject(edec.ToSingle());
         if (numberinfo.get("int64").AsBoolean()) {
           Assert.assertEquals(
-BigInteger.fromString(numberinfo.get("integer").AsString()).longValue(),
-cbornumber.AsInt64());
+          BigInteger.fromString(numberinfo.get("integer").AsString()).longValue(),
+          cbornumber.AsInt64());
           if (isdouble) {
             Assert.assertEquals(
-BigInteger.fromString(numberinfo.get("integer").AsString()).longValue(),
-cbornumberdouble.AsInt64());
+          BigInteger.fromString(numberinfo.get("integer").AsString()).longValue(),
+          cbornumberdouble.AsInt64());
           }
           if (issingle) {
             Assert.assertEquals(
-BigInteger.fromString(numberinfo.get("integer").AsString()).longValue(),
-cbornumbersingle.AsInt64());
+          BigInteger.fromString(numberinfo.get("integer").AsString()).longValue(),
+          cbornumbersingle.AsInt64());
           }
         } else {
           try {
@@ -797,8 +798,8 @@ cbornumber.AsSingle());
         if (numberinfo.get("int32").AsBoolean() && numberinfo.get("isintegral"
 ).AsBoolean()) {
           if (!(cbornumber.CanFitInInt32()))Assert.fail();
-   if (!(CBORObject.FromObject(cbornumber.AsInt32())
-            .CanFitInInt32()))Assert.fail();
+          if (!(CBORObject.FromObject(cbornumber.AsInt32())
+                        .CanFitInInt32()))Assert.fail();
         } else {
           if (cbornumber.CanFitInInt32())Assert.fail();
         }
@@ -823,8 +824,8 @@ cbornumber.AsSingle());
         if (numberinfo.get("int64").AsBoolean() && numberinfo.get("isintegral"
 ).AsBoolean()) {
           if (!(cbornumber.CanFitInInt64()))Assert.fail();
-   if (!(CBORObject.FromObject(cbornumber.AsInt64())
-            .CanFitInInt64()))Assert.fail();
+          if (!(CBORObject.FromObject(cbornumber.AsInt64())
+                        .CanFitInInt64()))Assert.fail();
         } else {
           if (cbornumber.CanFitInInt64())Assert.fail();
         }
@@ -856,50 +857,50 @@ cbornumber.AsSingle());
     @Test
     public void TestCanTruncatedIntFitInInt32() {
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-11)).CanTruncatedIntFitInInt32()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            11)).CanTruncatedIntFitInInt32()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-12)).CanTruncatedIntFitInInt32()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            12)).CanTruncatedIntFitInInt32()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-13)).CanTruncatedIntFitInInt32()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            13)).CanTruncatedIntFitInInt32()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-14)).CanTruncatedIntFitInInt32()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            14)).CanTruncatedIntFitInInt32()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-15)).CanTruncatedIntFitInInt32()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            15)).CanTruncatedIntFitInInt32()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-16)).CanTruncatedIntFitInInt32()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            16)).CanTruncatedIntFitInInt32()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-17)).CanTruncatedIntFitInInt32()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            17)).CanTruncatedIntFitInInt32()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-18)).CanTruncatedIntFitInInt32()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            18)).CanTruncatedIntFitInInt32()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-19)).CanTruncatedIntFitInInt32()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            19)).CanTruncatedIntFitInInt32()))Assert.fail();
       if (!(CBORObject.FromObject(0).CanTruncatedIntFitInInt32()))Assert.fail();
       if (CBORObject.True.CanTruncatedIntFitInInt32())Assert.fail();
       if (CBORObject.FromObject("")
@@ -925,50 +926,50 @@ ExtendedFloat.Create(
     @Test
     public void TestCanTruncatedIntFitInInt64() {
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-11)).CanTruncatedIntFitInInt64()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            11)).CanTruncatedIntFitInInt64()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-12)).CanTruncatedIntFitInInt64()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            12)).CanTruncatedIntFitInInt64()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-13)).CanTruncatedIntFitInInt64()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            13)).CanTruncatedIntFitInInt64()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-14)).CanTruncatedIntFitInInt64()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            14)).CanTruncatedIntFitInInt64()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-15)).CanTruncatedIntFitInInt64()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            15)).CanTruncatedIntFitInInt64()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-16)).CanTruncatedIntFitInInt64()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            16)).CanTruncatedIntFitInInt64()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-17)).CanTruncatedIntFitInInt64()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            17)).CanTruncatedIntFitInInt64()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-18)).CanTruncatedIntFitInInt64()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            18)).CanTruncatedIntFitInInt64()))Assert.fail();
       if (!(
-CBORObject.FromObject(
-ExtendedFloat.Create(
--2,
-19)).CanTruncatedIntFitInInt64()))Assert.fail();
+        CBORObject.FromObject(
+          ExtendedFloat.Create(
+            -2,
+            19)).CanTruncatedIntFitInInt64()))Assert.fail();
       if (!(CBORObject.FromObject(0).CanTruncatedIntFitInInt64()))Assert.fail();
       if (CBORObject.True.CanTruncatedIntFitInInt64())Assert.fail();
       if (CBORObject.FromObject("")
@@ -1006,17 +1007,17 @@ ExtendedFloat.Create(
       CBORTest.CompareTestLess(CBORObject.False, CBORObject.FromObject(0));
       CBORTest.CompareTestLess(CBORObject.False, CBORObject.FromSimpleValue(0));
       CBORTest.CompareTestLess(
-CBORObject.FromSimpleValue(0),
-CBORObject.FromSimpleValue(1));
+        CBORObject.FromSimpleValue(0),
+        CBORObject.FromSimpleValue(1));
       CBORTest.CompareTestLess(
-CBORObject.FromObject(0),
-CBORObject.FromObject(1));
+        CBORObject.FromObject(0),
+        CBORObject.FromObject(1));
       CBORTest.CompareTestLess(
-CBORObject.FromObject(0.0f),
-CBORObject.FromObject(1.0f));
+        CBORObject.FromObject(0.0f),
+        CBORObject.FromObject(1.0f));
       CBORTest.CompareTestLess(
-CBORObject.FromObject(0.0),
-CBORObject.FromObject(1.0));
+        CBORObject.FromObject(0.0),
+        CBORObject.FromObject(1.0));
     }
     @Test
     public void TestContainsKey() {
@@ -1031,7 +1032,7 @@ CBORObject.FromObject(1.0));
     }
 
     @Test
-    public void TestDecodeFromBytesVersion2Dot0() {
+    public void TestDecodeFromBytes() {
       try {
         CBORObject.DecodeFromBytes(new byte[] { });
         Assert.fail("Should have failed");
@@ -1040,10 +1041,6 @@ CBORObject.FromObject(1.0));
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
-    }
-
-    @Test
-    public void TestDecodeFromBytes() {
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0x1c  });
         Assert.fail("Should have failed");
@@ -1520,8 +1517,8 @@ CBORObject.FromObject(1.0));
       Assert.assertEquals(CBORObject.Null, CBORObject.FromJSONString("null"));
       Assert.assertEquals(5, CBORObject.FromJSONString(" 5 ").AsInt32());
       Assert.assertEquals(
-"/\b",
-CBORObject.FromJSONString("\"\\/\\b\"").AsString());
+        "/\b",
+        CBORObject.FromJSONString("\"\\/\\b\"").AsString());
     }
     @Test
     public void TestFromObject() {
@@ -1541,14 +1538,14 @@ CBORObject.FromJSONString("\"\\/\\b\"").AsString());
       if (!(CBORObject.FromObject(3).compareTo(cbor.get(1)) == 0))Assert.fail();
       TestCommon.AssertRoundTrip(cbor);
       Assert.assertEquals(
-CBORObject.Null,
-CBORObject.FromObject((ExtendedRational)null));
+        CBORObject.Null,
+        CBORObject.FromObject((ExtendedRational)null));
       Assert.assertEquals(
-CBORObject.Null,
-CBORObject.FromObject((ExtendedDecimal)null));
+        CBORObject.Null,
+        CBORObject.FromObject((ExtendedDecimal)null));
       Assert.assertEquals(
-CBORObject.FromObject(10),
-CBORObject.FromObject(ExtendedRational.Create(10, 1)));
+        CBORObject.FromObject(10),
+        CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       try {
         CBORObject.FromObject(ExtendedRational.Create(10, 2));
       } catch (Exception ex) {
@@ -1763,7 +1760,7 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       if (CBORObject.FromObject(Double.NEGATIVE_INFINITY).isFinite())Assert.fail();
       if (CBORObject.FromObject(Double.NaN).isFinite())Assert.fail();
       if (CBORObject.FromObject(
-       ExtendedDecimal.PositiveInfinity).isFinite())Assert.fail();
+        ExtendedDecimal.PositiveInfinity).isFinite())Assert.fail();
       if (CBORObject.FromObject(
         ExtendedDecimal.NegativeInfinity).isFinite())Assert.fail();
       if (CBORObject.FromObject(ExtendedDecimal.NaN).isFinite())Assert.fail();
@@ -1803,16 +1800,16 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
         ExtendedDecimal.FromString("4444e+800")).isIntegral()))Assert.fail();
 
       if (CBORObject.FromObject(
-         ExtendedDecimal.FromString("4444e-800")).isIntegral())Assert.fail();
+        ExtendedDecimal.FromString("4444e-800")).isIntegral())Assert.fail();
       if (CBORObject.FromObject(2.5).isIntegral())Assert.fail();
       if (CBORObject.FromObject(999.99).isIntegral())Assert.fail();
       if (CBORObject.FromObject(Double.POSITIVE_INFINITY).isIntegral())Assert.fail();
       if (CBORObject.FromObject(Double.NEGATIVE_INFINITY).isIntegral())Assert.fail();
       if (CBORObject.FromObject(Double.NaN).isIntegral())Assert.fail();
       if (CBORObject.FromObject(
-      ExtendedDecimal.PositiveInfinity).isIntegral())Assert.fail();
+        ExtendedDecimal.PositiveInfinity).isIntegral())Assert.fail();
       if (CBORObject.FromObject(
-         ExtendedDecimal.NegativeInfinity).isIntegral())Assert.fail();
+        ExtendedDecimal.NegativeInfinity).isIntegral())Assert.fail();
       if (CBORObject.FromObject(ExtendedDecimal.NaN).isIntegral())Assert.fail();
       cbor = CBORObject.True;
       if (cbor.isIntegral())Assert.fail();
@@ -1826,8 +1823,8 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       for (int i = 0; i < numbers.size(); ++i) {
         CBORObject numberinfo = numbers.get(i);
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo.get("number"
-).AsString()));
+          CBORObject.FromObject(ExtendedDecimal.FromString(
+            numberinfo.get("number").AsString()));
         if (numberinfo.get("isintegral").AsBoolean()) {
           if (!(cbornumber.isIntegral()))Assert.fail();
         } else {
@@ -2009,7 +2006,215 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
     }
     @Test
     public void TestReadJSON() {
-      // not implemented yet
+      java.io.ByteArrayInputStream ms = null;
+try {
+ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b,
+                                         0x7d  });
+
+        try {
+          CBORObject.ReadJSON(ms);
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
+}
+finally {
+try { if (ms != null)ms.close(); } catch (java.io.IOException ex) {}
+}
+      // whitespace followed by BOM
+      java.io.ByteArrayInputStream ms2 = null;
+try {
+ms2 = new java.io.ByteArrayInputStream(new byte[] { 0x20, (byte)0xef, (byte)0xbb, (byte)0xbf,
+                                          0x7b, 0x7d  });
+
+        try {
+          CBORObject.ReadJSON(ms2);
+          Assert.fail("Should have failed");
+        } catch (CBORException ex) {
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
+}
+finally {
+try { if (ms2 != null)ms2.close(); } catch (java.io.IOException ex) {}
+}
+      // two BOMs
+      java.io.ByteArrayInputStream ms3 = null;
+try {
+ms3 = new java.io.ByteArrayInputStream(new byte[] { (byte)0xef, (byte)0xbb, (byte)0xbf, (byte)0xef,
+                                          (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
+
+        try {
+          CBORObject.ReadJSON(ms3);
+          Assert.fail("Should have failed");
+        } catch (CBORException ex) {
+        } catch (Exception ex) {
+          Assert.fail(ex.toString());
+          throw new IllegalStateException("", ex);
+        }
+}
+finally {
+try { if (ms3 != null)ms3.close(); } catch (java.io.IOException ex) {}
+}
+      try {
+        MemoryStream ms;
+        ms = new java.io.ByteArrayInputStream(new byte[] { 0, 0, (byte)0xfe, (byte)0xff, 0, 0, 0, 0x74,
+          0, 0, 0, 0x72, 0, 0, 0, 0x75, 0, 0, 0,
+                                0x65  });
+        Assert.assertEquals(CBORObject.True, CBORObject.ReadJSON(ms));
+        ms = new java.io.ByteArrayInputStream(new byte[] { 0, 0, 0, 0x74, 0, 0, 0, 0x72, 0,
+          0, 0, 0x75, 0, 0, 0, 0x65  });
+        Assert.assertEquals(CBORObject.True, CBORObject.ReadJSON(ms));
+        ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xff, (byte)0xfe, 0, 0, 0x74, 0, 0, 0,
+          0x72, 0, 0, 0, 0x75, 0, 0, 0, 0x65, 0,
+                                0, 0  });
+        Assert.assertEquals(CBORObject.True, CBORObject.ReadJSON(ms));
+        ms = new java.io.ByteArrayInputStream(new byte[] { 0x74, 0, 0, 0, 0x72, 0, 0, 0,
+          0x75, 0, 0, 0, 0x65, 0, 0, 0  });
+        Assert.assertEquals(CBORObject.True, CBORObject.ReadJSON(ms));
+      ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xfe, (byte)0xff, 0, 0x74, 0, 0x72, 0,
+          0x75,
+                                0, 0x65  });
+        Assert.assertEquals(CBORObject.True, CBORObject.ReadJSON(ms));
+      ms = new java.io.ByteArrayInputStream(new byte[] { 0, 0x74, 0, 0x72, 0, 0x75, 0, 0x65  });
+        Assert.assertEquals(CBORObject.True, CBORObject.ReadJSON(ms));
+      ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xff, (byte)0xfe, 0x74, 0, 0x72, 0, 0x75,
+          0,
+                                0x65, 0  });
+        Assert.assertEquals(CBORObject.True, CBORObject.ReadJSON(ms));
+      ms = new java.io.ByteArrayInputStream(new byte[] { 0x74, 0, 0x72, 0, 0x75, 0, 0x65, 0  });
+        Assert.assertEquals(CBORObject.True, CBORObject.ReadJSON(ms));
+ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xef, (byte)0xbb, (byte)0xbf, 0x74, 0x72, 0x75, 0x65  });
+        Assert.assertEquals(CBORObject.True, CBORObject.ReadJSON(ms));
+        ms = new java.io.ByteArrayInputStream(new byte[] { 0x74, 0x72, 0x75, 0x65  });
+        Assert.assertEquals(CBORObject.True, CBORObject.ReadJSON(ms));
+        ms = new java.io.ByteArrayInputStream(new byte[] { 0, 0, (byte)0xfe, (byte)0xff, 0, 0, 0, 0x22,
+          0, 1, 0, 0, 0, 0, 0,
+                                0x22  });
+        Assert.assertEquals("\ud800\udc00", CBORObject.ReadJSON(ms).AsString());
+        ms = new java.io.ByteArrayInputStream(new byte[] { 0, 0, 0, 0x22, 0, 1, 0, 0, 0, 0, 0,
+                                0x22  });
+        Assert.assertEquals("\ud800\udc00", CBORObject.ReadJSON(ms).AsString());
+        ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xff, (byte)0xfe, 0, 0, 0x22, 0, 0, 0,
+          0, 0, 1, 0, 0x22, 0,
+                                0, 0  });
+        Assert.assertEquals("\ud800\udc00", CBORObject.ReadJSON(ms).AsString());
+ms = new java.io.ByteArrayInputStream(new byte[] { 0x22, 0, 0, 0, 0, 0, 1, 0, 0x22, 0, 0, 0  });
+        Assert.assertEquals("\ud800\udc00", CBORObject.ReadJSON(ms).AsString());
+        ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xfe, (byte)0xff, 0, 0x22, (byte)0xd8, 0,
+          (byte)0xdc, 0, 0, 0x22  });
+        Assert.assertEquals("\ud800\udc00", CBORObject.ReadJSON(ms).AsString());
+      ms = new java.io.ByteArrayInputStream(new byte[] { 0, 0x22, (byte)0xd8, 0, (byte)0xdc, 0, 0, 0x22  });
+        Assert.assertEquals("\ud800\udc00", CBORObject.ReadJSON(ms).AsString());
+        ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xff, (byte)0xfe, 0x22, 0, 0, (byte)0xd8, 0,
+          (byte)0xdc, 0x22, 0  });
+        Assert.assertEquals("\ud800\udc00", CBORObject.ReadJSON(ms).AsString());
+      ms = new java.io.ByteArrayInputStream(new byte[] { 0x22, 0, 0, (byte)0xd8, 0, (byte)0xdc, 0x22, 0  });
+        Assert.assertEquals("\ud800\udc00", CBORObject.ReadJSON(ms).AsString());
+        ms = new java.io.ByteArrayInputStream(new byte[] { 0, 0, (byte)0xfe, (byte)0xff, 0, 0, 0, 0x22,
+          0, 0, (byte)0xd8, 0, 0, 0, 0,
+                                0x22  });
+        try {
+ CBORObject.ReadJSON(ms);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      ms = new java.io.ByteArrayInputStream(new byte[] { 0, 0, 0, 0x22, 0, 0, (byte)0xd8, 0, 0, 0,
+          0,
+                                0x22  });
+        try {
+ CBORObject.ReadJSON(ms);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+        ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xff, (byte)0xfe, 0, 0, 0x22, 0, 0, 0,
+          0, (byte)0xd8, 0, 0, 0x22, 0,
+                                0, 0  });
+        try {
+ CBORObject.ReadJSON(ms);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+        ms = new java.io.ByteArrayInputStream(new byte[] { 0x22, 0, 0, 0, 0, (byte)0xd8, 0, 0,
+          0x22, 0, 0, 0  });
+        try {
+ CBORObject.ReadJSON(ms);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+        ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xfe, (byte)0xff, 0, 0x22, 0, (byte)0xdc, 0,
+          (byte)0xdc, 0, 0, 0x22  });
+        try {
+ CBORObject.ReadJSON(ms);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+   ms = new java.io.ByteArrayInputStream(new byte[] { 0, 0x22, 0, (byte)0xdc, 0, (byte)0xdc, 0, 0, 0x22  });
+        try {
+ CBORObject.ReadJSON(ms);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+        ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xff, (byte)0xfe, 0x22, 0, 0, (byte)0xdc, 0,
+          (byte)0xdc, 0x22, 0  });
+        try {
+ CBORObject.ReadJSON(ms);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      ms = new java.io.ByteArrayInputStream(new byte[] { 0x22, 0, 0, (byte)0xdc, 0, (byte)0xdc, 0x22, 0  });
+        try {
+ CBORObject.ReadJSON(ms);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+        ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xfc  });
+        try {
+ CBORObject.ReadJSON(ms);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+        ms = new java.io.ByteArrayInputStream(new byte[] { 0, 0  });
+        try {
+ CBORObject.ReadJSON(ms);
+Assert.fail("Should have failed");
+} catch (CBORException ex) {
+} catch (Exception ex) {
+ Assert.fail(ex.toString());
+throw new IllegalStateException("", ex);
+}
+      } catch (IOException ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
     }
     @Test
     public void TestRemainder() {
@@ -2096,58 +2301,54 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
     }
 
     @Test
-    public void TestToJSONStringFor2Dot0() {
-      Assert.assertEquals(
-"\"\u2027\\u2028\\u2029\u202a\"" ,
-CBORObject.FromObject("\u2027\u2028\u2029\u202a").ToJSONString());
-    }
-
-    @Test
     public void TestToJSONString() {
+      Assert.assertEquals(
+        "\"\u2027\\u2028\\u2029\u202a\"" ,
+        CBORObject.FromObject("\u2027\u2028\u2029\u202a").ToJSONString());
       Assert.assertEquals("true", CBORObject.True.ToJSONString());
       Assert.assertEquals("false", CBORObject.False.ToJSONString());
       Assert.assertEquals("null", CBORObject.Null.ToJSONString());
       Assert.assertEquals(
-"null" ,
-CBORObject.FromObject(Float.POSITIVE_INFINITY).ToJSONString());
+        "null" ,
+        CBORObject.FromObject(Float.POSITIVE_INFINITY).ToJSONString());
       Assert.assertEquals(
-"null" ,
-CBORObject.FromObject(Float.NEGATIVE_INFINITY).ToJSONString());
+        "null" ,
+        CBORObject.FromObject(Float.NEGATIVE_INFINITY).ToJSONString());
       Assert.assertEquals("null", CBORObject.FromObject(Float.NaN).ToJSONString());
       Assert.assertEquals(
-"null" ,
-CBORObject.FromObject(Double.POSITIVE_INFINITY).ToJSONString());
+        "null" ,
+        CBORObject.FromObject(Double.POSITIVE_INFINITY).ToJSONString());
       Assert.assertEquals(
-"null" ,
-CBORObject.FromObject(Double.NEGATIVE_INFINITY).ToJSONString());
+        "null" ,
+        CBORObject.FromObject(Double.NEGATIVE_INFINITY).ToJSONString());
       Assert.assertEquals("null", CBORObject.FromObject(Double.NaN).ToJSONString());
       // Base64 tests
       CBORObject o;
       o = CBORObject.FromObjectAndTag(
-new byte[] { (byte)0x9a,
-(byte)0xd6,
-(byte)0xf0,
-(byte)0xe8  },
-22);
+        new byte[] { (byte)0x9a,
+          (byte)0xd6,
+          (byte)0xf0,
+          (byte)0xe8  },
+        22);
       Assert.assertEquals("\"mtbw6A\"", o.ToJSONString());
       o = CBORObject.FromObject(new byte[] { (byte)0x9a, (byte)0xd6, (byte)0xf0, (byte)0xe8  });
       Assert.assertEquals("\"mtbw6A\"", o.ToJSONString());
       o = CBORObject.FromObjectAndTag(
-new byte[] { (byte)0x9a,
-(byte)0xd6,
-(byte)0xf0,
-(byte)0xe8  },
-23);
+        new byte[] { (byte)0x9a,
+          (byte)0xd6,
+          (byte)0xf0,
+          (byte)0xe8  },
+        23);
       Assert.assertEquals("\"9AD6F0E8\"", o.ToJSONString());
       o = CBORObject.FromObject(new byte[] { (byte)0x9a, (byte)0xd6, (byte)0xff, (byte)0xe8  });
       // Encode with Base64URL by default
       Assert.assertEquals("\"mtb_6A\"", o.ToJSONString());
       o = CBORObject.FromObjectAndTag(
-new byte[] { (byte)0x9a,
-(byte)0xd6,
-(byte)0xff,
-(byte)0xe8  },
-22);
+        new byte[] { (byte)0x9a,
+          (byte)0xd6,
+          (byte)0xff,
+          (byte)0xe8  },
+        22);
       // Encode with Base64
       Assert.assertEquals("\"mtb/6A\"", o.ToJSONString());
     }

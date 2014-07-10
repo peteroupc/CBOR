@@ -80,7 +80,7 @@ private CBORDataUtilities() {
           if (str.charAt(i) == '.') {
             haveDecimalPoint = true;
             ++i;
-  } else if (str.charAt(i) == 'E' || str.charAt(i) == 'e') {
+          } else if (str.charAt(i) == 'E' || str.charAt(i) == 'e') {
             haveExponent = true;
           } else {
             return null;
@@ -121,7 +121,7 @@ private CBORDataUtilities() {
               --newScaleInt;
             }
           }
-  } else if (!integersOnly && str.charAt(i) == '.') {
+        } else if (!integersOnly && str.charAt(i) == '.') {
           if (!haveDigits) {
             // no digits before the decimal point
             return null;
@@ -130,7 +130,7 @@ private CBORDataUtilities() {
             return null;
           }
           haveDecimalPoint = true;
-  } else if (!integersOnly && (str.charAt(i) == 'E' || str.charAt(i) == 'e')) {
+        } else if (!integersOnly && (str.charAt(i) == 'E' || str.charAt(i) == 'e')) {
           haveExponent = true;
           ++i;
           break;
@@ -193,14 +193,14 @@ private CBORDataUtilities() {
         if (exp != null && (expBufferMult != 1 || expBuffer != 0)) {
           exp.Multiply(expBufferMult).AddInt(expBuffer);
         }
-      if (offset >= 0 && newScaleInt == 0 && newScale == null && exp ==
-          null) {
+        if (offset >= 0 && newScaleInt == 0 && newScale == null && exp ==
+            null) {
           newScaleInt = expInt;
-  } else if (exp == null) {
+        } else if (exp == null) {
           newScale = (newScale == null) ? ((new FastInteger(newScaleInt))) : newScale;
           if (offset < 0) {
             newScale.SubtractInt(expInt);
-  } else if (expInt != 0) {
+          } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
@@ -217,7 +217,7 @@ private CBORDataUtilities() {
         return null;
       }
       if ((newScale == null && newScaleInt == 0) || (newScale != null &&
-        newScale.signum() == 0)) {
+                                                     newScale.signum() == 0)) {
         // No fractional part
         if (mant != null && mant.CanFitInInt32()) {
           mantInt = mant.AsInt32();

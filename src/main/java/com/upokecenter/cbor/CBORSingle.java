@@ -55,7 +55,7 @@ import com.upokecenter.util.*;
         throw new ArithmeticException("This Object's value is out of range");
       }
       fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) :
-      (float)Math.floor(fltItem);
+        (float)Math.floor(fltItem);
       if (fltItem >= -SingleOneLsh64 && fltItem < SingleOneLsh64) {
         return (long)fltItem;
       }
@@ -84,9 +84,9 @@ import com.upokecenter.util.*;
         return false;
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) :
-      (float)Math.floor(fltItem);
+        (float)Math.floor(fltItem);
       return fltItem2 >= -SingleOneLsh64 && fltItem2 <
-      SingleOneLsh64;
+        SingleOneLsh64;
     }
 
     public boolean CanTruncatedIntFitInInt32(Object obj) {
@@ -95,11 +95,11 @@ import com.upokecenter.util.*;
         return false;
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) :
-      (float)Math.floor(fltItem);
+        (float)Math.floor(fltItem);
       // Convert float to double to avoid precision loss when
       // converting Integer.MIN_VALUE/MaxValue to float
       return (double)fltItem2 >= Integer.MIN_VALUE && (double)fltItem2 <=
-      Integer.MAX_VALUE;
+        Integer.MAX_VALUE;
     }
 
     public int AsInt32(Object obj, int minValue, int maxValue) {
@@ -108,11 +108,11 @@ import com.upokecenter.util.*;
         throw new ArithmeticException("This Object's value is out of range");
       }
       fltItem = (fltItem < 0) ? (float)Math.ceil(fltItem) :
-      (float)Math.floor(fltItem);
+        (float)Math.floor(fltItem);
       // Convert float to double to avoid precision loss when
       // converting Integer.MIN_VALUE/MaxValue to float
       if ((double)fltItem >= Integer.MIN_VALUE && (double)fltItem <=
-      Integer.MAX_VALUE) {
+          Integer.MAX_VALUE) {
         int ret = (int)fltItem;
         return ret;
       }
@@ -134,7 +134,7 @@ import com.upokecenter.util.*;
         return false;
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.ceil(fltItem) :
-      (float)Math.floor(fltItem);
+        (float)Math.floor(fltItem);
       return fltItem == fltItem2;
     }
 
@@ -148,7 +148,7 @@ import com.upokecenter.util.*;
       return (val < 0) ? -val : obj;
     }
 
-public ExtendedRational AsExtendedRational(Object obj) {
+    public ExtendedRational AsExtendedRational(Object obj) {
       return ExtendedRational.FromSingle(((Float)obj).floatValue());
     }
   }

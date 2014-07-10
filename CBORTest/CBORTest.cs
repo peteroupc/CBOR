@@ -3151,39 +3151,6 @@ o2,
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      using (var ms = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x7b,
-                                         0x7d })) {
-        try {
-          CBORObject.ReadJSON(ms);
-        } catch (Exception ex) {
-          Assert.Fail(ex.ToString());
-          throw new InvalidOperationException(String.Empty, ex);
-        }
-      }
-      // whitespace followed by BOM
-      using (var ms2 = new MemoryStream(new byte[] { 0x20, 0xef, 0xbb, 0xbf,
-                                          0x7b, 0x7d })) {
-        try {
-          CBORObject.ReadJSON(ms2);
-          Assert.Fail("Should have failed");
-        } catch (CBORException) {
-        } catch (Exception ex) {
-          Assert.Fail(ex.ToString());
-          throw new InvalidOperationException(String.Empty, ex);
-        }
-      }
-      // two BOMs
-      using (var ms3 = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0xef,
-                                          0xbb, 0xbf, 0x7b, 0x7d })) {
-        try {
-          CBORObject.ReadJSON(ms3);
-          Assert.Fail("Should have failed");
-        } catch (CBORException) {
-        } catch (Exception ex) {
-          Assert.Fail(ex.ToString());
-          throw new InvalidOperationException(String.Empty, ex);
-        }
-      }
       try {
         CBORObject.FromJSONString("\ufeff\u0020 {}");
         Assert.Fail("Should have failed");

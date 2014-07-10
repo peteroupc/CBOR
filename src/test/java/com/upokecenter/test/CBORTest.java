@@ -3169,57 +3169,6 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) {}
         Assert.fail(ex.toString());
         throw new IllegalStateException("", ex);
       }
-      java.io.ByteArrayInputStream ms = null;
-try {
-ms = new java.io.ByteArrayInputStream(new byte[] { (byte)0xef, (byte)0xbb, (byte)0xbf, 0x7b,
-                                         0x7d  });
-
-        try {
-          CBORObject.ReadJSON(ms);
-        } catch (Exception ex) {
-          Assert.fail(ex.toString());
-          throw new IllegalStateException("", ex);
-        }
-}
-finally {
-try { if (ms != null)ms.close(); } catch (java.io.IOException ex) {}
-}
-      // whitespace followed by BOM
-      java.io.ByteArrayInputStream ms2 = null;
-try {
-ms2 = new java.io.ByteArrayInputStream(new byte[] { 0x20, (byte)0xef, (byte)0xbb, (byte)0xbf,
-                                          0x7b, 0x7d  });
-
-        try {
-          CBORObject.ReadJSON(ms2);
-          Assert.fail("Should have failed");
-        } catch (CBORException ex) {
-        } catch (Exception ex) {
-          Assert.fail(ex.toString());
-          throw new IllegalStateException("", ex);
-        }
-}
-finally {
-try { if (ms2 != null)ms2.close(); } catch (java.io.IOException ex) {}
-}
-      // two BOMs
-      java.io.ByteArrayInputStream ms3 = null;
-try {
-ms3 = new java.io.ByteArrayInputStream(new byte[] { (byte)0xef, (byte)0xbb, (byte)0xbf, (byte)0xef,
-                                          (byte)0xbb, (byte)0xbf, 0x7b, 0x7d  });
-
-        try {
-          CBORObject.ReadJSON(ms3);
-          Assert.fail("Should have failed");
-        } catch (CBORException ex) {
-        } catch (Exception ex) {
-          Assert.fail(ex.toString());
-          throw new IllegalStateException("", ex);
-        }
-}
-finally {
-try { if (ms3 != null)ms3.close(); } catch (java.io.IOException ex) {}
-}
       try {
         CBORObject.FromJSONString("\ufeff\u0020 {}");
         Assert.fail("Should have failed");
