@@ -55,7 +55,7 @@ namespace PeterO.Cbor {
         throw new OverflowException("This object's value is out of range");
       }
       fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
-      (float)Math.Floor(fltItem);
+        (float)Math.Floor(fltItem);
       if (fltItem >= -SingleOneLsh64 && fltItem < SingleOneLsh64) {
         return (long)fltItem;
       }
@@ -84,9 +84,9 @@ namespace PeterO.Cbor {
         return false;
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
-      (float)Math.Floor(fltItem);
+        (float)Math.Floor(fltItem);
       return fltItem2 >= -SingleOneLsh64 && fltItem2 <
-      SingleOneLsh64;
+        SingleOneLsh64;
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
@@ -95,11 +95,11 @@ namespace PeterO.Cbor {
         return false;
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
-      (float)Math.Floor(fltItem);
+        (float)Math.Floor(fltItem);
       // Convert float to double to avoid precision loss when
       // converting Int32.MinValue/MaxValue to float
       return (double)fltItem2 >= Int32.MinValue && (double)fltItem2 <=
-      Int32.MaxValue;
+        Int32.MaxValue;
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
@@ -108,11 +108,11 @@ namespace PeterO.Cbor {
         throw new OverflowException("This object's value is out of range");
       }
       fltItem = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
-      (float)Math.Floor(fltItem);
+        (float)Math.Floor(fltItem);
       // Convert float to double to avoid precision loss when
       // converting Int32.MinValue/MaxValue to float
       if ((double)fltItem >= Int32.MinValue && (double)fltItem <=
-      Int32.MaxValue) {
+          Int32.MaxValue) {
         var ret = (int)fltItem;
         return ret;
       }
@@ -134,7 +134,7 @@ namespace PeterO.Cbor {
         return false;
       }
       float fltItem2 = (fltItem < 0) ? (float)Math.Ceiling(fltItem) :
-      (float)Math.Floor(fltItem);
+        (float)Math.Floor(fltItem);
       return fltItem == fltItem2;
     }
 
@@ -148,7 +148,7 @@ namespace PeterO.Cbor {
       return (val < 0) ? -val : obj;
     }
 
-public ExtendedRational AsExtendedRational(object obj) {
+    public ExtendedRational AsExtendedRational(object obj) {
       return ExtendedRational.FromSingle((float)obj);
     }
   }

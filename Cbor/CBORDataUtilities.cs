@@ -73,7 +73,7 @@ namespace PeterO.Cbor {
           if (str[i] == '.') {
             haveDecimalPoint = true;
             ++i;
-  } else if (str[i] == 'E' || str[i] == 'e') {
+          } else if (str[i] == 'E' || str[i] == 'e') {
             haveExponent = true;
           } else {
             return null;
@@ -114,7 +114,7 @@ namespace PeterO.Cbor {
               --newScaleInt;
             }
           }
-  } else if (!integersOnly && str[i] == '.') {
+        } else if (!integersOnly && str[i] == '.') {
           if (!haveDigits) {
             // no digits before the decimal point
             return null;
@@ -123,7 +123,7 @@ namespace PeterO.Cbor {
             return null;
           }
           haveDecimalPoint = true;
-  } else if (!integersOnly && (str[i] == 'E' || str[i] == 'e')) {
+        } else if (!integersOnly && (str[i] == 'E' || str[i] == 'e')) {
           haveExponent = true;
           ++i;
           break;
@@ -186,14 +186,14 @@ namespace PeterO.Cbor {
         if (exp != null && (expBufferMult != 1 || expBuffer != 0)) {
           exp.Multiply(expBufferMult).AddInt(expBuffer);
         }
-      if (offset >= 0 && newScaleInt == 0 && newScale == null && exp ==
-          null) {
+        if (offset >= 0 && newScaleInt == 0 && newScale == null && exp ==
+            null) {
           newScaleInt = expInt;
-  } else if (exp == null) {
+        } else if (exp == null) {
           newScale = newScale ?? (new FastInteger(newScaleInt));
           if (offset < 0) {
             newScale.SubtractInt(expInt);
-  } else if (expInt != 0) {
+          } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
@@ -210,7 +210,7 @@ namespace PeterO.Cbor {
         return null;
       }
       if ((newScale == null && newScaleInt == 0) || (newScale != null &&
-        newScale.Sign == 0)) {
+                                                     newScale.Sign == 0)) {
         // No fractional part
         if (mant != null && mant.CanFitInInt32()) {
           mantInt = mant.AsInt32();
@@ -218,12 +218,14 @@ namespace PeterO.Cbor {
         }
         if (mant == null) {
           // NOTE: mantInt can only be positive, so overflow is impossible
-#if DEBUG
+          #if DEBUG
           if (mantInt < 0) {
-  throw new ArgumentException("mantInt (" + mantInt + ") is less than " +
+            throw new ArgumentException(
+              "mantInt (" + mantInt +
+              ") is less than " +
               "0");
           }
-#endif
+          #endif
 
           if (negative) {
             mantInt = -mantInt;
