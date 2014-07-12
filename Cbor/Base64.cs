@@ -6,7 +6,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 using System;
-using System.IO;
 using System.Text;
 
 namespace PeterO.Cbor {
@@ -54,21 +53,21 @@ namespace PeterO.Cbor {
     }
 
     public static void WriteBase64(
-      Stream outputStream,
+      Utf8Writer writer,
       byte[] data,
       int offset,
       int count,
       bool padding) {
-      WriteBase64(outputStream, data, offset, count, Base64Classic, padding);
+      WriteBase64(writer, data, offset, count, Base64Classic, padding);
     }
 
     public static void WriteBase64URL(
-      Stream outputStream,
+      Utf8Writer writer,
       byte[] data,
       int offset,
       int count,
       bool padding) {
-      WriteBase64(outputStream, data, offset, count, Base64URL, padding);
+      WriteBase64(writer, data, offset, count, Base64URL, padding);
     }
 
     public static string ToBase64String(byte[] data, bool padding) {
@@ -127,8 +126,8 @@ namespace PeterO.Cbor {
           "offset (" + offset + ") is more than " + data.Length);
       }
       if (count < 0) {
-     throw new ArgumentException("count (" + count + ") is less than " +
-          "0 ");
+        throw new ArgumentException("count (" + count + ") is less than " +
+                                    "0 ");
       }
       if (count > data.Length) {
         throw new ArgumentException(
@@ -136,7 +135,7 @@ namespace PeterO.Cbor {
       }
       if (data.Length - offset < count) {
         throw new ArgumentException("data's length minus " + offset + " (" +
-          (data.Length - offset) +
+                                    (data.Length - offset) +
                                     ") is less than " + count);
       }
       int length = offset + count;
@@ -169,73 +168,75 @@ namespace PeterO.Cbor {
     }
 
     private static void WriteBase64(
-      Stream outputStream,
+      Utf8Writer writer,
       byte[] data,
       int offset,
       int count,
       string alphabet,
       bool padding) {
-      if (outputStream == null) {
-        throw new ArgumentNullException("outputStream");
+      if (writer == null) {
+        throw new ArgumentNullException("writer");
       }
       if (offset < 0) {
-   throw new ArgumentException("offset (" + offset + ") is less than " +
-          "0 ");
+        throw new ArgumentException("offset (" + offset + ") is less than " +
+                                    "0 ");
       }
       if (offset > data.Length) {
         throw new ArgumentException("offset (" + offset + ") is more than " +
-          data.Length);
+                                    data.Length);
       }
       if (count < 0) {
-     throw new ArgumentException("count (" + count + ") is less than " +
-          "0 ");
+        throw new ArgumentException("count (" + count + ") is less than " +
+                                    "0 ");
       }
       if (count > data.Length) {
         throw new ArgumentException("count (" + count + ") is more than " +
-          data.Length);
+                                    data.Length);
       }
       if (data.Length - offset < count) {
         throw new ArgumentException("data's length minus " + offset + " (" +
-          (data.Length - offset) +
+                                    (data.Length - offset) +
                                     ") is less than " + count);
       }
       int length = offset + count;
       int i = offset;
-      var buffer = new byte[4];
+      var buffer = new char[4];
       for (i = offset; i < (length - 2); i += 3) {
-        buffer[0] = (byte)alphabet[(data[i] >> 2) & 63];
-        buffer[1] = (byte)alphabet[((data[i] & 3) << 4) +
+        buffer[0] = (char)alphabet[(data[i] >> 2) & 63];
+        buffer[1] = (char)alphabet[((data[i] & 3) << 4) +
                                    ((data[i + 1] >> 4) &
                                     15)];
-        buffer[2] = (byte)alphabet[((data[i + 1] & 15) << 2) + ((data[i +
+        buffer[2] = (char)alphabet[((data[i + 1] & 15) << 2) + ((data[i +
                                                                       2] >> 6) &
                                                                 3)];
-        buffer[3] = (byte)alphabet[data[i + 2] & 63];
-        outputStream.Write(buffer, 0, 4);
+        buffer[3] = (char)alphabet[data[i + 2] & 63];
+        writer.WriteChar(buffer[0]);
+        writer.WriteChar(buffer[1]);
+        writer.WriteChar(buffer[2]);
+        writer.WriteChar(buffer[3]);
       }
       int lenmod3 = count % 3;
       if (lenmod3 != 0) {
         i = length - lenmod3;
-        buffer[0] = (byte)alphabet[(data[i] >> 2) & 63];
+        buffer[0] = (char)alphabet[(data[i] >> 2) & 63];
         if (lenmod3 == 2) {
-          buffer[1] = (byte)alphabet[((data[i] & 3) << 4) + ((data[i + 1] >>
+          buffer[1] = (char)alphabet[((data[i] & 3) << 4) + ((data[i + 1] >>
                                                               4) &
                                                              15)];
-          buffer[2] = (byte)alphabet[(data[i + 1] & 15) << 2];
+          buffer[2] = (char)alphabet[(data[i + 1] & 15) << 2];
+          writer.WriteChar(buffer[0]);
+          writer.WriteChar(buffer[1]);
+          writer.WriteChar(buffer[2]);
           if (padding) {
-            buffer[3] = (byte)'=';
-            outputStream.Write(buffer, 0, 4);
-          } else {
-            outputStream.Write(buffer, 0, 3);
+            writer.WriteChar('=');
           }
         } else {
-          buffer[1] = (byte)alphabet[(data[i] & 3) << 4];
+          buffer[1] = (char)alphabet[(data[i] & 3) << 4];
+          writer.WriteChar(buffer[0]);
+          writer.WriteChar(buffer[1]);
           if (padding) {
-            buffer[2] = (byte)'=';
-            buffer[3] = (byte)'=';
-            outputStream.Write(buffer, 0, 4);
-          } else {
-            outputStream.Write(buffer, 0, 2);
+            writer.WriteChar('=');
+            writer.WriteChar('=');
           }
         }
       }

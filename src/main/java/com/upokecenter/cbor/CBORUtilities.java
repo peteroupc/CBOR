@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-import java.io.*;
-
 import com.upokecenter.util.*;
 
     /**
@@ -27,17 +25,6 @@ private CBORUtilities() {
       for (int i = 0; i < length; ++i) {
         str.append(HexAlphabet.charAt((data[i] >> 4) & 15));
         str.append(HexAlphabet.charAt(data[i] & 15));
-      }
-    }
-
-    public static void WriteBase16(OutputStream outputStream, byte[] data) throws IOException {
-      if (data == null) {
-        throw new NullPointerException("data");
-      }
-      int length = data.length;
-      for (int i = 0; i < length; ++i) {
-        outputStream.write((byte)HexAlphabet.charAt((data[i] >> 4) & 15));
-        outputStream.write((byte)HexAlphabet.charAt(data[i] & 15));
       }
     }
 

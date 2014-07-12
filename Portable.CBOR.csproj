@@ -52,6 +52,7 @@
     <Compile Include="Cbor\CBORExtendedFloat.cs" />
     <Compile Include="Cbor\CBORExtendedRational.cs" />
     <Compile Include="Cbor\CBORInteger.cs" />
+    <Compile Include="Cbor\CBORJson.cs" />
     <Compile Include="Cbor\CBORObject.cs" />
     <Compile Include="Cbor\CBORObjectExtra.cs" />
     <Compile Include="Cbor\CBORObjectMath.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Cbor\SharedRefs.cs" />
     <Compile Include="Cbor\StringRefs.cs" />
     <Compile Include="Cbor\URIUtility.cs" />
+    <Compile Include="Cbor\Utf8Writer.cs" />
     <Compile Include="DataUtilities.cs" />
     <Compile Include="DebugUtility.cs" />
     <Compile Include="DecimalUtility.cs" />

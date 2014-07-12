@@ -101,16 +101,16 @@ import com.upokecenter.util.*;
     private int tagLow;
     private int tagHigh;
     static final int CBORObjectTypeInteger = 0;  // -(2^63).. (2^63-1)
-    private static final int CBORObjectTypeBigInteger = 1;  // all other integers
+    static final int CBORObjectTypeBigInteger = 1;  // all other integers
     static final int CBORObjectTypeByteString = 2;
     static final int CBORObjectTypeTextString = 3;
-    private static final int CBORObjectTypeArray = 4;
-    private static final int CBORObjectTypeMap = 5;
-    private static final int CBORObjectTypeSimpleValue = 6;
+    static final int CBORObjectTypeArray = 4;
+    static final int CBORObjectTypeMap = 5;
+    static final int CBORObjectTypeSimpleValue = 6;
     static final int CBORObjectTypeSingle = 7;
     static final int CBORObjectTypeDouble = 8;
     static final int CBORObjectTypeExtendedDecimal = 9;
-    private static final int CBORObjectTypeTagged = 10;
+    static final int CBORObjectTypeTagged = 10;
     static final int CBORObjectTypeExtendedFloat = 11;
     static final int CBORObjectTypeExtendedRational = 12;
     static final BigInteger Int64MaxValue =
@@ -347,8 +347,8 @@ public final void setConverter(Object value) {
      * @return True if this value is a CBOR true value; otherwise, false.
      */
     public final boolean isTrue() {
-        return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() ==
-
+        return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue()
+          ==
           21;
       }
 
@@ -357,8 +357,8 @@ public final void setConverter(Object value) {
      * @return True if this value is a CBOR false value; otherwise, false.
      */
     public final boolean isFalse() {
-        return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() ==
-
+        return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue()
+          ==
           20;
       }
 
@@ -367,8 +367,8 @@ public final void setConverter(Object value) {
      * @return True if this value is a CBOR null value; otherwise, false.
      */
     public final boolean isNull() {
-        return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() ==
-
+        return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue()
+          ==
           22;
       }
 
@@ -377,8 +377,8 @@ public final void setConverter(Object value) {
      * @return True if this value is a CBOR undefined value; otherwise, false.
      */
     public final boolean isUndefined() {
-        return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue() ==
-
+        return this.getItemType() == CBORObjectTypeSimpleValue && ((Integer)this.getThisItem()).intValue()
+          ==
           23;
       }
 
@@ -755,8 +755,8 @@ public int compareTo(CBORObject other) {
           } else if (typeA == CBORObjectTypeExtendedFloat || typeB ==
                      CBORObjectTypeExtendedFloat ||
                      typeA == CBORObjectTypeDouble || typeB ==
-                     CBORObjectTypeDouble ||
-
+                     CBORObjectTypeDouble
+                     ||
                      typeA == CBORObjectTypeSingle || typeB ==
                      CBORObjectTypeSingle) {
             ExtendedFloat e1 = NumberInterfaces[typeA].AsExtendedFloat(objA);
@@ -963,7 +963,7 @@ public int compareTo(CBORObject other) {
         CBORObject valueB = null;
         boolean hasKey;
 valueB = mapB.get(kvp.getKey());
-hasKey = (valueB == null) ? mapB.containsKey(kvp.getKey()) : true;
+hasKey=(valueB == null) ? mapB.containsKey(kvp.getKey()) : true;
         if (hasKey) {
           CBORObject valueA = kvp.getValue();
           if (!(valueA == null ? valueB == null : valueA.equals(valueB))) {
@@ -1346,11 +1346,11 @@ ms = new java.io.ByteArrayInputStream(data);
 int startingAvailable = ms.available();
 
         CBORObject o = Read(ms);
-        CheckCBORLength((long)data.length, (long)(startingAvailable - ms.available()));
+        CheckCBORLength((long)data.length, (long)(startingAvailable-ms.available()));
         return o;
 }
 finally {
-try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
+try { if (ms != null)ms.close(); } catch (java.io.IOException ex) {}
 }
     }
 
@@ -1533,13 +1533,11 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
           previtem.tagHigh);
       }
 
-    @SuppressWarnings("unchecked")
-private Map<CBORObject, CBORObject> AsMap() {
+    internal Map<CBORObject, CBORObject> AsMap() {
       return (Map<CBORObject, CBORObject>)this.getThisItem();
     }
 
-    @SuppressWarnings("unchecked")
-private List<CBORObject> AsList() {
+    internal List<CBORObject> AsList() {
       return (List<CBORObject>)this.getThisItem();
     }
 
@@ -2622,7 +2620,7 @@ private List<CBORObject> AsList() {
       if (bigint.signum() < 0) {
         datatype = 1;
         bigint = bigint.add(BigInteger.ONE);
-        bigint = (bigint).negate();
+        bigint=(bigint).negate();
       }
       if (bigint.compareTo(Int64MaxValue) <= 0) {
         // If the big integer is representable as a long and in
@@ -3090,7 +3088,7 @@ ms = new java.io.ByteArrayOutputStream(16);
           return ms.toByteArray();
 }
 finally {
-try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
+try { if (ms != null)ms.close(); } catch (java.io.IOException ex) {}
 }
       } catch (IOException ex) {
         throw new CBORException("I/O Error occurred", ex);
@@ -3150,339 +3148,6 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       FromObject(objValue).WriteTo(stream);
     }
 
-    // JSON parsing methods
-    private static int SkipWhitespaceJSON(CharacterReader reader) {
-      while (true) {
-        int c = reader.NextChar();
-        if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-          return c;
-        }
-      }
-    }
-
-    private static String NextJSONString(CharacterReader reader, int quote) {
-      int c;
-      StringBuilder sb = null;
-      boolean surrogate = false;
-      boolean surrogateEscaped = false;
-      boolean escaped = false;
-      while (true) {
-        c = reader.NextChar();
-        if (c == -1 || c < 0x20) {
-          throw reader.NewError("Unterminated String");
-        }
-        switch (c) {
-          case '\\':
-            c = reader.NextChar();
-            escaped = true;
-            switch (c) {
-              case '\\':
-                c = '\\';
-                break;
-              case '/':
-                // Now allowed to be escaped under RFC 7159
-                c = '/';
-                break;
-              case '\"':
-                c = '\"';
-                break;
-              case 'b':
-                c = '\b';
-                break;
-              case 'f':
-                c = '\f';
-                break;
-              case 'n':
-                c = '\n';
-                break;
-              case 'r':
-                c = '\r';
-                break;
-              case 't':
-                c = '\t';
-                break;
-                case 'u': { // Unicode escape
-                  c = 0;
-                  // Consists of 4 hex digits
-                  for (int i = 0; i < 4; ++i) {
-                    int ch = reader.NextChar();
-                    if (ch >= '0' && ch <= '9') {
-                      c <<= 4;
-                      c |= ch - '0';
-                    } else if (ch >= 'A' && ch <= 'F') {
-                      c <<= 4;
-                      c |= ch + 10 - 'A';
-                    } else if (ch >= 'a' && ch <= 'f') {
-                      c <<= 4;
-                      c |= ch + 10 - 'a';
-                    } else {
-                      throw
-                        reader.NewError(
-                          "Invalid Unicode escaped character");
-                    }
-                  }
-                  break;
-                }
-              default:
-                throw reader.NewError("Invalid escaped character");
-            }
-            break;
-          default:
-            escaped = false;
-            break;
-        }
-        if (surrogate) {
-          if ((c & 0x1ffc00) != 0xdc00) {
-            // Note: this includes the ending quote
-            // and supplementary characters
-            throw reader.NewError("Unpaired surrogate code point");
-          }
-          if (escaped != surrogateEscaped) {
-            throw
-  reader.NewError("Pairing escaped surrogate with unescaped surrogate");
-          }
-          surrogate = false;
-        } else if ((c & 0x1ffc00) == 0xd800) {
-          surrogate = true;
-          surrogateEscaped = escaped;
-        } else if ((c & 0x1ffc00) == 0xdc00) {
-          throw reader.NewError("Unpaired surrogate code point");
-        }
-        if (c == quote && !escaped) {
-          // End quote reached
-          return (sb == null) ? "" : sb.toString();
-        }
-        sb = (sb == null) ? ((new StringBuilder())) : sb;
-        if (c <= 0xffff) {
-          sb.append((char)c);
-        } else {
-          sb.append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
-          sb.append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
-        }
-      }
-    }
-
-    private static CBORObject NextJSONValue(
-      CharacterReader reader,
-      int firstChar,
-      boolean noDuplicates,
-      int[] nextChar,
-      int depth) {
-      String str;
-      int c = firstChar;
-      CBORObject obj = null;
-      if (c < 0) {
-        throw reader.NewError("Unexpected end of data");
-      }
-      if (c == '"') {
-        // Parse a String
-        // The tokenizer already checked the String for invalid
-        // surrogate pairs, so just call the CBORObject
-        // constructor directly
-        obj = CBORObject.FromRaw(NextJSONString(reader, c));
-        nextChar[0] = SkipWhitespaceJSON(reader);
-        return obj;
-      }
-      if (c == '{') {
-        // Parse an object
-        obj = ParseJSONObject(reader, noDuplicates, depth + 1);
-        nextChar[0] = SkipWhitespaceJSON(reader);
-        return obj;
-      }
-      if (c == '[') {
-        // Parse an array
-        obj = ParseJSONArray(reader, noDuplicates, depth + 1);
-        nextChar[0] = SkipWhitespaceJSON(reader);
-        return obj;
-      }
-      if (c == 't') {
-        // Parse true
-        if (reader.NextChar() != 'r' ||
-            reader.NextChar() != 'u' ||
-            reader.NextChar() != 'e') {
-          throw reader.NewError("Value can't be parsed.");
-        }
-        nextChar[0] = SkipWhitespaceJSON(reader);
-        return CBORObject.True;
-      }
-      if (c == 'f') {
-        // Parse false
-        if (reader.NextChar() != 'a' ||
-            reader.NextChar() != 'l' ||
-            reader.NextChar() != 's' ||
-            reader.NextChar() != 'e') {
-          throw reader.NewError("Value can't be parsed.");
-        }
-        nextChar[0] = SkipWhitespaceJSON(reader);
-        return CBORObject.False;
-      }
-      if (c == 'n') {
-        // Parse null
-        if (reader.NextChar() != 'u' ||
-            reader.NextChar() != 'l' ||
-            reader.NextChar() != 'l') {
-          throw reader.NewError("Value can't be parsed.");
-        }
-        nextChar[0] = SkipWhitespaceJSON(reader);
-        return CBORObject.Null;
-      }
-      if (c == '-' || (c >= '0' && c <= '9')) {
-        // Parse a number
-        StringBuilder sb = new StringBuilder();
-        while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-               c == 'e' || c == 'E') {
-          sb.append((char)c);
-          c = reader.NextChar();
-        }
-        str = sb.toString();
-        obj = CBORDataUtilities.ParseJSONNumber(str);
-        if (obj == null) {
-          throw reader.NewError("JSON number can't be parsed. " + str);
-        }
-        if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-          nextChar[0] = c;
-        } else {
-          nextChar[0] = SkipWhitespaceJSON(reader);
-        }
-        return obj;
-      }
-      throw reader.NewError("Value can't be parsed.");
-    }
-
-    private static CBORObject ParseJSONValue(
-      CharacterReader reader,
-      boolean noDuplicates,
-      boolean objectOrArrayOnly,
-      int depth) {
-      if (depth > 1000) {
-        throw reader.NewError("Too deeply nested");
-      }
-      int c;
-      c = SkipWhitespaceJSON(reader);
-      if (c == '[') {
-        return ParseJSONArray(reader, noDuplicates, depth);
-      }
-      if (c == '{') {
-        return ParseJSONObject(reader, noDuplicates, depth);
-      }
-      if (objectOrArrayOnly) {
-        throw reader.NewError("A JSON Object must begin with '{' or '['");
-      }
-      int[] nextChar = new int[1];
-      return NextJSONValue(reader, c, noDuplicates, nextChar, depth);
-    }
-
-    private static CBORObject ParseJSONObject(
-      CharacterReader reader,
-      boolean noDuplicates,
-      int depth) {
-      // Assumes that the last character read was '{'
-      if (depth > 1000) {
-        throw reader.NewError("Too deeply nested");
-      }
-      int c;
-      CBORObject key;
-      CBORObject obj;
-      int[] nextchar = new int[1];
-      boolean seenComma = false;
-      HashMap<CBORObject, CBORObject> myHashMap = new HashMap<CBORObject, CBORObject>();
-      while (true) {
-        c = SkipWhitespaceJSON(reader);
-        switch (c) {
-          case -1:
-            throw reader.NewError("A JSONObject must end with '}'");
-          case '}':
-            if (seenComma) {
-              // Situation like '{"0"=>1,}'
-              throw reader.NewError("Trailing comma");
-            }
-            return CBORObject.FromRaw(myHashMap);
-            default: {
-              // Read the next String
-              if (c < 0) {
-                throw reader.NewError("Unexpected end of data");
-              }
-              if (c != '"') {
-                throw reader.NewError("Expected a String as a key");
-              }
-              // Parse a String that represents the Object's key
-              // The tokenizer already checked the String for invalid
-              // surrogate pairs, so just call the CBORObject
-              // constructor directly
-              obj = CBORObject.FromRaw(NextJSONString(reader, c));
-              key = obj;
-              if (noDuplicates && myHashMap.containsKey(obj)) {
-                throw reader.NewError("Key already exists: " + key);
-              }
-              break;
-            }
-        }
-        if (SkipWhitespaceJSON(reader) != ':') {
-          throw reader.NewError("Expected a ':' after a key");
-        }
-        // NOTE: Will overwrite existing value
-        myHashMap.put(key, NextJSONValue(
-          reader,
-          SkipWhitespaceJSON(reader),
-          noDuplicates,
-          nextchar,
-          depth));
-        switch (nextchar[0]) {
-          case ',':
-            seenComma = true;
-            break;
-          case '}':
-            return CBORObject.FromRaw(myHashMap);
-          default:
-            throw reader.NewError("Expected a ',' or '}'");
-        }
-      }
-    }
-
-    private static CBORObject ParseJSONArray(
-      CharacterReader reader,
-      boolean noDuplicates,
-      int depth) {
-      // Assumes that the last character read was '['
-      if (depth > 1000) {
-        throw reader.NewError("Too deeply nested");
-      }
-      ArrayList<CBORObject> myArrayList = new ArrayList<CBORObject>();
-      boolean seenComma = false;
-      int[] nextchar = new int[1];
-      while (true) {
-        int c = SkipWhitespaceJSON(reader);
-        if (c == ']') {
-          if (seenComma) {
-            // Situation like '[0,1,]'
-            throw reader.NewError("Trailing comma");
-          }
-          return CBORObject.FromRaw(myArrayList);
-        }
-        if (c == ',') {
-          // Situation like '[,0,1,2]' or '[0,,1]'
-          throw reader.NewError("Empty array element");
-        }
-        myArrayList.add(
-          NextJSONValue(
-            reader,
-            c,
-            noDuplicates,
-            nextchar,
-            depth));
-        c = nextchar[0];
-        switch (c) {
-          case ',':
-            seenComma = true;
-            break;
-          case ']':
-            return CBORObject.FromRaw(myArrayList);
-          default:
-            throw reader.NewError("Expected a ',' or ']'");
-        }
-      }
-    }
-
     /**
      * Generates a CBOR object from a string in JavaScript Object Notation (JSON)
      * format. <p>If a JSON object has the same key, only the last given
@@ -3494,19 +3159,16 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * @throws CBORException The string is not in JSON format.
      */
     public static CBORObject FromJSONString(String str) {
-      /*
-       if ((str) == null) {
-  throw new NullPointerException("str");
-}
-       */
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
       if (str.length() > 0 && str.charAt(0) == 0xfeff) {
-         throw new
-  CBORException("JSON Object began with a byte order mark (U+FEFF) (offset 0)"
-);
+        throw new CBORException(
+          "JSON Object began with a byte order mark (U+FEFF) (offset 0)");
       }
       CharacterReader reader = new CharacterReader(str);
-      CBORObject obj = ParseJSONValue(reader, false, false, 0);
-      if (SkipWhitespaceJSON(reader) != -1) {
+      CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, 0);
+      if (CBORJson.SkipWhitespaceJSON(reader) != -1) {
         throw reader.NewError("End of String not reached");
       }
       return obj;
@@ -3516,9 +3178,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * Generates a CBOR object from a data stream in JavaScript Object Notation
      * (JSON) format. The JSON stream may begin with a byte order mark (U +
      * FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or
-     * UTF-32 encoding. (In previous versions, only UTF-8 was allowed.)
-     * <p>If a JSON object has the same key, only the last given value will
-     * be used for each duplicated key.</p>
+     * UTF-32 encoding; the encoding is detected by assuming that the first
+     * character read must be a byte order mark or an ASCII character. (In
+     * previous versions, only UTF-8 was allowed.) <p>If a JSON object has
+     * the same key, only the last given value will be used for each
+     * duplicated key.</p>
      * @param stream A readable data stream.
      * @return A CBORObject object.
      * @throws NullPointerException The parameter {@code stream} is null.
@@ -3529,8 +3193,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     public static CBORObject ReadJSON(InputStream stream) throws IOException {
       CharacterReader reader = new CharacterReader(stream);
       try {
-        CBORObject obj = ParseJSONValue(reader, false, false, 0);
-        if (SkipWhitespaceJSON(reader) != -1) {
+        CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, 0);
+        if (CBORJson.SkipWhitespaceJSON(reader) != -1) {
           throw reader.NewError("End of data stream not reached");
         }
         return obj;
@@ -3543,164 +3207,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
-    private static final String Hex16 = "0123456789ABCDEF";
-
-    private static void WriteJSONStringUnquoted(
-      String str,
-      OutputStream outputStream) throws IOException {
-      // Surrogates were already verified when this
-      // String was added to the CBOR Object; that check
-      // is not repeated here
-      int startIndex = 0;
-      byte[] buffer = null;
-      for (int i = 0; i < str.length(); ++i) {
-        char c = str.charAt(i);
-        if (c == '\\' || c == '"') {
-          buffer = (buffer == null) ? ((new byte[6])) : buffer;
-          if (startIndex != i) {
-            DataUtilities.WriteUtf8(
-              str,
-              startIndex,
-              i - startIndex,
-              outputStream,
-              true);
-          }
-          startIndex = i + 1;
-          buffer[0] = (byte)'\\';
-          buffer[1] = (byte)c;
-          outputStream.write(buffer, 0, 2);
-        } else if (c < 0x20 || c == 0x2028 || c == 0x2029 || c == 0x85) {
-          // Control characters, and also the line and paragraph separators
-          // which apparently can't appear in JavaScript (as opposed to
-          // JSON) strings
-          buffer = (buffer == null) ? ((new byte[6])) : buffer;
-          if (startIndex != i) {
-            DataUtilities.WriteUtf8(
-              str,
-              startIndex,
-              i - startIndex,
-              outputStream,
-              true);
-          }
-          int bufferSize = 0;
-          startIndex = i + 1;
-          if (c == 0x0d) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'r';
-            bufferSize = 2;
-          } else if (c == 0x0a) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'n';
-            bufferSize = 2;
-          } else if (c == 0x08) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'b';
-            bufferSize = 2;
-          } else if (c == 0x0c) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'f';
-            bufferSize = 2;
-          } else if (c == 0x09) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'t';
-            bufferSize = 2;
-          } else if (c == 0x85) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'u';
-            buffer[2] = (byte)'0';
-            buffer[3] = (byte)'0';
-            buffer[4] = (byte)'8';
-            buffer[5] = (byte)'5';
-            bufferSize = 6;
-          } else if (c == 0x2028 || c == 0x2029) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'u';
-            buffer[2] = (byte)'2';
-            buffer[3] = (byte)'0';
-            buffer[4] = (byte)'2';
-            buffer[5] = (byte)(c == 0x2028 ? '8' : '9');
-            bufferSize = 6;
-          } else {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'u';
-            buffer[2] = (byte)'0';
-            buffer[3] = (byte)'0';
-            buffer[4] = (byte)Hex16.charAt((int)(c >> 4));
-            buffer[5] = (byte)Hex16.charAt((int)(c & 15));
-            bufferSize = 6;
-          }
-          outputStream.write(buffer, 0, bufferSize);
-        }
-      }
-      if (startIndex == 0) {
-        DataUtilities.WriteUtf8(str, outputStream, true);
-      } else {
-        DataUtilities.WriteUtf8(
-          str,
-          startIndex,
-          str.length() - startIndex,
-          outputStream,
-          true);
-      }
-    }
-
-    private static void StringToJSONStringUnquoted(
-      String str,
-      StringBuilder sb) {
-      // Surrogates were already verified when this
-      // String was added to the CBOR Object; that check
-      // is not repeated here
-      boolean first = true;
-      for (int i = 0; i < str.length(); ++i) {
-        char c = str.charAt(i);
-        if (c == '\\' || c == '"') {
-          if (first) {
-            first = false;
-            sb.append(str, 0, (0) + (i));
-          }
-          sb.append('\\');
-          sb.append(c);
-        } else if (c < 0x20 || c == 0x2028 || c == 0x2029 || c == 0x85) {
-          // Control characters, and also the line and paragraph separators
-          // which apparently can't appear in JavaScript (as opposed to
-          // JSON) strings
-          if (first) {
-            first = false;
-            sb.append(str, 0, (0) + (i));
-          }
-          if (c == 0x0d) {
-            sb.append("\\r");
-          } else if (c == 0x0a) {
-            sb.append("\\n");
-          } else if (c == 0x08) {
-            sb.append("\\b");
-          } else if (c == 0x0c) {
-            sb.append("\\f");
-          } else if (c == 0x09) {
-            sb.append("\\t");
-          } else if (c == 0x85) {
-            sb.append("\\u0085");
-          } else if (c == 0x2029 || c == 0x2028) {
-            sb.append("\\u202");
-            sb.append(c == 0x2028 ? '8' : '9');
-          } else {
-            sb.append("\\u00");
-            sb.append(Hex16.charAt((int)(c >> 4)));
-            sb.append(Hex16.charAt((int)(c & 15)));
-          }
-        } else if (!first) {
-          sb.append(c);
-        }
-      }
-      if (first) {
-        sb.append(str);
-      }
-    }
-
     private static byte[] valueTrueBytes = {  0x74, 0x72, 0x75, 0x65  };
     private static byte[] valueFalseBytes = {  0x66, 0x61, 0x6c, 0x73, 0x65  };
     private static byte[] valueNullBytes = {  0x6e, 0x75, 0x6c, 0x6c  };
-    private static byte[] valueEmptyStringBytes = {  0x22, 0x22  };
 
     /**
      * Converts an arbitrary object to a string in JavaScript Object Notation
@@ -3731,259 +3240,13 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      * data stream in UTF-8.
      * @param outputStream A writable data stream.
      * @throws java.io.IOException An I/O error occurred.
+     * @throws NullPointerException The parameter {@code outputStream} is null.
      */
     public void WriteJSONTo(OutputStream outputStream) throws IOException {
-      int type = this.getItemType();
-      switch (type) {
-          case CBORObjectTypeSimpleValue: {
-            if (this.isTrue()) {
-              outputStream.write(valueTrueBytes, 0, valueTrueBytes.length);
-              return;
-            }
-            if (this.isFalse()) {
-              outputStream.write(valueFalseBytes, 0, valueFalseBytes.length);
-              return;
-            }
-            if (this.isNull()) {
-              outputStream.write(valueNullBytes, 0, valueNullBytes.length);
-              return;
-            }
-            outputStream.write(valueNullBytes, 0, valueNullBytes.length);
-            return;
-          }
-          case CBORObjectTypeSingle: {
-            float f = ((Float)this.getThisItem()).floatValue();
-            if (((f) == Float.NEGATIVE_INFINITY) ||
-                ((f) == Float.POSITIVE_INFINITY) ||
-                Float.isNaN(f)) {
-              outputStream.write(valueNullBytes, 0, valueNullBytes.length);
-              return;
-            }
-            DataUtilities.WriteUtf8(
-              TrimDotZero(
-                Float.toString((float)f)),
-              outputStream,
-              true);
-            return;
-          }
-          case CBORObjectTypeDouble: {
-            double f = ((Double)this.getThisItem()).doubleValue();
-            if (((f) == Double.NEGATIVE_INFINITY) ||
-                ((f) == Double.POSITIVE_INFINITY) ||
-                Double.isNaN(f)) {
-              outputStream.write(valueNullBytes, 0, valueNullBytes.length);
-              return;
-            }
-            DataUtilities.WriteUtf8(
-              TrimDotZero(
-                Double.toString((double)f)),
-              outputStream,
-              true);
-            return;
-          }
-          case CBORObjectTypeInteger: {
-            DataUtilities.WriteUtf8(
-           Long.toString((((Long)this.getThisItem()).longValue())),
-           outputStream,
-           true);
-            return;
-          }
-          case CBORObjectTypeBigInteger: {
-            DataUtilities.WriteUtf8(
-              CBORUtilities.BigIntToString((BigInteger)this.getThisItem()),
-              outputStream,
-              true);
-            return;
-          }
-          case CBORObjectTypeExtendedRational: {
-            ExtendedRational dec = (ExtendedRational)this.getThisItem();
-            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
-              PrecisionContext.Decimal128.WithUnlimitedExponents());
-            if (!f.isFinite()) {
-              outputStream.write(valueNullBytes, 0, valueNullBytes.length);
-              return;
-            }
-            DataUtilities.WriteUtf8(f.toString(), outputStream, true);
-            return;
-          }
-          case CBORObjectTypeExtendedDecimal: {
-            ExtendedDecimal dec = (ExtendedDecimal)this.getThisItem();
-            if (dec.IsInfinity() || dec.IsNaN()) {
-              outputStream.write(valueNullBytes, 0, valueNullBytes.length);
-              return;
-            }
-            DataUtilities.WriteUtf8(dec.toString(), outputStream, true);
-            return;
-          }
-          case CBORObjectTypeExtendedFloat: {
-            ExtendedFloat flo = (ExtendedFloat)this.getThisItem();
-            if (flo.IsInfinity() || flo.IsNaN()) {
-              outputStream.write(valueNullBytes, 0, valueNullBytes.length);
-              return;
-            }
-            if (flo.isFinite() &&
-                (flo.getExponent()).abs().compareTo(BigInteger.valueOf(2500)) > 0) {
-              // Too inefficient to convert to a decimal number
-              // from a bigfloat with a very high exponent,
-              // so convert to double instead
-              double f = flo.ToDouble();
-              if (((f) == Double.NEGATIVE_INFINITY) ||
-                  ((f) == Double.POSITIVE_INFINITY) ||
-                  Double.isNaN(f)) {
-                outputStream.write(valueNullBytes, 0, valueNullBytes.length);
-                return;
-              }
-              DataUtilities.WriteUtf8(
-                TrimDotZero(
-                  Double.toString((double)f)),
-                outputStream,
-                true);
-              return;
-            }
-            DataUtilities.WriteUtf8(flo.toString(), outputStream, true);
-            return;
-          }
-          default: {
-            this.WriteJSONToInternal(outputStream);
-            return;
-          }
-      }
-    }
-
-    private void WriteJSONToInternal(OutputStream outputStream) throws IOException {
-      int type = this.getItemType();
-      switch (type) {
-          case CBORObjectTypeByteString: {
-            byte[] byteArray = (byte[])this.getThisItem();
-            if (byteArray.length == 0) {
-              outputStream.write(
-                valueEmptyStringBytes, 0, valueEmptyStringBytes.length);
-              return;
-            } else {
-              outputStream.write((byte)'\"');
-              StringBuilder sb = new StringBuilder();
-              if (this.HasTag(22)) {
-                Base64.WriteBase64(
-                  outputStream,
-                  byteArray,
-                  0,
-                  byteArray.length,
-                  false);
-              } else if (this.HasTag(23)) {
-                CBORUtilities.WriteBase16(outputStream, byteArray);
-              } else {
-                Base64.WriteBase64URL(
-                  outputStream,
-                  byteArray,
-                  0,
-                  byteArray.length,
-                  false);
-              }
-              DataUtilities.WriteUtf8(sb.toString(), outputStream, true);
-              outputStream.write((byte)'\"');
-            }
-            break;
-          }
-          case CBORObjectTypeTextString: {
-            String thisString = (String)this.getThisItem();
-            if (thisString.length() == 0) {
-              outputStream.write(
-                valueEmptyStringBytes, 0, valueEmptyStringBytes.length);
-              return;
-            }
-            outputStream.write((byte)'\"');
-            WriteJSONStringUnquoted(thisString, outputStream);
-            outputStream.write((byte)'\"');
-            break;
-          }
-          case CBORObjectTypeArray: {
-            boolean first = true;
-            outputStream.write((byte)'[');
-            for (CBORObject i : this.AsList()) {
-              if (!first) {
-                outputStream.write((byte)',');
-              }
-              i.WriteJSONTo(outputStream);
-              first = false;
-            }
-            outputStream.write((byte)']');
-            break;
-          }
-          case CBORObjectTypeExtendedRational: {
-            ExtendedRational dec = (ExtendedRational)this.getThisItem();
-            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
-              PrecisionContext.Decimal128.WithUnlimitedExponents());
-            if (!f.isFinite()) {
-              outputStream.write(valueNullBytes, 0, valueNullBytes.length);
-            } else {
-              DataUtilities.WriteUtf8(f.toString(), outputStream, true);
-            }
-            break;
-          }
-          case CBORObjectTypeMap: {
-            boolean first = true;
-            boolean hasNonStringKeys = false;
-            Map<CBORObject, CBORObject> objMap = this.AsMap();
-            for (Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
-              CBORObject key = entry.getKey();
-              if (key.getItemType() != CBORObjectTypeTextString) {
-                hasNonStringKeys = true;
-                break;
-              }
-            }
-            if (!hasNonStringKeys) {
-              outputStream.write((byte)'{');
-              for (Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
-                CBORObject key = entry.getKey();
-                CBORObject value = entry.getValue();
-                if (!first) {
-                  outputStream.write((byte)',');
-                }
-                outputStream.write((byte)'\"');
-                WriteJSONStringUnquoted((String)key.getThisItem(), outputStream);
-                outputStream.write((byte)'\"');
-                outputStream.write((byte)':');
-                value.WriteJSONTo(outputStream);
-                first = false;
-              }
-              outputStream.write((byte)'}');
-            } else {
-              // This map has non-String keys
-              Map<String, CBORObject> stringMap = new
-                HashMap<String, CBORObject>();
-              // Copy to a map with String keys, since
-              // some keys could be duplicates
-              // when serialized to strings
-              for (Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
-                CBORObject key = entry.getKey();
-                CBORObject value = entry.getValue();
-                String str = (key.getItemType() == CBORObjectTypeTextString) ?
-                  ((String)key.getThisItem()) : key.ToJSONString();
-                stringMap.put(str, value);
-              }
-              first = true;
-              outputStream.write((byte)'{');
-              for (Map.Entry<String, CBORObject> entry : stringMap.entrySet()) {
-                String key = entry.getKey();
-                CBORObject value = entry.getValue();
-                if (!first) {
-                  outputStream.write((byte)',');
-                }
-                outputStream.write((byte)'\"');
-                WriteJSONStringUnquoted((String)key, outputStream);
-                outputStream.write((byte)'\"');
-                outputStream.write((byte)':');
-                value.WriteJSONTo(outputStream);
-                first = false;
-              }
-              outputStream.write((byte)'}');
-            }
-            break;
-          }
-        default:
-          this.WriteJSONTo(outputStream);
-          break;
-      }
+      if (outputStream == null) {
+  throw new NullPointerException("outputStream");
+}
+      CBORJson.WriteJSONToInternal(this, new Utf8Writer(outputStream));
     }
 
     /**
@@ -4015,186 +3278,27 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           case CBORObjectTypeSimpleValue: {
             return this.isTrue() ? "true" : (this.isFalse() ? "false" : "null");
           }
-          case CBORObjectTypeSingle: {
-            float f = ((Float)this.getThisItem()).floatValue();
-            if (((f) == Float.NEGATIVE_INFINITY) ||
-                ((f) == Float.POSITIVE_INFINITY) ||
-                Float.isNaN(f)) {
-              return "null";
-            }
-            return TrimDotZero(
-              Float.toString((float)f));
-          }
-          case CBORObjectTypeDouble: {
-            double f = ((Double)this.getThisItem()).doubleValue();
-            if (((f) == Double.NEGATIVE_INFINITY) ||
-                ((f) == Double.POSITIVE_INFINITY) ||
-                Double.isNaN(f)) {
-              return "null";
-            }
-            return TrimDotZero(
-              Double.toString((double)f));
-          }
           case CBORObjectTypeInteger: {
             return Long.toString((((Long)this.getThisItem()).longValue()));
           }
-          case CBORObjectTypeBigInteger: {
-            return CBORUtilities.BigIntToString((BigInteger)this.getThisItem());
-          }
-          case CBORObjectTypeExtendedRational: {
-            ExtendedRational dec = (ExtendedRational)this.getThisItem();
-            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
-              PrecisionContext.Decimal128.WithUnlimitedExponents());
-            return (!f.isFinite()) ? "null" : f.toString();
-          }
-          case CBORObjectTypeExtendedDecimal: {
-            ExtendedDecimal dec = (ExtendedDecimal)this.getThisItem();
-            return (dec.IsInfinity() || dec.IsNaN()) ? "null" : dec.toString();
-          }
-          case CBORObjectTypeExtendedFloat: {
-            ExtendedFloat flo = (ExtendedFloat)this.getThisItem();
-            if (flo.IsInfinity() || flo.IsNaN()) {
-              return "null";
-            }
-            if (flo.isFinite() &&
-                (flo.getExponent()).abs().compareTo(BigInteger.valueOf(2500)) > 0) {
-              // Too inefficient to convert to a decimal number
-              // from a bigfloat with a very high exponent,
-              // so convert to double instead
-              double f = flo.ToDouble();
-              if (((f) == Double.NEGATIVE_INFINITY) ||
-                  ((f) == Double.POSITIVE_INFINITY) ||
-                  Double.isNaN(f)) {
-                return "null";
-              }
-              return TrimDotZero(
-                Double.toString((double)f));
-            }
-            return flo.toString();
-          }
           default: {
             StringBuilder sb = new StringBuilder();
-            this.ToJSONStringInternal(sb);
+            CBORJson.WriteJSONToInternal(this, new Utf8Writer(sb));
             return sb.toString();
           }
       }
     }
 
-    private void ToJSONStringInternal(StringBuilder sb) {
-      int type = this.getItemType();
-      switch (type) {
-          case CBORObjectTypeByteString: {
-            sb.append('\"');
-            if (this.HasTag(22)) {
-              Base64.ToBase64(sb, (byte[])this.getThisItem(), false);
-            } else if (this.HasTag(23)) {
-              CBORUtilities.ToBase16(sb, (byte[])this.getThisItem());
-            } else {
-              Base64.ToBase64URL(sb, (byte[])this.getThisItem(), false);
-            }
-            sb.append('\"');
-            break;
-          }
-          case CBORObjectTypeTextString: {
-            sb.append('\"');
-            StringToJSONStringUnquoted((String)this.getThisItem(), sb);
-            sb.append('\"');
-            break;
-          }
-          case CBORObjectTypeArray: {
-            boolean first = true;
-            sb.append('[');
-            for (CBORObject i : this.AsList()) {
-              if (!first) {
-                sb.append(',');
-              }
-              i.ToJSONStringInternal(sb);
-              first = false;
-            }
-            sb.append(']');
-            break;
-          }
-          case CBORObjectTypeExtendedRational: {
-            ExtendedRational dec = (ExtendedRational)this.getThisItem();
-            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
-              PrecisionContext.Decimal128.WithUnlimitedExponents());
-            if (!f.isFinite()) {
-              sb.append("null");
-            } else {
-              sb.append(f.toString());
-            }
-            break;
-          }
-          case CBORObjectTypeMap: {
-            boolean first = true;
-            boolean hasNonStringKeys = false;
-            Map<CBORObject, CBORObject> objMap = this.AsMap();
-            sb.append('{');
-            int oldLength = sb.length();
-            for (Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
-              CBORObject key = entry.getKey();
-              CBORObject value = entry.getValue();
-              if (key.getItemType() != CBORObjectTypeTextString) {
-                hasNonStringKeys = true;
-                break;
-              }
-              if (!first) {
-                sb.append(',');
-              }
-              sb.append('\"');
-              StringToJSONStringUnquoted((String)key.getThisItem(), sb);
-              sb.append('\"');
-              sb.append(':');
-              value.ToJSONStringInternal(sb);
-              first = false;
-            }
-            if (hasNonStringKeys) {
-              sb.delete(oldLength, (oldLength) + (sb.length() - oldLength));
-              Map<String, CBORObject> stringMap = new
-                HashMap<String, CBORObject>();
-              // Copy to a map with String keys, since
-              // some keys could be duplicates
-              // when serialized to strings
-              for (Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
-                CBORObject key = entry.getKey();
-                CBORObject value = entry.getValue();
-                String str = (key.getItemType() == CBORObjectTypeTextString) ?
-                  ((String)key.getThisItem()) : key.ToJSONString();
-                stringMap.put(str, value);
-              }
-              first = true;
-              for (Map.Entry<String, CBORObject> entry : stringMap.entrySet()) {
-                String key = entry.getKey();
-                CBORObject value = entry.getValue();
-                if (!first) {
-                  sb.append(',');
-                }
-                sb.append('\"');
-                StringToJSONStringUnquoted(key, sb);
-                sb.append('\"');
-                sb.append(':');
-                value.ToJSONStringInternal(sb);
-                first = false;
-              }
-            }
-            sb.append('}');
-            break;
-          }
-        default:
-          sb.append(this.ToJSONString());
-          break;
-      }
-    }
-
-    private static CBORObject FromRaw(String str) {
+    static CBORObject FromRaw(String str) {
       return new CBORObject(CBORObjectTypeTextString, str);
     }
 
-    private static CBORObject FromRaw(List<CBORObject> list) {
+    static CBORObject FromRaw(List<CBORObject> list) {
       return new CBORObject(CBORObjectTypeArray, list);
     }
 
-    private static CBORObject FromRaw(Map<CBORObject, CBORObject> map) {
+  static CBORObject FromRaw(Map<CBORObject, CBORObject>
+      map) {
       return new CBORObject(CBORObjectTypeMap, map);
     }
 
@@ -4329,10 +3433,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         return CBORObject.Null;
       }
       return (bigintValue.compareTo(Int64MinValue) >= 0 &&
-              bigintValue.compareTo(Int64MaxValue) <= 0) ? (new
-                                                    CBORObject(
-                                                      CBORObjectTypeInteger,
-  bigintValue.longValue())) :
+              bigintValue.compareTo(Int64MaxValue) <= 0) ?
+        (new
+         CBORObject(
+           CBORObjectTypeInteger,
+           bigintValue.longValue())) :
         (new
          CBORObject(
            CBORObjectTypeBigInteger,
@@ -4354,8 +3459,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
       BigInteger bigintExponent = bigValue.getExponent();
       return (bigintExponent.signum() == 0 && !(bigValue.signum() == 0 &&
-                        bigValue.isNegative())) ?
-                                           FromObject(bigValue.getMantissa()) :
+                                         bigValue.isNegative())) ?
+        FromObject(bigValue.getMantissa()) :
         (new
          CBORObject(
            CBORObjectTypeExtendedFloat,
@@ -4370,10 +3475,11 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
     public static CBORObject FromObject(ExtendedRational bigValue) {
       return ((Object)bigValue == (Object)null) ? CBORObject.Null :
         ((bigValue.isFinite() && bigValue.getDenominator().equals(BigInteger.ONE)) ?
-         FromObject(bigValue.getNumerator()) : (new
-                                           CBORObject(
-                                             CBORObjectTypeExtendedRational,
-                                             bigValue)));
+         FromObject(bigValue.getNumerator()) :
+         (new
+          CBORObject(
+            CBORObjectTypeExtendedRational,
+            bigValue)));
     }
 
     /**
@@ -4390,8 +3496,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
       BigInteger bigintExponent = otherValue.getExponent();
       return (bigintExponent.signum() == 0 && !(otherValue.signum() == 0 &&
-                    otherValue.isNegative())) ?
-                                           FromObject(otherValue.getMantissa()) :
+                                         otherValue.isNegative())) ?
+        FromObject(otherValue.getMantissa()) :
         (new
          CBORObject(
            CBORObjectTypeExtendedDecimal,
@@ -4895,9 +4001,9 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       }
     }
 
-    private static String TrimDotZero(String str) {
-      return (str.length() > 2 && str.charAt(str.length() - 1) == '0' && str.charAt(str.length() -
-                              2) == '.') ?
+    static String TrimDotZero(String str) {
+      return (str.length() > 2 && str.charAt(str.length() - 1) == '0' && str.charAt(str.length()
+                                                                  - 2) == '.') ?
         str.substring(0, str.length() - 2) :
         str;
     }
@@ -4970,8 +4076,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         }
       } else if (type == CBORObjectTypeSingle) {
         float f = ((Float)this.getThisItem()).floatValue();
-        simvalue = ((f) == Float.NEGATIVE_INFINITY) ? "-Infinity" :
-          (((f) == Float.POSITIVE_INFINITY) ? "Infinity" : (Float.isNaN(f) ?
+        simvalue = ((f)==Float.NEGATIVE_INFINITY) ? "-Infinity" :
+          (((f)==Float.POSITIVE_INFINITY) ? "Infinity" : (Float.isNaN(f) ?
                                                         "NaN" :
                                                         TrimDotZero(
                                                           Float.toString((float)f))));
@@ -4981,8 +4087,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         sb.append(simvalue);
       } else if (type == CBORObjectTypeDouble) {
         double f = ((Double)this.getThisItem()).doubleValue();
-        simvalue = ((f) == Double.NEGATIVE_INFINITY) ? "-Infinity" :
-          (((f) == Double.POSITIVE_INFINITY) ? "Infinity" : (Double.isNaN(f) ?
+        simvalue = ((f)==Double.NEGATIVE_INFINITY) ? "-Infinity" :
+          (((f)==Double.POSITIVE_INFINITY) ? "Infinity" : (Double.isNaN(f) ?
                                                         "NaN" :
                                                         TrimDotZero(
                                                           Double.toString((double)f))));
