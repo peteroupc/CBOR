@@ -9,15 +9,15 @@ at: http://upokecenter.com/d/
 
 import java.io.*;
 
-  final class CharacterReader {
+  interface ICharacterReader {
+    int NextChar();
+  }
+
+  final class CharacterReader implements ICharacterReader {
 
     private String str;
     private InputStream stream;
     private int offset;
-
-    private interface ICharacterReader {
-      int NextChar();
-    }
 
     private static final class Utf16Reader implements ICharacterReader {
       private final boolean bigEndian;
@@ -71,12 +71,12 @@ import java.io.*;
             if ((c1 & 0xfc00) == 0xdc00) {
               ++this.offset;
               return 0x10000 + ((surr - 0xd800) << 10) + (c1 - 0xdc00);
-            } else {
-              throw CharacterReader.NewError(
-                "Unpaired surrogate code point",
-                this.offset);
             }
-          } else if (surr == 0xdc00) {
+            throw CharacterReader.NewError(
+              "Unpaired surrogate code point",
+              this.offset);
+          }
+          if (surr == 0xdc00) {
             throw CharacterReader.NewError(
               "Unpaired surrogate code point",
               this.offset);
@@ -126,10 +126,9 @@ import java.io.*;
           int surr = c1 & 0xfffc00;
           if (c1 < 0 || c1 >= 0x110000 || (c1 & 0xfff800) == 0xd800) {
             throw CharacterReader.NewError("Invalid UTF-32", this.offset);
-          } else {
-            ++this.offset;
-            return c1;
           }
+          ++this.offset;
+          return c1;
         } catch (IOException ex) {
           throw new CBORException(
             "I/O error occurred (offset " + this.offset + ")",
@@ -249,7 +248,8 @@ import java.io.*;
         int c1 = this.stream.read();
         if (c1 < 0) {
           return -1;
-        } else if (c1 == 0xff) {
+        }
+        if (c1 == 0xff) {
           if (this.stream.read() == 0xfe) {
             // Little endian UTF-16 or UTF-32
             int c3 = this.stream.read();
@@ -263,9 +263,8 @@ import java.io.*;
               newReader.Unget(c3, c4);
               return newReader.NextChar();
             }
-          } else {
-            throw NewError("Invalid Unicode stream", 0);
           }
+          throw NewError("Invalid Unicode stream", 0);
         } else if (c1 == 0xfe) {
           if (this.stream.read() == 0xff) {
             // Big endian UTF-16 or UTF-32
@@ -280,16 +279,16 @@ import java.io.*;
               newReader.Unget(c3, c4);
               return newReader.NextChar();
             }
-          } else {
-            throw NewError("Invalid Unicode stream", 0);
           }
+          throw NewError("Invalid Unicode stream", 0);
         } else if (c1 == 0) {
           int c2 = this.stream.read();
           if (c2 < 0) {
             // 0 EOF
             this.reader = new Utf8Reader(this.stream);
             return 0;
-          } else if (c2 == 0) {
+          }
+          if (c2 == 0) {
             // 0 0
             int c3 = this.stream.read();
             int c4 = this.stream.read();
@@ -297,7 +296,8 @@ import java.io.*;
               // 0 0 FE FF
               this.reader = new Utf32Reader(this.stream, true);
               return this.reader.NextChar();
-            } else if (c3 == 0 && c4 >= 0 && (c4 & 0x80) == 0) {
+            }
+            if (c3 == 0 && c4 >= 0 && (c4 & 0x80) == 0) {
               // 0 0 0 ASCII
               this.reader = new Utf32Reader(this.stream, true);
               return c4;
@@ -307,7 +307,8 @@ import java.io.*;
               newReader.Unget(c3, c4);
               return newReader.NextChar();
             }
-          } if ((c2 & 0x80) == 0) {
+          }
+          if ((c2 & 0x80) == 0) {
             // UTF-16BE
             this.reader = new Utf16Reader(this.stream, true);
             return c2;
@@ -322,7 +323,8 @@ import java.io.*;
           if (c2 < 0) {
             this.reader = new Utf8Reader(this.stream);
             return c1;
-          } else if (c2 == 0) {
+          }
+          if (c2 == 0) {
             int c3 = this.stream.read();
             int c4 = this.stream.read();
             if (c3 == 0 && c4 == 0) {
@@ -375,16 +377,17 @@ import java.io.*;
     public int NextChar() {
       if (this.reader != null) {
         return this.reader.NextChar();
-      } else if (this.stream != null) {
+      }
+      if (this.stream != null) {
         return this.DetectUnicodeEncoding();
       } else {
         int c = (this.offset < this.str.length()) ? this.str.charAt(this.offset) : -1;
         if ((c & 0xfc00) == 0xd800 && this.offset + 1 < this.str.length() &&
-            this.str.charAt(this.offset + 1) >= 0xdc00 && this.str.charAt(this.offset + 1) <=
-            0xdfff) {
+                this.str.charAt(this.offset + 1) >= 0xdc00 && this.str.charAt(this.offset + 1) <=
+                0xdfff) {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (this.str.charAt(this.offset + 1) -
-                                                0xdc00);
+          0xdc00);
           ++this.offset;
         } else if ((c & 0xf800) == 0xd800) {
           // unpaired surrogate

@@ -7,8 +7,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.com/d/
  */
 
-import java.io.*;
-
   final class Base64 {
 private Base64() {
 }
@@ -54,21 +52,21 @@ private Base64() {
     }
 
     public static void WriteBase64(
-      OutputStream outputStream,
+      Utf8Writer writer,
       byte[] data,
       int offset,
       int count,
-      boolean padding) throws IOException {
-      WriteBase64(outputStream, data, offset, count, Base64Classic, padding);
+      boolean padding) {
+      WriteBase64(writer, data, offset, count, Base64Classic, padding);
     }
 
     public static void WriteBase64URL(
-      OutputStream outputStream,
+      Utf8Writer writer,
       byte[] data,
       int offset,
       int count,
-      boolean padding) throws IOException {
-      WriteBase64(outputStream, data, offset, count, Base64URL, padding);
+      boolean padding) {
+      WriteBase64(writer, data, offset, count, Base64URL, padding);
     }
 
     public static String ToBase64String(byte[] data, boolean padding) {
@@ -127,8 +125,8 @@ private Base64() {
           "offset (" + offset + ") is more than " + data.length);
       }
       if (count < 0) {
-     throw new IllegalArgumentException("count (" + count + ") is less than " +
-          "0 ");
+        throw new IllegalArgumentException("count (" + count + ") is less than " +
+                                    "0 ");
       }
       if (count > data.length) {
         throw new IllegalArgumentException(
@@ -136,7 +134,7 @@ private Base64() {
       }
       if (data.length - offset < count) {
         throw new IllegalArgumentException("data's length minus " + offset + " (" +
-          (data.length - offset) +
+                                    (data.length - offset) +
                                     ") is less than " + count);
       }
       int length = offset + count;
@@ -169,73 +167,75 @@ private Base64() {
     }
 
     private static void WriteBase64(
-      OutputStream outputStream,
+      Utf8Writer writer,
       byte[] data,
       int offset,
       int count,
       String alphabet,
-      boolean padding) throws IOException {
-      if (outputStream == null) {
-        throw new NullPointerException("outputStream");
+      boolean padding) {
+      if (writer == null) {
+        throw new NullPointerException("writer");
       }
       if (offset < 0) {
-   throw new IllegalArgumentException("offset (" + offset + ") is less than " +
-          "0 ");
+        throw new IllegalArgumentException("offset (" + offset + ") is less than " +
+                                    "0 ");
       }
       if (offset > data.length) {
         throw new IllegalArgumentException("offset (" + offset + ") is more than " +
-          data.length);
+                                    data.length);
       }
       if (count < 0) {
-     throw new IllegalArgumentException("count (" + count + ") is less than " +
-          "0 ");
+        throw new IllegalArgumentException("count (" + count + ") is less than " +
+                                    "0 ");
       }
       if (count > data.length) {
         throw new IllegalArgumentException("count (" + count + ") is more than " +
-          data.length);
+                                    data.length);
       }
       if (data.length - offset < count) {
         throw new IllegalArgumentException("data's length minus " + offset + " (" +
-          (data.length - offset) +
+                                    (data.length - offset) +
                                     ") is less than " + count);
       }
       int length = offset + count;
       int i = offset;
-      byte[] buffer = new byte[4];
+      char[] buffer = new char[4];
       for (i = offset; i < (length - 2); i += 3) {
-        buffer[0] = (byte)alphabet.charAt((data[i] >> 2) & 63);
-        buffer[1] = (byte)alphabet.charAt(((data[i] & 3) << 4) +
+        buffer[0] = (char)alphabet.charAt((data[i] >> 2) & 63);
+        buffer[1] = (char)alphabet.charAt(((data[i] & 3) << 4) +
                                    ((data[i + 1] >> 4) &
                                     15));
-        buffer[2] = (byte)alphabet.charAt(((data[i + 1] & 15) << 2) + ((data[i +
+        buffer[2] = (char)alphabet.charAt(((data[i + 1] & 15) << 2) + ((data[i +
                                                                       2] >> 6) &
                                                                 3));
-        buffer[3] = (byte)alphabet.charAt(data[i + 2] & 63);
-        outputStream.write(buffer, 0, 4);
+        buffer[3] = (char)alphabet.charAt(data[i + 2] & 63);
+        writer.WriteChar(buffer[0]);
+        writer.WriteChar(buffer[1]);
+        writer.WriteChar(buffer[2]);
+        writer.WriteChar(buffer[3]);
       }
       int lenmod3 = count % 3;
       if (lenmod3 != 0) {
         i = length - lenmod3;
-        buffer[0] = (byte)alphabet.charAt((data[i] >> 2) & 63);
+        buffer[0] = (char)alphabet.charAt((data[i] >> 2) & 63);
         if (lenmod3 == 2) {
-          buffer[1] = (byte)alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >>
+          buffer[1] = (char)alphabet.charAt(((data[i] & 3) << 4) + ((data[i + 1] >>
                                                               4) &
                                                              15));
-          buffer[2] = (byte)alphabet.charAt((data[i + 1] & 15) << 2);
+          buffer[2] = (char)alphabet.charAt((data[i + 1] & 15) << 2);
+          writer.WriteChar(buffer[0]);
+          writer.WriteChar(buffer[1]);
+          writer.WriteChar(buffer[2]);
           if (padding) {
-            buffer[3] = (byte)'=';
-            outputStream.write(buffer, 0, 4);
-          } else {
-            outputStream.write(buffer, 0, 3);
+            writer.WriteChar('=');
           }
         } else {
-          buffer[1] = (byte)alphabet.charAt((data[i] & 3) << 4);
+          buffer[1] = (char)alphabet.charAt((data[i] & 3) << 4);
+          writer.WriteChar(buffer[0]);
+          writer.WriteChar(buffer[1]);
           if (padding) {
-            buffer[2] = (byte)'=';
-            buffer[3] = (byte)'=';
-            outputStream.write(buffer, 0, 4);
-          } else {
-            outputStream.write(buffer, 0, 2);
+            writer.WriteChar('=');
+            writer.WriteChar('=');
           }
         }
       }

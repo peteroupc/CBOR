@@ -149,16 +149,16 @@ namespace PeterO.Cbor {
     private int tagLow;
     private int tagHigh;
     internal const int CBORObjectTypeInteger = 0;  // -(2^63).. (2^63-1)
-    private const int CBORObjectTypeBigInteger = 1;  // all other integers
+    internal const int CBORObjectTypeBigInteger = 1;  // all other integers
     internal const int CBORObjectTypeByteString = 2;
     internal const int CBORObjectTypeTextString = 3;
-    private const int CBORObjectTypeArray = 4;
-    private const int CBORObjectTypeMap = 5;
-    private const int CBORObjectTypeSimpleValue = 6;
+    internal const int CBORObjectTypeArray = 4;
+    internal const int CBORObjectTypeMap = 5;
+    internal const int CBORObjectTypeSimpleValue = 6;
     internal const int CBORObjectTypeSingle = 7;
     internal const int CBORObjectTypeDouble = 8;
     internal const int CBORObjectTypeExtendedDecimal = 9;
-    private const int CBORObjectTypeTagged = 10;
+    internal const int CBORObjectTypeTagged = 10;
     internal const int CBORObjectTypeExtendedFloat = 11;
     internal const int CBORObjectTypeExtendedRational = 12;
     internal static readonly BigInteger Int64MaxValue =
@@ -1361,16 +1361,16 @@ namespace PeterO.Cbor {
             }
             if (firstbyte == 0xfa) {
               float flt = BitConverter.ToSingle(
-                  BitConverter.GetBytes((int)unchecked((int)uadditional)),
-                  0);
+                BitConverter.GetBytes((int)unchecked((int)uadditional)),
+                0);
               return new CBORObject(
                 CBORObjectTypeSingle,
                 flt);
             }
             if (firstbyte == 0xfb) {
               double flt = BitConverter.ToDouble(
-                  BitConverter.GetBytes((long)uadditional),
-                  0);
+                BitConverter.GetBytes((long)uadditional),
+                0);
               return new CBORObject(
                 CBORObjectTypeDouble,
                 flt);
@@ -1653,11 +1653,11 @@ namespace PeterO.Cbor {
       }
     }
 
-    private IDictionary<CBORObject, CBORObject> AsMap() {
+    internal IDictionary<CBORObject, CBORObject> AsMap() {
       return (IDictionary<CBORObject, CBORObject>)this.ThisItem;
     }
 
-    private IList<CBORObject> AsList() {
+    internal IList<CBORObject> AsList() {
       return (IList<CBORObject>)this.ThisItem;
     }
 
@@ -3325,339 +3325,6 @@ namespace PeterO.Cbor {
       FromObject(objValue).WriteTo(stream);
     }
 
-    // JSON parsing methods
-    private static int SkipWhitespaceJSON(CharacterReader reader) {
-      while (true) {
-        int c = reader.NextChar();
-        if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-          return c;
-        }
-      }
-    }
-
-    private static string NextJSONString(CharacterReader reader, int quote) {
-      int c;
-      StringBuilder sb = null;
-      bool surrogate = false;
-      bool surrogateEscaped = false;
-      bool escaped = false;
-      while (true) {
-        c = reader.NextChar();
-        if (c == -1 || c < 0x20) {
-          throw reader.NewError("Unterminated string");
-        }
-        switch (c) {
-          case '\\':
-            c = reader.NextChar();
-            escaped = true;
-            switch (c) {
-              case '\\':
-                c = '\\';
-                break;
-              case '/':
-                // Now allowed to be escaped under RFC 7159
-                c = '/';
-                break;
-              case '\"':
-                c = '\"';
-                break;
-              case 'b':
-                c = '\b';
-                break;
-              case 'f':
-                c = '\f';
-                break;
-              case 'n':
-                c = '\n';
-                break;
-              case 'r':
-                c = '\r';
-                break;
-              case 't':
-                c = '\t';
-                break;
-                case 'u': { // Unicode escape
-                  c = 0;
-                  // Consists of 4 hex digits
-                  for (var i = 0; i < 4; ++i) {
-                    int ch = reader.NextChar();
-                    if (ch >= '0' && ch <= '9') {
-                      c <<= 4;
-                      c |= ch - '0';
-                    } else if (ch >= 'A' && ch <= 'F') {
-                      c <<= 4;
-                      c |= ch + 10 - 'A';
-                    } else if (ch >= 'a' && ch <= 'f') {
-                      c <<= 4;
-                      c |= ch + 10 - 'a';
-                    } else {
-                      throw
-                        reader.NewError(
-                          "Invalid Unicode escaped character");
-                    }
-                  }
-                  break;
-                }
-              default:
-                throw reader.NewError("Invalid escaped character");
-            }
-            break;
-          default:
-            escaped = false;
-            break;
-        }
-        if (surrogate) {
-          if ((c & 0x1ffc00) != 0xdc00) {
-            // Note: this includes the ending quote
-            // and supplementary characters
-            throw reader.NewError("Unpaired surrogate code point");
-          }
-          if (escaped != surrogateEscaped) {
-            throw
-  reader.NewError("Pairing escaped surrogate with unescaped surrogate");
-          }
-          surrogate = false;
-        } else if ((c & 0x1ffc00) == 0xd800) {
-          surrogate = true;
-          surrogateEscaped = escaped;
-        } else if ((c & 0x1ffc00) == 0xdc00) {
-          throw reader.NewError("Unpaired surrogate code point");
-        }
-        if (c == quote && !escaped) {
-          // End quote reached
-          return (sb == null) ? String.Empty : sb.ToString();
-        }
-        sb = sb ?? (new StringBuilder());
-        if (c <= 0xffff) {
-          sb.Append((char)c);
-        } else {
-          sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
-          sb.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
-        }
-      }
-    }
-
-    private static CBORObject NextJSONValue(
-      CharacterReader reader,
-      int firstChar,
-      bool noDuplicates,
-      int[] nextChar,
-      int depth) {
-      string str;
-      int c = firstChar;
-      CBORObject obj = null;
-      if (c < 0) {
-        throw reader.NewError("Unexpected end of data");
-      }
-      if (c == '"') {
-        // Parse a string
-        // The tokenizer already checked the string for invalid
-        // surrogate pairs, so just call the CBORObject
-        // constructor directly
-        obj = CBORObject.FromRaw(NextJSONString(reader, c));
-        nextChar[0] = SkipWhitespaceJSON(reader);
-        return obj;
-      }
-      if (c == '{') {
-        // Parse an object
-        obj = ParseJSONObject(reader, noDuplicates, depth + 1);
-        nextChar[0] = SkipWhitespaceJSON(reader);
-        return obj;
-      }
-      if (c == '[') {
-        // Parse an array
-        obj = ParseJSONArray(reader, noDuplicates, depth + 1);
-        nextChar[0] = SkipWhitespaceJSON(reader);
-        return obj;
-      }
-      if (c == 't') {
-        // Parse true
-        if (reader.NextChar() != 'r' ||
-            reader.NextChar() != 'u' ||
-            reader.NextChar() != 'e') {
-          throw reader.NewError("Value can't be parsed.");
-        }
-        nextChar[0] = SkipWhitespaceJSON(reader);
-        return CBORObject.True;
-      }
-      if (c == 'f') {
-        // Parse false
-        if (reader.NextChar() != 'a' ||
-            reader.NextChar() != 'l' ||
-            reader.NextChar() != 's' ||
-            reader.NextChar() != 'e') {
-          throw reader.NewError("Value can't be parsed.");
-        }
-        nextChar[0] = SkipWhitespaceJSON(reader);
-        return CBORObject.False;
-      }
-      if (c == 'n') {
-        // Parse null
-        if (reader.NextChar() != 'u' ||
-            reader.NextChar() != 'l' ||
-            reader.NextChar() != 'l') {
-          throw reader.NewError("Value can't be parsed.");
-        }
-        nextChar[0] = SkipWhitespaceJSON(reader);
-        return CBORObject.Null;
-      }
-      if (c == '-' || (c >= '0' && c <= '9')) {
-        // Parse a number
-        var sb = new StringBuilder();
-        while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
-               c == 'e' || c == 'E') {
-          sb.Append((char)c);
-          c = reader.NextChar();
-        }
-        str = sb.ToString();
-        obj = CBORDataUtilities.ParseJSONNumber(str);
-        if (obj == null) {
-          throw reader.NewError("JSON number can't be parsed. " + str);
-        }
-        if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
-          nextChar[0] = c;
-        } else {
-          nextChar[0] = SkipWhitespaceJSON(reader);
-        }
-        return obj;
-      }
-      throw reader.NewError("Value can't be parsed.");
-    }
-
-    private static CBORObject ParseJSONValue(
-      CharacterReader reader,
-      bool noDuplicates,
-      bool objectOrArrayOnly,
-      int depth) {
-      if (depth > 1000) {
-        throw reader.NewError("Too deeply nested");
-      }
-      int c;
-      c = SkipWhitespaceJSON(reader);
-      if (c == '[') {
-        return ParseJSONArray(reader, noDuplicates, depth);
-      }
-      if (c == '{') {
-        return ParseJSONObject(reader, noDuplicates, depth);
-      }
-      if (objectOrArrayOnly) {
-        throw reader.NewError("A JSON object must begin with '{' or '['");
-      }
-      var nextChar = new int[1];
-      return NextJSONValue(reader, c, noDuplicates, nextChar, depth);
-    }
-
-    private static CBORObject ParseJSONObject(
-      CharacterReader reader,
-      bool noDuplicates,
-      int depth) {
-      // Assumes that the last character read was '{'
-      if (depth > 1000) {
-        throw reader.NewError("Too deeply nested");
-      }
-      int c;
-      CBORObject key;
-      CBORObject obj;
-      var nextchar = new int[1];
-      bool seenComma = false;
-      var myHashMap = new Dictionary<CBORObject, CBORObject>();
-      while (true) {
-        c = SkipWhitespaceJSON(reader);
-        switch (c) {
-          case -1:
-            throw reader.NewError("A JSONObject must end with '}'");
-          case '}':
-            if (seenComma) {
-              // Situation like '{"0"=>1,}'
-              throw reader.NewError("Trailing comma");
-            }
-            return CBORObject.FromRaw(myHashMap);
-            default: {
-              // Read the next string
-              if (c < 0) {
-                throw reader.NewError("Unexpected end of data");
-              }
-              if (c != '"') {
-                throw reader.NewError("Expected a string as a key");
-              }
-              // Parse a string that represents the object's key
-              // The tokenizer already checked the string for invalid
-              // surrogate pairs, so just call the CBORObject
-              // constructor directly
-              obj = CBORObject.FromRaw(NextJSONString(reader, c));
-              key = obj;
-              if (noDuplicates && myHashMap.ContainsKey(obj)) {
-                throw reader.NewError("Key already exists: " + key);
-              }
-              break;
-            }
-        }
-        if (SkipWhitespaceJSON(reader) != ':') {
-          throw reader.NewError("Expected a ':' after a key");
-        }
-        // NOTE: Will overwrite existing value
-        myHashMap[key] = NextJSONValue(
-          reader,
-          SkipWhitespaceJSON(reader),
-          noDuplicates,
-          nextchar,
-          depth);
-        switch (nextchar[0]) {
-          case ',':
-            seenComma = true;
-            break;
-          case '}':
-            return CBORObject.FromRaw(myHashMap);
-          default:
-            throw reader.NewError("Expected a ',' or '}'");
-        }
-      }
-    }
-
-    private static CBORObject ParseJSONArray(
-      CharacterReader reader,
-      bool noDuplicates,
-      int depth) {
-      // Assumes that the last character read was '['
-      if (depth > 1000) {
-        throw reader.NewError("Too deeply nested");
-      }
-      var myArrayList = new List<CBORObject>();
-      bool seenComma = false;
-      var nextchar = new int[1];
-      while (true) {
-        int c = SkipWhitespaceJSON(reader);
-        if (c == ']') {
-          if (seenComma) {
-            // Situation like '[0,1,]'
-            throw reader.NewError("Trailing comma");
-          }
-          return CBORObject.FromRaw(myArrayList);
-        }
-        if (c == ',') {
-          // Situation like '[,0,1,2]' or '[0,,1]'
-          throw reader.NewError("Empty array element");
-        }
-        myArrayList.Add(
-          NextJSONValue(
-            reader,
-            c,
-            noDuplicates,
-            nextchar,
-            depth));
-        c = nextchar[0];
-        switch (c) {
-          case ',':
-            seenComma = true;
-            break;
-          case ']':
-            return CBORObject.FromRaw(myArrayList);
-          default:
-            throw reader.NewError("Expected a ',' or ']'");
-        }
-      }
-    }
-
     /// <summary>Generates a CBOR object from a string in JavaScript Object
     /// Notation
     /// (JSON) format. <para>If a JSON object has the same key, only the
@@ -3674,19 +3341,16 @@ namespace PeterO.Cbor {
     /// <exception cref='CBORException'>The string is not in JSON
     /// format.</exception>
     public static CBORObject FromJSONString(string str) {
-      /*
-       if ((str) == null) {
-  throw new ArgumentNullException("str");
-}
-       */
+      if (str == null) {
+        throw new ArgumentNullException("str");
+      }
       if (str.Length > 0 && str[0] == 0xfeff) {
-         throw new
-  CBORException("JSON object began with a byte order mark (U+FEFF) (offset 0)"
-);
+        throw new CBORException(
+          "JSON object began with a byte order mark (U+FEFF) (offset 0)");
       }
       var reader = new CharacterReader(str);
-      CBORObject obj = ParseJSONValue(reader, false, false, 0);
-      if (SkipWhitespaceJSON(reader) != -1) {
+      CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, 0);
+      if (CBORJson.SkipWhitespaceJSON(reader) != -1) {
         throw reader.NewError("End of string not reached");
       }
       return obj;
@@ -3696,10 +3360,12 @@ namespace PeterO.Cbor {
     /// Notation (JSON) format. The JSON stream may begin with a byte order
     /// mark (U
     /// + FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or
-    /// UTF-32 encoding. (In previous versions, only UTF-8 was allowed.)
-    /// <para>If a
-    /// JSON object has the same key, only the last given value will be used for
-    /// each duplicated key.</para>
+    /// UTF-32 encoding; the encoding is detected by assuming that the first
+    /// character read must be a byte order mark or an ASCII character. (In
+    /// previous
+    /// versions, only UTF-8 was allowed.) <para>If a JSON object has the
+    /// same key,
+    /// only the last given value will be used for each duplicated key.</para>
     /// </summary>
     /// <param name='stream'>A readable data stream.</param>
     /// <returns>A CBORObject object.</returns>
@@ -3713,8 +3379,8 @@ namespace PeterO.Cbor {
     public static CBORObject ReadJSON(Stream stream) {
       var reader = new CharacterReader(stream);
       try {
-        CBORObject obj = ParseJSONValue(reader, false, false, 0);
-        if (SkipWhitespaceJSON(reader) != -1) {
+        CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, 0);
+        if (CBORJson.SkipWhitespaceJSON(reader) != -1) {
           throw reader.NewError("End of data stream not reached");
         }
         return obj;
@@ -3727,164 +3393,9 @@ namespace PeterO.Cbor {
       }
     }
 
-    private const string Hex16 = "0123456789ABCDEF";
-
-    private static void WriteJSONStringUnquoted(
-      string str,
-      Stream outputStream) {
-      // Surrogates were already verified when this
-      // string was added to the CBOR object; that check
-      // is not repeated here
-      int startIndex = 0;
-      byte[] buffer = null;
-      for (var i = 0; i < str.Length; ++i) {
-        char c = str[i];
-        if (c == '\\' || c == '"') {
-          buffer = buffer ?? (new byte[6]);
-          if (startIndex != i) {
-            DataUtilities.WriteUtf8(
-              str,
-              startIndex,
-              i - startIndex,
-              outputStream,
-              true);
-          }
-          startIndex = i + 1;
-          buffer[0] = (byte)'\\';
-          buffer[1] = (byte)c;
-          outputStream.Write(buffer, 0, 2);
-        } else if (c < 0x20 || c == 0x2028 || c == 0x2029 || c == 0x85) {
-          // Control characters, and also the line and paragraph separators
-          // which apparently can't appear in JavaScript (as opposed to
-          // JSON) strings
-          buffer = buffer ?? (new byte[6]);
-          if (startIndex != i) {
-            DataUtilities.WriteUtf8(
-              str,
-              startIndex,
-              i - startIndex,
-              outputStream,
-              true);
-          }
-          int bufferSize = 0;
-          startIndex = i + 1;
-          if (c == 0x0d) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'r';
-            bufferSize = 2;
-          } else if (c == 0x0a) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'n';
-            bufferSize = 2;
-          } else if (c == 0x08) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'b';
-            bufferSize = 2;
-          } else if (c == 0x0c) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'f';
-            bufferSize = 2;
-          } else if (c == 0x09) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'t';
-            bufferSize = 2;
-          } else if (c == 0x85) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'u';
-            buffer[2] = (byte)'0';
-            buffer[3] = (byte)'0';
-            buffer[4] = (byte)'8';
-            buffer[5] = (byte)'5';
-            bufferSize = 6;
-          } else if (c == 0x2028 || c == 0x2029) {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'u';
-            buffer[2] = (byte)'2';
-            buffer[3] = (byte)'0';
-            buffer[4] = (byte)'2';
-            buffer[5] = (byte)(c == 0x2028 ? '8' : '9');
-            bufferSize = 6;
-          } else {
-            buffer[0] = (byte)'\\';
-            buffer[1] = (byte)'u';
-            buffer[2] = (byte)'0';
-            buffer[3] = (byte)'0';
-            buffer[4] = (byte)Hex16[(int)(c >> 4)];
-            buffer[5] = (byte)Hex16[(int)(c & 15)];
-            bufferSize = 6;
-          }
-          outputStream.Write(buffer, 0, bufferSize);
-        }
-      }
-      if (startIndex == 0) {
-        DataUtilities.WriteUtf8(str, outputStream, true);
-      } else {
-        DataUtilities.WriteUtf8(
-          str,
-          startIndex,
-          str.Length - startIndex,
-          outputStream,
-          true);
-      }
-    }
-
-    private static void StringToJSONStringUnquoted(
-      string str,
-      StringBuilder sb) {
-      // Surrogates were already verified when this
-      // string was added to the CBOR object; that check
-      // is not repeated here
-      bool first = true;
-      for (var i = 0; i < str.Length; ++i) {
-        char c = str[i];
-        if (c == '\\' || c == '"') {
-          if (first) {
-            first = false;
-            sb.Append(str, 0, i);
-          }
-          sb.Append('\\');
-          sb.Append(c);
-        } else if (c < 0x20 || c == 0x2028 || c == 0x2029 || c == 0x85) {
-          // Control characters, and also the line and paragraph separators
-          // which apparently can't appear in JavaScript (as opposed to
-          // JSON) strings
-          if (first) {
-            first = false;
-            sb.Append(str, 0, i);
-          }
-          if (c == 0x0d) {
-            sb.Append("\\r");
-          } else if (c == 0x0a) {
-            sb.Append("\\n");
-          } else if (c == 0x08) {
-            sb.Append("\\b");
-          } else if (c == 0x0c) {
-            sb.Append("\\f");
-          } else if (c == 0x09) {
-            sb.Append("\\t");
-          } else if (c == 0x85) {
-            sb.Append("\\u0085");
-          } else if (c == 0x2029 || c == 0x2028) {
-            sb.Append("\\u202");
-            sb.Append(c == 0x2028 ? '8' : '9');
-          } else {
-            sb.Append("\\u00");
-            sb.Append(Hex16[(int)(c >> 4)]);
-            sb.Append(Hex16[(int)(c & 15)]);
-          }
-        } else if (!first) {
-          sb.Append(c);
-        }
-      }
-      if (first) {
-        sb.Append(str);
-      }
-    }
-
     private static byte[] valueTrueBytes = { 0x74, 0x72, 0x75, 0x65 };
     private static byte[] valueFalseBytes = { 0x66, 0x61, 0x6c, 0x73, 0x65 };
     private static byte[] valueNullBytes = { 0x6e, 0x75, 0x6c, 0x6c };
-    private static byte[] valueEmptyStringBytes = { 0x22, 0x22 };
 
     /// <summary>Converts an arbitrary object to a string in JavaScript Object
     /// Notation (JSON) format, as in the ToJSONString method, and writes that
@@ -3914,268 +3425,13 @@ namespace PeterO.Cbor {
     /// <param name='outputStream'>A writable data stream.</param>
     /// <exception cref='System.IO.IOException' >An I/O error
     /// occurred.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='outputStream'/> is null.</exception>
     public void WriteJSONTo(Stream outputStream) {
-      int type = this.ItemType;
-      switch (type) {
-          case CBORObjectTypeSimpleValue: {
-            if (this.IsTrue) {
-              outputStream.Write(valueTrueBytes, 0, valueTrueBytes.Length);
-              return;
-            }
-            if (this.IsFalse) {
-              outputStream.Write(valueFalseBytes, 0, valueFalseBytes.Length);
-              return;
-            }
-            if (this.IsNull) {
-              outputStream.Write(valueNullBytes, 0, valueNullBytes.Length);
-              return;
-            }
-            outputStream.Write(valueNullBytes, 0, valueNullBytes.Length);
-            return;
-          }
-          case CBORObjectTypeSingle: {
-            var f = (float)this.ThisItem;
-            if (Single.IsNegativeInfinity(f) ||
-                Single.IsPositiveInfinity(f) ||
-                Single.IsNaN(f)) {
-              outputStream.Write(valueNullBytes, 0, valueNullBytes.Length);
-              return;
-            }
-            DataUtilities.WriteUtf8(
-              TrimDotZero(
-                Convert.ToString(
-                  (float)f,
-                  CultureInfo.InvariantCulture)),
-              outputStream,
-              true);
-            return;
-          }
-          case CBORObjectTypeDouble: {
-            var f = (double)this.ThisItem;
-            if (Double.IsNegativeInfinity(f) ||
-                Double.IsPositiveInfinity(f) ||
-                Double.IsNaN(f)) {
-              outputStream.Write(valueNullBytes, 0, valueNullBytes.Length);
-              return;
-            }
-            DataUtilities.WriteUtf8(
-              TrimDotZero(
-                Convert.ToString(
-                  (double)f,
-                  CultureInfo.InvariantCulture)),
-              outputStream,
-              true);
-            return;
-          }
-          case CBORObjectTypeInteger: {
-            DataUtilities.WriteUtf8(
-           Convert.ToString((long)this.ThisItem, CultureInfo.InvariantCulture),
-           outputStream,
-           true);
-            return;
-          }
-          case CBORObjectTypeBigInteger: {
-            DataUtilities.WriteUtf8(
-              CBORUtilities.BigIntToString((BigInteger)this.ThisItem),
-              outputStream,
-              true);
-            return;
-          }
-          case CBORObjectTypeExtendedRational: {
-            var dec = (ExtendedRational)this.ThisItem;
-            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
-              PrecisionContext.Decimal128.WithUnlimitedExponents());
-            if (!f.IsFinite) {
-              outputStream.Write(valueNullBytes, 0, valueNullBytes.Length);
-              return;
-            }
-            DataUtilities.WriteUtf8(f.ToString(), outputStream, true);
-            return;
-          }
-          case CBORObjectTypeExtendedDecimal: {
-            var dec = (ExtendedDecimal)this.ThisItem;
-            if (dec.IsInfinity() || dec.IsNaN()) {
-              outputStream.Write(valueNullBytes, 0, valueNullBytes.Length);
-              return;
-            }
-            DataUtilities.WriteUtf8(dec.ToString(), outputStream, true);
-            return;
-          }
-          case CBORObjectTypeExtendedFloat: {
-            var flo = (ExtendedFloat)this.ThisItem;
-            if (flo.IsInfinity() || flo.IsNaN()) {
-              outputStream.Write(valueNullBytes, 0, valueNullBytes.Length);
-              return;
-            }
-            if (flo.IsFinite &&
-                BigInteger.Abs(flo.Exponent).CompareTo((BigInteger)2500) > 0) {
-              // Too inefficient to convert to a decimal number
-              // from a bigfloat with a very high exponent,
-              // so convert to double instead
-              double f = flo.ToDouble();
-              if (Double.IsNegativeInfinity(f) ||
-                  Double.IsPositiveInfinity(f) ||
-                  Double.IsNaN(f)) {
-                outputStream.Write(valueNullBytes, 0, valueNullBytes.Length);
-                return;
-              }
-              DataUtilities.WriteUtf8(
-                TrimDotZero(
-                  Convert.ToString(
-                    (double)f,
-                    CultureInfo.InvariantCulture)),
-                outputStream,
-                true);
-              return;
-            }
-            DataUtilities.WriteUtf8(flo.ToString(), outputStream, true);
-            return;
-          }
-          default: {
-            this.WriteJSONToInternal(outputStream);
-            return;
-          }
-      }
-    }
-
-    private void WriteJSONToInternal(Stream outputStream) {
-      int type = this.ItemType;
-      switch (type) {
-          case CBORObjectTypeByteString: {
-            byte[] byteArray = (byte[])this.ThisItem;
-            if (byteArray.Length == 0) {
-              outputStream.Write(
-                valueEmptyStringBytes,
-                0,
-                valueEmptyStringBytes.Length);
-              return;
-            } else {
-              outputStream.WriteByte((byte)'\"');
-              var sb = new StringBuilder();
-              if (this.HasTag(22)) {
-                Base64.WriteBase64(
-                  outputStream,
-                  byteArray,
-                  0,
-                  byteArray.Length,
-                  false);
-              } else if (this.HasTag(23)) {
-                CBORUtilities.WriteBase16(outputStream, byteArray);
-              } else {
-                Base64.WriteBase64URL(
-                  outputStream,
-                  byteArray,
-                  0,
-                  byteArray.Length,
-                  false);
-              }
-              DataUtilities.WriteUtf8(sb.ToString(), outputStream, true);
-              outputStream.WriteByte((byte)'\"');
-            }
-            break;
-          }
-          case CBORObjectTypeTextString: {
-            var thisString = (string)this.ThisItem;
-            if (thisString.Length == 0) {
-              outputStream.Write(
-                valueEmptyStringBytes,
-                0,
-                valueEmptyStringBytes.Length);
-              return;
-            }
-            outputStream.WriteByte((byte)'\"');
-            WriteJSONStringUnquoted(thisString, outputStream);
-            outputStream.WriteByte((byte)'\"');
-            break;
-          }
-          case CBORObjectTypeArray: {
-            bool first = true;
-            outputStream.WriteByte((byte)'[');
-            foreach (CBORObject i in this.AsList()) {
-              if (!first) {
-                outputStream.WriteByte((byte)',');
-              }
-              i.WriteJSONTo(outputStream);
-              first = false;
-            }
-            outputStream.WriteByte((byte)']');
-            break;
-          }
-          case CBORObjectTypeExtendedRational: {
-            var dec = (ExtendedRational)this.ThisItem;
-            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
-              PrecisionContext.Decimal128.WithUnlimitedExponents());
-            if (!f.IsFinite) {
-              outputStream.Write(valueNullBytes, 0, valueNullBytes.Length);
-            } else {
-              DataUtilities.WriteUtf8(f.ToString(), outputStream, true);
-            }
-            break;
-          }
-          case CBORObjectTypeMap: {
-            bool first = true;
-            bool hasNonStringKeys = false;
-            IDictionary<CBORObject, CBORObject> objMap = this.AsMap();
-            foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
-              CBORObject key = entry.Key;
-              if (key.ItemType != CBORObjectTypeTextString) {
-                hasNonStringKeys = true;
-                break;
-              }
-            }
-            if (!hasNonStringKeys) {
-              outputStream.WriteByte((byte)'{');
-              foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
-                CBORObject key = entry.Key;
-                CBORObject value = entry.Value;
-                if (!first) {
-                  outputStream.WriteByte((byte)',');
-                }
-                outputStream.WriteByte((byte)'\"');
-                WriteJSONStringUnquoted((string)key.ThisItem, outputStream);
-                outputStream.WriteByte((byte)'\"');
-                outputStream.WriteByte((byte)':');
-                value.WriteJSONTo(outputStream);
-                first = false;
-              }
-              outputStream.WriteByte((byte)'}');
-            } else {
-              // This map has non-string keys
-              IDictionary<string, CBORObject> stringMap = new
-                Dictionary<String, CBORObject>();
-              // Copy to a map with String keys, since
-              // some keys could be duplicates
-              // when serialized to strings
-              foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
-                CBORObject key = entry.Key;
-                CBORObject value = entry.Value;
-                string str = (key.ItemType == CBORObjectTypeTextString) ?
-                  ((string)key.ThisItem) : key.ToJSONString();
-                stringMap[str] = value;
-              }
-              first = true;
-              outputStream.WriteByte((byte)'{');
-              foreach (KeyValuePair<string, CBORObject> entry in stringMap) {
-                string key = entry.Key;
-                CBORObject value = entry.Value;
-                if (!first) {
-                  outputStream.WriteByte((byte)',');
-                }
-                outputStream.WriteByte((byte)'\"');
-                WriteJSONStringUnquoted((string)key, outputStream);
-                outputStream.WriteByte((byte)'\"');
-                outputStream.WriteByte((byte)':');
-                value.WriteJSONTo(outputStream);
-                first = false;
-              }
-              outputStream.WriteByte((byte)'}');
-            }
-            break;
-          }
-        default:
-          this.WriteJSONTo(outputStream);
-          break;
-      }
+      if (outputStream == null) {
+  throw new ArgumentNullException("outputStream");
+}
+      CBORJson.WriteJSONToInternal(this, new Utf8Writer(outputStream));
     }
 
     /// <summary>Converts this object to a string in JavaScript Object Notation
@@ -4217,194 +3473,29 @@ namespace PeterO.Cbor {
           case CBORObjectTypeSimpleValue: {
             return this.IsTrue ? "true" : (this.IsFalse ? "false" : "null");
           }
-          case CBORObjectTypeSingle: {
-            var f = (float)this.ThisItem;
-            if (Single.IsNegativeInfinity(f) ||
-                Single.IsPositiveInfinity(f) ||
-                Single.IsNaN(f)) {
-              return "null";
-            }
-            return TrimDotZero(
-              Convert.ToString(
-                (float)f,
-                CultureInfo.InvariantCulture));
-          }
-          case CBORObjectTypeDouble: {
-            var f = (double)this.ThisItem;
-            if (Double.IsNegativeInfinity(f) ||
-                Double.IsPositiveInfinity(f) ||
-                Double.IsNaN(f)) {
-              return "null";
-            }
-            return TrimDotZero(
-              Convert.ToString(
-                (double)f,
-                CultureInfo.InvariantCulture));
-          }
           case CBORObjectTypeInteger: {
             return Convert.ToString(
               (long)this.ThisItem,
               CultureInfo.InvariantCulture);
           }
-          case CBORObjectTypeBigInteger: {
-            return CBORUtilities.BigIntToString((BigInteger)this.ThisItem);
-          }
-          case CBORObjectTypeExtendedRational: {
-            var dec = (ExtendedRational)this.ThisItem;
-            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
-              PrecisionContext.Decimal128.WithUnlimitedExponents());
-            return (!f.IsFinite) ? "null" : f.ToString();
-          }
-          case CBORObjectTypeExtendedDecimal: {
-            var dec = (ExtendedDecimal)this.ThisItem;
-            return (dec.IsInfinity() || dec.IsNaN()) ? "null" : dec.ToString();
-          }
-          case CBORObjectTypeExtendedFloat: {
-            var flo = (ExtendedFloat)this.ThisItem;
-            if (flo.IsInfinity() || flo.IsNaN()) {
-              return "null";
-            }
-            if (flo.IsFinite &&
-                BigInteger.Abs(flo.Exponent).CompareTo((BigInteger)2500) > 0) {
-              // Too inefficient to convert to a decimal number
-              // from a bigfloat with a very high exponent,
-              // so convert to double instead
-              double f = flo.ToDouble();
-              if (Double.IsNegativeInfinity(f) ||
-                  Double.IsPositiveInfinity(f) ||
-                  Double.IsNaN(f)) {
-                return "null";
-              }
-              return TrimDotZero(
-                Convert.ToString(
-                  (double)f,
-                  CultureInfo.InvariantCulture));
-            }
-            return flo.ToString();
-          }
           default: {
             var sb = new StringBuilder();
-            this.ToJSONStringInternal(sb);
+            CBORJson.WriteJSONToInternal(this, new Utf8Writer(sb));
             return sb.ToString();
           }
       }
     }
 
-    private void ToJSONStringInternal(StringBuilder sb) {
-      int type = this.ItemType;
-      switch (type) {
-          case CBORObjectTypeByteString: {
-            sb.Append('\"');
-            if (this.HasTag(22)) {
-              Base64.ToBase64(sb, (byte[])this.ThisItem, false);
-            } else if (this.HasTag(23)) {
-              CBORUtilities.ToBase16(sb, (byte[])this.ThisItem);
-            } else {
-              Base64.ToBase64URL(sb, (byte[])this.ThisItem, false);
-            }
-            sb.Append('\"');
-            break;
-          }
-          case CBORObjectTypeTextString: {
-            sb.Append('\"');
-            StringToJSONStringUnquoted((string)this.ThisItem, sb);
-            sb.Append('\"');
-            break;
-          }
-          case CBORObjectTypeArray: {
-            bool first = true;
-            sb.Append('[');
-            foreach (CBORObject i in this.AsList()) {
-              if (!first) {
-                sb.Append(',');
-              }
-              i.ToJSONStringInternal(sb);
-              first = false;
-            }
-            sb.Append(']');
-            break;
-          }
-          case CBORObjectTypeExtendedRational: {
-            var dec = (ExtendedRational)this.ThisItem;
-            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
-              PrecisionContext.Decimal128.WithUnlimitedExponents());
-            if (!f.IsFinite) {
-              sb.Append("null");
-            } else {
-              sb.Append(f.ToString());
-            }
-            break;
-          }
-          case CBORObjectTypeMap: {
-            bool first = true;
-            bool hasNonStringKeys = false;
-            IDictionary<CBORObject, CBORObject> objMap = this.AsMap();
-            sb.Append('{');
-            int oldLength = sb.Length;
-            foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
-              CBORObject key = entry.Key;
-              CBORObject value = entry.Value;
-              if (key.ItemType != CBORObjectTypeTextString) {
-                hasNonStringKeys = true;
-                break;
-              }
-              if (!first) {
-                sb.Append(',');
-              }
-              sb.Append('\"');
-              StringToJSONStringUnquoted((string)key.ThisItem, sb);
-              sb.Append('\"');
-              sb.Append(':');
-              value.ToJSONStringInternal(sb);
-              first = false;
-            }
-            if (hasNonStringKeys) {
-              sb.Remove(oldLength, sb.Length - oldLength);
-              IDictionary<string, CBORObject> stringMap = new
-                Dictionary<String, CBORObject>();
-              // Copy to a map with String keys, since
-              // some keys could be duplicates
-              // when serialized to strings
-              foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
-                CBORObject key = entry.Key;
-                CBORObject value = entry.Value;
-                string str = (key.ItemType == CBORObjectTypeTextString) ?
-                  ((string)key.ThisItem) : key.ToJSONString();
-                stringMap[str] = value;
-              }
-              first = true;
-              foreach (KeyValuePair<string, CBORObject> entry in stringMap) {
-                string key = entry.Key;
-                CBORObject value = entry.Value;
-                if (!first) {
-                  sb.Append(',');
-                }
-                sb.Append('\"');
-                StringToJSONStringUnquoted(key, sb);
-                sb.Append('\"');
-                sb.Append(':');
-                value.ToJSONStringInternal(sb);
-                first = false;
-              }
-            }
-            sb.Append('}');
-            break;
-          }
-        default:
-          sb.Append(this.ToJSONString());
-          break;
-      }
-    }
-
-    private static CBORObject FromRaw(string str) {
+    internal static CBORObject FromRaw(string str) {
       return new CBORObject(CBORObjectTypeTextString, str);
     }
 
-    private static CBORObject FromRaw(IList<CBORObject> list) {
+    internal static CBORObject FromRaw(IList<CBORObject> list) {
       return new CBORObject(CBORObjectTypeArray, list);
     }
 
-    private static CBORObject FromRaw(IDictionary<CBORObject, CBORObject> map) {
+  internal static CBORObject FromRaw(IDictionary<CBORObject, CBORObject>
+      map) {
       return new CBORObject(CBORObjectTypeMap, map);
     }
 
@@ -4528,10 +3619,11 @@ namespace PeterO.Cbor {
         return CBORObject.Null;
       }
       return (bigintValue.CompareTo(Int64MinValue) >= 0 &&
-              bigintValue.CompareTo(Int64MaxValue) <= 0) ? (new
-                                                    CBORObject(
-                                                      CBORObjectTypeInteger,
-  (long)(BigInteger)bigintValue)) :
+              bigintValue.CompareTo(Int64MaxValue) <= 0) ?
+        (new
+         CBORObject(
+           CBORObjectTypeInteger,
+           (long)(BigInteger)bigintValue)) :
         (new
          CBORObject(
            CBORObjectTypeBigInteger,
@@ -4552,8 +3644,8 @@ namespace PeterO.Cbor {
       }
       BigInteger bigintExponent = bigValue.Exponent;
       return (bigintExponent.IsZero && !(bigValue.IsZero &&
-                        bigValue.IsNegative)) ?
-                                           FromObject(bigValue.Mantissa) :
+                                         bigValue.IsNegative)) ?
+        FromObject(bigValue.Mantissa) :
         (new
          CBORObject(
            CBORObjectTypeExtendedFloat,
@@ -4566,10 +3658,11 @@ namespace PeterO.Cbor {
     public static CBORObject FromObject(ExtendedRational bigValue) {
       return ((object)bigValue == (object)null) ? CBORObject.Null :
         ((bigValue.IsFinite && bigValue.Denominator.Equals(BigInteger.One)) ?
-         FromObject(bigValue.Numerator) : (new
-                                           CBORObject(
-                                             CBORObjectTypeExtendedRational,
-                                             bigValue)));
+         FromObject(bigValue.Numerator) :
+         (new
+          CBORObject(
+            CBORObjectTypeExtendedRational,
+            bigValue)));
     }
 
     /// <summary>Generates a CBOR object from a decimal number.</summary>
@@ -4584,8 +3677,8 @@ namespace PeterO.Cbor {
       }
       BigInteger bigintExponent = otherValue.Exponent;
       return (bigintExponent.IsZero && !(otherValue.IsZero &&
-                    otherValue.IsNegative)) ?
-                                           FromObject(otherValue.Mantissa) :
+                                         otherValue.IsNegative)) ?
+        FromObject(otherValue.Mantissa) :
         (new
          CBORObject(
            CBORObjectTypeExtendedDecimal,
@@ -5124,9 +4217,9 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static string TrimDotZero(string str) {
+    internal static string TrimDotZero(string str) {
       return (str.Length > 2 && str[str.Length - 1] == '0' && str[str.Length
-                              - 2] == '.') ?
+                                                                  - 2] == '.') ?
         str.Substring(0, str.Length - 2) :
         str;
     }
