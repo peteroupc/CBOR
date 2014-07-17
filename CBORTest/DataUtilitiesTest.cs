@@ -10,13 +10,13 @@ namespace Test {
     [TestMethod]
     public void TestCodePointAt() {
       try {
- DataUtilities.CodePointAt(null, 0);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        DataUtilities.CodePointAt(null, 0);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       Assert.AreEqual(-1, DataUtilities.CodePointAt("A", -1));
       Assert.AreEqual(-1, DataUtilities.CodePointAt("A", 1));
       Assert.AreEqual(0x41, DataUtilities.CodePointAt("A", 0));
@@ -24,32 +24,33 @@ throw new InvalidOperationException(String.Empty, ex);
     [TestMethod]
     public void TestCodePointBefore() {
       try {
- DataUtilities.CodePointBefore(null, 0);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        DataUtilities.CodePointBefore(null, 0);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       // not implemented yet
     }
     [TestMethod]
     public void TestCodePointCompare() {
-   Assert.AreEqual(
-0,
-Math.Sign(DataUtilities.CodePointCompare("abc", "abc")));
       Assert.AreEqual(
-0,
-Math.Sign(DataUtilities.CodePointCompare("\ud800\udc00" , "\ud800\udc00")));
+        0,
+        Math.Sign(DataUtilities.CodePointCompare("abc", "abc")));
       Assert.AreEqual(
--1,
-Math.Sign(DataUtilities.CodePointCompare("abc" , "\ud800\udc00")));
+        0,
+   Math.Sign(DataUtilities.CodePointCompare("\ud800\udc00" , "\ud800\udc00"
+)));
       Assert.AreEqual(
--1,
-Math.Sign(DataUtilities.CodePointCompare("\uf000" , "\ud800\udc00")));
+        -1,
+        Math.Sign(DataUtilities.CodePointCompare("abc" , "\ud800\udc00")));
       Assert.AreEqual(
-1,
-Math.Sign(DataUtilities.CodePointCompare("\uf000" , "\ud800")));
+        -1,
+        Math.Sign(DataUtilities.CodePointCompare("\uf000" , "\ud800\udc00")));
+      Assert.AreEqual(
+        1,
+        Math.Sign(DataUtilities.CodePointCompare("\uf000" , "\ud800")));
     }
     [TestMethod]
     public void TestGetUtf8Bytes() {
@@ -146,32 +147,32 @@ Math.Sign(DataUtilities.CodePointCompare("\uf000" , "\ud800")));
       }
       Assert.AreEqual(
         "ABC",
-     DataUtilities.GetUtf8String(
-new byte[] { 0x41,
-0x42,
-0x43 },
-0,
-3,
-true));
+        DataUtilities.GetUtf8String(
+          new byte[] { 0x41,
+            0x42,
+            0x43 },
+          0,
+          3,
+          true));
       Assert.AreEqual(
         "ABC\ufffd",
         DataUtilities.GetUtf8String(
-new byte[] { 0x41,
-0x42,
-0x43,
-0x80 },
-0,
-4,
-true));
+          new byte[] { 0x41,
+            0x42,
+            0x43,
+            0x80 },
+          0,
+          4,
+          true));
       try {
         DataUtilities.GetUtf8String(
-new byte[] { 0x41,
-0x42,
-0x43,
-0x80 },
-0,
-4,
-false);
+          new byte[] { 0x41,
+            0x42,
+            0x43,
+            0x80 },
+          0,
+          4,
+          false);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -210,11 +211,11 @@ false);
       }
       try {
         DataUtilities.ReadUtf8FromBytes(
-new byte[] { 0 },
--1,
-1,
-new StringBuilder(),
-true);
+          new byte[] { 0 },
+          -1,
+          1,
+          new StringBuilder(),
+          true);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -223,11 +224,11 @@ true);
       }
       try {
         DataUtilities.ReadUtf8FromBytes(
-new byte[] { 0 },
-2,
-1,
-new StringBuilder(),
-true);
+          new byte[] { 0 },
+          2,
+          1,
+          new StringBuilder(),
+          true);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -236,11 +237,11 @@ true);
       }
       try {
         DataUtilities.ReadUtf8FromBytes(
-new byte[] { 0 },
-0,
--1,
-new StringBuilder(),
-true);
+          new byte[] { 0 },
+          0,
+          -1,
+          new StringBuilder(),
+          true);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -249,11 +250,11 @@ true);
       }
       try {
         DataUtilities.ReadUtf8FromBytes(
-new byte[] { 0 },
-0,
-2,
-new StringBuilder(),
-true);
+          new byte[] { 0 },
+          0,
+          2,
+          new StringBuilder(),
+          true);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -262,11 +263,11 @@ true);
       }
       try {
         DataUtilities.ReadUtf8FromBytes(
-new byte[] { 0 },
-1,
-1,
-new StringBuilder(),
-true);
+          new byte[] { 0 },
+          1,
+          1,
+          new StringBuilder(),
+          true);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {

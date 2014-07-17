@@ -103,7 +103,7 @@ private CBORJson() {
           }
           if (escaped != surrogateEscaped) {
             throw reader.NewError(
-                "Pairing escaped surrogate with unescaped surrogate");
+              "Pairing escaped surrogate with unescaped surrogate");
           }
           surrogate = false;
         } else if ((c & 0x1ffc00) == 0xd800) {
@@ -366,7 +366,8 @@ private CBORJson() {
           sb.WriteChar('\\');
           sb.WriteChar(c);
         } else if (c < 0x20 || (c >= 0x85 && (c == 0x2028 || c == 0x2029 ||
-                          c == 0x85 || c == 0xfeff || c == 0xfffe ||
+                                     c == 0x85 || c == 0xfeff || c == 0xfffe ||
+
                                               c == 0xffff))) {
           // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to
@@ -412,10 +413,11 @@ private CBORJson() {
       }
     }
 
-  static void WriteJSONToInternal(
-CBORObject obj,
-Utf8Writer writer) {
+    static void WriteJSONToInternal(
+      CBORObject obj,
+      Utf8Writer writer) {
       int type = obj.getItemType();
+      Object thisItem = obj.getThisItem();
       switch (type) {
           case CBORObject.CBORObjectTypeSimpleValue: {
             if (obj.isTrue()) {
@@ -430,7 +432,7 @@ Utf8Writer writer) {
             return;
           }
           case CBORObject.CBORObjectTypeSingle: {
-            float f = ((Float)obj).floatValue().getThisItem();
+            float f = ((Float)thisItem).floatValue();
             if (((f) == Float.NEGATIVE_INFINITY) ||
                 ((f) == Float.POSITIVE_INFINITY) ||
                 Float.isNaN(f)) {
@@ -443,7 +445,7 @@ Utf8Writer writer) {
             return;
           }
           case CBORObject.CBORObjectTypeDouble: {
-            double f = ((Double)obj).doubleValue().getThisItem();
+            double f = ((Double)thisItem).doubleValue();
             if (((f) == Double.NEGATIVE_INFINITY) ||
                 ((f) == Double.POSITIVE_INFINITY) ||
                 Double.isNaN(f)) {
@@ -456,17 +458,18 @@ Utf8Writer writer) {
             return;
           }
           case CBORObject.CBORObjectTypeInteger: {
+            long longItem = (((Long)thisItem).longValue());
             writer.WriteString(
-            Integer.toString(((Integer)obj).intValue().getThisItem()));
+              CBORUtilities.LongToString(longItem));
             return;
           }
           case CBORObject.CBORObjectTypeBigInteger: {
             writer.WriteString(
-              CBORUtilities.BigIntToString((BigInteger)obj.getThisItem()));
+              CBORUtilities.BigIntToString((BigInteger)thisItem));
             return;
           }
           case CBORObject.CBORObjectTypeExtendedDecimal: {
-            ExtendedDecimal dec = (ExtendedDecimal)obj.getThisItem();
+            ExtendedDecimal dec = (ExtendedDecimal)thisItem;
             if (dec.IsInfinity() || dec.IsNaN()) {
               writer.WriteString("null");
             } else {
@@ -475,7 +478,7 @@ Utf8Writer writer) {
             return;
           }
           case CBORObject.CBORObjectTypeExtendedFloat: {
-            ExtendedFloat flo = (ExtendedFloat)obj.getThisItem();
+            ExtendedFloat flo = (ExtendedFloat)thisItem;
             if (flo.IsInfinity() || flo.IsNaN()) {
               writer.WriteString("null");
               return;
@@ -500,9 +503,9 @@ Utf8Writer writer) {
             writer.WriteString(flo.toString());
             return;
           }
-          case CBORObject.CBORObjectTypeByteString:
+        case CBORObject.CBORObjectTypeByteString:
           {
-            byte[] byteArray = (byte[])obj.getThisItem();
+            byte[] byteArray = (byte[])thisItem;
             if (byteArray.length == 0) {
               writer.WriteString("\"\"");
               return;
@@ -533,7 +536,7 @@ Utf8Writer writer) {
             break;
           }
           case CBORObject.CBORObjectTypeTextString: {
-            String thisString = (String)obj.getThisItem();
+            String thisString = (String)thisItem;
             if (thisString.length() == 0) {
               writer.WriteString("\"\"");
               return;
@@ -557,7 +560,7 @@ Utf8Writer writer) {
             break;
           }
           case CBORObject.CBORObjectTypeExtendedRational: {
-            ExtendedRational dec = (ExtendedRational)obj.getThisItem();
+            ExtendedRational dec = (ExtendedRational)thisItem;
             ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
               PrecisionContext.Decimal128.WithUnlimitedExponents());
             if (!f.isFinite()) {
@@ -604,8 +607,8 @@ Utf8Writer writer) {
               for (Map.Entry<CBORObject, CBORObject> entry : objMap.entrySet()) {
                 CBORObject key = entry.getKey();
                 CBORObject value = entry.getValue();
-           String str = (key.getItemType() ==
-                  CBORObject.CBORObjectTypeTextString) ?
+                String str = (key.getItemType() ==
+                              CBORObject.CBORObjectTypeTextString) ?
                   ((String)key.getThisItem()) : key.ToJSONString();
                 stringMap.put(str, value);
               }

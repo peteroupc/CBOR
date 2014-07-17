@@ -1356,6 +1356,10 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, as
  * System.IO.IOException: 
 An I/O error occurred.
 
+ * System.ArgumentNullException: 
+The parameter  <i>outputStream</i>
+ is null.
+
 ### ToJSONString
 
     public string ToJSONString();

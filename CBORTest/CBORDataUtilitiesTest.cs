@@ -7,6 +7,28 @@ namespace Test {
   public class CBORDataUtilitiesTest {
     [TestMethod]
     public void TestParseJSONNumber() {
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("100.", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("-100.", false, false));
+    Assert.IsNull(
+CBORDataUtilities.ParseJSONNumber(
+"100.e+20",
+false,
+false));
+    Assert.IsNull(
+CBORDataUtilities.ParseJSONNumber(
+"-100.e20",
+false,
+false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("100.e20", false, false));
+
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("+0.1", false, false));
+
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("-0.", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.e+20", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("-0.e20", false, false));
+      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.e20", false, false));
+
       Assert.IsNull(CBORDataUtilities.ParseJSONNumber(null, false, false));
   Assert.IsNull(
 CBORDataUtilities.ParseJSONNumber(

@@ -9,10 +9,6 @@ at: http://upokecenter.com/d/
 
 import java.io.*;
 
-  interface ICharacterReader {
-    int NextChar();
-  }
-
   final class CharacterReader implements ICharacterReader {
 
     private String str;
@@ -80,10 +76,9 @@ import java.io.*;
             throw CharacterReader.NewError(
               "Unpaired surrogate code point",
               this.offset);
-          } else {
-            ++this.offset;
-            return c1;
           }
+          ++this.offset;
+          return c1;
         } catch (IOException ex) {
           throw new CBORException(
             "I/O error occurred (offset " + this.offset + ")",
@@ -265,7 +260,8 @@ import java.io.*;
             }
           }
           throw NewError("Invalid Unicode stream", 0);
-        } else if (c1 == 0xfe) {
+        }
+        if (c1 == 0xfe) {
           if (this.stream.read() == 0xff) {
             // Big endian UTF-16 or UTF-32
             int c3 = this.stream.read();

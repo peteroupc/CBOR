@@ -103,7 +103,7 @@ namespace PeterO.Cbor {
           }
           if (escaped != surrogateEscaped) {
             throw reader.NewError(
-                "Pairing escaped surrogate with unescaped surrogate");
+              "Pairing escaped surrogate with unescaped surrogate");
           }
           surrogate = false;
         } else if ((c & 0x1ffc00) == 0xd800) {
@@ -366,7 +366,8 @@ namespace PeterO.Cbor {
           sb.WriteChar('\\');
           sb.WriteChar(c);
         } else if (c < 0x20 || (c >= 0x85 && (c == 0x2028 || c == 0x2029 ||
-                          c == 0x85 || c == 0xfeff || c == 0xfffe ||
+                                     c == 0x85 || c == 0xfeff || c == 0xfffe
+                                                ||
                                               c == 0xffff))) {
           // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to
@@ -412,10 +413,11 @@ namespace PeterO.Cbor {
       }
     }
 
-  internal static void WriteJSONToInternal(
-CBORObject obj,
-Utf8Writer writer) {
+    internal static void WriteJSONToInternal(
+      CBORObject obj,
+      Utf8Writer writer) {
       int type = obj.ItemType;
+      object thisItem = obj.ThisItem;
       switch (type) {
           case CBORObject.CBORObjectTypeSimpleValue: {
             if (obj.IsTrue) {
@@ -430,7 +432,7 @@ Utf8Writer writer) {
             return;
           }
           case CBORObject.CBORObjectTypeSingle: {
-            var f = (float)obj.ThisItem;
+            var f = (float)thisItem;
             if (Single.IsNegativeInfinity(f) ||
                 Single.IsPositiveInfinity(f) ||
                 Single.IsNaN(f)) {
@@ -445,7 +447,7 @@ Utf8Writer writer) {
             return;
           }
           case CBORObject.CBORObjectTypeDouble: {
-            var f = (double)obj.ThisItem;
+            var f = (double)thisItem;
             if (Double.IsNegativeInfinity(f) ||
                 Double.IsPositiveInfinity(f) ||
                 Double.IsNaN(f)) {
@@ -460,19 +462,18 @@ Utf8Writer writer) {
             return;
           }
           case CBORObject.CBORObjectTypeInteger: {
+            var longItem = (long)thisItem;
             writer.WriteString(
-            Convert.ToString(
-(int)obj.ThisItem,
-CultureInfo.InvariantCulture));
+              CBORUtilities.LongToString(longItem));
             return;
           }
           case CBORObject.CBORObjectTypeBigInteger: {
             writer.WriteString(
-              CBORUtilities.BigIntToString((BigInteger)obj.ThisItem));
+              CBORUtilities.BigIntToString((BigInteger)thisItem));
             return;
           }
           case CBORObject.CBORObjectTypeExtendedDecimal: {
-            var dec = (ExtendedDecimal)obj.ThisItem;
+            var dec = (ExtendedDecimal)thisItem;
             if (dec.IsInfinity() || dec.IsNaN()) {
               writer.WriteString("null");
             } else {
@@ -481,7 +482,7 @@ CultureInfo.InvariantCulture));
             return;
           }
           case CBORObject.CBORObjectTypeExtendedFloat: {
-            var flo = (ExtendedFloat)obj.ThisItem;
+            var flo = (ExtendedFloat)thisItem;
             if (flo.IsInfinity() || flo.IsNaN()) {
               writer.WriteString("null");
               return;
@@ -508,9 +509,9 @@ CultureInfo.InvariantCulture));
             writer.WriteString(flo.ToString());
             return;
           }
-          case CBORObject.CBORObjectTypeByteString:
+        case CBORObject.CBORObjectTypeByteString:
           {
-            var byteArray = (byte[])obj.ThisItem;
+            var byteArray = (byte[])thisItem;
             if (byteArray.Length == 0) {
               writer.WriteString("\"\"");
               return;
@@ -541,7 +542,7 @@ CultureInfo.InvariantCulture));
             break;
           }
           case CBORObject.CBORObjectTypeTextString: {
-            var thisString = (string)obj.ThisItem;
+            var thisString = (string)thisItem;
             if (thisString.Length == 0) {
               writer.WriteString("\"\"");
               return;
@@ -565,7 +566,7 @@ CultureInfo.InvariantCulture));
             break;
           }
           case CBORObject.CBORObjectTypeExtendedRational: {
-            var dec = (ExtendedRational)obj.ThisItem;
+            var dec = (ExtendedRational)thisItem;
             ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
               PrecisionContext.Decimal128.WithUnlimitedExponents());
             if (!f.IsFinite) {
@@ -612,8 +613,8 @@ CultureInfo.InvariantCulture));
               foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
-           string str = (key.ItemType ==
-                  CBORObject.CBORObjectTypeTextString) ?
+                string str = (key.ItemType ==
+                              CBORObject.CBORObjectTypeTextString) ?
                   ((string)key.ThisItem) : key.ToJSONString();
                 stringMap[str] = value;
               }
