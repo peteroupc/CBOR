@@ -9,10 +9,6 @@ using System;
 using System.IO;
 
 namespace PeterO.Cbor {
-  internal interface ICharacterReader {
-    int NextChar();
-  }
-
   internal sealed class CharacterReader : ICharacterReader
   {
     private string str;
@@ -80,10 +76,9 @@ namespace PeterO.Cbor {
             throw CharacterReader.NewError(
               "Unpaired surrogate code point",
               this.offset);
-          } else {
-            ++this.offset;
-            return c1;
           }
+          ++this.offset;
+          return c1;
         } catch (IOException ex) {
           throw new CBORException(
             "I/O error occurred (offset " + this.offset + ")",
@@ -265,7 +260,8 @@ namespace PeterO.Cbor {
             }
           }
           throw NewError("Invalid Unicode stream", 0);
-        } else if (c1 == 0xfe) {
+        }
+        if (c1 == 0xfe) {
           if (this.stream.ReadByte() == 0xff) {
             // Big endian UTF-16 or UTF-32
             int c3 = this.stream.ReadByte();

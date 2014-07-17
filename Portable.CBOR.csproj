@@ -80,6 +80,7 @@
     <Compile Include="Cbor\ICBORConverter.cs" />
     <Compile Include="Cbor\ICBORNumber.cs" />
     <Compile Include="Cbor\ICBORTag.cs" />
+    <Compile Include="Cbor\ICharacterReader.cs" />
     <Compile Include="Cbor\PropertyMap.cs" />
     <Compile Include="Cbor\SharedRefs.cs" />
     <Compile Include="Cbor\StringRefs.cs" />

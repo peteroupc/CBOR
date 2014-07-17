@@ -65,6 +65,7 @@ private CBORDataUtilities() {
       int expBufferMult = 1;
       boolean haveDecimalPoint = false;
       boolean haveDigits = false;
+      boolean haveDigitsAfterDecimal = false;
       boolean haveExponent = false;
       int newScaleInt = 0;
       FastInteger newScale = null;
@@ -114,6 +115,7 @@ private CBORDataUtilities() {
           }
           haveDigits = true;
           if (haveDecimalPoint) {
+            haveDigitsAfterDecimal = true;
             if (newScaleInt == Integer.MIN_VALUE) {
               newScale = (newScale == null) ? ((new FastInteger(newScaleInt))) : newScale;
               newScale.AddInt(-1);
@@ -138,7 +140,7 @@ private CBORDataUtilities() {
           return null;
         }
       }
-      if (!haveDigits) {
+      if (!haveDigits || (haveDecimalPoint && !haveDigitsAfterDecimal)) {
         return null;
       }
       if (mant != null && (mantBufferMult != 1 || mantBuffer != 0)) {

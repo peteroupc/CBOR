@@ -58,6 +58,7 @@ namespace PeterO.Cbor {
       int expBufferMult = 1;
       bool haveDecimalPoint = false;
       bool haveDigits = false;
+      bool haveDigitsAfterDecimal = false;
       bool haveExponent = false;
       int newScaleInt = 0;
       FastInteger newScale = null;
@@ -107,6 +108,7 @@ namespace PeterO.Cbor {
           }
           haveDigits = true;
           if (haveDecimalPoint) {
+            haveDigitsAfterDecimal = true;
             if (newScaleInt == Int32.MinValue) {
               newScale = newScale ?? (new FastInteger(newScaleInt));
               newScale.AddInt(-1);
@@ -131,7 +133,7 @@ namespace PeterO.Cbor {
           return null;
         }
       }
-      if (!haveDigits) {
+      if (!haveDigits || (haveDecimalPoint && !haveDigitsAfterDecimal)) {
         return null;
       }
       if (mant != null && (mantBufferMult != 1 || mantBuffer != 0)) {

@@ -10,13 +10,13 @@ import com.upokecenter.util.*;
     @Test
     public void TestCodePointAt() {
       try {
- DataUtilities.CodePointAt(null, 0);
-Assert.fail("Should have failed");
-} catch (NullPointerException ex) {
-} catch (Exception ex) {
- Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        DataUtilities.CodePointAt(null, 0);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
       Assert.assertEquals(-1, DataUtilities.CodePointAt("A", -1));
       Assert.assertEquals(-1, DataUtilities.CodePointAt("A", 1));
       Assert.assertEquals(0x41, DataUtilities.CodePointAt("A", 0));
@@ -24,32 +24,34 @@ throw new IllegalStateException("", ex);
     @Test
     public void TestCodePointBefore() {
       try {
- DataUtilities.CodePointBefore(null, 0);
-Assert.fail("Should have failed");
-} catch (NullPointerException ex) {
-} catch (Exception ex) {
- Assert.fail(ex.toString());
-throw new IllegalStateException("", ex);
-}
+        DataUtilities.CodePointBefore(null, 0);
+        Assert.fail("Should have failed");
+      } catch (NullPointerException ex) {
+      } catch (Exception ex) {
+        Assert.fail(ex.toString());
+        throw new IllegalStateException("", ex);
+      }
       // not implemented yet
     }
     @Test
     public void TestCodePointCompare() {
-   Assert.assertEquals(
-0,
-((DataUtilities.CodePointCompare("abc", "abc")==0) ? 0 : ((DataUtilities.CodePointCompare("abc", "abc")< 0) ? -1 : 1)));
       Assert.assertEquals(
-0,
-((DataUtilities.CodePointCompare("\ud800\udc00" , "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("\ud800\udc00" , "\ud800\udc00")< 0) ? -1 : 1)));
+        0,
+        ((DataUtilities.CodePointCompare("abc", "abc")==0) ? 0 : ((DataUtilities.CodePointCompare("abc", "abc")< 0) ? -1 : 1)));
       Assert.assertEquals(
--1,
-((DataUtilities.CodePointCompare("abc" , "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("abc" , "\ud800\udc00")< 0) ? -1 : 1)));
+        0,
+   ((DataUtilities.CodePointCompare("\ud800\udc00" , "\ud800\udc00"
+)==0) ? 0 : ((DataUtilities.CodePointCompare("\ud800\udc00" , "\ud800\udc00"
+)< 0) ? -1 : 1)));
       Assert.assertEquals(
--1,
-((DataUtilities.CodePointCompare("\uf000" , "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000" , "\ud800\udc00")< 0) ? -1 : 1)));
+        -1,
+        ((DataUtilities.CodePointCompare("abc" , "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("abc" , "\ud800\udc00")< 0) ? -1 : 1)));
       Assert.assertEquals(
-1,
-((DataUtilities.CodePointCompare("\uf000" , "\ud800")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000" , "\ud800")< 0) ? -1 : 1)));
+        -1,
+        ((DataUtilities.CodePointCompare("\uf000" , "\ud800\udc00")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000" , "\ud800\udc00")< 0) ? -1 : 1)));
+      Assert.assertEquals(
+        1,
+        ((DataUtilities.CodePointCompare("\uf000" , "\ud800")==0) ? 0 : ((DataUtilities.CodePointCompare("\uf000" , "\ud800")< 0) ? -1 : 1)));
     }
     @Test
     public void TestGetUtf8Bytes() {
@@ -146,32 +148,32 @@ throw new IllegalStateException("", ex);
       }
       Assert.assertEquals(
         "ABC",
-     DataUtilities.GetUtf8String(
-new byte[] { 0x41,
-0x42,
-0x43  },
-0,
-3,
-true));
+        DataUtilities.GetUtf8String(
+          new byte[] { 0x41,
+            0x42,
+            0x43  },
+          0,
+          3,
+          true));
       Assert.assertEquals(
         "ABC\ufffd",
         DataUtilities.GetUtf8String(
-new byte[] { 0x41,
-0x42,
-0x43,
-(byte)0x80  },
-0,
-4,
-true));
+          new byte[] { 0x41,
+            0x42,
+            0x43,
+            (byte)0x80  },
+          0,
+          4,
+          true));
       try {
         DataUtilities.GetUtf8String(
-new byte[] { 0x41,
-0x42,
-0x43,
-(byte)0x80  },
-0,
-4,
-false);
+          new byte[] { 0x41,
+            0x42,
+            0x43,
+            (byte)0x80  },
+          0,
+          4,
+          false);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -210,11 +212,11 @@ false);
       }
       try {
         DataUtilities.ReadUtf8FromBytes(
-new byte[] { 0  },
--1,
-1,
-new StringBuilder(),
-true);
+          new byte[] { 0  },
+          -1,
+          1,
+          new StringBuilder(),
+          true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -223,11 +225,11 @@ true);
       }
       try {
         DataUtilities.ReadUtf8FromBytes(
-new byte[] { 0  },
-2,
-1,
-new StringBuilder(),
-true);
+          new byte[] { 0  },
+          2,
+          1,
+          new StringBuilder(),
+          true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -236,11 +238,11 @@ true);
       }
       try {
         DataUtilities.ReadUtf8FromBytes(
-new byte[] { 0  },
-0,
--1,
-new StringBuilder(),
-true);
+          new byte[] { 0  },
+          0,
+          -1,
+          new StringBuilder(),
+          true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -249,11 +251,11 @@ true);
       }
       try {
         DataUtilities.ReadUtf8FromBytes(
-new byte[] { 0  },
-0,
-2,
-new StringBuilder(),
-true);
+          new byte[] { 0  },
+          0,
+          2,
+          new StringBuilder(),
+          true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {
@@ -262,11 +264,11 @@ true);
       }
       try {
         DataUtilities.ReadUtf8FromBytes(
-new byte[] { 0  },
-1,
-1,
-new StringBuilder(),
-true);
+          new byte[] { 0  },
+          1,
+          1,
+          new StringBuilder(),
+          true);
         Assert.fail("Should have failed");
       } catch (IllegalArgumentException ex) {
       } catch (Exception ex) {

@@ -7,6 +7,28 @@ import com.upokecenter.cbor.*;
   public class CBORDataUtilitiesTest {
     @Test
     public void TestParseJSONNumber() {
+      if ((CBORDataUtilities.ParseJSONNumber("100.", false, false))!=null)Assert.fail();
+      if ((CBORDataUtilities.ParseJSONNumber("-100.", false, false))!=null)Assert.fail();
+    if ((
+CBORDataUtilities.ParseJSONNumber(
+"100.e+20",
+false,
+false)) != null)Assert.fail();
+    if ((
+CBORDataUtilities.ParseJSONNumber(
+"-100.e20",
+false,
+false)) != null)Assert.fail();
+      if ((CBORDataUtilities.ParseJSONNumber("100.e20", false, false))!=null)Assert.fail();
+
+      if ((CBORDataUtilities.ParseJSONNumber("+0.1", false, false))!=null)Assert.fail();
+
+      if ((CBORDataUtilities.ParseJSONNumber("0.", false, false))!=null)Assert.fail();
+      if ((CBORDataUtilities.ParseJSONNumber("-0.", false, false))!=null)Assert.fail();
+      if ((CBORDataUtilities.ParseJSONNumber("0.e+20", false, false))!=null)Assert.fail();
+      if ((CBORDataUtilities.ParseJSONNumber("-0.e20", false, false))!=null)Assert.fail();
+      if ((CBORDataUtilities.ParseJSONNumber("0.e20", false, false))!=null)Assert.fail();
+
       if ((CBORDataUtilities.ParseJSONNumber(null, false, false)) != null)Assert.fail();
   if ((
 CBORDataUtilities.ParseJSONNumber(

@@ -121,6 +121,43 @@ private CBORUtilities() {
       }
     }
 
+    private static void ReverseChars(char[] chars, int offset, int length) {
+      int half = length >> 1;
+      int right = offset + length - 1;
+      for (int i = 0; i < half; i++, right--) {
+        char value = chars[offset + i];
+        chars[offset + i] = chars[right];
+        chars[right] = value;
+      }
+    }
+
+    public static String LongToString(long value) {
+      if (value == Long.MIN_VALUE) {
+        return "-9223372036854775808";
+      } else if (value == 0) {
+        return "0";
+      }
+      boolean neg = value < 0;
+      char[] chars = new char[24];
+      int count = 0;
+      if (neg) {
+        chars[0] = '-';
+        ++count;
+        value = -value;
+      }
+      while (value != 0) {
+        char digit = HexAlphabet.charAt((int)(value % 10));
+        chars[count++] = digit;
+        value /= 10;
+      }
+      if (neg) {
+        ReverseChars(chars, 1, count - 1);
+      } else {
+        ReverseChars(chars, 0, count);
+      }
+      return new String(chars, 0, count);
+    }
+
     public static String BigIntToString(BigInteger bigint) {
       return bigint.toString();
     }
