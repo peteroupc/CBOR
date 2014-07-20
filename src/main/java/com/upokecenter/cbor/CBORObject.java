@@ -2290,7 +2290,8 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
       if (value < 0) {
-        throw new IllegalArgumentException("value (" + value + ") is less than " + "0");
+      throw new IllegalArgumentException("value (" + value + ") is less than " +
+          "0");
       }
       if (value < 24) {
         return new byte[] { (byte)((byte)value | (byte)(type << 5))  };
@@ -2321,7 +2322,8 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
 
     private static byte[] GetPositiveInt64Bytes(int type, long value) {
       if (value < 0) {
-        throw new IllegalArgumentException("value (" + value + ") is less than " + "0");
+      throw new IllegalArgumentException("value (" + value + ") is less than " +
+          "0");
       }
       if (value < 24) {
         return new byte[] { (byte)((byte)value | (byte)(type << 5))  };
@@ -3241,7 +3243,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       if (outputStream == null) {
   throw new NullPointerException("outputStream");
 }
-      CBORJson.WriteJSONToInternal(this, new Utf8Writer(outputStream));
+      CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream));
     }
 
     /**
@@ -3278,7 +3280,7 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
           }
           default: {
             StringBuilder sb = new StringBuilder();
-            CBORJson.WriteJSONToInternal(this, new Utf8Writer(sb));
+            CBORJson.WriteJSONToInternal(this, new StringOutput(sb));
             return sb.toString();
           }
       }
@@ -3379,10 +3381,12 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
      */
     public static CBORObject FromSimpleValue(int simpleValue) {
       if (simpleValue < 0) {
-        throw new IllegalArgumentException("simpleValue (" + simpleValue + ") is less than " + "0");
+        throw new IllegalArgumentException("simpleValue (" + simpleValue +
+          ") is less than " + "0");
       }
       if (simpleValue > 255) {
-        throw new IllegalArgumentException("simpleValue (" + simpleValue + ") is more than " + "255");
+        throw new IllegalArgumentException("simpleValue (" + simpleValue +
+          ") is more than " + "255");
       }
       if (simpleValue >= 24 && simpleValue < 32) {
         throw new IllegalArgumentException("Simple value is from 24 to 31: " +
@@ -3833,7 +3837,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
         throw new NullPointerException("bigintTag");
       }
       if (bigintTag.signum() < 0) {
-        throw new IllegalArgumentException("bigintTag's sign (" + bigintTag.signum() + ") is less than " +
+        throw new IllegalArgumentException("bigintTag's sign (" + bigintTag.signum() +
+          ") is less than " +
                                     "0");
       }
       if (bigintTag.compareTo(UInt64MaxValue) > 0) {
@@ -3924,7 +3929,8 @@ public static void Write(Object objValue, OutputStream stream) throws IOExceptio
       Object valueObValue,
       int smallTag) {
       if (smallTag < 0) {
-        throw new IllegalArgumentException("smallTag (" + smallTag + ") is less than " + "0");
+throw new IllegalArgumentException("smallTag (" + smallTag + ") is less than " +
+          "0");
       }
       ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);

@@ -11,17 +11,17 @@ using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-  internal sealed class Utf8Writer
+  internal sealed class StringOutput
   {
     private readonly StringBuilder builder;
     private readonly Stream outputStream;
 
-    public Utf8Writer(StringBuilder builder) {
+    public StringOutput(StringBuilder builder) {
       this.builder = builder;
       this.outputStream = null;
     }
 
-    public Utf8Writer(Stream outputStream) {
+    public StringOutput(Stream outputStream) {
       this.outputStream = outputStream;
       this.builder = null;
     }

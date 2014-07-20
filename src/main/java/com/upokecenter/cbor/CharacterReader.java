@@ -226,6 +226,15 @@ import java.io.*;
       this.str = str;
     }
 
+    public CharacterReader (String str, boolean skipByteOrderMark) {
+      if (str == null) {
+        throw new NullPointerException("str");
+      }
+      this.offset = (skipByteOrderMark && str.length() > 0 && str.charAt(0) ==
+        0xfeff) ? (1) : (0);
+      this.str = str;
+    }
+
     public CharacterReader (InputStream stream) {
       if (stream == null) {
         throw new NullPointerException("stream");
@@ -238,7 +247,7 @@ import java.io.*;
     // Detects a Unicode encoding assuming
     // the first character read will be ASCII
     // unless a byte order mark appears
-    public int DetectUnicodeEncoding() {
+    private int DetectUnicodeEncoding() {
       try {
         int c1 = this.stream.read();
         if (c1 < 0) {
@@ -277,7 +286,8 @@ import java.io.*;
             }
           }
           throw NewError("Invalid Unicode stream", 0);
-        } else if (c1 == 0) {
+        }
+        if (c1 == 0) {
           int c2 = this.stream.read();
           if (c2 < 0) {
             // 0 EOF
@@ -314,7 +324,8 @@ import java.io.*;
             utf8reader.Unget(c2);
             return 0;
           }
-        } else if ((c1 & 0x80) == 0) {
+        }
+        if ((c1 & 0x80) == 0) {
           int c2 = this.stream.read();
           if (c2 < 0) {
             this.reader = new Utf8Reader(this.stream);

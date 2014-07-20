@@ -226,6 +226,15 @@ namespace PeterO.Cbor {
       this.str = str;
     }
 
+    public CharacterReader(string str, bool skipByteOrderMark) {
+      if (str == null) {
+        throw new ArgumentNullException("str");
+      }
+      this.offset = (skipByteOrderMark && str.Length > 0 && str[0] ==
+        0xfeff) ? (1) : (0);
+      this.str = str;
+    }
+
     public CharacterReader(Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -238,7 +247,7 @@ namespace PeterO.Cbor {
     // Detects a Unicode encoding assuming
     // the first character read will be ASCII
     // unless a byte order mark appears
-    public int DetectUnicodeEncoding() {
+    private int DetectUnicodeEncoding() {
       try {
         int c1 = this.stream.ReadByte();
         if (c1 < 0) {
@@ -277,7 +286,8 @@ namespace PeterO.Cbor {
             }
           }
           throw NewError("Invalid Unicode stream", 0);
-        } else if (c1 == 0) {
+        }
+        if (c1 == 0) {
           int c2 = this.stream.ReadByte();
           if (c2 < 0) {
             // 0 EOF
@@ -314,7 +324,8 @@ namespace PeterO.Cbor {
             utf8reader.Unget(c2);
             return 0;
           }
-        } else if ((c1 & 0x80) == 0) {
+        }
+        if ((c1 & 0x80) == 0) {
           int c2 = this.stream.ReadByte();
           if (c2 < 0) {
             this.reader = new Utf8Reader(this.stream);
