@@ -52,20 +52,20 @@ private Base64() {
     }
 
     public static void WriteBase64(
-      Utf8Writer writer,
+      StringOutput writer,
       byte[] data,
       int offset,
       int count,
-      boolean padding) {
+      boolean padding) throws IOException {
       WriteBase64(writer, data, offset, count, Base64Classic, padding);
     }
 
     public static void WriteBase64URL(
-      Utf8Writer writer,
+      StringOutput writer,
       byte[] data,
       int offset,
       int count,
-      boolean padding) {
+      boolean padding) throws IOException {
       WriteBase64(writer, data, offset, count, Base64URL, padding);
     }
 
@@ -167,12 +167,12 @@ private Base64() {
     }
 
     private static void WriteBase64(
-      Utf8Writer writer,
+      StringOutput writer,
       byte[] data,
       int offset,
       int count,
       String alphabet,
-      boolean padding) {
+      boolean padding) throws IOException {
       if (writer == null) {
         throw new NullPointerException("writer");
       }

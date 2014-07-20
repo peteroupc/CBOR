@@ -53,7 +53,7 @@ namespace PeterO.Cbor {
     }
 
     public static void WriteBase64(
-      Utf8Writer writer,
+      StringOutput writer,
       byte[] data,
       int offset,
       int count,
@@ -62,7 +62,7 @@ namespace PeterO.Cbor {
     }
 
     public static void WriteBase64URL(
-      Utf8Writer writer,
+      StringOutput writer,
       byte[] data,
       int offset,
       int count,
@@ -168,7 +168,7 @@ namespace PeterO.Cbor {
     }
 
     private static void WriteBase64(
-      Utf8Writer writer,
+      StringOutput writer,
       byte[] data,
       int offset,
       int count,

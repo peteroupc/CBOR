@@ -11,17 +11,17 @@ import java.io.*;
 
 import com.upokecenter.util.*;
 
-  final class Utf8Writer {
+  final class StringOutput {
 
     private final StringBuilder builder;
     private final OutputStream outputStream;
 
-    public Utf8Writer (StringBuilder builder) {
+    public StringOutput (StringBuilder builder) {
       this.builder = builder;
       this.outputStream = null;
     }
 
-    public Utf8Writer (OutputStream outputStream) {
+    public StringOutput (OutputStream outputStream) {
       this.outputStream = outputStream;
       this.builder = null;
     }

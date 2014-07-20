@@ -2296,7 +2296,8 @@ namespace PeterO.Cbor {
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
       if (value < 0) {
-        throw new ArgumentException("value (" + value + ") is less than " + "0");
+      throw new ArgumentException("value (" + value + ") is less than " +
+          "0");
       }
       if (value < 24) {
         return new[] { (byte)((byte)value | (byte)(type << 5)) };
@@ -2327,7 +2328,8 @@ namespace PeterO.Cbor {
 
     private static byte[] GetPositiveInt64Bytes(int type, long value) {
       if (value < 0) {
-        throw new ArgumentException("value (" + value + ") is less than " + "0");
+      throw new ArgumentException("value (" + value + ") is less than " +
+          "0");
       }
       if (value < 24) {
         return new[] { (byte)((byte)value | (byte)(type << 5)) };
@@ -2754,7 +2756,8 @@ namespace PeterO.Cbor {
         } else {
           #if DEBUG
           if (value < 32) {
-            throw new ArgumentException("value (" + value + ") is less than " + "32");
+     throw new ArgumentException("value (" + value + ") is less than " +
+              "32");
           }
           #endif
 
@@ -3252,7 +3255,7 @@ namespace PeterO.Cbor {
       if (outputStream == null) {
   throw new ArgumentNullException("outputStream");
 }
-      CBORJson.WriteJSONToInternal(this, new Utf8Writer(outputStream));
+      CBORJson.WriteJSONToInternal(this, new StringOutput(outputStream));
     }
 
     /// <summary>Converts this object to a string in JavaScript Object Notation
@@ -3290,7 +3293,7 @@ namespace PeterO.Cbor {
           }
           default: {
             var sb = new StringBuilder();
-            CBORJson.WriteJSONToInternal(this, new Utf8Writer(sb));
+            CBORJson.WriteJSONToInternal(this, new StringOutput(sb));
             return sb.ToString();
           }
       }
@@ -3377,10 +3380,12 @@ namespace PeterO.Cbor {
     /// 31.</exception>
     public static CBORObject FromSimpleValue(int simpleValue) {
       if (simpleValue < 0) {
-        throw new ArgumentException("simpleValue (" + simpleValue + ") is less than " + "0");
+        throw new ArgumentException("simpleValue (" + simpleValue +
+          ") is less than " + "0");
       }
       if (simpleValue > 255) {
-        throw new ArgumentException("simpleValue (" + simpleValue + ") is more than " + "255");
+        throw new ArgumentException("simpleValue (" + simpleValue +
+          ") is more than " + "255");
       }
       if (simpleValue >= 24 && simpleValue < 32) {
         throw new ArgumentException("Simple value is from 24 to 31: " +
@@ -3813,7 +3818,8 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("bigintTag");
       }
       if (bigintTag.Sign < 0) {
-        throw new ArgumentException("bigintTag's sign (" + bigintTag.Sign + ") is less than " +
+        throw new ArgumentException("bigintTag's sign (" + bigintTag.Sign +
+          ") is less than " +
                                     "0");
       }
       if (bigintTag.CompareTo(UInt64MaxValue) > 0) {
@@ -3908,7 +3914,8 @@ namespace PeterO.Cbor {
       object valueObValue,
       int smallTag) {
       if (smallTag < 0) {
-        throw new ArgumentException("smallTag (" + smallTag + ") is less than " + "0");
+throw new ArgumentException("smallTag (" + smallTag + ") is less than " +
+          "0");
       }
       ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);

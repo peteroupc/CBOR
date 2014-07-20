@@ -351,7 +351,7 @@ namespace PeterO.Cbor {
 
     internal static void WriteJSONStringUnquoted(
       string str,
-      Utf8Writer sb) {
+      StringOutput sb) {
       // Surrogates were already verified when this
       // string was added to the CBOR object; that check
       // is not repeated here
@@ -415,7 +415,7 @@ namespace PeterO.Cbor {
 
     internal static void WriteJSONToInternal(
       CBORObject obj,
-      Utf8Writer writer) {
+      StringOutput writer) {
       int type = obj.ItemType;
       object thisItem = obj.ThisItem;
       switch (type) {
