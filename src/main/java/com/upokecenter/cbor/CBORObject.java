@@ -1854,17 +1854,15 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
     }
 
     /**
-     * Adds a new object to the end of this array.
+     * Adds a new object to the end of this array. (Used to throw
+     * NullPointerException on a null reference, but now converts the
+     * object to CBORObject.Null, for convenience with the object overload
+     * of this method.).
      * @param obj A CBOR object.
      * @return This object.
      * @throws java.lang.IllegalStateException This object is not an array.
-     * @throws NullPointerException The parameter {@code obj} is null (as opposed
-     * to CBORObject.Null).
      */
     public CBORObject Add(CBORObject obj) {
-      if (obj == null) {
-        throw new NullPointerException("obj");
-      }
       if (this.getItemType() == CBORObjectTypeArray) {
         List<CBORObject> list = this.AsList();
         list.add(obj);
@@ -1878,7 +1876,7 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) { }
      * @param obj A CBOR object.
      * @return This object.
      * @throws java.lang.IllegalStateException This object is not an array.
-     * @throws IllegalArgumentException The object's type is not supported.
+     * @throws IllegalArgumentException The type of {@code obj} is not supported.
      */
     public CBORObject Add(Object obj) {
       if (this.getItemType() == CBORObjectTypeArray) {

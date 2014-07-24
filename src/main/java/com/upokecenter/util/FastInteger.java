@@ -371,6 +371,7 @@ at: http://upokecenter.com/d/
    throw new IllegalArgumentException("augend (" + augend + ") is less than " +
             "0 ");
         }
+        {
         if (augend != 0) {
           int carry = 0;
           // Ensure a length of at least 1
@@ -410,6 +411,7 @@ at: http://upokecenter.com/d/
         }
         return this;
       }
+    }
     }
 
     private int smallValue;  // if integerMode is 0

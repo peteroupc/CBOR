@@ -44,356 +44,6 @@ namespace Test {
       TestCommon.AssertRoundTrip(CBORObject.FromObject(d));
     }
 
-    public static CBORObject RandomNumber(FastRandom rand) {
-      switch (rand.NextValue(6)) {
-        case 0:
-          return CBORObject.FromObject(RandomDouble(rand, Int32.MaxValue));
-        case 1:
-          return CBORObject.FromObject(RandomSingle(rand, Int32.MaxValue));
-        case 2:
-          return CBORObject.FromObject(RandomBigInteger(rand));
-        case 3:
-          return CBORObject.FromObject(RandomExtendedFloat(rand));
-        case 4:
-          return CBORObject.FromObject(RandomExtendedDecimal(rand));
-        case 5:
-          return CBORObject.FromObject(RandomInt64(rand));
-        default:
-          throw new ArgumentException();
-      }
-    }
-
-    public static CBORObject RandomNumberOrRational(FastRandom rand) {
-      switch (rand.NextValue(7)) {
-        case 0:
-          return CBORObject.FromObject(RandomDouble(rand, Int32.MaxValue));
-        case 1:
-          return CBORObject.FromObject(RandomSingle(rand, Int32.MaxValue));
-        case 2:
-          return CBORObject.FromObject(RandomBigInteger(rand));
-        case 3:
-          return CBORObject.FromObject(RandomExtendedFloat(rand));
-        case 4:
-          return CBORObject.FromObject(RandomExtendedDecimal(rand));
-        case 5:
-          return CBORObject.FromObject(RandomInt64(rand));
-        case 6:
-          return CBORObject.FromObject(RandomRational(rand));
-        default:
-          throw new ArgumentException();
-      }
-    }
-
-    private static CBORObject RandomCBORByteString(FastRandom rand) {
-      int x = rand.NextValue(0x2000);
-      var bytes = new byte[x];
-      for (var i = 0; i < x; ++i) {
-        bytes[i] = unchecked((byte)rand.NextValue(256));
-      }
-      return CBORObject.FromObject(bytes);
-    }
-
-    private static CBORObject RandomCBORByteStringShort(FastRandom rand) {
-      int x = rand.NextValue(50);
-      var bytes = new byte[x];
-      for (var i = 0; i < x; ++i) {
-        bytes[i] = unchecked((byte)rand.NextValue(256));
-      }
-      return CBORObject.FromObject(bytes);
-    }
-
-    private static CBORObject RandomCBORTextString(FastRandom rand) {
-      int length = rand.NextValue(0x2000);
-      var sb = new StringBuilder();
-      for (var i = 0; i < length; ++i) {
-        int x = rand.NextValue(100);
-        if (x < 95) {
-          // ASCII
-          sb.Append((char)(0x20 + rand.NextValue(0x60)));
-        } else if (x < 98) {
-          // Supplementary character
-          x = rand.NextValue(0x400) + 0xd800;
-          sb.Append((char)x);
-          x = rand.NextValue(0x400) + 0xdc00;
-          sb.Append((char)x);
-        } else {
-          // BMP character
-          x = 0x20 + rand.NextValue(0xffe0);
-          if (x >= 0xd800 && x < 0xe000) {
-            // surrogate code unit, generate ASCII instead
-            x = 0x20 + rand.NextValue(0x60);
-          }
-          sb.Append((char)x);
-        }
-      }
-      return CBORObject.FromObject(sb.ToString());
-    }
-
-    private static CBORObject RandomCBORMap(FastRandom rand, int depth) {
-      int x = rand.NextValue(100);
-      int count = 0;
-      count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
-      CBORObject cborRet = CBORObject.NewMap();
-      for (var i = 0; i < count; ++i) {
-        CBORObject key = RandomCBORObject(rand, depth + 1);
-        CBORObject value = RandomCBORObject(rand, depth + 1);
-        cborRet[key] = value;
-      }
-      return cborRet;
-    }
-
-    private static CBORObject RandomCBORTaggedObject(
-      FastRandom rand,
-      int depth) {
-      int tag = 0;
-      if (rand.NextValue(2) == 0) {
-        int[] tagselection = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30,
-          30, 0, 1, 25, 26, 27 };
-        tag = tagselection[rand.NextValue(tagselection.Length)];
-      } else {
-        tag = rand.NextValue(0x1000000);
-      }
-      if (tag == 25) {
-        tag = 0;
-      }
-      if (tag == 30) {
-        return RandomCBORByteString(rand);
-      }
-      for (var i = 0; i < 15; ++i) {
-        CBORObject o;
-        // Console.WriteLine("tag "+tag+" "+i);
-        if (tag == 0 || tag == 1 || tag == 28 || tag == 29) {
-          tag = 999;
-        }
-        if (tag == 2 || tag == 3) {
-          o = RandomCBORByteStringShort(rand);
-        } else if (tag == 4 || tag == 5) {
-          o = CBORObject.NewArray();
-          o.Add(RandomSmallIntegral(rand));
-          o.Add(CBORObject.FromObject(RandomBigInteger(rand)));
-        } else if (tag == 30) {
-          o = CBORObject.NewArray();
-          o.Add(RandomSmallIntegral(rand));
-          o.Add(CBORObject.FromObject(RandomBigInteger(rand)));
-        } else {
-          o = RandomCBORObject(rand, depth + 1);
-        }
-        try {
-          o = CBORObject.FromObjectAndTag(o, tag);
-          // Console.WriteLine("done");
-          return o;
-        } catch (Exception) {
-          continue;
-        }
-      }
-      // Console.WriteLine("Failed "+tag);
-      return CBORObject.Null;
-    }
-
-    private static CBORObject RandomCBORArray(FastRandom rand, int depth) {
-      int x = rand.NextValue(100);
-      int count = 0;
-      count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
-      CBORObject cborRet = CBORObject.NewArray();
-      for (var i = 0; i < count; ++i) {
-        cborRet.Add(RandomCBORObject(rand, depth + 1));
-      }
-      return cborRet;
-    }
-
-    public static ExtendedRational RandomRational(FastRandom rand) {
-      BigInteger bigintA = RandomBigInteger(rand);
-      BigInteger bigintB = RandomBigInteger(rand);
-      if (bigintB.IsZero) {
-        bigintB = BigInteger.One;
-      }
-      return new ExtendedRational(bigintA, bigintB);
-    }
-
-    public static CBORObject RandomCBORObject(FastRandom rand) {
-      return RandomCBORObject(rand, 0);
-    }
-
-    private static CBORObject RandomCBORObject(FastRandom rand, int depth) {
-      int nextval = rand.NextValue(11);
-      switch (nextval) {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-          return RandomNumberOrRational(rand);
-        case 4:
-          return rand.NextValue(2) == 0 ? CBORObject.True : CBORObject.False;
-        case 5:
-          return rand.NextValue(2) == 0 ? CBORObject.Null :
-            CBORObject.Undefined;
-        case 6:
-          return RandomCBORTextString(rand);
-        case 7:
-          return RandomCBORByteString(rand);
-        case 8:
-          return RandomCBORArray(rand, depth);
-        case 9:
-          return RandomCBORMap(rand, depth);
-        case 10:
-          return RandomCBORTaggedObject(rand, depth);
-        default:
-          return RandomNumber(rand);
-      }
-    }
-
-    private static long RandomInt64(FastRandom rand) {
-      long r = rand.NextValue(0x10000);
-      r |= ((long)rand.NextValue(0x10000)) << 16;
-      if (rand.NextValue(2) == 0) {
-        r |= ((long)rand.NextValue(0x10000)) << 32;
-        if (rand.NextValue(2) == 0) {
-          r |= ((long)rand.NextValue(0x10000)) << 48;
-        }
-      }
-      return r;
-    }
-
-    private static double RandomDouble(FastRandom rand, int exponent) {
-      if (exponent == Int32.MaxValue) {
-        exponent = rand.NextValue(2047);
-      }
-      long r = rand.NextValue(0x10000);
-      r |= ((long)rand.NextValue(0x10000)) << 16;
-      if (rand.NextValue(2) == 0) {
-        r |= ((long)rand.NextValue(0x10000)) << 32;
-        if (rand.NextValue(2) == 0) {
-          r |= ((long)rand.NextValue(0x10000)) << 48;
-        }
-      }
-      r &= ~0x7FF0000000000000L;  // clear exponent
-      r |= ((long)exponent) << 52;  // set exponent
-      return BitConverter.ToDouble(BitConverter.GetBytes((long)r), 0);
-    }
-
-    private static float RandomSingle(FastRandom rand, int exponent) {
-      if (exponent == Int32.MaxValue) {
-        exponent = rand.NextValue(255);
-      }
-      int r = rand.NextValue(0x10000);
-      if (rand.NextValue(2) == 0) {
-        r |= ((int)rand.NextValue(0x10000)) << 16;
-      }
-      r &= ~0x7f800000;  // clear exponent
-      r |= ((int)exponent) << 23;  // set exponent
-      return BitConverter.ToSingle(BitConverter.GetBytes((int)r), 0);
-    }
-
-    public static ExtendedDecimal RandomExtendedDecimal(FastRandom r) {
-      if (r.NextValue(100) == 0) {
-        int x = r.NextValue(3);
-        if (x == 0) {
-          return ExtendedDecimal.PositiveInfinity;
-        }
-        if (x == 1) {
-          return ExtendedDecimal.NegativeInfinity;
-        }
-        if (x == 2) {
-          return ExtendedDecimal.NaN;
-        }
-        // Signaling NaN currently not generated because
-        // it doesn't round-trip as well
-      }
-      return ExtendedDecimal.FromString(RandomDecimalString(r));
-    }
-
-    public static BigInteger RandomBigInteger(FastRandom r) {
-      int count = r.NextValue(60) + 1;
-      var bytes = new byte[count];
-      for (var i = 0; i < count; ++i) {
-        bytes[i] = (byte)((int)r.NextValue(256));
-      }
-      return BigInteger.fromByteArray(bytes, true);
-    }
-
-    public static ExtendedFloat RandomExtendedFloat(FastRandom r) {
-      if (r.NextValue(100) == 0) {
-        int x = r.NextValue(3);
-        if (x == 0) {
-          return ExtendedFloat.PositiveInfinity;
-        }
-        if (x == 1) {
-          return ExtendedFloat.NegativeInfinity;
-        }
-        if (x == 2) {
-          return ExtendedFloat.NaN;
-        }
-      }
-      return ExtendedFloat.Create(
-        RandomBigInteger(r),
-        (BigInteger)(r.NextValue(400) - 200));
-    }
-
-    public static String RandomBigIntString(FastRandom r) {
-      int count = r.NextValue(50) + 1;
-      var sb = new StringBuilder();
-      if (r.NextValue(2) == 0) {
-        sb.Append('-');
-      }
-      for (var i = 0; i < count; ++i) {
-        if (i == 0) {
-          sb.Append((char)('1' + r.NextValue(9)));
-        } else {
-          sb.Append((char)('0' + r.NextValue(10)));
-        }
-      }
-      return sb.ToString();
-    }
-
-    public static CBORObject RandomSmallIntegral(FastRandom r) {
-      int count = r.NextValue(20) + 1;
-      var sb = new StringBuilder();
-      if (r.NextValue(2) == 0) {
-        sb.Append('-');
-      }
-      for (var i = 0; i < count; ++i) {
-        if (i == 0) {
-          sb.Append((char)('1' + r.NextValue(9)));
-        } else {
-          sb.Append((char)('0' + r.NextValue(10)));
-        }
-      }
-      return CBORObject.FromObject(BigInteger.fromString(sb.ToString()));
-    }
-
-    public static String RandomDecimalString(FastRandom r) {
-      int count = r.NextValue(20) + 1;
-      var sb = new StringBuilder();
-      if (r.NextValue(2) == 0) {
-        sb.Append('-');
-      }
-      for (var i = 0; i < count; ++i) {
-        if (i == 0) {
-          sb.Append((char)('1' + r.NextValue(9)));
-        } else {
-          sb.Append((char)('0' + r.NextValue(10)));
-        }
-      }
-      if (r.NextValue(2) == 0) {
-        sb.Append('.');
-        count = r.NextValue(20) + 1;
-        for (var i = 0; i < count; ++i) {
-          sb.Append((char)('0' + r.NextValue(10)));
-        }
-      }
-      if (r.NextValue(2) == 0) {
-        sb.Append('E');
-        count = r.NextValue(20);
-        if (count != 0) {
-          sb.Append(r.NextValue(2) == 0 ? '+' : '-');
-        }
-        sb.Append(Convert.ToString(
-          (int)count,
-          CultureInfo.InvariantCulture));
-      }
-      return sb.ToString();
-    }
-
     private static void TestDecimalString(String r) {
       CBORObject o = CBORObject.FromObject(ExtendedDecimal.FromString(r));
       CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
@@ -404,8 +54,8 @@ namespace Test {
     public void TestAdd() {
       var r = new FastRandom();
       for (var i = 0; i < 3000; ++i) {
-        CBORObject o1 = RandomNumber(r);
-        CBORObject o2 = RandomNumber(r);
+        CBORObject o1 = RandomObjects.RandomNumber(r);
+        CBORObject o2 = RandomObjects.RandomNumber(r);
         ExtendedDecimal cmpDecFrac =
           o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
         ExtendedDecimal cmpCobj = CBORObject.Addition(
@@ -426,8 +76,10 @@ namespace Test {
     public void TestDivide() {
       var r = new FastRandom();
       for (var i = 0; i < 3000; ++i) {
-        CBORObject o1 = CBORObject.FromObject(RandomBigInteger(r));
-        CBORObject o2 = CBORObject.FromObject(RandomBigInteger(r));
+      CBORObject o1 =
+          CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
+      CBORObject o2 =
+          CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
         if (o2.IsZero) {
           continue;
         }
@@ -437,8 +89,8 @@ namespace Test {
         }
       }
       for (var i = 0; i < 3000; ++i) {
-        CBORObject o1 = RandomNumber(r);
-        CBORObject o2 = RandomNumber(r);
+        CBORObject o1 = RandomObjects.RandomNumber(r);
+        CBORObject o2 = RandomObjects.RandomNumber(r);
         ExtendedRational er =
           o1.AsExtendedRational().Divide(o2.AsExtendedRational());
         if (er.CompareTo(CBORObject.Divide(o1, o2).AsExtendedRational()) != 0) {
@@ -450,8 +102,8 @@ namespace Test {
     public void TestMultiply() {
       var r = new FastRandom();
       for (var i = 0; i < 3000; ++i) {
-        CBORObject o1 = RandomNumber(r);
-        CBORObject o2 = RandomNumber(r);
+        CBORObject o1 = RandomObjects.RandomNumber(r);
+        CBORObject o2 = RandomObjects.RandomNumber(r);
         ExtendedDecimal cmpDecFrac =
           o1.AsExtendedDecimal().Multiply(o2.AsExtendedDecimal());
         ExtendedDecimal cmpCobj = CBORObject.Multiply(
@@ -472,8 +124,8 @@ namespace Test {
     public void TestSubtract() {
       var r = new FastRandom();
       for (var i = 0; i < 3000; ++i) {
-        CBORObject o1 = RandomNumber(r);
-        CBORObject o2 = RandomNumber(r);
+        CBORObject o1 = RandomObjects.RandomNumber(r);
+        CBORObject o2 = RandomObjects.RandomNumber(r);
         ExtendedDecimal cmpDecFrac =
           o1.AsExtendedDecimal().Subtract(o2.AsExtendedDecimal());
         ExtendedDecimal cmpCobj = CBORObject.Subtract(
@@ -819,7 +471,7 @@ o2,
     public void TestFloatDecimalRoundTrip() {
       var r = new FastRandom();
       for (var i = 0; i < 5000; ++i) {
-        ExtendedFloat ef = RandomExtendedFloat(r);
+        ExtendedFloat ef = RandomObjects.RandomExtendedFloat(r);
         ExtendedDecimal ed = ef.ToExtendedDecimal();
         ExtendedFloat ef2 = ed.ToExtendedFloat();
         // Tests that values converted from float to decimal and
@@ -840,18 +492,18 @@ o2,
       // string badstr = null;
       const int CompareCount = 500;
       for (var i = 0; i < CompareCount; ++i) {
-        CBORObject o1 = RandomCBORObject(r);
-        CBORObject o2 = RandomCBORObject(r);
+        CBORObject o1 = RandomObjects.RandomCBORObject(r);
+        CBORObject o2 = RandomObjects.RandomCBORObject(r);
         CompareTestReciprocal(o1, o2);
       }
       for (var i = 0; i < 5000; ++i) {
-        CBORObject o1 = RandomNumber(r);
-        CBORObject o2 = RandomNumber(r);
+        CBORObject o1 = RandomObjects.RandomNumber(r);
+        CBORObject o2 = RandomObjects.RandomNumber(r);
         CompareDecimals(o1, o2);
       }
       for (var i = 0; i < 50; ++i) {
         CBORObject o1 = CBORObject.FromObject(Single.NegativeInfinity);
-        CBORObject o2 = RandomNumberOrRational(r);
+        CBORObject o2 = RandomObjects.RandomNumberOrRational(r);
         if (o2.IsInfinity() || o2.IsNaN()) {
           continue;
         }
@@ -962,7 +614,7 @@ o2,
     public void TestParseDecimalStrings() {
       var rand = new FastRandom();
       for (var i = 0; i < 3000; ++i) {
-        string r = RandomDecimalString(rand);
+        string r = RandomObjects.RandomDecimalString(rand);
         TestDecimalString(r);
       }
     }
@@ -1228,7 +880,7 @@ o2,
       var r = new FastRandom();
       try {
         for (var i = 0; i < 1000; ++i) {
-          int val = unchecked((int)RandomInt64(r));
+          int val = unchecked((int)RandomObjects.RandomInt64(r));
           using (var ms = new MemoryStream()) {
             MiniCBOR.WriteInt32(val, ms);
             using (var ms2 = new MemoryStream(ms.ToArray())) {
@@ -2959,7 +2611,7 @@ o2,
       var rand = new FastRandom();
       // Test slightly modified objects
       for (var i = 0; i < 200; ++i) {
-        CBORObject originalObject = RandomCBORObject(rand);
+        CBORObject originalObject = RandomObjects.RandomCBORObject(rand);
         byte[] array = originalObject.EncodeToBytes();
         // Console.WriteLine(originalObject);
         int count2 = rand.NextValue(10) + 1;
@@ -3004,7 +2656,7 @@ o2,
       var rand = new FastRandom();
       CBORObject obj;
       for (var i = 0; i < 1000; ++i) {
-        obj = RandomCBORObject(rand);
+        obj = RandomObjects.RandomCBORObject(rand);
         TestCommon.AssertRoundTrip(obj);
         this.TestWriteToJSON(obj);
       }
@@ -3016,10 +2668,10 @@ o2,
       for (var i = 0; i < 255; ++i) {
         // Try a random float with a given
         // exponent
-        TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
-        TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
-        TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
-        TestExtendedFloatSingleCore(RandomSingle(rand, i), null);
+        TestExtendedFloatSingleCore(RandomObjects.RandomSingle(rand, i), null);
+        TestExtendedFloatSingleCore(RandomObjects.RandomSingle(rand, i), null);
+        TestExtendedFloatSingleCore(RandomObjects.RandomSingle(rand, i), null);
+        TestExtendedFloatSingleCore(RandomObjects.RandomSingle(rand, i), null);
       }
     }
 
@@ -3037,10 +2689,10 @@ o2,
       for (var i = 0; i < 2047; ++i) {
         // Try a random double with a given
         // exponent
-        TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
-        TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
-        TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
-        TestExtendedFloatDoubleCore(RandomDouble(rand, i), null);
+        TestExtendedFloatDoubleCore(RandomObjects.RandomDouble(rand, i), null);
+        TestExtendedFloatDoubleCore(RandomObjects.RandomDouble(rand, i), null);
+        TestExtendedFloatDoubleCore(RandomObjects.RandomDouble(rand, i), null);
+        TestExtendedFloatDoubleCore(RandomObjects.RandomDouble(rand, i), null);
       }
     }
     [TestMethod]
@@ -5275,7 +4927,7 @@ ExtendedDecimal.FromString("0.0000000000000000000e-8"
     public void TestCanFitIn() {
       var r = new FastRandom();
       for (var i = 0; i < 5000; ++i) {
-        CBORObject ed = RandomNumber(r);
+        CBORObject ed = RandomObjects.RandomNumber(r);
         ExtendedDecimal ed2;
         ed2 = ExtendedDecimal.FromDouble(ed.AsExtendedDecimal().ToDouble());
         if ((ed.AsExtendedDecimal().CompareTo(ed2) == 0) !=

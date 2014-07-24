@@ -231,7 +231,7 @@ import java.io.*;
         throw new NullPointerException("str");
       }
       this.offset = (skipByteOrderMark && str.length() > 0 && str.charAt(0) ==
-        0xfeff) ? (1) : (0);
+        0xfeff) ? 1 : 0;
       this.str = str;
     }
 

@@ -83,9 +83,9 @@
     <Compile Include="Cbor\ICharacterReader.cs" />
     <Compile Include="Cbor\PropertyMap.cs" />
     <Compile Include="Cbor\SharedRefs.cs" />
+    <Compile Include="Cbor\StringOutput.cs" />
     <Compile Include="Cbor\StringRefs.cs" />
     <Compile Include="Cbor\URIUtility.cs" />
-    <Compile Include="Cbor\Utf8Writer.cs" />
     <Compile Include="DataUtilities.cs" />
     <Compile Include="DebugUtility.cs" />
     <Compile Include="DecimalUtility.cs" />

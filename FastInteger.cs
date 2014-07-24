@@ -373,6 +373,7 @@ namespace PeterO {
    throw new ArgumentException("augend (" + augend + ") is less than " +
             "0 ");
         }
+        unchecked {
         if (augend != 0) {
           int carry = 0;
           // Ensure a length of at least 1
@@ -412,6 +413,7 @@ namespace PeterO {
         }
         return this;
       }
+    }
     }
 
     private int smallValue;  // if integerMode is 0

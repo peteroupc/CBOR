@@ -1893,17 +1893,15 @@ namespace PeterO.Cbor {
       return false;
     }
 
-    /// <summary>Adds a new object to the end of this array.</summary>
+    /// <summary>Adds a new object to the end of this array. (Used to throw
+    /// ArgumentNullException on a null reference, but now converts the object to
+    /// CBORObject.Null, for convenience with the Object overload of this
+    /// method.).</summary>
     /// <param name='obj'>A CBOR object.</param>
     /// <returns>This object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object is not an
     /// array.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='obj'/>
-    /// is null (as opposed to CBORObject.Null).</exception>
     public CBORObject Add(CBORObject obj) {
-      if (obj == null) {
-        throw new ArgumentNullException("obj");
-      }
       if (this.ItemType == CBORObjectTypeArray) {
         IList<CBORObject> list = this.AsList();
         list.Add(obj);
@@ -1918,8 +1916,8 @@ namespace PeterO.Cbor {
     /// <returns>This object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object is not an
     /// array.</exception>
-    /// <exception cref='ArgumentException'>The object's type is not
-    /// supported.</exception>
+    /// <exception cref='ArgumentException'>The type of <paramref name='obj'/> is
+    /// not supported.</exception>
     public CBORObject Add(object obj) {
       if (this.ItemType == CBORObjectTypeArray) {
         IList<CBORObject> list = this.AsList();

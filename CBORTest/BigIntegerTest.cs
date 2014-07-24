@@ -186,7 +186,7 @@ namespace Test {
           }
         }
         var bigprime = (BigInteger)prime;
-        BigInteger ba = CBORTest.RandomBigInteger(rand);
+        BigInteger ba = RandomObjects.RandomBigInteger(rand);
         if (ba.IsZero) {
           continue;
         }
@@ -205,7 +205,7 @@ namespace Test {
     public void TestGetDigitCount() {
       var r = new FastRandom();
       for (var i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         String str = BigInteger.Abs(bigintA).ToString();
         Assert.AreEqual(str.Length, bigintA.getDigitCount());
       }
@@ -295,7 +295,7 @@ namespace Test {
     public void TestIsEven() {
       var r = new FastRandom();
       for (var i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         BigInteger mod = bigintA.remainder(BigInteger.valueOf(2));
         Assert.AreEqual(mod.IsZero, bigintA.IsEven);
       }

@@ -231,7 +231,7 @@ namespace PeterO.Cbor {
         throw new ArgumentNullException("str");
       }
       this.offset = (skipByteOrderMark && str.Length > 0 && str[0] ==
-        0xfeff) ? (1) : (0);
+        0xfeff) ? 1 : 0;
       this.str = str;
     }
 

@@ -186,7 +186,7 @@ import com.upokecenter.util.*;
           }
         }
         BigInteger bigprime = BigInteger.valueOf(prime);
-        BigInteger ba = CBORTest.RandomBigInteger(rand);
+        BigInteger ba = RandomObjects.RandomBigInteger(rand);
         if (ba.signum() == 0) {
           continue;
         }
@@ -205,7 +205,7 @@ import com.upokecenter.util.*;
     public void TestGetDigitCount() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         String str = (bigintA).abs().toString();
         Assert.assertEquals(str.length(), bigintA.getDigitCount());
       }
@@ -295,7 +295,7 @@ import com.upokecenter.util.*;
     public void TestIsEven() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         BigInteger mod = bigintA.remainder(BigInteger.valueOf(2));
         Assert.assertEquals(mod.signum() == 0, bigintA.testBit(0) == false);
       }

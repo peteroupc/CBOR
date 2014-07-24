@@ -1022,10 +1022,10 @@ bytes = new byte[] { (byte)0x9f, (byte)0xd8, 28, 1, (byte)0xd8, 29, 0, 3, 3, (by
       // System.Diagnostics.Stopwatch sw1 = new System.Diagnostics.Stopwatch();
       // System.Diagnostics.Stopwatch sw2 = new System.Diagnostics.Stopwatch();
       for (int i = 0; i < 100; ++i) {
-        ExtendedRational er = CBORTest.RandomRational(fr);
+        ExtendedRational er = RandomObjects.RandomRational(fr);
         int exp = -100000 + fr.NextValue(200000);
         ExtendedDecimal ed = ExtendedDecimal.Create(
-          CBORTest.RandomBigInteger(fr),
+          RandomObjects.RandomBigInteger(fr),
           BigInteger.valueOf(exp));
         ExtendedRational er2 = ExtendedRational.FromExtendedDecimal(ed);
         // sw1.Start();
@@ -1045,8 +1045,8 @@ bytes = new byte[] { (byte)0x9f, (byte)0xd8, 28, 1, (byte)0xd8, 29, 0, 3, 3, (by
     public void TestRationalDivide() {
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
-        ExtendedRational er = CBORTest.RandomRational(fr);
-        ExtendedRational er2 = CBORTest.RandomRational(fr);
+        ExtendedRational er = RandomObjects.RandomRational(fr);
+        ExtendedRational er2 = RandomObjects.RandomRational(fr);
         if (er2.signum() == 0 || !er2.isFinite()) {
           continue;
         }
@@ -1069,10 +1069,10 @@ bytes = new byte[] { (byte)0x9f, (byte)0xd8, 28, 1, (byte)0xd8, 29, 0, 3, 3, (by
         ExtendedRational er;
         ExtendedRational er2;
       er = new ExtendedRational(
-CBORTest.RandomBigInteger(fr),
+RandomObjects.RandomBigInteger(fr),
 BigInteger.ONE);
      er2 = new ExtendedRational(
-CBORTest.RandomBigInteger(fr),
+RandomObjects.RandomBigInteger(fr),
 BigInteger.ONE);
         if (er2.signum() == 0 || !er2.isFinite()) {
           continue;
@@ -1099,7 +1099,7 @@ BigInteger.ONE);
     public void TestRationalCompare() {
       FastRandom fr = new FastRandom();
       for (int i = 0; i < 100; ++i) {
-        BigInteger num = CBORTest.RandomBigInteger(fr);
+        BigInteger num = RandomObjects.RandomBigInteger(fr);
         if (num.signum() == 0) {
           // Skip if number is 0; 0/1 and 0/2 are
           // equal in that case
@@ -1120,8 +1120,8 @@ BigInteger.ONE);
         new ExtendedRational(BigInteger.ONE, BigInteger.valueOf(2)).compareTo(
           new ExtendedRational(BigInteger.valueOf(4), BigInteger.ONE)));
       for (int i = 0; i < 100; ++i) {
-        BigInteger num = CBORTest.RandomBigInteger(fr);
-        BigInteger den = CBORTest.RandomBigInteger(fr);
+        BigInteger num = RandomObjects.RandomBigInteger(fr);
+        BigInteger den = RandomObjects.RandomBigInteger(fr);
         if (den.signum() == 0) {
           den = BigInteger.ONE;
         }
@@ -1129,7 +1129,7 @@ BigInteger.ONE);
         for (int j = 0; j < 10; ++j) {
           BigInteger num2 = num;
           BigInteger den2 = den;
-          BigInteger mult = CBORTest.RandomBigInteger(fr);
+          BigInteger mult = RandomObjects.RandomBigInteger(fr);
           if (mult.signum() == 0 || mult.equals(BigInteger.ONE)) {
             mult = BigInteger.valueOf(2);
           }
