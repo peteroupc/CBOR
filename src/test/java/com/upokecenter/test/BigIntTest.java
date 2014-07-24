@@ -34,7 +34,7 @@ import com.upokecenter.util.*;
     public void TestToString() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         String s = bigintA.toString();
         BigInteger big2 = BigInteger.fromString(s);
         Assert.assertEquals(big2.toString(), s);
@@ -45,7 +45,7 @@ import com.upokecenter.util.*;
     public void TestShiftLeft() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
           BigInteger ba = bigintA;
@@ -73,7 +73,7 @@ import com.upokecenter.util.*;
         }
       }
       for (int i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         bigintA = (bigintA).abs();
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
@@ -93,7 +93,7 @@ import com.upokecenter.util.*;
     public void TestMultiply() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         BigInteger bigintB = bigintA .add(BigInteger.ONE);
         BigInteger bigintC = bigintA.multiply(bigintB);
         // Test near-squaring
@@ -125,8 +125,8 @@ import com.upokecenter.util.*;
     public void TestMultiplyDivide() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 4000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
-        BigInteger bigintB = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
+        BigInteger bigintB = RandomObjects.RandomBigInteger(r);
         // Test that A*B/A = B and A*B/B = A
         BigInteger bigintC = bigintA.multiply(bigintB);
         BigInteger bigintRem;
@@ -189,7 +189,7 @@ bigintRem = divrem[1]; }
       FastRandom r = new FastRandom();
       for (int i = 0; i < 200; ++i) {
         int power = 1 + r.NextValue(8);
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         BigInteger bigintB = bigintA;
         for (int j = 1; j < power; ++j) {
           bigintB = bigintB.multiply(bigintA);
@@ -202,7 +202,7 @@ bigintRem = divrem[1]; }
     public void TestSquareRoot() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 10000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         if (bigintA.signum() < 0) {
           bigintA = bigintA.negate();
         }
@@ -551,8 +551,8 @@ bigintRem = divrem[1]; }
     public void TestAddSubtract() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 10000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
-        BigInteger bigintB = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
+        BigInteger bigintB = RandomObjects.RandomBigInteger(r);
         BigInteger bigintC = bigintA.add(bigintB);
         BigInteger bigintD = bigintC.subtract(bigintB);
         if (!bigintD.equals(bigintA)) {

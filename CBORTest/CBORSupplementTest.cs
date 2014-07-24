@@ -1010,10 +1010,10 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
       // var sw1 = new System.Diagnostics.Stopwatch();
       // var sw2 = new System.Diagnostics.Stopwatch();
       for (var i = 0; i < 100; ++i) {
-        ExtendedRational er = CBORTest.RandomRational(fr);
+        ExtendedRational er = RandomObjects.RandomRational(fr);
         int exp = -100000 + fr.NextValue(200000);
         ExtendedDecimal ed = ExtendedDecimal.Create(
-          CBORTest.RandomBigInteger(fr),
+          RandomObjects.RandomBigInteger(fr),
           (BigInteger)exp);
         ExtendedRational er2 = ExtendedRational.FromExtendedDecimal(ed);
         // sw1.Start();
@@ -1033,8 +1033,8 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
     public void TestRationalDivide() {
       var fr = new FastRandom();
       for (var i = 0; i < 100; ++i) {
-        ExtendedRational er = CBORTest.RandomRational(fr);
-        ExtendedRational er2 = CBORTest.RandomRational(fr);
+        ExtendedRational er = RandomObjects.RandomRational(fr);
+        ExtendedRational er2 = RandomObjects.RandomRational(fr);
         if (er2.IsZero || !er2.IsFinite) {
           continue;
         }
@@ -1057,10 +1057,10 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
         ExtendedRational er;
         ExtendedRational er2;
       er = new ExtendedRational(
-CBORTest.RandomBigInteger(fr),
+RandomObjects.RandomBigInteger(fr),
 BigInteger.One);
      er2 = new ExtendedRational(
-CBORTest.RandomBigInteger(fr),
+RandomObjects.RandomBigInteger(fr),
 BigInteger.One);
         if (er2.IsZero || !er2.IsFinite) {
           continue;
@@ -1087,7 +1087,7 @@ BigInteger.One);
     public void TestRationalCompare() {
       var fr = new FastRandom();
       for (var i = 0; i < 100; ++i) {
-        BigInteger num = CBORTest.RandomBigInteger(fr);
+        BigInteger num = RandomObjects.RandomBigInteger(fr);
         if (num.IsZero) {
           // Skip if number is 0; 0/1 and 0/2 are
           // equal in that case
@@ -1108,8 +1108,8 @@ BigInteger.One);
         new ExtendedRational(BigInteger.One, (BigInteger)2).CompareTo(
           new ExtendedRational((BigInteger)4, BigInteger.One)));
       for (var i = 0; i < 100; ++i) {
-        BigInteger num = CBORTest.RandomBigInteger(fr);
-        BigInteger den = CBORTest.RandomBigInteger(fr);
+        BigInteger num = RandomObjects.RandomBigInteger(fr);
+        BigInteger den = RandomObjects.RandomBigInteger(fr);
         if (den.IsZero) {
           den = BigInteger.One;
         }
@@ -1117,7 +1117,7 @@ BigInteger.One);
         for (int j = 0; j < 10; ++j) {
           BigInteger num2 = num;
           BigInteger den2 = den;
-          BigInteger mult = CBORTest.RandomBigInteger(fr);
+          BigInteger mult = RandomObjects.RandomBigInteger(fr);
           if (mult.IsZero || mult.Equals(BigInteger.One)) {
             mult = (BigInteger)2;
           }

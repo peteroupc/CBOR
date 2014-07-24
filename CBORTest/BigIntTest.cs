@@ -34,7 +34,7 @@ namespace Test {
     public void TestToString() {
       var r = new FastRandom();
       for (var i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         String s = bigintA.ToString();
         BigInteger big2 = BigInteger.fromString(s);
         Assert.AreEqual(big2.ToString(), s);
@@ -45,7 +45,7 @@ namespace Test {
     public void TestShiftLeft() {
       var r = new FastRandom();
       for (var i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
           BigInteger ba = bigintA;
@@ -73,7 +73,7 @@ namespace Test {
         }
       }
       for (var i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         bigintA = BigInteger.Abs(bigintA);
         BigInteger bigintB = bigintA;
         for (int j = 0; j < 100; ++j) {
@@ -93,7 +93,7 @@ namespace Test {
     public void TestMultiply() {
       var r = new FastRandom();
       for (var i = 0; i < 1000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         BigInteger bigintB = bigintA + BigInteger.One;
         BigInteger bigintC = bigintA * (BigInteger)bigintB;
         // Test near-squaring
@@ -125,8 +125,8 @@ namespace Test {
     public void TestMultiplyDivide() {
       var r = new FastRandom();
       for (var i = 0; i < 4000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
-        BigInteger bigintB = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
+        BigInteger bigintB = RandomObjects.RandomBigInteger(r);
         // Test that A*B/A = B and A*B/B = A
         BigInteger bigintC = bigintA * (BigInteger)bigintB;
         BigInteger bigintRem;
@@ -201,7 +201,7 @@ bigintD,
       var r = new FastRandom();
       for (var i = 0; i < 200; ++i) {
         int power = 1 + r.NextValue(8);
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         BigInteger bigintB = bigintA;
         for (int j = 1; j < power; ++j) {
           bigintB *= bigintA;
@@ -214,7 +214,7 @@ bigintD,
     public void TestSquareRoot() {
       var r = new FastRandom();
       for (var i = 0; i < 10000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         if (bigintA.Sign < 0) {
           bigintA = -bigintA;
         }
@@ -563,8 +563,8 @@ bigintD,
     public void TestAddSubtract() {
       var r = new FastRandom();
       for (var i = 0; i < 10000; ++i) {
-        BigInteger bigintA = CBORTest.RandomBigInteger(r);
-        BigInteger bigintB = CBORTest.RandomBigInteger(r);
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
+        BigInteger bigintB = RandomObjects.RandomBigInteger(r);
         BigInteger bigintC = bigintA + (BigInteger)bigintB;
         BigInteger bigintD = bigintC - (BigInteger)bigintB;
         if (!bigintD.Equals(bigintA)) {
