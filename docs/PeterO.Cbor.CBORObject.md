@@ -535,7 +535,7 @@ Key is null (as opposed to CBORObject.Null).
     public PeterO.Cbor.CBORObject Add(
         PeterO.Cbor.CBORObject obj);
 
-Adds a new object to the end of this array.
+Adds a new object to the end of this array. (Used to throw ArgumentNullException on a null reference, but now converts the object to CBORObject.Null, for convenience with the Object overload of this method.).
 
 <b>Parameters:</b>
 
@@ -549,10 +549,6 @@ This object.
 
  * System.InvalidOperationException: 
 This object is not an array.
-
- * System.ArgumentNullException: 
-The parameter  <i>obj</i>
-is null (as opposed to CBORObject.Null).
 
 ### Add
 
@@ -575,7 +571,8 @@ This object.
 This object is not an array.
 
  * System.ArgumentException: 
-The object's type is not supported.
+The type of  <i>obj</i>
+ is not supported.
 
 ### Remove
 
