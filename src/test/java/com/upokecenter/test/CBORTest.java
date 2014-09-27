@@ -760,14 +760,6 @@ o2,
         throw new IllegalStateException("", ex);
       }
       try {
-        CBORObject.NewArray().Add(null);
-        Assert.fail("Should have failed");
-      } catch (NullPointerException ex) {
-      } catch (Exception ex) {
-        Assert.fail(ex.toString());
-        throw new IllegalStateException("", ex);
-      }
-      try {
         CBORObject.NewArray().Add(CBORObject.Null);
       } catch (Exception ex) {
         Assert.fail(ex.toString());
@@ -906,10 +898,10 @@ try { if (ms3 != null)ms3.close(); } catch (java.io.IOException ex) {}
     @Test
     public void TestCBORInfinity() {
       Assert.assertEquals(
-        "-Infinity" ,
+        "-Infinity",
         CBORObject.FromObject(ExtendedRational.NegativeInfinity).toString());
       Assert.assertEquals(
-        "Infinity" ,
+        "Infinity",
         CBORObject.FromObject(ExtendedRational.PositiveInfinity).toString());
 
   TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.NegativeInfinity));
@@ -3000,48 +2992,48 @@ try { if (ms != null)ms.close(); } catch (java.io.IOException ex) {}
     @Test
     public void TestFPToBigInteger() {
       Assert.assertEquals(
-        "0" ,
+        "0",
         CBORObject.FromObject((float)0.75).AsBigInteger().toString());
       Assert.assertEquals(
-        "0" ,
+        "0",
         CBORObject.FromObject((float)0.99).AsBigInteger().toString());
       Assert.assertEquals(
-        "0" ,
+        "0",
  CBORObject.FromObject((float)0.0000000000000001).AsBigInteger()
           .toString());
       Assert.assertEquals(
-        "0" ,
+        "0",
         CBORObject.FromObject((float)0.5).AsBigInteger().toString());
       Assert.assertEquals(
-        "1" ,
+        "1",
         CBORObject.FromObject((float)1.5).AsBigInteger().toString());
       Assert.assertEquals(
-        "2" ,
+        "2",
         CBORObject.FromObject((float)2.5).AsBigInteger().toString());
       Assert.assertEquals(
-        "328323" ,
+        "328323",
         CBORObject.FromObject((float)328323f).AsBigInteger().toString());
       Assert.assertEquals(
-        "0" ,
+        "0",
         CBORObject.FromObject((double)0.75).AsBigInteger().toString());
       Assert.assertEquals(
-        "0" ,
+        "0",
         CBORObject.FromObject((double)0.99).AsBigInteger().toString());
       Assert.assertEquals(
-        "0" ,
+        "0",
 CBORObject.FromObject((double)0.0000000000000001).AsBigInteger()
           .toString());
       Assert.assertEquals(
-        "0" ,
+        "0",
         CBORObject.FromObject((double)0.5).AsBigInteger().toString());
       Assert.assertEquals(
-        "1" ,
+        "1",
         CBORObject.FromObject((double)1.5).AsBigInteger().toString());
       Assert.assertEquals(
-        "2" ,
+        "2",
         CBORObject.FromObject((double)2.5).AsBigInteger().toString());
       Assert.assertEquals(
-        "328323" ,
+        "328323",
         CBORObject.FromObject((double)328323).AsBigInteger().toString());
       try {
         CBORObject.FromObject(Float.POSITIVE_INFINITY).AsBigInteger();
@@ -3478,51 +3470,51 @@ CBORObject.FromObject((double)0.0000000000000001).AsBigInteger()
         "0.0000",
         ExtendedDecimal.FromString("0.000E-1").ToPlainString());
       Assert.assertEquals(
-        "0E-16" ,
+        "0E-16",
         ExtendedDecimal.FromString("0.0000000000000e-3").toString());
       Assert.assertEquals(
-        "0.0E-15" ,
+        "0.0E-15",
         ExtendedDecimal.FromString("0.0000000000000e-3").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000" ,
+        "0.0000000000000000",
         ExtendedDecimal.FromString("0.0000000000000e-3").ToPlainString());
       Assert.assertEquals(
         "0E-8",
         ExtendedDecimal.FromString("0.000000000e+1").toString());
       Assert.assertEquals(
-        "0.00E-6" ,
+        "0.00E-6",
         ExtendedDecimal.FromString("0.000000000e+1").ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000" ,
+        "0.00000000",
         ExtendedDecimal.FromString("0.000000000e+1").ToPlainString());
       Assert.assertEquals(
-        "0.000" ,
+        "0.000",
         ExtendedDecimal.FromString("0.000000000000000e+12").toString());
       Assert.assertEquals(
-        "0.000" ,
+        "0.000",
    ExtendedDecimal.FromString("0.000000000000000e+12"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.000" ,
+        "0.000",
         ExtendedDecimal.FromString("0.000000000000000e+12").ToPlainString());
       Assert.assertEquals(
-        "0E-25" ,
+        "0E-25",
         ExtendedDecimal.FromString("0.00000000000000e-11").toString());
       Assert.assertEquals(
-        "0.0E-24" ,
+        "0.0E-24",
     ExtendedDecimal.FromString("0.00000000000000e-11"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000000000000" ,
+        "0.0000000000000000000000000",
         ExtendedDecimal.FromString("0.00000000000000e-11").ToPlainString());
       Assert.assertEquals(
-        "0E-7" ,
+        "0E-7",
         ExtendedDecimal.FromString("0.000000000000e+5").toString());
       Assert.assertEquals(
-        "0.0E-6" ,
+        "0.0E-6",
         ExtendedDecimal.FromString("0.000000000000e+5").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000" ,
+        "0.0000000",
         ExtendedDecimal.FromString("0.000000000000e+5").ToPlainString());
       Assert.assertEquals(
         "0E-8",
@@ -3550,14 +3542,14 @@ CBORObject.FromObject((double)0.0000000000000001).AsBigInteger()
         "0",
         ExtendedDecimal.FromString("0.0e+3").ToPlainString());
       Assert.assertEquals(
-        "0E-7" ,
+        "0E-7",
         ExtendedDecimal.FromString("0.000000000000000e+8").toString());
       Assert.assertEquals(
-        "0.0E-6" ,
+        "0.0E-6",
     ExtendedDecimal.FromString("0.000000000000000e+8"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000" ,
+        "0.0000000",
         ExtendedDecimal.FromString("0.000000000000000e+8").ToPlainString());
       Assert.assertEquals(
         "0E+7",
@@ -3569,14 +3561,14 @@ CBORObject.FromObject((double)0.0000000000000001).AsBigInteger()
         "0",
         ExtendedDecimal.FromString("0.000e+10").ToPlainString());
       Assert.assertEquals(
-        "0E-31" ,
+        "0E-31",
         ExtendedDecimal.FromString("0.0000000000000000000e-12").toString());
       Assert.assertEquals(
-        "0.0E-30" ,
+        "0.0E-30",
         ExtendedDecimal.FromString("0.0000000000000000000e-12"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000000000000000000" ,
+        "0.0000000000000000000000000000000",
      ExtendedDecimal.FromString("0.0000000000000000000e-12"
 ).ToPlainString());
       Assert.assertEquals(
@@ -3589,41 +3581,41 @@ CBORObject.FromObject((double)0.0000000000000001).AsBigInteger()
         "0.00000",
         ExtendedDecimal.FromString("0.0000e-1").ToPlainString());
       Assert.assertEquals(
-        "0E-22" ,
+        "0E-22",
         ExtendedDecimal.FromString("0.00000000000e-11").toString());
       Assert.assertEquals(
-        "0.0E-21" ,
+        "0.0E-21",
         ExtendedDecimal.FromString("0.00000000000e-11").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000000000" ,
+        "0.0000000000000000000000",
         ExtendedDecimal.FromString("0.00000000000e-11").ToPlainString());
       Assert.assertEquals(
-        "0E-28" ,
+        "0E-28",
         ExtendedDecimal.FromString("0.00000000000e-17").toString());
       Assert.assertEquals(
-        "0.0E-27" ,
+        "0.0E-27",
         ExtendedDecimal.FromString("0.00000000000e-17").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000000000000000" ,
+        "0.0000000000000000000000000000",
         ExtendedDecimal.FromString("0.00000000000e-17").ToPlainString());
       Assert.assertEquals(
-        "0.00000" ,
+        "0.00000",
         ExtendedDecimal.FromString("0.00000000000000e+9").toString());
       Assert.assertEquals(
-        "0.00000" ,
+        "0.00000",
      ExtendedDecimal.FromString("0.00000000000000e+9"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.00000" ,
+        "0.00000",
         ExtendedDecimal.FromString("0.00000000000000e+9").ToPlainString());
       Assert.assertEquals(
-        "0E-28" ,
+        "0E-28",
         ExtendedDecimal.FromString("0.0000000000e-18").toString());
       Assert.assertEquals(
-        "0.0E-27" ,
+        "0.0E-27",
         ExtendedDecimal.FromString("0.0000000000e-18").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000000000000000" ,
+        "0.0000000000000000000000000000",
         ExtendedDecimal.FromString("0.0000000000e-18").ToPlainString());
       Assert.assertEquals(
         "0E-14",
@@ -3632,17 +3624,17 @@ CBORObject.FromObject((double)0.0000000000000001).AsBigInteger()
         "0.00E-12",
         ExtendedDecimal.FromString("0.0e-13").ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000" ,
+        "0.00000000000000",
         ExtendedDecimal.FromString("0.0e-13").ToPlainString());
       Assert.assertEquals(
-        "0E-8" ,
+        "0E-8",
         ExtendedDecimal.FromString("0.000000000000000000e+10").toString());
       Assert.assertEquals(
-        "0.00E-6" ,
+        "0.00E-6",
 ExtendedDecimal.FromString("0.000000000000000000e+10"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000" ,
+        "0.00000000",
         ExtendedDecimal.FromString("0.000000000000000000e+10").ToPlainString());
       Assert.assertEquals(
         "0E+15",
@@ -3660,13 +3652,13 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0.0E-12",
         ExtendedDecimal.FromString("0.00000e-8").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000" ,
+        "0.0000000000000",
         ExtendedDecimal.FromString("0.00000e-8").ToPlainString());
       Assert.assertEquals(
-        "0E+3" ,
+        "0E+3",
         ExtendedDecimal.FromString("0.00000000000e+14").toString());
       Assert.assertEquals(
-        "0E+3" ,
+        "0E+3",
         ExtendedDecimal.FromString("0.00000000000e+14").ToEngineeringString());
       Assert.assertEquals(
         "0",
@@ -3678,7 +3670,7 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0.00E-15",
         ExtendedDecimal.FromString("0.000e-14").ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000000" ,
+        "0.00000000000000000",
         ExtendedDecimal.FromString("0.000e-14").ToPlainString());
       Assert.assertEquals(
         "0E-25",
@@ -3687,53 +3679,53 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0.0E-24",
         ExtendedDecimal.FromString("0.000000e-19").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000000000000" ,
+        "0.0000000000000000000000000",
         ExtendedDecimal.FromString("0.000000e-19").ToPlainString());
       Assert.assertEquals(
-        "0E+7" ,
+        "0E+7",
         ExtendedDecimal.FromString("0.000000000000e+19").toString());
       Assert.assertEquals(
-        "0.00E+9" ,
+        "0.00E+9",
         ExtendedDecimal.FromString("0.000000000000e+19").ToEngineeringString());
       Assert.assertEquals(
         "0",
         ExtendedDecimal.FromString("0.000000000000e+19").ToPlainString());
       Assert.assertEquals(
-        "0E+5" ,
+        "0E+5",
         ExtendedDecimal.FromString("0.0000000000000e+18").toString());
       Assert.assertEquals(
-        "0.0E+6" ,
+        "0.0E+6",
      ExtendedDecimal.FromString("0.0000000000000e+18"
 ).ToEngineeringString());
       Assert.assertEquals(
         "0",
         ExtendedDecimal.FromString("0.0000000000000e+18").ToPlainString());
       Assert.assertEquals(
-        "0E-16" ,
+        "0E-16",
         ExtendedDecimal.FromString("0.00000000000000e-2").toString());
       Assert.assertEquals(
-        "0.0E-15" ,
+        "0.0E-15",
      ExtendedDecimal.FromString("0.00000000000000e-2"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000" ,
+        "0.0000000000000000",
         ExtendedDecimal.FromString("0.00000000000000e-2").ToPlainString());
       Assert.assertEquals(
-        "0E-31" ,
+        "0E-31",
         ExtendedDecimal.FromString("0.0000000000000e-18").toString());
       Assert.assertEquals(
-        "0.0E-30" ,
+        "0.0E-30",
      ExtendedDecimal.FromString("0.0000000000000e-18"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000000000000000000" ,
+        "0.0000000000000000000000000000000",
         ExtendedDecimal.FromString("0.0000000000000e-18").ToPlainString());
       Assert.assertEquals("0E-17", ExtendedDecimal.FromString("0e-17").toString());
       Assert.assertEquals(
         "0.00E-15",
         ExtendedDecimal.FromString("0e-17").ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000000" ,
+        "0.00000000000000000",
         ExtendedDecimal.FromString("0e-17").ToPlainString());
       Assert.assertEquals("0E+17", ExtendedDecimal.FromString("0e+17").toString());
       Assert.assertEquals(
@@ -3741,44 +3733,44 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         ExtendedDecimal.FromString("0e+17").ToEngineeringString());
       Assert.assertEquals("0", ExtendedDecimal.FromString("0e+17").ToPlainString());
       Assert.assertEquals(
-        "0E-17" ,
+        "0E-17",
         ExtendedDecimal.FromString("0.00000000000000000e+0").toString());
       Assert.assertEquals(
-        "0.00E-15" ,
+        "0.00E-15",
   ExtendedDecimal.FromString("0.00000000000000000e+0"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000000" ,
+        "0.00000000000000000",
         ExtendedDecimal.FromString("0.00000000000000000e+0").ToPlainString());
       Assert.assertEquals(
-        "0E-13" ,
+        "0E-13",
         ExtendedDecimal.FromString("0.0000000000000e+0").toString());
       Assert.assertEquals(
-        "0.0E-12" ,
+        "0.0E-12",
         ExtendedDecimal.FromString("0.0000000000000e+0").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000" ,
+        "0.0000000000000",
         ExtendedDecimal.FromString("0.0000000000000e+0").ToPlainString());
       Assert.assertEquals(
-        "0E-31" ,
+        "0E-31",
         ExtendedDecimal.FromString("0.0000000000000000000e-12").toString());
       Assert.assertEquals(
-        "0.0E-30" ,
+        "0.0E-30",
         ExtendedDecimal.FromString("0.0000000000000000000e-12"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000000000000000000" ,
+        "0.0000000000000000000000000000000",
      ExtendedDecimal.FromString("0.0000000000000000000e-12"
 ).ToPlainString());
       Assert.assertEquals(
-        "0E-9" ,
+        "0E-9",
         ExtendedDecimal.FromString("0.0000000000000000000e+10").toString());
       Assert.assertEquals(
-        "0E-9" ,
+        "0E-9",
         ExtendedDecimal.FromString("0.0000000000000000000e+10"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.000000000" ,
+        "0.000000000",
      ExtendedDecimal.FromString("0.0000000000000000000e+10"
 ).ToPlainString());
       Assert.assertEquals(
@@ -3803,20 +3795,20 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0E-19",
         ExtendedDecimal.FromString("0.000000000e-10").toString());
       Assert.assertEquals(
-        "0.0E-18" ,
+        "0.0E-18",
         ExtendedDecimal.FromString("0.000000000e-10").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000000" ,
+        "0.0000000000000000000",
         ExtendedDecimal.FromString("0.000000000e-10").ToPlainString());
       Assert.assertEquals(
-        "0E-8" ,
+        "0E-8",
         ExtendedDecimal.FromString("0.00000000000000e+6").toString());
       Assert.assertEquals(
-        "0.00E-6" ,
+        "0.00E-6",
      ExtendedDecimal.FromString("0.00000000000000e+6"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000" ,
+        "0.00000000",
         ExtendedDecimal.FromString("0.00000000000000e+6").ToPlainString());
       Assert.assertEquals(
         "0E+12",
@@ -3828,30 +3820,30 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0",
         ExtendedDecimal.FromString("0.00000e+17").ToPlainString());
       Assert.assertEquals(
-        "0E-18" ,
+        "0E-18",
         ExtendedDecimal.FromString("0.000000000000000000e-0").toString());
       Assert.assertEquals(
-        "0E-18" ,
+        "0E-18",
  ExtendedDecimal.FromString("0.000000000000000000e-0"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.000000000000000000" ,
+        "0.000000000000000000",
         ExtendedDecimal.FromString("0.000000000000000000e-0").ToPlainString());
       Assert.assertEquals(
-        "0.00000" ,
+        "0.00000",
         ExtendedDecimal.FromString("0.0000000000000000e+11").toString());
       Assert.assertEquals(
-        "0.00000" ,
+        "0.00000",
   ExtendedDecimal.FromString("0.0000000000000000e+11"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.00000" ,
+        "0.00000",
         ExtendedDecimal.FromString("0.0000000000000000e+11").ToPlainString());
       Assert.assertEquals(
-        "0E+3" ,
+        "0E+3",
         ExtendedDecimal.FromString("0.000000000000e+15").toString());
       Assert.assertEquals(
-        "0E+3" ,
+        "0E+3",
         ExtendedDecimal.FromString("0.000000000000e+15").ToEngineeringString());
       Assert.assertEquals(
         "0",
@@ -3863,7 +3855,7 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0E-27",
         ExtendedDecimal.FromString("0.00000000e-19").ToEngineeringString());
       Assert.assertEquals(
-        "0.000000000000000000000000000" ,
+        "0.000000000000000000000000000",
         ExtendedDecimal.FromString("0.00000000e-19").ToPlainString());
       Assert.assertEquals(
         "0E-11",
@@ -3872,14 +3864,14 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0.00E-9",
         ExtendedDecimal.FromString("0.00000e-6").ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000" ,
+        "0.00000000000",
         ExtendedDecimal.FromString("0.00000e-6").ToPlainString());
       Assert.assertEquals("0E-14", ExtendedDecimal.FromString("0e-14").toString());
       Assert.assertEquals(
         "0.00E-12",
         ExtendedDecimal.FromString("0e-14").ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000" ,
+        "0.00000000000000",
         ExtendedDecimal.FromString("0e-14").ToPlainString());
       Assert.assertEquals(
         "0",
@@ -3909,42 +3901,42 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0.000",
         ExtendedDecimal.FromString("0.000e-0").ToPlainString());
       Assert.assertEquals(
-        "0E-9" ,
+        "0E-9",
         ExtendedDecimal.FromString("0.000000000000000e+6").toString());
       Assert.assertEquals(
-        "0E-9" ,
+        "0E-9",
     ExtendedDecimal.FromString("0.000000000000000e+6"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.000000000" ,
+        "0.000000000",
         ExtendedDecimal.FromString("0.000000000000000e+6").ToPlainString());
       Assert.assertEquals(
         "0E+8",
         ExtendedDecimal.FromString("0.000000000e+17").toString());
       Assert.assertEquals(
-        "0.0E+9" ,
+        "0.0E+9",
         ExtendedDecimal.FromString("0.000000000e+17").ToEngineeringString());
       Assert.assertEquals(
         "0",
         ExtendedDecimal.FromString("0.000000000e+17").ToPlainString());
       Assert.assertEquals(
-        "0.00000" ,
+        "0.00000",
         ExtendedDecimal.FromString("0.00000000000e+6").toString());
       Assert.assertEquals(
-        "0.00000" ,
+        "0.00000",
         ExtendedDecimal.FromString("0.00000000000e+6").ToEngineeringString());
       Assert.assertEquals(
-        "0.00000" ,
+        "0.00000",
         ExtendedDecimal.FromString("0.00000000000e+6").ToPlainString());
       Assert.assertEquals(
-        "0E-11" ,
+        "0E-11",
         ExtendedDecimal.FromString("0.00000000000000e+3").toString());
       Assert.assertEquals(
-        "0.00E-9" ,
+        "0.00E-9",
      ExtendedDecimal.FromString("0.00000000000000e+3"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000" ,
+        "0.00000000000",
         ExtendedDecimal.FromString("0.00000000000000e+3").ToPlainString());
       Assert.assertEquals("0", ExtendedDecimal.FromString("0e+0").toString());
       Assert.assertEquals(
@@ -3970,14 +3962,14 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0.00",
         ExtendedDecimal.FromString("0.00000000000e+9").ToPlainString());
       Assert.assertEquals(
-        "0E-23" ,
+        "0E-23",
         ExtendedDecimal.FromString("0.00000000000000e-9").toString());
       Assert.assertEquals(
-        "0.00E-21" ,
+        "0.00E-21",
      ExtendedDecimal.FromString("0.00000000000000e-9"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000000000000" ,
+        "0.00000000000000000000000",
         ExtendedDecimal.FromString("0.00000000000000e-9").ToPlainString());
       Assert.assertEquals("0.0", ExtendedDecimal.FromString("0e-1").toString());
       Assert.assertEquals(
@@ -3993,26 +3985,26 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0.00E-15",
         ExtendedDecimal.FromString("0.0000e-13").ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000000" ,
+        "0.00000000000000000",
         ExtendedDecimal.FromString("0.0000e-13").ToPlainString());
       Assert.assertEquals(
-        "0E-18" ,
+        "0E-18",
         ExtendedDecimal.FromString("0.00000000000e-7").toString());
       Assert.assertEquals(
-        "0E-18" ,
+        "0E-18",
         ExtendedDecimal.FromString("0.00000000000e-7").ToEngineeringString());
       Assert.assertEquals(
-        "0.000000000000000000" ,
+        "0.000000000000000000",
         ExtendedDecimal.FromString("0.00000000000e-7").ToPlainString());
       Assert.assertEquals(
-        "0E-10" ,
+        "0E-10",
         ExtendedDecimal.FromString("0.00000000000000e+4").toString());
       Assert.assertEquals(
-        "0.0E-9" ,
+        "0.0E-9",
      ExtendedDecimal.FromString("0.00000000000000e+4"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000" ,
+        "0.0000000000",
         ExtendedDecimal.FromString("0.00000000000000e+4").ToPlainString());
       Assert.assertEquals(
         "0E-16",
@@ -4021,7 +4013,7 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0.0E-15",
         ExtendedDecimal.FromString("0.00000000e-8").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000" ,
+        "0.0000000000000000",
         ExtendedDecimal.FromString("0.00000000e-8").ToPlainString());
       Assert.assertEquals("0E-8", ExtendedDecimal.FromString("0.00e-6").toString());
       Assert.assertEquals(
@@ -4038,14 +4030,14 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0.00",
         ExtendedDecimal.FromString("0.0e-1").ToPlainString());
       Assert.assertEquals(
-        "0E-26" ,
+        "0E-26",
         ExtendedDecimal.FromString("0.0000000000000000e-10").toString());
       Assert.assertEquals(
-        "0.00E-24" ,
+        "0.00E-24",
   ExtendedDecimal.FromString("0.0000000000000000e-10"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000000000000000" ,
+        "0.00000000000000000000000000",
         ExtendedDecimal.FromString("0.0000000000000000e-10").ToPlainString());
       Assert.assertEquals(
         "0E+12",
@@ -4057,14 +4049,14 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0",
         ExtendedDecimal.FromString("0.00e+14").ToPlainString());
       Assert.assertEquals(
-        "0E-13" ,
+        "0E-13",
         ExtendedDecimal.FromString("0.000000000000000000e+5").toString());
       Assert.assertEquals(
-        "0.0E-12" ,
+        "0.0E-12",
  ExtendedDecimal.FromString("0.000000000000000000e+5"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000" ,
+        "0.0000000000000",
         ExtendedDecimal.FromString("0.000000000000000000e+5").ToPlainString());
       Assert.assertEquals("0E+6", ExtendedDecimal.FromString("0.0e+7").toString());
       Assert.assertEquals(
@@ -4089,7 +4081,7 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0E-9",
         ExtendedDecimal.FromString("0.000000000e+0").ToEngineeringString());
       Assert.assertEquals(
-        "0.000000000" ,
+        "0.000000000",
         ExtendedDecimal.FromString("0.000000000e+0").ToPlainString());
       Assert.assertEquals(
         "0E+10",
@@ -4101,14 +4093,14 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0",
         ExtendedDecimal.FromString("0.000e+13").ToPlainString());
       Assert.assertEquals(
-        "0" ,
+        "0",
         ExtendedDecimal.FromString("0.0000000000000000e+16").toString());
       Assert.assertEquals(
-        "0" ,
+        "0",
   ExtendedDecimal.FromString("0.0000000000000000e+16"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0" ,
+        "0",
         ExtendedDecimal.FromString("0.0000000000000000e+16").ToPlainString());
       Assert.assertEquals(
         "0E-9",
@@ -4117,16 +4109,16 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0E-9",
         ExtendedDecimal.FromString("0.00000000e-1").ToEngineeringString());
       Assert.assertEquals(
-        "0.000000000" ,
+        "0.000000000",
         ExtendedDecimal.FromString("0.00000000e-1").ToPlainString());
       Assert.assertEquals(
-        "0E-26" ,
+        "0E-26",
         ExtendedDecimal.FromString("0.00000000000e-15").toString());
       Assert.assertEquals(
-        "0.00E-24" ,
+        "0.00E-24",
         ExtendedDecimal.FromString("0.00000000000e-15").ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000000000000000" ,
+        "0.00000000000000000000000000",
         ExtendedDecimal.FromString("0.00000000000e-15").ToPlainString());
       Assert.assertEquals(
         "0E+10",
@@ -4147,44 +4139,44 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0",
         ExtendedDecimal.FromString("0.00000e+7").ToPlainString());
       Assert.assertEquals(
-        "0E-38" ,
+        "0E-38",
         ExtendedDecimal.FromString("0.0000000000000000000e-19").toString());
       Assert.assertEquals(
-        "0.00E-36" ,
+        "0.00E-36",
         ExtendedDecimal.FromString("0.0000000000000000000e-19"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000000000000000000000000000" ,
+        "0.00000000000000000000000000000000000000",
      ExtendedDecimal.FromString("0.0000000000000000000e-19"
 ).ToPlainString());
       Assert.assertEquals(
         "0E-16",
         ExtendedDecimal.FromString("0.0000000000e-6").toString());
       Assert.assertEquals(
-        "0.0E-15" ,
+        "0.0E-15",
         ExtendedDecimal.FromString("0.0000000000e-6").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000" ,
+        "0.0000000000000000",
         ExtendedDecimal.FromString("0.0000000000e-6").ToPlainString());
       Assert.assertEquals(
-        "0E-32" ,
+        "0E-32",
         ExtendedDecimal.FromString("0.00000000000000000e-15").toString());
       Assert.assertEquals(
-        "0.00E-30" ,
+        "0.00E-30",
  ExtendedDecimal.FromString("0.00000000000000000e-15"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000000000000000000000" ,
+        "0.00000000000000000000000000000000",
         ExtendedDecimal.FromString("0.00000000000000000e-15").ToPlainString());
       Assert.assertEquals(
-        "0E-13" ,
+        "0E-13",
         ExtendedDecimal.FromString("0.000000000000000e+2").toString());
       Assert.assertEquals(
-        "0.0E-12" ,
+        "0.0E-12",
     ExtendedDecimal.FromString("0.000000000000000e+2"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000" ,
+        "0.0000000000000",
         ExtendedDecimal.FromString("0.000000000000000e+2").ToPlainString());
       Assert.assertEquals(
         "0E-19",
@@ -4193,17 +4185,17 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0.0E-18",
         ExtendedDecimal.FromString("0.0e-18").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000000" ,
+        "0.0000000000000000000",
         ExtendedDecimal.FromString("0.0e-18").ToPlainString());
       Assert.assertEquals(
-        "0E-20" ,
+        "0E-20",
         ExtendedDecimal.FromString("0.00000000000000e-6").toString());
       Assert.assertEquals(
-        "0.00E-18" ,
+        "0.00E-18",
      ExtendedDecimal.FromString("0.00000000000000e-6"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000000000" ,
+        "0.00000000000000000000",
         ExtendedDecimal.FromString("0.00000000000000e-6").ToPlainString());
       Assert.assertEquals(
         "0E-20",
@@ -4212,17 +4204,17 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0.00E-18",
         ExtendedDecimal.FromString("0.000e-17").ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000000000" ,
+        "0.00000000000000000000",
         ExtendedDecimal.FromString("0.000e-17").ToPlainString());
       Assert.assertEquals(
-        "0E-21" ,
+        "0E-21",
         ExtendedDecimal.FromString("0.00000000000000e-7").toString());
       Assert.assertEquals(
-        "0E-21" ,
+        "0E-21",
      ExtendedDecimal.FromString("0.00000000000000e-7"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.000000000000000000000" ,
+        "0.000000000000000000000",
         ExtendedDecimal.FromString("0.00000000000000e-7").ToPlainString());
       Assert.assertEquals(
         "0E-15",
@@ -4231,7 +4223,7 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0E-15",
         ExtendedDecimal.FromString("0.000000e-9").ToEngineeringString());
       Assert.assertEquals(
-        "0.000000000000000" ,
+        "0.000000000000000",
         ExtendedDecimal.FromString("0.000000e-9").ToPlainString());
       Assert.assertEquals("0E-11", ExtendedDecimal.FromString("0e-11").toString());
       Assert.assertEquals(
@@ -4244,68 +4236,68 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         "0E+2",
         ExtendedDecimal.FromString("0.000000000e+11").toString());
       Assert.assertEquals(
-        "0.0E+3" ,
+        "0.0E+3",
         ExtendedDecimal.FromString("0.000000000e+11").ToEngineeringString());
       Assert.assertEquals(
         "0",
         ExtendedDecimal.FromString("0.000000000e+11").ToPlainString());
       Assert.assertEquals(
-        "0.0" ,
+        "0.0",
         ExtendedDecimal.FromString("0.0000000000000000e+15").toString());
       Assert.assertEquals(
-        "0.0" ,
+        "0.0",
   ExtendedDecimal.FromString("0.0000000000000000e+15"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.0" ,
+        "0.0",
         ExtendedDecimal.FromString("0.0000000000000000e+15").ToPlainString());
       Assert.assertEquals(
-        "0.000000" ,
+        "0.000000",
         ExtendedDecimal.FromString("0.0000000000000000e+10").toString());
       Assert.assertEquals(
-        "0.000000" ,
+        "0.000000",
   ExtendedDecimal.FromString("0.0000000000000000e+10"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.000000" ,
+        "0.000000",
         ExtendedDecimal.FromString("0.0000000000000000e+10").ToPlainString());
       Assert.assertEquals(
-        "0.00000" ,
+        "0.00000",
         ExtendedDecimal.FromString("0.000000000e+4").toString());
       Assert.assertEquals(
-        "0.00000" ,
+        "0.00000",
         ExtendedDecimal.FromString("0.000000000e+4").ToEngineeringString());
       Assert.assertEquals(
-        "0.00000" ,
+        "0.00000",
         ExtendedDecimal.FromString("0.000000000e+4").ToPlainString());
       Assert.assertEquals(
-        "0E-28" ,
+        "0E-28",
         ExtendedDecimal.FromString("0.000000000000000e-13").toString());
       Assert.assertEquals(
-        "0.0E-27" ,
+        "0.0E-27",
    ExtendedDecimal.FromString("0.000000000000000e-13"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000000000000000" ,
+        "0.0000000000000000000000000000",
         ExtendedDecimal.FromString("0.000000000000000e-13").ToPlainString());
       Assert.assertEquals(
-        "0E-27" ,
+        "0E-27",
         ExtendedDecimal.FromString("0.0000000000000000000e-8").toString());
       Assert.assertEquals(
-        "0E-27" ,
+        "0E-27",
 ExtendedDecimal.FromString("0.0000000000000000000e-8"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.000000000000000000000000000" ,
+        "0.000000000000000000000000000",
         ExtendedDecimal.FromString("0.0000000000000000000e-8").ToPlainString());
       Assert.assertEquals(
-        "0E-26" ,
+        "0E-26",
         ExtendedDecimal.FromString("0.00000000000e-15").toString());
       Assert.assertEquals(
-        "0.00E-24" ,
+        "0.00E-24",
         ExtendedDecimal.FromString("0.00000000000e-15").ToEngineeringString());
       Assert.assertEquals(
-        "0.00000000000000000000000000" ,
+        "0.00000000000000000000000000",
         ExtendedDecimal.FromString("0.00000000000e-15").ToPlainString());
       Assert.assertEquals(
         "0E+10",
@@ -4324,43 +4316,43 @@ ExtendedDecimal.FromString("0.0000000000000000000e-8"
         "0",
         ExtendedDecimal.FromString("0.0e+5").ToPlainString());
       Assert.assertEquals(
-        "0E-9" ,
+        "0E-9",
         ExtendedDecimal.FromString("0.0000000000000000e+7").toString());
       Assert.assertEquals(
-        "0E-9" ,
+        "0E-9",
    ExtendedDecimal.FromString("0.0000000000000000e+7"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.000000000" ,
+        "0.000000000",
         ExtendedDecimal.FromString("0.0000000000000000e+7").ToPlainString());
       Assert.assertEquals(
-        "0E-16" ,
+        "0E-16",
         ExtendedDecimal.FromString("0.0000000000000000e-0").toString());
       Assert.assertEquals(
-        "0.0E-15" ,
+        "0.0E-15",
    ExtendedDecimal.FromString("0.0000000000000000e-0"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000000" ,
+        "0.0000000000000000",
         ExtendedDecimal.FromString("0.0000000000000000e-0").ToPlainString());
       Assert.assertEquals(
-        "0.00" ,
+        "0.00",
         ExtendedDecimal.FromString("0.000000000000000e+13").toString());
       Assert.assertEquals(
-        "0.00" ,
+        "0.00",
    ExtendedDecimal.FromString("0.000000000000000e+13"
 ).ToEngineeringString());
       Assert.assertEquals(
-        "0.00" ,
+        "0.00",
         ExtendedDecimal.FromString("0.000000000000000e+13").ToPlainString());
       Assert.assertEquals(
-        "0E-24" ,
+        "0E-24",
         ExtendedDecimal.FromString("0.00000000000e-13").toString());
       Assert.assertEquals(
-        "0E-24" ,
+        "0E-24",
         ExtendedDecimal.FromString("0.00000000000e-13").ToEngineeringString());
       Assert.assertEquals(
-        "0.000000000000000000000000" ,
+        "0.000000000000000000000000",
         ExtendedDecimal.FromString("0.00000000000e-13").ToPlainString());
       Assert.assertEquals(
         "0E-13",
@@ -4369,7 +4361,7 @@ ExtendedDecimal.FromString("0.0000000000000000000e-8"
         "0.0E-12",
         ExtendedDecimal.FromString("0.000e-10").ToEngineeringString());
       Assert.assertEquals(
-        "0.0000000000000" ,
+        "0.0000000000000",
         ExtendedDecimal.FromString("0.000e-10").ToPlainString());
     }
 
@@ -4634,7 +4626,7 @@ ExtendedDecimal.FromString("0.0000000000000000000e-8"
       Assert.assertEquals(ExtendedDecimal.One, ExtendedDecimal.FromInt32(1));
       Assert.assertEquals("sNaN", ExtendedDecimal.SignalingNaN.toString());
       Assert.assertEquals(
-        "sNaN" ,
+        "sNaN",
         ExtendedDecimal.SignalingNaN.ToEngineeringString());
       Assert.assertEquals("sNaN", ExtendedDecimal.SignalingNaN.ToPlainString());
       Assert.assertEquals(
