@@ -76,10 +76,10 @@ namespace Test {
     public void TestDivide() {
       var r = new FastRandom();
       for (var i = 0; i < 3000; ++i) {
-      CBORObject o1 =
-          CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
-      CBORObject o2 =
-          CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
+        CBORObject o1 =
+            CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
+        CBORObject o2 =
+            CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
         if (o2.IsZero) {
           continue;
         }
@@ -3439,7 +3439,7 @@ CBORObject.FromObject((double)0.0000000000000001).AsBigInteger()
         ExtendedDecimal.FromString("0.0000000000000e-3").ToString());
       Assert.AreEqual(
         "0.0E-15",
-        ExtendedDecimal.FromString("0.0000000000000e-3" ).ToEngineeringString());
+        ExtendedDecimal.FromString("0.0000000000000e-3").ToEngineeringString());
       Assert.AreEqual(
         "0.0000000000000000",
         ExtendedDecimal.FromString("0.0000000000000e-3").ToPlainString());
@@ -3600,7 +3600,7 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
 ).ToEngineeringString());
       Assert.AreEqual(
         "0.00000000",
-        ExtendedDecimal.FromString("0.000000000000000000e+10" ).ToPlainString());
+        ExtendedDecimal.FromString("0.000000000000000000e+10").ToPlainString());
       Assert.AreEqual(
         "0E+15",
         ExtendedDecimal.FromString("0.0000e+19").ToString());
@@ -3651,7 +3651,7 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         ExtendedDecimal.FromString("0.000000000000e+19").ToString());
       Assert.AreEqual(
         "0.00E+9",
-        ExtendedDecimal.FromString("0.000000000000e+19" ).ToEngineeringString());
+        ExtendedDecimal.FromString("0.000000000000e+19").ToEngineeringString());
       Assert.AreEqual(
         "0",
         ExtendedDecimal.FromString("0.000000000000e+19").ToPlainString());
@@ -3712,7 +3712,7 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         ExtendedDecimal.FromString("0.0000000000000e+0").ToString());
       Assert.AreEqual(
         "0.0E-12",
-        ExtendedDecimal.FromString("0.0000000000000e+0" ).ToEngineeringString());
+        ExtendedDecimal.FromString("0.0000000000000e+0").ToEngineeringString());
       Assert.AreEqual(
         "0.0000000000000",
         ExtendedDecimal.FromString("0.0000000000000e+0").ToPlainString());
@@ -3809,7 +3809,7 @@ ExtendedDecimal.FromString("0.000000000000000000e+10"
         ExtendedDecimal.FromString("0.000000000000e+15").ToString());
       Assert.AreEqual(
         "0E+3",
-        ExtendedDecimal.FromString("0.000000000000e+15" ).ToEngineeringString());
+        ExtendedDecimal.FromString("0.000000000000e+15").ToEngineeringString());
       Assert.AreEqual(
         "0",
         ExtendedDecimal.FromString("0.000000000000e+15").ToPlainString());
@@ -4254,7 +4254,7 @@ ExtendedDecimal.FromString("0.0000000000000000000e-8"
 ).ToEngineeringString());
       Assert.AreEqual(
         "0.000000000000000000000000000",
-        ExtendedDecimal.FromString("0.0000000000000000000e-8" ).ToPlainString());
+        ExtendedDecimal.FromString("0.0000000000000000000e-8").ToPlainString());
       Assert.AreEqual(
         "0E-26",
         ExtendedDecimal.FromString("0.00000000000e-15").ToString());

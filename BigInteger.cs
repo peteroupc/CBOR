@@ -4436,10 +4436,10 @@ namespace PeterO {
       if (thisValue.Equals(BigInteger.One)) {
         return thisValue;
       }
-      int expOfTwo = Math.Min(
-        this.getLowestSetBit(),
-        bigintSecond.getLowestSetBit());
       if (thisValue.wordCount <= 10 && bigintSecond.wordCount <= 10) {
+        int expOfTwo = Math.Min(
+         thisValue.getLowestSetBit(),
+         bigintSecond.getLowestSetBit());
         while (true) {
           BigInteger bigintA = (thisValue - (BigInteger)bigintSecond).abs();
           if (bigintA.IsZero) {

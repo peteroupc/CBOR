@@ -74,10 +74,10 @@ import com.upokecenter.cbor.*;
     public void TestDivide() {
       FastRandom r = new FastRandom();
       for (int i = 0; i < 3000; ++i) {
-      CBORObject o1 =
-          CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
-      CBORObject o2 =
-          CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
+        CBORObject o1 =
+            CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
+        CBORObject o2 =
+            CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
         if (o2.signum() == 0) {
           continue;
         }

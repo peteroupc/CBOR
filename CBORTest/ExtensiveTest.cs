@@ -94,8 +94,8 @@ namespace CBOR {
     }
 
     private static string ConvertOp(string s) {
-    return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ?
-        "NaN" :
+      return s.Equals("S") ? "sNaN" : ((s.Equals("Q") || s.Equals("#")) ?
+                                       "NaN" :
                                        s);
     }
 
@@ -416,10 +416,10 @@ namespace CBOR {
           if (exponent == 255) {
             return (mantissa == 0) ? Create(neg ?
                                             ExtendedFloat.NegativeInfinity :
-                 ExtendedFloat.PositiveInfinity) : (((mantissa & 0x00400000)
-                                              !=
-                                                0) ? Create(ExtendedFloat.NaN) :
-  Create(ExtendedFloat.SignalingNaN));
+                                            ExtendedFloat.PositiveInfinity) : (((mantissa & 0x00400000)
+                                                != 0) ?
+                                               Create(ExtendedFloat.NaN) :
+                                               Create(ExtendedFloat.SignalingNaN));
           }
           if (exponent == 0) {
             if (mantissa == 0) {
@@ -450,11 +450,11 @@ namespace CBOR {
           int mantissaNonzero = mantissa | words[1];
           if (exponent == 2047) {
             return (mantissaNonzero == 0) ? Create(neg ?
-  ExtendedFloat.NegativeInfinity :
-                 ExtendedFloat.PositiveInfinity) : (((mantissa & 0x00080000)
-                                                     !=
+                                                   ExtendedFloat.NegativeInfinity :
+                                                   ExtendedFloat.PositiveInfinity) : (((mantissa & 0x00080000)
+                                                !=
                                                 0) ? Create(ExtendedFloat.NaN) :
-  Create(ExtendedFloat.SignalingNaN));
+                                               Create(ExtendedFloat.SignalingNaN));
           }
           if (exponent == 0) {
             if (mantissaNonzero == 0) {
@@ -492,11 +492,11 @@ namespace CBOR {
           int mantissaNonzero = mantissa | words[3] | words[1] | words[2];
           if (exponent == 0x7fff) {
             return (mantissaNonzero == 0) ? Create(neg ?
-  ExtendedFloat.NegativeInfinity :
-                 ExtendedFloat.PositiveInfinity) : (((mantissa & 0x00008000)
-                                                     !=
+                                                   ExtendedFloat.NegativeInfinity :
+                                                   ExtendedFloat.PositiveInfinity) : (((mantissa & 0x00008000)
+                                                !=
                                                 0) ? Create(ExtendedFloat.NaN) :
-  Create(ExtendedFloat.SignalingNaN));
+                                               Create(ExtendedFloat.SignalingNaN));
           }
           if (exponent == 0) {
             if (mantissaNonzero == 0) {
@@ -761,8 +761,8 @@ namespace CBOR {
           op2 = null;
         } else {
           result = BinaryNumber.FromFloatWords(new[] {
-                              this.HexInt(chunks[12]),
-                                                   this.HexInt(chunks[13]),
+                                                 this.HexInt(chunks[12]),
+                                                 this.HexInt(chunks[13]),
                                                  this.HexInt(chunks[14]),
                                                  this.HexInt(chunks[15]) });
         }
@@ -951,21 +951,21 @@ namespace CBOR {
         if (!result.Equals(d3)) {
           if (compareOp.Equals("vn")) {
             if (!result.IsNear(d3)) {
-         Console.WriteLine("op1=..." + op1 + " result=" + result +
-                " d3=...." +
+              Console.WriteLine("op1=..." + op1 + " result=" + result +
+                                " d3=...." +
                                 d3);
               Assert.AreEqual(result, d3, ln);
             }
           } else if (compareOp.Equals("nb")) {
             if (!result.IsNear(d3)) {
-         Console.WriteLine("op1=..." + op1 + " result=" + result +
-                " d3=...." +
+              Console.WriteLine("op1=..." + op1 + " result=" + result +
+                                " d3=...." +
                                 d3);
               Assert.AreEqual(result, d3, ln);
             }
           } else {
-         Console.WriteLine("op1=..." + op1 + " result=" + result +
-              " d3=...." +
+            Console.WriteLine("op1=..." + op1 + " result=" + result +
+                              " d3=...." +
                               d3);
             Assert.AreEqual(result, d3, ln);
           }
