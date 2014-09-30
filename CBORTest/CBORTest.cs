@@ -871,7 +871,7 @@ o2,
     public void TestReadWriteInt() {
       var r = new FastRandom();
       try {
-        for (var i = 0; i < 1000; ++i) {
+        for (var i = 0; i < 100000; ++i) {
           int val = unchecked((int)RandomObjects.RandomInt64(r));
           using (var ms = new MemoryStream()) {
             MiniCBOR.WriteInt32(val, ms);

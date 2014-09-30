@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -3291,7 +3291,12 @@ namespace PeterO.Cbor {
           }
           default: {
             var sb = new StringBuilder();
+            try {
             CBORJson.WriteJSONToInternal(this, new StringOutput(sb));
+            } catch (IOException ex) {
+              // This is truly exceptional
+              throw new InvalidOperationException("Internal error", ex);
+            }
             return sb.ToString();
           }
       }

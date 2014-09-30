@@ -1,4 +1,4 @@
-﻿/*
+/*
 Written in 2013 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
@@ -130,32 +130,32 @@ namespace PeterO.Cbor {
     }
 
     public static string LongToString(long value) {
-			if (value == Int64.MinValue) {
-				return "-9223372036854775808";
-			}
-			if (value == 0) {
-				return "0";
-			}
-			bool neg = value < 0;
-			var chars = new char[24];
-			int count = 0;
-			if (neg) {
-				chars[0] = '-';
-				++count;
-				value = -value;
-			}
-			while (value != 0) {
-				char digit = HexAlphabet[(int)(value % 10)];
-				chars[count++] = digit;
-				value /= 10;
-			}
-			if (neg) {
-				ReverseChars(chars, 1, count - 1);
-			} else {
-				ReverseChars(chars, 0, count);
-			}
-			return new String(chars, 0, count);
-		}
+      if (value == Int64.MinValue) {
+        return "-9223372036854775808";
+      }
+      if (value == 0) {
+        return "0";
+      }
+      bool neg = value < 0;
+      var chars = new char[24];
+      int count = 0;
+      if (neg) {
+        chars[0] = '-';
+        ++count;
+        value = -value;
+      }
+      while (value != 0) {
+        char digit = HexAlphabet[(int)(value % 10)];
+        chars[count++] = digit;
+        value /= 10;
+      }
+      if (neg) {
+        ReverseChars(chars, 1, count - 1);
+      } else {
+        ReverseChars(chars, 0, count);
+      }
+      return new String(chars, 0, count);
+    }
 
     public static string BigIntToString(BigInteger bigint) {
       return bigint.ToString();
