@@ -26,12 +26,6 @@ text to CBOR objects and back.
 
 See [docs/APIDocs.md](https://github.com/peteroupc/CBOR/blob/master/docs/APIDocs.md) for C# (.NET) API documentation.
 
-About This Repository
------------
-
-This repository contains code in two languages: C# and Java.
-C# is the main language of the project, and the C# implementation has the most features.  
-
 The C# implementation is designed as a Portable Class Library, making it usable not only in the .NET
 Framework, but also Silverlight 5 and Windows Phone 8.
 
@@ -88,26 +82,6 @@ Another example of reading data from a file:
     }
  }
 ```
-
-```java
- // Java
- // Open the file stream
- try (FileInputStream stream = new FileInputStream("object.cbor")) {
-    // Read the CBOR object from the stream
-    var cbor = CBORObject.Read(stream);
-    // At this point, the object is read, but the file stream might
-    // not have ended yet.  Here, the code may choose to read another
-    // CBOR object, check for the end of the stream, or just ignore the
-    // rest of the file.  The following is an example of checking for the
-    // end of the stream.
-    if (stream.getChannel().position() != stream.getChannel().size()) {
-      // The end of the stream wasn't reached yet.
-    } else {
-      // The end of the stream was reached.
-    }
- }
-```
-
 Writing CBOR data to a file (C#):
 
 ```c#
@@ -125,20 +99,6 @@ Writing multiple objects to a file, including arbitrary objects:
 // This example writes different kinds of objects in CBOR
 // format to the same file.
 using (var stream = new FileStream("object.cbor", FileMode.Create)) {
-   CBORObject.Write(true, stream);
-   CBORObject.Write(422.5, stream);
-   CBORObject.Write("some string", stream);
-   CBORObject.Write(CBORObject.Undefined, stream);
-   CBORObject.NewArray().Add(42).WriteTo(stream);
-}
-```
-
-```java
-// Java
-// This example uses the "try-with-resources" statement from Java 7.
-// This example writes different kinds of objects in CBOR
-// format to the same file.
-try (FileOutputStream stream = new FileOutputStream("object.cbor")) {
    CBORObject.Write(true, stream);
    CBORObject.Write(422.5, stream);
    CBORObject.Write("some string", stream);
@@ -286,3 +246,5 @@ Acknowledgments
 
 * Carsten Bormann reviewed this library and gave helpful suggestions.
 * Anders Gustafsson converted this library to a Portable Class Library.
+
+I thank all users who sent issues to this repository.
