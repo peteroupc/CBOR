@@ -197,6 +197,18 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+In version 2.0 (to come):
+
+- Several very special characters are escaped in JSON output, such as line and paragraph
+  separators, and byte order marks.
+- BigInteger's longValue method was fixed
+- BigInteger was changed to have no public constructors
+- ReadJSON now supports UTF-16 and UTF-32 in addition to UTF-8
+- PrecisionContext's JavaBigDecimal object was corrected.
+- Fixed bugs in parsing JSON numbers in some cases
+- CBORObject's one-argument Add method now adds CBORObject.Null if passed null,
+  rather than throwing an exception.
+
 In version 1.3:
 
 - Added a CompareToIgnoreTags method to CBORObject
