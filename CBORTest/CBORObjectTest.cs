@@ -2059,15 +2059,13 @@ cbornumber.AsSingle());
           0x75,
                                 0, 0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
-  msjson = new MemoryStream(new byte[] { 0, 0x74, 0, 0x72, 0, 0x75, 0, 0x65
-        });
+  msjson = new MemoryStream(new byte[] { 0, 0x74, 0, 0x72, 0, 0x75, 0, 0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
       msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x74, 0, 0x72, 0, 0x75,
           0,
                                 0x65, 0 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
-  msjson = new MemoryStream(new byte[] { 0x74, 0, 0x72, 0, 0x75, 0, 0x65, 0
-        });
+  msjson = new MemoryStream(new byte[] { 0x74, 0, 0x72, 0, 0x75, 0, 0x65, 0 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
 msjson = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x74, 0x72, 0x75,
   0x65 });
@@ -2092,14 +2090,12 @@ msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0, 0, 0, 1, 0, 0x22, 0,
         msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0, 0x22, 0xd8, 0,
           0xdc, 0, 0, 0x22 });
         Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
-  msjson = new MemoryStream(new byte[] { 0, 0x22, 0xd8, 0, 0xdc, 0, 0, 0x22
-        });
+  msjson = new MemoryStream(new byte[] { 0, 0x22, 0xd8, 0, 0xdc, 0, 0, 0x22 });
         Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
         msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x22, 0, 0, 0xd8, 0,
           0xdc, 0x22, 0 });
         Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
-  msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0xd8, 0, 0xdc, 0x22, 0
-        });
+  msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0xd8, 0, 0xdc, 0x22, 0 });
         Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
         msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0, 0, 0x22,
           0, 0, 0xd8, 0, 0, 0, 0,
@@ -2174,8 +2170,7 @@ Assert.Fail("Should have failed");
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
 }
-  msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0xdc, 0, 0xdc, 0x22, 0
-        });
+  msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0xdc, 0, 0xdc, 0x22, 0 });
         try {
  CBORObject.ReadJSON(msjson);
 Assert.Fail("Should have failed");
