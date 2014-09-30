@@ -2291,6 +2291,9 @@ throw new InvalidOperationException(String.Empty, ex);
       Assert.AreEqual(
         "\"\u2027\\u2028\\u2029\u202a\"" ,
         CBORObject.FromObject("\u2027\u2028\u2029\u202a").ToJSONString());
+      Assert.AreEqual(
+        "\"\\u0085\\ufeff\\ufffe\\uffff\"" ,
+        CBORObject.FromObject("\u0085\ufeff\ufffe\uffff").ToJSONString());
       Assert.AreEqual("true", CBORObject.True.ToJSONString());
       Assert.AreEqual("false", CBORObject.False.ToJSONString());
       Assert.AreEqual("null", CBORObject.Null.ToJSONString());
