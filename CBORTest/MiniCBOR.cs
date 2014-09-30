@@ -125,9 +125,9 @@ bool check32bit) {
         if (b < 0) {
           throw new IOException("Premature end of stream");
         }
-        return (b != 0x38) ? b : -1 - b;
+        return (headByte != 0x38) ? b : -1 - b;
       }
-      if (kind == 0x18) {
+      if (kind == 0x19) {
         var bytes = new byte[2];
         if (stream.Read(bytes, 0, bytes.Length) != bytes.Length) {
           throw new IOException("Premature end of stream");
@@ -135,7 +135,7 @@ bool check32bit) {
         int b = ((int)bytes[0]) & 0xff;
         b <<= 8;
         b |= ((int)bytes[1]) & 0xff;
-        return (headByte != 0x19) ? b : -1 - b;
+        return (headByte != 0x39) ? b : -1 - b;
       }
       if (kind == 0x1a || kind == 0x3a) {
         var bytes = new byte[4];

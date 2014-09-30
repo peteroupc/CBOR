@@ -25,4 +25,4 @@ release.properties
 *.suo
 *.log
 .pmd
-/target
+target/

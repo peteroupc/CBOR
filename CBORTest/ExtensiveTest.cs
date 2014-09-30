@@ -416,10 +416,11 @@ namespace CBOR {
           if (exponent == 255) {
             return (mantissa == 0) ? Create(neg ?
                                             ExtendedFloat.NegativeInfinity :
-                                            ExtendedFloat.PositiveInfinity) : (((mantissa & 0x00400000)
-                                                != 0) ?
+                    ExtendedFloat.PositiveInfinity) : (((mantissa &
+                                              0x00400000) !=
+                                                0) ?
                                                Create(ExtendedFloat.NaN) :
-                                               Create(ExtendedFloat.SignalingNaN));
+  Create(ExtendedFloat.SignalingNaN));
           }
           if (exponent == 0) {
             if (mantissa == 0) {
@@ -450,11 +451,12 @@ namespace CBOR {
           int mantissaNonzero = mantissa | words[1];
           if (exponent == 2047) {
             return (mantissaNonzero == 0) ? Create(neg ?
-                                                   ExtendedFloat.NegativeInfinity :
-                                                   ExtendedFloat.PositiveInfinity) : (((mantissa & 0x00080000)
+  ExtendedFloat.NegativeInfinity :
+                    ExtendedFloat.PositiveInfinity) : (((mantissa &
+                                                     0x00080000)
                                                 !=
                                                 0) ? Create(ExtendedFloat.NaN) :
-                                               Create(ExtendedFloat.SignalingNaN));
+  Create(ExtendedFloat.SignalingNaN));
           }
           if (exponent == 0) {
             if (mantissaNonzero == 0) {
@@ -492,11 +494,12 @@ namespace CBOR {
           int mantissaNonzero = mantissa | words[3] | words[1] | words[2];
           if (exponent == 0x7fff) {
             return (mantissaNonzero == 0) ? Create(neg ?
-                                                   ExtendedFloat.NegativeInfinity :
-                                                   ExtendedFloat.PositiveInfinity) : (((mantissa & 0x00008000)
+  ExtendedFloat.NegativeInfinity :
+                    ExtendedFloat.PositiveInfinity) : (((mantissa &
+                                                     0x00008000)
                                                 !=
                                                 0) ? Create(ExtendedFloat.NaN) :
-                                               Create(ExtendedFloat.SignalingNaN));
+  Create(ExtendedFloat.SignalingNaN));
           }
           if (exponent == 0) {
             if (mantissaNonzero == 0) {

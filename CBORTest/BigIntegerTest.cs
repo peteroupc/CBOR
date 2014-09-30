@@ -143,7 +143,7 @@ namespace Test {
       if (n % 2 == 0) {
         return false;
       }
-      if(n<=23){
+      if (n <= 23) {
         return (n == 3 || n == 5 || n == 7 || n == 11 ||
                 n == 13 || n == 17 || n == 19 || n == 23);
       }
@@ -176,12 +176,15 @@ namespace Test {
       }
       return true;
     }
-    
-    private static void TestGcdPair(BigInteger biga, BigInteger bigb, BigInteger biggcd){
-      BigInteger ba=BigInteger.GreatestCommonDivisor(biga,bigb);
-      BigInteger bb=BigInteger.GreatestCommonDivisor(bigb,biga);
-      Assert.AreEqual(ba,biggcd);
-      Assert.AreEqual(bb,biggcd);
+
+    private static void TestGcdPair(
+BigInteger biga,
+BigInteger bigb,
+BigInteger biggcd) {
+      BigInteger ba = BigInteger.GreatestCommonDivisor(biga, bigb);
+      BigInteger bb = BigInteger.GreatestCommonDivisor(bigb, biga);
+      Assert.AreEqual(ba, biggcd);
+      Assert.AreEqual(bb, biggcd);
     }
 
     [TestMethod]
@@ -206,90 +209,90 @@ namespace Test {
           bigprime,
           BigInteger.GreatestCommonDivisor(bigprime, ba));
       }
-      TestGcdPair((BigInteger)(-1867), (BigInteger)(-4456), (BigInteger)(1));
-      TestGcdPair((BigInteger)(4604), (BigInteger)(-4516), (BigInteger)(4));
-      TestGcdPair((BigInteger)(-1756), (BigInteger)(4525), (BigInteger)(1));
-      TestGcdPair((BigInteger)(1568), (BigInteger)(-4955), (BigInteger)(1));
-      TestGcdPair((BigInteger)(2519), (BigInteger)(2845), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-1470), (BigInteger)(132), (BigInteger)(6));
-      TestGcdPair((BigInteger)(-2982), (BigInteger)(2573), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-244), (BigInteger)(-3929), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-3794), (BigInteger)(-2325), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-2667), (BigInteger)(2123), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-3712), (BigInteger)(-1850), (BigInteger)(2));
-      TestGcdPair((BigInteger)(2329), (BigInteger)(3874), (BigInteger)(1));
-      TestGcdPair((BigInteger)(1384), (BigInteger)(-4278), (BigInteger)(2));
-      TestGcdPair((BigInteger)(213), (BigInteger)(-1217), (BigInteger)(1));
-      TestGcdPair((BigInteger)(1163), (BigInteger)(2819), (BigInteger)(1));
-      TestGcdPair((BigInteger)(1921), (BigInteger)(-579), (BigInteger)(1));
-      TestGcdPair((BigInteger)(3886), (BigInteger)(-13), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-3270), (BigInteger)(-3760), (BigInteger)(10));
-      TestGcdPair((BigInteger)(-3528), (BigInteger)(1822), (BigInteger)(2));
-      TestGcdPair((BigInteger)(1547), (BigInteger)(-333), (BigInteger)(1));
-      TestGcdPair((BigInteger)(2402), (BigInteger)(2850), (BigInteger)(2));
-      TestGcdPair((BigInteger)(4519), (BigInteger)(1296), (BigInteger)(1));
-      TestGcdPair((BigInteger)(1821), (BigInteger)(2949), (BigInteger)(3));
-      TestGcdPair((BigInteger)(-2634), (BigInteger)(-4353), (BigInteger)(3));
-      TestGcdPair((BigInteger)(-1728), (BigInteger)(199), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-4646), (BigInteger)(-1418), (BigInteger)(2));
-      TestGcdPair((BigInteger)(-35), (BigInteger)(-3578), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-2244), (BigInteger)(-3250), (BigInteger)(2));
-      TestGcdPair((BigInteger)(-3329), (BigInteger)(1039), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-3064), (BigInteger)(-4730), (BigInteger)(2));
-      TestGcdPair((BigInteger)(-1214), (BigInteger)(4130), (BigInteger)(2));
-      TestGcdPair((BigInteger)(-3038), (BigInteger)(-3184), (BigInteger)(2));
-      TestGcdPair((BigInteger)(-209), (BigInteger)(-1617), (BigInteger)(11));
-      TestGcdPair((BigInteger)(-1101), (BigInteger)(-2886), (BigInteger)(3));
-      TestGcdPair((BigInteger)(-3021), (BigInteger)(-4499), (BigInteger)(1));
-      TestGcdPair((BigInteger)(3108), (BigInteger)(1815), (BigInteger)(3));
-      TestGcdPair((BigInteger)(1195), (BigInteger)(4618), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-3643), (BigInteger)(2156), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-2067), (BigInteger)(-3780), (BigInteger)(3));
-      TestGcdPair((BigInteger)(4251), (BigInteger)(1607), (BigInteger)(1));
-      TestGcdPair((BigInteger)(438), (BigInteger)(741), (BigInteger)(3));
-      TestGcdPair((BigInteger)(-3692), (BigInteger)(-2135), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-1076), (BigInteger)(2149), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-3224), (BigInteger)(-1532), (BigInteger)(4));
-      TestGcdPair((BigInteger)(-3713), (BigInteger)(1721), (BigInteger)(1));
-      TestGcdPair((BigInteger)(3038), (BigInteger)(-2657), (BigInteger)(1));
-      TestGcdPair((BigInteger)(4977), (BigInteger)(-110), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-3305), (BigInteger)(-922), (BigInteger)(1));
-      TestGcdPair((BigInteger)(1902), (BigInteger)(2481), (BigInteger)(3));
-      TestGcdPair((BigInteger)(-4804), (BigInteger)(-1378), (BigInteger)(2));
-      TestGcdPair((BigInteger)(-1446), (BigInteger)(-4226), (BigInteger)(2));
-      TestGcdPair((BigInteger)(-1409), (BigInteger)(3303), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-1626), (BigInteger)(-3193), (BigInteger)(1));
-      TestGcdPair((BigInteger)(912), (BigInteger)(-421), (BigInteger)(1));
-      TestGcdPair((BigInteger)(751), (BigInteger)(-1755), (BigInteger)(1));
-      TestGcdPair((BigInteger)(3135), (BigInteger)(-3581), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-4941), (BigInteger)(-2885), (BigInteger)(1));
-      TestGcdPair((BigInteger)(4744), (BigInteger)(3240), (BigInteger)(8));
-      TestGcdPair((BigInteger)(3488), (BigInteger)(4792), (BigInteger)(8));
-      TestGcdPair((BigInteger)(3632), (BigInteger)(3670), (BigInteger)(2));
-      TestGcdPair((BigInteger)(-4821), (BigInteger)(-1749), (BigInteger)(3));
-      TestGcdPair((BigInteger)(4666), (BigInteger)(2013), (BigInteger)(1));
-      TestGcdPair((BigInteger)(810), (BigInteger)(-3466), (BigInteger)(2));
-      TestGcdPair((BigInteger)(2199), (BigInteger)(161), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-1137), (BigInteger)(-1620), (BigInteger)(3));
-      TestGcdPair((BigInteger)(-472), (BigInteger)(66), (BigInteger)(2));
-      TestGcdPair((BigInteger)(3825), (BigInteger)(2804), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-2895), (BigInteger)(1942), (BigInteger)(1));
-      TestGcdPair((BigInteger)(1576), (BigInteger)(-4209), (BigInteger)(1));
-      TestGcdPair((BigInteger)(-277), (BigInteger)(-4415), (BigInteger)(1));
+      TestGcdPair((BigInteger)(-1867), (BigInteger)(-4456), BigInteger.One);
+      TestGcdPair((BigInteger)4604, (BigInteger)(-4516), (BigInteger)4);
+      TestGcdPair((BigInteger)(-1756), (BigInteger)4525, BigInteger.One);
+      TestGcdPair((BigInteger)1568, (BigInteger)(-4955), BigInteger.One);
+      TestGcdPair((BigInteger)2519, (BigInteger)2845, BigInteger.One);
+      TestGcdPair((BigInteger)(-1470), (BigInteger)132, (BigInteger)6);
+      TestGcdPair((BigInteger)(-2982), (BigInteger)2573, BigInteger.One);
+      TestGcdPair((BigInteger)(-244), (BigInteger)(-3929), BigInteger.One);
+      TestGcdPair((BigInteger)(-3794), (BigInteger)(-2325), BigInteger.One);
+      TestGcdPair((BigInteger)(-2667), (BigInteger)2123, BigInteger.One);
+      TestGcdPair((BigInteger)(-3712), (BigInteger)(-1850), (BigInteger)2);
+      TestGcdPair((BigInteger)2329, (BigInteger)3874, BigInteger.One);
+      TestGcdPair((BigInteger)1384, (BigInteger)(-4278), (BigInteger)2);
+      TestGcdPair((BigInteger)213, (BigInteger)(-1217), BigInteger.One);
+      TestGcdPair((BigInteger)1163, (BigInteger)2819, BigInteger.One);
+      TestGcdPair((BigInteger)1921, (BigInteger)(-579), BigInteger.One);
+      TestGcdPair((BigInteger)3886, (BigInteger)(-13), BigInteger.One);
+      TestGcdPair((BigInteger)(-3270), (BigInteger)(-3760), (BigInteger)10);
+      TestGcdPair((BigInteger)(-3528), (BigInteger)1822, (BigInteger)2);
+      TestGcdPair((BigInteger)1547, (BigInteger)(-333), BigInteger.One);
+      TestGcdPair((BigInteger)2402, (BigInteger)2850, (BigInteger)2);
+      TestGcdPair((BigInteger)4519, (BigInteger)1296, BigInteger.One);
+      TestGcdPair((BigInteger)1821, (BigInteger)2949, (BigInteger)3);
+      TestGcdPair((BigInteger)(-2634), (BigInteger)(-4353), (BigInteger)3);
+      TestGcdPair((BigInteger)(-1728), (BigInteger)199, BigInteger.One);
+      TestGcdPair((BigInteger)(-4646), (BigInteger)(-1418), (BigInteger)2);
+      TestGcdPair((BigInteger)(-35), (BigInteger)(-3578), BigInteger.One);
+      TestGcdPair((BigInteger)(-2244), (BigInteger)(-3250), (BigInteger)2);
+      TestGcdPair((BigInteger)(-3329), (BigInteger)1039, BigInteger.One);
+      TestGcdPair((BigInteger)(-3064), (BigInteger)(-4730), (BigInteger)2);
+      TestGcdPair((BigInteger)(-1214), (BigInteger)4130, (BigInteger)2);
+      TestGcdPair((BigInteger)(-3038), (BigInteger)(-3184), (BigInteger)2);
+      TestGcdPair((BigInteger)(-209), (BigInteger)(-1617), (BigInteger)11);
+      TestGcdPair((BigInteger)(-1101), (BigInteger)(-2886), (BigInteger)3);
+      TestGcdPair((BigInteger)(-3021), (BigInteger)(-4499), BigInteger.One);
+      TestGcdPair((BigInteger)3108, (BigInteger)1815, (BigInteger)3);
+      TestGcdPair((BigInteger)1195, (BigInteger)4618, BigInteger.One);
+      TestGcdPair((BigInteger)(-3643), (BigInteger)2156, BigInteger.One);
+      TestGcdPair((BigInteger)(-2067), (BigInteger)(-3780), (BigInteger)3);
+      TestGcdPair((BigInteger)4251, (BigInteger)1607, BigInteger.One);
+      TestGcdPair((BigInteger)438, (BigInteger)741, (BigInteger)3);
+      TestGcdPair((BigInteger)(-3692), (BigInteger)(-2135), BigInteger.One);
+      TestGcdPair((BigInteger)(-1076), (BigInteger)2149, BigInteger.One);
+      TestGcdPair((BigInteger)(-3224), (BigInteger)(-1532), (BigInteger)4);
+      TestGcdPair((BigInteger)(-3713), (BigInteger)1721, BigInteger.One);
+      TestGcdPair((BigInteger)3038, (BigInteger)(-2657), BigInteger.One);
+      TestGcdPair((BigInteger)4977, (BigInteger)(-110), BigInteger.One);
+      TestGcdPair((BigInteger)(-3305), (BigInteger)(-922), BigInteger.One);
+      TestGcdPair((BigInteger)1902, (BigInteger)2481, (BigInteger)3);
+      TestGcdPair((BigInteger)(-4804), (BigInteger)(-1378), (BigInteger)2);
+      TestGcdPair((BigInteger)(-1446), (BigInteger)(-4226), (BigInteger)2);
+      TestGcdPair((BigInteger)(-1409), (BigInteger)3303, BigInteger.One);
+      TestGcdPair((BigInteger)(-1626), (BigInteger)(-3193), BigInteger.One);
+      TestGcdPair((BigInteger)912, (BigInteger)(-421), BigInteger.One);
+      TestGcdPair((BigInteger)751, (BigInteger)(-1755), BigInteger.One);
+      TestGcdPair((BigInteger)3135, (BigInteger)(-3581), BigInteger.One);
+      TestGcdPair((BigInteger)(-4941), (BigInteger)(-2885), BigInteger.One);
+      TestGcdPair((BigInteger)4744, (BigInteger)3240, (BigInteger)8);
+      TestGcdPair((BigInteger)3488, (BigInteger)4792, (BigInteger)8);
+      TestGcdPair((BigInteger)3632, (BigInteger)3670, (BigInteger)2);
+      TestGcdPair((BigInteger)(-4821), (BigInteger)(-1749), (BigInteger)3);
+      TestGcdPair((BigInteger)4666, (BigInteger)2013, BigInteger.One);
+      TestGcdPair((BigInteger)810, (BigInteger)(-3466), (BigInteger)2);
+      TestGcdPair((BigInteger)2199, (BigInteger)161, BigInteger.One);
+      TestGcdPair((BigInteger)(-1137), (BigInteger)(-1620), (BigInteger)3);
+      TestGcdPair((BigInteger)(-472), (BigInteger)66, (BigInteger)2);
+      TestGcdPair((BigInteger)3825, (BigInteger)2804, BigInteger.One);
+      TestGcdPair((BigInteger)(-2895), (BigInteger)1942, BigInteger.One);
+      TestGcdPair((BigInteger)1576, (BigInteger)(-4209), BigInteger.One);
+      TestGcdPair((BigInteger)(-277), (BigInteger)(-4415), BigInteger.One);
       for (var i = 0; i < 1000; ++i) {
         prime = rand.NextValue(0x7fffffff);
-        if(rand.NextValue(2)==0){
-          prime=-prime;
+        if (rand.NextValue(2) == 0) {
+          prime = -prime;
         }
-        int b=rand.NextValue(0x7fffffff);
-        if(rand.NextValue(2)==0){
-          b=-b;
+        int b = rand.NextValue(0x7fffffff);
+        if (rand.NextValue(2) == 0) {
+          b = -b;
         }
-        var biga=(BigInteger)prime;
-        var bigb=(BigInteger)b;
-        BigInteger ba=BigInteger.GreatestCommonDivisor(biga,bigb);
-        BigInteger bb=BigInteger.GreatestCommonDivisor(bigb,biga);
-        Assert.AreEqual(ba,bb);
+        var biga = (BigInteger)prime;
+        var bigb = (BigInteger)b;
+        BigInteger ba = BigInteger.GreatestCommonDivisor(biga, bigb);
+        BigInteger bb = BigInteger.GreatestCommonDivisor(bigb, biga);
+        Assert.AreEqual(ba, bb);
       }
     }
 
@@ -475,7 +478,7 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One).longValueChecked();
+BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One).longValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
       } catch (Exception ex) {

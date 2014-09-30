@@ -1,7 +1,7 @@
 CBOR
 ====
 
-A C# and Java implementation of Concise Binary Object Representation, a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. "CBOR was inspired by MessagePack", but "is not intended as a version of or replacement for MessagePack."
+A C# implementation of Concise Binary Object Representation, a general-purpose binary data format defined in RFC 7049. According to that RFC, CBOR's data model "is an extended version of the JSON data model", supporting many more types of data than JSON. "CBOR was inspired by MessagePack", but "is not intended as a version of or replacement for MessagePack."
 
 This implementation was written by Peter O. and is released to the Public Domain under the [CC0 Declaration](http://creativecommons.org/publicdomain/zero/1.0/).
 
@@ -17,21 +17,6 @@ NuGet Package Gallery under the name
 this library as a NuGet package, enter `Install-Package PeterO.Cbor` in the
 NuGet Package Manager Console.
 
-Starting with version 0.23.0, the Java implementation is available
-as an [artifact](https://search.maven.org/#search|ga|1|g%3A%22com.upokecenter%22%20AND%20a%3A%22cbor%22) in the Central Repository. To add this library to a Maven
-project, add the following to the `dependencies` section in your `pom.xml` file:
-
-```xml
-<dependency>
-  <groupId>com.upokecenter</groupId>
-  <artifactId>cbor</artifactId>
-  <version>1.3.0</version>
-</dependency>
-```
-
-In other Java-based environments, the library can be referred to by its
-group ID (`com.upokecenter`), artifact ID (`cbor`), and version, as given above.
-
 Documentation
 ------------
 
@@ -39,11 +24,9 @@ This library defines one class, called CBORObject, that allows you to read and
 write CBOR objects to and from data streams and byte arrays, and to convert JSON
 text to CBOR objects and back.
 
-See the [Wiki](https://github.com/peteroupc/CBOR/wiki) for Java API documentation.
-
 See [docs/APIDocs.md](https://github.com/peteroupc/CBOR/blob/master/docs/APIDocs.md) for C# (.NET) API documentation.
 
-More About the Different Versions
+About This Repository
 -----------
 
 This repository contains code in two languages: C# and Java.
@@ -52,14 +35,8 @@ C# is the main language of the project, and the C# implementation has the most f
 The C# implementation is designed as a Portable Class Library, making it usable not only in the .NET
 Framework, but also Silverlight 5 and Windows Phone 8.
 
-The Java version is a translation from the C# version. It contains almost as many features as the C# version
-and has all the important ones, such as reading and writing CBOR objects,
-CBOR/JSON conversion, and support for decimal fractions and bigfloats.
-
 Examples
 ----------
-
-This code is in C#, but the Java version of the code would be very similar.
 
 ```c#
 // The following creates a CBOR map and adds
