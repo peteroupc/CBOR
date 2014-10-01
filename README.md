@@ -197,7 +197,7 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
-In version 2.0 (to come):
+In version 2.0:
 
 - Several very special characters are escaped in JSON output, such as line and paragraph
   separators, and byte order marks.
