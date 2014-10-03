@@ -106,8 +106,8 @@ namespace PeterO.Cbor {
           }
         } else if (codePoint <= 0x10ffff) {
           this.builder.Append((char)((((codePoint - 0x10000) >> 10) &
-                                      0x3ff) +0xd800));
-          this.builder.Append((char)(((codePoint - 0x10000) & 0x3ff) +0xdc00));
+                                      0x3ff) + 0xd800));
+          this.builder.Append((char)(((codePoint - 0x10000) & 0x3ff) + 0xdc00));
         }
       }
     }

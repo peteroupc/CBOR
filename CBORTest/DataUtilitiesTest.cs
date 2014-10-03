@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -7,6 +8,60 @@ using PeterO;
 namespace Test {
   [TestClass]
   public class DataUtilitiesTest {
+    public static IList<byte[]> GenerateIllegalUtf8Sequences() {
+      List<byte[]> list = new List<byte[]>();
+      // Generate illegal single bytes
+      for (int i = 0x80; i <= 0xff; ++i) {
+        if (i < 0xc2 || i > 0xf4) {
+          list.Add(new byte[] { (byte)i, 0x80 });
+        }
+        list.Add(new byte[] { (byte)i });
+      }
+      list.Add(new byte[] { 0xe0, 0xa0 });
+      list.Add(new byte[] { 0xe1, 0x80 });
+      list.Add(new byte[] { 0xef, 0x80 });
+      list.Add(new byte[] { 0xf0, 0x90 });
+      list.Add(new byte[] { 0xf1, 0x80 });
+      list.Add(new byte[] { 0xf3, 0x80 });
+      list.Add(new byte[] { 0xf4, 0x80 });
+      list.Add(new byte[] { 0xf0, 0x90, 0x80 });
+      list.Add(new byte[] { 0xf1, 0x80, 0x80 });
+      list.Add(new byte[] { 0xf3, 0x80, 0x80 });
+      list.Add(new byte[] { 0xf4, 0x80, 0x80 });
+      // Generate illegal multibyte sequences
+      for (int i = 0x00; i <= 0xff; ++i) {
+        if (i < 0x80 || i > 0xbf) {
+          list.Add(new byte[] { 0xc2, (byte)i });
+          list.Add(new byte[] { 0xdf, (byte)i });
+          list.Add(new byte[] { 0xe1, (byte)i, 0x80 });
+          list.Add(new byte[] { 0xef, (byte)i, 0x80 });
+          list.Add(new byte[] { 0xf1, (byte)i, 0x80, 0x80 });
+          list.Add(new byte[] { 0xf3, (byte)i, 0x80, 0x80 });
+          list.Add(new byte[] { 0xe0, 0xa0, (byte)i });
+          list.Add(new byte[] { 0xe1, 0x80, (byte)i });
+          list.Add(new byte[] { 0xef, 0x80, (byte)i });
+          list.Add(new byte[] { 0xf0, 0x90, (byte)i, 0x80 });
+          list.Add(new byte[] { 0xf1, 0x80, (byte)i, 0x80 });
+          list.Add(new byte[] { 0xf3, 0x80, (byte)i, 0x80 });
+          list.Add(new byte[] { 0xf4, 0x80, (byte)i, 0x80 });
+          list.Add(new byte[] { 0xf0, 0x90, 0x80, (byte)i });
+          list.Add(new byte[] { 0xf1, 0x80, 0x80, (byte)i });
+          list.Add(new byte[] { 0xf3, 0x80, 0x80, (byte)i });
+          list.Add(new byte[] { 0xf4, 0x80, 0x80, (byte)i });
+        }
+        if (i < 0xa0 || i > 0xbf) {
+          list.Add(new byte[] { 0xe0, (byte)i, 0x80 });
+        }
+        if (i < 0x90 || i > 0xbf) {
+          list.Add(new byte[] { 0xf0, (byte)i, 0x80, 0x80 });
+        }
+        if (i < 0x80 || i > 0x8f) {
+          list.Add(new byte[] { 0xf4, (byte)i, 0x80, 0x80 });
+        }
+      }
+      return list;
+    }
+
     [TestMethod]
     public void TestCodePointAt() {
       try {
@@ -40,7 +95,7 @@ namespace Test {
         Math.Sign(DataUtilities.CodePointCompare("abc", "abc")));
       Assert.AreEqual(
         0,
-   Math.Sign(DataUtilities.CodePointCompare("\ud800\udc00" , "\ud800\udc00"
+        Math.Sign(DataUtilities.CodePointCompare("\ud800\udc00" , "\ud800\udc00"
 )));
       Assert.AreEqual(
         -1,
@@ -179,6 +234,31 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+      IList<byte[]> illegalSeqs = GenerateIllegalUtf8Sequences();
+      foreach (byte[] seq in illegalSeqs) {
+        try {
+          DataUtilities.GetUtf8String(seq, false);
+          Assert.Fail("Should have failed");
+        } catch (ArgumentException) {
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+        string strret = DataUtilities.GetUtf8String(seq, true);
+        Assert.IsTrue(strret.Length > 0);
+        Assert.AreEqual('\ufffd', strret[0]);
+        try {
+          DataUtilities.GetUtf8String(seq, 0, seq.Length, false);
+          Assert.Fail("Should have failed");
+        } catch (ArgumentException) {
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+        strret = DataUtilities.GetUtf8String(seq, 0, seq.Length, true);
+        Assert.IsTrue(strret.Length > 0);
+        Assert.AreEqual('\ufffd', strret[0]);
+      }
     }
     [TestMethod]
     public void TestReadUtf8() {
@@ -292,6 +372,30 @@ namespace Test {
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
+      }
+      IList<byte[]> illegalSeqs = GenerateIllegalUtf8Sequences();
+      foreach (byte[] seq in illegalSeqs) {
+        using (var ms = new MemoryStream(seq)) {
+          try {
+            DataUtilities.ReadUtf8ToString(ms, -1, false);
+            Assert.Fail("Should have failed");
+          } catch (IOException) {
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+        }
+        using (var ms = new MemoryStream(seq)) {
+          String strret = null;
+          try {
+            strret = DataUtilities.ReadUtf8ToString(ms, -1, true);
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
+          Assert.IsTrue(strret.Length > 0);
+          Assert.AreEqual('\ufffd', strret[0]);
+        }
       }
     }
     [TestMethod]
