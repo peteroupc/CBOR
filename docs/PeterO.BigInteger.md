@@ -283,11 +283,26 @@ Finds the number of decimal digits this number has.
 
 The number of decimal digits. Returns 1 if this object' s value is 0.
 
+### toRadixString
+
+    public string toRadixString(
+        int radix);
+
+Not documented yet.
+
+<b>Parameters:</b>
+
+ * <i>radix</i>: A 32-bit signed integer.
+
+<b>Returns:</b>
+
+A string object.
+
 ### ToString
 
     public override string ToString();
 
-Converts this object to a text string.
+Converts this object to a text string in base 10.
 
 <b>Returns:</b>
 
@@ -324,17 +339,17 @@ The parameter  <i>str</i>
         string str,
         int radix);
 
-Converts a string to an arbitrary-precision integer in a given radix.
+Converts a portion of a string to an arbitrary-precision integer. The string portion can begin with a minus sign ('-') to indicate that it's negative.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string containing only digits, except that it may start with a minus sign.
+ * <i>str</i>: A string object.
 
- * <i>radix</i>: A base from 2 to 36. The possible digits start from 0 to 9, then from A to Z in base 36, and the possible digits start from 0 to 9, then from A to F in base 16.
+ * <i>radix</i>: A 32-bit signed integer.
 
 <b>Returns:</b>
 
-A BigInteger object with the same value as given in the string.
+A BigInteger object with the same value as given in the string portion.
 
 <b>Exceptions:</b>
 
@@ -342,9 +357,11 @@ A BigInteger object with the same value as given in the string.
 The parameter  <i>str</i>
 is null.
 
+ * System.ArgumentException: 
+The parameter "index" is less than 0, "endIndex" is less than 0, or either is greater than the string's length, or "endIndex" is less than "index" .
+
  * System.FormatException: 
-The parameter  <i>str</i>
- is in an invalid format.
+The string portion is empty or in an invalid format.
 
 ### fromSubstring
 

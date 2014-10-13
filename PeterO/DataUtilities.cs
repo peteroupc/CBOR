@@ -70,19 +70,19 @@ bool replace) {
       }
       if (offset < 0) {
         throw new ArgumentException("offset (" + offset + ") is less than " +
-                                    "0");
+                              "0");
       }
       if (offset > bytes.Length) {
         throw new ArgumentException("offset (" + offset + ") is more than " +
-                                    bytes.Length);
+                              bytes.Length);
       }
       if (bytesCount < 0) {
         throw new ArgumentException("bytesCount (" + bytesCount +
-                                    ") is less than " + "0");
+                              ") is less than " + "0");
       }
       if (bytesCount > bytes.Length) {
         throw new ArgumentException("bytesCount (" + bytesCount +
-                                    ") is more than " + bytes.Length);
+                              ") is more than " + bytes.Length);
       }
       if (bytes.Length - offset < bytesCount) {
         throw new ArgumentException("bytes's length minus " + offset + " (" +
@@ -237,7 +237,7 @@ int surrogateBehavior) {
       if ((c & 0xf800) == 0xd800) {
         // unpaired surrogate
         return (surrogateBehavior == 0) ? 0xfffd : ((surrogateBehavior == 1) ?
-                                                    c : (-1));
+                              c : (-1));
       }
       return c;
     }
@@ -300,7 +300,7 @@ int surrogateBehavior) {
       } else if ((c & 0xf800) == 0xd800) {
         // unpaired surrogate
         return (surrogateBehavior == 0) ? 0xfffd : ((surrogateBehavior == 1) ?
-                                                    c : (-1));
+                              c : (-1));
       }
       return c;
     }
@@ -405,7 +405,7 @@ int surrogateBehavior) {
         }
       }
       return (strA.Length == strB.Length) ? 0 : ((strA.Length < strB.Length) ?
-                                                 -1 : 1);
+                              -1 : 1);
     }
 
     /// <summary>Writes a portion of a string in UTF-8 encoding to a data
@@ -488,19 +488,19 @@ bool lenientLineBreaks) {
       }
       if (offset < 0) {
         throw new ArgumentException("offset (" + offset + ") is less than " +
-                                    "0");
+                              "0");
       }
       if (offset > str.Length) {
         throw new ArgumentException("offset (" + offset + ") is more than " +
-                                    str.Length);
+                              str.Length);
       }
       if (length < 0) {
         throw new ArgumentException("length (" + length + ") is less than " +
-                                    "0");
+                              "0");
       }
       if (length > str.Length) {
         throw new ArgumentException("length (" + length + ") is more than " +
-                                    str.Length);
+                              str.Length);
       }
       if (str.Length - offset < length) {
         throw new ArgumentException("str.Length minus offset (" +
@@ -649,19 +649,19 @@ bool replace) {
       }
       if (offset < 0) {
         throw new ArgumentException("offset (" + offset + ") is less than " +
-                                    "0");
+                              "0");
       }
       if (offset > data.Length) {
         throw new ArgumentException("offset (" + offset + ") is more than " +
-                                    data.Length);
+                              data.Length);
       }
       if (bytesCount < 0) {
         throw new ArgumentException("bytesCount (" + bytesCount +
-                                    ") is less than " + "0");
+                              ") is less than " + "0");
       }
       if (bytesCount > data.Length) {
         throw new ArgumentException("bytesCount (" + bytesCount +
-                                    ") is more than " + data.Length);
+                              ") is more than " + data.Length);
       }
       if (data.Length - offset < bytesCount) {
         throw new ArgumentException("data.Length minus offset (" +

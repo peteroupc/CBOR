@@ -328,7 +328,7 @@ namespace PeterO.Cbor {
       if (bigintTag.bitLength() > 64) {
         throw new ArgumentException("bigintTag.bitLength (" +
                 (long)bigintTag.bitLength() + ") is more than " +
-                                    "64");
+                              "64");
       }
       lock (tagHandlers) {
         tagHandlers[bigintTag] = handler;
@@ -588,7 +588,7 @@ namespace PeterO.Cbor {
     /// other object or if the other object is null.</returns>
     public int CompareToIgnoreTags(CBORObject other) {
       return (other == null) ? 1 : ((this == other) ? 0 :
-                                    this.Untag().CompareTo(other.Untag()));
+                              this.Untag().CompareTo(other.Untag()));
     }
 
     /// <summary>Compares two CBOR objects. <para>In this implementation:</para>
@@ -682,7 +682,7 @@ namespace PeterO.Cbor {
           return 1;
         }
         cmp = (simpleValueA == simpleValueB) ? 0 : ((simpleValueA <
-                                                     simpleValueB) ? -1 : 1);
+                              simpleValueB) ? -1 : 1);
       } else if (typeA == typeB) {
         switch (typeA) {
             case CBORObjectTypeInteger: {
@@ -697,7 +697,7 @@ namespace PeterO.Cbor {
               // Treat NaN as greater than all other numbers
               cmp = Single.IsNaN(a) ? (Single.IsNaN(b) ? 0 : 1) :
                 (Single.IsNaN(b) ? (-1) : ((a == b) ? 0 : ((a < b) ? -1 :
-                                                           1)));
+                              1)));
               break;
             }
             case CBORObjectTypeBigInteger: {
@@ -712,7 +712,7 @@ namespace PeterO.Cbor {
               // Treat NaN as greater than all other numbers
               cmp = Double.IsNaN(a) ? (Double.IsNaN(b) ? 0 : 1) :
                 (Double.IsNaN(b) ? (-1) : ((a == b) ? 0 : ((a < b) ? -1 :
-                                                           1)));
+                              1)));
               break;
             }
             case CBORObjectTypeExtendedDecimal: {
@@ -1146,7 +1146,7 @@ otherValue.itemValue as byte[])) {
           hashCode += 651869479 * itemHashCode;
         }
         hashCode += 651869483 * (this.itemtypeValue.GetHashCode() +
-                                 this.tagLow + this.tagHigh);
+                              this.tagLow + this.tagHigh);
       }
       return hashCode;
     }
@@ -1479,7 +1479,7 @@ CBORObjectTypeSingle,
     public bool HasTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +
-                                    ") is less than " + "0");
+                              ") is less than " + "0");
       }
       CBORObject obj = this;
       while (true) {
@@ -3500,7 +3500,7 @@ BitConverter.GetBytes((double)(double)value),
       }
       if (simpleValue >= 24 && simpleValue < 32) {
         throw new ArgumentException("Simple value is from 24 to 31: " +
-                                    simpleValue);
+                              simpleValue);
       }
       if (simpleValue < 32) {
         return valueFixedObjects[0xe0 + simpleValue];
@@ -3798,7 +3798,7 @@ otherValue));
     /// CBORObject.Null if
     /// <paramref name='dic'/> is null.</returns>
     public static CBORObject FromObject<TKey, TValue>(IDictionary<TKey,
-                                                      TValue> dic) {
+                              TValue> dic) {
       if (dic == null) {
         return CBORObject.Null;
       }

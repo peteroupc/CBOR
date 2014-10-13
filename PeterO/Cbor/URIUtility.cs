@@ -188,7 +188,7 @@ ParseMode.IRISurrogateLenient);
                 builder.Append((char)c);
               } else if (c <= 0x10ffff) {
                 builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) +
-                                      0xd800));
+                              0xd800));
                 builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
               }
             }
@@ -206,7 +206,7 @@ ParseMode.IRISurrogateLenient);
                 builder.Append((char)c);
               } else if (c <= 0x10ffff) {
                 builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) +
-                                      0xd800));
+                              0xd800));
                 builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
               }
             } else {
@@ -232,7 +232,7 @@ ParseMode.IRISurrogateLenient);
                 builder.Append((char)c);
               } else if (c <= 0x10ffff) {
                 builder.Append((char)((((c - 0x10000) >> 10) & 0x3ff) +
-                                      0xd800));
+                              0xd800));
                 builder.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
               }
             } else {
