@@ -1,10 +1,57 @@
 using System;
+using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 
 namespace Test {
   [TestClass]
   public class BigIntegerTest {
+    private sealed class StringAndBigInt {
+      private String stringValue;
+
+      public String StringValue {
+        get {
+ return this.stringValue;
+}
+      }
+
+      private BigInteger bigintValue;
+
+      public BigInteger BigIntValue {
+        get {
+ return this.bigintValue;
+}
+      }
+
+      private const string digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      public static StringAndBigInt Generate(FastRandom rand, int radix) {
+        BigInteger bv = BigInteger.Zero;
+        var sabi = new StringAndBigInt();
+        int numDigits = 1 + rand.NextValue(100);
+        bool negative = false;
+        var builder = new StringBuilder();
+        if (rand.NextValue(2) == 0) {
+          builder.Append('-');
+          negative = true;
+        }
+        for (int i = 0; i < numDigits; ++i) {
+          int digit = rand.NextValue(radix);
+          builder.Append(digits[digit]);
+          var bigintTmp = (BigInteger)radix;
+          bv *= bigintTmp;
+          bigintTmp = (BigInteger)digit;
+          bv += bigintTmp;
+        }
+        if (negative) {
+          bv = -bv;
+        }
+        sabi.bigintValue = bv;
+        sabi.stringValue = builder.ToString();
+        return sabi;
+      }
+    }
+
     [TestMethod]
     public void TestAbs() {
       // not implemented yet
@@ -102,6 +149,134 @@ BigInteger.fromString("-19084941898444092059").bitLength());
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    [TestMethod]
+    public void TestFromRadixString() {
+      try {
+        BigInteger.fromRadixString(null, 10);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+ BigInteger.fromRadixString("0", 1);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.fromRadixString("0", 0);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.fromRadixString("0", -37);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.fromRadixString("0", Int32.MinValue);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.fromRadixString("0", Int32.MaxValue);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      var fr = new FastRandom();
+      for (int i = 2; i <= 36; ++i) {
+        for (int j = 0; j < 100; ++j) {
+          StringAndBigInt sabi = StringAndBigInt.Generate(fr, i);
+          Assert.AreEqual(
+sabi.BigIntValue,
+BigInteger.fromRadixString(sabi.StringValue, i));
+        }
+      }
+    }
+    [TestMethod]
+    public void TestFromRadixSubstring() {
+      try {
+        BigInteger.fromRadixSubstring(null, 10, 0, 1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+ BigInteger.fromRadixSubstring("0", 1, 0, 1);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.fromRadixSubstring("0", 0, 0, 1);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.fromRadixSubstring("0", -37, 0, 1);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.fromRadixSubstring("0", Int32.MinValue, 0, 1);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.fromRadixSubstring("0", Int32.MaxValue, 0, 1);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      var fr = new FastRandom();
+      for (int i = 2; i <= 36; ++i) {
+        var padding = new StringBuilder();
+        for (int j = 0; j < 100; ++j) {
+          StringAndBigInt sabi = StringAndBigInt.Generate(fr, i);
+          padding.Append('!');
+          BigInteger actualBigInt = BigInteger.fromRadixSubstring(
+                                           padding + sabi.StringValue,
+            i,
+            j + 1,
+            j + 1 + sabi.StringValue.Length);
+          Assert.AreEqual(
+sabi.BigIntValue,
+actualBigInt);
+        }
       }
     }
 

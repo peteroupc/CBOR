@@ -15,7 +15,7 @@ namespace Test {
         if (i < 0xc2 || i > 0xf4) {
           list.Add(new byte[] { (byte)i, 0x80 });
         }
-        list.Add(new byte[] { (byte)i });
+        list.Add(new[] { (byte)i });
       }
       list.Add(new byte[] { 0xe0, 0xa0 });
       list.Add(new byte[] { 0xe1, 0x80 });

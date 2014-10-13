@@ -50,7 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\DataUtilities.cs">
+    <Compile Include="..\PeterO\Cbor\DataUtilities.cs">
       <Link>DataUtilities.cs</Link>
     </Compile>
     <Compile Include="DocGenerator.cs" />

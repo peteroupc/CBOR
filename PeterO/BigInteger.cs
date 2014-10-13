@@ -13,16 +13,16 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO {
-  /// <summary>An arbitrary-precision integer. <para>Instances of this
-  /// class are
-  /// immutable, so they are inherently safe for use by multiple threads.
-  /// Multiple
-  /// instances of this object with the same value are interchangeable, so
-  /// they
-  /// should not be compared using the "==" operator (which only checks if
-  /// each
-  /// side of the operator is the same instance).</para>
-  /// </summary>
+    /// <summary>An arbitrary-precision integer. <para>Instances of this
+    /// class are
+    /// immutable, so they are inherently safe for use by multiple threads.
+    /// Multiple
+    /// instances of this object with the same value are interchangeable, so
+    /// they
+    /// should not be compared using the "==" operator (which only checks if
+    /// each
+    /// side of the operator is the same instance).</para>
+    /// </summary>
   public sealed partial class BigInteger : IComparable<BigInteger>,
   IEquatable<BigInteger> {
     private static int CountWords(short[] array, int n) {
@@ -799,7 +799,7 @@ int astart,
 short[] words2,
 int bstart) {
       unchecked {
-        int shortMask = ShortMask;
+        const int shortMask = ShortMask;
         int p; short c; int d;
         int a0 = ((int)words1[astart]) & shortMask;
         int b0 = ((int)words2[bstart]) & shortMask;
@@ -877,7 +877,7 @@ short[] words2,
 int bstart) {
       unchecked {
         int p; short c; int d;
-        int shortMask = ShortMask;
+        const int shortMask = ShortMask;
         p = (((int)words1[astart]) & shortMask) * (((int)words2[bstart]) &
                 shortMask); c = (short)p; d = ((int)p >> 16) & shortMask;
         result[rstart] = c; c = (short)d; d = ((int)d >> 16) & shortMask;
@@ -2807,8 +2807,9 @@ int words2Count) {
       }
 #if DEBUG
       if (!(words1Count % 2 == 0 && words2Count % 2 == 0)) {
-        throw new ArgumentException("doesn't satisfy valueNA%2==0 && valueNB%2==0"
-   );
+        throw new
+             ArgumentException("doesn't satisfy valueNA%2==0 && valueNB%2==0"
+);
       }
       if (!(words2[words2Start + words2Count - 1] != 0 ||
             words2[words2Start + words2Count - 2] != 0)) {
@@ -4076,13 +4077,39 @@ shiftBits);
       if (str == null) {
         throw new ArgumentNullException("str");
       }
-      return fromSubstring(str, 0, str.Length);
+      return fromRadixSubstring(str, 10, 0, str.Length);
     }
 
-    private const int MaxSafeInt = 214748363;
+    /// <summary>Converts a string to an arbitrary-precision integer in a given
+    /// radix.</summary>
+    /// <param name='str' >A string containing only digits, except that it
+    /// may start
+    /// with a minus sign.</param>
+    /// <param name='radix' >A base from 2 to 36. The possible digits start
+    /// from 0 to
+    /// 9, then from A to Z in base 36, and the possible digits start from 0
+    /// to 9,
+    /// then from A to F in base 16.</param>
+    /// <returns>A BigInteger object with the same value as given in the
+    /// string.</returns>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='str' />
+    /// is null.</exception>
+    /// <exception cref='FormatException' >The parameter <paramref
+    /// name='str' /> is in
+    /// an invalid format.</exception>
+    public static BigInteger fromRadixString(string str, int radix) {
+      if (str == null) {
+        throw new ArgumentNullException("str");
+      }
+      return fromRadixSubstring(str, radix, 0, str.Length);
+    }
 
     /// <summary>Converts a portion of a string to an arbitrary-precision
-    /// integer.</summary>
+    /// integer.
+    /// The string portion can begin with a minus sign ('-') to indicate
+    /// that it's
+    /// negative.</summary>
     /// <param name='str'>A string object.</param>
     /// <param name='index'>The index of the string that starts the string
     /// portion.</param>
@@ -4108,6 +4135,73 @@ int endIndex) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
+      return fromRadixSubstring(str, 10, index, endIndex);
+    }
+
+    private static int[] valueMaxSafeInts = { 1073741823, 715827881,
+      536870911, 429496728, 357913940, 306783377, 268435455, 238609293,
+      214748363, 195225785, 178956969, 165191048, 153391688, 143165575,
+      134217727, 126322566, 119304646, 113025454, 107374181, 102261125,
+      97612892, 93368853, 89478484, 85899344, 82595523, 79536430, 76695843,
+      74051159, 71582787, 69273665, 67108863, 65075261, 63161282, 61356674,
+      59652322 };
+
+ private static int[] valueCharToDigit = { 36, 36, 36, 36, 36, 36, 36,
+      36,
+      36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36,
+      36, 36, 36, 36, 36, 36, 36, 36,
+      0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 36, 36, 36, 36, 36, 36,
+      36, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+      25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 36, 36, 36, 36,
+      36, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+      25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 36, 36, 36, 36 };
+
+    /// <summary>Converts a portion of a string to an arbitrary-precision
+    /// integer in
+    /// a given radix. The string portion can begin with a minus sign ('-') to
+    /// indicate that it's negative.</summary>
+    /// <param name='str'>A string object.</param>
+    /// <param name='radix' >A base from 2 to 36. The possible digits start
+    /// from 0 to
+    /// 9, then from A to Z in base 36, and the possible digits start from 0
+    /// to 9,
+    /// then from A to F in base 16.</param>
+    /// <param name='index'>The index of the string that starts the string
+    /// portion.</param>
+    /// <param name='endIndex' >The index of the string that ends the string
+    /// portion.
+    /// The length will be index + endIndex - 1.</param>
+    /// <returns>A BigInteger object with the same value as given in the string
+    /// portion.</returns>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='str' />
+    /// is null.</exception>
+    /// <exception cref='ArgumentException' >The parameter <paramref
+    /// name='index' />
+    /// is less than 0, <paramref name='endIndex'/> is less than 0, or either is
+    /// greater than the string's length, or <paramref name='endIndex'/> is less
+    /// than <paramref name='index'/> .</exception>
+    /// <exception cref='FormatException'>The string portion is empty or in an
+    /// invalid format.</exception>
+    public static BigInteger fromRadixSubstring(
+    string str,
+    int radix,
+    int index,
+    int endIndex) {
+      if (str == null) {
+        throw new ArgumentNullException("str");
+      }
+      if (radix < 2) {
+        throw new ArgumentException("radix (" + radix +
+          ") is less than 2");
+      }
+      if (radix > 36) {
+        throw new ArgumentException("radix (" + radix +
+          ") is more than 36");
+      }
       if (index < 0) {
         throw new ArgumentException("index (" + index + ") is less than " +
                                     "0");
@@ -4132,62 +4226,126 @@ int endIndex) {
         throw new FormatException("No digits");
       }
       bool negative = false;
-      if (str[0] == '-') {
+      if (str[index] == '-') {
         ++index;
+        if (index == endIndex) {
+          throw new FormatException("No digits");
+        }
         negative = true;
       }
-      var bigint = new short[4];
-      bool haveDigits = false;
-      bool haveSmallInt = true;
-      int smallInt = 0;
-      for (int i = index; i < endIndex; ++i) {
-        char c = str[i];
-        if (c < '0' || c > '9') {
-          throw new FormatException("Illegal character found");
-        }
-        haveDigits = true;
-        var digit = (int)(c - '0');
-        if (haveSmallInt && smallInt < MaxSafeInt) {
-          smallInt *= 10;
-          smallInt += digit;
-        } else {
-          if (haveSmallInt) {
-            bigint[0] = unchecked((short)(smallInt & 0xffff));
-            bigint[1] = unchecked((short)((smallInt >> 16) & 0xffff));
-            haveSmallInt = false;
-          }
-          // Multiply by 10
-          short carry = 0;
-          int n = bigint.Length;
-          for (int j = 0; j < n; ++j) {
-            int p;
-            unchecked {
-              p = (((int)bigint[j]) & 0xffff) * 10;
-              p += ((int)carry) & 0xffff;
-              bigint[j] = (short)p;
-              carry = (short)(p >> 16);
-            }
-          }
-          if (carry != 0) {
-            bigint = GrowForCarry(bigint, carry);
-          }
-          // Add the parsed digit
-          if (digit != 0) {
-            int d = bigint[0] & 0xffff;
-            if (d <= 65526) {
-              bigint[0] = unchecked((short)(d + digit));
-            } else if (Increment(bigint, 0, bigint.Length, (short)digit) != 0) {
-              bigint = GrowForCarry(bigint, (short)1);
-            }
-          }
+      // Skip leading zeros
+      for (; index < endIndex; ++index) {
+        char c = str[index];
+        if (c != 0x30) {
+          break;
         }
       }
-      if (!haveDigits) {
-        throw new FormatException("No digits");
+      int effectiveLength = endIndex - index;
+      if (effectiveLength == 0) {
+        return BigInteger.ZERO;
       }
-      if (haveSmallInt) {
-        bigint[0] = unchecked((short)(smallInt & 0xffff));
-        bigint[1] = unchecked((short)((smallInt >> 16) & 0xffff));
+      short[] bigint;
+      if (radix == 16) {
+        // Special case for hexadecimal radix
+        int leftover = effectiveLength & 3;
+        int wordCount = effectiveLength >> 2;
+        if (leftover != 0) {
+          ++wordCount;
+        }
+        bigint = new short[wordCount];
+        int currentDigit = wordCount - 1;
+        // Get most significant digits if effective
+        // length is not divisible by 4
+        if (leftover != 0) {
+          int extraWord = 0;
+          for (int i = 0; i < leftover; ++i) {
+            extraWord <<= 4;
+            char c = str[index + i];
+            int digit = (c >= 0x80) ? 36 : valueCharToDigit[(int)c];
+            if (digit >= 16) {
+              throw new FormatException("Illegal character found");
+            }
+            extraWord |= digit;
+          }
+          bigint[currentDigit] = unchecked((short)extraWord);
+          --currentDigit;
+          index += leftover;
+        }
+#if DEBUG
+        if ((endIndex - index) % 4 != 0) {
+    throw new ArgumentException(
+    "doesn't satisfy (endIndex - index) % 4 == 0");
+        }
+#endif
+        while (index < endIndex) {
+          char c = str[index + 3];
+          int digit = (c >= 0x80) ? 36 : valueCharToDigit[(int)c];
+          int word = digit;
+          c = str[index + 2];
+          digit = (c >= 0x80) ? 36 : valueCharToDigit[(int)c];
+          word |= digit << 4;
+          c = str[index + 1];
+          digit = (c >= 0x80) ? 36 : valueCharToDigit[(int)c];
+          word |= digit << 8;
+          c = str[index];
+          digit = (c >= 0x80) ? 36 : valueCharToDigit[(int)c];
+          word |= digit << 12;
+          index += 4;
+          bigint[currentDigit] = unchecked((short)word);
+          --currentDigit;
+        }
+      } else {
+        bigint = new short[4];
+        bool haveSmallInt = true;
+        int maxSafeInt = valueMaxSafeInts[radix - 2];
+        int maxShortPlusOneMinusRadix = 65536 - radix;
+        int smallInt = 0;
+        for (int i = index; i < endIndex; ++i) {
+          char c = str[i];
+          int digit = (c >= 0x80) ? 36 : valueCharToDigit[(int)c];
+          if (digit >= radix) {
+            throw new FormatException("Illegal character found");
+          }
+          if (haveSmallInt && smallInt < maxSafeInt) {
+            smallInt *= radix;
+            smallInt += digit;
+          } else {
+            if (haveSmallInt) {
+              bigint[0] = unchecked((short)(smallInt & 0xffff));
+              bigint[1] = unchecked((short)((smallInt >> 16) & 0xffff));
+              haveSmallInt = false;
+            }
+            // Multiply by the radix
+            short carry = 0;
+            int n = bigint.Length;
+            for (int j = 0; j < n; ++j) {
+              int p;
+              unchecked {
+                p = (((int)bigint[j]) & 0xffff) * radix;
+                p += ((int)carry) & 0xffff;
+                bigint[j] = (short)p;
+                carry = (short)(p >> 16);
+              }
+            }
+            if (carry != 0) {
+              bigint = GrowForCarry(bigint, carry);
+            }
+            // Add the parsed digit
+            if (digit != 0) {
+              int d = bigint[0] & 0xffff;
+              if (d <= maxShortPlusOneMinusRadix) {
+                bigint[0] = unchecked((short)(d + digit));
+              } else if (Increment(bigint, 0, bigint.Length, (short)digit) !=
+                   0) {
+                bigint = GrowForCarry(bigint, (short)1);
+              }
+            }
+          }
+        }
+        if (haveSmallInt) {
+          bigint[0] = unchecked((short)(smallInt & 0xffff));
+          bigint[1] = unchecked((short)((smallInt >> 16) & 0xffff));
+        }
       }
       int count = CountWords(bigint, bigint.Length);
       return (count == 0) ? BigInteger.Zero : new BigInteger(
