@@ -28,8 +28,7 @@ namespace Test {
           return CBORObject.FromObject(RandomExtendedDecimal(rand));
         case 5:
           return CBORObject.FromObject(RandomInt64(rand));
-        default:
-          throw new ArgumentException();
+        default: throw new ArgumentException();
       }
     }
 
@@ -49,8 +48,7 @@ namespace Test {
           return CBORObject.FromObject(RandomInt64(rand));
         case 6:
           return CBORObject.FromObject(RandomRational(rand));
-        default:
-          throw new ArgumentException();
+        default: throw new ArgumentException();
       }
     }
 
@@ -207,8 +205,7 @@ namespace Test {
           return RandomCBORMap(rand, depth);
         case 10:
           return RandomCBORTaggedObject(rand, depth);
-        default:
-          return RandomNumber(rand);
+        default: return RandomNumber(rand);
       }
     }
 
@@ -294,8 +291,7 @@ namespace Test {
           return ExtendedFloat.NaN;
         }
       }
-      return ExtendedFloat.Create(
-        RandomBigInteger(r),
+      return ExtendedFloat.Create(RandomBigInteger(r),
         (BigInteger)(r.NextValue(400) - 200));
     }
 

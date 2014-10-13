@@ -121,8 +121,7 @@ string name) {
       }
       if (output != null && !d3.ToString().Equals(output)) {
         ExtendedDecimal d4 = ExtendedDecimal.FromString(output);
-        Assert.AreEqual(
-          output,
+        Assert.AreEqual(output,
           d3.ToString(),
           name + ": expected: [" + d4.UnsignedMantissa + " " + d4.Exponent +
             "]\\n" + "but was: [" + d3.UnsignedMantissa + " " + d3.Exponent +
@@ -198,8 +197,7 @@ string name) {
     public static void AssertEqualsHashCode(Object o, Object o2) {
       if (o.Equals(o2)) {
         if (!o2.Equals(o)) {
-          Assert.Fail(
-            String.Format(
+          Assert.Fail(String.Format(
               CultureInfo.InvariantCulture,
               "{0} equals {1} but not vice versa",
               o,
@@ -210,8 +208,7 @@ string name) {
         if (o2.GetHashCode() != o.GetHashCode()) {
           // Don't use Assert.AreEqual directly because it has
           // quite a lot of overhead
-          Assert.Fail(
-            String.Format(
+          Assert.Fail(String.Format(
               CultureInfo.InvariantCulture,
               "{0} and {1} don't have equal hash codes",
               o,
@@ -220,11 +217,9 @@ string name) {
       } else {
         if (o2.Equals(o)) {
           Assert.Fail(
-            String.Format(
-              CultureInfo.InvariantCulture,
+            String.Format(CultureInfo.InvariantCulture,
               "{0} does not equal {1} but not vice versa",
-              o,
-              o2));
+              o, o2));
         }
       }
     }

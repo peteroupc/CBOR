@@ -87,8 +87,7 @@ int expectedType) {
           throw new CBORException("Unexpected data encountered");
         case 31:
           throw new CBORException("Indefinite-length data not allowed here");
-        default:
-          return headByte;
+        default: return headByte;
       }
     }
 
@@ -148,8 +147,7 @@ Stream outputStream) {
       }
     }
 
-    public CBORObject Read(
-      CBORTypeFilter filter) {
+    public CBORObject Read(CBORTypeFilter filter) {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
@@ -160,8 +158,7 @@ Stream outputStream) {
       return this.ReadForFirstByte(firstbyte, filter);
     }
 
-    public CBORObject ReadForFirstByte(
-      int firstbyte,
+    public CBORObject ReadForFirstByte(int firstbyte,
       CBORTypeFilter filter) {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
@@ -311,8 +308,7 @@ Stream outputStream) {
   CBORException("Length of bytes to be streamed is bigger than supported ");
             }
             data = ms.ToArray();
-            return new CBORObject(
-              CBORObject.CBORObjectTypeByteString,
+            return new CBORObject(CBORObject.CBORObjectTypeByteString,
               data);
           }
         } else {
@@ -329,8 +325,7 @@ CultureInfo.InvariantCulture) + " is bigger than supported");
           var cbor = new CBORObject(CBORObject.CBORObjectTypeByteString, data);
           if (this.stringRefs != null) {
             int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ?
-            Int32.MaxValue :
-              (int)uadditional;
+            Int32.MaxValue : (int)uadditional;
             this.stringRefs.AddStringIfNeeded(cbor, hint);
           }
           return cbor;
@@ -395,8 +390,7 @@ CBORObject.CBORObjectTypeTextString,
 builder.ToString());
           if (this.stringRefs != null) {
             int hint = (uadditional > Int32.MaxValue || hasBigAdditional) ?
-            Int32.MaxValue :
-              (int)uadditional;
+            Int32.MaxValue : (int)uadditional;
             this.stringRefs.AddStringIfNeeded(cbor, hint);
           }
           return cbor;
@@ -424,8 +418,7 @@ builder.ToString());
               throw new CBORException("Array is too long");
             }
             ++this.depth;
-            CBORObject o = this.ReadForFirstByte(
-              headByte,
+            CBORObject o = this.ReadForFirstByte(headByte,
               filter == null ? null : filter.GetSubFilter(vtindex));
             --this.depth;
             cbor.Add(o);

@@ -181,8 +181,7 @@ namespace PeterO.DocGen {
       return builder.ToString();
     }
 
-    public static void AppendConstraints(
-      Type[] genericArguments,
+    public static void AppendConstraints(Type[] genericArguments,
       StringBuilder builder) {
       foreach (var arg in genericArguments) {
         if (arg.IsGenericParameter) {
@@ -191,8 +190,7 @@ namespace PeterO.DocGen {
   (GenericParameterAttributes.ReferenceTypeConstraint |
   GenericParameterAttributes.NotNullableValueTypeConstraint |
                    GenericParameterAttributes.DefaultConstructorConstraint))
-                                             ==
-              GenericParameterAttributes.None) {
+                == GenericParameterAttributes.None) {
             continue;
           }
           builder.Append("\r\n" + FourSpaces + FourSpaces + "where ");
@@ -259,8 +257,8 @@ namespace PeterO.DocGen {
         }
         if (method.IsFinal) {
           builder.Append("sealed ");
-        } else if (method is MethodInfo &&
-                   IsMethodOverride((MethodInfo)method)) {
+     } else if (method is MethodInfo &&
+          IsMethodOverride((MethodInfo)method)) {
           builder.Append("override ");
         } else if (method.IsVirtual) {
           builder.Append("virtual ");
@@ -328,9 +326,8 @@ namespace PeterO.DocGen {
       MethodInfo getter = property.GetGetMethod();
       MethodInfo setter = property.GetSetMethod();
       return ((getter != null && getter.IsPublic) || (setter != null &&
-        setter.IsPublic)) || ((getter != null && getter.IsFamily) || (setter
-                                                        !=
-                                                     null &&
+        setter.IsPublic)) || ((getter != null && getter.IsFamily) || (setter!=
+                null &&
   setter.IsFamily));
     }
 
@@ -480,16 +477,13 @@ namespace PeterO.DocGen {
             (name.Equals("System.UInt16") ? "ushort" :
              (name.Equals("System.Char") ? "char" :
               (name.Equals("System.Object") ? "object" :
-                (name.Equals("System.Void") ? "void" :
-                                         (name.Equals("System.Byte") ?
+           (name.Equals("System.Void") ? "void" :
+                  (name.Equals("System.Byte") ?
                                                             "byte" :
   (name.Equals("System.SByte") ? "sbyte" : (name.Equals("System.String") ?
-                                                             "string" :
-                                      (name.Equals("System.Boolean") ?
-  "bool" :
-                                      (name.Equals("System.Single") ?
-  "float" :
-                 (name.Equals("System.Double") ? "double" :
+                "string" : (name.Equals("System.Boolean") ?
+  "bool" : (name.Equals("System.Single") ?
+  "float" : (name.Equals("System.Double") ? "double" :
   name))))))))))))));
     }
 
@@ -571,8 +565,8 @@ namespace PeterO.DocGen {
         }
         signature = FormatMethod(method);
         if (method is ConstructorInfo) {
-          this.WriteLine("### " +
-                         UndecorateTypeName(method.ReflectedType.Name) +
+        this.WriteLine("### " +
+            UndecorateTypeName(method.ReflectedType.Name) +
                          " Constructor\r\n\r\n" + signature + "\r\n\r\n");
         } else {
           this.WriteLine("### " + MethodNameHeading(method.Name) +

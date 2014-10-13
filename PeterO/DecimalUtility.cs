@@ -34,8 +34,7 @@ namespace PeterO {
       (BigInteger)476837158203125L, (BigInteger)2384185791015625L,
       (BigInteger)11920928955078125L,
       (BigInteger)59604644775390625L, (BigInteger)298023223876953125L,
-      (BigInteger)1490116119384765625L,
-      (BigInteger)7450580596923828125L
+      (BigInteger)1490116119384765625L, (BigInteger)7450580596923828125L
     };
 
     internal static int ShiftLeftOne(int[] arr) {

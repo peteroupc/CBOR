@@ -149,8 +149,7 @@ namespace PeterO {
               x1 = unchecked((int)(result2 | (result3 << 16)));
               int x2 = unchecked(x0 + carry);
               if (((x2 >> 31) == (x0 >> 31)) ? ((x2 & Int32.MaxValue) < (x0 &
-              Int32.MaxValue)) :
-                  ((x2 >> 31) == 0)) {
+              Int32.MaxValue)) : ((x2 >> 31) == 0)) {
                 // Carry in addition
                 x1 = unchecked(x1 + 1);
               }
@@ -192,8 +191,7 @@ namespace PeterO {
               x1 = unchecked((int)(result2 | (result3 << 16)));
               int x2 = unchecked(x0 + carry);
               if (((x2 >> 31) == (x0 >> 31)) ? ((x2 & Int32.MaxValue) < (x0 &
-              Int32.MaxValue)) :
-                  ((x2 >> 31) == 0)) {
+              Int32.MaxValue)) : ((x2 >> 31) == 0)) {
                 // Carry in addition
                 x1 = unchecked(x1 + 1);
               }
@@ -251,8 +249,7 @@ namespace PeterO {
                   ((this.data[0] >> 31) == 0)) ? -1 : 1;
       }
 
-      internal MutableNumber SubtractInt(
-        int other) {
+      internal MutableNumber SubtractInt(int other) {
         if (other < 0) {
      throw new ArgumentException("other (" + other + ") is less than " +
             "0 ");
@@ -279,8 +276,7 @@ namespace PeterO {
               for (int i = 1; i < this.wordCount; ++i) {
                 u = this.data[i] - borrow;
                 borrow = (((this.data[i] >> 31) == (u >> 31)) ?
-                          ((this.data[i] & Int32.MaxValue) < (u &
-                          Int32.MaxValue)) :
+                ((this.data[i] & Int32.MaxValue) < (u & Int32.MaxValue)) :
                           ((this.data[i] >> 31) == 0)) ? 1 : 0;
                 this.data[i] = (int)u;
               }
@@ -298,8 +294,7 @@ namespace PeterO {
     /// <summary>Subtracts a MutableNumber object from this instance.</summary>
     /// <param name='other'>A MutableNumber object.</param>
     /// <returns>The difference of the two objects.</returns>
-      internal MutableNumber Subtract(
-        MutableNumber other) {
+      internal MutableNumber Subtract(MutableNumber other) {
         unchecked {
           {
        // Console.WriteLine("" + this.data.Length + " " +
@@ -463,8 +458,7 @@ namespace PeterO {
           return this.mnum.ToInt32();
         case 2:
           return (int)this.largeValue;
-        default:
-          throw new InvalidOperationException();
+        default: throw new InvalidOperationException();
       }
     }
 
@@ -477,8 +471,8 @@ namespace PeterO {
       switch ((this.integerMode << 2) | val.integerMode) {
           case (0 << 2) | 0: {
             int vsv = val.smallValue;
-            return (this.smallValue == vsv) ? 0 :
-              (this.smallValue < vsv ? -1 : 1);
+        return (this.smallValue == vsv) ? 0 : (this.smallValue < vsv ? -1 :
+              1);
           }
         case (0 << 2) | 1:
           return -val.mnum.CompareToInt(this.smallValue);
@@ -494,8 +488,7 @@ namespace PeterO {
         case (2 << 2) | 1:
         case (2 << 2) | 2:
           return this.largeValue.CompareTo(val.AsBigInteger());
-        default:
-          throw new InvalidOperationException();
+        default: throw new InvalidOperationException();
       }
     }
 
@@ -626,8 +619,7 @@ out bigrem);
           case 2:
             this.largeValue *= (BigInteger)val;
             break;
-          default:
-            throw new InvalidOperationException();
+          default: throw new InvalidOperationException();
         }
       }
       return this;
@@ -706,8 +698,7 @@ out bigrem);
           valValue = val.AsBigInteger();
           this.largeValue -= (BigInteger)valValue;
           break;
-        default:
-          throw new InvalidOperationException();
+        default: throw new InvalidOperationException();
       }
       return this;
     }
@@ -828,8 +819,7 @@ out bigrem);
           valValue = val.AsBigInteger();
           this.largeValue += (BigInteger)valValue;
           break;
-        default:
-          throw new InvalidOperationException();
+        default: throw new InvalidOperationException();
       }
       return this;
     }
@@ -966,8 +956,8 @@ out bigrem);
       switch (this.integerMode) {
         case 0:
           if ((this.smallValue < 0 && (int)val < Int32.MinValue -
-          this.smallValue) ||
-              (this.smallValue > 0 && (int)val > Int32.MaxValue -
+        this.smallValue) || (this.smallValue > 0 && (int)val >
+            Int32.MaxValue -
               this.smallValue)) {
             // would overflow
             if (val >= 0) {
@@ -997,8 +987,7 @@ out bigrem);
           valValue = (BigInteger)val;
           this.largeValue += (BigInteger)valValue;
           break;
-        default:
-          throw new InvalidOperationException();
+        default: throw new InvalidOperationException();
       }
       return this;
     }
@@ -1029,8 +1018,7 @@ System.Globalization.CultureInfo.InvariantCulture);
           return this.mnum.ToBigInteger().ToString();
         case 2:
           return this.largeValue.ToString();
-        default:
-          return String.Empty;
+        default: return String.Empty;
       }
     }
 
@@ -1082,8 +1070,7 @@ System.Globalization.CultureInfo.InvariantCulture);
           return this.mnum.ToBigInteger().CompareTo((BigInteger)val);
         case 2:
           return this.largeValue.CompareTo((BigInteger)val);
-        default:
-          return 0;
+        default: return 0;
       }
     }
 
@@ -1095,8 +1082,7 @@ System.Globalization.CultureInfo.InvariantCulture);
           return this.mnum.ToBigInteger();
         case 2:
           return this.largeValue;
-        default:
-          throw new InvalidOperationException();
+        default: throw new InvalidOperationException();
       }
     }
   }

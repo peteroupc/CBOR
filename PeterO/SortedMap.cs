@@ -89,8 +89,7 @@ namespace PeterO {
         KeyValuePair<T1, T2> kvp;
         KeyValuePair<T1, T2> kvpIn;
         kvpIn = new KeyValuePair<T1, T2>(key, default(T2));
-        if (this.tree.Find(
-            kvpIn,
+        if (this.tree.Find(kvpIn,
             out kvp)) {
           return kvp.Value;
         }
@@ -143,7 +142,7 @@ namespace PeterO {
       return this.tree.GetEnumerator();
     }
 
-    System.Collections.IEnumerator
+System.Collections.IEnumerator
       System.Collections.IEnumerable.GetEnumerator() {
       return this.tree.GetEnumerator();
     }

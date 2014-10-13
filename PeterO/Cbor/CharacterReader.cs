@@ -73,8 +73,7 @@ namespace PeterO.Cbor {
               this.offset);
           }
           if (surr == 0xdc00) {
-            throw CharacterReader.NewError(
-              "Unpaired surrogate code point",
+            throw CharacterReader.NewError("Unpaired surrogate code point",
               this.offset);
           }
           ++this.offset;

@@ -70,8 +70,7 @@ namespace PeterO {
     public TrapException() {
     }
 
-    public TrapException(string message):
-      base(message) {
+    public TrapException(string message): base(message) {
     }
 
     public TrapException(string message, Exception innerException):

@@ -310,8 +310,7 @@ namespace PeterO {
         }
         return root;
       }
-      /** From CLR **/
-      private RBCell rotateLeft(RBCell rootValue) {
+      /** From CLR **/ private RBCell rotateLeft(RBCell rootValue) {
         RBCell r = this.rightValue;
         this.rightValue = r.leftValue;
         if (r.leftValue != null) {
@@ -329,8 +328,7 @@ namespace PeterO {
         this.parentValue = r;
         return rootValue;
       }
-      /** From CLR **/
-      private RBCell rotateRight(RBCell rootValue) {
+      /** From CLR **/ private RBCell rotateRight(RBCell rootValue) {
         RBCell l = this.leftValue;
         this.leftValue = l.rightValue;
         if (l.rightValue != null) {
@@ -348,8 +346,7 @@ namespace PeterO {
         this.parentValue = l;
         return rootValue;
       }
-      /** From CLR **/
-      private RBCell fixAfterInsertion(RBCell rootValue) {
+      /** From CLR **/ private RBCell fixAfterInsertion(RBCell rootValue) {
         this.colorValue = RED;
         RBCell x = this;
         while (x != null && x != rootValue && x.parentValue.colorValue == RED) {
@@ -581,8 +578,8 @@ this.cmpValue);
           if (diff == 0 && checkOccurrence == OccurrenceMode.AddIfMissing) {
             return false;
           }
-          if (diff == 0 && checkOccurrence ==
-          OccurrenceMode.OverwriteIfExisting) {
+      if (diff == 0 && checkOccurrence ==
+            OccurrenceMode.OverwriteIfExisting) {
             t.element(element);
             return false;
           }

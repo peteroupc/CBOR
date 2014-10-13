@@ -97,10 +97,8 @@ namespace PeterO {
       }
     }
 
-    public BitShiftAccumulator(
-      BigInteger bigint,
-      int lastDiscarded,
-      int olderDiscarded) {
+    public BitShiftAccumulator(BigInteger bigint,
+      int lastDiscarded, int olderDiscarded) {
       if (bigint.Sign < 0) {
         throw new ArgumentException("bigint's sign (" + bigint.Sign +
           ") is less than " + "0");

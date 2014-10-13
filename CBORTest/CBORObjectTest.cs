@@ -12,20 +12,17 @@ namespace Test {
       Assert.AreEqual(
         CBORObject.FromObject(2),
         CBORObject.FromObject(-2).Abs());
-      Assert.AreEqual(
-        CBORObject.FromObject(2),
+      Assert.AreEqual(CBORObject.FromObject(2),
         CBORObject.FromObject(2).Abs());
       Assert.AreEqual(
         CBORObject.FromObject(2.5),
         CBORObject.FromObject(-2.5).Abs());
-      Assert.AreEqual(
-        CBORObject.FromObject(ExtendedDecimal.FromString("6.63")),
+    Assert.AreEqual(CBORObject.FromObject(ExtendedDecimal.FromString("6.63"
+)),
         CBORObject.FromObject(ExtendedDecimal.FromString("-6.63")).Abs());
-      Assert.AreEqual(
-        CBORObject.FromObject(ExtendedFloat.FromString("2.75")),
+      Assert.AreEqual(CBORObject.FromObject(ExtendedFloat.FromString("2.75")),
         CBORObject.FromObject(ExtendedFloat.FromString("-2.75")).Abs());
-      Assert.AreEqual(
-        CBORObject.FromObject(ExtendedRational.FromDouble(2.5)),
+      Assert.AreEqual(CBORObject.FromObject(ExtendedRational.FromDouble(2.5)),
         CBORObject.FromObject(ExtendedRational.FromDouble(-2.5)).Abs());
     }
     [TestMethod]
@@ -109,8 +106,7 @@ namespace Test {
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
   ].AsString()));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
-          Assert.AreEqual(
-            numberinfo["integer" ].AsString(),
+          Assert.AreEqual(numberinfo["integer" ].AsString(),
             cbornumber.AsBigInteger().ToString());
         } else {
           try {
@@ -290,16 +286,14 @@ namespace Test {
       Assert.AreEqual(
         ExtendedDecimal.PositiveInfinity,
         CBORObject.FromObject(Single.PositiveInfinity).AsExtendedDecimal());
-      Assert.AreEqual(
-        ExtendedDecimal.NegativeInfinity,
+      Assert.AreEqual(ExtendedDecimal.NegativeInfinity,
         CBORObject.FromObject(Single.NegativeInfinity).AsExtendedDecimal());
       Assert.IsTrue(CBORObject.FromObject(Single.NaN).AsExtendedDecimal()
                     .IsNaN());
       Assert.AreEqual(
         ExtendedDecimal.PositiveInfinity,
         CBORObject.FromObject(Double.PositiveInfinity).AsExtendedDecimal());
-      Assert.AreEqual(
-        ExtendedDecimal.NegativeInfinity,
+      Assert.AreEqual(ExtendedDecimal.NegativeInfinity,
         CBORObject.FromObject(Double.NegativeInfinity).AsExtendedDecimal());
       Assert.IsTrue(CBORObject.FromObject(Double.NaN).AsExtendedDecimal()
                     .IsNaN());
@@ -357,16 +351,14 @@ namespace Test {
       Assert.AreEqual(
         ExtendedFloat.PositiveInfinity,
         CBORObject.FromObject(Single.PositiveInfinity).AsExtendedFloat());
-      Assert.AreEqual(
-        ExtendedFloat.NegativeInfinity,
+      Assert.AreEqual(ExtendedFloat.NegativeInfinity,
         CBORObject.FromObject(Single.NegativeInfinity).AsExtendedFloat());
       Assert.IsTrue(CBORObject.FromObject(Single.NaN).AsExtendedFloat()
                     .IsNaN());
       Assert.AreEqual(
         ExtendedFloat.PositiveInfinity,
         CBORObject.FromObject(Double.PositiveInfinity).AsExtendedFloat());
-      Assert.AreEqual(
-        ExtendedFloat.NegativeInfinity,
+      Assert.AreEqual(ExtendedFloat.NegativeInfinity,
         CBORObject.FromObject(Double.NegativeInfinity).AsExtendedFloat());
       Assert.IsTrue(CBORObject.FromObject(Double.NaN).AsExtendedFloat()
                     .IsNaN());
@@ -376,16 +368,14 @@ namespace Test {
       Assert.AreEqual(
         ExtendedRational.PositiveInfinity,
         CBORObject.FromObject(Single.PositiveInfinity).AsExtendedRational());
-      Assert.AreEqual(
-        ExtendedRational.NegativeInfinity,
+      Assert.AreEqual(ExtendedRational.NegativeInfinity,
         CBORObject.FromObject(Single.NegativeInfinity).AsExtendedRational());
       Assert.IsTrue(CBORObject.FromObject(Single.NaN).AsExtendedRational()
                     .IsNaN());
       Assert.AreEqual(
         ExtendedRational.PositiveInfinity,
         CBORObject.FromObject(Double.PositiveInfinity).AsExtendedRational());
-      Assert.AreEqual(
-        ExtendedRational.NegativeInfinity,
+      Assert.AreEqual(ExtendedRational.NegativeInfinity,
         CBORObject.FromObject(Double.NegativeInfinity).AsExtendedRational());
       Assert.IsTrue(CBORObject.FromObject(Double.NaN).AsExtendedRational()
                     .IsNaN());
@@ -856,50 +846,36 @@ cbornumber.AsSingle());
     }
     [TestMethod]
     public void TestCanTruncatedIntFitInInt32() {
-      Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
-            -2,
+      Assert.IsTrue(CBORObject.FromObject(
+          ExtendedFloat.Create(-2,
             11)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
+        CBORObject.FromObject(ExtendedFloat.Create(
             -2,
             12)).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
-            -2,
+      Assert.IsTrue(CBORObject.FromObject(
+          ExtendedFloat.Create(-2,
             13)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
+        CBORObject.FromObject(ExtendedFloat.Create(
             -2,
             14)).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
-            -2,
+      Assert.IsTrue(CBORObject.FromObject(
+          ExtendedFloat.Create(-2,
             15)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
+        CBORObject.FromObject(ExtendedFloat.Create(
             -2,
             16)).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
-            -2,
+      Assert.IsTrue(CBORObject.FromObject(
+          ExtendedFloat.Create(-2,
             17)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
+        CBORObject.FromObject(ExtendedFloat.Create(
             -2,
             18)).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
-            -2,
+      Assert.IsTrue(CBORObject.FromObject(
+          ExtendedFloat.Create(-2,
             19)).CanTruncatedIntFitInInt32());
       Assert.IsTrue(CBORObject.FromObject(0).CanTruncatedIntFitInInt32());
       Assert.IsFalse(CBORObject.True.CanTruncatedIntFitInInt32());
@@ -925,50 +901,36 @@ cbornumber.AsSingle());
     }
     [TestMethod]
     public void TestCanTruncatedIntFitInInt64() {
-      Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
-            -2,
+      Assert.IsTrue(CBORObject.FromObject(
+          ExtendedFloat.Create(-2,
             11)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
+        CBORObject.FromObject(ExtendedFloat.Create(
             -2,
             12)).CanTruncatedIntFitInInt64());
-      Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
-            -2,
+      Assert.IsTrue(CBORObject.FromObject(
+          ExtendedFloat.Create(-2,
             13)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
+        CBORObject.FromObject(ExtendedFloat.Create(
             -2,
             14)).CanTruncatedIntFitInInt64());
-      Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
-            -2,
+      Assert.IsTrue(CBORObject.FromObject(
+          ExtendedFloat.Create(-2,
             15)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
+        CBORObject.FromObject(ExtendedFloat.Create(
             -2,
             16)).CanTruncatedIntFitInInt64());
-      Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
-            -2,
+      Assert.IsTrue(CBORObject.FromObject(
+          ExtendedFloat.Create(-2,
             17)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
+        CBORObject.FromObject(ExtendedFloat.Create(
             -2,
             18)).CanTruncatedIntFitInInt64());
-      Assert.IsTrue(
-        CBORObject.FromObject(
-          ExtendedFloat.Create(
-            -2,
+      Assert.IsTrue(CBORObject.FromObject(
+          ExtendedFloat.Create(-2,
             19)).CanTruncatedIntFitInInt64());
       Assert.IsTrue(CBORObject.FromObject(0).CanTruncatedIntFitInInt64());
       Assert.IsFalse(CBORObject.True.CanTruncatedIntFitInInt64());
@@ -1006,14 +968,12 @@ cbornumber.AsSingle());
       CBORTest.CompareTestLess(CBORObject.False, CBORObject.True);
       CBORTest.CompareTestLess(CBORObject.False, CBORObject.FromObject(0));
       CBORTest.CompareTestLess(CBORObject.False, CBORObject.FromSimpleValue(0));
-      CBORTest.CompareTestLess(
-        CBORObject.FromSimpleValue(0),
+      CBORTest.CompareTestLess(CBORObject.FromSimpleValue(0),
         CBORObject.FromSimpleValue(1));
       CBORTest.CompareTestLess(
         CBORObject.FromObject(0),
         CBORObject.FromObject(1));
-      CBORTest.CompareTestLess(
-        CBORObject.FromObject(0.0f),
+      CBORTest.CompareTestLess(CBORObject.FromObject(0.0f),
         CBORObject.FromObject(1.0f));
       CBORTest.CompareTestLess(
         CBORObject.FromObject(0.0),
@@ -1516,8 +1476,7 @@ cbornumber.AsSingle());
       Assert.AreEqual(CBORObject.False, CBORObject.FromJSONString("false"));
       Assert.AreEqual(CBORObject.Null, CBORObject.FromJSONString("null"));
       Assert.AreEqual(5, CBORObject.FromJSONString(" 5 ").AsInt32());
-      Assert.AreEqual(
-        "/\b",
+      Assert.AreEqual("/\b",
         CBORObject.FromJSONString("\"\\/\\b\"").AsString());
     }
     [TestMethod]
@@ -1540,11 +1499,9 @@ cbornumber.AsSingle());
       Assert.AreEqual(
         CBORObject.Null,
         CBORObject.FromObject((ExtendedRational)null));
-      Assert.AreEqual(
-        CBORObject.Null,
+      Assert.AreEqual(CBORObject.Null,
         CBORObject.FromObject((ExtendedDecimal)null));
-      Assert.AreEqual(
-        CBORObject.FromObject(10),
+      Assert.AreEqual(CBORObject.FromObject(10),
         CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       try {
         CBORObject.FromObject(ExtendedRational.Create(10, 2));
@@ -2041,29 +1998,25 @@ cbornumber.AsSingle());
       }
       try {
     var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0, 0,
-          0x74,
-          0, 0, 0, 0x72, 0, 0, 0, 0x75, 0, 0, 0,
+          0x74, 0, 0, 0, 0x72, 0, 0, 0, 0x75, 0, 0, 0,
                                 0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x74, 0, 0, 0, 0x72, 0,
           0, 0, 0x75, 0, 0, 0, 0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0, 0, 0x74, 0, 0, 0,
-          0x72, 0, 0, 0, 0x75, 0, 0, 0, 0x65, 0,
-                                0, 0 });
+          0x72, 0, 0, 0, 0x75, 0, 0, 0, 0x65, 0, 0, 0 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         msjson = new MemoryStream(new byte[] { 0x74, 0, 0, 0, 0x72, 0, 0, 0,
           0x75, 0, 0, 0, 0x65, 0, 0, 0 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
       msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0, 0x74, 0, 0x72, 0,
-          0x75,
-                                0, 0x65 });
+          0x75, 0, 0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
   msjson = new MemoryStream(new byte[] { 0, 0x74, 0, 0x72, 0, 0x75, 0, 0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
       msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x74, 0, 0x72, 0, 0x75,
-          0,
-                                0x65, 0 });
+          0, 0x65, 0 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
   msjson = new MemoryStream(new byte[] { 0x74, 0, 0x72, 0, 0x75, 0, 0x65, 0 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
@@ -2073,16 +2026,13 @@ msjson = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x74, 0x72, 0x75,
         msjson = new MemoryStream(new byte[] { 0x74, 0x72, 0x75, 0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0, 0, 0x22,
-          0, 1, 0, 0, 0, 0, 0,
-                                0x22 });
+          0, 1, 0, 0, 0, 0, 0, 0x22 });
         Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
      msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x22, 0, 1, 0, 0, 0, 0,
-          0,
-                                0x22 });
+          0, 0x22 });
         Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
         msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0, 0, 0x22, 0, 0, 0,
-          0, 0, 1, 0, 0x22, 0,
-                                0, 0 });
+          0, 0, 1, 0, 0x22, 0, 0, 0 });
         Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
 msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0, 0, 0, 1, 0, 0x22, 0,
   0, 0 });
@@ -2098,8 +2048,7 @@ msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0, 0, 0, 1, 0, 0x22, 0,
   msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0xd8, 0, 0xdc, 0x22, 0 });
         Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
         msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0, 0, 0x22,
-          0, 0, 0xd8, 0, 0, 0, 0,
-                                0x22 });
+          0, 0, 0xd8, 0, 0, 0, 0, 0x22 });
         try {
  CBORObject.ReadJSON(msjson);
 Assert.Fail("Should have failed");
@@ -2109,8 +2058,7 @@ Assert.Fail("Should have failed");
 throw new InvalidOperationException(String.Empty, ex);
 }
       msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x22, 0, 0, 0xd8, 0, 0, 0,
-          0,
-                                0x22 });
+          0, 0x22 });
         try {
  CBORObject.ReadJSON(msjson);
 Assert.Fail("Should have failed");
@@ -2120,8 +2068,7 @@ Assert.Fail("Should have failed");
 throw new InvalidOperationException(String.Empty, ex);
 }
         msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0, 0, 0x22, 0, 0, 0,
-          0, 0xd8, 0, 0, 0x22, 0,
-                                0, 0 });
+          0, 0xd8, 0, 0, 0x22, 0, 0, 0 });
         try {
  CBORObject.ReadJSON(msjson);
 Assert.Fail("Should have failed");
@@ -2291,53 +2238,40 @@ throw new InvalidOperationException(String.Empty, ex);
       Assert.AreEqual(
         "\"\u2027\\u2028\\u2029\u202a\"" ,
         CBORObject.FromObject("\u2027\u2028\u2029\u202a").ToJSONString());
-      Assert.AreEqual(
-        "\"\\u0085\\uFEFF\\uFFFE\\uFFFF\"" ,
+      Assert.AreEqual("\"\\u0085\\uFEFF\\uFFFE\\uFFFF\"" ,
         CBORObject.FromObject("\u0085\ufeff\ufffe\uffff").ToJSONString());
       Assert.AreEqual("true", CBORObject.True.ToJSONString());
       Assert.AreEqual("false", CBORObject.False.ToJSONString());
       Assert.AreEqual("null", CBORObject.Null.ToJSONString());
-      Assert.AreEqual(
-        "null" ,
+      Assert.AreEqual("null" ,
         CBORObject.FromObject(Single.PositiveInfinity).ToJSONString());
-      Assert.AreEqual(
-        "null" ,
+      Assert.AreEqual("null" ,
         CBORObject.FromObject(Single.NegativeInfinity).ToJSONString());
       Assert.AreEqual("null", CBORObject.FromObject(Single.NaN).ToJSONString());
-      Assert.AreEqual(
-        "null" ,
+      Assert.AreEqual("null" ,
         CBORObject.FromObject(Double.PositiveInfinity).ToJSONString());
-      Assert.AreEqual(
-        "null" ,
+      Assert.AreEqual("null" ,
         CBORObject.FromObject(Double.NegativeInfinity).ToJSONString());
       Assert.AreEqual("null", CBORObject.FromObject(Double.NaN).ToJSONString());
       // Base64 tests
       CBORObject o;
       o = CBORObject.FromObjectAndTag(
-        new byte[] { 0x9a,
-          0xd6,
-          0xf0,
-          0xe8 },
+        new byte[] { 0x9a, 0xd6,
+          0xf0, 0xe8 },
         22);
       Assert.AreEqual("\"mtbw6A\"", o.ToJSONString());
       o = CBORObject.FromObject(new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 });
       Assert.AreEqual("\"mtbw6A\"", o.ToJSONString());
-      o = CBORObject.FromObjectAndTag(
-        new byte[] { 0x9a,
-          0xd6,
-          0xf0,
-          0xe8 },
-        23);
+      o = CBORObject.FromObjectAndTag(new byte[] { 0x9a,
+          0xd6, 0xf0,
+          0xe8 }, 23);
       Assert.AreEqual("\"9AD6F0E8\"", o.ToJSONString());
       o = CBORObject.FromObject(new byte[] { 0x9a, 0xd6, 0xff, 0xe8 });
       // Encode with Base64URL by default
       Assert.AreEqual("\"mtb_6A\"", o.ToJSONString());
-      o = CBORObject.FromObjectAndTag(
-        new byte[] { 0x9a,
-          0xd6,
-          0xff,
-          0xe8 },
-        22);
+      o = CBORObject.FromObjectAndTag(new byte[] { 0x9a,
+          0xd6, 0xff,
+          0xe8 }, 22);
       // Encode with Base64
       Assert.AreEqual("\"mtb/6A\"", o.ToJSONString());
     }

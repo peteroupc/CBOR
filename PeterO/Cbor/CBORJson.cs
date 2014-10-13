@@ -80,8 +80,7 @@ namespace PeterO.Cbor {
                       c <<= 4;
                       c |= ch + 10 - 'a';
                     } else {
-                      throw
-                        reader.NewError(
+                throw reader.NewError(
                           "Invalid Unicode escaped character");
                     }
                   }
@@ -91,8 +90,7 @@ namespace PeterO.Cbor {
                 throw reader.NewError("Invalid escaped character");
             }
             break;
-          default:
-            escaped = false;
+          default: escaped = false;
             break;
         }
         if (surrogate) {
@@ -161,8 +159,7 @@ namespace PeterO.Cbor {
       }
       if (c == 't') {
         // Parse true
-        if (reader.NextChar() != 'r' ||
-            reader.NextChar() != 'u' ||
+        if (reader.NextChar() != 'r' || reader.NextChar() != 'u' ||
             reader.NextChar() != 'e') {
           throw reader.NewError("Value can't be parsed.");
         }
@@ -171,10 +168,8 @@ namespace PeterO.Cbor {
       }
       if (c == 'f') {
         // Parse false
-        if (reader.NextChar() != 'a' ||
-            reader.NextChar() != 'l' ||
-            reader.NextChar() != 's' ||
-            reader.NextChar() != 'e') {
+        if (reader.NextChar() != 'a' || reader.NextChar() != 'l' ||
+            reader.NextChar() != 's' || reader.NextChar() != 'e') {
           throw reader.NewError("Value can't be parsed.");
         }
         nextChar[0] = SkipWhitespaceJSON(reader);
@@ -182,8 +177,7 @@ namespace PeterO.Cbor {
       }
       if (c == 'n') {
         // Parse null
-        if (reader.NextChar() != 'u' ||
-            reader.NextChar() != 'l' ||
+        if (reader.NextChar() != 'u' || reader.NextChar() != 'l' ||
             reader.NextChar() != 'l') {
           throw reader.NewError("Value can't be parsed.");
         }
@@ -285,20 +279,16 @@ namespace PeterO.Cbor {
           throw reader.NewError("Expected a ':' after a key");
         }
         // NOTE: Will overwrite existing value
-        myHashMap[key] = NextJSONValue(
-          reader,
-          SkipWhitespaceJSON(reader),
-          noDuplicates,
-          nextchar,
-          depth);
+        myHashMap[key] = NextJSONValue(reader,
+          SkipWhitespaceJSON(reader), noDuplicates,
+          nextchar, depth);
         switch (nextchar[0]) {
           case ',':
             seenComma = true;
             break;
           case '}':
             return CBORObject.FromRaw(myHashMap);
-          default:
-            throw reader.NewError("Expected a ',' or '}'");
+          default: throw reader.NewError("Expected a ',' or '}'");
         }
       }
     }
@@ -328,12 +318,9 @@ namespace PeterO.Cbor {
           throw reader.NewError("Empty array element");
         }
         myArrayList.Add(
-          NextJSONValue(
-            reader,
-            c,
-            noDuplicates,
-            nextchar,
-            depth));
+          NextJSONValue(reader,
+            c, noDuplicates,
+            nextchar, depth));
         c = nextchar[0];
         switch (c) {
           case ',':
@@ -366,8 +353,7 @@ namespace PeterO.Cbor {
           sb.WriteChar('\\');
           sb.WriteChar(c);
         } else if (c < 0x20 || (c >= 0x85 && (c == 0x2028 || c == 0x2029 ||
-                                     c == 0x85 || c == 0xfeff || c == 0xfffe
-                                                ||
+                c == 0x85 || c == 0xfeff || c == 0xfffe ||
                                               c == 0xffff))) {
           // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to
@@ -434,30 +420,25 @@ namespace PeterO.Cbor {
           case CBORObject.CBORObjectTypeSingle: {
             var f = (float)thisItem;
             if (Single.IsNegativeInfinity(f) ||
-                Single.IsPositiveInfinity(f) ||
-                Single.IsNaN(f)) {
+                Single.IsPositiveInfinity(f) || Single.IsNaN(f)) {
               writer.WriteString("null");
               return;
             }
             writer.WriteString(
-              CBORObject.TrimDotZero(
-                Convert.ToString(
-                  (float)f,
-                  CultureInfo.InvariantCulture)));
+              CBORObject.TrimDotZero(Convert.ToString(
+                (float)f,
+                CultureInfo.InvariantCulture)));
             return;
           }
           case CBORObject.CBORObjectTypeDouble: {
             var f = (double)thisItem;
-            if (Double.IsNegativeInfinity(f) ||
-                Double.IsPositiveInfinity(f) ||
+            if (Double.IsNegativeInfinity(f) || Double.IsPositiveInfinity(f) ||
                 Double.IsNaN(f)) {
               writer.WriteString("null");
               return;
             }
-            writer.WriteString(
-              CBORObject.TrimDotZero(
-                Convert.ToString(
-                  (double)f,
+            writer.WriteString(CBORObject.TrimDotZero(
+                Convert.ToString((double)f,
                   CultureInfo.InvariantCulture)));
             return;
           }
@@ -468,7 +449,7 @@ namespace PeterO.Cbor {
             return;
           }
           case CBORObject.CBORObjectTypeBigInteger: {
-            writer.WriteString(
+       writer.WriteString(
               CBORUtilities.BigIntToString((BigInteger)thisItem));
             return;
           }
@@ -494,16 +475,14 @@ namespace PeterO.Cbor {
               // so convert to double instead
               double f = flo.ToDouble();
               if (Double.IsNegativeInfinity(f) ||
-                  Double.IsPositiveInfinity(f) ||
-                  Double.IsNaN(f)) {
+                Double.IsPositiveInfinity(f) || Double.IsNaN(f)) {
                 writer.WriteString("null");
                 return;
               }
               writer.WriteString(
-                CBORObject.TrimDotZero(
-                  Convert.ToString(
-                    (double)f,
-                    CultureInfo.InvariantCulture)));
+                CBORObject.TrimDotZero(Convert.ToString(
+                (double)f,
+                CultureInfo.InvariantCulture)));
               return;
             }
             writer.WriteString(flo.ToString());
@@ -518,12 +497,9 @@ namespace PeterO.Cbor {
             }
             writer.WriteChar('\"');
             if (obj.HasTag(22)) {
-              Base64.WriteBase64(
-                writer,
-                byteArray,
-                0,
-                byteArray.Length,
-                false);
+              Base64.WriteBase64(writer,
+                byteArray, 0,
+                byteArray.Length, false);
             } else if (obj.HasTag(23)) {
               // Write as base16
               for (int i = 0; i < byteArray.Length; ++i) {
@@ -531,12 +507,9 @@ namespace PeterO.Cbor {
                 writer.WriteChar(Hex16[byteArray[i] & 15]);
               }
             } else {
-              Base64.WriteBase64URL(
-                writer,
-                byteArray,
-                0,
-                byteArray.Length,
-                false);
+              Base64.WriteBase64URL(writer,
+                byteArray, 0,
+                byteArray.Length, false);
             }
             writer.WriteChar('\"');
             break;
@@ -613,8 +586,8 @@ namespace PeterO.Cbor {
               foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
-                string str = (key.ItemType ==
-                              CBORObject.CBORObjectTypeTextString) ?
+           string str = (key.ItemType ==
+                  CBORObject.CBORObjectTypeTextString) ?
                   ((string)key.ThisItem) : key.ToJSONString();
                 stringMap[str] = value;
               }

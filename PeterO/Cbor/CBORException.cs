@@ -15,8 +15,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Initializes a new instance of the CBORException class.</summary>
     /// <param name='message'>A string object.</param>
-    public CBORException(string message) :
-      base(message) {
+    public CBORException(string message) : base(message) {
     }
 
     /// <summary>Initializes a new instance of the CBORException class. Uses the

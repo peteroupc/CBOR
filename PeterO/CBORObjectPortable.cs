@@ -92,8 +92,7 @@ namespace PeterO {
               s.Write(buffer, 0, 9);
               break;
             default:
-              s.WriteByte((datatype == 0) ?
-                          (byte)0xc2 :
+              s.WriteByte((datatype == 0) ? (byte)0xc2 :
                           (byte)0xc3);
               WritePositiveInt(2, bytes.Length, s);
               for (int i = bytes.Length-1; i >= 0; --i) {
