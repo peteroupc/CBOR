@@ -270,9 +270,9 @@ throw new InvalidOperationException(String.Empty, ex);
           padding.Append('!');
           BigInteger actualBigInt = BigInteger.fromRadixSubstring(
                                            padding + sabi.StringValue,
-            i,
-            j + 1,
-            j + 1 + sabi.StringValue.Length);
+                                           i,
+                                           j + 1,
+                                           j + 1 + sabi.StringValue.Length);
           Assert.AreEqual(
 sabi.BigIntValue,
 actualBigInt);

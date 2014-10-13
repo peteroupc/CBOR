@@ -377,10 +377,10 @@ new byte[] { 0 },
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var ms = new MemoryStream(seq)) {
+        using (var ms2 = new MemoryStream(seq)) {
           String strret = null;
           try {
-            strret = DataUtilities.ReadUtf8ToString(ms, -1, true);
+            strret = DataUtilities.ReadUtf8ToString(ms2, -1, true);
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
