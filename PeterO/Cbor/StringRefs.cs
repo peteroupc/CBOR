@@ -46,9 +46,8 @@ namespace PeterO.Cbor {
       if (!(str.Type == CBORType.ByteString || str.Type ==
             CBORType.TextString)) {
         throw new
-
-  ArgumentException("doesn't satisfy str.Type== CBORType.ByteString || str.Type== CBORType.TextString"
-);
+  ArgumentException(
+     "doesn't satisfy str.Type== ByteString or TextString");
       }
       if (lengthHint < 0) {
         throw new ArgumentException("lengthHint (" + (lengthHint)+

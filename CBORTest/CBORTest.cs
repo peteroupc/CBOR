@@ -14,8 +14,8 @@ using PeterO;
 using PeterO.Cbor;
 
 namespace Test {
-  /// <summary>Contains CBOR tests.</summary>
-  /// <returns/>
+    /// <summary>Contains CBOR tests.</summary>
+    /// <returns/>
   [TestClass]
   public class CBORTest {
     private static void TestExtendedFloatDoubleCore(double d, string s) {
@@ -78,7 +78,7 @@ ObjectMessages(o1, o2, "Results don't match"));
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 =
             CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
-        CBORObject o2 = CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
+      CBORObject o2 = CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
         if (o2.IsZero) {
           continue;
         }
@@ -194,8 +194,7 @@ o2,
       sb.Append("new byte[] { ");
       for (var i = 0; i < bytes.Length; ++i) {
         if (i > 0) {
-          sb.Append(",");
-        }
+          sb.Append(","); }
         if ((bytes[i] & 0x80) != 0) {
           sb.Append("(byte)0x");
         } else {
@@ -226,7 +225,7 @@ o2,
     [TestMethod]
     public void TestDecFracCompareIntegerVsBigFraction() {
       ExtendedDecimal a = ExtendedDecimal.FromString(
-          "7.00468923842476447758037175245551511770928808756622205663208" + "4784688080253355047487262563521426272927783429622650146484375");
+          "7.00468923842476447758037175245551511770928808756622205663208" + "4784688080253355047487262563521426272927783429622650146484375" );
       ExtendedDecimal b = ExtendedDecimal.FromString("5");
       Assert.AreEqual(1, a.CompareTo(b));
       Assert.AreEqual(-1, b.CompareTo(a));
@@ -640,13 +639,13 @@ ExtendedRational.FromExtendedFloat(ExtendedFloat.PositiveInfinity));
 ExtendedRational.NegativeInfinity,
 ExtendedRational.FromExtendedFloat(ExtendedFloat.NegativeInfinity));
 
-      Assert.IsTrue(Double.IsPositiveInfinity(ExtendedRational.PositiveInfinity.ToDouble()));
+  Assert.IsTrue(Double.IsPositiveInfinity(ExtendedRational.PositiveInfinity.ToDouble()));
 
-      Assert.IsTrue(Double.IsNegativeInfinity(ExtendedRational.NegativeInfinity.ToDouble()));
+  Assert.IsTrue(Double.IsNegativeInfinity(ExtendedRational.NegativeInfinity.ToDouble()));
 
-      Assert.IsTrue(Single.IsPositiveInfinity(ExtendedRational.PositiveInfinity.ToSingle()));
+  Assert.IsTrue(Single.IsPositiveInfinity(ExtendedRational.PositiveInfinity.ToSingle()));
 
-      Assert.IsTrue(Single.IsNegativeInfinity(ExtendedRational.NegativeInfinity.ToSingle()));
+  Assert.IsTrue(Single.IsNegativeInfinity(ExtendedRational.NegativeInfinity.ToSingle()));
       try {
         ExtendedDecimal.PositiveInfinity.ToBigInteger();
         Assert.Fail("Should have failed");
@@ -844,9 +843,9 @@ ExtendedRational.FromExtendedFloat(ExtendedFloat.NegativeInfinity));
 "Infinity",
 CBORObject.FromObject(ExtendedRational.PositiveInfinity).ToString());
 
-      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.NegativeInfinity));
+  TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.NegativeInfinity));
 
-      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.PositiveInfinity));
+  TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.PositiveInfinity));
       Assert.IsTrue(CBORObject.FromObject(ExtendedRational.NegativeInfinity)
                     .IsInfinity());
       Assert.IsTrue(CBORObject.FromObject(ExtendedRational.PositiveInfinity)
@@ -861,21 +860,21 @@ CBORObject.FromObject(ExtendedRational.PositiveInfinity).ToString());
       Assert.IsTrue(CBORObject.NegativeInfinity.IsNegativeInfinity());
       Assert.IsTrue(CBORObject.NaN.IsNaN());
 
-      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity));
+  TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity));
 
-      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.NegativeInfinity));
+  TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.NegativeInfinity));
 
-      TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.NegativeInfinity));
+  TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.NegativeInfinity));
 
-      TestCommon.AssertRoundTrip(CBORObject.FromObject(Single.NegativeInfinity));
+  TestCommon.AssertRoundTrip(CBORObject.FromObject(Single.NegativeInfinity));
 
-      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity));
+  TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity));
 
-      TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.PositiveInfinity));
+  TestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.PositiveInfinity));
 
-      TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.PositiveInfinity));
+  TestCommon.AssertRoundTrip(CBORObject.FromObject(Double.PositiveInfinity));
 
-      TestCommon.AssertRoundTrip(CBORObject.FromObject(Single.PositiveInfinity));
+  TestCommon.AssertRoundTrip(CBORObject.FromObject(Single.PositiveInfinity));
     }
 
     [TestMethod]
@@ -4196,7 +4195,7 @@ CBORObject.FromObject(Double.NaN),
         (BigInteger)Int64.MaxValue - (BigInteger)500,
         (BigInteger)Int64.MaxValue + (BigInteger)500,
         ((BigInteger.One << 64) - BigInteger.One) - (BigInteger)500,
-        maxuint, };
+        maxuint };
       Assert.IsFalse(CBORObject.True.IsTagged);
       Assert.AreEqual(
 BigInteger.Zero - BigInteger.One,

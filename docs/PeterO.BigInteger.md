@@ -318,6 +318,34 @@ is null.
 The parameter  <i>str</i>
  is in an invalid format.
 
+### fromRadixString
+
+    public static PeterO.BigInteger fromRadixString(
+        string str,
+        int radix);
+
+Converts a string to an arbitrary-precision integer in a given radix.
+
+<b>Parameters:</b>
+
+ * <i>str</i>: A string containing only digits, except that it may start with a minus sign.
+
+ * <i>radix</i>: A base from 2 to 36. The possible digits start from 0 to 9, then from A to Z in base 36, and the possible digits start from 0 to 9, then from A to F in base 16.
+
+<b>Returns:</b>
+
+A BigInteger object with the same value as given in the string.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter  <i>str</i>
+is null.
+
+ * System.FormatException: 
+The parameter  <i>str</i>
+ is in an invalid format.
+
 ### fromSubstring
 
     public static PeterO.BigInteger fromSubstring(
@@ -325,11 +353,51 @@ The parameter  <i>str</i>
         int index,
         int endIndex);
 
-Converts a portion of a string to an arbitrary-precision integer.
+Converts a portion of a string to an arbitrary-precision integer. The string portion can begin with a minus sign ('-') to indicate that it's negative.
 
 <b>Parameters:</b>
 
  * <i>str</i>: A string object.
+
+ * <i>index</i>: The index of the string that starts the string portion.
+
+ * <i>endIndex</i>: The index of the string that ends the string portion. The length will be index + endIndex - 1.
+
+<b>Returns:</b>
+
+A BigInteger object with the same value as given in the string portion.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter  <i>str</i>
+is null.
+
+ * System.ArgumentException: 
+The parameter  <i>index</i>
+is less than 0,  <i>endIndex</i>
+ is less than 0, or either is greater than the string's length, or  <i>endIndex</i>
+ is less than  <i>index</i>
+ .
+
+ * System.FormatException: 
+The string portion is empty or in an invalid format.
+
+### fromRadixSubstring
+
+    public static PeterO.BigInteger fromRadixSubstring(
+        string str,
+        int radix,
+        int index,
+        int endIndex);
+
+Converts a portion of a string to an arbitrary-precision integer in a given radix. The string portion can begin with a minus sign ('-') to indicate that it's negative.
+
+<b>Parameters:</b>
+
+ * <i>str</i>: A string object.
+
+ * <i>radix</i>: A base from 2 to 36. The possible digits start from 0 to 9, then from A to Z in base 36, and the possible digits start from 0 to 9, then from A to F in base 16.
 
  * <i>index</i>: The index of the string that starts the string portion.
 
