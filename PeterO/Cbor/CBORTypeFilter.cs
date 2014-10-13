@@ -370,7 +370,7 @@ params CBORTypeFilter[] elements) {
     /// <returns>True if this type filter allows CBOR arrays and the given array
     /// index is allowed under this type filter; otherwise, false.</returns>
     public bool ArrayIndexAllowed(int index) {
-   return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength||
+   return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength ||
         ((this.arrayMinLength || index < this.arrayLength) && index >=
                                                 0));
     }

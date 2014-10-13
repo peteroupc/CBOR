@@ -291,8 +291,9 @@ namespace Test {
           return ExtendedFloat.NaN;
         }
       }
-      return ExtendedFloat.Create(RandomBigInteger(r),
-        (BigInteger)(r.NextValue(400) - 200));
+      return ExtendedFloat.Create(
+RandomBigInteger(r),
+(BigInteger)(r.NextValue(400) - 200));
     }
 
     public static String RandomBigIntString(FastRandom r) {

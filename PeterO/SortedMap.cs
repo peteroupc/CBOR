@@ -89,8 +89,10 @@ namespace PeterO {
         KeyValuePair<T1, T2> kvp;
         KeyValuePair<T1, T2> kvpIn;
         kvpIn = new KeyValuePair<T1, T2>(key, default(T2));
-        if (this.tree.Find(kvpIn,
-            out kvp)) {
+        if (
+this.tree.Find(
+kvpIn,
+out kvp)) {
           return kvp.Value;
         }
         throw new KeyNotFoundException("Key not found: " + key);

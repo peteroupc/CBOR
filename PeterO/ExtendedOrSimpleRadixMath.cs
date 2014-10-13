@@ -97,8 +97,11 @@ ctx) :
 
     public T SquareRoot(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.IsSimplified) ?
-    this.ext.SquareRoot(thisValue, ctx) : this.simp.SquareRoot(thisValue,
-        ctx);
+    this.ext.SquareRoot(
+thisValue,
+ctx) : this.simp.SquareRoot(
+thisValue,
+ctx);
     }
 
     public T NextMinus(T thisValue, PrecisionContext ctx) {

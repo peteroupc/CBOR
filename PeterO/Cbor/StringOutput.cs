@@ -50,9 +50,13 @@ namespace PeterO.Cbor {
         if (length == 1) {
           this.WriteChar(str[index]);
         } else {
-          if (DataUtilities.WriteUtf8(str,
-            index, length,
-            this.outputStream, false) < 0) {
+          if (
+DataUtilities.WriteUtf8(
+str,
+index,
+length,
+this.outputStream,
+false) < 0) {
             throw new ArgumentException("str has an unpaired surrogate");
           }
         }

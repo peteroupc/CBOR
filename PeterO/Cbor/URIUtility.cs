@@ -10,60 +10,78 @@ namespace PeterO.Cbor {
   using System.Text;
 
     /// <summary>Contains utility methods for processing Uniform Resource
-    /// Identifiers (URIs) and Internationalized Resource Identifiers (IRIs) under
-    /// RFC3986 and RFC3987, respectively. In the following documentation, URIs and
-    /// IRIs include URI references and IRI references, for convenience.</summary>
+    /// Identifiers (URIs) and Internationalized Resource Identifiers (IRIs)
+    /// under
+    /// RFC3986 and RFC3987, respectively. In the following documentation,
+    /// URIs and
+    /// IRIs include URI references and IRI references, for
+    /// convenience.</summary>
   internal static class URIUtility {
-    /// <summary>Specifies whether certain characters are allowed when parsing IRIs
+    /// <summary>Specifies whether certain characters are allowed when
+    /// parsing IRIs
     /// and URIs.</summary>
     internal enum ParseMode {
-    /// <summary>The rules follow the syntax for parsing IRIs. In particular, many
-    /// internationalized characters are allowed. Strings with unpaired surrogate
+    /// <summary>The rules follow the syntax for parsing IRIs. In
+    /// particular, many
+    /// internationalized characters are allowed. Strings with unpaired
+    /// surrogate
     /// code points are considered invalid.</summary>
       IRIStrict,
 
-    /// <summary>The rules follow the syntax for parsing IRIs, except that non-ASCII
+    /// <summary>The rules follow the syntax for parsing IRIs, except that
+    /// non-ASCII
     /// characters are not allowed.</summary>
       URIStrict,
 
-    /// <summary>The rules only check for the appropriate delimiters when splitting
+    /// <summary>The rules only check for the appropriate delimiters when
+    /// splitting
     /// the path, without checking if all the characters in each component are
-    /// valid. Even with this mode, strings with unpaired surrogate code points are
+    /// valid. Even with this mode, strings with unpaired surrogate code
+    /// points are
     /// considered invalid.</summary>
       IRILenient,
 
-    /// <summary>The rules only check for the appropriate delimiters when splitting
+    /// <summary>The rules only check for the appropriate delimiters when
+    /// splitting
     /// the path, without checking if all the characters in each component are
     /// valid. Non-ASCII characters are not allowed.</summary>
       URILenient,
 
-    /// <summary>The rules only check for the appropriate delimiters when splitting
+    /// <summary>The rules only check for the appropriate delimiters when
+    /// splitting
     /// the path, without checking if all the characters in each component are
     /// valid. Unpaired surrogate code points are treated as though they were
     /// replacement characters instead for the purposes of these rules, so that
-    /// strings with those code points are not considered invalid strings.</summary>
+    /// strings with those code points are not considered invalid
+    /// strings.</summary>
       IRISurrogateLenient
     }
 
     private const string HexChars = "0123456789ABCDEF";
 
-    private static void appendAuthority(StringBuilder builder,
-      string refValue, int[] segments) {
+    private static void appendAuthority(
+StringBuilder builder,
+string refValue,
+int[] segments) {
       if (segments[2] >= 0) {
         builder.Append("//");
-        builder.Append(refValue.Substring(
-            segments[2],
-            segments[3] - segments[2]));
+        builder.Append(
+refValue.Substring(
+segments[2],
+segments[3] - segments[2]));
       }
     }
 
-    private static void appendFragment(StringBuilder builder,
-      string refValue, int[] segments) {
+    private static void appendFragment(
+StringBuilder builder,
+string refValue,
+int[] segments) {
       if (segments[8] >= 0) {
         builder.Append('#');
-        builder.Append(refValue.Substring(
-            segments[8],
-            segments[9] - segments[8]));
+        builder.Append(
+refValue.Substring(
+segments[8],
+segments[9] - segments[8]));
       }
     }
 
@@ -72,42 +90,54 @@ namespace PeterO.Cbor {
       string refValue,
       int[] segments) {
       builder.Append(
-        normalizePath(refValue.Substring(
-            segments[4],
-            segments[5] - segments[4])));
+        normalizePath(
+refValue.Substring(
+segments[4],
+segments[5] - segments[4])));
     }
 
-    private static void appendPath(StringBuilder builder,
-      string refValue, int[] segments) {
-      builder.Append(refValue.Substring(
-          segments[4],
-          segments[5] - segments[4]));
+    private static void appendPath(
+StringBuilder builder,
+string refValue,
+int[] segments) {
+      builder.Append(
+refValue.Substring(
+segments[4],
+segments[5] - segments[4]));
     }
 
-    private static void appendQuery(StringBuilder builder,
-      string refValue, int[] segments) {
+    private static void appendQuery(
+StringBuilder builder,
+string refValue,
+int[] segments) {
       if (segments[6] >= 0) {
         builder.Append('?');
-        builder.Append(refValue.Substring(
-            segments[6],
-            segments[7] - segments[6]));
+        builder.Append(
+refValue.Substring(
+segments[6],
+segments[7] - segments[6]));
       }
     }
 
-    private static void appendScheme(StringBuilder builder,
-      string refValue, int[] segments) {
+    private static void appendScheme(
+StringBuilder builder,
+string refValue,
+int[] segments) {
       if (segments[0] >= 0) {
         builder.Append(
-          refValue.Substring(segments[0],
-            segments[1] - segments[0]));
+          refValue.Substring(
+segments[0],
+segments[1] - segments[0]));
         builder.Append(':');
       }
     }
 
     /// <return>a string possibly containing escaped characters, or null if s is
     /// null.</return>
-    /// <summary>Escapes characters that cannot appear in URIs or IRIs. The function
-    /// is idempotent; that is, calling the function again on the result with the
+    /// <summary>Escapes characters that cannot appear in URIs or IRIs. The
+    /// function
+    /// is idempotent; that is, calling the function again on the result
+    /// with the
     /// same mode doesn't change the result.</summary>
     /// <param name='s'>A string to escape.</param>
     /// <param name='mode'>A 32-bit signed integer.</param>
@@ -119,17 +149,20 @@ namespace PeterO.Cbor {
       int[] components = null;
       if (mode == 1) {
         components = (
-          s == null) ? null : splitIRI(s,
-          0, s.Length,
-          ParseMode.IRIStrict);
+          s == null) ? null : splitIRI(
+s,
+0,
+s.Length,
+ParseMode.IRIStrict);
         if (components == null) {
           return null;
         }
       } else {
-        components = (
-          s == null) ? null : splitIRI(s,
-          0, s.Length,
-          ParseMode.IRISurrogateLenient);
+        components = (s == null) ? null : splitIRI(
+s,
+0,
+s.Length,
+ParseMode.IRISurrogateLenient);
       }
       int index = 0;
       int valueSLength = s.Length;
@@ -226,7 +259,7 @@ namespace PeterO.Cbor {
     /// relative IRI references.
     /// <para>The following cases return true:</para>
     /// <code> xx-x:mm example:/ww </code>
-    ///  The following cases return false:
+    /// The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
     /// <param name='refValue'>A string object.</param>
@@ -247,7 +280,7 @@ namespace PeterO.Cbor {
     /// relative URI references. The following cases return
     /// true:
     /// <code> http://example/z xx-x:mm example:/ww </code>
-    ///  The following cases return false:
+    /// The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
     /// <param name='refValue'>A string object.</param>
@@ -317,7 +350,8 @@ namespace PeterO.Cbor {
         (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
-    /// <summary>Determines whether the substring is a valid CURIE reference under
+    /// <summary>Determines whether the substring is a valid CURIE reference
+    /// under
     /// RDFA 1.1. (The CURIE reference is the part after the colon.).</summary>
     /// <param name='s'>A string object.</param>
     /// <param name='offset'>A 32-bit signed integer.</param>
@@ -408,11 +442,13 @@ namespace PeterO.Cbor {
     }
 
     public static bool isValidIRI(string s) {
-      return ((s == null) ? null : splitIRI(
-                s,
-                0,
-                s.Length,
-                ParseMode.IRIStrict)) != null;
+      return (
+(
+s == null) ? null : splitIRI(
+s,
+0,
+s.Length,
+ParseMode.IRIStrict)) != null;
     }
 
     private static string normalizePath(string path) {
@@ -509,9 +545,12 @@ StringComparison.Ordinal) < 0) {
       return builder.ToString();
     }
 
-    private static int parseDecOctet(string s,
-      int index, int endOffset,
-      int c, int delim) {
+    private static int parseDecOctet(
+string s,
+int index,
+int endOffset,
+int c,
+int delim) {
       if (c >= '1' && c <= '9' && index + 2 < endOffset &&
           s[index + 1] >= '0' && s[index + 1] <= '9' &&
           s[index + 2] == delim) {
@@ -632,9 +671,12 @@ StringComparison.Ordinal) < 0) {
                   index += 2;
                 }
                 char tmpc = (index < endOffset) ? s[index] : '\0';
-                decOctet = parseDecOctet(s,
-                index, endOffset,
-                tmpc, '.');
+                decOctet = parseDecOctet(
+s,
+index,
+endOffset,
+tmpc,
+'.');
                 if (decOctet >= 100) {
                   index += 4;
                 } else if (decOctet >= 10) {
@@ -747,8 +789,10 @@ StringComparison.Ordinal) < 0) {
       return -1;
     }
 
-    private static string pathParent(string refValue,
-      int startIndex, int endIndex) {
+    private static string pathParent(
+string refValue,
+int startIndex,
+int endIndex) {
       if (startIndex > endIndex) {
         return String.Empty;
       }
@@ -804,8 +848,10 @@ StringComparison.Ordinal) < 0) {
     /// <param name='parseMode'>A ParseMode object.</param>
     /// <returns>The resolved IRI, or null if refValue is null or is not a valid
     /// IRI. If base is null or is not a valid IRI, returns refValue.</returns>
-    public static string relativeResolve(string refValue,
-      string baseURI, ParseMode parseMode) {
+    public static string relativeResolve(
+string refValue,
+string baseURI,
+ParseMode parseMode) {
       int[] segments = (refValue == null) ? null : splitIRI(
         refValue,
         0,
@@ -815,9 +861,11 @@ StringComparison.Ordinal) < 0) {
         return null;
       }
       int[] segmentsBase = (
-        baseURI == null) ? null : splitIRI(baseURI,
-        0, baseURI.Length,
-        parseMode);
+        baseURI == null) ? null : splitIRI(
+baseURI,
+0,
+baseURI.Length,
+parseMode);
       if (segmentsBase == null) {
         return refValue;
       }
@@ -857,8 +905,10 @@ StringComparison.Ordinal) < 0) {
             builder.Append(normalizePath(merged.ToString()));
           } else {
             merged.Append(
-              pathParent(baseURI,
-                segmentsBase[4], segmentsBase[5]));
+              pathParent(
+baseURI,
+segmentsBase[4],
+segmentsBase[5]));
             appendPath(merged, refValue, segments);
             builder.Append(normalizePath(merged.ToString()));
           }
@@ -871,11 +921,15 @@ StringComparison.Ordinal) < 0) {
 
     /// <summary>Parses an Internationalized Resource Identifier (IRI) reference
     /// under RFC3987. If the IRI reference is syntactically valid, splits the
-    /// string into its components and returns an array containing the indices into
-    /// the components. <returns>If the string is a valid IRI reference, returns an
-    /// array of 10 integers. Each of the five pairs corresponds to the start and
+    /// string into its components and returns an array containing the
+    /// indices into
+    /// the components. <returns>If the string is a valid IRI reference,
+    /// returns an
+    /// array of 10 integers. Each of the five pairs corresponds to the
+    /// start and
     /// end index of the IRI's scheme, authority, path, query, or fragment
-    /// component, respectively. If a component is absent, both indices in that pair
+    /// component, respectively. If a component is absent, both indices in
+    /// that pair
     /// will be -1. If the string is null or is not a valid IRI, returns
     /// null.</returns>
     /// </summary>
@@ -885,23 +939,32 @@ StringComparison.Ordinal) < 0) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict);
     }
 
-    /// <summary>Parses a substring that represents an Internationalized Resource
-    /// Identifier (IRI) under RFC3987. If the IRI is syntactically valid, splits
-    /// the string into its components and returns an array containing the indices
+    /// <summary>Parses a substring that represents an Internationalized
+    /// Resource
+    /// Identifier (IRI) under RFC3987. If the IRI is syntactically valid,
+    /// splits
+    /// the string into its components and returns an array containing the
+    /// indices
     /// into the components.</summary>
     /// <param name='s'>A string object.</param>
     /// <param name='offset'>A 32-bit signed integer.</param>
     /// <param name='length'>A 32-bit signed integer. (2).</param>
     /// <param name='parseMode'>A ParseMode object.</param>
-    /// <returns>If the string is a valid IRI, returns an array of 10 integers. Each
+    /// <returns>If the string is a valid IRI, returns an array of 10
+    /// integers. Each
     /// of the five pairs corresponds to the start and end index of the IRI's
-    /// scheme, authority, path, query, or fragment component, respectively. If a
-    /// component is absent, both indices in that pair will be -1 (an index won't be
-    /// less than 0 in any other case). If the string is null or is not a valid IRI,
+    /// scheme, authority, path, query, or fragment component, respectively.
+    /// If a
+    /// component is absent, both indices in that pair will be -1 (an index
+    /// won't be
+    /// less than 0 in any other case). If the string is null or is not a
+    /// valid IRI,
     /// returns null.</returns>
-    public static int[] splitIRI(string s,
-      int offset, int length,
-      ParseMode parseMode) {
+    public static int[] splitIRI(
+string s,
+int offset,
+int length,
+ParseMode parseMode) {
       if (s == null) {
         return null;
       }
@@ -937,8 +1000,7 @@ StringComparison.Ordinal) < 0) {
         }
         if (strict && index > offset &&
         !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' &&
-              c <= '9') ||
-              c == '+' || c == '-' || c == '.')) {
+              c <= '9') || c == '+' || c == '-' || c == '.')) {
           break;
         }
         if (!strict && (c == '#' || c == ':' || c == '?' || c == '/')) {
@@ -1131,15 +1193,18 @@ StringComparison.Ordinal) < 0) {
     }
 
     /// <summary>Parses an Internationalized Resource Identifier (IRI) reference
-    /// under RFC3987. If the IRI is syntactically valid, splits the string into its
+    /// under RFC3987. If the IRI is syntactically valid, splits the string
+    /// into its
     /// components and returns an array containing the indices into the
     /// components.</summary>
     /// <param name='s'>A string object.</param>
     /// <param name='parseMode'>A ParseMode object.</param>
     /// <returns>If the string is a valid IRI reference, returns an array of 10
-    /// integers. Each of the five pairs corresponds to the start and end index of
+    /// integers. Each of the five pairs corresponds to the start and end
+    /// index of
     /// the IRI's scheme, authority, path, query, or fragment component,
-    /// respectively. If a component is absent, both indices in that pair will be
+    /// respectively. If a component is absent, both indices in that pair
+    /// will be
     /// -1. If the string is null or is not a valid IRI, returns null.</returns>
     public static int[] splitIRI(string s, ParseMode parseMode) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, parseMode);

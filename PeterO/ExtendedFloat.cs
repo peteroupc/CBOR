@@ -140,9 +140,11 @@ namespace PeterO {
     /// name='diag'/> is null.</exception>
     /// <exception cref='ArgumentException'>The parameter <paramref name='diag'/> is
     /// less than 0.</exception>
-    public static ExtendedFloat CreateNaN(BigInteger diag,
-      bool signaling, bool negative,
-      PrecisionContext ctx) {
+    public static ExtendedFloat CreateNaN(
+BigInteger diag,
+bool signaling,
+bool negative,
+PrecisionContext ctx) {
       if (diag == null) {
         throw new ArgumentNullException("diag");
       }
@@ -189,8 +191,9 @@ namespace PeterO {
     /// <returns>An ExtendedFloat object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='mantissa'/> or <paramref name='exponent'/> is null.</exception>
-    public static ExtendedFloat Create(BigInteger mantissa,
-      BigInteger exponent) {
+    public static ExtendedFloat Create(
+BigInteger mantissa,
+BigInteger exponent) {
       if (mantissa == null) {
         throw new ArgumentNullException("mantissa");
       }
@@ -198,12 +201,16 @@ namespace PeterO {
         throw new ArgumentNullException("exponent");
       }
       int sign = mantissa.Sign;
-      return new ExtendedFloat(sign < 0 ? (-(BigInteger)mantissa) : mantissa,
-        exponent, (sign < 0) ? BigNumberFlags.FlagNegative : 0);
+      return new ExtendedFloat(
+sign < 0 ? (-(BigInteger)mantissa) : mantissa,
+exponent,
+(sign < 0) ? BigNumberFlags.FlagNegative : 0);
     }
 
-    private ExtendedFloat(BigInteger unsignedMantissa,
-      BigInteger exponent, int flags) {
+    private ExtendedFloat(
+BigInteger unsignedMantissa,
+BigInteger exponent,
+int flags) {
       #if DEBUG
       if (unsignedMantissa == null) {
         throw new ArgumentNullException("unsignedMantissa");
@@ -231,8 +238,10 @@ namespace PeterO {
         throw new ArgumentNullException("exponent");
       }
       int sign = mantissa == null ? 0 : mantissa.Sign;
-      return new ExtendedFloat(sign < 0 ? (-(BigInteger)mantissa) : mantissa,
-        exponent, flags);
+      return new ExtendedFloat(
+sign < 0 ? (-(BigInteger)mantissa) : mantissa,
+exponent,
+flags);
     }
 
     /// <summary>Creates a binary float from a string that represents a number. Note
@@ -264,15 +273,19 @@ namespace PeterO {
     /// <returns>An ExtendedFloat object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
     /// is null.</exception>
-    public static ExtendedFloat FromString(String str,
-      int offset, int length,
-      PrecisionContext ctx) {
+    public static ExtendedFloat FromString(
+String str,
+int offset,
+int length,
+PrecisionContext ctx) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
-      return ExtendedDecimal.FromString(str,
-        offset, length,
-        ctx).ToExtendedFloat();
+      return ExtendedDecimal.FromString(
+str,
+offset,
+length,
+ctx).ToExtendedFloat();
     }
 
     /// <summary>Not documented yet.</summary>
@@ -372,8 +385,9 @@ namespace PeterO {
     /// <param name='bigint'>A BigInteger object. (2).</param>
     /// <param name='power'>A FastInteger object.</param>
     /// <returns>A BigInteger object.</returns>
-      public BigInteger MultiplyByRadixPower(BigInteger bigint,
-        FastInteger power) {
+      public BigInteger MultiplyByRadixPower(
+BigInteger bigint,
+FastInteger power) {
         BigInteger tmpbigint = bigint;
         if (power.Sign <= 0) {
           return tmpbigint;
@@ -384,8 +398,9 @@ namespace PeterO {
             tmpbigint = DecimalUtility.ShiftLeftInt(tmpbigint, power.AsInt32());
             tmpbigint = -tmpbigint;
           } else {
-            tmpbigint = DecimalUtility.ShiftLeft(tmpbigint,
-              power.AsBigInteger());
+            tmpbigint = DecimalUtility.ShiftLeft(
+tmpbigint,
+power.AsBigInteger());
             tmpbigint = -tmpbigint;
           }
           return tmpbigint;
@@ -409,8 +424,10 @@ namespace PeterO {
     /// <param name='exponent'>A BigInteger object. (2).</param>
     /// <param name='flags'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedFloat object.</returns>
-      public ExtendedFloat CreateNewWithFlags(BigInteger mantissa,
-        BigInteger exponent, int flags) {
+      public ExtendedFloat CreateNewWithFlags(
+BigInteger mantissa,
+BigInteger exponent,
+int flags) {
         return ExtendedFloat.CreateWithFlags(mantissa, exponent, flags);
       }
 
@@ -618,8 +635,9 @@ namespace PeterO {
         if (this.IsNegative) {
           smallmantissa |= 1 << 31;
         }
-        return BitConverter.ToSingle(BitConverter.GetBytes((int)smallmantissa),
-          0);
+        return BitConverter.ToSingle(
+BitConverter.GetBytes((int)smallmantissa),
+0);
       }
     }
 
@@ -784,8 +802,10 @@ namespace PeterO {
         if (bigmant.IsZero) {
           return quiet ? NaN : SignalingNaN;
         }
-        return CreateWithFlags(bigmant,
-          BigInteger.Zero, value);
+        return CreateWithFlags(
+bigmant,
+BigInteger.Zero,
+value);
       }
       if (floatExponent == 0) {
         ++floatExponent;
@@ -854,10 +874,11 @@ namespace PeterO {
           return quiet ? NaN : SignalingNaN;
         }
         value[0] = (neg ? BigNumberFlags.FlagNegative : 0) |
-       (quiet ? BigNumberFlags.FlagQuietNaN :
-            BigNumberFlags.FlagSignalingNaN);
-        return CreateWithFlags(info,
-          BigInteger.Zero, value[0]);
+       (quiet ? BigNumberFlags.FlagQuietNaN : BigNumberFlags.FlagSignalingNaN);
+        return CreateWithFlags(
+info,
+BigInteger.Zero,
+value[0]);
       }
       value[1] &= 0xfffff;  // Mask out the exponent and sign
       if (floatExponent == 0) {
@@ -866,8 +887,7 @@ namespace PeterO {
         value[1] |= 0x100000;
       }
       if ((value[1] | value[0]) != 0) {
-      floatExponent +=
-          DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
+      floatExponent += DecimalUtility.ShiftAwayTrailingZerosTwoElements(value);
       } else {
         return neg ? ExtendedFloat.NegativeZero : ExtendedFloat.Zero;
       }
@@ -1090,8 +1110,9 @@ namespace PeterO {
     /// <exception cref='ArithmeticException'>The result can't be exact because it
     /// would have a nonterminating binary expansion.</exception>
     public ExtendedFloat Divide(ExtendedFloat divisor) {
-      return this.Divide(divisor,
-        PrecisionContext.ForRounding(Rounding.Unnecessary));
+      return this.Divide(
+divisor,
+PrecisionContext.ForRounding(Rounding.Unnecessary));
     }
 
     /// <summary>Divides this object by another binary float and returns a result
@@ -1107,8 +1128,10 @@ namespace PeterO {
     public ExtendedFloat DivideToSameExponent(
       ExtendedFloat divisor,
       Rounding rounding) {
-      return this.DivideToExponent(divisor,
-        this.exponent, PrecisionContext.ForRounding(rounding));
+      return this.DivideToExponent(
+divisor,
+this.exponent,
+PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary>Divides two ExtendedFloat objects, and returns the integer part of
@@ -1192,10 +1215,14 @@ namespace PeterO {
     /// desired exponent is outside that range.</returns>
     /// <exception cref='ArithmeticException'>The rounding mode is
     /// Rounding.Unnecessary and the result is not exact.</exception>
-    public ExtendedFloat DivideToExponent(ExtendedFloat divisor,
-      long desiredExponentSmall, PrecisionContext ctx) {
-      return this.DivideToExponent(divisor,
-        (BigInteger)desiredExponentSmall, ctx);
+    public ExtendedFloat DivideToExponent(
+ExtendedFloat divisor,
+long desiredExponentSmall,
+PrecisionContext ctx) {
+      return this.DivideToExponent(
+divisor,
+(BigInteger)desiredExponentSmall,
+ctx);
     }
 
     /// <summary>Divides this ExtendedFloat object by another ExtendedFloat object.
@@ -1213,8 +1240,9 @@ namespace PeterO {
     /// or <paramref name='ctx'/> 's precision is 0, and the result would have a
     /// nonterminating binary expansion; or, the rounding mode is
     /// Rounding.Unnecessary and the result is not exact.</exception>
-    public ExtendedFloat Divide(ExtendedFloat divisor,
-      PrecisionContext ctx) {
+    public ExtendedFloat Divide(
+ExtendedFloat divisor,
+PrecisionContext ctx) {
       return MathValue.Divide(this, divisor, ctx);
     }
 
@@ -1232,11 +1260,14 @@ namespace PeterO {
     /// FlagInvalid and returns NaN if the divisor and the dividend are 0.</returns>
     /// <exception cref='ArithmeticException'>The rounding mode is
     /// Rounding.Unnecessary and the result is not exact.</exception>
-    public ExtendedFloat DivideToExponent(ExtendedFloat divisor,
-      long desiredExponentSmall, Rounding rounding) {
-      return this.DivideToExponent(divisor,
-     (BigInteger)desiredExponentSmall,
-          PrecisionContext.ForRounding(rounding));
+    public ExtendedFloat DivideToExponent(
+ExtendedFloat divisor,
+long desiredExponentSmall,
+Rounding rounding) {
+      return this.DivideToExponent(
+divisor,
+(BigInteger)desiredExponentSmall,
+PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary>Divides two ExtendedFloat objects, and gives a particular exponent
@@ -1261,8 +1292,10 @@ namespace PeterO {
     /// desired exponent is outside that range.</returns>
     /// <exception cref='ArithmeticException'>The rounding mode is
     /// Rounding.Unnecessary and the result is not exact.</exception>
-    public ExtendedFloat DivideToExponent(ExtendedFloat divisor,
-      BigInteger exponent, PrecisionContext ctx) {
+    public ExtendedFloat DivideToExponent(
+ExtendedFloat divisor,
+BigInteger exponent,
+PrecisionContext ctx) {
       return MathValue.DivideToExponent(this, divisor, exponent, ctx);
     }
 
@@ -1279,10 +1312,14 @@ namespace PeterO {
     /// FlagInvalid and returns NaN if the divisor and the dividend are 0.</returns>
     /// <exception cref='ArithmeticException'>The rounding mode is
     /// Rounding.Unnecessary and the result is not exact.</exception>
-    public ExtendedFloat DivideToExponent(ExtendedFloat divisor,
-      BigInteger desiredExponent, Rounding rounding) {
-      return this.DivideToExponent(divisor,
-        desiredExponent, PrecisionContext.ForRounding(rounding));
+    public ExtendedFloat DivideToExponent(
+ExtendedFloat divisor,
+BigInteger desiredExponent,
+Rounding rounding) {
+      return this.DivideToExponent(
+divisor,
+desiredExponent,
+PrecisionContext.ForRounding(rounding));
     }
 
     /// <summary>Finds the absolute value of this object (if it&apos;s negative, it
@@ -1332,16 +1369,19 @@ namespace PeterO {
     /// <returns>The difference of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='otherValue'/> is null.</exception>
-    public ExtendedFloat Subtract(ExtendedFloat otherValue,
-      PrecisionContext ctx) {
+    public ExtendedFloat Subtract(
+ExtendedFloat otherValue,
+PrecisionContext ctx) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
       }
       ExtendedFloat negated = otherValue;
       if ((otherValue.flags & BigNumberFlags.FlagNaN) == 0) {
         int newflags = otherValue.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(otherValue.unsignedMantissa,
-          otherValue.exponent, newflags);
+        negated = CreateWithFlags(
+otherValue.unsignedMantissa,
+otherValue.exponent,
+newflags);
       }
       return this.Add(negated, ctx);
     }
@@ -1359,8 +1399,9 @@ namespace PeterO {
     /// <param name='multiplicand'>The value to multiply.</param>
     /// <param name='augend'>The value to add.</param>
     /// <returns>The result this * multiplicand + augend.</returns>
-    public ExtendedFloat MultiplyAndAdd(ExtendedFloat multiplicand,
-      ExtendedFloat augend) {
+    public ExtendedFloat MultiplyAndAdd(
+ExtendedFloat multiplicand,
+ExtendedFloat augend) {
       return this.MultiplyAndAdd(multiplicand, augend, null);
     }
     //----------------------------------------------------------------
@@ -1417,8 +1458,9 @@ namespace PeterO {
     /// <param name='divisor'>An ExtendedFloat object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The remainder of the two objects.</returns>
-    public ExtendedFloat Remainder(ExtendedFloat divisor,
-      PrecisionContext ctx) {
+    public ExtendedFloat Remainder(
+ExtendedFloat divisor,
+PrecisionContext ctx) {
       return MathValue.Remainder(this, divisor, ctx);
     }
 
@@ -1450,8 +1492,9 @@ namespace PeterO {
     /// <returns>The distance of the closest multiple. Signals FlagInvalid and
     /// returns NaN if the divisor is 0, or either the result of integer division
     /// (the quotient) or the remainder wouldn't fit the given precision.</returns>
-    public ExtendedFloat RemainderNear(ExtendedFloat divisor,
-      PrecisionContext ctx) {
+    public ExtendedFloat RemainderNear(
+ExtendedFloat divisor,
+PrecisionContext ctx) {
       return MathValue.RemainderNear(this, divisor, ctx);
     }
 
@@ -1500,8 +1543,9 @@ namespace PeterO {
     /// <exception cref='ArgumentException'>The parameter <paramref name='ctx'/> is
     /// null, the precision is 0, or <paramref name='ctx'/> has an unlimited
     /// exponent range.</exception>
-    public ExtendedFloat NextToward(ExtendedFloat otherValue,
-      PrecisionContext ctx) {
+    public ExtendedFloat NextToward(
+ExtendedFloat otherValue,
+PrecisionContext ctx) {
       return MathValue.NextToward(this, otherValue, ctx);
     }
 
@@ -1513,8 +1557,10 @@ namespace PeterO {
     /// store the flags resulting from the operation (the flags are in addition to
     /// the pre-existing flags). Can be null.</param>
     /// <returns>The larger value of the two objects.</returns>
-    public static ExtendedFloat Max(ExtendedFloat first,
-      ExtendedFloat second, PrecisionContext ctx) {
+    public static ExtendedFloat Max(
+ExtendedFloat first,
+ExtendedFloat second,
+PrecisionContext ctx) {
       return MathValue.Max(first, second, ctx);
     }
 
@@ -1526,8 +1572,10 @@ namespace PeterO {
     /// store the flags resulting from the operation (the flags are in addition to
     /// the pre-existing flags). Can be null.</param>
     /// <returns>The smaller value of the two objects.</returns>
-    public static ExtendedFloat Min(ExtendedFloat first,
-      ExtendedFloat second, PrecisionContext ctx) {
+    public static ExtendedFloat Min(
+ExtendedFloat first,
+ExtendedFloat second,
+PrecisionContext ctx) {
       return MathValue.Min(first, second, ctx);
     }
 
@@ -1567,8 +1615,9 @@ namespace PeterO {
     /// <param name='first'>An ExtendedFloat object.</param>
     /// <param name='second'>An ExtendedFloat object. (2).</param>
     /// <returns>The larger value of the two objects.</returns>
-    public static ExtendedFloat Max(ExtendedFloat first,
-      ExtendedFloat second) {
+    public static ExtendedFloat Max(
+ExtendedFloat first,
+ExtendedFloat second) {
       return Max(first, second, null);
     }
 
@@ -1576,8 +1625,9 @@ namespace PeterO {
     /// <param name='first'>An ExtendedFloat object.</param>
     /// <param name='second'>An ExtendedFloat object. (2).</param>
     /// <returns>The smaller value of the two objects.</returns>
-    public static ExtendedFloat Min(ExtendedFloat first,
-      ExtendedFloat second) {
+    public static ExtendedFloat Min(
+ExtendedFloat first,
+ExtendedFloat second) {
       return Min(first, second, null);
     }
 
@@ -1659,8 +1709,9 @@ namespace PeterO {
     /// <returns>Quiet NaN if this object or the other object is NaN, or 0 if both
     /// objects have the same value, or -1 if this object is less than the other
     /// value, or 1 if this object is greater.</returns>
-    public ExtendedFloat CompareToSignal(ExtendedFloat other,
-      PrecisionContext ctx) {
+    public ExtendedFloat CompareToSignal(
+ExtendedFloat other,
+PrecisionContext ctx) {
       return MathValue.CompareToWithContext(this, other, true, ctx);
     }
 
@@ -1672,8 +1723,9 @@ namespace PeterO {
     /// store the flags resulting from the operation (the flags are in addition to
     /// the pre-existing flags). Can be null.</param>
     /// <returns>The sum of thisValue and the other object.</returns>
-    public ExtendedFloat Add(ExtendedFloat otherValue,
-      PrecisionContext ctx) {
+    public ExtendedFloat Add(
+ExtendedFloat otherValue,
+PrecisionContext ctx) {
       return MathValue.Add(this, otherValue, ctx);
     }
 
@@ -1686,8 +1738,9 @@ namespace PeterO {
     /// occurred, or the rounded result can't fit the given precision, or if the
     /// context defines an exponent range and the given exponent is outside that
     /// range.</returns>
-    public ExtendedFloat Quantize(BigInteger desiredExponent,
-      PrecisionContext ctx) {
+    public ExtendedFloat Quantize(
+BigInteger desiredExponent,
+PrecisionContext ctx) {
       return this.Quantize(
         ExtendedFloat.Create(BigInteger.One, desiredExponent),
         ctx);
@@ -1702,8 +1755,9 @@ namespace PeterO {
     /// occurred, or the rounded result can't fit the given precision, or if the
     /// context defines an exponent range and the given exponent is outside that
     /// range.</returns>
-    public ExtendedFloat Quantize(int desiredExponentSmall,
-      PrecisionContext ctx) {
+    public ExtendedFloat Quantize(
+int desiredExponentSmall,
+PrecisionContext ctx) {
       return this.Quantize(
         ExtendedFloat.Create(BigInteger.One, (BigInteger)desiredExponentSmall),
         ctx);
@@ -1728,8 +1782,9 @@ namespace PeterO {
     /// Signals FlagInvalid and returns NaN if the new exponent is outside of the
     /// valid range of the precision context, if it defines an exponent
     /// range.</returns>
-    public ExtendedFloat Quantize(ExtendedFloat otherValue,
-      PrecisionContext ctx) {
+    public ExtendedFloat Quantize(
+ExtendedFloat otherValue,
+PrecisionContext ctx) {
       return MathValue.Quantize(this, otherValue, ctx);
     }
 
@@ -1806,8 +1861,9 @@ namespace PeterO {
     /// the new exponent must be changed when rounding and the new exponent is
     /// outside of the valid range of the precision context, if it defines an
     /// exponent range.</returns>
-    public ExtendedFloat RoundToExponent(BigInteger exponent,
-      PrecisionContext ctx) {
+    public ExtendedFloat RoundToExponent(
+BigInteger exponent,
+PrecisionContext ctx) {
       return MathValue.RoundToExponentSimple(this, exponent, ctx);
     }
 
@@ -1821,8 +1877,9 @@ namespace PeterO {
     /// store the flags resulting from the operation (the flags are in addition to
     /// the pre-existing flags). Can be null.</param>
     /// <returns>The product of the two binary floats.</returns>
-    public ExtendedFloat Multiply(ExtendedFloat op,
-      PrecisionContext ctx) {
+    public ExtendedFloat Multiply(
+ExtendedFloat op,
+PrecisionContext ctx) {
       return MathValue.Multiply(this, op, ctx);
     }
 
@@ -1834,8 +1891,10 @@ namespace PeterO {
     /// store the flags resulting from the operation (the flags are in addition to
     /// the pre-existing flags). Can be null.</param>
     /// <returns>The result thisValue * multiplicand + augend.</returns>
-    public ExtendedFloat MultiplyAndAdd(ExtendedFloat op,
-      ExtendedFloat augend, PrecisionContext ctx) {
+    public ExtendedFloat MultiplyAndAdd(
+ExtendedFloat op,
+ExtendedFloat augend,
+PrecisionContext ctx) {
       return MathValue.MultiplyAndAdd(this, op, augend, ctx);
     }
 
@@ -1860,8 +1919,10 @@ namespace PeterO {
       ExtendedFloat negated = subtrahend;
       if ((subtrahend.flags & BigNumberFlags.FlagNaN) == 0) {
         int newflags = subtrahend.flags ^ BigNumberFlags.FlagNegative;
-        negated = CreateWithFlags(subtrahend.unsignedMantissa,
-          subtrahend.exponent, newflags);
+        negated = CreateWithFlags(
+subtrahend.unsignedMantissa,
+subtrahend.exponent,
+newflags);
       }
       return MathValue.MultiplyAndAdd(this, op, negated, ctx);
     }

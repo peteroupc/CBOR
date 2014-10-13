@@ -23,25 +23,26 @@ namespace CBOR {
       if (expected == actual) {
         return;
       }
-      Assert.AreEqual((expected & PrecisionContext.FlagInexact) != 0,
-        (actual & PrecisionContext.FlagInexact) != 0,
-        "Inexact: " + str);
       Assert.AreEqual(
-        (expected & PrecisionContext.FlagOverflow) != 0,
-        (actual & PrecisionContext.FlagOverflow) != 0,
-        "Overflow: " + str);
+(expected & PrecisionContext.FlagInexact) != 0,
+(actual & PrecisionContext.FlagInexact) != 0,
+"Inexact: " + str);
       Assert.AreEqual(
-        (expected & PrecisionContext.FlagUnderflow) != 0,
-        (actual & PrecisionContext.FlagUnderflow) != 0,
-        "Underflow: " + str);
+(expected & PrecisionContext.FlagOverflow) != 0,
+(actual & PrecisionContext.FlagOverflow) != 0,
+"Overflow: " + str);
       Assert.AreEqual(
-        (expected & PrecisionContext.FlagInvalid) != 0,
-        (actual & PrecisionContext.FlagInvalid) != 0,
-        "Invalid: " + str);
+(expected & PrecisionContext.FlagUnderflow) != 0,
+(actual & PrecisionContext.FlagUnderflow) != 0,
+"Underflow: " + str);
       Assert.AreEqual(
-        (expected & PrecisionContext.FlagDivideByZero) != 0,
-        (actual & PrecisionContext.FlagDivideByZero) != 0,
-        "DivideByZero: " + str);
+(expected & PrecisionContext.FlagInvalid) != 0,
+(actual & PrecisionContext.FlagInvalid) != 0,
+"Invalid: " + str);
+      Assert.AreEqual(
+(expected & PrecisionContext.FlagDivideByZero) != 0,
+(actual & PrecisionContext.FlagDivideByZero) != 0,
+"DivideByZero: " + str);
     }
 
     private bool Contains(string str, string sub) {
@@ -108,11 +109,15 @@ namespace CBOR {
 
       IExtendedNumber SquareRoot(PrecisionContext ctx);
 
-      IExtendedNumber MultiplyAndAdd(IExtendedNumber b,
-        IExtendedNumber c, PrecisionContext ctx);
+      IExtendedNumber MultiplyAndAdd(
+IExtendedNumber b,
+IExtendedNumber c,
+PrecisionContext ctx);
 
-      IExtendedNumber MultiplyAndSubtract(IExtendedNumber b,
-        IExtendedNumber c, PrecisionContext ctx);
+      IExtendedNumber MultiplyAndSubtract(
+IExtendedNumber b,
+IExtendedNumber c,
+PrecisionContext ctx);
 
       bool IsQuietNaN();
 
@@ -390,8 +395,10 @@ namespace CBOR {
           throw new FormatException(str);
         }
         // Console.WriteLine("mant=" + mantissa + " exp=" + (exponent));
-        return Create(ExtendedFloat.Create((BigInteger)mantissa,
-          (BigInteger)exponent));
+        return Create(
+ExtendedFloat.Create(
+(BigInteger)mantissa,
+(BigInteger)exponent));
       }
 
       public static BinaryNumber FromFloatWords(int[] words) {
@@ -403,11 +410,9 @@ namespace CBOR {
           int exponent = (words[0] >> 23) & 0xff;
           int mantissa = words[0] & 0x7fffff;
           if (exponent == 255) {
-         return (mantissa == 0) ? Create(neg ?
-              ExtendedFloat.NegativeInfinity :
+         return (mantissa == 0) ? Create(neg ? ExtendedFloat.NegativeInfinity :
                     ExtendedFloat.PositiveInfinity) : (((mantissa &
-                0x00400000) != 0) ?
-                                               Create(ExtendedFloat.NaN) :
+                0x00400000) != 0) ? Create(ExtendedFloat.NaN) :
   Create(ExtendedFloat.SignalingNaN));
           }
           if (exponent == 0) {
@@ -427,9 +432,10 @@ namespace CBOR {
             bigmantissa = -bigmantissa;
           }
           exponent -= 23;
-          return Create(ExtendedFloat.Create(
-              bigmantissa,
-              (BigInteger)exponent));
+          return Create(
+ExtendedFloat.Create(
+bigmantissa,
+(BigInteger)exponent));
         }
         if (words.Length == 2) {
           bool neg = (words[0] >> 31) != 0;
@@ -439,9 +445,7 @@ namespace CBOR {
           if (exponent == 2047) {
             return (mantissaNonzero == 0) ? Create(neg ?
   ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity) :
-    (((mantissa &
-                0x00080000) !=
-                                                0) ? Create(ExtendedFloat.NaN) :
+    (((mantissa & 0x00080000) != 0) ? Create(ExtendedFloat.NaN) :
   Create(ExtendedFloat.SignalingNaN));
           }
           if (exponent == 0) {
@@ -468,9 +472,10 @@ namespace CBOR {
             bigmantissa = -bigmantissa;
           }
           exponent -= 52;
-          return Create(ExtendedFloat.Create(
-              bigmantissa,
-              (BigInteger)exponent));
+          return Create(
+ExtendedFloat.Create(
+bigmantissa,
+(BigInteger)exponent));
         }
         if (words.Length == 4) {
           bool neg = (words[0] >> 31) != 0;
@@ -480,9 +485,7 @@ namespace CBOR {
           if (exponent == 0x7fff) {
             return (mantissaNonzero == 0) ? Create(neg ?
   ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity) :
-    (((mantissa &
-                0x00008000) !=
-                                                0) ? Create(ExtendedFloat.NaN) :
+    (((mantissa & 0x00008000) != 0) ? Create(ExtendedFloat.NaN) :
   Create(ExtendedFloat.SignalingNaN));
           }
           if (exponent == 0) {
@@ -517,9 +520,10 @@ namespace CBOR {
             bigmantissa = -bigmantissa;
           }
           exponent -= 112;
-          return Create(ExtendedFloat.Create(
-              bigmantissa,
-              (BigInteger)exponent));
+          return Create(
+ExtendedFloat.Create(
+bigmantissa,
+(BigInteger)exponent));
         }
         throw new ArgumentException("words has a bad length");
       }
@@ -576,8 +580,9 @@ namespace CBOR {
         return Create(this.ef.Divide(ToValue(b), ctx));
       }
 
-      public BinaryNumber Pow(ExtensiveTest.IExtendedNumber b,
-        PrecisionContext ctx) {
+      public BinaryNumber Pow(
+ExtensiveTest.IExtendedNumber b,
+PrecisionContext ctx) {
         return Create(this.ef.Pow(ToValue(b), ctx));
       }
 
@@ -1185,8 +1190,8 @@ namespace CBOR {
           Assert.AreEqual(result, d3, ln);
         }
         if (binaryFP && (
-          (op1.IsQuietNaN() && (op2.IsSignalingNaN() || op3.IsSignalingNaN()))||
-          (op2.IsQuietNaN() && op3.IsSignalingNaN()))) {
+        (op1.IsQuietNaN() && (op2.IsSignalingNaN() || op3.IsSignalingNaN())) ||
+            (op2.IsQuietNaN() && op3.IsSignalingNaN()))) {
           // Don't check flags for binary test cases involving quiet
           // NaN followed by signaling NaN, as the semantics for
           // the invalid operation flag in those cases are different

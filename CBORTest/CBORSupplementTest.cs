@@ -1104,7 +1104,10 @@ BigInteger.One);
         }
       }
       Assert.AreEqual(
-        -1, new ExtendedRational(BigInteger.One, (BigInteger)2).CompareTo(
+        -1,
+ new ExtendedRational(
+BigInteger.One,
+(BigInteger)2).CompareTo(
           new ExtendedRational((BigInteger)4, BigInteger.One)));
       for (var i = 0; i < 100; ++i) {
         BigInteger num = RandomObjects.RandomBigInteger(fr);
@@ -1125,8 +1128,8 @@ BigInteger.One);
           var rat2 = new ExtendedRational(num2, den2);
           if (rat.CompareTo(rat2) != 0) {
             Assert.AreEqual(
-              0, rat.CompareTo(rat2),
-           rat + "; " + rat2 + "; " + rat.ToDouble() + "; " +
+              0,
+ rat.CompareTo(rat2), rat + "; " + rat2 + "; " + rat.ToDouble() + "; " +
                 rat2.ToDouble());
           }
         }
@@ -1546,11 +1549,14 @@ CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsBigInteger());
     [TestMethod]
     public void TestNegativeBigInts() {
       BigInteger minusone = BigInteger.Zero - BigInteger.One;
-      Assert.AreEqual(minusone - (BigInteger.One << 8),
+      Assert.AreEqual(
+minusone - (BigInteger.One << 8),
    CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x42, 1, 0 }).AsBigInteger());
-      Assert.AreEqual(minusone - (BigInteger.One << 16),
+      Assert.AreEqual(
+minusone - (BigInteger.One << 16),
 CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
-      Assert.AreEqual(minusone - (BigInteger.One << 24),
+      Assert.AreEqual(
+minusone - (BigInteger.One << 24),
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x44, 1, 0, 0, 0
           }).AsBigInteger());
       Assert.AreEqual(
@@ -1582,41 +1588,18 @@ CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
     [TestMethod]
     public void TestStringRefs() {
       CBORObject cbor = CBORObject.DecodeFromBytes(
-        new byte[] { 0xd9, 1,
-        0, 0x9f,
-        0x64, 0x61,
-        0x62, 0x63,
-        0x64, 0xd8,
-        0x19, 0x00,
-        0xd8, 0x19,
-        0x00, 0x64,
-        0x62, 0x62,
-        0x63, 0x64,
-        0xd8, 0x19,
-        0x01, 0xd8,
-        0x19, 0x00,
-        0xd8, 0x19,
-        0x01, 0xff });
+        new byte[] { 0xd9, 1, 0, 0x9f, 0x64, 0x61, 0x62, 0x63,
+        0x64, 0xd8, 0x19, 0x00, 0xd8, 0x19, 0x00, 0x64,
+        0x62, 0x62, 0x63, 0x64, 0xd8, 0x19, 0x01, 0xd8,
+        0x19, 0x00, 0xd8, 0x19, 0x01, 0xff });
       string expected =
         "[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xd9,
-        1, 0,
-        0x9f, 0x64,
-        0x61, 0x62,
-        0x63, 0x64,
-        0x62, 0x61,
-        0x61, 0xd8,
-        0x19, 0x00,
-        0xd8, 0x19,
-        0x00, 0x64,
-        0x62, 0x62,
-        0x63, 0x64,
-        0xd8, 0x19,
-        0x01, 0xd8,
-        0x19, 0x00,
-        0xd8, 0x19,
-        0x01, 0xff });
+        1, 0, 0x9f, 0x64, 0x61, 0x62, 0x63, 0x64,
+        0x62, 0x61, 0x61, 0xd8, 0x19, 0x00, 0xd8, 0x19,
+        0x00, 0x64, 0x62, 0x62, 0x63, 0x64, 0xd8, 0x19,
+        0x01, 0xd8, 0x19, 0x00, 0xd8, 0x19, 0x01, 0xff });
       expected =
   "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]"
 ;

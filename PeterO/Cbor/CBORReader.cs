@@ -158,8 +158,9 @@ Stream outputStream) {
       return this.ReadForFirstByte(firstbyte, filter);
     }
 
-    public CBORObject ReadForFirstByte(int firstbyte,
-      CBORTypeFilter filter) {
+    public CBORObject ReadForFirstByte(
+int firstbyte,
+CBORTypeFilter filter) {
       if (this.depth > 500) {
         throw new CBORException("Too deeply nested");
       }
@@ -308,8 +309,9 @@ Stream outputStream) {
   CBORException("Length of bytes to be streamed is bigger than supported ");
             }
             data = ms.ToArray();
-            return new CBORObject(CBORObject.CBORObjectTypeByteString,
-              data);
+            return new CBORObject(
+CBORObject.CBORObjectTypeByteString,
+data);
           }
         } else {
           if (hasBigAdditional) {
@@ -418,8 +420,9 @@ builder.ToString());
               throw new CBORException("Array is too long");
             }
             ++this.depth;
-            CBORObject o = this.ReadForFirstByte(headByte,
-              filter == null ? null : filter.GetSubFilter(vtindex));
+            CBORObject o = this.ReadForFirstByte(
+headByte,
+filter == null ? null : filter.GetSubFilter(vtindex));
             --this.depth;
             cbor.Add(o);
             ++vtindex;
