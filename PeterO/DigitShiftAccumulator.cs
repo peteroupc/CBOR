@@ -62,8 +62,10 @@ namespace PeterO {
       }
     }
 
-    public DigitShiftAccumulator(BigInteger bigint,
-      int lastDiscarded, int olderDiscarded) {
+    public DigitShiftAccumulator(
+BigInteger bigint,
+int lastDiscarded,
+int olderDiscarded) {
       if (bigint.canFitInInt()) {
         this.shiftedSmall = (int)bigint;
         if (this.shiftedSmall < 0) {
@@ -143,8 +145,10 @@ namespace PeterO {
       // Console.WriteLine("digits=" + (digits));
       if (digits == 1) {
         BigInteger bigrem;
-        BigInteger bigquo = BigInteger.DivRem(this.shiftedBigInt,
-          (BigInteger)10, out bigrem);
+        BigInteger bigquo = BigInteger.DivRem(
+this.shiftedBigInt,
+(BigInteger)10,
+out bigrem);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
         this.shiftedBigInt = bigquo;
@@ -163,8 +167,10 @@ namespace PeterO {
       if (startCount > 0) {
         BigInteger bigrem;
         BigInteger radixPower = DecimalUtility.FindPowerOfTen(startCount);
-        BigInteger bigquo = BigInteger.DivRem(this.shiftedBigInt,
-          radixPower, out bigrem);
+        BigInteger bigquo = BigInteger.DivRem(
+this.shiftedBigInt,
+radixPower,
+out bigrem);
         if (!bigrem.IsZero) {
           this.bitsAfterLeftmost |= 1;
         }

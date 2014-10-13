@@ -17,9 +17,11 @@ namespace PeterO {
     private const int StreamedStringBufferLength = 4096;
 
     /// <summary>Generates a text string from a UTF-8 byte array.</summary>
-    /// <param name='bytes'>A byte array containing text encoded in UTF-8.</param>
+    /// <param name='bytes' >A byte array containing text encoded in
+    /// UTF-8.</param>
     /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, stops processing when invalid
+    /// replacement character (U + FFFD). If false, stops processing when
+    /// invalid
     /// UTF-8 is seen.</param>
     /// <returns>A string represented by the UTF-8 byte array.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -39,23 +41,30 @@ namespace PeterO {
 
     /// <summary>Generates a text string from a portion of a UTF-8 byte
     /// array.</summary>
-    /// <param name='bytes'>A byte array containing text encoded in UTF-8.</param>
-    /// <param name='offset'>Offset into the byte array to start reading.</param>
+    /// <param name='bytes' >A byte array containing text encoded in
+    /// UTF-8.</param>
+    /// <param name='offset' >Offset into the byte array to start
+    /// reading.</param>
     /// <param name='bytesCount'>Length, in bytes, of the UTF-8 string.</param>
     /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, stops processing when invalid
+    /// replacement character (U + FFFD). If false, stops processing when
+    /// invalid
     /// UTF-8 is seen.</param>
     /// <returns>A string represented by the UTF-8 byte array.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bytes'/> is null.</exception>
     /// <exception cref='ArgumentException'>The portion of the byte array is not
     /// valid UTF-8 and <paramref name='replace'/> is false.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref name='offset'/>
-    /// is less than 0, <paramref name='bytesCount'/> is less than 0, or offset plus
+    /// <exception cref='ArgumentException' >The parameter <paramref
+    /// name='offset' />
+    /// is less than 0, <paramref name='bytesCount' /> is less than 0, or
+    /// offset plus
     /// bytesCount is greater than the length of "data" .</exception>
-    public static string GetUtf8String(byte[] bytes,
-      int offset, int bytesCount,
-      bool replace) {
+    public static string GetUtf8String(
+byte[] bytes,
+int offset,
+int bytesCount,
+bool replace) {
       if (bytes == null) {
         throw new ArgumentNullException("bytes");
       }
@@ -88,17 +97,22 @@ namespace PeterO {
 
     /// <summary>Encodes a string in UTF-8 as a byte array.</summary>
     /// <param name='str'>A text string.</param>
-    /// <param name='replace'>If true, replaces unpaired surrogate code points with
+    /// <param name='replace' >If true, replaces unpaired surrogate code
+    /// points with
     /// the replacement character (U + FFFD). If false, stops processing when an
     /// unpaired surrogate code point is seen.</param>
     /// <returns>The string encoded in UTF-8.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='str' />
     /// is null.</exception>
     /// <exception cref='ArgumentException'>The string contains an unpaired
-    /// surrogate code point and <paramref name='replace'/> is false, or an internal
+    /// surrogate code point and <paramref name='replace' /> is false, or an
+    /// internal
     /// error occurred.</exception>
-    /// <exception cref='ArgumentException'>The parameter "offset" is less than 0,
-    /// "bytesCount" is less than 0, or offset plus bytesCount is greater than the
+    /// <exception cref='ArgumentException' >The parameter "offset" is less
+    /// than 0,
+    /// "bytesCount" is less than 0, or offset plus bytesCount is greater
+    /// than the
     /// length of "data" .</exception>
     public static byte[] GetUtf8Bytes(string str, bool replace) {
       if (str == null) {
@@ -122,10 +136,12 @@ namespace PeterO {
     /// <param name='replace'>If true, treats unpaired surrogate code points as
     /// having 3 UTF-8 bytes (the UTF-8 length of the replacement character U +
     /// FFFD).</param>
-    /// <returns>The number of bytes needed to encode the given string in UTF-8, or
+    /// <returns>The number of bytes needed to encode the given string in
+    /// UTF-8, or
     /// -1 if the string contains an unpaired surrogate code point and <paramref
     /// name='replace'/> is false.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='str' />
     /// is null.</exception>
     public static long GetUtf8Length(String str, bool replace) {
       if (str == null) {
@@ -166,12 +182,14 @@ namespace PeterO {
     /// <summary>Gets the Unicode code point just before the given index of the
     /// string.</summary>
     /// <param name='str'>A string.</param>
-    /// <param name='index'>Index of the current position into the string.</param>
+    /// <param name='index' >Index of the current position into the
+    /// string.</param>
     /// <returns>The Unicode code point at the previous position. Returns -1 if
     /// <paramref name='index'/> is 0 or less, or is greater than the string's
     /// length. Returns the replacement character (U + FFFD) if the previous
     /// character is an unpaired surrogate code point.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='str' />
     /// is null.</exception>
     public static int CodePointBefore(string str, int index) {
       return CodePointBefore(str, index, 0);
@@ -180,20 +198,27 @@ namespace PeterO {
     /// <summary>Gets the Unicode code point just before the given index of the
     /// string.</summary>
     /// <param name='str'>A string.</param>
-    /// <param name='index'>Index of the current position into the string.</param>
-    /// <param name='surrogateBehavior'>Specifies what kind of value to return if
-    /// the previous character is an unpaired surrogate code point: if 0, return the
-    /// replacement character (U + FFFD); if 1, return the value of the surrogate
+    /// <param name='index' >Index of the current position into the
+    /// string.</param>
+    /// <param name='surrogateBehavior' >Specifies what kind of value to
+    /// return if
+    /// the previous character is an unpaired surrogate code point: if 0,
+    /// return the
+    /// replacement character (U + FFFD); if 1, return the value of the
+    /// surrogate
     /// code point; if neither 0 nor 1, return -1.</param>
     /// <returns>The Unicode code point at the previous position. Returns -1 if
     /// <paramref name='index'/> is 0 or less, or is greater than the string's
     /// length. Returns a value as specified under <paramref
     /// name='surrogateBehavior'/> if the previous character is an unpaired
     /// surrogate code point.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='str' />
     /// is null.</exception>
-    public static int CodePointBefore(string str,
-      int index, int surrogateBehavior) {
+    public static int CodePointBefore(
+string str,
+int index,
+int surrogateBehavior) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
@@ -220,12 +245,14 @@ namespace PeterO {
     /// <summary>Gets the Unicode code point at the given index of the
     /// string.</summary>
     /// <param name='str'>A string.</param>
-    /// <param name='index'>Index of the current position into the string.</param>
+    /// <param name='index' >Index of the current position into the
+    /// string.</param>
     /// <returns>The Unicode code point at the given position. Returns -1 if
     /// <paramref name='index'/> is less than 0, or is the string's length or
     /// greater. Returns the replacement character (U + FFFD) if the current
     /// character is an unpaired surrogate code point.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='str' />
     /// is null.</exception>
     public static int CodePointAt(string str, int index) {
       return CodePointAt(str, index, 0);
@@ -234,20 +261,27 @@ namespace PeterO {
     /// <summary>Gets the Unicode code point at the given index of the
     /// string.</summary>
     /// <param name='str'>A string.</param>
-    /// <param name='index'>Index of the current position into the string.</param>
-    /// <param name='surrogateBehavior'>Specifies what kind of value to return if
-    /// the previous character is an unpaired surrogate code point: if 0, return the
-    /// replacement character (U + FFFD); if 1, return the value of the surrogate
+    /// <param name='index' >Index of the current position into the
+    /// string.</param>
+    /// <param name='surrogateBehavior' >Specifies what kind of value to
+    /// return if
+    /// the previous character is an unpaired surrogate code point: if 0,
+    /// return the
+    /// replacement character (U + FFFD); if 1, return the value of the
+    /// surrogate
     /// code point; if neither 0 nor 1, return -1.</param>
     /// <returns>The Unicode code point at the current position. Returns -1 if
     /// <paramref name='index'/> is less than 0, or is the string's length or
     /// greater. Returns a value as specified under <paramref
     /// name='surrogateBehavior'/> if the previous character is an unpaired
     /// surrogate code point.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='str' />
     /// is null.</exception>
-    public static int CodePointAt(string str,
-      int index, int surrogateBehavior) {
+    public static int CodePointAt(
+string str,
+int index,
+int surrogateBehavior) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
@@ -271,7 +305,8 @@ namespace PeterO {
       return c;
     }
 
-    /// <summary>Returns a string with upper-case ASCII letters (A to Z) converted
+    /// <summary>Returns a string with upper-case ASCII letters (A to Z)
+    /// converted
     /// to lower-case. Other characters remain unchanged.</summary>
     /// <param name='str'>A string.</param>
     /// <returns>The converted string, or null if <paramref name='str'/> is
@@ -309,11 +344,16 @@ namespace PeterO {
     /// surrogates are treated as individual code points.</summary>
     /// <param name='strA'>The first string. Can be null.</param>
     /// <param name='strB'>The second string. Can be null.</param>
-    /// <returns>A value indicating which string is " less" or " greater" . 0: Both
-    /// strings are equal or null. Less than 0: a is null and b isn't; or the first
-    /// code point that's different is less in A than in B; or b starts with a and
-    /// is longer than a. Greater than 0: b is null and a isn't; or the first code
-    /// point that's different is greater in A than in B; or a starts with b and is
+    /// <returns>A value indicating which string is " less" or " greater" .
+    /// 0: Both
+    /// strings are equal or null. Less than 0: a is null and b isn't; or
+    /// the first
+    /// code point that's different is less in A than in B; or b starts with
+    /// a and
+    /// is longer than a. Greater than 0: b is null and a isn't; or the
+    /// first code
+    /// point that's different is greater in A than in B; or a starts with b
+    /// and is
     /// longer than b.</returns>
     public static int CodePointCompare(String strA, String strB) {
       if (strA == null) {
@@ -371,56 +411,75 @@ namespace PeterO {
     /// <summary>Writes a portion of a string in UTF-8 encoding to a data
     /// stream.</summary>
     /// <param name='str'>A string to write.</param>
-    /// <param name='offset'>The zero-based index where the string portion to write
+    /// <param name='offset' >The zero-based index where the string portion
+    /// to write
     /// begins.</param>
     /// <param name='length'>The length of the string portion to write.</param>
     /// <param name='stream'>A writable data stream.</param>
-    /// <param name='replace'>If true, replaces unpaired surrogate code points with
+    /// <param name='replace' >If true, replaces unpaired surrogate code
+    /// points with
     /// the replacement character (U + FFFD). If false, stops processing when an
     /// unpaired surrogate code point is seen.</param>
     /// <returns>0 if the entire string portion was written; or -1 if the string
     /// portion contains an unpaired surrogate code point and <paramref
     /// name='replace'/> is false.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='str' />
     /// is null or <paramref name='stream'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref name='offset'/>
+    /// <exception cref='ArgumentException' >The parameter <paramref
+    /// name='offset' />
     /// is less than 0, <paramref name='length'/> is less than 0, or <paramref
-    /// name='offset'/> plus <paramref name='length'/> is greater than the string's
+    /// name='offset' /> plus <paramref name='length' /> is greater than the
+    /// string's
     /// length.</exception>
-    /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
-    public static int WriteUtf8(String str,
-      int offset, int length,
-      Stream stream, bool replace) {
+    /// <exception cref='System.IO.IOException' >An I/O error
+    /// occurred.</exception>
+    public static int WriteUtf8(
+String str,
+int offset,
+int length,
+Stream stream,
+bool replace) {
       return WriteUtf8(str, offset, length, stream, replace, false);
     }
 
     /// <summary>Writes a portion of a string in UTF-8 encoding to a data
     /// stream.</summary>
     /// <param name='str'>A string to write.</param>
-    /// <param name='offset'>The zero-based index where the string portion to write
+    /// <param name='offset' >The zero-based index where the string portion
+    /// to write
     /// begins.</param>
     /// <param name='length'>The length of the string portion to write.</param>
     /// <param name='stream'>A writable data stream.</param>
-    /// <param name='replace'>If true, replaces unpaired surrogate code points with
+    /// <param name='replace' >If true, replaces unpaired surrogate code
+    /// points with
     /// the replacement character (U + FFFD). If false, stops processing when an
     /// unpaired surrogate code point is seen.</param>
-    /// <param name='lenientLineBreaks'>If true, replaces carriage return (CR) not
+    /// <param name='lenientLineBreaks' >If true, replaces carriage return
+    /// (CR) not
     /// followed by line feed (LF) and LF not preceded by CR with CR-LF
     /// pairs.</param>
     /// <returns>0 if the entire string portion was written; or -1 if the string
     /// portion contains an unpaired surrogate code point and <paramref
     /// name='replace'/> is false.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='str' />
     /// is null or <paramref name='stream'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref name='offset'/>
+    /// <exception cref='ArgumentException' >The parameter <paramref
+    /// name='offset' />
     /// is less than 0, <paramref name='length'/> is less than 0, or <paramref
-    /// name='offset'/> plus <paramref name='length'/> is greater than the string's
+    /// name='offset' /> plus <paramref name='length' /> is greater than the
+    /// string's
     /// length.</exception>
-    /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
-    public static int WriteUtf8(String str,
-      int offset, int length,
-      Stream stream, bool replace,
-      bool lenientLineBreaks) {
+    /// <exception cref='System.IO.IOException' >An I/O error
+    /// occurred.</exception>
+    public static int WriteUtf8(
+String str,
+int offset,
+int length,
+Stream stream,
+bool replace,
+bool lenientLineBreaks) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
@@ -537,15 +596,19 @@ namespace PeterO {
     /// <summary>Writes a string in UTF-8 encoding to a data stream.</summary>
     /// <param name='str'>A string to write.</param>
     /// <param name='stream'>A writable data stream.</param>
-    /// <param name='replace'>If true, replaces unpaired surrogate code points with
+    /// <param name='replace' >If true, replaces unpaired surrogate code
+    /// points with
     /// the replacement character (U + FFFD). If false, stops processing when an
     /// unpaired surrogate code point is seen.</param>
-    /// <returns>0 if the entire string was written; or -1 if the string contains an
+    /// <returns>0 if the entire string was written; or -1 if the string
+    /// contains an
     /// unpaired surrogate code point and <paramref name='replace'/> is
     /// false.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException' >The parameter <paramref
+    /// name='str' />
     /// is null or <paramref name='stream'/> is null.</exception>
-    /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
+    /// <exception cref='System.IO.IOException' >An I/O error
+    /// occurred.</exception>
     public static int WriteUtf8(String str, Stream stream, bool replace) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -555,24 +618,32 @@ namespace PeterO {
 
     /// <summary>Reads a string in UTF-8 encoding from a byte array.</summary>
     /// <param name='data'>A byte array containing a UTF-8 string.</param>
-    /// <param name='offset'>Offset into the byte array to start reading.</param>
+    /// <param name='offset' >Offset into the byte array to start
+    /// reading.</param>
     /// <param name='bytesCount'>Length, in bytes, of the UTF-8 string.</param>
     /// <param name='builder'>A string builder object where the resulting string
     /// will be stored.</param>
     /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, stops processing when invalid
+    /// replacement character (U + FFFD). If false, stops processing when
+    /// invalid
     /// UTF-8 is seen.</param>
-    /// <returns>0 if the entire string was read without errors, or -1 if the string
+    /// <returns>0 if the entire string was read without errors, or -1 if
+    /// the string
     /// is not valid UTF-8 and <paramref name='replace'/> is false.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null or <paramref name='builder'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref name='offset'/>
-    /// is less than 0, <paramref name='bytesCount'/> is less than 0, or offset plus
+    /// <exception cref='ArgumentException' >The parameter <paramref
+    /// name='offset' />
+    /// is less than 0, <paramref name='bytesCount' /> is less than 0, or
+    /// offset plus
     /// bytesCount is greater than the length of <paramref name='data'/>
     /// .</exception>
-    public static int ReadUtf8FromBytes(byte[] data,
-      int offset, int bytesCount,
-      StringBuilder builder, bool replace) {
+    public static int ReadUtf8FromBytes(
+byte[] data,
+int offset,
+int bytesCount,
+StringBuilder builder,
+bool replace) {
       if (data == null) {
         throw new ArgumentNullException("data");
       }
@@ -682,7 +753,8 @@ namespace PeterO {
     /// character (U + FFFD).</summary>
     /// <param name='stream'>A readable data stream.</param>
     /// <returns>The string read.</returns>
-    /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
+    /// <exception cref='System.IO.IOException' >An I/O error
+    /// occurred.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
     public static string ReadUtf8ToString(Stream stream) {
@@ -693,9 +765,11 @@ namespace PeterO {
     /// that string.</summary>
     /// <param name='stream'>A readable data stream.</param>
     /// <param name='bytesCount'>The length, in bytes, of the string. If this is
-    /// less than 0, this function will read until the end of the stream.</param>
+    /// less than 0, this function will read until the end of the
+    /// stream.</param>
     /// <param name='replace'>If true, replaces invalid encoding with the
-    /// replacement character (U + FFFD). If false, throws an error if an unpaired
+    /// replacement character (U + FFFD). If false, throws an error if an
+    /// unpaired
     /// surrogate code point is seen.</param>
     /// <returns>The string read.</returns>
     /// <exception cref='System.IO.IOException'>An I/O error occurred; or, the
@@ -703,8 +777,10 @@ namespace PeterO {
     /// false.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
-    public static string ReadUtf8ToString(Stream stream,
-      int bytesCount, bool replace) {
+    public static string ReadUtf8ToString(
+Stream stream,
+int bytesCount,
+bool replace) {
       var builder = new StringBuilder();
       int retval = DataUtilities.ReadUtf8(stream, bytesCount, builder, replace);
       if (retval == -1) {
@@ -718,23 +794,31 @@ namespace PeterO {
     /// <summary>Reads a string in UTF-8 encoding from a data stream.</summary>
     /// <param name='stream'>A readable data stream.</param>
     /// <param name='bytesCount'>The length, in bytes, of the string. If this is
-    /// less than 0, this function will read until the end of the stream.</param>
+    /// less than 0, this function will read until the end of the
+    /// stream.</param>
     /// <param name='builder'>A string builder object where the resulting string
     /// will be stored.</param>
     /// <param name='replace'>If true, replaces invalid encoding with the
     /// replacement character (U + FFFD). If false, stops processing when an
     /// unpaired surrogate code point is seen.</param>
-    /// <returns>0 if the entire string was read without errors, -1 if the string is
-    /// not valid UTF-8 and <paramref name='replace'/> is false, or -2 if the end of
-    /// the stream was reached before the last character was read completely (which
+    /// <returns>0 if the entire string was read without errors, -1 if the
+    /// string is
+    /// not valid UTF-8 and <paramref name='replace' /> is false, or -2 if
+    /// the end of
+    /// the stream was reached before the last character was read completely
+    /// (which
     /// is only the case if <paramref name='bytesCount'/> is 0 or
     /// greater).</returns>
-    /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
+    /// <exception cref='System.IO.IOException' >An I/O error
+    /// occurred.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null or <paramref name='builder'/> is null.</exception>
-    public static int ReadUtf8(Stream stream,
-      int bytesCount, StringBuilder builder,
-      bool replace) {
+    /// name='stream' /> is null or <paramref name='builder' /> is
+    /// null.</exception>
+    public static int ReadUtf8(
+Stream stream,
+int bytesCount,
+StringBuilder builder,
+bool replace) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }

@@ -77,9 +77,11 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static void FromArrayRecursive(Array arr,
-      int[] index, int dimension,
-      CBORObject obj) {
+    private static void FromArrayRecursive(
+Array arr,
+int[] index,
+int dimension,
+CBORObject obj) {
       int dimLength = arr.GetLength(dimension);
       int rank = index.Length;
       for (var i = 0; i < dimLength; ++i) {

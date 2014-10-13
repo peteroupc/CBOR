@@ -24,35 +24,49 @@ namespace PeterO.Cbor {
       ToBase64(str, data, 0, data.Length, Base64Classic, padding);
     }
 
-    public static void ToBase64URL(StringBuilder str,
-      byte[] data, bool padding) {
+    public static void ToBase64URL(
+StringBuilder str,
+byte[] data,
+bool padding) {
       if (data == null) {
         throw new ArgumentNullException("data");
       }
       ToBase64(str, data, 0, data.Length, Base64URL, padding);
     }
 
-    public static void ToBase64(StringBuilder str,
-      byte[] data, int offset,
-      int count, bool padding) {
+    public static void ToBase64(
+StringBuilder str,
+byte[] data,
+int offset,
+int count,
+bool padding) {
       ToBase64(str, data, offset, count, Base64Classic, padding);
     }
 
-    public static void ToBase64URL(StringBuilder str,
-      byte[] data, int offset,
-      int count, bool padding) {
+    public static void ToBase64URL(
+StringBuilder str,
+byte[] data,
+int offset,
+int count,
+bool padding) {
       ToBase64(str, data, offset, count, Base64URL, padding);
     }
 
-    public static void WriteBase64(StringOutput writer,
-      byte[] data, int offset,
-      int count, bool padding) {
+    public static void WriteBase64(
+StringOutput writer,
+byte[] data,
+int offset,
+int count,
+bool padding) {
       WriteBase64(writer, data, offset, count, Base64Classic, padding);
     }
 
-    public static void WriteBase64URL(StringOutput writer,
-      byte[] data, int offset,
-      int count, bool padding) {
+    public static void WriteBase64URL(
+StringOutput writer,
+byte[] data,
+int offset,
+int count,
+bool padding) {
       WriteBase64(writer, data, offset, count, Base64URL, padding);
     }
 
@@ -70,26 +84,33 @@ namespace PeterO.Cbor {
       return ToBase64String(data, 0, data.Length, padding);
     }
 
-    public static string ToBase64String(byte[] data,
-      int offset, int count,
-      bool padding) {
+    public static string ToBase64String(
+byte[] data,
+int offset,
+int count,
+bool padding) {
       var builder = new StringBuilder();
       ToBase64(builder, data, offset, count, Base64Classic, padding);
       return builder.ToString();
     }
 
-    public static string ToBase64URLString(byte[] data,
-      int offset, int count,
-      bool padding) {
+    public static string ToBase64URLString(
+byte[] data,
+int offset,
+int count,
+bool padding) {
       var builder = new StringBuilder();
       ToBase64(builder, data, offset, count, Base64Classic, padding);
       return builder.ToString();
     }
 
-    private static void ToBase64(StringBuilder str,
-      byte[] data, int offset,
-      int count, string alphabet,
-      bool padding) {
+    private static void ToBase64(
+StringBuilder str,
+byte[] data,
+int offset,
+int count,
+string alphabet,
+bool padding) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
@@ -145,10 +166,13 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static void WriteBase64(StringOutput writer,
-      byte[] data, int offset,
-      int count, string alphabet,
-      bool padding) {
+    private static void WriteBase64(
+StringOutput writer,
+byte[] data,
+int offset,
+int count,
+string alphabet,
+bool padding) {
       if (writer == null) {
         throw new ArgumentNullException("writer");
       }

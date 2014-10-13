@@ -80,14 +80,12 @@ namespace PeterO.Cbor {
                       c <<= 4;
                       c |= ch + 10 - 'a';
                     } else {
-                throw reader.NewError(
-                          "Invalid Unicode escaped character");
+                throw reader.NewError("Invalid Unicode escaped character");
                     }
                   }
                   break;
                 }
-              default:
-                throw reader.NewError("Invalid escaped character");
+              default: throw reader.NewError("Invalid escaped character");
             }
             break;
           default: escaped = false;
@@ -279,9 +277,12 @@ namespace PeterO.Cbor {
           throw reader.NewError("Expected a ':' after a key");
         }
         // NOTE: Will overwrite existing value
-        myHashMap[key] = NextJSONValue(reader,
-          SkipWhitespaceJSON(reader), noDuplicates,
-          nextchar, depth);
+        myHashMap[key] = NextJSONValue(
+reader,
+          SkipWhitespaceJSON(reader),
+ noDuplicates,
+ nextchar,
+ depth);
         switch (nextchar[0]) {
           case ',':
             seenComma = true;
@@ -318,9 +319,12 @@ namespace PeterO.Cbor {
           throw reader.NewError("Empty array element");
         }
         myArrayList.Add(
-          NextJSONValue(reader,
-            c, noDuplicates,
-            nextchar, depth));
+          NextJSONValue(
+reader,
+c,
+noDuplicates,
+nextchar,
+depth));
         c = nextchar[0];
         switch (c) {
           case ',':
@@ -425,9 +429,10 @@ namespace PeterO.Cbor {
               return;
             }
             writer.WriteString(
-              CBORObject.TrimDotZero(Convert.ToString(
-                (float)f,
-                CultureInfo.InvariantCulture)));
+              CBORObject.TrimDotZero(
+Convert.ToString(
+(float)f,
+CultureInfo.InvariantCulture)));
             return;
           }
           case CBORObject.CBORObjectTypeDouble: {
@@ -438,19 +443,18 @@ namespace PeterO.Cbor {
               return;
             }
             writer.WriteString(CBORObject.TrimDotZero(
-                Convert.ToString((double)f,
-                  CultureInfo.InvariantCulture)));
+                Convert.ToString(
+(double)f,
+CultureInfo.InvariantCulture)));
             return;
           }
           case CBORObject.CBORObjectTypeInteger: {
             var longItem = (long)thisItem;
-            writer.WriteString(
-              CBORUtilities.LongToString(longItem));
+            writer.WriteString(CBORUtilities.LongToString(longItem));
             return;
           }
           case CBORObject.CBORObjectTypeBigInteger: {
-       writer.WriteString(
-              CBORUtilities.BigIntToString((BigInteger)thisItem));
+       writer.WriteString(CBORUtilities.BigIntToString((BigInteger)thisItem));
             return;
           }
           case CBORObject.CBORObjectTypeExtendedDecimal: {
@@ -480,9 +484,10 @@ namespace PeterO.Cbor {
                 return;
               }
               writer.WriteString(
-                CBORObject.TrimDotZero(Convert.ToString(
-                (double)f,
-                CultureInfo.InvariantCulture)));
+                CBORObject.TrimDotZero(
+Convert.ToString(
+(double)f,
+CultureInfo.InvariantCulture)));
               return;
             }
             writer.WriteString(flo.ToString());
@@ -497,9 +502,12 @@ namespace PeterO.Cbor {
             }
             writer.WriteChar('\"');
             if (obj.HasTag(22)) {
-              Base64.WriteBase64(writer,
-                byteArray, 0,
-                byteArray.Length, false);
+              Base64.WriteBase64(
+writer,
+byteArray,
+0,
+byteArray.Length,
+false);
             } else if (obj.HasTag(23)) {
               // Write as base16
               for (int i = 0; i < byteArray.Length; ++i) {
@@ -507,9 +515,12 @@ namespace PeterO.Cbor {
                 writer.WriteChar(Hex16[byteArray[i] & 15]);
               }
             } else {
-              Base64.WriteBase64URL(writer,
-                byteArray, 0,
-                byteArray.Length, false);
+              Base64.WriteBase64URL(
+writer,
+byteArray,
+0,
+byteArray.Length,
+false);
             }
             writer.WriteChar('\"');
             break;
@@ -586,8 +597,7 @@ namespace PeterO.Cbor {
               foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
-           string str = (key.ItemType ==
-                  CBORObject.CBORObjectTypeTextString) ?
+           string str = (key.ItemType == CBORObject.CBORObjectTypeTextString) ?
                   ((string)key.ThisItem) : key.ToJSONString();
                 stringMap[str] = value;
               }

@@ -490,9 +490,12 @@ namespace PeterO {
     /// <param name='precision'>Maximum number of digits (precision).</param>
     /// <returns>A PrecisionContext object.</returns>
     public static PrecisionContext ForPrecision(int precision) {
-      return new PrecisionContext(precision,
-        Rounding.HalfUp, 0,
-        0, false).WithUnlimitedExponents();
+      return new PrecisionContext(
+precision,
+Rounding.HalfUp,
+0,
+0,
+false).WithUnlimitedExponents();
     }
 
     /// <summary>Creates a new PrecisionContext object initialized with unlimited
@@ -501,9 +504,12 @@ namespace PeterO {
     /// context.</param>
     /// <returns>A PrecisionContext object.</returns>
     public static PrecisionContext ForRounding(Rounding rounding) {
-      return new PrecisionContext(0,
-        rounding, 0,
-        0, false).WithUnlimitedExponents();
+      return new PrecisionContext(
+0,
+rounding,
+0,
+0,
+false).WithUnlimitedExponents();
     }
 
     /// <summary>Creates a new PrecisionContext object initialized with unlimited
@@ -515,9 +521,12 @@ namespace PeterO {
     public static PrecisionContext ForPrecisionAndRounding(
       int precision,
       Rounding rounding) {
-      return new PrecisionContext(precision,
-        rounding, 0,
-        0, false).WithUnlimitedExponents();
+      return new PrecisionContext(
+precision,
+rounding,
+0,
+0,
+false).WithUnlimitedExponents();
     }
 
     /// <summary>Initializes a new instance of the PrecisionContext class. HasFlags
@@ -527,9 +536,12 @@ namespace PeterO {
     /// <param name='exponentMinSmall'>A 32-bit signed integer. (2).</param>
     /// <param name='exponentMaxSmall'>A 32-bit signed integer. (3).</param>
     /// <param name='clampNormalExponents'>A Boolean object.</param>
-    public PrecisionContext(int precision,
-      Rounding rounding, int exponentMinSmall,
-      int exponentMaxSmall, bool clampNormalExponents) {
+    public PrecisionContext(
+int precision,
+Rounding rounding,
+int exponentMinSmall,
+int exponentMaxSmall,
+bool clampNormalExponents) {
       if (precision < 0) {
         throw new ArgumentException("precision (" + precision +
           ") is less than " + "0");
@@ -571,7 +583,7 @@ namespace PeterO {
     #endif
     public static readonly PrecisionContext Binary16 =
       PrecisionContext.ForPrecisionAndRounding(11, Rounding.HalfEven)
-      .WithExponentClamp(true) .WithExponentRange(-14, 15);
+      .WithExponentClamp(true).WithExponentRange(-14, 15);
 
     /// <summary>Precision context for the IEEE-754-2008 binary32 format, 24 bits
     /// precision. The default rounding mode is HalfEven.</summary>
@@ -583,7 +595,7 @@ namespace PeterO {
     #endif
     public static readonly PrecisionContext Binary32 =
       PrecisionContext.ForPrecisionAndRounding(24, Rounding.HalfEven)
-      .WithExponentClamp(true) .WithExponentRange(-126, 127);
+      .WithExponentClamp(true).WithExponentRange(-126, 127);
 
     /// <summary>Precision context for the IEEE-754-2008 binary64 format, 53 bits
     /// precision. The default rounding mode is HalfEven.</summary>
@@ -595,7 +607,7 @@ namespace PeterO {
     #endif
     public static readonly PrecisionContext Binary64 =
       PrecisionContext.ForPrecisionAndRounding(53, Rounding.HalfEven)
-      .WithExponentClamp(true) .WithExponentRange(-1022, 1023);
+      .WithExponentClamp(true).WithExponentRange(-1022, 1023);
 
     /// <summary>Precision context for the IEEE-754-2008 binary128 format, 113 bits
     /// precision. The default rounding mode is HalfEven.</summary>
@@ -607,7 +619,7 @@ namespace PeterO {
     #endif
     public static readonly PrecisionContext Binary128 =
       PrecisionContext.ForPrecisionAndRounding(113, Rounding.HalfEven)
-      .WithExponentClamp(true) .WithExponentRange(-16382, 16383);
+      .WithExponentClamp(true).WithExponentRange(-16382, 16383);
 
     /// <summary>Precision context for the IEEE-754-2008 decimal32 format. The
     /// default rounding mode is HalfEven.</summary>
@@ -680,9 +692,10 @@ namespace PeterO {
     #endif
     public static readonly PrecisionContext BigDecimalJava =
       new PrecisionContext(0, Rounding.HalfUp, 0, 0, true)
-      .WithExponentClamp(true) .WithAdjustExponent(false)
-      .WithBigExponentRange(BigInteger.Zero - (BigInteger)Int32.MaxValue,
-        BigInteger.One + (BigInteger)Int32.MaxValue);
+      .WithExponentClamp(true).WithAdjustExponent(false)
+      .WithBigExponentRange(
+BigInteger.Zero - (BigInteger)Int32.MaxValue,
+BigInteger.One + (BigInteger)Int32.MaxValue);
 
     /// <summary>Precision context for Java's BigDecimal format. The default
     /// rounding mode is HalfUp.</summary>

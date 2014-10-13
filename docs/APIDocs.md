@@ -1,7 +1,7 @@
 ﻿ * [PeterO.BigInteger](PeterO.BigInteger.md) - An arbitrary-precision integer.
  * [PeterO.Cbor.CBORDataUtilities](PeterO.Cbor.CBORDataUtilities.md) - Contains methods useful for reading and writing data, with a focus             on CBOR.
  * [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) - Exception thrown for errors involving CBOR data.
- * [PeterO.Cbor.CBORObject](PeterO.Cbor.CBORObject.md) - Represents an object in Concise Binary Object Representation (CBOR)             and contains methods for reading and writing CBOR data.
+ * [PeterO.Cbor.CBORObject](PeterO.Cbor.CBORObject.md) - Represents an object in Concise Binary Object             Representation (CBOR)             and contains methods for reading and writing CBOR data.
  * [PeterO.Cbor.CBORType](PeterO.Cbor.CBORType.md) - Represents a type that a CBOR object can have.
  * [PeterO.Cbor.CBORTypeFilter](PeterO.Cbor.CBORTypeFilter.md) - Specifies what kinds of CBOR objects a tag can be.
  * [PeterO.Cbor.ICBORConverter&lt;T&gt;](PeterO.Cbor.ICBORConverter-T.md) - Interface implemented by classes that convert objects of arbitrary             types to CBOR objects.
