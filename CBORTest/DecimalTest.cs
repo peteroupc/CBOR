@@ -30,7 +30,7 @@ namespace Test {
 
     private static TValue GetKeyOrDefault<TKey, TValue>(
 IDictionary<TKey,
-                                                 TValue> dict,
+                              TValue> dict,
  TKey key,
  TValue defaultValue) {
       return (!dict.ContainsKey(key)) ? defaultValue : dict[key];

@@ -159,7 +159,7 @@ String.Format(CultureInfo.InvariantCulture, "{0}", i));
     [TestMethod]
     public void TestArbitraryTypes() {
       CBORObject obj = CBORObject.FromObject(new { AByte.A, B = AInt.A, C =
-                                                 AULong.A });
+                              AULong.A });
       Assert.AreEqual(254, obj["a"].AsInt32());
       Assert.AreEqual(256, obj["b"].AsInt32());
       Assert.AreEqual(999999, obj["c"].AsInt32());
@@ -182,14 +182,14 @@ String.Format(CultureInfo.InvariantCulture, "{0}", i));
       TestCommon.AssertRoundTrip(obj);
       // Select all even numbers
       obj = CBORObject.FromObject(from i in RangeExclusive(0, 10) where i %
-                                  2 == 0 select i);
+                              2 == 0 select i);
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(2, obj[1].AsInt32());
       TestCommon.AssertRoundTrip(obj);
       // Select all even numbers
       obj = CBORObject.FromObject(from i in RangeExclusive(0, 10) where i %
-                                  2 == 0 select new { A = i, B = i + 1 });
+                              2 == 0 select new { A = i, B = i + 1 });
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0]["a"].AsInt32());
       Assert.AreEqual(3, obj[1]["b"].AsInt32());
@@ -4240,7 +4240,7 @@ bool returnRemainder) {
         t = dividendHigh >> 31;
         dividendHigh <<= 1;
         dividendHigh = unchecked((int)(dividendHigh | ((int)((dividendLow >>
-                                                              31) & 1))));
+                              31) & 1))));
         dividendLow <<= 1;
         t |= dividendHigh;
         // unsigned greater-than-or-equal check

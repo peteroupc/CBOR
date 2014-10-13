@@ -796,7 +796,7 @@ cbornumber.AsSingle());
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
   ].AsString()));
         if (numberinfo["int32" ].AsBoolean() && numberinfo["isintegral"
-                                                          ].AsBoolean()) {
+                              ].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInInt32());
           Assert.IsTrue(CBORObject.FromObject(cbornumber.AsInt32())
                         .CanFitInInt32());
@@ -822,7 +822,7 @@ cbornumber.AsSingle());
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
   ].AsString()));
         if (numberinfo["int64" ].AsBoolean() && numberinfo["isintegral"
-                                                          ].AsBoolean()) {
+                              ].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInInt64());
           Assert.IsTrue(CBORObject.FromObject(cbornumber.AsInt64())
                         .CanFitInInt64());
@@ -1971,7 +1971,7 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
     [TestMethod]
     public void TestReadJSON() {
       using (var ms = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x7b,
-                                         0x7d })) {
+                              0x7d })) {
         try {
           CBORObject.ReadJSON(ms);
         } catch (Exception ex) {
@@ -1981,7 +1981,7 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       }
       // whitespace followed by BOM
       using (var ms2 = new MemoryStream(new byte[] { 0x20, 0xef, 0xbb, 0xbf,
-                                          0x7b, 0x7d })) {
+                              0x7b, 0x7d })) {
         try {
           CBORObject.ReadJSON(ms2);
           Assert.Fail("Should have failed");
@@ -1993,7 +1993,7 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       }
       // two BOMs
       using (var ms3 = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0xef,
-                                          0xbb, 0xbf, 0x7b, 0x7d })) {
+                              0xbb, 0xbf, 0x7b, 0x7d })) {
         try {
           CBORObject.ReadJSON(ms3);
           Assert.Fail("Should have failed");
@@ -2006,7 +2006,7 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
       try {
     var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0, 0,
           0x74, 0, 0, 0, 0x72, 0, 0, 0, 0x75, 0, 0, 0,
-                                0x65 });
+                              0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x74, 0, 0, 0, 0x72, 0,
           0, 0, 0x75, 0, 0, 0, 0x65 });
