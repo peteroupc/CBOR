@@ -54,10 +54,8 @@ namespace PeterO.Cbor {
       return (sbyte)v;
     }
 
-    private static decimal EncodeDecimal(
-      BigInteger bigmant,
-      int scale,
-      bool neg) {
+    private static decimal EncodeDecimal(BigInteger bigmant,
+      int scale, bool neg) {
       if (scale < 0) {
         throw new ArgumentException(
 "scale (" + scale + ") is less than " + "0");
@@ -141,13 +139,10 @@ namespace PeterO.Cbor {
       try {
         ExtendedDecimal newDecimal =
           ExtendedDecimal.FromBigInteger(extendedNumber.Numerator)
-          .Divide(
-            ExtendedDecimal.FromBigInteger(extendedNumber.Denominator),
+          .Divide(ExtendedDecimal.FromBigInteger(extendedNumber.Denominator),
   PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
-        return EncodeDecimal(
-          BigInteger.Abs(newDecimal.Mantissa),
-          -((int)newDecimal.Exponent),
-          newDecimal.Mantissa.Sign < 0);
+        return EncodeDecimal(BigInteger.Abs(newDecimal.Mantissa),
+          -((int)newDecimal.Exponent), newDecimal.Mantissa.Sign < 0);
       } catch (TrapException ex) {
         throw new OverflowException("This object's value is out of range", ex);
       }
@@ -161,10 +156,8 @@ namespace PeterO.Cbor {
       try {
         ExtendedDecimal newDecimal = extendedNumber.RoundToPrecision(
           PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
-        return EncodeDecimal(
-          BigInteger.Abs(newDecimal.Mantissa),
-          -((int)newDecimal.Exponent),
-          newDecimal.Mantissa.Sign < 0);
+        return EncodeDecimal(BigInteger.Abs(newDecimal.Mantissa),
+          -((int)newDecimal.Exponent), newDecimal.Mantissa.Sign < 0);
       } catch (TrapException ex) {
         throw new OverflowException("This object's value is out of range", ex);
       }
@@ -286,10 +279,8 @@ namespace PeterO.Cbor {
       if (negative) {
         mantissa = -mantissa;
       }
-      return FromObjectAndTag(
-        new[] { FromObject(-scale),
-        FromObject(mantissa) },
-        4);
+      return FromObjectAndTag(new[] { FromObject(-scale),
+        FromObject(mantissa) }, 4);
     }
 
     /// <summary>Writes a 32-bit unsigned integer in CBOR format to a data

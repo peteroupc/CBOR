@@ -10,8 +10,7 @@ using System;
 namespace PeterO.Cbor {
   internal class CBORTag4 : ICBORTag
   {
-    public CBORTag4() :
-      this(false) {
+    public CBORTag4() : this(false) {
     }
 
     private bool extended;

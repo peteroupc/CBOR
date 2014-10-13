@@ -279,10 +279,8 @@ params CBORTypeFilter[] elements) {
     /// allowed under this filter; otherwise, false.</returns>
     public bool ArrayLengthMatches(int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
-                                              (this.arrayMinLength ?
-                                                this.arrayLength >= length :
-                                                this.arrayLength ==
-                                                length));
+                (this.arrayMinLength ? this.arrayLength >= length :
+                this.arrayLength == length));
     }
 
     /// <summary>Returns whether an array's length is allowed under a
@@ -292,10 +290,8 @@ params CBORTypeFilter[] elements) {
     /// allowed under a filter; otherwise, false.</returns>
     public bool ArrayLengthMatches(long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
-                                              (this.arrayMinLength ?
-                                                this.arrayLength >= length :
-                                                this.arrayLength ==
-                                                length));
+                (this.arrayMinLength ? this.arrayLength >= length :
+                this.arrayLength == length));
     }
 
     /// <summary>Returns whether an array's length is allowed under a
@@ -374,9 +370,8 @@ params CBORTypeFilter[] elements) {
     /// <returns>True if this type filter allows CBOR arrays and the given array
     /// index is allowed under this type filter; otherwise, false.</returns>
     public bool ArrayIndexAllowed(int index) {
-   return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength
-        ||
-            ((this.arrayMinLength || index < this.arrayLength) && index >=
+   return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength||
+        ((this.arrayMinLength || index < this.arrayLength) && index >=
                                                 0));
     }
 

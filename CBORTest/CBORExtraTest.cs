@@ -120,8 +120,7 @@ namespace Test {
     [TestMethod]
     public void TestSByte() {
       for (int i = SByte.MinValue; i <= SByte.MaxValue; ++i) {
-        TestCommon.AssertSer(
-          CBORObject.FromObject((sbyte)i),
+        TestCommon.AssertSer(CBORObject.FromObject((sbyte)i),
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
       }
     }
@@ -4212,16 +4211,13 @@ namespace Test {
     [TestMethod]
     public void TestULong() {
       ulong[] ranges = {
-        0, 65539,
-        0xFFFFF000UL, 0x100000400UL,
+        0, 65539, 0xFFFFF000UL, 0x100000400UL,
         0x7FFFFFFFFFFFF000UL, 0x8000000000000400UL,
-        UInt64.MaxValue - 1000, UInt64.MaxValue
-      };
+        UInt64.MaxValue - 1000, UInt64.MaxValue };
       for (var i = 0; i < ranges.Length; i += 2) {
         ulong j = ranges[i];
         while (true) {
-          TestCommon.AssertSer(
-            CBORObject.FromObject(j),
+          TestCommon.AssertSer(CBORObject.FromObject(j),
             String.Format(CultureInfo.InvariantCulture, "{0}", j));
           if (j == ranges[i + 1]) {
             break;
@@ -4253,8 +4249,8 @@ bool returnRemainder) {
           }
         }
       }
-      return returnRemainder ?
-        unchecked((short)(((int)dividendHigh) & 0xffff)) :
+    return returnRemainder ? unchecked((short)(((int)dividendHigh) &
+        0xffff)) :
         unchecked((short)(((int)dividendLow) & 0xffff));
     }
 
@@ -4314,16 +4310,13 @@ bool returnRemainder) {
     [TestMethod]
     public void TestUInt() {
       uint[] ranges = { 0, 65539,
-        0x7FFFF000U, 0x80000400U,
-        UInt32.MaxValue - 1000, UInt32.MaxValue };
+        0x7FFFF000U, 0x80000400U, UInt32.MaxValue - 1000, UInt32.MaxValue };
       for (var i = 0; i < ranges.Length; i += 2) {
         uint j = ranges[i];
         while (true) {
-          TestCommon.AssertSer(
-            CBORObject.FromObject(j),
+          TestCommon.AssertSer(CBORObject.FromObject(j),
             String.Format(CultureInfo.InvariantCulture, "{0}", j));
-          Assert.AreEqual(
-            CBORObject.FromObject(j),
+          Assert.AreEqual(CBORObject.FromObject(j),
             CBORObject.FromObject((BigInteger)j));
           if (j == ranges[i + 1]) {
             break;
@@ -4338,21 +4331,18 @@ bool returnRemainder) {
       TestCommon.AssertSer(
         CBORObject.FromObject(Decimal.MinValue),
         String.Format(CultureInfo.InvariantCulture, "{0}", Decimal.MinValue));
-      TestCommon.AssertSer(
-        CBORObject.FromObject(Decimal.MaxValue),
+      TestCommon.AssertSer(CBORObject.FromObject(Decimal.MaxValue),
         String.Format(CultureInfo.InvariantCulture, "{0}", Decimal.MaxValue));
       for (int i = -100; i <= 100; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((decimal)i),
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
-        TestCommon.AssertSer(
-          CBORObject.FromObject((decimal)i + 0.1m),
+        TestCommon.AssertSer(CBORObject.FromObject((decimal)i + 0.1m),
         String.Format(
 CultureInfo.InvariantCulture,
 "{0}" ,
 (decimal)i + 0.1m));
-        TestCommon.AssertSer(
-          CBORObject.FromObject((decimal)i + 0.1111m),
+        TestCommon.AssertSer(CBORObject.FromObject((decimal)i + 0.1111m),
           String.Format(
 CultureInfo.InvariantCulture,
 "{0}",
@@ -4363,8 +4353,7 @@ CultureInfo.InvariantCulture,
     [TestMethod]
     public void TestUShort() {
       for (int i = UInt16.MinValue; i <= UInt16.MaxValue; ++i) {
-        TestCommon.AssertSer(
-          CBORObject.FromObject((UInt16)i),
+        TestCommon.AssertSer(CBORObject.FromObject((UInt16)i),
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
       }
     }
@@ -4434,8 +4423,7 @@ CultureInfo.InvariantCulture,
       for (var i = 0; i < ranges.Length; i += 2) {
         DateTime j = ranges[i];
         while (true) {
-          TestCommon.AssertSer(
-            CBORObject.FromObject(j),
+          TestCommon.AssertSer(CBORObject.FromObject(j),
             "0(\"" + DateTimeToString(j) + "\")");
           if (j >= ranges[i + 1]) {
             break;

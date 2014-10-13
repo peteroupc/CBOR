@@ -31,8 +31,7 @@ namespace Test {
     private static TValue GetKeyOrDefault<TKey, TValue>(
 IDictionary<TKey,
                                                  TValue> dict,
- TKey key,
-                                                          TValue
+ TKey key, TValue
                                                         defaultValue) {
       return (!dict.ContainsKey(key)) ? defaultValue : dict[key];
     }
@@ -40,8 +39,7 @@ IDictionary<TKey,
     public static void ParseDecTest(
 string ln,
  IDictionary<string,
- string>
-                                    context) {
+ string> context) {
       Match match;
       if (ln.Contains("-- ")) {
         ln = ln.Substring(0, ln.IndexOf("-- ", StringComparison.Ordinal));
@@ -72,16 +70,13 @@ string ln,
         int maxexponent = Convert.ToInt32(context["maxexponent"]);
         // Skip tests that take null as input or output;
         // also skip tests that take a hex number format
-        if (input1.Contains("#") ||
-            input2.Contains("#") ||
-            input3.Contains("#") ||
-            output.Contains("#")) {
+        if (input1.Contains("#") || input2.Contains("#") ||
+            input3.Contains("#") || output.Contains("#")) {
           return;
         }
         // Skip some tests that assume a maximum
         // supported precision of 999999999
-        if (name.Equals("pow250") ||
-            name.Equals("pow251") ||
+        if (name.Equals("pow250") || name.Equals("pow251") ||
             name.Equals("pow252")) {
           return;
         }
@@ -93,21 +88,14 @@ string ln,
               // to 0
               name.Equals("qua531") || // assumes that the input will underflow
               // to 0
-              name.Equals("rpow068") ||
-              name.Equals("rpow159") ||
-              name.Equals("rpow217") ||
-              name.Equals("rpow272") ||
-              name.Equals("rpow324") ||
-              name.Equals("rpow327") ||
+              name.Equals("rpow068") || name.Equals("rpow159") ||
+              name.Equals("rpow217") || name.Equals("rpow272") ||
+              name.Equals("rpow324") || name.Equals("rpow327") ||
               // following cases incorrectly remove trailing zeros
-              name.Equals("sqtx2207") ||
-              name.Equals("sqtx2231") ||
-              name.Equals("sqtx2271") ||
-              name.Equals("sqtx2327") ||
-              name.Equals("sqtx2399") ||
-              name.Equals("sqtx2487") ||
-              name.Equals("sqtx2591") ||
-              name.Equals("sqtx2711") ||
+              name.Equals("sqtx2207") || name.Equals("sqtx2231") ||
+              name.Equals("sqtx2271") || name.Equals("sqtx2327") ||
+              name.Equals("sqtx2399") || name.Equals("sqtx2487") ||
+              name.Equals("sqtx2591") || name.Equals("sqtx2711") ||
               name.Equals("sqtx2847")) {
             return;
           }
@@ -304,10 +292,8 @@ string ln,
         // extended arithmetic counterparts for at least
         // some of them have no flags in their
         // result.
-        if (!name.Equals("pow118") &&
-            !name.Equals("pow119") &&
-            !name.Equals("pow120") &&
-            !name.Equals("pow121") &&
+        if (!name.Equals("pow118") && !name.Equals("pow119") &&
+            !name.Equals("pow120") && !name.Equals("pow121") &&
             !name.Equals("pow122")) {
           TestCommon.AssertFlags(expectedFlags, ctx.Flags, name);
         }

@@ -47,27 +47,21 @@ namespace PeterO.Cbor {
 
     private const string HexChars = "0123456789ABCDEF";
 
-    private static void appendAuthority(
-      StringBuilder builder,
-      string refValue,
-      int[] segments) {
+    private static void appendAuthority(StringBuilder builder,
+      string refValue, int[] segments) {
       if (segments[2] >= 0) {
         builder.Append("//");
-        builder.Append(
-          refValue.Substring(
+        builder.Append(refValue.Substring(
             segments[2],
             segments[3] - segments[2]));
       }
     }
 
-    private static void appendFragment(
-      StringBuilder builder,
-      string refValue,
-      int[] segments) {
+    private static void appendFragment(StringBuilder builder,
+      string refValue, int[] segments) {
       if (segments[8] >= 0) {
         builder.Append('#');
-        builder.Append(
-          refValue.Substring(
+        builder.Append(refValue.Substring(
             segments[8],
             segments[9] - segments[8]));
       }
@@ -78,43 +72,33 @@ namespace PeterO.Cbor {
       string refValue,
       int[] segments) {
       builder.Append(
-        normalizePath(
-          refValue.Substring(
+        normalizePath(refValue.Substring(
             segments[4],
             segments[5] - segments[4])));
     }
 
-    private static void appendPath(
-      StringBuilder builder,
-      string refValue,
-      int[] segments) {
-      builder.Append(
-        refValue.Substring(
+    private static void appendPath(StringBuilder builder,
+      string refValue, int[] segments) {
+      builder.Append(refValue.Substring(
           segments[4],
           segments[5] - segments[4]));
     }
 
-    private static void appendQuery(
-      StringBuilder builder,
-      string refValue,
-      int[] segments) {
+    private static void appendQuery(StringBuilder builder,
+      string refValue, int[] segments) {
       if (segments[6] >= 0) {
         builder.Append('?');
-        builder.Append(
-          refValue.Substring(
+        builder.Append(refValue.Substring(
             segments[6],
             segments[7] - segments[6]));
       }
     }
 
-    private static void appendScheme(
-      StringBuilder builder,
-      string refValue,
-      int[] segments) {
+    private static void appendScheme(StringBuilder builder,
+      string refValue, int[] segments) {
       if (segments[0] >= 0) {
         builder.Append(
-          refValue.Substring(
-            segments[0],
+          refValue.Substring(segments[0],
             segments[1] - segments[0]));
         builder.Append(':');
       }
@@ -135,20 +119,16 @@ namespace PeterO.Cbor {
       int[] components = null;
       if (mode == 1) {
         components = (
-          s == null) ? null : splitIRI(
-          s,
-          0,
-          s.Length,
+          s == null) ? null : splitIRI(s,
+          0, s.Length,
           ParseMode.IRIStrict);
         if (components == null) {
           return null;
         }
       } else {
         components = (
-          s == null) ? null : splitIRI(
-          s,
-          0,
-          s.Length,
+          s == null) ? null : splitIRI(s,
+          0, s.Length,
           ParseMode.IRISurrogateLenient);
       }
       int index = 0;
@@ -183,8 +163,7 @@ namespace PeterO.Cbor {
             continue;
           }
           if (c >= 0x7f || c <= 0x20 ||
-              ((c & 0x7f) == c &&
-               "{}|^\\`<>\"".IndexOf((char)c) >= 0)) {
+              ((c & 0x7f) == c && "{}|^\\`<>\"".IndexOf((char)c) >= 0)) {
             percentEncodeUtf8(builder, c);
           } else if (c == '[' || c == ']') {
             if (components != null && index >= components[2] && index <
@@ -254,8 +233,7 @@ namespace PeterO.Cbor {
     /// <returns>True if the string is a valid IRI with a scheme component;
     /// otherwise, false.</returns>
     public static bool hasScheme(string refValue) {
-      int[] segments = (
-        refValue == null) ? null : splitIRI(
+      int[] segments = (refValue == null) ? null : splitIRI(
         refValue,
         0,
         refValue.Length,
@@ -286,66 +264,55 @@ namespace PeterO.Cbor {
 
     private static bool isHexChar(char c) {
       return (c >= 'a' && c <= 'f') ||
-        (c >= 'A' && c <= 'F') ||
-        (c >= '0' && c <= '9');
+        (c >= 'A' && c <= 'F') || (c >= '0' && c <= '9');
     }
 
     private static bool isIfragmentChar(int c) {
       // '%' omitted
-      return (c >= 'a' && c <= 'z') ||
-        (c >= 'A' && c <= 'Z') ||
+      return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
         (c >= '0' && c <= '9') ||
         ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
-        (c >= 0xa0 && c <= 0xd7ff) ||
-        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
         (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
     private static bool isIpchar(int c) {
       // '%' omitted
-      return (c >= 'a' && c <= 'z') ||
-        (c >= 'A' && c <= 'Z') ||
+      return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
         (c >= '0' && c <= '9') ||
         ((c & 0x7F) == c && "/-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
-        (c >= 0xa0 && c <= 0xd7ff) ||
-        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
         (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
     private static bool isIqueryChar(int c) {
       // '%' omitted
-      return (c >= 'a' && c <= 'z') ||
-        (c >= 'A' && c <= 'Z') ||
+      return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
         (c >= '0' && c <= '9') ||
         ((c & 0x7F) == c && "/?-._~:@!$&'()*+,;=".IndexOf((char)c) >= 0) ||
-        (c >= 0xa0 && c <= 0xd7ff) ||
-        (c >= 0xe000 && c <= 0xfdcf) ||
+        (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xe000 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
         (c >= 0x10000 && c <= 0x10fffd && (c & 0xfffe) != 0xfffe);
     }
 
     private static bool isIRegNameChar(int c) {
       // '%' omitted
-      return (c >= 'a' && c <= 'z') ||
-        (c >= 'A' && c <= 'Z') ||
+      return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
         (c >= '0' && c <= '9') ||
         ((c & 0x7F) == c && "-._~!$&'()*+,;=".IndexOf((char)c) >= 0) ||
-        (c >= 0xa0 && c <= 0xd7ff) ||
-        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
         (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
     private static bool isIUserInfoChar(int c) {
       // '%' omitted
-      return (c >= 'a' && c <= 'z') ||
-        (c >= 'A' && c <= 'Z') ||
+      return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
         (c >= '0' && c <= '9') ||
         ((c & 0x7F) == c && "-._~:!$&'()*+,;=".IndexOf((char)c) >= 0) ||
-        (c >= 0xa0 && c <= 0xd7ff) ||
-        (c >= 0xf900 && c <= 0xfdcf) ||
+        (c >= 0xa0 && c <= 0xd7ff) || (c >= 0xf900 && c <= 0xfdcf) ||
         (c >= 0xfdf0 && c <= 0xffef) ||
         (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
@@ -441,8 +408,7 @@ namespace PeterO.Cbor {
     }
 
     public static bool isValidIRI(string s) {
-      return ((
-        s == null) ? null : splitIRI(
+      return ((s == null) ? null : splitIRI(
                 s,
                 0,
                 s.Length,
@@ -464,10 +430,8 @@ StringComparison.Ordinal) < 0) {
       int index = 0;
       while (index < len) {
         char c = path[index];
-        if ((index + 3 <= len && c == '/' &&
-             path[index + 1] == '.' &&
-             path[index + 2] == '/') ||
-            (index + 2 == len && c == '.' &&
+        if ((index + 3 <= len && c == '/' && path[index + 1] == '.' &&
+             path[index + 2] == '/') || (index + 2 == len && c == '.' &&
              path[index + 1] == '.')) {
           // begins with "/./" or is "..";
           // move index by 2
@@ -475,16 +439,14 @@ StringComparison.Ordinal) < 0) {
           continue;
         }
         if (index + 3 <= len && c == '.' &&
-            path[index + 1] == '.' &&
-            path[index + 2] == '/') {
+            path[index + 1] == '.' && path[index + 2] == '/') {
           // begins with "../";
           // move index by 3
           index += 3;
           continue;
         }
         if ((index + 2 <= len && c == '.' &&
-             path[index + 1] == '/') ||
-            (index + 1 == len && c == '.')) {
+             path[index + 1] == '/') || (index + 1 == len && c == '.')) {
           // begins with "./" or is ".";
           // move index by 1
           ++index;
@@ -497,8 +459,7 @@ StringComparison.Ordinal) < 0) {
           break;
         }
         if (index + 3 == len && c == '/' &&
-            path[index + 1] == '.' &&
-            path[index + 2] == '.') {
+            path[index + 1] == '.' && path[index + 2] == '.') {
           // is "/.."; remove last segment,
           // append "/" and return
           int index2 = builder.Length - 1;
@@ -515,10 +476,8 @@ StringComparison.Ordinal) < 0) {
           builder.Append('/');
           break;
         }
-        if (index + 4 <= len && c == '/' &&
-            path[index + 1] == '.' &&
-            path[index + 2] == '.' &&
-            path[index + 3] == '/') {
+        if (index + 4 <= len && c == '/' && path[index + 1] == '.' &&
+            path[index + 2] == '.' && path[index + 3] == '/') {
           // begins with "/../"; remove last segment
           int index2 = builder.Length - 1;
           while (index2 >= 0) {
@@ -550,20 +509,17 @@ StringComparison.Ordinal) < 0) {
       return builder.ToString();
     }
 
-    private static int parseDecOctet(
-      string s,
-      int index,
-      int endOffset,
-      int c,
-      int delim) {
+    private static int parseDecOctet(string s,
+      int index, int endOffset,
+      int c, int delim) {
       if (c >= '1' && c <= '9' && index + 2 < endOffset &&
           s[index + 1] >= '0' && s[index + 1] <= '9' &&
           s[index + 2] == delim) {
         return ((c - '0') * 10) + (s[index + 1] - '0');
       }
       if (c == '2' && index + 3 < endOffset &&
-          (s[index + 1] == '5') &&
-          (s[index + 2] >= '0' && s[index + 2] <= '5') &&
+       (s[index + 1] == '5') && (s[index + 2] >= '0' && s[index + 2] <= '5'
+) &&
           s[index + 3] == delim) {
         return 250 + (s[index + 2] - '0');
       }
@@ -613,8 +569,7 @@ StringComparison.Ordinal) < 0) {
         hex = false;
         while (index < endOffset) {
           char c = s[index];
-          if ((c >= 'a' && c <= 'z') ||
-              (c >= 'A' && c <= 'Z') ||
+          if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
               (c >= '0' && c <= '9') ||
               ((c & 0x7F) == c && ":-._~!$&'()*+,;=".IndexOf(c) >= 0)) {
             hex = true;
@@ -677,12 +632,9 @@ StringComparison.Ordinal) < 0) {
                   index += 2;
                 }
                 char tmpc = (index < endOffset) ? s[index] : '\0';
-                decOctet = parseDecOctet(
-                  s,
-                  index,
-                  endOffset,
-                  tmpc,
-                  '.');
+                decOctet = parseDecOctet(s,
+                index, endOffset,
+                tmpc, '.');
                 if (decOctet >= 100) {
                   index += 4;
                 } else if (decOctet >= 10) {
@@ -777,8 +729,7 @@ StringComparison.Ordinal) < 0) {
               }
               if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
              (c >= '0' && c <= '9') || c == '.' || c == '_' || c == '-' ||
-                    c ==
-                  '~') {
+                c == '~') {
                 // unreserved character under RFC3986
                 ++index;
                 haveChar = true;
@@ -796,10 +747,8 @@ StringComparison.Ordinal) < 0) {
       return -1;
     }
 
-    private static string pathParent(
-      string refValue,
-      int startIndex,
-      int endIndex) {
+    private static string pathParent(string refValue,
+      int startIndex, int endIndex) {
       if (startIndex > endIndex) {
         return String.Empty;
       }
@@ -855,12 +804,9 @@ StringComparison.Ordinal) < 0) {
     /// <param name='parseMode'>A ParseMode object.</param>
     /// <returns>The resolved IRI, or null if refValue is null or is not a valid
     /// IRI. If base is null or is not a valid IRI, returns refValue.</returns>
-    public static string relativeResolve(
-      string refValue,
-      string baseURI,
-      ParseMode parseMode) {
-      int[] segments = (
-        refValue == null) ? null : splitIRI(
+    public static string relativeResolve(string refValue,
+      string baseURI, ParseMode parseMode) {
+      int[] segments = (refValue == null) ? null : splitIRI(
         refValue,
         0,
         refValue.Length,
@@ -869,10 +815,8 @@ StringComparison.Ordinal) < 0) {
         return null;
       }
       int[] segmentsBase = (
-        baseURI == null) ? null : splitIRI(
-        baseURI,
-        0,
-        baseURI.Length,
+        baseURI == null) ? null : splitIRI(baseURI,
+        0, baseURI.Length,
         parseMode);
       if (segmentsBase == null) {
         return refValue;
@@ -913,10 +857,8 @@ StringComparison.Ordinal) < 0) {
             builder.Append(normalizePath(merged.ToString()));
           } else {
             merged.Append(
-              pathParent(
-                baseURI,
-                segmentsBase[4],
-                segmentsBase[5]));
+              pathParent(baseURI,
+                segmentsBase[4], segmentsBase[5]));
             appendPath(merged, refValue, segments);
             builder.Append(normalizePath(merged.ToString()));
           }
@@ -957,10 +899,8 @@ StringComparison.Ordinal) < 0) {
     /// component is absent, both indices in that pair will be -1 (an index won't be
     /// less than 0 in any other case). If the string is null or is not a valid IRI,
     /// returns null.</returns>
-    public static int[] splitIRI(
-      string s,
-      int offset,
-      int length,
+    public static int[] splitIRI(string s,
+      int offset, int length,
       ParseMode parseMode) {
       if (s == null) {
         return null;
@@ -992,14 +932,12 @@ StringComparison.Ordinal) < 0) {
           break;
         }
         if (strict && index == offset && !((c >= 'a' && c <= 'z') ||
-                                           (c >= 'A' && c <=
-                                                               'Z'))) {
+                (c >= 'A' && c <= 'Z'))) {
           break;
         }
         if (strict && index > offset &&
         !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0' &&
-              c <=
-                                                                   '9') ||
+              c <= '9') ||
               c == '+' || c == '-' || c == '.')) {
           break;
         }

@@ -162,8 +162,7 @@ namespace PeterO.Cbor {
     }
 
     public static BigInteger BigIntegerFromDouble(double dbl) {
-      long lvalue = BitConverter.ToInt64(
-        BitConverter.GetBytes((double)dbl),
+      long lvalue = BitConverter.ToInt64(BitConverter.GetBytes((double)dbl),
         0);
       int value0 = unchecked((int)(lvalue & 0xFFFFFFFFL));
       int value1 = unchecked((int)((lvalue >> 32) & 0xFFFFFFFFL));
@@ -228,16 +227,13 @@ namespace PeterO.Cbor {
       int negvalue = (value >= 0x8000) ? (1 << 31) : 0;
       value &= 0x7fff;
       if (value >= 0x7c00) {
-        value = (int)(0x3fc00 |
-                      (value & 0x3ff)) << 13 | negvalue;
-        return BitConverter.ToSingle(
-          BitConverter.GetBytes(value),
+        value = (int)(0x3fc00 | (value & 0x3ff)) << 13 | negvalue;
+        return BitConverter.ToSingle(BitConverter.GetBytes(value),
           0);
       }
       if (value > 0x400) {
         value = (int)((value + 0x1c000) << 13) | negvalue;
-        return BitConverter.ToSingle(
-          BitConverter.GetBytes(value),
+        return BitConverter.ToSingle(BitConverter.GetBytes(value),
           0);
       }
       if ((value & 0x400) == value) {

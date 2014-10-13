@@ -57,8 +57,7 @@ namespace PeterO.Cbor {
             PropertyData pd = new PropertyMap.PropertyData();
             pd.Name = pi.Name;
             // Convert 'IsXYZ' to 'XYZ'
-            if (pd.Name.Length >= 3 &&
-                pd.Name[0] == 'I' && pd.Name[1] == 's' &&
+            if (pd.Name.Length >= 3 && pd.Name[0] == 'I' && pd.Name[1] == 's' &&
                 pd.Name[2] >= 'A' && pd.Name[2] == 'Z') {
               pd.Name = pd.Name.Substring(2);
             }
@@ -78,10 +77,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static void FromArrayRecursive(
-      Array arr,
-      int[] index,
-      int dimension,
+    private static void FromArrayRecursive(Array arr,
+      int[] index, int dimension,
       CBORObject obj) {
       int dimLength = arr.GetLength(dimension);
       int rank = index.Length;

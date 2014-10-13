@@ -53,10 +53,8 @@ namespace PeterO {
     /// <exception cref='ArgumentException'>The parameter <paramref name='offset'/>
     /// is less than 0, <paramref name='bytesCount'/> is less than 0, or offset plus
     /// bytesCount is greater than the length of "data" .</exception>
-    public static string GetUtf8String(
-      byte[] bytes,
-      int offset,
-      int bytesCount,
+    public static string GetUtf8String(byte[] bytes,
+      int offset, int bytesCount,
       bool replace) {
       if (bytes == null) {
         throw new ArgumentNullException("bytes");
@@ -79,8 +77,7 @@ namespace PeterO {
       }
       if (bytes.Length - offset < bytesCount) {
         throw new ArgumentException("bytes's length minus " + offset + " (" +
-                                    (bytes.Length - offset) +
-                                    ") is less than " + bytesCount);
+                (bytes.Length - offset) + ") is less than " + bytesCount);
       }
       var b = new StringBuilder();
       if (ReadUtf8FromBytes(bytes, offset, bytesCount, b, replace) != 0) {
@@ -195,10 +192,8 @@ namespace PeterO {
     /// surrogate code point.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
     /// is null.</exception>
-    public static int CodePointBefore(
-      string str,
-      int index,
-      int surrogateBehavior) {
+    public static int CodePointBefore(string str,
+      int index, int surrogateBehavior) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
@@ -251,10 +246,8 @@ namespace PeterO {
     /// surrogate code point.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
     /// is null.</exception>
-    public static int CodePointAt(
-      string str,
-      int index,
-      int surrogateBehavior) {
+    public static int CodePointAt(string str,
+      int index, int surrogateBehavior) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
@@ -395,12 +388,9 @@ namespace PeterO {
     /// name='offset'/> plus <paramref name='length'/> is greater than the string's
     /// length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
-    public static int WriteUtf8(
-      String str,
-      int offset,
-      int length,
-      Stream stream,
-      bool replace) {
+    public static int WriteUtf8(String str,
+      int offset, int length,
+      Stream stream, bool replace) {
       return WriteUtf8(str, offset, length, stream, replace, false);
     }
 
@@ -427,12 +417,9 @@ namespace PeterO {
     /// name='offset'/> plus <paramref name='length'/> is greater than the string's
     /// length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
-    public static int WriteUtf8(
-      String str,
-      int offset,
-      int length,
-      Stream stream,
-      bool replace,
+    public static int WriteUtf8(String str,
+      int offset, int length,
+      Stream stream, bool replace,
       bool lenientLineBreaks) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -458,8 +445,7 @@ namespace PeterO {
       }
       if (str.Length - offset < length) {
         throw new ArgumentException("str.Length minus offset (" +
-                                    (str.Length - offset) +
-                                    ") is less than " + length);
+                (str.Length - offset) + ") is less than " + length);
       }
       byte[] bytes;
       int retval = 0;
@@ -584,12 +570,9 @@ namespace PeterO {
     /// is less than 0, <paramref name='bytesCount'/> is less than 0, or offset plus
     /// bytesCount is greater than the length of <paramref name='data'/>
     /// .</exception>
-    public static int ReadUtf8FromBytes(
-      byte[] data,
-      int offset,
-      int bytesCount,
-      StringBuilder builder,
-      bool replace) {
+    public static int ReadUtf8FromBytes(byte[] data,
+      int offset, int bytesCount,
+      StringBuilder builder, bool replace) {
       if (data == null) {
         throw new ArgumentNullException("data");
       }
@@ -611,8 +594,7 @@ namespace PeterO {
       }
       if (data.Length - offset < bytesCount) {
         throw new ArgumentException("data.Length minus offset (" +
-                                    (data.Length - offset) +
-                                    ") is less than " + bytesCount);
+                (data.Length - offset) + ") is less than " + bytesCount);
       }
       if (builder == null) {
         throw new ArgumentNullException("builder");
@@ -703,8 +685,7 @@ namespace PeterO {
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
-    public static string ReadUtf8ToString(
-      Stream stream) {
+    public static string ReadUtf8ToString(Stream stream) {
       return ReadUtf8ToString(stream, -1, true);
     }
 
@@ -722,16 +703,14 @@ namespace PeterO {
     /// false.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
-    public static string ReadUtf8ToString(
-      Stream stream,
-      int bytesCount,
-      bool replace) {
+    public static string ReadUtf8ToString(Stream stream,
+      int bytesCount, bool replace) {
       var builder = new StringBuilder();
       int retval = DataUtilities.ReadUtf8(stream, bytesCount, builder, replace);
       if (retval == -1) {
         throw new IOException(
-          "Unpaired surrogate code point found.",
-          new DecoderFallbackException());
+       "Unpaired surrogate code point found." ,
+       new DecoderFallbackException());
       }
       return builder.ToString();
     }
@@ -753,10 +732,8 @@ namespace PeterO {
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null or <paramref name='builder'/> is null.</exception>
-    public static int ReadUtf8(
-      Stream stream,
-      int bytesCount,
-      StringBuilder builder,
+    public static int ReadUtf8(Stream stream,
+      int bytesCount, StringBuilder builder,
       bool replace) {
       if (stream == null) {
         throw new ArgumentNullException("stream");

@@ -97,14 +97,13 @@ ctx) :
 
     public T SquareRoot(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.IsSimplified) ?
-      this.ext.SquareRoot(thisValue, ctx) :
-        this.simp.SquareRoot(thisValue, ctx);
+    this.ext.SquareRoot(thisValue, ctx) : this.simp.SquareRoot(thisValue,
+        ctx);
     }
 
     public T NextMinus(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.IsSimplified) ?
-      this.ext.NextMinus(thisValue, ctx) :
-        this.simp.NextMinus(thisValue, ctx);
+      this.ext.NextMinus(thisValue, ctx) : this.simp.NextMinus(thisValue, ctx);
     }
 
     public T NextToward(T thisValue, T otherValue, PrecisionContext ctx) {
@@ -115,8 +114,7 @@ ctx) :
 
     public T NextPlus(T thisValue, PrecisionContext ctx) {
       return (ctx == null || !ctx.IsSimplified) ?
-      this.ext.NextPlus(thisValue, ctx) :
-        this.simp.NextPlus(thisValue, ctx);
+      this.ext.NextPlus(thisValue, ctx) : this.simp.NextPlus(thisValue, ctx);
     }
 
     public T DivideToExponent(

@@ -373,8 +373,7 @@ ctx);
         return ExtendedDecimal.NegativeInfinity;
       }
       ExtendedDecimal ef = (this.IsNegative && this.IsZero) ?
- ExtendedDecimal.NegativeZero :
-          ExtendedDecimal.FromBigInteger(this.Numerator);
+ ExtendedDecimal.NegativeZero : ExtendedDecimal.FromBigInteger(this.Numerator);
       return ef.Divide(ExtendedDecimal.FromBigInteger(this.Denominator), ctx);
     }
 
@@ -411,10 +410,8 @@ ctx);
         return ExtendedDecimal.NegativeZero;
       }
       ExtendedDecimal valueEdNum = (this.IsNegative && this.IsZero) ?
- ExtendedDecimal.NegativeZero :
-          ExtendedDecimal.FromBigInteger(this.Numerator);
- ExtendedDecimal valueEdDen =
-        ExtendedDecimal.FromBigInteger(this.Denominator);
+ ExtendedDecimal.NegativeZero : ExtendedDecimal.FromBigInteger(this.Numerator);
+ ExtendedDecimal valueEdDen = ExtendedDecimal.FromBigInteger(this.Denominator);
       ExtendedDecimal ed = valueEdNum.Divide(valueEdDen, null);
       if (ed.IsNaN()) {
         // Result would be inexact, try again using the precision context
@@ -450,8 +447,7 @@ ctx);
         return ExtendedFloat.NegativeInfinity;
       }
       ExtendedFloat ef = (this.IsNegative && this.IsZero) ?
-     ExtendedFloat.NegativeZero :
-          ExtendedFloat.FromBigInteger(this.Numerator);
+     ExtendedFloat.NegativeZero : ExtendedFloat.FromBigInteger(this.Numerator);
       return ef.Divide(ExtendedFloat.FromBigInteger(this.Denominator), ctx);
     }
 
@@ -488,8 +484,7 @@ ctx);
           ExtendedFloat.Zero;
       }
       ExtendedFloat valueEdNum = (this.IsNegative && this.IsZero) ?
-     ExtendedFloat.NegativeZero :
-          ExtendedFloat.FromBigInteger(this.Numerator);
+     ExtendedFloat.NegativeZero : ExtendedFloat.FromBigInteger(this.Numerator);
       ExtendedFloat valueEdDen = ExtendedFloat.FromBigInteger(this.Denominator);
       ExtendedFloat ed = valueEdNum.Divide(valueEdDen, null);
       if (ed.IsNaN()) {
@@ -766,8 +761,7 @@ out thisRem);
           // Console.WriteLine("Shortcircuit II");
           return this.IsNegative ? 1 : -1;
         }
-      thisIntDec =
-          ExtendedFloat.FromBigInteger(this.UnsignedNumerator).Divide(
+      thisIntDec = ExtendedFloat.FromBigInteger(this.UnsignedNumerator).Divide(
           ExtendedFloat.FromBigInteger(this.Denominator),
           PrecisionContext.ForPrecisionAndRounding(256, Rounding.Down));
         if (thisIntDec.CompareTo(otherAbs) > 0) {
@@ -796,8 +790,7 @@ out thisRem);
       // Console.WriteLine("no shortcircuit");
       // Console.WriteLine(this);
       // Console.WriteLine(other);
-    ExtendedRational otherRational =
-        ExtendedRational.FromExtendedFloat(other);
+    ExtendedRational otherRational = ExtendedRational.FromExtendedFloat(other);
       BigInteger ad = this.Numerator * (BigInteger)otherRational.Denominator;
       BigInteger bc = this.Denominator * (BigInteger)otherRational.Numerator;
       return ad.CompareTo(bc);
@@ -886,8 +879,7 @@ out thisRem);
         }
         // Conservative approximation of this rational number's absolute value,
         // as a decimal number. The true value will be greater or equal.
-    thisIntDec =
-          ExtendedDecimal.FromBigInteger(this.UnsignedNumerator).Divide(
+    thisIntDec = ExtendedDecimal.FromBigInteger(this.UnsignedNumerator).Divide(
           ExtendedDecimal.FromBigInteger(this.Denominator),
           PrecisionContext.ForPrecisionAndRounding(20, Rounding.Down));
         if (thisIntDec.CompareTo(otherAbs) > 0) {
@@ -915,8 +907,7 @@ out thisRem);
       // Console.WriteLine("no shortcircuit");
       // Console.WriteLine(this);
       // Console.WriteLine(other);
-  ExtendedRational otherRational =
-        ExtendedRational.FromExtendedDecimal(other);
+  ExtendedRational otherRational = ExtendedRational.FromExtendedDecimal(other);
       BigInteger ad = this.Numerator * (BigInteger)otherRational.Denominator;
       BigInteger bc = this.Denominator * (BigInteger)otherRational.Numerator;
       return ad.CompareTo(bc);
@@ -943,8 +934,7 @@ out thisRem);
     /// false.</returns>
     public bool IsPositiveInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity |
-        BigNumberFlags.FlagNegative)) ==
-        BigNumberFlags.FlagInfinity;
+        BigNumberFlags.FlagNegative)) == BigNumberFlags.FlagInfinity;
     }
 
     /// <summary>Returns whether this object is a not-a-number value.</summary>
