@@ -6,57 +6,6 @@ using PeterO;
 namespace Test {
   [TestClass]
   public class BigIntegerTest {
-    private sealed class StringAndBigInt {
-      private String stringValue;
-
-      public String StringValue {
-        get {
-          return this.stringValue;
-        }
-      }
-
-      private BigInteger bigintValue;
-
-      public BigInteger BigIntValue {
-        get {
-          return this.bigintValue;
-        }
-      }
-
-      private const string digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      private const string digitsLower = "0123456789abcdefghijklmnopqrstuvwxyz";
-
-      public static StringAndBigInt Generate(FastRandom rand, int radix) {
-        BigInteger bv = BigInteger.Zero;
-        var sabi = new StringAndBigInt();
-        int numDigits = 1 + rand.NextValue(100);
-        bool negative = false;
-        var builder = new StringBuilder();
-        if (rand.NextValue(2) == 0) {
-          builder.Append('-');
-          negative = true;
-        }
-        for (int i = 0; i < numDigits; ++i) {
-          int digit = rand.NextValue(radix);
-          if (rand.NextValue(2) == 0) {
-            builder.Append(digits[digit]);
-          } else {
-            builder.Append(digitsLower[digit]);
-          }
-          var bigintTmp = (BigInteger)radix;
-          bv *= bigintTmp;
-          bigintTmp = (BigInteger)digit;
-          bv += bigintTmp;
-        }
-        if (negative) {
-          bv = -bv;
-        }
-        sabi.bigintValue = bv;
-        sabi.stringValue = builder.ToString();
-        return sabi;
-      }
-    }
-
     [TestMethod]
     public void TestAbs() {
       // not implemented yet
@@ -773,7 +722,34 @@ BigInteger.valueOf(0x90000000L).longValueUnchecked());
     }
     [TestMethod]
     public void TestMultiply() {
-      // not implemented yet
+      var r = new FastRandom();
+      for (var i = 0; i < 1000; ++i) {
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
+        BigInteger bigintB = bigintA + BigInteger.One;
+        BigInteger bigintC = bigintA * (BigInteger)bigintB;
+        // Test near-squaring
+        if (bigintA.IsZero || bigintB.IsZero) {
+          Assert.AreEqual(BigInteger.Zero, bigintC);
+        }
+        if (bigintA.Equals(BigInteger.One)) {
+          Assert.AreEqual(bigintB, bigintC);
+        }
+        if (bigintB.Equals(BigInteger.One)) {
+          Assert.AreEqual(bigintA, bigintC);
+        }
+        bigintB = bigintA;
+        // Test squaring
+        bigintC = bigintA * (BigInteger)bigintB;
+        if (bigintA.IsZero || bigintB.IsZero) {
+          Assert.AreEqual(BigInteger.Zero, bigintC);
+        }
+        if (bigintA.Equals(BigInteger.One)) {
+          Assert.AreEqual(bigintB, bigintC);
+        }
+        if (bigintB.Equals(BigInteger.One)) {
+          Assert.AreEqual(bigintA, bigintC);
+        }
+      }
     }
     [TestMethod]
     public void TestNegate() {
@@ -865,6 +841,21 @@ BigInteger.valueOf(0x90000000L).longValueUnchecked());
       bigint <<= 100;
       Assert.AreEqual(bigint.shiftLeft(12), bigint.shiftRight(-12));
       Assert.AreEqual(bigint.shiftLeft(-12), bigint.shiftRight(12));
+      var r = new FastRandom();
+      for (var i = 0; i < 1000; ++i) {
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
+        BigInteger bigintB = bigintA;
+        for (int j = 0; j < 100; ++j) {
+          BigInteger ba = bigintA;
+          ba <<= j;
+          Assert.AreEqual(bigintB, ba);
+          int negj = -j;
+          ba = bigintA;
+          ba >>= negj;
+          Assert.AreEqual(bigintB, ba);
+          bigintB *= (BigInteger)2;
+        }
+      }
     }
     [TestMethod]
     public void TestShiftRight() {
@@ -872,6 +863,31 @@ BigInteger.valueOf(0x90000000L).longValueUnchecked());
       bigint <<= 80;
       Assert.AreEqual(bigint.shiftLeft(12), bigint.shiftRight(-12));
       Assert.AreEqual(bigint.shiftLeft(-12), bigint.shiftRight(12));
+      var r = new FastRandom();
+      for (var i = 0; i < 1000; ++i) {
+        int smallint = r.NextValue(0x7fffffff);
+        var bigintA = (BigInteger)smallint;
+        string str = bigintA.ToString();
+        for (int j = 32; j < 80; ++j) {
+          TestCommon.DoTestShiftRight(str, j, "0");
+          TestCommon.DoTestShiftRight("-" + str, j, "-1");
+        }
+      }
+      for (var i = 0; i < 1000; ++i) {
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
+        bigintA = BigInteger.Abs(bigintA);
+        BigInteger bigintB = bigintA;
+        for (int j = 0; j < 100; ++j) {
+          BigInteger ba = bigintA;
+          ba >>= j;
+          Assert.AreEqual(bigintB, ba);
+          int negj = -j;
+          ba = bigintA;
+          ba <<= negj;
+          Assert.AreEqual(bigintB, ba);
+          bigintB /= (BigInteger)2;
+        }
+      }
     }
     [TestMethod]
     public void TestSign() {

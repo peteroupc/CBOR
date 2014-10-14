@@ -288,15 +288,20 @@ The number of decimal digits. Returns 1 if this object' s value is 0.
     public string toRadixString(
         int radix);
 
-Not documented yet.
+Generates a string representing the value of this object, in the given radix.
 
 <b>Parameters:</b>
 
- * <i>radix</i>: A 32-bit signed integer.
+ * <i>radix</i>: A radix from 2 through 36. For example, to generate a hexadecimal string, specify 16. To generate a decimal string, specify 10.
 
 <b>Returns:</b>
 
 A string object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentException: 
+The parameter "index" is less than 0, "endIndex" is less than 0, or either is greater than the string's length, or "endIndex" is less than "index" ; or radix is less than 2 or greater than 36.
 
 ### ToString
 
@@ -358,7 +363,7 @@ The parameter  <i>str</i>
 is null.
 
  * System.ArgumentException: 
-The parameter "index" is less than 0, "endIndex" is less than 0, or either is greater than the string's length, or "endIndex" is less than "index" .
+The parameter "index" is less than 0, "endIndex" is less than 0, or either is greater than the string's length, or "endIndex" is less than "index" ; or radix is less than 2 or greater than 36.
 
  * System.FormatException: 
 The string portion is empty or in an invalid format.

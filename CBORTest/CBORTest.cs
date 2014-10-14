@@ -225,7 +225,7 @@ o2,
     [TestMethod]
     public void TestDecFracCompareIntegerVsBigFraction() {
       ExtendedDecimal a = ExtendedDecimal.FromString(
-          "7.00468923842476447758037175245551511770928808756622205663208" + "4784688080253355047487262563521426272927783429622650146484375" );
+"7.00468923842476447758037175245551511770928808756622205663208" + "4784688080253355047487262563521426272927783429622650146484375");
       ExtendedDecimal b = ExtendedDecimal.FromString("5");
       Assert.AreEqual(1, a.CompareTo(b));
       Assert.AreEqual(-1, b.CompareTo(a));
@@ -1159,8 +1159,7 @@ CBORObject.FromObject(ExtendedRational.PositiveInfinity).ToString());
                 (byte)0xdf, 0x2d, 0x6c, 0x3b, (byte)0xfd, 0x0a, 0x64, 0x56,
                 (byte)0xab, 0x6f,
                 (byte)0xd6, (byte)0x8c, 0x60, (byte)0x90, 0x1b, 0x7d,
-             (byte)0xc7, (byte)0xef
-                                }).CompareTo(CBORObject.DecodeFromBytes(new
+             (byte)0xc7, (byte)0xef }).CompareTo(CBORObject.DecodeFromBytes(new
                               byte[] { (byte)0xc4,
                 (byte)0x82, 0x1b, 0x00, 0x00, 0x00, 0x24,
                 (byte)0x86, (byte)0xe1,
@@ -1435,8 +1434,7 @@ CBORObject.FromObject(ExtendedRational.PositiveInfinity).ToString());
                 0x2e, (byte)0x93, (byte)0x96, 0x49, (byte)0xfd, 0x3e, 0x2d,
                 0x47, 0x46,
                 (byte)0xb6, (byte)0xe9, (byte)0xb9, 0x0b, (byte)0x9b,
-             (byte)0x83, (byte)0xce
-                                }).CompareTo(CBORObject.DecodeFromBytes(new
+             (byte)0x83, (byte)0xce }).CompareTo(CBORObject.DecodeFromBytes(new
                               byte[] { (byte)0xd8,
                               0x1e, (byte)0x82, (byte)0xc2, 0x49, 0x18,
                 0x6f, 0x19,
@@ -1543,8 +1541,7 @@ CBORObject.FromObject(ExtendedRational.PositiveInfinity).ToString());
                 0x43, 0x43, 0x73, 0x60, (byte)0x87, (byte)0xfc, 0x7f,
                 (byte)0xfd, 0x4c,
                 (byte)0xba, (byte)0x94, 0x7e, 0x17, (byte)0xec,
-       (byte)0xd1, (byte)0xae, 0x5b
-                                }).CompareTo(CBORObject.DecodeFromBytes(new
+       (byte)0xd1, (byte)0xae, 0x5b }).CompareTo(CBORObject.DecodeFromBytes(new
                               byte[] { (byte)0xd8,
                               0x1e, (byte)0x82, 0x1b, 0x00, 0x00, 0x4a,
                 0x32, (byte)0x84,
