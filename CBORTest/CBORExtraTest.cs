@@ -4343,7 +4343,7 @@ String.Format(CultureInfo.InvariantCulture, "{0}", Decimal.MaxValue));
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
         TestCommon.AssertSer(
 CBORObject.FromObject((decimal)i + 0.1m),
-String.Format(CultureInfo.InvariantCulture, "{0}" , (decimal)i + 0.1m));
+String.Format(CultureInfo.InvariantCulture, "{0}", (decimal)i + 0.1m));
         TestCommon.AssertSer(
 CBORObject.FromObject((decimal)i + 0.1111m),
 String.Format(CultureInfo.InvariantCulture, "{0}", (decimal)i + 0.1111m));

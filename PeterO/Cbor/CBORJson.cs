@@ -80,15 +80,17 @@ namespace PeterO.Cbor {
                       c <<= 4;
                       c |= ch + 10 - 'a';
                     } else {
-                throw reader.NewError("Invalid Unicode escaped character");
+                    throw
+                        reader.NewError("Invalid Unicode escaped character"
+);
                     }
                   }
                   break;
                 }
-              default: throw reader.NewError("Invalid escaped character");
+                default: throw reader.NewError("Invalid escaped character");
             }
             break;
-          default: escaped = false;
+            default: escaped = false;
             break;
         }
         if (surrogate) {
@@ -278,18 +280,18 @@ namespace PeterO.Cbor {
         }
         // NOTE: Will overwrite existing value
         myHashMap[key] = NextJSONValue(
-reader,
+          reader,
           SkipWhitespaceJSON(reader),
- noDuplicates,
- nextchar,
- depth);
+          noDuplicates,
+          nextchar,
+          depth);
         switch (nextchar[0]) {
           case ',':
             seenComma = true;
             break;
           case '}':
             return CBORObject.FromRaw(myHashMap);
-          default: throw reader.NewError("Expected a ',' or '}'");
+            default: throw reader.NewError("Expected a ',' or '}'");
         }
       }
     }
@@ -320,11 +322,11 @@ reader,
         }
         myArrayList.Add(
           NextJSONValue(
-reader,
-c,
-noDuplicates,
-nextchar,
-depth));
+            reader,
+            c,
+            noDuplicates,
+            nextchar,
+            depth));
         c = nextchar[0];
         switch (c) {
           case ',':
@@ -357,8 +359,8 @@ depth));
           sb.WriteChar('\\');
           sb.WriteChar(c);
         } else if (c < 0x20 || (c >= 0x85 && (c == 0x2028 || c == 0x2029 ||
-                c == 0x85 || c == 0xfeff || c == 0xfffe ||
-                                              c == 0xffff))) {
+                              c == 0x85 || c == 0xfeff || c == 0xfffe ||
+                              c == 0xffff))) {
           // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to
           // JSON) strings
@@ -430,9 +432,9 @@ depth));
             }
             writer.WriteString(
               CBORObject.TrimDotZero(
-Convert.ToString(
-(float)f,
-CultureInfo.InvariantCulture)));
+                Convert.ToString(
+                  (float)f,
+                  CultureInfo.InvariantCulture)));
             return;
           }
           case CBORObject.CBORObjectTypeDouble: {
@@ -443,9 +445,9 @@ CultureInfo.InvariantCulture)));
               return;
             }
             writer.WriteString(CBORObject.TrimDotZero(
-                Convert.ToString(
-(double)f,
-CultureInfo.InvariantCulture)));
+              Convert.ToString(
+                (double)f,
+                CultureInfo.InvariantCulture)));
             return;
           }
           case CBORObject.CBORObjectTypeInteger: {
@@ -454,7 +456,8 @@ CultureInfo.InvariantCulture)));
             return;
           }
           case CBORObject.CBORObjectTypeBigInteger: {
-       writer.WriteString(CBORUtilities.BigIntToString((BigInteger)thisItem));
+            writer.WriteString(
+              CBORUtilities.BigIntToString((BigInteger)thisItem));
             return;
           }
           case CBORObject.CBORObjectTypeExtendedDecimal: {
@@ -479,15 +482,15 @@ CultureInfo.InvariantCulture)));
               // so convert to double instead
               double f = flo.ToDouble();
               if (Double.IsNegativeInfinity(f) ||
-                Double.IsPositiveInfinity(f) || Double.IsNaN(f)) {
+                  Double.IsPositiveInfinity(f) || Double.IsNaN(f)) {
                 writer.WriteString("null");
                 return;
               }
               writer.WriteString(
                 CBORObject.TrimDotZero(
-Convert.ToString(
-(double)f,
-CultureInfo.InvariantCulture)));
+                  Convert.ToString(
+                    (double)f,
+                    CultureInfo.InvariantCulture)));
               return;
             }
             writer.WriteString(flo.ToString());
@@ -503,11 +506,11 @@ CultureInfo.InvariantCulture)));
             writer.WriteChar('\"');
             if (obj.HasTag(22)) {
               Base64.WriteBase64(
-writer,
-byteArray,
-0,
-byteArray.Length,
-false);
+                writer,
+                byteArray,
+                0,
+                byteArray.Length,
+                false);
             } else if (obj.HasTag(23)) {
               // Write as base16
               for (int i = 0; i < byteArray.Length; ++i) {
@@ -516,11 +519,11 @@ false);
               }
             } else {
               Base64.WriteBase64URL(
-writer,
-byteArray,
-0,
-byteArray.Length,
-false);
+                writer,
+                byteArray,
+                0,
+                byteArray.Length,
+                false);
             }
             writer.WriteChar('\"');
             break;
@@ -597,7 +600,8 @@ false);
               foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
-           string str = (key.ItemType == CBORObject.CBORObjectTypeTextString) ?
+           string str = (key.ItemType ==
+                  CBORObject.CBORObjectTypeTextString) ?
                   ((string)key.ThisItem) : key.ToJSONString();
                 stringMap[str] = value;
               }
