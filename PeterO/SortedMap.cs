@@ -104,7 +104,7 @@ out kvp)) {
     }
 
     public void Add(KeyValuePair<T1, T2> item) {
-      this.tree.Add(item);
+      this.Add(item.Key, item.Value);
     }
 
     public void Clear() {
