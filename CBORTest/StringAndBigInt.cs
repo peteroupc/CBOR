@@ -5,6 +5,11 @@ using PeterO;
 
 namespace Test {
   internal sealed class StringAndBigInt {
+    private const string ValueDigits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    private const string ValueDigitsLower =
+          "0123456789abcdefghijklmnopqrstuvwxyz";
+
     private String stringValue;
 
     public String StringValue {
@@ -20,11 +25,6 @@ namespace Test {
         return this.bigintValue;
       }
     }
-
-    private const string ValueDigits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-private const string ValueDigitsLower =
-      "0123456789abcdefghijklmnopqrstuvwxyz";
 
     public static StringAndBigInt Generate(FastRandom rand, int radix) {
       BigInteger bv = BigInteger.Zero;

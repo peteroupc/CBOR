@@ -263,7 +263,7 @@ namespace PeterO {
     /// <returns>The new root of the current tree. Rebalancing can change the
     /// root.</returns>
       public RBCell delete(RBCell root) {
-        // if strictly private, swap contents with successor and then delete it
+        // if strictly internal, swap contents with successor and then delete it
         if (this.leftValue != null && this.rightValue != null) {
           RBCell s = this.successor();
           this.copyContents(s);

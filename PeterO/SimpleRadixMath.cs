@@ -388,6 +388,8 @@ PrecisionContext ctx) {
         if (pc.HasMaxPrecision && pc.HasExponentRange &&
             (roundingOnOverflow == Rounding.Down || roundingOnOverflow ==
              Rounding.ZeroFiveUp ||
+             (roundingOnOverflow == Rounding.OddOrZeroFiveUp) ||
+             (roundingOnOverflow == Rounding.Odd) ||
              (roundingOnOverflow == Rounding.Ceiling && neg) ||
              (roundingOnOverflow == Rounding.Floor && !neg))) {
           // Set to the highest possible value for

@@ -5,6 +5,59 @@ using PeterO;
 namespace Test {
   [TestClass]
   public class ExtendedFloatTest {
+    public ExtendedFloat FromBinary(string str) {
+      int smallExponent = 0;
+      int index = 0;
+      BigInteger ret = BigInteger.Zero;
+      while (index < str.Length) {
+        if (str[index] == '0') {
+          ++index;
+        } else {
+          break;
+        }
+      }
+      while (index < str.Length) {
+        if (str[index] == '.') {
+          ++index;
+          break;
+        } else if (str[index ]=='1') {
+          ++index;
+          if (ret.IsZero) {
+            ret = BigInteger.One;
+          } else {
+            ret <<= 1;
+            ret += BigInteger.One;
+          }
+        } else if (str[index ]=='0') {
+          ++index;
+          ret <<= 1;
+          continue;
+        } else {
+          break;
+        }
+      }
+      while (index < str.Length) {
+        if (str[index] == '1') {
+          ++index;
+          --smallExponent;
+          if (ret.IsZero) {
+            ret = BigInteger.One;
+          } else {
+            ret <<= 1;
+            ret += BigInteger.One;
+          }
+        } else if (str[index] == '0') {
+          ++index;
+          --smallExponent;
+          ret <<= 1;
+          continue;
+        } else {
+          break;
+        }
+      }
+      return ExtendedFloat.Create(ret, (BigInteger)smallExponent);
+    }
+
     [TestMethod]
     public void TestAbs() {
       // not implemented yet
