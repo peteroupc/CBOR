@@ -99,8 +99,7 @@ namespace Test {
 
     public static CBORObject RandomCBORMap(FastRandom rand, int depth) {
       int x = rand.NextValue(100);
-      int count = 0;
-      count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
+      int count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
       CBORObject cborRet = CBORObject.NewMap();
       for (var i = 0; i < count; ++i) {
         CBORObject key = RandomCBORObject(rand, depth + 1);
@@ -160,8 +159,7 @@ namespace Test {
 
     public static CBORObject RandomCBORArray(FastRandom rand, int depth) {
       int x = rand.NextValue(100);
-      int count = 0;
-      count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
+      int count = (x < 80) ? 2 : ((x < 93) ? 1 : ((x < 98) ? 0 : 10));
       CBORObject cborRet = CBORObject.NewArray();
       for (var i = 0; i < count; ++i) {
         cborRet.Add(RandomCBORObject(rand, depth + 1));
@@ -274,17 +272,18 @@ namespace Test {
       if (selection < 40) {
         StringAndBigInt sabi = StringAndBigInt.Generate(r, 16);
         return sabi.BigIntValue;
-      } else if (selection < 50) {
+      }
+      if (selection < 50) {
         StringAndBigInt sabi = StringAndBigInt.Generate(r, 2 + r.NextValue(35));
         return sabi.BigIntValue;
       } else {
-      int count = r.NextValue(60) + 1;
-      var bytes = new byte[count];
-      for (var i = 0; i < count; ++i) {
-        bytes[i] = (byte)((int)r.NextValue(256));
+        int count = r.NextValue(60) + 1;
+        var bytes = new byte[count];
+        for (var i = 0; i < count; ++i) {
+          bytes[i] = (byte)((int)r.NextValue(256));
+        }
+        return BigInteger.fromByteArray(bytes, true);
       }
-      return BigInteger.fromByteArray(bytes, true);
-     }
     }
 
     public static ExtendedFloat RandomExtendedFloat(FastRandom r) {

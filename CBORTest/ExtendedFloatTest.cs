@@ -5,7 +5,7 @@ using PeterO;
 namespace Test {
   [TestClass]
   public class ExtendedFloatTest {
-    public ExtendedFloat FromBinary(string str) {
+    public static ExtendedFloat FromBinary(string str) {
       int smallExponent = 0;
       int index = 0;
       BigInteger ret = BigInteger.Zero;
@@ -20,7 +20,8 @@ namespace Test {
         if (str[index] == '.') {
           ++index;
           break;
-        } else if (str[index ]=='1') {
+        }
+        if (str[index] == '1') {
           ++index;
           if (ret.IsZero) {
             ret = BigInteger.One;
@@ -28,7 +29,7 @@ namespace Test {
             ret <<= 1;
             ret += BigInteger.One;
           }
-        } else if (str[index ]=='0') {
+        } else if (str[index] == '0') {
           ++index;
           ret <<= 1;
           continue;

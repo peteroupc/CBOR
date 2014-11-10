@@ -190,7 +190,7 @@ cbornumber.AsBigInteger().ToString());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-      ].AsString()));
+         ].AsString()));
         if (numberinfo["byte"].AsBoolean()) {
           Assert.AreEqual(
            BigInteger.fromString(numberinfo["integer" ].AsString()).intValue(),
@@ -279,7 +279,7 @@ cbornumber.AsBigInteger().ToString());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-      ].AsString()));
+         ].AsString()));
         AreEqualExact(
 (double)ExtendedDecimal.FromString(numberinfo["number" ].AsString()).ToDouble(),
 cbornumber.AsDouble());
@@ -445,7 +445,7 @@ CBORObject.FromObject(Double.NegativeInfinity).AsExtendedRational());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-      ].AsString()));
+         ].AsString()));
         if (numberinfo["int16"].AsBoolean()) {
           Assert.AreEqual(
            BigInteger.fromString(numberinfo["integer" ].AsString()).intValue(),
@@ -734,7 +734,7 @@ CBORObject.FromObject(Double.NegativeInfinity).AsExtendedRational());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-      ].AsString()));
+         ].AsString()));
         AreEqualExact(
 (float)ExtendedDecimal.FromString(numberinfo["number" ].AsString()).ToSingle(),
 cbornumber.AsSingle());
@@ -771,7 +771,7 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-      ].AsString()));
+         ].AsString()));
         if (numberinfo["double"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInDouble());
         } else {
@@ -794,7 +794,7 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-      ].AsString()));
+         ].AsString()));
         if (numberinfo["int32" ].AsBoolean() && numberinfo["isintegral"
                                ].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInInt32());
@@ -820,7 +820,7 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-      ].AsString()));
+         ].AsString()));
         if (numberinfo["int64" ].AsBoolean() && numberinfo["isintegral"
                                ].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInInt64());
@@ -846,7 +846,7 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-      ].AsString()));
+         ].AsString()));
         if (numberinfo["single"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInSingle());
         } else {
@@ -897,7 +897,7 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-      ].AsString()));
+         ].AsString()));
         if (numberinfo["int32"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanTruncatedIntFitInInt32());
         } else {
@@ -948,7 +948,7 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-      ].AsString()));
+         ].AsString()));
         if (numberinfo["int64"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanTruncatedIntFitInInt64());
         } else {
@@ -1733,7 +1733,7 @@ CBORObject.FromObject(ExtendedRational.Create(10, 1)));
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-      ].AsString()));
+         ].AsString()));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
           Assert.IsTrue(cbornumber.IsFinite);
         } else {
@@ -2212,7 +2212,7 @@ throw new InvalidOperationException(String.Empty, ex);
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-      ].AsString()));
+         ].AsString()));
         if (cbornumber.IsNaN()) {
           try {
             Assert.Fail(String.Empty + cbornumber.Sign);
