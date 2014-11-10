@@ -60,6 +60,18 @@ Indicates that rounding will not be used. If rounding is required, the rounding 
 
     public static PeterO.Rounding ZeroFiveUp = 8;
 
-If there is a fractional part and if the last digit before rounding is 0 or half the radix, the number is rounded to the closest representable number away from zero; otherwise the fractional part is discarded. In overflow, the fractional part is always discarded. This rounding mode is useful for rounding intermediate results at a slightly higher precision than the final precision.
+If there is a fractional part and if the last digit before rounding is 0 or half the radix, the number is rounded to the closest representable number away from zero; otherwise the fractional part is discarded. In overflow, the fractional part is always discarded.
+
+### Odd
+
+    public static PeterO.Rounding Odd = 9;
+
+If there is a fractional part and the whole number part is even, the number is rounded to the closest representable odd number away from zero.
+
+### OddOrZeroFiveUp
+
+    public static PeterO.Rounding OddOrZeroFiveUp = 10;
+
+For binary floating point numbers, this is the same as Odd. For other bases (including decimal numbers), this is the same as ZeroFiveUp. This rounding mode is useful for rounding intermediate results at a slightly higher precision (at least 2 bits more for binary) than the final precision.
 
 
