@@ -29,8 +29,7 @@ namespace Test {
   RegexOptions.Compiled);
 
     private static TValue GetKeyOrDefault<TKey, TValue>(
-IDictionary<TKey,
-                              TValue> dict,
+IDictionary<TKey, TValue> dict,
  TKey key,
  TValue defaultValue) {
       return (!dict.ContainsKey(key)) ? defaultValue : dict[key];

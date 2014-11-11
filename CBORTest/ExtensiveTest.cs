@@ -394,7 +394,7 @@ PrecisionContext ctx);
         if (i != str.Length) {
           throw new FormatException(str);
         }
-        // Console.WriteLine("mant=" + mantissa + " exp=" + (exponent));
+        // Console.WriteLine("mant=" + mantissa + " exp=" + exponent);
         return Create(
 ExtendedFloat.Create(
 (BigInteger)mantissa,

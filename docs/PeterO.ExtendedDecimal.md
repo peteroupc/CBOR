@@ -1327,7 +1327,7 @@ Returns a decimal number with the same value but a new exponent.Note that this i
 
 <b>Returns:</b>
 
-A decimal number with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if an overflow error occurred, or the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
+A decimal number with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
 
 ### Quantize
 
@@ -1363,7 +1363,7 @@ Returns a decimal number with the same value but a new exponent.Note that this i
 
 <b>Returns:</b>
 
-A decimal number with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if an overflow error occurred, or the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
+A decimal number with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
 
 ### Quantize
 
@@ -1381,7 +1381,7 @@ Returns a decimal number with the same value as this object but with the same ex
 
 <b>Returns:</b>
 
-A decimal number with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if an overflow error occurred, or the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the new exponent is outside of the valid range of the precision context, if it defines an exponent range.
+A decimal number with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding, or if the precision context defines an exponent range and the given exponent is outside that range.
 
 ### RoundToIntegralExact
 
@@ -1396,7 +1396,7 @@ Returns a decimal number with the same value as this object but rounded to an in
 
 <b>Returns:</b>
 
-A decimal number with the same value as this object but rounded to an integer. Signals FlagInvalid and returns NaN if an overflow error occurred, or the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the new exponent must be changed to 0 when rounding and 0 is outside of the valid range of the precision context, if it defines an exponent range.
+A decimal number rounded to the closest integer representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to 0 when rounding, and 0 is outside of the valid range of the precision context.
 
 ### RoundToIntegralNoRoundedFlag
 
@@ -1411,7 +1411,7 @@ Returns a decimal number with the same value as this object but rounded to an in
 
 <b>Returns:</b>
 
-A decimal number with the same value as this object but rounded to an integer. Signals FlagInvalid and returns NaN if an overflow error occurred, or the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the new exponent must be changed to 0 when rounding and 0 is outside of the valid range of the precision context, if it defines an exponent range.
+A decimal number rounded to the closest integer representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to 0 when rounding, and 0 is outside of the valid range of the precision context.
 
 ### RoundToExponentExact
 
@@ -1429,7 +1429,7 @@ Returns a decimal number with the same value as this object but rounded to an in
 
 <b>Returns:</b>
 
-A decimal number with the same value as this object but rounded to an integer. Signals FlagInvalid and returns NaN if an overflow error occurred, or the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the new exponent is outside of the valid range of the precision context, if it defines an exponent range.
+A decimal number rounded to the closest value representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
 ### RoundToExponent
 
@@ -1447,7 +1447,7 @@ Returns a decimal number with the same value as this object, and rounds it to a 
 
 <b>Returns:</b>
 
-A decimal number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the new exponent must be changed when rounding and the new exponent is outside of the valid range of the precision context, if it defines an exponent range.
+A decimal number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
 ### RoundToExponentExact
 
@@ -1465,7 +1465,7 @@ Returns a decimal number with the same value as this object but rounded to an in
 
 <b>Returns:</b>
 
-A decimal number with the same value as this object but rounded to an integer. Signals FlagInvalid and returns NaN if an overflow error occurred, or the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the new exponent is outside of the valid range of the precision context, if it defines an exponent range.
+A decimal number rounded to the closest value representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
 ### RoundToExponent
 
@@ -1483,7 +1483,7 @@ Returns a decimal number with the same value as this object, and rounds it to a 
 
 <b>Returns:</b>
 
-A decimal number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the new exponent must be changed when rounding and the new exponent is outside of the valid range of the precision context, if it defines an exponent range.
+A decimal number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
 ### Multiply
 

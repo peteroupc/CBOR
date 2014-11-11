@@ -76,7 +76,10 @@ BigInteger.fromString("-19084941898444092059").bitLength());
     }
     [TestMethod]
     public void TestEquals() {
-      // not implemented yet
+      Assert.IsFalse(BigInteger.One.Equals(null));
+      Assert.IsFalse(BigInteger.Zero.Equals(null));
+      Assert.IsFalse(BigInteger.One.Equals(BigInteger.Zero));
+      Assert.IsFalse(BigInteger.Zero.Equals(BigInteger.One));
     }
     [TestMethod]
     public void TestFromByteArray() {
@@ -272,8 +275,8 @@ actualBigInt);
         return false;
       }
       if (n <= 23) {
-        return (n == 3 || n == 5 || n == 7 || n == 11 ||
-                n == 13 || n == 17 || n == 19 || n == 23);
+        return n == 3 || n == 5 || n == 7 || n == 11 ||
+                n == 13 || n == 17 || n == 19 || n == 23;
       }
       // Use a deterministic Rabin-Miller test
       int d = n - 1;
@@ -1044,6 +1047,7 @@ sabi.BigIntValue.toRadixString(i));
     [TestMethod]
     public void TestZero() {
       // not implemented yet
+      Assert.AreEqual("0", BigInteger.Zero.ToString());
     }
   }
 }

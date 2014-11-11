@@ -107,7 +107,7 @@ namespace PeterO {
     private bool EqualsInternal(ExtendedDecimal otherValue) {
       return (otherValue != null) && (this.flags == otherValue.flags &&
   this.unsignedMantissa.Equals(otherValue.unsignedMantissa)
-                                      &&
+                              &&
   this.exponent.Equals(otherValue.exponent));
     }
 
@@ -355,19 +355,19 @@ PrecisionContext ctx) {
       }
       if (tmpoffset < 0) {
         throw new FormatException("offset (" + tmpoffset + ") is less than " +
-                                  "0");
+                              "0");
       }
       if (tmpoffset > str.Length) {
         throw new FormatException("offset (" + tmpoffset + ") is more than " +
-                                  str.Length);
+                              str.Length);
       }
       if (length < 0) {
         throw new FormatException("length (" + length + ") is less than " +
-                                  "0");
+                              "0");
       }
       if (length > str.Length) {
         throw new FormatException("length (" + length + ") is more than " +
-                                  str.Length);
+                              str.Length);
       }
       if (str.Length - tmpoffset < length) {
         throw new FormatException("str's length minus " + tmpoffset + " (" +
@@ -402,7 +402,7 @@ PrecisionContext ctx) {
                 str[i + 4] == 'n') && (str[i + 5] ==
                 'I' || str[i + 5] == 'i') &&
             (str[i + 6] == 'T' || str[i + 6] == 't') && (str[i + 7] == 'Y' ||
-                                                         str[i + 7] == 'y')) {
+                              str[i + 7] == 'y')) {
           if (ctx != null && ctx.IsSimplified && i < endStr) {
             throw new FormatException("Infinity not allowed");
           }
@@ -422,7 +422,7 @@ PrecisionContext ctx) {
       if (i + 3 <= endStr) {
         // Quiet NaN
         if ((str[i] == 'N' || str[i] == 'n') && (str[i + 1] == 'A' || str[i +
-                                                   1] == 'a') && (str[i +
+                              1] == 'a') && (str[i +
   2] == 'N' || str[i + 2] == 'n')) {
           if (ctx != null && ctx.IsSimplified && i < endStr) {
             throw new FormatException("NaN not allowed");
@@ -952,7 +952,7 @@ FastInteger count) {
           if (cmp < 0) {
             var tmpFast = new FastInteger(mantissaString.Length).AddInt(6);
             builder = new StringBuilder(tmpFast.CompareToInt(Int32.MaxValue) >
-                                        0 ? Int32.MaxValue : tmpFast.AsInt32());
+                              0 ? Int32.MaxValue : tmpFast.AsInt32());
             if (negative) {
               builder.Append('-');
             }
@@ -969,7 +969,7 @@ FastInteger count) {
             }
             var tmpFast = new FastInteger(mantissaString.Length).AddInt(6);
             builder = new StringBuilder(tmpFast.CompareToInt(Int32.MaxValue) >
-                                        0 ? Int32.MaxValue : tmpFast.AsInt32());
+                              0 ? Int32.MaxValue : tmpFast.AsInt32());
             if (negative) {
               builder.Append('-');
             }
@@ -990,7 +990,7 @@ FastInteger count) {
             }
             var tmpFast = new FastInteger(mantissaString.Length).AddInt(6);
             builder = new StringBuilder(tmpFast.CompareToInt(Int32.MaxValue) >
-                                        0 ? Int32.MaxValue : tmpFast.AsInt32());
+                              0 ? Int32.MaxValue : tmpFast.AsInt32());
             if (negative) {
               builder.Append('-');
             }
@@ -1014,7 +1014,7 @@ FastInteger.Copy(decimalPoint).SubtractInt(builder.Length));
             }
             var tmpFast = new FastInteger(mantissaString.Length).AddInt(6);
             builder = new StringBuilder(tmpFast.CompareToInt(Int32.MaxValue) >
-                                        0 ? Int32.MaxValue : tmpFast.AsInt32());
+                              0 ? Int32.MaxValue : tmpFast.AsInt32());
             if (negative) {
               builder.Append('-');
             }
@@ -1073,7 +1073,7 @@ FastInteger.Copy(decimalPointAdjust).Decrement());
             }
             var tmpFast = new FastInteger(mantissaString.Length).AddInt(6);
             builder = new StringBuilder(tmpFast.CompareToInt(Int32.MaxValue) >
-                                        0 ? Int32.MaxValue : tmpFast.AsInt32());
+                              0 ? Int32.MaxValue : tmpFast.AsInt32());
             if (negative) {
               builder.Append('-');
             }
@@ -1453,7 +1453,7 @@ this.flags);
       }
       if (this.IsNegative && this.IsZero) {
         return Extras.IntegersToDouble(new[] { unchecked((int)(1 << 31)),
-                                         0 });
+                              0 });
       }
       if (this.IsZero) {
         return 0.0;
@@ -1716,7 +1716,7 @@ flags);
     /// <summary>Represents the number 1.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security" ,
-                                                     "CA2104" , Justification =
+                              "CA2104" , Justification =
   "ExtendedDecimal is immutable")]
     #endif
     public static readonly ExtendedDecimal One =
@@ -1725,7 +1725,7 @@ flags);
     /// <summary>Represents the number 0.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security" ,
-                                                     "CA2104" , Justification =
+                              "CA2104" , Justification =
   "ExtendedDecimal is immutable")]
     #endif
     public static readonly ExtendedDecimal Zero =
@@ -1734,7 +1734,7 @@ flags);
     /// <summary>Represents the number negative zero.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security" ,
-                                                     "CA2104" , Justification =
+                              "CA2104" , Justification =
   "ExtendedDecimal is immutable")]
     #endif
     public static readonly ExtendedDecimal NegativeZero =
@@ -1746,7 +1746,7 @@ BigNumberFlags.FlagNegative);
     /// <summary>Represents the number 10.</summary>
     #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security" ,
-                                                     "CA2104" , Justification =
+                              "CA2104" , Justification =
   "ExtendedDecimal is immutable")]
     #endif
 
@@ -1932,7 +1932,7 @@ PrecisionContext.ForRounding(rounding));
     /// is nonzero. Signals FlagInvalid and returns NaN if the divisor and the
     /// dividend are 0.</returns>
     public ExtendedDecimal DivideToIntegerNaturalScale(ExtendedDecimal
-                                                       divisor) {
+                              divisor) {
       return this.DivideToIntegerNaturalScale(
         divisor,
         PrecisionContext.ForRounding(Rounding.Down));
@@ -2198,7 +2198,7 @@ ExtendedDecimal augend) {
     private static readonly IRadixMath<ExtendedDecimal> MathValue = new
       TrappableRadixMath<ExtendedDecimal>(
         new ExtendedOrSimpleRadixMath<ExtendedDecimal>(new
-                                                       DecimalMathHelper()));
+                              DecimalMathHelper()));
 
     /// <summary>Divides this object by another object, and returns the integer part
     /// of the result, with the preferred exponent set to this value&apos;s exponent
@@ -2528,10 +2528,9 @@ PrecisionContext ctx) {
     /// flags). Can be null, in which case the default rounding mode is
     /// HalfEven.</param>
     /// <returns>A decimal number with the same value as this object but with the
-    /// exponent changed. Signals FlagInvalid and returns NaN if an overflow error
-    /// occurred, or the rounded result can't fit the given precision, or if the
-    /// context defines an exponent range and the given exponent is outside that
-    /// range.</returns>
+    /// exponent changed. Signals FlagInvalid and returns NaN if the rounded result
+    /// can't fit the given precision, or if the context defines an exponent range
+    /// and the given exponent is outside that range.</returns>
     public ExtendedDecimal Quantize(
 BigInteger desiredExponent,
 PrecisionContext ctx) {
@@ -2574,10 +2573,9 @@ Rounding rounding) {
     /// flags). Can be null, in which case the default rounding mode is
     /// HalfEven.</param>
     /// <returns>A decimal number with the same value as this object but with the
-    /// exponent changed. Signals FlagInvalid and returns NaN if an overflow error
-    /// occurred, or the rounded result can't fit the given precision, or if the
-    /// context defines an exponent range and the given exponent is outside that
-    /// range.</returns>
+    /// exponent changed. Signals FlagInvalid and returns NaN if the rounded result
+    /// can't fit the given precision, or if the context defines an exponent range
+    /// and the given exponent is outside that range.</returns>
     public ExtendedDecimal Quantize(
 int desiredExponentSmall,
 PrecisionContext ctx) {
@@ -2606,10 +2604,9 @@ PrecisionContext ctx) {
     /// flags). Can be null, in which case the default rounding mode is
     /// HalfEven.</param>
     /// <returns>A decimal number with the same value as this object but with the
-    /// exponent changed. Signals FlagInvalid and returns NaN if an overflow error
-    /// occurred, or the result can't fit the given precision without rounding.
-    /// Signals FlagInvalid and returns NaN if the new exponent is outside of the
-    /// valid range of the precision context, if it defines an exponent
+    /// exponent changed. Signals FlagInvalid and returns NaN if the result can't
+    /// fit the given precision without rounding, or if the precision context
+    /// defines an exponent range and the given exponent is outside that
     /// range.</returns>
     public ExtendedDecimal Quantize(
 ExtendedDecimal otherValue,
@@ -2625,12 +2622,12 @@ PrecisionContext ctx) {
     /// resulting from the operation (the flags are in addition to the pre-existing
     /// flags). Can be null, in which case the default rounding mode is
     /// HalfEven.</param>
-    /// <returns>A decimal number with the same value as this object but rounded to
-    /// an integer. Signals FlagInvalid and returns NaN if an overflow error
-    /// occurred, or the result can't fit the given precision without rounding.
-    /// Signals FlagInvalid and returns NaN if the new exponent must be changed to 0
-    /// when rounding and 0 is outside of the valid range of the precision context,
-    /// if it defines an exponent range.</returns>
+    /// <returns>A decimal number rounded to the closest integer representable in
+    /// the given precision. Signals FlagInvalid and returns NaN if the result can't
+    /// fit the given precision without rounding. Signals FlagInvalid and returns
+    /// NaN if the precision context defines an exponent range, the new exponent
+    /// must be changed to 0 when rounding, and 0 is outside of the valid range of
+    /// the precision context.</returns>
     public ExtendedDecimal RoundToIntegralExact(PrecisionContext ctx) {
       return MathValue.RoundToExponentExact(this, BigInteger.Zero, ctx);
     }
@@ -2645,12 +2642,12 @@ PrecisionContext ctx) {
     /// FlagInexact flags (the only difference between this and
     /// RoundToExponentExact). Can be null, in which case the default rounding mode
     /// is HalfEven.</param>
-    /// <returns>A decimal number with the same value as this object but rounded to
-    /// an integer. Signals FlagInvalid and returns NaN if an overflow error
-    /// occurred, or the result can't fit the given precision without rounding.
-    /// Signals FlagInvalid and returns NaN if the new exponent must be changed to 0
-    /// when rounding and 0 is outside of the valid range of the precision context,
-    /// if it defines an exponent range.</returns>
+    /// <returns>A decimal number rounded to the closest integer representable in
+    /// the given precision, meaning if the result can't fit the precision,
+    /// additional digits are discarded to make it fit. Signals FlagInvalid and
+    /// returns NaN if the precision context defines an exponent range, the new
+    /// exponent must be changed to 0 when rounding, and 0 is outside of the valid
+    /// range of the precision context.</returns>
     public ExtendedDecimal RoundToIntegralNoRoundedFlag(PrecisionContext ctx) {
       return MathValue.RoundToExponentNoRoundedFlag(this, BigInteger.Zero, ctx);
     }
@@ -2665,12 +2662,12 @@ PrecisionContext ctx) {
     /// means round to the thousand (10^3, 1000). A value of 0 rounds the number to
     /// an integer.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A decimal number with the same value as this object but rounded to
-    /// an integer. Signals FlagInvalid and returns NaN if an overflow error
-    /// occurred, or the result can't fit the given precision without rounding.
-    /// Signals FlagInvalid and returns NaN if the new exponent is outside of the
-    /// valid range of the precision context, if it defines an exponent
-    /// range.</returns>
+    /// <returns>A decimal number rounded to the closest value representable in the
+    /// given precision. Signals FlagInvalid and returns NaN if the result can't fit
+    /// the given precision without rounding. Signals FlagInvalid and returns NaN if
+    /// the precision context defines an exponent range, the new exponent must be
+    /// changed to the given exponent when rounding, and the given exponent is
+    /// outside of the valid range of the precision context.</returns>
     public ExtendedDecimal RoundToExponentExact(
       BigInteger exponent,
       PrecisionContext ctx) {
@@ -2693,9 +2690,9 @@ PrecisionContext ctx) {
     /// <returns>A decimal number rounded to the closest value representable in the
     /// given precision, meaning if the result can't fit the precision, additional
     /// digits are discarded to make it fit. Signals FlagInvalid and returns NaN if
-    /// the new exponent must be changed when rounding and the new exponent is
-    /// outside of the valid range of the precision context, if it defines an
-    /// exponent range.</returns>
+    /// the precision context defines an exponent range, the new exponent must be
+    /// changed to the given exponent when rounding, and the given exponent is
+    /// outside of the valid range of the precision context.</returns>
     public ExtendedDecimal RoundToExponent(
 BigInteger exponent,
 PrecisionContext ctx) {
@@ -2712,12 +2709,12 @@ PrecisionContext ctx) {
     /// 0.0001), and 3 means round to the thousand (10^3, 1000). A value of 0 rounds
     /// the number to an integer.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>A decimal number with the same value as this object but rounded to
-    /// an integer. Signals FlagInvalid and returns NaN if an overflow error
-    /// occurred, or the result can't fit the given precision without rounding.
-    /// Signals FlagInvalid and returns NaN if the new exponent is outside of the
-    /// valid range of the precision context, if it defines an exponent
-    /// range.</returns>
+    /// <returns>A decimal number rounded to the closest value representable in the
+    /// given precision. Signals FlagInvalid and returns NaN if the result can't fit
+    /// the given precision without rounding. Signals FlagInvalid and returns NaN if
+    /// the precision context defines an exponent range, the new exponent must be
+    /// changed to the given exponent when rounding, and the given exponent is
+    /// outside of the valid range of the precision context.</returns>
     public ExtendedDecimal RoundToExponentExact(
       int exponentSmall,
       PrecisionContext ctx) {
@@ -2740,9 +2737,9 @@ PrecisionContext ctx) {
     /// <returns>A decimal number rounded to the closest value representable in the
     /// given precision, meaning if the result can't fit the precision, additional
     /// digits are discarded to make it fit. Signals FlagInvalid and returns NaN if
-    /// the new exponent must be changed when rounding and the new exponent is
-    /// outside of the valid range of the precision context, if it defines an
-    /// exponent range.</returns>
+    /// the precision context defines an exponent range, the new exponent must be
+    /// changed to the given exponent when rounding, and the given exponent is
+    /// outside of the valid range of the precision context.</returns>
     public ExtendedDecimal RoundToExponent(
 int exponentSmall,
 PrecisionContext ctx) {

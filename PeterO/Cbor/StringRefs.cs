@@ -31,8 +31,8 @@ namespace PeterO.Cbor {
     public void Pop() {
       #if DEBUG
       if (this.stack.Count <= 0) {
-        throw new ArgumentException("this.stack.Count (" + (this.stack.Count)+
-                                    ") is not greater than " + "0 ");
+        throw new ArgumentException("this.stack.Count (" + this.stack.Count +
+                              ") is not greater than " + "0 ");
       }
       #endif
       this.stack.RemoveAt(this.stack.Count - 1);
@@ -50,8 +50,8 @@ namespace PeterO.Cbor {
      "doesn't satisfy str.Type== ByteString or TextString");
       }
       if (lengthHint < 0) {
-        throw new ArgumentException("lengthHint (" + (lengthHint)+
-                                    ") is less than " + "0 ");
+        throw new ArgumentException("lengthHint (" + lengthHint +
+                              ") is less than " + "0 ");
       }
       #endif
       bool addStr = false;

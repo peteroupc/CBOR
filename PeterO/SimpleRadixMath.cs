@@ -42,32 +42,32 @@ namespace PeterO {
     }
 
     private T PostProcess(
-T thisValue,
-PrecisionContext ctxDest,
-PrecisionContext ctxSrc) {
+      T thisValue,
+      PrecisionContext ctxDest,
+      PrecisionContext ctxSrc) {
       return this.PostProcessEx(thisValue, ctxDest, ctxSrc, false, false);
     }
 
     private T PostProcessAfterDivision(
-T thisValue,
-PrecisionContext ctxDest,
-PrecisionContext ctxSrc) {
+      T thisValue,
+      PrecisionContext ctxDest,
+      PrecisionContext ctxSrc) {
       return this.PostProcessEx(thisValue, ctxDest, ctxSrc, true, false);
     }
 
     private T PostProcessAfterQuantize(
-T thisValue,
-PrecisionContext ctxDest,
-PrecisionContext ctxSrc) {
+      T thisValue,
+      PrecisionContext ctxDest,
+      PrecisionContext ctxSrc) {
       return this.PostProcessEx(thisValue, ctxDest, ctxSrc, false, true);
     }
 
     private T PostProcessEx(
-T thisValue,
-PrecisionContext ctxDest,
-PrecisionContext ctxSrc,
-bool afterDivision,
-bool afterQuantize) {
+      T thisValue,
+      PrecisionContext ctxDest,
+      PrecisionContext ctxSrc,
+      bool afterDivision,
+      bool afterQuantize) {
       int thisFlags = this.GetHelper().GetFlags(thisValue);
       if (ctxDest != null && ctxSrc != null) {
         if (ctxDest.HasFlags) {
@@ -90,8 +90,8 @@ bool afterQuantize) {
           mant,
           this.GetHelper().GetExponent(thisValue),
           0) : this.wrapper.RoundToPrecision(
-this.GetHelper().ValueOf(0),
-ctxDest);
+          this.GetHelper().ValueOf(0),
+          ctxDest);
       }
       if (afterQuantize) {
         return thisValue;
@@ -136,7 +136,7 @@ ctxDest);
         }
       } else if (afterDivision && exp.Sign < 0) {
         FastInteger fastExp = FastInteger.FromBig(exp);
-          int radix = this.GetHelper().GetRadix();
+        int radix = this.GetHelper().GetRadix();
         mant = DecimalUtility.ReduceTrailingZeros(
           mant, fastExp, radix, null, null, new FastInteger(0));
         thisValue = this.GetHelper().CreateNewWithFlags(
@@ -152,8 +152,8 @@ ctxDest);
       bool mantChanged = false;
       if (!mant.IsZero && ctx != null && ctx.HasMaxPrecision) {
         BigInteger limit = this.GetHelper().MultiplyByRadixPower(
-            BigInteger.One,
-            FastInteger.FromBig(ctx.Precision));
+          BigInteger.One,
+          FastInteger.FromBig(ctx.Precision));
         if (mant.CompareTo(limit) >= 0) {
           mant %= (BigInteger)limit;
           mantChanged = true;
@@ -181,16 +181,17 @@ ctxDest);
       // Check this value then the other value for quiet NaN
       return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ?
         this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags &
-         BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(
-other,
-ctx) : default(T));
+                      BigNumberFlags.FlagQuietNaN) != 0) ?
+                                this.ReturnQuietNaN(
+                              other,
+                              ctx) : default(T));
     }
 
     private T CheckNotANumber3(
-T thisValue,
-T other,
-T other2,
-PrecisionContext ctx) {
+      T thisValue,
+      T other,
+      T other2,
+      PrecisionContext ctx) {
       int thisFlags = this.GetHelper().GetFlags(thisValue);
       int otherFlags = this.GetHelper().GetFlags(other);
       int other2Flags = this.GetHelper().GetFlags(other2);
@@ -207,11 +208,13 @@ PrecisionContext ctx) {
       // Check this value then the other value for quiet NaN
       return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ?
         this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags &
-         BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(
-other,
-ctx) :
-                          (((other2Flags & BigNumberFlags.FlagQuietNaN) !=
-                0) ? this.ReturnQuietNaN(other, ctx) : default(T)));
+                      BigNumberFlags.FlagQuietNaN) != 0) ?
+                                this.ReturnQuietNaN(
+                              other,
+                              ctx) :
+                              (((other2Flags & BigNumberFlags.FlagQuietNaN) !=
+                           0) ? this.ReturnQuietNaN(other, ctx) :
+                                default(T)));
     }
 
     private T SignalingNaNInvalid(T value, PrecisionContext ctx) {
@@ -255,9 +258,7 @@ ctx) :
       #if DEBUG
       if ((ctx2.Flags & PrecisionContext.FlagInvalid) != 0) {
         throw new
-
-  ArgumentException("doesn't satisfy (ctx2.Flags&PrecisionContext.FlagInvalid)==0"
-);
+          ArgumentException("doesn't satisfy (ctx2.Flags&FlagInvalid)==0");
       }
       #endif
       if ((ctx2.Flags & PrecisionContext.FlagInexact) != 0) {
@@ -285,9 +286,9 @@ ctx) :
     }
 
     public T DivideToIntegerNaturalScale(
-T thisValue,
-T divisor,
-PrecisionContext ctx) {
+      T thisValue,
+      T divisor,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((object)ret != (object)default(T)) {
         return ret;
@@ -303,9 +304,9 @@ PrecisionContext ctx) {
     }
 
     public T DivideToIntegerZeroScale(
-T thisValue,
-T divisor,
-PrecisionContext ctx) {
+      T thisValue,
+      T divisor,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((object)ret != (object)default(T)) {
         return ret;
@@ -397,8 +398,8 @@ PrecisionContext ctx) {
           BigInteger overflowMant = BigInteger.Zero;
           FastInteger fastPrecision = FastInteger.FromBig(pc.Precision);
           overflowMant = this.GetHelper().MultiplyByRadixPower(
-              BigInteger.One,
-              fastPrecision);
+            BigInteger.One,
+            fastPrecision);
           overflowMant -= BigInteger.One;
           FastInteger clamp =
             FastInteger.FromBig(pc.EMax).Increment().Subtract(fastPrecision);
@@ -411,9 +412,9 @@ PrecisionContext ctx) {
       return this.GetHelper().GetArithmeticSupport() ==
         BigNumberFlags.FiniteOnly ?
         default(T) : this.GetHelper().CreateNewWithFlags(
-        BigInteger.Zero,
-        BigInteger.Zero,
-        (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
+          BigInteger.Zero,
+          BigInteger.Zero,
+          (neg ? BigNumberFlags.FlagNegative : 0) | BigNumberFlags.FlagInfinity);
     }
 
     public T Power(T thisValue, T pow, PrecisionContext ctx) {
@@ -535,10 +536,10 @@ PrecisionContext ctx) {
     }
 
     public T DivideToExponent(
-T thisValue,
-T divisor,
-BigInteger desiredExponent,
-PrecisionContext ctx) {
+      T thisValue,
+      T divisor,
+      BigInteger desiredExponent,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((object)ret != (object)default(T)) {
         return ret;
@@ -641,10 +642,10 @@ PrecisionContext ctx) {
     }
 
     public T MultiplyAndAdd(
-T thisValue,
-T multiplicand,
-T augend,
-PrecisionContext ctx) {
+      T thisValue,
+      T multiplicand,
+      T augend,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber3(thisValue, multiplicand, augend, ctx);
       if ((object)ret != (object)default(T)) {
         return ret;
@@ -722,9 +723,9 @@ PrecisionContext ctx) {
     }
 
     public T RoundToExponentExact(
-T thisValue,
-BigInteger expOther,
-PrecisionContext ctx) {
+      T thisValue,
+      BigInteger expOther,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
         return ret;
@@ -736,9 +737,9 @@ PrecisionContext ctx) {
     }
 
     public T RoundToExponentSimple(
-T thisValue,
-BigInteger expOther,
-PrecisionContext ctx) {
+      T thisValue,
+      BigInteger expOther,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
         return ret;
@@ -750,9 +751,9 @@ PrecisionContext ctx) {
     }
 
     public T RoundToExponentNoRoundedFlag(
-T thisValue,
-BigInteger exponent,
-PrecisionContext ctx) {
+      T thisValue,
+      BigInteger exponent,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber1(thisValue, ctx);
       if ((object)ret != (object)default(T)) {
         return ret;
@@ -793,21 +794,21 @@ PrecisionContext ctx) {
           other;
         thisValue = this.RoundToPrecision(thisValue, ctx2);
       } else {
-      thisValue = (!zeroB) ? this.wrapper.AddEx(
-thisValue,
-other,
-ctx2,
-true) :
+        thisValue = (!zeroB) ? this.wrapper.AddEx(
+          thisValue,
+          other,
+          ctx2,
+          true) :
           this.RoundToPrecision(thisValue, ctx2);
       }
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
     public T AddEx(
-T thisValue,
-T other,
-PrecisionContext ctx,
-bool roundToOperandPrecision) {
+      T thisValue,
+      T other,
+      PrecisionContext ctx,
+      bool roundToOperandPrecision) {
       // NOTE: Ignores roundToOperandPrecision
       return this.Add(thisValue, other, ctx);
     }
@@ -821,10 +822,10 @@ bool roundToOperandPrecision) {
     /// <returns>Zero if the values are equal; a negative number if this instance is
     /// less, or a positive number if this instance is greater.</returns>
     public T CompareToWithContext(
-T thisValue,
-T otherValue,
-bool treatQuietNansAsSignaling,
-PrecisionContext ctx) {
+      T thisValue,
+      T otherValue,
+      bool treatQuietNansAsSignaling,
+      PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, otherValue, ctx);
       if ((object)ret != (object)default(T)) {
         return ret;
