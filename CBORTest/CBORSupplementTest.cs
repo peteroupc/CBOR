@@ -1051,39 +1051,6 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
     }
 
     [TestMethod]
-    public void TestRationalRemainder() {
-      var fr = new FastRandom();
-      for (var i = 0; i < 100; ++i) {
-        ExtendedRational er;
-        ExtendedRational er2;
-      er = new ExtendedRational(
-RandomObjects.RandomBigInteger(fr),
-BigInteger.One);
-     er2 = new ExtendedRational(
-RandomObjects.RandomBigInteger(fr),
-BigInteger.One);
-        if (er2.IsZero || !er2.IsFinite) {
-          continue;
-        }
-        if (er.IsZero || !er.IsFinite) {
-          // Code below will divide by "er",
-          // so skip if "er" is zero
-          continue;
-        }
-        ExtendedRational ermult = er.Multiply(er2);
-        ExtendedRational erdiv = ermult.Divide(er);
-        erdiv = ermult.Remainder(er);
-        if (!erdiv.IsZero) {
-          Assert.Fail(ermult + "; " + er);
-        }
-        erdiv = ermult.Remainder(er2);
-        if (!erdiv.IsZero) {
-          Assert.Fail(er + "; " + er2);
-        }
-      }
-    }
-
-    [TestMethod]
     public void TestRationalCompare() {
       var fr = new FastRandom();
       for (var i = 0; i < 100; ++i) {
@@ -1432,7 +1399,10 @@ BigInteger.One,
         throw new InvalidOperationException(String.Empty, ex);
       }
 
-      Assert.AreEqual(BigInteger.Zero, CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsBigInteger());
+      Assert.AreEqual(
+BigInteger.Zero,
+ CBORObject.DecodeFromBytes(new byte[] {
+        0xc2, 0x40 }).AsBigInteger());
       Assert.AreEqual(
 BigInteger.Zero - BigInteger.One,
 CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x41, 0x00 }).AsBigInteger());

@@ -141,7 +141,35 @@ namespace Test {
     }
     [TestMethod]
     public void TestRemainder() {
-      // not implemented yet
+      var fr = new FastRandom();
+      for (var i = 0; i < 100; ++i) {
+        ExtendedRational er;
+        ExtendedRational er2;
+        er = new ExtendedRational(
+          RandomObjects.RandomBigInteger(fr),
+          BigInteger.One);
+        er2 = new ExtendedRational(
+          RandomObjects.RandomBigInteger(fr),
+          BigInteger.One);
+        if (er2.IsZero || !er2.IsFinite) {
+          continue;
+        }
+        if (er.IsZero || !er.IsFinite) {
+          // Code below will divide by "er",
+          // so skip if "er" is zero
+          continue;
+        }
+        ExtendedRational ermult = er.Multiply(er2);
+        ExtendedRational erdiv = ermult.Divide(er);
+        erdiv = ermult.Remainder(er);
+        if (!erdiv.IsZero) {
+          Assert.Fail(ermult + "; " + er);
+        }
+        erdiv = ermult.Remainder(er2);
+        if (!erdiv.IsZero) {
+          Assert.Fail(er + "; " + er2);
+        }
+      }
     }
     [TestMethod]
     public void TestSign() {

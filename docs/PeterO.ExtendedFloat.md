@@ -1386,7 +1386,7 @@ A binary float with the same value as this object but with the exponent changed.
     public PeterO.ExtendedFloat RoundToIntegralExact(
         PeterO.PrecisionContext ctx);
 
-Returns a binary float with the same value as this object but rounded to an integer.
+Returns a binary number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
 <b>Parameters:</b>
 
@@ -1394,14 +1394,14 @@ Returns a binary float with the same value as this object but rounded to an inte
 
 <b>Returns:</b>
 
-A binary float with the same value as this object but rounded to an integer. Signals FlagInvalid and returns NaN if an overflow error occurred, or the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the new exponent must be changed to 0 when rounding and 0 is outside of the valid range of the precision context, if it defines an exponent range.
+A binary number rounded to the closest integer representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to 0 when rounding, and 0 is outside of the valid range of the precision context.
 
 ### RoundToIntegralNoRoundedFlag
 
     public PeterO.ExtendedFloat RoundToIntegralNoRoundedFlag(
         PeterO.PrecisionContext ctx);
 
-Returns a binary float with the same value as this object but rounded to an integer, without adding the FlagInexact or FlagRounded flags.
+Returns a binary number with the same value as this object but rounded to an integer, without adding the FlagInexact or FlagRounded flags.
 
 <b>Parameters:</b>
 
@@ -1409,7 +1409,7 @@ Returns a binary float with the same value as this object but rounded to an inte
 
 <b>Returns:</b>
 
-A binary float with the same value as this object but rounded to an integer. Signals FlagInvalid and returns NaN if an overflow error occurred, or the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the new exponent must be changed to 0 when rounding and 0 is outside of the valid range of the precision context, if it defines an exponent range.
+A binary number rounded to the closest integer representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to 0 when rounding, and 0 is outside of the valid range of the precision context.
 
 ### RoundToExponentExact
 
@@ -1417,17 +1417,17 @@ A binary float with the same value as this object but rounded to an integer. Sig
         PeterO.BigInteger exponent,
         PeterO.PrecisionContext ctx);
 
-Returns a binary float with the same value as this object but rounded to an integer.
+Returns a binary number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
 <b>Parameters:</b>
 
- * <i>exponent</i>: A BigInteger object.
+ * <i>exponent</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteens place (10b^3, 1000b). A value of 0 rounds the number to an integer.
 
  * <i>ctx</i>: A PrecisionContext object.
 
 <b>Returns:</b>
 
-A binary float with the same value as this object but rounded to an integer. Signals FlagInvalid and returns NaN if an overflow error occurred, or the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the new exponent is outside of the valid range of the precision context, if it defines an exponent range.
+A binary number rounded to the closest value representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
 ### RoundToExponent
 
@@ -1435,17 +1435,53 @@ A binary float with the same value as this object but rounded to an integer. Sig
         PeterO.BigInteger exponent,
         PeterO.PrecisionContext ctx);
 
-Returns a binary float with the same value as this object, and rounds it to a new exponent if necessary.
+Returns a binary number with the same value as this object, and rounds it to a new exponent if necessary.
 
 <b>Parameters:</b>
 
- * <i>exponent</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the thousandth (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A value of 0 rounds the number to an integer.
+ * <i>exponent</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteens place (10b^3, 1000b). A value of 0 rounds the number to an integer.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case the default rounding mode is HalfEven.
 
 <b>Returns:</b>
 
-A binary float rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the new exponent must be changed when rounding and the new exponent is outside of the valid range of the precision context, if it defines an exponent range.
+A binary number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
+
+### RoundToExponentExact
+
+    public PeterO.ExtendedFloat RoundToExponentExact(
+        int exponentSmall,
+        PeterO.PrecisionContext ctx);
+
+Returns a binary number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
+
+<b>Parameters:</b>
+
+ * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteens place (10b^3, 1000b). A value of 0 rounds the number to an integer.
+
+ * <i>ctx</i>: A PrecisionContext object.
+
+<b>Returns:</b>
+
+A binary number rounded to the closest value representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
+
+### RoundToExponent
+
+    public PeterO.ExtendedFloat RoundToExponent(
+        int exponentSmall,
+        PeterO.PrecisionContext ctx);
+
+Returns a binary number with the same value as this object, and rounds it to a new exponent if necessary.
+
+<b>Parameters:</b>
+
+ * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteens place (10b^3, 1000b). A value of 0 rounds the number to an integer.
+
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case the default rounding mode is HalfEven.
+
+<b>Returns:</b>
+
+A binary number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
 ### Multiply
 

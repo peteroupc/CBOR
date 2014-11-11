@@ -13,14 +13,10 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO {
-    /// <summary>An arbitrary-precision integer. <para>Instances of this
-    /// class are
-    /// immutable, so they are inherently safe for use by multiple threads.
-    /// Multiple
-    /// instances of this object with the same value are interchangeable, so
-    /// they
-    /// should not be compared using the "==" operator (which only checks if
-    /// each
+    /// <summary>An arbitrary-precision integer. <para>Instances of this class are
+    /// immutable, so they are inherently safe for use by multiple threads. Multiple
+    /// instances of this object with the same value are interchangeable, so they
+    /// should not be compared using the "==" operator (which only checks if each
     /// side of the operator is the same instance).</para>
     /// </summary>
   public sealed partial class BigInteger : IComparable<BigInteger>,
@@ -372,7 +368,7 @@ namespace PeterO {
       #if DEBUG
       if (acount < bcount) {
         throw new ArgumentException("acount (" + acount + ") is less than " +
-                              (bcount));
+                              bcount);
       }
       #endif
       unchecked {
@@ -1180,17 +1176,16 @@ namespace PeterO {
 
       if (resultStart > resultArr.Length) {
         throw new ArgumentException("resultStart (" + resultStart +
-                              ") is more than " + (resultArr.Length));
+                              ") is more than " + resultArr.Length);
       }
 
       if (count + count < 0) {
         throw new ArgumentException("count plus count (" + (count + count) +
                               ") is less than " + "0");
       }
-
       if (count + count > resultArr.Length) {
         throw new ArgumentException("count plus count (" + (count + count) +
-                              ") is more than " + (resultArr.Length));
+                              ") is more than " + resultArr.Length);
       }
 
       if (resultArr.Length - resultStart < count + count) {
@@ -1210,7 +1205,7 @@ namespace PeterO {
 
       if (tempStart > tempArr.Length) {
         throw new ArgumentException("tempStart (" + tempStart +
-                              ") is more than " + (tempArr.Length));
+                              ") is more than " + tempArr.Length);
       }
 
       if (count + count < 0) {
@@ -1220,7 +1215,7 @@ namespace PeterO {
 
       if (count + count > tempArr.Length) {
         throw new ArgumentException("count plus count (" + (count + count) +
-                              ") is more than " + (tempArr.Length));
+                              ") is more than " + tempArr.Length);
       }
 
       if (tempArr.Length - tempStart < count + count) {
@@ -1240,7 +1235,7 @@ namespace PeterO {
 
       if (words1Start > words1.Length) {
         throw new ArgumentException("words1Start (" + words1Start +
-                              ") is more than " + (words1.Length));
+                              ") is more than " + words1.Length);
       }
 
       if (count < 0) {
@@ -1250,13 +1245,13 @@ namespace PeterO {
 
       if (count > words1.Length) {
         throw new ArgumentException("count (" + count + ") is more than " +
-                              (words1.Length));
+                              words1.Length);
       }
 
       if (words1.Length - words1Start < count) {
         throw new ArgumentException("words1.Length minus words1Start (" +
                 (words1.Length - words1Start) + ") is less than " +
-                              (count));
+                              count);
       }
 
       if (words2 == null) {
@@ -1270,7 +1265,7 @@ namespace PeterO {
 
       if (words2Start > words2.Length) {
         throw new ArgumentException("words2Start (" + words2Start +
-                              ") is more than " + (words2.Length));
+                              ") is more than " + words2.Length);
       }
 
       if (count < 0) {
@@ -1280,13 +1275,13 @@ namespace PeterO {
 
       if (count > words2.Length) {
         throw new ArgumentException("count (" + count + ") is more than " +
-                              (words2.Length));
+                              words2.Length);
       }
 
       if (words2.Length - words2Start < count) {
         throw new ArgumentException("words2.Length minus words2Start (" +
                 (words2.Length - words2Start) + ") is less than " +
-                              (count));
+                              count);
       }
       #endif
 
@@ -1835,7 +1830,7 @@ namespace PeterO {
       #if DEBUG
       if (acount < bcount) {
         throw new ArgumentException("acount (" + acount + ") is less than " +
-                              (bcount));
+                              bcount);
       }
 
       if (productArr == null) {
@@ -1849,7 +1844,7 @@ namespace PeterO {
 
       if (cstart > productArr.Length) {
         throw new ArgumentException("cstart (" + cstart + ") is more than " +
-                              (productArr.Length));
+                              productArr.Length);
       }
 
       if (acount + bcount < 0) {
@@ -1859,7 +1854,7 @@ namespace PeterO {
 
       if (acount + bcount > productArr.Length) {
         throw new ArgumentException("acount plus bcount (" + (acount + bcount) +
-                              ") is more than " + (productArr.Length));
+                              ") is more than " + productArr.Length);
       }
 
       if (productArr.Length - cstart < acount + bcount) {
@@ -1879,7 +1874,7 @@ namespace PeterO {
 
       if (tempStart > tempArr.Length) {
         throw new ArgumentException("tempStart (" + tempStart +
-                              ") is more than " + (tempArr.Length));
+                              ") is more than " + tempArr.Length);
       }
 
       if ((bcount * 4) < 0) {
@@ -1909,7 +1904,7 @@ namespace PeterO {
 
       if (astart > words1.Length) {
         throw new ArgumentException("astart (" + astart + ") is more than " +
-                              (words1.Length));
+                              words1.Length);
       }
 
       if (acount < 0) {
@@ -1919,13 +1914,13 @@ namespace PeterO {
 
       if (acount > words1.Length) {
         throw new ArgumentException("acount (" + acount + ") is more than " +
-                              (words1.Length));
+                              words1.Length);
       }
 
       if (words1.Length - astart < acount) {
         throw new ArgumentException("words1.Length minus astart (" +
                               (words1.Length - astart) + ") is less than " +
-                              (acount));
+                              acount);
       }
 
       if (words2 == null) {
@@ -1939,7 +1934,7 @@ namespace PeterO {
 
       if (bstart > words2.Length) {
         throw new ArgumentException("bstart (" + bstart + ") is more than " +
-                              (words2.Length));
+                              words2.Length);
       }
 
       if (bcount < 0) {
@@ -1949,13 +1944,13 @@ namespace PeterO {
 
       if (bcount > words2.Length) {
         throw new ArgumentException("bcount (" + bcount + ") is more than " +
-                              (words2.Length));
+                              words2.Length);
       }
 
       if (words2.Length - bstart < bcount) {
         throw new ArgumentException("words2.Length minus bstart (" +
                               (words2.Length - bstart) + ") is less than " +
-                              (bcount));
+                              bcount);
       }
       #endif
 
@@ -2055,7 +2050,7 @@ namespace PeterO {
 
       if (resultStart > resultArr.Length) {
         throw new ArgumentException("resultStart (" + resultStart +
-                              ") is more than " + (resultArr.Length));
+                              ") is more than " + resultArr.Length);
       }
 
       if (words1Count + words2Count < 0) {
@@ -2067,7 +2062,7 @@ namespace PeterO {
       if (words1Count + words2Count > resultArr.Length) {
         throw new ArgumentException("words1Count plus words2Count (" +
                               (words1Count + words2Count) +
-                              ") is more than " + (resultArr.Length));
+                              ") is more than " + resultArr.Length);
       }
 
       if (resultArr.Length - resultStart < words1Count + words2Count) {
@@ -2088,7 +2083,7 @@ namespace PeterO {
 
       if (tempStart > tempArr.Length) {
         throw new ArgumentException("tempStart (" + tempStart +
-                              ") is more than " + (tempArr.Length));
+                              ") is more than " + tempArr.Length);
       }
 
       if (words1Count + words2Count < 0) {
@@ -2100,7 +2095,7 @@ namespace PeterO {
       if (words1Count + words2Count > tempArr.Length) {
         throw new ArgumentException("words1Count plus words2Count (" +
                               (words1Count + words2Count) +
-                              ") is more than " + (tempArr.Length));
+                              ") is more than " + tempArr.Length);
       }
 
       if (tempArr.Length - tempStart < words1Count + words2Count) {
@@ -2121,7 +2116,7 @@ namespace PeterO {
 
       if (words1Start > words1.Length) {
         throw new ArgumentException("words1Start (" + words1Start +
-                              ") is more than " + (words1.Length));
+                              ") is more than " + words1.Length);
       }
 
       if (words1Count < 0) {
@@ -2131,13 +2126,13 @@ namespace PeterO {
 
       if (words1Count > words1.Length) {
         throw new ArgumentException("words1Count (" + words1Count +
-                              ") is more than " + (words1.Length));
+                              ") is more than " + words1.Length);
       }
 
       if (words1.Length - words1Start < words1Count) {
         throw new ArgumentException("words1.Length minus words1Start (" +
                               (words1.Length - words1Start) +
-                              ") is less than " + (words1Count));
+                              ") is less than " + words1Count);
       }
 
       if (words2 == null) {
@@ -2151,7 +2146,7 @@ namespace PeterO {
 
       if (words2Start > words2.Length) {
         throw new ArgumentException("words2Start (" + words2Start +
-                              ") is more than " + (words2.Length));
+                              ") is more than " + words2.Length);
       }
 
       if (words2Count < 0) {
@@ -2161,13 +2156,13 @@ namespace PeterO {
 
       if (words2Count > words2.Length) {
         throw new ArgumentException("words2Count (" + words2Count +
-                              ") is more than " + (words2.Length));
+                              ") is more than " + words2.Length);
       }
 
       if (words2.Length - words2Start < words2Count) {
         throw new ArgumentException("words2.Length minus words2Start (" +
                               (words2.Length - words2Start) +
-                              ") is less than " + (words2Count));
+                              ") is less than " + words2Count);
       }
       #endif
 
@@ -2532,15 +2527,13 @@ namespace PeterO {
       short valueQ;
       unchecked {
         valueQ = ((short)(valueB1 + 1) == 0) ? words1[words1Start + 2] :
-          (
-            (
-              valueB1 != 0) ? DivideUnsigned(
-              MakeUint(
-                words1[words1Start + 1],
-                words1[words1Start + 2]),
-              (short)(((int)valueB1 + 1) & 0xffff)) : DivideUnsigned(
-              MakeUint(words1[words1Start], words1[words1Start + 1]),
-              valueB0));
+          ((valueB1 != 0) ? DivideUnsigned(
+            MakeUint(
+              words1[words1Start + 1],
+              words1[words1Start + 2]),
+            (short)(((int)valueB1 + 1) & 0xffff)) : DivideUnsigned(
+             MakeUint(words1[words1Start], words1[words1Start + 1]),
+             valueB0));
 
         int valueQint = ((int)valueQ) & 0xffff;
         int valueB0int = ((int)valueB0) & 0xffff;
@@ -2812,15 +2805,12 @@ namespace PeterO {
       #if DEBUG
       if (!(words1Count % 2 == 0 && words2Count % 2 == 0)) {
         throw new
-          ArgumentException("doesn't satisfy valueNA%2==0 && valueNB%2==0"
-);
+          ArgumentException("doesn't satisfy valueNA%2==0 && valueNB%2==0");
       }
       if (!(words2[words2Start + words2Count - 1] != 0 ||
             words2[words2Start + words2Count - 2] != 0)) {
-        throw new
-
-  ArgumentException("doesn't satisfy words2[valueNB-1]!=0 || words2[valueNB-2]!=0"
-);
+        throw new ArgumentException(
+            "doesn't satisfy words2[valueNB-1]!=0 || words2[valueNB-2]!=0");
       }
       if (words2Count > words1Count) {
         throw new ArgumentException("doesn't satisfy valueNB<= valueNA");
@@ -3026,8 +3016,7 @@ namespace PeterO {
       this.negative = negative;
     }
 
-    /// <summary>Initializes a BigInteger object from an array of
-    /// bytes.</summary>
+    /// <summary>Initializes a BigInteger object from an array of bytes.</summary>
     /// <param name='bytes'>A byte array. Can be empty, in which case the return
     /// value is 0.</param>
     /// <param name='littleEndian'>A Boolean object.</param>
@@ -3105,11 +3094,9 @@ namespace PeterO {
       return a;
     }
 
-    /// <summary>Returns whether a bit is set in the two's-complement
-    /// representation
+    /// <summary>Returns whether a bit is set in the two's-complement representation
     /// of this object's value.</summary>
-    /// <param name='index' >Zero based index of the bit to test. 0 means
-    /// the least
+    /// <param name='index'>Zero based index of the bit to test. 0 means the least
     /// significant bit.</param>
     /// <returns>True if the specified bit is set; otherwise, false.</returns>
     public bool testBit(int index) {
@@ -3153,8 +3140,7 @@ namespace PeterO {
 
     /// <summary>Returns a byte array of this object&apos;s value.</summary>
     /// <param name='littleEndian'>A Boolean object.</param>
-    /// <returns>A byte array that represents the value of this
-    /// object.</returns>
+    /// <returns>A byte array that represents the value of this object.</returns>
     public byte[] toByteArray(bool littleEndian) {
       int sign = this.Sign;
       if (sign == 0) {
@@ -3217,13 +3203,10 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Shifts this object&apos;s value by a number of bits. A
-    /// value of 1
-    /// doubles this value, a value of 2 multiplies it by 4, a value of 3 by
-    /// 8, a
+    /// <summary>Shifts this object&apos;s value by a number of bits. A value of 1
+    /// doubles this value, a value of 2 multiplies it by 4, a value of 3 by 8, a
     /// value of 4 by 16, and so on.</summary>
-    /// <param name='numberBits' >The number of bits to shift. Can be
-    /// negative, in
+    /// <param name='numberBits'>The number of bits to shift. Can be negative, in
     /// which case this is the same as shiftRight with the absolute value of
     /// numberBits.</param>
     /// <returns>A BigInteger object.</returns>
@@ -3265,8 +3248,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Returns a big integer with the bits shifted to the
-    /// right.</summary>
+    /// <summary>Returns a big integer with the bits shifted to the right.</summary>
     /// <param name='numberBits'>Number of bits to shift right.</param>
     /// <returns>A BigInteger object.</returns>
     public BigInteger shiftRight(int numberBits) {
@@ -3368,11 +3350,9 @@ namespace PeterO {
       return new BigInteger(retwordcount, retreg, retnegative);
     }
 
-    /// <summary>Converts this object's value to a 32-bit signed
-    /// integer.</summary>
+    /// <summary>Converts this object's value to a 32-bit signed integer.</summary>
     /// <returns>A 32-bit signed integer.</returns>
-    /// <exception cref='OverflowException' >This object's value is too big
-    /// to fit a
+    /// <exception cref='OverflowException'>This object's value is too big to fit a
     /// 32-bit signed integer.</exception>
     public int intValueChecked() {
       int count = this.wordCount;
@@ -3413,11 +3393,9 @@ namespace PeterO {
       return intRetValue;
     }
 
-    /// <summary>Converts this object's value to a 64-bit signed
-    /// integer.</summary>
+    /// <summary>Converts this object's value to a 64-bit signed integer.</summary>
     /// <returns>A 64-bit signed integer.</returns>
-    /// <exception cref='OverflowException' >This object's value is too big
-    /// to fit a
+    /// <exception cref='OverflowException'>This object's value is too big to fit a
     /// 64-bit signed integer.</exception>
     public long longValueChecked() {
       int count = this.wordCount;
@@ -3479,15 +3457,13 @@ namespace PeterO {
       return ivv;
     }
 
-    /// <summary>Converts this object's value to a 32-bit signed integer. To
-    /// make
+    /// <summary>Converts this object's value to a 32-bit signed integer. To make
     /// the conversion intention clearer, use the <c>intValueChecked</c>
     /// and
     /// <c>intValueUnchecked</c>
     /// methods instead.</summary>
     /// <returns>A 32-bit signed integer.</returns>
-    /// <exception cref='OverflowException' >This object's value is too big
-    /// to fit a
+    /// <exception cref='OverflowException'>This object's value is too big to fit a
     /// 32-bit signed integer.</exception>
     public int intValue() {
       return this.intValueChecked();
@@ -3495,8 +3471,7 @@ namespace PeterO {
 
     /// <summary>Returns whether this object's value can fit in a 32-bit signed
     /// integer.</summary>
-    /// <returns>True if this object's value is MinValue or greater, and
-    /// MaxValue or
+    /// <returns>True if this object's value is MinValue or greater, and MaxValue or
     /// less; otherwise, false.</returns>
     public bool canFitInInt() {
       var c = (int)this.wordCount;
@@ -3523,15 +3498,13 @@ namespace PeterO {
       return true;
     }
 
-    /// <summary>Converts this object's value to a 64-bit signed integer. To
-    /// make
+    /// <summary>Converts this object's value to a 64-bit signed integer. To make
     /// the conversion intention clearer, use the <c>longValueChecked</c>
     /// and
     /// <c>longValueUnchecked</c>
     /// methods instead.</summary>
     /// <returns>A 64-bit signed integer.</returns>
-    /// <exception cref='OverflowException' >This object's value is too big
-    /// to fit a
+    /// <exception cref='OverflowException'>This object's value is too big to fit a
     /// 64-bit signed integer.</exception>
     public long longValue() {
       return this.longValueChecked();
@@ -3704,10 +3677,8 @@ namespace PeterO {
     }
 
     /// <summary>Finds the minimum number of bits needed to represent this
-    /// object&apos;s value, except for its sign. If the value is negative,
-    /// finds
-    /// the number of bits in a value equal to this object's absolute value
-    /// minus
+    /// object&apos;s value, except for its sign. If the value is negative, finds
+    /// the number of bits in a value equal to this object's absolute value minus
     /// 1.</summary>
     /// <returns>The number of bits in this object's value. Returns 0 if this
     /// object's value is 0 or negative 1.</returns>
@@ -3811,8 +3782,7 @@ namespace PeterO {
     }
 
     /// <summary>Finds the number of decimal digits this number has.</summary>
-    /// <returns>The number of decimal digits. Returns 1 if this object' s
-    /// value is
+    /// <returns>The number of decimal digits. Returns 1 if this object' s value is
     /// 0.</returns>
     public int getDigitCount() {
       if (this.IsZero) {
@@ -3833,14 +3803,14 @@ namespace PeterO {
                               ((value >= 100000000000000L) ? 15 : ((value
                               >= 10000000000000L) ?
                               14 : ((value >= 1000000000000L) ? 13 : ((value
-                       >= 100000000000L) ? 12 : ((value >= 10000000000L) ?
-                11 : ((value >= 1000000000L) ? 10 : 9)))))))));
+                >= 100000000000L) ? 12 : ((value >= 10000000000L) ?
+                              11 : ((value >= 1000000000L) ? 10 : 9)))))))));
         } else {
           var v2 = (int)value;
           return (v2 >= 100000000) ? 9 : ((v2 >= 10000000) ? 8 : ((v2 >=
                               1000000) ? 7 : ((v2 >= 100000) ? 6 : ((v2
-                    >= 10000) ? 5 : ((v2 >= 1000) ? 4 : ((v2 >= 100) ? 3 :
-                ((v2 >= 10) ? 2 : 1)))))));
+                              >= 10000) ? 5 : ((v2 >= 1000) ? 4 : ((v2 >= 100) ?
+                3 : ((v2 >= 10) ? 2 : 1)))))));
         }
       }
       int bitlen = this.getUnsignedBitLength();
@@ -3981,20 +3951,15 @@ namespace PeterO {
 
     private const string Digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    /// <summary>Generates a string representing the value of this object,
-    /// in the
+    /// <summary>Generates a string representing the value of this object, in the
     /// given radix.</summary>
-    /// <param name='radix' >A radix from 2 through 36. For example, to
-    /// generate a
+    /// <param name='radix'>A radix from 2 through 36. For example, to generate a
     /// hexadecimal string, specify 16. To generate a decimal string, specify
     /// 10.</param>
     /// <returns>A string object.</returns>
-    /// <exception cref='ArgumentException' >The parameter "index" is less
-    /// than 0,
-    /// "endIndex" is less than 0, or either is greater than the string's
-    /// length, or
-    /// "endIndex" is less than "index" ; or radix is less than 2 or greater
-    /// than
+    /// <exception cref='ArgumentException'>The parameter "index" is less than 0,
+    /// "endIndex" is less than 0, or either is greater than the string's length, or
+    /// "endIndex" is less than "index" ; or radix is less than 2 or greater than
     /// 36.</exception>
     public string toRadixString(int radix) {
       if (radix < 2) {
@@ -4202,16 +4167,13 @@ namespace PeterO {
     }
 
     /// <summary>Converts a string to an arbitrary-precision integer.</summary>
-    /// <param name='str' >A string containing only digits, except that it
-    /// may start
+    /// <param name='str'>A string containing only digits, except that it may start
     /// with a minus sign.</param>
     /// <returns>A BigInteger object with the same value as given in the
     /// string.</returns>
-    /// <exception cref='ArgumentNullException' >The parameter <paramref
-    /// name='str' />
+    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
     /// is null.</exception>
-    /// <exception cref='FormatException' >The parameter <paramref
-    /// name='str' /> is in
+    /// <exception cref='FormatException'>The parameter <paramref name='str'/> is in
     /// an invalid format.</exception>
     public static BigInteger fromString(string str) {
       if (str == null) {
@@ -4220,24 +4182,18 @@ namespace PeterO {
       return fromRadixSubstring(str, 10, 0, str.Length);
     }
 
-    /// <summary>Converts a portion of a string to an arbitrary-precision
-    /// integer.
-    /// The string portion can begin with a minus sign ('-') to indicate
-    /// that it's
+    /// <summary>Converts a portion of a string to an arbitrary-precision integer.
+    /// The string portion can begin with a minus sign ('-') to indicate that it's
     /// negative.</summary>
     /// <param name='str'>A string object.</param>
     /// <param name='radix'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object with the same value as given in the string
     /// portion.</returns>
-    /// <exception cref='ArgumentNullException' >The parameter <paramref
-    /// name='str' />
+    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
     /// is null.</exception>
-    /// <exception cref='ArgumentException' >The parameter "index" is less
-    /// than 0,
-    /// "endIndex" is less than 0, or either is greater than the string's
-    /// length, or
-    /// "endIndex" is less than "index" ; or radix is less than 2 or greater
-    /// than
+    /// <exception cref='ArgumentException'>The parameter "index" is less than 0,
+    /// "endIndex" is less than 0, or either is greater than the string's length, or
+    /// "endIndex" is less than "index" ; or radix is less than 2 or greater than
     /// 36.</exception>
     /// <exception cref='FormatException'>The string portion is empty or in an
     /// invalid format.</exception>
@@ -4248,24 +4204,19 @@ namespace PeterO {
       return fromRadixSubstring(str, radix, 0, str.Length);
     }
 
-    /// <summary>Converts a portion of a string to an arbitrary-precision
-    /// integer.
-    /// The string portion can begin with a minus sign ('-') to indicate
-    /// that it's
+    /// <summary>Converts a portion of a string to an arbitrary-precision integer.
+    /// The string portion can begin with a minus sign ('-') to indicate that it's
     /// negative.</summary>
     /// <param name='str'>A string object.</param>
     /// <param name='index'>The index of the string that starts the string
     /// portion.</param>
-    /// <param name='endIndex' >The index of the string that ends the string
-    /// portion.
+    /// <param name='endIndex'>The index of the string that ends the string portion.
     /// The length will be index + endIndex - 1.</param>
     /// <returns>A BigInteger object with the same value as given in the string
     /// portion.</returns>
-    /// <exception cref='ArgumentNullException' >The parameter <paramref
-    /// name='str' />
+    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
     /// is null.</exception>
-    /// <exception cref='ArgumentException' >The parameter <paramref
-    /// name='index' />
+    /// <exception cref='ArgumentException'>The parameter <paramref name='index'/>
     /// is less than 0, <paramref name='endIndex'/> is less than 0, or either is
     /// greater than the string's length, or <paramref name='endIndex'/> is less
     /// than <paramref name='index'/> .</exception>
@@ -4302,28 +4253,22 @@ namespace PeterO {
       36, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
       25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 36, 36, 36, 36 };
 
-    /// <summary>Converts a portion of a string to an arbitrary-precision
-    /// integer in
+    /// <summary>Converts a portion of a string to an arbitrary-precision integer in
     /// a given radix. The string portion can begin with a minus sign ('-') to
     /// indicate that it's negative.</summary>
     /// <param name='str'>A string object.</param>
-    /// <param name='radix' >A base from 2 to 36. The possible digits start
-    /// from 0 to
-    /// 9, then from A to Z in base 36, and the possible digits start from 0
-    /// to 9,
+    /// <param name='radix'>A base from 2 to 36. The possible digits start from 0 to
+    /// 9, then from A to Z in base 36, and the possible digits start from 0 to 9,
     /// then from A to F in base 16.</param>
     /// <param name='index'>The index of the string that starts the string
     /// portion.</param>
-    /// <param name='endIndex' >The index of the string that ends the string
-    /// portion.
+    /// <param name='endIndex'>The index of the string that ends the string portion.
     /// The length will be index + endIndex - 1.</param>
     /// <returns>A BigInteger object with the same value as given in the string
     /// portion.</returns>
-    /// <exception cref='ArgumentNullException' >The parameter <paramref
-    /// name='str' />
+    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
     /// is null.</exception>
-    /// <exception cref='ArgumentException' >The parameter <paramref
-    /// name='index' />
+    /// <exception cref='ArgumentException'>The parameter <paramref name='index'/>
     /// is less than 0, <paramref name='endIndex'/> is less than 0, or either is
     /// greater than the string's length, or <paramref name='endIndex'/> is less
     /// than <paramref name='index'/> .</exception>
@@ -4508,26 +4453,26 @@ namespace PeterO {
         } else {
           return (((c << 15) & 0xffff) != 0) ? (retSetBit + 0) : ((((c <<
                               14) & 0xffff) != 0) ? (retSetBit + 1) : ((((c <<
-                         13) & 0xffff) != 0) ? (retSetBit + 2) : ((((c <<
-               12) & 0xffff) != 0) ? (retSetBit + 3) : ((((c << 11) & 0xffff) !=
-                0) ? (retSetBit +
+                              13) & 0xffff) != 0) ? (retSetBit + 2) : ((((c <<
+                 12) & 0xffff) != 0) ? (retSetBit + 3) : ((((c << 11) &
+                0xffff) != 0) ? (retSetBit +
                               4) : ((((c << 10) & 0xffff) != 0) ? (retSetBit +
-                  5) : ((((c << 9) & 0xffff) != 0) ? (retSetBit + 6) : ((((c <<
+                     5) : ((((c << 9) & 0xffff) != 0) ? (retSetBit + 6) :
+                              ((((c <<
                 8) & 0xffff) != 0) ? (retSetBit + 7) : ((((c << 7) & 0xffff) !=
                 0) ? (retSetBit + 8) : ((((c << 6) & 0xffff) !=
-                0) ? (retSetBit + 9) : ((((c <<
+                              0) ? (retSetBit + 9) : ((((c <<
                               5) & 0xffff) != 0) ? (retSetBit + 10) : ((((c <<
-               4) & 0xffff) != 0) ? (retSetBit + 11) : ((((c << 3) & 0xffff) !=
-                0) ? (retSetBit + 12) : ((((c << 2) & 0xffff) !=
-                          0) ? (retSetBit + 13) : ((((c << 1) & 0xffff) !=
+                  4) & 0xffff) != 0) ? (retSetBit + 11) : ((((c << 3) &
+                0xffff) != 0) ? (retSetBit + 12) : ((((c << 2) & 0xffff) !=
+                              0) ? (retSetBit + 13) : ((((c << 1) & 0xffff) !=
                 0) ? (retSetBit + 14) : (retSetBit + 15)))))))))))))));
         }
       }
       return 0;
     }
 
-    /// <summary>Returns the greatest common divisor of two integers. The
-    /// greatest
+    /// <summary>Returns the greatest common divisor of two integers. The greatest
     /// common divisor (GCD) is also known as the greatest common factor
     /// (GCF).</summary>
     /// <param name='bigintSecond'>A BigInteger object. (2).</param>
@@ -4590,8 +4535,7 @@ namespace PeterO {
     /// <param name='pow'>A BigInteger object. (2).</param>
     /// <param name='mod'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='ArgumentNullException' >The parameter <paramref
-    /// name='pow' />
+    /// <exception cref='ArgumentNullException'>The parameter <paramref name='pow'/>
     /// is null.</exception>
     public BigInteger ModPow(BigInteger pow, BigInteger mod) {
       if (pow == null) {
@@ -4618,8 +4562,7 @@ namespace PeterO {
     }
 
     #region Equals and GetHashCode implementation
-    /// <inheritdoc/><summary>Determines whether this object and another
-    /// object are
+    /// <inheritdoc/><summary>Determines whether this object and another object are
     /// equal.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>True if the objects are equal; otherwise, false.</returns>
@@ -5088,10 +5031,8 @@ namespace PeterO {
 
     /// <summary>Divides this instance by the value of a BigInteger object. The
     /// result is rounded down (the fractional part is discarded). Except if the
-    /// result is 0, it will be negative if this object is positive and the
-    /// other is
-    /// negative, or vice versa, and will be positive if both are positive
-    /// or both
+    /// result is 0, it will be negative if this object is positive and the other is
+    /// negative, or vice versa, and will be positive if both are positive or both
     /// are negative.</summary>
     /// <param name='bigintDivisor'>A BigInteger object.</param>
     /// <returns>The quotient of the two objects.</returns>
@@ -5169,12 +5110,10 @@ namespace PeterO {
           this.negative ^ bigintDivisor.negative)) : BigInteger.Zero;
     }
 
-    /// <summary>Divides this object by another big integer and returns the
-    /// quotient
+    /// <summary>Divides this object by another big integer and returns the quotient
     /// and remainder.</summary>
     /// <param name='divisor'>The divisor.</param>
-    /// <returns>An array with two big integers: the first is the quotient,
-    /// and the
+    /// <returns>An array with two big integers: the first is the quotient, and the
     /// second is the remainder.</returns>
     /// <exception cref='ArgumentNullException'>The parameter divisor is
     /// null.</exception>
@@ -5274,12 +5213,9 @@ namespace PeterO {
     }
 
     /// <summary>Finds the modulus remainder that results when this instance is
-    /// divided by the value of a BigInteger object. The modulus remainder
-    /// is the
-    /// same as the normal remainder if the normal remainder is positive,
-    /// and equals
-    /// divisor plus normal remainder if the normal remainder is
-    /// negative.</summary>
+    /// divided by the value of a BigInteger object. The modulus remainder is the
+    /// same as the normal remainder if the normal remainder is positive, and equals
+    /// divisor plus normal remainder if the normal remainder is negative.</summary>
     /// <param name='divisor'>A divisor greater than 0 (the modulus).</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArithmeticException'>The parameter <paramref
@@ -5300,14 +5236,10 @@ namespace PeterO {
       return rem;
     }
 
-    /// <summary>Finds the remainder that results when this instance is
-    /// divided by
-    /// the value of a BigInteger object. The remainder is the value that
-    /// remains
-    /// when the absolute value of this object is divided by the absolute
-    /// value of
-    /// the other object; the remainder has the same sign (positive or
-    /// negative) as
+    /// <summary>Finds the remainder that results when this instance is divided by
+    /// the value of a BigInteger object. The remainder is the value that remains
+    /// when the absolute value of this object is divided by the absolute value of
+    /// the other object; the remainder has the same sign (positive or negative) as
     /// this object.</summary>
     /// <param name='divisor'>A BigInteger object.</param>
     /// <returns>The remainder of the two objects.</returns>
@@ -5380,8 +5312,7 @@ namespace PeterO {
 
     /// <summary>Compares a BigInteger object with this instance.</summary>
     /// <param name='other'>A BigInteger object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is
+    /// <returns>Zero if the values are equal; a negative number if this instance is
     /// less, or a positive number if this instance is greater.</returns>
     public int CompareTo(BigInteger other) {
       if (other == null) {
@@ -5422,8 +5353,7 @@ namespace PeterO {
     }
 
     /// <summary>Gets the sign of this object's value.</summary>
-    /// <value>0 if this value is zero; -1 if this value is negative, or 1
-    /// if this
+    /// <value>0 if this value is zero; -1 if this value is negative, or 1 if this
     /// value is positive.</value>
     public int Sign {
       get {
@@ -5441,8 +5371,7 @@ namespace PeterO {
 
     /// <summary>Finds the square root of this instance&apos;s value, rounded
     /// down.</summary>
-    /// <returns>The square root of this object's value. Returns 0 if this
-    /// value is
+    /// <returns>The square root of this object's value. Returns 0 if this value is
     /// 0 or less.</returns>
     public BigInteger sqrt() {
       BigInteger[] srrem = this.sqrtWithRemainder();
@@ -5450,12 +5379,9 @@ namespace PeterO {
     }
 
     /// <summary>Calculates the square root and the remainder.</summary>
-    /// <returns>An array of two big integers: the first integer is the
-    /// square root,
-    /// and the second is the difference between this value and the square
-    /// of the
-    /// first integer. Returns two zeros if this value is 0 or less, or one
-    /// and zero
+    /// <returns>An array of two big integers: the first integer is the square root,
+    /// and the second is the difference between this value and the square of the
+    /// first integer. Returns two zeros if this value is 0 or less, or one and zero
     /// if this value equals 1.</returns>
     public BigInteger[] sqrtWithRemainder() {
       if (this.Sign <= 0) {
