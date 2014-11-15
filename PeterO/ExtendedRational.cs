@@ -559,7 +559,9 @@ out rem);
     /// value can be positive infinity or negative infinity if this value exceeds
     /// the range of a 64-bit floating point number.</returns>
     public double ToDouble() {
-      return this.ToExtendedFloat(PrecisionContext.Binary64).ToDouble();
+      return
+  this.ToExtendedFloat(PrecisionContext.Binary64.WithRounding(Rounding.Odd))
+        .ToDouble();
     }
 
     /// <summary>Converts this value to a 32-bit floating-point number. The
@@ -568,7 +570,9 @@ out rem);
     /// value can be positive infinity or negative infinity if this value exceeds
     /// the range of a 32-bit floating point number.</returns>
     public float ToSingle() {
-      return this.ToExtendedFloat(PrecisionContext.Binary32).ToSingle();
+      return
+  this.ToExtendedFloat(PrecisionContext.Binary32.WithRounding(Rounding.Odd))
+        .ToSingle();
     }
 
     /// <summary>Not documented yet.</summary>
@@ -888,7 +892,7 @@ out thisRem);
           // Console.WriteLine("Shortcircuit III");
           return this.IsNegative ? -1 : 1;
         }
-        // Console.WriteLine("---" + this + " " + (other));
+        // Console.WriteLine("---" + this + " " + other);
         if (other.Exponent.Sign > 0) {
           int digitCount = this.UnsignedNumerator.getDigitCount();
           --digitCount;
