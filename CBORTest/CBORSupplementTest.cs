@@ -1401,8 +1401,7 @@ BigInteger.One,
 
       Assert.AreEqual(
 BigInteger.Zero,
- CBORObject.DecodeFromBytes(new byte[] {
-        0xc2, 0x40 }).AsBigInteger());
+ CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsBigInteger());
       Assert.AreEqual(
 BigInteger.Zero - BigInteger.One,
 CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x41, 0x00 }).AsBigInteger());

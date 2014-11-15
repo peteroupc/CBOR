@@ -193,7 +193,15 @@ namespace Test {
     }
     [TestMethod]
     public void TestToDouble() {
-      // not implemented yet
+      // test for correct rounding
+      double dbl;
+      dbl = ExtendedRational.FromExtendedDecimal(
+        ExtendedDecimal.FromString(
+       "1.972579273363468721491642554610734805464744567871093749999999999999"))
+        .ToDouble();
+      Assert.AreEqual(
+        "1.9725792733634686104693400920950807631015777587890625",
+        ExtendedFloat.FromDouble(dbl).ToPlainString());
     }
     [TestMethod]
     public void TestToExtendedDecimal() {
