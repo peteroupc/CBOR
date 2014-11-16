@@ -1032,20 +1032,23 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
     [TestMethod]
     public void TestRationalDivide() {
       var fr = new FastRandom();
-      for (var i = 0; i < 100; ++i) {
+      for (var i = 0; i < 500; ++i) {
         ExtendedRational er = RandomObjects.RandomRational(fr);
         ExtendedRational er2 = RandomObjects.RandomRational(fr);
         if (er2.IsZero || !er2.IsFinite) {
           continue;
         }
+        if (er.IsZero || !er.IsFinite) {
+          continue;
+        }
         ExtendedRational ermult = er.Multiply(er2);
         ExtendedRational erdiv = ermult.Divide(er);
         if (erdiv.CompareTo(er2) != 0) {
-          Assert.Fail(er + "; " + er2);
+          Assert.Fail(er + "; " + erdiv + "; " + er2);
         }
         erdiv = ermult.Divide(er2);
         if (erdiv.CompareTo(er) != 0) {
-          Assert.Fail(er + "; " + er2);
+          Assert.Fail(er + "; " + erdiv + "; " +er2);
         }
       }
     }

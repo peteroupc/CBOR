@@ -3,8 +3,25 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
 
 namespace Test {
-  [TestClass]
+[TestClass]
   public class ExtendedFloatTest {
+    [TestMethod]
+    public void TestMovePointRight() {
+      ExtendedFloat ef;
+      ExtendedFloat ef2;
+      ef = ExtendedFloat.FromInt32(0x100).MovePointRight(4);
+      ef2 = ExtendedFloat.FromInt32(0x1000);
+      Assert.AreEqual(0, ef.CompareTo(ef2));
+    }
+    [TestMethod]
+    public void TestMovePointLeft() {
+      ExtendedFloat ef;
+      ExtendedFloat ef2;
+      ef = ExtendedFloat.FromInt32(0x150).MovePointLeft(4);
+      ef2 = ExtendedFloat.FromInt32(0x15);
+      Assert.AreEqual(0, ef.CompareTo(ef2));
+    }
+
     public static ExtendedFloat FromBinary(string str) {
       int smallExponent = 0;
       int index = 0;

@@ -5,7 +5,23 @@ using PeterO;
 namespace Test {
   [TestClass]
   public class ExtendedDecimalTest {
-    [TestMethod]
+[TestMethod]
+public void TestMovePointRight() {
+ExtendedDecimal ed;
+ExtendedDecimal ed2;
+ed = ExtendedDecimal.FromInt32(100).MovePointRight(1);
+ed2 = ExtendedDecimal.FromInt32(1000);
+Assert.AreEqual(0, ed.CompareTo(ed2));
+}
+[TestMethod]
+public void TestMovePointLeft() {
+ExtendedDecimal ed;
+ExtendedDecimal ed2;
+  ed = ExtendedDecimal.FromInt32(150).MovePointLeft(1);
+ed2 = ExtendedDecimal.FromInt32(15);
+Assert.AreEqual(0, ed.CompareTo(ed2));
+}
+[TestMethod]
     public void TestAbs() {
       // not implemented yet
     }

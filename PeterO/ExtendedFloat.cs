@@ -2473,5 +2473,155 @@ namespace PeterO {
     public static ExtendedFloat PI(PrecisionContext ctx) {
       return MathValue.Pi(ctx);
     }
+
+    /// <summary>Returns a number similar to this number but with the radix
+    /// point
+    /// moved to the right. <param name='ctx'>A precision context to control
+    /// precision, rounding, and exponent range of the result. If HasFlags of
+    /// the
+    /// context is true, will also store the flags resulting from the operation
+    /// (the
+    /// flags are in addition to the pre-existing flags). Can be null.</param>
+    /// </summary>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    public ExtendedFloat MovePointLeft(int places) {
+      return this.MovePointLeft((BigInteger)places, null);
+    }
+
+    /// <summary>Returns a number similar to this number but with the radix
+    /// point
+    /// moved to the right. <param name='ctx'>A precision context to control
+    /// precision, rounding, and exponent range of the result. If HasFlags of
+    /// the
+    /// context is true, will also store the flags resulting from the operation
+    /// (the
+    /// flags are in addition to the pre-existing flags). Can be null.</param>
+    /// </summary>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    public ExtendedFloat MovePointLeft(int places, PrecisionContext ctx) {
+      return this.MovePointLeft((BigInteger)places, ctx);
+    }
+
+    /// <summary>Returns a number similar to this number but with the radix
+    /// point
+    /// moved to the right. <param name='ctx'>A precision context to control
+    /// precision, rounding, and exponent range of the result. If HasFlags of
+    /// the
+    /// context is true, will also store the flags resulting from the operation
+    /// (the
+    /// flags are in addition to the pre-existing flags). Can be null.</param>
+    /// </summary>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    public ExtendedFloat MovePointLeft(BigInteger bigPlaces) {
+      return this.MovePointLeft(bigPlaces, null);
+    }
+
+    /// <summary>Returns a number similar to this number but with the radix
+    /// point
+    /// moved to the right. <param name='ctx'>A precision context to control
+    /// precision, rounding, and exponent range of the result. If HasFlags of
+    /// the
+    /// context is true, will also store the flags resulting from the operation
+    /// (the
+    /// flags are in addition to the pre-existing flags). Can be null.</param>
+    /// </summary>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    public ExtendedFloat MovePointLeft(
+BigInteger bigPlaces,
+PrecisionContext ctx) {
+      if (bigPlaces.IsZero) {
+        return this.RoundToPrecision(ctx);
+      }
+      if (!this.IsFinite) {
+        return this.RoundToPrecision(ctx);
+      }
+      BigInteger bigExp = this.Exponent;
+      bigExp -= bigPlaces;
+      return CreateWithFlags(
+this.unsignedMantissa,
+bigExp,
+this.flags).RoundToPrecision(ctx);
+    }
+
+    /// <summary>Returns a number similar to this number but with the radix
+    /// point
+    /// moved to the right. <param name='ctx'>A precision context to control
+    /// precision, rounding, and exponent range of the result. If HasFlags of
+    /// the
+    /// context is true, will also store the flags resulting from the operation
+    /// (the
+    /// flags are in addition to the pre-existing flags). Can be null.</param>
+    /// </summary>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    public ExtendedFloat MovePointRight(int places) {
+      return this.MovePointRight((BigInteger)places, null);
+    }
+
+    /// <summary>Returns a number similar to this number but with the radix
+    /// point
+    /// moved to the right. <param name='ctx'>A precision context to control
+    /// precision, rounding, and exponent range of the result. If HasFlags of
+    /// the
+    /// context is true, will also store the flags resulting from the operation
+    /// (the
+    /// flags are in addition to the pre-existing flags). Can be null.</param>
+    /// </summary>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    public ExtendedFloat MovePointRight(int places, PrecisionContext ctx) {
+      return this.MovePointRight((BigInteger)places, ctx);
+    }
+
+    /// <summary>Returns a number similar to this number but with the radix
+    /// point
+    /// moved to the right. <param name='ctx'>A precision context to control
+    /// precision, rounding, and exponent range of the result. If HasFlags of
+    /// the
+    /// context is true, will also store the flags resulting from the operation
+    /// (the
+    /// flags are in addition to the pre-existing flags). Can be null.</param>
+    /// </summary>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    public ExtendedFloat MovePointRight(BigInteger bigPlaces) {
+      return this.MovePointRight(bigPlaces, null);
+    }
+
+    /// <summary>Returns a number similar to this number but with the radix
+    /// point
+    /// moved to the right. <param name='ctx'>A precision context to control
+    /// precision, rounding, and exponent range of the result. If HasFlags of
+    /// the
+    /// context is true, will also store the flags resulting from the operation
+    /// (the
+    /// flags are in addition to the pre-existing flags). Can be null.</param>
+    /// </summary>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>An ExtendedFloat object.</returns>
+    public ExtendedFloat MovePointRight(
+      BigInteger bigPlaces,
+      PrecisionContext ctx) {
+      if (bigPlaces.IsZero) {
+        return this.RoundToPrecision(ctx);
+      }
+      if (!this.IsFinite) {
+        return this.RoundToPrecision(ctx);
+      }
+      BigInteger bigExp = this.Exponent;
+      bigExp += bigPlaces;
+      return CreateWithFlags(
+this.unsignedMantissa,
+bigExp,
+this.flags).RoundToPrecision(ctx);
+    }
   }
 }
