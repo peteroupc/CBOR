@@ -1732,6 +1732,154 @@ Finds the constant pi.
 Pi rounded to the given precision. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
+### MovePointLeft
+
+    public PeterO.ExtendedDecimal MovePointLeft(
+        int places);
+
+Returns a number similar to this number but with the decimal point moved to the right. 
+
+<b>Parameters:</b>
+
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+
+ * <i>places</i>: A 32-bit signed integer.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### MovePointLeft
+
+    public PeterO.ExtendedDecimal MovePointLeft(
+        int places,
+        PeterO.PrecisionContext ctx);
+
+Returns a number similar to this number but with the decimal point moved to the right. 
+
+<b>Parameters:</b>
+
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+
+ * <i>places</i>: A 32-bit signed integer.
+
+ * <i>ctx</i>: A PrecisionContext object.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### MovePointLeft
+
+    public PeterO.ExtendedDecimal MovePointLeft(
+        PeterO.BigInteger bigPlaces);
+
+Returns a number similar to this number but with the decimal point moved to the right. 
+
+<b>Parameters:</b>
+
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+
+ * <i>bigPlaces</i>: A BigInteger object.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### MovePointLeft
+
+    public PeterO.ExtendedDecimal MovePointLeft(
+        PeterO.BigInteger bigPlaces,
+        PeterO.PrecisionContext ctx);
+
+Returns a number similar to this number but with the decimal point moved to the right. 
+
+<b>Parameters:</b>
+
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+
+ * <i>bigPlaces</i>: A BigInteger object.
+
+ * <i>ctx</i>: A PrecisionContext object.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### MovePointRight
+
+    public PeterO.ExtendedDecimal MovePointRight(
+        int places);
+
+Returns a number similar to this number but with the decimal point moved to the right. 
+
+<b>Parameters:</b>
+
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+
+ * <i>places</i>: A 32-bit signed integer.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### MovePointRight
+
+    public PeterO.ExtendedDecimal MovePointRight(
+        int places,
+        PeterO.PrecisionContext ctx);
+
+Returns a number similar to this number but with the decimal point moved to the right. 
+
+<b>Parameters:</b>
+
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+
+ * <i>places</i>: A 32-bit signed integer.
+
+ * <i>ctx</i>: A PrecisionContext object.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### MovePointRight
+
+    public PeterO.ExtendedDecimal MovePointRight(
+        PeterO.BigInteger bigPlaces);
+
+Returns a number similar to this number but with the decimal point moved to the right. 
+
+<b>Parameters:</b>
+
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+
+ * <i>bigPlaces</i>: A BigInteger object.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### MovePointRight
+
+    public PeterO.ExtendedDecimal MovePointRight(
+        PeterO.BigInteger bigPlaces,
+        PeterO.PrecisionContext ctx);
+
+Returns a number similar to this number but with the decimal point moved to the right. 
+
+<b>Parameters:</b>
+
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+
+ * <i>bigPlaces</i>: A BigInteger object.
+
+ * <i>ctx</i>: A PrecisionContext object.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
 ### Exponent
 
     public PeterO.BigInteger Exponent { get; }

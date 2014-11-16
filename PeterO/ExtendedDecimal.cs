@@ -372,10 +372,17 @@ namespace PeterO {
     /// java.math.BigDecimal(),
     /// except that the digits must be ASCII digits ('0' through '9').</para>
     /// </summary>
-    /// <param name='str'>A String object.</param>
+    /// <param name='str'>A string object, a portion of which represents a
+    /// number.</param>
     /// <param name='offset'>A 32-bit signed integer.</param>
     /// <param name='length'>A 32-bit signed integer. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx' >A precision context to control precision, rounding,
+    /// and
+    /// exponent range of the result. If HasFlags of the context is true, will
+    /// also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to
+    /// the pre-existing flags). Can be null.</param>
     /// <returns>An arbitrary-precision decimal number with the same value as
     /// the
     /// given string.</returns>

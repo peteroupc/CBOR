@@ -486,7 +486,7 @@ namespace PeterO {
     }
 
     /// <summary>Creates a new precision context using the given maximum number of
-    /// digits and an unlimited exponent range.</summary>
+    /// digits, an unlimited exponent range, and the HalfUp rounding mode.</summary>
     /// <param name='precision'>Maximum number of digits (precision).</param>
     /// <returns>A PrecisionContext object.</returns>
     public static PrecisionContext ForPrecision(int precision) {
@@ -498,8 +498,9 @@ Rounding.HalfUp,
 false).WithUnlimitedExponents();
     }
 
-    /// <summary>Creates a new PrecisionContext object initialized with unlimited
-    /// precision and exponent range, and the given rounding mode.</summary>
+    /// <summary>Creates a new PrecisionContext object initialized with an unlimited
+    /// precision, an unlimited exponent range, and the given rounding
+    /// mode.</summary>
     /// <param name='rounding'>The rounding mode for the new precision
     /// context.</param>
     /// <returns>A PrecisionContext object.</returns>
@@ -512,9 +513,8 @@ rounding,
 false).WithUnlimitedExponents();
     }
 
-    /// <summary>Creates a new PrecisionContext object initialized with unlimited
-    /// and exponent range, and the given rounding mode and maximum
-    /// precision.</summary>
+    /// <summary>Creates a new PrecisionContext object initialized with an unlimited
+    /// exponent range, and the given rounding mode and maximum precision.</summary>
     /// <param name='precision'>Maximum number of digits (precision).</param>
     /// <param name='rounding'>A Rounding object.</param>
     /// <returns>A PrecisionContext object.</returns>
