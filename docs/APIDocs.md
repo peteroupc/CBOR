@@ -7,7 +7,7 @@
  * [PeterO.Cbor.ICBORConverter&lt;T&gt;](PeterO.Cbor.ICBORConverter-T.md) - Interface implemented by classes that convert objects of arbitrary             types to CBOR objects.
  * [PeterO.Cbor.ICBORTag](PeterO.Cbor.ICBORTag.md) - Implemented by classes that validate CBOR objects belonging to a             specific tag.
  * [PeterO.DataUtilities](PeterO.DataUtilities.md) - Contains methods useful for reading and writing strings.
- * [PeterO.ExtendedDecimal](PeterO.ExtendedDecimal.md) - Represents an arbitrary-precision decimal floating-point number.
+ * [PeterO.ExtendedDecimal](PeterO.ExtendedDecimal.md) - Represents an arbitrary-precision decimal floating-point             number.
  * [PeterO.ExtendedFloat](PeterO.ExtendedFloat.md) - Represents an arbitrary-precision binary floating-point number.
  * [PeterO.ExtendedRational](PeterO.ExtendedRational.md) - Arbitrary-precision rational number.
  * [PeterO.PrecisionContext](PeterO.PrecisionContext.md) - Contains parameters for controlling the precision, rounding, and             exponent range of arbitrary-precision numbers.
