@@ -353,7 +353,7 @@ BigInteger bigintSecond) {
       }
       if (power.Sign < 0) {
         throw new ArgumentException("power's sign (" + power.Sign +
-          ") is less than " + "0");
+          ") is less than 0");
       }
       BigInteger val = BigInteger.One;
       while (power.Sign > 0) {

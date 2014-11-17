@@ -84,7 +84,7 @@ namespace Test {
     public int NextValue(int v) {
       if (v <= 0) {
         throw new ArgumentException(
-          "v (" + v + ") is not greater than " + "0");
+          "v (" + v + ") is not greater than 0");
       }
       if (v <= 1) {
         return 0;
@@ -110,6 +110,15 @@ namespace Test {
         }
       }
       ++this.count;
+      if (v == 0x1000000) {
+        return this.NextValueInternal() & 0xffffff;
+      }
+      if (v == 0x10000) {
+        return this.NextValueInternal() & 0xffff;
+      }
+      if (v == 0x100) {
+        return this.NextValueInternal() & 0xff;
+      }
       int maxExclusive = (Int32.MaxValue / v) * v;
       while (true) {
         int vi = this.NextValueInternal();

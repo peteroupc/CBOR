@@ -168,7 +168,7 @@ params CBORTypeFilter[] elements) {
       }
       if (arrayLength < 0) {
         throw new ArgumentException("arrayLength (" + arrayLength +
-          ") is less than " + "0");
+          ") is less than 0");
       }
       if (arrayLength < elements.Length) {
         throw new ArgumentException("arrayLength (" + arrayLength +
@@ -207,7 +207,7 @@ params CBORTypeFilter[] elements) {
       }
       if (arrayLength < 0) {
         throw new ArgumentException("arrayLength (" + arrayLength +
-          ") is less than " + "0");
+          ") is less than 0");
       }
       if (arrayLength < elements.Length) {
         throw new ArgumentException("arrayLength (" + arrayLength +
@@ -231,7 +231,7 @@ params CBORTypeFilter[] elements) {
       }
       if (this.arrayLength < 0) {
         throw new ArgumentException("this.arrayLength (" + this.arrayLength +
-          ") is less than " + "0");
+          ") is less than 0");
       }
       if (this.arrayLength < this.elements.Length) {
         throw new ArgumentException("this.arrayLength (" + this.arrayLength +
@@ -262,7 +262,7 @@ params CBORTypeFilter[] elements) {
     public bool MajorTypeMatches(int type) {
       #if DEBUG
       if (type < 0) {
-        throw new ArgumentException("type (" + type + ") is less than " + "0");
+        throw new ArgumentException("type (" + type + ") is less than 0");
       }
       if (type > 7) {
         throw new ArgumentException("type (" + type + ") is more than " + "7");
@@ -372,7 +372,7 @@ params CBORTypeFilter[] elements) {
     public bool ArrayIndexAllowed(int index) {
    return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength ||
         ((this.arrayMinLength || index < this.arrayLength) && index >=
-                                                0));
+                              0));
     }
 
     /// <summary>Not documented yet.</summary>

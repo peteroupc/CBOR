@@ -2066,7 +2066,7 @@ namespace PeterO {
     /// the
     /// number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b),
     /// and
-    /// 3 means round to the sixteens place (10b^3, 1000b). A value of 0 rounds
+    /// 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds
     /// the
     /// number to an integer.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
@@ -2096,7 +2096,7 @@ namespace PeterO {
     /// the
     /// number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b),
     /// and
-    /// 3 means round to the sixteens place (10b^3, 1000b). A value of 0 rounds
+    /// 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds
     /// the
     /// number to an integer.</param>
     /// <param name='ctx' >A precision context to control precision, rounding,
@@ -2134,7 +2134,7 @@ namespace PeterO {
     /// places
     /// number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b),
     /// and
-    /// 3 means round to the sixteens place (10b^3, 1000b). A value of 0 rounds
+    /// 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds
     /// the
     /// number to an integer.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
@@ -2163,7 +2163,7 @@ namespace PeterO {
     /// places
     /// number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b),
     /// and
-    /// 3 means round to the sixteens place (10b^3, 1000b). A value of 0 rounds
+    /// 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds
     /// the
     /// number to an integer.</param>
     /// <param name='ctx' >A precision context to control precision, rounding,
@@ -2476,7 +2476,7 @@ namespace PeterO {
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
+    /// moved to the left. <param name='ctx'>A precision context to control
     /// precision, rounding, and exponent range of the result. If HasFlags of
     /// the
     /// context is true, will also store the flags resulting from the operation
@@ -2491,7 +2491,7 @@ namespace PeterO {
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
+    /// moved to the left. <param name='ctx'>A precision context to control
     /// precision, rounding, and exponent range of the result. If HasFlags of
     /// the
     /// context is true, will also store the flags resulting from the operation
@@ -2507,7 +2507,7 @@ namespace PeterO {
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
+    /// moved to the left. <param name='ctx'>A precision context to control
     /// precision, rounding, and exponent range of the result. If HasFlags of
     /// the
     /// context is true, will also store the flags resulting from the operation
@@ -2522,15 +2522,7 @@ namespace PeterO {
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
-    /// precision, rounding, and exponent range of the result. If HasFlags of
-    /// the
-    /// context is true, will also store the flags resulting from the operation
-    /// (the
-    /// flags are in addition to the pre-existing flags). Can be null.</param>
-    /// </summary>
-    /// <param name='bigPlaces'>A BigInteger object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// moved to the left.</summary>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat MovePointLeft(
 BigInteger bigPlaces,
@@ -2538,26 +2530,13 @@ PrecisionContext ctx) {
       if (bigPlaces.IsZero) {
         return this.RoundToPrecision(ctx);
       }
-      if (!this.IsFinite) {
-        return this.RoundToPrecision(ctx);
-      }
-      BigInteger bigExp = this.Exponent;
-      bigExp -= bigPlaces;
-      return CreateWithFlags(
-this.unsignedMantissa,
-bigExp,
-this.flags).RoundToPrecision(ctx);
+      return (!this.IsFinite) ? this.RoundToPrecision(ctx) :
+        this.MovePointRight(-(BigInteger)bigPlaces, ctx);
     }
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
-    /// precision, rounding, and exponent range of the result. If HasFlags of
-    /// the
-    /// context is true, will also store the flags resulting from the operation
-    /// (the
-    /// flags are in addition to the pre-existing flags). Can be null.</param>
-    /// </summary>
+    /// moved to the right.</summary>
     /// <param name='places'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat MovePointRight(int places) {
@@ -2566,15 +2545,7 @@ this.flags).RoundToPrecision(ctx);
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
-    /// precision, rounding, and exponent range of the result. If HasFlags of
-    /// the
-    /// context is true, will also store the flags resulting from the operation
-    /// (the
-    /// flags are in addition to the pre-existing flags). Can be null.</param>
-    /// </summary>
-    /// <param name='places'>A 32-bit signed integer.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// moved to the right.</summary>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat MovePointRight(int places, PrecisionContext ctx) {
       return this.MovePointRight((BigInteger)places, ctx);
@@ -2582,13 +2553,7 @@ this.flags).RoundToPrecision(ctx);
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
-    /// precision, rounding, and exponent range of the result. If HasFlags of
-    /// the
-    /// context is true, will also store the flags resulting from the operation
-    /// (the
-    /// flags are in addition to the pre-existing flags). Can be null.</param>
-    /// </summary>
+    /// moved to the right.</summary>
     /// <param name='bigPlaces'>A BigInteger object.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat MovePointRight(BigInteger bigPlaces) {
@@ -2606,10 +2571,87 @@ this.flags).RoundToPrecision(ctx);
     /// </summary>
     /// <param name='bigPlaces'>A BigInteger object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>An ExtendedFloat object.</returns>
+    /// <returns>A number whose scale is increased by <paramref name='bigPlaces'
+    /// /> ,
+    /// but not to more than 0.</returns>
     public ExtendedFloat MovePointRight(
-      BigInteger bigPlaces,
-      PrecisionContext ctx) {
+BigInteger bigPlaces,
+PrecisionContext ctx) {
+      if (bigPlaces.IsZero) {
+        return this.RoundToPrecision(ctx);
+      }
+      if (!this.IsFinite) {
+        return this.RoundToPrecision(ctx);
+      }
+      BigInteger bigExp = this.Exponent;
+      bigExp += bigPlaces;
+      if (bigExp.Sign > 0) {
+        BigInteger mant = DecimalUtility.ShiftLeft(
+          this.unsignedMantissa,
+          bigExp);
+        return CreateWithFlags(
+mant,
+BigInteger.Zero,
+this.flags).RoundToPrecision(ctx);
+      }
+      return CreateWithFlags(
+        this.unsignedMantissa,
+        bigExp,
+        this.flags).RoundToPrecision(ctx);
+    }
+
+    /// <summary>Returns a number similar to this number but with the scale
+    /// adjusted.</summary>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
+    public ExtendedFloat ScaleByPowerOfTwo(int places) {
+      return this.ScaleByPowerOfTwo((BigInteger)places, null);
+    }
+
+    /// <summary>Returns a number similar to this number but with the scale
+    /// adjusted.</summary>
+    /// <param name='ctx' >A precision context to control precision, rounding,
+    /// and
+    /// exponent range of the result. If HasFlags of the context is true, will
+    /// also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to
+    /// the pre-existing flags). Can be null.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
+    public ExtendedFloat ScaleByPowerOfTwo(int places, PrecisionContext ctx) {
+      return this.ScaleByPowerOfTwo((BigInteger)places, ctx);
+    }
+
+    /// <summary>Returns a number similar to this number but with the scale
+    /// adjusted. <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the context
+    /// is
+    /// true, will also store the flags resulting from the operation (the flags
+    /// are
+    /// in addition to the pre-existing flags). Can be null.</param>
+    /// </summary>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
+    public ExtendedFloat ScaleByPowerOfTwo(BigInteger bigPlaces) {
+      return this.ScaleByPowerOfTwo(bigPlaces, null);
+    }
+
+    /// <summary>Returns a number similar to this number but with its scale
+    /// adjusted. <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the context
+    /// is
+    /// true, will also store the flags resulting from the operation (the flags
+    /// are
+    /// in addition to the pre-existing flags). Can be null.</param>
+    /// </summary>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <returns>A number whose scale is increased by <paramref name='bigPlaces'
+    /// />
+    /// .</returns>
+    public ExtendedFloat ScaleByPowerOfTwo(
+BigInteger bigPlaces,
+PrecisionContext ctx) {
       if (bigPlaces.IsZero) {
         return this.RoundToPrecision(ctx);
       }
@@ -2619,9 +2661,9 @@ this.flags).RoundToPrecision(ctx);
       BigInteger bigExp = this.Exponent;
       bigExp += bigPlaces;
       return CreateWithFlags(
-this.unsignedMantissa,
-bigExp,
-this.flags).RoundToPrecision(ctx);
+        this.unsignedMantissa,
+        bigExp,
+        this.flags).RoundToPrecision(ctx);
     }
   }
 }

@@ -413,7 +413,7 @@ Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN)
       Assert.AreEqual(ExtendedDecimal.Zero, ExtendedDecimal.FromString("0"));
   Assert.AreEqual(
 ExtendedDecimal.Zero,
-ExtendedDecimal.FromString("0" , null));
+ExtendedDecimal.FromString("0", null));
       try {
         ExtendedDecimal.FromString(null, null);
         Assert.Fail("Should have failed");

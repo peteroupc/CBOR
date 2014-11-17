@@ -212,7 +212,7 @@ namespace PeterO.Cbor {
         return null;
       }
       if ((newScale == null && newScaleInt == 0) || (newScale != null &&
-                                                     newScale.Sign == 0)) {
+                              newScale.Sign == 0)) {
         // No fractional part
         if (mant != null && mant.CanFitInInt32()) {
           mantInt = mant.AsInt32();
@@ -223,7 +223,7 @@ namespace PeterO.Cbor {
           #if DEBUG
           if (mantInt < 0) {
             throw new ArgumentException("mantInt (" + mantInt +
-              ") is less than " + "0");
+              ") is less than 0");
           }
           #endif
 

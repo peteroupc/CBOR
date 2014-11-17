@@ -1796,7 +1796,7 @@ namespace PeterO {
     /// <summary>Represents the number 1.</summary>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security" ,
-                "CA2104" , Justification = "ExtendedDecimal is immutable")]
+                "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
     public static readonly ExtendedDecimal One =
       ExtendedDecimal.Create(BigInteger.One, BigInteger.Zero);
@@ -1804,7 +1804,7 @@ namespace PeterO {
     /// <summary>Represents the number 0.</summary>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security" ,
-                "CA2104" , Justification = "ExtendedDecimal is immutable")]
+                "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
     public static readonly ExtendedDecimal Zero =
       ExtendedDecimal.Create(BigInteger.Zero, BigInteger.Zero);
@@ -1812,7 +1812,7 @@ namespace PeterO {
     /// <summary>Represents the number negative zero.</summary>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security" ,
-                "CA2104" , Justification = "ExtendedDecimal is immutable")]
+                "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
     public static readonly ExtendedDecimal NegativeZero =
       CreateWithFlags(
@@ -1823,7 +1823,7 @@ namespace PeterO {
     /// <summary>Represents the number 10.</summary>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security" ,
-                "CA2104" , Justification = "ExtendedDecimal is immutable")]
+                "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
 
     public static readonly ExtendedDecimal Ten =
@@ -3382,7 +3382,7 @@ namespace PeterO {
 
     /// <summary>Returns a number similar to this number but with the decimal
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
+    /// moved to the left. <param name='ctx'>A precision context to control
     /// precision, rounding, and exponent range of the result. If HasFlags of
     /// the
     /// context is true, will also store the flags resulting from the operation
@@ -3398,7 +3398,7 @@ namespace PeterO {
 
     /// <summary>Returns a number similar to this number but with the decimal
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
+    /// moved to the left. <param name='ctx'>A precision context to control
     /// precision, rounding, and exponent range of the result. If HasFlags of
     /// the
     /// context is true, will also store the flags resulting from the operation
@@ -3413,7 +3413,7 @@ namespace PeterO {
 
     /// <summary>Returns a number similar to this number but with the decimal
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
+    /// moved to the left. <param name='ctx'>A precision context to control
     /// precision, rounding, and exponent range of the result. If HasFlags of
     /// the
     /// context is true, will also store the flags resulting from the operation
@@ -3429,26 +3429,13 @@ PrecisionContext ctx) {
       if (bigPlaces.IsZero) {
         return this.RoundToPrecision(ctx);
       }
-      if (!this.IsFinite) {
-        return this.RoundToPrecision(ctx);
-      }
-      BigInteger bigExp = this.Exponent;
-      bigExp -= bigPlaces;
-      return CreateWithFlags(
-this.unsignedMantissa,
-bigExp,
-this.flags).RoundToPrecision(ctx);
+      return (!this.IsFinite) ? this.RoundToPrecision(ctx) :
+        this.MovePointRight(-(BigInteger)bigPlaces, ctx);
     }
 
     /// <summary>Returns a number similar to this number but with the decimal
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
-    /// precision, rounding, and exponent range of the result. If HasFlags of
-    /// the
-    /// context is true, will also store the flags resulting from the operation
-    /// (the
-    /// flags are in addition to the pre-existing flags). Can be null.</param>
-    /// </summary>
+    /// moved to the right.</summary>
     /// <param name='places'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal MovePointRight(int places) {
@@ -3457,15 +3444,7 @@ this.flags).RoundToPrecision(ctx);
 
     /// <summary>Returns a number similar to this number but with the decimal
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
-    /// precision, rounding, and exponent range of the result. If HasFlags of
-    /// the
-    /// context is true, will also store the flags resulting from the operation
-    /// (the
-    /// flags are in addition to the pre-existing flags). Can be null.</param>
-    /// </summary>
-    /// <param name='places'>A 32-bit signed integer.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// moved to the right.</summary>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal MovePointRight(int places, PrecisionContext ctx) {
       return this.MovePointRight((BigInteger)places, ctx);
@@ -3488,17 +3467,78 @@ this.flags).RoundToPrecision(ctx);
 
     /// <summary>Returns a number similar to this number but with the decimal
     /// point
-    /// moved to the right. <param name='ctx'>A precision context to control
-    /// precision, rounding, and exponent range of the result. If HasFlags of
-    /// the
-    /// context is true, will also store the flags resulting from the operation
-    /// (the
-    /// flags are in addition to the pre-existing flags). Can be null.</param>
+    /// moved to the right.</summary>
+    /// <returns>A number whose scale is increased by <paramref name='bigPlaces'
+    /// /> ,
+    /// but not to more than 0.</returns>
+    public ExtendedDecimal MovePointRight(
+BigInteger bigPlaces,
+PrecisionContext ctx) {
+      if (bigPlaces.IsZero) {
+        return this.RoundToPrecision(ctx);
+      }
+      if (!this.IsFinite) {
+        return this.RoundToPrecision(ctx);
+      }
+      BigInteger bigExp = this.Exponent;
+      bigExp += bigPlaces;
+      if (bigExp.Sign > 0) {
+        BigInteger mant = this.unsignedMantissa;
+        BigInteger bigPower = DecimalUtility.FindPowerOfTenFromBig(bigExp);
+        mant *= bigPower;
+        return CreateWithFlags(
+mant,
+BigInteger.Zero,
+this.flags).RoundToPrecision(ctx);
+      }
+      return CreateWithFlags(
+        this.unsignedMantissa,
+        bigExp,
+        this.flags).RoundToPrecision(ctx);
+    }
+
+    /// <summary>Returns a number similar to this number but with the scale
+    /// adjusted.</summary>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
+    public ExtendedDecimal ScaleByPowerOfTen(int places) {
+      return this.ScaleByPowerOfTen((BigInteger)places, null);
+    }
+
+    /// <summary>Returns a number similar to this number but with the scale
+    /// adjusted.</summary>
+    /// <param name='ctx' >A precision context to control precision, rounding,
+    /// and
+    /// exponent range of the result. If HasFlags of the context is true, will
+    /// also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to
+    /// the pre-existing flags). Can be null.</param>
+    /// <returns>An ExtendedDecimal object.</returns>
+    public ExtendedDecimal ScaleByPowerOfTen(int places, PrecisionContext ctx) {
+      return this.ScaleByPowerOfTen((BigInteger)places, ctx);
+    }
+
+    /// <summary>Returns a number similar to this number but with the scale
+    /// adjusted. <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the context
+    /// is
+    /// true, will also store the flags resulting from the operation (the flags
+    /// are
+    /// in addition to the pre-existing flags). Can be null.</param>
     /// </summary>
     /// <param name='bigPlaces'>A BigInteger object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
-    public ExtendedDecimal MovePointRight(
+    public ExtendedDecimal ScaleByPowerOfTen(BigInteger bigPlaces) {
+      return this.ScaleByPowerOfTen(bigPlaces, null);
+    }
+
+    /// <summary>Returns a number similar to this number but with its scale
+    /// adjusted.</summary>
+    /// <returns>A number whose scale is increased by <paramref name='bigPlaces'
+    /// />
+    /// .</returns>
+    public ExtendedDecimal ScaleByPowerOfTen(
 BigInteger bigPlaces,
 PrecisionContext ctx) {
       if (bigPlaces.IsZero) {

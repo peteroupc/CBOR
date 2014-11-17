@@ -1171,7 +1171,7 @@ namespace PeterO {
 
       if (resultStart < 0) {
         throw new ArgumentException("resultStart (" + resultStart +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (resultStart > resultArr.Length) {
@@ -1181,7 +1181,7 @@ namespace PeterO {
 
       if (count + count < 0) {
         throw new ArgumentException("count plus count (" + (count + count) +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
       if (count + count > resultArr.Length) {
         throw new ArgumentException("count plus count (" + (count + count) +
@@ -1200,7 +1200,7 @@ namespace PeterO {
 
       if (tempStart < 0) {
         throw new ArgumentException("tempStart (" + tempStart +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (tempStart > tempArr.Length) {
@@ -1210,7 +1210,7 @@ namespace PeterO {
 
       if (count + count < 0) {
         throw new ArgumentException("count plus count (" + (count + count) +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (count + count > tempArr.Length) {
@@ -1230,7 +1230,7 @@ namespace PeterO {
 
       if (words1Start < 0) {
         throw new ArgumentException("words1Start (" + words1Start +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (words1Start > words1.Length) {
@@ -1260,7 +1260,7 @@ namespace PeterO {
 
       if (words2Start < 0) {
         throw new ArgumentException("words2Start (" + words2Start +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (words2Start > words2.Length) {
@@ -1849,7 +1849,7 @@ namespace PeterO {
 
       if (acount + bcount < 0) {
         throw new ArgumentException("acount plus bcount (" + (acount + bcount) +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (acount + bcount > productArr.Length) {
@@ -1869,7 +1869,7 @@ namespace PeterO {
 
       if (tempStart < 0) {
         throw new ArgumentException("tempStart (" + tempStart +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (tempStart > tempArr.Length) {
@@ -2045,7 +2045,7 @@ namespace PeterO {
 
       if (resultStart < 0) {
         throw new ArgumentException("resultStart (" + resultStart +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (resultStart > resultArr.Length) {
@@ -2078,7 +2078,7 @@ namespace PeterO {
 
       if (tempStart < 0) {
         throw new ArgumentException("tempStart (" + tempStart +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (tempStart > tempArr.Length) {
@@ -2111,7 +2111,7 @@ namespace PeterO {
 
       if (words1Start < 0) {
         throw new ArgumentException("words1Start (" + words1Start +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (words1Start > words1.Length) {
@@ -2121,7 +2121,7 @@ namespace PeterO {
 
       if (words1Count < 0) {
         throw new ArgumentException("words1Count (" + words1Count +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (words1Count > words1.Length) {
@@ -2141,7 +2141,7 @@ namespace PeterO {
 
       if (words2Start < 0) {
         throw new ArgumentException("words2Start (" + words2Start +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (words2Start > words2.Length) {
@@ -2151,7 +2151,7 @@ namespace PeterO {
 
       if (words2Count < 0) {
         throw new ArgumentException("words2Count (" + words2Count +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
 
       if (words2Count > words2.Length) {
@@ -2778,11 +2778,11 @@ namespace PeterO {
       #if DEBUG
       if (words1Count <= 0) {
         throw new ArgumentException("words1Count (" + words1Count +
-                              ") is not greater than " + "0");
+                              ") is not greater than 0");
       }
       if (words2Count <= 0) {
         throw new ArgumentException("words2Count (" + words2Count +
-                              ") is not greater than " + "0");
+                              ") is not greater than 0");
       }
       #endif
       if (words2Count == 0) {
@@ -3131,7 +3131,7 @@ namespace PeterO {
     private bool GetUnsignedBit(int n) {
       #if DEBUG
       if (n < 0) {
-        throw new ArgumentException("n (" + n + ") is less than " + "0");
+        throw new ArgumentException("n (" + n + ") is less than 0");
       }
       #endif
       return ((n >> 4) < this.words.Length) && ((bool)(((this.words[(n >>
@@ -3522,7 +3522,7 @@ namespace PeterO {
       int sign = power.Sign;
       if (sign < 0) {
         throw new ArgumentException(
-          "sign (" + sign + ") is less than " + "0");
+          "sign (" + sign + ") is less than 0");
       }
       BigInteger thisVar = this;
       if (sign == 0) {
@@ -3556,7 +3556,7 @@ namespace PeterO {
     public BigInteger pow(int powerSmall) {
       if (powerSmall < 0) {
         throw new ArgumentException("powerSmall (" + powerSmall +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
       BigInteger thisVar = this;
       if (powerSmall == 0) {
@@ -4300,7 +4300,7 @@ namespace PeterO {
       }
       if (endIndex < 0) {
         throw new ArgumentException("endIndex (" + endIndex +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
       if (endIndex > str.Length) {
         throw new ArgumentException("endIndex (" + endIndex +

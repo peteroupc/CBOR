@@ -5,22 +5,27 @@ using PeterO;
 namespace Test {
   [TestClass]
   public class ExtendedDecimalTest {
-[TestMethod]
-public void TestMovePointRight() {
-ExtendedDecimal ed;
-ExtendedDecimal ed2;
-ed = ExtendedDecimal.FromInt32(100).MovePointRight(1);
-ed2 = ExtendedDecimal.FromInt32(1000);
-Assert.AreEqual(0, ed.CompareTo(ed2));
-}
-[TestMethod]
-public void TestMovePointLeft() {
-ExtendedDecimal ed;
-ExtendedDecimal ed2;
-  ed = ExtendedDecimal.FromInt32(150).MovePointLeft(1);
-ed2 = ExtendedDecimal.FromInt32(15);
-Assert.AreEqual(0, ed.CompareTo(ed2));
-}
+    [TestMethod]
+    public void TestScaling() {
+      Assert.AreEqual(
+"5.000E+5" ,
+ExtendedDecimal.FromString("5.000" ).ScaleByPowerOfTen(5).ToString());
+      Assert.AreEqual(
+"0.00005000" ,
+ExtendedDecimal.FromString("5.000" ).ScaleByPowerOfTen(-5).ToString());
+      Assert.AreEqual(
+"50000000000" ,
+ExtendedDecimal.FromString("500000" ).MovePointRight(5).ToString());
+      Assert.AreEqual(
+"5.00000" ,
+ExtendedDecimal.FromString("500000" ).MovePointRight(-5).ToString());
+      Assert.AreEqual(
+"50000000000" ,
+ExtendedDecimal.FromString("500000" ).MovePointLeft(-5).ToString());
+      Assert.AreEqual(
+"5.00000" ,
+ExtendedDecimal.FromString("500000" ).MovePointLeft(5).ToString());
+    }
 [TestMethod]
     public void TestAbs() {
       // not implemented yet

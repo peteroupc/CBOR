@@ -78,7 +78,7 @@ namespace PeterO.Cbor {
     /// <para><b>Thread Safety:</b>
     /// </para>
     /// <para>CBOR objects that are numbers,
-    /// "simple values" , and text strings are immutable (their values can't be
+    /// "simple values", and text strings are immutable (their values can't be
     /// changed), so they are inherently safe for use by multiple threads.</para>
     /// <para>CBOR objects that are arrays, maps, and byte strings are mutable, but
     /// this class doesn't attempt to synchronize reads and writes to those objects
@@ -295,7 +295,7 @@ namespace PeterO.Cbor {
       }
       if (bigintTag.Sign < 0) {
         throw new ArgumentException("bigintTag.Sign (" +
-                              bigintTag.Sign + ") is less than " + "0");
+                              bigintTag.Sign + ") is less than 0");
       }
       if (bigintTag.bitLength() > 64) {
         throw new ArgumentException("bigintTag.bitLength (" +
@@ -1418,7 +1418,7 @@ namespace PeterO.Cbor {
     public bool HasTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
       CBORObject obj = this;
       while (true) {
@@ -3317,7 +3317,7 @@ namespace PeterO.Cbor {
     public static CBORObject FromSimpleValue(int simpleValue) {
       if (simpleValue < 0) {
         throw new ArgumentException("simpleValue (" + simpleValue +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
       if (simpleValue > 255) {
         throw new ArgumentException("simpleValue (" + simpleValue +
@@ -3745,7 +3745,7 @@ namespace PeterO.Cbor {
       }
       if (bigintTag.Sign < 0) {
         throw new ArgumentException("bigintTag's sign (" + bigintTag.Sign +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
       if (bigintTag.CompareTo(UInt64MaxValue) > 0) {
         throw new ArgumentException(
@@ -3840,7 +3840,7 @@ namespace PeterO.Cbor {
       int smallTag) {
       if (smallTag < 0) {
       throw new ArgumentException("smallTag (" + smallTag +
-          ") is less than " + "0");
+          ") is less than 0");
       }
       ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);

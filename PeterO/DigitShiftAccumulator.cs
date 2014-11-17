@@ -70,7 +70,7 @@ int olderDiscarded) {
         this.shiftedSmall = (int)bigint;
         if (this.shiftedSmall < 0) {
           throw new ArgumentException("shiftedSmall (" + this.shiftedSmall +
-            ") is less than " + "0");
+            ") is less than 0");
         }
         this.isSmall = true;
       } else {
@@ -142,7 +142,7 @@ int olderDiscarded) {
         this.knownBitLength = new FastInteger(1);
         return;
       }
-      // Console.WriteLine("digits=" + (digits));
+      // Console.WriteLine("digits=" + digits);
       if (digits == 1) {
         BigInteger bigrem;
         BigInteger bigquo = BigInteger.DivRem(
@@ -357,7 +357,7 @@ out bigrem);
         this.knownBitLength.SubtractInt(digitShift);
         var newLength = (int)(digitLength - digitShift);
         // Console.WriteLine("dlen= " + digitLength + " dshift=" +
-        // digitShift + " newlen= " + (newLength));
+        // digitShift + " newlen= " + newLength);
         this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
         if (digitShift <= Int32.MaxValue) {
           this.discardedBitCount.AddInt((int)digitShift);
@@ -449,7 +449,7 @@ out bigrem);
       } else {
         if (bits.Sign < 0) {
           throw new ArgumentException("bits's sign (" + bits.Sign +
-            ") is less than " + "0");
+            ") is less than 0");
         }
         this.knownBitLength = this.CalcKnownDigitLength();
         BigInteger bigintDiff = this.knownBitLength.AsBigInteger();

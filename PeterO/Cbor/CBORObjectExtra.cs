@@ -60,7 +60,7 @@ int scale,
 bool neg) {
       if (scale < 0) {
         throw new ArgumentException(
-"scale (" + scale + ") is less than " + "0");
+"scale (" + scale + ") is less than 0");
       }
       if (scale > 28) {
         throw new ArgumentException(
