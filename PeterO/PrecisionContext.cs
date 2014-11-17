@@ -435,7 +435,7 @@ namespace PeterO {
     public PrecisionContext WithPrecision(int precision) {
       if (precision < 0) {
         throw new ArgumentException("precision (" + precision +
-          ") is less than " + "0");
+          ") is less than 0");
       }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = (BigInteger)precision;
@@ -454,7 +454,7 @@ namespace PeterO {
       }
       if (bigintPrecision.Sign < 0) {
         throw new ArgumentException("bigintPrecision's sign (" +
-          bigintPrecision.Sign + ") is less than " + "0");
+          bigintPrecision.Sign + ") is less than 0");
       }
       PrecisionContext pc = this.Copy();
       pc.bigintPrecision = bigintPrecision;
@@ -544,7 +544,7 @@ int exponentMaxSmall,
 bool clampNormalExponents) {
       if (precision < 0) {
         throw new ArgumentException("precision (" + precision +
-          ") is less than " + "0");
+          ") is less than 0");
       }
       if (exponentMinSmall > exponentMaxSmall) {
         throw new ArgumentException("exponentMinSmall (" + exponentMinSmall +

@@ -48,6 +48,9 @@ namespace PeterO.DocGen {
         if (methodName.StartsWith(".ctor", StringComparison.Ordinal)) {
           methodName = "Constructor";
         }
+        if (methodName.StartsWith(".cctor", StringComparison.Ordinal)) {
+          methodName = "StaticConstructor";
+        }
         if (methodName.Length == 0) {
           continue;
         }

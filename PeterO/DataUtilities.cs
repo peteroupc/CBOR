@@ -71,7 +71,7 @@ bool replace) {
       }
       if (bytesCount < 0) {
         throw new ArgumentException("bytesCount (" + bytesCount +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
       if (bytesCount > bytes.Length) {
         throw new ArgumentException("bytesCount (" + bytesCount +
@@ -601,7 +601,7 @@ bool replace) {
       }
       if (bytesCount < 0) {
         throw new ArgumentException("bytesCount (" + bytesCount +
-                              ") is less than " + "0");
+                              ") is less than 0");
       }
       if (bytesCount > data.Length) {
         throw new ArgumentException("bytesCount (" + bytesCount +

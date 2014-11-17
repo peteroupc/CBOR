@@ -240,15 +240,15 @@ actualBigInt);
     public static int ModPow(int x, int pow, int intMod) {
       if (x < 0) {
         throw new ArgumentException(
-          "x (" + x + ") is less than " + "0");
+          "x (" + x + ") is less than 0");
       }
       if (pow <= 0) {
         throw new ArgumentException(
-          "pow (" + pow + ") is not greater than " + "0");
+          "pow (" + pow + ") is not greater than 0");
       }
       if (intMod <= 0) {
         throw new ArgumentException(
-          "mod (" + intMod + ") is not greater than " + "0");
+          "mod (" + intMod + ") is not greater than 0");
       }
       int r = 1;
       int v = x;

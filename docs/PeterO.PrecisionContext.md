@@ -306,7 +306,7 @@ A PrecisionContext object.
     public static PeterO.PrecisionContext ForPrecision(
         int precision);
 
-Creates a new precision context using the given maximum number of digits and an unlimited exponent range.
+Creates a new precision context using the given maximum number of digits, an unlimited exponent range, and the HalfUp rounding mode.
 
 <b>Parameters:</b>
 
@@ -321,7 +321,7 @@ A PrecisionContext object.
     public static PeterO.PrecisionContext ForRounding(
         PeterO.Rounding rounding);
 
-Creates a new PrecisionContext object initialized with unlimited precision and exponent range, and the given rounding mode.
+Creates a new PrecisionContext object initialized with an unlimited precision, an unlimited exponent range, and the given rounding mode.
 
 <b>Parameters:</b>
 
@@ -337,7 +337,7 @@ A PrecisionContext object.
         int precision,
         PeterO.Rounding rounding);
 
-Creates a new PrecisionContext object initialized with unlimited and exponent range, and the given rounding mode and maximum precision.
+Creates a new PrecisionContext object initialized with an unlimited exponent range, and the given rounding mode and maximum precision.
 
 <b>Parameters:</b>
 

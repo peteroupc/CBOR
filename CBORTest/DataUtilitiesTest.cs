@@ -95,16 +95,16 @@ namespace Test {
         Math.Sign(DataUtilities.CodePointCompare("abc", "abc")));
       Assert.AreEqual(
 0,
-Math.Sign(DataUtilities.CodePointCompare("\ud800\udc00" , "\ud800\udc00")));
+Math.Sign(DataUtilities.CodePointCompare("\ud800\udc00", "\ud800\udc00")));
       Assert.AreEqual(
 -1,
-Math.Sign(DataUtilities.CodePointCompare("abc" , "\ud800\udc00")));
+Math.Sign(DataUtilities.CodePointCompare("abc", "\ud800\udc00")));
       Assert.AreEqual(
 -1,
-Math.Sign(DataUtilities.CodePointCompare("\uf000" , "\ud800\udc00")));
+Math.Sign(DataUtilities.CodePointCompare("\uf000", "\ud800\udc00")));
       Assert.AreEqual(
 1,
-Math.Sign(DataUtilities.CodePointCompare("\uf000" , "\ud800")));
+Math.Sign(DataUtilities.CodePointCompare("\uf000", "\ud800")));
     }
     [TestMethod]
     public void TestGetUtf8Bytes() {

@@ -11,6 +11,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using PeterO;
+using PeterO.Cbor;
 
 namespace CBOR {
   [TestClass]
@@ -1219,7 +1220,15 @@ PrecisionContext ctx) {
     }
 
     public static string[] GetTestFiles() {
-      return Directory.GetFiles(".");
+      var list = new List<string>(Directory.GetFiles("."));
+      if (File.Exists("testfiles.cbor")) {
+CBORObject obj = CBORObject.DecodeFromBytes(File.ReadAllBytes("testfiles.cbor"
+));
+        for (int i = 0; i < obj.Count; ++i) {
+          list.AddRange(Directory.GetFiles(obj[i].AsString()));
+        }
+      }
+      return list.ToArray();
     }
 
     [TestMethod]
