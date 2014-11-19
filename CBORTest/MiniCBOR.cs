@@ -286,8 +286,7 @@ bool check32bit) {
         // Read a floating-point number
         return ReadFP(stream, b);
       }
-      if (b == 0x18 || b == 0x19 ||
-          b == 0x1a || b == 0x38 ||
+      if (b == 0x18 || b == 0x19 || b == 0x1a || b == 0x38 ||
           b == 0x39 || b == 0x3a) {  // covers headbytes 0x18-0x1a and 0x38-0x3A
         return (double)ReadInteger(stream, b, false);
       }

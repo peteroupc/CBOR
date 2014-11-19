@@ -957,8 +957,7 @@ out bigrem);
         case 0:
           if ((this.smallValue < 0 && (int)val < Int32.MinValue -
         this.smallValue) || (this.smallValue > 0 && (int)val >
-            Int32.MaxValue -
-              this.smallValue)) {
+            Int32.MaxValue - this.smallValue)) {
             // would overflow
             if (val >= 0) {
               this.integerMode = 1;

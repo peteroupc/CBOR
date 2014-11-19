@@ -675,7 +675,7 @@ ExtendedDecimal.FromString("0", null));
       }
       try {
         ExtendedFloat.FromString(
-"Infinity" ,
+"Infinity",
 PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
@@ -685,7 +685,7 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"-Infinity" ,
+"-Infinity",
 PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
@@ -695,7 +695,7 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"NaN" ,
+"NaN",
 PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
@@ -705,7 +705,7 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"sNaN" ,
+"sNaN",
 PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
@@ -715,7 +715,7 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"Infinity" ,
+"Infinity",
 PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
@@ -725,7 +725,7 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"-Infinity" ,
+"-Infinity",
 PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
@@ -735,7 +735,7 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"NaN" ,
+"NaN",
 PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
@@ -745,7 +745,7 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"sNaN" ,
+"sNaN",
 PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {

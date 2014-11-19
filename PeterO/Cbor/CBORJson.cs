@@ -80,9 +80,7 @@ namespace PeterO.Cbor {
                       c <<= 4;
                       c |= ch + 10 - 'a';
                     } else {
-                    throw
-                        reader.NewError("Invalid Unicode escaped character"
-);
+                throw reader.NewError("Invalid Unicode escaped character");
                     }
                   }
                   break;
@@ -600,8 +598,7 @@ namespace PeterO.Cbor {
               foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
                 CBORObject key = entry.Key;
                 CBORObject value = entry.Value;
-           string str = (key.ItemType ==
-                  CBORObject.CBORObjectTypeTextString) ?
+           string str = (key.ItemType == CBORObject.CBORObjectTypeTextString) ?
                   ((string)key.ThisItem) : key.ToJSONString();
                 stringMap[str] = value;
               }

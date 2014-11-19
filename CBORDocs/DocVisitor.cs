@@ -478,7 +478,7 @@ StringBuilder builder) {
              (name.Equals("System.Char") ? "char" :
               (name.Equals("System.Object") ? "object" :
            (name.Equals("System.Void") ? "void" : (name.Equals("System.Byte") ?
-                                                            "byte" :
+                              "byte" :
   (name.Equals("System.SByte") ? "sbyte" : (name.Equals("System.String") ?
                 "string" : (name.Equals("System.Boolean") ?
   "bool" : (name.Equals("System.Single") ?

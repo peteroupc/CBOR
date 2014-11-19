@@ -2845,18 +2845,14 @@ false);
       }
     }
 
-    /// <summary>Gets the lesser value between two values, ignoring their signs.
-    /// If
+    /// <summary>Gets the lesser value between two values, ignoring their signs. If
     /// the absolute values are equal, has the same effect as Min.</summary>
-
     /// <param name='a'>A T object. (2).</param>
     /// <param name='b'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-    /// <exception cref='ArgumentNullException' >The parameter <paramref
-    /// name='a' />
+    /// <exception cref='ArgumentNullException'>The parameter <paramref name='a'/>
     /// or <paramref name='b'/> is null.</exception>
- /// <summary>Not documented yet.</summary>
     public T MinMagnitude(T a, T b, PrecisionContext ctx) {
       if (a == null) {
         throw new ArgumentNullException("a");
@@ -2878,18 +2874,14 @@ b,
 ctx));
     }
 
-    /// <summary>Gets the greater value between two values, ignoring their
-    /// signs. If
+    /// <summary>Gets the greater value between two values, ignoring their signs. If
     /// the absolute values are equal, has the same effect as Max.</summary>
-
     /// <param name='a'>A T object. (2).</param>
     /// <param name='b'>A T object. (3).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A T object.</returns>
-    /// <exception cref='ArgumentNullException' >The parameter <paramref
-    /// name='a' />
+    /// <exception cref='ArgumentNullException'>The parameter <paramref name='a'/>
     /// or <paramref name='b'/> is null.</exception>
- /// <summary>Not documented yet.</summary>
     public T MaxMagnitude(T a, T b, PrecisionContext ctx) {
       if (a == null) {
         throw new ArgumentNullException("a");
@@ -2916,8 +2908,7 @@ ctx));
     /// <param name='b'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The larger value of the two objects.</returns>
-    /// <exception cref='ArgumentNullException' >The parameter <paramref
-    /// name='a' />
+    /// <exception cref='ArgumentNullException'>The parameter <paramref name='a'/>
     /// or <paramref name='b'/> is null.</exception>
     public T Max(T a, T b, PrecisionContext ctx) {
       if (a == null) {
@@ -2952,8 +2943,7 @@ ctx));
     /// <param name='b'>A T object. (2).</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The smaller value of the two objects.</returns>
-    /// <exception cref='ArgumentNullException' >The parameter <paramref
-    /// name='a' />
+    /// <exception cref='ArgumentNullException'>The parameter <paramref name='a'/>
     /// or <paramref name='b'/> is null.</exception>
     public T Min(T a, T b, PrecisionContext ctx) {
       if (a == null) {
@@ -4286,8 +4276,7 @@ ctx);
     /// <param name='otherValue'>A T object. (2).</param>
     /// <param name='treatQuietNansAsSignaling'>A Boolean object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is
+    /// <returns>Zero if the values are equal; a negative number if this instance is
     /// less, or a positive number if this instance is greater.</returns>
     public T CompareToWithContext(
 T thisValue,
@@ -4321,8 +4310,7 @@ ctx);
     /// <param name='thisValue'>A T object.</param>
     /// <param name='otherValue'>A T object. (2).</param>
     /// <param name='reportOOM'>A Boolean object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is
+    /// <returns>Zero if the values are equal; a negative number if this instance is
     /// less, or a positive number if this instance is greater.</returns>
     private int CompareToInternal(T thisValue, T otherValue, bool reportOOM) {
       if (otherValue == null) {

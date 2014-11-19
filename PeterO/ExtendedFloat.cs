@@ -2523,6 +2523,8 @@ namespace PeterO {
     /// <summary>Returns a number similar to this number but with the radix
     /// point
     /// moved to the left.</summary>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat MovePointLeft(
 BigInteger bigPlaces,
@@ -2546,6 +2548,8 @@ PrecisionContext ctx) {
     /// <summary>Returns a number similar to this number but with the radix
     /// point
     /// moved to the right.</summary>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat MovePointRight(int places, PrecisionContext ctx) {
       return this.MovePointRight((BigInteger)places, ctx);
@@ -2610,13 +2614,8 @@ this.flags).RoundToPrecision(ctx);
 
     /// <summary>Returns a number similar to this number but with the scale
     /// adjusted.</summary>
-    /// <param name='ctx' >A precision context to control precision, rounding,
-    /// and
-    /// exponent range of the result. If HasFlags of the context is true, will
-    /// also
-    /// store the flags resulting from the operation (the flags are in addition
-    /// to
-    /// the pre-existing flags). Can be null.</param>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedFloat ScaleByPowerOfTwo(int places, PrecisionContext ctx) {
       return this.ScaleByPowerOfTwo((BigInteger)places, ctx);
@@ -2637,15 +2636,15 @@ this.flags).RoundToPrecision(ctx);
     }
 
     /// <summary>Returns a number similar to this number but with its scale
-    /// adjusted. <param name='ctx'>A precision context to control precision,
-    /// rounding, and exponent range of the result. If HasFlags of the context
-    /// is
-    /// true, will also store the flags resulting from the operation (the flags
-    /// are
-    /// in addition to the pre-existing flags). Can be null.</param>
-    /// </summary>
+    /// adjusted.</summary>
     /// <param name='bigPlaces'>A BigInteger object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx' >A precision context to control precision, rounding,
+    /// and
+    /// exponent range of the result. If HasFlags of the context is true, will
+    /// also
+    /// store the flags resulting from the operation (the flags are in addition
+    /// to
+    /// the pre-existing flags). Can be null.</param>
     /// <returns>A number whose scale is increased by <paramref name='bigPlaces'
     /// />
     /// .</returns>
@@ -2664,6 +2663,76 @@ PrecisionContext ctx) {
         this.unsignedMantissa,
         bigExp,
         this.flags).RoundToPrecision(ctx);
+    }
+
+    /// <summary>Finds the number of digits in this number's mantissa. Returns 1
+    /// if
+    /// this value is 0, and 0 if this value is infinity or NaN.</summary>
+    /// <returns>A BigInteger object.</returns>
+    public BigInteger Precision() {
+      if (!this.IsFinite) {
+ return BigInteger.Zero;
+}
+      if (this.IsZero) {
+ return BigInteger.One;
+}
+      int bitlen = this.unsignedMantissa.bitLength();
+      return (BigInteger)bitlen;
+    }
+
+    /// <summary>Returns the unit in the last place. The mantissa will be 1 and
+    /// the
+    /// exponent will be this number's exponent. Returns 1 with an exponent of 0
+    /// if
+    /// this number is infinity or NaN.</summary>
+    /// <returns>An ExtendedFloat object.</returns>
+    public ExtendedFloat Ulp() {
+      return (!this.IsFinite) ? ExtendedFloat.One :
+        ExtendedFloat.Create(BigInteger.One, this.exponent);
+    }
+
+    /// <summary>Calculates the quotient and remainder using the
+    /// DivideToIntegerNaturalScale and the formula in RemainderNaturalScale.
+    /// This
+    /// is meant to be similar to the divideAndRemainder method in Java's
+    /// BigDecimal.</summary>
+    /// <param name='divisor'>The number to divide by.</param>
+    /// <returns>A 2 element array consisting of the quotient and remainder in
+    /// that
+    /// order.</returns>
+ public ExtendedFloat[] DivideAndRemainderNaturalScale(ExtendedFloat divisor) {
+      return this.DivideAndRemainderNaturalScale(divisor, null);
+    }
+
+    /// <summary>Calculates the quotient and remainder using the
+    /// DivideToIntegerNaturalScale and the formula in RemainderNaturalScale.
+    /// This
+    /// is meant to be similar to the divideAndRemainder method in Java's
+    /// BigDecimal.</summary>
+    /// <param name='divisor'>The number to divide by.</param>
+    /// <param name='ctx'>A precision context object to control the precision,
+    /// rounding, and exponent range of the result. This context will be used
+    /// only
+    /// in the division portion of the remainder calculation; as a result,
+    /// it&apos;s
+    /// possible for the remainder to have a higher precision than given in this
+    /// context. Flags will be set on the given context only if the
+    /// context&apos;s
+    /// HasFlags is true and the integer part of the division result
+    /// doesn&apos;t
+    /// fit the precision and exponent range without rounding.</param>
+    /// <returns>A 2 element array consisting of the quotient and remainder in
+    /// that
+    /// order.</returns>
+    public ExtendedFloat[] DivideAndRemainderNaturalScale(
+      ExtendedFloat divisor,
+      PrecisionContext ctx) {
+      var result = new ExtendedFloat[2];
+      result[0] = this.DivideToIntegerNaturalScale(divisor, ctx);
+      result[1] = this.Subtract(
+        result[0].Multiply(divisor, null),
+        null);
+      return result;
     }
   }
 }

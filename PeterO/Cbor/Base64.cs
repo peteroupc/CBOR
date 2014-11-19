@@ -127,7 +127,7 @@ bool padding) {
       }
       if (count < 0) {
         throw new ArgumentException("count (" + count + ") is less than " +
-                                    "0 ");
+                              "0 ");
       }
       if (count > data.Length) {
         throw new ArgumentException(
@@ -143,7 +143,7 @@ bool padding) {
         str.Append(alphabet[(data[i] >> 2) & 63]);
         str.Append(alphabet[((data[i] & 3) << 4) + ((data[i + 1] >> 4) & 15)]);
         str.Append(alphabet[((data[i + 1] & 15) << 2) + ((data[i + 2] >> 6) &
-                                                         3)]);
+                              3)]);
         str.Append(alphabet[data[i + 2] & 63]);
       }
       int lenmod3 = count % 3;
@@ -152,7 +152,7 @@ bool padding) {
         str.Append(alphabet[(data[i] >> 2) & 63]);
         if (lenmod3 == 2) {
           str.Append(alphabet[((data[i] & 3) << 4) + ((data[i + 1] >> 4) &
-                                                      15)]);
+                              15)]);
           str.Append(alphabet[(data[i + 1] & 15) << 2]);
           if (padding) {
             str.Append("=");
@@ -178,19 +178,19 @@ bool padding) {
       }
       if (offset < 0) {
         throw new ArgumentException("offset (" + offset + ") is less than " +
-                                    "0 ");
+                              "0 ");
       }
       if (offset > data.Length) {
         throw new ArgumentException("offset (" + offset + ") is more than " +
-                                    data.Length);
+                              data.Length);
       }
       if (count < 0) {
         throw new ArgumentException("count (" + count + ") is less than " +
-                                    "0 ");
+                              "0 ");
       }
       if (count > data.Length) {
         throw new ArgumentException("count (" + count + ") is more than " +
-                                    data.Length);
+                              data.Length);
       }
       if (data.Length - offset < count) {
         throw new ArgumentException("data's length minus " + offset + " (" +

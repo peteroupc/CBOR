@@ -181,8 +181,7 @@ namespace PeterO {
       // Check this value then the other value for quiet NaN
       return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ?
         this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags &
-                      BigNumberFlags.FlagQuietNaN) != 0) ?
-                                this.ReturnQuietNaN(
+                BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(
                               other,
                               ctx) : default(T));
     }
@@ -208,13 +207,11 @@ namespace PeterO {
       // Check this value then the other value for quiet NaN
       return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ?
         this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags &
-                      BigNumberFlags.FlagQuietNaN) != 0) ?
-                                this.ReturnQuietNaN(
+                BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(
                               other,
                               ctx) :
                               (((other2Flags & BigNumberFlags.FlagQuietNaN) !=
-                           0) ? this.ReturnQuietNaN(other, ctx) :
-                                default(T)));
+                0) ? this.ReturnQuietNaN(other, ctx) : default(T)));
     }
 
     private T SignalingNaNInvalid(T value, PrecisionContext ctx) {
