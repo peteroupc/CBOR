@@ -20,7 +20,7 @@ namespace PeterO {
     /// the mantissa is 235678. The exponent is where the "floating" decimal
     /// point
     /// of the number is located. A positive exponent means
-    /// "move it to the right" ,
+    /// "move it to the right",
     /// and a negative exponent means "move it to the left." In the example 2,
     /// 356.78, the exponent is -2, since it has 2 decimal places and the
     /// decimal
@@ -1784,9 +1784,8 @@ namespace PeterO {
       return this.ToStringInternal(1);
     }
 
-    /// <summary>Converts this value to a string, but without an exponent part.
-    /// The
-    /// format of the return value follows the format of the
+    /// <summary>Converts this value to a string, but without using exponential
+    /// notation. The format of the return value follows the format of the
     /// java.math.BigDecimal.toPlainString() method.</summary>
     /// <returns>A string object.</returns>
     public string ToPlainString() {
@@ -1795,7 +1794,7 @@ namespace PeterO {
 
     /// <summary>Represents the number 1.</summary>
 #if CODE_ANALYSIS
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security" ,
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
                 "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
     public static readonly ExtendedDecimal One =
@@ -1803,7 +1802,7 @@ namespace PeterO {
 
     /// <summary>Represents the number 0.</summary>
 #if CODE_ANALYSIS
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security" ,
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
                 "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
     public static readonly ExtendedDecimal Zero =
@@ -1811,7 +1810,7 @@ namespace PeterO {
 
     /// <summary>Represents the number negative zero.</summary>
 #if CODE_ANALYSIS
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security" ,
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
                 "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
     public static readonly ExtendedDecimal NegativeZero =
@@ -1822,7 +1821,7 @@ namespace PeterO {
 
     /// <summary>Represents the number 10.</summary>
 #if CODE_ANALYSIS
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security" ,
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
                 "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
 
@@ -2512,7 +2511,9 @@ namespace PeterO {
     }
 
     /// <summary>Finds the next value that is closer to the other object&apos;s
-    /// value than this object&apos;s value.</summary>
+    /// value than this object&apos;s value. Returns a copy of this value with
+    /// the
+    /// same sign as the other value if both values are equal.</summary>
     /// <param name='otherValue'>An ExtendedDecimal object.</param>
     /// <param name='ctx' >A precision context object to control the precision
     /// and
@@ -3445,6 +3446,8 @@ PrecisionContext ctx) {
     /// <summary>Returns a number similar to this number but with the decimal
     /// point
     /// moved to the right.</summary>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal MovePointRight(int places, PrecisionContext ctx) {
       return this.MovePointRight((BigInteger)places, ctx);
@@ -3468,6 +3471,8 @@ PrecisionContext ctx) {
     /// <summary>Returns a number similar to this number but with the decimal
     /// point
     /// moved to the right.</summary>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A number whose scale is increased by <paramref name='bigPlaces'
     /// /> ,
     /// but not to more than 0.</returns>
@@ -3507,13 +3512,8 @@ this.flags).RoundToPrecision(ctx);
 
     /// <summary>Returns a number similar to this number but with the scale
     /// adjusted.</summary>
-    /// <param name='ctx' >A precision context to control precision, rounding,
-    /// and
-    /// exponent range of the result. If HasFlags of the context is true, will
-    /// also
-    /// store the flags resulting from the operation (the flags are in addition
-    /// to
-    /// the pre-existing flags). Can be null.</param>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal ScaleByPowerOfTen(int places, PrecisionContext ctx) {
       return this.ScaleByPowerOfTen((BigInteger)places, ctx);
@@ -3535,6 +3535,8 @@ this.flags).RoundToPrecision(ctx);
 
     /// <summary>Returns a number similar to this number but with its scale
     /// adjusted.</summary>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A number whose scale is increased by <paramref name='bigPlaces'
     /// />
     /// .</returns>
@@ -3553,6 +3555,77 @@ PrecisionContext ctx) {
         this.unsignedMantissa,
         bigExp,
         this.flags).RoundToPrecision(ctx);
+    }
+
+    /// <summary>Finds the number of digits in this number's mantissa. Returns 1
+    /// if
+    /// this value is 0, and 0 if this value is infinity or NaN.</summary>
+    /// <returns>A BigInteger object.</returns>
+    public BigInteger Precision() {
+      if (!this.IsFinite) {
+ return BigInteger.Zero;
+}
+      if (this.IsZero) {
+ return BigInteger.One;
+}
+      int digcount = this.unsignedMantissa.getDigitCount();
+      return (BigInteger)digcount;
+    }
+
+    /// <summary>Returns the unit in the last place. The mantissa will be 1 and
+    /// the
+    /// exponent will be this number's exponent. Returns 1 with an exponent of 0
+    /// if
+    /// this number is infinity or NaN.</summary>
+    /// <returns>An ExtendedDecimal object.</returns>
+    public ExtendedDecimal Ulp() {
+      return (!this.IsFinite) ? ExtendedDecimal.One :
+        ExtendedDecimal.Create(BigInteger.One, this.exponent);
+    }
+
+    /// <summary>Calculates the quotient and remainder using the
+    /// DivideToIntegerNaturalScale and the formula in RemainderNaturalScale.
+    /// This
+    /// is meant to be similar to the divideAndRemainder method in Java's
+    /// BigDecimal.</summary>
+    /// <param name='divisor'>The number to divide by.</param>
+    /// <returns>A 2 element array consisting of the quotient and remainder in
+    /// that
+    /// order.</returns>
+    public ExtendedDecimal[] DivideAndRemainderNaturalScale(ExtendedDecimal
+      divisor) {
+      return this.DivideAndRemainderNaturalScale(divisor, null);
+    }
+
+    /// <summary>Calculates the quotient and remainder using the
+    /// DivideToIntegerNaturalScale and the formula in RemainderNaturalScale.
+    /// This
+    /// is meant to be similar to the divideAndRemainder method in Java's
+    /// BigDecimal.</summary>
+    /// <param name='divisor'>The number to divide by.</param>
+    /// <param name='ctx'>A precision context object to control the precision,
+    /// rounding, and exponent range of the result. This context will be used
+    /// only
+    /// in the division portion of the remainder calculation; as a result,
+    /// it&apos;s
+    /// possible for the remainder to have a higher precision than given in this
+    /// context. Flags will be set on the given context only if the
+    /// context&apos;s
+    /// HasFlags is true and the integer part of the division result
+    /// doesn&apos;t
+    /// fit the precision and exponent range without rounding.</param>
+    /// <returns>A 2 element array consisting of the quotient and remainder in
+    /// that
+    /// order.</returns>
+    public ExtendedDecimal[] DivideAndRemainderNaturalScale(
+      ExtendedDecimal divisor,
+      PrecisionContext ctx) {
+      var result = new ExtendedDecimal[2];
+      result[0] = this.DivideToIntegerNaturalScale(divisor, ctx);
+      result[1] = this.Subtract(
+        result[0].Multiply(divisor, null),
+        null);
+      return result;
     }
   }
 }

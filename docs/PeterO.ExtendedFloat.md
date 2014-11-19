@@ -1421,7 +1421,7 @@ Returns a binary number with the same value as this object but rounded to an int
 
 <b>Parameters:</b>
 
- * <i>exponent</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteens place (10b^3, 1000b). A value of 0 rounds the number to an integer.
+ * <i>exponent</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an integer.
 
  * <i>ctx</i>: A PrecisionContext object.
 
@@ -1439,7 +1439,7 @@ Returns a binary number with the same value as this object, and rounds it to a n
 
 <b>Parameters:</b>
 
- * <i>exponent</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteens place (10b^3, 1000b). A value of 0 rounds the number to an integer.
+ * <i>exponent</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an integer.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case the default rounding mode is HalfEven.
 
@@ -1457,7 +1457,7 @@ Returns a binary number with the same value as this object but rounded to an int
 
 <b>Parameters:</b>
 
- * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteens place (10b^3, 1000b). A value of 0 rounds the number to an integer.
+ * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an integer.
 
  * <i>ctx</i>: A PrecisionContext object.
 
@@ -1475,7 +1475,7 @@ Returns a binary number with the same value as this object, and rounds it to a n
 
 <b>Parameters:</b>
 
- * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteens place (10b^3, 1000b). A value of 0 rounds the number to an integer.
+ * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an integer.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case the default rounding mode is HalfEven.
 
@@ -1760,7 +1760,7 @@ The parameter  <i>ctx</i>
     public PeterO.ExtendedFloat MovePointLeft(
         int places);
 
-Returns a number similar to this number but with the radix point moved to the right. 
+Returns a number similar to this number but with the radix point moved to the left. 
 
 <b>Parameters:</b>
 
@@ -1778,7 +1778,7 @@ An ExtendedFloat object.
         int places,
         PeterO.PrecisionContext ctx);
 
-Returns a number similar to this number but with the radix point moved to the right. 
+Returns a number similar to this number but with the radix point moved to the left. 
 
 <b>Parameters:</b>
 
@@ -1797,7 +1797,7 @@ An ExtendedFloat object.
     public PeterO.ExtendedFloat MovePointLeft(
         PeterO.BigInteger bigPlaces);
 
-Returns a number similar to this number but with the radix point moved to the right. 
+Returns a number similar to this number but with the radix point moved to the left. 
 
 <b>Parameters:</b>
 
@@ -1815,11 +1815,9 @@ An ExtendedFloat object.
         PeterO.BigInteger bigPlaces,
         PeterO.PrecisionContext ctx);
 
-Returns a number similar to this number but with the radix point moved to the right. 
+Returns a number similar to this number but with the radix point moved to the left.
 
 <b>Parameters:</b>
-
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
  * <i>bigPlaces</i>: A BigInteger object.
 
@@ -1834,11 +1832,9 @@ An ExtendedFloat object.
     public PeterO.ExtendedFloat MovePointRight(
         int places);
 
-Returns a number similar to this number but with the radix point moved to the right. 
+Returns a number similar to this number but with the radix point moved to the right.
 
 <b>Parameters:</b>
-
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
  * <i>places</i>: A 32-bit signed integer.
 
@@ -1852,11 +1848,9 @@ An ExtendedFloat object.
         int places,
         PeterO.PrecisionContext ctx);
 
-Returns a number similar to this number but with the radix point moved to the right. 
+Returns a number similar to this number but with the radix point moved to the right.
 
 <b>Parameters:</b>
-
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
  * <i>places</i>: A 32-bit signed integer.
 
@@ -1871,11 +1865,9 @@ An ExtendedFloat object.
     public PeterO.ExtendedFloat MovePointRight(
         PeterO.BigInteger bigPlaces);
 
-Returns a number similar to this number but with the radix point moved to the right. 
+Returns a number similar to this number but with the radix point moved to the right.
 
 <b>Parameters:</b>
-
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
  * <i>bigPlaces</i>: A BigInteger object.
 
@@ -1901,7 +1893,130 @@ Returns a number similar to this number but with the radix point moved to the ri
 
 <b>Returns:</b>
 
+A number whose scale is increased by  <i>bigPlaces</i>
+ , but not to more than 0.
+
+### ScaleByPowerOfTwo
+
+    public PeterO.ExtendedFloat ScaleByPowerOfTwo(
+        int places);
+
+Returns a number similar to this number but with the scale adjusted.
+
+<b>Parameters:</b>
+
+ * <i>places</i>: A 32-bit signed integer.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### ScaleByPowerOfTwo
+
+    public PeterO.ExtendedFloat ScaleByPowerOfTwo(
+        int places,
+        PeterO.PrecisionContext ctx);
+
+Returns a number similar to this number but with the scale adjusted.
+
+<b>Parameters:</b>
+
+ * <i>places</i>: A 32-bit signed integer.
+
+ * <i>ctx</i>: A PrecisionContext object.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### ScaleByPowerOfTwo
+
+    public PeterO.ExtendedFloat ScaleByPowerOfTwo(
+        PeterO.BigInteger bigPlaces);
+
+Returns a number similar to this number but with the scale adjusted. 
+
+<b>Parameters:</b>
+
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+
+ * <i>bigPlaces</i>: A BigInteger object.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### ScaleByPowerOfTwo
+
+    public PeterO.ExtendedFloat ScaleByPowerOfTwo(
+        PeterO.BigInteger bigPlaces,
+        PeterO.PrecisionContext ctx);
+
+Returns a number similar to this number but with its scale adjusted.
+
+<b>Parameters:</b>
+
+ * <i>bigPlaces</i>: A BigInteger object.
+
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+
+<b>Returns:</b>
+
+A number whose scale is increased by  <i>bigPlaces</i>
+.
+
+### Precision
+
+    public PeterO.BigInteger Precision();
+
+Finds the number of digits in this number's mantissa. Returns 1 if this value is 0, and 0 if this value is infinity or NaN.
+
+<b>Returns:</b>
+
+A BigInteger object.
+
+### Ulp
+
+    public PeterO.ExtendedFloat Ulp();
+
+Returns the unit in the last place. The mantissa will be 1 and the exponent will be this number's exponent. Returns 1 with an exponent of 0 if this number is infinity or NaN.
+
+<b>Returns:</b>
+
 An ExtendedFloat object.
+
+### DivideAndRemainderNaturalScale
+
+    public PeterO.ExtendedFloat[] DivideAndRemainderNaturalScale(
+        PeterO.ExtendedFloat divisor);
+
+Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale. This is meant to be similar to the divideAndRemainder method in Java's BigDecimal.
+
+<b>Parameters:</b>
+
+ * <i>divisor</i>: The number to divide by.
+
+<b>Returns:</b>
+
+A 2 element array consisting of the quotient and remainder in that order.
+
+### DivideAndRemainderNaturalScale
+
+    public PeterO.ExtendedFloat[] DivideAndRemainderNaturalScale(
+        PeterO.ExtendedFloat divisor,
+        PeterO.PrecisionContext ctx);
+
+Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale. This is meant to be similar to the divideAndRemainder method in Java's BigDecimal.
+
+<b>Parameters:</b>
+
+ * <i>divisor</i>: The number to divide by.
+
+ * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the result. This context will be used only in the division portion of the remainder calculation; as a result, it's possible for the remainder to have a higher precision than given in this context. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the division result doesn't fit the precision and exponent range without rounding.
+
+<b>Returns:</b>
+
+A 2 element array consisting of the quotient and remainder in that order.
 
 ### Exponent
 

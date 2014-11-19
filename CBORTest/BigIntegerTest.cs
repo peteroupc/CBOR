@@ -225,11 +225,12 @@ BigInteger.fromRadixString(sabi.StringValue, i));
         for (int j = 0; j < 100; ++j) {
           StringAndBigInt sabi = StringAndBigInt.Generate(fr, i);
           padding.Append('!');
+          string sabiString = sabi.StringValue;
           BigInteger actualBigInt = BigInteger.fromRadixSubstring(
-            padding + sabi.StringValue,
+            padding + sabiString,
             i,
             j + 1,
-            j + 1 + sabi.StringValue.Length);
+            j + 1 + sabiString.Length);
           Assert.AreEqual(
 sabi.BigIntValue,
 actualBigInt);

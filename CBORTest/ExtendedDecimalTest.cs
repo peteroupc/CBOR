@@ -8,23 +8,23 @@ namespace Test {
     [TestMethod]
     public void TestScaling() {
       Assert.AreEqual(
-"5.000E+5" ,
-ExtendedDecimal.FromString("5.000" ).ScaleByPowerOfTen(5).ToString());
+"5.000E+5",
+ExtendedDecimal.FromString("5.000").ScaleByPowerOfTen(5).ToString());
       Assert.AreEqual(
-"0.00005000" ,
-ExtendedDecimal.FromString("5.000" ).ScaleByPowerOfTen(-5).ToString());
+"0.00005000",
+ExtendedDecimal.FromString("5.000").ScaleByPowerOfTen(-5).ToString());
       Assert.AreEqual(
-"50000000000" ,
-ExtendedDecimal.FromString("500000" ).MovePointRight(5).ToString());
+"50000000000",
+ExtendedDecimal.FromString("500000").MovePointRight(5).ToString());
       Assert.AreEqual(
-"5.00000" ,
-ExtendedDecimal.FromString("500000" ).MovePointRight(-5).ToString());
+"5.00000",
+ExtendedDecimal.FromString("500000").MovePointRight(-5).ToString());
       Assert.AreEqual(
-"50000000000" ,
-ExtendedDecimal.FromString("500000" ).MovePointLeft(-5).ToString());
+"50000000000",
+ExtendedDecimal.FromString("500000").MovePointLeft(-5).ToString());
       Assert.AreEqual(
-"5.00000" ,
-ExtendedDecimal.FromString("500000" ).MovePointLeft(5).ToString());
+"5.00000",
+ExtendedDecimal.FromString("500000").MovePointLeft(5).ToString());
     }
 [TestMethod]
     public void TestAbs() {
@@ -270,7 +270,7 @@ ExtendedDecimal.FromString("500000" ).MovePointLeft(5).ToString());
         ExtendedDecimal.FromDouble(0.2133).ToString());
 
       Assert.AreEqual(
-  "2.29360000000000010330982488752915582352898127282969653606414794921875E-7" ,
+  "2.29360000000000010330982488752915582352898127282969653606414794921875E-7",
   ExtendedDecimal.FromDouble(2.2936E-7).ToString());
       Assert.AreEqual(
         "3893200000",
@@ -289,7 +289,7 @@ ExtendedDecimal.FromString("500000" ).MovePointLeft(5).ToString());
         ExtendedDecimal.FromDouble(0.30233).ToString());
 
       Assert.AreEqual(
-   "0.0000019512000000000000548530838806460252499164198525249958038330078125" ,
+   "0.0000019512000000000000548530838806460252499164198525249958038330078125",
    ExtendedDecimal.FromDouble(1.9512E-6).ToString());
       Assert.AreEqual(
         "199500",
@@ -346,7 +346,7 @@ ExtendedDecimal.FromString("500000" ).MovePointLeft(5).ToString());
         ExtendedDecimal.FromDouble(3.636E11).ToString());
 
       Assert.AreEqual(
-  "0.00000323700000000000009386523676380154057596882921643555164337158203125" ,
+  "0.00000323700000000000009386523676380154057596882921643555164337158203125",
   ExtendedDecimal.FromDouble(3.237E-6).ToString());
       Assert.AreEqual(
         "728000",
@@ -419,7 +419,7 @@ ExtendedDecimal.FromString("500000" ).MovePointLeft(5).ToString());
         ExtendedDecimal.FromDouble(244200.0).ToString());
 
       Assert.AreEqual(
-  "2.28179999999999995794237200343046456652018605382181704044342041015625E-7" ,
+  "2.28179999999999995794237200343046456652018605382181704044342041015625E-7",
   ExtendedDecimal.FromDouble(2.2818E-7).ToString());
       Assert.AreEqual(
         "39.73400000000000176214598468504846096038818359375",
@@ -449,7 +449,7 @@ ExtendedDecimal.FromString("500000" ).MovePointLeft(5).ToString());
         ExtendedDecimal.FromDouble(27.2).ToString());
 
       Assert.AreEqual(
-  "0.00000380250000000000001586513038998038638283105683512985706329345703125" ,
+  "0.00000380250000000000001586513038998038638283105683512985706329345703125",
   ExtendedDecimal.FromDouble(3.8025E-6).ToString());
 
       Assert.AreEqual(
@@ -466,7 +466,7 @@ ExtendedDecimal.FromString("500000" ).MovePointLeft(5).ToString());
         ExtendedDecimal.FromDouble(2.7534E10).ToString());
 
       Assert.AreEqual(
-    "3.911600000000000165617541382501176627783934236504137516021728515625E-7" ,
+    "3.911600000000000165617541382501176627783934236504137516021728515625E-7",
     ExtendedDecimal.FromDouble(3.9116E-7).ToString());
 
       Assert.AreEqual(
@@ -506,11 +506,11 @@ ExtendedDecimal.FromString("500000" ).MovePointLeft(5).ToString());
         ExtendedDecimal.FromDouble(1.3414E-4).ToString());
 
       Assert.AreEqual(
-   "3.4449999999999999446924077266263264363033158588223159313201904296875E-7" ,
+   "3.4449999999999999446924077266263264363033158588223159313201904296875E-7",
    ExtendedDecimal.FromDouble(3.445E-7).ToString());
 
       Assert.AreEqual(
-   "1.3610000000000000771138253079228785935583800892345607280731201171875E-7" ,
+   "1.3610000000000000771138253079228785935583800892345607280731201171875E-7",
    ExtendedDecimal.FromDouble(1.361E-7).ToString());
       Assert.AreEqual(
         "26090000",
@@ -520,7 +520,7 @@ ExtendedDecimal.FromString("500000" ).MovePointLeft(5).ToString());
         ExtendedDecimal.FromDouble(9.936).ToString());
 
       Assert.AreEqual(
-     "0.00000600000000000000015200514458246772164784488268196582794189453125" ,
+     "0.00000600000000000000015200514458246772164784488268196582794189453125",
      ExtendedDecimal.FromDouble(6.0E-6).ToString());
       Assert.AreEqual(
         "260.31000000000000227373675443232059478759765625",
@@ -565,7 +565,7 @@ ExtendedDecimal.FromString("500000" ).MovePointLeft(5).ToString());
       Assert.AreEqual("36570", ExtendedDecimal.FromDouble(36570.0).ToString());
 
       Assert.AreEqual(
-     "0.00001830000000000000097183545932910675446692039258778095245361328125" ,
+     "0.00001830000000000000097183545932910675446692039258778095245361328125",
      ExtendedDecimal.FromDouble(1.83E-5).ToString());
       Assert.AreEqual(
         "301310000",

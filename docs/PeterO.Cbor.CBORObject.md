@@ -32,7 +32,7 @@ Although this class is inconsistent with the Equals method, it is safe to use CB
 
 Thread Safety:
 
-CBOR objects that are numbers, "simple values" , and text strings are immutable (their values can't be changed), so they are inherently safe for use by multiple threads.
+CBOR objects that are numbers, "simple values", and text strings are immutable (their values can't be changed), so they are inherently safe for use by multiple threads.
 
 CBOR objects that are arrays, maps, and byte strings are mutable, but this class doesn't attempt to synchronize reads and writes to those objects by multiple threads, so those objects are not thread safe without such synchronization.
 

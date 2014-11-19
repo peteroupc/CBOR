@@ -4,7 +4,7 @@
         System.IComparable,
         System.IEquatable
 
-Represents an arbitrary-precision decimal floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 10^exponent.The mantissa is the value of the digits that make up a number, ignoring the decimal point and exponent. For example, in the number 2356.78, the mantissa is 235678. The exponent is where the "floating" decimal point of the number is located. A positive exponent means "move it to the right" , and a negative exponent means "move it to the left." In the example 2, 356.78, the exponent is -2, since it has 2 decimal places and the decimal point is "moved to the left by 2." Therefore, in the ExtendedDecimal representation, this number would be stored as 235678 * 10^-2.
+Represents an arbitrary-precision decimal floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 10^exponent.The mantissa is the value of the digits that make up a number, ignoring the decimal point and exponent. For example, in the number 2356.78, the mantissa is 235678. The exponent is where the "floating" decimal point of the number is located. A positive exponent means "move it to the right", and a negative exponent means "move it to the left." In the example 2, 356.78, the exponent is -2, since it has 2 decimal places and the decimal point is "moved to the left by 2." Therefore, in the ExtendedDecimal representation, this number would be stored as 235678 * 10^-2.
 
 The mantissa and exponent format preserves trailing zeros in the number's value. This may give rise to multiple ways to store the same value. For example, 1.00 and 1 would be stored differently, even though they have the same value. In the first case, 100 * 10^-2 (100 with decimal point moved left by 2), and in the second case, 1 * 10^0 (1 with decimal point moved 0).
 
@@ -488,7 +488,7 @@ A string object.
 
     public string ToPlainString();
 
-Converts this value to a string, but without an exponent part. The format of the return value follows the format of the java.math.BigDecimal.toPlainString() method.
+Converts this value to a string, but without using exponential notation. The format of the return value follows the format of the java.math.BigDecimal.toPlainString() method.
 
 <b>Returns:</b>
 
@@ -1063,7 +1063,7 @@ has an unlimited exponent range.
         PeterO.ExtendedDecimal otherValue,
         PeterO.PrecisionContext ctx);
 
-Finds the next value that is closer to the other object's value than this object's value.
+Finds the next value that is closer to the other object's value than this object's value. Returns a copy of this value with the same sign as the other value if both values are equal.
 
 <b>Parameters:</b>
 
@@ -1755,7 +1755,7 @@ An ExtendedDecimal object.
         int places,
         PeterO.PrecisionContext ctx);
 
-Returns a number similar to this number but with the decimal point moved to the right. 
+Returns a number similar to this number but with the decimal point moved to the left. 
 
 <b>Parameters:</b>
 
@@ -1774,7 +1774,7 @@ An ExtendedDecimal object.
     public PeterO.ExtendedDecimal MovePointLeft(
         PeterO.BigInteger bigPlaces);
 
-Returns a number similar to this number but with the decimal point moved to the right. 
+Returns a number similar to this number but with the decimal point moved to the left. 
 
 <b>Parameters:</b>
 
@@ -1792,7 +1792,7 @@ An ExtendedDecimal object.
         PeterO.BigInteger bigPlaces,
         PeterO.PrecisionContext ctx);
 
-Returns a number similar to this number but with the decimal point moved to the right. 
+Returns a number similar to this number but with the decimal point moved to the left. 
 
 <b>Parameters:</b>
 
@@ -1811,11 +1811,9 @@ An ExtendedDecimal object.
     public PeterO.ExtendedDecimal MovePointRight(
         int places);
 
-Returns a number similar to this number but with the decimal point moved to the right. 
+Returns a number similar to this number but with the decimal point moved to the right.
 
 <b>Parameters:</b>
-
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
  * <i>places</i>: A 32-bit signed integer.
 
@@ -1829,11 +1827,9 @@ An ExtendedDecimal object.
         int places,
         PeterO.PrecisionContext ctx);
 
-Returns a number similar to this number but with the decimal point moved to the right. 
+Returns a number similar to this number but with the decimal point moved to the right.
 
 <b>Parameters:</b>
-
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
  * <i>places</i>: A 32-bit signed integer.
 
@@ -1866,11 +1862,9 @@ An ExtendedDecimal object.
         PeterO.BigInteger bigPlaces,
         PeterO.PrecisionContext ctx);
 
-Returns a number similar to this number but with the decimal point moved to the right. 
+Returns a number similar to this number but with the decimal point moved to the right.
 
 <b>Parameters:</b>
-
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
  * <i>bigPlaces</i>: A BigInteger object.
 
@@ -1878,7 +1872,130 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 <b>Returns:</b>
 
+A number whose scale is increased by  <i>bigPlaces</i>
+ , but not to more than 0.
+
+### ScaleByPowerOfTen
+
+    public PeterO.ExtendedDecimal ScaleByPowerOfTen(
+        int places);
+
+Returns a number similar to this number but with the scale adjusted.
+
+<b>Parameters:</b>
+
+ * <i>places</i>: A 32-bit signed integer.
+
+<b>Returns:</b>
+
 An ExtendedDecimal object.
+
+### ScaleByPowerOfTen
+
+    public PeterO.ExtendedDecimal ScaleByPowerOfTen(
+        int places,
+        PeterO.PrecisionContext ctx);
+
+Returns a number similar to this number but with the scale adjusted.
+
+<b>Parameters:</b>
+
+ * <i>places</i>: A 32-bit signed integer.
+
+ * <i>ctx</i>: A PrecisionContext object.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### ScaleByPowerOfTen
+
+    public PeterO.ExtendedDecimal ScaleByPowerOfTen(
+        PeterO.BigInteger bigPlaces);
+
+Returns a number similar to this number but with the scale adjusted. 
+
+<b>Parameters:</b>
+
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+
+ * <i>bigPlaces</i>: A BigInteger object.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### ScaleByPowerOfTen
+
+    public PeterO.ExtendedDecimal ScaleByPowerOfTen(
+        PeterO.BigInteger bigPlaces,
+        PeterO.PrecisionContext ctx);
+
+Returns a number similar to this number but with its scale adjusted.
+
+<b>Parameters:</b>
+
+ * <i>bigPlaces</i>: A BigInteger object.
+
+ * <i>ctx</i>: A PrecisionContext object.
+
+<b>Returns:</b>
+
+A number whose scale is increased by  <i>bigPlaces</i>
+.
+
+### Precision
+
+    public PeterO.BigInteger Precision();
+
+Finds the number of digits in this number's mantissa. Returns 1 if this value is 0, and 0 if this value is infinity or NaN.
+
+<b>Returns:</b>
+
+A BigInteger object.
+
+### Ulp
+
+    public PeterO.ExtendedDecimal Ulp();
+
+Returns the unit in the last place. The mantissa will be 1 and the exponent will be this number's exponent. Returns 1 with an exponent of 0 if this number is infinity or NaN.
+
+<b>Returns:</b>
+
+An ExtendedDecimal object.
+
+### DivideAndRemainderNaturalScale
+
+    public PeterO.ExtendedDecimal[] DivideAndRemainderNaturalScale(
+        PeterO.ExtendedDecimal divisor);
+
+Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale. This is meant to be similar to the divideAndRemainder method in Java's BigDecimal.
+
+<b>Parameters:</b>
+
+ * <i>divisor</i>: The number to divide by.
+
+<b>Returns:</b>
+
+A 2 element array consisting of the quotient and remainder in that order.
+
+### DivideAndRemainderNaturalScale
+
+    public PeterO.ExtendedDecimal[] DivideAndRemainderNaturalScale(
+        PeterO.ExtendedDecimal divisor,
+        PeterO.PrecisionContext ctx);
+
+Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale. This is meant to be similar to the divideAndRemainder method in Java's BigDecimal.
+
+<b>Parameters:</b>
+
+ * <i>divisor</i>: The number to divide by.
+
+ * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the result. This context will be used only in the division portion of the remainder calculation; as a result, it's possible for the remainder to have a higher precision than given in this context. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the division result doesn't fit the precision and exponent range without rounding.
+
+<b>Returns:</b>
+
+A 2 element array consisting of the quotient and remainder in that order.
 
 ### Exponent
 

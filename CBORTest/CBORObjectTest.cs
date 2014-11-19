@@ -2278,7 +2278,7 @@ cbornumber.AsSingle());
     [TestMethod]
     public void TestToJSONString() {
       Assert.AreEqual(
-        "\"\u2027\\u2028\\u2029\u202a\"" ,
+        "\"\u2027\\u2028\\u2029\u202a\"",
         CBORObject.FromObject("\u2027\u2028\u2029\u202a").ToJSONString());
       Assert.AreEqual(
         "\"\\u0085\\uFEFF\\uFFFE\\uFFFF\"",
