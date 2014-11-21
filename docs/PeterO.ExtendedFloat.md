@@ -1793,7 +1793,7 @@ An ExtendedFloat object.
     public PeterO.ExtendedFloat MovePointLeft(
         PeterO.BigInteger bigPlaces);
 
-Returns a number similar to this number but with the radix point moved to the left. 
+Returns a number similar to this number but with the radix point moved to the left.
 
 <b>Parameters:</b>
 
@@ -1875,7 +1875,7 @@ An ExtendedFloat object.
         PeterO.BigInteger bigPlaces,
         PeterO.PrecisionContext ctx);
 
-Returns a number similar to this number but with the radix point moved to the right. 
+Returns a number similar to this number but with the radix point moved to the right.
 
 <b>Parameters:</b>
 
