@@ -197,6 +197,16 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+In version 2.1:
+
+- Added Ulp, Precision, MovePointLeft, MovePointRight, and ScaleToPowerOfTwo/-Ten methods to
+  ExtendedDecimal and ExtendedFloat
+- Fixed double-rounding issue with ToDouble and ToFloat methods
+  of ExtendedDecimal
+- Added Odd and OddOrZeroFiveUp rounding modes
+- Added non-decimal base conversion features to BigInteger
+- Other bug fixes
+
 In version 2.0:
 
 - Several very special characters are escaped in JSON output, such as line and paragraph

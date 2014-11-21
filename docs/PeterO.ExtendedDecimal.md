@@ -1737,11 +1737,9 @@ Pi rounded to the given precision. Signals FlagInvalid and returns NaN if the pa
     public PeterO.ExtendedDecimal MovePointLeft(
         int places);
 
-Returns a number similar to this number but with the decimal point moved to the right. 
+Returns a number similar to this number but with the decimal point moved to the right.
 
 <b>Parameters:</b>
-
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
  * <i>places</i>: A 32-bit signed integer.
 
@@ -1759,11 +1757,9 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
-
  * <i>places</i>: A 32-bit signed integer.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
 <b>Returns:</b>
 
@@ -1774,11 +1770,9 @@ An ExtendedDecimal object.
     public PeterO.ExtendedDecimal MovePointLeft(
         PeterO.BigInteger bigPlaces);
 
-Returns a number similar to this number but with the decimal point moved to the left. 
+Returns a number similar to this number but with the decimal point moved to the left.
 
 <b>Parameters:</b>
-
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
  * <i>bigPlaces</i>: A BigInteger object.
 
@@ -1796,11 +1790,9 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
-
  * <i>bigPlaces</i>: A BigInteger object.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
 <b>Returns:</b>
 
@@ -1833,7 +1825,7 @@ Returns a number similar to this number but with the decimal point moved to the 
 
  * <i>places</i>: A 32-bit signed integer.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
 <b>Returns:</b>
 
@@ -1844,11 +1836,9 @@ An ExtendedDecimal object.
     public PeterO.ExtendedDecimal MovePointRight(
         PeterO.BigInteger bigPlaces);
 
-Returns a number similar to this number but with the decimal point moved to the right. 
+Returns a number similar to this number but with the decimal point moved to the right.
 
 <b>Parameters:</b>
-
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
  * <i>bigPlaces</i>: A BigInteger object.
 
@@ -1868,7 +1858,7 @@ Returns a number similar to this number but with the decimal point moved to the 
 
  * <i>bigPlaces</i>: A BigInteger object.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
 <b>Returns:</b>
 
@@ -1902,7 +1892,7 @@ Returns a number similar to this number but with the scale adjusted.
 
  * <i>places</i>: A 32-bit signed integer.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
 <b>Returns:</b>
 
@@ -1916,8 +1906,6 @@ An ExtendedDecimal object.
 Returns a number similar to this number but with the scale adjusted. 
 
 <b>Parameters:</b>
-
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
  * <i>bigPlaces</i>: A BigInteger object.
 
@@ -1937,7 +1925,7 @@ Returns a number similar to this number but with its scale adjusted.
 
  * <i>bigPlaces</i>: A BigInteger object.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
 <b>Returns:</b>
 
