@@ -183,7 +183,7 @@ is null.
 
  * System.FormatException: 
 The parameter  <i>str</i>
-is not a correctly formatted number string.
+ is not a correctly formatted number string.
 
 ### FromString
 
@@ -211,7 +211,7 @@ is null.
 
  * System.FormatException: 
 The parameter  <i>str</i>
-is not a correctly formatted number string.
+ is not a correctly formatted number string.
 
 ### FromString
 
@@ -242,7 +242,7 @@ is null.
 
  * System.FormatException: 
 The parameter  <i>str</i>
-is not a correctly formatted number string.
+ is not a correctly formatted number string.
 
 ### FromString
 
@@ -286,7 +286,7 @@ is null.
 
  * System.FormatException: 
 The parameter  <i>str</i>
-is not a correctly formatted number string.
+ is not a correctly formatted number string.
 
 ### CompareToBinary
 
@@ -1055,7 +1055,7 @@ Finds the smallest value that's greater than the given value.
 
 Returns the smallest value that's greater than the given value.Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
-has an unlimited exponent range.
+ has an unlimited exponent range.
 
 ### NextToward
 
@@ -1074,7 +1074,7 @@ Finds the next value that is closer to the other object's value than this object
 <b>Returns:</b>
 
 Returns the next value that is closer to the other object' s value than this object's value. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
- is null, the precision is 0, or <i>ctx</i>
+ is null, the precision is 0, or  <i>ctx</i>
  has an unlimited exponent range.
 
 ### Max
@@ -1753,7 +1753,7 @@ An ExtendedDecimal object.
         int places,
         PeterO.PrecisionContext ctx);
 
-Returns a number similar to this number but with the decimal point moved to the left. 
+Returns a number similar to this number but with the decimal point moved to the left.
 
 <b>Parameters:</b>
 
@@ -1786,7 +1786,7 @@ An ExtendedDecimal object.
         PeterO.BigInteger bigPlaces,
         PeterO.PrecisionContext ctx);
 
-Returns a number similar to this number but with the decimal point moved to the left. 
+Returns a number similar to this number but with the decimal point moved to the left.
 
 <b>Parameters:</b>
 
@@ -1903,7 +1903,7 @@ An ExtendedDecimal object.
     public PeterO.ExtendedDecimal ScaleByPowerOfTen(
         PeterO.BigInteger bigPlaces);
 
-Returns a number similar to this number but with the scale adjusted. 
+Returns a number similar to this number but with the scale adjusted.
 
 <b>Parameters:</b>
 
