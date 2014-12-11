@@ -15,8 +15,7 @@ using PeterO.Cbor;
 
 namespace CBOR {
   [TestClass]
-  public class ExtensiveTest
-  {
+  public class ExtensiveTest {
     public static void AssertFlags(int expected, int actual, string str) {
       actual &= PrecisionContext.FlagInexact | PrecisionContext.FlagUnderflow |
         PrecisionContext.FlagOverflow | PrecisionContext.FlagInvalid |

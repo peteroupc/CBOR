@@ -2,7 +2,7 @@
 
     public class PrecisionContext
 
-Contains parameters for controlling the precision, rounding, and exponent range of arbitrary-precision numbers.
+Contains parameters for controlling the precision, rounding, and exponent range of arbitrary-precision numbers. NOTE: This class is not designed for inheritance, and inheriting from this class is not recommended since it may break in future versions.
 
 ### FlagInexact
 
