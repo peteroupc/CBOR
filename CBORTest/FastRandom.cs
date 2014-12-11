@@ -13,8 +13,7 @@ namespace Test {
     /// during testing. Unfortunately it can be very slow. So we use this
     /// wrapper
     /// class.</summary>
-  public class FastRandom
-  {
+  public class FastRandom {
     private const int ReseedCount = 500;
 
     private Random rand;

@@ -14,8 +14,7 @@ using PeterO;
 
 namespace Test {
   [TestClass]
-  public class DecimalTest
-  {
+  public class DecimalTest {
     private static Regex valuePropertyLine = new Regex(
       "^(\\w+)\\:\\s*(\\S+)",
       RegexOptions.Compiled);

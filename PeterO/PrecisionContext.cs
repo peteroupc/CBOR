@@ -9,8 +9,11 @@ using System;
 
 namespace PeterO {
     /// <summary>Contains parameters for controlling the precision, rounding, and
-    /// exponent range of arbitrary-precision numbers.</summary>
+    /// exponent range of arbitrary-precision numbers. NOTE: This class is not
+    /// designed for inheritance, and inheriting from this class is not recommended
+    /// since it may break in future versions.</summary>
   public class PrecisionContext {
+    // TODO: Add 'sealed' to PrecisionContext in version 3
     private BigInteger exponentMax;
 
     /// <summary>Gets the highest exponent possible when a converted number is
