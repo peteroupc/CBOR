@@ -1937,8 +1937,7 @@ namespace PeterO.Cbor {
     /// <returns>True if the given key (as a CBOR object) is found, or false if
     /// the
     /// given key is not found or this object is not a map.</returns>
-    /// <exception cref='ArgumentNullException'>Key is null (as opposed to
-    /// CBORObject.Null).</exception>
+    /// <exception cref='ArgumentNullException'>Key is null.</exception>
     public bool ContainsKey(string key) {
       if (key == null) {
         throw new ArgumentNullException("key");
@@ -1951,7 +1950,7 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Adds a new object to the end of this array. (Used to throw
-    /// ArgumentNullException on a null reference, but now converts the object
+    /// ArgumentNullException on a null reference, but now converts the null reference
     /// to
     /// CBORObject.Null, for convenience with the Object overload of this
     /// method.).</summary>
@@ -1976,8 +1975,7 @@ namespace PeterO.Cbor {
     /// <exception cref='System.InvalidOperationException'>This object is not an
     /// array.</exception>
     /// <exception cref='ArgumentException' >The type of <paramref name='obj' />
-    /// is
-    /// not supported.</exception>
+    /// is not supported.</exception>
     public CBORObject Add(object obj) {
       if (this.ItemType == CBORObjectTypeArray) {
         IList<CBORObject> list = this.AsList();
@@ -2481,7 +2479,7 @@ namespace PeterO.Cbor {
           bytes[byteIndex++] = (byte)c;
         } else if (c <= 0x7ff) {
           if (byteIndex + 2 > StreamedStringBufferLength) {
-            // Write bytes retrieved so far, the next three bytes
+            // Write bytes retrieved so far - the next three bytes
             // would exceed the length, and the CBOR spec forbids
             // splitting characters when generating text strings
             if (!streaming) {
@@ -2506,7 +2504,7 @@ namespace PeterO.Cbor {
           }
           if (c <= 0xffff) {
             if (byteIndex + 3 > StreamedStringBufferLength) {
-              // Write bytes retrieved so far, the next three bytes
+              // Write bytes retrieved so far - the next three bytes
               // would exceed the length, and the CBOR spec forbids
               // splitting characters when generating text strings
               if (!streaming) {
@@ -2522,7 +2520,7 @@ namespace PeterO.Cbor {
             bytes[byteIndex++] = (byte)(0x80 | (c & 0x3f));
           } else {
             if (byteIndex + 4 > StreamedStringBufferLength) {
-              // Write bytes retrieved so far, the next four bytes
+              // Write bytes retrieved so far - the next four bytes
               // would exceed the length, and the CBOR spec forbids
               // splitting characters when generating text strings
               if (!streaming) {
