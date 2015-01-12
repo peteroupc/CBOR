@@ -13,8 +13,7 @@ namespace PeterO.Cbor {
   // Contains extra methods placed separately
   // because they are not CLS-compliant or they
   // are specific to the .NET framework.
-  public sealed partial class CBORObject
-  {
+  public sealed partial class CBORObject {
     /// <summary>Converts this object to a 16-bit unsigned integer. The return value
     /// will be truncated as necessary.</summary>
     /// <returns>A 16-bit unsigned integer.</returns>

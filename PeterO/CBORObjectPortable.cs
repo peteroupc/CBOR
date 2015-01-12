@@ -12,8 +12,7 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 namespace PeterO {
- sealed class CBORObjectPortable
-  {
+ sealed class CBORObjectPortable {
     private static void WritePortable(BigInteger bigint, Stream s) {
       if ((s) == null) {
  throw new ArgumentNullException("s");

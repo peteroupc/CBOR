@@ -9,8 +9,7 @@ using System;
 using System.Text;
 
 namespace PeterO.Cbor {
-  internal static class Base64
-  {
+  internal static class Base64 {
     private const string Base64URL =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 

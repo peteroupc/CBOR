@@ -528,14 +528,14 @@ True if the given key (as a CBOR object) is found, or false if the given key is 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-Key is null (as opposed to CBORObject.Null).
+Key is null.
 
 ### Add
 
     public PeterO.Cbor.CBORObject Add(
         PeterO.Cbor.CBORObject obj);
 
-Adds a new object to the end of this array. (Used to throw ArgumentNullException on a null reference, but now converts the object to CBORObject.Null, for convenience with the Object overload of this method.).
+Adds a new object to the end of this array. (Used to throw ArgumentNullException on a null reference, but now converts the null reference to CBORObject.Null, for convenience with the Object overload of this method.).
 
 <b>Parameters:</b>
 

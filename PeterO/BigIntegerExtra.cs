@@ -9,8 +9,7 @@ using System;
 
 namespace PeterO {
     /// <summary>An arbitrary-precision integer.</summary>
-  public sealed partial class BigInteger
-  {
+  public sealed partial class BigInteger {
     /// <summary>Converts the value of a 64-bit signed integer to
     /// BigInteger.</summary>
     /// <param name='bigValue'>A 64-bit signed integer.</param>

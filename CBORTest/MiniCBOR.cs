@@ -11,8 +11,7 @@ using System.IO;
 namespace Test {
     /// <summary>Contains lightweight methods for reading and writing CBOR
     /// data.</summary>
-  public static class MiniCBOR
-  {
+  public static class MiniCBOR {
     private static float ToSingle(int value) {
       return BitConverter.ToSingle(BitConverter.GetBytes(value), 0);
     }
