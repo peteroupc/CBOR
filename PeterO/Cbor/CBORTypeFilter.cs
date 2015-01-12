@@ -13,8 +13,7 @@ namespace PeterO.Cbor {
     /// used when a CBOR object is being read from a data stream. This class cannot
     /// be inherited; this is a change in version 2.0 from previous versions, where
     /// the class was inadvertently left inheritable.</summary>
-  public sealed class CBORTypeFilter
-  {
+  public sealed class CBORTypeFilter {
     private bool any;
     private int types;
     private bool floatingpoint;

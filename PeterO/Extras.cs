@@ -8,8 +8,7 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO {
-  internal static class Extras
-  {
+  internal static class Extras {
     public static int[] DoubleToIntegers(double dbl) {
       long value = BitConverter.ToInt64(
 BitConverter.GetBytes((double)dbl),

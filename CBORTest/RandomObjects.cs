@@ -12,8 +12,7 @@ using PeterO.Cbor;
 
 namespace Test {
     /// <summary>Description of RandomObjects.</summary>
-  public static class RandomObjects
-  {
+  public static class RandomObjects {
     public static CBORObject RandomNumber(FastRandom rand) {
       switch (rand.NextValue(6)) {
         case 0:

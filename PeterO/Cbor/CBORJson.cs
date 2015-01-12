@@ -12,8 +12,7 @@ using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-  internal static class CBORJson
-  {
+  internal static class CBORJson {
     // JSON parsing methods
     internal static int SkipWhitespaceJSON(CharacterReader reader) {
       while (true) {

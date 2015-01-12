@@ -11,8 +11,7 @@ using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-  internal sealed class StringOutput
-  {
+  internal sealed class StringOutput {
     private readonly StringBuilder builder;
     private readonly Stream outputStream;
 

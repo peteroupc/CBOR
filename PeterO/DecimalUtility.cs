@@ -8,8 +8,7 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO {
-  internal static class DecimalUtility
-  {
+  internal static class DecimalUtility {
     private static BigInteger[] valueBigIntPowersOfTen = {
       BigInteger.One, (BigInteger)10, (BigInteger)100, (BigInteger)1000,
       (BigInteger)10000, (BigInteger)100000, (BigInteger)1000000,

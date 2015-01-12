@@ -1950,10 +1950,10 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Adds a new object to the end of this array. (Used to throw
-    /// ArgumentNullException on a null reference, but now converts the null reference
-    /// to
-    /// CBORObject.Null, for convenience with the Object overload of this
-    /// method.).</summary>
+    /// ArgumentNullException on a null reference, but now converts the null
+    /// reference to CBORObject.Null, for convenience with the Object overload
+    /// of
+    /// this method.).</summary>
     /// <param name='obj'>A CBOR object.</param>
     /// <returns>This object.</returns>
     /// <exception cref='System.InvalidOperationException'>This object is not an
@@ -1975,7 +1975,8 @@ namespace PeterO.Cbor {
     /// <exception cref='System.InvalidOperationException'>This object is not an
     /// array.</exception>
     /// <exception cref='ArgumentException' >The type of <paramref name='obj' />
-    /// is not supported.</exception>
+    /// is
+    /// not supported.</exception>
     public CBORObject Add(object obj) {
       if (this.ItemType == CBORObjectTypeArray) {
         IList<CBORObject> list = this.AsList();

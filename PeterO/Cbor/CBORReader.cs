@@ -12,8 +12,7 @@ using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-  internal class CBORReader
-  {
+  internal class CBORReader {
     private SharedRefs sharedRefs;
     private StringRefs stringRefs;
     private Stream stream;

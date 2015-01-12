@@ -8,8 +8,7 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO {
-  internal static class DebugUtility
-  {
+  internal static class DebugUtility {
     [System.Diagnostics.Conditional("DEBUG")]
     public static void Log(string str) {
       Type type = Type.GetType("System.Console");

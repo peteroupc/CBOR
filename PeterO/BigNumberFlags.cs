@@ -8,8 +8,7 @@ at: http://upokecenter.com/d/
 using System;
 
 namespace PeterO {
-  internal static class BigNumberFlags
-  {
+  internal static class BigNumberFlags {
     internal const int FlagNegative = 1;
     internal const int FlagQuietNaN = 4;
     internal const int FlagSignalingNaN = 8;

@@ -11,8 +11,7 @@ using System.Reflection;
 using PeterO;
 
 namespace PeterO.Cbor {
-  internal static class PropertyMap
-  {
+  internal static class PropertyMap {
     private sealed class PropertyData {
       private string name;
 

@@ -10,8 +10,7 @@ using System.Collections.Generic;
 using PeterO;
 
 namespace PeterO.Cbor {
-  internal class SharedRefs
-  {
+  internal class SharedRefs {
     private IList<CBORObject> sharedObjects;
 
     public SharedRefs() {
