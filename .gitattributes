@@ -9,6 +9,7 @@
 *.h eol=lf
 *.cc eol=lf
 *.cpp eol=lf
+*.nuspec eol=lf
 *.cs     diff=csharp
 *.sln    merge=union
 *.csproj merge=union
