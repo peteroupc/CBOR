@@ -1,7 +1,7 @@
 CBOR
 ====
 
-If you like this software, consider donating to me at this link: http://upokecenter.com/d/
+If you like this software, consider donating to me at this link: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 
 ----
 
