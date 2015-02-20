@@ -773,8 +773,8 @@ namespace PeterO {
 
     /// <summary>Creates a binary float from a 32-bit floating-point number. This
     /// method computes the exact value of the floating point number, not an
-    /// approximation, as is often the case by converting the number to a
-    /// string.</summary>
+    /// approximation, as is often the case by converting the floating point number
+    /// to a string first.</summary>
     /// <param name='flt'>A 32-bit floating-point number.</param>
     /// <returns>A binary float with the same value as <paramref name='flt'/>
     /// .</returns>
@@ -848,8 +848,8 @@ namespace PeterO {
 
     /// <summary>Creates a binary float from a 64-bit floating-point number. This
     /// method computes the exact value of the floating point number, not an
-    /// approximation, as is often the case by converting the number to a
-    /// string.</summary>
+    /// approximation, as is often the case by converting the floating point number
+    /// to a string first.</summary>
     /// <param name='dbl'>A 64-bit floating-point number.</param>
     /// <returns>A binary float with the same value as <paramref name='dbl'/>
     /// .</returns>
