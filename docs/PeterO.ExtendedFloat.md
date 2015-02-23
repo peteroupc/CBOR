@@ -345,7 +345,7 @@ The closest 64-bit floating-point number to this value. The return value can be 
     public static PeterO.ExtendedFloat FromSingle(
         float flt);
 
-Creates a binary float from a 32-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the number to a string.
+Creates a binary float from a 32-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first.
 
 <b>Parameters:</b>
 
@@ -406,7 +406,7 @@ An ExtendedDecimal object.
     public static PeterO.ExtendedFloat FromDouble(
         double dbl);
 
-Creates a binary float from a 64-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the number to a string.
+Creates a binary float from a 64-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first.
 
 <b>Parameters:</b>
 
