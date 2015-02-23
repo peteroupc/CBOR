@@ -128,8 +128,8 @@ Writing a CBOR object as JSON:
 // This example assumes that the variable "cbor" refers
 // to a CBORObject object.
 // NOTE: Specifying Encoding.UTF8 as the third parameter
-// would add a byte order mark to the beginning of the text, 
-// but conforming JSON implementations are forbidden from 
+// would add a byte order mark to the beginning of the text,
+// but conforming JSON implementations are forbidden from
 // adding it this way in JSON texts they generate.
 File.WriteAllText(
   "object.json",
@@ -158,8 +158,6 @@ using (var stream = new FileStream("object6.json", FileMode.Create)) {
    CBORObject.WriteJSON(42, stream);
 }
 ```
-
-
 
 NOTE: All code samples in this section are released to the Public Domain,
 as explained in <http://creativecommons.org/publicdomain/zero/1.0/>.
@@ -250,11 +248,11 @@ to Add but can replace a key's value in a CBOR map. Some bugs were also fixed.
 
 Version 0.23.0 has no new features of note.
 
-Version 0.22.0 adds CBOR support for decimal fractions and big floats with any 
-exponent, even exponents higher than 65 bits, and implements well-formedness 
-checking for tag 32 (URIs).  Several bugs were also fixed.   
+Version 0.22.0 adds CBOR support for decimal fractions and big floats with any
+exponent, even exponents higher than 65 bits, and implements well-formedness
+checking for tag 32 (URIs).  Several bugs were also fixed.
 
-The [commit history](https://github.com/peteroupc/CBOR/commits/master) 
+The [commit history](https://github.com/peteroupc/CBOR/commits/master)
 contains details on code changes in previous versions.
 
 Specifications
