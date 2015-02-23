@@ -1,9 +1,9 @@
 # Written in 2013 by Peter Occil.
 # Any copyright is dedicated to the Public Domain.
 # http://creativecommons.org/publicdomain/zero/1.0/
-# 
+#
 # If you like this, you should donate to Peter O.
-# at: http://upokecenter.com/d/
+# at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 
 # Converts unit tests to the Microsoft Unit Testing Framework.
 
@@ -49,10 +49,10 @@ def utf8edit(file,createIfNotFound=false)
   end
   return if !data
   data2=yield(data.clone)
-  if (createIfNotFound && !found) || 
+  if (createIfNotFound && !found) ||
       (data2!=data && data2!=nil) # nil check for sanity
     utf8write(data2||"",file)
-  end   
+  end
 end
 
 ##################

@@ -8,8 +8,12 @@
 *.c eol=lf
 *.h eol=lf
 *.cc eol=lf
+*.gitignore eol=lf
+*.gitattributes eol=lf
+*.md eol=lf
+*.sln eol=lf
+*.html eol=lf
 *.cpp eol=lf
-*.nuspec eol=lf
 *.cs     diff=csharp
 *.sln    merge=union
 *.csproj merge=union
