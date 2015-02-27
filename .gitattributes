@@ -12,6 +12,8 @@
 *.gitattributes eol=lf
 *.md eol=lf
 *.sln eol=lf
+*.csproj eol=lf
+*.nuspec eol=lf
 *.html eol=lf
 *.cpp eol=lf
 *.cs     diff=csharp
