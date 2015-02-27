@@ -1,4 +1,4 @@
-﻿## PeterO.Rounding
+## PeterO.Rounding
 
     public sealed struct Rounding :
         System.Enum,
@@ -73,5 +73,3 @@ If there is a fractional part and the whole number part is even, the number is r
     public static PeterO.Rounding OddOrZeroFiveUp = 10;
 
 For binary floating point numbers, this is the same as Odd. For other bases (including decimal numbers), this is the same as ZeroFiveUp. This rounding mode is useful for rounding intermediate results at a slightly higher precision (at least 2 bits more for binary) than the final precision.
-
-

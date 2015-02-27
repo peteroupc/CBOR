@@ -1,4 +1,4 @@
-﻿## PeterO.Cbor.CBORException
+## PeterO.Cbor.CBORException
 
     public class CBORException :
         System.Exception,
@@ -37,5 +37,3 @@ Initializes a new instance of the CBORException class. Uses the given message an
  * <i>message</i>: A string object.
 
  * <i>innerException</i>: An Exception object.
-
-

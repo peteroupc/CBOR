@@ -1,4 +1,4 @@
-﻿## PeterO.TrapException
+## PeterO.TrapException
 
     public class TrapException :
         System.ArithmeticException,
@@ -53,5 +53,3 @@ Gets the flag that specifies the kind of error (PrecisionContext.FlagXXX). This 
 <b>Returns:</b>
 
 The flag that specifies the kind of error (PrecisionContext.FlagXXX). This will only be one flag, such as FlagInexact or FlagSubnormal.
-
-

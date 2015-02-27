@@ -1,4 +1,4 @@
-﻿## PeterO.Cbor.ICBORConverter<T>
+## PeterO.Cbor.ICBORConverter<T>
 
     public interface ICBORConverter<T>
 
@@ -18,5 +18,3 @@ Converts an object to a CBOR object.
 <b>Returns:</b>
 
 A CBOR object.
-
-
