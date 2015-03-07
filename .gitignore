@@ -12,8 +12,6 @@ CBORTest/bin/
 CBORTest/obj/
 CBORTest/OpenCover/
 *.Cache
-js/*.ht*
-js/DecTest.*
 ProfilingSessions/
 CBORTest/ProfilingSessions/
 .project
