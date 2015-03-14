@@ -1967,6 +1967,22 @@ namespace Test {
     }
 
     [TestMethod]
+    public void TestHalfPrecision() {
+      CBORObject o = CBORObject.DecodeFromBytes(
+        new byte[] { 0xf9, 0x7c, 0x00 });
+      Assert.AreEqual(Single.PositiveInfinity, o.AsSingle());
+      o = CBORObject.DecodeFromBytes(
+        new byte[] { 0xf9, 0x00, 0x00 });
+      Assert.AreEqual(Single.PositiveInfinity, o.AsSingle());
+      o = CBORObject.DecodeFromBytes(
+        new byte[] { 0xf9, 0xfc, 0x00 });
+      Assert.AreEqual(Single.NegativeInfinity, o.AsSingle());
+      o = CBORObject.DecodeFromBytes(
+        new byte[] { 0xf9, 0x7e, 0x00 });
+      Assert.IsTrue(Single.IsNaN(o.AsSingle()));
+    }
+
+    [TestMethod]
     public void TestJSON() {
       CBORObject o;
       o = CBORObject.FromJSONString("[1,2,null,true,false,\"\"]");
