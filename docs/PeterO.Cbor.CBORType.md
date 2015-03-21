@@ -1,4 +1,4 @@
-## PeterO.Cbor.CBORType
+﻿## PeterO.Cbor.CBORType
 
     public sealed struct CBORType :
         System.Enum,
@@ -49,3 +49,5 @@ An array of CBOR objects.
     public static PeterO.Cbor.CBORType Map = 6;
 
 A map of CBOR objects.
+
+

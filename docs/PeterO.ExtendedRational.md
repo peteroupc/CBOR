@@ -1,4 +1,4 @@
-## PeterO.ExtendedRational
+﻿## PeterO.ExtendedRational
 
     public sealed class ExtendedRational :
         System.IComparable,
@@ -83,7 +83,7 @@ Initializes a new instance of the ExtendedRational class.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException:
+ * System.ArgumentNullException: 
 The parameter  <i>numerator</i>
  or  <i>denominator</i>
  is null.
@@ -172,11 +172,11 @@ An ExtendedRational object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException:
+ * System.ArgumentNullException: 
 The parameter  <i>diag</i>
  is null.
 
- * System.ArgumentException:
+ * System.ArgumentException: 
 The parameter  <i>diag</i>
  is less than 0.
 
@@ -203,11 +203,11 @@ An ExtendedRational object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException:
+ * System.ArgumentNullException: 
 The parameter  <i>diag</i>
  is null.
 
- * System.ArgumentException:
+ * System.ArgumentException: 
 The parameter  <i>diag</i>
  is less than 0.
 
@@ -228,7 +228,7 @@ An ExtendedRational object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException:
+ * System.ArgumentNullException: 
 The parameter  <i>ef</i>
 is null.
 
@@ -249,7 +249,7 @@ An ExtendedRational object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException:
+ * System.ArgumentNullException: 
 The parameter  <i>ef</i>
 is null.
 
@@ -335,7 +335,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.OverflowException:
+ * System.OverflowException: 
 This object's value is infinity or NaN.
 
 ### ToBigIntegerExact
@@ -350,10 +350,10 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.OverflowException:
+ * System.OverflowException: 
 This object's value is infinity or NaN.
 
- * System.ArithmeticException:
+ * System.ArithmeticException: 
 This object's value is not an exact integer.
 
 ### FromInt32
@@ -587,7 +587,7 @@ The sum of the two numbers. Returns NaN if either operand is NaN.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException:
+ * System.ArgumentNullException: 
 The parameter  <i>otherValue</i>
  is null.
 
@@ -608,7 +608,7 @@ The difference of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException:
+ * System.ArgumentNullException: 
 The parameter  <i>otherValue</i>
  is null.
 
@@ -629,7 +629,7 @@ The product of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException:
+ * System.ArgumentNullException: 
 The parameter  <i>otherValue</i>
  is null.
 
@@ -650,7 +650,7 @@ The quotient of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException:
+ * System.ArgumentNullException: 
 The parameter  <i>otherValue</i>
  is null.
 
@@ -671,7 +671,7 @@ The remainder of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException:
+ * System.ArgumentNullException: 
 The parameter  <i>otherValue</i>
  is null.
 
@@ -768,3 +768,5 @@ Gets a value indicating whether this object's value is negative (including negat
 <b>Returns:</b>
 
 True if this object's value is negative; otherwise, false.
+
+
