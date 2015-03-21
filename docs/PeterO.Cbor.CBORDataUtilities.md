@@ -1,4 +1,4 @@
-## PeterO.Cbor.CBORDataUtilities
+﻿## PeterO.Cbor.CBORDataUtilities
 
     public static class CBORDataUtilities
 
@@ -39,3 +39,5 @@ Parses a number whose format follows the JSON specification (RFC 7159). Roughly 
 <b>Returns:</b>
 
 A CBOR object that represents the parsed number. Returns null if the parsing fails.
+
+
