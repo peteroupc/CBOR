@@ -28,7 +28,7 @@ This library defines one class, called CBORObject, that allows you to read and
 write CBOR objects to and from data streams and byte arrays, and to convert JSON
 text to CBOR objects and back.
 
-See [docs/APIDocs.md](https://github.com/peteroupc/CBOR/blob/master/docs/APIDocs.md) for C# (.NET) API documentation.
+**See the [C# (.NET) API documentation](https://peteroupc.github.io/CBOR/docs/).**
 
 The C# implementation is designed as a Portable Class Library, making it usable not only in the .NET
 Framework, but also Silverlight 5 and Windows Phone 8.
