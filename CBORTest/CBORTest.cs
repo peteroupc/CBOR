@@ -1973,7 +1973,7 @@ namespace Test {
       Assert.AreEqual(Single.PositiveInfinity, o.AsSingle());
       o = CBORObject.DecodeFromBytes(
         new byte[] { 0xf9, 0x00, 0x00 });
-      Assert.AreEqual(Single.PositiveInfinity, o.AsSingle());
+      Assert.AreEqual((float)0, o.AsSingle());
       o = CBORObject.DecodeFromBytes(
         new byte[] { 0xf9, 0xfc, 0x00 });
       Assert.AreEqual(Single.NegativeInfinity, o.AsSingle());
