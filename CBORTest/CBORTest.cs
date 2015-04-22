@@ -2480,33 +2480,31 @@ CBORObject.FromObject((double)0.0000000000000001).AsBigInteger()
       return sb.ToString();
     }
 
+    private void TestTextStringStreamOne(string longString) {
+      CBORObject cbor, cbor2;
+      cbor = CBORObject.FromObject(longString);
+      cbor2 = TestCommon.FromBytesTestAB(cbor.EncodeToBytes());
+      Assert.AreEqual(
+longString,
+CBORObject.DecodeFromBytes(cbor.EncodeToBytes()).AsString());
+      Assert.AreEqual(
+longString,
+        CBORObject.DecodeFromBytes(cbor.EncodeToBytes(
+        CBOREncodeOptions.NoIndefLengthStrings)).AsString());
+      TestCommon.AssertEqualsHashCode(cbor, cbor2);
+      Assert.AreEqual(longString, cbor2.AsString());
+    }
+
     [TestMethod]
     public void TestTextStringStream() {
       CBORObject cbor = TestCommon.FromBytesTestAB(
         new byte[] { 0x7f, 0x61, 0x2e, 0x61, 0x2e, 0xff });
       Assert.AreEqual("..", cbor.AsString());
       // Test streaming of long strings
-      string longString = Repeat('x', 200000);
-      CBORObject cbor2;
-      cbor = CBORObject.FromObject(longString);
-      cbor2 = TestCommon.FromBytesTestAB(cbor.EncodeToBytes());
-      TestCommon.AssertEqualsHashCode(cbor, cbor2);
-      Assert.AreEqual(longString, cbor2.AsString());
-      longString = Repeat('\u00e0', 200000);
-      cbor = CBORObject.FromObject(longString);
-      cbor2 = TestCommon.FromBytesTestAB(cbor.EncodeToBytes());
-      TestCommon.AssertEqualsHashCode(cbor, cbor2);
-      Assert.AreEqual(longString, cbor2.AsString());
-      longString = Repeat('\u3000', 200000);
-      cbor = CBORObject.FromObject(longString);
-      cbor2 = TestCommon.FromBytesTestAB(cbor.EncodeToBytes());
-      TestCommon.AssertEqualsHashCode(cbor, cbor2);
-      Assert.AreEqual(longString, cbor2.AsString());
-      longString = Repeat("\ud800\udc00", 200000);
-      cbor = CBORObject.FromObject(longString);
-      cbor2 = TestCommon.FromBytesTestAB(cbor.EncodeToBytes());
-      TestCommon.AssertEqualsHashCode(cbor, cbor2);
-      Assert.AreEqual(longString, cbor2.AsString());
+      this.TestTextStringStreamOne(Repeat('x', 200000));
+      this.TestTextStringStreamOne(Repeat('\u00e0', 200000));
+      this.TestTextStringStreamOne(Repeat('\u3000', 200000));
+      this.TestTextStringStreamOne(Repeat("\ud800\udc00", 200000));
     }
     [TestMethod]
     [ExpectedException(typeof(CBORException))]
