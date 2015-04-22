@@ -201,6 +201,10 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+In version 2.2:
+- Portable Class Library compatibility expanded
+- Add option to always use definite length string encoding when generating CBOR objects
+
 In version 2.1:
 
 - Added Ulp, Precision, MovePointLeft, MovePointRight, and ScaleToPowerOfTwo/-Ten methods to

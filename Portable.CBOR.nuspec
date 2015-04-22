@@ -16,14 +16,10 @@
     </description>
     <summary>A C# implementation of Concise Binary Object Representation (CBOR), a data serialization format. This implementation can also convert between CBOR and JSON.</summary>
     <releaseNotes>
-In version 2.1:
-- Added Ulp, Precision, MovePointLeft, MovePointRight, and ScaleToPowerOfTwo/-Ten methods to
-  ExtendedDecimal and ExtendedFloat
-- Fixed double-rounding issue with ToDouble and ToFloat methods
-  of ExtendedDecimal
-- Added Odd and OddOrZeroFiveUp rounding modes
-- Added non-decimal base conversion features to BigInteger
-- Other bug fixes   See the project page for release notes on previous versions: https://github.com/peteroupc/CBOR
+In version 2.2:
+- Portable Class Library compatibility expanded
+- Add option to always use definite length string encoding when generating CBOR objects
+See the project page for release notes on previous versions: https://github.com/peteroupc/CBOR
     </releaseNotes>
     <copyright>Written by Peter O. in 2013-2014.  Any copyright is released to the Public Domain.</copyright>
     <tags>cbor data serialization binary json numbers arithmetic</tags>
