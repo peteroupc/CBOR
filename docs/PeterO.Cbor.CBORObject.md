@@ -572,7 +572,7 @@ This object is not an array.
 
  * System.ArgumentException: 
 The type of  <i>obj</i>
-is not supported.
+ is not supported.
 
 ### Remove
 
@@ -910,7 +910,7 @@ Writes a string in CBOR format to a data stream.
 
  * <i>stream</i>: A writable data stream.
 
- * <i>options</i>: A CBOREncodeOptions object.
+ * <i>options</i>: Options for encoding the data to CBOR.
 
 <b>Exceptions:</b>
 
@@ -1061,7 +1061,7 @@ Writes this CBOR object to a data stream.
 
  * <i>stream</i>: A writable data stream.
 
- * <i>options</i>: A CBOREncodeOptions object.
+ * <i>options</i>: Options for encoding the data to CBOR.
 
 <b>Exceptions:</b>
 
@@ -1279,7 +1279,7 @@ Gets the binary representation of this data item.
 
 <b>Parameters:</b>
 
- * <i>options</i>: A CBOREncodeOptions object.
+ * <i>options</i>: Options for encoding the data to CBOR.
 
 <b>Returns:</b>
 
@@ -1313,6 +1313,12 @@ The parameter  <i>stream</i>
 
 Not documented yet.
 
+<b>Parameters:</b>
+
+ * <i>objValue</i>: An arbitrary object.
+
+ * <i>stream</i>: A writable data stream.
+
 ### Write
 
     public static void Write(
@@ -1336,7 +1342,7 @@ Writes an arbitrary object to a CBOR data stream. Currently, the following objec
 
  * <i>stream</i>: A writable data stream.
 
- * <i>options</i>: A CBOREncodeOptions object.
+ * <i>options</i>: Options for encoding the data to CBOR.
 
 <b>Exceptions:</b>
 
@@ -1942,7 +1948,7 @@ A CBOR object where each key and value of the given map is converted to a CBOR o
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
-Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null , primitive types, strings, CBORObject , ExtendedDecimal , ExtendedFloat , the custom BigInteger , lists, arrays, enumerations ( `Enum` objects), and maps.In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is" , that word is deleted from the name. Also, .NET  `Enum` objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays. In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum` objects will be converted to the result of their name method.
+Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null , primitive types, strings, CBORObject , ExtendedDecimal , ExtendedFloat , the custom BigInteger , lists, arrays, enumerations (  `Enum` objects), and maps.In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is" , that word is deleted from the name. Also, .NET  `Enum` objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays. In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum` objects will be converted to the result of their name method.
 
 If the input is a byte array, the byte array is copied to a new byte array. (This method can't be used to decode CBOR data from a byte array; for that, use the DecodeFromBytes method instead.).
 
@@ -2002,7 +2008,7 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 <b>Returns:</b>
 
 A CBOR object where the object  <i>valueObValue</i>
-is converted to a CBOR object and given the tag  <i>smallTag</i>
+ is converted to a CBOR object and given the tag  <i>smallTag</i>
 .
 
 <b>Exceptions:</b>

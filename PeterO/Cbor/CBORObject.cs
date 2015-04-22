@@ -2454,7 +2454,7 @@ options);
     /// <summary>Writes a string in CBOR format to a data stream.</summary>
     /// <param name='str'>The string to write. Can be null.</param>
     /// <param name='stream'>A writable data stream.</param>
-    /// <param name='options'>A CBOREncodeOptions object.</param>
+    /// <param name='options'>Options for encoding the data to CBOR.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
@@ -2468,7 +2468,8 @@ CBOREncodeOptions options) {
       if (str == null) {
         stream.WriteByte(0xf6);  // Write null instead of string
       } else {
- CBOREncodeOptions noIndef = options.And(CBOREncodeOptions.NoIndefLengthStrings);
+ CBOREncodeOptions noIndef =
+   options.And(CBOREncodeOptions.NoIndefLengthStrings);
         if (noIndef.Value != 0) {
           // NOTE: Length of a String object won't be higher than the maximum
           // allowed for definite-length strings
@@ -2721,7 +2722,7 @@ CBOREncodeOptions options) {
 
     /// <summary>Writes this CBOR object to a data stream.</summary>
     /// <param name='stream'>A writable data stream.</param>
-    /// <param name='options'>A CBOREncodeOptions object.</param>
+    /// <param name='options'>Options for encoding the data to CBOR.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
@@ -2986,7 +2987,7 @@ CBOREncodeOptions options) {
     }
 
     /// <summary>Gets the binary representation of this data item.</summary>
-    /// <param name='options'>A CBOREncodeOptions object.</param>
+    /// <param name='options'>Options for encoding the data to CBOR.</param>
     /// <returns>A byte array in CBOR format.</returns>
     public byte[] EncodeToBytes(CBOREncodeOptions options) {
       // For some types, a memory stream is a lot of
@@ -3130,7 +3131,7 @@ CBOREncodeOptions options) {
     /// </summary>
     /// <param name='objValue'>The value to write.</param>
     /// <param name='stream'>A writable data stream.</param>
-    /// <param name='options'>A CBOREncodeOptions object.</param>
+    /// <param name='options'>Options for encoding the data to CBOR.</param>
     /// <exception cref='ArgumentException'>The object's type is not
     /// supported.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
