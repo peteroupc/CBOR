@@ -15,6 +15,8 @@ This implementation also doubles as a reader and writer of JSON, and can convert
 
 Finally, this implementation supports arbitrary-precision binary and decimal floating-point numbers and rational numbers with arbitrary-precision components.
 
+Source code is available in the [project page](https://github.com/peteroupc/CBOR).
+
 How to Install
 ---------
 Starting with version 0.21.0, the C# implementation is available in the
@@ -34,6 +36,13 @@ text to CBOR objects and back.
 
 The C# implementation is designed as a Portable Class Library, making it usable not only in the .NET
 Framework, but also Silverlight 5 and Windows Phone 8.
+
+Other Sites
+----------
+
+* CodePlex: https://peterocbor.codeplex.com/
+* Code Project: http://www.codeproject.com/Tips/897294/Concise-Binary-Object-Representation-CBOR-in-Cshar
+* SourceForge: https://sourceforge.net/p/petero-cbor
 
 Examples
 ----------
@@ -163,10 +172,6 @@ using (var stream = new FileStream("object6.json", FileMode.Create)) {
 
 NOTE: All code samples in this section are released to the Public Domain,
 as explained in <http://creativecommons.org/publicdomain/zero/1.0/>.
-
-Source Code
----------
-Source code is available in the [project page](https://github.com/peteroupc/CBOR).
 
 About
 -----------
