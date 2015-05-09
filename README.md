@@ -40,9 +40,9 @@ Framework, but also Silverlight 5 and Windows Phone 8.
 Other Sites
 ----------
 
-* CodePlex: https://peterocbor.codeplex.com/
-* Code Project: http://www.codeproject.com/Tips/897294/Concise-Binary-Object-Representation-CBOR-in-Cshar
-* SourceForge: https://sourceforge.net/p/petero-cbor
+* CodePlex: [https://peterocbor.codeplex.com/](https://peterocbor.codeplex.com/)
+* Code Project: [http://www.codeproject.com/Tips/897294/Concise-Binary-Object-Representation-CBOR-in-Cshar](http://www.codeproject.com/Tips/897294/Concise-Binary-Object-Representation-CBOR-in-Cshar)
+* SourceForge: [https://sourceforge.net/p/petero-cbor](https://sourceforge.net/p/petero-cbor)
 
 Examples
 ----------
