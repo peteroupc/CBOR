@@ -4,90 +4,223 @@
 
 Specifies what kinds of CBOR objects a tag can be. This class is used when a CBOR object is being read from a data stream. This class cannot be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.
 
-### WithUnsignedInteger
+### Any
 
-    public PeterO.Cbor.CBORTypeFilter WithUnsignedInteger();
+    public static readonly PeterO.Cbor.CBORTypeFilter Any;
 
-Copies this filter and includes unsigned integers in the new filter.
+A filter that allows any CBOR object.
 
-<b>Returns:</b>
+### ByteString
 
-A CBORTypeFilter object.
+    public static readonly PeterO.Cbor.CBORTypeFilter ByteString;
 
-### WithNegativeInteger
+A filter that allows byte strings.
 
-    public PeterO.Cbor.CBORTypeFilter WithNegativeInteger();
+### NegativeInteger
 
-Copies this filter and includes negative integers in the new filter.
+    public static readonly PeterO.Cbor.CBORTypeFilter NegativeInteger;
 
-<b>Returns:</b>
+A filter that allows negative integers.
 
-A CBORTypeFilter object.
+### None
 
-### WithByteString
+    public static readonly PeterO.Cbor.CBORTypeFilter None;
 
-    public PeterO.Cbor.CBORTypeFilter WithByteString();
+A filter that allows no CBOR types.
 
-Copies this filter and includes byte strings in the new filter.
+### TextString
 
-<b>Returns:</b>
+    public static readonly PeterO.Cbor.CBORTypeFilter TextString;
 
-A CBORTypeFilter object.
+A filter that allows text strings.
 
-### WithMap
+### UnsignedInteger
 
-    public PeterO.Cbor.CBORTypeFilter WithMap();
+    public static readonly PeterO.Cbor.CBORTypeFilter UnsignedInteger;
 
-Copies this filter and includes maps in the new filter.
+A filter that allows unsigned integers.
 
-<b>Returns:</b>
+### ArrayIndexAllowed
 
-A CBORTypeFilter object.
+    public bool ArrayIndexAllowed(
+        int index);
 
-### WithTextString
-
-    public PeterO.Cbor.CBORTypeFilter WithTextString();
-
-Copies this filter and includes text strings in the new filter.
-
-<b>Returns:</b>
-
-A CBORTypeFilter object.
-
-### WithTags
-
-    public PeterO.Cbor.CBORTypeFilter WithTags(
-        params int[] tags);
-
-Not documented yet.
+Determines whether this type filter allows CBOR arrays and the given array index is allowed under this type filter.
 
 <b>Parameters:</b>
 
- * <i>tags</i>: An integer array of tags allowed.
+ * <i>index</i>: An array index, starting from 0.
 
 <b>Returns:</b>
 
-A CBORTypeFilter object.
+True if this type filter allows CBOR arrays and the given array index is allowed under this type filter; otherwise, false.
 
-### WithTags
+### ArrayLengthMatches
 
-    public PeterO.Cbor.CBORTypeFilter WithTags(
-        params PeterO.BigInteger[] tags);
+    public bool ArrayLengthMatches(
+        int length);
 
-Not documented yet.
+Returns whether an array's length is allowed under this filter.
 
 <b>Parameters:</b>
 
- * <i>tags</i>: A BigInteger[] object.
+ * <i>length</i>: The length of a CBOR array.
 
 <b>Returns:</b>
 
-A CBORTypeFilter object.
+True if this filter allows CBOR arrays and an array's length is allowed under this filter; otherwise, false.
+
+### ArrayLengthMatches
+
+    public bool ArrayLengthMatches(
+        long length);
+
+Returns whether an array's length is allowed under a filter.
+
+<b>Parameters:</b>
+
+ * <i>length</i>: The length of a CBOR array.
+
+<b>Returns:</b>
+
+True if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise, false.
+
+### ArrayLengthMatches
+
+    public bool ArrayLengthMatches(
+        PeterO.BigInteger bigLength);
+
+Returns whether an array's length is allowed under a filter.
+
+<b>Parameters:</b>
+
+ * <i>bigLength</i>: A BigInteger object.
+
+<b>Returns:</b>
+
+True if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise, false.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException: 
-The parameter "tags[i]" is null.
+The parameter  <i>bigLength</i>
+ is null.
+
+### GetSubFilter
+
+    public PeterO.Cbor.CBORTypeFilter GetSubFilter(
+        int index);
+
+Not documented yet.
+
+<b>Parameters:</b>
+
+ * <i>index</i>: A 32-bit signed integer.
+
+<b>Returns:</b>
+
+A CBORTypeFilter object.
+
+### GetSubFilter
+
+    public PeterO.Cbor.CBORTypeFilter GetSubFilter(
+        long index);
+
+Not documented yet.
+
+<b>Parameters:</b>
+
+ * <i>index</i>: A 64-bit signed integer.
+
+<b>Returns:</b>
+
+A CBORTypeFilter object.
+
+### MajorTypeMatches
+
+    public bool MajorTypeMatches(
+        int type);
+
+Not documented yet.
+
+<b>Parameters:</b>
+
+ * <i>type</i>: A 32-bit signed integer.
+
+<b>Returns:</b>
+
+A Boolean object.
+
+### NonFPSimpleValueAllowed
+
+    public bool NonFPSimpleValueAllowed();
+
+Returns whether this filter allows simple values that are not floating-point numbers.
+
+<b>Returns:</b>
+
+True if this filter allows simple values that are not floating-point numbers; otherwise, false.
+
+### TagAllowed
+
+    public bool TagAllowed(
+        int tag);
+
+Gets a value indicating whether CBOR objects can have the given tag number.
+
+<b>Parameters:</b>
+
+ * <i>tag</i>: A tag number. Returns false if this is less than 0.
+
+<b>Returns:</b>
+
+True if CBOR objects can have the given tag number; otherwise, false.
+
+### TagAllowed
+
+    public bool TagAllowed(
+        long tag);
+
+Gets a value indicating whether CBOR objects can have the given tag number.
+
+<b>Parameters:</b>
+
+ * <i>tag</i>: A tag number. Returns false if this is less than 0.
+
+<b>Returns:</b>
+
+True if CBOR objects can have the given tag number; otherwise, false.
+
+### TagAllowed
+
+    public bool TagAllowed(
+        PeterO.BigInteger bigTag);
+
+Gets a value indicating whether CBOR objects can have the given tag number.
+
+<b>Parameters:</b>
+
+ * <i>bigTag</i>: A tag number. Returns false if this is less than 0.
+
+<b>Returns:</b>
+
+True if CBOR objects can have the given tag number; otherwise, false.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException: 
+The parameter  <i>bigTag</i>
+ is null.
+
+### WithArrayAnyLength
+
+    public PeterO.Cbor.CBORTypeFilter WithArrayAnyLength();
+
+Copies this filter and includes arrays of any length in the new filter.
+
+<b>Returns:</b>
+
+A CBORTypeFilter object.
 
 ### WithArrayExactLength
 
@@ -147,11 +280,11 @@ The parameter elements is null.
  * System.ArgumentException: 
 The parameter elements has fewer elements than specified in arrayLength.
 
-### WithArrayAnyLength
+### WithByteString
 
-    public PeterO.Cbor.CBORTypeFilter WithArrayAnyLength();
+    public PeterO.Cbor.CBORTypeFilter WithByteString();
 
-Copies this filter and includes arrays of any length in the new filter.
+Copies this filter and includes byte strings in the new filter.
 
 <b>Returns:</b>
 
@@ -167,212 +300,79 @@ Copies this filter and includes floating-point numbers in the new filter.
 
 A CBORTypeFilter object.
 
-### MajorTypeMatches
+### WithMap
 
-    public bool MajorTypeMatches(
-        int type);
+    public PeterO.Cbor.CBORTypeFilter WithMap();
 
-Not documented yet.
-
-<b>Parameters:</b>
-
- * <i>type</i>: A 32-bit signed integer.
-
-<b>Returns:</b>
-
-A Boolean object.
-
-### ArrayLengthMatches
-
-    public bool ArrayLengthMatches(
-        int length);
-
-Returns whether an array's length is allowed under this filter.
-
-<b>Parameters:</b>
-
- * <i>length</i>: The length of a CBOR array.
-
-<b>Returns:</b>
-
-True if this filter allows CBOR arrays and an array's length is allowed under this filter; otherwise, false.
-
-### ArrayLengthMatches
-
-    public bool ArrayLengthMatches(
-        long length);
-
-Returns whether an array's length is allowed under a filter.
-
-<b>Parameters:</b>
-
- * <i>length</i>: The length of a CBOR array.
-
-<b>Returns:</b>
-
-True if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise, false.
-
-### ArrayLengthMatches
-
-    public bool ArrayLengthMatches(
-        PeterO.BigInteger bigLength);
-
-Returns whether an array's length is allowed under a filter.
-
-<b>Parameters:</b>
-
- * <i>bigLength</i>: A BigInteger object.
-
-<b>Returns:</b>
-
-True if this filter allows CBOR arrays and an array's length is allowed under a filter; otherwise, false.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException: 
-The parameter  <i>bigLength</i>
- is null.
-
-### TagAllowed
-
-    public bool TagAllowed(
-        int tag);
-
-Gets a value indicating whether CBOR objects can have the given tag number.
-
-<b>Parameters:</b>
-
- * <i>tag</i>: A tag number. Returns false if this is less than 0.
-
-<b>Returns:</b>
-
-True if CBOR objects can have the given tag number; otherwise, false.
-
-### TagAllowed
-
-    public bool TagAllowed(
-        long tag);
-
-Gets a value indicating whether CBOR objects can have the given tag number.
-
-<b>Parameters:</b>
-
- * <i>tag</i>: A tag number. Returns false if this is less than 0.
-
-<b>Returns:</b>
-
-True if CBOR objects can have the given tag number; otherwise, false.
-
-### TagAllowed
-
-    public bool TagAllowed(
-        PeterO.BigInteger bigTag);
-
-Gets a value indicating whether CBOR objects can have the given tag number.
-
-<b>Parameters:</b>
-
- * <i>bigTag</i>: A tag number. Returns false if this is less than 0.
-
-<b>Returns:</b>
-
-True if CBOR objects can have the given tag number; otherwise, false.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException: 
-The parameter  <i>bigTag</i>
- is null.
-
-### ArrayIndexAllowed
-
-    public bool ArrayIndexAllowed(
-        int index);
-
-Determines whether this type filter allows CBOR arrays and the given array index is allowed under this type filter.
-
-<b>Parameters:</b>
-
- * <i>index</i>: An array index, starting from 0.
-
-<b>Returns:</b>
-
-True if this type filter allows CBOR arrays and the given array index is allowed under this type filter; otherwise, false.
-
-### GetSubFilter
-
-    public PeterO.Cbor.CBORTypeFilter GetSubFilter(
-        int index);
-
-Not documented yet.
-
-<b>Parameters:</b>
-
- * <i>index</i>: A 32-bit signed integer.
+Copies this filter and includes maps in the new filter.
 
 <b>Returns:</b>
 
 A CBORTypeFilter object.
 
-### GetSubFilter
+### WithNegativeInteger
 
-    public PeterO.Cbor.CBORTypeFilter GetSubFilter(
-        long index);
+    public PeterO.Cbor.CBORTypeFilter WithNegativeInteger();
 
-Not documented yet.
-
-<b>Parameters:</b>
-
- * <i>index</i>: A 64-bit signed integer.
+Copies this filter and includes negative integers in the new filter.
 
 <b>Returns:</b>
 
 A CBORTypeFilter object.
 
-### NonFPSimpleValueAllowed
+### WithTags
 
-    public bool NonFPSimpleValueAllowed();
+    public PeterO.Cbor.CBORTypeFilter WithTags(
+        params int[] tags);
 
-Returns whether this filter allows simple values that are not floating-point numbers.
+Not documented yet.
+
+<b>Parameters:</b>
+
+ * <i>tags</i>: An integer array of tags allowed.
 
 <b>Returns:</b>
 
-True if this filter allows simple values that are not floating-point numbers; otherwise, false.
+A CBORTypeFilter object.
 
-### None
+### WithTags
 
-    public static readonly PeterO.Cbor.CBORTypeFilter None;
+    public PeterO.Cbor.CBORTypeFilter WithTags(
+        params PeterO.BigInteger[] tags);
 
-A filter that allows no CBOR types.
+Not documented yet.
 
-### UnsignedInteger
+<b>Parameters:</b>
 
-    public static readonly PeterO.Cbor.CBORTypeFilter UnsignedInteger;
+ * <i>tags</i>: A BigInteger[] object.
 
-A filter that allows unsigned integers.
+<b>Returns:</b>
 
-### NegativeInteger
+A CBORTypeFilter object.
 
-    public static readonly PeterO.Cbor.CBORTypeFilter NegativeInteger;
+<b>Exceptions:</b>
 
-A filter that allows negative integers.
+ * System.ArgumentNullException: 
+The parameter "tags[i]" is null.
 
-### Any
+### WithTextString
 
-    public static readonly PeterO.Cbor.CBORTypeFilter Any;
+    public PeterO.Cbor.CBORTypeFilter WithTextString();
 
-A filter that allows any CBOR object.
+Copies this filter and includes text strings in the new filter.
 
-### ByteString
+<b>Returns:</b>
 
-    public static readonly PeterO.Cbor.CBORTypeFilter ByteString;
+A CBORTypeFilter object.
 
-A filter that allows byte strings.
+### WithUnsignedInteger
 
-### TextString
+    public PeterO.Cbor.CBORTypeFilter WithUnsignedInteger();
 
-    public static readonly PeterO.Cbor.CBORTypeFilter TextString;
+Copies this filter and includes unsigned integers in the new filter.
 
-A filter that allows text strings.
+<b>Returns:</b>
+
+A CBORTypeFilter object.
 
 

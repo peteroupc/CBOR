@@ -4,32 +4,27 @@
 
 Specifies options for encoding CBOR objects to bytes.
 
-### None
-
-    public static readonly PeterO.Cbor.CBOREncodeOptions None;
-
-No special options for encoding. Value: 0.
-
 ### NoIndefLengthStrings
 
     public static readonly PeterO.Cbor.CBOREncodeOptions NoIndefLengthStrings;
 
 Always encode strings with a definite-length encoding. Value: 1.
 
-### Or
+### None
 
-    public PeterO.Cbor.CBOREncodeOptions Or(
-        PeterO.Cbor.CBOREncodeOptions o);
+    public static readonly PeterO.Cbor.CBOREncodeOptions None;
 
-Combines the flags of this options object with another options object.
+No special options for encoding. Value: 0.
 
-<b>Parameters:</b>
+### Value
 
- * <i>o</i>: A CBOREncodeOptions object. (2).
+    public int Value { get; }
+
+Gets this options object's value.
 
 <b>Returns:</b>
 
-A CBOREncodeOptions object.
+This options object's value.
 
 ### And
 
@@ -46,14 +41,19 @@ Returns an options object whose flags are shared by this and another options obj
 
 A CBOREncodeOptions object.
 
-### Value
+### Or
 
-    public int Value { get; }
+    public PeterO.Cbor.CBOREncodeOptions Or(
+        PeterO.Cbor.CBOREncodeOptions o);
 
-Gets this options object's value.
+Combines the flags of this options object with another options object.
+
+<b>Parameters:</b>
+
+ * <i>o</i>: A CBOREncodeOptions object. (2).
 
 <b>Returns:</b>
 
-This options object's value.
+A CBOREncodeOptions object.
 
 
