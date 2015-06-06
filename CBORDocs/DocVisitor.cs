@@ -26,8 +26,31 @@ namespace PeterO.DocGen {
     private StringBuilder currentBuffer;
     private StringBuilder buffer = new StringBuilder();
 
+    private class BufferChanger : IDisposable {
+      private StringBuilder oldBuffer;
+      private DocVisitor vis;
+
+      public BufferChanger(DocVisitor vis, StringBuilder buffer) {
+        this.vis = vis;
+        this.oldBuffer = vis.currentBuffer;
+        vis.currentBuffer = buffer;
+      }
+
+      public void Dispose() {
+        this.vis.currentBuffer = this.oldBuffer;
+      }
+    }
+
+    private IDictionary<string, StringBuilder> members = new
+      SortedDictionary<string, StringBuilder>();
+
     public override string ToString() {
-      return this.buffer.ToString();
+      var b = new StringBuilder();
+      b.Append(this.buffer.ToString());
+      foreach (var b2 in this.members.Keys) {
+        b.Append(this.members[b2].ToString());
+      }
+      return b.ToString();
     }
 
     public static string GetTypeID(Type type) {
@@ -492,40 +515,51 @@ StringBuilder builder) {
       return (baseMethod != null) && (!method.Equals(baseMethod));
     }
 
+    private IDisposable Change(StringBuilder builder) {
+      return new BufferChanger(this, builder);
+    }
+
+    private IDisposable AddMember(MemberInfo member) {
+      var buffer = new StringBuilder();
+      var heading = this.HeadingUnambiguous(member);
+      this.members[heading] = buffer;
+      return new BufferChanger(this, buffer);
+    }
+
     public override void VisitReturns(Returns returns) {
-      this.currentBuffer = this.returnStr;
-      this.WriteLine("<b>Returns:</b>\r\n");
-      base.VisitReturns(returns);
-      this.WriteLine("\r\n\r\n");
-      this.currentBuffer = null;
+      using (var ch = this.Change(this.returnStr)) {
+        this.WriteLine("<b>Returns:</b>\r\n");
+        base.VisitReturns(returns);
+        this.WriteLine("\r\n\r\n");
+      }
     }
 
     public override void VisitValue(Value value) {
-      this.currentBuffer = this.returnStr;
-      this.WriteLine("<b>Returns:</b>\r\n");
-      base.VisitValue(value);
-      this.WriteLine("\r\n\r\n");
-      this.currentBuffer = null;
+      using (var ch = this.Change(this.returnStr)) {
+        this.WriteLine("<b>Returns:</b>\r\n");
+        base.VisitValue(value);
+        this.WriteLine("\r\n\r\n");
+      }
     }
 
     public override void VisitException(ClariusLabs.NuDoc.Exception exception) {
-      this.currentBuffer = this.exceptionStr;
-      string cref = exception.Cref;
-      if (cref.StartsWith("T:", StringComparison.Ordinal)) {
-        cref = cref.Substring(2);
+      using (var ch = this.Change(this.exceptionStr)) {
+        string cref = exception.Cref;
+        if (cref.StartsWith("T:", StringComparison.Ordinal)) {
+          cref = cref.Substring(2);
+        }
+        this.WriteLine(" * " + cref + ": ");
+        base.VisitException(exception);
+        this.WriteLine("\r\n\r\n");
       }
-      this.WriteLine(" * " + cref + ": ");
-      base.VisitException(exception);
-      this.WriteLine("\r\n\r\n");
-      this.currentBuffer = null;
     }
 
     public override void VisitParam(Param param) {
-      this.currentBuffer = this.paramStr;
-      this.Write(" * <i>" + param.Name + "</i>: ");
-      base.VisitParam(param);
-      this.WriteLine("\r\n\r\n");
-      this.currentBuffer = null;
+      using (var ch = this.Change(this.paramStr)) {
+        this.Write(" * <i>" + param.Name + "</i>: ");
+        base.VisitParam(param);
+        this.WriteLine("\r\n\r\n");
+      }
     }
 
     public override void VisitList(List list) {
@@ -540,16 +574,61 @@ StringBuilder builder) {
     }
 
     public override void VisitTypeParam(TypeParam typeParam) {
-      this.currentBuffer = this.paramStr;
-      this.Write(" * &lt;" + typeParam.Name + "&gt;: ");
-      base.VisitTypeParam(typeParam);
-      this.WriteLine("\r\n\r\n");
-      this.currentBuffer = null;
+      using (var ch = this.Change(this.paramStr)) {
+        this.Write(" * &lt;" + typeParam.Name + "&gt;: ");
+        base.VisitTypeParam(typeParam);
+        this.WriteLine("\r\n\r\n");
+      }
     }
 
     public override void VisitParamRef(ParamRef paramRef) {
       this.WriteLine(" <i>" + paramRef.Name + "</i>");
       base.VisitParamRef(paramRef);
+    }
+
+    private string HeadingUnambiguous(MemberInfo info) {
+      string ret = String.Empty;
+      if (info is MethodBase) {
+        var method = (MethodBase)info;
+        if (method is ConstructorInfo) {
+          return "<1>" + " " + FormatMethod(method);
+        } else {
+          return "<4>" + method.Name + " " + FormatMethod(method);
+        }
+      } else if (info is Type) {
+        var type = (Type)info;
+        return "<0>" + FormatType(type);
+      } else if (info is PropertyInfo) {
+        var property = (PropertyInfo)info;
+        return "<3>" + property.Name;
+      } else if (info is FieldInfo) {
+        var field = (FieldInfo)info;
+        return "<2>" + field.Name;
+      }
+      return ret;
+    }
+
+    private string Heading(MemberInfo info) {
+      string ret = String.Empty;
+      if (info is MethodBase) {
+        var method = (MethodBase)info;
+        if (method is ConstructorInfo) {
+          return UndecorateTypeName(method.ReflectedType.Name) +
+                           " Constructor";
+        } else {
+          return MethodNameHeading(method.Name);
+        }
+      } else if (info is Type) {
+        var type = (Type)info;
+        return FormatType(type);
+      } else if (info is PropertyInfo) {
+        var property = (PropertyInfo)info;
+        return property.Name;
+      } else if (info is FieldInfo) {
+        var field = (FieldInfo)info;
+        return field.Name;
+      }
+      return ret;
     }
 
     public override void VisitMember(Member member) {
@@ -562,34 +641,31 @@ StringBuilder builder) {
           // methods
           return;
         }
-        signature = FormatMethod(method);
-        if (method is ConstructorInfo) {
-        this.WriteLine("### " + UndecorateTypeName(method.ReflectedType.Name) +
-                         " Constructor\r\n\r\n" + signature + "\r\n\r\n");
-        } else {
-          this.WriteLine("### " + MethodNameHeading(method.Name) +
+        using (var ch = this.AddMember(info)) {
+          signature = FormatMethod(method);
+          this.WriteLine("### " + this.Heading(info) +
                          "\r\n\r\n" + signature + "\r\n\r\n");
-        }
-        var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-          ObsoleteAttribute;
-        if (attr != null) {
-          this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
-        }
-        this.paramStr.Clear();
-        this.returnStr.Clear();
-        this.exceptionStr.Clear();
-        base.VisitMember(member);
-        if (this.paramStr.Length > 0) {
-          this.Write("<b>Parameters:</b>\r\n\r\n");
-          string paramString = this.paramStr.ToString();
-          // Decrease spacing between list items
-          paramString = paramString.Replace("\r\n * ", " * ");
-          this.Write(paramString);
-        }
-        this.Write(this.returnStr.ToString());
-        if (this.exceptionStr.Length > 0) {
-          this.Write("<b>Exceptions:</b>\r\n\r\n");
-          this.Write(this.exceptionStr.ToString());
+          var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+            ObsoleteAttribute;
+          if (attr != null) {
+            this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+          }
+          this.paramStr.Clear();
+          this.returnStr.Clear();
+          this.exceptionStr.Clear();
+          base.VisitMember(member);
+          if (this.paramStr.Length > 0) {
+            this.Write("<b>Parameters:</b>\r\n\r\n");
+            string paramString = this.paramStr.ToString();
+            // Decrease spacing between list items
+            paramString = paramString.Replace("\r\n * ", " * ");
+            this.Write(paramString);
+          }
+          this.Write(this.returnStr.ToString());
+          if (this.exceptionStr.Length > 0) {
+            this.Write("<b>Exceptions:</b>\r\n\r\n");
+            this.Write(this.exceptionStr.ToString());
+          }
         }
       } else if (info is Type) {
         var type = (Type)info;
@@ -597,14 +673,16 @@ StringBuilder builder) {
           // Ignore nonpublic types
           return;
         }
-        this.WriteLine("## " + FormatType(type) + "\r\n\r\n");
-        this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
-        var attr = type.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-          ObsoleteAttribute;
-        if (attr != null) {
-          this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+        using (var ch = this.AddMember(info)) {
+          this.WriteLine("## " + this.Heading(type) + "\r\n\r\n");
+          this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
+          var attr = type.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+            ObsoleteAttribute;
+          if (attr != null) {
+            this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+          }
+          base.VisitMember(member);
         }
-        base.VisitMember(member);
       } else if (info is PropertyInfo) {
         var property = (PropertyInfo)info;
         if (!PropertyIsPublicOrFamily(property)) {
@@ -612,26 +690,28 @@ StringBuilder builder) {
           // methods
           return;
         }
-        signature = FormatProperty(property);
-        this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
-                       "\r\n\r\n");
-        var attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as
-          ObsoleteAttribute;
-        if (attr != null) {
-          this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
-        }
-        this.paramStr.Clear();
-        this.returnStr.Clear();
-        this.exceptionStr.Clear();
-        base.VisitMember(member);
-        if (this.paramStr.Length > 0) {
-          this.Write("<b>Parameters:</b>\r\n\r\n");
-          this.Write(this.paramStr.ToString());
-        }
-        this.Write(this.returnStr.ToString());
-        if (this.exceptionStr.Length > 0) {
-          this.Write("<b>Exceptions:</b>\r\n\r\n");
-          this.Write(this.exceptionStr.ToString());
+        using (var ch = this.AddMember(info)) {
+          signature = FormatProperty(property);
+          this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
+                         "\r\n\r\n");
+          var attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as
+            ObsoleteAttribute;
+          if (attr != null) {
+            this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
+          }
+          this.paramStr.Clear();
+          this.returnStr.Clear();
+          this.exceptionStr.Clear();
+          base.VisitMember(member);
+          if (this.paramStr.Length > 0) {
+            this.Write("<b>Parameters:</b>\r\n\r\n");
+            this.Write(this.paramStr.ToString());
+          }
+          this.Write(this.returnStr.ToString());
+          if (this.exceptionStr.Length > 0) {
+            this.Write("<b>Exceptions:</b>\r\n\r\n");
+            this.Write(this.exceptionStr.ToString());
+          }
         }
       } else if (info is FieldInfo) {
         var field = (FieldInfo)info;
@@ -639,10 +719,12 @@ StringBuilder builder) {
           // Ignore nonpublic, nonprotected fields
           return;
         }
-        signature = FormatField(field);
-        this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
-                       "\r\n\r\n");
-        base.VisitMember(member);
+        using (var ch = this.AddMember(info)) {
+          signature = FormatField(field);
+          this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
+                         "\r\n\r\n");
+          base.VisitMember(member);
+        }
       }
     }
 

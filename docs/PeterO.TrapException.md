@@ -34,16 +34,6 @@ Gets the precision context used during the operation that triggered the trap. Ma
 
 The precision context used during the operation that triggered the trap. May be null.
 
-### Result
-
-    public object Result { get; }
-
-Gets the defined result of the operation that caused the trap.
-
-<b>Returns:</b>
-
-The defined result of the operation that caused the trap.
-
 ### Error
 
     public int Error { get; }
@@ -53,5 +43,15 @@ Gets the flag that specifies the kind of error (PrecisionContext.FlagXXX). This 
 <b>Returns:</b>
 
 The flag that specifies the kind of error (PrecisionContext.FlagXXX). This will only be one flag, such as FlagInexact or FlagSubnormal.
+
+### Result
+
+    public object Result { get; }
+
+Gets the defined result of the operation that caused the trap.
+
+<b>Returns:</b>
+
+The defined result of the operation that caused the trap.
 
 
