@@ -1635,7 +1635,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets the value of a CBOR object in this map, using a CBOR object as
     /// the key.</summary>
-    /// <param name='key'>A CBORObject object. (2).</param>
+    /// <param name='key'>Another CBOR object.</param>
     /// <returns>A CBORObject object.</returns>
     /// <exception cref='ArgumentNullException'>The key is null (as opposed to
     /// CBORObject.Null); or the set method is called and the value is
@@ -3328,7 +3328,7 @@ options);
     }
 
     /// <summary>Finds the sum of two CBOR number objects.</summary>
-    /// <param name='first'>A CBORObject object. (2).</param>
+    /// <param name='first'>Another CBOR object.</param>
     /// <param name='second'>A CBORObject object. (3).</param>
     /// <returns>A CBORObject object.</returns>
     /// <exception cref='ArgumentException'>Either or both operands are not numbers
@@ -3339,7 +3339,7 @@ options);
 
     /// <summary>Finds the difference between two CBOR number objects.</summary>
     /// <param name='first'>A CBORObject object.</param>
-    /// <param name='second'>A CBORObject object. (2).</param>
+    /// <param name='second'>Another CBOR object.</param>
     /// <returns>The difference of the two objects.</returns>
     /// <exception cref='ArgumentException'>Either or both operands are not numbers
     /// (as opposed to Not-a-Number, NaN).</exception>
@@ -3349,7 +3349,7 @@ options);
 
     /// <summary>Multiplies two CBOR number objects.</summary>
     /// <param name='first'>A CBORObject object.</param>
-    /// <param name='second'>A CBORObject object. (2).</param>
+    /// <param name='second'>Another CBOR object.</param>
     /// <returns>The product of the two objects.</returns>
     /// <exception cref='ArgumentException'>Either or both operands are not numbers
     /// (as opposed to Not-a-Number, NaN).</exception>
@@ -3360,7 +3360,7 @@ options);
     /// <summary>Divides a CBORObject object by the value of a CBORObject
     /// object.</summary>
     /// <param name='first'>A CBORObject object.</param>
-    /// <param name='second'>A CBORObject object. (2).</param>
+    /// <param name='second'>Another CBOR object.</param>
     /// <returns>The quotient of the two objects.</returns>
     public static CBORObject Divide(CBORObject first, CBORObject second) {
       return CBORObjectMath.Divide(first, second);
@@ -3369,7 +3369,7 @@ options);
     /// <summary>Finds the remainder that results when a CBORObject object is
     /// divided by the value of a CBORObject object.</summary>
     /// <param name='first'>A CBORObject object.</param>
-    /// <param name='second'>A CBORObject object. (2).</param>
+    /// <param name='second'>Another CBOR object.</param>
     /// <returns>The remainder of the two objects.</returns>
     public static CBORObject Remainder(CBORObject first, CBORObject second) {
       return CBORObjectMath.Remainder(first, second);
