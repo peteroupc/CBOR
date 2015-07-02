@@ -3511,7 +3511,7 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='power'>A BigInteger object. (2).</param>
+    /// <param name='power'>Another BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='power'/> is null.</exception>
@@ -4475,7 +4475,7 @@ namespace PeterO {
     /// <summary>Returns the greatest common divisor of two integers. The greatest
     /// common divisor (GCD) is also known as the greatest common factor
     /// (GCF).</summary>
-    /// <param name='bigintSecond'>A BigInteger object. (2).</param>
+    /// <param name='bigintSecond'>Another BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintSecond'/> is null.</exception>
@@ -4532,7 +4532,7 @@ namespace PeterO {
 
     /// <summary>Calculates the remainder when a BigInteger raised to a certain
     /// power is divided by another BigInteger.</summary>
-    /// <param name='pow'>A BigInteger object. (2).</param>
+    /// <param name='pow'>Another BigInteger object.</param>
     /// <param name='mod'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref name='pow'/>

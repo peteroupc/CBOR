@@ -94,7 +94,7 @@ int denominatorSmall) {
     /// <summary>Creates a number with the given numerator and
     /// denominator.</summary>
     /// <param name='numerator'>A BigInteger object.</param>
-    /// <param name='denominator'>A BigInteger object. (2).</param>
+    /// <param name='denominator'>Another BigInteger object.</param>
     /// <returns>An ExtendedRational object.</returns>
     public static ExtendedRational Create(
 BigInteger numerator,
@@ -104,7 +104,7 @@ BigInteger denominator) {
 
     /// <summary>Initializes a new instance of the ExtendedRational class.</summary>
     /// <param name='numerator'>A BigInteger object.</param>
-    /// <param name='denominator'>A BigInteger object. (2).</param>
+    /// <param name='denominator'>Another BigInteger object.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='numerator'/> or <paramref name='denominator'/> is null.</exception>
     public ExtendedRational(BigInteger numerator, BigInteger denominator) {
@@ -1034,7 +1034,7 @@ BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
     /// <summary>Adds two rational numbers.</summary>
-    /// <param name='otherValue'>An ExtendedRational object. (2).</param>
+    /// <param name='otherValue'>Another ExtendedRational object.</param>
     /// <returns>The sum of the two numbers. Returns NaN if either operand is
     /// NaN.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref

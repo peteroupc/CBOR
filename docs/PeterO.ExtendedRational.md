@@ -18,7 +18,7 @@ Initializes a new instance of the ExtendedRational class.
 
  * <i>numerator</i>: A BigInteger object.
 
- * <i>denominator</i>: A BigInteger object. (2).
+ * <i>denominator</i>: Another BigInteger object.
 
 <b>Exceptions:</b>
 
@@ -164,7 +164,7 @@ Adds two rational numbers.
 
 <b>Parameters:</b>
 
- * <i>otherValue</i>: An ExtendedRational object. (2).
+ * <i>otherValue</i>: Another ExtendedRational object.
 
 <b>Returns:</b>
 
@@ -251,7 +251,7 @@ Creates a number with the given numerator and denominator.
 
  * <i>numerator</i>: A BigInteger object.
 
- * <i>denominator</i>: A BigInteger object. (2).
+ * <i>denominator</i>: Another BigInteger object.
 
 <b>Returns:</b>
 

@@ -369,7 +369,7 @@ new[] { FromObject(-scale),
 
     /// <summary>Adds a CBORObject object and a CBORObject object.</summary>
     /// <param name='a'>A CBORObject object.</param>
-    /// <param name='b'>A CBORObject object. (2).</param>
+    /// <param name='b'>Another CBORObject object.</param>
     /// <returns>The sum of the two objects.</returns>
     public static CBORObject operator +(CBORObject a, CBORObject b) {
       return Addition(a, b);
@@ -377,7 +377,7 @@ new[] { FromObject(-scale),
 
     /// <summary>Subtracts a CBORObject object from a CBORObject object.</summary>
     /// <param name='a'>A CBORObject object.</param>
-    /// <param name='b'>A CBORObject object. (2).</param>
+    /// <param name='b'>Another CBORObject object.</param>
     /// <returns>The difference of the two objects.</returns>
     public static CBORObject operator -(CBORObject a, CBORObject b) {
       return Subtract(a, b);
@@ -386,7 +386,7 @@ new[] { FromObject(-scale),
     /// <summary>Multiplies a CBORObject object by the value of a CBORObject
     /// object.</summary>
     /// <param name='a'>A CBORObject object.</param>
-    /// <param name='b'>A CBORObject object. (2).</param>
+    /// <param name='b'>Another CBORObject object.</param>
     /// <returns>The product of the two objects.</returns>
     public static CBORObject operator *(CBORObject a, CBORObject b) {
       return Multiply(a, b);
@@ -395,7 +395,7 @@ new[] { FromObject(-scale),
     /// <summary>Divides a CBORObject object by the value of a CBORObject
     /// object.</summary>
     /// <param name='a'>A CBORObject object.</param>
-    /// <param name='b'>A CBORObject object. (2).</param>
+    /// <param name='b'>Another CBORObject object.</param>
     /// <returns>The quotient of the two objects.</returns>
     public static CBORObject operator /(CBORObject a, CBORObject b) {
       return Divide(a, b);
@@ -404,7 +404,7 @@ new[] { FromObject(-scale),
     /// <summary>Finds the remainder that results when a CBORObject object is
     /// divided by the value of a CBORObject object.</summary>
     /// <param name='a'>A CBORObject object.</param>
-    /// <param name='b'>A CBORObject object. (2).</param>
+    /// <param name='b'>Another CBORObject object.</param>
     /// <returns>The remainder of the two objects.</returns>
     public static CBORObject operator %(CBORObject a, CBORObject b) {
       return Remainder(a, b);

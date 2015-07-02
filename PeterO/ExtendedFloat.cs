@@ -367,7 +367,7 @@ namespace PeterO {
 
     /// <summary>This is an internal method.</summary>
     /// <param name='num'>A BigInteger object.</param>
-    /// <param name='den'>A BigInteger object. (2).</param>
+    /// <param name='den'>Another BigInteger object.</param>
     /// <returns>A Boolean object.</returns>
       public bool HasTerminatingRadixExpansion(BigInteger num, BigInteger den) {
         BigInteger gcd = BigInteger.GreatestCommonDivisor(num, den);
@@ -382,7 +382,7 @@ namespace PeterO {
       }
 
     /// <summary>This is an internal method.</summary>
-    /// <param name='bigint'>A BigInteger object. (2).</param>
+    /// <param name='bigint'>Another BigInteger object.</param>
     /// <param name='power'>A FastInteger object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger MultiplyByRadixPower(
@@ -421,7 +421,7 @@ namespace PeterO {
 
     /// <summary>This is an internal method.</summary>
     /// <param name='mantissa'>A BigInteger object.</param>
-    /// <param name='exponent'>A BigInteger object. (2).</param>
+    /// <param name='exponent'>Another BigInteger object.</param>
     /// <param name='flags'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedFloat object.</returns>
       public ExtendedFloat CreateNewWithFlags(
@@ -1161,7 +1161,7 @@ namespace PeterO {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='divisor'>An ExtendedFloat object. (2).</param>
+    /// <param name='divisor'>Another ExtendedFloat object.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat RemainderNaturalScale(
       ExtendedFloat divisor) {
@@ -1171,7 +1171,7 @@ namespace PeterO {
     /// <summary>Calculates the remainder of a number by the formula this - ((this /
     /// divisor) * divisor). This is meant to be similar to the remainder operation
     /// in Java's BigDecimal.</summary>
-    /// <param name='divisor'>An ExtendedFloat object. (2).</param>
+    /// <param name='divisor'>Another ExtendedFloat object.</param>
     /// <param name='ctx'>A precision context object to control the precision,
     /// rounding, and exponent range of the integer part of the result. This context
     /// will be used only in the division portion of the remainder calculation.
@@ -1546,7 +1546,7 @@ namespace PeterO {
 
     /// <summary>Gets the greater value between two binary floats.</summary>
     /// <param name='first'>An ExtendedFloat object.</param>
-    /// <param name='second'>An ExtendedFloat object. (2).</param>
+    /// <param name='second'>Another ExtendedFloat object.</param>
     /// <param name='ctx'>A precision context to control precision, rounding, and
     /// exponent range of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition to
@@ -1561,7 +1561,7 @@ namespace PeterO {
 
     /// <summary>Gets the lesser value between two binary floats.</summary>
     /// <param name='first'>An ExtendedFloat object.</param>
-    /// <param name='second'>An ExtendedFloat object. (2).</param>
+    /// <param name='second'>Another ExtendedFloat object.</param>
     /// <param name='ctx'>A precision context to control precision, rounding, and
     /// exponent range of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition to
@@ -1576,7 +1576,7 @@ namespace PeterO {
 
     /// <summary>Gets the greater value between two values, ignoring their signs. If
     /// the absolute values are equal, has the same effect as Max.</summary>
-    /// <param name='first'>An ExtendedFloat object. (2).</param>
+    /// <param name='first'>Another ExtendedFloat object.</param>
     /// <param name='second'>An ExtendedFloat object. (3).</param>
     /// <param name='ctx'>A precision context to control precision, rounding, and
     /// exponent range of the result. If HasFlags of the context is true, will also
@@ -1592,7 +1592,7 @@ namespace PeterO {
 
     /// <summary>Gets the lesser value between two values, ignoring their signs. If
     /// the absolute values are equal, has the same effect as Min.</summary>
-    /// <param name='first'>An ExtendedFloat object. (2).</param>
+    /// <param name='first'>Another ExtendedFloat object.</param>
     /// <param name='second'>An ExtendedFloat object. (3).</param>
     /// <param name='ctx'>A precision context to control precision, rounding, and
     /// exponent range of the result. If HasFlags of the context is true, will also
@@ -1608,7 +1608,7 @@ namespace PeterO {
 
     /// <summary>Gets the greater value between two binary floats.</summary>
     /// <param name='first'>An ExtendedFloat object.</param>
-    /// <param name='second'>An ExtendedFloat object. (2).</param>
+    /// <param name='second'>Another ExtendedFloat object.</param>
     /// <returns>The larger value of the two objects.</returns>
     public static ExtendedFloat Max(
       ExtendedFloat first,
@@ -1618,7 +1618,7 @@ namespace PeterO {
 
     /// <summary>Gets the lesser value between two binary floats.</summary>
     /// <param name='first'>An ExtendedFloat object.</param>
-    /// <param name='second'>An ExtendedFloat object. (2).</param>
+    /// <param name='second'>Another ExtendedFloat object.</param>
     /// <returns>The smaller value of the two objects.</returns>
     public static ExtendedFloat Min(
       ExtendedFloat first,
@@ -1628,7 +1628,7 @@ namespace PeterO {
 
     /// <summary>Gets the greater value between two values, ignoring their signs. If
     /// the absolute values are equal, has the same effect as Max.</summary>
-    /// <param name='first'>An ExtendedFloat object. (2).</param>
+    /// <param name='first'>Another ExtendedFloat object.</param>
     /// <param name='second'>An ExtendedFloat object. (3).</param>
     /// <returns>An ExtendedFloat object.</returns>
     public static ExtendedFloat MaxMagnitude(
@@ -1639,7 +1639,7 @@ namespace PeterO {
 
     /// <summary>Gets the lesser value between two values, ignoring their signs. If
     /// the absolute values are equal, has the same effect as Min.</summary>
-    /// <param name='first'>An ExtendedFloat object. (2).</param>
+    /// <param name='first'>Another ExtendedFloat object.</param>
     /// <param name='second'>An ExtendedFloat object. (3).</param>
     /// <returns>An ExtendedFloat object.</returns>
     public static ExtendedFloat MinMagnitude(

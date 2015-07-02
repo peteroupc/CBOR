@@ -978,7 +978,7 @@ Gets the greater value between two decimal numbers.
 
  * <i>first</i>: An ExtendedDecimal object.
 
- * <i>second</i>: An ExtendedDecimal object. (2).
+ * <i>second</i>: Another ExtendedDecimal object.
 
 <b>Returns:</b>
 

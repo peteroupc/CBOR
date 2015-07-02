@@ -105,7 +105,7 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>thisValue</i>: A BigInteger object. (2).
+ * <i>thisValue</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -446,7 +446,7 @@ Returns the greatest common divisor of two integers. The greatest common divisor
 
 <b>Parameters:</b>
 
- * <i>bigintSecond</i>: A BigInteger object. (2).
+ * <i>bigintSecond</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -526,7 +526,7 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>bigintFirst</i>: A BigInteger object. (2).
+ * <i>bigintFirst</i>: Another BigInteger object.
 
  * <i>bigintSecond</i>: A BigInteger object. (3).
 
@@ -655,7 +655,7 @@ Calculates the remainder when a BigInteger raised to a certain power is divided 
 
 <b>Parameters:</b>
 
- * <i>pow</i>: A BigInteger object. (2).
+ * <i>pow</i>: Another BigInteger object.
 
  * <i>mod</i>: A BigInteger object. (3).
 
@@ -682,7 +682,7 @@ Calculates the remainder when a BigInteger raised to a certain power is divided 
 
  * <i>bigintValue</i>: A BigInteger object.
 
- * <i>pow</i>: A BigInteger object. (2).
+ * <i>pow</i>: Another BigInteger object.
 
  * <i>mod</i>: A BigInteger object. (3).
 
@@ -739,7 +739,7 @@ Returns a BigInteger with every bit flipped.
 
 <b>Parameters:</b>
 
- * <i>valueA</i>: A BigInteger object. (2).
+ * <i>valueA</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -763,7 +763,7 @@ Adds a BigInteger object and a BigInteger object.
 
  * <i>bthis</i>: A BigInteger object.
 
- * <i>augend</i>: A BigInteger object. (2).
+ * <i>augend</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -787,7 +787,7 @@ Divides a BigInteger object by the value of a BigInteger object.
 
  * <i>dividend</i>: A BigInteger object.
 
- * <i>divisor</i>: A BigInteger object. (2).
+ * <i>divisor</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -849,7 +849,7 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>bthis</i>: A BigInteger object. (2).
+ * <i>bthis</i>: Another BigInteger object.
 
  * <i>bitCount</i>: A 32-bit signed integer.
 
@@ -915,7 +915,7 @@ Finds the remainder that results when a BigInteger object is divided by the valu
 
  * <i>dividend</i>: A BigInteger object.
 
- * <i>divisor</i>: A BigInteger object. (2).
+ * <i>divisor</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -939,7 +939,7 @@ Multiplies a BigInteger object by the value of a BigInteger object.
 
  * <i>operand1</i>: A BigInteger object.
 
- * <i>operand2</i>: A BigInteger object. (2).
+ * <i>operand2</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -961,7 +961,7 @@ Shifts the bits of a BigInteger instance to the right.
 
 For this operation, the BigInteger is treated as a two's complement representation. Thus, for negative values, the BigInteger is sign-extended.<b>Parameters:</b>
 
- * <i>bthis</i>: A BigInteger object. (2).
+ * <i>bthis</i>: Another BigInteger object.
 
  * <i>bigValue</i>: A 32-bit signed integer.
 
@@ -1008,7 +1008,7 @@ Negates a BigInteger object.
 
 <b>Parameters:</b>
 
- * <i>bigValue</i>: A BigInteger object. (2).
+ * <i>bigValue</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -1030,7 +1030,7 @@ Does an OR operation between two BigInteger instances.
 
 Each BigInteger instance is treated as a two's complement representation for the purposes of this operator.<b>Parameters:</b>
 
- * <i>first</i>: A BigInteger object. (2).
+ * <i>first</i>: Another BigInteger object.
 
  * <i>second</i>: A BigInteger object. (3).
 
@@ -1070,7 +1070,7 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>bigValue</i>: A BigInteger object. (2).
+ * <i>bigValue</i>: Another BigInteger object.
 
  * <i>power</i>: A 32-bit signed integer.
 
@@ -1094,7 +1094,7 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>bigValue</i>: A BigInteger object. (2).
+ * <i>bigValue</i>: Another BigInteger object.
 
  * <i>power</i>: A BigInteger object. (3).
 
@@ -1118,7 +1118,7 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>power</i>: A BigInteger object. (2).
+ * <i>power</i>: Another BigInteger object.
 
 <b>Returns:</b>
 

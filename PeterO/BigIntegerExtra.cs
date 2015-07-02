@@ -21,7 +21,7 @@ namespace PeterO {
 
     /// <summary>Adds a BigInteger object and a BigInteger object.</summary>
     /// <param name='bthis'>A BigInteger object.</param>
-    /// <param name='augend'>A BigInteger object. (2).</param>
+    /// <param name='augend'>Another BigInteger object.</param>
     /// <returns>The sum of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bthis'/> is null.</exception>
@@ -50,7 +50,7 @@ BigInteger subtrahend) {
     /// <summary>Multiplies a BigInteger object by the value of a BigInteger
     /// object.</summary>
     /// <param name='operand1'>A BigInteger object.</param>
-    /// <param name='operand2'>A BigInteger object. (2).</param>
+    /// <param name='operand2'>Another BigInteger object.</param>
     /// <returns>The product of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='operand1'/> is null.</exception>
@@ -66,7 +66,7 @@ BigInteger operand2) {
     /// <summary>Divides a BigInteger object by the value of a BigInteger
     /// object.</summary>
     /// <param name='dividend'>A BigInteger object.</param>
-    /// <param name='divisor'>A BigInteger object. (2).</param>
+    /// <param name='divisor'>Another BigInteger object.</param>
     /// <returns>The quotient of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='dividend'/> is null.</exception>
@@ -82,7 +82,7 @@ BigInteger divisor) {
     /// <summary>Finds the remainder that results when a BigInteger object is
     /// divided by the value of a BigInteger object.</summary>
     /// <param name='dividend'>A BigInteger object.</param>
-    /// <param name='divisor'>A BigInteger object. (2).</param>
+    /// <param name='divisor'>Another BigInteger object.</param>
     /// <returns>The remainder of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='dividend'/> is null.</exception>
@@ -96,7 +96,7 @@ BigInteger divisor) {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='bthis'>A BigInteger object. (2).</param>
+    /// <param name='bthis'>Another BigInteger object.</param>
     /// <param name='bitCount'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -111,7 +111,7 @@ BigInteger divisor) {
     /// <summary>Calculates the remainder when a BigInteger raised to a certain
     /// power is divided by another BigInteger.</summary>
     /// <param name='bigintValue'>A BigInteger object.</param>
-    /// <param name='pow'>A BigInteger object. (2).</param>
+    /// <param name='pow'>Another BigInteger object.</param>
     /// <param name='mod'>A BigInteger object. (3).</param>
     /// <returns>The value ( <paramref name='bigintValue'/> ^ <paramref name='pow'/>
     /// )% <paramref name='mod'/> .</returns>
@@ -128,7 +128,7 @@ BigInteger mod) {
     }
 
     /// <summary>Shifts the bits of a BigInteger instance to the right.</summary>
-    /// <param name='bthis'>A BigInteger object. (2).</param>
+    /// <param name='bthis'>Another BigInteger object.</param>
     /// <param name='bigValue'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -144,7 +144,7 @@ BigInteger mod) {
     }
 
     /// <summary>Negates a BigInteger object.</summary>
-    /// <param name='bigValue'>A BigInteger object. (2).</param>
+    /// <param name='bigValue'>Another BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigValue'/> is null.</exception>
@@ -244,7 +244,7 @@ BigInteger otherValue) {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='thisValue'>A BigInteger object. (2).</param>
+    /// <param name='thisValue'>Another BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='thisValue'/> is null.</exception>
@@ -296,7 +296,7 @@ BigInteger otherValue) {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='dividend'>A BigInteger object. (2).</param>
+    /// <param name='dividend'>Another BigInteger object.</param>
     /// <param name='divisor'>A BigInteger object. (3).</param>
     /// <param name='remainder'>A BigInteger object. (4).</param>
     /// <returns>A BigInteger object.</returns>
@@ -315,7 +315,7 @@ out BigInteger remainder) {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='bigintFirst'>A BigInteger object. (2).</param>
+    /// <param name='bigintFirst'>Another BigInteger object.</param>
     /// <param name='bigintSecond'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -337,7 +337,7 @@ BigInteger bigintSecond) {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='bigValue'>A BigInteger object. (2).</param>
+    /// <param name='bigValue'>Another BigInteger object.</param>
     /// <param name='power'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -365,7 +365,7 @@ BigInteger bigintSecond) {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='bigValue'>A BigInteger object. (2).</param>
+    /// <param name='bigValue'>Another BigInteger object.</param>
     /// <param name='power'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -414,7 +414,7 @@ BigInteger bigintSecond) {
     }
 
     /// <summary>Returns a BigInteger with every bit flipped.</summary>
-    /// <param name='valueA'>A BigInteger object. (2).</param>
+    /// <param name='valueA'>Another BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='valueA'/> is null.</exception>
@@ -499,7 +499,7 @@ Math.Max(valueXaReg.Length, valueXbReg.Length));
     }
 
     /// <summary>Does an OR operation between two BigInteger instances.</summary>
-    /// <param name='first'>A BigInteger object. (2).</param>
+    /// <param name='first'>Another BigInteger object.</param>
     /// <param name='second'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref

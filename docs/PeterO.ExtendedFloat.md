@@ -991,7 +991,7 @@ Gets the greater value between two binary floats.
 
  * <i>first</i>: An ExtendedFloat object.
 
- * <i>second</i>: An ExtendedFloat object. (2).
+ * <i>second</i>: Another ExtendedFloat object.
 
 <b>Returns:</b>
 
@@ -1010,7 +1010,7 @@ Gets the greater value between two binary floats.
 
  * <i>first</i>: An ExtendedFloat object.
 
- * <i>second</i>: An ExtendedFloat object. (2).
+ * <i>second</i>: Another ExtendedFloat object.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
@@ -1028,7 +1028,7 @@ Gets the greater value between two values, ignoring their signs. If the absolute
 
 <b>Parameters:</b>
 
- * <i>first</i>: An ExtendedFloat object. (2).
+ * <i>first</i>: Another ExtendedFloat object.
 
  * <i>second</i>: An ExtendedFloat object. (3).
 
@@ -1047,7 +1047,7 @@ Gets the greater value between two values, ignoring their signs. If the absolute
 
 <b>Parameters:</b>
 
- * <i>first</i>: An ExtendedFloat object. (2).
+ * <i>first</i>: Another ExtendedFloat object.
 
  * <i>second</i>: An ExtendedFloat object. (3).
 
@@ -1069,7 +1069,7 @@ Gets the lesser value between two binary floats.
 
  * <i>first</i>: An ExtendedFloat object.
 
- * <i>second</i>: An ExtendedFloat object. (2).
+ * <i>second</i>: Another ExtendedFloat object.
 
 <b>Returns:</b>
 
@@ -1088,7 +1088,7 @@ Gets the lesser value between two binary floats.
 
  * <i>first</i>: An ExtendedFloat object.
 
- * <i>second</i>: An ExtendedFloat object. (2).
+ * <i>second</i>: Another ExtendedFloat object.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
@@ -1106,7 +1106,7 @@ Gets the lesser value between two values, ignoring their signs. If the absolute 
 
 <b>Parameters:</b>
 
- * <i>first</i>: An ExtendedFloat object. (2).
+ * <i>first</i>: Another ExtendedFloat object.
 
  * <i>second</i>: An ExtendedFloat object. (3).
 
@@ -1125,7 +1125,7 @@ Gets the lesser value between two values, ignoring their signs. If the absolute 
 
 <b>Parameters:</b>
 
- * <i>first</i>: An ExtendedFloat object. (2).
+ * <i>first</i>: Another ExtendedFloat object.
 
  * <i>second</i>: An ExtendedFloat object. (3).
 
@@ -1660,7 +1660,7 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: An ExtendedFloat object. (2).
+ * <i>divisor</i>: Another ExtendedFloat object.
 
 <b>Returns:</b>
 
@@ -1676,7 +1676,7 @@ Calculates the remainder of a number by the formula this - ((this / divisor) * d
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: An ExtendedFloat object. (2).
+ * <i>divisor</i>: Another ExtendedFloat object.
 
  * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the integer part of the result. This context will be used only in the division portion of the remainder calculation. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the division result doesn't fit the precision and exponent range without rounding.
 

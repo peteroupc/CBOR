@@ -28,7 +28,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Combines the flags of this options object with another options
     /// object.</summary>
-    /// <param name='o'>A CBOREncodeOptions object. (2).</param>
+    /// <param name='o'>Another CBOREncodeOptions object.</param>
     /// <returns>A CBOREncodeOptions object.</returns>
     public CBOREncodeOptions Or(CBOREncodeOptions o) {
       return new CBOREncodeOptions(this.value | o.value);
@@ -36,7 +36,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Returns an options object whose flags are shared by this and
     /// another options object.</summary>
-    /// <param name='o'>A CBOREncodeOptions object. (2).</param>
+    /// <param name='o'>Another CBOREncodeOptions object.</param>
     /// <returns>A CBOREncodeOptions object.</returns>
     public CBOREncodeOptions And(CBOREncodeOptions o) {
       return new CBOREncodeOptions(this.value & o.value);
