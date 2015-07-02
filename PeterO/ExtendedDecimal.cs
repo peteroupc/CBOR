@@ -754,7 +754,7 @@ namespace PeterO {
 
     /// <summary>This is an internal method.</summary>
     /// <param name='numerator'>A BigInteger object.</param>
-    /// <param name='denominator'>A BigInteger object. (2).</param>
+    /// <param name='denominator'>Another BigInteger object.</param>
     /// <returns>A Boolean object.</returns>
       public bool HasTerminatingRadixExpansion(
         BigInteger numerator,
@@ -788,7 +788,7 @@ namespace PeterO {
       }
 
     /// <summary>This is an internal method.</summary>
-    /// <param name='bigint'>A BigInteger object. (2).</param>
+    /// <param name='bigint'>Another BigInteger object.</param>
     /// <param name='power'>A FastInteger object.</param>
     /// <returns>A BigInteger object.</returns>
       public BigInteger MultiplyByRadixPower(
@@ -826,7 +826,7 @@ namespace PeterO {
 
     /// <summary>This is an internal method.</summary>
     /// <param name='mantissa'>A BigInteger object.</param>
-    /// <param name='exponent'>A BigInteger object. (2).</param>
+    /// <param name='exponent'>Another BigInteger object.</param>
     /// <param name='flags'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedDecimal object.</returns>
       public ExtendedDecimal CreateNewWithFlags(
@@ -2429,7 +2429,7 @@ namespace PeterO {
 
     /// <summary>Gets the greater value between two decimal numbers.</summary>
     /// <param name='first'>An ExtendedDecimal object.</param>
-    /// <param name='second'>An ExtendedDecimal object. (2).</param>
+    /// <param name='second'>Another ExtendedDecimal object.</param>
     /// <returns>The larger value of the two objects.</returns>
     public static ExtendedDecimal Max(
       ExtendedDecimal first,

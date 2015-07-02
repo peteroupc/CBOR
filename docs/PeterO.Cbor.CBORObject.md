@@ -1698,7 +1698,7 @@ Adds a CBORObject object and a CBORObject object.
 
  * <i>a</i>: A CBORObject object.
 
- * <i>b</i>: A CBORObject object. (2).
+ * <i>b</i>: Another CBORObject object.
 
 <b>Returns:</b>
 
@@ -1716,7 +1716,7 @@ Divides a CBORObject object by the value of a CBORObject object.
 
  * <i>a</i>: A CBORObject object.
 
- * <i>b</i>: A CBORObject object. (2).
+ * <i>b</i>: Another CBORObject object.
 
 <b>Returns:</b>
 
@@ -1734,7 +1734,7 @@ Finds the remainder that results when a CBORObject object is divided by the valu
 
  * <i>a</i>: A CBORObject object.
 
- * <i>b</i>: A CBORObject object. (2).
+ * <i>b</i>: Another CBORObject object.
 
 <b>Returns:</b>
 
@@ -1752,7 +1752,7 @@ Multiplies a CBORObject object by the value of a CBORObject object.
 
  * <i>a</i>: A CBORObject object.
 
- * <i>b</i>: A CBORObject object. (2).
+ * <i>b</i>: Another CBORObject object.
 
 <b>Returns:</b>
 
@@ -1770,7 +1770,7 @@ Subtracts a CBORObject object from a CBORObject object.
 
  * <i>a</i>: A CBORObject object.
 
- * <i>b</i>: A CBORObject object. (2).
+ * <i>b</i>: Another CBORObject object.
 
 <b>Returns:</b>
 
