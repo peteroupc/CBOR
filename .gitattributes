@@ -21,6 +21,8 @@
 *.nuspec eol=lf
 *.html eol=lf
 *.htm eol=lf
+*.css eol=lf
+*.less eol=lf
 .gitattributes eol=lf
 .gitignore eol=lf
 .npmignore eol=lf
