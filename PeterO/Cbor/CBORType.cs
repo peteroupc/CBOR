@@ -18,7 +18,7 @@ namespace PeterO.Cbor {
     /// <summary>The simple values true and false.</summary>
     Boolean,
 
-    /// <summary>A &quot;simple value&quot; other than floating point values, true,
+    /// <summary>A &#x22;simple value&#x22; other than floating point values, true,
     /// and false.</summary>
     SimpleValue,
 

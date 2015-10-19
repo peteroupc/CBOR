@@ -3138,7 +3138,7 @@ namespace PeterO {
                               4)] >> (int)(n & 15)) & 1) != 0));
     }
 
-    /// <summary>Returns a byte array of this object&apos;s value.</summary>
+    /// <summary>Returns a byte array of this object&#x27;s value.</summary>
     /// <param name='littleEndian'>A Boolean object.</param>
     /// <returns>A byte array that represents the value of this object.</returns>
     public byte[] toByteArray(bool littleEndian) {
@@ -3203,7 +3203,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Shifts this object&apos;s value by a number of bits. A value of 1
+    /// <summary>Shifts this object&#x27;s value by a number of bits. A value of 1
     /// doubles this value, a value of 2 multiplies it by 4, a value of 3 by 8, a
     /// value of 4 by 16, and so on.</summary>
     /// <param name='numberBits'>The number of bits to shift. Can be negative, in
@@ -3612,7 +3612,7 @@ namespace PeterO {
     }
 
     /// <summary>Finds the minimum number of bits needed to represent this
-    /// object&apos;s absolute value.</summary>
+    /// object&#x27;s absolute value.</summary>
     /// <returns>The number of bits in this object's value. Returns 0 if this
     /// object's value is 0, and returns 1 if the value is negative 1.</returns>
     public int getUnsignedBitLength() {
@@ -3677,7 +3677,7 @@ namespace PeterO {
     }
 
     /// <summary>Finds the minimum number of bits needed to represent this
-    /// object&apos;s value, except for its sign. If the value is negative, finds
+    /// object&#x27;s value, except for its sign. If the value is negative, finds
     /// the number of bits in a value equal to this object's absolute value minus
     /// 1.</summary>
     /// <returns>The number of bits in this object's value. Returns 0 if this
@@ -5369,7 +5369,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Finds the square root of this instance&apos;s value, rounded
+    /// <summary>Finds the square root of this instance&#x27;s value, rounded
     /// down.</summary>
     /// <returns>The square root of this object's value. Returns 0 if this value is
     /// 0 or less.</returns>

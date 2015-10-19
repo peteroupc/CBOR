@@ -93,7 +93,7 @@ namespace PeterO {
 
     /// <summary>Gets the maximum length of a converted number in digits, ignoring
     /// the decimal point and exponent. For example, if precision is 3, a converted
-    /// number&apos;s mantissa can range from 0 to 999 (up to three digits long). If
+    /// number&#x27;s mantissa can range from 0 to 999 (up to three digits long). If
     /// 0, converted numbers can have any precision.</summary>
     /// <value>The maximum length of a converted number in digits, ignoring the
     /// decimal point and exponent.</value>
@@ -107,11 +107,11 @@ namespace PeterO {
 
     private bool clampNormalExponents;
 
-    /// <summary>Gets a value indicating whether a converted number&apos;s Exponent
-    /// property will not be higher than EMax + 1 - Precision. If a number&apos;s
+    /// <summary>Gets a value indicating whether a converted number&#x27;s Exponent
+    /// property will not be higher than EMax + 1 - Precision. If a number&#x27;s
     /// exponent is higher than that value, but not high enough to cause overflow,
     /// the exponent is clamped to that value and enough zeros are added to the
-    /// number&apos;s mantissa to account for the adjustment. If HasExponentRange is
+    /// number&#x27;s mantissa to account for the adjustment. If HasExponentRange is
     /// false, this value is always false.</summary>
     /// <value>If true, a converted number&apos;s Exponent property will not be
     /// higher than EMax + 1 - Precision.</value>
@@ -122,7 +122,7 @@ namespace PeterO {
     }
 
     /// <summary>Gets the desired rounding mode when converting numbers that
-    /// can&apos;t be represented in the given precision and exponent
+    /// can&#x27;t be represented in the given precision and exponent
     /// range.</summary>
     /// <value>The desired rounding mode when converting numbers that can&apos;t be
     /// represented in the given precision and exponent range.</value>
@@ -153,11 +153,11 @@ namespace PeterO {
     /// the value or the exponent may have changed from the original.</summary>
     public const int FlagRounded = 2;
 
-    /// <summary>Signals that the result&apos;s exponent, before rounding, is lower
+    /// <summary>Signals that the result&#x27;s exponent, before rounding, is lower
     /// than the lowest exponent allowed.</summary>
     public const int FlagSubnormal = 4;
 
-    /// <summary>Signals that the result&apos;s exponent, before rounding, is lower
+    /// <summary>Signals that the result&#x27;s exponent, before rounding, is lower
     /// than the lowest exponent allowed, and the result was rounded to a different
     /// mathematical value, but as close as possible to the original.</summary>
     public const int FlagUnderflow = 8;
@@ -279,8 +279,8 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary>Copies this precision context and sets the copy&apos;s
-    /// &quot;ClampNormalExponents&quot; flag to the given value.</summary>
+    /// <summary>Copies this precision context and sets the copy&#x27;s
+    /// &#x22;ClampNormalExponents&#x22; flag to the given value.</summary>
     /// <param name='clamp'>A Boolean object.</param>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithExponentClamp(bool clamp) {
@@ -289,7 +289,7 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary>Copies this precision context and sets the copy&apos;s exponent
+    /// <summary>Copies this precision context and sets the copy&#x27;s exponent
     /// range.</summary>
     /// <param name='exponentMinSmall'>Desired minimum exponent (EMin).</param>
     /// <param name='exponentMaxSmall'>Desired maximum exponent (EMax).</param>
@@ -308,7 +308,7 @@ namespace PeterO {
       return pc;
     }
 
-    /// <summary>Copies this precision context and sets the copy&apos;s exponent
+    /// <summary>Copies this precision context and sets the copy&#x27;s exponent
     /// range.</summary>
     /// <param name='exponentMin'>Desired minimum exponent (EMin).</param>
     /// <param name='exponentMax'>Desired maximum exponent (EMax).</param>
