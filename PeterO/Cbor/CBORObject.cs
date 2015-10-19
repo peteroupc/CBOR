@@ -421,7 +421,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Gets a value indicating whether this object&apos;s value equals
+    /// <summary>Gets a value indicating whether this object&#x27;s value equals
     /// 0.</summary>
     /// <value>True if this object&apos;s value equals 0; otherwise, false.</value>
     public bool IsZero {
@@ -431,7 +431,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Gets this object&apos;s value with the sign reversed.</summary>
+    /// <summary>Gets this object&#x27;s value with the sign reversed.</summary>
     /// <returns>The reversed-sign form of this number.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's type is not
     /// a number type.</exception>
@@ -462,7 +462,7 @@ namespace PeterO.Cbor {
       return cn == null ? 2 : cn.Sign(obj);
     }
 
-    /// <summary>Gets this value&apos;s sign: -1 if negative; 1 if positive; 0 if
+    /// <summary>Gets this value&#x27;s sign: -1 if negative; 1 if positive; 0 if
     /// zero.</summary>
     /// <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if
     /// zero.</value>
@@ -528,7 +528,7 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Gets a value indicating whether this CBOR object represents a
-    /// not-a-number value (as opposed to whether this object&apos;s type is not a
+    /// not-a-number value (as opposed to whether this object&#x27;s type is not a
     /// number type).</summary>
     /// <returns>True if this CBOR object represents a not-a-number value (as
     /// opposed to whether this object's type is not a number type); otherwise,
@@ -3536,7 +3536,7 @@ options);
     }
 
     /// <summary>Returns the CBOR true value or false value, depending on
-    /// &quot;value&quot;.</summary>
+    /// &#x22;value&#x22;.</summary>
     /// <param name='value'>Either True or False.</param>
     /// <returns>CBORObject.True if value is true; otherwise
     /// CBORObject.False.</returns>

@@ -8,7 +8,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace Test {
-    /// <summary>The system&apos;s random number generator will be called many
+    /// <summary>The system&#x27;s random number generator will be called many
     /// times
     /// during testing. Unfortunately it can be very slow. So we use this
     /// wrapper

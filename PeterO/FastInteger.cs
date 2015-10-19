@@ -570,7 +570,7 @@ out bigrem);
       }
     }
 
-    /// <summary>Sets this object&apos;s value to the current value times another
+    /// <summary>Sets this object&#x27;s value to the current value times another
     /// integer.</summary>
     /// <param name='val'>The integer to multiply by.</param>
     /// <returns>This object.</returns>
@@ -625,7 +625,7 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&apos;s value to 0 minus its current value
+    /// <summary>Sets this object&#x27;s value to 0 minus its current value
     /// (reverses its sign).</summary>
     /// <returns>This object.</returns>
     internal FastInteger Negate() {
@@ -654,7 +654,7 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&apos;s value to the current value minus the given
+    /// <summary>Sets this object&#x27;s value to the current value minus the given
     /// FastInteger value.</summary>
     /// <param name='val'>The subtrahend.</param>
     /// <returns>This object.</returns>
@@ -703,7 +703,7 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&apos;s value to the current value minus the given
+    /// <summary>Sets this object&#x27;s value to the current value minus the given
     /// integer.</summary>
     /// <param name='val'>The subtrahend.</param>
     /// <returns>This object.</returns>
@@ -726,7 +726,7 @@ out bigrem);
       return this.AddInt(-val);
     }
 
-    /// <summary>Sets this object&apos;s value to the current value plus the given
+    /// <summary>Sets this object&#x27;s value to the current value plus the given
     /// integer.</summary>
     /// <param name='bigintVal'>The number to add.</param>
     /// <returns>This object.</returns>
@@ -750,7 +750,7 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&apos;s value to the current value minus the given
+    /// <summary>Sets this object&#x27;s value to the current value minus the given
     /// integer.</summary>
     /// <param name='bigintVal'>The subtrahend.</param>
     /// <returns>This object.</returns>
@@ -824,7 +824,7 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&apos;s value to the remainder of the current value
+    /// <summary>Sets this object&#x27;s value to the remainder of the current value
     /// divided by the given integer.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <returns>This object.</returns>
@@ -930,7 +930,7 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Gets a value indicating whether this object&apos;s value is
+    /// <summary>Gets a value indicating whether this object&#x27;s value is
     /// even.</summary>
     /// <value>True if this object&apos;s value is even; otherwise, false.</value>
     internal bool IsEvenNumber {
@@ -1021,7 +1021,7 @@ System.Globalization.CultureInfo.InvariantCulture);
       }
     }
 
-    /// <summary>Gets the sign of this object&apos;s value.</summary>
+    /// <summary>Gets the sign of this object&#x27;s value.</summary>
     /// <value>1 if positive, -1 if negative, 0 if zero.</value>
     internal int Sign {
       get {

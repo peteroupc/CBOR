@@ -74,7 +74,7 @@ namespace PeterO {
     private readonly BigInteger unsignedMantissa;
     private readonly int flags;
 
-    /// <summary>Gets this object&apos;s exponent. This object&apos;s value will be
+    /// <summary>Gets this object&#x27;s exponent. This object&#x27;s value will be
     /// an integer if the exponent is positive or zero.</summary>
     /// <value>This object&apos;s exponent. This object&apos;s value will be an
     /// integer if the exponent is positive or zero.</value>
@@ -84,7 +84,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets the absolute value of this object&apos;s un-scaled
+    /// <summary>Gets the absolute value of this object&#x27;s un-scaled
     /// value.</summary>
     /// <value>The absolute value of this object&apos;s un-scaled value.</value>
     public BigInteger UnsignedMantissa {
@@ -93,7 +93,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets this object&apos;s un-scaled value.</summary>
+    /// <summary>Gets this object&#x27;s un-scaled value.</summary>
     /// <value>This object&apos;s un-scaled value. Will be negative if this
     /// object&apos;s value is negative (including a negative NaN).</value>
     public BigInteger Mantissa {
@@ -110,7 +110,7 @@ namespace PeterO {
                 this.exponent.Equals(otherValue.exponent));
     }
 
-    /// <summary>Determines whether this object&apos;s mantissa and exponent are
+    /// <summary>Determines whether this object&#x27;s mantissa and exponent are
     /// equal to those of another object.</summary>
     /// <param name='other'>An ExtendedDecimal object.</param>
     /// <returns>True if this object's mantissa and exponent are equal to those of
@@ -119,7 +119,7 @@ namespace PeterO {
       return this.EqualsInternal(other);
     }
 
-    /// <summary>Determines whether this object&apos;s mantissa and exponent are
+    /// <summary>Determines whether this object&#x27;s mantissa and exponent are
     /// equal to those of another object and that other object is a decimal
     /// fraction.</summary>
     /// <param name='obj'>An arbitrary object.</param>
@@ -128,7 +128,7 @@ namespace PeterO {
       return this.EqualsInternal(obj as ExtendedDecimal);
     }
 
-    /// <summary>Calculates this object&apos;s hash code.</summary>
+    /// <summary>Calculates this object&#x27;s hash code.</summary>
     /// <returns>This object's hash code.</returns>
     public override int GetHashCode() {
       int hashCode = 964453631;
@@ -316,22 +316,24 @@ namespace PeterO {
       return FromString(str, offset, length, null);
     }
 
-    /// <summary>Creates a decimal number from a string that represents a number.
-    /// <para>The format of the string generally consists of: <list type=''><item>An
-    /// optional '-' or '+' character (if '-', the value is negative.)</item>
-    /// <item>One or more digits, with a single optional decimal point after the
-    /// first digit and before the last digit.</item>
-    /// <item>Optionally, E+ (positive
-    /// exponent) or E- (negative exponent) plus one or more digits specifying the
-    /// exponent.</item>
+    /// <summary><para>Creates a decimal number from a string that represents a
+    /// number.</para>
+    /// <para>The format of the string generally consists of:</para>
+    /// <list type=''><item>An optional '-' or '+' character (if '-' , the value is
+    /// negative.)</item>
+    /// <item>One or more digits, with a single optional decimal
+    /// point after the first digit and before the last digit.</item>
+    /// <item>Optionally, E+ (positive exponent) or E- (negative exponent) plus one
+    /// or more digits specifying the exponent.</item>
     /// </list>
-    /// </para>
-    /// <para>The string can also be "-INF",
-    /// "-Infinity" , "Infinity" , "INF" , quiet NaN ("qNaN" /"-qNaN") followed by
-    /// any number of digits, or signaling NaN ("sNaN" /"-sNaN") followed by any
-    /// number of digits, all in any combination of upper and lower case.</para>
-    /// <para>The format generally follows the definition in java.math.BigDecimal(),
-    /// except that the digits must be ASCII digits ('0' through '9').</para>
+    /// <para>The string can
+    /// also be "-INF", "-Infinity" , "Infinity" , "INF" , quiet NaN ("qNaN"
+    /// /"-qNaN") followed by any number of digits, or signaling NaN ("sNaN"
+    /// /"-sNaN") followed by any number of digits, all in any combination of upper
+    /// and lower case.</para>
+    /// <para>The format generally follows the definition in
+    /// java.math.BigDecimal(), except that the digits must be ASCII digits ('0'
+    /// through '9').</para>
     /// </summary>
     /// <param name='str'>A string object, a portion of which represents a
     /// number.</param>
@@ -1276,7 +1278,7 @@ namespace PeterO {
 
     private static BigInteger valueOneShift62 = BigInteger.One << 62;
 
-    /// <summary>Creates a binary floating-point number from this object&apos;s
+    /// <summary>Creates a binary floating-point number from this object&#x27;s
     /// value. Note that if the binary floating-point number contains a negative
     /// exponent, the resulting value might not be exact. However, the resulting
     /// binary float will contain enough precision to accurately convert it to a
@@ -1793,7 +1795,7 @@ namespace PeterO {
         BigNumberFlags.FlagQuietNaN);
 
     /// <summary>A not-a-number value that signals an invalid operation flag when
-    /// it&apos;s passed as an argument to any arithmetic operation in
+    /// it&#x27;s passed as an argument to any arithmetic operation in
     /// ExtendedDecimal.</summary>
     public static readonly ExtendedDecimal SignalingNaN =
       CreateWithFlags(
@@ -1886,7 +1888,7 @@ namespace PeterO {
       return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
     }
 
-    /// <summary>Gets this value&apos;s sign: -1 if negative; 1 if positive; 0 if
+    /// <summary>Gets this value&#x27;s sign: -1 if negative; 1 if positive; 0 if
     /// zero.</summary>
     /// <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if
     /// zero.</value>
@@ -1898,7 +1900,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets a value indicating whether this object&apos;s value equals
+    /// <summary>Gets a value indicating whether this object&#x27;s value equals
     /// 0.</summary>
     /// <value>True if this object&apos;s value equals 0; otherwise, false.</value>
     public bool IsZero {
@@ -1955,7 +1957,7 @@ namespace PeterO {
 
     /// <summary>Divides two ExtendedDecimal objects, and returns the integer part
     /// of the result, rounded down, with the preferred exponent set to this
-    /// value&apos;s exponent minus the divisor&apos;s exponent.</summary>
+    /// value&#x27;s exponent minus the divisor&#x27;s exponent.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <returns>The integer part of the quotient of the two objects. Signals
     /// FlagDivideByZero and returns infinity if the divisor is 0 and the dividend
@@ -1968,7 +1970,7 @@ namespace PeterO {
         PrecisionContext.ForRounding(Rounding.Down));
     }
 
-    /// <summary>Removes trailing zeros from this object&apos;s mantissa. For
+    /// <summary>Removes trailing zeros from this object&#x27;s mantissa. For
     /// example, 1.000 becomes 1. <para>If this object's value is 0, changes the
     /// exponent to 0. (This is unlike the behavior in Java's BigDecimal method
     /// "stripTrailingZeros" in Java 7 and earlier.)</para>
@@ -2047,8 +2049,8 @@ namespace PeterO {
     }
 
     /// <summary>Divides this ExtendedDecimal object by another ExtendedDecimal
-    /// object. The preferred exponent for the result is this object&apos;s exponent
-    /// minus the divisor&apos;s exponent.</summary>
+    /// object. The preferred exponent for the result is this object&#x27;s exponent
+    /// minus the divisor&#x27;s exponent.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context to control precision, rounding, and
     /// exponent range of the result. If HasFlags of the context is true, will also
@@ -2141,7 +2143,7 @@ namespace PeterO {
         PrecisionContext.ForRounding(rounding));
     }
 
-    /// <summary>Finds the absolute value of this object (if it&apos;s negative, it
+    /// <summary>Finds the absolute value of this object (if it&#x27;s negative, it
     /// becomes positive).</summary>
     /// <param name='context'>A precision context to control precision, rounding,
     /// and exponent range of the result. If HasFlags of the context is true, will
@@ -2231,8 +2233,8 @@ namespace PeterO {
                               DecimalMathHelper()));
 
     /// <summary>Divides this object by another object, and returns the integer part
-    /// of the result, with the preferred exponent set to this value&apos;s exponent
-    /// minus the divisor&apos;s exponent.</summary>
+    /// of the result, with the preferred exponent set to this value&#x27;s exponent
+    /// minus the divisor&#x27;s exponent.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <param name='ctx'>A precision context object to control the precision,
     /// rounding, and exponent range of the integer part of the result. Flags will
@@ -2282,8 +2284,8 @@ namespace PeterO {
     }
 
     /// <summary>Finds the distance to the closest multiple of the given divisor,
-    /// based on the result of dividing this object&apos;s value by another
-    /// object&apos;s value. <list type=''><item>If this and the other object divide
+    /// based on the result of dividing this object&#x27;s value by another
+    /// object&#x27;s value. <list type=''><item>If this and the other object divide
     /// evenly, the result is 0.</item>
     /// <item>If the remainder's absolute value is
     /// less than half of the divisor's absolute value, the result has the same sign
@@ -2315,7 +2317,7 @@ namespace PeterO {
       return MathValue.RemainderNear(this, divisor, ctx);
     }
 
-    /// <summary>Finds the largest value that&apos;s smaller than the given
+    /// <summary>Finds the largest value that&#x27;s smaller than the given
     /// value.</summary>
     /// <param name='ctx'>A precision context object to control the precision and
     /// exponent range of the result. The rounding mode from this context is
@@ -2331,7 +2333,7 @@ namespace PeterO {
       return MathValue.NextMinus(this, ctx);
     }
 
-    /// <summary>Finds the smallest value that&apos;s greater than the given
+    /// <summary>Finds the smallest value that&#x27;s greater than the given
     /// value.</summary>
     /// <param name='ctx'>A precision context object to control the precision and
     /// exponent range of the result. The rounding mode from this context is
@@ -2346,8 +2348,8 @@ namespace PeterO {
       return MathValue.NextPlus(this, ctx);
     }
 
-    /// <summary>Finds the next value that is closer to the other object&apos;s
-    /// value than this object&apos;s value. Returns a copy of this value with the
+    /// <summary>Finds the next value that is closer to the other object&#x27;s
+    /// value than this object&#x27;s value. Returns a copy of this value with the
     /// same sign as the other value if both values are equal.</summary>
     /// <param name='otherValue'>An ExtendedDecimal object.</param>
     /// <param name='ctx'>A precision context object to control the precision and
@@ -2531,7 +2533,7 @@ namespace PeterO {
       return MathValue.CompareToWithContext(this, other, true, ctx);
     }
 
-    /// <summary>Finds the sum of this object and another object. The result&apos;s
+    /// <summary>Finds the sum of this object and another object. The result&#x27;s
     /// exponent is set to the lower of the exponents of the two operands.</summary>
     /// <param name='otherValue'>The number to add to.</param>
     /// <param name='ctx'>A precision context to control precision, rounding, and
@@ -2778,7 +2780,7 @@ namespace PeterO {
     }
 
     /// <summary>Multiplies two decimal numbers. The resulting scale will be the sum
-    /// of the scales of the two decimal numbers. The result&apos;s sign is positive
+    /// of the scales of the two decimal numbers. The result&#x27;s sign is positive
     /// if both operands have the same sign, and negative if they have different
     /// signs.</summary>
     /// <param name='op'>Another decimal number.</param>
@@ -2835,7 +2837,7 @@ namespace PeterO {
       return MathValue.MultiplyAndAdd(this, op, negated, ctx);
     }
 
-    /// <summary>Rounds this object&apos;s value to a given precision, using the
+    /// <summary>Rounds this object&#x27;s value to a given precision, using the
     /// given rounding mode and range of exponent.</summary>
     /// <param name='ctx'>A context for controlling the precision, rounding mode,
     /// and exponent range. Can be null.</param>
@@ -2846,7 +2848,7 @@ namespace PeterO {
       return MathValue.RoundToPrecision(this, ctx);
     }
 
-    /// <summary>Rounds this object&apos;s value to a given precision, using the
+    /// <summary>Rounds this object&#x27;s value to a given precision, using the
     /// given rounding mode and range of exponent, and also converts negative zero
     /// to positive zero.</summary>
     /// <param name='ctx'>A context for controlling the precision, rounding mode,
@@ -2858,7 +2860,7 @@ namespace PeterO {
       return MathValue.Plus(this, ctx);
     }
 
-    /// <summary>Rounds this object&apos;s value to a given maximum bit length,
+    /// <summary>Rounds this object&#x27;s value to a given maximum bit length,
     /// using the given rounding mode and range of exponent.</summary>
     /// <param name='ctx'>A context for controlling the precision, rounding mode,
     /// and exponent range. The precision is interpreted as the maximum bit length
@@ -2880,7 +2882,7 @@ namespace PeterO {
       return ret;
     }
 
-    /// <summary>Finds the square root of this object&apos;s value.</summary>
+    /// <summary>Finds the square root of this object&#x27;s value.</summary>
     /// <param name='ctx'>A precision context to control precision, rounding, and
     /// exponent range of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition to
@@ -2896,7 +2898,7 @@ namespace PeterO {
     }
 
     /// <summary>Finds e (the base of natural logarithms) raised to the power of
-    /// this object&apos;s value.</summary>
+    /// this object&#x27;s value.</summary>
     /// <param name='ctx'>A precision context to control precision, rounding, and
     /// exponent range of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition to
@@ -2912,7 +2914,7 @@ namespace PeterO {
 
     /// <summary>Finds the natural logarithm of this object, that is, the power
     /// (exponent) that e (the base of natural logarithms) must be raised to in
-    /// order to equal this object&apos;s value.</summary>
+    /// order to equal this object&#x27;s value.</summary>
     /// <param name='ctx'>A precision context to control precision, rounding, and
     /// exponent range of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition to
@@ -2931,7 +2933,7 @@ namespace PeterO {
 
     /// <summary>Finds the base-10 logarithm of this object, that is, the power
     /// (exponent) that the number 10 must be raised to in order to equal this
-    /// object&apos;s value.</summary>
+    /// object&#x27;s value.</summary>
     /// <param name='ctx'>A precision context to control precision, rounding, and
     /// exponent range of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition to
@@ -2945,7 +2947,7 @@ namespace PeterO {
       return MathValue.Log10(this, ctx);
     }
 
-    /// <summary>Raises this object&apos;s value to the given exponent.</summary>
+    /// <summary>Raises this object&#x27;s value to the given exponent.</summary>
     /// <param name='exponent'>An ExtendedDecimal object.</param>
     /// <param name='ctx'>A precision context to control precision, rounding, and
     /// exponent range of the result. If HasFlags of the context is true, will also
@@ -2961,7 +2963,7 @@ namespace PeterO {
       return MathValue.Power(this, exponent, ctx);
     }
 
-    /// <summary>Raises this object&apos;s value to the given exponent.</summary>
+    /// <summary>Raises this object&#x27;s value to the given exponent.</summary>
     /// <param name='exponentSmall'>A 32-bit signed integer.</param>
     /// <param name='ctx'>A precision context to control precision, rounding, and
     /// exponent range of the result. If HasFlags of the context is true, will also
@@ -2973,7 +2975,7 @@ namespace PeterO {
       return this.Pow(ExtendedDecimal.FromInt64(exponentSmall), ctx);
     }
 
-    /// <summary>Raises this object&apos;s value to the given exponent.</summary>
+    /// <summary>Raises this object&#x27;s value to the given exponent.</summary>
     /// <param name='exponentSmall'>A 32-bit signed integer.</param>
     /// <returns>This^exponent. Returns NaN if this object and exponent are both
     /// 0.</returns>

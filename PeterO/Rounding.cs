@@ -6,9 +6,9 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 namespace PeterO {
-    /// <summary>Specifies the mode to use when &quot;shortening&quot; numbers that
-    /// otherwise can&apos;t fit a given number of digits, so that the shortened
-    /// number has about the same value. This &quot;shortening&quot; is known as
+    /// <summary>Specifies the mode to use when &#x22;shortening&#x22; numbers that
+    /// otherwise can&#x27;t fit a given number of digits, so that the shortened
+    /// number has about the same value. This &#x22;shortening&#x22; is known as
     /// rounding.</summary>
   public enum Rounding {
     /// <summary>If there is a fractional part, the number is rounded to the closest
@@ -20,11 +20,11 @@ namespace PeterO {
     Down,
 
     /// <summary>If there is a fractional part, the number is rounded to the highest
-    /// representable number that&apos;s closest to it.</summary>
+    /// representable number that&#x27;s closest to it.</summary>
     Ceiling,
 
     /// <summary>If there is a fractional part, the number is rounded to the lowest
-    /// representable number that&apos;s closest to it.</summary>
+    /// representable number that&#x27;s closest to it.</summary>
     Floor,
 
     /// <summary>Rounded to the nearest number; if the fractional part is exactly
@@ -38,8 +38,8 @@ namespace PeterO {
 
     /// <summary>Rounded to the nearest number; if the fractional part is exactly
     /// half, the number is rounded to the closest representable number that is
-    /// even. This is sometimes also known as &quot;banker&apos;s
-    /// rounding&quot;.</summary>
+    /// even. This is sometimes also known as &#x22;banker&#x27;s
+    /// rounding&#x22;.</summary>
     HalfEven,
 
     /// <summary>Indicates that rounding will not be used. If rounding is required,

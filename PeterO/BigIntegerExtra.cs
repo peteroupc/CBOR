@@ -223,7 +223,7 @@ BigInteger otherValue) {
         (thisValue.CompareTo(otherValue) >= 0);
     }
 
-    /// <summary>Gets a value indicating whether this object&apos;s value is a power
+    /// <summary>Gets a value indicating whether this object&#x27;s value is a power
     /// of two.</summary>
     /// <value>True if this object&apos;s value is a power of two; otherwise,
     /// false.</value>

@@ -800,7 +800,9 @@ The parameter  <i>str</i>
         int length,
         PeterO.PrecisionContext ctx);
 
-Creates a decimal number from a string that represents a number.The format of the string generally consists of: 
+Creates a decimal number from a string that represents a number.
+
+The format of the string generally consists of:
 
  * An optional '-' or '+' character (if '-', the value is negative.)
 

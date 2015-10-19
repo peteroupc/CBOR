@@ -816,7 +816,7 @@ is null.
         int length,
         PeterO.PrecisionContext ctx);
 
-Creates a binary float from a string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double). The format of the string generally consists of: 
+Creates a binary float from a string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double). The format of the string generally consists of:
 
  * An optional '-' or '+' character (if '-' , the value is negative.)
 
@@ -824,7 +824,7 @@ Creates a binary float from a string that represents a number. Note that if the 
 
  * Optionally, E+ (positive exponent) or E- (negative exponent) plus one or more digits specifying the exponent.
 
-The string can also be "-INF", "-Infinity", "Infinity", "INF", quiet NaN ("qNaN") followed by any number of digits, or signaling NaN ("sNaN") followed by any number of digits, all in any combination of upper and lower case.
+The string can also be "-INF" , "-Infinity" , "Infinity" , "INF", quiet NaN ("qNaN") followed by any number of digits, or signaling NaN ("sNaN") followed by any number of digits, all in any combination of upper and lower case.
 
 The format generally follows the definition in java.math.BigDecimal(), except that the digits must be ASCII digits ('0' through '9').
 
