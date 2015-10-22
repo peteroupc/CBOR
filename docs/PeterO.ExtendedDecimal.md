@@ -804,7 +804,7 @@ Creates a decimal number from a string that represents a number.
 
 The format of the string generally consists of:
 
- * An optional '-' or '+' character (if '-', the value is negative.)
+ * An optional '-' or '+' character (if '-' , the value is negative.)
 
  * One or more digits, with a single optional decimal point after the first digit and before the last digit.
 
