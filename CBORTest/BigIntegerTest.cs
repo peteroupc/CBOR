@@ -281,29 +281,62 @@ actualBigInt);
       }
       // Use a deterministic Rabin-Miller test
       int d = n - 1;
+      int shift = 0;
       while ((d & 1) == 0) {
         d >>= 1;
+        shift+=1;
       }
-      int mp = 0;
+      int mp = 0, mp2 = 0;
+      bool found=false;
       // For all 32-bit integers it's enough
       // to check the strong pseudoprime
       // bases 2, 7, and 61
       if (n > 2) {
         mp = ModPow(2, d, n);
         if (mp != 1 && mp + 1 != n) {
-          return false;
+          found=false;
+          for(var i=1;i<shift;i++){
+            mp2 = ModPow(2, d<<i, n);
+            if(mp2+1==n){
+              found=true;
+              break;
+            }
+          }
+          if(found){
+            return false;
+          }
         }
       }
       if (n > 7) {
         mp = ModPow(7, d, n);
         if (mp != 1 && mp + 1 != n) {
-          return false;
+          found=false;
+          for(var i=1;i<shift;i++){
+            mp2 = ModPow(7, d<<i, n);
+            if(mp2+1==n){
+              found=true;
+              break;
+            }
+          }
+          if(found){
+            return false;
+          }
         }
       }
       if (n > 61) {
         mp = ModPow(61, d, n);
         if (mp != 1 && mp + 1 != n) {
-          return false;
+          found=false;
+          for(var i=1;i<shift;i++){
+            mp2 = ModPow(61, d<<i, n);
+            if(mp2+1==n){
+              found=true;
+              break;
+            }
+          }
+          if(found){
+            return false;
+          }
         }
       }
       return true;
