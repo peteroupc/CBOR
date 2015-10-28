@@ -1,4 +1,4 @@
-﻿## PeterO.ExtendedDecimal
+## PeterO.ExtendedDecimal
 
     public sealed class ExtendedDecimal :
         System.IComparable,
@@ -10,7 +10,7 @@ The mantissa and exponent format preserves trailing zeros in the number's value.
 
 This class also supports values for negative zero, not-a-number (NaN) values, and infinity. Negative zerois generally used when a negative number is rounded to 0; it has the same mathematical value as positive zero. Infinityis generally used when a non-zero number is divided by zero, or when a very high number can't be represented in a given exponent range. Not-a-numberis generally used to signal errors.
 
-This class implements the General Decimal Arithmetic Specification version 1.70: `http://speleotrove.com/decimal/decarith.html` 
+This class implements the General Decimal Arithmetic Specification version 1.70: `http://speleotrove.com/decimal/decarith.html`
 
 Passing a signaling NaN to any arithmetic operation shown here will signal the flag FlagInvalid and return a quiet NaN, even if another operand to that operation is a quiet NaN, unless noted otherwise.
 
@@ -235,7 +235,7 @@ Compares a ExtendedFloat object with this instance.
 
 <b>Returns:</b>
 
-Zero if the values are equal; a negative number if this instance is less, or a positive number if this instance is greater.
+Zero if the values are equal; a negative number if this instance is less, or a positive number if this instance is greater. Returns 0 if both values are NaN (even signaling NaN) and 1 if this value is NaN (even signaling NaN) and the other isn't.
 
 ### CompareToSignal
 
@@ -315,7 +315,7 @@ An ExtendedDecimal object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>mantissa</i>
  or  <i>exponent</i>
  is null.
@@ -337,7 +337,7 @@ A quiet not-a-number object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>diag</i>
  is null or is less than 0.
 
@@ -367,7 +367,7 @@ An ExtendedDecimal object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>diag</i>
  is null or is less than 0.
 
@@ -686,7 +686,7 @@ An ExtendedDecimal object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigfloat</i>
  is null.
 
@@ -753,11 +753,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
- * System.FormatException: 
+ * System.FormatException:
 The parameter  <i>str</i>
  is not a correctly formatted number string.
 
@@ -784,11 +784,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
- * System.FormatException: 
+ * System.FormatException:
 The parameter  <i>str</i>
  is not a correctly formatted number string.
 
@@ -830,11 +830,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
- * System.FormatException: 
+ * System.FormatException:
 The parameter  <i>str</i>
  is not a correctly formatted number string.
 
@@ -858,11 +858,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
- * System.FormatException: 
+ * System.FormatException:
 The parameter  <i>str</i>
  is not a correctly formatted number string.
 
@@ -1354,7 +1354,7 @@ The result thisValue * multiplicand - subtrahend.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter "otherValue" is null.
 
 ### Negate
@@ -1674,7 +1674,7 @@ An ExtendedDecimal object.
         PeterO.ExtendedDecimal divisor,
         PeterO.PrecisionContext ctx);
 
-Finds the distance to the closest multiple of the given divisor, based on the result of dividing this object's value by another object's value. 
+Finds the distance to the closest multiple of the given divisor, based on the result of dividing this object's value by another object's value.
 
  * If this and the other object divide evenly, the result is 0.
 
@@ -1950,7 +1950,7 @@ The difference of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>otherValue</i>
  is null.
 
@@ -1966,7 +1966,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value is infinity or NaN.
 
 ### ToBigIntegerExact
@@ -1981,10 +1981,10 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value is infinity or NaN.
 
- * System.ArithmeticException: 
+ * System.ArithmeticException:
 This object's value is not an exact integer.
 
 ### ToDouble
@@ -2056,5 +2056,3 @@ Returns the unit in the last place. The mantissa will be 1 and the exponent will
 <b>Returns:</b>
 
 An ExtendedDecimal object.
-
-

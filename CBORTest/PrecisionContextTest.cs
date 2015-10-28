@@ -9,8 +9,8 @@ namespace Test {
     public void TestConstructor() {
       try {
         Assert.AreEqual(
-null,
-new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
+          null,
+          new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -19,8 +19,8 @@ new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
       }
       try {
         Assert.AreEqual(
-null,
-new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
+          null,
+          new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -56,7 +56,19 @@ new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
     }
     [TestMethod]
     public void TestExponentWithinRange() {
-      // not implemented yet
+  Assert.IsTrue(PrecisionContext.Unlimited.ExponentWithinRange(BigInteger.fromString(
+"-9999999")));
+
+  Assert.IsTrue(PrecisionContext.Unlimited.ExponentWithinRange(BigInteger.fromString(
+"9999999")));
+      try {
+ PrecisionContext.Unlimited.ExponentWithinRange(null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [TestMethod]
     public void TestFlags() {
@@ -89,35 +101,39 @@ new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
 
     [TestMethod]
     public void TestCliDecimal() {
-            ExtendedDecimal valueEdTmp;
-      valueEdTmp = ExtendedDecimal.FromString("-79228162514264337593543950336"
-).RoundToPrecision(PrecisionContext.CliDecimal);
+      ExtendedDecimal valueEdTmp;
+      valueEdTmp = ExtendedDecimal.FromString(
+        "-79228162514264337593543950336" ).RoundToPrecision(PrecisionContext.CliDecimal);
       Assert.AreEqual(
         ExtendedDecimal.NegativeInfinity,
         valueEdTmp);
-      valueEdTmp = ExtendedDecimal.FromString("8.782580686213340724E+28"
-).RoundToPrecision(PrecisionContext.CliDecimal);
+      valueEdTmp = ExtendedDecimal.FromString(
+     "8.782580686213340724E+28").RoundToPrecision(PrecisionContext.CliDecimal);
       Assert.AreEqual(
         ExtendedDecimal.PositiveInfinity,
         valueEdTmp);
       Assert.AreEqual(
         ExtendedDecimal.NegativeInfinity,
-        ExtendedDecimal.FromString("-9.3168444507547E+28"
-).RoundToPrecision(PrecisionContext.CliDecimal));
-      Assert.AreEqual(
-        "-9344285899206687626894794544",
+        ExtendedDecimal.FromString(
+        "-9.3168444507547E+28").RoundToPrecision(PrecisionContext.CliDecimal));
+      {
+        string stringTemp =
 
-  ExtendedDecimal.FromString("-9344285899206687626894794544.04982268810272216796875"
-).RoundToPrecision(PrecisionContext.CliDecimal)
-        .ToPlainString());
+          ExtendedDecimal.FromString(
+            "-9344285899206687626894794544.04982268810272216796875" ).RoundToPrecision(PrecisionContext.CliDecimal)
+          .ToPlainString();
+        Assert.AreEqual(
+          "-9344285899206687626894794544",
+          stringTemp);
+      }
       Assert.AreEqual(
         ExtendedDecimal.PositiveInfinity,
-        ExtendedDecimal.FromString("96148154858060747311034406200"
-).RoundToPrecision(PrecisionContext.CliDecimal));
+        ExtendedDecimal.FromString(
+          "96148154858060747311034406200" ).RoundToPrecision(PrecisionContext.CliDecimal));
       Assert.AreEqual(
         ExtendedDecimal.PositiveInfinity,
-        ExtendedDecimal.FromString("90246605365627217170000000000"
-).RoundToPrecision(PrecisionContext.CliDecimal));
+        ExtendedDecimal.FromString(
+          "90246605365627217170000000000" ).RoundToPrecision(PrecisionContext.CliDecimal));
     }
 
     [TestMethod]
@@ -183,13 +199,13 @@ new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
     [TestMethod]
     public void TestWithBigPrecision() {
       try {
- PrecisionContext.Unlimited.WithBigPrecision(BigInteger.One.negate());
-Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        PrecisionContext.Unlimited.WithBigPrecision(BigInteger.One.negate());
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [TestMethod]
     public void TestWithBlankFlags() {
@@ -227,9 +243,9 @@ throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         BigInteger bigintBig = BigInteger.One << 64;
-   PrecisionContext.Unlimited.WithBigExponentRange(
-bigintBig,
-BigInteger.Zero);
+        PrecisionContext.Unlimited.WithBigExponentRange(
+          bigintBig,
+          BigInteger.Zero);
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
       } catch (Exception ex) {
@@ -244,13 +260,13 @@ BigInteger.Zero);
     [TestMethod]
     public void TestWithPrecision() {
       try {
- PrecisionContext.Unlimited.WithPrecision(-1);
-Assert.Fail("Should have failed");
-} catch (ArgumentException) {
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        PrecisionContext.Unlimited.WithPrecision(-1);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       PrecisionContext ctx;
       ctx = PrecisionContext.Unlimited.WithPrecision(6);
       Assert.AreEqual((BigInteger)6, ctx.Precision);

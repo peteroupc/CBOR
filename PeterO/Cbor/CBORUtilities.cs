@@ -199,7 +199,7 @@ BitConverter.GetBytes((double)dbl),
       bytes[6] = (byte)((value1 >> 16) & 0xff);
       bytes[7] = (byte)((value1 >> 24) & 0xff);
       bytes[8] = (byte)0;
-      bigmantissa = BigInteger.fromByteArray(bytes, true);
+      bigmantissa = BigInteger.fromBytes(bytes, true);
       if (floatExponent == 0) {
         if (neg) {
           bigmantissa = -bigmantissa;

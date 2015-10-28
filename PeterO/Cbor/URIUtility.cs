@@ -436,14 +436,17 @@ s.Length,
 ParseMode.IRIStrict)) != null;
     }
 
+    private const string ValueValueDotSlash = "." + "/";
+    private const string ValueValueSlashDot = "/" + ".";
+
     private static string normalizePath(string path) {
       int len = path.Length;
       if (len == 0 || path.Equals("..") || path.Equals(".")) {
         return String.Empty;
       }
-      if (path.IndexOf("/. ", StringComparison.Ordinal) < 0 &&
+      if (path.IndexOf(ValueValueSlashDot, StringComparison.Ordinal) < 0 &&
           path.IndexOf(
-"./ ",
+ValueValueDotSlash,
 StringComparison.Ordinal) < 0) {
         return path;
       }

@@ -9,11 +9,25 @@ namespace PeterO.DocGen {
 /// <summary>A documentation generator.</summary>
 public static class DocGenerator {
     public static void Generate(string assemblyFile, string docdir) {
+      if (assemblyFile == null) {
+  throw new ArgumentNullException("assemblyFile");
+}if (assemblyFile.Length == 0) {
+  throw new ArgumentException("assemblyFile" + " is empty.");
+}
+      if (docdir == null) {
+  throw new ArgumentNullException("docdir");
+}if (docdir.Length == 0) {
+  throw new ArgumentException("docdir" + " is empty.");
+}
       var directory = Path.GetFullPath(docdir);
       Directory.CreateDirectory(directory);
       assemblyFile = Path.GetFullPath(assemblyFile);
       var appdomain = AppDomain.CreateDomain("docgen");
       Directory.SetCurrentDirectory(Path.GetDirectoryName(assemblyFile));
+      if (!File.Exists(assemblyFile)) {
+        // Exit early, not found
+        return;
+      }
       var assembly = Assembly.LoadFrom(assemblyFile);
       var members = DocReader.Read(assembly);
       var oldWriter = Console.Out;

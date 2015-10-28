@@ -281,7 +281,7 @@ namespace Test {
         for (var i = 0; i < count; ++i) {
           bytes[i] = (byte)((int)r.NextValue(256));
         }
-        return BigInteger.fromByteArray(bytes, true);
+        return BigInteger.fromBytes(bytes, true);
       }
     }
 

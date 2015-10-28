@@ -1,4 +1,4 @@
-﻿## PeterO.Cbor.CBOREncodeOptions
+## PeterO.Cbor.CBOREncodeOptions
 
     public sealed class CBOREncodeOptions
 
@@ -55,5 +55,3 @@ Combines the flags of this options object with another options object.
 <b>Returns:</b>
 
 A CBOREncodeOptions object.
-
-

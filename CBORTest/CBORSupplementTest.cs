@@ -153,9 +153,9 @@ namespace Test {
         throw new InvalidOperationException(String.Empty, ex);
       }
       Assert.AreEqual(CBORObject.Null, CBORObject.FromObject((byte[])null));
-   Assert.AreEqual(
-CBORObject.Null,
-CBORObject.FromObject((CBORObject[])null));
+      Assert.AreEqual(
+        CBORObject.Null,
+        CBORObject.FromObject((CBORObject[])null));
       Assert.AreEqual(CBORObject.True, CBORObject.FromObject(true));
       Assert.AreEqual(CBORObject.False, CBORObject.FromObject(false));
       Assert.AreEqual(CBORObject.FromObject(8), CBORObject.FromObject((byte)8));
@@ -257,22 +257,22 @@ CBORObject.FromObject((CBORObject[])null));
       Assert.IsFalse(CBORObject.NewMap().CanTruncatedIntFitInInt32());
       Assert.IsTrue(CBORObject.FromObject(0).CanTruncatedIntFitInInt32());
       Assert.IsTrue(CBORObject.FromObject(2.5).CanTruncatedIntFitInInt32());
-Assert.IsTrue(CBORObject.FromObject(Int32.MinValue)
-        .CanTruncatedIntFitInInt32());
-Assert.IsTrue(CBORObject.FromObject(Int32.MaxValue)
-        .CanTruncatedIntFitInInt32());
-Assert.IsFalse(CBORObject.FromObject(Double.PositiveInfinity)
-        .CanTruncatedIntFitInInt32());
-Assert.IsFalse(CBORObject.FromObject(Double.NegativeInfinity)
-        .CanTruncatedIntFitInInt32());
-Assert.IsFalse(CBORObject.FromObject(Double.NaN)
-        .CanTruncatedIntFitInInt32());
-Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity)
-        .CanTruncatedIntFitInInt32());
-Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity)
-        .CanTruncatedIntFitInInt32());
-Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN)
-        .CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(Int32.MinValue)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(Int32.MaxValue)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(Double.PositiveInfinity)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(Double.NegativeInfinity)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(Double.NaN)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN)
+                    .CanTruncatedIntFitInInt32());
     }
 
     [TestMethod]
@@ -411,9 +411,9 @@ Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN)
         throw new InvalidOperationException(String.Empty, ex);
       }
       Assert.AreEqual(ExtendedDecimal.Zero, ExtendedDecimal.FromString("0"));
-  Assert.AreEqual(
-ExtendedDecimal.Zero,
-ExtendedDecimal.FromString("0", null));
+      Assert.AreEqual(
+        ExtendedDecimal.Zero,
+        ExtendedDecimal.FromString("0", null));
       try {
         ExtendedDecimal.FromString(null, null);
         Assert.Fail("Should have failed");
@@ -675,8 +675,8 @@ ExtendedDecimal.FromString("0", null));
       }
       try {
         ExtendedFloat.FromString(
-"Infinity",
-PrecisionContext.Unlimited.WithSimplified(true));
+          "Infinity",
+          PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -685,8 +685,8 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"-Infinity",
-PrecisionContext.Unlimited.WithSimplified(true));
+          "-Infinity",
+          PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -695,8 +695,8 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"NaN",
-PrecisionContext.Unlimited.WithSimplified(true));
+          "NaN",
+          PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -705,8 +705,8 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"sNaN",
-PrecisionContext.Unlimited.WithSimplified(true));
+          "sNaN",
+          PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -715,8 +715,8 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"Infinity",
-PrecisionContext.Unlimited.WithSimplified(true));
+          "Infinity",
+          PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -725,8 +725,8 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"-Infinity",
-PrecisionContext.Unlimited.WithSimplified(true));
+          "-Infinity",
+          PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -735,8 +735,8 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"NaN",
-PrecisionContext.Unlimited.WithSimplified(true));
+          "NaN",
+          PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -745,8 +745,8 @@ PrecisionContext.Unlimited.WithSimplified(true));
       }
       try {
         ExtendedFloat.FromString(
-"sNaN",
-PrecisionContext.Unlimited.WithSimplified(true));
+          "sNaN",
+          PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
       } catch (FormatException) {
       } catch (Exception ex) {
@@ -872,6 +872,7 @@ PrecisionContext.Unlimited.WithSimplified(true));
     [TestMethod]
     public void TestNestingDepth() {
       try {
+        {
         using (var ms = new MemoryStream()) {
           for (var i = 0; i < 2000; ++i) {
             // Write beginning of indefinite-length array
@@ -892,22 +893,25 @@ PrecisionContext.Unlimited.WithSimplified(true));
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-        using (var ms2 = new MemoryStream()) {
+        }
+        {
+          using (var ms = new MemoryStream()) {
           for (var i = 0; i < 495; ++i) {
             // Write beginning of indefinite-length array
-            ms2.WriteByte((byte)0x9f);
+            ms.WriteByte((byte)0x9f);
           }
           for (var i = 0; i < 495; ++i) {
             // Write end of indefinite-length array
-            ms2.WriteByte((byte)0xff);
+            ms.WriteByte((byte)0xff);
           }
           // Maximum nesting depth not reached, so shouldn't throw
           try {
-            CBORObject.DecodeFromBytes(ms2.ToArray());
+            CBORObject.DecodeFromBytes(ms.ToArray());
           } catch (Exception ex) {
             Assert.Fail(ex.ToString());
             throw new InvalidOperationException(String.Empty, ex);
           }
+        }
         }
       } catch (Exception ex) {
         throw new InvalidOperationException(ex.Message, ex);
@@ -971,11 +975,11 @@ PrecisionContext.Unlimited.WithSimplified(true));
       Assert.AreEqual(0, co.CompareTo(co2));
       Assert.AreEqual(0, co2.CompareTo(co));
       co = CBORObject.NewMap().Add(
-ExtendedDecimal.PositiveInfinity,
-CBORObject.Undefined);
-  co2 = CBORObject.NewMap().Add(
-Double.PositiveInfinity,
-CBORObject.Undefined);
+        ExtendedDecimal.PositiveInfinity,
+        CBORObject.Undefined);
+      co2 = CBORObject.NewMap().Add(
+        Double.PositiveInfinity,
+        CBORObject.Undefined);
       Assert.AreEqual(0, co.CompareTo(co2));
       Assert.AreEqual(0, co2.CompareTo(co));
     }
@@ -1048,7 +1052,7 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
         }
         erdiv = ermult.Divide(er2);
         if (erdiv.CompareTo(er) != 0) {
-          Assert.Fail(er + "; " + erdiv + "; " +er2);
+          Assert.Fail(er + "; " + erdiv + "; " + er2);
         }
       }
     }
@@ -1075,9 +1079,9 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
       }
       Assert.AreEqual(
         -1,
- new ExtendedRational(
-BigInteger.One,
-(BigInteger)2).CompareTo(
+        new ExtendedRational(
+          BigInteger.One,
+          (BigInteger)2).CompareTo(
           new ExtendedRational((BigInteger)4, BigInteger.One)));
       for (var i = 0; i < 100; ++i) {
         BigInteger num = RandomObjects.RandomBigInteger(fr);
@@ -1099,8 +1103,8 @@ BigInteger.One,
           if (rat.CompareTo(rat2) != 0) {
             Assert.AreEqual(
               0,
- rat.CompareTo(rat2), rat + "; " + rat2 + "; " + rat.ToDouble() + "; " +
-                rat2.ToDouble());
+        rat.CompareTo(rat2), rat + "; " + rat2 + "; " + rat.ToDouble() + "; " +
+              rat2.ToDouble());
           }
         }
       }
@@ -1403,21 +1407,21 @@ BigInteger.One,
       }
 
       Assert.AreEqual(
-BigInteger.Zero,
- CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsBigInteger());
+        BigInteger.Zero,
+        CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x40 }).AsBigInteger());
       Assert.AreEqual(
-BigInteger.Zero - BigInteger.One,
-CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x41, 0x00 }).AsBigInteger());
+        BigInteger.Zero - BigInteger.One,
+   CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x41, 0x00 }).AsBigInteger());
       Assert.AreEqual(
-BigInteger.Zero - BigInteger.One,
-CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsBigInteger());
+        BigInteger.Zero - BigInteger.One,
+        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsBigInteger());
     }
 
     [TestMethod]
     public void TestUUID() {
       CBORObject obj =
-  CBORObject.FromObject(Guid.Parse("00112233-4455-6677-8899-AABBCCDDEEFF"
-));
+        CBORObject.FromObject(Guid.Parse(
+          "00112233-4455-6677-8899-AABBCCDDEEFF"));
       Assert.AreEqual(CBORType.ByteString, obj.Type);
       Assert.AreEqual((BigInteger)37, obj.InnermostTag);
       byte[] bytes = obj.GetByteString();
@@ -1522,13 +1526,13 @@ CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsBigInteger());
     public void TestNegativeBigInts() {
       BigInteger minusone = BigInteger.Zero - BigInteger.One;
       Assert.AreEqual(
-minusone - (BigInteger.One << 8),
+        minusone - (BigInteger.One << 8),
    CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x42, 1, 0 }).AsBigInteger());
       Assert.AreEqual(
-minusone - (BigInteger.One << 16),
+        minusone - (BigInteger.One << 16),
 CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
       Assert.AreEqual(
-minusone - (BigInteger.One << 24),
+        minusone - (BigInteger.One << 24),
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x44, 1, 0, 0, 0
           }).AsBigInteger());
       Assert.AreEqual(
@@ -1542,39 +1546,38 @@ minusone - (BigInteger.One << 24),
       Assert.AreEqual(
         minusone - (BigInteger.One << 48),
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x47, 1, 0, 0, 0, 0,
-          0, 0 }).AsBigInteger());
+                    0, 0 }).AsBigInteger());
       Assert.AreEqual(
         minusone - (BigInteger.One << 56),
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x48, 1, 0, 0, 0, 0,
-          0, 0, 0 }).AsBigInteger());
+                    0, 0, 0 }).AsBigInteger());
       Assert.AreEqual(
         minusone - (BigInteger.One << 64),
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x49, 1, 0, 0, 0, 0,
-          0, 0, 0, 0 }).AsBigInteger());
+                    0, 0, 0, 0 }).AsBigInteger());
       Assert.AreEqual(
         minusone - (BigInteger.One << 72),
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x4a, 1, 0, 0, 0, 0,
-          0, 0, 0, 0, 0 }).AsBigInteger());
+                    0, 0, 0, 0, 0 }).AsBigInteger());
     }
 
     [TestMethod]
     public void TestStringRefs() {
       CBORObject cbor = CBORObject.DecodeFromBytes(
-        new byte[] { 0xd9, 1, 0, 0x9f, 0x64, 0x61, 0x62, 0x63,
-        0x64, 0xd8, 0x19, 0x00, 0xd8, 0x19, 0x00, 0x64,
-        0x62, 0x62, 0x63, 0x64, 0xd8, 0x19, 0x01, 0xd8,
-        0x19, 0x00, 0xd8, 0x19, 0x01, 0xff });
+        new byte[] { 0xd9, 1, 0, 0x9f, 0x64, 0x61, 0x62, 0x63, 0x64, 0xd8, 0x19,
+          0x00, 0xd8, 0x19, 0x00, 0x64, 0x62, 0x62, 0x63, 0x64, 0xd8, 0x19,
+          0x01, 0xd8, 0x19, 0x00, 0xd8, 0x19, 0x01, 0xff });
       string expected =
         "[\"abcd\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
       cbor = CBORObject.DecodeFromBytes(new byte[] { 0xd9,
-        1, 0, 0x9f, 0x64, 0x61, 0x62, 0x63, 0x64,
-        0x62, 0x61, 0x61, 0xd8, 0x19, 0x00, 0xd8, 0x19,
-        0x00, 0x64, 0x62, 0x62, 0x63, 0x64, 0xd8, 0x19,
-        0x01, 0xd8, 0x19, 0x00, 0xd8, 0x19, 0x01, 0xff });
+                    1, 0, 0x9f, 0x64, 0x61, 0x62, 0x63, 0x64, 0x62, 0x61, 0x61,
+                      0xd8, 0x19, 0x00, 0xd8, 0x19, 0x00, 0x64, 0x62, 0x62,
+                      0x63, 0x64, 0xd8, 0x19, 0x01, 0xd8, 0x19, 0x00, 0xd8,
+                      0x19, 0x01, 0xff });
       expected =
-  "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]"
-;
+      "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]"
+        ;
       Assert.AreEqual(expected, cbor.ToJSONString());
     }
 

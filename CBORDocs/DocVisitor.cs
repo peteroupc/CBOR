@@ -55,6 +55,7 @@ namespace PeterO.DocGen {
 
     public static string GetTypeID(Type type) {
       string name = FormatType(type);
+      name = name.Replace(", ", ",");
       var builder = new StringBuilder();
       for (var i = 0; i < name.Length; ++i) {
         UnicodeCategory cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
@@ -163,7 +164,7 @@ namespace PeterO.DocGen {
       } else {
         builder.Append("interface ");
       }
-      builder.Append(UndecorateTypeName(typeInfo.Name));
+      builder.Append(TypeNameUtil.UndecorateTypeName(typeInfo.Name));
       bool first;
       if (typeInfo.GetGenericArguments().Length > 0) {
         builder.Append('<');
@@ -218,7 +219,7 @@ StringBuilder builder) {
             continue;
           }
           builder.Append("\r\n" + FourSpaces + FourSpaces + "where ");
-          builder.Append(UndecorateTypeName(arg.Name));
+          builder.Append(TypeNameUtil.UndecorateTypeName(arg.Name));
           builder.Append(" : ");
           bool first = true;
           if ((arg.GenericParameterAttributes &
@@ -288,7 +289,12 @@ StringBuilder builder) {
         }
       }
       var methodInfo = method as MethodInfo;
+      bool isExtension = false;
+      Attribute attr;
       if (methodInfo != null) {
+        attr = methodInfo.GetCustomAttribute(
+          typeof(System.Runtime.CompilerServices.ExtensionAttribute));
+        isExtension = attr != null;
         if (method.Name.Equals("op_Explicit")) {
           builder.Append("explicit operator ");
           builder.Append(FormatType(methodInfo.ReturnType));
@@ -305,7 +311,7 @@ StringBuilder builder) {
           builder.Append(method.Name);
         }
       } else {
-        builder.Append(UndecorateTypeName(method.ReflectedType.Name));
+    builder.Append(TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
       }
       bool first;
       if (method is MethodInfo && method.GetGenericArguments().Length > 0) {
@@ -328,7 +334,10 @@ StringBuilder builder) {
         } else {
           builder.Append("\r\n" + FourSpaces + FourSpaces);
         }
-        Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
+        if (first && isExtension) {
+          builder.Append("this ");
+        }
+        attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null) {
           builder.Append("params ");
         }
@@ -403,7 +412,7 @@ StringBuilder builder) {
           builder.Append(",\r\n" + FourSpaces + FourSpaces);
         } else {
           builder.Append(indexParams.Length == 1 ?
-                         String.Empty : "\r\n" + FourSpaces + FourSpaces);
+                    String.Empty : "\r\n" + FourSpaces + FourSpaces);
         }
         Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null) {
@@ -474,20 +483,8 @@ StringBuilder builder) {
       return builder.ToString();
     }
 
-    public static string UndecorateTypeName(string name) {
-      int idx = name.IndexOf('`');
-      if (idx >= 0) {
-        name = name.Substring(0, idx);
-      }
-      idx = name.IndexOf('[');
-      if (idx >= 0) {
-        name = name.Substring(0, idx);
-      }
-      return name;
-    }
-
     public static string FormatTypeRaw(Type type) {
-      string name = UndecorateTypeName(type.Name);
+      string name = TypeNameUtil.UndecorateTypeName(type.Name);
       if (type.IsGenericParameter) {
         return name;
       }
@@ -501,7 +498,7 @@ StringBuilder builder) {
              (name.Equals("System.Char") ? "char" :
               (name.Equals("System.Object") ? "object" :
            (name.Equals("System.Void") ? "void" : (name.Equals("System.Byte") ?
-                              "byte" :
+                    "byte" :
   (name.Equals("System.SByte") ? "sbyte" : (name.Equals("System.String") ?
                 "string" : (name.Equals("System.Boolean") ?
   "bool" : (name.Equals("System.Single") ?
@@ -590,12 +587,11 @@ StringBuilder builder) {
       string ret = String.Empty;
       if (info is MethodBase) {
         var method = (MethodBase)info;
-        if (method is ConstructorInfo) {
-          return "<1>" + " " + FormatMethod(method);
-        } else {
-          return "<4>" + method.Name + " " + FormatMethod(method);
-        }
-      } else if (info is Type) {
+        return (method is ConstructorInfo) ? ("<1>" + " " +
+          FormatMethod(method)) : ("<4>" + method.Name + " " +
+          FormatMethod(method));
+      }
+      if (info is Type) {
         var type = (Type)info;
         return "<0>" + FormatType(type);
       } else if (info is PropertyInfo) {
@@ -613,12 +609,12 @@ StringBuilder builder) {
       if (info is MethodBase) {
         var method = (MethodBase)info;
         if (method is ConstructorInfo) {
-          return UndecorateTypeName(method.ReflectedType.Name) +
-                           " Constructor";
-        } else {
-          return MethodNameHeading(method.Name);
+          return TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name) +
+          " Constructor";
         }
-      } else if (info is Type) {
+        return MethodNameHeading(method.Name);
+      }
+      if (info is Type) {
         var type = (Type)info;
         return FormatType(type);
       } else if (info is PropertyInfo) {
@@ -644,7 +640,7 @@ StringBuilder builder) {
         using (var ch = this.AddMember(info)) {
           signature = FormatMethod(method);
           this.WriteLine("### " + this.Heading(info) +
-                         "\r\n\r\n" + signature + "\r\n\r\n");
+                    "\r\n\r\n" + signature + "\r\n\r\n");
           var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as
             ObsoleteAttribute;
           if (attr != null) {
@@ -681,7 +677,15 @@ StringBuilder builder) {
           if (attr != null) {
             this.WriteLine("<b>Deprecated.</b> " + attr.Message + "\r\n\r\n");
           }
+          this.paramStr.Clear();
           base.VisitMember(member);
+          if (this.paramStr.Length > 0) {
+            this.Write("<b>Parameters:</b>\r\n\r\n");
+            string paramString = this.paramStr.ToString();
+            // Decrease spacing between list items
+            paramString = paramString.Replace("\r\n * ", " * ");
+            this.Write(paramString);
+          }
         }
       } else if (info is PropertyInfo) {
         var property = (PropertyInfo)info;
@@ -693,7 +697,7 @@ StringBuilder builder) {
         using (var ch = this.AddMember(info)) {
           signature = FormatProperty(property);
           this.WriteLine("### " + property.Name + "\r\n\r\n" + signature +
-                         "\r\n\r\n");
+                    "\r\n\r\n");
           var attr = property.GetCustomAttribute(typeof(ObsoleteAttribute)) as
             ObsoleteAttribute;
           if (attr != null) {
@@ -722,7 +726,7 @@ StringBuilder builder) {
         using (var ch = this.AddMember(info)) {
           signature = FormatField(field);
           this.WriteLine("### " + field.Name + "\r\n\r\n" + signature +
-                         "\r\n\r\n");
+                    "\r\n\r\n");
           base.VisitMember(member);
         }
       }
@@ -736,6 +740,11 @@ StringBuilder builder) {
 
     public override void VisitSummary(Summary summary) {
       base.VisitSummary(summary);
+      this.WriteLine("\r\n\r\n");
+    }
+
+    public override void VisitRemarks(Remarks remarks) {
+      base.VisitRemarks(remarks);
       this.WriteLine("\r\n\r\n");
     }
 

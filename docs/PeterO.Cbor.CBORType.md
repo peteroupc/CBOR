@@ -1,4 +1,4 @@
-﻿## PeterO.Cbor.CBORType
+## PeterO.Cbor.CBORType
 
     public sealed struct CBORType :
         System.Enum,
@@ -49,5 +49,3 @@ A "simple value" other than floating point values, true, and false.
     public static PeterO.Cbor.CBORType TextString = 4;
 
 A text string.
-
-

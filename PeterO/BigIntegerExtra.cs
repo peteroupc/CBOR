@@ -331,9 +331,10 @@ BigInteger bigintSecond) {
 
     /// <summary>Not documented yet.</summary>
     /// <returns>A byte array.</returns>
+    [Obsolete("Use 'toBytes(true)' instead.")]
     [CLSCompliant(false)]
     public byte[] ToByteArray() {
-      return this.toByteArray(true);
+      return this.toBytes(true);
     }
 
     /// <summary>Not documented yet.</summary>

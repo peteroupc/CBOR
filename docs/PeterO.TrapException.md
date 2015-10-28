@@ -1,4 +1,4 @@
-﻿## PeterO.TrapException
+## PeterO.TrapException
 
     public class TrapException :
         System.ArithmeticException,
@@ -53,5 +53,3 @@ Gets the defined result of the operation that caused the trap.
 <b>Returns:</b>
 
 The defined result of the operation that caused the trap.
-
-

@@ -1,4 +1,4 @@
-﻿## PeterO.Rounding
+## PeterO.Rounding
 
     public sealed struct Rounding :
         System.Enum,
@@ -73,5 +73,3 @@ If there is a fractional part, the number is rounded to the closest representabl
     public static PeterO.Rounding ZeroFiveUp = 8;
 
 If there is a fractional part and if the last digit before rounding is 0 or half the radix, the number is rounded to the closest representable number away from zero; otherwise the fractional part is discarded. In overflow, the fractional part is always discarded.
-
-

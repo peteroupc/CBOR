@@ -8,10 +8,8 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace Test {
-    /// <summary>The system&#x27;s random number generator will be called many
-    /// times
-    /// during testing. Unfortunately it can be very slow. So we use this
-    /// wrapper
+    /// <summary>The system&#x27;s random number generator will be called many times
+    /// during testing. Unfortunately it can be very slow. So we use this wrapper
     /// class.</summary>
   public class FastRandom {
     private const int ReseedCount = 500;
@@ -48,9 +46,9 @@ namespace Test {
       }
     }
 
-    private static int seedIndex = 0;
-    private static int seedCount = 0;
-    private static int seedReadIndex = 0;
+    private static int seedIndex;
+    private static int seedCount;
+    private static int seedReadIndex;
 
     public FastRandom() {
       int randseed = GetSeed();
@@ -76,8 +74,7 @@ namespace Test {
     }
 
     /// <summary>Generates a random number.</summary>
-    /// <param name='v' >The return value will be 0 or greater, and less than
-    /// this
+    /// <param name='v'>The return value will be 0 or greater, and less than this
     /// number.</param>
     /// <returns>A 32-bit signed integer.</returns>
     public int NextValue(int v) {

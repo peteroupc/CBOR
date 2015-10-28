@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{8FE63143-541E-448D-8337-A98D1FA51541}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Exe</OutputType>
     <RootNamespace>CBORTest</RootNamespace>
@@ -62,7 +62,7 @@
     <StartArguments>Test.</StartArguments>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+                <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -91,10 +91,12 @@
     <Compile Include="PrecisionContextTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomObjects.cs" />
+    <Compile Include="Reflect.cs" />
     <Compile Include="Runner.cs" />
     <Compile Include="StringAndBigInt.cs" />
     <Compile Include="TestCommon.cs" />
     <Compile Include="TrapExceptionTest.cs" />
+    <Compile Include="URIUtilityTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

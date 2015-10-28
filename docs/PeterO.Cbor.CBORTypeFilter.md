@@ -1,4 +1,4 @@
-﻿## PeterO.Cbor.CBORTypeFilter
+## PeterO.Cbor.CBORTypeFilter
 
     public sealed class CBORTypeFilter
 
@@ -102,7 +102,7 @@ True if this filter allows CBOR arrays and an array's length is allowed under a 
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigLength</i>
  is null.
 
@@ -208,7 +208,7 @@ True if CBOR objects can have the given tag number; otherwise, false.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigTag</i>
  is null.
 
@@ -242,13 +242,13 @@ A CBORTypeFilter object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter arrayLength is less than 0.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter elements is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter elements has fewer elements than specified in arrayLength.
 
 ### WithArrayMinLength
@@ -271,13 +271,13 @@ A CBORTypeFilter object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter arrayLength is less than 0.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter elements is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter elements has fewer elements than specified in arrayLength.
 
 ### WithByteString
@@ -352,7 +352,7 @@ A CBORTypeFilter object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter "tags[i]" is null.
 
 ### WithTextString
@@ -374,5 +374,3 @@ Copies this filter and includes unsigned integers in the new filter.
 <b>Returns:</b>
 
 A CBORTypeFilter object.
-
-

@@ -300,7 +300,7 @@ string ln,
 
     private static void PrintTime(System.Diagnostics.Stopwatch sw) {
       Console.WriteLine("Elapsed time: " + (sw.ElapsedMilliseconds / 1000.0) +
-                        " s");
+                    " s");
     }
 
     [TestMethod]
@@ -312,7 +312,7 @@ string ln,
       PrintTime(sw);
     }
 
-    // [TestMethod]
+    [TestMethod]
     public static void TestParser() {
       long failures = 0;
       for (var i = 0; i < 1; ++i) {
@@ -323,8 +323,8 @@ string ln,
             continue;
           }
           Console.WriteLine(f);
-          IDictionary<string, string> context = new Dictionary<string,
-          string>();
+          IDictionary<string, string> context =
+            new Dictionary<string, string>();
           using (var w = new StreamReader(f)) {
             while (!w.EndOfStream) {
               string ln = w.ReadLine();

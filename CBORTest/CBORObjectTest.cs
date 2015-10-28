@@ -38,7 +38,38 @@ namespace Test {
     }
     [TestMethod]
     public void TestAddition() {
-      // not implemented yet
+      try {
+ CBORObject.Addition(null, CBORObject.FromObject(2));
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Addition(CBORObject.FromObject(2), null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Addition(CBORObject.Null, CBORObject.FromObject(2));
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Addition(CBORObject.FromObject(2), CBORObject.Null);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [TestMethod]
     public void TestAddTagHandler() {
@@ -110,7 +141,7 @@ namespace Test {
           CBORObject.FromObject(ExtendedDecimal.FromString(numberString));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
           Assert.AreEqual(
-            numberinfo["integer" ].AsString(),
+            numberinfo["integer"].AsString(),
             cbornumber.AsBigInteger().ToString());
         } else {
           try {
@@ -190,11 +221,11 @@ namespace Test {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                               ].AsString()));
+                    ].AsString()));
         if (numberinfo["byte"].AsBoolean()) {
           Assert.AreEqual(
-           BigInteger.fromString(numberinfo["integer" ].AsString()).intValue(),
-           ((int)cbornumber.AsByte()) & 0xff);
+    BigInteger.fromString(numberinfo["integer" ].AsString()).intValueChecked(),
+    ((int)cbornumber.AsByte()) & 0xff);
         } else {
           try {
             cbornumber.AsByte();
@@ -279,7 +310,7 @@ namespace Test {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                               ].AsString()));
+                    ].AsString()));
         AreEqualExact(
 (double)ExtendedDecimal.FromString(numberinfo["number" ].AsString()).ToDouble(),
 cbornumber.AsDouble());
@@ -444,12 +475,12 @@ cbornumber.AsDouble());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                               ].AsString()));
+          CBORObject.FromObject(
+            ExtendedDecimal.FromString(numberinfo["number"].AsString()));
         if (numberinfo["int16"].AsBoolean()) {
           Assert.AreEqual(
-           BigInteger.fromString(numberinfo["integer" ].AsString()).intValue(),
-           cbornumber.AsInt16());
+    BigInteger.fromString(numberinfo["integer" ].AsString()).intValueChecked(),
+    cbornumber.AsInt16());
         } else {
           try {
             cbornumber.AsInt16();
@@ -517,7 +548,7 @@ cbornumber.AsDouble());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         ExtendedDecimal edec =
-          ExtendedDecimal.FromString(numberinfo["number" ].AsString());
+          ExtendedDecimal.FromString(numberinfo["number"].AsString());
         CBORObject cbornumber = CBORObject.FromObject(edec);
         bool isdouble = numberinfo["double"].AsBoolean();
         CBORObject cbornumberdouble = CBORObject.FromObject(edec.ToDouble());
@@ -525,17 +556,17 @@ cbornumber.AsDouble());
         CBORObject cbornumbersingle = CBORObject.FromObject(edec.ToSingle());
         if (numberinfo["int32"].AsBoolean()) {
           Assert.AreEqual(
-           BigInteger.fromString(numberinfo["integer" ].AsString()).intValue(),
-           cbornumber.AsInt32());
+    BigInteger.fromString(numberinfo["integer" ].AsString()).intValueChecked(),
+    cbornumber.AsInt32());
           if (isdouble) {
             Assert.AreEqual(
-           BigInteger.fromString(numberinfo["integer" ].AsString()).intValue(),
-           cbornumberdouble.AsInt32());
+    BigInteger.fromString(numberinfo["integer" ].AsString()).intValueChecked(),
+    cbornumberdouble.AsInt32());
           }
           if (issingle) {
             Assert.AreEqual(
-           BigInteger.fromString(numberinfo["integer" ].AsString()).intValue(),
-           cbornumbersingle.AsInt32());
+    BigInteger.fromString(numberinfo["integer" ].AsString()).intValueChecked(),
+    cbornumbersingle.AsInt32());
           }
         } else {
           try {
@@ -623,7 +654,7 @@ cbornumber.AsDouble());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         ExtendedDecimal edec =
-          ExtendedDecimal.FromString(numberinfo["number" ].AsString());
+          ExtendedDecimal.FromString(numberinfo["number"].AsString());
         CBORObject cbornumber = CBORObject.FromObject(edec);
         bool isdouble = numberinfo["double"].AsBoolean();
         CBORObject cbornumberdouble = CBORObject.FromObject(edec.ToDouble());
@@ -631,17 +662,17 @@ cbornumber.AsDouble());
         CBORObject cbornumbersingle = CBORObject.FromObject(edec.ToSingle());
         if (numberinfo["int64"].AsBoolean()) {
           Assert.AreEqual(
-          BigInteger.fromString(numberinfo["integer" ].AsString()).longValue(),
-          cbornumber.AsInt64());
+   BigInteger.fromString(numberinfo["integer" ].AsString()).longValueChecked(),
+   cbornumber.AsInt64());
           if (isdouble) {
             Assert.AreEqual(
-          BigInteger.fromString(numberinfo["integer" ].AsString()).longValue(),
-          cbornumberdouble.AsInt64());
+   BigInteger.fromString(numberinfo["integer" ].AsString()).longValueChecked(),
+   cbornumberdouble.AsInt64());
           }
           if (issingle) {
             Assert.AreEqual(
-          BigInteger.fromString(numberinfo["integer" ].AsString()).longValue(),
-          cbornumbersingle.AsInt64());
+   BigInteger.fromString(numberinfo["integer" ].AsString()).longValueChecked(),
+   cbornumbersingle.AsInt64());
           }
         } else {
           try {
@@ -734,7 +765,7 @@ cbornumber.AsDouble());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                               ].AsString()));
+                    ].AsString()));
         AreEqualExact(
 (float)ExtendedDecimal.FromString(numberinfo["number" ].AsString()).ToSingle(),
 cbornumber.AsSingle());
@@ -771,7 +802,7 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                               ].AsString()));
+                    ].AsString()));
         if (numberinfo["double"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInDouble());
         } else {
@@ -794,12 +825,12 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                               ].AsString()));
-        if (numberinfo["int32" ].AsBoolean() && numberinfo["isintegral"
-                               ].AsBoolean()) {
+                    ].AsString()));
+        if (numberinfo["int32"].AsBoolean() && numberinfo["isintegral"
+                    ].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInInt32());
           Assert.IsTrue(CBORObject.FromObject(cbornumber.AsInt32())
-                        .CanFitInInt32());
+                    .CanFitInInt32());
         } else {
           Assert.IsFalse(cbornumber.CanFitInInt32());
         }
@@ -820,12 +851,12 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                               ].AsString()));
-        if (numberinfo["int64" ].AsBoolean() && numberinfo["isintegral"
-                               ].AsBoolean()) {
+                    ].AsString()));
+        if (numberinfo["int64"].AsBoolean() && numberinfo["isintegral"
+                    ].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInInt64());
           Assert.IsTrue(CBORObject.FromObject(cbornumber.AsInt64())
-                        .CanFitInInt64());
+                    .CanFitInInt64());
         } else {
           Assert.IsFalse(cbornumber.CanFitInInt64());
         }
@@ -846,7 +877,7 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                               ].AsString()));
+                    ].AsString()));
         if (numberinfo["single"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInSingle());
         } else {
@@ -886,7 +917,7 @@ cbornumber.AsSingle());
       Assert.IsTrue(CBORObject.FromObject(0).CanTruncatedIntFitInInt32());
       Assert.IsFalse(CBORObject.True.CanTruncatedIntFitInInt32());
       Assert.IsFalse(CBORObject.FromObject(String.Empty)
-                     .CanTruncatedIntFitInInt32());
+                    .CanTruncatedIntFitInInt32());
       Assert.IsFalse(CBORObject.NewArray().CanTruncatedIntFitInInt32());
       Assert.IsFalse(CBORObject.NewMap().CanTruncatedIntFitInInt32());
       Assert.IsFalse(CBORObject.False.CanTruncatedIntFitInInt32());
@@ -896,8 +927,8 @@ cbornumber.AsSingle());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                               ].AsString()));
+          CBORObject.FromObject(
+            ExtendedDecimal.FromString(numberinfo["number"].AsString()));
         if (numberinfo["int32"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanTruncatedIntFitInInt32());
         } else {
@@ -937,7 +968,7 @@ cbornumber.AsSingle());
       Assert.IsTrue(CBORObject.FromObject(0).CanTruncatedIntFitInInt64());
       Assert.IsFalse(CBORObject.True.CanTruncatedIntFitInInt64());
       Assert.IsFalse(CBORObject.FromObject(String.Empty)
-                     .CanTruncatedIntFitInInt64());
+                    .CanTruncatedIntFitInInt64());
       Assert.IsFalse(CBORObject.NewArray().CanTruncatedIntFitInInt64());
       Assert.IsFalse(CBORObject.NewMap().CanTruncatedIntFitInInt64());
       Assert.IsFalse(CBORObject.False.CanTruncatedIntFitInInt64());
@@ -948,7 +979,7 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                               ].AsString()));
+                    ].AsString()));
         if (numberinfo["int64"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanTruncatedIntFitInInt64());
         } else {
@@ -1048,7 +1079,38 @@ cbornumber.AsSingle());
     }
     [TestMethod]
     public void TestDivide() {
-      // not implemented yet
+      try {
+ CBORObject.Divide(null, CBORObject.FromObject(2));
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Divide(CBORObject.FromObject(2), null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Divide(CBORObject.Null, CBORObject.FromObject(2));
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Divide(CBORObject.FromObject(2), CBORObject.Null);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [TestMethod]
     public void TestEncodeToBytes() {
@@ -1480,9 +1542,12 @@ cbornumber.AsSingle());
       Assert.AreEqual(CBORObject.False, CBORObject.FromJSONString("false"));
       Assert.AreEqual(CBORObject.Null, CBORObject.FromJSONString("null"));
       Assert.AreEqual(5, CBORObject.FromJSONString(" 5 ").AsInt32());
-      Assert.AreEqual(
-        "/\b",
-        CBORObject.FromJSONString("\"\\/\\b\"").AsString());
+      {
+string stringTemp = CBORObject.FromJSONString("\"\\/\\b\"").AsString();
+Assert.AreEqual(
+"/\b",
+stringTemp);
+}
     }
     [TestMethod]
     public void TestFromObject() {
@@ -1733,7 +1798,7 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                               ].AsString()));
+                    ].AsString()));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
           Assert.IsTrue(cbornumber.IsFinite);
         } else {
@@ -1862,7 +1927,16 @@ cbornumber.AsSingle());
     }
     [TestMethod]
     public void TestIsUndefined() {
-      // not implemented yet
+      Assert.IsFalse(CBORObject.True.IsUndefined);
+      Assert.IsFalse(CBORObject.FromObject(String.Empty).IsUndefined);
+      Assert.IsFalse(CBORObject.NewArray().IsUndefined);
+      Assert.IsFalse(CBORObject.NewMap().IsUndefined);
+      Assert.IsFalse(CBORObject.False.IsUndefined);
+      Assert.IsFalse(CBORObject.Null.IsUndefined);
+      Assert.IsTrue(CBORObject.Undefined.IsUndefined);
+      Assert.IsFalse(CBORObject.PositiveInfinity.IsUndefined);
+      Assert.IsFalse(CBORObject.NegativeInfinity.IsUndefined);
+      Assert.IsFalse(CBORObject.NaN.IsUndefined);
     }
     [TestMethod]
     public void TestIsZero() {
@@ -1922,7 +1996,38 @@ cbornumber.AsSingle());
     }
     [TestMethod]
     public void TestMultiply() {
-      // not implemented yet
+      try {
+ CBORObject.Multiply(null, CBORObject.FromObject(2));
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Multiply(CBORObject.FromObject(2), null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Multiply(CBORObject.Null, CBORObject.FromObject(2));
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Multiply(CBORObject.FromObject(2), CBORObject.Null);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [TestMethod]
     public void TestNegate() {
@@ -2001,8 +2106,8 @@ cbornumber.AsSingle());
     }
     [TestMethod]
     public void TestReadJSON() {
-      using (var ms = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x7b,
-                              0x7d })) {
+      using (var ms = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x7b, 0x7d
+        })) {
         try {
           CBORObject.ReadJSON(ms);
         } catch (Exception ex) {
@@ -2012,7 +2117,7 @@ cbornumber.AsSingle());
       }
       // whitespace followed by BOM
       using (var ms2 = new MemoryStream(new byte[] { 0x20, 0xef, 0xbb, 0xbf,
-                              0x7b, 0x7d })) {
+        0x7b, 0x7d })) {
         try {
           CBORObject.ReadJSON(ms2);
           Assert.Fail("Should have failed");
@@ -2022,9 +2127,29 @@ cbornumber.AsSingle());
           throw new InvalidOperationException(String.Empty, ex);
         }
       }
+      using (var ms2a = new MemoryStream(new byte[] { 0x7b, 0x05, 0x7d })) {
+        try {
+          CBORObject.ReadJSON(ms2a);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+      }
+      using (var ms2b = new MemoryStream(new byte[] { 0x05, 0x7b, 0x7d })) {
+        try {
+          CBORObject.ReadJSON(ms2b);
+          Assert.Fail("Should have failed");
+        } catch (CBORException) {
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+      }
       // two BOMs
       using (var ms3 = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0xef,
-                              0xbb, 0xbf, 0x7b, 0x7d })) {
+        0xbb, 0xbf, 0x7b, 0x7d })) {
         try {
           CBORObject.ReadJSON(ms3);
           Assert.Fail("Should have failed");
@@ -2036,60 +2161,99 @@ cbornumber.AsSingle());
       }
       try {
         var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0, 0,
-                              0x74, 0, 0, 0, 0x72, 0, 0, 0, 0x75, 0, 0, 0,
-                              0x65 });
+                    0x74, 0, 0, 0, 0x72, 0, 0, 0, 0x75, 0, 0, 0,
+                    0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x74, 0, 0, 0, 0x72, 0,
-                              0, 0, 0x75, 0, 0, 0, 0x65 });
+                    0, 0, 0x75, 0, 0, 0, 0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0, 0, 0x74, 0, 0, 0,
-                              0x72, 0, 0, 0, 0x75, 0, 0, 0, 0x65, 0, 0, 0 });
+                    0x72, 0, 0, 0, 0x75, 0, 0, 0, 0x65, 0, 0, 0 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         msjson = new MemoryStream(new byte[] { 0x74, 0, 0, 0, 0x72, 0, 0, 0,
-                              0x75, 0, 0, 0, 0x65, 0, 0, 0 });
+                    0x75, 0, 0, 0, 0x65, 0, 0, 0 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0, 0x74, 0, 0x72, 0,
-                              0x75, 0, 0x65 });
+                    0x75, 0, 0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
   msjson = new MemoryStream(new byte[] { 0, 0x74, 0, 0x72, 0, 0x75, 0, 0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
-     msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x74, 0, 0x72, 0,
-          0x75,
-                              0, 0x65, 0 });
+        msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x74, 0, 0x72, 0,
+                    0x75,
+                    0, 0x65, 0 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
   msjson = new MemoryStream(new byte[] { 0x74, 0, 0x72, 0, 0x75, 0, 0x65, 0 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
-     msjson = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x74, 0x72,
-          0x75,
-                              0x65 });
+     msjson = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x74, 0x72, 0x75,
+       0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         msjson = new MemoryStream(new byte[] { 0x74, 0x72, 0x75, 0x65 });
         Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0, 0, 0x22,
-                              0, 1, 0, 0, 0, 0, 0, 0x22 });
-        Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
+                    0, 1, 0, 0, 0, 0, 0, 0x22 });
+        {
+string stringTemp = CBORObject.ReadJSON(msjson).AsString();
+Assert.AreEqual(
+"\ud800\udc00",
+stringTemp);
+}
         msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x22, 0, 1, 0, 0, 0, 0,
-                              0, 0x22 });
-        Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
+                    0, 0x22 });
+        {
+string stringTemp = CBORObject.ReadJSON(msjson).AsString();
+Assert.AreEqual(
+"\ud800\udc00",
+stringTemp);
+}
         msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0, 0, 0x22, 0, 0, 0,
-                              0, 0, 1, 0, 0x22, 0, 0, 0 });
-        Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
-     msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0, 0, 0, 1, 0, 0x22,
-          0,
-                              0, 0 });
-        Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
+                    0, 0, 1, 0, 0x22, 0, 0, 0 });
+        {
+string stringTemp = CBORObject.ReadJSON(msjson).AsString();
+Assert.AreEqual(
+"\ud800\udc00",
+stringTemp);
+}
+        msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0, 0, 0, 1, 0, 0x22,
+                    0,
+                    0, 0 });
+        {
+string stringTemp = CBORObject.ReadJSON(msjson).AsString();
+Assert.AreEqual(
+"\ud800\udc00",
+stringTemp);
+}
         msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0, 0x22, 0xd8, 0,
-                              0xdc, 0, 0, 0x22 });
-        Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
+                    0xdc, 0, 0, 0x22 });
+        {
+string stringTemp = CBORObject.ReadJSON(msjson).AsString();
+Assert.AreEqual(
+"\ud800\udc00",
+stringTemp);
+}
   msjson = new MemoryStream(new byte[] { 0, 0x22, 0xd8, 0, 0xdc, 0, 0, 0x22 });
-        Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
+        {
+string stringTemp = CBORObject.ReadJSON(msjson).AsString();
+Assert.AreEqual(
+"\ud800\udc00",
+stringTemp);
+}
         msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x22, 0, 0, 0xd8, 0,
-                              0xdc, 0x22, 0 });
-        Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
+                    0xdc, 0x22, 0 });
+        {
+string stringTemp = CBORObject.ReadJSON(msjson).AsString();
+Assert.AreEqual(
+"\ud800\udc00",
+stringTemp);
+}
   msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0xd8, 0, 0xdc, 0x22, 0 });
-        Assert.AreEqual("\ud800\udc00", CBORObject.ReadJSON(msjson).AsString());
+        {
+string stringTemp = CBORObject.ReadJSON(msjson).AsString();
+Assert.AreEqual(
+"\ud800\udc00",
+stringTemp);
+}
         msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0, 0, 0x22,
-                              0, 0, 0xd8, 0, 0, 0, 0, 0x22 });
+                    0, 0, 0xd8, 0, 0, 0, 0, 0x22 });
         try {
           CBORObject.ReadJSON(msjson);
           Assert.Fail("Should have failed");
@@ -2098,9 +2262,9 @@ cbornumber.AsSingle());
           Assert.Fail(ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
         }
-     msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x22, 0, 0, 0xd8, 0, 0,
-          0,
-                              0, 0x22 });
+        msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x22, 0, 0, 0xd8, 0, 0,
+                    0,
+                    0, 0x22 });
         try {
           CBORObject.ReadJSON(msjson);
           Assert.Fail("Should have failed");
@@ -2110,7 +2274,7 @@ cbornumber.AsSingle());
           throw new InvalidOperationException(String.Empty, ex);
         }
         msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0, 0, 0x22, 0, 0, 0,
-                              0, 0xd8, 0, 0, 0x22, 0, 0, 0 });
+                    0, 0xd8, 0, 0, 0x22, 0, 0, 0 });
         try {
           CBORObject.ReadJSON(msjson);
           Assert.Fail("Should have failed");
@@ -2120,7 +2284,7 @@ cbornumber.AsSingle());
           throw new InvalidOperationException(String.Empty, ex);
         }
         msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0, 0, 0xd8, 0, 0,
-                              0x22, 0, 0, 0 });
+                    0x22, 0, 0, 0 });
         try {
           CBORObject.ReadJSON(msjson);
           Assert.Fail("Should have failed");
@@ -2130,7 +2294,7 @@ cbornumber.AsSingle());
           throw new InvalidOperationException(String.Empty, ex);
         }
         msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0, 0x22, 0, 0xdc, 0,
-                              0xdc, 0, 0, 0x22 });
+                    0xdc, 0, 0, 0x22 });
         try {
           CBORObject.ReadJSON(msjson);
           Assert.Fail("Should have failed");
@@ -2140,7 +2304,7 @@ cbornumber.AsSingle());
           throw new InvalidOperationException(String.Empty, ex);
         }
         msjson = new MemoryStream(new byte[] { 0, 0x22, 0, 0xdc, 0, 0xdc, 0, 0,
-                              0x22 });
+                    0x22 });
         try {
           CBORObject.ReadJSON(msjson);
           Assert.Fail("Should have failed");
@@ -2150,7 +2314,7 @@ cbornumber.AsSingle());
           throw new InvalidOperationException(String.Empty, ex);
         }
         msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x22, 0, 0, 0xdc, 0,
-                              0xdc, 0x22, 0 });
+                    0xdc, 0x22, 0 });
         try {
           CBORObject.ReadJSON(msjson);
           Assert.Fail("Should have failed");
@@ -2186,6 +2350,318 @@ cbornumber.AsSingle());
           Assert.Fail(ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
         }
+        // Illegal UTF-16
+        msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0x20, 0x20, 0x20 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x20, 0x20, 0x20 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xd8, 0x00 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xdc, 0x00 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xd8, 0x00, 0x20, 0x00 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xdc, 0x00, 0x20, 0x00 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xd8, 0x00, 0xd8, 0x00 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xdc, 0x00, 0xd8, 0x00 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xdc, 0x00, 0xd8,
+          0x00, 0xdc, 0x00 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xdc, 0x00, 0xdc, 0x00 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+
+        msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xdc });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8, 0x00, 0x20 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xdc, 0x00, 0x20 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8, 0x00, 0xd8 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xdc, 0x00, 0xd8 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xdc, 0x00,
+          0xd8, 0x00, 0xdc });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xdc, 0x00, 0xdc });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+
+        // Illegal UTF-32
+        msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0, 0xd8, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0, 0xdc, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+     msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0x11, 0x00, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+     msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0xff, 0x00, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0x1, 0, 0x00, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+     msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0, 0xd8, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+     msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0, 0xdc, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0x11, 0x00, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+  msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0xff, 0x00, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+   msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0x1, 0, 0x00, 0 });
+        try {
+ CBORObject.ReadJSON(msjson);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       } catch (IOException ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2193,7 +2669,38 @@ cbornumber.AsSingle());
     }
     [TestMethod]
     public void TestRemainder() {
-      // not implemented yet
+      try {
+ CBORObject.Remainder(null, CBORObject.FromObject(2));
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Remainder(CBORObject.FromObject(2), null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Remainder(CBORObject.Null, CBORObject.FromObject(2));
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Remainder(CBORObject.FromObject(2), CBORObject.Null);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [TestMethod]
     public void TestRemove() {
@@ -2247,7 +2754,7 @@ cbornumber.AsSingle());
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
           CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                               ].AsString()));
+                    ].AsString()));
         if (cbornumber.IsNaN()) {
           try {
             Assert.Fail(String.Empty + cbornumber.Sign);
@@ -2272,60 +2779,173 @@ cbornumber.AsSingle());
     }
     [TestMethod]
     public void TestSubtract() {
-      // not implemented yet
+      try {
+ CBORObject.Subtract(null, CBORObject.FromObject(2));
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Subtract(CBORObject.FromObject(2), null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Subtract(CBORObject.Null, CBORObject.FromObject(2));
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Subtract(CBORObject.FromObject(2), CBORObject.Null);
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
 
     [TestMethod]
     public void TestToJSONString() {
-      Assert.AreEqual(
-        "\"\u2027\\u2028\\u2029\u202a\"",
-        CBORObject.FromObject("\u2027\u2028\u2029\u202a").ToJSONString());
-      Assert.AreEqual(
-        "\"\\u0085\\uFEFF\\uFFFE\\uFFFF\"",
-        CBORObject.FromObject("\u0085\ufeff\ufffe\uffff").ToJSONString());
-      Assert.AreEqual("true", CBORObject.True.ToJSONString());
-      Assert.AreEqual("false", CBORObject.False.ToJSONString());
-      Assert.AreEqual("null", CBORObject.Null.ToJSONString());
-      Assert.AreEqual(
-        "null",
-        CBORObject.FromObject(Single.PositiveInfinity).ToJSONString());
-      Assert.AreEqual(
-        "null",
-        CBORObject.FromObject(Single.NegativeInfinity).ToJSONString());
-      Assert.AreEqual("null", CBORObject.FromObject(Single.NaN).ToJSONString());
-      Assert.AreEqual(
-        "null",
-        CBORObject.FromObject(Double.PositiveInfinity).ToJSONString());
-      Assert.AreEqual(
-        "null",
-        CBORObject.FromObject(Double.NegativeInfinity).ToJSONString());
-      Assert.AreEqual("null", CBORObject.FromObject(Double.NaN).ToJSONString());
+      {
+string stringTemp = CBORObject.FromObject(
+"\u2027\u2028\u2029\u202a").ToJSONString();
+Assert.AreEqual(
+"\"\u2027\\u2028\\u2029\u202a\"",
+stringTemp);
+}
+      {
+string stringTemp = CBORObject.FromObject(
+"\u0085\ufeff\ufffe\uffff").ToJSONString();
+Assert.AreEqual(
+"\"\\u0085\\uFEFF\\uFFFE\\uFFFF\"",
+stringTemp);
+}
+      {
+string stringTemp = CBORObject.True.ToJSONString();
+Assert.AreEqual(
+"true",
+stringTemp);
+}
+      {
+string stringTemp = CBORObject.False.ToJSONString();
+Assert.AreEqual(
+"false",
+stringTemp);
+}
+      {
+string stringTemp = CBORObject.Null.ToJSONString();
+Assert.AreEqual(
+"null",
+stringTemp);
+}
+      {
+string stringTemp =
+  CBORObject.FromObject(Single.PositiveInfinity).ToJSONString();
+Assert.AreEqual(
+"null",
+stringTemp);
+}
+      {
+string stringTemp =
+  CBORObject.FromObject(Single.NegativeInfinity).ToJSONString();
+Assert.AreEqual(
+"null",
+stringTemp);
+}
+      {
+string stringTemp = CBORObject.FromObject(Single.NaN).ToJSONString();
+Assert.AreEqual(
+"null",
+stringTemp);
+}
+      {
+string stringTemp =
+  CBORObject.FromObject(Double.PositiveInfinity).ToJSONString();
+Assert.AreEqual(
+"null",
+stringTemp);
+}
+      {
+string stringTemp =
+  CBORObject.FromObject(Double.NegativeInfinity).ToJSONString();
+Assert.AreEqual(
+"null",
+stringTemp);
+}
+      {
+string stringTemp = CBORObject.FromObject(Double.NaN).ToJSONString();
+Assert.AreEqual(
+"null",
+stringTemp);
+}
       // Base64 tests
       CBORObject o;
       o = CBORObject.FromObjectAndTag(
         new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 }, 22);
-      Assert.AreEqual("\"mtbw6A\"", o.ToJSONString());
+      {
+string stringTemp = o.ToJSONString();
+Assert.AreEqual(
+"\"mtbw6A\"",
+stringTemp);
+}
       o = CBORObject.FromObject(new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 });
-      Assert.AreEqual("\"mtbw6A\"", o.ToJSONString());
+      {
+string stringTemp = o.ToJSONString();
+Assert.AreEqual(
+"\"mtbw6A\"",
+stringTemp);
+}
       o = CBORObject.FromObjectAndTag(
-        new byte[] { 0x9a,
-          0xd6, 0xf0, 0xe8 },
+        new byte[] { 0x9a, 0xd6, 0xf0, 0xe8 },
         23);
-      Assert.AreEqual("\"9AD6F0E8\"", o.ToJSONString());
+      {
+string stringTemp = o.ToJSONString();
+Assert.AreEqual(
+"\"9AD6F0E8\"",
+stringTemp);
+}
       o = CBORObject.FromObject(new byte[] { 0x9a, 0xd6, 0xff, 0xe8 });
       // Encode with Base64URL by default
-      Assert.AreEqual("\"mtb_6A\"", o.ToJSONString());
+      {
+string stringTemp = o.ToJSONString();
+Assert.AreEqual(
+"\"mtb_6A\"",
+stringTemp);
+}
       o = CBORObject.FromObjectAndTag(
-        new byte[] { 0x9a,
-          0xd6, 0xff, 0xe8 },
+        new byte[] { 0x9a, 0xd6, 0xff, 0xe8 },
         22);
       // Encode with Base64
-      Assert.AreEqual("\"mtb/6A\"", o.ToJSONString());
+      {
+string stringTemp = o.ToJSONString();
+Assert.AreEqual(
+"\"mtb/6A\"",
+stringTemp);
+}
     }
     [TestMethod]
     public void TestToString() {
-      Assert.AreEqual("undefined", CBORObject.Undefined.ToString());
-      Assert.AreEqual("simple(50)", CBORObject.FromSimpleValue(50).ToString());
+      {
+string stringTemp = CBORObject.Undefined.ToString();
+Assert.AreEqual(
+"undefined",
+stringTemp);
+}
+      {
+string stringTemp = CBORObject.FromSimpleValue(50).ToString();
+Assert.AreEqual(
+"simple(50)",
+stringTemp);
+}
     }
     [TestMethod]
     public void TestType() {

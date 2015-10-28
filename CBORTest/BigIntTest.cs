@@ -289,7 +289,7 @@ bigintD,
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        BigInteger.fromByteArray(null, false);
+        BigInteger.fromBytes(null, false);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
       } catch (Exception ex) {

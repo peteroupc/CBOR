@@ -97,6 +97,22 @@ Another example of reading data from a file:
     }
  }
 ```
+
+If a byte array contains multiple CBOR objects, the byte array should
+be wrapped in a MemoryStream and the stream used to read the objects,
+as DecodeFromBytes assumes the array contains only one CBOR object.
+Here is an example.
+
+```c#
+ // C#
+ // Create a memory stream with a view of the byte array
+ using (var stream = new MemoryStream(byteArray)) {
+    // Read the CBOR object from the stream
+    var cbor = CBORObject.Read(stream);
+    // The rest of the example follows the one given above.
+ }
+```
+
 Writing CBOR data to a file (C#):
 
 ```c#

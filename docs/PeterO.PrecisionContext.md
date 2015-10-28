@@ -1,4 +1,4 @@
-﻿## PeterO.PrecisionContext
+## PeterO.PrecisionContext
 
     public class PrecisionContext
 
@@ -247,7 +247,7 @@ True if this context's Precision property is in bits, rather than digits; otherw
 
     public bool IsSimplified { get; }
 
-Gets a value indicating whether to use a "simplified" arithmetic. In the simplified arithmetic, infinity, not-a-number, and subnormal numbers are not allowed, and negative zero is treated the same as positive zero. For further details, see  `http://speleotrove.com/decimal/dax3274.html` 
+Gets a value indicating whether to use a "simplified" arithmetic. In the simplified arithmetic, infinity, not-a-number, and subnormal numbers are not allowed, and negative zero is treated the same as positive zero. For further details, see  `http://speleotrove.com/decimal/dax3274.html`
 
 <b>Returns:</b>
 
@@ -310,7 +310,7 @@ True if a number can have the given Exponent property under this precision conte
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>exponent</i>
  is null.
 
@@ -407,11 +407,11 @@ A PrecisionContext object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>exponentMin</i>
  is null.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>exponentMax</i>
  is null.
 
@@ -432,7 +432,7 @@ A PrecisionContext object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigintPrecision</i>
  is null.
 
@@ -573,5 +573,3 @@ Copies this PrecisionContext with an unlimited exponent range.
 <b>Returns:</b>
 
 A PrecisionContext object.
-
-

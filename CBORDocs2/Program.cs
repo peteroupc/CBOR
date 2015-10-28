@@ -10,7 +10,8 @@ using System;
 namespace CBORDocs {
   internal class Program {
     public static void Main(string[] args) {
-      if (args.Length < 2) {
+      if (args.Length < 2 || String.IsNullOrEmpty(args[0]) ||
+        String.IsNullOrEmpty(args[1])) {
         Console.WriteLine("Usage: CBORDocs2 <dllfile> <docpath>");
         return;
       }

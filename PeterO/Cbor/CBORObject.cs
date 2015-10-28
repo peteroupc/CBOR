@@ -13,89 +13,112 @@ using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Represents an object in Concise Binary Object Representation (CBOR)
-    /// and contains methods for reading and writing CBOR data. CBOR is defined in
-    /// RFC 7049. <para><b>Converting CBOR objects</b>
-    /// </para>
-    /// <para>There are many
-    /// ways to get a CBOR object, including from bytes, objects, streams and JSON,
-    /// as described below.</para>
-    /// <para><b>To and from byte arrays:</b>
-    /// The
-    /// CBORObject.DecodeToBytes method converts a byte array in CBOR format to a
-    /// CBOR object. The EncodeToBytes method converts a CBOR object to its
-    /// corresponding byte array in CBOR format.</para>
-    /// <para><b>To and from data
-    /// streams:</b>
-    /// The CBORObject.Write methods write many kinds of objects to a
-    /// data stream, including numbers, CBOR objects, strings, and arrays of numbers
-    /// and strings. The CBORObject.Read method reads a CBOR object from a data
-    /// stream.</para>
-    /// <para><b>To and from other objects:</b>
-    /// The
-    /// CBORObject.FromObject method converts many kinds of objects to a CBOR
-    /// object, including numbers, strings, and arrays and maps of numbers and
-    /// strings. Methods like AsDouble, AsByte, and AsString convert a CBOR object
-    /// to different types of object.</para>
-    /// <para><b>To and from JSON:</b>
-    /// This
-    /// class also doubles as a reader and writer of JavaScript Object Notation
-    /// (JSON). The CBORObject.FromJSONString method converts JSON to a CBOR object,
-    /// and the ToJSONString method converts a CBOR object to a JSON string.</para>
-    /// <para>In addition, the CBORObject.WriteJSON method writes many kinds of
-    /// objects as JSON to a data stream, including numbers, CBOR objects, strings,
-    /// and arrays of numbers and strings. The CBORObject.Read method reads a CBOR
-    /// object from a JSON data stream.</para>
-    /// <para><b>Comparison
-    /// Considerations:</b>
-    /// </para>
-    /// <para>Instances of CBORObject should not be
-    /// compared for equality using the "==" operator; it's possible to create two
-    /// CBOR objects with the same value but not the same reference. (The "=="
-    /// operator only checks if each side of the operator is the same
-    /// instance.)</para>
-    /// <para>This class's natural ordering (under the CompareTo
-    /// method) is not consistent with the Equals method. This means that two values
-    /// that compare as equal under the CompareTo method might not be equal under
-    /// the Equals method. This is important to consider especially if an
-    /// application wants to compare numbers, since the CBOR number type supports
-    /// numbers of different formats, such as big integers, rational numbers, and
-    /// decimal fractions.</para>
-    /// <para>Another consideration is that two values
-    /// that are otherwise equal may have different tags. To strip the tags from a
-    /// CBOR object before comparing, use the <c>Untag</c>
-    /// method.</para>
-    /// <para>To
-    /// compare two numbers, the CompareToIgnoreTags or CompareTo method should be
-    /// used. Which method to use depends on whether two equal values should still
-    /// be considered equal if they have different tags.</para>
-    /// <para>Although this
-    /// class is inconsistent with the Equals method, it is safe to use CBORObject
-    /// instances as hash keys as long as all of the keys are untagged text strings
-    /// (which means GetTags returns an empty array and the Type property, or
-    /// "getType()" in Java, returns TextString). This is because the natural
-    /// ordering of these instances is consistent with the Equals method.</para>
-    /// <para><b>Thread Safety:</b>
-    /// </para>
-    /// <para>CBOR objects that are numbers,
-    /// "simple values", and text strings are immutable (their values can't be
-    /// changed), so they are inherently safe for use by multiple threads.</para>
-    /// <para>CBOR objects that are arrays, maps, and byte strings are mutable, but
-    /// this class doesn't attempt to synchronize reads and writes to those objects
-    /// by multiple threads, so those objects are not thread safe without such
-    /// synchronization.</para>
-    /// <para>One kind of CBOR object is called a map, or a
-    /// list of key-value pairs. Keys can be any kind of CBOR object, including
-    /// numbers, strings, arrays, and maps. However, text strings are the most
-    /// suitable to use as keys; other kinds of CBOR object are much better used as
-    /// map values instead, keeping in mind that some of them are not thread safe
-    /// without synchronizing reads and writes to them.</para>
-    /// <para>To find the
-    /// type of a CBOR object, call its Type property (or "getType()" in Java). The
-    /// return value can be Number, Boolean, SimpleValue, or TextString for
-    /// immutable CBOR objects, and Array, Map, or ByteString for mutable CBOR
-    /// objects.</para>
-    /// </summary>
+  /// <summary>Represents an object in Concise Binary Object Representation
+  /// (CBOR)
+  /// and contains methods for reading and writing CBOR data. CBOR is defined in
+  /// RFC 7049. <para><b>Converting CBOR objects</b>
+  /// </para>
+  /// <para>There are many
+  /// ways to get a CBOR object, including from bytes, objects, streams and
+  /// JSON,
+  /// as described below.</para>
+  /// <para><b>To and from byte arrays:</b>
+  /// The
+  /// CBORObject.DecodeToBytes method converts a byte array in CBOR format to a
+  /// CBOR object. The EncodeToBytes method converts a CBOR object to its
+  /// corresponding byte array in CBOR format.</para>
+  /// <para><b>To and from data
+  /// streams:</b>
+  /// The CBORObject.Write methods write many kinds of objects to a
+  /// data stream, including numbers, CBOR objects, strings, and arrays of
+  /// numbers
+  /// and strings. The CBORObject.Read method reads a CBOR object from a data
+  /// stream.</para>
+  /// <para><b>To and from other objects:</b>
+  /// The
+  /// CBORObject.FromObject method converts many kinds of objects to a CBOR
+  /// object, including numbers, strings, and arrays and maps of numbers and
+  /// strings. Methods like AsDouble, AsByte, and AsString convert a CBOR object
+  /// to different types of object.</para>
+  /// <para><b>To and from JSON:</b>
+  /// This
+  /// class also doubles as a reader and writer of JavaScript Object Notation
+  /// (JSON). The CBORObject.FromJSONString method converts JSON to a CBOR
+  /// object,
+  /// and the ToJSONString method converts a CBOR object to a JSON
+  /// string.</para>
+  /// <para>In addition, the CBORObject.WriteJSON method writes many kinds of
+  /// objects as JSON to a data stream, including numbers, CBOR objects,
+  /// strings,
+  /// and arrays of numbers and strings. The CBORObject.Read method reads a CBOR
+  /// object from a JSON data stream.</para>
+  /// <para><b>Comparison
+  /// Considerations:</b>
+  /// </para>
+  /// <para>Instances of CBORObject should not be
+  /// compared for equality using the "==" operator; it's possible to create two
+  /// CBOR objects with the same value but not the same reference. (The "=="
+  /// operator only checks if each side of the operator is the same
+  /// instance.)</para>
+  /// <para>This class's natural ordering (under the CompareTo
+  /// method) is not consistent with the Equals method. This means that two
+  /// values
+  /// that compare as equal under the CompareTo method might not be equal under
+  /// the Equals method. This is important to consider especially if an
+  /// application wants to compare numbers, since the CBOR number type supports
+  /// numbers of different formats, such as big integers, rational numbers, and
+  /// decimal fractions.</para>
+  /// <para>Another consideration is that two values
+  /// that are otherwise equal may have different tags. To strip the tags from a
+  /// CBOR object before comparing, use the <c>Untag</c>
+  /// method.</para>
+  /// <para>To
+  /// compare two numbers, the CompareToIgnoreTags or CompareTo method should be
+  /// used. Which method to use depends on whether two equal values should still
+  /// be considered equal if they have different tags.</para>
+  /// <para>Although this
+  /// class is inconsistent with the Equals method, it is safe to use CBORObject
+  /// instances as hash keys as long as all of the keys are untagged text
+  /// strings
+  /// (which means GetTags returns an empty array and the Type property, or
+  /// "getType()" in Java, returns TextString). This is because the natural
+  /// ordering of these instances is consistent with the Equals method.</para>
+  /// <para><b>Thread Safety:</b>
+  /// </para>
+  /// <para>CBOR objects that are numbers,
+  /// "simple values", and text strings are immutable (their values can't be
+  /// changed), so they are inherently safe for use by multiple threads.</para>
+  /// <para>CBOR objects that are arrays, maps, and byte strings are mutable,
+  /// but
+  /// this class doesn't attempt to synchronize reads and writes to those
+  /// objects
+  /// by multiple threads, so those objects are not thread safe without such
+  /// synchronization.</para>
+  /// <para>One kind of CBOR object is called a map, or a
+  /// list of key-value pairs. Keys can be any kind of CBOR object, including
+  /// numbers, strings, arrays, and maps. However, text strings are the most
+  /// suitable to use as keys; other kinds of CBOR object are much better used
+  /// as
+  /// map values instead, keeping in mind that some of them are not thread safe
+  /// without synchronizing reads and writes to them.</para>
+  /// <para>To find the
+  /// type of a CBOR object, call its Type property (or "getType()" in Java).
+  /// The
+  /// return value can be Number, Boolean, SimpleValue, or TextString for
+  /// immutable CBOR objects, and Array, Map, or ByteString for mutable CBOR
+  /// objects.</para>
+  /// <para><b>Nesting Depth:</b></para>
+  /// <para>The DecodeFromBytes method can only read objects with a limited
+  /// maximum depth
+  /// of arrays and maps nested within other arrays and maps. The code sets this
+  /// maximum depth to
+  /// 500 (allowing more than enough nesting for most purposes), but it's
+  /// possible that
+  /// stack overflows
+  /// in some runtimes might lower the effective maximum nesting depth. When the
+  /// nesting depth goes
+  /// above 500, the DecodeFromBytes method throws a CBORException.</para>
+  /// </summary>
   public sealed partial class CBORObject : IComparable<CBORObject>,
   IEquatable<CBORObject> {
     internal int ItemType {
@@ -295,12 +318,12 @@ namespace PeterO.Cbor {
       }
       if (bigintTag.Sign < 0) {
         throw new ArgumentException("bigintTag.Sign (" +
-                              bigintTag.Sign + ") is less than 0");
+                    bigintTag.Sign + ") is less than 0");
       }
       if (bigintTag.bitLength() > 64) {
         throw new ArgumentException("bigintTag.bitLength (" +
-                              (long)bigintTag.bitLength() + ") is more than " +
-                              "64");
+                    (long)bigintTag.bitLength() + ") is more than " +
+                    "64");
       }
       lock (tagHandlers) {
         tagHandlers[bigintTag] = handler;
@@ -547,7 +570,7 @@ namespace PeterO.Cbor {
     /// other object or if the other object is null.</returns>
     public int CompareToIgnoreTags(CBORObject other) {
       return (other == null) ? 1 : ((this == other) ? 0 :
-                              this.Untag().CompareTo(other.Untag()));
+                    this.Untag().CompareTo(other.Untag()));
     }
 
     /// <summary>Compares two CBOR objects. <para>In this implementation:</para>
@@ -632,7 +655,7 @@ namespace PeterO.Cbor {
           return 1;
         }
         cmp = (simpleValueA == simpleValueB) ? 0 : ((simpleValueA <
-                              simpleValueB) ? -1 : 1);
+                    simpleValueB) ? -1 : 1);
       } else if (typeA == typeB) {
         switch (typeA) {
             case CBORObjectTypeInteger: {
@@ -647,7 +670,7 @@ namespace PeterO.Cbor {
               // Treat NaN as greater than all other numbers
               cmp = Single.IsNaN(a) ? (Single.IsNaN(b) ? 0 : 1) :
                 (Single.IsNaN(b) ? (-1) : ((a == b) ? 0 : ((a < b) ? -1 :
-                              1)));
+                    1)));
               break;
             }
             case CBORObjectTypeBigInteger: {
@@ -662,7 +685,7 @@ namespace PeterO.Cbor {
               // Treat NaN as greater than all other numbers
               cmp = Double.IsNaN(a) ? (Double.IsNaN(b) ? 0 : 1) :
                 (Double.IsNaN(b) ? (-1) : ((a == b) ? 0 : ((a < b) ? -1 :
-                              1)));
+                    1)));
               break;
             }
             case CBORObjectTypeExtendedDecimal: {
@@ -765,7 +788,7 @@ namespace PeterO.Cbor {
               cmp = -cmp;
             }
           } else if (typeA == CBORObjectTypeExtendedDecimal ||
-                     typeB == CBORObjectTypeExtendedDecimal) {
+                    typeB == CBORObjectTypeExtendedDecimal) {
             ExtendedDecimal e1 = null;
             ExtendedDecimal e2 = null;
             if (typeA == CBORObjectTypeExtendedFloat) {
@@ -783,11 +806,11 @@ namespace PeterO.Cbor {
               cmp = e1.CompareTo(e2);
             }
           } else if (typeA == CBORObjectTypeExtendedFloat || typeB ==
-                     CBORObjectTypeExtendedFloat ||
-                     typeA == CBORObjectTypeDouble || typeB ==
-                     CBORObjectTypeDouble ||
-                     typeA == CBORObjectTypeSingle || typeB ==
-                     CBORObjectTypeSingle) {
+                    CBORObjectTypeExtendedFloat ||
+                    typeA == CBORObjectTypeDouble || typeB ==
+                    CBORObjectTypeDouble ||
+                    typeA == CBORObjectTypeSingle || typeB ==
+                    CBORObjectTypeSingle) {
             ExtendedFloat e1 = NumberInterfaces[typeA].AsExtendedFloat(objA);
             ExtendedFloat e2 = NumberInterfaces[typeB].AsExtendedFloat(objB);
             cmp = e1.CompareTo(e2);
@@ -799,7 +822,7 @@ namespace PeterO.Cbor {
         }
       }
       return (cmp == 0) ? ((!this.IsTagged && !other.IsTagged) ? 0 :
-                           TagsCompare(this.GetTags(), other.GetTags())) : cmp;
+                    TagsCompare(this.GetTags(), other.GetTags())) : cmp;
     }
 
     #region Equals and GetHashCode implementation
@@ -1058,7 +1081,7 @@ namespace PeterO.Cbor {
           }
           break;
         default:
-          if (!object.Equals(this.itemValue, otherValue.itemValue)) {
+          if (!Object.Equals(this.itemValue, otherValue.itemValue)) {
             return false;
           }
           break;
@@ -1092,7 +1115,7 @@ namespace PeterO.Cbor {
           hashCode += 651869479 * itemHashCode;
         }
         hashCode += 651869483 * (this.itemtypeValue.GetHashCode() +
-                              this.tagLow + this.tagHigh);
+                    this.tagLow + this.tagHigh);
       }
       return hashCode;
     }
@@ -1274,7 +1297,7 @@ namespace PeterO.Cbor {
             if (firstbyte == 0xf9) {
               return new CBORObject(
                 CBORObjectTypeSingle,
-  CBORUtilities.HalfPrecisionToSingle(unchecked((int)uadditional)));
+             CBORUtilities.HalfPrecisionToSingle(unchecked((int)uadditional)));
             }
             if (firstbyte == 0xfa) {
               float flt = BitConverter.ToSingle(
@@ -1418,7 +1441,7 @@ namespace PeterO.Cbor {
     public bool HasTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +
-                              ") is less than 0");
+                    ") is less than 0");
       }
       CBORObject obj = this;
       while (true) {
@@ -1473,7 +1496,7 @@ namespace PeterO.Cbor {
         uabytes[1] = (byte)((tagLow >> 8) & 0xff);
         uabytes[0] = (byte)(tagLow & 0xff);
         uabytes[8] = 0;
-        return BigInteger.fromByteArray(uabytes, true);
+        return BigInteger.fromBytes(uabytes, true);
       }
       if (tagLow != 0) {
         uabytes = new byte[5];
@@ -1482,7 +1505,7 @@ namespace PeterO.Cbor {
         uabytes[1] = (byte)((tagLow >> 8) & 0xff);
         uabytes[0] = (byte)(tagLow & 0xff);
         uabytes[4] = 0;
-        return BigInteger.fromByteArray(uabytes, true);
+        return BigInteger.fromBytes(uabytes, true);
       }
       return BigInteger.Zero;
     }
@@ -2264,24 +2287,24 @@ namespace PeterO.Cbor {
         CBORObject key = entry.Key;
         CBORObject value = entry.Value;
         stack = WriteChildObject(
-thisObj,
-key,
-outputStream,
-stack,
-options);
+          thisObj,
+          key,
+          outputStream,
+          stack,
+          options);
         stack = WriteChildObject(
-thisObj,
-value,
-outputStream,
-stack,
-options);
+          thisObj,
+          value,
+          outputStream,
+          stack,
+          options);
       }
     }
 
     private static byte[] GetPositiveIntBytes(int type, int value) {
       if (value < 0) {
         throw new ArgumentException("value (" + value + ") is less than " +
-                              "0");
+                    "0");
       }
       if (value < 24) {
         return new[] { (byte)((byte)value | (byte)(type << 5)) };
@@ -2308,7 +2331,7 @@ options);
     private static byte[] GetPositiveInt64Bytes(int type, long value) {
       if (value < 0) {
         throw new ArgumentException("value (" + value + ") is less than " +
-                              "0");
+                    "0");
       }
       if (value < 24) {
         return new[] { (byte)((byte)value | (byte)(type << 5)) };
@@ -2459,17 +2482,17 @@ options);
     /// name='stream'/> is null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error occurred.</exception>
     public static void Write(
-string str,
-Stream stream,
-CBOREncodeOptions options) {
+      string str,
+      Stream stream,
+      CBOREncodeOptions options) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
       if (str == null) {
         stream.WriteByte(0xf6);  // Write null instead of string
       } else {
- CBOREncodeOptions noIndef =
-   options.And(CBOREncodeOptions.NoIndefLengthStrings);
+        CBOREncodeOptions noIndef =
+          options.And(CBOREncodeOptions.NoIndefLengthStrings);
         if (noIndef.Value != 0) {
           // NOTE: Length of a String object won't be higher than the maximum
           // allowed for definite-length strings
@@ -2645,7 +2668,7 @@ CBOREncodeOptions options) {
         // Get a byte array of the big integer's value,
         // since shifting and doing AND operations is
         // slow with large BigIntegers
-        byte[] bytes = bigint.ToByteArray();
+        byte[] bytes = bigint.toBytes(true);
         int byteCount = bytes.Length;
         while (byteCount > 0 && bytes[byteCount - 1] == 0) {
           // Ignore trailing zero bytes
@@ -2703,7 +2726,7 @@ CBOREncodeOptions options) {
             stream.Write(bytes, 0, byteCount);
             break;
             default: stream.WriteByte((datatype == 0) ?
-                              (byte)0xc2 : (byte)0xc3);
+                    (byte)0xc2 : (byte)0xc3);
             WritePositiveInt(2, byteCount, stream);
             stream.Write(bytes, 0, byteCount);
             break;
@@ -2766,7 +2789,7 @@ CBOREncodeOptions options) {
           #if DEBUG
           if (value < 32) {
             throw new ArgumentException("value (" + value + ") is less than " +
-                              "32");
+                    "32");
           }
           #endif
 
@@ -3137,9 +3160,9 @@ CBOREncodeOptions options) {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
     public static void Write(
-object objValue,
-Stream stream,
-CBOREncodeOptions options) {
+      object objValue,
+      Stream stream,
+      CBOREncodeOptions options) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
@@ -3155,16 +3178,16 @@ CBOREncodeOptions options) {
       }
       if (objValue is IList<CBORObject>) {
         WriteObjectArray(
-(IList<CBORObject>)objValue,
-stream,
-options);
+          (IList<CBORObject>)objValue,
+          stream,
+          options);
         return;
       }
       if (objValue is IDictionary<CBORObject, CBORObject>) {
         WriteObjectMap(
-(IDictionary<CBORObject, CBORObject>)objValue,
-stream,
-options);
+          (IDictionary<CBORObject, CBORObject>)objValue,
+          stream,
+          options);
         return;
       }
       FromObject(objValue).WriteTo(stream);
@@ -3323,7 +3346,7 @@ options);
     }
 
     internal static CBORObject FromRaw(IDictionary<CBORObject, CBORObject>
-                              map) {
+                    map) {
       return new CBORObject(CBORObjectTypeMap, map);
     }
 
@@ -3396,15 +3419,15 @@ options);
     public static CBORObject FromSimpleValue(int simpleValue) {
       if (simpleValue < 0) {
         throw new ArgumentException("simpleValue (" + simpleValue +
-                              ") is less than 0");
+                    ") is less than 0");
       }
       if (simpleValue > 255) {
         throw new ArgumentException("simpleValue (" + simpleValue +
-                              ") is more than " + "255");
+                    ") is more than " + "255");
       }
       if (simpleValue >= 24 && simpleValue < 32) {
         throw new ArgumentException("Simple value is from 24 to 31: " +
-                              simpleValue);
+                    simpleValue);
       }
       if (simpleValue < 32) {
         return valueFixedObjects[0xe0 + simpleValue];
@@ -3438,9 +3461,9 @@ options);
       }
       return (bigintValue.CompareTo(Int64MinValue) >= 0 &&
               bigintValue.CompareTo(Int64MaxValue) <= 0) ?
-          new CBORObject(
-            CBORObjectTypeInteger,
-            (long)(BigInteger)bigintValue) : (new CBORObject(
+        new CBORObject(
+          CBORObjectTypeInteger,
+          (long)(BigInteger)bigintValue) : (new CBORObject(
         CBORObjectTypeBigInteger,
         bigintValue));
     }
@@ -3459,7 +3482,7 @@ options);
       }
       BigInteger bigintExponent = bigValue.Exponent;
       return (bigintExponent.IsZero && !(bigValue.IsZero &&
-                bigValue.IsNegative)) ? FromObject(bigValue.Mantissa) :
+                    bigValue.IsNegative)) ? FromObject(bigValue.Mantissa) :
         new CBORObject(
           CBORObjectTypeExtendedFloat,
           bigValue);
@@ -3488,10 +3511,10 @@ options);
       }
       BigInteger bigintExponent = otherValue.Exponent;
       return (bigintExponent.IsZero && !(otherValue.IsZero &&
-                otherValue.IsNegative)) ? FromObject(otherValue.Mantissa) :
-          new CBORObject(
-            CBORObjectTypeExtendedDecimal,
-            otherValue);
+                    otherValue.IsNegative)) ? FromObject(otherValue.Mantissa) :
+        new CBORObject(
+          CBORObjectTypeExtendedDecimal,
+          otherValue);
     }
 
     /// <summary>Generates a CBOR object from a string.</summary>
@@ -3506,7 +3529,7 @@ options);
       }
       if (DataUtilities.GetUtf8Length(strValue, false) < 0) {
         throw new
-  ArgumentException("String contains an unpaired surrogate code point.");
+        ArgumentException("String contains an unpaired surrogate code point.");
       }
       return new CBORObject(CBORObjectTypeTextString, strValue);
     }
@@ -3678,7 +3701,7 @@ options);
     /// converted to a CBOR object and copied to a new map, or CBORObject.Null if
     /// <paramref name='dic'/> is null.</returns>
     public static CBORObject FromObject<TKey, TValue>(IDictionary<TKey,
-                              TValue> dic) {
+                    TValue> dic) {
       if (dic == null) {
         return CBORObject.Null;
       }
@@ -3851,7 +3874,7 @@ options);
       }
       if (bigintTag.Sign < 0) {
         throw new ArgumentException("bigintTag's sign (" + bigintTag.Sign +
-                              ") is less than 0");
+                    ") is less than 0");
       }
       if (bigintTag.CompareTo(UInt64MaxValue) > 0) {
         throw new ArgumentException(
@@ -3864,7 +3887,7 @@ options);
       } else {
         int tagLow = 0;
         int tagHigh = 0;
-        byte[] bytes = bigintTag.ToByteArray();
+        byte[] bytes = bigintTag.toBytes(true);
         for (var i = 0; i < Math.Min(4, bytes.Length); ++i) {
           int b = ((int)bytes[i]) & 0xff;
           tagLow = unchecked(tagLow | (((int)b) << (i * 8)));
@@ -3945,8 +3968,8 @@ options);
       object valueObValue,
       int smallTag) {
       if (smallTag < 0) {
-      throw new ArgumentException("smallTag (" + smallTag +
-          ") is less than 0");
+        throw new ArgumentException("smallTag (" + smallTag +
+                    ") is less than 0");
       }
       ICBORTag tagconv = FindTagConverter(smallTag);
       CBORObject c = FromObject(valueObValue);
@@ -4008,13 +4031,13 @@ options);
 
     internal static string TrimDotZero(string str) {
       return (str.Length > 2 && str[str.Length - 1] == '0' && str[str.Length
-                              - 2] == '.') ? str.Substring(0, str.Length - 2) :
+                    - 2] == '.') ? str.Substring(0, str.Length - 2) :
         str;
     }
 
     private static string ExtendedToString(ExtendedFloat ef) {
       if (ef.IsFinite && (ef.Exponent.CompareTo((BigInteger)2500) > 0 ||
-                          ef.Exponent.CompareTo((BigInteger)(-2500)) < 0)) {
+                    ef.Exponent.CompareTo((BigInteger)(-2500)) < 0)) {
         // It can take very long to convert a number with a very high
         // or very low exponent to a decimal string, so do this instead
         return ef.Mantissa + "p" + ef.Exponent;
@@ -4082,9 +4105,9 @@ options);
         var f = (float)this.ThisItem;
         simvalue = Single.IsNegativeInfinity(f) ? "-Infinity" :
           (Single.IsPositiveInfinity(f) ? "Infinity" : (Single.IsNaN(f) ?
-                              "NaN" : TrimDotZero(Convert.ToString(
-                              (float)f,
-                              CultureInfo.InvariantCulture))));
+                    "NaN" : TrimDotZero(Convert.ToString(
+                    (float)f,
+                    CultureInfo.InvariantCulture))));
         if (sb == null) {
           return simvalue;
         }
@@ -4093,9 +4116,9 @@ options);
         var f = (double)this.ThisItem;
         simvalue = Double.IsNegativeInfinity(f) ? "-Infinity" :
           (Double.IsPositiveInfinity(f) ? "Infinity" : (Double.IsNaN(f) ?
-                              "NaN" : TrimDotZero(Convert.ToString(
-                              (double)f,
-                              CultureInfo.InvariantCulture))));
+                    "NaN" : TrimDotZero(Convert.ToString(
+                    (double)f,
+                    CultureInfo.InvariantCulture))));
         if (sb == null) {
           return simvalue;
         }
