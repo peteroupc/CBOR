@@ -9,30 +9,41 @@ using System;
 using System.Text;
 
 namespace PeterO {
-    /// <summary>Represents an arbitrary-precision decimal floating-point number.
+    /// <summary>Represents an arbitrary-precision decimal floating-point
+    /// number.
     /// Consists of an integer mantissa and an integer exponent, both
-    /// arbitrary-precision. The value of the number equals mantissa * 10^exponent.
+    /// arbitrary-precision. The value of the number equals mantissa *
+    /// 10^exponent.
     /// <para>The mantissa is the value of the digits that make up a number,
-    /// ignoring the decimal point and exponent. For example, in the number 2356.78,
-    /// the mantissa is 235678. The exponent is where the "floating" decimal point
-    /// of the number is located. A positive exponent means "move it to the right",
+    /// ignoring the decimal point and exponent. For example, in the number
+    /// 2356.78,
+    /// the mantissa is 235678. The exponent is where the "floating" decimal
+    /// point
+    /// of the number is located. A positive exponent means
+    /// "move it to the right",
     /// and a negative exponent means "move it to the left." In the example 2,
-    /// 356.78, the exponent is -2, since it has 2 decimal places and the decimal
+    /// 356.78, the exponent is -2, since it has 2 decimal places and the
+    /// decimal
     /// point is "moved to the left by 2." Therefore, in the ExtendedDecimal
     /// representation, this number would be stored as 235678 * 10^-2.</para>
     /// <para>The mantissa and exponent format preserves trailing zeros in the
-    /// number's value. This may give rise to multiple ways to store the same value.
-    /// For example, 1.00 and 1 would be stored differently, even though they have
-    /// the same value. In the first case, 100 * 10^-2 (100 with decimal point moved
+    /// number's value. This may give rise to multiple ways to store the same
+    /// value.
+    /// For example, 1.00 and 1 would be stored differently, even though they
+    /// have
+    /// the same value. In the first case, 100 * 10^-2 (100 with decimal point
+    /// moved
     /// left by 2), and in the second case, 1 * 10^0 (1 with decimal point moved
     /// 0).</para>
     /// <para>This class also supports values for negative zero,
     /// not-a-number (NaN) values, and infinity. <b>Negative zero</b>
     /// is generally
-    /// used when a negative number is rounded to 0; it has the same mathematical
+    /// used when a negative number is rounded to 0; it has the same
+    /// mathematical
     /// value as positive zero. <b>Infinity</b>
     /// is generally used when a non-zero
-    /// number is divided by zero, or when a very high number can't be represented
+    /// number is divided by zero, or when a very high number can't be
+    /// represented
     /// in a given exponent range. <b>Not-a-number</b>
     /// is generally used to signal
     /// errors.</para>
@@ -41,29 +52,35 @@ namespace PeterO {
     /// <c>http://speleotrove.com/decimal/decarith.html</c>
     /// </para>
     /// <para>Passing a
-    /// signaling NaN to any arithmetic operation shown here will signal the flag
+    /// signaling NaN to any arithmetic operation shown here will signal the
+    /// flag
     /// FlagInvalid and return a quiet NaN, even if another operand to that
     /// operation is a quiet NaN, unless noted otherwise.</para>
     /// <para>Passing a
-    /// quiet NaN to any arithmetic operation shown here will return a quiet NaN,
-    /// unless noted otherwise. Invalid operations will also return a quiet NaN, as
+    /// quiet NaN to any arithmetic operation shown here will return a quiet
+    /// NaN,
+    /// unless noted otherwise. Invalid operations will also return a quiet NaN,
+    /// as
     /// stated in the individual methods.</para>
     /// <para>Unless noted otherwise,
     /// passing a null ExtendedDecimal argument to any method here will throw an
     /// exception.</para>
     /// <para>When an arithmetic operation signals the flag
     /// FlagInvalid, FlagOverflow, or FlagDivideByZero, it will not throw an
-    /// exception too, unless the flag's trap is enabled in the precision context
+    /// exception too, unless the flag's trap is enabled in the precision
+    /// context
     /// (see PrecisionContext's Traps property).</para>
     /// <para>An ExtendedDecimal
     /// value can be serialized in one of the following ways:</para>
     /// <list><item>By
-    /// calling the toString() method, which will always return distinct strings for
+    /// calling the toString() method, which will always return distinct strings
+    /// for
     /// distinct ExtendedDecimal values.</item>
     /// <item>By calling the
     /// UnsignedMantissa, Exponent, and IsNegative properties, and calling the
     /// IsInfinity, IsQuietNaN, and IsSignalingNaN methods. The return values
-    /// combined will uniquely identify a particular ExtendedDecimal value.</item>
+    /// combined will uniquely identify a particular ExtendedDecimal
+    /// value.</item>
     /// </list>
     /// </summary>
   public sealed class ExtendedDecimal : IComparable<ExtendedDecimal>,
@@ -239,7 +256,7 @@ namespace PeterO {
       if (diag.Sign < 0) {
         throw new
        ArgumentException("Diagnostic information must be 0 or greater, was: " +
-                            diag);
+                    diag);
       }
       if (diag.IsZero && !negative) {
         return signaling ? SignalingNaN : NaN;
@@ -360,23 +377,23 @@ namespace PeterO {
       }
       if (tmpoffset < 0) {
         throw new FormatException("offset (" + tmpoffset + ") is less than " +
-                              "0");
+                    "0");
       }
       if (tmpoffset > str.Length) {
         throw new FormatException("offset (" + tmpoffset + ") is more than " +
-                              str.Length);
+                    str.Length);
       }
       if (length < 0) {
         throw new FormatException("length (" + length + ") is less than " +
-                              "0");
+                    "0");
       }
       if (length > str.Length) {
         throw new FormatException("length (" + length + ") is more than " +
-                              str.Length);
+                    str.Length);
       }
       if (str.Length - tmpoffset < length) {
         throw new FormatException("str's length minus " + tmpoffset + " (" +
-                        (str.Length - tmpoffset) + ") is less than " + length);
+                    (str.Length - tmpoffset) + ") is less than " + length);
       }
       if (length == 0) {
         throw new FormatException();
@@ -404,10 +421,10 @@ namespace PeterO {
             (str[i + 1] == 'N' || str[i + 1] == 'n') &&
             (str[i + 2] == 'F' || str[i + 2] == 'f') &&
             (str[i + 3] == 'I' || str[i + 3] == 'i') && (str[i + 4] == 'N' ||
-                              str[i + 4] == 'n') && (str[i + 5] ==
-                              'I' || str[i + 5] == 'i') &&
+                    str[i + 4] == 'n') && (str[i + 5] ==
+                    'I' || str[i + 5] == 'i') &&
             (str[i + 6] == 'T' || str[i + 6] == 't') && (str[i + 7] == 'Y' ||
-                              str[i + 7] == 'y')) {
+                    str[i + 7] == 'y')) {
           if (ctx != null && ctx.IsSimplified && i < endStr) {
             throw new FormatException("Infinity not allowed");
           }
@@ -417,7 +434,7 @@ namespace PeterO {
       if (i + 3 == endStr) {
         if ((str[i] == 'I' || str[i] == 'i') &&
             (str[i + 1] == 'N' || str[i + 1] == 'n') && (str[i + 2] == 'F' ||
-                              str[i + 2] == 'f')) {
+                    str[i + 2] == 'f')) {
           if (ctx != null && ctx.IsSimplified && i < endStr) {
             throw new FormatException("Infinity not allowed");
           }
@@ -500,7 +517,7 @@ namespace PeterO {
       if (i + 4 <= endStr) {
         // Signaling NaN
         if ((str[i] == 'S' || str[i] == 's') && (str[i + 1] == 'N' || str[i +
-                      1] == 'n') && (str[i + 2] == 'A' || str[i + 2] == 'a') &&
+                    1] == 'n') && (str[i + 2] == 'A' || str[i + 2] == 'a') &&
                 (str[i + 3] == 'N' || str[i + 3] == 'n')) {
           if (ctx != null && ctx.IsSimplified && i < endStr) {
             throw new FormatException("NaN not allowed");
@@ -906,7 +923,7 @@ namespace PeterO {
         int intphase =
           FastInteger.Copy(adjustedExponent).Abs().Remainder(3).AsInt32();
         if (iszero && (adjustedExponent.CompareTo(threshold) < 0 || scaleSign <
-                       0)) {
+                    0)) {
           if (intphase == 1) {
             if (adjExponentNegative) {
               decimalPointAdjust.Increment();
@@ -947,7 +964,7 @@ namespace PeterO {
         adjustedExponent = newExponent;
       }
       if (mode == 2 || (adjustedExponent.CompareTo(threshold) >= 0 &&
-                        scaleSign >= 0)) {
+                    scaleSign >= 0)) {
         if (scaleSign > 0) {
           FastInteger decimalPoint =
             FastInteger.Copy(thisExponent).Add(builderLength);
@@ -956,7 +973,7 @@ namespace PeterO {
           if (cmp < 0) {
             var tmpFast = new FastInteger(mantissaString.Length).AddInt(6);
             builder = new StringBuilder(tmpFast.CompareToInt(Int32.MaxValue) >
-                              0 ? Int32.MaxValue : tmpFast.AsInt32());
+                    0 ? Int32.MaxValue : tmpFast.AsInt32());
             if (negative) {
               builder.Append('-');
             }
@@ -973,7 +990,7 @@ namespace PeterO {
             }
             var tmpFast = new FastInteger(mantissaString.Length).AddInt(6);
             builder = new StringBuilder(tmpFast.CompareToInt(Int32.MaxValue) >
-                              0 ? Int32.MaxValue : tmpFast.AsInt32());
+                    0 ? Int32.MaxValue : tmpFast.AsInt32());
             if (negative) {
               builder.Append('-');
             }
@@ -994,7 +1011,7 @@ namespace PeterO {
             }
             var tmpFast = new FastInteger(mantissaString.Length).AddInt(6);
             builder = new StringBuilder(tmpFast.CompareToInt(Int32.MaxValue) >
-                              0 ? Int32.MaxValue : tmpFast.AsInt32());
+                    0 ? Int32.MaxValue : tmpFast.AsInt32());
             if (negative) {
               builder.Append('-');
             }
@@ -1018,7 +1035,7 @@ namespace PeterO {
             }
             var tmpFast = new FastInteger(mantissaString.Length).AddInt(6);
             builder = new StringBuilder(tmpFast.CompareToInt(Int32.MaxValue) >
-                              0 ? Int32.MaxValue : tmpFast.AsInt32());
+                    0 ? Int32.MaxValue : tmpFast.AsInt32());
             if (negative) {
               builder.Append('-');
             }
@@ -1077,7 +1094,7 @@ namespace PeterO {
             }
             var tmpFast = new FastInteger(mantissaString.Length).AddInt(6);
             builder = new StringBuilder(tmpFast.CompareToInt(Int32.MaxValue) >
-                              0 ? Int32.MaxValue : tmpFast.AsInt32());
+                    0 ? Int32.MaxValue : tmpFast.AsInt32());
             if (negative) {
               builder.Append('-');
             }
@@ -1122,7 +1139,9 @@ namespace PeterO {
     /// <summary>Compares a ExtendedFloat object with this instance.</summary>
     /// <param name='other'>An ExtendedFloat object.</param>
     /// <returns>Zero if the values are equal; a negative number if this instance is
-    /// less, or a positive number if this instance is greater.</returns>
+    /// less, or a positive number if this instance is greater. Returns 0 if both
+    /// values are NaN (even signaling NaN) and 1 if this value is NaN (even
+    /// signaling NaN) and the other isn't.</returns>
     public int CompareToBinary(ExtendedFloat other) {
       if (other == null) {
         return 1;
@@ -1264,7 +1283,7 @@ namespace PeterO {
         var acc = new DigitShiftAccumulator(bigmantissa, 0, 0);
         acc.ShiftRight(bigexponent);
         if (exact && (acc.LastDiscardedDigit != 0 || acc.OlderDiscardedDigits !=
-                      0)) {
+                    0)) {
           // Some digits were discarded
           throw new ArithmeticException("Not an exact integer");
         }
@@ -1468,7 +1487,7 @@ namespace PeterO {
       }
       if (this.IsNegative && this.IsZero) {
         return Extras.IntegersToDouble(new[] { unchecked((int)(1 << 31)),
-                              0 });
+                    0 });
       }
       if (this.IsZero) {
         return 0.0;
@@ -1478,7 +1497,7 @@ namespace PeterO {
         // Very low exponent, treat as 0
         return this.IsNegative ?
           Extras.IntegersToDouble(new[] { unchecked((int)(1 << 31)),
-                              0 }) : 0.0;
+                    0 }) : 0.0;
       }
       if (adjExp.CompareTo((BigInteger)309) > 0) {
         // Very high exponent, treat as infinity
@@ -1794,7 +1813,8 @@ namespace PeterO {
         BigInteger.Zero,
         BigNumberFlags.FlagQuietNaN);
 
-    /// <summary>A not-a-number value that signals an invalid operation flag when
+    /// <summary>A not-a-number value that signals an invalid operation flag
+    /// when
     /// it&#x27;s passed as an argument to any arithmetic operation in
     /// ExtendedDecimal.</summary>
     public static readonly ExtendedDecimal SignalingNaN =
@@ -1823,7 +1843,7 @@ namespace PeterO {
     public bool IsNegativeInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity |
                 BigNumberFlags.FlagNegative)) == (BigNumberFlags.FlagInfinity |
-                              BigNumberFlags.FlagNegative);
+                    BigNumberFlags.FlagNegative);
     }
 
     /// <summary>Returns whether this object is positive infinity.</summary>
@@ -1840,7 +1860,7 @@ namespace PeterO {
     /// false.</returns>
     public bool IsNaN() {
       return (this.flags & (BigNumberFlags.FlagQuietNaN |
-                            BigNumberFlags.FlagSignalingNaN)) != 0;
+                    BigNumberFlags.FlagSignalingNaN)) != 0;
     }
 
     /// <summary>Gets a value indicating whether this object is positive or negative
@@ -1858,7 +1878,7 @@ namespace PeterO {
     public bool IsFinite {
       get {
         return (this.flags & (BigNumberFlags.FlagInfinity |
-                              BigNumberFlags.FlagNaN)) == 0;
+                    BigNumberFlags.FlagNaN)) == 0;
       }
     }
 
@@ -1896,7 +1916,7 @@ namespace PeterO {
       get {
         return (((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
                 this.unsignedMantissa.IsZero) ? 0 : (((this.flags &
-                              BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
+                    BigNumberFlags.FlagNegative) != 0) ? -1 : 1);
       }
     }
 
@@ -1964,7 +1984,7 @@ namespace PeterO {
     /// is nonzero. Signals FlagInvalid and returns NaN if the divisor and the
     /// dividend are 0.</returns>
     public ExtendedDecimal DivideToIntegerNaturalScale(ExtendedDecimal
-                              divisor) {
+                    divisor) {
       return this.DivideToIntegerNaturalScale(
         divisor,
         PrecisionContext.ForRounding(Rounding.Down));
@@ -2230,7 +2250,7 @@ namespace PeterO {
     private static readonly IRadixMath<ExtendedDecimal> MathValue = new
       TrappableRadixMath<ExtendedDecimal>(
         new ExtendedOrSimpleRadixMath<ExtendedDecimal>(new
-                              DecimalMathHelper()));
+                    DecimalMathHelper()));
 
     /// <summary>Divides this object by another object, and returns the integer part
     /// of the result, with the preferred exponent set to this value&#x27;s exponent

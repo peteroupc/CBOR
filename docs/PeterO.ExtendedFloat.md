@@ -1,4 +1,4 @@
-﻿## PeterO.ExtendedFloat
+## PeterO.ExtendedFloat
 
     public sealed class ExtendedFloat :
         System.IComparable,
@@ -292,7 +292,7 @@ An ExtendedFloat object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>mantissa</i>
  or  <i>exponent</i>
  is null.
@@ -314,11 +314,11 @@ A quiet not-a-number object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>diag</i>
  is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>diag</i>
  is less than 0.
 
@@ -348,11 +348,11 @@ An ExtendedFloat object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>diag</i>
  is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>diag</i>
  is less than 0.
 
@@ -373,7 +373,7 @@ The quotient of the two numbers. Signals FlagDivideByZero and returns infinity i
 
 <b>Exceptions:</b>
 
- * System.ArithmeticException: 
+ * System.ArithmeticException:
 The result can't be exact because it would have a nonterminating binary expansion.
 
 ### Divide
@@ -396,7 +396,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 
 <b>Exceptions:</b>
 
- * System.ArithmeticException: 
+ * System.ArithmeticException:
 Either  <i>ctx</i>
  is null or  <i>ctx</i>
  's precision is 0, and the result would have a nonterminating binary expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
@@ -457,7 +457,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 
 <b>Exceptions:</b>
 
- * System.ArithmeticException: 
+ * System.ArithmeticException:
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
 ### DivideToExponent
@@ -483,7 +483,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 
 <b>Exceptions:</b>
 
- * System.ArithmeticException: 
+ * System.ArithmeticException:
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
 ### DivideToExponent
@@ -509,7 +509,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 
 <b>Exceptions:</b>
 
- * System.ArithmeticException: 
+ * System.ArithmeticException:
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
 ### DivideToExponent
@@ -535,7 +535,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 
 <b>Exceptions:</b>
 
- * System.ArithmeticException: 
+ * System.ArithmeticException:
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
 ### DivideToIntegerNaturalScale
@@ -573,7 +573,7 @@ The integer part of the quotient of the two objects. Returns null if the return 
 
 <b>Exceptions:</b>
 
- * System.ArithmeticException: 
+ * System.ArithmeticException:
 The rounding mode is Rounding.Unnecessary and the integer part of the result is not exact.
 
 ### DivideToIntegerZeroScale
@@ -614,7 +614,7 @@ The quotient of the two numbers. Signals FlagDivideByZero and returns infinity i
 
 <b>Exceptions:</b>
 
- * System.ArithmeticException: 
+ * System.ArithmeticException:
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
 ### Equals
@@ -679,7 +679,7 @@ Exponential of this object. If this object's value is 1, returns an approximatio
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
@@ -777,7 +777,7 @@ An ExtendedFloat object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
@@ -804,7 +804,7 @@ An ExtendedFloat object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
@@ -844,7 +844,7 @@ An ExtendedFloat object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
@@ -868,7 +868,7 @@ An ExtendedFloat object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
@@ -959,7 +959,7 @@ Ln(this object). Signals the flag FlagInvalid and returns NaN if this object is 
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
@@ -1363,7 +1363,7 @@ The result thisValue * multiplicand - subtrahend.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter "otherValue" is null.
 
 ### Negate
@@ -1408,7 +1408,7 @@ Returns the largest value that's less than the given value. Returns negative inf
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
  has an unlimited exponent range.
@@ -1430,7 +1430,7 @@ Returns the smallest value that's greater than the given value.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
  has an unlimited exponent range.
@@ -1455,7 +1455,7 @@ Returns the next value that is closer to the other object' s value than this obj
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
  has an unlimited exponent range.
@@ -1477,7 +1477,7 @@ Pi rounded to the given precision.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
@@ -1550,7 +1550,7 @@ This^exponent. Signals the flag FlagInvalid and returns NaN if this object and e
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0), and the exponent has a fractional part.
 
@@ -1690,7 +1690,7 @@ An ExtendedFloat object.
         PeterO.ExtendedFloat divisor,
         PeterO.PrecisionContext ctx);
 
-Finds the distance to the closest multiple of the given divisor, based on the result of dividing this object's value by another object's value. 
+Finds the distance to the closest multiple of the given divisor, based on the result of dividing this object's value by another object's value.
 
  * If this and the other object divide evenly, the result is 0.
 
@@ -1932,7 +1932,7 @@ The square root. Signals the flag FlagInvalid and returns NaN if this object is 
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
@@ -1971,7 +1971,7 @@ The difference of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>otherValue</i>
  is null.
 
@@ -1987,7 +1987,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value is infinity or NaN.
 
 ### ToBigIntegerExact
@@ -2002,10 +2002,10 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value is infinity or NaN.
 
- * System.ArithmeticException: 
+ * System.ArithmeticException:
 This object's value is not an exact integer.
 
 ### ToDouble
@@ -2077,5 +2077,3 @@ Returns the unit in the last place. The mantissa will be 1 and the exponent will
 <b>Returns:</b>
 
 An ExtendedFloat object.
-
-

@@ -20,9 +20,9 @@ namespace Test {
 
     private static byte[] EncodingToBytes(CBORObject b) {
       try {
-        using (var s = new MemoryStream()) {
-          BEncoding.Write(b, s);
-          return s.ToArray();
+        using (var ms = new MemoryStream()) {
+          BEncoding.Write(b, ms);
+          return ms.ToArray();
         }
       } catch (IOException ex) {
         throw new CBORException(String.Empty, ex);
@@ -64,16 +64,36 @@ namespace Test {
       beo.Add(CBORObject.FromObject("four"));
       Assert.AreEqual(4, beo.Count);
       Assert.AreEqual(1, beo[0].AsInt64());
-      Assert.AreEqual("two", beo[1].AsString());
+      {
+string stringTemp = beo[1].AsString();
+Assert.AreEqual(
+"two",
+stringTemp);
+}
       Assert.AreEqual(3, beo[2].AsInt64());
-      Assert.AreEqual("four", beo[3].AsString());
+      {
+string stringTemp = beo[3].AsString();
+Assert.AreEqual(
+"four",
+stringTemp);
+}
       byte[] b = EncodingToBytes(beo);
       beo = EncodingFromBytes(b);
       Assert.AreEqual(4, beo.Count);
       Assert.AreEqual(1, beo[0].AsInt64());
-      Assert.AreEqual("two", beo[1].AsString());
+      {
+string stringTemp = beo[1].AsString();
+Assert.AreEqual(
+"two",
+stringTemp);
+}
       Assert.AreEqual(3, beo[2].AsInt64());
-      Assert.AreEqual("four", beo[3].AsString());
+      {
+string stringTemp = beo[3].AsString();
+Assert.AreEqual(
+"four",
+stringTemp);
+}
     }
 
     [TestMethod]
@@ -85,16 +105,36 @@ namespace Test {
       beo["three"] = CBORObject.FromObject("four");
       Assert.AreEqual(4, beo.Count);
       Assert.AreEqual(1, beo["zero"].AsInt64());
-      Assert.AreEqual("two", beo["one"].AsString());
+      {
+string stringTemp = beo["one"].AsString();
+Assert.AreEqual(
+"two",
+stringTemp);
+}
       Assert.AreEqual(3, beo["two"].AsInt64());
-      Assert.AreEqual("four", beo["three"].AsString());
+      {
+string stringTemp = beo["three"].AsString();
+Assert.AreEqual(
+"four",
+stringTemp);
+}
       byte[] b = EncodingToBytes(beo);
       beo = EncodingFromBytes(b);
       Assert.AreEqual(4, beo.Count);
       Assert.AreEqual(1, beo["zero"].AsInt64());
-      Assert.AreEqual("two", beo["one"].AsString());
+      {
+string stringTemp = beo["one"].AsString();
+Assert.AreEqual(
+"two",
+stringTemp);
+}
       Assert.AreEqual(3, beo["two"].AsInt64());
-      Assert.AreEqual("four", beo["three"].AsString());
+      {
+string stringTemp = beo["three"].AsString();
+Assert.AreEqual(
+"four",
+stringTemp);
+}
     }
 
     [TestMethod]
@@ -103,8 +143,8 @@ namespace Test {
       doTestString(" ");
       doTestString("test");
 
-  doTestString("testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods"
-);
+  doTestString(
+  "testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods" );
       doTestString("te\u007fst");
       doTestString("te\u0080st");
       doTestString("te\u3000st");

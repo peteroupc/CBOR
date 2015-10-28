@@ -19,7 +19,7 @@ namespace PeterO {
           throw new ArgumentException("bigintVal's sign (" + bigintVal.Sign +
             ") is less than " + "0 ");
         }
-        byte[] bytes = bigintVal.ToByteArray();
+        byte[] bytes = bigintVal.toBytes(true);
         int len = bytes.Length;
         int newWordCount = Math.Max(4, (len / 4) + 1);
         if (newWordCount > mnum.data.Length) {
@@ -78,7 +78,7 @@ namespace PeterO {
           bytes[(i * 4) + 3] = (byte)((this.data[i] >> 24) & 0xff);
         }
         bytes[bytes.Length - 1] = (byte)0;
-        return BigInteger.fromByteArray(bytes, true);
+        return BigInteger.fromBytes(bytes, true);
       }
 
       internal int[] GetLastWordsInternal(int numWords32Bit) {
@@ -435,7 +435,7 @@ namespace PeterO {
 
     internal static FastInteger FromBig(BigInteger bigintVal) {
       if (bigintVal.canFitInInt()) {
-        return new FastInteger(bigintVal.intValue());
+        return new FastInteger(bigintVal.intValueChecked());
       }
       if (bigintVal.Sign > 0) {
         var fi = new FastInteger(0);
@@ -509,7 +509,7 @@ namespace PeterO {
         bytes[(i * 4) + 3] = (byte)((words[i] >> 24) & 0xff);
       }
       bytes[bytes.Length - 1] = (byte)0;
-      return BigInteger.fromByteArray(bytes, true);
+      return BigInteger.fromBytes(bytes, true);
     }
 
     internal static int[] GetLastWords(BigInteger bigint, int numWords32Bit) {

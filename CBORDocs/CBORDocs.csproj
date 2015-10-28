@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SummaryVisitor.cs" />
     <Compile Include="TestGenerator.cs" />
+    <Compile Include="TypeNameUtil.cs" />
     <Compile Include="TypeVisitor.cs" />
   </ItemGroup>
   <ItemGroup>

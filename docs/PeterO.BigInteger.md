@@ -1,4 +1,4 @@
-﻿## PeterO.BigInteger
+## PeterO.BigInteger
 
     public sealed class BigInteger :
         System.IComparable,
@@ -113,7 +113,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>thisValue</i>
  is null.
 
@@ -126,7 +126,7 @@ Adds this object and another object.
 
 <b>Parameters:</b>
 
- * <i>bigintAugend</i>: A BigInteger object.
+ * <i>bigintAugend</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -134,7 +134,7 @@ The sum of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigintAugend</i>
  is null.
 
@@ -146,7 +146,9 @@ The parameter  <i>bigintAugend</i>
 
 Does an AND operation between two BigInteger values.
 
-Each BigInteger instance is treated as a two's complement representation for the purposes of this operator.<b>Parameters:</b>
+Each BigInteger instance is treated as a two's complement representation for the purposes of this operator.
+
+<b>Parameters:</b>
 
  * <i>a</i>: A BigInteger instance.
 
@@ -158,7 +160,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>a</i>
 or  <i>b</i>
  is null.
@@ -207,7 +209,7 @@ Divides this instance by the value of a BigInteger object. The result is rounded
 
 <b>Parameters:</b>
 
- * <i>bigintDivisor</i>: A BigInteger object.
+ * <i>bigintDivisor</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -215,14 +217,14 @@ The quotient of the two objects.
 
 <b>Exceptions:</b>
 
- * System.DivideByZeroException: 
+ * System.DivideByZeroException:
 The divisor is zero.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigintDivisor</i>
  is null.
 
- * System.DivideByZeroException: 
+ * System.DivideByZeroException:
 Attempted to divide by zero.
 
 ### divideAndRemainder
@@ -234,7 +236,7 @@ Divides this object by another big integer and returns the quotient and remainde
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: The divisor.
+ * <i>divisor</i>: A BigInteger object.
 
 <b>Returns:</b>
 
@@ -242,13 +244,13 @@ An array with two big integers: the first is the quotient, and the second is the
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter divisor is null.
 
- * System.DivideByZeroException: 
+ * System.DivideByZeroException:
 The parameter divisor is 0.
 
- * System.DivideByZeroException: 
+ * System.DivideByZeroException:
 Attempted to divide by zero.
 
 ### Equals
@@ -264,7 +266,7 @@ Determines whether this object and another object are equal.
 
 <b>Returns:</b>
 
-True if the objects are equal; otherwise, false.
+True if this object and another object are equal; otherwise, false.
 
 ### Equals
 
@@ -287,11 +289,13 @@ A Boolean object.
         byte[] bytes,
         bool littleEndian);
 
+<b>Deprecated.</b> Renamed to 'fromBytes'.
+
 Initializes a BigInteger object from an array of bytes.
 
 <b>Parameters:</b>
 
- * <i>bytes</i>: A byte array. Can be empty, in which case the return value is 0.
+ * <i>bytes</i>: A byte array.
 
  * <i>littleEndian</i>: A Boolean object.
 
@@ -301,7 +305,31 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
+The parameter  <i>bytes</i>
+ is null.
+
+### fromBytes
+
+    public static PeterO.BigInteger fromBytes(
+        byte[] bytes,
+        bool littleEndian);
+
+Initializes a BigInteger object from an array of bytes.
+
+<b>Parameters:</b>
+
+ * <i>bytes</i>: A byte array.
+
+ * <i>littleEndian</i>: A Boolean object.
+
+<b>Returns:</b>
+
+A BigInteger object.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
 The parameter  <i>bytes</i>
  is null.
 
@@ -325,14 +353,14 @@ A BigInteger object with the same value as given in the string portion.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter "index" is less than 0, "endIndex" is less than 0, or either is greater than the string's length, or "endIndex" is less than "index" ; or radix is less than 2 or greater than 36.
 
- * System.FormatException: 
+ * System.FormatException:
 The string portion is empty or in an invalid format.
 
 ### fromRadixSubstring
@@ -361,18 +389,18 @@ A BigInteger object with the same value as given in the string portion.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>index</i>
 is less than 0,  <i>endIndex</i>
  is less than 0, or either is greater than the string's length, or  <i>endIndex</i>
  is less than  <i>index</i>
  .
 
- * System.FormatException: 
+ * System.FormatException:
 The string portion is empty or in an invalid format.
 
 ### fromString
@@ -392,13 +420,13 @@ A BigInteger object with the same value as given in the string.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
- * System.FormatException: 
+ * System.FormatException:
 The parameter  <i>str</i>
- is in an invalid format.
+is in an invalid format.
 
 ### fromSubstring
 
@@ -423,18 +451,18 @@ A BigInteger object with the same value as given in the string portion.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>index</i>
 is less than 0,  <i>endIndex</i>
  is less than 0, or either is greater than the string's length, or  <i>endIndex</i>
  is less than  <i>index</i>
  .
 
- * System.FormatException: 
+ * System.FormatException:
 The string portion is empty or in an invalid format.
 
 ### gcd
@@ -454,7 +482,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigintSecond</i>
  is null.
 
@@ -494,7 +522,7 @@ Returns the hash code for this instance.
 
 <b>Returns:</b>
 
-A 32-bit hash code.
+A 32-bit signed integer.
 
 ### getLowestSetBit
 
@@ -536,7 +564,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigintFirst</i>
  is null.
 
@@ -544,7 +572,9 @@ The parameter  <i>bigintFirst</i>
 
     public int intValue();
 
-Converts this object's value to a 32-bit signed integer. To make the conversion intention clearer, use the  `intValueChecked` and `intValueUnchecked` methods instead.
+<b>Deprecated.</b> To make the conversion intention clearer use the 'intValueChecked' and 'intValueUnchecked' methods instead. Replace 'intValue' with 'intValueChecked' in your code.
+
+Converts this object's value to a 32-bit signed integer.
 
 <b>Returns:</b>
 
@@ -552,7 +582,7 @@ A 32-bit signed integer.
 
 <b>Exceptions:</b>
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value is too big to fit a 32-bit signed integer.
 
 ### intValueChecked
@@ -567,7 +597,7 @@ A 32-bit signed integer.
 
 <b>Exceptions:</b>
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value is too big to fit a 32-bit signed integer.
 
 ### intValueUnchecked
@@ -584,7 +614,9 @@ A 32-bit signed integer.
 
     public long longValue();
 
-Converts this object's value to a 64-bit signed integer. To make the conversion intention clearer, use the  `longValueChecked` and `longValueUnchecked` methods instead.
+<b>Deprecated.</b> To make the conversion intention clearer use the 'longValueChecked' and 'longValueUnchecked' methods instead. Replace 'longValue' with 'longValueChecked' in your code.
+
+Converts this object's value to a 64-bit signed integer.
 
 <b>Returns:</b>
 
@@ -592,7 +624,7 @@ A 64-bit signed integer.
 
 <b>Exceptions:</b>
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value is too big to fit a 64-bit signed integer.
 
 ### longValueChecked
@@ -607,7 +639,7 @@ A 64-bit signed integer.
 
 <b>Exceptions:</b>
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value is too big to fit a 64-bit signed integer.
 
 ### longValueUnchecked
@@ -637,11 +669,11 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArithmeticException: 
+ * System.ArithmeticException:
 The parameter  <i>divisor</i>
  is negative.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>divisor</i>
  is null.
 
@@ -665,9 +697,10 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>pow</i>
-is null.
+or  <i>mod</i>
+ is null.
 
 ### ModPow
 
@@ -695,7 +728,7 @@ The value (  <i>bigintValue</i>
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigintValue</i>
  is null.
 
@@ -708,7 +741,7 @@ Multiplies this instance by the value of a BigInteger object.
 
 <b>Parameters:</b>
 
- * <i>bigintMult</i>: A BigInteger object.
+ * <i>bigintMult</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -716,7 +749,7 @@ The product of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigintMult</i>
  is null.
 
@@ -747,7 +780,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>valueA</i>
  is null.
 
@@ -771,7 +804,7 @@ The sum of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bthis</i>
  is null.
 
@@ -795,7 +828,7 @@ The quotient of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>dividend</i>
  is null.
 
@@ -859,7 +892,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bthis</i>
  is null.
 
@@ -923,7 +956,7 @@ The remainder of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>dividend</i>
  is null.
 
@@ -947,7 +980,7 @@ The product of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>operand1</i>
  is null.
 
@@ -959,7 +992,9 @@ The parameter  <i>operand1</i>
 
 Shifts the bits of a BigInteger instance to the right.
 
-For this operation, the BigInteger is treated as a two's complement representation. Thus, for negative values, the BigInteger is sign-extended.<b>Parameters:</b>
+For this operation, the BigInteger is treated as a two's complement representation. Thus, for negative values, the BigInteger is sign-extended.
+
+<b>Parameters:</b>
 
  * <i>bthis</i>: Another BigInteger object.
 
@@ -971,7 +1006,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bthis</i>
  is null.
 
@@ -995,7 +1030,7 @@ The difference of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bthis</i>
  is null.
 
@@ -1016,7 +1051,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigValue</i>
  is null.
 
@@ -1028,7 +1063,9 @@ The parameter  <i>bigValue</i>
 
 Does an OR operation between two BigInteger instances.
 
-Each BigInteger instance is treated as a two's complement representation for the purposes of this operator.<b>Parameters:</b>
+Each BigInteger instance is treated as a two's complement representation for the purposes of this operator.
+
+<b>Parameters:</b>
 
  * <i>first</i>: Another BigInteger object.
 
@@ -1040,7 +1077,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>first</i>
  or  <i>second</i>
  is null.
@@ -1080,7 +1117,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigValue</i>
  is null.
 
@@ -1104,7 +1141,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigValue</i>
  or  <i>power</i>
  is null.
@@ -1126,7 +1163,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>power</i>
  is null.
 
@@ -1139,7 +1176,7 @@ Finds the remainder that results when this instance is divided by the value of a
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: A BigInteger object.
+ * <i>divisor</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -1147,11 +1184,11 @@ The remainder of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>divisor</i>
  is null.
 
- * System.DivideByZeroException: 
+ * System.DivideByZeroException:
 Attempted to divide by zero.
 
 ### shiftLeft
@@ -1213,7 +1250,7 @@ Subtracts a BigInteger from this BigInteger.
 
 <b>Parameters:</b>
 
- * <i>subtrahend</i>: A BigInteger object.
+ * <i>subtrahend</i>: Another BigInteger object.
 
 <b>Returns:</b>
 
@@ -1221,7 +1258,7 @@ The difference of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>subtrahend</i>
  is null.
 
@@ -1238,12 +1275,14 @@ Returns whether a bit is set in the two's-complement representation of this obje
 
 <b>Returns:</b>
 
-True if the specified bit is set; otherwise, false.
+True if a bit is set in the two's-complement representation of this object's value; otherwise, false.
 
 ### toByteArray
 
     public byte[] toByteArray(
         bool littleEndian);
+
+<b>Deprecated.</b> Renamed to 'toBytes'.
 
 Returns a byte array of this object's value.
 
@@ -1253,13 +1292,30 @@ Returns a byte array of this object's value.
 
 <b>Returns:</b>
 
-A byte array that represents the value of this object.
+A byte array.
 
 ### ToByteArray
 
     public byte[] ToByteArray();
 
+<b>Deprecated.</b> Use 'toBytes(true)' instead.
+
 Not documented yet.
+
+<b>Returns:</b>
+
+A byte array.
+
+### toBytes
+
+    public byte[] toBytes(
+        bool littleEndian);
+
+Returns a byte array of this object's value.
+
+<b>Parameters:</b>
+
+ * <i>littleEndian</i>: A Boolean object.
 
 <b>Returns:</b>
 
@@ -1282,7 +1338,7 @@ A string object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter "index" is less than 0, "endIndex" is less than 0, or either is greater than the string's length, or "endIndex" is less than "index" ; or radix is less than 2 or greater than 36.
 
 ### ToString
@@ -1318,7 +1374,9 @@ A BigInteger object with the same value as the 64-bit number.
 
 Finds the exclusive "or" of two BigInteger objects.
 
-Each BigInteger instance is treated as a two's complement representation for the purposes of this operator.<b>Parameters:</b>
+Each BigInteger instance is treated as a two's complement representation for the purposes of this operator.
+
+<b>Parameters:</b>
 
  * <i>a</i>: A BigInteger instance.
 
@@ -1330,9 +1388,7 @@ A BigInteger object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>a</i>
 or  <i>b</i>
  is null.
-
-

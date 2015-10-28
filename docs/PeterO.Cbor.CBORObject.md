@@ -1,4 +1,4 @@
-﻿## PeterO.Cbor.CBORObject
+## PeterO.Cbor.CBORObject
 
     public sealed class CBORObject :
         System.IComparable,
@@ -39,6 +39,10 @@ CBOR objects that are arrays, maps, and byte strings are mutable, but this class
 One kind of CBOR object is called a map, or a list of key-value pairs. Keys can be any kind of CBOR object, including numbers, strings, arrays, and maps. However, text strings are the most suitable to use as keys; other kinds of CBOR object are much better used as map values instead, keeping in mind that some of them are not thread safe without synchronizing reads and writes to them.
 
 To find the type of a CBOR object, call its Type property (or "getType()" in Java). The return value can be Number, Boolean, SimpleValue, or TextString for immutable CBOR objects, and Array, Map, or ByteString for mutable CBOR objects.
+
+Nesting Depth:
+
+The DecodeFromBytes method can only read objects with a limited maximum depth of arrays and maps nested within other arrays and maps. The code sets this maximum depth to 500 (allowing more than enough nesting for most purposes), but it's possible that stack overflows in some runtimes might lower the effective maximum nesting depth. When the nesting depth goes above 500, the DecodeFromBytes method throws a CBORException.
 
 ### False
 
@@ -194,7 +198,7 @@ A collection of the keys of this CBOR object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object is not a map.
 
 ### OutermostTag
@@ -219,7 +223,7 @@ This value's sign: -1 if negative; 1 if positive; 0 if zero.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type, including the special not-a-number value (NaN).
 
 ### SimpleValue
@@ -254,7 +258,7 @@ A collection of the values of this CBOR object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object is not a map or an array.
 
 ### Abs
@@ -269,7 +273,7 @@ This object's absolute without its negative sign.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type.
 
 ### Add
@@ -292,14 +296,14 @@ This object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>key</i>
 already exists in this map.
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object is not a map.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>key</i>
  or <i>valueOb</i>
  has an unsupported type.
@@ -321,10 +325,10 @@ This object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object is not an array.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The type of  <i>obj</i>
  is not supported.
 
@@ -345,7 +349,7 @@ This object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object is not an array.
 
 ### AddConverter
@@ -366,7 +370,7 @@ Registers an object that converts objects of a given type to CBOR objects (calle
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>type</i>
  or  <i>converter</i>
  is null.
@@ -391,7 +395,7 @@ A CBORObject object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
 ### AddTagHandler
@@ -410,7 +414,7 @@ Registers an object that validates CBOR objects with new tags.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigintTag</i>
  or  <i>handler</i>
  is null.
@@ -427,10 +431,10 @@ The closest big integer to this object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null.
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value is infinity or not-a-number (NaN).
 
 ### AsBoolean
@@ -455,10 +459,10 @@ The closest byte-sized integer to this object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type.
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value exceeds the range of a byte (would be less than 0 or greater than 255 when truncated to an integer).
 
 ### AsDecimal
@@ -473,10 +477,10 @@ The closest big integer to this object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type.
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value exceeds the range of a .NET decimal.
 
 ### AsDouble
@@ -491,7 +495,7 @@ The closest 64-bit floating point number to this object. The return value can be
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type.
 
 ### AsExtendedDecimal
@@ -506,7 +510,7 @@ A decimal number for this object's value. If this object is a rational number wi
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null.
 
 ### AsExtendedFloat
@@ -521,7 +525,7 @@ An arbitrary-precision binary floating point number for this object's value. Not
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null.
 
 ### AsExtendedRational
@@ -536,7 +540,7 @@ A rational number for this object's value.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type, including if this object is CBORObject.Null.
 
 ### AsInt16
@@ -551,10 +555,10 @@ The closest 16-bit signed integer to this object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type.
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value exceeds the range of a 16-bit signed integer.
 
 ### AsInt32
@@ -569,10 +573,10 @@ The closest big integer to this object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type.
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value exceeds the range of a 32-bit signed integer.
 
 ### AsInt64
@@ -587,10 +591,10 @@ The closest 64-bit signed integer to this object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type.
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value exceeds the range of a 64-bit signed integer.
 
 ### AsSByte
@@ -615,7 +619,7 @@ The closest 32-bit floating point number to this object. The return value can be
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type.
 
 ### AsString
@@ -630,7 +634,7 @@ Gets this object's string.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a string, including if this object is CBORObject.Null.
 
 ### AsUInt16
@@ -645,7 +649,7 @@ A 16-bit unsigned integer.
 
 <b>Exceptions:</b>
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value is outside the range of a 16-bit unsigned integer.
 
 ### AsUInt32
@@ -660,7 +664,7 @@ A 32-bit unsigned integer.
 
 <b>Exceptions:</b>
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value is outside the range of a 32-bit unsigned integer.
 
 ### AsUInt64
@@ -675,10 +679,10 @@ The closest big integer to this object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type.
 
- * System.OverflowException: 
+ * System.OverflowException:
 This object's value exceeds the range of a 64-bit unsigned integer.
 
 ### CanFitInDouble
@@ -808,7 +812,7 @@ True if the given key is found, or false if the given key is not found or this o
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 Key is null (as opposed to CBORObject.Null).
 
 ### ContainsKey
@@ -828,7 +832,7 @@ True if the given key (as a CBOR object) is found, or false if the given key is 
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 Key is null.
 
 ### DecodeFromBytes
@@ -848,11 +852,11 @@ A CBOR object corresponding to the data.
 
 <b>Exceptions:</b>
 
- * PeterO.Cbor.CBORException: 
+ * PeterO.Cbor.CBORException:
 There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
  is empty.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>data</i>
  is null.
 
@@ -946,11 +950,11 @@ A CBORObject object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
- * PeterO.Cbor.CBORException: 
+ * PeterO.Cbor.CBORException:
 The string is not in JSON format.
 
 ### FromObject
@@ -1015,7 +1019,7 @@ A CBORObject object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>value</i>
 is a surrogate code point.
 
@@ -1263,7 +1267,7 @@ A CBOR object representing the string, or CBORObject.Null if stringValue is null
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The string contains an unpaired surrogate code point.
 
 ### FromObject
@@ -1422,12 +1426,12 @@ A CBOR object where the object  <i>valueOb</i>
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>bigintTag</i>
  is less than 0 or greater than 2^64-1, or  <i>valueOb</i>
  's type is unsupported.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bigintTag</i>
  is null.
 
@@ -1453,7 +1457,7 @@ A CBOR object where the object  <i>valueObValue</i>
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>smallTag</i>
  is less than 0 or  <i>valueObValue</i>
  's type is unsupported.
@@ -1475,7 +1479,7 @@ A CBORObject object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>simpleValue</i>
  is less than 0, greater than 255, or from 24 through 31.
 
@@ -1491,7 +1495,7 @@ A byte array.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object is not a byte string.
 
 ### GetHashCode
@@ -1531,10 +1535,10 @@ True if this object has a tag of the given number; otherwise, false.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 TagValue is less than 0.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter "obj" is null.
 
 ### HasTag
@@ -1554,10 +1558,10 @@ True if this object has a tag of the given number; otherwise, false.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 BigTagValue is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 BigTagValue is less than 0.
 
 ### Insert
@@ -1580,10 +1584,10 @@ This object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object is not an array.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>valueOb</i>
 has an unsupported type; or  <i>index</i>
  is not a valid index into this array.
@@ -1648,7 +1652,7 @@ The product of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
 ### Negate
@@ -1663,7 +1667,7 @@ The reversed-sign form of this number.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object's type is not a number type.
 
 ### NewArray
@@ -1793,11 +1797,11 @@ A CBOR object that was read.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * PeterO.Cbor.CBORException: 
+ * PeterO.Cbor.CBORException:
 There was an error in reading or parsing the data.
 
 ### ReadJSON
@@ -1817,14 +1821,14 @@ A CBORObject object.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
- * PeterO.Cbor.CBORException: 
+ * PeterO.Cbor.CBORException:
 The data stream contains invalid UTF-8 or is not in JSON format.
 
 ### Remainder
@@ -1862,11 +1866,11 @@ True if the item was removed; otherwise, false.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>obj</i>
 is null (as opposed to CBORObject.Null).
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 The object is not an array or map.
 
 ### Set
@@ -1889,10 +1893,10 @@ This object.
 
 <b>Exceptions:</b>
 
- * System.InvalidOperationException: 
+ * System.InvalidOperationException:
 This object is not a map.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>key</i>
  or <i>valueOb</i>
  has an unsupported type.
@@ -1917,14 +1921,14 @@ The difference of the two objects.
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 Either or both operands are not numbers (as opposed to Not-a-Number, NaN).
 
 ### ToJSONString
 
     public string ToJSONString();
 
-Converts this object to a string in JavaScript Object Notation (JSON) format. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes: 
+Converts this object to a string in JavaScript Object Notation (JSON) format. This function works not only with arrays and maps, but also integers, strings, byte arrays, and other JSON data types. Notes:
 
  * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
@@ -1990,11 +1994,11 @@ Writes a Boolean value in CBOR format to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2013,11 +2017,11 @@ Writes a byte (0 to 255) in CBOR format to a data stream. If the value is less t
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2036,15 +2040,15 @@ Writes a Unicode character as a string in CBOR format to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>value</i>
 is a surrogate code point.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2063,11 +2067,11 @@ Writes a 64-bit floating-point number in CBOR format to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2086,11 +2090,11 @@ Writes a 32-bit floating-point number in CBOR format to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>s</i>
 is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2109,11 +2113,11 @@ Writes a 32-bit signed integer in CBOR format to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2132,11 +2136,11 @@ Writes a 64-bit signed integer in CBOR format to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2160,7 +2164,7 @@ Not documented yet.
         System.IO.Stream stream,
         PeterO.Cbor.CBOREncodeOptions options);
 
-Writes an arbitrary object to a CBOR data stream. Currently, the following objects are supported: 
+Writes an arbitrary object to a CBOR data stream. Currently, the following objects are supported:
 
  * Lists of CBORObject.
 
@@ -2180,10 +2184,10 @@ Writes an arbitrary object to a CBOR data stream. Currently, the following objec
 
 <b>Exceptions:</b>
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The object's type is not supported.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
@@ -2203,11 +2207,11 @@ Writes a big integer in CBOR format to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2226,7 +2230,7 @@ Writes a CBOR object to a CBOR data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
@@ -2236,7 +2240,7 @@ The parameter  <i>stream</i>
         PeterO.ExtendedDecimal bignum,
         System.IO.Stream stream);
 
-Writes a decimal floating-point number in CBOR format to a data stream, as follows: 
+Writes a decimal floating-point number in CBOR format to a data stream, as follows:
 
  * If the value is null, writes the byte 0xF6.
 
@@ -2254,11 +2258,11 @@ Writes a decimal floating-point number in CBOR format to a data stream, as follo
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2267,7 +2271,7 @@ An I/O error occurred.
         PeterO.ExtendedFloat bignum,
         System.IO.Stream stream);
 
-Writes a binary floating-point number in CBOR format to a data stream as follows: 
+Writes a binary floating-point number in CBOR format to a data stream as follows:
 
  * If the value is null, writes the byte 0xF6.
 
@@ -2285,11 +2289,11 @@ Writes a binary floating-point number in CBOR format to a data stream as follows
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2308,11 +2312,11 @@ Writes a rational number in CBOR format to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2345,11 +2349,11 @@ Writes a 16-bit signed integer in CBOR format to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2368,11 +2372,11 @@ Writes a string in CBOR format to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2394,11 +2398,11 @@ Writes a string in CBOR format to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### Write
@@ -2431,7 +2435,7 @@ Writes a 64-bit unsigned integer in CBOR format to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
@@ -2476,10 +2480,10 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, as
 
 <b>Exceptions:</b>
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>outputStream</i>
  is null.
 
@@ -2496,11 +2500,11 @@ Writes this CBOR object to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### WriteTo
@@ -2519,11 +2523,9 @@ Writes this CBOR object to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
-
-

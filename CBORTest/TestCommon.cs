@@ -20,6 +20,59 @@ namespace Test {
       AssertEqualsHashCode(a2, b);
     }
 
+    public static string ToByteArrayString(byte[] bytes) {
+      if (bytes == null) {
+ return "null";
+}
+      var sb = new System.Text.StringBuilder();
+      string hex = "0123456789ABCDEF";
+      sb.Append("new byte[] { ");
+      for (var i = 0; i < bytes.Length; ++i) {
+        if (i > 0) {
+          sb.Append(","); }
+        if ((bytes[i] & 0x80) != 0) {
+          sb.Append("(byte)0x");
+        } else {
+          sb.Append("0x");
+        }
+        sb.Append(hex[(bytes[i] >> 4) & 0xf]);
+        sb.Append(hex[bytes[i] & 0xf]);
+      }
+      sb.Append("}");
+      return sb.ToString();
+    }
+
+    public static string ToByteArrayString(CBORObject obj) {
+   return new System.Text.StringBuilder().Append("CBORObject.DecodeFromBytes(")
+        .Append(ToByteArrayString(obj.EncodeToBytes()))
+        .Append(")").ToString();
+    }
+
+    private static bool ByteArraysEqual(byte[] arr1, byte[] arr2) {
+      if (arr1 == null) {
+ return arr2 == null;
+}
+      if (arr2 == null) {
+ return false;
+}
+      if (arr1.Length != arr2.Length) {
+        return false;
+      }
+      for (var i = 0; i < arr1.Length; ++i) {
+        if (arr1[i ]!=arr2[i]) {
+ return false;
+}
+      }
+      return true;
+    }
+
+    public static void AssertByteArraysEqual(byte[] arr1, byte[] arr2) {
+      if (!ByteArraysEqual(arr1, arr2)) {
+     Assert.Fail("Expected " + ToByteArrayString(arr1) + ", got " +
+       ToByteArrayString(arr2));
+      }
+    }
+
     public static void DoTestDivide(
 string dividend,
 string divisor,

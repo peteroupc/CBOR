@@ -7,17 +7,10 @@ namespace Test {
   [TestClass]
   public class BigIntegerTest {
     [TestMethod]
-    public void TestAbs() {
-      // not implemented yet
-    }
-    [TestMethod]
     public void TestAdd() {
       // not implemented yet
     }
-    [TestMethod]
-    public void TestAnd() {
-      // not implemented yet
-    }
+
     [TestMethod]
     public void TestBitLength() {
       Assert.AreEqual(31, BigInteger.valueOf(-2147483647L).bitLength());
@@ -39,11 +32,11 @@ namespace Test {
       Assert.AreEqual(17, BigInteger.valueOf(65536).bitLength());
       Assert.AreEqual(16, BigInteger.valueOf(-65536).bitLength());
       Assert.AreEqual(
-65,
-BigInteger.fromString("19084941898444092059").bitLength());
+        65,
+        BigInteger.fromString("19084941898444092059").bitLength());
       Assert.AreEqual(
-65,
-BigInteger.fromString("-19084941898444092059").bitLength());
+        65,
+        BigInteger.fromString("-19084941898444092059").bitLength());
       Assert.AreEqual(0, BigInteger.valueOf(-1).bitLength());
       Assert.AreEqual(1, BigInteger.valueOf(-2).bitLength());
     }
@@ -84,7 +77,7 @@ BigInteger.fromString("-19084941898444092059").bitLength());
     [TestMethod]
     public void TestFromByteArray() {
       Assert.AreEqual(
-        BigInteger.Zero, BigInteger.fromByteArray(new byte[] { }, false));
+        BigInteger.Zero, BigInteger.fromBytes(new byte[] { }, false));
     }
     [TestMethod]
     public void TestFromString() {
@@ -106,6 +99,30 @@ BigInteger.fromString("-19084941898444092059").bitLength());
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
+      }
+      {
+ string stringTemp = BigInteger.fromSubstring("0123456789" , 9, 10).ToString();
+        Assert.AreEqual(
+          "9",
+          stringTemp);
+      }
+      {
+ string stringTemp = BigInteger.fromSubstring("0123456789" , 8, 10).ToString();
+        Assert.AreEqual(
+          "89",
+          stringTemp);
+      }
+      {
+ string stringTemp = BigInteger.fromSubstring("0123456789" , 7, 10).ToString();
+        Assert.AreEqual(
+          "789",
+          stringTemp);
+      }
+      {
+ string stringTemp = BigInteger.fromSubstring("0123456789" , 6, 10).ToString();
+        Assert.AreEqual(
+          "6789",
+          stringTemp);
       }
     }
 
@@ -164,8 +181,8 @@ BigInteger.fromString("-19084941898444092059").bitLength());
         for (int j = 0; j < 100; ++j) {
           StringAndBigInt sabi = StringAndBigInt.Generate(fr, i);
           Assert.AreEqual(
-sabi.BigIntValue,
-BigInteger.fromRadixString(sabi.StringValue, i));
+            sabi.BigIntValue,
+            BigInteger.fromRadixString(sabi.StringValue, i));
         }
       }
     }
@@ -219,6 +236,102 @@ BigInteger.fromRadixString(sabi.StringValue, i));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+      try {
+        BigInteger.fromRadixSubstring("123", 10, -1, 2);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromRadixSubstring("123", 10, 4, 5);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromRadixSubstring("123", 10, 0, -8);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromRadixSubstring("123", 10, 0, 6);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromRadixSubstring("123", 10, 2, 0);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromRadixSubstring("123", 10, 0, 0);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromRadixSubstring("123", 10, 1, 1);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromRadixSubstring("-", 10, 0, 1);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromRadixSubstring("g", 16, 0, 1);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromRadixSubstring("0123gggg", 16, 0, 8);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromRadixSubstring("0123gggg", 10, 0, 8);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.fromRadixSubstring("0123aaaa", 10, 0, 8);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       var fr = new FastRandom();
       for (int i = 2; i <= 36; ++i) {
         var padding = new StringBuilder();
@@ -232,8 +345,8 @@ BigInteger.fromRadixString(sabi.StringValue, i));
             j + 1,
             j + 1 + sabiString.Length);
           Assert.AreEqual(
-sabi.BigIntValue,
-actualBigInt);
+            sabi.BigIntValue,
+            actualBigInt);
         }
       }
     }
@@ -277,7 +390,7 @@ actualBigInt);
       }
       if (n <= 23) {
         return n == 3 || n == 5 || n == 7 || n == 11 ||
-                n == 13 || n == 17 || n == 19 || n == 23;
+          n == 13 || n == 17 || n == 19 || n == 23;
       }
       // Use a deterministic Rabin-Miller test
       int d = n - 1;
@@ -343,9 +456,9 @@ actualBigInt);
     }
 
     private static void TestGcdPair(
-BigInteger biga,
-BigInteger bigb,
-BigInteger biggcd) {
+      BigInteger biga,
+      BigInteger bigb,
+      BigInteger biggcd) {
       BigInteger ba = BigInteger.GreatestCommonDivisor(biga, bigb);
       BigInteger bb = BigInteger.GreatestCommonDivisor(bigb, biga);
       Assert.AreEqual(ba, biggcd);
@@ -354,6 +467,96 @@ BigInteger biggcd) {
 
     [TestMethod]
     public void TestGcd() {
+      try {
+ BigInteger.Zero.gcd(null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      {
+string stringTemp = BigInteger.Zero.gcd(BigInteger.fromString("244"
+)).ToString();
+Assert.AreEqual(
+"244",
+stringTemp);
+}
+      {
+string stringTemp = BigInteger.Zero.gcd(BigInteger.fromString("-244"
+)).ToString();
+Assert.AreEqual(
+"244",
+stringTemp);
+}
+      {
+string stringTemp = BigInteger.fromString("244"
+).gcd(BigInteger.Zero).ToString();
+Assert.AreEqual(
+"244",
+stringTemp);
+}
+      {
+string stringTemp = BigInteger.fromString("-244"
+).gcd(BigInteger.Zero).ToString();
+Assert.AreEqual(
+"244",
+stringTemp);
+}
+      {
+string stringTemp = BigInteger.One.gcd(BigInteger.fromString("244")).ToString();
+Assert.AreEqual(
+"1",
+stringTemp);
+}
+      {
+string stringTemp = BigInteger.One.gcd(BigInteger.fromString("-244"
+)).ToString();
+Assert.AreEqual(
+"1",
+stringTemp);
+}
+      {
+string stringTemp = BigInteger.fromString("244").gcd(BigInteger.One).ToString();
+Assert.AreEqual(
+"1",
+stringTemp);
+}
+      {
+string stringTemp = BigInteger.fromString("-244"
+).gcd(BigInteger.One).ToString();
+Assert.AreEqual(
+"1",
+stringTemp);
+}
+      {
+string stringTemp = BigInteger.fromString("15").gcd(BigInteger.fromString(
+"15")).ToString();
+Assert.AreEqual(
+"15",
+stringTemp);
+}
+      {
+string stringTemp = BigInteger.fromString("-15").gcd(
+        BigInteger.fromString("15")).ToString();
+Assert.AreEqual(
+"15",
+stringTemp);
+}
+      {
+string stringTemp = BigInteger.fromString("15").gcd(
+        BigInteger.fromString("-15")).ToString();
+Assert.AreEqual(
+"15",
+stringTemp);
+}
+      {
+string stringTemp = BigInteger.fromString(
+"-15").gcd(BigInteger.fromString("-15")).ToString();
+Assert.AreEqual(
+"15",
+stringTemp);
+}
       int prime = 0;
       var rand = new FastRandom();
       for (var i = 0; i < 1000; ++i) {
@@ -371,8 +574,8 @@ BigInteger biggcd) {
         }
         ba *= (BigInteger)bigprime;
         Assert.AreEqual(
-bigprime,
-BigInteger.GreatestCommonDivisor(bigprime, ba));
+          bigprime,
+          BigInteger.GreatestCommonDivisor(bigprime, ba));
       }
       TestGcdPair((BigInteger)(-1867), (BigInteger)(-4456), BigInteger.One);
       TestGcdPair((BigInteger)4604, (BigInteger)(-4516), (BigInteger)4);
@@ -491,38 +694,43 @@ BigInteger.GreatestCommonDivisor(bigprime, ba));
       // not implemented yet
     }
     [TestMethod]
-    public void TestIntValue() {
-      Assert.AreEqual(
-        Int32.MinValue,
-        BigInteger.valueOf(Int32.MinValue).intValue());
-      Assert.AreEqual(
-Int32.MaxValue,
-BigInteger.valueOf(Int32.MaxValue).intValue());
-      try {
-        BigInteger.valueOf(Int32.MinValue - 1L).intValue();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        BigInteger.valueOf(Int32.MaxValue + 1L).intValue();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-    }
-    [TestMethod]
     public void TestIntValueChecked() {
       Assert.AreEqual(
         Int32.MinValue,
         BigInteger.valueOf(Int32.MinValue).intValueChecked());
       Assert.AreEqual(
-Int32.MaxValue,
-BigInteger.valueOf(Int32.MaxValue).intValueChecked());
+        Int32.MaxValue,
+        BigInteger.valueOf(Int32.MaxValue).intValueChecked());
+      try {
+        BigInteger.valueOf(Int32.MinValue - 1L).intValueChecked();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        BigInteger.valueOf(Int32.MaxValue + 1L).intValueChecked();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+  BigInteger.fromString("999999999999999999999999999999999").intValueChecked();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      Assert.AreEqual(
+        Int32.MinValue,
+        BigInteger.valueOf(Int32.MinValue).intValueChecked());
+      Assert.AreEqual(
+        Int32.MaxValue,
+        BigInteger.valueOf(Int32.MaxValue).intValueChecked());
       try {
         BigInteger.valueOf(Int32.MinValue - 1L).intValueChecked();
         Assert.Fail("Should have failed");
@@ -542,18 +750,19 @@ BigInteger.valueOf(Int32.MaxValue).intValueChecked());
     }
     [TestMethod]
     public void TestIntValueUnchecked() {
+      Assert.AreEqual(0L, BigInteger.ZERO.intValueUnchecked());
       Assert.AreEqual(
         Int32.MinValue,
         BigInteger.valueOf(Int32.MinValue).intValueUnchecked());
       Assert.AreEqual(
-Int32.MaxValue,
-BigInteger.valueOf(Int32.MaxValue).intValueUnchecked());
+        Int32.MaxValue,
+        BigInteger.valueOf(Int32.MaxValue).intValueUnchecked());
       Assert.AreEqual(
-Int32.MaxValue,
-BigInteger.valueOf(Int32.MinValue - 1L).intValueUnchecked());
+        Int32.MaxValue,
+        BigInteger.valueOf(Int32.MinValue - 1L).intValueUnchecked());
       Assert.AreEqual(
-Int32.MinValue,
-BigInteger.valueOf(Int32.MaxValue + 1L).intValueUnchecked());
+        Int32.MinValue,
+        BigInteger.valueOf(Int32.MaxValue + 1L).intValueUnchecked());
     }
     [TestMethod]
     public void TestIsEven() {
@@ -573,15 +782,15 @@ BigInteger.valueOf(Int32.MaxValue + 1L).intValueUnchecked());
       // not implemented yet
     }
     [TestMethod]
-    public void TestLongValue() {
+    public void TestLongValueChecked() {
       Assert.AreEqual(
         Int64.MinValue,
-        BigInteger.valueOf(Int64.MinValue).longValue());
+        BigInteger.valueOf(Int64.MinValue).longValueChecked());
       Assert.AreEqual(
-Int64.MaxValue,
-BigInteger.valueOf(Int64.MaxValue).longValue());
+        Int64.MaxValue,
+        BigInteger.valueOf(Int64.MaxValue).longValueChecked());
       try {
-        BigInteger.valueOf(Int64.MinValue).subtract(BigInteger.One).longValue();
+BigInteger.valueOf(Int64.MinValue).subtract(BigInteger.One).longValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
       } catch (Exception ex) {
@@ -589,7 +798,7 @@ BigInteger.valueOf(Int64.MaxValue).longValue());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-        BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One).longValue();
+     BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One).longValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
       } catch (Exception ex) {
@@ -598,41 +807,50 @@ BigInteger.valueOf(Int64.MaxValue).longValue());
       }
       Assert.AreEqual(
         unchecked((long)0xFFFFFFF200000000L),
-        BigInteger.valueOf(unchecked((long)0xFFFFFFF200000000L)).longValue());
+  BigInteger.valueOf(unchecked((long)0xFFFFFFF200000000L)).longValueChecked());
       Assert.AreEqual(
-unchecked((long)0xFFFFFFF280000000L),
-BigInteger.valueOf(unchecked((long)0xFFFFFFF280000000L)).longValue());
+        unchecked((long)0xFFFFFFF280000000L),
+  BigInteger.valueOf(unchecked((long)0xFFFFFFF280000000L)).longValueChecked());
       Assert.AreEqual(
-unchecked((long)0xFFFFFFF280000001L),
-BigInteger.valueOf(unchecked((long)0xFFFFFFF280000001L)).longValue());
+        unchecked((long)0xFFFFFFF280000001L),
+  BigInteger.valueOf(unchecked((long)0xFFFFFFF280000001L)).longValueChecked());
       Assert.AreEqual(
-unchecked((long)0xFFFFFFF27FFFFFFFL),
-BigInteger.valueOf(unchecked((long)0xFFFFFFF27FFFFFFFL)).longValue());
+        unchecked((long)0xFFFFFFF27FFFFFFFL),
+  BigInteger.valueOf(unchecked((long)0xFFFFFFF27FFFFFFFL)).longValueChecked());
       Assert.AreEqual(
-0x0000000380000001L,
-BigInteger.valueOf(0x0000000380000001L).longValue());
+        0x0000000380000001L,
+        BigInteger.valueOf(0x0000000380000001L).longValueChecked());
       Assert.AreEqual(
-0x0000000382222222L,
-BigInteger.valueOf(0x0000000382222222L).longValue());
-      Assert.AreEqual(-8L, BigInteger.valueOf(-8L).longValue());
-      Assert.AreEqual(-32768L, BigInteger.valueOf(-32768L).longValue());
+        0x0000000382222222L,
+        BigInteger.valueOf(0x0000000382222222L).longValueChecked());
+      Assert.AreEqual(-8L, BigInteger.valueOf(-8L).longValueChecked());
+      Assert.AreEqual(-32768L, BigInteger.valueOf(-32768L).longValueChecked());
       Assert.AreEqual(
-Int32.MinValue,
-BigInteger.valueOf(Int32.MinValue).longValue());
+        Int32.MinValue,
+        BigInteger.valueOf(Int32.MinValue).longValueChecked());
       Assert.AreEqual(
-Int32.MaxValue,
-BigInteger.valueOf(Int32.MaxValue).longValue());
-      Assert.AreEqual(0x80000000L, BigInteger.valueOf(0x80000000L).longValue());
-      Assert.AreEqual(0x90000000L, BigInteger.valueOf(0x90000000L).longValue());
-    }
-    [TestMethod]
-    public void TestLongValueChecked() {
+        Int32.MaxValue,
+        BigInteger.valueOf(Int32.MaxValue).longValueChecked());
+      Assert.AreEqual(
+        0x80000000L,
+        BigInteger.valueOf(0x80000000L).longValueChecked());
+      Assert.AreEqual(
+        0x90000000L,
+        BigInteger.valueOf(0x90000000L).longValueChecked());
+      try {
+ BigInteger.fromString("999999999999999999999999999999999").longValueChecked();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       Assert.AreEqual(
         Int64.MinValue,
         BigInteger.valueOf(Int64.MinValue).longValueChecked());
       Assert.AreEqual(
-Int64.MaxValue,
-BigInteger.valueOf(Int64.MaxValue).longValueChecked());
+        Int64.MaxValue,
+        BigInteger.valueOf(Int64.MaxValue).longValueChecked());
       try {
         BigInteger.valueOf(Int64.MinValue).subtract(BigInteger.One)
           .longValueChecked();
@@ -643,7 +861,7 @@ BigInteger.valueOf(Int64.MaxValue).longValueChecked());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-   BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One)
+        BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One)
           .longValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
@@ -671,42 +889,43 @@ BigInteger.valueOf(Int64.MaxValue).longValueChecked());
         0x0000000380000001L,
         BigInteger.valueOf(0x0000000380000001L).longValueChecked());
       Assert.AreEqual(
-0x0000000382222222L,
-BigInteger.valueOf(0x0000000382222222L).longValueChecked());
+        0x0000000382222222L,
+        BigInteger.valueOf(0x0000000382222222L).longValueChecked());
       Assert.AreEqual(-8L, BigInteger.valueOf(-8L).longValueChecked());
       Assert.AreEqual(-32768L, BigInteger.valueOf(-32768L).longValueChecked());
       Assert.AreEqual(
-Int32.MinValue,
-BigInteger.valueOf(Int32.MinValue).longValueChecked());
+        Int32.MinValue,
+        BigInteger.valueOf(Int32.MinValue).longValueChecked());
       Assert.AreEqual(
-Int32.MaxValue,
-BigInteger.valueOf(Int32.MaxValue).longValueChecked());
+        Int32.MaxValue,
+        BigInteger.valueOf(Int32.MaxValue).longValueChecked());
       Assert.AreEqual(
-0x80000000L,
-BigInteger.valueOf(0x80000000L).longValueChecked());
+        0x80000000L,
+        BigInteger.valueOf(0x80000000L).longValueChecked());
       Assert.AreEqual(
-0x90000000L,
-BigInteger.valueOf(0x90000000L).longValueChecked());
+        0x90000000L,
+        BigInteger.valueOf(0x90000000L).longValueChecked());
     }
     [TestMethod]
     public void TestLongValueUnchecked() {
+      Assert.AreEqual(0L, BigInteger.ZERO.longValueUnchecked());
       Assert.AreEqual(
         Int64.MinValue,
         BigInteger.valueOf(Int64.MinValue).longValueUnchecked());
       Assert.AreEqual(
-Int64.MaxValue,
-BigInteger.valueOf(Int64.MaxValue).longValueUnchecked());
+        Int64.MaxValue,
+        BigInteger.valueOf(Int64.MaxValue).longValueUnchecked());
       Assert.AreEqual(
-Int64.MaxValue,
-                      BigInteger.valueOf(Int64.MinValue)
-                      .subtract(BigInteger.One).longValueUnchecked());
+        Int64.MaxValue,
+        BigInteger.valueOf(Int64.MinValue)
+        .subtract(BigInteger.One).longValueUnchecked());
       Assert.AreEqual(
-Int64.MinValue,
-BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One).longValueUnchecked());
+        Int64.MinValue,
+  BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One).longValueUnchecked());
       Assert.AreEqual(
-unchecked((long)0xFFFFFFF200000000L),
-                      BigInteger.valueOf(unchecked((long)0xFFFFFFF200000000L))
-                      .longValueUnchecked());
+        unchecked((long)0xFFFFFFF200000000L),
+        BigInteger.valueOf(unchecked((long)0xFFFFFFF200000000L))
+        .longValueUnchecked());
       Assert.AreEqual(
         unchecked((long)0xFFFFFFF280000000L),
         BigInteger.valueOf(unchecked((long)0xFFFFFFF280000000L))
@@ -723,24 +942,24 @@ unchecked((long)0xFFFFFFF200000000L),
         0x0000000380000001L,
         BigInteger.valueOf(0x0000000380000001L).longValueUnchecked());
       Assert.AreEqual(
-0x0000000382222222L,
-BigInteger.valueOf(0x0000000382222222L).longValueUnchecked());
+        0x0000000382222222L,
+        BigInteger.valueOf(0x0000000382222222L).longValueUnchecked());
       Assert.AreEqual(-8L, BigInteger.valueOf(-8L).longValueUnchecked());
       Assert.AreEqual(
--32768L,
-BigInteger.valueOf(-32768L).longValueUnchecked());
+        -32768L,
+        BigInteger.valueOf(-32768L).longValueUnchecked());
       Assert.AreEqual(
-Int32.MinValue,
-BigInteger.valueOf(Int32.MinValue).longValueUnchecked());
+        Int32.MinValue,
+        BigInteger.valueOf(Int32.MinValue).longValueUnchecked());
       Assert.AreEqual(
-Int32.MaxValue,
-BigInteger.valueOf(Int32.MaxValue).longValueUnchecked());
+        Int32.MaxValue,
+        BigInteger.valueOf(Int32.MaxValue).longValueUnchecked());
       Assert.AreEqual(
-0x80000000L,
-BigInteger.valueOf(0x80000000L).longValueUnchecked());
+        0x80000000L,
+        BigInteger.valueOf(0x80000000L).longValueUnchecked());
       Assert.AreEqual(
-0x90000000L,
-BigInteger.valueOf(0x90000000L).longValueUnchecked());
+        0x90000000L,
+        BigInteger.valueOf(0x90000000L).longValueUnchecked());
     }
     [TestMethod]
     public void TestMod() {
@@ -753,9 +972,73 @@ BigInteger.valueOf(0x90000000L).longValueUnchecked());
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [TestMethod]
-    public void TestModPow() {
-      // not implemented yet
+    public void TestBigIntegerModPow() {
+      try {
+ BigInteger.One.ModPow(null, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.One.ModPow(null, BigInteger.Zero);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.One.ModPow(BigInteger.Zero, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.One.ModPow(BigInteger.fromString("-1"),BigInteger.fromString("1"));
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.One.ModPow(BigInteger.fromString("0"),BigInteger.fromString("0"));
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.One.ModPow(BigInteger.fromString("0"),BigInteger.fromString("-1"));
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.One.ModPow(BigInteger.fromString("1"),BigInteger.fromString("0"));
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ BigInteger.One.ModPow(BigInteger.fromString("1"),BigInteger.fromString("-1"));
+Assert.Fail("Should have failed");
+} catch (ArgumentException) {
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [TestMethod]
     public void TestMultiply() {
@@ -1060,8 +1343,8 @@ BigInteger.valueOf(0x90000000L).longValueUnchecked());
             expected = "-" + expected;
           }
           Assert.AreEqual(
-expected,
-sabi.BigIntValue.toRadixString(i));
+            expected,
+            sabi.BigIntValue.toRadixString(i));
         }
       }
     }
@@ -1081,7 +1364,12 @@ sabi.BigIntValue.toRadixString(i));
     [TestMethod]
     public void TestZero() {
       // not implemented yet
-      Assert.AreEqual("0", BigInteger.Zero.ToString());
+      {
+        string stringTemp = BigInteger.Zero.ToString();
+        Assert.AreEqual(
+          "0",
+          stringTemp);
+      }
     }
   }
 }

@@ -65,7 +65,7 @@ bool neg) {
         throw new ArgumentException(
 "scale (" + scale + ") is more than " + "28");
       }
-      byte[] data = bigmant.ToByteArray();
+      byte[] data = bigmant.toBytes(true);
       int a = 0;
       int b = 0;
       int c = 0;
@@ -122,7 +122,7 @@ bool neg) {
       data[11] = (byte)((bits[2] >> 24) & 0xff);
       data[12] = 0;
       int scale = (bits[3] >> 16) & 0xff;
-      var bigint = BigInteger.fromByteArray(data, true);
+      var bigint = BigInteger.fromBytes(data, true);
       for (var i = 0; i < scale; ++i) {
         bigint /= (BigInteger)10;
       }
@@ -197,7 +197,7 @@ newDecimal.Mantissa.Sign < 0);
       if (bigint.Sign < 0 || bigint.bitLength() > 64) {
         throw new OverflowException("This object's value is out of range");
       }
-      byte[] data = bigint.ToByteArray();
+      byte[] data = bigint.toBytes(true);
       int a = 0;
       int b = 0;
       for (var i = 0; i < Math.Min(4, data.Length); ++i) {
@@ -280,7 +280,7 @@ newDecimal.Mantissa.Sign < 0);
       data[10] = (byte)((bits[2] >> 16) & 0xff);
       data[11] = (byte)((bits[2] >> 24) & 0xff);
       data[12] = 0;
-      var mantissa = BigInteger.fromByteArray(data, true);
+      var mantissa = BigInteger.fromBytes(data, true);
       bool negative = (bits[3] >> 31) != 0;
       if (negative) {
         mantissa = -mantissa;
@@ -329,7 +329,7 @@ new[] { FromObject(-scale),
       data[6] = (byte)((uvalue >> 48) & 0xff);
       data[7] = (byte)((uvalue >> 56) & 0xff);
       data[8] = (byte)0;
-      return BigInteger.fromByteArray(data, true);
+      return BigInteger.fromBytes(data, true);
     }
 
     /// <summary>Converts a 64-bit unsigned integer to a CBOR object.</summary>

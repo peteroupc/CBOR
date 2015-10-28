@@ -8,15 +8,15 @@ using System.Text;
 namespace PeterO.DocGen {
   internal static class TestGenerator {
     public static void GenerateTests(Type type, string directory) {
-      string name = DocVisitor.UndecorateTypeName(type.Name);
+      string name = TypeNameUtil.UndecorateTypeName(type.Name);
       var builder = new StringBuilder();
       builder.Append("using System;\n");
       builder.Append("using System.Collections.Generic;\n");
       builder.Append("using System.Text;\n");
       builder.Append("using " + type.Namespace + ";\n");
-      builder.Append("using NUnit.Framework;\n");
+      builder.Append("using Microsoft.VisualStudio.TestTools.UnitTesting;\n");
       builder.Append("namespace Test {\n");
-      builder.Append("  [TestFixture]\n");
+      builder.Append("  [TestClass]\n");
       builder.Append("  public partial class " + name + "Test {\n");
       var methods = new SortedSet<string>();
       bool hasPublicConstructor = false;
@@ -63,7 +63,7 @@ namespace PeterO.DocGen {
         return;
       }
       if (methods.Contains("Constructor")) {
-        builder.Append("    [Test]\n");
+        builder.Append("    [TestMethod]\n");
         builder.Append("    public void TestConstructor() {\n");
         builder.Append("      // not implemented yet\n");
         builder.Append("    }\n");
@@ -72,7 +72,7 @@ namespace PeterO.DocGen {
         if (methodName.Equals("Constructor")) {
           continue;
         }
-        builder.Append("    [Test]\n");
+        builder.Append("    [TestMethod]\n");
         builder.Append("    public void Test" + methodName + "() {\n");
         builder.Append("      // not implemented yet\n");
         builder.Append("    }\n");

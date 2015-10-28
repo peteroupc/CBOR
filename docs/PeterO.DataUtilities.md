@@ -1,4 +1,4 @@
-﻿## PeterO.DataUtilities
+## PeterO.DataUtilities
 
     public static class DataUtilities
 
@@ -25,7 +25,7 @@ The Unicode code point at the given position. Returns -1 if <i>index</i>
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
@@ -54,7 +54,7 @@ The Unicode code point at the current position. Returns -1 if <i>index</i>
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
@@ -79,7 +79,7 @@ The Unicode code point at the previous position. Returns -1 if <i>index</i>
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
@@ -108,7 +108,7 @@ The Unicode code point at the previous position. Returns -1 if <i>index</i>
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
@@ -150,16 +150,13 @@ The string encoded in UTF-8.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The string contains an unpaired surrogate code point and  <i>replace</i>
  is false, or an internal error occurred.
-
- * System.ArgumentException: 
-The parameter "offset" is less than 0, "bytesCount" is less than 0, or offset plus bytesCount is greater than the length of "data" .
 
 ### GetUtf8Length
 
@@ -182,7 +179,7 @@ The number of bytes needed to encode the given string in UTF-8, or -1 if the str
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null.
 
@@ -206,11 +203,11 @@ A string represented by the UTF-8 byte array.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bytes</i>
  is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The string is not valid UTF-8 and <i>replace</i>
  is false.
 
@@ -240,15 +237,15 @@ A string represented by the UTF-8 byte array.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>bytes</i>
  is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The portion of the byte array is not valid UTF-8 and  <i>replace</i>
  is false.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>offset</i>
 is less than 0,  <i>bytesCount</i>
  is less than 0, or offset plus bytesCount is greater than the length of "data" .
@@ -281,10 +278,10 @@ Reads a string in UTF-8 encoding from a data stream.
 
 <b>Exceptions:</b>
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null or  <i>builder</i>
  is null.
@@ -319,12 +316,12 @@ Reads a string in UTF-8 encoding from a byte array.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>data</i>
  is null or  <i>builder</i>
  is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>offset</i>
 is less than 0,  <i>bytesCount</i>
  is less than 0, or offset plus bytesCount is greater than the length of  <i>data</i>
@@ -347,10 +344,10 @@ The string read.
 
 <b>Exceptions:</b>
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
@@ -377,11 +374,11 @@ The string read.
 
 <b>Exceptions:</b>
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred; or, the string is not valid UTF-8 and  <i>replace</i>
  is false.
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>stream</i>
  is null.
 
@@ -431,19 +428,19 @@ Writes a portion of a string in UTF-8 encoding to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null or  <i>stream</i>
  is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>offset</i>
 is less than 0,  <i>length</i>
  is less than 0, or  <i>offset</i>
  plus  <i>length</i>
  is greater than the string's length.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### WriteUtf8
@@ -479,19 +476,19 @@ Writes a portion of a string in UTF-8 encoding to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null or  <i>stream</i>
  is null.
 
- * System.ArgumentException: 
+ * System.ArgumentException:
 The parameter  <i>offset</i>
 is less than 0,  <i>length</i>
  is less than 0, or  <i>offset</i>
  plus  <i>length</i>
  is greater than the string's length.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
 
 ### WriteUtf8
@@ -518,12 +515,10 @@ Writes a string in UTF-8 encoding to a data stream.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException: 
+ * System.ArgumentNullException:
 The parameter  <i>str</i>
 is null or  <i>stream</i>
  is null.
 
- * System.IO.IOException: 
+ * System.IO.IOException:
 An I/O error occurred.
-
-

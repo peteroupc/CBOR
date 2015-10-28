@@ -140,7 +140,7 @@ PrecisionContext ctx);
       #region Equals and GetHashCode implementation
       public override bool Equals(object obj) {
         ExtensiveTest.DecimalNumber other = obj as ExtensiveTest.DecimalNumber;
-        return (other != null) && object.Equals(this.ed, other.ed);
+        return (other != null) && Object.Equals(this.ed, other.ed);
       }
 
       public override int GetHashCode() {
@@ -418,7 +418,7 @@ ExtendedFloat.Create(
           if (exponent == 0) {
             if (mantissa == 0) {
               return Create(neg ? ExtendedFloat.NegativeZero :
-                            ExtendedFloat.Zero);
+                    ExtendedFloat.Zero);
             }
             // subnormal
             exponent = -126;
@@ -451,7 +451,7 @@ bigmantissa,
           if (exponent == 0) {
             if (mantissaNonzero == 0) {
               return Create(neg ? ExtendedFloat.NegativeZero :
-                            ExtendedFloat.Zero);
+                    ExtendedFloat.Zero);
             }
             // subnormal
             exponent = -1022;
@@ -491,7 +491,7 @@ bigmantissa,
           if (exponent == 0) {
             if (mantissaNonzero == 0) {
               return Create(neg ? ExtendedFloat.NegativeZero :
-                            ExtendedFloat.Zero);
+                    ExtendedFloat.Zero);
             }
             // subnormal
             exponent = -16382;
@@ -615,7 +615,7 @@ PrecisionContext ctx) {
 
       public void ComparePrint(IExtendedNumber bn) {
         Console.WriteLine(String.Empty + ToValue(this).Mantissa + " man, " +
-                          ToValue(bn).Mantissa + " exp");
+                    ToValue(bn).Mantissa + " exp");
       }
 
       public BinaryNumber RoundToIntegralExact(PrecisionContext ctx) {
@@ -712,7 +712,7 @@ PrecisionContext ctx) {
           op2 = null;
         } else {
           result = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[6])
-                              });
+                    });
         }
       } else if (size == 1) {
         // double
@@ -720,16 +720,16 @@ PrecisionContext ctx) {
           return 0;
         }
         op1 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[4]),
-                              this.HexInt(chunks[5]) });
+                    this.HexInt(chunks[5]) });
         op2 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[6]),
-                              this.HexInt(chunks[7]) });
+                    this.HexInt(chunks[7]) });
         if (chunks.Length == 8 || chunks[8].Length == 0) {
           result = op2;
           op2 = null;
           return 0;
         }
         result = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[8]),
-                              this.HexInt(chunks[9]) });
+                    this.HexInt(chunks[9]) });
       } else if (size == 2) {
         // quad
         if (chunks.Length < 12) {
@@ -737,10 +737,10 @@ PrecisionContext ctx) {
         }
         op1 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[4]),
                 this.HexInt(chunks[5]), this.HexInt(chunks[6]),
-                              this.HexInt(chunks[7]) });
+                    this.HexInt(chunks[7]) });
         op2 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[8]),
                 this.HexInt(chunks[9]), this.HexInt(chunks[10]),
-                              this.HexInt(chunks[11]) });
+                    this.HexInt(chunks[11]) });
         if (chunks.Length == 12 || chunks[12].Length == 0) {
           result = op2;
           op2 = null;
@@ -1221,8 +1221,8 @@ PrecisionContext ctx) {
     public static string[] GetTestFiles() {
       var list = new List<string>(Directory.GetFiles("."));
       if (File.Exists("testfiles.cbor")) {
-CBORObject obj = CBORObject.DecodeFromBytes(File.ReadAllBytes("testfiles.cbor"
-));
+CBORObject obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
+"testfiles.cbor"));
         for (int i = 0; i < obj.Count; ++i) {
           list.AddRange(Directory.GetFiles(obj[i].AsString()));
         }
@@ -1233,8 +1233,8 @@ CBORObject obj = CBORObject.DecodeFromBytes(File.ReadAllBytes("testfiles.cbor"
     [TestMethod]
     public void TestParser() {
       long failures = 0;
-      List<string> errors = new List<string>();
-      List<string> dirfiles = new List<string>();
+      var errors = new List<string>();
+      var dirfiles = new List<string>();
       var sw = new System.Diagnostics.Stopwatch();
       sw.Start();
       TextWriter nullWriter = TextWriter.Null;

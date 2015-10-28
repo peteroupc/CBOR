@@ -83,7 +83,10 @@ namespace Test {
     }
     [TestMethod]
     public void TestIsFinite() {
-      // not implemented yet
+      Assert.IsFalse(ExtendedRational.PositiveInfinity.IsFinite);
+      Assert.IsFalse(ExtendedRational.NegativeInfinity.IsFinite);
+      Assert.IsTrue(ExtendedRational.Zero.IsFinite);
+      Assert.IsFalse(ExtendedRational.NaN.IsFinite);
     }
     [TestMethod]
     public void TestIsInfinity() {
@@ -97,6 +100,7 @@ namespace Test {
       Assert.IsFalse(ExtendedRational.PositiveInfinity.IsNaN());
       Assert.IsFalse(ExtendedRational.NegativeInfinity.IsNaN());
       Assert.IsFalse(ExtendedRational.Zero.IsNaN());
+      Assert.IsFalse(ExtendedRational.One.IsNaN());
       Assert.IsTrue(ExtendedRational.NaN.IsNaN());
     }
     [TestMethod]
@@ -105,11 +109,19 @@ namespace Test {
     }
     [TestMethod]
     public void TestIsNegativeInfinity() {
-      // not implemented yet
+      Assert.IsFalse(ExtendedRational.PositiveInfinity.IsNegativeInfinity());
+      Assert.IsTrue(ExtendedRational.NegativeInfinity.IsNegativeInfinity());
+      Assert.IsFalse(ExtendedRational.Zero.IsNegativeInfinity());
+      Assert.IsFalse(ExtendedRational.One.IsNegativeInfinity());
+      Assert.IsFalse(ExtendedRational.NaN.IsNegativeInfinity());
     }
     [TestMethod]
     public void TestIsPositiveInfinity() {
-      // not implemented yet
+      Assert.IsTrue(ExtendedRational.PositiveInfinity.IsPositiveInfinity());
+      Assert.IsFalse(ExtendedRational.NegativeInfinity.IsPositiveInfinity());
+      Assert.IsFalse(ExtendedRational.Zero.IsPositiveInfinity());
+      Assert.IsFalse(ExtendedRational.One.IsPositiveInfinity());
+      Assert.IsFalse(ExtendedRational.NaN.IsPositiveInfinity());
     }
     [TestMethod]
     public void TestIsQuietNaN() {
@@ -199,9 +211,12 @@ namespace Test {
         ExtendedDecimal.FromString(
        "1.972579273363468721491642554610734805464744567871093749999999999999"))
         .ToDouble();
-      Assert.AreEqual(
-        "1.9725792733634686104693400920950807631015777587890625",
-        ExtendedFloat.FromDouble(dbl).ToPlainString());
+      {
+string stringTemp = ExtendedFloat.FromDouble(dbl).ToPlainString();
+Assert.AreEqual(
+"1.9725792733634686104693400920950807631015777587890625",
+stringTemp);
+}
     }
     [TestMethod]
     public void TestToExtendedDecimal() {

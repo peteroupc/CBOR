@@ -1,4 +1,4 @@
-﻿## PeterO.Cbor.ICBORTag
+## PeterO.Cbor.ICBORTag
 
     public interface ICBORTag
 
@@ -28,5 +28,3 @@ Generates a CBOR object based on the data of another object. If the data is not 
 <b>Returns:</b>
 
 A CBORObject object. Note that this method may choose to return the same object as the parameter.
-
-
