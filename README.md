@@ -189,6 +189,12 @@ using (var stream = new FileStream("object6.json", FileMode.Create)) {
 NOTE: All code samples in this section are released to the Public Domain,
 as explained in <http://creativecommons.org/publicdomain/zero/1.0/>.
 
+Demo
+----------
+
+Go to [https://github.com/peteroupc/Calculator](https://github.com/peteroupc/Calculator) for source code to a demo of the
+CBOR library in the form of a calculator.
+
 About
 -----------
 
