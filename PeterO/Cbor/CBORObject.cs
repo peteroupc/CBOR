@@ -13,112 +13,98 @@ using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-  /// <summary>Represents an object in Concise Binary Object Representation
-  /// (CBOR)
-  /// and contains methods for reading and writing CBOR data. CBOR is defined in
-  /// RFC 7049. <para><b>Converting CBOR objects</b>
-  /// </para>
-  /// <para>There are many
-  /// ways to get a CBOR object, including from bytes, objects, streams and
-  /// JSON,
-  /// as described below.</para>
-  /// <para><b>To and from byte arrays:</b>
-  /// The
-  /// CBORObject.DecodeToBytes method converts a byte array in CBOR format to a
-  /// CBOR object. The EncodeToBytes method converts a CBOR object to its
-  /// corresponding byte array in CBOR format.</para>
-  /// <para><b>To and from data
-  /// streams:</b>
-  /// The CBORObject.Write methods write many kinds of objects to a
-  /// data stream, including numbers, CBOR objects, strings, and arrays of
-  /// numbers
-  /// and strings. The CBORObject.Read method reads a CBOR object from a data
-  /// stream.</para>
-  /// <para><b>To and from other objects:</b>
-  /// The
-  /// CBORObject.FromObject method converts many kinds of objects to a CBOR
-  /// object, including numbers, strings, and arrays and maps of numbers and
-  /// strings. Methods like AsDouble, AsByte, and AsString convert a CBOR object
-  /// to different types of object.</para>
-  /// <para><b>To and from JSON:</b>
-  /// This
-  /// class also doubles as a reader and writer of JavaScript Object Notation
-  /// (JSON). The CBORObject.FromJSONString method converts JSON to a CBOR
-  /// object,
-  /// and the ToJSONString method converts a CBOR object to a JSON
-  /// string.</para>
-  /// <para>In addition, the CBORObject.WriteJSON method writes many kinds of
-  /// objects as JSON to a data stream, including numbers, CBOR objects,
-  /// strings,
-  /// and arrays of numbers and strings. The CBORObject.Read method reads a CBOR
-  /// object from a JSON data stream.</para>
-  /// <para><b>Comparison
-  /// Considerations:</b>
-  /// </para>
-  /// <para>Instances of CBORObject should not be
-  /// compared for equality using the "==" operator; it's possible to create two
-  /// CBOR objects with the same value but not the same reference. (The "=="
-  /// operator only checks if each side of the operator is the same
-  /// instance.)</para>
-  /// <para>This class's natural ordering (under the CompareTo
-  /// method) is not consistent with the Equals method. This means that two
-  /// values
-  /// that compare as equal under the CompareTo method might not be equal under
-  /// the Equals method. This is important to consider especially if an
-  /// application wants to compare numbers, since the CBOR number type supports
-  /// numbers of different formats, such as big integers, rational numbers, and
-  /// decimal fractions.</para>
-  /// <para>Another consideration is that two values
-  /// that are otherwise equal may have different tags. To strip the tags from a
-  /// CBOR object before comparing, use the <c>Untag</c>
-  /// method.</para>
-  /// <para>To
-  /// compare two numbers, the CompareToIgnoreTags or CompareTo method should be
-  /// used. Which method to use depends on whether two equal values should still
-  /// be considered equal if they have different tags.</para>
-  /// <para>Although this
-  /// class is inconsistent with the Equals method, it is safe to use CBORObject
-  /// instances as hash keys as long as all of the keys are untagged text
-  /// strings
-  /// (which means GetTags returns an empty array and the Type property, or
-  /// "getType()" in Java, returns TextString). This is because the natural
-  /// ordering of these instances is consistent with the Equals method.</para>
-  /// <para><b>Thread Safety:</b>
-  /// </para>
-  /// <para>CBOR objects that are numbers,
-  /// "simple values", and text strings are immutable (their values can't be
-  /// changed), so they are inherently safe for use by multiple threads.</para>
-  /// <para>CBOR objects that are arrays, maps, and byte strings are mutable,
-  /// but
-  /// this class doesn't attempt to synchronize reads and writes to those
-  /// objects
-  /// by multiple threads, so those objects are not thread safe without such
-  /// synchronization.</para>
-  /// <para>One kind of CBOR object is called a map, or a
-  /// list of key-value pairs. Keys can be any kind of CBOR object, including
-  /// numbers, strings, arrays, and maps. However, text strings are the most
-  /// suitable to use as keys; other kinds of CBOR object are much better used
-  /// as
-  /// map values instead, keeping in mind that some of them are not thread safe
-  /// without synchronizing reads and writes to them.</para>
-  /// <para>To find the
-  /// type of a CBOR object, call its Type property (or "getType()" in Java).
-  /// The
-  /// return value can be Number, Boolean, SimpleValue, or TextString for
-  /// immutable CBOR objects, and Array, Map, or ByteString for mutable CBOR
-  /// objects.</para>
-  /// <para><b>Nesting Depth:</b></para>
-  /// <para>The DecodeFromBytes method can only read objects with a limited
-  /// maximum depth
-  /// of arrays and maps nested within other arrays and maps. The code sets this
-  /// maximum depth to
-  /// 500 (allowing more than enough nesting for most purposes), but it's
-  /// possible that
-  /// stack overflows
-  /// in some runtimes might lower the effective maximum nesting depth. When the
-  /// nesting depth goes
-  /// above 500, the DecodeFromBytes method throws a CBORException.</para>
-  /// </summary>
+    /// <summary>Represents an object in Concise Binary Object Representation (CBOR)
+    /// and contains methods for reading and writing CBOR data. CBOR is defined in
+    /// RFC 7049. <para><b>Converting CBOR objects</b>
+    /// </para>
+    /// <para>There are many
+    /// ways to get a CBOR object, including from bytes, objects, streams and JSON,
+    /// as described below.</para>
+    /// <para><b>To and from byte arrays:</b>
+    /// The
+    /// CBORObject.DecodeToBytes method converts a byte array in CBOR format to a
+    /// CBOR object. The EncodeToBytes method converts a CBOR object to its
+    /// corresponding byte array in CBOR format.</para>
+    /// <para><b>To and from data
+    /// streams:</b>
+    /// The CBORObject.Write methods write many kinds of objects to a
+    /// data stream, including numbers, CBOR objects, strings, and arrays of numbers
+    /// and strings. The CBORObject.Read method reads a CBOR object from a data
+    /// stream.</para>
+    /// <para><b>To and from other objects:</b>
+    /// The
+    /// CBORObject.FromObject method converts many kinds of objects to a CBOR
+    /// object, including numbers, strings, and arrays and maps of numbers and
+    /// strings. Methods like AsDouble, AsByte, and AsString convert a CBOR object
+    /// to different types of object.</para>
+    /// <para><b>To and from JSON:</b>
+    /// This
+    /// class also doubles as a reader and writer of JavaScript Object Notation
+    /// (JSON). The CBORObject.FromJSONString method converts JSON to a CBOR object,
+    /// and the ToJSONString method converts a CBOR object to a JSON string.</para>
+    /// <para>In addition, the CBORObject.WriteJSON method writes many kinds of
+    /// objects as JSON to a data stream, including numbers, CBOR objects, strings,
+    /// and arrays of numbers and strings. The CBORObject.Read method reads a CBOR
+    /// object from a JSON data stream.</para>
+    /// <para><b>Comparison
+    /// Considerations:</b>
+    /// </para>
+    /// <para>Instances of CBORObject should not be
+    /// compared for equality using the "==" operator; it's possible to create two
+    /// CBOR objects with the same value but not the same reference. (The "=="
+    /// operator only checks if each side of the operator is the same
+    /// instance.)</para>
+    /// <para>This class's natural ordering (under the CompareTo
+    /// method) is not consistent with the Equals method. This means that two values
+    /// that compare as equal under the CompareTo method might not be equal under
+    /// the Equals method. This is important to consider especially if an
+    /// application wants to compare numbers, since the CBOR number type supports
+    /// numbers of different formats, such as big integers, rational numbers, and
+    /// decimal fractions.</para>
+    /// <para>Another consideration is that two values
+    /// that are otherwise equal may have different tags. To strip the tags from a
+    /// CBOR object before comparing, use the <c>Untag</c>
+    /// method.</para>
+    /// <para>To
+    /// compare two numbers, the CompareToIgnoreTags or CompareTo method should be
+    /// used. Which method to use depends on whether two equal values should still
+    /// be considered equal if they have different tags.</para>
+    /// <para>Although this
+    /// class is inconsistent with the Equals method, it is safe to use CBORObject
+    /// instances as hash keys as long as all of the keys are untagged text strings
+    /// (which means GetTags returns an empty array and the Type property, or
+    /// "getType()" in Java, returns TextString). This is because the natural
+    /// ordering of these instances is consistent with the Equals method.</para>
+    /// <para><b>Thread Safety:</b>
+    /// </para>
+    /// <para>CBOR objects that are numbers,
+    /// "simple values", and text strings are immutable (their values can't be
+    /// changed), so they are inherently safe for use by multiple threads.</para>
+    /// <para>CBOR objects that are arrays, maps, and byte strings are mutable, but
+    /// this class doesn't attempt to synchronize reads and writes to those objects
+    /// by multiple threads, so those objects are not thread safe without such
+    /// synchronization.</para>
+    /// <para>One kind of CBOR object is called a map, or a
+    /// list of key-value pairs. Keys can be any kind of CBOR object, including
+    /// numbers, strings, arrays, and maps. However, text strings are the most
+    /// suitable to use as keys; other kinds of CBOR object are much better used as
+    /// map values instead, keeping in mind that some of them are not thread safe
+    /// without synchronizing reads and writes to them.</para>
+    /// <para>To find the
+    /// type of a CBOR object, call its Type property (or "getType()" in Java). The
+    /// return value can be Number, Boolean, SimpleValue, or TextString for
+    /// immutable CBOR objects, and Array, Map, or ByteString for mutable CBOR
+    /// objects.</para>
+    /// <para><b>Nesting Depth:</b>
+    /// </para>
+    /// <para>The
+    /// DecodeFromBytes method can only read objects with a limited maximum depth of
+    /// arrays and maps nested within other arrays and maps. The code sets this
+    /// maximum depth to 500 (allowing more than enough nesting for most purposes),
+    /// but it's possible that stack overflows in some runtimes might lower the
+    /// effective maximum nesting depth. When the nesting depth goes above 500, the
+    /// DecodeFromBytes method throws a CBORException.</para>
+    /// </summary>
   public sealed partial class CBORObject : IComparable<CBORObject>,
   IEquatable<CBORObject> {
     internal int ItemType {
@@ -3213,11 +3199,16 @@ namespace PeterO.Cbor {
           "JSON object began with a byte order mark (U+FEFF) (offset 0)");
       }
       var reader = new CharacterReader(str);
-      CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, 0);
-      if (CBORJson.SkipWhitespaceJSON(reader) != -1) {
+    try {
+       CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, 0);
+       if (CBORJson.SkipWhitespaceJSON(reader) != -1) {
         throw reader.NewError("End of string not reached");
-      }
-      return obj;
+       }
+    } catch (FormatException ex) {
+    // thrown by the underlying CharacterReader
+        throw new CBORException(ex.Message, ex.InnerException);
+    }
+    return obj;
     }
 
     /// <summary>Generates a CBOR object from a data stream in JavaScript Object
@@ -3236,6 +3227,9 @@ namespace PeterO.Cbor {
     /// <exception cref='CBORException'>The data stream contains invalid UTF-8 or is
     /// not in JSON format.</exception>
     public static CBORObject ReadJSON(Stream stream) {
+    if ((stream) == null) {
+  throw new ArgumentNullException("stream");
+}
       var reader = new CharacterReader(stream);
       try {
         CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, 0);
@@ -3243,6 +3237,9 @@ namespace PeterO.Cbor {
           throw reader.NewError("End of data stream not reached");
         }
         return obj;
+    } catch (FormatException ex) {
+    // thrown by the underlying CharacterReader
+        throw new CBORException(ex.Message, ex.InnerException);
       } catch (CBORException ex) {
         var ioex = ex.InnerException as IOException;
         if (ioex != null) {

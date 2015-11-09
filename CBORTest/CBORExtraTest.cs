@@ -164,23 +164,23 @@ throw new InvalidOperationException(String.Empty, ex);
     }
 
     private enum AByte : byte {
-      /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       A = 254,
 
-      /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       B
     }
 
     private enum AInt {
-      /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       A = 256,
 
-      /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       B
     }
 
     private enum AULong : ulong {
-      /// <summary>An arbitrary value.</summary>
+    /// <summary>An arbitrary value.</summary>
       A = 999999,
 
     /// <summary>An arbitrary value.</summary>
