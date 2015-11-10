@@ -9,41 +9,30 @@ using System;
 using System.Text;
 
 namespace PeterO {
-    /// <summary>Represents an arbitrary-precision decimal floating-point
-    /// number.
+    /// <summary>Represents an arbitrary-precision decimal floating-point number.
     /// Consists of an integer mantissa and an integer exponent, both
-    /// arbitrary-precision. The value of the number equals mantissa *
-    /// 10^exponent.
+    /// arbitrary-precision. The value of the number equals mantissa * 10^exponent.
     /// <para>The mantissa is the value of the digits that make up a number,
-    /// ignoring the decimal point and exponent. For example, in the number
-    /// 2356.78,
-    /// the mantissa is 235678. The exponent is where the "floating" decimal
-    /// point
-    /// of the number is located. A positive exponent means
-    /// "move it to the right",
+    /// ignoring the decimal point and exponent. For example, in the number 2356.78,
+    /// the mantissa is 235678. The exponent is where the "floating" decimal point
+    /// of the number is located. A positive exponent means "move it to the right",
     /// and a negative exponent means "move it to the left." In the example 2,
-    /// 356.78, the exponent is -2, since it has 2 decimal places and the
-    /// decimal
+    /// 356.78, the exponent is -2, since it has 2 decimal places and the decimal
     /// point is "moved to the left by 2." Therefore, in the ExtendedDecimal
     /// representation, this number would be stored as 235678 * 10^-2.</para>
     /// <para>The mantissa and exponent format preserves trailing zeros in the
-    /// number's value. This may give rise to multiple ways to store the same
-    /// value.
-    /// For example, 1.00 and 1 would be stored differently, even though they
-    /// have
-    /// the same value. In the first case, 100 * 10^-2 (100 with decimal point
-    /// moved
+    /// number's value. This may give rise to multiple ways to store the same value.
+    /// For example, 1.00 and 1 would be stored differently, even though they have
+    /// the same value. In the first case, 100 * 10^-2 (100 with decimal point moved
     /// left by 2), and in the second case, 1 * 10^0 (1 with decimal point moved
     /// 0).</para>
     /// <para>This class also supports values for negative zero,
     /// not-a-number (NaN) values, and infinity. <b>Negative zero</b>
     /// is generally
-    /// used when a negative number is rounded to 0; it has the same
-    /// mathematical
+    /// used when a negative number is rounded to 0; it has the same mathematical
     /// value as positive zero. <b>Infinity</b>
     /// is generally used when a non-zero
-    /// number is divided by zero, or when a very high number can't be
-    /// represented
+    /// number is divided by zero, or when a very high number can't be represented
     /// in a given exponent range. <b>Not-a-number</b>
     /// is generally used to signal
     /// errors.</para>
@@ -52,35 +41,29 @@ namespace PeterO {
     /// <c>http://speleotrove.com/decimal/decarith.html</c>
     /// </para>
     /// <para>Passing a
-    /// signaling NaN to any arithmetic operation shown here will signal the
-    /// flag
+    /// signaling NaN to any arithmetic operation shown here will signal the flag
     /// FlagInvalid and return a quiet NaN, even if another operand to that
     /// operation is a quiet NaN, unless noted otherwise.</para>
     /// <para>Passing a
-    /// quiet NaN to any arithmetic operation shown here will return a quiet
-    /// NaN,
-    /// unless noted otherwise. Invalid operations will also return a quiet NaN,
-    /// as
+    /// quiet NaN to any arithmetic operation shown here will return a quiet NaN,
+    /// unless noted otherwise. Invalid operations will also return a quiet NaN, as
     /// stated in the individual methods.</para>
     /// <para>Unless noted otherwise,
     /// passing a null ExtendedDecimal argument to any method here will throw an
     /// exception.</para>
     /// <para>When an arithmetic operation signals the flag
     /// FlagInvalid, FlagOverflow, or FlagDivideByZero, it will not throw an
-    /// exception too, unless the flag's trap is enabled in the precision
-    /// context
+    /// exception too, unless the flag's trap is enabled in the precision context
     /// (see PrecisionContext's Traps property).</para>
     /// <para>An ExtendedDecimal
     /// value can be serialized in one of the following ways:</para>
     /// <list><item>By
-    /// calling the toString() method, which will always return distinct strings
-    /// for
+    /// calling the toString() method, which will always return distinct strings for
     /// distinct ExtendedDecimal values.</item>
     /// <item>By calling the
     /// UnsignedMantissa, Exponent, and IsNegative properties, and calling the
     /// IsInfinity, IsQuietNaN, and IsSignalingNaN methods. The return values
-    /// combined will uniquely identify a particular ExtendedDecimal
-    /// value.</item>
+    /// combined will uniquely identify a particular ExtendedDecimal value.</item>
     /// </list>
     /// </summary>
   public sealed class ExtendedDecimal : IComparable<ExtendedDecimal>,
@@ -354,8 +337,9 @@ namespace PeterO {
     /// </summary>
     /// <param name='str'>A string object, a portion of which represents a
     /// number.</param>
-    /// <param name='offset'>A 32-bit signed integer.</param>
-    /// <param name='length'>A 32-bit signed integer. (2).</param>
+    /// <param name='offset'>A zero-based index that identifies the start of the
+    /// number.</param>
+    /// <param name='length'>The length of the number within the string.</param>
     /// <param name='ctx'>A precision context to control precision, rounding, and
     /// exponent range of the result. If HasFlags of the context is true, will also
     /// store the flags resulting from the operation (the flags are in addition to
@@ -1813,8 +1797,7 @@ namespace PeterO {
         BigInteger.Zero,
         BigNumberFlags.FlagQuietNaN);
 
-    /// <summary>A not-a-number value that signals an invalid operation flag
-    /// when
+    /// <summary>A not-a-number value that signals an invalid operation flag when
     /// it&#x27;s passed as an argument to any arithmetic operation in
     /// ExtendedDecimal.</summary>
     public static readonly ExtendedDecimal SignalingNaN =
