@@ -66,16 +66,5 @@ namespace PeterO {
       this.ctx = (ctx == null) ? null : ctx.Copy();
       this.result = result;
     }
-/*
-    public TrapException() {
-    }
-
-    public TrapException(string message): base(message) {
-    }
-
-    public TrapException(string message, Exception innerException):
-      base(message, innerException) {
-    }
-  */
   }
 }

@@ -3715,7 +3715,7 @@ namespace PeterO.Cbor {
     /// types are specially handled by this method: null , primitive types, strings,
     /// CBORObject , ExtendedDecimal , ExtendedFloat , the custom BigInteger ,
     /// lists, arrays, enumerations ( <c>Enum</c>
-    /// objects), and maps.In the .NET
+    /// objects), and maps. In the .NET
     /// version, if the object is a type not specially handled by this method,
     /// returns a CBOR map with the values of each of its read/write properties (or
     /// all properties in the case of an anonymous type). Properties are converted
