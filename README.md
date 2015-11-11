@@ -47,6 +47,11 @@ Other Sites
 Examples
 ----------
 
+*For more examples, see [examples.md](https://github.com/peteroupc/CBOR/tree/master/examples.md).*
+
+Creating a map and converting that map to CBOR bytes
+and a JSON string:
+
 ```c#
 // The following creates a CBOR map and adds
 // several kinds of objects to it
@@ -231,6 +236,10 @@ Release Notes
 In version 2.2:
 - Portable Class Library compatibility expanded
 - Add option to always use definite length string encoding when generating CBOR objects
+
+Known issue in version 2.2:
+- Setting `lenientLineBreaks` to `true` in the `PeterO.Cbor.DataUtilities.WriteUtf8` method
+ doesn't correctly write CR/LF line breaks.  This will be fixed in a future version of the library.
 
 In version 2.1:
 
