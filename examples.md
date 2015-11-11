@@ -22,9 +22,9 @@ public static double BigIntegerToDouble(BigInteger bigInteger){
 }
 ```
 
-Converting a base 10 string to a `double`:
+Converting a number string to a `double`:
 ```c#
 public static double StringToDouble(string str){
- return ExtendedFloat.FromString(bigInteger).ToDouble();
+ return ExtendedFloat.FromString(str).ToDouble();
 }
 ```
