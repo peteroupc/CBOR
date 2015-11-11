@@ -3154,9 +3154,15 @@ namespace PeterO {
       return this.toBytes(true);
     }
 
-    /// <summary>Returns a byte array of this object&#x27;s value.</summary>
-    /// <param name='littleEndian'>A Boolean object.</param>
-    /// <returns>A byte array.</returns>
+    /// <summary>Returns a byte array of this object&#x27;s value. The byte array
+    /// will take the form of the number's two's-complement representation, using
+    /// the fewest bytes necessary to represent its value unambiguously. If this
+    /// value is negative, the bits that appear "before" the most significant bit of
+    /// the number will be all ones.</summary>
+    /// <param name='littleEndian'>If true, the least significant bits will appear
+    /// first.</param>
+    /// <returns>A byte array. If this value is 0, returns a byte array with the
+    /// single element 0.</returns>
     public byte[] toBytes(bool littleEndian) {
       int sign = this.Sign;
       if (sign == 0) {
@@ -4203,10 +4209,8 @@ namespace PeterO {
     /// portion.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
     /// is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter "index" is less than 0,
-    /// "endIndex" is less than 0, or either is greater than the string's length, or
-    /// "endIndex" is less than "index" ; or radix is less than 2 or greater than
-    /// 36.</exception>
+    /// <exception cref='ArgumentException'>The parameter <paramref name='radix'/>
+    /// is less than 2 or greater than 36.</exception>
     /// <exception cref='FormatException'>The string portion is empty or in an
     /// invalid format.</exception>
     public static BigInteger fromRadixString(string str, int radix) {
