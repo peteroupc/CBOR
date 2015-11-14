@@ -358,7 +358,8 @@ The parameter  <i>str</i>
 is null.
 
  * System.ArgumentException:
-The parameter "index" is less than 0, "endIndex" is less than 0, or either is greater than the string's length, or "endIndex" is less than "index" ; or radix is less than 2 or greater than 36.
+The parameter  <i>radix</i>
+is less than 2 or greater than 36.
 
  * System.FormatException:
 The string portion is empty or in an invalid format.
@@ -1311,15 +1312,15 @@ A byte array.
     public byte[] toBytes(
         bool littleEndian);
 
-Returns a byte array of this object's value.
+Returns a byte array of this object's value. The byte array will take the form of the number's two' s-complement representation, using the fewest bytes necessary to represent its value unambiguously. If this value is negative, the bits that appear "before" the most significant bit of the number will be all ones.
 
 <b>Parameters:</b>
 
- * <i>littleEndian</i>: A Boolean object.
+ * <i>littleEndian</i>: If true, the least significant bits will appear first.
 
 <b>Returns:</b>
 
-A byte array.
+A byte array. If this value is 0, returns a byte array with the single element 0.
 
 ### toRadixString
 

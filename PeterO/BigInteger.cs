@@ -13,10 +13,14 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO {
-    /// <summary>An arbitrary-precision integer. <para>Instances of this class are
-    /// immutable, so they are inherently safe for use by multiple threads. Multiple
-    /// instances of this object with the same value are interchangeable, so they
-    /// should not be compared using the "==" operator (which only checks if each
+    /// <summary>An arbitrary-precision integer. <para>Instances of this class
+    /// are
+    /// immutable, so they are inherently safe for use by multiple threads.
+    /// Multiple
+    /// instances of this object with the same value are interchangeable, so
+    /// they
+    /// should not be compared using the "==" operator (which only checks if
+    /// each
     /// side of the operator is the same instance).</para>
     /// </summary>
   public sealed partial class BigInteger : IComparable<BigInteger>,
@@ -3016,7 +3020,8 @@ namespace PeterO {
       this.negative = negative;
     }
 
-    /// <summary>Initializes a BigInteger object from an array of bytes.</summary>
+    /// <summary>Initializes a BigInteger object from an array of
+    /// bytes.</summary>
     /// <param name='bytes'>A byte array.</param>
     /// <param name='littleEndian'>A Boolean object.</param>
     /// <returns>A BigInteger object.</returns>
@@ -3027,7 +3032,8 @@ namespace PeterO {
       return fromBytes(bytes, littleEndian);
     }
 
-    /// <summary>Initializes a BigInteger object from an array of bytes.</summary>
+    /// <summary>Initializes a BigInteger object from an array of
+    /// bytes.</summary>
     /// <param name='bytes'>A byte array.</param>
     /// <param name='littleEndian'>A Boolean object.</param>
     /// <returns>A BigInteger object.</returns>
@@ -3101,11 +3107,14 @@ namespace PeterO {
       return a;
     }
 
-    /// <summary>Returns whether a bit is set in the two's-complement representation
+    /// <summary>Returns whether a bit is set in the two's-complement
+    /// representation
     /// of this object's value.</summary>
-    /// <param name='index'>Zero based index of the bit to test. 0 means the least
+    /// <param name='index'>Zero based index of the bit to test. 0 means the
+    /// least
     /// significant bit.</param>
-    /// <returns>True if a bit is set in the two's-complement representation of this
+    /// <returns>True if a bit is set in the two's-complement representation of
+    /// this
     /// object's value; otherwise, false.</returns>
     public bool testBit(int index) {
       if (index < 0) {
@@ -3154,12 +3163,16 @@ namespace PeterO {
       return this.toBytes(true);
     }
 
-    /// <summary>Returns a byte array of this object&#x27;s value. The byte array
-    /// will take the form of the number's two's-complement representation, using
+    /// <summary>Returns a byte array of this object&#x27;s value. The byte
+    /// array
+    /// will take the form of the number's two' s-complement representation,
+    /// using
     /// the fewest bytes necessary to represent its value unambiguously. If this
-    /// value is negative, the bits that appear "before" the most significant bit of
+    /// value is negative, the bits that appear "before" the most significant
+    /// bit of
     /// the number will be all ones.</summary>
-    /// <param name='littleEndian'>If true, the least significant bits will appear
+    /// <param name='littleEndian'>If true, the least significant bits will
+    /// appear
     /// first.</param>
     /// <returns>A byte array. If this value is 0, returns a byte array with the
     /// single element 0.</returns>
@@ -3225,10 +3238,13 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Shifts this object&#x27;s value by a number of bits. A value of 1
-    /// doubles this value, a value of 2 multiplies it by 4, a value of 3 by 8, a
+    /// <summary>Shifts this object&#x27;s value by a number of bits. A value of
+    /// 1
+    /// doubles this value, a value of 2 multiplies it by 4, a value of 3 by 8,
+    /// a
     /// value of 4 by 16, and so on.</summary>
-    /// <param name='numberBits'>The number of bits to shift. Can be negative, in
+    /// <param name='numberBits'>The number of bits to shift. Can be negative,
+    /// in
     /// which case this is the same as shiftRight with the absolute value of
     /// numberBits.</param>
     /// <returns>A BigInteger object.</returns>
@@ -3270,7 +3286,8 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Returns a big integer with the bits shifted to the right.</summary>
+    /// <summary>Returns a big integer with the bits shifted to the
+    /// right.</summary>
     /// <param name='numberBits'>Number of bits to shift right.</param>
     /// <returns>A BigInteger object.</returns>
     public BigInteger shiftRight(int numberBits) {
@@ -3372,9 +3389,11 @@ namespace PeterO {
       return new BigInteger(retwordcount, retreg, retnegative);
     }
 
-    /// <summary>Converts this object's value to a 32-bit signed integer.</summary>
+    /// <summary>Converts this object's value to a 32-bit signed
+    /// integer.</summary>
     /// <returns>A 32-bit signed integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is too big to fit a
+    /// <exception cref='OverflowException'>This object's value is too big to
+    /// fit a
     /// 32-bit signed integer.</exception>
     public int intValueChecked() {
       int count = this.wordCount;
@@ -3415,9 +3434,11 @@ namespace PeterO {
       return intRetValue;
     }
 
-    /// <summary>Converts this object's value to a 64-bit signed integer.</summary>
+    /// <summary>Converts this object's value to a 64-bit signed
+    /// integer.</summary>
     /// <returns>A 64-bit signed integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is too big to fit a
+    /// <exception cref='OverflowException'>This object's value is too big to
+    /// fit a
     /// 64-bit signed integer.</exception>
     public long longValueChecked() {
       int count = this.wordCount;
@@ -3479,9 +3500,11 @@ namespace PeterO {
       return ivv;
     }
 
-    /// <summary>Converts this object's value to a 32-bit signed integer.</summary>
+    /// <summary>Converts this object's value to a 32-bit signed
+    /// integer.</summary>
     /// <returns>A 32-bit signed integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is too big to fit a
+    /// <exception cref='OverflowException'>This object's value is too big to
+    /// fit a
     /// 32-bit signed integer.</exception>
   [Obsolete(
   "To make the conversion intention clearer use the 'intValueChecked' and 'intValueUnchecked' methods instead. Replace 'intValue' with 'intValueChecked' in your code." )]
@@ -3491,7 +3514,8 @@ namespace PeterO {
 
     /// <summary>Returns whether this object's value can fit in a 32-bit signed
     /// integer.</summary>
-    /// <returns>True if this object's value is MinValue or greater, and MaxValue or
+    /// <returns>True if this object's value is MinValue or greater, and
+    /// MaxValue or
     /// less; otherwise, false.</returns>
     public bool canFitInInt() {
       var c = (int)this.wordCount;
@@ -3518,9 +3542,11 @@ namespace PeterO {
       return true;
     }
 
-    /// <summary>Converts this object's value to a 64-bit signed integer.</summary>
+    /// <summary>Converts this object's value to a 64-bit signed
+    /// integer.</summary>
     /// <returns>A 64-bit signed integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is too big to fit a
+    /// <exception cref='OverflowException'>This object's value is too big to
+    /// fit a
     /// 64-bit signed integer.</exception>
   [Obsolete(
   "To make the conversion intention clearer use the 'longValueChecked' and 'longValueUnchecked' methods instead. Replace 'longValue' with 'longValueChecked' in your code." )]
@@ -3695,8 +3721,10 @@ namespace PeterO {
     }
 
     /// <summary>Finds the minimum number of bits needed to represent this
-    /// object&#x27;s value, except for its sign. If the value is negative, finds
-    /// the number of bits in a value equal to this object's absolute value minus
+    /// object&#x27;s value, except for its sign. If the value is negative,
+    /// finds
+    /// the number of bits in a value equal to this object's absolute value
+    /// minus
     /// 1.</summary>
     /// <returns>The number of bits in this object's value. Returns 0 if this
     /// object's value is 0 or negative 1.</returns>
@@ -3800,7 +3828,8 @@ namespace PeterO {
     }
 
     /// <summary>Finds the number of decimal digits this number has.</summary>
-    /// <returns>The number of decimal digits. Returns 1 if this object' s value is
+    /// <returns>The number of decimal digits. Returns 1 if this object' s value
+    /// is
     /// 0.</returns>
     public int getDigitCount() {
       if (this.IsZero) {
@@ -3969,15 +3998,20 @@ namespace PeterO {
 
     private const string Digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    /// <summary>Generates a string representing the value of this object, in the
+    /// <summary>Generates a string representing the value of this object, in
+    /// the
     /// given radix.</summary>
-    /// <param name='radix'>A radix from 2 through 36. For example, to generate a
+    /// <param name='radix'>A radix from 2 through 36. For example, to generate
+    /// a
     /// hexadecimal string, specify 16. To generate a decimal string, specify
     /// 10.</param>
     /// <returns>A string object.</returns>
-    /// <exception cref='ArgumentException'>The parameter "index" is less than 0,
-    /// "endIndex" is less than 0, or either is greater than the string's length, or
-    /// "endIndex" is less than "index" ; or radix is less than 2 or greater than
+    /// <exception cref='ArgumentException'>The parameter "index" is less than
+    /// 0,
+    /// "endIndex" is less than 0, or either is greater than the string's
+    /// length, or
+    /// "endIndex" is less than "index" ; or radix is less than 2 or greater
+    /// than
     /// 36.</exception>
     public string toRadixString(int radix) {
       if (radix < 2) {
@@ -4185,13 +4219,16 @@ namespace PeterO {
     }
 
     /// <summary>Converts a string to an arbitrary-precision integer.</summary>
-    /// <param name='str'>A string containing only digits, except that it may start
+    /// <param name='str'>A string containing only digits, except that it may
+    /// start
     /// with a minus sign.</param>
     /// <returns>A BigInteger object with the same value as given in the
     /// string.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str' />
     /// is null.</exception>
-    /// <exception cref='FormatException'>The parameter <paramref name='str'/> is in
+    /// <exception cref='FormatException'>The parameter <paramref name='str' />
+    /// is in
     /// an invalid format.</exception>
     public static BigInteger fromString(string str) {
       if (str == null) {
@@ -4200,16 +4237,20 @@ namespace PeterO {
       return fromRadixSubstring(str, 10, 0, str.Length);
     }
 
-    /// <summary>Converts a portion of a string to an arbitrary-precision integer.
-    /// The string portion can begin with a minus sign ('-') to indicate that it's
+    /// <summary>Converts a portion of a string to an arbitrary-precision
+    /// integer.
+    /// The string portion can begin with a minus sign ('-') to indicate that
+    /// it's
     /// negative.</summary>
     /// <param name='str'>A string object.</param>
     /// <param name='radix'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object with the same value as given in the string
     /// portion.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str' />
     /// is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref name='radix'/>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='radix' />
     /// is less than 2 or greater than 36.</exception>
     /// <exception cref='FormatException'>The string portion is empty or in an
     /// invalid format.</exception>
@@ -4220,19 +4261,24 @@ namespace PeterO {
       return fromRadixSubstring(str, radix, 0, str.Length);
     }
 
-    /// <summary>Converts a portion of a string to an arbitrary-precision integer.
-    /// The string portion can begin with a minus sign ('-') to indicate that it's
+    /// <summary>Converts a portion of a string to an arbitrary-precision
+    /// integer.
+    /// The string portion can begin with a minus sign ('-') to indicate that
+    /// it's
     /// negative.</summary>
     /// <param name='str'>A string object.</param>
     /// <param name='index'>The index of the string that starts the string
     /// portion.</param>
-    /// <param name='endIndex'>The index of the string that ends the string portion.
+    /// <param name='endIndex'>The index of the string that ends the string
+    /// portion.
     /// The length will be index + endIndex - 1.</param>
     /// <returns>A BigInteger object with the same value as given in the string
     /// portion.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str' />
     /// is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref name='index'/>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='index' />
     /// is less than 0, <paramref name='endIndex'/> is less than 0, or either is
     /// greater than the string's length, or <paramref name='endIndex'/> is less
     /// than <paramref name='index'/> .</exception>
@@ -4269,22 +4315,28 @@ namespace PeterO {
       36, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
       25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 36, 36, 36, 36 };
 
-    /// <summary>Converts a portion of a string to an arbitrary-precision integer in
+    /// <summary>Converts a portion of a string to an arbitrary-precision
+    /// integer in
     /// a given radix. The string portion can begin with a minus sign ('-') to
     /// indicate that it's negative.</summary>
     /// <param name='str'>A string object.</param>
-    /// <param name='radix'>A base from 2 to 36. The possible digits start from 0 to
-    /// 9, then from A to Z in base 36, and the possible digits start from 0 to 9,
+    /// <param name='radix'>A base from 2 to 36. The possible digits start from
+    /// 0 to
+    /// 9, then from A to Z in base 36, and the possible digits start from 0 to
+    /// 9,
     /// then from A to F in base 16.</param>
     /// <param name='index'>The index of the string that starts the string
     /// portion.</param>
-    /// <param name='endIndex'>The index of the string that ends the string portion.
+    /// <param name='endIndex'>The index of the string that ends the string
+    /// portion.
     /// The length will be index + endIndex - 1.</param>
     /// <returns>A BigInteger object with the same value as given in the string
     /// portion.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='str'/>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str' />
     /// is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref name='index'/>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='index' />
     /// is less than 0, <paramref name='endIndex'/> is less than 0, or either is
     /// greater than the string's length, or <paramref name='endIndex'/> is less
     /// than <paramref name='index'/> .</exception>
@@ -4502,7 +4554,8 @@ namespace PeterO {
       return 0;
     }
 
-    /// <summary>Returns the greatest common divisor of two integers. The greatest
+    /// <summary>Returns the greatest common divisor of two integers. The
+    /// greatest
     /// common divisor (GCD) is also known as the greatest common factor
     /// (GCF).</summary>
     /// <param name='bigintSecond'>Another BigInteger object.</param>
@@ -4565,7 +4618,8 @@ namespace PeterO {
     /// <param name='pow'>Another BigInteger object.</param>
     /// <param name='mod'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='pow'/>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='pow' />
     /// or <paramref name='mod'/> is null.</exception>
     public BigInteger ModPow(BigInteger pow, BigInteger mod) {
       if (pow == null) {
@@ -4595,7 +4649,8 @@ namespace PeterO {
     }
 
     #region Equals and GetHashCode implementation
-    /// <inheritdoc/><summary>Determines whether this object and another object are
+    /// <inheritdoc/><summary>Determines whether this object and another object
+    /// are
     /// equal.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>True if this object and another object are equal; otherwise,
@@ -5065,8 +5120,10 @@ namespace PeterO {
 
     /// <summary>Divides this instance by the value of a BigInteger object. The
     /// result is rounded down (the fractional part is discarded). Except if the
-    /// result is 0, it will be negative if this object is positive and the other is
-    /// negative, or vice versa, and will be positive if both are positive or both
+    /// result is 0, it will be negative if this object is positive and the
+    /// other is
+    /// negative, or vice versa, and will be positive if both are positive or
+    /// both
     /// are negative.</summary>
     /// <param name='bigintDivisor'>Another BigInteger object.</param>
     /// <returns>The quotient of the two objects.</returns>
@@ -5144,10 +5201,12 @@ namespace PeterO {
           this.negative ^ bigintDivisor.negative)) : BigInteger.Zero;
     }
 
-    /// <summary>Divides this object by another big integer and returns the quotient
+    /// <summary>Divides this object by another big integer and returns the
+    /// quotient
     /// and remainder.</summary>
     /// <param name='divisor'>A BigInteger object.</param>
-    /// <returns>An array with two big integers: the first is the quotient, and the
+    /// <returns>An array with two big integers: the first is the quotient, and
+    /// the
     /// second is the remainder.</returns>
     /// <exception cref='ArgumentNullException'>The parameter divisor is
     /// null.</exception>
@@ -5247,9 +5306,12 @@ namespace PeterO {
     }
 
     /// <summary>Finds the modulus remainder that results when this instance is
-    /// divided by the value of a BigInteger object. The modulus remainder is the
-    /// same as the normal remainder if the normal remainder is positive, and equals
-    /// divisor plus normal remainder if the normal remainder is negative.</summary>
+    /// divided by the value of a BigInteger object. The modulus remainder is
+    /// the
+    /// same as the normal remainder if the normal remainder is positive, and
+    /// equals
+    /// divisor plus normal remainder if the normal remainder is
+    /// negative.</summary>
     /// <param name='divisor'>A divisor greater than 0 (the modulus).</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArithmeticException'>The parameter <paramref
@@ -5270,10 +5332,14 @@ namespace PeterO {
       return rem;
     }
 
-    /// <summary>Finds the remainder that results when this instance is divided by
-    /// the value of a BigInteger object. The remainder is the value that remains
-    /// when the absolute value of this object is divided by the absolute value of
-    /// the other object; the remainder has the same sign (positive or negative) as
+    /// <summary>Finds the remainder that results when this instance is divided
+    /// by
+    /// the value of a BigInteger object. The remainder is the value that
+    /// remains
+    /// when the absolute value of this object is divided by the absolute value
+    /// of
+    /// the other object; the remainder has the same sign (positive or negative)
+    /// as
     /// this object.</summary>
     /// <param name='divisor'>Another BigInteger object.</param>
     /// <returns>The remainder of the two objects.</returns>
@@ -5346,7 +5412,8 @@ namespace PeterO {
 
     /// <summary>Compares a BigInteger object with this instance.</summary>
     /// <param name='other'>A BigInteger object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this instance is
+    /// <returns>Zero if the values are equal; a negative number if this
+    /// instance is
     /// less, or a positive number if this instance is greater.</returns>
     public int CompareTo(BigInteger other) {
       if (other == null) {
@@ -5387,7 +5454,8 @@ namespace PeterO {
     }
 
     /// <summary>Gets the sign of this object's value.</summary>
-    /// <value>0 if this value is zero; -1 if this value is negative, or 1 if this
+    /// <value>0 if this value is zero; -1 if this value is negative, or 1 if
+    /// this
     /// value is positive.</value>
     public int Sign {
       get {
@@ -5405,7 +5473,8 @@ namespace PeterO {
 
     /// <summary>Finds the square root of this instance&#x27;s value, rounded
     /// down.</summary>
-    /// <returns>The square root of this object's value. Returns 0 if this value is
+    /// <returns>The square root of this object's value. Returns 0 if this value
+    /// is
     /// 0 or less.</returns>
     public BigInteger sqrt() {
       BigInteger[] srrem = this.sqrtWithRemainder();
@@ -5413,9 +5482,12 @@ namespace PeterO {
     }
 
     /// <summary>Calculates the square root and the remainder.</summary>
-    /// <returns>An array of two big integers: the first integer is the square root,
-    /// and the second is the difference between this value and the square of the
-    /// first integer. Returns two zeros if this value is 0 or less, or one and zero
+    /// <returns>An array of two big integers: the first integer is the square
+    /// root,
+    /// and the second is the difference between this value and the square of
+    /// the
+    /// first integer. Returns two zeros if this value is 0 or less, or one and
+    /// zero
     /// if this value equals 1.</returns>
     public BigInteger[] sqrtWithRemainder() {
       if (this.Sign <= 0) {

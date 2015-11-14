@@ -24,7 +24,7 @@ s,
 CborNamespace() +".URIUtility" , "escapeURI",
 (string)Reflect.InvokeStatic(
 CborNamespace() +".URIUtility",
-"escapeURI" ,s, 0), 0));
+"escapeURI" , s, 0), 0));
     Assert.AreEqual(
 (string)Reflect.InvokeStatic(
 CborNamespace() + ".URIUtility",
@@ -35,7 +35,7 @@ s,
 CborNamespace() +".URIUtility" , "escapeURI",
 (string)Reflect.InvokeStatic(
 CborNamespace() +".URIUtility",
-"escapeURI" ,s, 1), 1));
+"escapeURI" , s, 1), 1));
     Assert.AreEqual(
 (string)Reflect.InvokeStatic(
 CborNamespace() + ".URIUtility",
@@ -46,7 +46,7 @@ s,
 CborNamespace() +".URIUtility" , "escapeURI",
 (string)Reflect.InvokeStatic(
 CborNamespace() +".URIUtility",
-"escapeURI" ,s, 2), 2));
+"escapeURI" , s, 2), 2));
     Assert.AreEqual(
 (string)Reflect.InvokeStatic(
 CborNamespace() + ".URIUtility",
@@ -57,7 +57,7 @@ s,
 CborNamespace() +".URIUtility" , "escapeURI",
 (string)Reflect.InvokeStatic(
 CborNamespace() +".URIUtility",
-"escapeURI" ,s, 3), 3));
+"escapeURI" , s, 3), 3));
   }
 
   private static void assertIdempotencyNeg(string s) {
@@ -77,7 +77,7 @@ s,
 CborNamespace() +".URIUtility" , "escapeURI",
 (string)Reflect.InvokeStatic(
 CborNamespace() +".URIUtility",
-"escapeURI" ,s, 0), 0));
+"escapeURI" , s, 0), 0));
     Assert.AreEqual(
 (string)Reflect.InvokeStatic(
 CborNamespace() + ".URIUtility",
@@ -88,7 +88,7 @@ s,
 CborNamespace() +".URIUtility" , "escapeURI",
 (string)Reflect.InvokeStatic(
 CborNamespace() +".URIUtility",
-"escapeURI" ,s, 1), 1));
+"escapeURI" , s, 1), 1));
     Assert.AreEqual(
 (string)Reflect.InvokeStatic(
 CborNamespace() + ".URIUtility",
@@ -99,7 +99,7 @@ s,
 CborNamespace() +".URIUtility" , "escapeURI",
 (string)Reflect.InvokeStatic(
 CborNamespace() +".URIUtility",
-"escapeURI" ,s, 2), 2));
+"escapeURI" , s, 2), 2));
     Assert.AreEqual(
 (string)Reflect.InvokeStatic(
 CborNamespace() + ".URIUtility",
@@ -110,14 +110,14 @@ s,
 CborNamespace() +".URIUtility" , "escapeURI",
 (string)Reflect.InvokeStatic(
 CborNamespace() +".URIUtility",
-"escapeURI" ,s, 3), 3));
+"escapeURI" , s, 3), 3));
   }
 
   private static void assertResolve(String src, String baseuri, String dest) {
     assertIdempotency(src);
     assertIdempotency(baseuri);
     assertIdempotency(dest);
-    string res = (string)Reflect.InvokeStatic(
+    var res = (string)Reflect.InvokeStatic(
 CborNamespace() +".URIUtility",
 "relativeResolve",
 src,
