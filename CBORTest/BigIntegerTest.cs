@@ -476,29 +476,29 @@ Assert.Fail("Should have failed");
 throw new InvalidOperationException(String.Empty, ex);
 }
       {
-string stringTemp = BigInteger.Zero.gcd(BigInteger.fromString("244"
-)).ToString();
+string stringTemp = BigInteger.Zero.gcd(BigInteger.fromString(
+"244")).ToString();
 Assert.AreEqual(
 "244",
 stringTemp);
 }
       {
-string stringTemp = BigInteger.Zero.gcd(BigInteger.fromString("-244"
-)).ToString();
+string stringTemp = BigInteger.Zero.gcd(BigInteger.fromString(
+"-244")).ToString();
 Assert.AreEqual(
 "244",
 stringTemp);
 }
       {
-string stringTemp = BigInteger.fromString("244"
-).gcd(BigInteger.Zero).ToString();
+string stringTemp = BigInteger.fromString(
+"244").gcd(BigInteger.Zero).ToString();
 Assert.AreEqual(
 "244",
 stringTemp);
 }
       {
-string stringTemp = BigInteger.fromString("-244"
-).gcd(BigInteger.Zero).ToString();
+string stringTemp = BigInteger.fromString(
+"-244").gcd(BigInteger.Zero).ToString();
 Assert.AreEqual(
 "244",
 stringTemp);
@@ -510,8 +510,8 @@ Assert.AreEqual(
 stringTemp);
 }
       {
-string stringTemp = BigInteger.One.gcd(BigInteger.fromString("-244"
-)).ToString();
+string stringTemp = BigInteger.One.gcd(BigInteger.fromString(
+"-244")).ToString();
 Assert.AreEqual(
 "1",
 stringTemp);
@@ -523,8 +523,8 @@ Assert.AreEqual(
 stringTemp);
 }
       {
-string stringTemp = BigInteger.fromString("-244"
-).gcd(BigInteger.One).ToString();
+string stringTemp = BigInteger.fromString(
+"-244").gcd(BigInteger.One).ToString();
 Assert.AreEqual(
 "1",
 stringTemp);
@@ -1000,7 +1000,7 @@ Assert.Fail("Should have failed");
 throw new InvalidOperationException(String.Empty, ex);
 }
       try {
- BigInteger.One.ModPow(BigInteger.fromString("-1"),BigInteger.fromString("1"));
+ BigInteger.One.ModPow(BigInteger.fromString("-1"), BigInteger.fromString("1"));
 Assert.Fail("Should have failed");
 } catch (ArgumentException) {
 } catch (Exception ex) {
@@ -1008,7 +1008,7 @@ Assert.Fail("Should have failed");
 throw new InvalidOperationException(String.Empty, ex);
 }
       try {
- BigInteger.One.ModPow(BigInteger.fromString("0"),BigInteger.fromString("0"));
+ BigInteger.One.ModPow(BigInteger.fromString("0"), BigInteger.fromString("0"));
 Assert.Fail("Should have failed");
 } catch (ArgumentException) {
 } catch (Exception ex) {
@@ -1016,7 +1016,7 @@ Assert.Fail("Should have failed");
 throw new InvalidOperationException(String.Empty, ex);
 }
       try {
- BigInteger.One.ModPow(BigInteger.fromString("0"),BigInteger.fromString("-1"));
+ BigInteger.One.ModPow(BigInteger.fromString("0"), BigInteger.fromString("-1"));
 Assert.Fail("Should have failed");
 } catch (ArgumentException) {
 } catch (Exception ex) {
@@ -1024,7 +1024,7 @@ Assert.Fail("Should have failed");
 throw new InvalidOperationException(String.Empty, ex);
 }
       try {
- BigInteger.One.ModPow(BigInteger.fromString("1"),BigInteger.fromString("0"));
+ BigInteger.One.ModPow(BigInteger.fromString("1"), BigInteger.fromString("0"));
 Assert.Fail("Should have failed");
 } catch (ArgumentException) {
 } catch (Exception ex) {
@@ -1032,7 +1032,7 @@ Assert.Fail("Should have failed");
 throw new InvalidOperationException(String.Empty, ex);
 }
       try {
- BigInteger.One.ModPow(BigInteger.fromString("1"),BigInteger.fromString("-1"));
+ BigInteger.One.ModPow(BigInteger.fromString("1"), BigInteger.fromString("-1"));
 Assert.Fail("Should have failed");
 } catch (ArgumentException) {
 } catch (Exception ex) {

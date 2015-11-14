@@ -143,25 +143,30 @@ Assert.AreEqual(0xdc00, DataUtilities.CodePointAt("\udc00\ud800\udc00" , 0,1));
       }
       {
         long numberTemp = Math.Sign(
-          DataUtilities.CodePointCompare("\ud800\udc00",
-                    "\ud800\udc00"));
+          DataUtilities.CodePointCompare(
+"\ud800\udc00",
+"\ud800\udc00"));
         Assert.AreEqual(0, numberTemp);
       }
       {
         long numberTemp = Math.Sign(
-          DataUtilities.CodePointCompare("abc",
-                    "\ud800\udc00"));
+          DataUtilities.CodePointCompare(
+"abc",
+"\ud800\udc00"));
         Assert.AreEqual(-1, numberTemp);
       }
       {
         long numberTemp = Math.Sign(
-          DataUtilities.CodePointCompare("\uf000",
-                    "\ud800\udc00"));
+          DataUtilities.CodePointCompare(
+"\uf000",
+"\ud800\udc00"));
         Assert.AreEqual(-1, numberTemp);
       }
       {
-        long numberTemp = Math.Sign(DataUtilities.CodePointCompare("\uf000",
-          "\ud800"));
+        long numberTemp = Math.Sign(
+DataUtilities.CodePointCompare(
+"\uf000",
+"\ud800"));
         Assert.AreEqual(1, numberTemp);
       }
       Assert.IsTrue(DataUtilities.CodePointCompare("abc", "def") < 0);
@@ -732,7 +737,9 @@ throw new InvalidOperationException(String.Empty, ex);
     }
     [TestMethod]
     public void TestToLowerCaseAscii() {
-      Assert.IsNull(DataUtilities.ToLowerCaseAscii(null));
+      if (DataUtilities.ToLowerCaseAscii(null) != null) {
+ Assert.Fail();
+ }
       {
         string stringTemp = DataUtilities.ToLowerCaseAscii("abc012-=?");
         Assert.AreEqual(
@@ -750,7 +757,7 @@ throw new InvalidOperationException(String.Empty, ex);
     public void TestWriteUtf8() {
       try {
         {
-          using(var ms = new MemoryStream()) {
+           using (var ms = new MemoryStream()) {
           try {
             DataUtilities.WriteUtf8("x", null, true);
             Assert.Fail("Should have failed");
@@ -891,47 +898,47 @@ throw new InvalidOperationException(String.Empty, ex);
         }
         {
           var ms = new MemoryStream();
-          DataUtilities.WriteUtf8("0\r1",0,3,ms,true,true);
+          DataUtilities.WriteUtf8("0\r1", 0, 3, ms, true, true);
           TestCommon.AssertByteArraysEqual(
             new byte[] { 0x30, 0x0d, 0x0a, 0x31 },
             ms.ToArray());
           ms = new MemoryStream();
-          DataUtilities.WriteUtf8("0\n1",0,3,ms,true,true);
+          DataUtilities.WriteUtf8("0\n1", 0, 3, ms, true, true);
           TestCommon.AssertByteArraysEqual(
             new byte[] { 0x30, 0x0d, 0x0a, 0x31 },
             ms.ToArray());
           ms = new MemoryStream();
-          DataUtilities.WriteUtf8("0\r\n1",0,4,ms,true,true);
+          DataUtilities.WriteUtf8("0\r\n1", 0, 4, ms, true, true);
           TestCommon.AssertByteArraysEqual(
             new byte[] { 0x30, 0x0d, 0x0a, 0x31 },
             ms.ToArray());
           ms = new MemoryStream();
-          DataUtilities.WriteUtf8("0\r\r1",0,4,ms,true,true);
+          DataUtilities.WriteUtf8("0\r\r1", 0, 4, ms, true, true);
           TestCommon.AssertByteArraysEqual(
             new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
             ms.ToArray());
           ms = new MemoryStream();
-          DataUtilities.WriteUtf8("0\n\r1",0,4,ms,true,true);
+          DataUtilities.WriteUtf8("0\n\r1", 0, 4, ms, true, true);
           TestCommon.AssertByteArraysEqual(
             new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
             ms.ToArray());
           ms = new MemoryStream();
-          DataUtilities.WriteUtf8("0\r\r\n1",0,5,ms,true,true);
+          DataUtilities.WriteUtf8("0\r\r\n1", 0, 5, ms, true, true);
           TestCommon.AssertByteArraysEqual(
             new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
             ms.ToArray());
           ms = new MemoryStream();
-          DataUtilities.WriteUtf8("0\n\r\n1",0,5,ms,true,true);
+          DataUtilities.WriteUtf8("0\n\r\n1", 0, 5, ms, true, true);
           TestCommon.AssertByteArraysEqual(
             new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
             ms.ToArray());
           ms = new MemoryStream();
-          DataUtilities.WriteUtf8("0\n\n\r1",0,5,ms,true,true);
+          DataUtilities.WriteUtf8("0\n\n\r1", 0, 5, ms, true, true);
           TestCommon.AssertByteArraysEqual(
             new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
             ms.ToArray());
           ms = new MemoryStream();
-          DataUtilities.WriteUtf8("0\r\r\r1",0,5,ms,true,true);
+          DataUtilities.WriteUtf8("0\r\r\r1", 0, 5, ms, true, true);
           TestCommon.AssertByteArraysEqual(
             new byte[] { 0x30, 0x0d, 0x0a, 0x0d, 0x0a, 0x0d, 0x0a, 0x31 },
             ms.ToArray());

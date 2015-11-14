@@ -818,9 +818,9 @@ The format generally follows the definition in java.math.BigDecimal(), except th
 
  * <i>str</i>: A string object, a portion of which represents a number.
 
- * <i>offset</i>: A 32-bit signed integer.
+ * <i>offset</i>: A zero-based index that identifies the start of the number.
 
- * <i>length</i>: A 32-bit signed integer. (2).
+ * <i>length</i>: The length of the number within the string.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 

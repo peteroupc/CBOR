@@ -3204,11 +3204,11 @@ namespace PeterO.Cbor {
        if (CBORJson.SkipWhitespaceJSON(reader) != -1) {
         throw reader.NewError("End of string not reached");
        }
+       return obj;
     } catch (FormatException ex) {
     // thrown by the underlying CharacterReader
         throw new CBORException(ex.Message, ex.InnerException);
     }
-    return obj;
     }
 
     /// <summary>Generates a CBOR object from a data stream in JavaScript Object
@@ -3227,7 +3227,7 @@ namespace PeterO.Cbor {
     /// <exception cref='CBORException'>The data stream contains invalid UTF-8 or is
     /// not in JSON format.</exception>
     public static CBORObject ReadJSON(Stream stream) {
-    if ((stream) == null) {
+    if (stream == null) {
   throw new ArgumentNullException("stream");
 }
       var reader = new CharacterReader(stream);

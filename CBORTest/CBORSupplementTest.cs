@@ -1577,7 +1577,7 @@ CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
                       0x19, 0x01, 0xff });
       expected =
       "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]"
-        ;
+;
       Assert.AreEqual(expected, cbor.ToJSONString());
     }
 
