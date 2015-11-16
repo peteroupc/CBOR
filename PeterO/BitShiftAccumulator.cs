@@ -15,7 +15,8 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether the last discarded bit was
     /// set.</summary>
-    /// <value>True if the last discarded bit was set; otherwise, false.</value>
+    /// <value>True if the last discarded bit was set; otherwise,
+    /// false.</value>
     public int LastDiscardedDigit
     {
       get
@@ -26,10 +27,10 @@ namespace PeterO {
 
     private int bitsAfterLeftmost;
 
-    /// <summary>Gets a value indicating whether any of the discarded bits to the
-    /// right of the last one was set.</summary>
-    /// <value>True if any of the discarded bits to the right of the last one was
-    /// set; otherwise, false.</value>
+    /// <summary>Gets a value indicating whether any of the discarded bits
+    /// to the right of the last one was set.</summary>
+    /// <value>True if any of the discarded bits to the right of the last
+    /// one was set; otherwise, false.</value>
     public int OlderDiscardedDigits
     {
       get
@@ -294,11 +295,11 @@ int olderDiscarded) {
       }
     }
 
-    /// <summary>Shifts a number to the right, gathering information on whether the
-    /// last bit discarded is set and whether the discarded bits to the right of
-    /// that bit are set. Assumes that the big integer being shifted is
-    /// positive.</summary>
-    /// <param name='bits'>A 32-bit signed integer.</param>
+    /// <summary>Shifts a number to the right, gathering information on
+    /// whether the last bit discarded is set and whether the discarded
+    /// bits to the right of that bit are set. Assumes that the big integer
+    /// being shifted is positive.</summary>
+    /// <param name='bits'>Not documented yet.</param>
     public void ShiftRightInt(int bits) {
       if (this.isSmall) {
         this.ShiftRightSmall(bits);
@@ -346,10 +347,10 @@ int olderDiscarded) {
     }
 
     /// <summary>Shifts a number until it reaches the given number of bits,
-    /// gathering information on whether the last bit discarded is set and whether
-    /// the discarded bits to the right of that bit are set. Assumes that the big
-    /// integer being shifted is positive.</summary>
-    /// <param name='bits'>A 32-bit signed integer.</param>
+    /// gathering information on whether the last bit discarded is set and
+    /// whether the discarded bits to the right of that bit are set.
+    /// Assumes that the big integer being shifted is positive.</summary>
+    /// <param name='bits'>Not documented yet.</param>
     public void ShiftToDigitsInt(int bits) {
       if (bits < 0) {
         throw new ArgumentException("bits (" + bits + ") is less than 0");

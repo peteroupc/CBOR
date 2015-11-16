@@ -241,12 +241,12 @@ bool check32bit) {
       throw new IOException("Not a valid headbyte for ReadFP");
     }
 
-    /// <summary>Reads a double-precision floating point number in CBOR format from
-    /// a data stream.</summary>
+    /// <summary>Reads a double-precision floating point number in CBOR
+    /// format from a data stream.</summary>
     /// <param name='stream'>A data stream.</param>
     /// <returns>A 64-bit floating-point number.</returns>
-    /// <exception cref='System.IO.IOException'>The end of the stream was reached,
-    /// or the object read isn't a number.</exception>
+    /// <exception cref='System.IO.IOException'>The end of the stream was
+    /// reached, or the object read isn't a number.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>
     public static double ReadDouble(Stream stream) {
@@ -292,13 +292,13 @@ bool check32bit) {
       throw new IOException("Not a double");
     }
 
-    /// <summary>Reads a 32-bit integer in CBOR format from a data stream. If the
-    /// object read is a floating-point number, it is truncated to an
-    /// integer.</summary>
+    /// <summary>Reads a 32-bit integer in CBOR format from a data stream.
+    /// If the object read is a floating-point number, it is truncated to
+    /// an integer.</summary>
     /// <param name='stream'>A data stream.</param>
     /// <returns>A 32-bit signed integer.</returns>
-    /// <exception cref='System.IO.IOException'>The end of the stream was reached,
-    /// or the object read isn't a number, or can't fit a 32-bit
+    /// <exception cref='System.IO.IOException'>The end of the stream was
+    /// reached, or the object read isn't a number, or can't fit a 32-bit
     /// integer.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='stream'/> is null.</exception>

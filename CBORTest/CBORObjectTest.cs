@@ -2106,8 +2106,8 @@ throw new InvalidOperationException(String.Empty, ex);
     }
     [TestMethod]
     public void TestReadJSON() {
-      using (var ms = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x7b, 0x7d
-        })) {
+      using (var ms = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x7b,
+        0x7d })) {
         try {
           CBORObject.ReadJSON(ms);
         } catch (Exception ex) {

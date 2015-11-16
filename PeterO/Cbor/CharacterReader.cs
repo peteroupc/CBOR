@@ -378,8 +378,8 @@ this.offset);
 
     /// <summary>Reads the next character from a Unicode stream or a
     /// string.</summary>
-    /// <returns>The next character, or -1 if the end of the string or stream was
-    /// reached.</returns>
+    /// <returns>The next character, or -1 if the end of the string or
+    /// stream was reached.</returns>
     public int NextChar() {
       if (this.reader != null) {
         return this.reader.NextChar();

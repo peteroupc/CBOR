@@ -9,7 +9,8 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Implements arithmetic operations with CBOR objects.</summary>
+    /// <summary>Implements arithmetic operations with CBOR
+    /// objects.</summary>
   internal static class CBORObjectMath {
     public static CBORObject Addition(CBORObject a, CBORObject b) {
       if (a == null) {

@@ -197,7 +197,8 @@ The lowest exponent possible when a converted number is expressed in scientific 
 
     public int Flags { get; set;}
 
-Gets or sets the flags that are set from converting numbers according to this precision context. If HasFlags is false, this value will be 0. This value is a combination of bit fields. To retrieve a particular flag, use the AND operation on the return value of this method. For example: `(this.Flags & PrecisionContext.FlagInexact) != 0` returns TRUE if the Inexact flag is set.
+Gets or sets the flags that are set from converting numbers according to this precision context. If HasFlags is false, this value will be 0. This value is a combination of bit fields. To retrieve a particular flag, use the AND operation on the return value of this method. For example:  `(this.Flags &
+            PrecisionContext.FlagInexact) != 0` returns TRUE if the Inexact flag is set.
 
 <b>Returns:</b>
 
@@ -241,13 +242,13 @@ Gets a value indicating whether this context's Precision property is in bits, ra
 
 <b>Returns:</b>
 
-True if this context's Precision property is in bits, rather than digits; otherwise, false.. The default is false.
+True if this context's Precision property is in bits, rather than digits; otherwise, false. The default is false.
 
 ### IsSimplified
 
     public bool IsSimplified { get; }
 
-Gets a value indicating whether to use a "simplified" arithmetic. In the simplified arithmetic, infinity, not-a-number, and subnormal numbers are not allowed, and negative zero is treated the same as positive zero. For further details, see  `http://speleotrove.com/decimal/dax3274.html`
+Gets a value indicating whether to use a "simplified" arithmetic. In the simplified arithmetic, infinity, not-a-number, and subnormal numbers are not allowed, and negative zero is treated the same as positive zero. For further details, see `http://speleotrove.com/decimal/dax3274.html`
 
 <b>Returns:</b>
 
@@ -277,7 +278,7 @@ The desired rounding mode when converting numbers that can't be represented in t
 
     public int Traps { get; }
 
-Gets the traps that are set for each flag in the context. Whenever a flag is signaled, even if HasFlags is false, and the flag's trap is enabled, the operation will throw a TrapException. For example, if Traps equals FlagInexact and FlagSubnormal, a TrapException will be thrown if an operation's return value is not the same as the exact result (FlagInexact) or if the return value's exponent is lower than the lowest allowed (FlagSubnormal).
+Gets the traps that are set for each flag in the context. Whenever a flag is signaled, even if HasFlags is false, and the flag's trap is enabled, the operation will throw a TrapException.For example, if Traps equals FlagInexact and FlagSubnormal, a TrapException will be thrown if an operation's return value is not the same as the exact result (FlagInexact) or if the return value's exponent is lower than the lowest allowed (FlagSubnormal).
 
 <b>Returns:</b>
 

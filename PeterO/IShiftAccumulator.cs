@@ -8,9 +8,9 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO {
-    /// <summary>Common interface for classes that shift a number of digits and
-    /// record information on whether a non-zero digit was discarded this
-    /// way.</summary>
+    /// <summary>Common interface for classes that shift a number of digits
+    /// and record information on whether a non-zero digit was discarded
+    /// this way.</summary>
   internal interface IShiftAccumulator {
     BigInteger ShiftedInt { get; }
 

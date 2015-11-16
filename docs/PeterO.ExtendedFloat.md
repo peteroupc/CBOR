@@ -211,7 +211,7 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
 <b>Returns:</b>
 
-Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if <i>other</i>
+Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if  <i>other</i>
  is null, or 0 if both values are equal.
 
 ### CompareToSignal
@@ -240,7 +240,7 @@ Quiet NaN if this object or the other object is NaN, or 0 if both objects have t
         PeterO.ExtendedFloat other,
         PeterO.PrecisionContext ctx);
 
-Compares the mathematical values of this object and another object.In this method, negative zero and positive zero are considered equal.
+Compares the mathematical values of this object and another object. In this method, negative zero and positive zero are considered equal.
 
 If this object or the other object is a quiet NaN or signaling NaN, this method returns a quiet NaN, and will signal a FlagInvalid flag if either is a signaling NaN.
 
@@ -398,7 +398,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 
  * System.ArithmeticException:
 Either  <i>ctx</i>
- is null or  <i>ctx</i>
+is null or  <i>ctx</i>
  's precision is 0, and the result would have a nonterminating binary expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
 
 ### DivideAndRemainderNaturalScale
@@ -712,7 +712,7 @@ Creates a binary float from a 64-bit floating-point number. This method computes
 <b>Returns:</b>
 
 A binary float with the same value as  <i>dbl</i>
-.
+ .
 
 ### FromInt32
 
@@ -758,7 +758,7 @@ Creates a binary float from a 32-bit floating-point number. This method computes
 <b>Returns:</b>
 
 A binary float with the same value as  <i>flt</i>
-.
+ .
 
 ### FromString
 
@@ -779,7 +779,7 @@ An ExtendedFloat object.
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
 ### FromString
 
@@ -806,7 +806,7 @@ An ExtendedFloat object.
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
 ### FromString
 
@@ -846,7 +846,7 @@ An ExtendedFloat object.
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
 ### FromString
 
@@ -870,7 +870,7 @@ An ExtendedFloat object.
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
 ### GetHashCode
 
@@ -1411,7 +1411,7 @@ Returns the largest value that's less than the given value. Returns negative inf
  * System.ArgumentException:
 The parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
- has an unlimited exponent range.
+has an unlimited exponent range.
 
 ### NextPlus
 
@@ -1433,7 +1433,7 @@ Returns the smallest value that's greater than the given value.
  * System.ArgumentException:
 The parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
- has an unlimited exponent range.
+has an unlimited exponent range.
 
 ### NextToward
 
@@ -1458,7 +1458,7 @@ Returns the next value that is closer to the other object' s value than this obj
  * System.ArgumentException:
 The parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
- has an unlimited exponent range.
+has an unlimited exponent range.
 
 ### PI
 
@@ -1494,8 +1494,8 @@ Rounds this object's value to a given precision, using the given rounding mode a
 
 <b>Returns:</b>
 
-The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if  <i>ctx</i>
-is null or the precision and exponent range are unlimited.
+The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if <i>ctx</i>
+ is null or the precision and exponent range are unlimited.
 
 ### Pow
 
@@ -1727,8 +1727,8 @@ Rounds this object's value to a given maximum bit length, using the given roundi
 
 <b>Returns:</b>
 
-The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if  <i>ctx</i>
-is null or the precision and exponent range are unlimited.
+The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if <i>ctx</i>
+ is null or the precision and exponent range are unlimited.
 
 ### RoundToExponent
 
@@ -1845,8 +1845,8 @@ Rounds this object's value to a given precision, using the given rounding mode a
 
 <b>Returns:</b>
 
-The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if  <i>ctx</i>
-is null or the precision and exponent range are unlimited.
+The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if <i>ctx</i>
+ is null or the precision and exponent range are unlimited.
 
 ### ScaleByPowerOfTwo
 
@@ -1913,7 +1913,7 @@ Returns a number similar to this number but with its scale adjusted.
 <b>Returns:</b>
 
 A number whose scale is increased by  <i>bigPlaces</i>
-.
+ .
 
 ### SquareRoot
 

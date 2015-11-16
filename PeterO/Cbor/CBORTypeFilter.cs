@@ -9,10 +9,11 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <summary>Specifies what kinds of CBOR objects a tag can be. This class is
-    /// used when a CBOR object is being read from a data stream. This class cannot
-    /// be inherited; this is a change in version 2.0 from previous versions, where
-    /// the class was inadvertently left inheritable.</summary>
+    /// <summary>Specifies what kinds of CBOR objects a tag can be. This
+    /// class is used when a CBOR object is being read from a data stream.
+    /// This class cannot be inherited; this is a change in version 2.0
+    /// from previous versions, where the class was inadvertently left
+    /// inheritable.</summary>
   public sealed class CBORTypeFilter {
     private bool any;
     private int types;
@@ -56,15 +57,15 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Copies this filter and includes unsigned integers in the new
-    /// filter.</summary>
+    /// <summary>Copies this filter and includes unsigned integers in the
+    /// new filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithUnsignedInteger() {
       return this.WithType(0);
     }
 
-    /// <summary>Copies this filter and includes negative integers in the new
-    /// filter.</summary>
+    /// <summary>Copies this filter and includes negative integers in the
+    /// new filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithNegativeInteger() {
       return this.WithType(1);
@@ -77,7 +78,8 @@ namespace PeterO.Cbor {
       return this.WithType(2).WithTags(25);
     }
 
-    /// <summary>Copies this filter and includes maps in the new filter.</summary>
+    /// <summary>Copies this filter and includes maps in the new
+    /// filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithMap() {
       return this.WithType(5);
@@ -143,19 +145,20 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <summary>Copies this filter and includes CBOR arrays with an exact length to
-    /// the new filter.</summary>
-    /// <param name='arrayLength'>The desired maximum length of an array.</param>
-    /// <param name='elements'>An array containing the allowed types for each
-    /// element in the array. There must be at least as many elements here as given
-    /// in the arrayLength parameter.</param>
+    /// <summary>Copies this filter and includes CBOR arrays with an exact
+    /// length to the new filter.</summary>
+    /// <param name='arrayLength'>The desired maximum length of an
+    /// array.</param>
+    /// <param name='elements'>An array containing the allowed types for
+    /// each element in the array. There must be at least as many elements
+    /// here as given in the arrayLength parameter.</param>
     /// <returns>A CBORTypeFilter object.</returns>
-    /// <exception cref='ArgumentException'>The parameter arrayLength is less than
-    /// 0.</exception>
+    /// <exception cref='ArgumentException'>The parameter arrayLength is
+    /// less than 0.</exception>
     /// <exception cref='ArgumentNullException'>The parameter elements is
     /// null.</exception>
-    /// <exception cref='ArgumentException'>The parameter elements has fewer
-    /// elements than specified in arrayLength.</exception>
+    /// <exception cref='ArgumentException'>The parameter elements has
+    /// fewer elements than specified in arrayLength.</exception>
     public CBORTypeFilter WithArrayExactLength(
 int arrayLength,
 params CBORTypeFilter[] elements) {
@@ -182,19 +185,20 @@ params CBORTypeFilter[] elements) {
       return filter;
     }
 
-    /// <summary>Copies this filter and includes CBOR arrays with at least a given
-    /// length to the new filter.</summary>
-    /// <param name='arrayLength'>The desired minimum length of an array.</param>
-    /// <param name='elements'>An array containing the allowed types for each
-    /// element in the array. There must be at least as many elements here as given
-    /// in the arrayLength parameter.</param>
+    /// <summary>Copies this filter and includes CBOR arrays with at least
+    /// a given length to the new filter.</summary>
+    /// <param name='arrayLength'>The desired minimum length of an
+    /// array.</param>
+    /// <param name='elements'>An array containing the allowed types for
+    /// each element in the array. There must be at least as many elements
+    /// here as given in the arrayLength parameter.</param>
     /// <returns>A CBORTypeFilter object.</returns>
-    /// <exception cref='ArgumentException'>The parameter arrayLength is less than
-    /// 0.</exception>
+    /// <exception cref='ArgumentException'>The parameter arrayLength is
+    /// less than 0.</exception>
     /// <exception cref='ArgumentNullException'>The parameter elements is
     /// null.</exception>
-    /// <exception cref='ArgumentException'>The parameter elements has fewer
-    /// elements than specified in arrayLength.</exception>
+    /// <exception cref='ArgumentException'>The parameter elements has
+    /// fewer elements than specified in arrayLength.</exception>
     public CBORTypeFilter WithArrayMinLength(
 int arrayLength,
 params CBORTypeFilter[] elements) {
@@ -221,8 +225,8 @@ params CBORTypeFilter[] elements) {
       return filter;
     }
 
-    /// <summary>Copies this filter and includes arrays of any length in the new
-    /// filter.</summary>
+    /// <summary>Copies this filter and includes arrays of any length in
+    /// the new filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithArrayAnyLength() {
       if (this.any) {
@@ -242,8 +246,8 @@ params CBORTypeFilter[] elements) {
       return filter;
     }
 
-    /// <summary>Copies this filter and includes floating-point numbers in the new
-    /// filter.</summary>
+    /// <summary>Copies this filter and includes floating-point numbers in
+    /// the new filter.</summary>
     /// <returns>A CBORTypeFilter object.</returns>
     public CBORTypeFilter WithFloatingPoint() {
       if (this.any) {
@@ -274,8 +278,8 @@ params CBORTypeFilter[] elements) {
     /// <summary>Returns whether an array's length is allowed under this
     /// filter.</summary>
     /// <param name='length'>The length of a CBOR array.</param>
-    /// <returns>True if this filter allows CBOR arrays and an array's length is
-    /// allowed under this filter; otherwise, false.</returns>
+    /// <returns>True if this filter allows CBOR arrays and an array's
+    /// length is allowed under this filter; otherwise, false.</returns>
     public bool ArrayLengthMatches(int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                 (this.arrayMinLength ? this.arrayLength >= length :
@@ -285,8 +289,8 @@ params CBORTypeFilter[] elements) {
     /// <summary>Returns whether an array's length is allowed under a
     /// filter.</summary>
     /// <param name='length'>The length of a CBOR array.</param>
-    /// <returns>True if this filter allows CBOR arrays and an array's length is
-    /// allowed under a filter; otherwise, false.</returns>
+    /// <returns>True if this filter allows CBOR arrays and an array's
+    /// length is allowed under a filter; otherwise, false.</returns>
     public bool ArrayLengthMatches(long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
                 (this.arrayMinLength ? this.arrayLength >= length :
@@ -296,8 +300,8 @@ params CBORTypeFilter[] elements) {
     /// <summary>Returns whether an array's length is allowed under a
     /// filter.</summary>
     /// <param name='bigLength'>A BigInteger object.</param>
-    /// <returns>True if this filter allows CBOR arrays and an array's length is
-    /// allowed under a filter; otherwise, false.</returns>
+    /// <returns>True if this filter allows CBOR arrays and an array's
+    /// length is allowed under a filter; otherwise, false.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigLength'/> is null.</exception>
     public bool ArrayLengthMatches(BigInteger bigLength) {
@@ -311,32 +315,32 @@ params CBORTypeFilter[] elements) {
         bigLength.CompareTo((BigInteger)this.arrayLength) >= 0)));
     }
 
-    /// <summary>Gets a value indicating whether CBOR objects can have the given tag
-    /// number.</summary>
+    /// <summary>Gets a value indicating whether CBOR objects can have the
+    /// given tag number.</summary>
     /// <param name='tag'>A tag number. Returns false if this is less than
     /// 0.</param>
-    /// <returns>True if CBOR objects can have the given tag number; otherwise,
-    /// false.</returns>
+    /// <returns>True if CBOR objects can have the given tag number;
+    /// otherwise, false.</returns>
     public bool TagAllowed(int tag) {
       return this.any || this.TagAllowed((BigInteger)tag);
     }
 
-    /// <summary>Gets a value indicating whether CBOR objects can have the given tag
-    /// number.</summary>
+    /// <summary>Gets a value indicating whether CBOR objects can have the
+    /// given tag number.</summary>
     /// <param name='tag'>A tag number. Returns false if this is less than
     /// 0.</param>
-    /// <returns>True if CBOR objects can have the given tag number; otherwise,
-    /// false.</returns>
+    /// <returns>True if CBOR objects can have the given tag number;
+    /// otherwise, false.</returns>
     public bool TagAllowed(long tag) {
       return this.any || this.TagAllowed((BigInteger)tag);
     }
 
-    /// <summary>Gets a value indicating whether CBOR objects can have the given tag
-    /// number.</summary>
-    /// <param name='bigTag'>A tag number. Returns false if this is less than
-    /// 0.</param>
-    /// <returns>True if CBOR objects can have the given tag number; otherwise,
-    /// false.</returns>
+    /// <summary>Gets a value indicating whether CBOR objects can have the
+    /// given tag number.</summary>
+    /// <param name='bigTag'>A tag number. Returns false if this is less
+    /// than 0.</param>
+    /// <returns>True if CBOR objects can have the given tag number;
+    /// otherwise, false.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigTag'/> is null.</exception>
     public bool TagAllowed(BigInteger bigTag) {
@@ -363,15 +367,16 @@ params CBORTypeFilter[] elements) {
       return false;
     }
 
-    /// <summary>Determines whether this type filter allows CBOR arrays and the
-    /// given array index is allowed under this type filter.</summary>
+    /// <summary>Determines whether this type filter allows CBOR arrays and
+    /// the given array index is allowed under this type filter.</summary>
     /// <param name='index'>An array index, starting from 0.</param>
-    /// <returns>True if this type filter allows CBOR arrays and the given array
-    /// index is allowed under this type filter; otherwise, false.</returns>
+    /// <returns>True if this type filter allows CBOR arrays and the given
+    /// array index is allowed under this type filter; otherwise,
+    /// false.</returns>
     public bool ArrayIndexAllowed(int index) {
    return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength ||
         ((this.arrayMinLength || index < this.arrayLength) && index >=
-                              0));
+                    0));
     }
 
     /// <summary>Not documented yet.</summary>
@@ -426,8 +431,8 @@ params CBORTypeFilter[] elements) {
       return this.elements[(int)index];
     }
 
-    /// <summary>Returns whether this filter allows simple values that are not
-    /// floating-point numbers.</summary>
+    /// <summary>Returns whether this filter allows simple values that are
+    /// not floating-point numbers.</summary>
     /// <returns>True if this filter allows simple values that are not
     /// floating-point numbers; otherwise, false.</returns>
     public bool NonFPSimpleValueAllowed() {

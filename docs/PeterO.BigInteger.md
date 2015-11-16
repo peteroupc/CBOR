@@ -162,7 +162,7 @@ A BigInteger object.
 
  * System.ArgumentNullException:
 The parameter  <i>a</i>
-or  <i>b</i>
+ or  <i>b</i>
  is null.
 
 ### bitLength
@@ -355,11 +355,11 @@ A BigInteger object with the same value as given in the string portion.
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
  * System.ArgumentException:
 The parameter  <i>radix</i>
-is less than 2 or greater than 36.
+ is less than 2 or greater than 36.
 
  * System.FormatException:
 The string portion is empty or in an invalid format.
@@ -392,14 +392,14 @@ A BigInteger object with the same value as given in the string portion.
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
  * System.ArgumentException:
 The parameter  <i>index</i>
-is less than 0,  <i>endIndex</i>
+ is less than 0,  <i>endIndex</i>
  is less than 0, or either is greater than the string's length, or  <i>endIndex</i>
  is less than  <i>index</i>
- .
+.
 
  * System.FormatException:
 The string portion is empty or in an invalid format.
@@ -423,11 +423,11 @@ A BigInteger object with the same value as given in the string.
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
  * System.FormatException:
 The parameter  <i>str</i>
-is in an invalid format.
+ is in an invalid format.
 
 ### fromSubstring
 
@@ -454,14 +454,14 @@ A BigInteger object with the same value as given in the string portion.
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
  * System.ArgumentException:
 The parameter  <i>index</i>
-is less than 0,  <i>endIndex</i>
+ is less than 0,  <i>endIndex</i>
  is less than 0, or either is greater than the string's length, or  <i>endIndex</i>
  is less than  <i>index</i>
- .
+.
 
  * System.FormatException:
 The string portion is empty or in an invalid format.
@@ -700,7 +700,7 @@ A BigInteger object.
 
  * System.ArgumentNullException:
 The parameter  <i>pow</i>
-or  <i>mod</i>
+ or  <i>mod</i>
  is null.
 
 ### ModPow
@@ -724,7 +724,7 @@ Calculates the remainder when a BigInteger raised to a certain power is divided 
 
 The value (  <i>bigintValue</i>
  ^  <i>pow</i>
-)%  <i>mod</i>
+ )%  <i>mod</i>
  .
 
 <b>Exceptions:</b>
@@ -850,7 +850,7 @@ Determines whether a BigInteger instance is greater than another BigInteger inst
 <b>Returns:</b>
 
 True if  <i>thisValue</i>
- is greater than  <i>otherValue</i>
+ is greater than <i>otherValue</i>
  ; otherwise, false.
 
 ### Operator `>=`
@@ -914,7 +914,7 @@ Determines whether a BigInteger instance is less than another BigInteger instanc
 <b>Returns:</b>
 
 True if  <i>thisValue</i>
- is less than  <i>otherValue</i>
+ is less than <i>otherValue</i>
  ; otherwise, false.
 
 ### Operator `<=`
@@ -1391,5 +1391,5 @@ A BigInteger object.
 
  * System.ArgumentNullException:
 The parameter  <i>a</i>
-or  <i>b</i>
+ or  <i>b</i>
  is null.

@@ -31,7 +31,7 @@ namespace PeterO.Cbor {
       #if DEBUG
       if (this.stack.Count <= 0) {
         throw new ArgumentException("this.stack.Count (" + this.stack.Count +
-                              ") is not greater than " + "0 ");
+                    ") is not greater than " + "0 ");
       }
       #endif
       this.stack.RemoveAt(this.stack.Count - 1);
@@ -50,7 +50,7 @@ namespace PeterO.Cbor {
       }
       if (lengthHint < 0) {
         throw new ArgumentException("lengthHint (" + lengthHint +
-                              ") is less than " + "0 ");
+                    ") is less than " + "0 ");
       }
       #endif
       bool addStr = false;

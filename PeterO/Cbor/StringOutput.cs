@@ -84,14 +84,14 @@ false) < 0) {
             throw new ArgumentException("ch is a surrogate");
           }
           this.outputStream.WriteByte((byte)(0xe0 | ((codePoint >> 12) &
-                              0x0f)));
+                    0x0f)));
           this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 6) & 0x3f)));
           this.outputStream.WriteByte((byte)(0x80 | (codePoint & 0x3f)));
         } else {
           this.outputStream.WriteByte((byte)(0xf0 | ((codePoint >> 18) &
-                              0x08)));
+                    0x08)));
           this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 12) &
-                              0x3f)));
+                    0x3f)));
           this.outputStream.WriteByte((byte)(0x80 | ((codePoint >> 6) & 0x3f)));
           this.outputStream.WriteByte((byte)(0x80 | (codePoint & 0x3f)));
         }
@@ -104,7 +104,7 @@ false) < 0) {
           }
         } else if (codePoint <= 0x10ffff) {
           this.builder.Append((char)((((codePoint - 0x10000) >> 10) &
-                              0x3ff) + 0xd800));
+                    0x3ff) + 0xd800));
           this.builder.Append((char)(((codePoint - 0x10000) & 0x3ff) + 0xdc00));
         }
       }

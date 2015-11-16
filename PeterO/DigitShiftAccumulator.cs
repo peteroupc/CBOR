@@ -11,9 +11,10 @@ namespace PeterO {
   internal sealed class DigitShiftAccumulator : IShiftAccumulator {
     private int bitLeftmost;
 
-    /// <summary>Gets a value indicating whether the last discarded digit was
-    /// set.</summary>
-    /// <value>True if the last discarded digit was set; otherwise, false.</value>
+    /// <summary>Gets a value indicating whether the last discarded digit
+    /// was set.</summary>
+    /// <value>True if the last discarded digit was set; otherwise,
+    /// false.</value>
     public int LastDiscardedDigit {
       get {
         return this.bitLeftmost;
@@ -22,10 +23,10 @@ namespace PeterO {
 
     private int bitsAfterLeftmost;
 
-    /// <summary>Gets a value indicating whether any of the discarded digits to the
-    /// right of the last one was set.</summary>
-    /// <value>True if any of the discarded digits to the right of the last one was
-    /// set; otherwise, false.</value>
+    /// <summary>Gets a value indicating whether any of the discarded
+    /// digits to the right of the last one was set.</summary>
+    /// <value>True if any of the discarded digits to the right of the last
+    /// one was set; otherwise, false.</value>
     public int OlderDiscardedDigits {
       get {
         return this.bitsAfterLeftmost;
@@ -382,11 +383,11 @@ out bigrem);
       }
     }
 
-    /// <summary>Shifts a number to the right, gathering information on whether the
-    /// last digit discarded is set and whether the discarded digits to the right of
-    /// that digit are set. Assumes that the big integer being shifted is
-    /// positive.</summary>
-    /// <param name='digits'>A 32-bit signed integer.</param>
+    /// <summary>Shifts a number to the right, gathering information on
+    /// whether the last digit discarded is set and whether the discarded
+    /// digits to the right of that digit are set. Assumes that the big
+    /// integer being shifted is positive.</summary>
+    /// <param name='digits'>Not documented yet.</param>
     public void ShiftRightInt(int digits) {
       if (this.isSmall) {
         this.ShiftRightSmall(digits);
@@ -463,11 +464,12 @@ out bigrem);
       }
     }
 
-    /// <summary>Shifts a number until it reaches the given number of digits,
-    /// gathering information on whether the last digit discarded is set and whether
-    /// the discarded digits to the right of that digit are set. Assumes that the
-    /// big integer being shifted is positive.</summary>
-    /// <param name='digits'>A 32-bit signed integer.</param>
+    /// <summary>Shifts a number until it reaches the given number of
+    /// digits, gathering information on whether the last digit discarded
+    /// is set and whether the discarded digits to the right of that digit
+    /// are set. Assumes that the big integer being shifted is
+    /// positive.</summary>
+    /// <param name='digits'>Not documented yet.</param>
     public void ShiftToDigitsInt(int digits) {
       if (this.isSmall) {
         this.ShiftToBitsSmall(digits);

@@ -9,16 +9,16 @@ using System;
 
 namespace PeterO {
     /// <summary>Arbitrary-precision rational number. This class cannot be
-    /// inherited; this is a change in version 2.0 from previous versions, where the
-    /// class was inadvertently left inheritable.</summary>
+    /// inherited; this is a change in version 2.0 from previous versions,
+    /// where the class was inadvertently left inheritable.</summary>
   public sealed class ExtendedRational : IComparable<ExtendedRational>,
     IEquatable<ExtendedRational> {
     private BigInteger unsignedNumerator;
 
     /// <summary>Gets this object's numerator.</summary>
-    /// <value>This object&apos;s numerator. If this object is a not-a-number value,
-    /// returns the diagnostic information (which will be negative if this object is
-    /// negative).</value>
+    /// <value>This object&apos;s numerator. If this object is a
+    /// not-a-number value, returns the diagnostic information (which will
+    /// be negative if this object is negative).</value>
     public BigInteger Numerator {
       get {
         return this.IsNegative ? (-(BigInteger)this.unsignedNumerator) :
@@ -26,9 +26,10 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Gets this object's numerator with the sign removed.</summary>
-    /// <value>This object&apos;s numerator. If this object is a not-a-number value,
-    /// returns the diagnostic information.</value>
+    /// <summary>Gets this object's numerator with the sign
+    /// removed.</summary>
+    /// <value>This object&apos;s numerator. If this object is a
+    /// not-a-number value, returns the diagnostic information.</value>
     public BigInteger UnsignedNumerator {
       get {
         return this.unsignedNumerator;
@@ -56,9 +57,9 @@ namespace PeterO {
       var other = obj as ExtendedRational;
       return (
 other != null) && (
-object.Equals(
+Object.Equals(
 this.unsignedNumerator,
-other.unsignedNumerator) && object.Equals(
+other.unsignedNumerator) && Object.Equals(
 this.denominator,
 other.denominator) && this.flags == other.flags);
     }
@@ -83,7 +84,8 @@ other.denominator) && this.flags == other.flags);
     /// <summary>Creates a number with the given numerator and
     /// denominator.</summary>
     /// <param name='numeratorSmall'>A 32-bit signed integer.</param>
-    /// <param name='denominatorSmall'>A 32-bit signed integer. (2).</param>
+    /// <param name='denominatorSmall'>A 32-bit signed integer.
+    /// (2).</param>
     /// <returns>An ExtendedRational object.</returns>
     public static ExtendedRational Create(
 int numeratorSmall,
@@ -102,11 +104,13 @@ BigInteger denominator) {
       return new ExtendedRational(numerator, denominator);
     }
 
-    /// <summary>Initializes a new instance of the ExtendedRational class.</summary>
+    /// <summary>Initializes a new instance of the ExtendedRational
+    /// class.</summary>
     /// <param name='numerator'>A BigInteger object.</param>
     /// <param name='denominator'>Another BigInteger object.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='numerator'/> or <paramref name='denominator'/> is null.</exception>
+    /// name='numerator'/> or <paramref name='denominator'/> is
+    /// null.</exception>
     public ExtendedRational(BigInteger numerator, BigInteger denominator) {
       if (numerator == null) {
         throw new ArgumentNullException("numerator");
@@ -138,9 +142,10 @@ BigInteger denominator) {
     }
 
     /// <summary>Converts this object to a text string.</summary>
-    /// <returns>A string representation of this object. The result can be Infinity,
-    /// NaN, or sNaN (with a minus sign before it for negative values), or a number
-    /// of the following form: [-]numerator/denominator.</returns>
+    /// <returns>A string representation of this object. The result can be
+    /// Infinity, NaN, or sNaN (with a minus sign before it for negative
+    /// values), or a number of the following form:
+    /// [-]numerator/denominator.</returns>
     public override string ToString() {
       if (!this.IsFinite) {
         if (this.IsSignalingNaN()) {
@@ -171,44 +176,46 @@ BigInteger denominator) {
       return new ExtendedRational(bigint, BigInteger.One);
     }
 
-    /// <summary>Converts this rational number to a decimal number.</summary>
-    /// <returns>The exact value of the rational number, or not-a-number (NaN) if
-    /// the result can't be exact because it has a nonterminating decimal
-    /// expansion.</returns>
+    /// <summary>Converts this rational number to a decimal
+    /// number.</summary>
+    /// <returns>The exact value of the rational number, or not-a-number
+    /// (NaN) if the result can't be exact because it has a nonterminating
+    /// decimal expansion.</returns>
     public ExtendedDecimal ToExtendedDecimal() {
       return this.ToExtendedDecimal(null);
     }
 
-    /// <summary>Converts a 32-bit floating-point number to a rational number. This
-    /// method computes the exact value of the floating point number, not an
-    /// approximation, as is often the case by converting the number to a
-    /// string.</summary>
+    /// <summary>Converts a 32-bit floating-point number to a rational
+    /// number. This method computes the exact value of the floating point
+    /// number, not an approximation, as is often the case by converting
+    /// the number to a string.</summary>
     /// <param name='flt'>A 32-bit floating-point number.</param>
-    /// <returns>A rational number with the same value as <paramref name='flt'/>
-    /// .</returns>
+    /// <returns>A rational number with the same value as <paramref
+    /// name='flt'/> .</returns>
     public static ExtendedRational FromSingle(float flt) {
       return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
     }
 
-    /// <summary>Converts a 64-bit floating-point number to a rational number. This
-    /// method computes the exact value of the floating point number, not an
-    /// approximation, as is often the case by converting the number to a
-    /// string.</summary>
+    /// <summary>Converts a 64-bit floating-point number to a rational
+    /// number. This method computes the exact value of the floating point
+    /// number, not an approximation, as is often the case by converting
+    /// the number to a string.</summary>
     /// <param name='flt'>A 64-bit floating-point number.</param>
-    /// <returns>A rational number with the same value as <paramref name='flt'/>
-    /// .</returns>
+    /// <returns>A rational number with the same value as <paramref
+    /// name='flt'/> .</returns>
     public static ExtendedRational FromDouble(double flt) {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
     }
 
     /// <summary>Creates a not-a-number ExtendedRational object.</summary>
-    /// <param name='diag'>A number to use as diagnostic information associated with
-    /// this object. If none is needed, should be zero.</param>
+    /// <param name='diag'>A number to use as diagnostic information
+    /// associated with this object. If none is needed, should be
+    /// zero.</param>
     /// <returns>An ExtendedRational object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='diag'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref name='diag'/> is
-    /// less than 0.</exception>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='diag'/> is less than 0.</exception>
     public static ExtendedRational CreateNaN(BigInteger diag) {
       return CreateNaN(diag, false, false);
     }
@@ -223,16 +230,18 @@ int flags) {
     }
 
     /// <summary>Creates a not-a-number ExtendedRational object.</summary>
-    /// <param name='diag'>A number to use as diagnostic information associated with
-    /// this object. If none is needed, should be zero.</param>
-    /// <param name='signaling'>Whether the return value will be signaling (true) or
-    /// quiet (false).</param>
-    /// <param name='negative'>Whether the return value is negative.</param>
+    /// <param name='diag'>A number to use as diagnostic information
+    /// associated with this object. If none is needed, should be
+    /// zero.</param>
+    /// <param name='signaling'>Whether the return value will be signaling
+    /// (true) or quiet (false).</param>
+    /// <param name='negative'>Whether the return value is
+    /// negative.</param>
     /// <returns>An ExtendedRational object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='diag'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref name='diag'/> is
-    /// less than 0.</exception>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='diag'/> is less than 0.</exception>
     public static ExtendedRational CreateNaN(
 BigInteger diag,
 bool signaling,
@@ -262,8 +271,8 @@ bool negative) {
     /// <summary>Not documented yet.</summary>
     /// <param name='ef'>An ExtendedFloat object.</param>
     /// <returns>An ExtendedRational object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='ef'/>
-    /// is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='ef'/> is null.</exception>
     public static ExtendedRational FromExtendedFloat(ExtendedFloat ef) {
       if (ef == null) {
         throw new ArgumentNullException("ef");
@@ -309,8 +318,8 @@ bool negative) {
     /// <summary>Not documented yet.</summary>
     /// <param name='ef'>An ExtendedDecimal object.</param>
     /// <returns>An ExtendedRational object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='ef'/>
-    /// is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='ef'/> is null.</exception>
     public static ExtendedRational FromExtendedDecimal(ExtendedDecimal ef) {
       if (ef == null) {
         throw new ArgumentNullException("ef");
@@ -354,8 +363,8 @@ bool negative) {
       return new ExtendedRational(num, den);
     }
 
-    /// <summary>Converts this rational number to a decimal number and rounds the
-    /// result to the given precision.</summary>
+    /// <summary>Converts this rational number to a decimal number and
+    /// rounds the result to the given precision.</summary>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal ToExtendedDecimal(PrecisionContext ctx) {
@@ -377,15 +386,16 @@ ctx);
       return ef.Divide(ExtendedDecimal.FromBigInteger(this.Denominator), ctx);
     }
 
-    /// <summary>Converts this rational number to a decimal number, but if the
-    /// result would have a nonterminating decimal expansion, rounds that result to
-    /// the given precision.</summary>
-    /// <param name='ctx'>A precision context object to control the precision. The
-    /// rounding and exponent range settings of this context are ignored. This
-    /// context will be used only if the exact result would have a nonterminating
-    /// decimal expansion. If HasFlags of the context is true, will also store the
-    /// flags resulting from the operation (the flags are in addition to the
-    /// pre-existing flags). Can be null, in which case this method is the same as
+    /// <summary>Converts this rational number to a decimal number, but if
+    /// the result would have a nonterminating decimal expansion, rounds
+    /// that result to the given precision.</summary>
+    /// <param name='ctx'>A precision context object to control the
+    /// precision. The rounding and exponent range settings of this context
+    /// are ignored. This context will be used only if the exact result
+    /// would have a nonterminating decimal expansion. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null, in which case this method is the same as
     /// ToExtendedDecimal.</param>
     /// <returns>An ExtendedDecimal object.</returns>
 public ExtendedDecimal ToExtendedDecimalExactIfPossible(PrecisionContext
@@ -420,16 +430,17 @@ ctx);
       return ed;
     }
 
-    /// <summary>Converts this rational number to a binary number.</summary>
-    /// <returns>The exact value of the rational number, or not-a-number (NaN) if
-    /// the result can't be exact because it has a nonterminating binary
-    /// expansion.</returns>
+    /// <summary>Converts this rational number to a binary
+    /// number.</summary>
+    /// <returns>The exact value of the rational number, or not-a-number
+    /// (NaN) if the result can't be exact because it has a nonterminating
+    /// binary expansion.</returns>
     public ExtendedFloat ToExtendedFloat() {
       return this.ToExtendedFloat(null);
     }
 
-    /// <summary>Converts this rational number to a binary number and rounds the
-    /// result to the given precision.</summary>
+    /// <summary>Converts this rational number to a binary number and
+    /// rounds the result to the given precision.</summary>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat ToExtendedFloat(PrecisionContext ctx) {
@@ -451,15 +462,16 @@ ctx);
       return ef.Divide(ExtendedFloat.FromBigInteger(this.Denominator), ctx);
     }
 
-    /// <summary>Converts this rational number to a binary number, but if the result
-    /// would have a nonterminating binary expansion, rounds that result to the
-    /// given precision.</summary>
-    /// <param name='ctx'>A precision context object to control the precision. The
-    /// rounding and exponent range settings of this context are ignored. This
-    /// context will be used only if the exact result would have a nonterminating
-    /// binary expansion. If HasFlags of the context is true, will also store the
-    /// flags resulting from the operation (the flags are in addition to the
-    /// pre-existing flags). Can be null, in which case this method is the same as
+    /// <summary>Converts this rational number to a binary number, but if
+    /// the result would have a nonterminating binary expansion, rounds
+    /// that result to the given precision.</summary>
+    /// <param name='ctx'>A precision context object to control the
+    /// precision. The rounding and exponent range settings of this context
+    /// are ignored. This context will be used only if the exact result
+    /// would have a nonterminating binary expansion. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null, in which case this method is the same as
     /// ToExtendedFloat.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat ToExtendedFloatExactIfPossible(PrecisionContext ctx) {
@@ -494,10 +506,10 @@ ctx);
       return ed;
     }
 
-    /// <summary>Gets a value indicating whether this object is finite (not infinity
-    /// or NaN).</summary>
-    /// <value>True if this object is finite (not infinity or NaN); otherwise,
-    /// false.</value>
+    /// <summary>Gets a value indicating whether this object is finite (not
+    /// infinity or NaN).</summary>
+    /// <value>True if this object is finite (not infinity or NaN);
+    /// otherwise, false.</value>
     public bool IsFinite {
       get {
         return !this.IsNaN() && !this.IsInfinity();
@@ -505,11 +517,11 @@ ctx);
     }
 
     /// <summary>Converts this value to an arbitrary-precision integer. Any
-    /// fractional part in this value will be discarded when converting to a big
-    /// integer.</summary>
+    /// fractional part in this value will be discarded when converting to
+    /// a big integer.</summary>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='OverflowException'>This object's value is infinity or
-    /// NaN.</exception>
+    /// <exception cref='OverflowException'>This object's value is infinity
+    /// or NaN.</exception>
     public BigInteger ToBigInteger() {
       if (!this.IsFinite) {
         throw new OverflowException("Value is infinity or NaN");
@@ -517,13 +529,13 @@ ctx);
       return this.Numerator / (BigInteger)this.denominator;
     }
 
-    /// <summary>Converts this value to an arbitrary-precision integer, checking
-    /// whether the value is an exact integer.</summary>
+    /// <summary>Converts this value to an arbitrary-precision integer,
+    /// checking whether the value is an exact integer.</summary>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='OverflowException'>This object's value is infinity or
-    /// NaN.</exception>
-    /// <exception cref='ArithmeticException'>This object's value is not an exact
-    /// integer.</exception>
+    /// <exception cref='OverflowException'>This object's value is infinity
+    /// or NaN.</exception>
+    /// <exception cref='ArithmeticException'>This object's value is not an
+    /// exact integer.</exception>
     public BigInteger ToBigIntegerExact() {
       if (!this.IsFinite) {
         throw new OverflowException("Value is infinity or NaN");
@@ -555,9 +567,10 @@ out rem);
 
     /// <summary>Converts this value to a 64-bit floating-point number. The
     /// half-even rounding mode is used.</summary>
-    /// <returns>The closest 64-bit floating-point number to this value. The return
-    /// value can be positive infinity or negative infinity if this value exceeds
-    /// the range of a 64-bit floating point number.</returns>
+    /// <returns>The closest 64-bit floating-point number to this value.
+    /// The return value can be positive infinity or negative infinity if
+    /// this value exceeds the range of a 64-bit floating point
+    /// number.</returns>
     public double ToDouble() {
       return
   this.ToExtendedFloat(PrecisionContext.Binary64.WithRounding(Rounding.Odd))
@@ -566,9 +579,10 @@ out rem);
 
     /// <summary>Converts this value to a 32-bit floating-point number. The
     /// half-even rounding mode is used.</summary>
-    /// <returns>The closest 32-bit floating-point number to this value. The return
-    /// value can be positive infinity or negative infinity if this value exceeds
-    /// the range of a 32-bit floating point number.</returns>
+    /// <returns>The closest 32-bit floating-point number to this value.
+    /// The return value can be positive infinity or negative infinity if
+    /// this value exceeds the range of a 32-bit floating point
+    /// number.</returns>
     public float ToSingle() {
       return
   this.ToExtendedFloat(PrecisionContext.Binary32.WithRounding(Rounding.Odd))
@@ -596,7 +610,8 @@ out rem);
 
     /// <summary>Gets a value indicating whether this object's value equals
     /// 0.</summary>
-    /// <value>True if this object&apos;s value equals 0; otherwise, false.</value>
+    /// <value>True if this object&apos;s value equals 0; otherwise,
+    /// false.</value>
     public bool IsZero {
       get {
         return ((this.flags & (BigNumberFlags.FlagInfinity |
@@ -605,8 +620,9 @@ out rem);
     }
 
     /// <summary>Gets the sign of this rational number.</summary>
-    /// <value>Zero if this value is zero or negative zero; -1 if this value is less
-    /// than 0; and 1 if this value is greater than 0.</value>
+    /// <value>Zero if this value is zero or negative zero; -1 if this
+    /// value is less than 0; and 1 if this value is greater than
+    /// 0.</value>
     public int Sign {
       get {
         return ((this.flags & (BigNumberFlags.FlagInfinity |
@@ -615,10 +631,12 @@ out rem);
       }
     }
 
-    /// <summary>Compares an ExtendedRational object with this instance.</summary>
+    /// <summary>Compares an ExtendedRational object with this
+    /// instance.</summary>
     /// <param name='other'>An ExtendedRational object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this instance is
-    /// less, or a positive number if this instance is greater.</returns>
+    /// <returns>Zero if the values are equal; a negative number if this
+    /// instance is less, or a positive number if this instance is
+    /// greater.</returns>
     public int CompareTo(ExtendedRational other) {
       if (other == null) {
         return 1;
@@ -685,10 +703,12 @@ out rem);
       return ad.CompareTo(bc);
     }
 
-    /// <summary>Compares an ExtendedFloat object with this instance.</summary>
+    /// <summary>Compares an ExtendedFloat object with this
+    /// instance.</summary>
     /// <param name='other'>An ExtendedFloat object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this instance is
-    /// less, or a positive number if this instance is greater.</returns>
+    /// <returns>Zero if the values are equal; a negative number if this
+    /// instance is less, or a positive number if this instance is
+    /// greater.</returns>
     public int CompareToBinary(ExtendedFloat other) {
       if (other == null) {
         return 1;
@@ -800,10 +820,12 @@ out thisRem);
       return ad.CompareTo(bc);
     }
 
-    /// <summary>Compares an ExtendedDecimal object with this instance.</summary>
+    /// <summary>Compares an ExtendedDecimal object with this
+    /// instance.</summary>
     /// <param name='other'>An ExtendedDecimal object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this instance is
-    /// less, or a positive number if this instance is greater.</returns>
+    /// <returns>Zero if the values are equal; a negative number if this
+    /// instance is less, or a positive number if this instance is
+    /// greater.</returns>
     public int CompareToDecimal(ExtendedDecimal other) {
       if (other == null) {
         return 1;
@@ -924,7 +946,8 @@ out thisRem);
       return this.Equals((object)other);
     }
 
-    /// <summary>Returns whether this object is negative infinity.</summary>
+    /// <summary>Returns whether this object is negative
+    /// infinity.</summary>
     /// <returns>True if this object is negative infinity; otherwise,
     /// false.</returns>
     public bool IsNegativeInfinity() {
@@ -933,7 +956,8 @@ out thisRem);
         (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
-    /// <summary>Returns whether this object is positive infinity.</summary>
+    /// <summary>Returns whether this object is positive
+    /// infinity.</summary>
     /// <returns>True if this object is positive infinity; otherwise,
     /// false.</returns>
     public bool IsPositiveInfinity() {
@@ -941,15 +965,16 @@ out thisRem);
         BigNumberFlags.FlagNegative)) == BigNumberFlags.FlagInfinity;
     }
 
-    /// <summary>Returns whether this object is a not-a-number value.</summary>
+    /// <summary>Returns whether this object is a not-a-number
+    /// value.</summary>
     /// <returns>True if this object is a not-a-number value; otherwise,
     /// false.</returns>
     public bool IsNaN() {
       return (this.flags & BigNumberFlags.FlagNaN) != 0;
     }
 
-    /// <summary>Gets a value indicating whether this object's value is negative
-    /// (including negative zero).</summary>
+    /// <summary>Gets a value indicating whether this object's value is
+    /// negative (including negative zero).</summary>
     /// <value>True if this object&apos;s value is negative; otherwise,
     /// false.</value>
     public bool IsNegative {
@@ -968,18 +993,18 @@ out thisRem);
 
     /// <summary>Returns whether this object is a quiet not-a-number
     /// value.</summary>
-    /// <returns>True if this object is a quiet not-a-number value; otherwise,
-    /// false.</returns>
+    /// <returns>True if this object is a quiet not-a-number value;
+    /// otherwise, false.</returns>
     public bool IsQuietNaN() {
       return (this.flags & BigNumberFlags.FlagQuietNaN) != 0;
     }
 
-    /// <summary>Returns whether this object is a signaling not-a-number value
-    /// (which causes an error if the value is passed to any arithmetic operation in
-    /// this class).</summary>
-    /// <returns>True if this object is a signaling not-a-number value (which causes
-    /// an error if the value is passed to any arithmetic operation in this class);
-    /// otherwise, false.</returns>
+    /// <summary>Returns whether this object is a signaling not-a-number
+    /// value (which causes an error if the value is passed to any
+    /// arithmetic operation in this class).</summary>
+    /// <returns>True if this object is a signaling not-a-number value
+    /// (which causes an error if the value is passed to any arithmetic
+    /// operation in this class); otherwise, false.</returns>
     public bool IsSignalingNaN() {
       return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
     }
@@ -998,7 +1023,8 @@ BigInteger.Zero,
 BigInteger.One,
 BigNumberFlags.FlagSignalingNaN);
 
-    /// <summary>Positive infinity, greater than any other number.</summary>
+    /// <summary>Positive infinity, greater than any other
+    /// number.</summary>
     public static readonly ExtendedRational PositiveInfinity =
       CreateWithFlags(
 BigInteger.Zero,
@@ -1035,8 +1061,8 @@ BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
     /// <summary>Adds two rational numbers.</summary>
     /// <param name='otherValue'>Another ExtendedRational object.</param>
-    /// <returns>The sum of the two numbers. Returns NaN if either operand is
-    /// NaN.</returns>
+    /// <returns>The sum of the two numbers. Returns NaN if either operand
+    /// is NaN.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='otherValue'/> is null.</exception>
     public ExtendedRational Add(ExtendedRational otherValue) {
@@ -1072,7 +1098,8 @@ otherValue.IsNegative);
       return new ExtendedRational(ad, bd).Simplify();
     }
 
-    /// <summary>Subtracts an ExtendedRational object from this instance.</summary>
+    /// <summary>Subtracts an ExtendedRational object from this
+    /// instance.</summary>
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The difference of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -1113,8 +1140,8 @@ otherValue.IsNegative);
       return new ExtendedRational(ad, bd).Simplify();
     }
 
-    /// <summary>Multiplies this instance by the value of an ExtendedRational
-    /// object.</summary>
+    /// <summary>Multiplies this instance by the value of an
+    /// ExtendedRational object.</summary>
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The product of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -1198,8 +1225,8 @@ otherValue.IsNegative);
       return new ExtendedRational(ad, bc).Simplify().ChangeSign(resultNeg);
     }
 
-    /// <summary>Finds the remainder that results when this instance is divided by
-    /// the value of a ExtendedRational object.</summary>
+    /// <summary>Finds the remainder that results when this instance is
+    /// divided by the value of a ExtendedRational object.</summary>
     /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The remainder of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
