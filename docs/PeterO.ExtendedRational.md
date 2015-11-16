@@ -393,7 +393,7 @@ Converts a 64-bit floating-point number to a rational number. This method comput
 <b>Returns:</b>
 
 A rational number with the same value as  <i>flt</i>
-.
+ .
 
 ### FromExtendedDecimal
 
@@ -414,7 +414,7 @@ An ExtendedRational object.
 
  * System.ArgumentNullException:
 The parameter  <i>ef</i>
-is null.
+ is null.
 
 ### FromExtendedFloat
 
@@ -435,7 +435,7 @@ An ExtendedRational object.
 
  * System.ArgumentNullException:
 The parameter  <i>ef</i>
-is null.
+ is null.
 
 ### FromInt32
 
@@ -481,7 +481,7 @@ Converts a 32-bit floating-point number to a rational number. This method comput
 <b>Returns:</b>
 
 A rational number with the same value as  <i>flt</i>
-.
+ .
 
 ### GetHashCode
 

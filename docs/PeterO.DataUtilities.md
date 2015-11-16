@@ -20,14 +20,14 @@ Gets the Unicode code point at the given index of the string.
 
 <b>Returns:</b>
 
-The Unicode code point at the given position. Returns -1 if <i>index</i>
+The Unicode code point at the given position. Returns -1 if  <i>index</i>
  is less than 0, or is the string's length or greater. Returns the replacement character (U + FFFD) if the current character is an unpaired surrogate code point.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
 ### CodePointAt
 
@@ -48,7 +48,7 @@ Gets the Unicode code point at the given index of the string.
 
 <b>Returns:</b>
 
-The Unicode code point at the current position. Returns -1 if <i>index</i>
+The Unicode code point at the current position. Returns -1 if  <i>index</i>
  is less than 0, or is the string's length or greater. Returns a value as specified under  <i>surrogateBehavior</i>
  if the previous character is an unpaired surrogate code point.
 
@@ -56,7 +56,7 @@ The Unicode code point at the current position. Returns -1 if <i>index</i>
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
 ### CodePointBefore
 
@@ -74,14 +74,14 @@ Gets the Unicode code point just before the given index of the string.
 
 <b>Returns:</b>
 
-The Unicode code point at the previous position. Returns -1 if <i>index</i>
+The Unicode code point at the previous position. Returns -1 if  <i>index</i>
  is 0 or less, or is greater than the string's length. Returns the replacement character (U + FFFD) if the previous character is an unpaired surrogate code point.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
 ### CodePointBefore
 
@@ -102,7 +102,7 @@ Gets the Unicode code point just before the given index of the string.
 
 <b>Returns:</b>
 
-The Unicode code point at the previous position. Returns -1 if <i>index</i>
+The Unicode code point at the previous position. Returns -1 if  <i>index</i>
  is 0 or less, or is greater than the string's length. Returns a value as specified under  <i>surrogateBehavior</i>
  if the previous character is an unpaired surrogate code point.
 
@@ -110,7 +110,7 @@ The Unicode code point at the previous position. Returns -1 if <i>index</i>
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
 ### CodePointCompare
 
@@ -152,7 +152,7 @@ The string encoded in UTF-8.
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
  * System.ArgumentException:
 The string contains an unpaired surrogate code point and  <i>replace</i>
@@ -181,7 +181,7 @@ The number of bytes needed to encode the given string in UTF-8, or -1 if the str
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
 ### GetUtf8String
 
@@ -208,7 +208,7 @@ The parameter  <i>bytes</i>
  is null.
 
  * System.ArgumentException:
-The string is not valid UTF-8 and <i>replace</i>
+The string is not valid UTF-8 and  <i>replace</i>
  is false.
 
 ### GetUtf8String
@@ -247,7 +247,7 @@ The portion of the byte array is not valid UTF-8 and  <i>replace</i>
 
  * System.ArgumentException:
 The parameter  <i>offset</i>
-is less than 0,  <i>bytesCount</i>
+ is less than 0,  <i>bytesCount</i>
  is less than 0, or offset plus bytesCount is greater than the length of "data" .
 
 ### ReadUtf8
@@ -323,9 +323,9 @@ The parameter  <i>data</i>
 
  * System.ArgumentException:
 The parameter  <i>offset</i>
-is less than 0,  <i>bytesCount</i>
+ is less than 0,  <i>bytesCount</i>
  is less than 0, or offset plus bytesCount is greater than the length of  <i>data</i>
-.
+ .
 
 ### ReadUtf8ToString
 
@@ -423,22 +423,22 @@ Writes a portion of a string in UTF-8 encoding to a data stream.
 
 <b>Returns:</b>
 
-0 if the entire string portion was written; or -1 if the string portion contains an unpaired surrogate code point and  <i>replace</i>
+0 if the entire string portion was written; or -1 if the string portion contains an unpaired surrogate code point and <i>replace</i>
  is false.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null or  <i>stream</i>
+ is null or  <i>stream</i>
  is null.
 
  * System.ArgumentException:
 The parameter  <i>offset</i>
-is less than 0,  <i>length</i>
+ is less than 0,  <i>length</i>
  is less than 0, or  <i>offset</i>
  plus  <i>length</i>
- is greater than the string's length.
+is greater than the string's length.
 
  * System.IO.IOException:
 An I/O error occurred.
@@ -471,22 +471,22 @@ Writes a portion of a string in UTF-8 encoding to a data stream.
 
 <b>Returns:</b>
 
-0 if the entire string portion was written; or -1 if the string portion contains an unpaired surrogate code point and  <i>replace</i>
+0 if the entire string portion was written; or -1 if the string portion contains an unpaired surrogate code point and <i>replace</i>
  is false.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null or  <i>stream</i>
+ is null or  <i>stream</i>
  is null.
 
  * System.ArgumentException:
 The parameter  <i>offset</i>
-is less than 0,  <i>length</i>
+ is less than 0,  <i>length</i>
  is less than 0, or  <i>offset</i>
  plus  <i>length</i>
- is greater than the string's length.
+is greater than the string's length.
 
  * System.IO.IOException:
 An I/O error occurred.
@@ -517,7 +517,7 @@ Writes a string in UTF-8 encoding to a data stream.
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null or  <i>stream</i>
+ is null or  <i>stream</i>
  is null.
 
  * System.IO.IOException:

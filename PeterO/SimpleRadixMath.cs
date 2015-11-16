@@ -8,11 +8,12 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO {
-    /// <summary>Implements the simplified arithmetic in Appendix A of the General
-    /// Decimal Arithmetic Specification. Unfortunately, it doesn't pass all the
-    /// test cases, since some aspects of the spec are left open. For example: in
-    /// which cases is the Clamped flag set? The test cases set the Clamped flag in
-    /// only a handful of test cases, all within the <c>exp</c>
+    /// <summary>Implements the simplified arithmetic in Appendix A of the
+    /// General Decimal Arithmetic Specification. Unfortunately, it doesn't
+    /// pass all the test cases, since some aspects of the spec are left
+    /// open. For example: in which cases is the Clamped flag set? The test
+    /// cases set the Clamped flag in only a handful of test cases, all
+    /// within the <c>exp</c>
     /// operation.</summary>
     /// <typeparam name='T'>Data type for a numeric value in a particular
     /// radix.</typeparam>
@@ -182,8 +183,8 @@ namespace PeterO {
       return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ?
         this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags &
                 BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(
-                              other,
-                              ctx) : default(T));
+                    other,
+                    ctx) : default(T));
     }
 
     private T CheckNotANumber3(
@@ -208,9 +209,9 @@ namespace PeterO {
       return ((thisFlags & BigNumberFlags.FlagQuietNaN) != 0) ?
         this.ReturnQuietNaN(thisValue, ctx) : (((otherFlags &
                 BigNumberFlags.FlagQuietNaN) != 0) ? this.ReturnQuietNaN(
-                              other,
-                              ctx) :
-                              (((other2Flags & BigNumberFlags.FlagQuietNaN) !=
+                    other,
+                    ctx) :
+                    (((other2Flags & BigNumberFlags.FlagQuietNaN) !=
                 0) ? this.ReturnQuietNaN(other, ctx) : default(T)));
     }
 
@@ -342,10 +343,8 @@ namespace PeterO {
 
     /// <summary>Finds the remainder that results when dividing two T
     /// objects.</summary>
-    /// <summary>Finds the remainder that results when dividing two T
-    /// objects.</summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='divisor'>A T object. (2).</param>
+    /// <param name='thisValue'>Not documented yet.</param>
+    /// <param name='divisor'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The remainder of the two objects.</returns>
     public T Remainder(T thisValue, T divisor, PrecisionContext ctx) {
@@ -553,9 +552,8 @@ namespace PeterO {
     }
 
     /// <summary>Divides two T objects.</summary>
-    /// <summary>Divides two T objects.</summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='divisor'>A T object. (2).</param>
+    /// <param name='thisValue'>Not documented yet.</param>
+    /// <param name='divisor'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The quotient of the two objects.</returns>
     public T Divide(T thisValue, T divisor, PrecisionContext ctx) {
@@ -621,9 +619,8 @@ namespace PeterO {
     }
 
     /// <summary>Multiplies two T objects.</summary>
-    /// <summary>Multiplies two T objects.</summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='other'>A T object. (2).</param>
+    /// <param name='thisValue'>Not documented yet.</param>
+    /// <param name='other'>A T object.</param>
     /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The product of the two objects.</returns>
     public T Multiply(T thisValue, T other, PrecisionContext ctx) {
@@ -811,13 +808,10 @@ namespace PeterO {
     }
 
     /// <summary>Compares a T object with this instance.</summary>
-    /// <summary>Compares a T object with this instance.</summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='otherValue'>A T object. (2).</param>
-    /// <param name='treatQuietNansAsSignaling'>A Boolean object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this instance is
-    /// less, or a positive number if this instance is greater.</returns>
+    /// <param name='thisValue'>Not documented yet.</param>
+    /// <returns>Zero if the values are equal; a negative number if this
+    /// instance is less, or a positive number if this instance is
+    /// greater.</returns>
     public T CompareToWithContext(
       T thisValue,
       T otherValue,
@@ -837,11 +831,13 @@ namespace PeterO {
     }
 
     /// <summary>Compares a T object with this instance.</summary>
+    /// <param name='thisValue'>Not documented yet.</param>
     /// <summary>Compares a T object with this instance.</summary>
-    /// <param name='thisValue'>A T object.</param>
-    /// <param name='otherValue'>A T object. (2).</param>
-    /// <returns>Zero if the values are equal; a negative number if this instance is
-    /// less, or a positive number if this instance is greater.</returns>
+    /// <param name='thisValue'>Not documented yet.</param>
+    /// <param name='otherValue'>Not documented yet.</param>
+    /// <returns>Zero if the values are equal; a negative number if this
+    /// instance is less, or a positive number if this instance is
+    /// greater.</returns>
     public int CompareTo(T thisValue, T otherValue) {
       return this.wrapper.CompareTo(thisValue, otherValue);
     }

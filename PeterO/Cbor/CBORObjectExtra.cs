@@ -14,11 +14,11 @@ namespace PeterO.Cbor {
   // because they are not CLS-compliant or they
   // are specific to the .NET framework.
   public sealed partial class CBORObject {
-    /// <summary>Converts this object to a 16-bit unsigned integer. The return value
-    /// will be truncated as necessary.</summary>
+    /// <summary>Converts this object to a 16-bit unsigned integer. The
+    /// return value will be truncated as necessary.</summary>
     /// <returns>A 16-bit unsigned integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is outside the range
-    /// of a 16-bit unsigned integer.</exception>
+    /// <exception cref='OverflowException'>This object's value is outside
+    /// the range of a 16-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ushort AsUInt16() {
       int v = this.AsInt32();
@@ -28,11 +28,11 @@ namespace PeterO.Cbor {
       return (ushort)v;
     }
 
-    /// <summary>Converts this object to a 32-bit unsigned integer. The return value
-    /// will be truncated as necessary.</summary>
+    /// <summary>Converts this object to a 32-bit unsigned integer. The
+    /// return value will be truncated as necessary.</summary>
     /// <returns>A 32-bit unsigned integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is outside the range
-    /// of a 32-bit unsigned integer.</exception>
+    /// <exception cref='OverflowException'>This object's value is outside
+    /// the range of a 32-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public uint AsUInt32() {
       ulong v = this.AsUInt64();
@@ -171,10 +171,10 @@ newDecimal.Mantissa.Sign < 0);
 
     /// <summary>Converts this object to a .NET decimal.</summary>
     /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object's type is not
-    /// a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object's value exceeds the
-    /// range of a .NET decimal.</exception>
+    /// <exception cref='System.InvalidOperationException'>This object's
+    /// type is not a number type.</exception>
+    /// <exception cref='System.OverflowException'>This object's value
+    /// exceeds the range of a .NET decimal.</exception>
     [CLSCompliant(false)]
     public decimal AsDecimal() {
       return (this.ItemType == CBORObjectTypeInteger) ?
@@ -184,13 +184,13 @@ newDecimal.Mantissa.Sign < 0);
         ExtendedDecimalToDecimal(this.AsExtendedDecimal()));
     }
 
-    /// <summary>Converts this object to a 64-bit unsigned integer. Floating point
-    /// values are truncated to an integer.</summary>
+    /// <summary>Converts this object to a 64-bit unsigned integer.
+    /// Floating point values are truncated to an integer.</summary>
     /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object's type is not
-    /// a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object's value exceeds the
-    /// range of a 64-bit unsigned integer.</exception>
+    /// <exception cref='System.InvalidOperationException'>This object's
+    /// type is not a number type.</exception>
+    /// <exception cref='System.OverflowException'>This object's value
+    /// exceeds the range of a 64-bit unsigned integer.</exception>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       BigInteger bigint = this.AsBigInteger();
@@ -309,7 +309,8 @@ new[] { FromObject(-scale),
       Write((ulong)value, stream);
     }
 
-    /// <summary>Converts a signed 8-bit integer to a CBOR object.</summary>
+    /// <summary>Converts a signed 8-bit integer to a CBOR
+    /// object.</summary>
     /// <param name='value'>An 8-bit signed integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
@@ -332,7 +333,8 @@ new[] { FromObject(-scale),
       return BigInteger.fromBytes(data, true);
     }
 
-    /// <summary>Converts a 64-bit unsigned integer to a CBOR object.</summary>
+    /// <summary>Converts a 64-bit unsigned integer to a CBOR
+    /// object.</summary>
     /// <param name='value'>A 64-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
@@ -340,7 +342,8 @@ new[] { FromObject(-scale),
       return CBORObject.FromObject(UInt64ToBigInteger(value));
     }
 
-    /// <summary>Converts a 32-bit unsigned integer to a CBOR object.</summary>
+    /// <summary>Converts a 32-bit unsigned integer to a CBOR
+    /// object.</summary>
     /// <param name='value'>A 32-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
@@ -348,7 +351,8 @@ new[] { FromObject(-scale),
       return FromObject((long)value);
     }
 
-    /// <summary>Converts a 16-bit unsigned integer to a CBOR object.</summary>
+    /// <summary>Converts a 16-bit unsigned integer to a CBOR
+    /// object.</summary>
     /// <param name='value'>A 16-bit unsigned integer.</param>
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
@@ -356,18 +360,20 @@ new[] { FromObject(-scale),
       return FromObject((long)value);
     }
 
-    /// <summary>Generates a CBOR object from an arbitrary object and gives the
-    /// resulting object a tag.</summary>
+    /// <summary>Generates a CBOR object from an arbitrary object and gives
+    /// the resulting object a tag.</summary>
     /// <param name='o'>An arbitrary object.</param>
     /// <param name='tag'>A 64-bit unsigned integer.</param>
-    /// <returns>A CBOR object where the object <paramref name='o'/> is converted to
-    /// a CBOR object and given the tag <paramref name='tag'/> .</returns>
+    /// <returns>A CBOR object where the object <paramref name='o'/> is
+    /// converted to a CBOR object and given the tag <paramref name='tag'/>
+    /// .</returns>
     [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
       return FromObjectAndTag(o, UInt64ToBigInteger(tag));
     }
 
-    /// <summary>Adds a CBORObject object and a CBORObject object.</summary>
+    /// <summary>Adds a CBORObject object and a CBORObject
+    /// object.</summary>
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>Another CBORObject object.</param>
     /// <returns>The sum of the two objects.</returns>
@@ -375,7 +381,8 @@ new[] { FromObject(-scale),
       return Addition(a, b);
     }
 
-    /// <summary>Subtracts a CBORObject object from a CBORObject object.</summary>
+    /// <summary>Subtracts a CBORObject object from a CBORObject
+    /// object.</summary>
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>Another CBORObject object.</param>
     /// <returns>The difference of the two objects.</returns>
@@ -383,8 +390,8 @@ new[] { FromObject(-scale),
       return Subtract(a, b);
     }
 
-    /// <summary>Multiplies a CBORObject object by the value of a CBORObject
-    /// object.</summary>
+    /// <summary>Multiplies a CBORObject object by the value of a
+    /// CBORObject object.</summary>
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>Another CBORObject object.</param>
     /// <returns>The product of the two objects.</returns>
@@ -401,8 +408,8 @@ new[] { FromObject(-scale),
       return Divide(a, b);
     }
 
-    /// <summary>Finds the remainder that results when a CBORObject object is
-    /// divided by the value of a CBORObject object.</summary>
+    /// <summary>Finds the remainder that results when a CBORObject object
+    /// is divided by the value of a CBORObject object.</summary>
     /// <param name='a'>A CBORObject object.</param>
     /// <param name='b'>Another CBORObject object.</param>
     /// <returns>The remainder of the two objects.</returns>

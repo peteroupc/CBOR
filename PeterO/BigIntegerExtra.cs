@@ -19,7 +19,8 @@ namespace PeterO {
       return valueOf(bigValue);
     }
 
-    /// <summary>Adds a BigInteger object and a BigInteger object.</summary>
+    /// <summary>Adds a BigInteger object and a BigInteger
+    /// object.</summary>
     /// <param name='bthis'>A BigInteger object.</param>
     /// <param name='augend'>Another BigInteger object.</param>
     /// <returns>The sum of the two objects.</returns>
@@ -47,8 +48,8 @@ BigInteger subtrahend) {
       return bthis.subtract(subtrahend);
     }
 
-    /// <summary>Multiplies a BigInteger object by the value of a BigInteger
-    /// object.</summary>
+    /// <summary>Multiplies a BigInteger object by the value of a
+    /// BigInteger object.</summary>
     /// <param name='operand1'>A BigInteger object.</param>
     /// <param name='operand2'>Another BigInteger object.</param>
     /// <returns>The product of the two objects.</returns>
@@ -79,8 +80,8 @@ BigInteger divisor) {
       return dividend.divide(divisor);
     }
 
-    /// <summary>Finds the remainder that results when a BigInteger object is
-    /// divided by the value of a BigInteger object.</summary>
+    /// <summary>Finds the remainder that results when a BigInteger object
+    /// is divided by the value of a BigInteger object.</summary>
     /// <param name='dividend'>A BigInteger object.</param>
     /// <param name='divisor'>Another BigInteger object.</param>
     /// <returns>The remainder of the two objects.</returns>
@@ -108,13 +109,13 @@ BigInteger divisor) {
       return bthis.shiftLeft(bitCount);
     }
 
-    /// <summary>Calculates the remainder when a BigInteger raised to a certain
-    /// power is divided by another BigInteger.</summary>
+    /// <summary>Calculates the remainder when a BigInteger raised to a
+    /// certain power is divided by another BigInteger.</summary>
     /// <param name='bigintValue'>A BigInteger object.</param>
     /// <param name='pow'>Another BigInteger object.</param>
     /// <param name='mod'>A BigInteger object. (3).</param>
-    /// <returns>The value ( <paramref name='bigintValue'/> ^ <paramref name='pow'/>
-    /// )% <paramref name='mod'/> .</returns>
+    /// <returns>The value ( <paramref name='bigintValue'/> ^ <paramref
+    /// name='pow'/> )% <paramref name='mod'/> .</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintValue'/> is null.</exception>
     public static BigInteger ModPow(
@@ -127,15 +128,16 @@ BigInteger mod) {
       return bigintValue.ModPow(pow, mod);
     }
 
-    /// <summary>Shifts the bits of a BigInteger instance to the right.</summary>
+    /// <summary>Shifts the bits of a BigInteger instance to the
+    /// right.</summary>
     /// <param name='bthis'>Another BigInteger object.</param>
     /// <param name='bigValue'>A 32-bit signed integer.</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bthis'/> is null.</exception>
-    /// <remarks>For this operation, the BigInteger is treated as a two's complement
-    /// representation. Thus, for negative values, the BigInteger is
-    /// sign-extended.</remarks>
+    /// <remarks>For this operation, the BigInteger is treated as a two's
+    /// complement representation. Thus, for negative values, the
+    /// BigInteger is sign-extended.</remarks>
     public static BigInteger operator >>(BigInteger bthis, int bigValue) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
@@ -155,41 +157,41 @@ BigInteger mod) {
       return bigValue.negate();
     }
 
-    /// <summary>Converts the value of a BigInteger object to a 64-bit signed
-    /// integer.</summary>
+    /// <summary>Converts the value of a BigInteger object to a 64-bit
+    /// signed integer.</summary>
     /// <param name='bigValue'>A BigInteger object.</param>
-    /// <returns>A 64-bit signed integer with the same value as the BigInteger
-    /// object.</returns>
-    /// <exception cref='OverflowException'>This object's value is too big to fit a
-    /// 64-bit signed integer.</exception>
+    /// <returns>A 64-bit signed integer with the same value as the
+    /// BigInteger object.</returns>
+    /// <exception cref='OverflowException'>This object's value is too big
+    /// to fit a 64-bit signed integer.</exception>
     public static explicit operator long(BigInteger bigValue) {
       return bigValue.longValueChecked();
     }
 
-    /// <summary>Converts the value of a BigInteger object to a 32-bit signed
-    /// integer.</summary>
+    /// <summary>Converts the value of a BigInteger object to a 32-bit
+    /// signed integer.</summary>
     /// <param name='bigValue'>A BigInteger object.</param>
-    /// <returns>A 32-bit signed integer with the same value as the BigInteger
-    /// object.</returns>
-    /// <exception cref='OverflowException'>This object's value is too big to fit a
-    /// 32-bit signed integer.</exception>
+    /// <returns>A 32-bit signed integer with the same value as the
+    /// BigInteger object.</returns>
+    /// <exception cref='OverflowException'>This object's value is too big
+    /// to fit a 32-bit signed integer.</exception>
     public static explicit operator int(BigInteger bigValue) {
       return bigValue.intValueChecked();
     }
 
-    /// <summary>Determines whether a BigInteger instance is less than another
-    /// BigInteger instance.</summary>
+    /// <summary>Determines whether a BigInteger instance is less than
+    /// another BigInteger instance.</summary>
     /// <param name='thisValue'>The first BigInteger object.</param>
     /// <param name='otherValue'>The second BigInteger object.</param>
-    /// <returns>True if <paramref name='thisValue'/> is less than <paramref
-    /// name='otherValue'/> ; otherwise, false.</returns>
+    /// <returns>True if <paramref name='thisValue'/> is less than
+    /// <paramref name='otherValue'/> ; otherwise, false.</returns>
     public static bool operator <(BigInteger thisValue, BigInteger otherValue) {
       return (thisValue == null) ? (otherValue != null) :
         (thisValue.CompareTo(otherValue) < 0);
     }
 
-    /// <summary>Determines whether a BigInteger instance is less than or equal to
-    /// another BigInteger instance.</summary>
+    /// <summary>Determines whether a BigInteger instance is less than or
+    /// equal to another BigInteger instance.</summary>
     /// <param name='thisValue'>The first BigInteger object.</param>
     /// <param name='otherValue'>The second BigInteger object.</param>
     /// <returns>True if <paramref name='thisValue'/> is up to <paramref
@@ -200,18 +202,18 @@ BigInteger otherValue) {
       return (thisValue == null) || (thisValue.CompareTo(otherValue) <= 0);
     }
 
-    /// <summary>Determines whether a BigInteger instance is greater than another
-    /// BigInteger instance.</summary>
+    /// <summary>Determines whether a BigInteger instance is greater than
+    /// another BigInteger instance.</summary>
     /// <param name='thisValue'>The first BigInteger object.</param>
     /// <param name='otherValue'>The second BigInteger object.</param>
-    /// <returns>True if <paramref name='thisValue'/> is greater than <paramref
-    /// name='otherValue'/> ; otherwise, false.</returns>
+    /// <returns>True if <paramref name='thisValue'/> is greater than
+    /// <paramref name='otherValue'/> ; otherwise, false.</returns>
     public static bool operator >(BigInteger thisValue, BigInteger otherValue) {
       return (thisValue != null) && (thisValue.CompareTo(otherValue) > 0);
     }
 
-    /// <summary>Determines whether a BigInteger value is greater than another
-    /// BigInteger value.</summary>
+    /// <summary>Determines whether a BigInteger value is greater than
+    /// another BigInteger value.</summary>
     /// <param name='thisValue'>The first BigInteger object.</param>
     /// <param name='otherValue'>The second BigInteger object.</param>
     /// <returns>True if <paramref name='thisValue'/> is at least <paramref
@@ -223,10 +225,10 @@ BigInteger otherValue) {
         (thisValue.CompareTo(otherValue) >= 0);
     }
 
-    /// <summary>Gets a value indicating whether this object&#x27;s value is a power
-    /// of two.</summary>
-    /// <value>True if this object&apos;s value is a power of two; otherwise,
-    /// false.</value>
+    /// <summary>Gets a value indicating whether this object&#x27;s value
+    /// is a power of two.</summary>
+    /// <value>True if this object&apos;s value is a power of two;
+    /// otherwise, false.</value>
     public bool IsPowerOfTwo
     {
       get
@@ -443,12 +445,13 @@ BigInteger bigintSecond) {
         BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
-    /// <summary>Does an AND operation between two BigInteger values.</summary>
+    /// <summary>Does an AND operation between two BigInteger
+    /// values.</summary>
     /// <param name='a'>A BigInteger instance.</param>
     /// <param name='b'>Another BigInteger instance.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='a'/>
-    /// or <paramref name='b'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='a'/> or <paramref name='b'/> is null.</exception>
     /// <remarks>Each BigInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
     public static BigInteger And(BigInteger a, BigInteger b) {
@@ -499,7 +502,8 @@ Math.Max(valueXaReg.Length, valueXbReg.Length));
         BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
-    /// <summary>Does an OR operation between two BigInteger instances.</summary>
+    /// <summary>Does an OR operation between two BigInteger
+    /// instances.</summary>
     /// <param name='first'>Another BigInteger object.</param>
     /// <param name='second'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
@@ -552,12 +556,13 @@ Math.Max(valueXaReg.Length, valueXbReg.Length));
         BigInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
-    /// <summary>Finds the exclusive "or" of two BigInteger objects.</summary>
+    /// <summary>Finds the exclusive "or" of two BigInteger
+    /// objects.</summary>
     /// <param name='a'>A BigInteger instance.</param>
     /// <param name='b'>Another BigInteger instance.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref name='a'/>
-    /// or <paramref name='b'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='a'/> or <paramref name='b'/> is null.</exception>
     /// <remarks>Each BigInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
     public static BigInteger Xor(BigInteger a, BigInteger b) {

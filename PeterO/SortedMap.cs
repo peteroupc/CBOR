@@ -9,8 +9,8 @@ using System;
 using System.Collections.Generic;
 
 namespace PeterO {
-    /// <summary>A dictionary sorted by key. It is here because the Portable Class
-    /// Library subset used by CBOR doesn't include the
+    /// <summary>A dictionary sorted by key. It is here because the
+    /// Portable Class Library subset used by CBOR doesn't include the
     /// System.Collections.Generic.SortedDictionary class.</summary>
     /// <typeparam name='T1'>The type of each key.</typeparam>
     /// <typeparam name='T2'>The type of each value.</typeparam>
@@ -38,7 +38,7 @@ namespace PeterO {
     }
 
     /// <summary>Adds two T1 objects.</summary>
-    /// <param name='key'>A T1 object.</param>
+    /// <param name='key'>Not documented yet.</param>
     /// <param name='value'>A T2 object.</param>
     public void Add(T1 key, T2 value) {
       if (!this.tree.AddIfMissing(new KeyValuePair<T1, T2>(key, value))) {
@@ -128,7 +128,8 @@ out kvp)) {
       }
     }
 
-    /// <summary>Gets a value indicating whether this map is read-only.</summary>
+    /// <summary>Gets a value indicating whether this map is
+    /// read-only.</summary>
     /// <value>Always false.</value>
     public bool IsReadOnly {
       get {

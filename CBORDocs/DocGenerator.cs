@@ -11,12 +11,14 @@ public static class DocGenerator {
     public static void Generate(string assemblyFile, string docdir) {
       if (assemblyFile == null) {
   throw new ArgumentNullException("assemblyFile");
-}if (assemblyFile.Length == 0) {
+}
+if (assemblyFile.Length == 0) {
   throw new ArgumentException("assemblyFile" + " is empty.");
 }
       if (docdir == null) {
   throw new ArgumentNullException("docdir");
-}if (docdir.Length == 0) {
+}
+if (docdir.Length == 0) {
   throw new ArgumentException("docdir" + " is empty.");
 }
       var directory = Path.GetFullPath(docdir);

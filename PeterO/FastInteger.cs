@@ -108,8 +108,7 @@ namespace PeterO {
 
     /// <summary>Multiplies this instance by the value of a 32-bit signed
     /// integer.</summary>
-    /// <summary>Multiplies this instance by the value of a Int32 object.</summary>
-    /// <param name='multiplicand'>A 32-bit signed integer.</param>
+    /// <param name='multiplicand'>Not documented yet.</param>
     /// <returns>The product of the two objects.</returns>
       internal MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
@@ -269,15 +268,15 @@ namespace PeterO {
             int a = this.data[0];
             u = a - other;
             borrow = ((((a >> 31) == (u >> 31)) ?
-                       ((a & Int32.MaxValue) < (u & Int32.MaxValue)) :
-                       ((a >> 31) == 0)) || (a == u && other != 0)) ? 1 : 0;
+                    ((a & Int32.MaxValue) < (u & Int32.MaxValue)) :
+                    ((a >> 31) == 0)) || (a == u && other != 0)) ? 1 : 0;
             this.data[0] = (int)u;
             if (borrow != 0) {
               for (int i = 1; i < this.wordCount; ++i) {
                 u = this.data[i] - borrow;
                 borrow = (((this.data[i] >> 31) == (u >> 31)) ?
                 ((this.data[i] & Int32.MaxValue) < (u & Int32.MaxValue)) :
-                          ((this.data[i] >> 31) == 0)) ? 1 : 0;
+                    ((this.data[i] >> 31) == 0)) ? 1 : 0;
                 this.data[i] = (int)u;
               }
             }
@@ -290,9 +289,9 @@ namespace PeterO {
         return this;
       }
 
-    /// <summary>Subtracts a MutableNumber object from this instance.</summary>
-    /// <summary>Subtracts a MutableNumber object from this instance.</summary>
-    /// <param name='other'>A MutableNumber object.</param>
+    /// <summary>Subtracts a MutableNumber object from this
+    /// instance.</summary>
+    /// <param name='other'>Not documented yet.</param>
     /// <returns>The difference of the two objects.</returns>
       internal MutableNumber Subtract(MutableNumber other) {
         unchecked {
@@ -315,8 +314,8 @@ namespace PeterO {
               u = (a - other.data[i]) - borrow;
               borrow = ((((a >> 31) == (u >> 31)) ? ((a & Int32.MaxValue) <
               (u & Int32.MaxValue)) :
-                         ((a >> 31) == 0)) || (a == u && other.data[i] !=
-                         0)) ? 1 : 0;
+                    ((a >> 31) == 0)) || (a == u && other.data[i] !=
+                    0)) ? 1 : 0;
               this.data[i] = (int)u;
             }
             if (borrow != 0) {
@@ -325,8 +324,8 @@ namespace PeterO {
                 u = (a - other.data[i]) - borrow;
                 borrow = ((((a >> 31) == (u >> 31)) ? ((a & Int32.MaxValue) <
                 (u & Int32.MaxValue)) :
-                           ((a >> 31) == 0)) || (a == u && other.data[i] !=
-                           0)) ? 1 : 0;
+                    ((a >> 31) == 0)) || (a == u && other.data[i] !=
+                    0)) ? 1 : 0;
                 this.data[i] = (int)u;
               }
             }
@@ -361,7 +360,7 @@ namespace PeterO {
       }
 
     /// <summary>Adds a 32-bit signed integer to this instance.</summary>
-    /// <param name='augend'>A 32-bit signed integer.</param>
+    /// <param name='augend'>Not documented yet.</param>
     /// <returns>This instance.</returns>
       internal MutableNumber Add(int augend) {
         if (augend < 0) {
@@ -385,7 +384,7 @@ namespace PeterO {
             u = (a + augend) + carry;
             carry = ((((u >> 31) == (a >> 31)) ? ((u & Int32.MaxValue) < (a &
             Int32.MaxValue)) :
-                      ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
+                    ((u >> 31) == 0)) || (u == a && augend != 0)) ? 1 : 0;
             this.data[i] = u;
             if (carry == 0) {
               return this;
@@ -462,11 +461,12 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Compares a FastInteger object with this instance.</summary>
-    /// <summary>Compares a FastInteger object with this instance.</summary>
-    /// <param name='val'>A FastInteger object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this instance is
-    /// less, or a positive number if this instance is greater.</returns>
+    /// <summary>Compares a FastInteger object with this
+    /// instance.</summary>
+    /// <param name='val'>Not documented yet.</param>
+    /// <returns>Zero if the values are equal; a negative number if this
+    /// instance is less, or a positive number if this instance is
+    /// greater.</returns>
     public int CompareTo(FastInteger val) {
       switch ((this.integerMode << 2) | val.integerMode) {
           case (0 << 2) | 0: {
@@ -570,8 +570,8 @@ out bigrem);
       }
     }
 
-    /// <summary>Sets this object&#x27;s value to the current value times another
-    /// integer.</summary>
+    /// <summary>Sets this object&#x27;s value to the current value times
+    /// another integer.</summary>
     /// <param name='val'>The integer to multiply by.</param>
     /// <returns>This object.</returns>
     internal FastInteger Multiply(int val) {
@@ -585,10 +585,10 @@ out bigrem);
             bool bpos = val > 0L;
             if (
               (apos && ((!bpos && (Int32.MinValue / this.smallValue) > val) ||
-                        (bpos && this.smallValue > (Int32.MaxValue / val)))) ||
+                    (bpos && this.smallValue > (Int32.MaxValue / val)))) ||
               (!apos && ((!bpos && this.smallValue != 0L &&
-                          (Int32.MaxValue / this.smallValue) > val) ||
-                         (bpos && this.smallValue < (Int32.MinValue / val))))) {
+                    (Int32.MaxValue / this.smallValue) > val) ||
+                    (bpos && this.smallValue < (Int32.MinValue / val))))) {
               // would overflow, convert to large
               if (apos && bpos) {
                 // if both operands are nonnegative
@@ -654,8 +654,8 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&#x27;s value to the current value minus the given
-    /// FastInteger value.</summary>
+    /// <summary>Sets this object&#x27;s value to the current value minus
+    /// the given FastInteger value.</summary>
     /// <param name='val'>The subtrahend.</param>
     /// <returns>This object.</returns>
     internal FastInteger Subtract(FastInteger val) {
@@ -703,8 +703,8 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&#x27;s value to the current value minus the given
-    /// integer.</summary>
+    /// <summary>Sets this object&#x27;s value to the current value minus
+    /// the given integer.</summary>
     /// <param name='val'>The subtrahend.</param>
     /// <returns>This object.</returns>
     internal FastInteger SubtractInt(int val) {
@@ -726,8 +726,8 @@ out bigrem);
       return this.AddInt(-val);
     }
 
-    /// <summary>Sets this object&#x27;s value to the current value plus the given
-    /// integer.</summary>
+    /// <summary>Sets this object&#x27;s value to the current value plus
+    /// the given integer.</summary>
     /// <param name='bigintVal'>The number to add.</param>
     /// <returns>This object.</returns>
     internal FastInteger AddBig(BigInteger bigintVal) {
@@ -750,8 +750,8 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&#x27;s value to the current value minus the given
-    /// integer.</summary>
+    /// <summary>Sets this object&#x27;s value to the current value minus
+    /// the given integer.</summary>
     /// <param name='bigintVal'>The subtrahend.</param>
     /// <returns>This object.</returns>
     internal FastInteger SubtractBig(BigInteger bigintVal) {
@@ -824,12 +824,12 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&#x27;s value to the remainder of the current value
-    /// divided by the given integer.</summary>
+    /// <summary>Sets this object&#x27;s value to the remainder of the
+    /// current value divided by the given integer.</summary>
     /// <param name='divisor'>The divisor.</param>
     /// <returns>This object.</returns>
-    /// <exception cref='System.DivideByZeroException'>Attempted to divide by
-    /// zero.</exception>
+    /// <exception cref='System.DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
     internal FastInteger Remainder(int divisor) {
       // Mod operator will always result in a
       // number that fits an int for int divisors
@@ -887,11 +887,10 @@ out bigrem);
 
     /// <summary>Divides this instance by the value of a 32-bit signed
     /// integer.</summary>
-    /// <summary>Divides this instance by the value of a Int32 object.</summary>
-    /// <param name='divisor'>A 32-bit signed integer.</param>
+    /// <param name='divisor'>Not documented yet.</param>
     /// <returns>The quotient of the two objects.</returns>
-    /// <exception cref='System.DivideByZeroException'>Attempted to divide by
-    /// zero.</exception>
+    /// <exception cref='System.DivideByZeroException'>Attempted to divide
+    /// by zero.</exception>
     internal FastInteger Divide(int divisor) {
       if (divisor != 0) {
         switch (this.integerMode) {
@@ -930,9 +929,10 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Gets a value indicating whether this object&#x27;s value is
-    /// even.</summary>
-    /// <value>True if this object&apos;s value is even; otherwise, false.</value>
+    /// <summary>Gets a value indicating whether this object&#x27;s value
+    /// is even.</summary>
+    /// <value>True if this object&apos;s value is even; otherwise,
+    /// false.</value>
     internal bool IsEvenNumber {
       get {
         switch (this.integerMode) {
@@ -949,7 +949,7 @@ out bigrem);
     }
 
     /// <summary>Adds a 32-bit signed integer to this instance.</summary>
-    /// <param name='val'>A 32-bit signed integer.</param>
+    /// <param name='val'>Not documented yet.</param>
     /// <returns>This instance.</returns>
     internal FastInteger AddInt(int val) {
       BigInteger valValue;
@@ -1038,7 +1038,8 @@ System.Globalization.CultureInfo.InvariantCulture);
       }
     }
 
-    /// <summary>Gets a value indicating whether this value is zero.</summary>
+    /// <summary>Gets a value indicating whether this value is
+    /// zero.</summary>
     /// <value>True if this value is zero; otherwise, false.</value>
     internal bool IsValueZero {
       get {
@@ -1055,11 +1056,12 @@ System.Globalization.CultureInfo.InvariantCulture);
       }
     }
 
-    /// <summary>Compares a 32-bit signed integer with this instance.</summary>
-    /// <summary>Compares a Int32 object with this instance.</summary>
-    /// <param name='val'>A 32-bit signed integer.</param>
-    /// <returns>Zero if the values are equal; a negative number if this instance is
-    /// less, or a positive number if this instance is greater.</returns>
+    /// <summary>Compares a 32-bit signed integer with this
+    /// instance.</summary>
+    /// <param name='val'>Not documented yet.</param>
+    /// <returns>Zero if the values are equal; a negative number if this
+    /// instance is less, or a positive number if this instance is
+    /// greater.</returns>
     internal int CompareToInt(int val) {
       switch (this.integerMode) {
         case 0:

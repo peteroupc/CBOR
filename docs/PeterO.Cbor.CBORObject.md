@@ -298,14 +298,14 @@ This object.
 
  * System.ArgumentException:
 The parameter  <i>key</i>
-already exists in this map.
+ already exists in this map.
 
  * System.InvalidOperationException:
 This object is not a map.
 
  * System.ArgumentException:
 The parameter  <i>key</i>
- or <i>valueOb</i>
+ or  <i>valueOb</i>
  has an unsupported type.
 
 ### Add
@@ -952,7 +952,7 @@ A CBORObject object.
 
  * System.ArgumentNullException:
 The parameter  <i>str</i>
-is null.
+ is null.
 
  * PeterO.Cbor.CBORException:
 The string is not in JSON format.
@@ -1021,7 +1021,7 @@ A CBORObject object.
 
  * System.ArgumentException:
 The parameter  <i>value</i>
-is a surrogate code point.
+ is a surrogate code point.
 
 ### FromObject
 
@@ -1118,7 +1118,7 @@ A CBOR array object where each element of the given array is copied to a new arr
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
-Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null , primitive types, strings, CBORObject , ExtendedDecimal , ExtendedFloat , the custom BigInteger , lists, arrays, enumerations (  `Enum` objects), and maps. In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is" , that word is deleted from the name. Also, .NET  `Enum` objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays. In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum` objects will be converted to the result of their name method.
+Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null , primitive types, strings, CBORObject , ExtendedDecimal , ExtendedFloat , the custom BigInteger , lists, arrays, enumerations (  `Enum` objects), and maps. In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET `Enum` objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum` objects will be converted to the result of their name method.
 
 If the input is a byte array, the byte array is copied to a new byte array. (This method can't be used to decode CBOR data from a byte array; for that, use the DecodeFromBytes method instead.).
 
@@ -1381,7 +1381,7 @@ Generates a CBOR object from a map of objects.
 
 <b>Returns:</b>
 
-A CBOR object where each key and value of the given map is converted to a CBOR object and copied to a new map, or CBORObject.Null if <i>dic</i>
+A CBOR object where each key and value of the given map is converted to a CBOR object and copied to a new map, or CBORObject.Null if  <i>dic</i>
  is null.
 
 ### FromObjectAndTag
@@ -1402,7 +1402,7 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 
 A CBOR object where the object  <i>o</i>
  is converted to a CBOR object and given the tag  <i>tag</i>
- .
+.
 
 ### FromObjectAndTag
 
@@ -1421,14 +1421,14 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 <b>Returns:</b>
 
 A CBOR object where the object  <i>valueOb</i>
- is converted to a CBOR object and given the tag  <i>bigintTag</i>
-.
+is converted to a CBOR object and given the tag  <i>bigintTag</i>
+ .
 
 <b>Exceptions:</b>
 
  * System.ArgumentException:
 The parameter  <i>bigintTag</i>
- is less than 0 or greater than 2^64-1, or  <i>valueOb</i>
+ is less than 0 or greater than 2^64-1, or <i>valueOb</i>
  's type is unsupported.
 
  * System.ArgumentNullException:
@@ -1453,14 +1453,14 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 
 A CBOR object where the object  <i>valueObValue</i>
  is converted to a CBOR object and given the tag  <i>smallTag</i>
-.
+ .
 
 <b>Exceptions:</b>
 
  * System.ArgumentException:
 The parameter  <i>smallTag</i>
  is less than 0 or  <i>valueObValue</i>
- 's type is unsupported.
+'s type is unsupported.
 
 ### FromSimpleValue
 
@@ -1589,7 +1589,7 @@ This object is not an array.
 
  * System.ArgumentException:
 The parameter  <i>valueOb</i>
-has an unsupported type; or  <i>index</i>
+ has an unsupported type; or  <i>index</i>
  is not a valid index into this array.
 
 ### IsInfinity
@@ -1868,7 +1868,7 @@ True if the item was removed; otherwise, false.
 
  * System.ArgumentNullException:
 The parameter  <i>obj</i>
-is null (as opposed to CBORObject.Null).
+ is null (as opposed to CBORObject.Null).
 
  * System.InvalidOperationException:
 The object is not an array or map.
@@ -1898,7 +1898,7 @@ This object is not a map.
 
  * System.ArgumentException:
 The parameter  <i>key</i>
- or <i>valueOb</i>
+ or  <i>valueOb</i>
  has an unsupported type.
 
 ### Subtract
@@ -2046,7 +2046,7 @@ The parameter  <i>stream</i>
 
  * System.ArgumentException:
 The parameter  <i>value</i>
-is a surrogate code point.
+ is a surrogate code point.
 
  * System.IO.IOException:
 An I/O error occurred.
@@ -2092,7 +2092,7 @@ Writes a 32-bit floating-point number in CBOR format to a data stream.
 
  * System.ArgumentNullException:
 The parameter  <i>s</i>
-is null.
+ is null.
 
  * System.IO.IOException:
 An I/O error occurred.

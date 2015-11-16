@@ -70,14 +70,14 @@ namespace PeterO.Cbor {
                   for (var i = 0; i < 4; ++i) {
                     int ch = reader.NextChar();
                     if (ch >= '0' && ch <= '9') {
-                      c <<= 4;
-                      c |= ch - '0';
+                    c <<= 4;
+                    c |= ch - '0';
                     } else if (ch >= 'A' && ch <= 'F') {
-                      c <<= 4;
-                      c |= ch + 10 - 'A';
+                    c <<= 4;
+                    c |= ch + 10 - 'A';
                     } else if (ch >= 'a' && ch <= 'f') {
-                      c <<= 4;
-                      c |= ch + 10 - 'a';
+                    c <<= 4;
+                    c |= ch + 10 - 'a';
                     } else {
                 throw reader.NewError("Invalid Unicode escaped character");
                     }
@@ -356,8 +356,8 @@ namespace PeterO.Cbor {
           sb.WriteChar('\\');
           sb.WriteChar(c);
         } else if (c < 0x20 || (c >= 0x85 && (c == 0x2028 || c == 0x2029 ||
-                              c == 0x85 || c == 0xfeff || c == 0xfffe ||
-                              c == 0xffff))) {
+                    c == 0x85 || c == 0xfeff || c == 0xfffe ||
+                    c == 0xffff))) {
           // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to
           // JSON) strings

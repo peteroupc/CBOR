@@ -7,57 +7,106 @@ namespace Test {
   public class CBORDataUtilitiesTest {
     [TestMethod]
     public void TestParseJSONNumber() {
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("100.", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("-100.", false, false));
-    Assert.IsNull(
+      if (CBORDataUtilities.ParseJSONNumber("100.", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("-100.", false, false) != null) {
+ Assert.Fail();
+ }
+    if ((
 CBORDataUtilities.ParseJSONNumber(
 "100.e+20",
 false,
-false));
-    Assert.IsNull(
+false)) != null) {
+ Assert.Fail();
+ }
+    if ((
 CBORDataUtilities.ParseJSONNumber(
 "-100.e20",
 false,
-false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("100.e20", false, false));
+false)) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("100.e20", false, false) != null) {
+ Assert.Fail();
+ }
 
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("+0.1", false, false));
+      if (CBORDataUtilities.ParseJSONNumber("+0.1", false, false) != null) {
+ Assert.Fail();
+ }
 
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("-0.", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.e+20", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("-0.e20", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.e20", false, false));
+      if (CBORDataUtilities.ParseJSONNumber("0.", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("-0.", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("0.e+20", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("-0.e20", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("0.e20", false, false) != null) {
+ Assert.Fail();
+ }
 
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(null, false, false));
-  Assert.IsNull(
+      if (CBORDataUtilities.ParseJSONNumber(null, false, false) != null) {
+ Assert.Fail();
+ }
+  if ((
 CBORDataUtilities.ParseJSONNumber(
 String.Empty,
 false,
-false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("xyz", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("true", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber(".1", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0..1", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0xyz", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.1xyz", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.xyz", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5exyz", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5q+88", false, false));
-      Assert.IsNull(CBORDataUtilities.ParseJSONNumber("0.5ee88", false, false));
-    Assert.IsNull(
+false)) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("xyz", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("true", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber(".1", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("0..1", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("0xyz", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("0.1xyz", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("0.xyz", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("0.5exyz", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("0.5q+88", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("0.5ee88", false, false) != null) {
+ Assert.Fail();
+ }
+    if ((
 CBORDataUtilities.ParseJSONNumber(
 "0.5e+xyz",
 false,
-false));
-  Assert.IsNull(
+false)) != null) {
+ Assert.Fail();
+ }
+  if ((
 CBORDataUtilities.ParseJSONNumber(
 "0.5e+88xyz",
 false,
-false));
+false)) != null) {
+ Assert.Fail();
+ }
       CBORObject cbor;
-      cbor =
-        CBORDataUtilities.ParseJSONNumber(
+      cbor = CBORDataUtilities.ParseJSONNumber(
 "1e+99999999999999999999999999",
 false,
 false);
