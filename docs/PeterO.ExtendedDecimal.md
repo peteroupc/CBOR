@@ -4,11 +4,11 @@
         System.IComparable,
         System.IEquatable
 
-Represents an arbitrary-precision decimal floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 10^exponent. The mantissa is the value of the digits that make up a number, ignoring the decimal point and exponent. For example, in the number 2356.78, the mantissa is 235678. The exponent is where the "floating" decimal point of the number is located. A positive exponent means "move it to the right", and a negative exponent means "move it to the left." In the example 2, 356.78, the exponent is -2, since it has 2 decimal places and the decimal point is "moved to the left by 2." Therefore, in the ExtendedDecimal representation, this number would be stored as 235678 * 10^-2.
+Represents an arbitrary-precision decimal floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 10^exponent.The mantissa is the value of the digits that make up a number, ignoring the decimal point and exponent. For example, in the number 2356.78, the mantissa is 235678. The exponent is where the "floating" decimal point of the number is located. A positive exponent means "move it to the right", and a negative exponent means "move it to the left." In the example 2, 356.78, the exponent is -2, since it has 2 decimal places and the decimal point is "moved to the left by 2." Therefore, in the ExtendedDecimal representation, this number would be stored as 235678 * 10^-2.
 
 The mantissa and exponent format preserves trailing zeros in the number's value. This may give rise to multiple ways to store the same value. For example, 1.00 and 1 would be stored differently, even though they have the same value. In the first case, 100 * 10^-2 (100 with decimal point moved left by 2), and in the second case, 1 * 10^0 (1 with decimal point moved 0).
 
-This class also supports values for negative zero, not-a-number (NaN) values, and infinity. Negative zerois generally used when a negative number is rounded to 0; it has the same mathematical value as positive zero. Infinityis generally used when a non-zero number is divided by zero, or when a very high number can't be represented in a given exponent range.Not-a-numberis generally used to signal errors.
+This class also supports values for negative zero, not-a-number (NaN) values, and infinity.Negative zero is generally used when a negative number is rounded to 0; it has the same mathematical value as positive zero.Infinity is generally used when a non-zero number is divided by zero, or when a very high number can't be represented in a given exponent range.Not-a-number is generally used to signal errors.
 
 This class implements the General Decimal Arithmetic Specification version 1.70: `http://speleotrove.com/decimal/decarith.html`
 
@@ -207,7 +207,7 @@ The sum of thisValue and the other object.
     public sealed int CompareTo(
         PeterO.ExtendedDecimal other);
 
-Compares the mathematical values of this object and another object, accepting NaN values. This method is not consistent with the Equals method because two different numbers with the same mathematical value, but different exponents, will compare as equal.
+Compares the mathematical values of this object and another object, accepting NaN values.This method is not consistent with the Equals method because two different numbers with the same mathematical value, but different exponents, will compare as equal.
 
 In this method, negative zero and positive zero are considered equal.
 
@@ -219,7 +219,7 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
 <b>Returns:</b>
 
-Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if  <i>other</i>
+Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if <i>other</i>
  is null, or 0 if both values are equal.
 
 ### CompareToBinary
@@ -243,7 +243,7 @@ Zero if the values are equal; a negative number if this instance is less, or a p
         PeterO.ExtendedDecimal other,
         PeterO.PrecisionContext ctx);
 
-Compares the mathematical values of this object and another object, treating quiet NaN as signaling. In this method, negative zero and positive zero are considered equal.
+Compares the mathematical values of this object and another object, treating quiet NaN as signaling.In this method, negative zero and positive zero are considered equal.
 
 If this object or the other object is a quiet NaN or signaling NaN, this method will return a quiet NaN and will signal a FlagInvalid flag.
 
@@ -263,7 +263,7 @@ Quiet NaN if this object or the other object is NaN, or 0 if both objects have t
         PeterO.ExtendedDecimal other,
         PeterO.PrecisionContext ctx);
 
-Compares the mathematical values of this object and another object. In this method, negative zero and positive zero are considered equal.
+Compares the mathematical values of this object and another object.In this method, negative zero and positive zero are considered equal.
 
 If this object or the other object is a quiet NaN or signaling NaN, this method returns a quiet NaN, and will signal a FlagInvalid flag if either is a signaling NaN.
 
@@ -316,8 +316,8 @@ An ExtendedDecimal object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>mantissa</i>
- or  <i>exponent</i>
+The parameter <i>mantissa</i>
+ or <i>exponent</i>
  is null.
 
 ### CreateNaN
@@ -338,7 +338,7 @@ A quiet not-a-number object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>diag</i>
+The parameter <i>diag</i>
  is null or is less than 0.
 
 ### CreateNaN
@@ -368,7 +368,7 @@ An ExtendedDecimal object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>diag</i>
+The parameter <i>diag</i>
  is null or is less than 0.
 
 ### Divide
@@ -402,7 +402,7 @@ Divides this ExtendedDecimal object by another ExtendedDecimal object. The prefe
 
 <b>Returns:</b>
 
-The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0; or, either  <i>ctx</i>
+The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0; or, either <i>ctx</i>
  is null or <i>ctx</i>
  's precision is 0, and the result would have a nonterminating decimal expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
 
@@ -635,7 +635,7 @@ Finds e (the base of natural logarithms) raised to the power of this object's va
 
 <b>Returns:</b>
 
-Exponential of this object. If this object's value is 1, returns an approximation to " e" within the given precision. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
+Exponential of this object. If this object's value is 1, returns an approximation to " e" within the given precision. Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
 ### FromBigInteger
@@ -658,7 +658,7 @@ An ExtendedDecimal object with the exponent set to 0.
     public static PeterO.ExtendedDecimal FromDouble(
         double dbl);
 
-Creates a decimal number from a 64-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 64-bit floating-point number is not always the value you get when you pass a literal decimal number (for example, calling  `ExtendedDecimal.FromDouble(0.1f)` ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting ExtendedDecimal will be the value of the closest "double" to 0.1, not 0.1 exactly). To create an ExtendedDecimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")` ).
+Creates a decimal number from a 64-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 64-bit floating-point number is not always the value you get when you pass a literal decimal number (for example, calling  `ExtendedDecimal.FromDouble(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting ExtendedDecimal will be the value of the closest "double" to 0.1, not 0.1 exactly). To create an ExtendedDecimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
 
 <b>Parameters:</b>
 
@@ -666,7 +666,7 @@ Creates a decimal number from a 64-bit floating-point number. This method comput
 
 <b>Returns:</b>
 
-A decimal number with the same value as  <i>dbl</i>
+A decimal number with the same value as <i>dbl</i>
  .
 
 ### FromExtendedFloat
@@ -687,7 +687,7 @@ An ExtendedDecimal object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigfloat</i>
+The parameter <i>bigfloat</i>
  is null.
 
 ### FromInt32
@@ -725,7 +725,7 @@ An ExtendedDecimal object with the exponent set to 0.
     public static PeterO.ExtendedDecimal FromSingle(
         float flt);
 
-Creates a decimal number from a 32-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 32-bit floating-point number is not always the value you get when you pass a literal decimal number (for example, calling  `ExtendedDecimal.FromSingle(0.1f)` ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting ExtendedDecimal will be the the value of the closest "float" to 0.1, not 0.1 exactly). To create an ExtendedDecimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")` ).
+Creates a decimal number from a 32-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 32-bit floating-point number is not always the value you get when you pass a literal decimal number (for example, calling  `ExtendedDecimal.FromSingle(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting ExtendedDecimal will be the the value of the closest "float" to 0.1, not 0.1 exactly). To create an ExtendedDecimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
 
 <b>Parameters:</b>
 
@@ -733,7 +733,7 @@ Creates a decimal number from a 32-bit floating-point number. This method comput
 
 <b>Returns:</b>
 
-A decimal number with the same value as  <i>flt</i>
+A decimal number with the same value as <i>flt</i>
  .
 
 ### FromString
@@ -754,11 +754,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
  * System.FormatException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is not a correctly formatted number string.
 
 ### FromString
@@ -785,11 +785,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
  * System.FormatException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is not a correctly formatted number string.
 
 ### FromString
@@ -831,11 +831,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
  * System.FormatException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is not a correctly formatted number string.
 
 ### FromString
@@ -859,11 +859,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
  * System.FormatException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is not a correctly formatted number string.
 
 ### GetHashCode
@@ -965,7 +965,7 @@ Finds the base-10 logarithm of this object, that is, the power (exponent) that t
 
 <b>Returns:</b>
 
-Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns NaN if this object is less than 0. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
+Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns NaN if this object is less than 0. Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Max
@@ -1254,7 +1254,7 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 <b>Returns:</b>
 
-A number whose scale is increased by  <i>bigPlaces</i>
+A number whose scale is increased by <i>bigPlaces</i>
  , but not to more than 0.
 
 ### Multiply
@@ -1306,7 +1306,7 @@ Multiplies by one decimal number, and then adds another decimal number.
 
 <b>Returns:</b>
 
-The result this *  <i>multiplicand</i>
+The result this * <i>multiplicand</i>
  + <i>augend</i>
  .
 
@@ -1396,7 +1396,7 @@ Finds the largest value that's smaller than the given value.
 <b>Returns:</b>
 
 Returns the largest value that's less than the given value. Returns negative infinity if the result is negative infinity. Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
- is null, the precision is 0, or  <i>ctx</i>
+ is null, the precision is 0, or <i>ctx</i>
  has an unlimited exponent range.
 
 ### NextPlus
@@ -1413,7 +1413,7 @@ Finds the smallest value that's greater than the given value.
 <b>Returns:</b>
 
 Returns the smallest value that's greater than the given value.Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
- is null, the precision is 0, or  <i>ctx</i>
+ is null, the precision is 0, or <i>ctx</i>
  has an unlimited exponent range.
 
 ### NextToward
@@ -1432,8 +1432,8 @@ Finds the next value that is closer to the other object's value than this object
 
 <b>Returns:</b>
 
-Returns the next value that is closer to the other object' s value than this object's value. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
- is null, the precision is 0, or  <i>ctx</i>
+Returns the next value that is closer to the other object' s value than this object's value. Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
+ is null, the precision is 0, or <i>ctx</i>
  has an unlimited exponent range.
 
 ### PI
@@ -1449,7 +1449,7 @@ Finds the constant pi.
 
 <b>Returns:</b>
 
-Pi rounded to the given precision. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
+Pi rounded to the given precision. Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Plus
@@ -1536,7 +1536,7 @@ A BigInteger object.
         int desiredExponentSmall,
         PeterO.PrecisionContext ctx);
 
-Returns a decimal number with the same value but a new exponent. Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
+Returns a decimal number with the same value but a new exponent.Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
 
 <b>Parameters:</b>
 
@@ -1572,7 +1572,7 @@ A decimal number with the same value as this object but with the exponent change
         PeterO.BigInteger desiredExponent,
         PeterO.PrecisionContext ctx);
 
-Returns a decimal number with the same value but a new exponent. Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
+Returns a decimal number with the same value but a new exponent.Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
 
 <b>Parameters:</b>
 
@@ -1607,7 +1607,7 @@ A decimal number with the same value as this object but with the exponent change
     public PeterO.ExtendedDecimal Reduce(
         PeterO.PrecisionContext ctx);
 
-Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1. If this object's value is 0, changes the exponent to 0. (This is unlike the behavior in Java's BigDecimal method "stripTrailingZeros" in Java 7 and earlier.)
+Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1.If this object's value is 0, changes the exponent to 0. (This is unlike the behavior in Java's BigDecimal method "stripTrailingZeros" in Java 7 and earlier.)
 
 <b>Parameters:</b>
 
@@ -1684,7 +1684,7 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
  * If the remainder's absolute value is exactly half of the divisor's absolute value, the result has the opposite sign of this object if the quotient, rounded down, is odd, and has the same sign as this object if the quotient, rounded down, is even, and the result's absolute value is half of the divisor's absolute value.
 
-This function is also known as the "IEEE Remainder" function.
+ This function is also known as the "IEEE Remainder" function.
 
 <b>Parameters:</b>
 
@@ -1896,7 +1896,7 @@ Returns a number similar to this number but with its scale adjusted.
 
 <b>Returns:</b>
 
-A number whose scale is increased by  <i>bigPlaces</i>
+A number whose scale is increased by <i>bigPlaces</i>
  .
 
 ### SquareRoot
@@ -1912,8 +1912,8 @@ Finds the square root of this object's value.
 
 <b>Returns:</b>
 
-The square root. Signals the flag FlagInvalid and returns NaN if this object is less than 0 (the square root would be a complex number, but the return value is still NaN). Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
-is null or the precision is unlimited (the context's Precision property is 0).
+The square root. Signals the flag FlagInvalid and returns NaN if this object is less than 0 (the square root would be a complex number, but the return value is still NaN). Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
+ is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Subtract
 
@@ -1951,7 +1951,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### ToBigInteger
@@ -1991,7 +1991,7 @@ This object's value is not an exact integer.
 
     public double ToDouble();
 
-Converts this value to a 64-bit floating-point number. The half-even rounding mode is used. If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
+Converts this value to a 64-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
 <b>Returns:</b>
 
@@ -2031,7 +2031,7 @@ A string object.
 
     public float ToSingle();
 
-Converts this value to a 32-bit floating-point number. The half-even rounding mode is used. If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
+Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
 <b>Returns:</b>
 

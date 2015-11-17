@@ -15,104 +15,95 @@ using PeterO;
 namespace PeterO.Cbor {
     /// <summary>Represents an object in Concise Binary Object
     /// Representation (CBOR) and contains methods for reading and writing
-    /// CBOR data. CBOR is defined in RFC 7049. <para><b>Converting CBOR
-    /// objects</b>
-    /// </para>
-    /// <para>There are many ways to get a CBOR object,
-    /// including from bytes, objects, streams and JSON, as described
-    /// below.</para>
-    /// <para><b>To and from byte arrays:</b>
-    /// The
-    /// CBORObject.DecodeToBytes method converts a byte array in CBOR
-    /// format to a CBOR object. The EncodeToBytes method converts a CBOR
-    /// object to its corresponding byte array in CBOR format.</para>
-    /// <para><b>To and from data streams:</b>
-    /// The CBORObject.Write methods
-    /// write many kinds of objects to a data stream, including numbers,
-    /// CBOR objects, strings, and arrays of numbers and strings. The
+    /// CBOR data. CBOR is defined in RFC 7049.
+    /// <para>
+    /// <b>Converting CBOR objects</b></para>
+    /// <para>There are many ways to get a CBOR object, including from
+    /// bytes, objects, streams and JSON, as described below.</para>
+    /// <para>
+    /// <b>To and from byte arrays:</b> The CBORObject.DecodeToBytes method
+    /// converts a byte array in CBOR format to a CBOR object. The
+    /// EncodeToBytes method converts a CBOR object to its corresponding
+    /// byte array in CBOR format.</para>
+    /// <para>
+    /// <b>To and from data streams:</b> The CBORObject.Write methods write
+    /// many kinds of objects to a data stream, including numbers, CBOR
+    /// objects, strings, and arrays of numbers and strings. The
     /// CBORObject.Read method reads a CBOR object from a data
     /// stream.</para>
-    /// <para><b>To and from other objects:</b>
-    /// The
-    /// CBORObject.FromObject method converts many kinds of objects to a
-    /// CBOR object, including numbers, strings, and arrays and maps of
-    /// numbers and strings. Methods like AsDouble, AsByte, and AsString
-    /// convert a CBOR object to different types of object.</para>
-    /// <para><b>To and from JSON:</b>
-    /// This class also doubles as a reader
-    /// and writer of JavaScript Object Notation (JSON). The
+    /// <para>
+    /// <b>To and from other objects:</b> The CBORObject.FromObject method
+    /// converts many kinds of objects to a CBOR object, including numbers,
+    /// strings, and arrays and maps of numbers and strings. Methods like
+    /// AsDouble, AsByte, and AsString convert a CBOR object to different
+    /// types of object.</para>
+    /// <para>
+    /// <b>To and from JSON:</b> This class also doubles as a reader and
+    /// writer of JavaScript Object Notation (JSON). The
     /// CBORObject.FromJSONString method converts JSON to a CBOR object,
     /// and the ToJSONString method converts a CBOR object to a JSON
     /// string.</para>
-    /// <para>In addition, the CBORObject.WriteJSON method
-    /// writes many kinds of objects as JSON to a data stream, including
-    /// numbers, CBOR objects, strings, and arrays of numbers and strings.
-    /// The CBORObject.Read method reads a CBOR object from a JSON data
+    /// <para>In addition, the CBORObject.WriteJSON method writes many
+    /// kinds of objects as JSON to a data stream, including numbers, CBOR
+    /// objects, strings, and arrays of numbers and strings. The
+    /// CBORObject.Read method reads a CBOR object from a JSON data
     /// stream.</para>
-    /// <para><b>Comparison Considerations:</b>
-    /// </para>
+    /// <para>
+    /// <b>Comparison Considerations:</b></para>
     /// <para>Instances of CBORObject should not be compared for equality
     /// using the "==" operator; it's possible to create two CBOR objects
     /// with the same value but not the same reference. (The "==" operator
     /// only checks if each side of the operator is the same
     /// instance.)</para>
-    /// <para>This class's natural ordering (under the
-    /// CompareTo method) is not consistent with the Equals method. This
-    /// means that two values that compare as equal under the CompareTo
-    /// method might not be equal under the Equals method. This is
-    /// important to consider especially if an application wants to compare
-    /// numbers, since the CBOR number type supports numbers of different
-    /// formats, such as big integers, rational numbers, and decimal
-    /// fractions.</para>
-    /// <para>Another consideration is that two values
-    /// that are otherwise equal may have different tags. To strip the tags
-    /// from a CBOR object before comparing, use the <c>Untag</c>
-    /// method.</para>
-    /// <para>To compare two numbers, the
-    /// CompareToIgnoreTags or CompareTo method should be used. Which
-    /// method to use depends on whether two equal values should still be
-    /// considered equal if they have different tags.</para>
-    /// <para>Although
-    /// this class is inconsistent with the Equals method, it is safe to
-    /// use CBORObject instances as hash keys as long as all of the keys
-    /// are untagged text strings (which means GetTags returns an empty
-    /// array and the Type property, or "getType()" in Java, returns
-    /// TextString). This is because the natural ordering of these
+    /// <para>This class's natural ordering (under the CompareTo method) is
+    /// not consistent with the Equals method. This means that two values
+    /// that compare as equal under the CompareTo method might not be equal
+    /// under the Equals method. This is important to consider especially
+    /// if an application wants to compare numbers, since the CBOR number
+    /// type supports numbers of different formats, such as big integers,
+    /// rational numbers, and decimal fractions.</para>
+    /// <para>Another consideration is that two values that are otherwise
+    /// equal may have different tags. To strip the tags from a CBOR object
+    /// before comparing, use the <c>Untag</c> method.</para>
+    /// <para>To compare two numbers, the CompareToIgnoreTags or CompareTo
+    /// method should be used. Which method to use depends on whether two
+    /// equal values should still be considered equal if they have
+    /// different tags.</para>
+    /// <para>Although this class is inconsistent with the Equals method,
+    /// it is safe to use CBORObject instances as hash keys as long as all
+    /// of the keys are untagged text strings (which means GetTags returns
+    /// an empty array and the Type property, or "getType()" in Java,
+    /// returns TextString). This is because the natural ordering of these
     /// instances is consistent with the Equals method.</para>
-    /// <para><b>Thread Safety:</b>
-    /// </para>
-    /// <para>CBOR objects that are
-    /// numbers, "simple values", and text strings are immutable (their
-    /// values can't be changed), so they are inherently safe for use by
-    /// multiple threads.</para>
-    /// <para>CBOR objects that are arrays, maps,
-    /// and byte strings are mutable, but this class doesn't attempt to
-    /// synchronize reads and writes to those objects by multiple threads,
-    /// so those objects are not thread safe without such
-    /// synchronization.</para>
-    /// <para>One kind of CBOR object is called a
-    /// map, or a list of key-value pairs. Keys can be any kind of CBOR
-    /// object, including numbers, strings, arrays, and maps. However, text
-    /// strings are the most suitable to use as keys; other kinds of CBOR
-    /// object are much better used as map values instead, keeping in mind
-    /// that some of them are not thread safe without synchronizing reads
-    /// and writes to them.</para>
-    /// <para>To find the type of a CBOR object,
-    /// call its Type property (or "getType()" in Java). The return value
-    /// can be Number, Boolean, SimpleValue, or TextString for immutable
-    /// CBOR objects, and Array, Map, or ByteString for mutable CBOR
-    /// objects.</para>
-    /// <para><b>Nesting Depth:</b>
-    /// </para>
-    /// <para>The
-    /// DecodeFromBytes method can only read objects with a limited maximum
-    /// depth of arrays and maps nested within other arrays and maps. The
-    /// code sets this maximum depth to 500 (allowing more than enough
-    /// nesting for most purposes), but it's possible that stack overflows
-    /// in some runtimes might lower the effective maximum nesting depth.
-    /// When the nesting depth goes above 500, the DecodeFromBytes method
-    /// throws a CBORException.</para>
-    /// </summary>
+    /// <para>
+    /// <b>Thread Safety:</b></para>
+    /// <para>CBOR objects that are numbers, "simple values", and text
+    /// strings are immutable (their values can't be changed), so they are
+    /// inherently safe for use by multiple threads.</para>
+    /// <para>CBOR objects that are arrays, maps, and byte strings are
+    /// mutable, but this class doesn't attempt to synchronize reads and
+    /// writes to those objects by multiple threads, so those objects are
+    /// not thread safe without such synchronization.</para>
+    /// <para>One kind of CBOR object is called a map, or a list of
+    /// key-value pairs. Keys can be any kind of CBOR object, including
+    /// numbers, strings, arrays, and maps. However, text strings are the
+    /// most suitable to use as keys; other kinds of CBOR object are much
+    /// better used as map values instead, keeping in mind that some of
+    /// them are not thread safe without synchronizing reads and writes to
+    /// them.</para>
+    /// <para>To find the type of a CBOR object, call its Type property (or
+    /// "getType()" in Java). The return value can be Number, Boolean,
+    /// SimpleValue, or TextString for immutable CBOR objects, and Array,
+    /// Map, or ByteString for mutable CBOR objects.</para>
+    /// <para>
+    /// <b>Nesting Depth:</b></para>
+    /// <para>The DecodeFromBytes method can only read objects with a
+    /// limited maximum depth of arrays and maps nested within other arrays
+    /// and maps. The code sets this maximum depth to 500 (allowing more
+    /// than enough nesting for most purposes), but it's possible that
+    /// stack overflows in some runtimes might lower the effective maximum
+    /// nesting depth. When the nesting depth goes above 500, the
+    /// DecodeFromBytes method throws a CBORException.</para></summary>
   public sealed partial class CBORObject : IComparable<CBORObject>,
   IEquatable<CBORObject> {
     internal int ItemType {
@@ -578,43 +569,42 @@ namespace PeterO.Cbor {
                     this.Untag().CompareTo(other.Untag()));
     }
 
-    /// <summary>Compares two CBOR objects. <para>In this
-    /// implementation:</para>
-    /// <list type=''><item>The null pointer (null
-    /// reference) is considered less than any other object.</item>
+    /// <summary>Compares two CBOR objects.
+    /// <para>In this implementation:</para>
+    /// <list type=''>
+    /// <item>The null pointer (null reference) is considered less than any
+    /// other object.</item>
     /// <item>If either object is true, false, CBORObject.Null, or the
     /// undefined value, it is treated as less than the other value. If
     /// both objects have one of these four values, then undefined is less
     /// than CBORObject.Null, which is less than false, which is less than
     /// true.</item>
-    /// <item>If both objects are numbers, their mathematical
-    /// values are compared. Here, NaN (not-a-number) is considered greater
-    /// than any number.</item>
-    /// <item>If both objects are simple values
-    /// other than true, false, CBORObject.Null, and the undefined value,
-    /// the objects are compared according to their ordinal numbers.</item>
+    /// <item>If both objects are numbers, their mathematical values are
+    /// compared. Here, NaN (not-a-number) is considered greater than any
+    /// number.</item>
+    /// <item>If both objects are simple values other than true, false,
+    /// CBORObject.Null, and the undefined value, the objects are compared
+    /// according to their ordinal numbers.</item>
     /// <item>If both objects are arrays, each element is compared. If one
     /// array is shorter than the other and the other array begins with
     /// that array (for the purposes of comparison), the shorter array is
     /// considered less than the longer array.</item>
-    /// <item>If both objects
-    /// are strings, compares each string code-point by code-point, as
-    /// though by the DataUtilities.CodePointCompare method.</item>
+    /// <item>If both objects are strings, compares each string code-point
+    /// by code-point, as though by the DataUtilities.CodePointCompare
+    /// method.</item>
     /// <item>If both objects are maps, compares each map as though each
     /// were an array with the sorted keys of that map as the array's
     /// elements. If both maps have the same keys, their values are
     /// compared in the order of the sorted keys.</item>
-    /// <item>If each
-    /// object is a different type, then they are sorted by their type
-    /// number, in the order given for the CBORType enumeration.</item>
+    /// <item>If each object is a different type, then they are sorted by
+    /// their type number, in the order given for the CBORType
+    /// enumeration.</item>
     /// <item>If each object has different tags and both objects are
     /// otherwise equal under this method, each element is compared as
     /// though each were an array with that object's tags listed in order
-    /// from outermost to innermost.</item>
-    /// </list>
-    /// <para>This method is
-    /// not consistent with the Equals method.</para>
-    /// </summary>
+    /// from outermost to innermost.</item></list>
+    /// <para>This method is not consistent with the Equals
+    /// method.</para></summary>
     /// <param name='other'>A value to compare with.</param>
     /// <returns>Less than 0, if this value is less than the other object;
     /// or 0, if both values are equal; or greater than 0, if this value is
@@ -2552,21 +2542,18 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Writes a binary floating-point number in CBOR format to a
-    /// data stream as follows: <list type=''><item>If the value is null,
-    /// writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero,
-    /// infinity, or NaN, converts the number to a <c>double</c>
-    /// and writes
-    /// that <c>double</c>
-    /// . If negative zero should not be written this
-    /// way, use the Plus method to convert the value beforehand.</item>
+    /// data stream as follows:
+    /// <list type=''>
+    /// <item>If the value is null, writes the byte 0xF6.</item>
+    /// <item>If the value is negative zero, infinity, or NaN, converts the
+    /// number to a <c>double</c> and writes that <c>double</c>. If
+    /// negative zero should not be written this way, use the Plus method
+    /// to convert the value beforehand.</item>
     /// <item>If the value has an exponent of zero, writes the value as an
     /// unsigned integer or signed integer if the number can fit either
     /// type or as a big integer otherwise.</item>
-    /// <item>In all other
-    /// cases, writes the value as a big float.</item>
-    /// </list>
-    /// </summary>
+    /// <item>In all other cases, writes the value as a big
+    /// float.</item></list></summary>
     /// <param name='bignum'>An ExtendedFloat object.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -2636,21 +2623,18 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Writes a decimal floating-point number in CBOR format to a
-    /// data stream, as follows: <list type=''><item>If the value is null,
-    /// writes the byte 0xF6.</item>
-    /// <item>If the value is negative zero,
-    /// infinity, or NaN, converts the number to a <c>double</c>
-    /// and writes
-    /// that <c>double</c>
-    /// . If negative zero should not be written this
-    /// way, use the Plus method to convert the value beforehand.</item>
+    /// data stream, as follows:
+    /// <list type=''>
+    /// <item>If the value is null, writes the byte 0xF6.</item>
+    /// <item>If the value is negative zero, infinity, or NaN, converts the
+    /// number to a <c>double</c> and writes that <c>double</c>. If
+    /// negative zero should not be written this way, use the Plus method
+    /// to convert the value beforehand.</item>
     /// <item>If the value has an exponent of zero, writes the value as an
     /// unsigned integer or signed integer if the number can fit either
     /// type or as a big integer otherwise.</item>
-    /// <item>In all other
-    /// cases, writes the value as a decimal number.</item>
-    /// </list>
-    /// </summary>
+    /// <item>In all other cases, writes the value as a decimal
+    /// number.</item></list></summary>
     /// <param name='bignum'>Decimal fraction to write. Can be
     /// null.</param>
     /// <param name='stream'>Stream to write to.</param>
@@ -3213,15 +3197,13 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Writes an arbitrary object to a CBOR data stream.
-    /// Currently, the following objects are supported: <list
-    /// type=''><item>Lists of CBORObject.</item>
-    /// <item>Maps of
-    /// CBORObject.</item>
+    /// Currently, the following objects are supported:
+    /// <list type=''>
+    /// <item>Lists of CBORObject.</item>
+    /// <item>Maps of CBORObject.</item>
     /// <item>Null.</item>
-    /// <item>Any object accepted by
-    /// the FromObject static methods.</item>
-    /// </list>
-    /// </summary>
+    /// <item>Any object accepted by the FromObject static
+    /// methods.</item></list></summary>
     /// <param name='objValue'>The value to write.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <param name='options'>Options for encoding the data to
@@ -3265,10 +3247,10 @@ namespace PeterO.Cbor {
     }
 
     /// <summary>Generates a CBOR object from a string in JavaScript Object
-    /// Notation (JSON) format. <para>If a JSON object has the same key,
-    /// only the last given value will be used for each duplicated key. The
-    /// JSON string may not begin with a byte order mark (U + FEFF).</para>
-    /// </summary>
+    /// Notation (JSON) format.
+    /// <para>If a JSON object has the same key, only the last given value
+    /// will be used for each duplicated key. The JSON string may not begin
+    /// with a byte order mark (U + FEFF).</para></summary>
     /// <param name='str'>A string in JSON format.</param>
     /// <returns>A CBORObject object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -3302,9 +3284,9 @@ namespace PeterO.Cbor {
     /// be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected
     /// by assuming that the first character read must be a byte order mark
     /// or an ASCII character. (In previous versions, only UTF-8 was
-    /// allowed.) <para>If a JSON object has the same key, only the last
-    /// given value will be used for each duplicated key.</para>
-    /// </summary>
+    /// allowed.)
+    /// <para>If a JSON object has the same key, only the last given value
+    /// will be used for each duplicated key.</para></summary>
     /// <param name='stream'>A readable data stream.</param>
     /// <returns>A CBORObject object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -3379,32 +3361,27 @@ namespace PeterO.Cbor {
     /// <summary>Converts this object to a string in JavaScript Object
     /// Notation (JSON) format. This function works not only with arrays
     /// and maps, but also integers, strings, byte arrays, and other JSON
-    /// data types. Notes: <list type=''><item>If this object contains maps
-    /// with non-string keys, the keys are converted to JSON strings before
-    /// writing the map as a JSON string.</item>
-    /// <item>If a number in the
-    /// form of a big float has a very high binary exponent, it will be
-    /// converted to a double before being converted to a JSON string. (The
-    /// resulting double could overflow to infinity, in which case the big
-    /// float is converted to null.)</item>
-    /// <item>The string will not begin
-    /// with a byte-order mark (U + FEFF); RFC 7159 (the JSON
-    /// specification) forbids placing a byte-order mark at the beginning
-    /// of a JSON string.</item>
-    /// <item>Byte strings are converted to Base64
-    /// URL by default.</item>
-    /// <item>Rational numbers will be converted to
-    /// their exact form, if possible, otherwise to a high-precision
-    /// approximation. (The resulting approximation could overflow to
-    /// infinity, in which case the rational number is converted to
-    /// null.)</item>
-    /// <item>Simple values other than true and false will be
-    /// converted to null. (This doesn't include floating-point
-    /// numbers.)</item>
-    /// <item>Infinity and not-a-number will be converted
-    /// to null.</item>
-    /// </list>
-    /// </summary>
+    /// data types. Notes:
+    /// <list type=''>
+    /// <item>If this object contains maps with non-string keys, the keys
+    /// are converted to JSON strings before writing the map as a JSON
+    /// string.</item>
+    /// <item>If a number in the form of a big float has a very high binary
+    /// exponent, it will be converted to a double before being converted
+    /// to a JSON string. (The resulting double could overflow to infinity,
+    /// in which case the big float is converted to null.)</item>
+    /// <item>The string will not begin with a byte-order mark (U + FEFF);
+    /// RFC 7159 (the JSON specification) forbids placing a byte-order mark
+    /// at the beginning of a JSON string.</item>
+    /// <item>Byte strings are converted to Base64 URL by default.</item>
+    /// <item>Rational numbers will be converted to their exact form, if
+    /// possible, otherwise to a high-precision approximation. (The
+    /// resulting approximation could overflow to infinity, in which case
+    /// the rational number is converted to null.)</item>
+    /// <item>Simple values other than true and false will be converted to
+    /// null. (This doesn't include floating-point numbers.)</item>
+    /// <item>Infinity and not-a-number will be converted to
+    /// null.</item></list></summary>
     /// <returns>A string object containing the converted object.</returns>
     public string ToJSONString() {
       int type = this.ItemType;
@@ -3824,16 +3801,14 @@ namespace PeterO.Cbor {
     /// following types are specially handled by this method: null ,
     /// primitive types, strings, CBORObject , ExtendedDecimal ,
     /// ExtendedFloat , the custom BigInteger , lists, arrays, enumerations
-    /// ( <c>Enum</c>
-    /// objects), and maps. In the .NET version, if the
+    /// ( <c>Enum</c> objects), and maps. In the .NET version, if the
     /// object is a type not specially handled by this method, returns a
     /// CBOR map with the values of each of its read/write properties (or
     /// all properties in the case of an anonymous type). Properties are
     /// converted to their camel-case names (meaning if a name starts with
     /// A to Z, that letter is lower-cased). If the property name begins
     /// with the word "Is", that word is deleted from the name. Also, .NET
-    /// <c>Enum</c>
-    /// objects will be converted to their integer values, and
+    /// <c>Enum</c> objects will be converted to their integer values, and
     /// a multidimensional array is converted to an array of arrays.
     /// <para>In the Java version, if the object is a type not specially
     /// handled by this method, this method checks the CBOR object for
@@ -3842,14 +3817,12 @@ namespace PeterO.Cbor {
     /// method found. For each method found, the starting word "get" or
     /// "is" is deleted from its name, and the name is converted to camel
     /// case (meaning if a name starts with A to Z, that letter is
-    /// lower-cased). Also, Java <c>Enum</c>
-    /// objects will be converted to
+    /// lower-cased). Also, Java <c>Enum</c> objects will be converted to
     /// the result of their name method.</para>
-    /// <para>If the input is a
-    /// byte array, the byte array is copied to a new byte array. (This
-    /// method can't be used to decode CBOR data from a byte array; for
-    /// that, use the DecodeFromBytes method instead.).</para>
-    /// </summary>
+    /// <para>If the input is a byte array, the byte array is copied to a
+    /// new byte array. (This method can't be used to decode CBOR data from
+    /// a byte array; for that, use the DecodeFromBytes method
+    /// instead.).</para></summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>A CBOR object corresponding to the given object. Returns
     /// CBORObject.Null if the object is null.</returns>
@@ -3970,7 +3943,7 @@ namespace PeterO.Cbor {
     /// used to mark a &quot;self-described CBOR&quot; object.</param>
     /// <returns>A CBOR object where the object <paramref name='valueOb'/>
     /// is converted to a CBOR object and given the tag <paramref
-    /// name='bigintTag'/> .</returns>
+    /// name='bigintTag'/>.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='bigintTag'/> is less than 0 or greater than 2^64-1, or
     /// <paramref name='valueOb'/> 's type is unsupported.</exception>
@@ -4071,7 +4044,7 @@ namespace PeterO.Cbor {
     /// &quot;self-described CBOR&quot; object.</param>
     /// <returns>A CBOR object where the object <paramref
     /// name='valueObValue'/> is converted to a CBOR object and given the
-    /// tag <paramref name='smallTag'/> .</returns>
+    /// tag <paramref name='smallTag'/>.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='smallTag'/> is less than 0 or <paramref name='valueObValue'/>
     /// 's type is unsupported.</exception>
