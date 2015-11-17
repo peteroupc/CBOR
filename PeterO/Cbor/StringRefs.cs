@@ -11,8 +11,7 @@ using PeterO;
 
 namespace PeterO.Cbor {
     /// <summary>Implements CBOR string references, described at
-    /// <c>http://cbor.schmorp.de/stringref</c>
-    /// </summary>
+    /// <c>http://cbor.schmorp.de/stringref</c></summary>
   internal class StringRefs {
     private List<List<CBORObject>> stack;
 

@@ -191,7 +191,7 @@ BigInteger denominator) {
     /// the number to a string.</summary>
     /// <param name='flt'>A 32-bit floating-point number.</param>
     /// <returns>A rational number with the same value as <paramref
-    /// name='flt'/> .</returns>
+    /// name='flt'/>.</returns>
     public static ExtendedRational FromSingle(float flt) {
       return FromExtendedFloat(ExtendedFloat.FromSingle(flt));
     }
@@ -202,7 +202,7 @@ BigInteger denominator) {
     /// the number to a string.</summary>
     /// <param name='flt'>A 64-bit floating-point number.</param>
     /// <returns>A rational number with the same value as <paramref
-    /// name='flt'/> .</returns>
+    /// name='flt'/>.</returns>
     public static ExtendedRational FromDouble(double flt) {
       return FromExtendedFloat(ExtendedFloat.FromDouble(flt));
     }

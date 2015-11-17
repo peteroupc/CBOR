@@ -130,9 +130,8 @@ segments[1] - segments[0]));
     /// function is idempotent; that is, calling the function again on the
     /// result with the same mode doesn't change the result.</summary>
     /// <param name='s'>A string to escape.</param>
-
-  /// <returns>Not documented yet.</returns>
-  /// <summary>Not documented yet.</summary>
+    /// <param name='mode'>A 32-bit signed integer.</param>
+    /// <returns>A string object.</returns>
     public static string escapeURI(string s, int mode) {
       if (s == null) {
         return null;
@@ -345,13 +344,10 @@ ParseMode.IRISurrogateLenient);
     /// reference under RDFA 1.1. (The CURIE reference is the part after
     /// the colon.).</summary>
     /// <param name='s'>Not documented yet.</param>
-
-    /// <param name='length'>Another 32-bit signed integer.</param>
+    /// <param name='offset'>Not documented yet.</param>
+    /// <param name='length'>Not documented yet. (3).</param>
     /// <returns>True if the substring is a valid CURIE reference under
     /// RDFA 1; otherwise, false.</returns>
-
-  /// <returns>Not documented yet.</returns>
-  /// <summary>Not documented yet.</summary>
     public static bool isValidCurieReference(string s, int offset, int length) {
       if (s == null) {
         return false;
@@ -832,9 +828,7 @@ int endIndex) {
     /// IRI.</summary>
     /// <param name='refValue'>Not documented yet.</param>
     /// <param name='baseURI'>Another string object.</param>
-
-  /// <returns>Not documented yet.</returns>
-  /// <summary>Not documented yet.</summary>
+    /// <returns>A string object.</returns>
     public static string relativeResolve(string refValue, string baseURI) {
       return relativeResolve(refValue, baseURI, ParseMode.IRIStrict);
     }
@@ -844,13 +838,12 @@ int endIndex) {
     /// <summary>Resolves a URI or IRI relative to another URI or
     /// IRI.</summary>
     /// <param name='refValue'>Not documented yet.</param>
-
+    /// <param name='refValue'>Not documented yet.</param>
+    /// <param name='baseURI'>Not documented yet.</param>
+    /// <param name='parseMode'>Not documented yet. (3).</param>
     /// <returns>The resolved IRI, or null if refValue is null or is not a
     /// valid IRI. If base is null or is not a valid IRI, returns
     /// refValue.</returns>
-
-  /// <returns>Not documented yet.</returns>
-  /// <summary>Not documented yet.</summary>
     public static string relativeResolve(
 string refValue,
 string baseURI,
@@ -925,14 +918,13 @@ segmentsBase[5]));
     /// <summary>Parses an Internationalized Resource Identifier (IRI)
     /// reference under RFC3987. If the IRI reference is syntactically
     /// valid, splits the string into its components and returns an array
-    /// containing the indices into the components. <returns>If the string
-    /// is a valid IRI reference, returns an array of 10 integers. Each of
-    /// the five pairs corresponds to the start and end index of the IRI's
-    /// scheme, authority, path, query, or fragment component,
-    /// respectively. If a component is absent, both indices in that pair
-    /// will be -1. If the string is null or is not a valid IRI, returns
-    /// null.</returns>
-    /// </summary>
+    /// containing the indices into the components.
+    /// <returns>If the string is a valid IRI reference, returns an array
+    /// of 10 integers. Each of the five pairs corresponds to the start and
+    /// end index of the IRI's scheme, authority, path, query, or fragment
+    /// component, respectively. If a component is absent, both indices in
+    /// that pair will be -1. If the string is null or is not a valid IRI,
+    /// returns null.</returns></summary>
     /// <param name='s'>Not documented yet.</param>
   /// <returns>Not documented yet.</returns>
     public static int[] splitIRI(string s) {
@@ -944,7 +936,6 @@ segmentsBase[5]));
     /// syntactically valid, splits the string into its components and
     /// returns an array containing the indices into the
     /// components.</summary>
-    /// <param name='s'>Not documented yet.</param>
     /// <returns>If the string is a valid IRI, returns an array of 10
     /// integers. Each of the five pairs corresponds to the start and end
     /// index of the IRI's scheme, authority, path, query, or fragment
@@ -1189,8 +1180,6 @@ ParseMode parseMode) {
     /// the string into its components and returns an array containing the
     /// indices into the components.</summary>
     /// <param name='s'>Not documented yet.</param>
-    /// <param name='s'>Not documented yet.</param>
-    /// <param name='parseMode'>Not documented yet.</param>
     /// <returns>If the string is a valid IRI reference, returns an array
     /// of 10 integers. Each of the five pairs corresponds to the start and
     /// end index of the IRI's scheme, authority, path, query, or fragment

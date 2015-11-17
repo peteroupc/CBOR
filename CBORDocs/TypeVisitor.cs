@@ -64,13 +64,11 @@ finalString,
 
     /// <summary>Compares a Type object with a Type.</summary>
     /// <param name='x'>Not documented yet.</param>
-    /// <summary>Compares a Type object with a Type.</summary>
-    /// <param name='x'>Not documented yet.</param>
-    /// <param name='y'>Not documented yet.</param>
+    /// <param name='y'>A Type object.</param>
     /// <returns>Zero if both values are equal; a negative number if
-    /// <paramref name='x'/> is less than <paramref name='y'/> , or a
+    /// <paramref name='x'/> is less than <paramref name='y'/>, or a
     /// positive number if <paramref name='x'/> is greater than <paramref
-    /// name='y'/> .</returns>
+    /// name='y'/>.</returns>
     public int Compare(Type x, Type y) {
       return string.Compare(x.FullName, y.FullName, StringComparison.Ordinal);
     }

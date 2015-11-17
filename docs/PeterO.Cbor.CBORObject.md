@@ -4,17 +4,17 @@
         System.IComparable,
         System.IEquatable
 
-Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049. Converting CBOR objects
+Represents an object in Concise Binary Object Representation (CBOR) and contains methods for reading and writing CBOR data. CBOR is defined in RFC 7049.Converting CBOR objects
 
 There are many ways to get a CBOR object, including from bytes, objects, streams and JSON, as described below.
 
-To and from byte arrays:The CBORObject.DecodeToBytes method converts a byte array in CBOR format to a CBOR object. The EncodeToBytes method converts a CBOR object to its corresponding byte array in CBOR format.
+To and from byte arrays: The CBORObject.DecodeToBytes method converts a byte array in CBOR format to a CBOR object. The EncodeToBytes method converts a CBOR object to its corresponding byte array in CBOR format.
 
-To and from data streams:The CBORObject.Write methods write many kinds of objects to a data stream, including numbers, CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read method reads a CBOR object from a data stream.
+To and from data streams: The CBORObject.Write methods write many kinds of objects to a data stream, including numbers, CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read method reads a CBOR object from a data stream.
 
-To and from other objects:The CBORObject.FromObject method converts many kinds of objects to a CBOR object, including numbers, strings, and arrays and maps of numbers and strings. Methods like AsDouble, AsByte, and AsString convert a CBOR object to different types of object.
+To and from other objects: The CBORObject.FromObject method converts many kinds of objects to a CBOR object, including numbers, strings, and arrays and maps of numbers and strings. Methods like AsDouble, AsByte, and AsString convert a CBOR object to different types of object.
 
-To and from JSON:This class also doubles as a reader and writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString method converts JSON to a CBOR object, and the ToJSONString method converts a CBOR object to a JSON string.
+To and from JSON: This class also doubles as a reader and writer of JavaScript Object Notation (JSON). The CBORObject.FromJSONString method converts JSON to a CBOR object, and the ToJSONString method converts a CBOR object to a JSON string.
 
 In addition, the CBORObject.WriteJSON method writes many kinds of objects as JSON to a data stream, including numbers, CBOR objects, strings, and arrays of numbers and strings. The CBORObject.Read method reads a CBOR object from a JSON data stream.
 
@@ -24,7 +24,7 @@ Instances of CBORObject should not be compared for equality using the "==" opera
 
 This class's natural ordering (under the CompareTo method) is not consistent with the Equals method. This means that two values that compare as equal under the CompareTo method might not be equal under the Equals method. This is important to consider especially if an application wants to compare numbers, since the CBOR number type supports numbers of different formats, such as big integers, rational numbers, and decimal fractions.
 
-Another consideration is that two values that are otherwise equal may have different tags. To strip the tags from a CBOR object before comparing, use the  `Untag` method.
+Another consideration is that two values that are otherwise equal may have different tags. To strip the tags from a CBOR object before comparing, use the  `Untag`  method.
 
 To compare two numbers, the CompareToIgnoreTags or CompareTo method should be used. Which method to use depends on whether two equal values should still be considered equal if they have different tags.
 
@@ -297,15 +297,15 @@ This object.
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>key</i>
+The parameter <i>key</i>
  already exists in this map.
 
  * System.InvalidOperationException:
 This object is not a map.
 
  * System.ArgumentException:
-The parameter  <i>key</i>
- or  <i>valueOb</i>
+The parameter <i>key</i>
+ or <i>valueOb</i>
  has an unsupported type.
 
 ### Add
@@ -329,7 +329,7 @@ This object.
 This object is not an array.
 
  * System.ArgumentException:
-The type of  <i>obj</i>
+The type of <i>obj</i>
  is not supported.
 
 ### Add
@@ -371,8 +371,8 @@ Registers an object that converts objects of a given type to CBOR objects (calle
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>type</i>
- or  <i>converter</i>
+The parameter <i>type</i>
+ or <i>converter</i>
  is null.
 
 ### Addition
@@ -415,8 +415,8 @@ Registers an object that validates CBOR objects with new tags.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigintTag</i>
- or  <i>handler</i>
+The parameter <i>bigintTag</i>
+ or <i>handler</i>
  is null.
 
 ### AsBigInteger
@@ -750,7 +750,7 @@ True if this object's value, truncated to an integer, would be -(2^63) or greate
     public sealed int CompareTo(
         PeterO.Cbor.CBORObject other);
 
-Compares two CBOR objects. In this implementation:
+Compares two CBOR objects.In this implementation:
 
  * The null pointer (null reference) is considered less than any other object.
 
@@ -853,11 +853,11 @@ A CBOR object corresponding to the data.
 <b>Exceptions:</b>
 
  * PeterO.Cbor.CBORException:
-There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter <i>data</i>
  is empty.
 
  * System.ArgumentNullException:
-The parameter  <i>data</i>
+The parameter <i>data</i>
  is null.
 
 ### Divide
@@ -938,7 +938,7 @@ True if the objects are equal; otherwise, false.
     public static PeterO.Cbor.CBORObject FromJSONString(
         string str);
 
-Generates a CBOR object from a string in JavaScript Object Notation (JSON) format. If a JSON object has the same key, only the last given value will be used for each duplicated key. The JSON string may not begin with a byte order mark (U + FEFF).
+Generates a CBOR object from a string in JavaScript Object Notation (JSON) format.If a JSON object has the same key, only the last given value will be used for each duplicated key. The JSON string may not begin with a byte order mark (U + FEFF).
 
 <b>Parameters:</b>
 
@@ -951,7 +951,7 @@ A CBORObject object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
  * PeterO.Cbor.CBORException:
@@ -1020,7 +1020,7 @@ A CBORObject object.
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>value</i>
+The parameter <i>value</i>
  is a surrogate code point.
 
 ### FromObject
@@ -1118,7 +1118,7 @@ A CBOR array object where each element of the given array is copied to a new arr
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
-Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null , primitive types, strings, CBORObject , ExtendedDecimal , ExtendedFloat , the custom BigInteger , lists, arrays, enumerations (  `Enum` objects), and maps. In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET `Enum` objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum` objects will be converted to the result of their name method.
+Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null , primitive types, strings, CBORObject , ExtendedDecimal , ExtendedFloat , the custom BigInteger , lists, arrays, enumerations (  `Enum`  objects), and maps. In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET `Enum`  objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum`  objects will be converted to the result of their name method.
 
 If the input is a byte array, the byte array is copied to a new byte array. (This method can't be used to decode CBOR data from a byte array; for that, use the DecodeFromBytes method instead.).
 
@@ -1381,7 +1381,7 @@ Generates a CBOR object from a map of objects.
 
 <b>Returns:</b>
 
-A CBOR object where each key and value of the given map is converted to a CBOR object and copied to a new map, or CBORObject.Null if  <i>dic</i>
+A CBOR object where each key and value of the given map is converted to a CBOR object and copied to a new map, or CBORObject.Null if <i>dic</i>
  is null.
 
 ### FromObjectAndTag
@@ -1400,9 +1400,9 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 
 <b>Returns:</b>
 
-A CBOR object where the object  <i>o</i>
- is converted to a CBOR object and given the tag  <i>tag</i>
-.
+A CBOR object where the object <i>o</i>
+ is converted to a CBOR object and given the tag <i>tag</i>
+ .
 
 ### FromObjectAndTag
 
@@ -1420,19 +1420,19 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 
 <b>Returns:</b>
 
-A CBOR object where the object  <i>valueOb</i>
-is converted to a CBOR object and given the tag  <i>bigintTag</i>
+A CBOR object where the object <i>valueOb</i>
+ is converted to a CBOR object and given the tag <i>bigintTag</i>
  .
 
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>bigintTag</i>
+The parameter <i>bigintTag</i>
  is less than 0 or greater than 2^64-1, or <i>valueOb</i>
  's type is unsupported.
 
  * System.ArgumentNullException:
-The parameter  <i>bigintTag</i>
+The parameter <i>bigintTag</i>
  is null.
 
 ### FromObjectAndTag
@@ -1451,16 +1451,16 @@ Generates a CBOR object from an arbitrary object and gives the resulting object 
 
 <b>Returns:</b>
 
-A CBOR object where the object  <i>valueObValue</i>
- is converted to a CBOR object and given the tag  <i>smallTag</i>
+A CBOR object where the object <i>valueObValue</i>
+ is converted to a CBOR object and given the tag <i>smallTag</i>
  .
 
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>smallTag</i>
- is less than 0 or  <i>valueObValue</i>
-'s type is unsupported.
+The parameter <i>smallTag</i>
+ is less than 0 or <i>valueObValue</i>
+ 's type is unsupported.
 
 ### FromSimpleValue
 
@@ -1480,7 +1480,7 @@ A CBORObject object.
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>simpleValue</i>
+The parameter <i>simpleValue</i>
  is less than 0, greater than 255, or from 24 through 31.
 
 ### GetByteString
@@ -1588,8 +1588,8 @@ This object.
 This object is not an array.
 
  * System.ArgumentException:
-The parameter  <i>valueOb</i>
- has an unsupported type; or  <i>index</i>
+The parameter <i>valueOb</i>
+ has an unsupported type; or <i>index</i>
  is not a valid index into this array.
 
 ### IsInfinity
@@ -1798,7 +1798,7 @@ A CBOR object that was read.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * PeterO.Cbor.CBORException:
@@ -1809,7 +1809,7 @@ There was an error in reading or parsing the data.
     public static PeterO.Cbor.CBORObject ReadJSON(
         System.IO.Stream stream);
 
-Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte order mark (U + FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte order mark or an ASCII character. (In previous versions, only UTF-8 was allowed.) If a JSON object has the same key, only the last given value will be used for each duplicated key.
+Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte order mark (U + FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte order mark or an ASCII character. (In previous versions, only UTF-8 was allowed.)If a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -1822,7 +1822,7 @@ A CBORObject object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -1867,7 +1867,7 @@ True if the item was removed; otherwise, false.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>obj</i>
+The parameter <i>obj</i>
  is null (as opposed to CBORObject.Null).
 
  * System.InvalidOperationException:
@@ -1897,8 +1897,8 @@ This object.
 This object is not a map.
 
  * System.ArgumentException:
-The parameter  <i>key</i>
- or  <i>valueOb</i>
+The parameter <i>key</i>
+ or <i>valueOb</i>
  has an unsupported type.
 
 ### Subtract
@@ -1995,7 +1995,7 @@ Writes a Boolean value in CBOR format to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2018,7 +2018,7 @@ Writes a byte (0 to 255) in CBOR format to a data stream. If the value is less t
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2041,11 +2041,11 @@ Writes a Unicode character as a string in CBOR format to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.ArgumentException:
-The parameter  <i>value</i>
+The parameter <i>value</i>
  is a surrogate code point.
 
  * System.IO.IOException:
@@ -2068,7 +2068,7 @@ Writes a 64-bit floating-point number in CBOR format to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2091,7 +2091,7 @@ Writes a 32-bit floating-point number in CBOR format to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>s</i>
+The parameter <i>s</i>
  is null.
 
  * System.IO.IOException:
@@ -2114,7 +2114,7 @@ Writes a 32-bit signed integer in CBOR format to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2137,7 +2137,7 @@ Writes a 64-bit signed integer in CBOR format to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2188,7 +2188,7 @@ Writes an arbitrary object to a CBOR data stream. Currently, the following objec
 The object's type is not supported.
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
 ### Write
@@ -2208,7 +2208,7 @@ Writes a big integer in CBOR format to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2231,7 +2231,7 @@ Writes a CBOR object to a CBOR data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
 ### Write
@@ -2244,7 +2244,7 @@ Writes a decimal floating-point number in CBOR format to a data stream, as follo
 
  * If the value is null, writes the byte 0xF6.
 
- * If the value is negative zero, infinity, or NaN, converts the number to a  `double` and writes that  `double` . If negative zero should not be written this way, use the Plus method to convert the value beforehand.
+ * If the value is negative zero, infinity, or NaN, converts the number to a  `double`  and writes that  `double`  . If negative zero should not be written this way, use the Plus method to convert the value beforehand.
 
  * If the value has an exponent of zero, writes the value as an unsigned integer or signed integer if the number can fit either type or as a big integer otherwise.
 
@@ -2259,7 +2259,7 @@ Writes a decimal floating-point number in CBOR format to a data stream, as follo
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2275,7 +2275,7 @@ Writes a binary floating-point number in CBOR format to a data stream as follows
 
  * If the value is null, writes the byte 0xF6.
 
- * If the value is negative zero, infinity, or NaN, converts the number to a  `double` and writes that  `double` . If negative zero should not be written this way, use the Plus method to convert the value beforehand.
+ * If the value is negative zero, infinity, or NaN, converts the number to a  `double`  and writes that  `double`  . If negative zero should not be written this way, use the Plus method to convert the value beforehand.
 
  * If the value has an exponent of zero, writes the value as an unsigned integer or signed integer if the number can fit either type or as a big integer otherwise.
 
@@ -2290,7 +2290,7 @@ Writes a binary floating-point number in CBOR format to a data stream as follows
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2313,7 +2313,7 @@ Writes a rational number in CBOR format to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2350,7 +2350,7 @@ Writes a 16-bit signed integer in CBOR format to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2373,7 +2373,7 @@ Writes a string in CBOR format to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2399,7 +2399,7 @@ Writes a string in CBOR format to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2436,7 +2436,7 @@ Writes a 64-bit unsigned integer in CBOR format to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
 ### Write
@@ -2484,7 +2484,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format, as
 An I/O error occurred.
 
  * System.ArgumentNullException:
-The parameter  <i>outputStream</i>
+The parameter <i>outputStream</i>
  is null.
 
 ### WriteTo
@@ -2501,7 +2501,7 @@ Writes this CBOR object to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:
@@ -2524,7 +2524,7 @@ Writes this CBOR object to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>stream</i>
+The parameter <i>stream</i>
  is null.
 
  * System.IO.IOException:

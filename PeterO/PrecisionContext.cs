@@ -43,8 +43,8 @@ namespace PeterO {
     /// <para>For example, if Traps equals FlagInexact and FlagSubnormal, a
     /// TrapException will be thrown if an operation's return value is not
     /// the same as the exact result (FlagInexact) or if the return value's
-    /// exponent is lower than the lowest allowed (FlagSubnormal).</para>
-    /// </summary>
+    /// exponent is lower than the lowest allowed
+    /// (FlagSubnormal).</para></summary>
     /// <value>The traps that are set for each flag in the context.</value>
     public int Traps {
       get {
@@ -196,8 +196,7 @@ namespace PeterO {
     /// this value will be 0. This value is a combination of bit fields. To
     /// retrieve a particular flag, use the AND operation on the return
     /// value of this method. For example: <c>(this.Flags &amp;
-    /// PrecisionContext.FlagInexact) != 0</c>
-    /// returns TRUE if the Inexact
+    /// PrecisionContext.FlagInexact) != 0</c> returns TRUE if the Inexact
     /// flag is set.</summary>
     /// <value>The flags that are set from converting numbers according to
     /// this precision context. If HasFlags is false, this value will be
@@ -391,8 +390,7 @@ namespace PeterO {
     /// arithmetic. In the simplified arithmetic, infinity, not-a-number,
     /// and subnormal numbers are not allowed, and negative zero is treated
     /// the same as positive zero. For further details, see
-    /// <c>http://speleotrove.com/decimal/dax3274.html</c>
-    /// </summary>
+    /// <c>http://speleotrove.com/decimal/dax3274.html</c></summary>
     /// <value>True if a &quot;simplified&quot; arithmetic will be used;
     /// otherwise, false.</value>
     public bool IsSimplified {

@@ -115,7 +115,7 @@ BigInteger divisor) {
     /// <param name='pow'>Another BigInteger object.</param>
     /// <param name='mod'>A BigInteger object. (3).</param>
     /// <returns>The value ( <paramref name='bigintValue'/> ^ <paramref
-    /// name='pow'/> )% <paramref name='mod'/> .</returns>
+    /// name='pow'/> )% <paramref name='mod'/>.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintValue'/> is null.</exception>
     public static BigInteger ModPow(

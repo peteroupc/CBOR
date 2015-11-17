@@ -31,8 +31,9 @@ if (docdir.Length == 0) {
         return;
       }
       var assembly = Assembly.LoadFrom(assemblyFile);
-      var members = DocReader.Read(assembly);
-      var oldWriter = Console.Out;
+      try {
+        var members = DocReader.Read(assembly);
+        var oldWriter = Console.Out;
       var visitor = new TypeVisitor(directory);
       members.Accept(visitor);
       visitor.Finish();
@@ -45,6 +46,10 @@ Encoding.UTF8)) {
         members.Accept(visitor2);
         visitor2.Finish();
       }
+    } catch (IOException ex) {
+      Console.WriteLine(ex.Message);
+      return;
+    }
     }
   }
 }

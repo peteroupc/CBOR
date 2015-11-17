@@ -13,8 +13,7 @@ namespace PeterO {
     /// pass all the test cases, since some aspects of the spec are left
     /// open. For example: in which cases is the Clamped flag set? The test
     /// cases set the Clamped flag in only a handful of test cases, all
-    /// within the <c>exp</c>
-    /// operation.</summary>
+    /// within the <c>exp</c> operation.</summary>
     /// <typeparam name='T'>Data type for a numeric value in a particular
     /// radix.</typeparam>
   internal sealed class SimpleRadixMath<T> : IRadixMath<T> {
@@ -344,8 +343,6 @@ namespace PeterO {
     /// <summary>Finds the remainder that results when dividing two T
     /// objects.</summary>
     /// <param name='thisValue'>Not documented yet.</param>
-    /// <param name='divisor'>A T object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The remainder of the two objects.</returns>
     public T Remainder(T thisValue, T divisor, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
@@ -553,8 +550,6 @@ namespace PeterO {
 
     /// <summary>Divides two T objects.</summary>
     /// <param name='thisValue'>Not documented yet.</param>
-    /// <param name='divisor'>A T object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The quotient of the two objects.</returns>
     public T Divide(T thisValue, T divisor, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
@@ -620,8 +615,6 @@ namespace PeterO {
 
     /// <summary>Multiplies two T objects.</summary>
     /// <param name='thisValue'>Not documented yet.</param>
-    /// <param name='other'>A T object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The product of the two objects.</returns>
     public T Multiply(T thisValue, T other, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, other, ctx);
@@ -809,6 +802,12 @@ namespace PeterO {
 
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>Not documented yet.</param>
+    /// <summary>Compares a T object with this instance.</summary>
+    /// <param name='thisValue'>Not documented yet.</param>
+    /// <param name='otherValue'>Not documented yet.</param>
+    /// <param name='treatQuietNansAsSignaling'>Not documented yet.
+    /// (3).</param>
+    /// <param name='ctx'>Not documented yet. (4).</param>
     /// <returns>Zero if the values are equal; a negative number if this
     /// instance is less, or a positive number if this instance is
     /// greater.</returns>
@@ -832,9 +831,7 @@ namespace PeterO {
 
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>Not documented yet.</param>
-    /// <summary>Compares a T object with this instance.</summary>
-    /// <param name='thisValue'>Not documented yet.</param>
-    /// <param name='otherValue'>Not documented yet.</param>
+    /// <param name='otherValue'>A T object.</param>
     /// <returns>Zero if the values are equal; a negative number if this
     /// instance is less, or a positive number if this instance is
     /// greater.</returns>

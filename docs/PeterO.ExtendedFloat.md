@@ -4,7 +4,7 @@
         System.IComparable,
         System.IEquatable
 
-Represents an arbitrary-precision binary floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 2^exponent. This class also supports values for negative zero, not-a-number (NaN) values, and infinity. Passing a signaling NaN to any arithmetic operation shown here will signal the flag FlagInvalid and return a quiet NaN, even if another operand to that operation is a quiet NaN, unless noted otherwise.
+Represents an arbitrary-precision binary floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 2^exponent. This class also supports values for negative zero, not-a-number (NaN) values, and infinity.Passing a signaling NaN to any arithmetic operation shown here will signal the flag FlagInvalid and return a quiet NaN, even if another operand to that operation is a quiet NaN, unless noted otherwise.
 
 Passing a quiet NaN to any arithmetic operation shown here will return a quiet NaN, unless noted otherwise.
 
@@ -199,7 +199,7 @@ The sum of thisValue and the other object.
     public sealed int CompareTo(
         PeterO.ExtendedFloat other);
 
-Compares the mathematical values of this object and another object, accepting NaN values. This method is not consistent with the Equals method because two different numbers with the same mathematical value, but different exponents, will compare as equal.
+Compares the mathematical values of this object and another object, accepting NaN values.This method is not consistent with the Equals method because two different numbers with the same mathematical value, but different exponents, will compare as equal.
 
 In this method, negative zero and positive zero are considered equal.
 
@@ -211,7 +211,7 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
 <b>Returns:</b>
 
-Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if  <i>other</i>
+Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if <i>other</i>
  is null, or 0 if both values are equal.
 
 ### CompareToSignal
@@ -220,7 +220,7 @@ Less than 0 if this object's value is less than the other value, or greater than
         PeterO.ExtendedFloat other,
         PeterO.PrecisionContext ctx);
 
-Compares the mathematical values of this object and another object, treating quiet NaN as signaling. In this method, negative zero and positive zero are considered equal.
+Compares the mathematical values of this object and another object, treating quiet NaN as signaling.In this method, negative zero and positive zero are considered equal.
 
 If this object or the other object is a quiet NaN or signaling NaN, this method will return a quiet NaN and will signal a FlagInvalid flag.
 
@@ -240,7 +240,7 @@ Quiet NaN if this object or the other object is NaN, or 0 if both objects have t
         PeterO.ExtendedFloat other,
         PeterO.PrecisionContext ctx);
 
-Compares the mathematical values of this object and another object. In this method, negative zero and positive zero are considered equal.
+Compares the mathematical values of this object and another object.In this method, negative zero and positive zero are considered equal.
 
 If this object or the other object is a quiet NaN or signaling NaN, this method returns a quiet NaN, and will signal a FlagInvalid flag if either is a signaling NaN.
 
@@ -293,8 +293,8 @@ An ExtendedFloat object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>mantissa</i>
- or  <i>exponent</i>
+The parameter <i>mantissa</i>
+ or <i>exponent</i>
  is null.
 
 ### CreateNaN
@@ -315,11 +315,11 @@ A quiet not-a-number object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>diag</i>
+The parameter <i>diag</i>
  is null.
 
  * System.ArgumentException:
-The parameter  <i>diag</i>
+The parameter <i>diag</i>
  is less than 0.
 
 ### CreateNaN
@@ -349,11 +349,11 @@ An ExtendedFloat object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>diag</i>
+The parameter <i>diag</i>
  is null.
 
  * System.ArgumentException:
-The parameter  <i>diag</i>
+The parameter <i>diag</i>
  is less than 0.
 
 ### Divide
@@ -397,8 +397,8 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 <b>Exceptions:</b>
 
  * System.ArithmeticException:
-Either  <i>ctx</i>
-is null or  <i>ctx</i>
+Either <i>ctx</i>
+ is null or <i>ctx</i>
  's precision is 0, and the result would have a nonterminating binary expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
 
 ### DivideAndRemainderNaturalScale
@@ -680,7 +680,7 @@ Exponential of this object. If this object's value is 1, returns an approximatio
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>ctx</i>
+The parameter <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
 ### FromBigInteger
@@ -711,7 +711,7 @@ Creates a binary float from a 64-bit floating-point number. This method computes
 
 <b>Returns:</b>
 
-A binary float with the same value as  <i>dbl</i>
+A binary float with the same value as <i>dbl</i>
  .
 
 ### FromInt32
@@ -757,7 +757,7 @@ Creates a binary float from a 32-bit floating-point number. This method computes
 
 <b>Returns:</b>
 
-A binary float with the same value as  <i>flt</i>
+A binary float with the same value as <i>flt</i>
  .
 
 ### FromString
@@ -778,7 +778,7 @@ An ExtendedFloat object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
 ### FromString
@@ -805,7 +805,7 @@ An ExtendedFloat object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
 ### FromString
@@ -816,7 +816,7 @@ The parameter  <i>str</i>
         int length,
         PeterO.PrecisionContext ctx);
 
-Creates a binary float from a string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double). The format of the string generally consists of:
+Creates a binary float from a string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double).The format of the string generally consists of:
 
  * An optional '-' or '+' character (if '-' , the value is negative.)
 
@@ -824,7 +824,7 @@ Creates a binary float from a string that represents a number. Note that if the 
 
  * Optionally, E+ (positive exponent) or E- (negative exponent) plus one or more digits specifying the exponent.
 
-The string can also be "-INF" , "-Infinity" , "Infinity" , "INF", quiet NaN ("qNaN") followed by any number of digits, or signaling NaN ("sNaN") followed by any number of digits, all in any combination of upper and lower case.
+The string can also be "-INF", "-Infinity" , "Infinity" , "INF", quiet NaN ("qNaN") followed by any number of digits, or signaling NaN ("sNaN") followed by any number of digits, all in any combination of upper and lower case.
 
 The format generally follows the definition in java.math.BigDecimal(), except that the digits must be ASCII digits ('0' through '9').
 
@@ -845,7 +845,7 @@ An ExtendedFloat object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
 ### FromString
@@ -869,7 +869,7 @@ An ExtendedFloat object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
 ### GetHashCode
@@ -960,7 +960,7 @@ Ln(this object). Signals the flag FlagInvalid and returns NaN if this object is 
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>ctx</i>
+The parameter <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Log10
@@ -976,7 +976,7 @@ Finds the base-10 logarithm of this object, that is, the power (exponent) that t
 
 <b>Returns:</b>
 
-Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns NaN if this object is less than 0. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
+Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns NaN if this object is less than 0. Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Max
@@ -1265,7 +1265,7 @@ Returns a number similar to this number but with the radix point moved to the ri
 
 <b>Returns:</b>
 
-A number whose scale is increased by  <i>bigPlaces</i>
+A number whose scale is increased by <i>bigPlaces</i>
  , but not to more than 0.
 
 ### Multiply
@@ -1409,9 +1409,9 @@ Returns the largest value that's less than the given value. Returns negative inf
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>ctx</i>
- is null, the precision is 0, or  <i>ctx</i>
-has an unlimited exponent range.
+The parameter <i>ctx</i>
+ is null, the precision is 0, or <i>ctx</i>
+ has an unlimited exponent range.
 
 ### NextPlus
 
@@ -1431,9 +1431,9 @@ Returns the smallest value that's greater than the given value.
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>ctx</i>
- is null, the precision is 0, or  <i>ctx</i>
-has an unlimited exponent range.
+The parameter <i>ctx</i>
+ is null, the precision is 0, or <i>ctx</i>
+ has an unlimited exponent range.
 
 ### NextToward
 
@@ -1456,9 +1456,9 @@ Returns the next value that is closer to the other object' s value than this obj
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>ctx</i>
- is null, the precision is 0, or  <i>ctx</i>
-has an unlimited exponent range.
+The parameter <i>ctx</i>
+ is null, the precision is 0, or <i>ctx</i>
+ has an unlimited exponent range.
 
 ### PI
 
@@ -1478,7 +1478,7 @@ Pi rounded to the given precision.
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>ctx</i>
+The parameter <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Plus
@@ -1551,7 +1551,7 @@ This^exponent. Signals the flag FlagInvalid and returns NaN if this object and e
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>ctx</i>
+The parameter <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0), and the exponent has a fractional part.
 
 ### Precision
@@ -1623,7 +1623,7 @@ A binary float with the same value as this object but with the exponent changed.
     public PeterO.ExtendedFloat Reduce(
         PeterO.PrecisionContext ctx);
 
-Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1. If this object's value is 0, changes the exponent to 0. (This is unlike the behavior in Java's BigDecimal method "stripTrailingZeros" in Java 7 and earlier.)
+Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1.If this object's value is 0, changes the exponent to 0. (This is unlike the behavior in Java's BigDecimal method "stripTrailingZeros" in Java 7 and earlier.)
 
 <b>Parameters:</b>
 
@@ -1700,7 +1700,7 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
  * If the remainder's absolute value is exactly half of the divisor's absolute value, the result has the opposite sign of this object if the quotient, rounded down, is odd, and has the same sign as this object if the quotient, rounded down, is even, and the result's absolute value is half of the divisor's absolute value.
 
-This function is also known as the "IEEE Remainder" function.
+ This function is also known as the "IEEE Remainder" function.
 
 <b>Parameters:</b>
 
@@ -1912,7 +1912,7 @@ Returns a number similar to this number but with its scale adjusted.
 
 <b>Returns:</b>
 
-A number whose scale is increased by  <i>bigPlaces</i>
+A number whose scale is increased by <i>bigPlaces</i>
  .
 
 ### SquareRoot
@@ -1933,7 +1933,7 @@ The square root. Signals the flag FlagInvalid and returns NaN if this object is 
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>ctx</i>
+The parameter <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Subtract
@@ -1972,7 +1972,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### ToBigInteger
@@ -2012,7 +2012,7 @@ This object's value is not an exact integer.
 
     public double ToDouble();
 
-Converts this value to a 64-bit floating-point number. The half-even rounding mode is used. If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
+Converts this value to a 64-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
 <b>Returns:</b>
 
@@ -2052,7 +2052,7 @@ A string object.
 
     public float ToSingle();
 
-Converts this value to a 32-bit floating-point number. The half-even rounding mode is used. If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
+Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
 <b>Returns:</b>
 
