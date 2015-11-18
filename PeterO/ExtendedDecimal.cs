@@ -2903,12 +2903,15 @@ namespace PeterO {
     /// Can be null.</param>
     /// <returns>The result thisValue * multiplicand -
     /// subtrahend.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter "otherValue"
-    /// is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='op'/> or <paramref name='subtrahend'/> is null.</exception>
     public ExtendedDecimal MultiplyAndSubtract(
       ExtendedDecimal op,
       ExtendedDecimal subtrahend,
       PrecisionContext ctx) {
+      if (op == null) {
+        throw new ArgumentNullException("op");
+      }
       if (subtrahend == null) {
         throw new ArgumentNullException("subtrahend");
       }

@@ -59,7 +59,7 @@ namespace Test {
         return false;
       }
       for (var i = 0; i < arr1.Length; ++i) {
-        if (arr1[i ]!=arr2[i]) {
+        if (arr1[i] != arr2[i]) {
  return false;
 }
       }

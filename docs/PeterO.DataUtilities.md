@@ -20,13 +20,13 @@ Gets the Unicode code point at the given index of the string.
 
 <b>Returns:</b>
 
-The Unicode code point at the given position. Returns -1 if <i>index</i>
+The Unicode code point at the given position. Returns -1 if  <i>index</i>
  is less than 0, or is the string's length or greater. Returns the replacement character (U + FFFD) if the current character is an unpaired surrogate code point.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is null.
 
 ### CodePointAt
@@ -48,14 +48,14 @@ Gets the Unicode code point at the given index of the string.
 
 <b>Returns:</b>
 
-The Unicode code point at the current position. Returns -1 if <i>index</i>
- is less than 0, or is the string's length or greater. Returns a value as specified under <i>surrogateBehavior</i>
+The Unicode code point at the current position. Returns -1 if  <i>index</i>
+ is less than 0, or is the string's length or greater. Returns a value as specified under  <i>surrogateBehavior</i>
  if the previous character is an unpaired surrogate code point.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is null.
 
 ### CodePointBefore
@@ -74,13 +74,13 @@ Gets the Unicode code point just before the given index of the string.
 
 <b>Returns:</b>
 
-The Unicode code point at the previous position. Returns -1 if <i>index</i>
+The Unicode code point at the previous position. Returns -1 if  <i>index</i>
  is 0 or less, or is greater than the string's length. Returns the replacement character (U + FFFD) if the previous character is an unpaired surrogate code point.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is null.
 
 ### CodePointBefore
@@ -102,14 +102,14 @@ Gets the Unicode code point just before the given index of the string.
 
 <b>Returns:</b>
 
-The Unicode code point at the previous position. Returns -1 if <i>index</i>
- is 0 or less, or is greater than the string's length. Returns a value as specified under <i>surrogateBehavior</i>
+The Unicode code point at the previous position. Returns -1 if  <i>index</i>
+ is 0 or less, or is greater than the string's length. Returns a value as specified under  <i>surrogateBehavior</i>
  if the previous character is an unpaired surrogate code point.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is null.
 
 ### CodePointCompare
@@ -151,11 +151,42 @@ The string encoded in UTF-8.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is null.
 
  * System.ArgumentException:
-The string contains an unpaired surrogate code point and <i>replace</i>
+The string contains an unpaired surrogate code point and  <i>replace</i>
+ is false, or an internal error occurred.
+
+### GetUtf8Bytes
+
+    public static byte[] GetUtf8Bytes(
+        string str,
+        bool replace,
+        bool lenientLineBreaks);
+
+Encodes a string in UTF-8 as a byte array.
+
+<b>Parameters:</b>
+
+ * <i>str</i>: A text string.
+
+ * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U + FFFD). If false, stops processing when an unpaired surrogate code point is seen.
+
+ * <i>lenientLineBreaks</i>: A Boolean object.
+
+<b>Returns:</b>
+
+The string encoded in UTF-8.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>str</i>
+ is null.
+
+ * System.ArgumentException:
+The string contains an unpaired surrogate code point and  <i>replace</i>
  is false, or an internal error occurred.
 
 ### GetUtf8Length
@@ -174,13 +205,13 @@ Calculates the number of bytes needed to encode a string in UTF-8.
 
 <b>Returns:</b>
 
-The number of bytes needed to encode the given string in UTF-8, or -1 if the string contains an unpaired surrogate code point and <i>replace</i>
+The number of bytes needed to encode the given string in UTF-8, or -1 if the string contains an unpaired surrogate code point and  <i>replace</i>
  is false.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is null.
 
 ### GetUtf8String
@@ -204,11 +235,11 @@ A string represented by the UTF-8 byte array.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>bytes</i>
+The parameter  <i>bytes</i>
  is null.
 
  * System.ArgumentException:
-The string is not valid UTF-8 and <i>replace</i>
+The string is not valid UTF-8 and  <i>replace</i>
  is false.
 
 ### GetUtf8String
@@ -238,16 +269,16 @@ A string represented by the UTF-8 byte array.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>bytes</i>
+The parameter  <i>bytes</i>
  is null.
 
  * System.ArgumentException:
-The portion of the byte array is not valid UTF-8 and <i>replace</i>
+The portion of the byte array is not valid UTF-8 and  <i>replace</i>
  is false.
 
  * System.ArgumentException:
-The parameter <i>offset</i>
- is less than 0, <i>bytesCount</i>
+The parameter  <i>offset</i>
+ is less than 0,  <i>bytesCount</i>
  is less than 0, or offset plus bytesCount is greater than the length of "data" .
 
 ### ReadUtf8
@@ -272,8 +303,8 @@ Reads a string in UTF-8 encoding from a data stream.
 
 <b>Returns:</b>
 
-0 if the entire string was read without errors, -1 if the string is not valid UTF-8 and <i>replace</i>
- is false, or -2 if the end of the stream was reached before the last character was read completely (which is only the case if <i>bytesCount</i>
+0 if the entire string was read without errors, -1 if the string is not valid UTF-8 and  <i>replace</i>
+ is false, or -2 if the end of the stream was reached before the last character was read completely (which is only the case if  <i>bytesCount</i>
  is 0 or greater).
 
 <b>Exceptions:</b>
@@ -282,8 +313,8 @@ Reads a string in UTF-8 encoding from a data stream.
 An I/O error occurred.
 
  * System.ArgumentNullException:
-The parameter <i>stream</i>
- is null or <i>builder</i>
+The parameter  <i>stream</i>
+ is null or  <i>builder</i>
  is null.
 
 ### ReadUtf8FromBytes
@@ -311,21 +342,21 @@ Reads a string in UTF-8 encoding from a byte array.
 
 <b>Returns:</b>
 
-0 if the entire string was read without errors, or -1 if the string is not valid UTF-8 and <i>replace</i>
+0 if the entire string was read without errors, or -1 if the string is not valid UTF-8 and  <i>replace</i>
  is false.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>data</i>
- is null or <i>builder</i>
+The parameter  <i>data</i>
+ is null or  <i>builder</i>
  is null.
 
  * System.ArgumentException:
-The parameter <i>offset</i>
- is less than 0, <i>bytesCount</i>
- is less than 0, or offset plus bytesCount is greater than the length of <i>data</i>
- .
+The parameter  <i>offset</i>
+ is less than 0,  <i>bytesCount</i>
+ is less than 0, or offset plus bytesCount is greater than the length of  <i>data</i>
+.
 
 ### ReadUtf8ToString
 
@@ -348,7 +379,7 @@ The string read.
 An I/O error occurred.
 
  * System.ArgumentNullException:
-The parameter <i>stream</i>
+The parameter  <i>stream</i>
  is null.
 
 ### ReadUtf8ToString
@@ -375,11 +406,11 @@ The string read.
 <b>Exceptions:</b>
 
  * System.IO.IOException:
-An I/O error occurred; or, the string is not valid UTF-8 and <i>replace</i>
+An I/O error occurred; or, the string is not valid UTF-8 and  <i>replace</i>
  is false.
 
  * System.ArgumentNullException:
-The parameter <i>stream</i>
+The parameter  <i>stream</i>
  is null.
 
 ### ToLowerCaseAscii
@@ -395,7 +426,7 @@ Returns a string with upper-case ASCII letters (A to Z) converted to lower-case.
 
 <b>Returns:</b>
 
-The converted string, or null if <i>str</i>
+The converted string, or null if  <i>str</i>
  is null.
 
 ### WriteUtf8
@@ -429,16 +460,16 @@ Writes a portion of a string in UTF-8 encoding to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
- is null or <i>stream</i>
+The parameter  <i>str</i>
+ is null or  <i>stream</i>
  is null.
 
  * System.ArgumentException:
-The parameter <i>offset</i>
- is less than 0, <i>length</i>
- is less than 0, or <i>offset</i>
- plus <i>length</i>
- is greater than the string's length.
+The parameter  <i>offset</i>
+ is less than 0,  <i>length</i>
+ is less than 0, or  <i>offset</i>
+ plus  <i>length</i>
+is greater than the string's length.
 
  * System.IO.IOException:
 An I/O error occurred.
@@ -477,16 +508,16 @@ Writes a portion of a string in UTF-8 encoding to a data stream.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
- is null or <i>stream</i>
+The parameter  <i>str</i>
+ is null or  <i>stream</i>
  is null.
 
  * System.ArgumentException:
-The parameter <i>offset</i>
- is less than 0, <i>length</i>
- is less than 0, or <i>offset</i>
- plus <i>length</i>
- is greater than the string's length.
+The parameter  <i>offset</i>
+ is less than 0,  <i>length</i>
+ is less than 0, or  <i>offset</i>
+ plus  <i>length</i>
+is greater than the string's length.
 
  * System.IO.IOException:
 An I/O error occurred.
@@ -510,14 +541,14 @@ Writes a string in UTF-8 encoding to a data stream.
 
 <b>Returns:</b>
 
-0 if the entire string was written; or -1 if the string contains an unpaired surrogate code point and <i>replace</i>
+0 if the entire string was written; or -1 if the string contains an unpaired surrogate code point and  <i>replace</i>
  is false.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
- is null or <i>stream</i>
+The parameter  <i>str</i>
+ is null or  <i>stream</i>
  is null.
 
  * System.IO.IOException:

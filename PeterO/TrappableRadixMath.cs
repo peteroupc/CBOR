@@ -118,6 +118,11 @@ PrecisionContext ctx) {
     /// <summary>Finds the remainder that results when dividing two T
     /// objects.</summary>
     /// <param name='thisValue'>Not documented yet.</param>
+    /// <summary>Finds the remainder that results when dividing two T
+    /// objects.</summary>
+    /// <param name='thisValue'>Not documented yet.</param>
+    /// <param name='divisor'>Not documented yet.</param>
+    /// <param name='ctx'>Not documented yet. (3).</param>
     /// <returns>The remainder of the two objects.</returns>
     public T Remainder(T thisValue, T divisor, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
@@ -205,6 +210,10 @@ tctx);
 
     /// <summary>Divides two T objects.</summary>
     /// <param name='thisValue'>Not documented yet.</param>
+    /// <summary>Divides two T objects.</summary>
+    /// <param name='thisValue'>Not documented yet.</param>
+    /// <param name='divisor'>Not documented yet.</param>
+    /// <param name='ctx'>Not documented yet. (3).</param>
     /// <returns>The quotient of the two objects.</returns>
     public T Divide(T thisValue, T divisor, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
@@ -238,6 +247,10 @@ tctx);
 
     /// <summary>Multiplies two T objects.</summary>
     /// <param name='thisValue'>Not documented yet.</param>
+    /// <summary>Multiplies two T objects.</summary>
+    /// <param name='thisValue'>Not documented yet.</param>
+    /// <param name='other'>Not documented yet.</param>
+    /// <param name='ctx'>Not documented yet. (3).</param>
     /// <returns>The product of the two objects.</returns>
     public T Multiply(T thisValue, T other, PrecisionContext ctx) {
       PrecisionContext tctx = GetTrappableContext(ctx);
@@ -321,12 +334,9 @@ ctx);
 
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>Not documented yet.</param>
-    /// <summary>Compares a T object with this instance.</summary>
-    /// <param name='thisValue'>Not documented yet.</param>
-    /// <param name='otherValue'>Not documented yet.</param>
-    /// <param name='treatQuietNansAsSignaling'>Not documented yet.
-    /// (3).</param>
-    /// <param name='ctx'>Not documented yet. (4).</param>
+    /// <param name='otherValue'>A T object.</param>
+    /// <param name='treatQuietNansAsSignaling'>A Boolean object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>Zero if the values are equal; a negative number if this
     /// instance is less, or a positive number if this instance is
     /// greater.</returns>
@@ -346,7 +356,6 @@ PrecisionContext ctx) {
 
     /// <summary>Compares a T object with this instance.</summary>
     /// <param name='thisValue'>Not documented yet.</param>
-    /// <param name='otherValue'>A T object.</param>
     /// <returns>Zero if the values are equal; a negative number if this
     /// instance is less, or a positive number if this instance is
     /// greater.</returns>

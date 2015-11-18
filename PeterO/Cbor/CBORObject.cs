@@ -3204,46 +3204,45 @@ namespace PeterO.Cbor {
     /// <item>Null.</item>
     /// <item>Any object accepted by the FromObject static
     /// methods.</item></list></summary>
-    /// <param name='objValue'>The value to write.</param>
-    /// <param name='stream'>A writable data stream.</param>
-    /// <param name='options'>Options for encoding the data to
-    /// CBOR.</param>
+    /// <param name='objValue'>Not documented yet.</param>
+    /// <param name='output'>Not documented yet.</param>
+    /// <param name='options'>Not documented yet. (3).</param>
     /// <exception cref='ArgumentException'>The object's type is not
     /// supported.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter "stream" is
+    /// null.</exception>
     public static void Write(
       object objValue,
-      Stream stream,
+      Stream output,
       CBOREncodeOptions options) {
-      if (stream == null) {
-        throw new ArgumentNullException("stream");
+      if (output == null) {
+        throw new ArgumentNullException("output");
       }
       if (objValue == null) {
-        stream.WriteByte(0xf6);
+        output.WriteByte(0xf6);
         return;
       }
       byte[] data = objValue as byte[];
       if (data != null) {
-        WritePositiveInt(3, data.Length, stream);
-        stream.Write(data, 0, data.Length);
+        WritePositiveInt(3, data.Length, output);
+        output.Write(data, 0, data.Length);
         return;
       }
       if (objValue is IList<CBORObject>) {
         WriteObjectArray(
           (IList<CBORObject>)objValue,
-          stream,
+          output,
           options);
         return;
       }
       if (objValue is IDictionary<CBORObject, CBORObject>) {
         WriteObjectMap(
           (IDictionary<CBORObject, CBORObject>)objValue,
-          stream,
+          output,
           options);
         return;
       }
-      FromObject(objValue).WriteTo(stream);
+      FromObject(objValue).WriteTo(output);
     }
 
     /// <summary>Generates a CBOR object from a string in JavaScript Object
@@ -3265,17 +3264,13 @@ namespace PeterO.Cbor {
         throw new CBORException(
           "JSON object began with a byte order mark (U+FEFF) (offset 0)");
       }
-      var reader = new CharacterReader(str);
-    try {
+      var reader = new CharacterInputWithCount(
+        new CharacterReader(str));
        CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, 0);
        if (CBORJson.SkipWhitespaceJSON(reader) != -1) {
-        throw reader.NewError("End of string not reached");
+         reader.RaiseError("End of string not reached");
        }
        return obj;
-    } catch (FormatException ex) {
-    // thrown by the underlying CharacterReader
-        throw new CBORException(ex.Message, ex.InnerException);
-    }
     }
 
     /// <summary>Generates a CBOR object from a data stream in JavaScript
@@ -3299,16 +3294,14 @@ namespace PeterO.Cbor {
     if (stream == null) {
   throw new ArgumentNullException("stream");
 }
-      var reader = new CharacterReader(stream);
+      var reader = new CharacterInputWithCount(
+        new CharacterReader(stream, 2));
       try {
         CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, 0);
         if (CBORJson.SkipWhitespaceJSON(reader) != -1) {
-          throw reader.NewError("End of data stream not reached");
+          reader.RaiseError("End of data stream not reached");
         }
         return obj;
-    } catch (FormatException ex) {
-    // thrown by the underlying CharacterReader
-        throw new CBORException(ex.Message, ex.InnerException);
       } catch (CBORException ex) {
         var ioex = ex.InnerException as IOException;
         if (ioex != null) {

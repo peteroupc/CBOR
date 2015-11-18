@@ -24,7 +24,7 @@ namespace Test {
       RegexOptions.Compiled);
 
     private static Regex valueTestLine = new Regex(
-  "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\'[^\\']*\\'|\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)" ,
+  "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\'[^\\']*\\'|\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)",
   RegexOptions.Compiled);
 
     private static TValue GetKeyOrDefault<TKey, TValue>(
@@ -313,7 +313,7 @@ string ln,
     }
 
     [TestMethod]
-    public static void TestParser() {
+    public void TestParser() {
       long failures = 0;
       for (var i = 0; i < 1; ++i) {
         // Reads decimal test files described in:

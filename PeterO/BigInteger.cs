@@ -13,13 +13,12 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO {
-    /// <summary>An arbitrary-precision integer. <para>Instances of this
-    /// class are immutable, so they are inherently safe for use by
-    /// multiple threads. Multiple instances of this object with the same
-    /// value are interchangeable, so they should not be compared using the
-    /// "==" operator (which only checks if each side of the operator is
-    /// the same instance).</para>
-    /// </summary>
+    /// <summary>An arbitrary-precision integer.
+    /// <para>Instances of this class are immutable, so they are inherently
+    /// safe for use by multiple threads. Multiple instances of this object
+    /// with the same value are interchangeable, so they should not be
+    /// compared using the "==" operator (which only checks if each side of
+    /// the operator is the same instance).</para></summary>
   public sealed partial class BigInteger : IComparable<BigInteger>,
   IEquatable<BigInteger> {
     private static int CountWords(short[] array, int n) {
@@ -59,8 +58,6 @@ namespace PeterO {
       int rstart,
       int n,
       int shiftBits) {
-      // DebugAssert.IsTrue(shiftBits<16,"{0} line {1}: shiftBits<16"
-      // ,"words.h" ,67);
       short u, carry = 0;
       unchecked {
         if (shiftBits != 0) {
@@ -81,8 +78,6 @@ namespace PeterO {
       int rstart,
       int n,
       int shiftBits) {
-      // DebugAssert.IsTrue(shiftBits<16,"{0} line {1}: shiftBits<16"
-      // ,"words.h" ,67);
       unchecked {
         short u, carry = (short)((int)0xffff << (int)(16 - shiftBits));
         if (shiftBits != 0) {
@@ -212,7 +207,6 @@ namespace PeterO {
       int n,
       short words2) {
       unchecked {
-        // DebugAssert.IsTrue(n!=0,"{0} line {1}: n","integer.cpp",63);
         short tmp = words1[words1Start];
         words1[words1Start] = (short)(tmp + words2);
         if ((((int)words1[words1Start]) & 0xffff) >= (((int)tmp) & 0xffff)) {
@@ -233,7 +227,6 @@ namespace PeterO {
       int words1Start,
       int n,
       short words2) {
-      // DebugAssert.IsTrue(n!=0,"{0} line {1}: n","integer.cpp",76);
       unchecked {
         short tmp = words1[words1Start];
         words1[words1Start] = (short)(tmp - words2);
@@ -266,8 +259,6 @@ namespace PeterO {
       short[] words2,
       int bstart,
       int n) {
-      // DebugAssert.IsTrue(n%2 == 0,"{0} line {1}: n%2 == 0" ,"integer.cpp"
-      // , 799);
       unchecked {
         int u;
         u = 0;
@@ -291,8 +282,6 @@ namespace PeterO {
       short[] words2,
       int bstart,
       int n) {
-      // DebugAssert.IsTrue(n%2 == 0,"{0} line {1}: n%2 == 0" ,"integer.cpp"
-      // , 799);
       unchecked {
         int u;
         u = 0;
@@ -396,8 +385,6 @@ namespace PeterO {
       short[] words2,
       int bstart,
       int n) {
-      // DebugAssert.IsTrue(n%2 == 0,"{0} line {1}: n%2 == 0" ,"integer.cpp"
-      // , 799);
       unchecked {
         int u;
         u = 0;
@@ -425,8 +412,6 @@ namespace PeterO {
       short[] words2,
       int bstart,
       int n) {
-      // DebugAssert.IsTrue(n%2 == 0,"{0} line {1}: n%2 == 0" ,"integer.cpp"
-      // , 799);
       unchecked {
         int u;
         u = 0;
@@ -3022,7 +3007,7 @@ namespace PeterO {
     /// <param name='bytes'>A byte array.</param>
     /// <param name='littleEndian'>A Boolean object.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bytes'/> is null.</exception>
     [Obsolete("Renamed to 'fromBytes'.")]
     public static BigInteger fromByteArray(byte[] bytes, bool littleEndian) {
@@ -3034,7 +3019,7 @@ namespace PeterO {
     /// <param name='bytes'>A byte array.</param>
     /// <param name='littleEndian'>A Boolean object.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bytes'/> is null.</exception>
     public static BigInteger fromBytes(byte[] bytes, bool littleEndian) {
       if (bytes == null) {
@@ -3544,7 +3529,7 @@ namespace PeterO {
     /// <summary>Not documented yet.</summary>
     /// <param name='power'>Another BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='power'/> is null.</exception>
     public BigInteger PowBigIntVar(BigInteger power) {
       if (power == null) {
@@ -3992,7 +3977,7 @@ namespace PeterO {
     /// generate a hexadecimal string, specify 16. To generate a decimal
     /// string, specify 10.</param>
     /// <returns>A string object.</returns>
-    /// <exception cref="ArgumentException">The parameter "index" is less
+    /// <exception cref='ArgumentException'>The parameter "index" is less
     /// than 0, "endIndex" is less than 0, or either is greater than the
     /// string's length, or "endIndex" is less than "index" ; or radix is
     /// less than 2 or greater than 36.</exception>
@@ -4208,7 +4193,7 @@ namespace PeterO {
     /// may start with a minus sign.</param>
     /// <returns>A BigInteger object with the same value as given in the
     /// string.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
     /// <exception cref='FormatException'>The parameter <paramref
     /// name='str'/> is in an invalid format.</exception>
@@ -4219,19 +4204,21 @@ namespace PeterO {
       return fromRadixSubstring(str, 10, 0, str.Length);
     }
 
-    /// <summary>Converts a portion of a string to an arbitrary-precision
-    /// integer. The string portion can begin with a minus sign ('-') to
-    /// indicate that it's negative.</summary>
+    /// <summary>Converts a string to an arbitrary-precision integer. The
+    /// string portion can begin with a minus sign ('-') to indicate that
+    /// it's negative.</summary>
     /// <param name='str'>A string object.</param>
-    /// <param name='radix'>A 32-bit signed integer.</param>
+    /// <param name='radix'>A base from 2 to 36. The possible digits start
+    /// from 0 to 9, then from A to Z in base 36, and the possible digits
+    /// start from 0 to 9, then from A to F in base 16.</param>
     /// <returns>A BigInteger object with the same value as given in the
-    /// string portion.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// string.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
-    /// <exception cref="ArgumentException">The parameter <paramref
+    /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='radix'/> is less than 2 or greater than 36.</exception>
-    /// <exception cref='FormatException'>The string portion is empty or in
-    /// an invalid format.</exception>
+    /// <exception cref='FormatException'>The string is empty or in an
+    /// invalid format.</exception>
     public static BigInteger fromRadixString(string str, int radix) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -4249,9 +4236,9 @@ namespace PeterO {
     /// portion. The length will be index + endIndex - 1.</param>
     /// <returns>A BigInteger object with the same value as given in the
     /// string portion.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
-    /// <exception cref="ArgumentException">The parameter <paramref
+    /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='index'/> is less than 0, <paramref name='endIndex'/> is less
     /// than 0, or either is greater than the string's length, or <paramref
     /// name='endIndex'/> is less than <paramref name='index'/>
@@ -4302,9 +4289,9 @@ namespace PeterO {
     /// portion. The length will be index + endIndex - 1.</param>
     /// <returns>A BigInteger object with the same value as given in the
     /// string portion.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
-    /// <exception cref="ArgumentException">The parameter <paramref
+    /// <exception cref='ArgumentException'>The parameter <paramref
     /// name='index'/> is less than 0, <paramref name='endIndex'/> is less
     /// than 0, or either is greater than the string's length, or <paramref
     /// name='endIndex'/> is less than <paramref name='index'/>
@@ -4528,7 +4515,7 @@ namespace PeterO {
     /// factor (GCF).</summary>
     /// <param name='bigintSecond'>Another BigInteger object.</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintSecond'/> is null.</exception>
     public BigInteger gcd(BigInteger bigintSecond) {
       if (bigintSecond == null) {
@@ -4586,7 +4573,7 @@ namespace PeterO {
     /// <param name='pow'>Another BigInteger object.</param>
     /// <param name='mod'>A BigInteger object. (3).</param>
     /// <returns>A BigInteger object.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='pow'/> or <paramref name='mod'/> is null.</exception>
     public BigInteger ModPow(BigInteger pow, BigInteger mod) {
       if (pow == null) {
@@ -4616,8 +4603,8 @@ namespace PeterO {
     }
 
     #region Equals and GetHashCode implementation
-    /// <inheritdoc/><summary>Determines whether this object and another
-    /// object are
+    /// <inheritdoc/>
+    /// <summary>Determines whether this object and another object are
     /// equal.</summary>
     /// <param name='obj'>An arbitrary object.</param>
     /// <returns>True if this object and another object are equal;
@@ -4660,7 +4647,7 @@ namespace PeterO {
     /// <summary>Adds this object and another object.</summary>
     /// <param name='bigintAugend'>Another BigInteger object.</param>
     /// <returns>The sum of the two objects.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintAugend'/> is null.</exception>
     public BigInteger add(BigInteger bigintAugend) {
       if (bigintAugend == null) {
@@ -4876,7 +4863,7 @@ namespace PeterO {
     /// <summary>Subtracts a BigInteger from this BigInteger.</summary>
     /// <param name='subtrahend'>Another BigInteger object.</param>
     /// <returns>The difference of the two objects.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='subtrahend'/> is null.</exception>
     public BigInteger subtract(BigInteger subtrahend) {
       if (subtrahend == null) {
@@ -4904,7 +4891,7 @@ namespace PeterO {
     /// object.</summary>
     /// <param name='bigintMult'>Another BigInteger object.</param>
     /// <returns>The product of the two objects.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintMult'/> is null.</exception>
     public BigInteger multiply(BigInteger bigintMult) {
       if (bigintMult == null) {
@@ -5094,7 +5081,7 @@ namespace PeterO {
     /// <returns>The quotient of the two objects.</returns>
     /// <exception cref='DivideByZeroException'>The divisor is
     /// zero.</exception>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintDivisor'/> is null.</exception>
     /// <exception cref='System.DivideByZeroException'>Attempted to divide
     /// by zero.</exception>
@@ -5172,7 +5159,7 @@ namespace PeterO {
     /// <param name='divisor'>A BigInteger object.</param>
     /// <returns>An array with two big integers: the first is the quotient,
     /// and the second is the remainder.</returns>
-    /// <exception cref="ArgumentNullException">The parameter divisor is
+    /// <exception cref='ArgumentNullException'>The parameter divisor is
     /// null.</exception>
     /// <exception cref='DivideByZeroException'>The parameter divisor is
     /// 0.</exception>
@@ -5279,7 +5266,7 @@ namespace PeterO {
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArithmeticException'>The parameter <paramref
     /// name='divisor'/> is negative.</exception>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='divisor'/> is null.</exception>
     public BigInteger mod(BigInteger divisor) {
       if (divisor == null) {
@@ -5302,7 +5289,7 @@ namespace PeterO {
     /// has the same sign (positive or negative) as this object.</summary>
     /// <param name='divisor'>Another BigInteger object.</param>
     /// <returns>The remainder of the two objects.</returns>
-    /// <exception cref="ArgumentNullException">The parameter <paramref
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='divisor'/> is null.</exception>
     /// <exception cref='System.DivideByZeroException'>Attempted to divide
     /// by zero.</exception>

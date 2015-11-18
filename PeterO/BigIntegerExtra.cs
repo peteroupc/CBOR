@@ -289,8 +289,6 @@ BigInteger otherValue) {
         throw new ArgumentOutOfRangeException("numberBits");
       }
       long v = 0;
-      // DebugAssert.IsTrue(n <= 8*8,"{0} line {1}: n <= sizeof(v)*8"
-      // ,"integer.cpp" ,2939);
       for (int j = 0; j < numberBits; ++j) {
         v |= (long)(this.testBit((int)(index + j)) ? 1 : 0) << j;
       }
