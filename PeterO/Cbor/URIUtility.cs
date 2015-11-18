@@ -348,6 +348,13 @@ ParseMode.IRISurrogateLenient);
     /// <param name='length'>Not documented yet. (3).</param>
     /// <returns>True if the substring is a valid CURIE reference under
     /// RDFA 1; otherwise, false.</returns>
+    /// <exception cref='ArgumentException'>Either <paramref
+    /// name='offset'/> or <paramref name='length'/> is less than 0 or
+    /// greater than <paramref name='s'/> 's length, or <paramref
+    /// name='s'/> 's length minus <paramref name='offset'/> is less than
+    /// <paramref name='length'/>.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='s'/> is null.</exception>
     public static bool isValidCurieReference(string s, int offset, int length) {
       if (s == null) {
         return false;
@@ -838,6 +845,9 @@ int endIndex) {
     /// <summary>Resolves a URI or IRI relative to another URI or
     /// IRI.</summary>
     /// <param name='refValue'>Not documented yet.</param>
+    /// <param name='refValue'>Not documented yet.</param>
+    /// <param name='baseURI'>Not documented yet.</param>
+    /// <param name='parseMode'>Not documented yet. (3).</param>
     /// <returns>The resolved IRI, or null if refValue is null or is not a
     /// valid IRI. If base is null or is not a valid IRI, returns
     /// refValue.</returns>
@@ -944,6 +954,13 @@ segmentsBase[5]));
     /// that pair will be -1 (an index won't be less than 0 in any other
     /// case). If the string is null or is not a valid IRI, returns
     /// null.</returns>
+    /// <exception cref='ArgumentException'>Either <paramref
+    /// name='offset'/> or <paramref name='length'/> is less than 0 or
+    /// greater than <paramref name='s'/> 's length, or <paramref
+    /// name='s'/> 's length minus <paramref name='offset'/> is less than
+    /// <paramref name='length'/>.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='s'/> is null.</exception>
     public static int[] splitIRI(
 string s,
 int offset,
@@ -1181,7 +1198,6 @@ ParseMode parseMode) {
     /// the string into its components and returns an array containing the
     /// indices into the components.</summary>
     /// <param name='s'>Not documented yet.</param>
-    /// <param name='parseMode'>A ParseMode object.</param>
     /// <returns>If the string is a valid IRI reference, returns an array
     /// of 10 integers. Each of the five pairs corresponds to the start and
     /// end index of the IRI's scheme, authority, path, query, or fragment
