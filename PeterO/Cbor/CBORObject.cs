@@ -157,7 +157,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets or sets the converter's ToCBORObject
     /// method.</summary>
-    /// <value>The converter&apos;s ToCBORObject method.</value>
+    /// <value>The converter&#x27;s ToCBORObject method.</value>
       public object ToObject {
         get {
           return this.toObject;
@@ -437,7 +437,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this object&#x27;s value
     /// equals 0.</summary>
-    /// <value>True if this object&apos;s value equals 0; otherwise,
+    /// <value>True if this object&#x27;s value equals 0; otherwise,
     /// false.</value>
     public bool IsZero {
       get {
@@ -481,7 +481,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets this value&#x27;s sign: -1 if negative; 1 if
     /// positive; 0 if zero.</summary>
-    /// <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if
+    /// <value>This value&#x27;s sign: -1 if negative; 1 if positive; 0 if
     /// zero.</value>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type, including the special not-a-number value
@@ -3794,7 +3794,7 @@ namespace PeterO.Cbor {
     /// following types are specially handled by this method: null ,
     /// primitive types, strings, CBORObject , ExtendedDecimal ,
     /// ExtendedFloat , the custom BigInteger , lists, arrays, enumerations
-    /// ( <c>Enum</c> objects), and maps. In the .NET version, if the
+    /// (<c>Enum</c> objects), and maps. In the .NET version, if the
     /// object is a type not specially handled by this method, returns a
     /// CBOR map with the values of each of its read/write properties (or
     /// all properties in the case of an anonymous type). Properties are
@@ -3928,12 +3928,12 @@ namespace PeterO.Cbor {
     /// <param name='valueOb'>An arbitrary object. If the tag number is 2
     /// or 3, this must be a byte string whose bytes represent an integer
     /// in little-endian byte order, and the value of the number is 1 minus
-    /// the integer&apos;s value for tag 3. If the tag number is 4 or 5,
+    /// the integer&#x27;s value for tag 3. If the tag number is 4 or 5,
     /// this must be an array with two elements: the first must be an
     /// integer representing the exponent, and the second must be an
     /// integer representing a mantissa.</param>
     /// <param name='bigintTag'>Tag number. The tag number 55799 can be
-    /// used to mark a &quot;self-described CBOR&quot; object.</param>
+    /// used to mark a &#x22;self-described CBOR&#x22; object.</param>
     /// <returns>A CBOR object where the object <paramref name='valueOb'/>
     /// is converted to a CBOR object and given the tag <paramref
     /// name='bigintTag'/>.</returns>
@@ -4028,13 +4028,13 @@ namespace PeterO.Cbor {
     /// <param name='valueObValue'>An arbitrary object. If the tag number
     /// is 2 or 3, this must be a byte string whose bytes represent an
     /// integer in little-endian byte order, and the value of the number is
-    /// 1 minus the integer&apos;s value for tag 3. If the tag number is 4
+    /// 1 minus the integer&#x27;s value for tag 3. If the tag number is 4
     /// or 5, this must be an array with two elements: the first must be an
     /// integer representing the exponent, and the second must be an
     /// integer representing a mantissa.</param>
     /// <param name='smallTag'>A 32-bit integer that specifies a tag
     /// number. The tag number 55799 can be used to mark a
-    /// &quot;self-described CBOR&quot; object.</param>
+    /// &#x22;self-described CBOR&#x22; object.</param>
     /// <returns>A CBOR object where the object <paramref
     /// name='valueObValue'/> is converted to a CBOR object and given the
     /// tag <paramref name='smallTag'/>.</returns>

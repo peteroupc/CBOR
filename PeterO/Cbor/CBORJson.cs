@@ -23,8 +23,9 @@ namespace PeterO.Cbor {
       }
     }
 
-    internal static string NextJSONString(CharacterInputWithCount reader,
-      int quote) {
+    internal static string NextJSONString(
+CharacterInputWithCount reader,
+int quote) {
       int c;
       StringBuilder sb = null;
       bool surrogate = false;
@@ -86,6 +87,7 @@ namespace PeterO.Cbor {
                   break;
                 }
                 default: reader.RaiseError("Invalid escaped character");
+                  break;
             }
             break;
             default: escaped = false;
@@ -238,7 +240,7 @@ namespace PeterO.Cbor {
         reader.RaiseError("Too deeply nested");
       }
       int c;
-      CBORObject key;
+      CBORObject key = null;
       CBORObject obj;
       var nextchar = new int[1];
       bool seenComma = false;
@@ -248,19 +250,23 @@ namespace PeterO.Cbor {
         switch (c) {
           case -1:
             reader.RaiseError("A JSONObject must end with '}'");
+            break;
           case '}':
             if (seenComma) {
               // Situation like '{"0"=>1,}'
               reader.RaiseError("Trailing comma");
+              return null;
             }
             return CBORObject.FromRaw(myHashMap);
             default: {
               // Read the next string
               if (c < 0) {
                 reader.RaiseError("Unexpected end of data");
+                return null;
               }
               if (c != '"') {
                 reader.RaiseError("Expected a string as a key");
+                return null;
               }
               // Parse a string that represents the object's key
               // The tokenizer already checked the string for invalid
@@ -270,6 +276,7 @@ namespace PeterO.Cbor {
               key = obj;
               if (noDuplicates && myHashMap.ContainsKey(obj)) {
                 reader.RaiseError("Key already exists: " + key);
+                return null;
               }
               break;
             }
@@ -291,6 +298,7 @@ namespace PeterO.Cbor {
           case '}':
             return CBORObject.FromRaw(myHashMap);
             default: reader.RaiseError("Expected a ',' or '}'");
+            break;
         }
       }
     }
@@ -335,6 +343,7 @@ namespace PeterO.Cbor {
             return CBORObject.FromRaw(myArrayList);
           default:
             reader.RaiseError("Expected a ',' or ']'");
+            break;
         }
       }
     }
