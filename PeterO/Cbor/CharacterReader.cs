@@ -10,11 +10,11 @@ using System.IO;
 
 namespace PeterO.Cbor {
   internal sealed class CharacterReader : ICharacterInput {
-    private interface ITransform {
+    private interface IByteReader {
       int ReadByte();
     }
 
-    private sealed class WrappedStream : ITransform {
+    private sealed class WrappedStream : IByteReader {
       private Stream stream;
 
       public WrappedStream(Stream stream) {
@@ -31,7 +31,7 @@ namespace PeterO.Cbor {
     }
 
     private string str;
-    private ITransform stream;
+    private IByteReader stream;
     private int mode;
     private int offset;
 
@@ -67,7 +67,7 @@ namespace PeterO.Cbor {
         this.saved[this.savedLength++] = c;
       }
 
-      public int Read(ITransform input) {
+      public int Read(IByteReader input) {
         if (this.savedOffset < this.savedLength) {
           int ret = this.saved[this.savedOffset++];
           if (this.savedOffset >= this.savedLength) {
@@ -81,10 +81,10 @@ namespace PeterO.Cbor {
 
     private sealed class Utf16Reader : ICharacterInput {
       private readonly bool bigEndian;
-      private readonly ITransform stream;
+      private readonly IByteReader stream;
       private SavedState state;
 
-      public Utf16Reader(ITransform stream, bool bigEndian) {
+      public Utf16Reader(IByteReader stream, bool bigEndian) {
         this.stream = stream;
         this.bigEndian = bigEndian;
         this.state = new SavedState();
@@ -145,11 +145,11 @@ namespace PeterO.Cbor {
 
     private sealed class Utf32Reader : ICharacterInput {
       private readonly bool bigEndian;
-      private readonly ITransform stream;
+      private readonly IByteReader stream;
 
       private SavedState state;
 
-      public Utf32Reader(ITransform stream, bool bigEndian) {
+      public Utf32Reader(IByteReader stream, bool bigEndian) {
         this.stream = stream;
         this.bigEndian = bigEndian;
         this.state = new SavedState();
@@ -196,11 +196,11 @@ namespace PeterO.Cbor {
     }
 
     private sealed class Utf8Reader : ICharacterInput {
-      private readonly ITransform stream;
+      private readonly IByteReader stream;
       private int lastChar;
       private SavedState state;
 
-      public Utf8Reader(ITransform stream) {
+      public Utf8Reader(IByteReader stream) {
         this.stream = stream;
         this.lastChar = -1;
         this.state = new SavedState();
@@ -308,7 +308,7 @@ namespace PeterO.Cbor {
       this.str = str;
     }
 
-    public CharacterReader(Stream stream) : this(stream, 0) {
+    public CharacterReader(Stream stream) : this(stream, 2) {
     }
 
     // Mode can be:
