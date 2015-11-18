@@ -39,34 +39,39 @@ namespace PeterO.Cbor {
       private int[] saved;
       private int savedOffset;
       private int savedLength;
+
       private void Ensure(int size) {
-        saved = saved ?? (new int[savedLength + size]);
-        if (savedOffset + size < saved.Length) {
-          var newsaved = new int[savedOffset + size + 4];
-          Array.Copy(saved, 0, newsaved, 0, savedLength);
-          saved = newsaved;
+        this.saved = this.saved ?? (new int[this.savedLength + size]);
+        if (this.savedOffset + size < this.saved.Length) {
+          var newsaved = new int[this.savedOffset + size + 4];
+          Array.Copy(this.saved, 0, newsaved, 0, this.savedLength);
+          this.saved = newsaved;
         }
       }
+
       public void AddOne(int a) {
-        Ensure(1);
-        saved[savedLength++] = a;
+        this.Ensure(1);
+        this.saved[this.savedLength++] = a;
       }
+
       public void AddTwo(int a, int b) {
-        Ensure(2);
-        saved[savedLength++] = a;
-        saved[savedLength++] = b;
+        this.Ensure(2);
+        this.saved[this.savedLength++] = a;
+        this.saved[this.savedLength++] = b;
       }
+
       public void AddThree(int a, int b, int c) {
-        Ensure(4);
-        saved[savedLength++] = a;
-        saved[savedLength++] = b;
-        saved[savedLength++] = c;
+        this.Ensure(4);
+        this.saved[this.savedLength++] = a;
+        this.saved[this.savedLength++] = b;
+        this.saved[this.savedLength++] = c;
       }
+
       public int Read(ITransform input) {
-        if (savedOffset < savedLength) {
-          int ret = saved[savedOffset++];
-          if (savedOffset >= savedLength) {
-            savedOffset = savedLength = 0;
+        if (this.savedOffset < this.savedLength) {
+          int ret = this.saved[this.savedOffset++];
+          if (this.savedOffset >= this.savedLength) {
+            this.savedOffset = this.savedLength = 0;
           }
           return ret;
         }
@@ -128,7 +133,7 @@ namespace PeterO.Cbor {
       public int Read(int[] chars, int index, int length) {
         int count = 0;
         for (int i = 0; i < length; ++i) {
-          int c = ReadChar();
+          int c = this.ReadChar();
           if (c < 0) {
  return count;
 }
@@ -180,7 +185,7 @@ namespace PeterO.Cbor {
       public int Read(int[] chars, int index, int length) {
         int count = 0;
         for (int i = 0; i < length; ++i) {
-          int c = ReadChar();
+          int c = this.ReadChar();
           if (c < 0) {
  return count;
 }
@@ -277,7 +282,7 @@ namespace PeterO.Cbor {
       public int Read(int[] chars, int index, int length) {
         int count = 0;
         for (int i = 0; i < length; ++i) {
-          int c = ReadChar();
+          int c = this.ReadChar();
           if (c < 0) {
  return count;
 }
@@ -506,6 +511,7 @@ namespace PeterO.Cbor {
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (this.str[this.offset + 1] -
           0xdc00);
+          ++this.offset;
         } else if ((c & 0xf800) == 0xd800) {
           // unpaired surrogate
           throw new InvalidOperationException("Unpaired surrogate code point");
@@ -516,7 +522,7 @@ namespace PeterO.Cbor {
     }
 
     public int Read(int[] chars, int index, int length) {
-      if ((chars) == null) {
+      if (chars == null) {
   throw new ArgumentNullException("chars");
 }
 if (index < 0) {
@@ -535,13 +541,13 @@ if (length > chars.Length) {
   throw new ArgumentException("length (" + length +
     ") is more than " + chars.Length);
 }
-if (chars.Length-index < length) {
+if (chars.Length - index < length) {
   throw new ArgumentException("chars's length minus " + index + " (" +
-    (chars.Length-index) + ") is less than " + length);
+    (chars.Length - index) + ") is less than " + length);
 }
       int count = 0;
       for (int i = 0; i < length; ++i) {
-        int c = ReadChar();
+        int c = this.ReadChar();
         if (c < 0) {
  return count;
 }

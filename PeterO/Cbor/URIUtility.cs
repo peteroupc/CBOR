@@ -249,7 +249,7 @@ ParseMode.IRISurrogateLenient);
     /// relative IRI references.
     /// <para>The following cases return true:</para>
     /// <code> xx-x:mm example:/ww </code>
-    ///  The following cases return false:
+    /// The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
     /// <param name='refValue'>Not documented yet.</param>
@@ -270,7 +270,7 @@ ParseMode.IRISurrogateLenient);
     /// relative URI references. The following cases return
     /// true:
     /// <code> http://example/z xx-x:mm example:/ww </code>
-    ///  The following cases return false:
+    /// The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
     /// <param name='refValue'>Not documented yet.</param>
@@ -926,6 +926,7 @@ segmentsBase[5]));
     /// that pair will be -1. If the string is null or is not a valid IRI,
     /// returns null.</returns></summary>
     /// <param name='s'>Not documented yet.</param>
+  /// <returns>Not documented yet.</returns>
     public static int[] splitIRI(string s) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict);
     }
