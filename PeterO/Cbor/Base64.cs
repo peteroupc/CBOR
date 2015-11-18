@@ -205,10 +205,10 @@ bool padding) {
         buffer[2] = (char)alphabet[((data[i + 1] & 15) << 2) + ((data[i +
                 2] >> 6) & 3)];
         buffer[3] = (char)alphabet[data[i + 2] & 63];
-        writer.WriteChar(buffer[0]);
-        writer.WriteChar(buffer[1]);
-        writer.WriteChar(buffer[2]);
-        writer.WriteChar(buffer[3]);
+        writer.WriteCodePoint((int)buffer[0]);
+        writer.WriteCodePoint((int)buffer[1]);
+        writer.WriteCodePoint((int)buffer[2]);
+        writer.WriteCodePoint((int)buffer[3]);
       }
       int lenmod3 = count % 3;
       if (lenmod3 != 0) {
@@ -218,19 +218,19 @@ bool padding) {
           buffer[1] = (char)alphabet[((data[i] & 3) << 4) + ((data[i + 1] >>
                 4) & 15)];
           buffer[2] = (char)alphabet[(data[i + 1] & 15) << 2];
-          writer.WriteChar(buffer[0]);
-          writer.WriteChar(buffer[1]);
-          writer.WriteChar(buffer[2]);
+          writer.WriteCodePoint((int)buffer[0]);
+          writer.WriteCodePoint((int)buffer[1]);
+          writer.WriteCodePoint((int)buffer[2]);
           if (padding) {
-            writer.WriteChar('=');
+            writer.WriteCodePoint((int)'=');
           }
         } else {
           buffer[1] = (char)alphabet[(data[i] & 3) << 4];
-          writer.WriteChar(buffer[0]);
-          writer.WriteChar(buffer[1]);
+          writer.WriteCodePoint((int)buffer[0]);
+          writer.WriteCodePoint((int)buffer[1]);
           if (padding) {
-            writer.WriteChar('=');
-            writer.WriteChar('=');
+            writer.WriteCodePoint((int)'=');
+            writer.WriteCodePoint((int)'=');
           }
         }
       }

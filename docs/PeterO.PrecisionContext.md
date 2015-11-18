@@ -312,7 +312,7 @@ True if a number can have the given Exponent property under this precision conte
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>exponent</i>
+The parameter  <i>exponent</i>
  is null.
 
 ### ForPrecision
@@ -409,11 +409,11 @@ A PrecisionContext object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>exponentMin</i>
+The parameter  <i>exponentMin</i>
  is null.
 
  * System.ArgumentNullException:
-The parameter <i>exponentMax</i>
+The parameter  <i>exponentMax</i>
  is null.
 
 ### WithBigPrecision
@@ -434,7 +434,7 @@ A PrecisionContext object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>bigintPrecision</i>
+The parameter  <i>bigintPrecision</i>
  is null.
 
 ### WithBlankFlags

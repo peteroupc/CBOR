@@ -9,168 +9,229 @@ using System;
 using System.IO;
 
 namespace PeterO.Cbor {
-  internal sealed class CharacterReader : ICharacterReader
-  {
+  internal sealed class CharacterReader : ICharacterInput {
+    private interface ITransform {
+      int ReadByte();
+    }
+
+    private sealed class WrappedStream : ITransform {
+      private Stream stream;
+
+      public WrappedStream(Stream stream) {
+        this.stream = stream;
+      }
+
+      public int ReadByte() {
+        try {
+          return this.stream.ReadByte();
+        } catch (IOException ex) {
+          throw new InvalidOperationException(ex.Message, ex);
+        }
+      }
+    }
+
     private string str;
-    private Stream stream;
+    private ITransform stream;
+    private int mode;
     private int offset;
 
-    private sealed class Utf16Reader : ICharacterReader {
+    private sealed class SavedState {
+      private int[] saved;
+      private int savedOffset;
+      private int savedLength;
+      private void Ensure(int size) {
+        saved = saved ?? (new int[savedLength + size]);
+        if (savedOffset + size < saved.Length) {
+          var newsaved = new int[savedOffset + size + 4];
+          Array.Copy(saved, 0, newsaved, 0, savedLength);
+          saved = newsaved;
+        }
+      }
+      public void AddOne(int a) {
+        Ensure(1);
+        saved[savedLength++] = a;
+      }
+      public void AddTwo(int a, int b) {
+        Ensure(2);
+        saved[savedLength++] = a;
+        saved[savedLength++] = b;
+      }
+      public void AddThree(int a, int b, int c) {
+        Ensure(4);
+        saved[savedLength++] = a;
+        saved[savedLength++] = b;
+        saved[savedLength++] = c;
+      }
+      public int Read(ITransform input) {
+        if (savedOffset < savedLength) {
+          int ret = saved[savedOffset++];
+          if (savedOffset >= savedLength) {
+            savedOffset = savedLength = 0;
+          }
+          return ret;
+        }
+        return input.ReadByte();
+      }
+    }
+
+    private sealed class Utf16Reader : ICharacterInput {
       private readonly bool bigEndian;
-      private readonly Stream stream;
+      private readonly ITransform stream;
+      private SavedState state;
 
-      private int offset;
-      private int savedC1;
-      private int savedC2;
-
-      public Utf16Reader(Stream stream, bool bigEndian) {
+      public Utf16Reader(ITransform stream, bool bigEndian) {
         this.stream = stream;
         this.bigEndian = bigEndian;
-        this.savedC1 = -1;
+        this.state = new SavedState();
       }
 
       public void Unget(int c1, int c2) {
-        this.savedC1 = c1;
-        this.savedC2 = c2;
+        this.state.AddTwo(c1, c2);
       }
 
-      public int NextChar() {
-        try {
-          int c1, c2;
-          if (this.savedC1 >= 0) {
-            c1 = this.savedC1;
-            c2 = this.savedC2;
-            this.savedC1 = -1;
-          } else {
-            c1 = this.stream.ReadByte();
-            c2 = this.stream.ReadByte();
-          }
+      public int ReadChar() {
+        int c1 = this.state.Read(this.stream);
+        int c2 = this.state.Read(this.stream);
+        if (c1 < 0) {
+          return -1;
+        }
+        if (c2 < 0) {
+          throw new InvalidOperationException("Invalid UTF-16");
+        }
+        c1 = this.bigEndian ? ((c1 << 8) | c2) : ((c2 << 8) | c1);
+        int surr = c1 & 0xfc00;
+        if (surr == 0xd800) {
+          surr = c1;
+          c1 = this.state.Read(this.stream);
           if (c1 < 0) {
-            return -1;
+            new InvalidOperationException("Invalid UTF-16");
           }
+          c2 = this.state.Read(this.stream);
           if (c2 < 0) {
-            throw CharacterReader.NewError("Invalid UTF-16", this.offset);
+            throw new InvalidOperationException("Invalid UTF-16");
           }
           c1 = this.bigEndian ? ((c1 << 8) | c2) : ((c2 << 8) | c1);
-          int surr = c1 & 0xfc00;
-          if (surr == 0xd800) {
-            surr = c1;
-            c1 = this.stream.ReadByte();
-            if (c1 < 0) {
-              CharacterReader.NewError("Invalid UTF-16", this.offset);
-            }
-            c2 = this.stream.ReadByte();
-            if (c2 < 0) {
-              throw CharacterReader.NewError("Invalid UTF-16", this.offset);
-            }
-            c1 = this.bigEndian ? ((c1 << 8) | c2) : ((c2 << 8) | c1);
-            if ((c1 & 0xfc00) == 0xdc00) {
-              ++this.offset;
-              return 0x10000 + ((surr - 0xd800) << 10) + (c1 - 0xdc00);
-            }
-            throw CharacterReader.NewError(
-              "Unpaired surrogate code point",
-              this.offset);
+          if ((c1 & 0xfc00) == 0xdc00) {
+            return 0x10000 + ((surr - 0xd800) << 10) + (c1 - 0xdc00);
           }
-          if (surr == 0xdc00) {
-            throw CharacterReader.NewError(
-"Unpaired surrogate code point",
-this.offset);
-          }
-          ++this.offset;
-          return c1;
-        } catch (IOException ex) {
-          throw new FormatException(
-            "I/O error occurred (offset " + this.offset + ")",
-            ex);
+          throw new InvalidOperationException(
+            "Unpaired surrogate code point");
         }
+        if (surr == 0xdc00) {
+          throw new InvalidOperationException(
+"Unpaired surrogate code point");
+        }
+
+        return c1;
+      }
+
+      public int Read(int[] chars, int index, int length) {
+        int count = 0;
+        for (int i = 0; i < length; ++i) {
+          int c = ReadChar();
+          if (c < 0) {
+ return count;
+}
+          chars[index + i] = c;
+        }
+        return count;
       }
     }
 
-    private sealed class Utf32Reader : ICharacterReader {
+    private sealed class Utf32Reader : ICharacterInput {
       private readonly bool bigEndian;
-      private readonly Stream stream;
+      private readonly ITransform stream;
 
-      private int offset;
+      private SavedState state;
 
-      public Utf32Reader(Stream stream, bool bigEndian) {
+      public Utf32Reader(ITransform stream, bool bigEndian) {
         this.stream = stream;
         this.bigEndian = bigEndian;
+        this.state = new SavedState();
       }
 
-      public int NextChar() {
-        try {
-          int c1 = this.stream.ReadByte();
-          if (c1 < 0) {
-            return -1;
-          }
-          int c2 = this.stream.ReadByte();
-          if (c2 < 0) {
-            throw CharacterReader.NewError("Invalid UTF-32", this.offset);
-          }
-          int c3 = this.stream.ReadByte();
-          if (c3 < 0) {
-            throw CharacterReader.NewError("Invalid UTF-32", this.offset);
-          }
-          int c4 = this.stream.ReadByte();
-          if (c4 < 0) {
-            throw CharacterReader.NewError("Invalid UTF-32", this.offset);
-          }
-          c1 = this.bigEndian ? ((c1 << 24) | (c2 << 16) | (c3 << 8) | c4) :
-            ((c4 << 24) | (c3 << 16) | (c2 << 8) | c1);
-          int surr = c1 & 0xfffc00;
-          if (c1 < 0 || c1 >= 0x110000 || (c1 & 0xfff800) == 0xd800) {
-            throw CharacterReader.NewError("Invalid UTF-32", this.offset);
-          }
-          ++this.offset;
-          return c1;
-        } catch (IOException ex) {
-          throw new FormatException(
-            "I/O error occurred (offset " + this.offset + ")",
-            ex);
+      public int ReadChar() {
+        int c1 = this.state.Read(this.stream);
+        if (c1 < 0) {
+          return -1;
         }
+        int c2 = this.state.Read(this.stream);
+        if (c2 < 0) {
+          throw new InvalidOperationException("Invalid UTF-32");
+        }
+        int c3 = this.state.Read(this.stream);
+        if (c3 < 0) {
+          throw new InvalidOperationException("Invalid UTF-32");
+        }
+        int c4 = this.state.Read(this.stream);
+        if (c4 < 0) {
+          throw new InvalidOperationException("Invalid UTF-32");
+        }
+        c1 = this.bigEndian ? ((c1 << 24) | (c2 << 16) | (c3 << 8) | c4) :
+          ((c4 << 24) | (c3 << 16) | (c2 << 8) | c1);
+        int surr = c1 & 0xfffc00;
+        if (c1 < 0 || c1 >= 0x110000 || (c1 & 0xfff800) == 0xd800) {
+          throw new InvalidOperationException("Invalid UTF-32");
+        }
+
+        return c1;
+      }
+
+      public int Read(int[] chars, int index, int length) {
+        int count = 0;
+        for (int i = 0; i < length; ++i) {
+          int c = ReadChar();
+          if (c < 0) {
+ return count;
+}
+          chars[index + i] = c;
+        }
+        return count;
       }
     }
 
-    private sealed class Utf8Reader : ICharacterReader {
-      private readonly Stream stream;
+    private sealed class Utf8Reader : ICharacterInput {
+      private readonly ITransform stream;
       private int lastChar;
-      private int offset;
+      private SavedState state;
 
-      public Utf8Reader(Stream stream) {
+      public Utf8Reader(ITransform stream) {
         this.stream = stream;
         this.lastChar = -1;
+        this.state = new SavedState();
       }
 
       public void Unget(int ch) {
-        this.lastChar = ch;
+        this.state.AddOne(ch);
       }
 
-      public int NextChar() {
+      public void UngetThree(int a, int b, int c) {
+        this.state.AddThree(a, b, c);
+      }
+
+      public int ReadChar() {
         int cp = 0;
         int bytesSeen = 0;
         int bytesNeeded = 0;
         int lower = 0;
         int upper = 0;
-        try {
           while (true) {
             int b;
             if (this.lastChar != -1) {
               b = this.lastChar;
               this.lastChar = -1;
             } else {
-              b = this.stream.ReadByte();
+              b = this.state.Read(this.stream);
             }
             if (b < 0) {
               if (bytesNeeded != 0) {
                 bytesNeeded = 0;
-                throw CharacterReader.NewError("Invalid UTF-8", this.offset);
+                throw new InvalidOperationException("Invalid UTF-8");
               }
               return -1;
             }
             if (bytesNeeded == 0) {
               if ((b & 0x7f) == b) {
-                ++this.offset;
                 return b;
               }
               if (b >= 0xc2 && b <= 0xdf) {
@@ -189,13 +250,13 @@ this.offset);
                 bytesNeeded = 3;
                 cp = (b - 0xf0) << 18;
               } else {
-                throw CharacterReader.NewError("Invalid UTF-8", this.offset);
+                throw new InvalidOperationException("Invalid UTF-8");
               }
               continue;
             }
             if (b < lower || b > upper) {
               cp = bytesNeeded = bytesSeen = 0;
-              throw CharacterReader.NewError("Invalid UTF-8", this.offset);
+              throw new InvalidOperationException("Invalid UTF-8");
             }
             lower = 0x80;
             upper = 0xbf;
@@ -208,14 +269,21 @@ this.offset);
             cp = 0;
             bytesSeen = 0;
             bytesNeeded = 0;
-            ++this.offset;
+
             return ret;
           }
-        } catch (IOException ex) {
-          throw new FormatException(
-            "I/O error occurred (offset " + this.offset + ")",
-            ex);
+      }
+
+      public int Read(int[] chars, int index, int length) {
+        int count = 0;
+        for (int i = 0; i < length; ++i) {
+          int c = ReadChar();
+          if (c < 0) {
+ return count;
+}
+          chars[index + i] = c;
         }
+        return count;
       }
     }
 
@@ -235,154 +303,198 @@ this.offset);
       this.str = str;
     }
 
-    public CharacterReader(Stream stream) {
+    public CharacterReader(Stream stream) : this(stream, 0) {
+    }
+
+    // Mode can be:
+    // 0 - UTF-8 only
+    // 1 - UTF-8 and UTF-16
+    // 2 - UTF-8, UTF-16, and UTF-32
+    // All three modes ignore the starting byte order mark
+    public CharacterReader(Stream stream, int mode) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
-      this.stream = stream;
+      this.stream = new WrappedStream(stream);
+      this.mode = mode;
     }
 
-    private ICharacterReader reader;
+    private ICharacterInput reader;
 
     // Detects a Unicode encoding assuming
     // the first character read will be ASCII
     // unless a byte order mark appears
     private int DetectUnicodeEncoding() {
-      try {
-        int c1 = this.stream.ReadByte();
-        if (c1 < 0) {
-          return -1;
+      int mode = this.mode;
+      int c1 = this.stream.ReadByte();
+      if (c1 < 0) {
+        return -1;
+      }
+      if (mode == 0) {  // UTF-8 only
+        var utf8reader = new Utf8Reader(this.stream);
+        this.reader = utf8reader;
+        c1 = utf8reader.ReadChar();
+        if (c1 == 0xfeff) {
+          // Skip BOM
+          c1 = utf8reader.ReadChar();
         }
-        if (c1 == 0xff) {
-          if (this.stream.ReadByte() == 0xfe) {
-            // Little endian UTF-16 or UTF-32
-            int c3 = this.stream.ReadByte();
-            int c4 = this.stream.ReadByte();
-            if (c3 == 0 && c4 == 0) {
-              this.reader = new Utf32Reader(this.stream, false);
-              return this.reader.NextChar();
-            } else {
-              var newReader = new Utf16Reader(this.stream, false);
-              this.reader = newReader;
-              newReader.Unget(c3, c4);
-              return newReader.NextChar();
-            }
+        return c1;
+      }
+      // The rest of this method handles modes 1 and 2
+      if (c1 == 0xff) {
+        if (this.stream.ReadByte() == 0xfe) {
+          if (mode == 1) {
+            // UTF-8 or UTF-16 only, so this is little endian UTF-16
+            var newReader = new Utf16Reader(this.stream, false);
+            this.reader = newReader;
+            return newReader.ReadChar();
           }
-          throw NewError("Invalid Unicode stream", 0);
+          // Little endian UTF-16 or UTF-32
+          int c3 = this.stream.ReadByte();
+          int c4 = this.stream.ReadByte();
+          if (c3 == 0 && c4 == 0) {
+            this.reader = new Utf32Reader(this.stream, false);
+            return this.reader.ReadChar();
+          } else {
+            var newReader = new Utf16Reader(this.stream, false);
+            this.reader = newReader;
+            newReader.Unget(c3, c4);
+            return newReader.ReadChar();
+          }
         }
-        if (c1 == 0xfe) {
-          if (this.stream.ReadByte() == 0xff) {
-            // Big endian UTF-16 or UTF-32
-            int c3 = this.stream.ReadByte();
-            int c4 = this.stream.ReadByte();
-            if (c3 == 0 && c4 == 0) {
-              this.reader = new Utf32Reader(this.stream, true);
-              return this.reader.NextChar();
-            } else {
-              var newReader = new Utf16Reader(this.stream, true);
-              this.reader = newReader;
-              newReader.Unget(c3, c4);
-              return newReader.NextChar();
-            }
+        throw new InvalidOperationException("Invalid Unicode stream");
+      }
+      if (c1 == 0xfe) {
+        if (this.stream.ReadByte() == 0xff) {
+          if (mode == 1) {
+            // UTF-8 or UTF-16 only, so this is big endian UTF-16
+            var newReader = new Utf16Reader(this.stream, true);
+            this.reader = newReader;
+            return newReader.ReadChar();
           }
-          throw NewError("Invalid Unicode stream", 0);
+          // Big endian UTF-16 or UTF-32
+          int c3 = this.stream.ReadByte();
+          int c4 = this.stream.ReadByte();
+          if (c3 == 0 && c4 == 0) {
+            this.reader = new Utf32Reader(this.stream, true);
+            return this.reader.ReadChar();
+          } else {
+            var newReader = new Utf16Reader(this.stream, true);
+            this.reader = newReader;
+            newReader.Unget(c3, c4);
+            return newReader.ReadChar();
+          }
         }
-        if (c1 == 0) {
-          int c2 = this.stream.ReadByte();
-          if (c2 < 0) {
-            // 0 EOF
-            this.reader = new Utf8Reader(this.stream);
-            return 0;
-          }
-          if (c2 == 0) {
-            // 0 0
-            int c3 = this.stream.ReadByte();
-            int c4 = this.stream.ReadByte();
-            if (c3 == 0xfe && c4 == 0xff) {
-              // 0 0 FE FF
-              this.reader = new Utf32Reader(this.stream, true);
-              return this.reader.NextChar();
-            }
-            if (c3 == 0 && c4 >= 0 && (c4 & 0x80) == 0) {
-              // 0 0 0 ASCII
-              this.reader = new Utf32Reader(this.stream, true);
-              return c4;
-            } else {
-              var newReader = new Utf16Reader(this.stream, true);
-              this.reader = newReader;
-              newReader.Unget(c3, c4);
-              return newReader.NextChar();
-            }
-          }
-          if ((c2 & 0x80) == 0) {
-            // UTF-16BE
+        throw new InvalidOperationException("Invalid Unicode stream");
+      }
+      if (c1 == 0 && mode > 0) {
+        int c2 = this.stream.ReadByte();
+        if (c2 < 0) {
+          // 0 EOF
+          this.reader = new Utf8Reader(this.stream);
+          return 0;
+        }
+        if (mode == 1) {
+          // UTF-8 or UTF-16 only
+          if ((c2 & 0x80) == 0 && c2 != 0) {
             this.reader = new Utf16Reader(this.stream, true);
             return c2;
           } else {
-            var utf8reader = new Utf8Reader(this.stream);
-            this.reader = utf8reader;
-            utf8reader.Unget(c2);
+            var newreader = new Utf8Reader(this.stream);
+            newreader.Unget(c2);
+            this.reader = newreader;
             return 0;
           }
         }
-        if ((c1 & 0x80) == 0) {
-          int c2 = this.stream.ReadByte();
-          if (c2 < 0) {
-            this.reader = new Utf8Reader(this.stream);
+        if (c2 == 0) {
+          // 0 0
+          int c3 = this.stream.ReadByte();
+          int c4 = this.stream.ReadByte();
+          if (c3 == 0xfe && c4 == 0xff) {
+            // 0 0 FE FF
+            this.reader = new Utf32Reader(this.stream, true);
+            return this.reader.ReadChar();
+          }
+          if (c3 == 0 && c4 >= 0 && (c4 & 0x80) == 0) {
+            // 0 0 0 ASCII
+            this.reader = new Utf32Reader(this.stream, true);
+            return c4;
+          } else {
+            // Other cases of "0 0 Any Any"
+            var newReader = new Utf8Reader(this.stream);
+            this.reader = newReader;
+            newReader.UngetThree(c2, c3, c4);
+            return 0;
+          }
+        }
+        if ((c2 & 0x80) == 0) {
+          // 0 ASCII
+          // UTF-16BE
+          this.reader = new Utf16Reader(this.stream, true);
+          return c2;
+        } else {
+          // 0 NonAscii
+          var utf8reader = new Utf8Reader(this.stream);
+          this.reader = utf8reader;
+          utf8reader.Unget(c2);
+          return 0;
+        }
+      }
+      if ((c1 & 0x80) == 0) {
+        int c2 = this.stream.ReadByte();
+        if (c2 < 0) {
+          this.reader = new Utf8Reader(this.stream);
+          return c1;
+        }
+        if (c2 == 0) {
+          // ASCII 0
+          if (mode == 1) {
+            // UTF-8 and UTF-16 only, assume UTF-16 little-endian
+            var newReader = new Utf16Reader(this.stream, false);
+            this.reader = newReader;
             return c1;
           }
-          if (c2 == 0) {
-            int c3 = this.stream.ReadByte();
-            int c4 = this.stream.ReadByte();
-            if (c3 == 0 && c4 == 0) {
-              this.reader = new Utf32Reader(this.stream, false);
-              return c1;
-            } else {
-              var newReader = new Utf16Reader(this.stream, false);
-              this.reader = newReader;
-              newReader.Unget(c3, c4);
-              return c1;
-            }
+          int c3 = this.stream.ReadByte();
+          int c4 = this.stream.ReadByte();
+          if (c3 == 0 && c4 == 0) {
+            // ASCII 0 0 0
+            this.reader = new Utf32Reader(this.stream, false);
+            return c1;
           } else {
-            var utf8reader = new Utf8Reader(this.stream);
-            this.reader = utf8reader;
-            utf8reader.Unget(c2);
+            // Other cases of "ASCII 0 Any Any"
+            var newReader = new Utf16Reader(this.stream, false);
+            this.reader = newReader;
+            newReader.Unget(c3, c4);
             return c1;
           }
         } else {
-          // Default case: assume UTF-8
+          // ASCII NonZero
           var utf8reader = new Utf8Reader(this.stream);
           this.reader = utf8reader;
-          utf8reader.Unget(c1);
-          c1 = utf8reader.NextChar();
-          if (c1 == 0xfeff) {
-            // Skip BOM
-            c1 = utf8reader.NextChar();
-          }
+          utf8reader.Unget(c2);
           return c1;
         }
-      } catch (IOException ex) {
-        throw new FormatException(
-          "I/O error occurred (offset " + this.offset + ")",
-          ex);
+      } else {
+        // Default case: assume UTF-8
+        var utf8reader = new Utf8Reader(this.stream);
+        this.reader = utf8reader;
+        utf8reader.Unget(c1);
+        c1 = utf8reader.ReadChar();
+        if (c1 == 0xfeff) {
+          // Skip BOM
+          c1 = utf8reader.ReadChar();
+        }
+        return c1;
       }
-    }
-
-    public static FormatException NewError(string str, int offset) {
-      return new FormatException(str + " (offset " + offset + ")");
-    }
-
-    public FormatException NewError(string str) {
-      return NewError(str, this.offset);
     }
 
     /// <summary>Reads the next character from a Unicode stream or a
     /// string.</summary>
     /// <returns>The next character, or -1 if the end of the string or
     /// stream was reached.</returns>
-    public int NextChar() {
+    public int ReadChar() {
       if (this.reader != null) {
-        return this.reader.NextChar();
+        return this.reader.ReadChar();
       }
       if (this.stream != null) {
         return this.DetectUnicodeEncoding();
@@ -394,14 +506,48 @@ this.offset);
           // Get the Unicode code point for the surrogate pair
           c = 0x10000 + ((c - 0xd800) << 10) + (this.str[this.offset + 1] -
           0xdc00);
-          ++this.offset;
         } else if ((c & 0xf800) == 0xd800) {
           // unpaired surrogate
-          throw this.NewError("Unpaired surrogate code point");
+          throw new InvalidOperationException("Unpaired surrogate code point");
         }
         ++this.offset;
         return c;
       }
+    }
+
+    public int Read(int[] chars, int index, int length) {
+      if ((chars) == null) {
+  throw new ArgumentNullException("chars");
+}
+if (index < 0) {
+  throw new ArgumentException("index (" + index +
+    ") is less than " + 0);
+}
+if (index > chars.Length) {
+  throw new ArgumentException("index (" + index +
+    ") is more than " + chars.Length);
+}
+if (length < 0) {
+  throw new ArgumentException("length (" + length +
+    ") is less than " + 0);
+}
+if (length > chars.Length) {
+  throw new ArgumentException("length (" + length +
+    ") is more than " + chars.Length);
+}
+if (chars.Length-index < length) {
+  throw new ArgumentException("chars's length minus " + index + " (" +
+    (chars.Length-index) + ") is less than " + length);
+}
+      int count = 0;
+      for (int i = 0; i < length; ++i) {
+        int c = ReadChar();
+        if (c < 0) {
+ return count;
+}
+        chars[index + i] = c;
+      }
+      return count;
     }
   }
 }

@@ -79,10 +79,11 @@
     <Compile Include="PeterO\Cbor\CborTypeFilter.cs" />
     <Compile Include="PeterO\Cbor\CBORUtilities.cs" />
     <Compile Include="PeterO\Cbor\CharacterReader.cs" />
+    <Compile Include="PeterO\Cbor\CharacterInputWithCount.cs" />
     <Compile Include="PeterO\Cbor\ICBORConverter.cs" />
     <Compile Include="PeterO\Cbor\ICBORNumber.cs" />
     <Compile Include="PeterO\Cbor\ICBORTag.cs" />
-    <Compile Include="PeterO\Cbor\ICharacterReader.cs" />
+    <Compile Include="PeterO\Cbor\ICharacterInput.cs" />
     <Compile Include="PeterO\Cbor\PropertyMap.cs" />
     <Compile Include="PeterO\Cbor\SharedRefs.cs" />
     <Compile Include="PeterO\Cbor\StringOutput.cs" />

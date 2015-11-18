@@ -23,8 +23,8 @@ Initializes a new instance of the ExtendedRational class.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>numerator</i>
- or <i>denominator</i>
+The parameter  <i>numerator</i>
+ or  <i>denominator</i>
  is null.
 
 ### NaN
@@ -173,7 +173,7 @@ The sum of the two numbers. Returns NaN if either operand is NaN.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### CompareTo
@@ -275,11 +275,11 @@ An ExtendedRational object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>diag</i>
+The parameter  <i>diag</i>
  is null.
 
  * System.ArgumentException:
-The parameter <i>diag</i>
+The parameter  <i>diag</i>
  is less than 0.
 
 ### CreateNaN
@@ -306,11 +306,11 @@ An ExtendedRational object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>diag</i>
+The parameter  <i>diag</i>
  is null.
 
  * System.ArgumentException:
-The parameter <i>diag</i>
+The parameter  <i>diag</i>
  is less than 0.
 
 ### Divide
@@ -331,7 +331,7 @@ The quotient of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### Equals
@@ -392,8 +392,8 @@ Converts a 64-bit floating-point number to a rational number. This method comput
 
 <b>Returns:</b>
 
-A rational number with the same value as <i>flt</i>
- .
+A rational number with the same value as  <i>flt</i>
+.
 
 ### FromExtendedDecimal
 
@@ -413,7 +413,7 @@ An ExtendedRational object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>ef</i>
+The parameter  <i>ef</i>
  is null.
 
 ### FromExtendedFloat
@@ -434,7 +434,7 @@ An ExtendedRational object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>ef</i>
+The parameter  <i>ef</i>
  is null.
 
 ### FromInt32
@@ -480,8 +480,8 @@ Converts a 32-bit floating-point number to a rational number. This method comput
 
 <b>Returns:</b>
 
-A rational number with the same value as <i>flt</i>
- .
+A rational number with the same value as  <i>flt</i>
+.
 
 ### GetHashCode
 
@@ -571,7 +571,7 @@ The product of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### Negate
@@ -602,7 +602,7 @@ The remainder of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### Subtract
@@ -623,7 +623,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### ToBigInteger

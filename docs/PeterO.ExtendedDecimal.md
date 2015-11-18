@@ -219,7 +219,7 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
 <b>Returns:</b>
 
-Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if <i>other</i>
+Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if  <i>other</i>
  is null, or 0 if both values are equal.
 
 ### CompareToBinary
@@ -316,8 +316,8 @@ An ExtendedDecimal object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>mantissa</i>
- or <i>exponent</i>
+The parameter  <i>mantissa</i>
+ or  <i>exponent</i>
  is null.
 
 ### CreateNaN
@@ -338,7 +338,7 @@ A quiet not-a-number object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>diag</i>
+The parameter  <i>diag</i>
  is null or is less than 0.
 
 ### CreateNaN
@@ -368,7 +368,7 @@ An ExtendedDecimal object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>diag</i>
+The parameter  <i>diag</i>
  is null or is less than 0.
 
 ### Divide
@@ -402,7 +402,7 @@ Divides this ExtendedDecimal object by another ExtendedDecimal object. The prefe
 
 <b>Returns:</b>
 
-The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0; or, either <i>ctx</i>
+The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0; or, either  <i>ctx</i>
  is null or <i>ctx</i>
  's precision is 0, and the result would have a nonterminating decimal expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
 
@@ -635,7 +635,7 @@ Finds e (the base of natural logarithms) raised to the power of this object's va
 
 <b>Returns:</b>
 
-Exponential of this object. If this object's value is 1, returns an approximation to " e" within the given precision. Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
+Exponential of this object. If this object's value is 1, returns an approximation to " e" within the given precision. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
 ### FromBigInteger
@@ -666,8 +666,8 @@ Creates a decimal number from a 64-bit floating-point number. This method comput
 
 <b>Returns:</b>
 
-A decimal number with the same value as <i>dbl</i>
- .
+A decimal number with the same value as  <i>dbl</i>
+.
 
 ### FromExtendedFloat
 
@@ -687,7 +687,7 @@ An ExtendedDecimal object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>bigfloat</i>
+The parameter  <i>bigfloat</i>
  is null.
 
 ### FromInt32
@@ -733,8 +733,8 @@ Creates a decimal number from a 32-bit floating-point number. This method comput
 
 <b>Returns:</b>
 
-A decimal number with the same value as <i>flt</i>
- .
+A decimal number with the same value as  <i>flt</i>
+.
 
 ### FromString
 
@@ -754,11 +754,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is null.
 
  * System.FormatException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is not a correctly formatted number string.
 
 ### FromString
@@ -785,11 +785,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is null.
 
  * System.FormatException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is not a correctly formatted number string.
 
 ### FromString
@@ -810,7 +810,7 @@ The format of the string generally consists of:
 
  * Optionally, E+ (positive exponent) or E- (negative exponent) plus one or more digits specifying the exponent.
 
-The string can also be "-INF", "-Infinity" , "Infinity" , "INF" , quiet NaN ("qNaN" /"-qNaN") followed by any number of digits, or signaling NaN ("sNaN" /"-sNaN") followed by any number of digits, all in any combination of upper and lower case.
+The string can also be "-INF", "-Infinity" , "Infinity", "INF" , quiet NaN ("qNaN" /"-qNaN") followed by any number of digits, or signaling NaN ("sNaN" /"-sNaN") followed by any number of digits, all in any combination of upper and lower case.
 
 The format generally follows the definition in java.math.BigDecimal(), except that the digits must be ASCII digits ('0' through '9').
 
@@ -831,11 +831,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is null.
 
  * System.FormatException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is not a correctly formatted number string.
 
 ### FromString
@@ -859,11 +859,11 @@ An arbitrary-precision decimal number with the same value as the given string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is null.
 
  * System.FormatException:
-The parameter <i>str</i>
+The parameter  <i>str</i>
  is not a correctly formatted number string.
 
 ### GetHashCode
@@ -965,7 +965,7 @@ Finds the base-10 logarithm of this object, that is, the power (exponent) that t
 
 <b>Returns:</b>
 
-Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns NaN if this object is less than 0. Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
+Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns NaN if this object is less than 0. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Max
@@ -1254,8 +1254,8 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 <b>Returns:</b>
 
-A number whose scale is increased by <i>bigPlaces</i>
- , but not to more than 0.
+A number whose scale is increased by  <i>bigPlaces</i>
+, but not to more than 0.
 
 ### Multiply
 
@@ -1306,9 +1306,9 @@ Multiplies by one decimal number, and then adds another decimal number.
 
 <b>Returns:</b>
 
-The result this * <i>multiplicand</i>
+The result this *  <i>multiplicand</i>
  + <i>augend</i>
- .
+.
 
 ### MultiplyAndAdd
 
@@ -1396,7 +1396,7 @@ Finds the largest value that's smaller than the given value.
 <b>Returns:</b>
 
 Returns the largest value that's less than the given value. Returns negative infinity if the result is negative infinity. Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
- is null, the precision is 0, or <i>ctx</i>
+ is null, the precision is 0, or  <i>ctx</i>
  has an unlimited exponent range.
 
 ### NextPlus
@@ -1413,7 +1413,7 @@ Finds the smallest value that's greater than the given value.
 <b>Returns:</b>
 
 Returns the smallest value that's greater than the given value.Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
- is null, the precision is 0, or <i>ctx</i>
+ is null, the precision is 0, or  <i>ctx</i>
  has an unlimited exponent range.
 
 ### NextToward
@@ -1432,8 +1432,8 @@ Finds the next value that is closer to the other object's value than this object
 
 <b>Returns:</b>
 
-Returns the next value that is closer to the other object' s value than this object's value. Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
- is null, the precision is 0, or <i>ctx</i>
+Returns the next value that is closer to the other object' s value than this object's value. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
+ is null, the precision is 0, or  <i>ctx</i>
  has an unlimited exponent range.
 
 ### PI
@@ -1449,7 +1449,7 @@ Finds the constant pi.
 
 <b>Returns:</b>
 
-Pi rounded to the given precision. Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
+Pi rounded to the given precision. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Plus
@@ -1896,8 +1896,8 @@ Returns a number similar to this number but with its scale adjusted.
 
 <b>Returns:</b>
 
-A number whose scale is increased by <i>bigPlaces</i>
- .
+A number whose scale is increased by  <i>bigPlaces</i>
+.
 
 ### SquareRoot
 
@@ -1912,8 +1912,8 @@ Finds the square root of this object's value.
 
 <b>Returns:</b>
 
-The square root. Signals the flag FlagInvalid and returns NaN if this object is less than 0 (the square root would be a complex number, but the return value is still NaN). Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
- is null or the precision is unlimited (the context's Precision property is 0).
+The square root. Signals the flag FlagInvalid and returns NaN if this object is less than 0 (the square root would be a complex number, but the return value is still NaN). Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
+is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Subtract
 
@@ -1951,7 +1951,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>otherValue</i>
+The parameter  <i>otherValue</i>
  is null.
 
 ### ToBigInteger
