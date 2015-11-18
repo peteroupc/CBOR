@@ -429,6 +429,7 @@ int surrogateBehavior) {
     /// is greater than the string's length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
+    /// <exception/>
     public static int WriteUtf8(
 String str,
 int offset,
@@ -464,6 +465,7 @@ bool replace) {
     /// is greater than the string's length.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
+    /// <exception/>
     public static int WriteUtf8(
 String str,
 int offset,

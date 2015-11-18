@@ -278,6 +278,11 @@ namespace PeterO {
     /// <returns>An ExtendedFloat object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
+    /// <exception cref='System.ArgumentException'>Either
+    /// &quot;offset&quot; or &quot;length&quot; is less than 0 or greater
+    /// than &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s
+    /// length minus &quot;offset&quot; is less than
+    /// &quot;length&quot;.</exception>
     public static ExtendedFloat FromString(
       String str,
       int offset,
@@ -319,6 +324,11 @@ namespace PeterO {
     /// <returns>An ExtendedFloat object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
+    /// <exception cref='System.ArgumentException'>Either
+    /// &quot;offset&quot; or &quot;length&quot; is less than 0 or greater
+    /// than &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s
+    /// length minus &quot;offset&quot; is less than
+    /// &quot;length&quot;.</exception>
     public static ExtendedFloat FromString(String str, int offset, int length) {
       return FromString(str, offset, length, null);
     }

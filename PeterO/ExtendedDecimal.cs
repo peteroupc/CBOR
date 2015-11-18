@@ -30,12 +30,11 @@ namespace PeterO {
     /// case, 100 * 10^-2 (100 with decimal point moved left by 2), and in
     /// the second case, 1 * 10^0 (1 with decimal point moved 0).</para>
     /// <para>This class also supports values for negative zero,
-    /// not-a-number (NaN) values, and infinity.
-    /// <b>Negative zero</b> is generally used when a negative number is
-    /// rounded to 0; it has the same mathematical value as positive zero.
-    /// <b>Infinity</b> is generally used when a non-zero number is divided
-    /// by zero, or when a very high number can't be represented in a given
-    /// exponent range.
+    /// not-a-number (NaN) values, and infinity. <b>Negative zero</b> is
+    /// generally used when a negative number is rounded to 0; it has the
+    /// same mathematical value as positive zero. <b>Infinity</b> is
+    /// generally used when a non-zero number is divided by zero, or when a
+    /// very high number can't be represented in a given exponent range.
     /// <b>Not-a-number</b> is generally used to signal errors.</para>
     /// <para>This class implements the General Decimal Arithmetic
     /// Specification version 1.70:

@@ -16,30 +16,25 @@ namespace PeterO.Cbor {
     /// <summary>Represents an object in Concise Binary Object
     /// Representation (CBOR) and contains methods for reading and writing
     /// CBOR data. CBOR is defined in RFC 7049.
-    /// <para>
-    /// <b>Converting CBOR objects</b></para>
+    /// <para><b>Converting CBOR objects</b></para>
     /// <para>There are many ways to get a CBOR object, including from
     /// bytes, objects, streams and JSON, as described below.</para>
-    /// <para>
-    /// <b>To and from byte arrays:</b> The CBORObject.DecodeToBytes method
-    /// converts a byte array in CBOR format to a CBOR object. The
+    /// <para><b>To and from byte arrays:</b> The CBORObject.DecodeToBytes
+    /// method converts a byte array in CBOR format to a CBOR object. The
     /// EncodeToBytes method converts a CBOR object to its corresponding
     /// byte array in CBOR format.</para>
-    /// <para>
-    /// <b>To and from data streams:</b> The CBORObject.Write methods write
-    /// many kinds of objects to a data stream, including numbers, CBOR
-    /// objects, strings, and arrays of numbers and strings. The
+    /// <para><b>To and from data streams:</b> The CBORObject.Write methods
+    /// write many kinds of objects to a data stream, including numbers,
+    /// CBOR objects, strings, and arrays of numbers and strings. The
     /// CBORObject.Read method reads a CBOR object from a data
     /// stream.</para>
-    /// <para>
-    /// <b>To and from other objects:</b> The CBORObject.FromObject method
-    /// converts many kinds of objects to a CBOR object, including numbers,
-    /// strings, and arrays and maps of numbers and strings. Methods like
-    /// AsDouble, AsByte, and AsString convert a CBOR object to different
-    /// types of object.</para>
-    /// <para>
-    /// <b>To and from JSON:</b> This class also doubles as a reader and
-    /// writer of JavaScript Object Notation (JSON). The
+    /// <para><b>To and from other objects:</b> The CBORObject.FromObject
+    /// method converts many kinds of objects to a CBOR object, including
+    /// numbers, strings, and arrays and maps of numbers and strings.
+    /// Methods like AsDouble, AsByte, and AsString convert a CBOR object
+    /// to different types of object.</para>
+    /// <para><b>To and from JSON:</b> This class also doubles as a reader
+    /// and writer of JavaScript Object Notation (JSON). The
     /// CBORObject.FromJSONString method converts JSON to a CBOR object,
     /// and the ToJSONString method converts a CBOR object to a JSON
     /// string.</para>
@@ -48,8 +43,7 @@ namespace PeterO.Cbor {
     /// objects, strings, and arrays of numbers and strings. The
     /// CBORObject.Read method reads a CBOR object from a JSON data
     /// stream.</para>
-    /// <para>
-    /// <b>Comparison Considerations:</b></para>
+    /// <para><b>Comparison Considerations:</b></para>
     /// <para>Instances of CBORObject should not be compared for equality
     /// using the "==" operator; it's possible to create two CBOR objects
     /// with the same value but not the same reference. (The "==" operator
@@ -75,8 +69,7 @@ namespace PeterO.Cbor {
     /// an empty array and the Type property, or "getType()" in Java,
     /// returns TextString). This is because the natural ordering of these
     /// instances is consistent with the Equals method.</para>
-    /// <para>
-    /// <b>Thread Safety:</b></para>
+    /// <para><b>Thread Safety:</b></para>
     /// <para>CBOR objects that are numbers, "simple values", and text
     /// strings are immutable (their values can't be changed), so they are
     /// inherently safe for use by multiple threads.</para>
@@ -95,8 +88,7 @@ namespace PeterO.Cbor {
     /// "getType()" in Java). The return value can be Number, Boolean,
     /// SimpleValue, or TextString for immutable CBOR objects, and Array,
     /// Map, or ByteString for mutable CBOR objects.</para>
-    /// <para>
-    /// <b>Nesting Depth:</b></para>
+    /// <para><b>Nesting Depth:</b></para>
     /// <para>The DecodeFromBytes method can only read objects with a
     /// limited maximum depth of arrays and maps nested within other arrays
     /// and maps. The code sets this maximum depth to 500 (allowing more
