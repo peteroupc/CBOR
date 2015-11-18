@@ -1355,7 +1355,9 @@ The result thisValue * multiplicand - subtrahend.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter "otherValue" is null.
+The parameter  <i>op</i>
+ or  <i>subtrahend</i>
+ is null.
 
 ### Negate
 

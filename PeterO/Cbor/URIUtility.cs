@@ -838,9 +838,6 @@ int endIndex) {
     /// <summary>Resolves a URI or IRI relative to another URI or
     /// IRI.</summary>
     /// <param name='refValue'>Not documented yet.</param>
-    /// <param name='refValue'>Not documented yet.</param>
-    /// <param name='baseURI'>Not documented yet.</param>
-    /// <param name='parseMode'>Not documented yet. (3).</param>
     /// <returns>The resolved IRI, or null if refValue is null or is not a
     /// valid IRI. If base is null or is not a valid IRI, returns
     /// refValue.</returns>
@@ -1184,6 +1181,7 @@ ParseMode parseMode) {
     /// the string into its components and returns an array containing the
     /// indices into the components.</summary>
     /// <param name='s'>Not documented yet.</param>
+    /// <param name='parseMode'>A ParseMode object.</param>
     /// <returns>If the string is a valid IRI reference, returns an array
     /// of 10 integers. Each of the five pairs corresponds to the start and
     /// end index of the IRI's scheme, authority, path, query, or fragment
