@@ -3526,12 +3526,16 @@ namespace PeterO {
       return this.longValueChecked();
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='power'>Another BigInteger object.</param>
-    /// <returns>A BigInteger object.</returns>
+    /// <summary>Raises a big integer to a power, which is given as another
+    /// big integer.</summary>
+    /// <param name='power'>The exponent to raise to.</param>
+    /// <returns>The result. Returns 1 if <paramref name='power'/> is
+    /// 0.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='power'/> is null.</exception>
-    public BigInteger PowBigIntVar(BigInteger power) {
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='power'/> is less than 0.</exception>
+  public BigInteger PowBigIntVar(BigInteger power) {
       if (power == null) {
         throw new ArgumentNullException("power");
       }
@@ -3566,9 +3570,12 @@ namespace PeterO {
       return r;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='powerSmall'>A 32-bit signed integer.</param>
-    /// <returns>A BigInteger object.</returns>
+    /// <summary>Raises a big integer to a power.</summary>
+    /// <param name='powerSmall'>The exponent to raise to.</param>
+    /// <returns>The result. Returns 1 if <paramref name='powerSmall'/> is
+    /// 0.</returns>
+    /// <exception cref='ArgumentException'>The parameter <paramref
+    /// name='powerSmall'/> is less than 0.</exception>
     public BigInteger pow(int powerSmall) {
       if (powerSmall < 0) {
         throw new ArgumentException("powerSmall (" + powerSmall +
@@ -4480,9 +4487,19 @@ namespace PeterO {
         negative);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>A 32-bit signed integer.</returns>
+    /// <summary>See <c>getLowBit()</c></summary>
+    /// <returns>See getLowBit().</returns>
+    [Obsolete("Renamed to getLowBit.")]
     public int getLowestSetBit() {
+      return this.getLowBit();
+    }
+
+    /// <summary>Gets the lowest set bit in this number's absolute
+    /// value.</summary>
+    /// <returns>The lowest bit set in the number, starting at 0. Returns 0
+    /// if this value is 0 or odd. (NOTE: In future versions, may return -1
+    /// instead if this value is 0.).</returns>
+    public int getLowBit() {
       int retSetBit = 0;
       for (var i = 0; i < this.wordCount; ++i) {
         short c = this.words[i];
@@ -4538,8 +4555,8 @@ namespace PeterO {
       }
       if (thisValue.wordCount <= 10 && bigintSecond.wordCount <= 10) {
         int expOfTwo = Math.Min(
-          thisValue.getLowestSetBit(),
-          bigintSecond.getLowestSetBit());
+          thisValue.getLowBit(),
+          bigintSecond.getLowBit());
         while (true) {
           BigInteger bigintA = (thisValue - (BigInteger)bigintSecond).abs();
           if (bigintA.IsZero) {
@@ -4548,7 +4565,7 @@ namespace PeterO {
             }
             return thisValue;
           }
-          int setbit = bigintA.getLowestSetBit();
+          int setbit = bigintA.getLowBit();
           bigintA >>= setbit;
           bigintSecond = (thisValue.CompareTo(bigintSecond) < 0) ? thisValue :
             bigintSecond;

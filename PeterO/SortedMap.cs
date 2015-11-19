@@ -37,9 +37,6 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Adds two T1 objects.</summary>
-    /// <param name='key'>Not documented yet.</param>
-    /// <param name='value'>A T2 object.</param>
     public void Add(T1 key, T2 value) {
       if (!this.tree.AddIfMissing(new KeyValuePair<T1, T2>(key, value))) {
         throw new InvalidOperationException("Key already exists");

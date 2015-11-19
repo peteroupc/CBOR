@@ -383,12 +383,11 @@ out bigrem);
       }
     }
 
-    /// <summary>Shifts a number to the right, gathering information on
-    /// whether the last digit discarded is set and whether the discarded
-    /// digits to the right of that digit are set. Assumes that the big
-    /// integer being shifted is positive.</summary>
-    /// <param name='digits'>Not documented yet.</param>
     public void ShiftRightInt(int digits) {
+      // <summary>Shifts a number to the right, gathering information on
+      // whether the last digit discarded is set and whether the discarded
+      // digits to the right of that digit are set. Assumes that the big
+      // integer being shifted is positive.</summary>
       if (this.isSmall) {
         this.ShiftRightSmall(digits);
       } else {
@@ -464,13 +463,12 @@ out bigrem);
       }
     }
 
-    /// <summary>Shifts a number until it reaches the given number of
-    /// digits, gathering information on whether the last digit discarded
-    /// is set and whether the discarded digits to the right of that digit
-    /// are set. Assumes that the big integer being shifted is
-    /// positive.</summary>
-    /// <param name='digits'>Not documented yet.</param>
     public void ShiftToDigitsInt(int digits) {
+      // <summary>Shifts a number until it reaches the given number of
+      // digits, gathering information on whether the last digit discarded
+      // is set and whether the discarded digits to the right of that digit
+      // are set. Assumes that the big integer being shifted is
+      // positive.</summary>
       if (this.isSmall) {
         this.ShiftToBitsSmall(digits);
       } else {

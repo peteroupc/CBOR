@@ -283,7 +283,7 @@ namespace PeterO {
     /// <summary>Copies this PrecisionContext with Traps set to the given
     /// value.</summary>
     /// <param name='traps'>Flags representing the traps to enable. See the
-    /// property &quot;Traps&quot;.</param>
+    /// property "Traps".</param>
     /// <returns>A PrecisionContext object.</returns>
     public PrecisionContext WithTraps(int traps) {
       PrecisionContext pc = this.Copy();

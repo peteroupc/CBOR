@@ -296,12 +296,14 @@ BigInteger otherValue) {
     }
 
     /// <summary>Not documented yet.</summary>
-    /// <param name='dividend'>Another BigInteger object.</param>
+    /// <param name='dividend'>Big integer to be divided.</param>
     /// <param name='divisor'>A BigInteger object. (3).</param>
     /// <param name='remainder'>A BigInteger object. (4).</param>
-    /// <returns>A BigInteger object.</returns>
+    /// <returns>An array of two big integers: the first is the quotient,
+    /// and the second is the remainder.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='dividend'/> is null.</exception>
+    /// name='dividend'/> or <paramref name='divisor'/> is
+    /// null.</exception>
     public static BigInteger DivRem(
 BigInteger dividend,
 BigInteger divisor,
@@ -309,6 +311,9 @@ out BigInteger remainder) {
       if (dividend == null) {
         throw new ArgumentNullException("dividend");
       }
+      if (divisor == null) {
+  throw new ArgumentNullException("divisor");
+}
       BigInteger[] result = dividend.divideAndRemainder(divisor);
       remainder = result[1];
       return result[0];

@@ -419,6 +419,10 @@ The parameter  <i>bigintTag</i>
  or  <i>handler</i>
  is null.
 
+ * System.ArgumentNullException:
+The parameter  <i>bigintTag</i>
+ is less than 0 or greater than (2^64-1).
+
 ### AsBigInteger
 
     public PeterO.BigInteger AsBigInteger();
@@ -1118,7 +1122,7 @@ A CBOR array object where each element of the given array is copied to a new arr
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
-Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null , primitive types, strings, CBORObject , ExtendedDecimal , ExtendedFloat , the custom BigInteger , lists, arrays, enumerations ( `Enum`  objects), and maps. In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET `Enum`  objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum`  objects will be converted to the result of their name method.
+Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null , primitive types, strings, CBORObject , ExtendedDecimal , ExtendedFloat , the custom BigInteger , lists, arrays, enumerations (  `Enum`  objects), and maps. In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET `Enum`  objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum`  objects will be converted to the result of their name method.
 
 If the input is a byte array, the byte array is copied to a new byte array. (This method can't be used to decode CBOR data from a byte array; for that, use the DecodeFromBytes method instead.).
 
@@ -2162,11 +2166,11 @@ Writes an arbitrary object to a CBOR data stream. Currently, the following objec
 
 <b>Parameters:</b>
 
- * <i>objValue</i>: Not documented yet.
+ * <i>objValue</i>: The arbitrary object to be serialized. Can be null.
 
- * <i>output</i>: Not documented yet.
+ * <i>output</i>: A writable data stream.
 
- * <i>options</i>: Not documented yet. (3).
+ * <i>options</i>: CBOR options for encoding the CBOR object to bytes.
 
 <b>Exceptions:</b>
 
@@ -2174,7 +2178,9 @@ Writes an arbitrary object to a CBOR data stream. Currently, the following objec
 The object's type is not supported.
 
  * System.ArgumentNullException:
-The parameter "stream" is null.
+The parameter  <i>options</i>
+ or  <i>output</i>
+ is null.
 
 ### Write
 
@@ -2182,7 +2188,7 @@ The parameter "stream" is null.
         object objValue,
         System.IO.Stream stream);
 
-Not documented yet.
+Writes a CBOR object to a CBOR data stream. See the three-parameter Write method that takes a CBOREncodeOptions.
 
 <b>Parameters:</b>
 

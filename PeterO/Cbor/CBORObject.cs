@@ -149,7 +149,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets or sets the converter's ToCBORObject
     /// method.</summary>
-    /// <value>The converter&#x27;s ToCBORObject method.</value>
+    /// <value>The converter&apos;s ToCBORObject method.</value>
       public object ToObject {
         get {
           return this.toObject;
@@ -289,6 +289,9 @@ namespace PeterO.Cbor {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintTag'/> or <paramref name='handler'/> is
     /// null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='bigintTag'/> is less than 0 or greater than
+    /// (2^64-1).</exception>
     public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
       if (bigintTag == null) {
         throw new ArgumentNullException("bigintTag");
@@ -429,7 +432,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets a value indicating whether this object&#x27;s value
     /// equals 0.</summary>
-    /// <value>True if this object&#x27;s value equals 0; otherwise,
+    /// <value>True if this object&apos;s value equals 0; otherwise,
     /// false.</value>
     public bool IsZero {
       get {
@@ -473,7 +476,7 @@ namespace PeterO.Cbor {
 
     /// <summary>Gets this value&#x27;s sign: -1 if negative; 1 if
     /// positive; 0 if zero.</summary>
-    /// <value>This value&#x27;s sign: -1 if negative; 1 if positive; 0 if
+    /// <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if
     /// zero.</value>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type, including the special not-a-number value
@@ -3181,7 +3184,9 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Writes a CBOR object to a CBOR data stream. See the
+    /// three-parameter Write method that takes a
+    /// CBOREncodeOptions.</summary>
     /// <param name='objValue'>An arbitrary object.</param>
     /// <param name='stream'>A writable data stream.</param>
     public static void Write(object objValue, Stream stream) {
@@ -3196,17 +3201,22 @@ namespace PeterO.Cbor {
     /// <item>Null.</item>
     /// <item>Any object accepted by the FromObject static
     /// methods.</item></list></summary>
-    /// <param name='objValue'>Not documented yet.</param>
-    /// <param name='output'>Not documented yet.</param>
-    /// <param name='options'>Not documented yet. (3).</param>
+    /// <param name='objValue'>The arbitrary object to be serialized. Can
+    /// be null.</param>
+    /// <param name='output'>A writable data stream.</param>
+    /// <param name='options'>CBOR options for encoding the CBOR object to
+    /// bytes.</param>
     /// <exception cref='ArgumentException'>The object's type is not
     /// supported.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter "stream" is
-    /// null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='options'/> or <paramref name='output'/> is null.</exception>
     public static void Write(
       object objValue,
       Stream output,
       CBOREncodeOptions options) {
+      if (options == null) {
+  throw new ArgumentNullException("options");
+}
       if (output == null) {
         throw new ArgumentNullException("output");
       }
@@ -3786,7 +3796,7 @@ namespace PeterO.Cbor {
     /// following types are specially handled by this method: null ,
     /// primitive types, strings, CBORObject , ExtendedDecimal ,
     /// ExtendedFloat , the custom BigInteger , lists, arrays, enumerations
-    /// (<c>Enum</c> objects), and maps. In the .NET version, if the
+    /// ( <c>Enum</c> objects), and maps. In the .NET version, if the
     /// object is a type not specially handled by this method, returns a
     /// CBOR map with the values of each of its read/write properties (or
     /// all properties in the case of an anonymous type). Properties are
@@ -3920,12 +3930,12 @@ namespace PeterO.Cbor {
     /// <param name='valueOb'>An arbitrary object. If the tag number is 2
     /// or 3, this must be a byte string whose bytes represent an integer
     /// in little-endian byte order, and the value of the number is 1 minus
-    /// the integer&#x27;s value for tag 3. If the tag number is 4 or 5,
-    /// this must be an array with two elements: the first must be an
-    /// integer representing the exponent, and the second must be an
-    /// integer representing a mantissa.</param>
+    /// the integer's value for tag 3. If the tag number is 4 or 5, this
+    /// must be an array with two elements: the first must be an integer
+    /// representing the exponent, and the second must be an integer
+    /// representing a mantissa.</param>
     /// <param name='bigintTag'>Tag number. The tag number 55799 can be
-    /// used to mark a &#x22;self-described CBOR&#x22; object.</param>
+    /// used to mark a "self-described CBOR" object.</param>
     /// <returns>A CBOR object where the object <paramref name='valueOb'/>
     /// is converted to a CBOR object and given the tag <paramref
     /// name='bigintTag'/>.</returns>
@@ -4020,13 +4030,13 @@ namespace PeterO.Cbor {
     /// <param name='valueObValue'>An arbitrary object. If the tag number
     /// is 2 or 3, this must be a byte string whose bytes represent an
     /// integer in little-endian byte order, and the value of the number is
-    /// 1 minus the integer&#x27;s value for tag 3. If the tag number is 4
-    /// or 5, this must be an array with two elements: the first must be an
+    /// 1 minus the integer's value for tag 3. If the tag number is 4 or 5,
+    /// this must be an array with two elements: the first must be an
     /// integer representing the exponent, and the second must be an
     /// integer representing a mantissa.</param>
     /// <param name='smallTag'>A 32-bit integer that specifies a tag
-    /// number. The tag number 55799 can be used to mark a
-    /// &#x22;self-described CBOR&#x22; object.</param>
+    /// number. The tag number 55799 can be used to mark a "self-described
+    /// CBOR" object.</param>
     /// <returns>A CBOR object where the object <paramref
     /// name='valueObValue'/> is converted to a CBOR object and given the
     /// tag <paramref name='smallTag'/>.</returns>
