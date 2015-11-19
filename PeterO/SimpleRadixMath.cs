@@ -8,14 +8,14 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO {
-    /// <summary>Implements the simplified arithmetic in Appendix A of the
-    /// General Decimal Arithmetic Specification. Unfortunately, it doesn't
-    /// pass all the test cases, since some aspects of the spec are left
-    /// open. For example: in which cases is the Clamped flag set? The test
-    /// cases set the Clamped flag in only a handful of test cases, all
-    /// within the <c>exp</c> operation.</summary>
-    /// <typeparam name='T'>Data type for a numeric value in a particular
-    /// radix.</typeparam>
+    // <summary>Implements the simplified arithmetic in Appendix A of the
+    // General Decimal Arithmetic Specification. Unfortunately, it doesn't
+    // pass all the test cases, since some aspects of the spec are left
+    // open. For example: in which cases is the Clamped flag set? The test
+    // cases set the Clamped flag in only a handful of test cases, all
+    // within the <c>exp</c> operation.</summary>
+    // <typeparam name='T'>Data type for a numeric value in a particular
+    // radix.</typeparam>
   internal sealed class SimpleRadixMath<T> : IRadixMath<T> {
     private IRadixMath<T> wrapper;
 
@@ -340,10 +340,15 @@ namespace PeterO {
       return this.PostProcess(value, ctx, ctx2);
     }
 
-    /// <summary>Finds the remainder that results when dividing two T
-    /// objects.</summary>
-    /// <param name='thisValue'>Not documented yet.</param>
-    /// <returns>The remainder of the two objects.</returns>
+    // <summary>Finds the remainder that results when dividing two T
+    // objects.</summary>
+    // <param name='thisValue'></param>
+    // <summary>Finds the remainder that results when dividing two T
+    // objects.</summary>
+    // <param name='thisValue'></param>
+    // <param name='divisor'></param>
+    // <param name='ctx'> (3).</param>
+    // <returns>The remainder of the two objects.</returns>
     public T Remainder(T thisValue, T divisor, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((object)ret != (object)default(T)) {
@@ -548,9 +553,13 @@ namespace PeterO {
       return this.PostProcessAfterDivision(thisValue, ctx, ctx2);
     }
 
-    /// <summary>Divides two T objects.</summary>
-    /// <param name='thisValue'>Not documented yet.</param>
-    /// <returns>The quotient of the two objects.</returns>
+    // <summary>Divides two T objects.</summary>
+    // <param name='thisValue'></param>
+    // <summary>Divides two T objects.</summary>
+    // <param name='thisValue'></param>
+    // <param name='divisor'></param>
+    // <param name='ctx'> (3).</param>
+    // <returns>The quotient of the two objects.</returns>
     public T Divide(T thisValue, T divisor, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, divisor, ctx);
       if ((object)ret != (object)default(T)) {
@@ -613,9 +622,13 @@ namespace PeterO {
       return this.PostProcess(a, ctx, ctx2);
     }
 
-    /// <summary>Multiplies two T objects.</summary>
-    /// <param name='thisValue'>Not documented yet.</param>
-    /// <returns>The product of the two objects.</returns>
+    // <summary>Multiplies two T objects.</summary>
+    // <param name='thisValue'></param>
+    // <summary>Multiplies two T objects.</summary>
+    // <param name='thisValue'></param>
+    // <param name='other'></param>
+    // <param name='ctx'> (3).</param>
+    // <returns>The product of the two objects.</returns>
     public T Multiply(T thisValue, T other, PrecisionContext ctx) {
       T ret = this.CheckNotANumber2(thisValue, other, ctx);
       if ((object)ret != (object)default(T)) {
@@ -800,17 +813,14 @@ namespace PeterO {
       return this.Add(thisValue, other, ctx);
     }
 
-    /// <summary>Compares a T object with this instance.</summary>
-    /// <param name='thisValue'>Not documented yet.</param>
-    /// <summary>Compares a T object with this instance.</summary>
-    /// <param name='thisValue'>Not documented yet.</param>
-    /// <param name='otherValue'>Not documented yet.</param>
-    /// <param name='treatQuietNansAsSignaling'>Not documented yet.
-    /// (3).</param>
-    /// <param name='ctx'>Not documented yet. (4).</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is less, or a positive number if this instance is
-    /// greater.</returns>
+    // <summary>Compares a T object with this instance.</summary>
+    // <param name='thisValue'></param>
+    // <param name='otherValue'>A T object.</param>
+    // <param name='treatQuietNansAsSignaling'>A Boolean object.</param>
+    // <param name='ctx'>A PrecisionContext object.</param>
+    // <returns>Zero if the values are equal; a negative number if this
+    // instance is less, or a positive number if this instance is
+    // greater.</returns>
     public T CompareToWithContext(
       T thisValue,
       T otherValue,
@@ -829,12 +839,11 @@ namespace PeterO {
         ctx);
     }
 
-    /// <summary>Compares a T object with this instance.</summary>
-    /// <param name='thisValue'>Not documented yet.</param>
-    /// <param name='otherValue'>A T object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is less, or a positive number if this instance is
-    /// greater.</returns>
+    // <summary>Compares a T object with this instance.</summary>
+    // <param name='thisValue'></param>
+    // <returns>Zero if the values are equal; a negative number if this
+    // instance is less, or a positive number if this instance is
+    // greater.</returns>
     public int CompareTo(T thisValue, T otherValue) {
       return this.wrapper.CompareTo(thisValue, otherValue);
     }

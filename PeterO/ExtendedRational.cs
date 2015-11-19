@@ -169,9 +169,10 @@ BigInteger denominator) {
       return this.Numerator + "/" + this.Denominator;
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Converts a big integer to a rational number.</summary>
     /// <param name='bigint'>A BigInteger object.</param>
-    /// <returns>An ExtendedRational object.</returns>
+    /// <returns>The exact value of the integer as a rational
+    /// number.</returns>
     public static ExtendedRational FromBigInteger(BigInteger bigint) {
       return new ExtendedRational(bigint, BigInteger.One);
     }
@@ -1049,8 +1050,8 @@ BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
     private ExtendedRational Simplify() {
       if ((this.flags & BigNumberFlags.FlagSpecial) == 0) {
-        int lowBit = this.unsignedNumerator.getLowestSetBit();
-        lowBit = Math.Min(lowBit, this.denominator.getLowestSetBit());
+        int lowBit = this.unsignedNumerator.getLowBit();
+        lowBit = Math.Min(lowBit, this.denominator.getLowBit());
         if (lowBit > 0) {
           this.unsignedNumerator >>= lowBit;
           this.denominator >>= lowBit;

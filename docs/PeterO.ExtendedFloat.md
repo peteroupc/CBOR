@@ -769,17 +769,11 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A String object.
+ * <i>str</i>: Not documented yet.
 
 <b>Returns:</b>
 
 An ExtendedFloat object.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>str</i>
- is null.
 
 ### FromString
 
@@ -794,9 +788,9 @@ Not documented yet.
 
  * <i>str</i>: A String object.
 
- * <i>offset</i>: A 32-bit signed integer.
+ * <i>offset</i>: A zero-based index showing where the desired portion of "str" begins.
 
- * <i>length</i>: A 32-bit signed integer. (2).
+ * <i>length</i>: The length, in code units, of the desired portion of "str" (but not more than "str" 's length).
 
 <b>Returns:</b>
 
@@ -807,6 +801,15 @@ An ExtendedFloat object.
  * System.ArgumentNullException:
 The parameter  <i>str</i>
  is null.
+
+ * System.ArgumentException:
+Either  <i>offset</i>
+ or  <i>length</i>
+ is less than 0 or greater than  <i>str</i>
+ 's length, or  <i>str</i>
+ 's length minus  <i>offset</i>
+ is less than <i>length</i>
+.
 
 ### FromString
 
@@ -832,9 +835,9 @@ The format generally follows the definition in java.math.BigDecimal(), except th
 
  * <i>str</i>: A String object.
 
- * <i>offset</i>: A 32-bit signed integer.
+ * <i>offset</i>: A zero-based index showing where the desired portion of "str" begins.
 
- * <i>length</i>: A 32-bit signed integer. (2).
+ * <i>length</i>: The length, in code units, of the desired portion of "str" (but not more than "str" 's length).
 
  * <i>ctx</i>: A PrecisionContext object.
 
@@ -847,6 +850,15 @@ An ExtendedFloat object.
  * System.ArgumentNullException:
 The parameter  <i>str</i>
  is null.
+
+ * System.ArgumentException:
+Either  <i>offset</i>
+ or  <i>length</i>
+ is less than 0 or greater than  <i>str</i>
+ 's length, or  <i>str</i>
+ 's length minus  <i>offset</i>
+ is less than <i>length</i>
+.
 
 ### FromString
 
@@ -2024,7 +2036,7 @@ The closest 64-bit floating-point number to this value. The return value can be 
 
     public string ToEngineeringString();
 
-Same as toString(), except that when an exponent is used it will be a multiple of 3. The format of the return value follows the format of the java.math.BigDecimal.toEngineeringString() method.
+Converts this value to an extended decimal, then returns the value of that decimal's ToEngineeringString method.
 
 <b>Returns:</b>
 
@@ -2068,7 +2080,7 @@ Converts this value to a string.
 
 <b>Returns:</b>
 
-A string representation of this object.
+A string representation of this object. The value is converted to decimal and the decimal form of this number's value is returned.
 
 ### Ulp
 

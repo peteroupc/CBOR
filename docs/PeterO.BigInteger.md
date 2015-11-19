@@ -525,15 +525,27 @@ Returns the hash code for this instance.
 
 A 32-bit signed integer.
 
+### getLowBit
+
+    public int getLowBit();
+
+Gets the lowest set bit in this number's absolute value.
+
+<b>Returns:</b>
+
+The lowest bit set in the number, starting at 0. Returns 0 if this value is 0 or odd. (NOTE: In future versions, may return -1 instead if this value is 0.).
+
 ### getLowestSetBit
 
     public int getLowestSetBit();
 
-Not documented yet.
+<b>Deprecated.</b> Renamed to getLowBit.
+
+See  `getLowBit()`
 
 <b>Returns:</b>
 
-A 32-bit signed integer.
+See getLowBit().
 
 ### getUnsignedBitLength
 
@@ -1088,15 +1100,22 @@ The parameter  <i>first</i>
     public PeterO.BigInteger pow(
         int powerSmall);
 
-Not documented yet.
+Raises a big integer to a power.
 
 <b>Parameters:</b>
 
- * <i>powerSmall</i>: A 32-bit signed integer.
+ * <i>powerSmall</i>: The exponent to raise to.
 
 <b>Returns:</b>
 
-A BigInteger object.
+The result. Returns 1 if  <i>powerSmall</i>
+ is 0.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentException:
+The parameter  <i>powerSmall</i>
+ is less than 0.
 
 ### Pow
 
@@ -1152,21 +1171,26 @@ The parameter  <i>bigValue</i>
     public PeterO.BigInteger PowBigIntVar(
         PeterO.BigInteger power);
 
-Not documented yet.
+Raises a big integer to a power, which is given as another big integer.
 
 <b>Parameters:</b>
 
- * <i>power</i>: Another BigInteger object.
+ * <i>power</i>: The exponent to raise to.
 
 <b>Returns:</b>
 
-A BigInteger object.
+The result. Returns 1 if  <i>power</i>
+ is 0.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
 The parameter  <i>power</i>
  is null.
+
+ * System.ArgumentException:
+The parameter  <i>power</i>
+ is less than 0.
 
 ### remainder
 

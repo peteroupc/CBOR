@@ -43,7 +43,7 @@ namespace PeterO {
 
     /// <summary>Gets this object&#x27;s exponent. This object&#x27;s value
     /// will be an integer if the exponent is positive or zero.</summary>
-    /// <value>This object&apos;s exponent. This object&apos;s value will
+    /// <value>This object&#x27;s exponent. This object&#x27;s value will
     /// be an integer if the exponent is positive or zero.</value>
     public BigInteger Exponent {
       get {
@@ -53,7 +53,7 @@ namespace PeterO {
 
     /// <summary>Gets the absolute value of this object&#x27;s un-scaled
     /// value.</summary>
-    /// <value>The absolute value of this object&apos;s un-scaled
+    /// <value>The absolute value of this object&#x27;s un-scaled
     /// value.</value>
     public BigInteger UnsignedMantissa {
       get {
@@ -62,8 +62,8 @@ namespace PeterO {
     }
 
     /// <summary>Gets this object&#x27;s un-scaled value.</summary>
-    /// <value>This object&apos;s un-scaled value. Will be negative if this
-    /// object&apos;s value is negative (including a negative NaN).</value>
+    /// <value>This object&#x27;s un-scaled value. Will be negative if this
+    /// object&#x27;s value is negative (including a negative NaN).</value>
     public BigInteger Mantissa {
       get {
         return this.IsNegative ? (-(BigInteger)this.unsignedMantissa) :
@@ -272,17 +272,22 @@ namespace PeterO {
     /// java.math.BigDecimal(), except that the digits must be ASCII digits
     /// ('0' through '9').</para></summary>
     /// <param name='str'>A String object.</param>
-    /// <param name='offset'>A 32-bit signed integer.</param>
-    /// <param name='length'>A 32-bit signed integer. (2).</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>An ExtendedFloat object.</returns>
+    /// <param name='offset'>A zero-based index showing where the desired
+    /// portion of "str" begins.</param>
+    /// <param name='length'>The length, in code units, of the desired
+    /// portion of "str" (but not more than "str" 's length).</param>
+    /// <param name='ctx'>A PrecisionContext object specifying the
+    /// precision, rounding, and exponent range to apply to the
+    /// parsed number.
+    /// Can be null.</param>
+    /// <returns>The parsed number, converted to ExtendedFloat.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
-    /// <exception cref='System.ArgumentException'>Either
-    /// &quot;offset&quot; or &quot;length&quot; is less than 0 or greater
-    /// than &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s
-    /// length minus &quot;offset&quot; is less than
-    /// &quot;length&quot;.</exception>
+    /// <exception cref='ArgumentException'>Either <paramref
+    /// name='offset'/> or <paramref name='length'/> is less than 0 or
+    /// greater than <paramref name='str'/> 's length, or <paramref
+    /// name='str'/> 's length minus <paramref name='offset'/> is less than
+    /// <paramref name='length'/>.</exception>
     public static ExtendedFloat FromString(
       String str,
       int offset,
@@ -298,19 +303,21 @@ namespace PeterO {
         ctx).ToExtendedFloat();
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Creates a binary float from a string that represents a
+    /// number. See the four-parameter FromString method.</summary>
     /// <param name='str'>A String object.</param>
-    /// <returns>An ExtendedFloat object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
+    /// <returns>The parsed number, converted to ExtendedFloat.</returns>
     public static ExtendedFloat FromString(String str) {
       return FromString(str, 0, str == null ? 0 : str.Length, null);
     }
 
     /// <summary>Not documented yet.</summary>
     /// <param name='str'>A String object.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>An ExtendedFloat object.</returns>
+    /// <param name='ctx'>A PrecisionContext object specifying the
+    /// precision, rounding, and exponent range to apply to the
+    /// parsed number.
+    /// Can be null.</param>
+    /// <returns>The parsed number, converted to ExtendedFloat.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
     public static ExtendedFloat FromString(String str, PrecisionContext ctx) {
@@ -319,16 +326,18 @@ namespace PeterO {
 
     /// <summary>Not documented yet.</summary>
     /// <param name='str'>A String object.</param>
-    /// <param name='offset'>A 32-bit signed integer.</param>
-    /// <param name='length'>A 32-bit signed integer. (2).</param>
+    /// <param name='offset'>A zero-based index showing where the desired
+    /// portion of "str" begins.</param>
+    /// <param name='length'>The length, in code units, of the desired
+    /// portion of "str" (but not more than "str" 's length).</param>
     /// <returns>An ExtendedFloat object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
-    /// <exception cref='System.ArgumentException'>Either
-    /// &quot;offset&quot; or &quot;length&quot; is less than 0 or greater
-    /// than &quot;str&quot;&apos;s length, or &quot;str&quot;&apos;s
-    /// length minus &quot;offset&quot; is less than
-    /// &quot;length&quot;.</exception>
+    /// <exception cref='ArgumentException'>Either <paramref
+    /// name='offset'/> or <paramref name='length'/> is less than 0 or
+    /// greater than <paramref name='str'/> 's length, or <paramref
+    /// name='str'/> 's length minus <paramref name='offset'/> is less than
+    /// <paramref name='length'/>.</exception>
     public static ExtendedFloat FromString(String str, int offset, int length) {
       return FromString(str, offset, length, null);
     }
@@ -917,15 +926,15 @@ namespace PeterO {
     }
 
     /// <summary>Converts this value to a string.</summary>
-    /// <returns>A string representation of this object.</returns>
+    /// <returns>A string representation of this object. The value is
+    /// converted to decimal and the decimal form of this number's value is
+    /// returned.</returns>
     public override string ToString() {
       return ExtendedDecimal.FromExtendedFloat(this).ToString();
     }
 
-    /// <summary>Same as toString(), except that when an exponent is used
-    /// it will be a multiple of 3. The format of the return value follows
-    /// the format of the java.math.BigDecimal.toEngineeringString()
-    /// method.</summary>
+    /// <summary>Converts this value to an extended decimal, then returns
+    /// the value of that decimal's ToEngineeringString method.</summary>
     /// <returns>A string object.</returns>
     public string ToEngineeringString() {
       return this.ToExtendedDecimal().ToEngineeringString();
@@ -1086,7 +1095,7 @@ namespace PeterO {
 
     /// <summary>Gets this value&#x27;s sign: -1 if negative; 1 if
     /// positive; 0 if zero.</summary>
-    /// <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if
+    /// <value>This value&#x27;s sign: -1 if negative; 1 if positive; 0 if
     /// zero.</value>
     public int Sign {
       get {
@@ -1098,7 +1107,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object&#x27;s value
     /// equals 0.</summary>
-    /// <value>True if this object&apos;s value equals 0; otherwise,
+    /// <value>True if this object&#x27;s value equals 0; otherwise,
     /// false.</value>
     public bool IsZero {
       get {
@@ -1207,9 +1216,9 @@ namespace PeterO {
     /// precision, rounding, and exponent range of the integer part of the
     /// result. This context will be used only in the division portion of
     /// the remainder calculation. Flags will be set on the given context
-    /// only if the context&apos;s HasFlags is true and the integer part of
-    /// the division result doesn&apos;t fit the precision and exponent
-    /// range without rounding.</param>
+    /// only if the context's HasFlags is true and the integer part of the
+    /// division result doesn't fit the precision and exponent range
+    /// without rounding.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public ExtendedFloat RemainderNaturalScale(
       ExtendedFloat divisor,
@@ -1231,8 +1240,8 @@ namespace PeterO {
     /// same exponent as this value. If the precision given in the context
     /// is other than 0, calls the Quantize method with both arguments
     /// equal to the result of the operation (and can signal FlagInvalid
-    /// and return NaN if the result doesn&apos;t fit the given precision).
-    /// If HasFlags of the context is true, will also store the flags
+    /// and return NaN if the result doesn't fit the given precision). If
+    /// HasFlags of the context is true, will also store the flags
     /// resulting from the operation (the flags are in addition to the
     /// pre-existing flags). Can be null, in which case the default
     /// rounding mode is HalfEven.</param>
@@ -1314,8 +1323,8 @@ namespace PeterO {
     /// same exponent as this value. If the precision given in the context
     /// is other than 0, calls the Quantize method with both arguments
     /// equal to the result of the operation (and can signal FlagInvalid
-    /// and return NaN if the result doesn&apos;t fit the given precision).
-    /// If HasFlags of the context is true, will also store the flags
+    /// and return NaN if the result doesn't fit the given precision). If
+    /// HasFlags of the context is true, will also store the flags
     /// resulting from the operation (the flags are in addition to the
     /// pre-existing flags). Can be null, in which case the default
     /// rounding mode is HalfEven.</param>
@@ -1457,8 +1466,8 @@ namespace PeterO {
     /// <param name='ctx'>A precision context object to control the
     /// precision, rounding, and exponent range of the integer part of the
     /// result. Flags will be set on the given context only if the
-    /// context&apos;s HasFlags is true and the integer part of the result
-    /// doesn&apos;t fit the precision and exponent range without
+    /// context's HasFlags is true and the integer part of the result
+    /// doesn't fit the precision and exponent range without
     /// rounding.</param>
     /// <returns>The integer part of the quotient of the two objects.
     /// Returns null if the return value would overflow the exponent range.
@@ -2115,7 +2124,7 @@ namespace PeterO {
     /// rounding, and exponent range of the result. If HasFlags of the
     /// context is true, will also store the flags resulting from the
     /// operation (the flags are in addition to the pre-existing flags).
-    /// --This parameter cannot be null, as the square root function&apos;s
+    /// --This parameter cannot be null, as the square root function's
     /// results are generally not exact for many inputs.--.</param>
     /// <returns>The square root. Signals the flag FlagInvalid and returns
     /// NaN if this object is less than 0 (the square root would be a
@@ -2133,7 +2142,7 @@ namespace PeterO {
     /// rounding, and exponent range of the result. If HasFlags of the
     /// context is true, will also store the flags resulting from the
     /// operation (the flags are in addition to the pre-existing flags).
-    /// --This parameter cannot be null, as the exponential function&apos;s
+    /// --This parameter cannot be null, as the exponential function's
     /// results are generally not exact.--.</param>
     /// <returns>Exponential of this object. If this object's value is 1,
     /// returns an approximation to " e" within the given
@@ -2152,8 +2161,8 @@ namespace PeterO {
     /// rounding, and exponent range of the result. If HasFlags of the
     /// context is true, will also store the flags resulting from the
     /// operation (the flags are in addition to the pre-existing flags).
-    /// --This parameter cannot be null, as the ln function&apos;s results
-    /// are generally not exact.--.</param>
+    /// --This parameter cannot be null, as the ln function's results are
+    /// generally not exact.--.</param>
     /// <returns>Ln(this object). Signals the flag FlagInvalid and returns
     /// NaN if this object is less than 0 (the result would be a complex
     /// number with a real part equal to Ln of this object's absolute value
@@ -2173,8 +2182,8 @@ namespace PeterO {
     /// rounding, and exponent range of the result. If HasFlags of the
     /// context is true, will also store the flags resulting from the
     /// operation (the flags are in addition to the pre-existing flags).
-    /// --This parameter cannot be null, as the ln function&apos;s results
-    /// are generally not exact.--.</param>
+    /// --This parameter cannot be null, as the ln function's results are
+    /// generally not exact.--.</param>
     /// <returns>Ln(this object)/Ln(10). Signals the flag FlagInvalid and
     /// returns NaN if this object is less than 0. Signals FlagInvalid and
     /// returns NaN if the parameter <paramref name='ctx'/> is null or the
@@ -2450,11 +2459,11 @@ PrecisionContext ctx) {
     /// <param name='ctx'>A precision context object to control the
     /// precision, rounding, and exponent range of the result. This context
     /// will be used only in the division portion of the remainder
-    /// calculation; as a result, it&apos;s possible for the remainder to
-    /// have a higher precision than given in this context. Flags will be
-    /// set on the given context only if the context&apos;s HasFlags is
-    /// true and the integer part of the division result doesn&apos;t fit
-    /// the precision and exponent range without rounding.</param>
+    /// calculation; as a result, it's possible for the remainder to have a
+    /// higher precision than given in this context. Flags will be set on
+    /// the given context only if the context's HasFlags is true and the
+    /// integer part of the division result doesn't fit the precision and
+    /// exponent range without rounding.</param>
     /// <returns>A 2 element array consisting of the quotient and remainder
     /// in that order.</returns>
     public ExtendedFloat[] DivideAndRemainderNaturalScale(

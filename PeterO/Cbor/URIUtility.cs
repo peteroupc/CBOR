@@ -252,7 +252,8 @@ ParseMode.IRISurrogateLenient);
     /// The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
-    /// <param name='refValue'>Not documented yet.</param>
+    /// <param name='refValue'>A string representing an IRI to
+    /// check.</param>
     /// <returns>True if the string is a valid IRI with a scheme component;
     /// otherwise, false.</returns>
     public static bool hasScheme(string refValue) {
@@ -273,7 +274,8 @@ ParseMode.IRISurrogateLenient);
     /// The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
-    /// <param name='refValue'>Not documented yet.</param>
+    /// <param name='refValue'>A string representing an IRI to
+    /// check.</param>
     /// <returns>True if the string is a valid URI with a scheme component;
     /// otherwise, false.</returns>
     public static bool hasSchemeForURI(string refValue) {
@@ -343,18 +345,21 @@ ParseMode.IRISurrogateLenient);
     /// <summary>Determines whether the substring is a valid CURIE
     /// reference under RDFA 1.1. (The CURIE reference is the part after
     /// the colon.).</summary>
-    /// <param name='s'>Not documented yet.</param>
-    /// <param name='offset'>Not documented yet.</param>
-    /// <param name='length'>Not documented yet. (3).</param>
+    /// <param name='s'>A string containing a CURIE reference. Can be
+    /// null.</param>
+    /// <param name='offset'>A zero-based index showing where the desired
+    /// portion of "s" begins.</param>
+    /// <param name='length'>The number of elements in the desired portion
+    /// of "s" (but not more than "s" 's length).</param>
     /// <returns>True if the substring is a valid CURIE reference under
-    /// RDFA 1; otherwise, false.</returns>
+    /// RDFA 1; otherwise, false. Returns false if <paramref name='s'/> is
+    /// null.</returns>
     /// <exception cref='ArgumentException'>Either <paramref
     /// name='offset'/> or <paramref name='length'/> is less than 0 or
     /// greater than <paramref name='s'/> 's length, or <paramref
     /// name='s'/> 's length minus <paramref name='offset'/> is less than
     /// <paramref name='length'/>.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='s'/> is null.</exception>
+    /// <exception cref='ArgumentNullException'>--.</exception>
     public static bool isValidCurieReference(string s, int offset, int length) {
       if (s == null) {
         return false;
@@ -833,24 +838,29 @@ int endIndex) {
 
     /// <summary>Resolves a URI or IRI relative to another URI or
     /// IRI.</summary>
-    /// <param name='refValue'>Not documented yet.</param>
-    /// <param name='baseURI'>Another string object.</param>
-    /// <returns>A string object.</returns>
+    /// <param name='refValue'>A string representing a URI or IRI
+    /// reference. Example: <c>dir/file.txt</c>.</param>
+    /// <param name='baseURI'>A string representing an absolute URI
+    /// reference. Example: <c>http://example.com/my/path/</c>.</param>
+    /// <returns>The resolved IRI, or null if <paramref name='refValue'/>
+    /// is null or is not a valid IRI. If base is null or is not a valid
+    /// IRI, returns refValue. Example:
+    /// http://example.com/my/path/dir/file.txt.</returns>
     public static string relativeResolve(string refValue, string baseURI) {
       return relativeResolve(refValue, baseURI, ParseMode.IRIStrict);
     }
 
-    /// <i>refValue</i>
-    /// <i>base</i>
     /// <summary>Resolves a URI or IRI relative to another URI or
     /// IRI.</summary>
-    /// <param name='refValue'>Not documented yet.</param>
-    /// <param name='refValue'>Not documented yet.</param>
-    /// <param name='baseURI'>Not documented yet.</param>
-    /// <param name='parseMode'>Not documented yet. (3).</param>
-    /// <returns>The resolved IRI, or null if refValue is null or is not a
-    /// valid IRI. If base is null or is not a valid IRI, returns
-    /// refValue.</returns>
+    /// <param name='refValue'>A string representing a URI or IRI
+    /// reference. Example: <c>dir/file.txt</c>.</param>
+    /// <param name='baseURI'>A string representing an absolute URI
+    /// reference. Example: <c>http://example.com/my/path/</c>.</param>
+    /// <param name='parseMode'>Parse mode that specifies whether certain
+    /// characters are allowed when parsing IRIs and URIs.</param>
+    /// <returns>The resolved IRI, or null if <paramref name='refValue'/>
+    /// is null or is not a valid IRI. If base is null or is not a valid
+    /// IRI, returns refValue.</returns>
     public static string relativeResolve(
 string refValue,
 string baseURI,
@@ -932,8 +942,14 @@ segmentsBase[5]));
     /// component, respectively. If a component is absent, both indices in
     /// that pair will be -1. If the string is null or is not a valid IRI,
     /// returns null.</returns></summary>
-    /// <param name='s'>Not documented yet.</param>
-  /// <returns>Not documented yet.</returns>
+    /// <param name='s'>A string that contains an IRI.</param>
+    /// <returns>If the string is a valid IRI, returns an array of 10
+    /// integers. Each of the five pairs corresponds to the start and end
+    /// index of the IRI's scheme, authority, path, query, or fragment
+    /// component, respectively. If a component is absent, both indices in
+    /// that pair will be -1 (an index won't be less than 0 in any other
+    /// case). If the string is null or is not a valid IRI, returns
+    /// null.</returns>
     public static int[] splitIRI(string s) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict);
     }
@@ -943,10 +959,13 @@ segmentsBase[5]));
     /// syntactically valid, splits the string into its components and
     /// returns an array containing the indices into the
     /// components.</summary>
-    /// <param name='s'>Not documented yet.</param>
-    /// <param name='offset'>Not documented yet.</param>
-    /// <param name='length'>Not documented yet. (3).</param>
-    /// <param name='parseMode'>Not documented yet. (4).</param>
+    /// <param name='s'>A string that contains an IRI.</param>
+    /// <param name='offset'>A zero-based index showing where the desired
+    /// portion of "s" begins.</param>
+    /// <param name='length'>The length of the desired portion of "s" (but
+    /// not more than "s" 's length).</param>
+    /// <param name='parseMode'>Parse mode that specifies whether certain
+    /// characters are allowed when parsing IRIs and URIs.</param>
     /// <returns>If the string is a valid IRI, returns an array of 10
     /// integers. Each of the five pairs corresponds to the start and end
     /// index of the IRI's scheme, authority, path, query, or fragment
@@ -1197,7 +1216,7 @@ ParseMode parseMode) {
     /// reference under RFC3987. If the IRI is syntactically valid, splits
     /// the string into its components and returns an array containing the
     /// indices into the components.</summary>
-    /// <param name='s'>Not documented yet.</param>
+    /// <param name='s'>A string representing an IRI. Can be null.</param>
     /// <returns>If the string is a valid IRI reference, returns an array
     /// of 10 integers. Each of the five pairs corresponds to the start and
     /// end index of the IRI's scheme, authority, path, query, or fragment

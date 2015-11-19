@@ -106,11 +106,7 @@ namespace PeterO {
         return mbi;
       }
 
-    /// <summary>Multiplies this instance by the value of a 32-bit signed
-    /// integer.</summary>
-    /// <param name='multiplicand'>Not documented yet.</param>
-    /// <returns>The product of the two objects.</returns>
-      internal MutableNumber Multiply(int multiplicand) {
+        internal MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
           throw new ArgumentException("multiplicand (" + multiplicand +
             ") is less than " + "0 ");
@@ -289,10 +285,6 @@ namespace PeterO {
         return this;
       }
 
-    /// <summary>Subtracts a MutableNumber object from this
-    /// instance.</summary>
-    /// <param name='other'>Not documented yet.</param>
-    /// <returns>The difference of the two objects.</returns>
       internal MutableNumber Subtract(MutableNumber other) {
         unchecked {
           {
@@ -359,10 +351,7 @@ namespace PeterO {
         return 0;
       }
 
-    /// <summary>Adds a 32-bit signed integer to this instance.</summary>
-    /// <param name='augend'>Not documented yet.</param>
-    /// <returns>This instance.</returns>
-      internal MutableNumber Add(int augend) {
+       internal MutableNumber Add(int augend) {
         if (augend < 0) {
    throw new ArgumentException("augend (" + augend + ") is less than " +
             "0 ");
@@ -461,13 +450,7 @@ namespace PeterO {
       }
     }
 
-    /// <summary>Compares a FastInteger object with this
-    /// instance.</summary>
-    /// <param name='val'>Not documented yet.</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is less, or a positive number if this instance is
-    /// greater.</returns>
-    public int CompareTo(FastInteger val) {
+     public int CompareTo(FastInteger val) {
       switch ((this.integerMode << 2) | val.integerMode) {
           case (0 << 2) | 0: {
             int vsv = val.smallValue;
@@ -885,12 +868,6 @@ out bigrem);
       return this.SubtractInt(1);
     }
 
-    /// <summary>Divides this instance by the value of a 32-bit signed
-    /// integer.</summary>
-    /// <param name='divisor'>Not documented yet.</param>
-    /// <returns>The quotient of the two objects.</returns>
-    /// <exception cref='System.DivideByZeroException'>Attempted to divide
-    /// by zero.</exception>
     internal FastInteger Divide(int divisor) {
       if (divisor != 0) {
         switch (this.integerMode) {
@@ -948,9 +925,6 @@ out bigrem);
       }
     }
 
-    /// <summary>Adds a 32-bit signed integer to this instance.</summary>
-    /// <param name='val'>Not documented yet.</param>
-    /// <returns>This instance.</returns>
     internal FastInteger AddInt(int val) {
       BigInteger valValue;
       switch (this.integerMode) {
@@ -1056,12 +1030,6 @@ System.Globalization.CultureInfo.InvariantCulture);
       }
     }
 
-    /// <summary>Compares a 32-bit signed integer with this
-    /// instance.</summary>
-    /// <param name='val'>Not documented yet.</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is less, or a positive number if this instance is
-    /// greater.</returns>
     internal int CompareToInt(int val) {
       switch (this.integerMode) {
         case 0:

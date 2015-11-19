@@ -369,7 +369,7 @@ A Boolean object.
     public static PeterO.ExtendedRational FromBigInteger(
         PeterO.BigInteger bigint);
 
-Not documented yet.
+Converts a big integer to a rational number.
 
 <b>Parameters:</b>
 
@@ -377,7 +377,7 @@ Not documented yet.
 
 <b>Returns:</b>
 
-An ExtendedRational object.
+The exact value of the integer as a rational number.
 
 ### FromDouble
 
