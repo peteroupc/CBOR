@@ -15,15 +15,15 @@ using PeterO;
 namespace Test {
   [TestClass]
   public class DecimalTest {
-    private static Regex valuePropertyLine = new Regex(
+    private static readonly Regex valuePropertyLine = new Regex(
       "^(\\w+)\\:\\s*(\\S+)",
       RegexOptions.Compiled);
 
-    private static Regex valueQuotes = new Regex(
+    private static readonly Regex valueQuotes = new Regex(
       "^[\\'\\\"]|[\\'\\\"]$",
       RegexOptions.Compiled);
 
-    private static Regex valueTestLine = new Regex(
+    private static readonly Regex valueTestLine = new Regex(
   "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\'[^\\']*\\'|\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)",
   RegexOptions.Compiled);
 
@@ -227,7 +227,7 @@ string ln,
           flags.Contains("Division_undefined") ||
           flags.Contains("Invalid_operation");
         bool divzero = flags.Contains("Division_by_zero");
-        int expectedFlags = 0;
+        var expectedFlags = 0;
         if (flags.Contains("Inexact") || flags.Contains("inexact")) {
           expectedFlags |= PrecisionContext.FlagInexact;
         }

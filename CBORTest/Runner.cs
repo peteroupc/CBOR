@@ -30,8 +30,8 @@ namespace PeterO {
       return false;
     }
 
-    public static void Main(string[] args) {
-      String param = null;
+    public static void Main() {
+      const String param = null;
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestClassAttribute))) {

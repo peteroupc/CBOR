@@ -43,7 +43,7 @@ namespace PeterO {
 
     private static CBORObject readInteger(Stream stream) {
       var builder = new StringBuilder();
-      bool start = true;
+      var start = true;
       while (true) {
         int c = stream.ReadByte();
         if (c < 0) {
@@ -126,7 +126,7 @@ namespace PeterO {
         builder.ToString(),
         true,
         true);
-      int length = 0;
+      var length = 0;
       try {
         length = number.AsInt32();
       } catch (ArithmeticException ex) {
@@ -159,7 +159,7 @@ namespace PeterO {
         stream.WriteByte(unchecked((byte)((byte)':')));
         writeUtf8(s, stream);
       } else if (obj.Type == CBORType.Map) {
-        bool hasNonStringKeys = false;
+        var hasNonStringKeys = false;
         foreach (CBORObject key in obj.Keys) {
           if (key.Type != CBORType.TextString) {
             hasNonStringKeys = true;

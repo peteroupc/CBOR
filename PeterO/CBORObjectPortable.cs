@@ -21,7 +21,7 @@ namespace PeterO {
         s.WriteByte(0xf6);
         return;
       }
-      int datatype = 0;
+      var datatype = 0;
       if (bigint.Sign< 0) {
         datatype = 1;
         bigint+=(BigInteger)BigInteger.One;
@@ -45,7 +45,7 @@ namespace PeterO {
             tmp=(long)(BigInteger)tmpbigint;
             bigint>>= 56;
             bool isNowZero=(bigint.IsZero);
-            int bufferindex = 0;
+            var bufferindex = 0;
             for (int i = 0; i<7 && (!isNowZero || tmp>0); ++i) {
               buffer[bufferindex]=(byte)(tmp & 0xff);
               tmp>>= 8;
@@ -103,7 +103,7 @@ namespace PeterO {
       }
     }
     private static void PortableDigitCount(BigInteger bi) {
-        int kb = 0;
+        var kb = 0;
         if (!bi.IsZero) {
           while (true) {
             if (bi.CompareTo((BigInteger)Int32.MaxValue) <= 0) {

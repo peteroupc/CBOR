@@ -17,8 +17,8 @@ using ClariusLabs.NuDoc;
 
 namespace PeterO.DocGen {
   internal class SummaryVisitor : Visitor, IComparer<Type> {
-    private SortedDictionary<Type, StringBuilder> docs;
-    private TextWriter writer;
+    private readonly SortedDictionary<Type, StringBuilder> docs;
+    private readonly TextWriter writer;
 
     public SummaryVisitor(TextWriter writer) {
       this.docs = new SortedDictionary<Type, StringBuilder>(this);
@@ -27,8 +27,8 @@ namespace PeterO.DocGen {
 
     public void Finish() {
       foreach (var key in this.docs.Keys) {
-        string finalString = this.docs[key].ToString();
-        string typeName = DocVisitor.FormatType(key);
+        var finalString = this.docs[key].ToString();
+        var typeName = DocVisitor.FormatType(key);
         typeName = typeName.Replace("&", "&amp;");
         typeName = typeName.Replace("<", "&lt;");
         typeName = typeName.Replace(">", "&gt;");
@@ -60,7 +60,7 @@ finalString.IndexOf(".", StringComparison.Ordinal) + 1);
       }
       foreach (var element in member.Elements) {
         if (element is Summary) {
-          string text = element.ToText();
+          var text = element.ToText();
           this.docs[currentType].Append(text);
           this.docs[currentType].Append("\r\n");
         }
@@ -70,6 +70,8 @@ finalString.IndexOf(".", StringComparison.Ordinal) + 1);
 
     /// <summary>Compares a Type object with a Type.</summary>
     /// <param name='x'>Not documented yet.</param>
+    /// <param name='x'>Not documented yet.</param>
+    /// <param name='y'>Not documented yet.</param>
     /// <returns>Zero if both values are equal; a negative number if
     /// <paramref name='x'/> is less than <paramref name='y'/>, or a
     /// positive number if <paramref name='x'/> is greater than <paramref

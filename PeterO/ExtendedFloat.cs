@@ -43,7 +43,7 @@ namespace PeterO {
 
     /// <summary>Gets this object&#x27;s exponent. This object&#x27;s value
     /// will be an integer if the exponent is positive or zero.</summary>
-    /// <value>This object&#x27;s exponent. This object&#x27;s value will
+    /// <value>This object&apos;s exponent. This object&apos;s value will
     /// be an integer if the exponent is positive or zero.</value>
     public BigInteger Exponent {
       get {
@@ -53,7 +53,7 @@ namespace PeterO {
 
     /// <summary>Gets the absolute value of this object&#x27;s un-scaled
     /// value.</summary>
-    /// <value>The absolute value of this object&#x27;s un-scaled
+    /// <value>The absolute value of this object&apos;s un-scaled
     /// value.</value>
     public BigInteger UnsignedMantissa {
       get {
@@ -62,8 +62,8 @@ namespace PeterO {
     }
 
     /// <summary>Gets this object&#x27;s un-scaled value.</summary>
-    /// <value>This object&#x27;s un-scaled value. Will be negative if this
-    /// object&#x27;s value is negative (including a negative NaN).</value>
+    /// <value>This object&apos;s un-scaled value. Will be negative if this
+    /// object&apos;s value is negative (including a negative NaN).</value>
     public BigInteger Mantissa {
       get {
         return this.IsNegative ? (-(BigInteger)this.unsignedMantissa) :
@@ -107,7 +107,7 @@ namespace PeterO {
     /// <summary>Calculates this object&#x27;s hash code.</summary>
     /// <returns>This object's hash code.</returns>
     public override int GetHashCode() {
-      int hashCode = 403796923;
+      var hashCode = 403796923;
       unchecked {
         hashCode += 403797019 * this.exponent.GetHashCode();
         hashCode += 403797059 * this.unsignedMantissa.GetHashCode();
@@ -160,7 +160,7 @@ namespace PeterO {
       if (diag.IsZero && !negative) {
         return signaling ? SignalingNaN : NaN;
       }
-      int flags = 0;
+      var flags = 0;
       if (negative) {
         flags |= BigNumberFlags.FlagNegative;
       }
@@ -277,9 +277,8 @@ namespace PeterO {
     /// <param name='length'>The length, in code units, of the desired
     /// portion of "str" (but not more than "str" 's length).</param>
     /// <param name='ctx'>A PrecisionContext object specifying the
-    /// precision, rounding, and exponent range to apply to the
-    /// parsed number.
-    /// Can be null.</param>
+    /// precision, rounding, and exponent range to apply to the parsed
+    /// number. Can be null.</param>
     /// <returns>The parsed number, converted to ExtendedFloat.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
@@ -314,9 +313,8 @@ namespace PeterO {
     /// <summary>Not documented yet.</summary>
     /// <param name='str'>A String object.</param>
     /// <param name='ctx'>A PrecisionContext object specifying the
-    /// precision, rounding, and exponent range to apply to the
-    /// parsed number.
-    /// Can be null.</param>
+    /// precision, rounding, and exponent range to apply to the parsed
+    /// number. Can be null.</param>
     /// <returns>The parsed number, converted to ExtendedFloat.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
@@ -537,8 +535,8 @@ namespace PeterO {
       }
     }
 
-    private static BigInteger valueOneShift23 = BigInteger.One << 23;
-    private static BigInteger valueOneShift52 = BigInteger.One << 52;
+    private static readonly BigInteger valueOneShift23 = BigInteger.One << 23;
+    private static readonly BigInteger valueOneShift52 = BigInteger.One << 52;
 
     /// <summary>Converts this value to a 32-bit floating-point number. The
     /// half-even rounding mode is used.
@@ -580,16 +578,16 @@ namespace PeterO {
       }
       BigInteger bigmant = BigInteger.Abs(this.unsignedMantissa);
       FastInteger bigexponent = FastInteger.FromBig(this.exponent);
-      int bitLeftmost = 0;
-      int bitsAfterLeftmost = 0;
+      var bitLeftmost = 0;
+      var bitsAfterLeftmost = 0;
       if (this.unsignedMantissa.IsZero) {
         return 0.0f;
       }
-      int smallmant = 0;
+      var smallmant = 0;
       FastInteger fastSmallMant;
       if (bigmant.CompareTo(valueOneShift23) < 0) {
         smallmant = (int)bigmant;
-        int exponentchange = 0;
+        var exponentchange = 0;
         while (smallmant < (1 << 23)) {
           smallmant <<= 1;
           ++exponentchange;
@@ -613,7 +611,7 @@ namespace PeterO {
           bigexponent.Increment();
         }
       }
-      bool subnormal = false;
+      var subnormal = false;
       if (bigexponent.CompareToInt(104) > 0) {
         // exponent too big
         return this.IsNegative ? Single.NegativeInfinity :
@@ -706,8 +704,8 @@ namespace PeterO {
       }
       BigInteger bigmant = BigInteger.Abs(this.unsignedMantissa);
       FastInteger bigexponent = FastInteger.FromBig(this.exponent);
-      int bitLeftmost = 0;
-      int bitsAfterLeftmost = 0;
+      var bitLeftmost = 0;
+      var bitsAfterLeftmost = 0;
       if (this.unsignedMantissa.IsZero) {
         return 0.0d;
       }
@@ -743,7 +741,7 @@ namespace PeterO {
           bigexponent.Increment();
         }
       }
-      bool subnormal = false;
+      var subnormal = false;
       if (bigexponent.CompareToInt(971) > 0) {
         // exponent too big
         return this.IsNegative ? Double.NegativeInfinity :
@@ -1095,7 +1093,7 @@ namespace PeterO {
 
     /// <summary>Gets this value&#x27;s sign: -1 if negative; 1 if
     /// positive; 0 if zero.</summary>
-    /// <value>This value&#x27;s sign: -1 if negative; 1 if positive; 0 if
+    /// <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if
     /// zero.</value>
     public int Sign {
       get {
@@ -1107,7 +1105,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object&#x27;s value
     /// equals 0.</summary>
-    /// <value>True if this object&#x27;s value equals 0; otherwise,
+    /// <value>True if this object&apos;s value equals 0; otherwise,
     /// false.</value>
     public bool IsZero {
       get {

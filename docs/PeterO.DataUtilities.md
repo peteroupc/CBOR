@@ -173,7 +173,7 @@ Encodes a string in UTF-8 as a byte array.
 
  * <i>replace</i>: If true, replaces unpaired surrogate code points with the replacement character (U + FFFD). If false, stops processing when an unpaired surrogate code point is seen.
 
- * <i>lenientLineBreaks</i>: A Boolean object.
+ * <i>lenientLineBreaks</i>: If true, replaces carriage return (CR) not followed by line feed (LF) and LF not preceded by CR with CR-LF pairs.
 
 <b>Returns:</b>
 

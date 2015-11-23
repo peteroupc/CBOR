@@ -20,15 +20,15 @@ namespace PeterO.DocGen {
   internal class DocVisitor : Visitor {
     private const string FourSpaces = " " + " " + " " + " ";
 
-    private StringBuilder paramStr = new StringBuilder();
-    private StringBuilder returnStr = new StringBuilder();
-    private StringBuilder exceptionStr = new StringBuilder();
+    private readonly StringBuilder paramStr = new StringBuilder();
+    private readonly StringBuilder returnStr = new StringBuilder();
+    private readonly StringBuilder exceptionStr = new StringBuilder();
     private StringBuilder currentBuffer;
-    private StringBuilder buffer = new StringBuilder();
+    private readonly StringBuilder buffer = new StringBuilder();
 
     private class BufferChanger : IDisposable {
-      private StringBuilder oldBuffer;
-      private DocVisitor vis;
+      private readonly StringBuilder oldBuffer;
+      private readonly DocVisitor vis;
 
       public BufferChanger(DocVisitor vis, StringBuilder buffer) {
         this.vis = vis;
@@ -41,7 +41,7 @@ namespace PeterO.DocGen {
       }
     }
 
-    private IDictionary<string, StringBuilder> members = new
+    private readonly IDictionary<string, StringBuilder> members = new
       SortedDictionary<string, StringBuilder>();
 
     public override string ToString() {
@@ -54,12 +54,12 @@ namespace PeterO.DocGen {
     }
 
     public static string GetTypeID(Type type) {
-      string name = FormatType(type);
+      var name = FormatType(type);
       name = name.Replace(", ", ",");
       var builder = new StringBuilder();
       for (var i = 0; i < name.Length; ++i) {
-        UnicodeCategory cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
-        int cp = DataUtilities.CodePointAt(name, i);
+        var cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
+        var cp = DataUtilities.CodePointAt(name, i);
         if (cp >= 0x10000) {
           ++i;
         }
@@ -85,7 +85,7 @@ namespace PeterO.DocGen {
     }
 
     public static string FormatType(Type type) {
-      string rawfmt = FormatTypeRaw(type);
+      var rawfmt = FormatTypeRaw(type);
       if (!type.IsArray && !type.IsGenericType) {
         return rawfmt;
       }
@@ -93,7 +93,7 @@ namespace PeterO.DocGen {
       sb.Append(rawfmt);
       if (type.ContainsGenericParameters) {
         sb.Append('<');
-        bool first = true;
+        var first = true;
         foreach (var arg in type.GetGenericArguments()) {
           if (!first) {
             sb.Append(", ");
@@ -111,7 +111,8 @@ namespace PeterO.DocGen {
       return sb.ToString();
     }
 
-    private static IDictionary<string, string> operators = OperatorList();
+private static readonly IDictionary<string, string> operators =
+      OperatorList();
 
     private static IDictionary<string, string> OperatorList() {
       var ops = new Dictionary<string, string>();
@@ -221,7 +222,7 @@ StringBuilder builder) {
           builder.Append("\r\n" + FourSpaces + FourSpaces + "where ");
           builder.Append(TypeNameUtil.UndecorateTypeName(arg.Name));
           builder.Append(" : ");
-          bool first = true;
+          var first = true;
           if ((arg.GenericParameterAttributes &
                GenericParameterAttributes.ReferenceTypeConstraint) !=
               GenericParameterAttributes.None) {
@@ -289,7 +290,7 @@ StringBuilder builder) {
         }
       }
       var methodInfo = method as MethodInfo;
-      bool isExtension = false;
+      var isExtension = false;
       Attribute attr;
       if (methodInfo != null) {
         attr = methodInfo.GetCustomAttribute(
@@ -355,8 +356,8 @@ StringBuilder builder) {
     }
 
     private static bool PropertyIsPublicOrFamily(PropertyInfo property) {
-      MethodInfo getter = property.GetGetMethod();
-      MethodInfo setter = property.GetSetMethod();
+      var getter = property.GetGetMethod();
+      var setter = property.GetSetMethod();
       return ((getter != null && getter.IsPublic) || (setter != null &&
         setter.IsPublic)) || ((getter != null && getter.IsFamily) || (setter !=
                 null &&
@@ -365,8 +366,8 @@ StringBuilder builder) {
 
     public static string FormatProperty(PropertyInfo property) {
       var builder = new StringBuilder();
-      MethodInfo getter = property.GetGetMethod();
-      MethodInfo setter = property.GetSetMethod();
+      var getter = property.GetGetMethod();
+      var setter = property.GetSetMethod();
       builder.Append(FourSpaces);
       if (!property.ReflectedType.IsInterface) {
         if ((getter != null && getter.IsPublic) ||
@@ -414,7 +415,7 @@ StringBuilder builder) {
           builder.Append(indexParams.Length == 1 ?
                     String.Empty : "\r\n" + FourSpaces + FourSpaces);
         }
-        Attribute attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
+        var attr = param.GetCustomAttribute(typeof(ParamArrayAttribute));
         if (attr != null) {
           builder.Append("params ");
         }
@@ -466,7 +467,7 @@ StringBuilder builder) {
       builder.Append(field.Name);
       if (field.IsLiteral) {
         try {
-          object obj = field.GetRawConstantValue();
+          var obj = field.GetRawConstantValue();
           if (obj is int) {
             builder.Append(" = " + (int)obj + ";");
           } else if (obj is long) {
@@ -484,7 +485,7 @@ StringBuilder builder) {
     }
 
     public static string FormatTypeRaw(Type type) {
-      string name = TypeNameUtil.UndecorateTypeName(type.Name);
+      var name = TypeNameUtil.UndecorateTypeName(type.Name);
       if (type.IsGenericParameter) {
         return name;
       }
@@ -507,8 +508,8 @@ StringBuilder builder) {
     }
 
     public static bool IsMethodOverride(MethodInfo method) {
-      Type type = method.DeclaringType;
-      MethodInfo baseMethod = method.GetBaseDefinition();
+      var type = method.DeclaringType;
+      var baseMethod = method.GetBaseDefinition();
       return (baseMethod != null) && (!method.Equals(baseMethod));
     }
 
@@ -541,7 +542,7 @@ StringBuilder builder) {
 
     public override void VisitException(ClariusLabs.NuDoc.Exception exception) {
       using (var ch = this.Change(this.exceptionStr)) {
-        string cref = exception.Cref;
+        var cref = exception.Cref;
         if (cref.StartsWith("T:", StringComparison.Ordinal)) {
           cref = cref.Substring(2);
         }
@@ -584,7 +585,7 @@ StringBuilder builder) {
     }
 
     private string HeadingUnambiguous(MemberInfo info) {
-      string ret = String.Empty;
+      var ret = String.Empty;
       if (info is MethodBase) {
         var method = (MethodBase)info;
         return (method is ConstructorInfo) ? ("<1>" + " " +
@@ -605,7 +606,7 @@ StringBuilder builder) {
     }
 
     private string Heading(MemberInfo info) {
-      string ret = String.Empty;
+      var ret = String.Empty;
       if (info is MethodBase) {
         var method = (MethodBase)info;
         if (method is ConstructorInfo) {
@@ -628,8 +629,8 @@ StringBuilder builder) {
     }
 
     public override void VisitMember(Member member) {
-      MemberInfo info = member.Info;
-      string signature = String.Empty;
+      var info = member.Info;
+      var signature = String.Empty;
       if (info is MethodBase) {
         var method = (MethodBase)info;
         if (!method.IsPublic && !method.IsFamily) {
@@ -652,7 +653,7 @@ StringBuilder builder) {
           base.VisitMember(member);
           if (this.paramStr.Length > 0) {
             this.Write("<b>Parameters:</b>\r\n\r\n");
-            string paramString = this.paramStr.ToString();
+            var paramString = this.paramStr.ToString();
             // Decrease spacing between list items
             paramString = paramString.Replace("\r\n * ", " * ");
             this.Write(paramString);
@@ -681,7 +682,7 @@ StringBuilder builder) {
           base.VisitMember(member);
           if (this.paramStr.Length > 0) {
             this.Write("<b>Parameters:</b>\r\n\r\n");
-            string paramString = this.paramStr.ToString();
+            var paramString = this.paramStr.ToString();
             // Decrease spacing between list items
             paramString = paramString.Replace("\r\n * ", " * ");
             this.Write(paramString);
@@ -749,7 +750,7 @@ StringBuilder builder) {
     }
 
     public override void VisitText(Text text) {
-      string t = text.Content;
+      var t = text.Content;
       // Collapse multiple spaces into a single space
       t = Regex.Replace(t, @"\s+", " ");
       this.Write(t);

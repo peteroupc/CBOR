@@ -13,7 +13,7 @@ namespace PeterO.Cbor {
     public static readonly CBOREncodeOptions NoIndefLengthStrings =
       new CBOREncodeOptions(1);
 
-    private int value;
+    private readonly int value;
 
     /// <summary>Gets this options object's value.</summary>
     /// <value>This options object&apos;s value.</value>

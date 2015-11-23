@@ -13,7 +13,7 @@ namespace PeterO.Cbor {
     /// <summary>Implements CBOR string references, described at
     /// <c>http://cbor.schmorp.de/stringref</c></summary>
   internal class StringRefs {
-    private List<List<CBORObject>> stack;
+    private readonly List<List<CBORObject>> stack;
 
     public StringRefs() {
       this.stack = new List<List<CBORObject>>();
@@ -52,7 +52,7 @@ namespace PeterO.Cbor {
                     ") is less than " + "0 ");
       }
       #endif
-      bool addStr = false;
+      var addStr = false;
       List<CBORObject> lastList = this.stack[this.stack.Count - 1];
       if (lastList.Count < 24) {
         addStr |= lengthHint >= 3;

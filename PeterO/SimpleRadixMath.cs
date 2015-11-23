@@ -17,7 +17,7 @@ namespace PeterO {
     // <typeparam name='T'>Data type for a numeric value in a particular
     // radix.</typeparam>
   internal sealed class SimpleRadixMath<T> : IRadixMath<T> {
-    private IRadixMath<T> wrapper;
+    private readonly IRadixMath<T> wrapper;
 
     public SimpleRadixMath(IRadixMath<T> wrapper) {
       this.wrapper = wrapper;
@@ -149,7 +149,7 @@ namespace PeterO {
 
     private T ReturnQuietNaN(T thisValue, PrecisionContext ctx) {
       BigInteger mant = BigInteger.Abs(this.GetHelper().GetMantissa(thisValue));
-      bool mantChanged = false;
+      var mantChanged = false;
       if (!mant.IsZero && ctx != null && ctx.HasMaxPrecision) {
         BigInteger limit = this.GetHelper().MultiplyByRadixPower(
           BigInteger.One,
@@ -430,9 +430,6 @@ namespace PeterO {
         thisValue =
           this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(1), ctx2);
       } else {
-        // Console.WriteLine("was " + thisValue);
-        // BigInteger powExponent = this.GetHelper().GetExponent(pow);
-        // BigInteger powInteger =
         BigInteger.Abs(this.GetHelper().GetMantissa(pow));
         {
           thisValue = this.wrapper.Power(thisValue, pow, ctx2);

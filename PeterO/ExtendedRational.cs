@@ -67,7 +67,7 @@ other.denominator) && this.flags == other.flags);
     /// <summary>Returns the hash code for this instance.</summary>
     /// <returns>A 32-bit hash code.</returns>
     public override int GetHashCode() {
-      int hashCode = 1857066527;
+      var hashCode = 1857066527;
       unchecked {
         if (this.unsignedNumerator != null) {
           hashCode += 1857066539 * this.unsignedNumerator.GetHashCode();
@@ -258,7 +258,7 @@ bool negative) {
       if (diag.IsZero && !negative) {
         return signaling ? SignalingNaN : NaN;
       }
-      int flags = 0;
+      var flags = 0;
       if (negative) {
         flags |= BigNumberFlags.FlagNegative;
       }
@@ -280,7 +280,7 @@ bool negative) {
       }
       if (!ef.IsFinite) {
         var er = new ExtendedRational(ef.Mantissa, BigInteger.One);
-        int flags = 0;
+        var flags = 0;
         if (ef.IsNegative) {
           flags |= BigNumberFlags.FlagNegative;
         }
@@ -327,7 +327,7 @@ bool negative) {
       }
       if (!ef.IsFinite) {
         var er = new ExtendedRational(ef.Mantissa, BigInteger.One);
-        int flags = 0;
+        var flags = 0;
         if (ef.IsNegative) {
           flags |= BigNumberFlags.FlagNegative;
         }

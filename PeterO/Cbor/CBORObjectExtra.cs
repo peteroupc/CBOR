@@ -66,9 +66,9 @@ bool neg) {
 "scale (" + scale + ") is more than " + "28");
       }
       byte[] data = bigmant.toBytes(true);
-      int a = 0;
-      int b = 0;
-      int c = 0;
+      var a = 0;
+      var b = 0;
+      var c = 0;
       for (var i = 0; i < Math.Min(4, data.Length); ++i) {
         a |= (((int)data[i]) & 0xff) << (i * 8);
       }
@@ -90,20 +90,6 @@ bool neg) {
 
     private static readonly BigInteger DecimalMinValue = -((BigInteger.One <<
       96) - BigInteger.One);
-
-    private static decimal BigIntegerToDecimal(BigInteger bi) {
-      if (bi.Sign < 0) {
-        if (bi.CompareTo(DecimalMinValue) < 0) {
-          throw new OverflowException();
-        }
-        bi = -bi;
-        return EncodeDecimal(bi, 0, true);
-      }
-      if (bi.CompareTo(DecimalMaxValue) > 0) {
-        throw new OverflowException();
-      }
-      return EncodeDecimal(bi, 0, false);
-    }
 
     private static BigInteger DecimalToBigInteger(decimal dec) {
       int[] bits = Decimal.GetBits(dec);
@@ -198,8 +184,8 @@ newDecimal.Mantissa.Sign < 0);
         throw new OverflowException("This object's value is out of range");
       }
       byte[] data = bigint.toBytes(true);
-      int a = 0;
-      int b = 0;
+      var a = 0;
+      var b = 0;
       for (var i = 0; i < Math.Min(4, data.Length); ++i) {
         a |= (((int)data[i]) & 0xff) << (i * 8);
       }

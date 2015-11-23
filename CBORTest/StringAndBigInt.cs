@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using PeterO;
 
@@ -29,7 +29,7 @@ namespace Test {
       BigInteger bv = BigInteger.Zero;
       var sabi = new StringAndBigInt();
       int numDigits = 1 + rand.NextValue(100);
-      bool negative = false;
+      var negative = false;
       var builder = new StringBuilder();
       if (rand.NextValue(2) == 0) {
         builder.Append('-');

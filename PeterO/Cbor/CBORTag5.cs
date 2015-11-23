@@ -26,7 +26,7 @@ CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
     public CBORTag5() : this(false) {
     }
 
-    private bool extended;
+    private readonly bool extended;
 
     public CBORTag5(bool extended) {
       this.extended = extended;

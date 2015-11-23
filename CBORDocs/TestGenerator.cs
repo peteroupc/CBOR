@@ -6,10 +6,11 @@ using System.Reflection;
 using System.Text;
 
 namespace PeterO.DocGen {
-  internal static class TestGenerator {
+  public static class TestGenerator {
     public static void GenerateTests(Type type, string directory) {
-      string name = TypeNameUtil.UndecorateTypeName(type.Name);
+      var name = TypeNameUtil.UndecorateTypeName(type.Name);
       var builder = new StringBuilder();
+      Directory.CreateDirectory(directory);
       builder.Append("using System;\n");
       builder.Append("using System.Collections.Generic;\n");
       builder.Append("using System.Text;\n");
@@ -19,7 +20,7 @@ namespace PeterO.DocGen {
       builder.Append("  [TestClass]\n");
       builder.Append("  public partial class " + name + "Test {\n");
       var methods = new SortedSet<string>();
-      bool hasPublicConstructor = false;
+      var hasPublicConstructor = false;
       foreach (var method in type.GetConstructors()) {
         if (!method.IsPublic) {
           continue;
@@ -37,7 +38,7 @@ namespace PeterO.DocGen {
         if (!method.DeclaringType.Equals(method.ReflectedType)) {
           continue;
         }
-        string methodName = method.Name;
+        var methodName = method.Name;
         if (methodName.StartsWith("get_", StringComparison.Ordinal)) {
           methodName = methodName.Substring(4);
         } else if (methodName.StartsWith("set_", StringComparison.Ordinal)) {
@@ -79,7 +80,7 @@ namespace PeterO.DocGen {
       }
       builder.Append("  }\n");
       builder.Append("}");
-      string filename = Path.Combine(directory, name + "Test.cs");
+      var filename = Path.Combine(directory, name + "Test.cs");
       if (!File.Exists(filename)) {
         File.WriteAllText(filename, builder.ToString());
       }

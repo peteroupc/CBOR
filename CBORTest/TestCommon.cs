@@ -25,7 +25,7 @@ namespace Test {
  return "null";
 }
       var sb = new System.Text.StringBuilder();
-      string hex = "0123456789ABCDEF";
+      const string hex = "0123456789ABCDEF";
       sb.Append("new byte[] { ");
       for (var i = 0; i < bytes.Length; ++i) {
         if (i > 0) {
@@ -82,7 +82,8 @@ string result) {
       if (bigintB.IsZero) {
         try {
           bigintA.divide(bigintB); Assert.Fail("Expected divide by 0 error");
-        } catch (ArithmeticException) {
+        } catch (ArithmeticException ex) {
+          Console.WriteLine(ex.Message);
         }
       } else {
         AssertBigIntegersEqual(result, bigintA.divide(bigintB));
@@ -98,7 +99,8 @@ string result) {
       if (bigintB.IsZero) {
         try {
           bigintA.remainder(bigintB); Assert.Fail("Expected divide by 0 error");
-        } catch (ArithmeticException) {
+        } catch (ArithmeticException ex) {
+          Console.WriteLine(ex.Message);
         }
       } else {
         AssertBigIntegersEqual(result, bigintA.remainder(bigintB));
@@ -120,7 +122,8 @@ string rem) {
             Assert.Fail();
           }
           Assert.Fail("Expected divide by 0 error");
-        } catch (ArithmeticException) {
+        } catch (ArithmeticException ex) {
+          Console.WriteLine(ex.Message);
         }
       } else {
         BigInteger quo = BigInteger.DivRem(bigintA, bigintB, out rembi);
@@ -290,32 +293,36 @@ o2));
         try {
           o.AsByte();
           Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-        } catch (Exception ex) {
+        } catch (OverflowException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt16();
           Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-        } catch (Exception ex) {
+        } catch (OverflowException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt32();
           Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-        } catch (Exception ex) {
+        } catch (OverflowException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
         }
         try {
           o.AsInt64();
           Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-        } catch (Exception ex) {
+        } catch (OverflowException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
         }
@@ -334,8 +341,9 @@ o2));
         try {
           o.AsBigInteger();
           Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-        } catch (Exception ex) {
+        } catch (OverflowException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
         }

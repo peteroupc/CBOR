@@ -15,8 +15,9 @@ namespace PeterO {
     /// <typeparam name='T1'>The type of each key.</typeparam>
     /// <typeparam name='T2'>The type of each value.</typeparam>
   internal class SortedMap<T1, T2> : IDictionary<T1, T2> {
-    private RedBlackTree<KeyValuePair<T1, T2>> tree;
-    private static IComparer<KeyValuePair<T1, T2>> comp = new KeyComparer();
+    private readonly RedBlackTree<KeyValuePair<T1, T2>> tree;
+    private static readonly IComparer<KeyValuePair<T1, T2>> comp = new
+      KeyComparer();
 
     private sealed class KeyComparer : IComparer<KeyValuePair<T1, T2>> {
       private static readonly IComparer<T1> KeyComp = Comparer<T1>.Default;

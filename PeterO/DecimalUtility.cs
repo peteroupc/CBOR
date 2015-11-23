@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO {
   internal static class DecimalUtility {
-    private static BigInteger[] valueBigIntPowersOfTen = {
+    private static readonly BigInteger[] valueBigIntPowersOfTen = {
       BigInteger.One, (BigInteger)10, (BigInteger)100, (BigInteger)1000,
       (BigInteger)10000, (BigInteger)100000, (BigInteger)1000000,
       (BigInteger)10000000, (BigInteger)100000000, (BigInteger)1000000000,
@@ -20,7 +20,7 @@ namespace PeterO {
       (BigInteger)100000000000000000L, (BigInteger)1000000000000000000L
     };
 
-    private static BigInteger[] valueBigIntPowersOfFive = {
+    private static readonly BigInteger[] valueBigIntPowersOfFive = {
       BigInteger.One, (BigInteger)5, (BigInteger)25, (BigInteger)125,
       (BigInteger)625, (BigInteger)3125, (BigInteger)15625,
       (BigInteger)78125, (BigInteger)390625,
@@ -38,7 +38,7 @@ namespace PeterO {
 
     internal static int ShiftLeftOne(int[] arr) {
       unchecked {
-        int carry = 0;
+        var carry = 0;
         for (var i = 0; i < arr.Length; ++i) {
           int item = arr[i];
           arr[i] = (int)(arr[i] << 1) | (int)carry;
@@ -52,7 +52,7 @@ namespace PeterO {
       if (numberValue == 0) {
         return 32;
       }
-      int i = 0;
+      var i = 0;
       unchecked {
         if ((numberValue << 16) == 0) {
           numberValue >>= 16;
@@ -81,7 +81,7 @@ namespace PeterO {
       if (numberValue == 0) {
         return 0;
       }
-      int i = 32;
+      var i = 32;
       unchecked {
         if ((numberValue >> 16) == 0) {
           numberValue <<= 16;
@@ -133,7 +133,8 @@ namespace PeterO {
       }
     }
 
-    private static BigInteger valueBigShiftIteration = (BigInteger)1000000;
+    private static readonly BigInteger valueBigShiftIteration =
+      (BigInteger)1000000;
 
     internal static BigInteger ShiftLeft(BigInteger val, BigInteger bigShift) {
       #if DEBUG
@@ -181,9 +182,9 @@ namespace PeterO {
 
     private sealed class PowerCache {
       private const int MaxSize = 64;
-      private BigInteger[] outputs;
-      private BigInteger[] inputs;
-      private int[] inputsInts;
+      private readonly BigInteger[] outputs;
+      private readonly BigInteger[] inputs;
+      private readonly int[] inputsInts;
 
       public PowerCache() {
         this.outputs = new BigInteger[MaxSize];
@@ -299,10 +300,11 @@ namespace PeterO {
       }
     }
 
-    private static PowerCache powerOfFiveCache = new
+    private static readonly PowerCache powerOfFiveCache = new
     DecimalUtility.PowerCache();
 
-    private static PowerCache powerOfTenCache = new DecimalUtility.PowerCache();
+    private static readonly PowerCache powerOfTenCache = new
+      DecimalUtility.PowerCache();
 
     internal static BigInteger FindPowerOfFiveFromBig(BigInteger diff) {
       int sign = diff.Sign;
@@ -353,7 +355,7 @@ namespace PeterO {
       return mantissa;
     }
 
-    private static BigInteger valueBigInt36 = (BigInteger)36;
+    private static readonly BigInteger valueBigInt36 = (BigInteger)36;
 
     internal static BigInteger FindPowerOfTenFromBig(BigInteger
     bigintExponent) {
@@ -393,7 +395,7 @@ namespace PeterO {
       return mantissa;
     }
 
-    private static BigInteger valueFivePower40 =
+    private static readonly BigInteger valueFivePower40 =
     ((BigInteger)95367431640625L) * (BigInteger)95367431640625L;
 
     internal static BigInteger FindPowerOfFive(int precision) {
@@ -438,7 +440,7 @@ namespace PeterO {
         return ret;
       }
       BigInteger[] otherPower;
-      bool first = true;
+      var first = true;
       bigpow = BigInteger.Zero;
       while (true) {
         otherPower =
@@ -538,7 +540,7 @@ namespace PeterO {
         return ret;
       }
       BigInteger[] otherPower;
-      bool first = true;
+      var first = true;
       bigpow = BigInteger.Zero;
       while (true) {
         otherPower =
@@ -617,7 +619,7 @@ throw new ArgumentException("doesn't satisfy precision==null || digits!=null");
         return bigmant;
       }
       var bigradix = (BigInteger)radix;
-      int bitToTest = 0;
+      var bitToTest = 0;
       var bitsToShift = new FastInteger(0);
       while (!bigmant.IsZero) {
         if (precision != null && digits.CompareTo(precision) == 0) {

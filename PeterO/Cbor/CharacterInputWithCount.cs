@@ -5,7 +5,7 @@ using PeterO;
 namespace PeterO.Cbor {
   internal class CharacterInputWithCount : ICharacterInput {
     private int offset;
-    private ICharacterInput ci;
+    private readonly ICharacterInput ci;
 
     public CharacterInputWithCount(ICharacterInput ci) {
       this.ci = ci;
@@ -24,7 +24,7 @@ namespace PeterO.Cbor {
     }
 
     public int ReadChar() {
-      int c = -1;
+      var c = -1;
       try {
         c = this.ci.ReadChar();
       } catch (InvalidOperationException ex) {

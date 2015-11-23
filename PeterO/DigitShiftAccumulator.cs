@@ -52,7 +52,7 @@ namespace PeterO {
       }
     }
 
-    private static BigInteger valueTen = (BigInteger)10;
+    private static readonly BigInteger valueTen = (BigInteger)10;
 
     /// <summary>Gets the current integer after shifting.</summary>
     /// <value>The current integer after shifting.</value>
@@ -89,7 +89,7 @@ int olderDiscarded) {
    throw new ArgumentException("length (" + length + ") is more than " +
           "9 ");
       }
-      int ret = 0;
+      var ret = 0;
       for (var i = 0; i < length; ++i) {
         var digit = (int)(str[offset + i] - '0');
         ret *= 10;
@@ -117,7 +117,7 @@ int olderDiscarded) {
       } else {
         BigInteger bi = fastint.AsBigInteger();
         while (bi.Sign > 0) {
-          int count = 1000000;
+          var count = 1000000;
           if (bi.CompareTo((BigInteger)1000000) < 0) {
             count = (int)bi;
           }
@@ -229,7 +229,7 @@ out bigrem);
       String str = this.shiftedBigInt.ToString();
       // NOTE: Will be 1 if the value is 0
       int digitLength = str.Length;
-      int bitDiff = 0;
+      var bitDiff = 0;
       if (digits > digitLength) {
         bitDiff = digits - digitLength;
       }
@@ -407,7 +407,7 @@ out bigrem);
         this.knownBitLength = new FastInteger(1);
         return;
       }
-      int kb = 0;
+      var kb = 0;
       int tmp = this.shiftedSmall;
       while (tmp > 0) {
         ++kb;
@@ -478,7 +478,7 @@ out bigrem);
 
     private FastInteger CalcKnownDigitLength() {
       if (this.isSmall) {
-        int kb = 0;
+        var kb = 0;
         int v2 = this.shiftedSmall;
         kb = (v2 >= 1000000000) ? 10 : ((v2 >= 100000000) ? 9 : ((v2 >=
         10000000) ? 8 : ((v2 >= 1000000) ? 7 : ((v2 >= 100000) ? 6 : ((v2 >=
@@ -490,7 +490,7 @@ out bigrem);
     }
 
     private void ShiftToBitsSmall(int digits) {
-      int kb = 0;
+      var kb = 0;
       int v2 = this.shiftedSmall;
       kb = (v2 >= 1000000000) ? 10 : ((v2 >= 100000000) ? 9 : ((v2 >=
       10000000) ? 8 : ((v2 >= 1000000) ? 7 : ((v2 >= 100000) ? 6 : ((v2 >=

@@ -71,7 +71,7 @@ result);
       return result;
     }
 
-    private IRadixMath<T> math;
+    private readonly IRadixMath<T> math;
 
     public TrappableRadixMath(IRadixMath<T> math) {
       #if DEBUG

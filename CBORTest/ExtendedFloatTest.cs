@@ -23,8 +23,8 @@ namespace Test {
     }
 
     public static ExtendedFloat FromBinary(string str) {
-      int smallExponent = 0;
-      int index = 0;
+      var smallExponent = 0;
+      var index = 0;
       BigInteger ret = BigInteger.Zero;
       while (index < str.Length) {
         if (str[index] == '0') {
@@ -221,16 +221,18 @@ namespace Test {
       try {
         ExtendedFloat.Max(null, ExtendedFloat.One);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
+      } catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         ExtendedFloat.Max(ExtendedFloat.One, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
+      } catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       } }
@@ -243,16 +245,18 @@ namespace Test {
       try {
         ExtendedFloat.Min(null, ExtendedFloat.One);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
+      } catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         ExtendedFloat.Min(ExtendedFloat.One, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
+      } catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -262,16 +266,18 @@ namespace Test {
       try {
         ExtendedFloat.MinMagnitude(null, ExtendedFloat.One);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
+      } catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         ExtendedFloat.MinMagnitude(ExtendedFloat.One, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
+      } catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }

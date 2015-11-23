@@ -38,7 +38,8 @@ namespace PeterO.Cbor {
       }
     }
 
-    private static IDictionary<Type, IList<PropertyData>> propertyLists =
+ private static readonly IDictionary<Type, IList<PropertyData>>
+      propertyLists =
       new Dictionary<Type, IList<PropertyData>>();
 
     private static IList<PropertyData> GetPropertyList(Type t) {

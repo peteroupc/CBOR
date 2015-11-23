@@ -73,7 +73,7 @@ namespace PeterO {
 
     /// <summary>Gets this object&#x27;s exponent. This object&#x27;s value
     /// will be an integer if the exponent is positive or zero.</summary>
-    /// <value>This object&#x27;s exponent. This object&#x27;s value will
+    /// <value>This object&apos;s exponent. This object&apos;s value will
     /// be an integer if the exponent is positive or zero.</value>
     public BigInteger Exponent {
       get {
@@ -83,7 +83,7 @@ namespace PeterO {
 
     /// <summary>Gets the absolute value of this object&#x27;s un-scaled
     /// value.</summary>
-    /// <value>The absolute value of this object&#x27;s un-scaled
+    /// <value>The absolute value of this object&apos;s un-scaled
     /// value.</value>
     public BigInteger UnsignedMantissa {
       get {
@@ -92,8 +92,8 @@ namespace PeterO {
     }
 
     /// <summary>Gets this object&#x27;s un-scaled value.</summary>
-    /// <value>This object&#x27;s un-scaled value. Will be negative if this
-    /// object&#x27;s value is negative (including a negative NaN).</value>
+    /// <value>This object&apos;s un-scaled value. Will be negative if this
+    /// object&apos;s value is negative (including a negative NaN).</value>
     public BigInteger Mantissa {
       get {
         return this.IsNegative ? (-(BigInteger)this.unsignedMantissa) :
@@ -129,7 +129,7 @@ namespace PeterO {
     /// <summary>Calculates this object&#x27;s hash code.</summary>
     /// <returns>This object's hash code.</returns>
     public override int GetHashCode() {
-      int hashCode = 964453631;
+      var hashCode = 964453631;
       unchecked {
         hashCode += 964453723 * this.exponent.GetHashCode();
         hashCode += 964453939 * this.unsignedMantissa.GetHashCode();
@@ -248,7 +248,7 @@ namespace PeterO {
       if (diag.IsZero && !negative) {
         return signaling ? SignalingNaN : NaN;
       }
-      int flags = 0;
+      var flags = 0;
       if (negative) {
         flags |= BigNumberFlags.FlagNegative;
       }
@@ -390,22 +390,22 @@ namespace PeterO {
       if (length == 0) {
         throw new FormatException();
       }
-      bool negative = false;
+      var negative = false;
       int endStr = tmpoffset + length;
       if (str[0] == '+' || str[0] == '-') {
         negative = str[0] == '-';
         ++tmpoffset;
       }
-      int mantInt = 0;
+      var mantInt = 0;
       FastInteger mant = null;
-      int mantBuffer = 0;
-      int mantBufferMult = 1;
-      int expBuffer = 0;
-      int expBufferMult = 1;
-      bool haveDecimalPoint = false;
-      bool haveDigits = false;
-      bool haveExponent = false;
-      int newScaleInt = 0;
+      var mantBuffer = 0;
+      var mantBufferMult = 1;
+      var expBuffer = 0;
+      var expBufferMult = 1;
+      var haveDecimalPoint = false;
+      var haveDigits = false;
+      var haveExponent = false;
+      var newScaleInt = 0;
       FastInteger newScale = null;
       int i = tmpoffset;
       if (i + 8 == endStr) {
@@ -635,7 +635,7 @@ namespace PeterO {
       }
       if (haveExponent) {
         FastInteger exp = null;
-        int expInt = 0;
+        var expInt = 0;
         tmpoffset = 1;
         haveDigits = false;
         if (i == endStr) {
@@ -1289,7 +1289,7 @@ namespace PeterO {
       }
     }
 
-    private static BigInteger valueOneShift62 = BigInteger.One << 62;
+    private static readonly BigInteger valueOneShift62 = BigInteger.One << 62;
 
     /// <summary>Creates a binary floating-point number from this
     /// object&#x27;s value. Note that if the binary floating-point number
@@ -1347,7 +1347,7 @@ namespace PeterO {
           if (!remainder.IsZero && quotient.CompareTo(valueOneShift62) < 0) {
             // At this point, the quotient has 62 or fewer bits
             int[] bits = FastInteger.GetLastWords(quotient, 2);
-            int shift = 0;
+            var shift = 0;
             if ((bits[0] | bits[1]) != 0) {
               // Quotient's integer part is nonzero.
               // Get the number of bits of the quotient
@@ -1510,13 +1510,13 @@ namespace PeterO {
     /// the floating point number to a string first. Remember, though, that
     /// the exact value of a 32-bit floating-point number is not always the
     /// value you get when you pass a literal decimal number (for example,
-    /// calling <c>ExtendedDecimal.FromSingle(0.1f)</c>), since not all
+    /// calling <c>ExtendedDecimal.FromSingle(0.1f)</c> ), since not all
     /// decimal numbers can be converted to exact binary numbers (in the
     /// example given, the resulting ExtendedDecimal will be the the value
     /// of the closest "float" to 0.1, not 0.1 exactly). To create an
     /// ExtendedDecimal number from a decimal number, use FromString
     /// instead in most cases (for example:
-    /// <c>ExtendedDecimal.FromString("0.1")</c>).</summary>
+    /// <c>ExtendedDecimal.FromString("0.1")</c> ).</summary>
     /// <param name='flt'>A 32-bit floating-point number.</param>
     /// <returns>A decimal number with the same value as <paramref
     /// name='flt'/>.</returns>
@@ -1614,13 +1614,13 @@ namespace PeterO {
     /// the floating point number to a string first. Remember, though, that
     /// the exact value of a 64-bit floating-point number is not always the
     /// value you get when you pass a literal decimal number (for example,
-    /// calling <c>ExtendedDecimal.FromDouble(0.1f)</c>), since not all
+    /// calling <c>ExtendedDecimal.FromDouble(0.1f)</c> ), since not all
     /// decimal numbers can be converted to exact binary numbers (in the
     /// example given, the resulting ExtendedDecimal will be the value of
     /// the closest "double" to 0.1, not 0.1 exactly). To create an
     /// ExtendedDecimal number from a decimal number, use FromString
     /// instead in most cases (for example:
-    /// <c>ExtendedDecimal.FromString("0.1")</c>).</summary>
+    /// <c>ExtendedDecimal.FromString("0.1")</c> ).</summary>
     /// <param name='dbl'>A 64-bit floating-point number.</param>
     /// <returns>A decimal number with the same value as <paramref
     /// name='dbl'/>.</returns>
@@ -1724,7 +1724,7 @@ namespace PeterO {
           bigmantissa = -(BigInteger)bigmantissa;
         }
         while (intcurexp.Sign > 0) {
-          int shift = 1000000;
+          var shift = 1000000;
           if (intcurexp.CompareToInt(1000000) < 0) {
             shift = intcurexp.AsInt32();
           }
@@ -1914,7 +1914,7 @@ namespace PeterO {
 
     /// <summary>Gets this value&#x27;s sign: -1 if negative; 1 if
     /// positive; 0 if zero.</summary>
-    /// <value>This value&#x27;s sign: -1 if negative; 1 if positive; 0 if
+    /// <value>This value&apos;s sign: -1 if negative; 1 if positive; 0 if
     /// zero.</value>
     public int Sign {
       get {
@@ -1926,7 +1926,7 @@ namespace PeterO {
 
     /// <summary>Gets a value indicating whether this object&#x27;s value
     /// equals 0.</summary>
-    /// <value>True if this object&#x27;s value equals 0; otherwise,
+    /// <value>True if this object&apos;s value equals 0; otherwise,
     /// false.</value>
     public bool IsZero {
       get {

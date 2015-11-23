@@ -138,7 +138,7 @@ int olderDiscarded) {
       } else {
         BigInteger bi = fastint.AsBigInteger();
         while (bi.Sign > 0) {
-          int count = 1000000;
+          var count = 1000000;
           if (bi.CompareTo((BigInteger)1000000) < 0) {
             count = (int)bi;
           }
@@ -248,7 +248,7 @@ int olderDiscarded) {
       }
       // Shift by the difference in bit length
       if (this.knownBitLength.CompareToInt(bits) > 0) {
-        int bs = 0;
+        var bs = 0;
         if (this.knownBitLength.CanFitInInt32()) {
           bs = this.knownBitLength.AsInt32();
           bs -= bits;

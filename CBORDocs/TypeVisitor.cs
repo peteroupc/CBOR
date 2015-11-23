@@ -17,8 +17,8 @@ using ClariusLabs.NuDoc;
 
 namespace PeterO.DocGen {
   internal class TypeVisitor : Visitor, IComparer<Type> {
-    private SortedDictionary<Type, DocVisitor> docs;
-    private string directory;
+    private readonly SortedDictionary<Type, DocVisitor> docs;
+    private readonly string directory;
 
     public TypeVisitor(string directory) {
       this.docs = new SortedDictionary<Type, DocVisitor>(this);
@@ -27,8 +27,8 @@ namespace PeterO.DocGen {
 
     public void Finish() {
       foreach (var key in this.docs.Keys) {
-        string finalString = this.docs[key].ToString();
-        string filename = Path.Combine(
+        var finalString = this.docs[key].ToString();
+        var filename = Path.Combine(
 this.directory,
 DocVisitor.GetTypeID(key) + ".md");
         using (var writer = new StreamWriter(filename, false, Encoding.UTF8)) {
@@ -64,6 +64,8 @@ finalString,
 
     /// <summary>Compares a Type object with a Type.</summary>
     /// <param name='x'>Not documented yet.</param>
+    /// <param name='x'>Not documented yet.</param>
+    /// <param name='y'>Not documented yet.</param>
     /// <returns>Zero if both values are equal; a negative number if
     /// <paramref name='x'/> is less than <paramref name='y'/>, or a
     /// positive number if <paramref name='x'/> is greater than <paramref
