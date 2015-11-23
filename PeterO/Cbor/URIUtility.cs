@@ -154,7 +154,7 @@ s,
 s.Length,
 ParseMode.IRISurrogateLenient);
       }
-      int index = 0;
+      var index = 0;
       int valueSLength = s.Length;
       var builder = new StringBuilder();
       while (index < valueSLength) {
@@ -249,7 +249,7 @@ ParseMode.IRISurrogateLenient);
     /// relative IRI references.
     /// <para>The following cases return true:</para>
     /// <code> xx-x:mm example:/ww </code>
-    /// The following cases return false:
+    ///  The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
     /// <param name='refValue'>A string representing an IRI to
@@ -271,7 +271,7 @@ ParseMode.IRISurrogateLenient);
     /// relative URI references. The following cases return
     /// true:
     /// <code> http://example/z xx-x:mm example:/ww </code>
-    /// The following cases return false:
+    ///  The following cases return false:
     /// <code> x@y:/z /x/y/z example.xyz </code>
     /// </summary>
     /// <param name='refValue'>A string representing an IRI to
@@ -390,7 +390,7 @@ ParseMode.IRISurrogateLenient);
       }
       int index = offset;
       int valueSLength = offset + length;
-      int state = 0;
+      var state = 0;
       if (index + 2 <= valueSLength && s[index] == '/' && s[index + 1] == '/') {
         // has an authority, which is not allowed
         return false;
@@ -468,7 +468,7 @@ StringComparison.Ordinal) < 0) {
         return path;
       }
       var builder = new StringBuilder();
-      int index = 0;
+      var index = 0;
       while (index < len) {
         char c = path[index];
         if ((index + 3 <= len && c == '/' && path[index + 1] == '.' &&
@@ -592,7 +592,7 @@ int delim) {
       if (s[index] == 'v') {
         // IPvFuture
         ++index;
-        bool hex = false;
+        var hex = false;
         while (index < endOffset) {
           char c = s[index];
           if (isHexChar(c)) {
@@ -633,11 +633,11 @@ int delim) {
       if (s[index] == ':' ||
           isHexChar(s[index])) {
         // IPv6 Address
-        int phase1 = 0;
-        int phase2 = 0;
-        bool phased = false;
-        bool expectHex = false;
-        bool expectColon = false;
+        var phase1 = 0;
+        var phase2 = 0;
+        var phased = false;
+        var expectHex = false;
+        var expectColon = false;
         while (index < endOffset) {
           char c = s[index];
           if (c == ':' && !expectHex) {
@@ -758,7 +758,7 @@ tmpc,
             // Zone identifier in an IPv6 address
             // (see RFC6874)
             index += 3;
-            bool haveChar = false;
+            var haveChar = false;
             while (index < endOffset) {
               char c = s[index];
               if (c == ']') {
@@ -943,13 +943,6 @@ segmentsBase[5]));
     /// that pair will be -1. If the string is null or is not a valid IRI,
     /// returns null.</returns></summary>
     /// <param name='s'>A string that contains an IRI.</param>
-    /// <returns>If the string is a valid IRI, returns an array of 10
-    /// integers. Each of the five pairs corresponds to the start and end
-    /// index of the IRI's scheme, authority, path, query, or fragment
-    /// component, respectively. If a component is absent, both indices in
-    /// that pair will be -1 (an index won't be less than 0 in any other
-    /// case). If the string is null or is not a valid IRI, returns
-    /// null.</returns>
     public static int[] splitIRI(string s) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict);
     }
@@ -1003,7 +996,7 @@ ParseMode parseMode) {
         ParseMode.IRIStrict;
       int index = offset;
       int valueSLength = offset + length;
-      bool scheme = false;
+      var scheme = false;
       // scheme
       while (index < valueSLength) {
         int c = s[index];
@@ -1031,7 +1024,7 @@ ParseMode parseMode) {
       if (!scheme) {
         index = offset;
       }
-      int state = 0;
+      var state = 0;
       if (index + 2 <= valueSLength && s[index] == '/' && s[index + 1] == '/') {
         // authority
         // (index + 2, valueSLength)
@@ -1135,8 +1128,8 @@ ParseMode parseMode) {
           }
         }
       }
-      bool colon = false;
-      bool segment = false;
+      var colon = false;
+      var segment = false;
       bool fullyRelative = index == offset;
       retval[4] = index;  // path offsets
       retval[5] = valueSLength;
@@ -1217,6 +1210,7 @@ ParseMode parseMode) {
     /// the string into its components and returns an array containing the
     /// indices into the components.</summary>
     /// <param name='s'>A string representing an IRI. Can be null.</param>
+    /// <param name='parseMode'>A ParseMode object.</param>
     /// <returns>If the string is a valid IRI reference, returns an array
     /// of 10 integers. Each of the five pairs corresponds to the start and
     /// end index of the IRI's scheme, authority, path, query, or fragment

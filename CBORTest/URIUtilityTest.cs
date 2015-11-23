@@ -127,6 +127,7 @@ baseuri);
   }
 
   [TestMethod]
+  [Timeout(5000)]
   public void testRelativeResolve() {
     assertResolve(
 "index.html",
@@ -151,6 +152,7 @@ baseuri);
   }
 
   [TestMethod]
+  [Timeout(5000)]
   public void testUri() {
     assertIdempotency(String.Empty);
     assertIdempotency("e");
@@ -212,42 +214,42 @@ baseuri);
     assertIdempotencyNeg("a://[va.a/");
     assertIdempotencyNeg("a://[v.a]");
     assertIdempotencyNeg("a://[va.]");
-    this.assertIPv6("a:a:a:a:a:a:100.100.100.100");
-    this.assertIPv6("::a:a:a:a:a:100.100.100.100");
-    this.assertIPv6("::a:a:a:a:a:99.255.240.10");
-    this.assertIPv6("::a:a:a:a:99.255.240.10");
-    this.assertIPv6("::99.255.240.10");
-    this.assertIPv6Neg("99.255.240.10");
-    this.assertIPv6("a:a:a:a:a::99.255.240.10");
-    this.assertIPv6("a:a:a:a:a:a:a:a");
-    this.assertIPv6("aaa:a:a:a:a:a:a:a");
-    this.assertIPv6("aaaa:a:a:a:a:a:a:a");
-    this.assertIPv6("::a:a:a:a:a:a:a");
-    this.assertIPv6("a::a:a:a:a:a:a");
-    this.assertIPv6("a:a::a:a:a:a:a");
-    this.assertIPv6("a:a:a::a:a:a:a");
-    this.assertIPv6("a:a:a:a::a:a:a");
-    this.assertIPv6("a:a:a:a:a::a:a");
-    this.assertIPv6("a:a:a:a:a:a::a");
-    this.assertIPv6("a::a");
-    this.assertIPv6("::a");
-    this.assertIPv6("::a:a");
-    this.assertIPv6("::");
-    this.assertIPv6("a:a:a:a:a:a:a::");
-    this.assertIPv6("a:a:a:a:a:a::");
-    this.assertIPv6("a:a:a:a:a::");
-    this.assertIPv6("a:a:a:a::");
-    this.assertIPv6("a:a::");
-    this.assertIPv6Neg("a:a::a:a:a:a:a:a");
-    this.assertIPv6Neg("aaaaa:a:a:a:a:a:a:a");
-    this.assertIPv6Neg("a:a:a:a:a:a:a:100.100.100.100");
-    this.assertIPv6Neg("a:a:a:a:a:a::99.255.240.10");
-    this.assertIPv6Neg(":::a:a:a:a:a:a:a");
-    this.assertIPv6Neg("a:a:a:a:a:a:::a");
-    this.assertIPv6Neg("a:a:a:a:a:a:a:::");
-    this.assertIPv6Neg("::a:a:a:a:a:a:a:");
-    this.assertIPv6Neg("::a:a:a:a:a:a:a:a");
-    this.assertIPv6Neg("a:a");
+      assertIPv6("a:a:a:a:a:a:100.100.100.100");
+      assertIPv6("::a:a:a:a:a:100.100.100.100");
+      assertIPv6("::a:a:a:a:a:99.255.240.10");
+      assertIPv6("::a:a:a:a:99.255.240.10");
+      assertIPv6("::99.255.240.10");
+      assertIPv6Neg("99.255.240.10");
+      assertIPv6("a:a:a:a:a::99.255.240.10");
+      assertIPv6("a:a:a:a:a:a:a:a");
+      assertIPv6("aaa:a:a:a:a:a:a:a");
+      assertIPv6("aaaa:a:a:a:a:a:a:a");
+      assertIPv6("::a:a:a:a:a:a:a");
+      assertIPv6("a::a:a:a:a:a:a");
+      assertIPv6("a:a::a:a:a:a:a");
+      assertIPv6("a:a:a::a:a:a:a");
+      assertIPv6("a:a:a:a::a:a:a");
+      assertIPv6("a:a:a:a:a::a:a");
+      assertIPv6("a:a:a:a:a:a::a");
+      assertIPv6("a::a");
+      assertIPv6("::a");
+      assertIPv6("::a:a");
+      assertIPv6("::");
+      assertIPv6("a:a:a:a:a:a:a::");
+      assertIPv6("a:a:a:a:a:a::");
+      assertIPv6("a:a:a:a:a::");
+      assertIPv6("a:a:a:a::");
+      assertIPv6("a:a::");
+      assertIPv6Neg("a:a::a:a:a:a:a:a");
+      assertIPv6Neg("aaaaa:a:a:a:a:a:a:a");
+      assertIPv6Neg("a:a:a:a:a:a:a:100.100.100.100");
+      assertIPv6Neg("a:a:a:a:a:a::99.255.240.10");
+      assertIPv6Neg(":::a:a:a:a:a:a:a");
+      assertIPv6Neg("a:a:a:a:a:a:::a");
+      assertIPv6Neg("a:a:a:a:a:a:a:::");
+      assertIPv6Neg("::a:a:a:a:a:a:a:");
+      assertIPv6Neg("::a:a:a:a:a:a:a:a");
+      assertIPv6Neg("a:a");
     assertIdempotency("e://[va.a]");
     assertIdempotency("e://[v0.0]");
     assertIdempotencyNeg("e://[wa.a]");
@@ -256,7 +258,7 @@ baseuri);
     assertIdempotencyNeg("e://[v.a]");
   }
 
-  private void assertIPv6Neg(string str) {
+  private static void assertIPv6Neg(string str) {
     assertIdempotencyNeg("e://[" + str + "]");
     assertIdempotencyNeg("e://[" + str + "NANA]");
     assertIdempotencyNeg("e://[" + str + "%25]");
@@ -268,7 +270,7 @@ baseuri);
     assertIdempotencyNeg("e://[" + str + "%25NA%2ENA]");
   }
 
-  private void assertIPv6(string str) {
+  private static void assertIPv6(string str) {
     assertIdempotency("e://[" + str + "]");
     assertIdempotencyNeg("e://[" + str + "NANA]");
     assertIdempotencyNeg("e://[" + str + "%25]");

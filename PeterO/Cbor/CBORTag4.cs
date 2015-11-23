@@ -13,7 +13,7 @@ namespace PeterO.Cbor {
     public CBORTag4() : this(false) {
     }
 
-    private bool extended;
+    private readonly bool extended;
 
     public CBORTag4(bool extended) {
       this.extended = extended;

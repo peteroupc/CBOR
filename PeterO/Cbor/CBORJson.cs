@@ -28,9 +28,9 @@ CharacterInputWithCount reader,
 int quote) {
       int c;
       StringBuilder sb = null;
-      bool surrogate = false;
-      bool surrogateEscaped = false;
-      bool escaped = false;
+      var surrogate = false;
+      var surrogateEscaped = false;
+      var escaped = false;
       while (true) {
         c = reader.ReadChar();
         if (c == -1 || c < 0x20) {
@@ -243,7 +243,7 @@ int quote) {
       CBORObject key = null;
       CBORObject obj;
       var nextchar = new int[1];
-      bool seenComma = false;
+      var seenComma = false;
       var myHashMap = new Dictionary<CBORObject, CBORObject>();
       while (true) {
         c = SkipWhitespaceJSON(reader);
@@ -312,7 +312,7 @@ int quote) {
         reader.RaiseError("Too deeply nested");
       }
       var myArrayList = new List<CBORObject>();
-      bool seenComma = false;
+      var seenComma = false;
       var nextchar = new int[1];
       while (true) {
         int c = SkipWhitespaceJSON(reader);
@@ -356,7 +356,7 @@ int quote) {
       // Surrogates were already verified when this
       // string was added to the CBOR object; that check
       // is not repeated here
-      bool first = true;
+      var first = true;
       for (var i = 0; i < str.Length; ++i) {
         char c = str[i];
         if (c == '\\' || c == '"') {
@@ -548,7 +548,7 @@ int quote) {
             break;
           }
           case CBORObject.CBORObjectTypeArray: {
-            bool first = true;
+            var first = true;
             writer.WriteCodePoint((int)'[');
             foreach (CBORObject i in obj.AsList()) {
               if (!first) {
@@ -572,8 +572,8 @@ int quote) {
             break;
           }
           case CBORObject.CBORObjectTypeMap: {
-            bool first = true;
-            bool hasNonStringKeys = false;
+            var first = true;
+            var hasNonStringKeys = false;
             IDictionary<CBORObject, CBORObject> objMap = obj.AsMap();
             foreach (KeyValuePair<CBORObject, CBORObject> entry in objMap) {
               CBORObject key = entry.Key;

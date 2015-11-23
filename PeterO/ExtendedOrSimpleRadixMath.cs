@@ -10,8 +10,8 @@ using System;
 namespace PeterO {
   internal class ExtendedOrSimpleRadixMath<T> : IRadixMath<T>
   {
-    private RadixMath<T> ext;
-    private SimpleRadixMath<T> simp;
+    private readonly RadixMath<T> ext;
+    private readonly SimpleRadixMath<T> simp;
 
     public ExtendedOrSimpleRadixMath(IRadixMathHelper<T> helper) {
       this.ext = new RadixMath<T>(helper);

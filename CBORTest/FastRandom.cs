@@ -14,13 +14,13 @@ namespace Test {
   public class FastRandom {
     private const int ReseedCount = 500;
 
-    private Random rand;
-    private Random rand2;
+    private readonly Random rand;
+    private readonly Random rand2;
     private int count;
 
     private int w = 521288629;
     private int z = 362436069;
-    private static int[] seeds = new int[32];
+    private static readonly int[] seeds = new int[32];
 
     private static void AddSeed(int seed) {
       lock (seeds) {

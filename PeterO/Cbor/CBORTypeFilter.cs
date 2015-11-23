@@ -101,7 +101,7 @@ namespace PeterO.Cbor {
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 6;  // Always include the "tag" major type
-      int startIndex = 0;
+      var startIndex = 0;
       if (filter.tags != null) {
         var newTags = new BigInteger[tags.Length + filter.tags.Length];
         Array.Copy(filter.tags, newTags, filter.tags.Length);
@@ -132,7 +132,7 @@ namespace PeterO.Cbor {
       }
       CBORTypeFilter filter = this.Copy();
       filter.types |= 1 << 6;  // Always include the "tag" major type
-      int startIndex = 0;
+      var startIndex = 0;
       if (filter.tags != null) {
         var newTags = new BigInteger[tags.Length + filter.tags.Length];
         Array.Copy(filter.tags, newTags, filter.tags.Length);

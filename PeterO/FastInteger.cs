@@ -112,7 +112,7 @@ namespace PeterO {
             ") is less than " + "0 ");
         }
         if (multiplicand != 0) {
-          int carry = 0;
+          var carry = 0;
           if (this.wordCount == 0) {
             if (this.data.Length == 0) {
               this.data = new int[4];
@@ -299,8 +299,8 @@ namespace PeterO {
             }
             neededSize = (this.wordCount < other.wordCount) ? this.wordCount :
             other.wordCount;
-            int u = 0;
-            int borrow = 0;
+            var u = 0;
+            var borrow = 0;
             for (var i = 0; i < neededSize; ++i) {
               int a = this.data[i];
               u = (a - other.data[i]) - borrow;
@@ -358,7 +358,7 @@ namespace PeterO {
         }
         unchecked {
         if (augend != 0) {
-          int carry = 0;
+          var carry = 0;
           // Ensure a length of at least 1
           if (this.wordCount == 0) {
             if (this.data.Length == 0) {
@@ -403,9 +403,11 @@ namespace PeterO {
     private MutableNumber mnum;  // if integerMode is 1
     private BigInteger largeValue;  // if integerMode is 2
     private int integerMode;
-    private static BigInteger valueInt32MinValue = (BigInteger)Int32.MinValue;
-    private static BigInteger valueInt32MaxValue = (BigInteger)Int32.MaxValue;
-    private static BigInteger valueNegativeInt32MinValue =
+    private static readonly BigInteger valueInt32MinValue =
+      (BigInteger)Int32.MinValue;
+    private static readonly BigInteger valueInt32MaxValue =
+      (BigInteger)Int32.MaxValue;
+    private static readonly BigInteger valueNegativeInt32MinValue =
     -(BigInteger)valueInt32MinValue;
 
     internal FastInteger(int value) {
@@ -508,7 +510,7 @@ namespace PeterO {
 
     internal int RepeatedSubtract(FastInteger divisor) {
       if (this.integerMode == 1) {
-        int count = 0;
+        var count = 0;
         if (divisor.integerMode == 1) {
           while (this.mnum.CompareTo(divisor.mnum) >= 0) {
             this.mnum.Subtract(divisor.mnum);

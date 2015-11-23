@@ -1272,40 +1272,44 @@ namespace PeterO {
       #endif
 
       if (count <= RecursionLimit) {
-        if (count == 2) {
-          BaselineMultiply2(
-            resultArr,
-            resultStart,
-            words1,
-            words1Start,
-            words2,
-            words2Start);
-        } else if (count == 4) {
-          BaselineMultiply4(
-            resultArr,
-            resultStart,
-            words1,
-            words1Start,
-            words2,
-            words2Start);
-        } else if (count == 8) {
-          BaselineMultiply8(
-            resultArr,
-            resultStart,
-            words1,
-            words1Start,
-            words2,
-            words2Start);
-        } else {
-          SchoolbookMultiply(
-            resultArr,
-            resultStart,
-            words1,
-            words1Start,
-            count,
-            words2,
-            words2Start,
-            count);
+        switch (count) {
+          case 2:
+            BaselineMultiply2(
+resultArr,
+resultStart,
+words1,
+words1Start,
+words2,
+words2Start);
+            break;
+          case 4:
+            BaselineMultiply4(
+  resultArr,
+  resultStart,
+  words1,
+  words1Start,
+  words2,
+  words2Start);
+            break;
+          case 8:
+            BaselineMultiply8(
+  resultArr,
+  resultStart,
+  words1,
+  words1Start,
+  words2,
+  words2Start);
+            break;
+          default: SchoolbookMultiply(
+resultArr,
+resultStart,
+words1,
+words1Start,
+count,
+words2,
+words2Start,
+count);
+            break;
         }
       } else {
         int countA = count;
@@ -1316,8 +1320,8 @@ namespace PeterO {
         while (countB != 0 && words2[words2Start + countB - 1] == 0) {
           --countB;
         }
-        int offset2For1 = 0;
-        int offset2For2 = 0;
+        var offset2For1 = 0;
+        var offset2For2 = 0;
         if (countA == 0 || countB == 0) {
           // words1 or words2 is empty, so result is 0
           Array.Clear((short[])resultArr, resultStart, count << 1);
@@ -1646,14 +1650,20 @@ namespace PeterO {
       int words1Start,
       int count) {
       if (count <= RecursionLimit) {
-        if (count == 2) {
-          BaselineSquare2(resultArr, resultStart, words1, words1Start);
-        } else if (count == 4) {
-          BaselineSquare4(resultArr, resultStart, words1, words1Start);
-        } else if (count == 8) {
-          BaselineSquare8(resultArr, resultStart, words1, words1Start);
-        } else {
-          SchoolbookSquare(resultArr, resultStart, words1, words1Start, count);
+        switch (count) {
+          case 2:
+            BaselineSquare2(resultArr, resultStart, words1, words1Start);
+            break;
+          case 4:
+            BaselineSquare4(resultArr, resultStart, words1, words1Start);
+            break;
+          case 8:
+            BaselineSquare8(resultArr, resultStart, words1, words1Start);
+            break;
+          default:
+          SchoolbookSquare(resultArr, resultStart, words1, words1Start,
+              count);
+            break;
         }
       } else if ((count & 1) == 0) {
         int count2 = count >> 1;
@@ -1941,7 +1951,7 @@ namespace PeterO {
       #endif
 
       unchecked {
-        int carryPos = 0;
+        var carryPos = 0;
         // Set carry to zero
         Array.Clear((short[])productArr, cstart, bcount);
         for (var i = 0; i < acount; i += bcount) {
@@ -2435,7 +2445,7 @@ namespace PeterO {
       if (numberValue == 0) {
         return 0;
       }
-      int i = 16;
+      var i = 16;
       unchecked {
         if ((numberValue >> 8) == 0) {
           numberValue <<= 8;
@@ -2464,7 +2474,7 @@ namespace PeterO {
       short divisorShort,
       bool returnRemainder) {
       int tmpInt;
-      int dividendHigh = 0;
+      var dividendHigh = 0;
       int intDivisor = ((int)divisorShort) & 0xffff;
       for (var i = 0; i < 32; ++i) {
         tmpInt = dividendHigh >> 31;
@@ -3035,7 +3045,7 @@ namespace PeterO {
       int valueJIndex = littleEndian ? len - 1 : 0;
       bool numIsNegative = (bytes[valueJIndex] & 0x80) != 0;
       bool newnegative = numIsNegative;
-      int j = 0;
+      var j = 0;
       if (!numIsNegative) {
         for (var i = 0; i < len; i += 2, j++) {
           int index = littleEndian ? i : len - 1 - i;
@@ -3103,7 +3113,7 @@ namespace PeterO {
         return false;
       }
       if (this.negative) {
-        int tcindex = 0;
+        var tcindex = 0;
         int wordpos = index / 16;
         if (wordpos >= this.words.Length) {
           return true;
@@ -3140,7 +3150,7 @@ namespace PeterO {
     /// <returns>A byte array.</returns>
     [Obsolete("Renamed to 'toBytes'.")]
     public byte[] toByteArray(bool littleEndian) {
-      return this.toBytes(true);
+      return this.toBytes(littleEndian);
     }
 
     /// <summary>Returns a byte array of this object&#x27;s value. The byte
@@ -3165,7 +3175,7 @@ namespace PeterO {
           ++byteArrayLength;
         }
         var bytes = new byte[byteArrayLength];
-        int j = 0;
+        var j = 0;
         for (var i = 0; i < byteCount; i += 2, j++) {
           int index = littleEndian ? i : bytes.Length - 1 - i;
           int index2 = littleEndian ? i + 1 : bytes.Length - 2 - i;
@@ -3202,7 +3212,7 @@ namespace PeterO {
         var bytes = new byte[byteCount];
         bytes[littleEndian ? bytes.Length - 1 : 0] = (byte)0xff;
         byteCount = Math.Min(byteCount, regdata.Length * 2);
-        int j = 0;
+        var j = 0;
         for (var i = 0; i < byteCount; i += 2, j++) {
           int index = littleEndian ? i : bytes.Length - 1 - i;
           int index2 = littleEndian ? i + 1 : bytes.Length - 2 - i;
@@ -3756,7 +3766,7 @@ namespace PeterO {
       }
       bool neg = value < 0;
       var chars = new char[24];
-      int count = 0;
+      var count = 0;
       if (neg) {
         chars[0] = '-';
         ++count;
@@ -3866,7 +3876,7 @@ namespace PeterO {
       }
       short[] tempReg = null;
       int currentCount = this.wordCount;
-      int i = 0;
+      var i = 0;
       while (currentCount != 0) {
         if (currentCount == 1 || (currentCount == 2 && tempReg[1] == 0)) {
           int rest = ((int)tempReg[0]) & 0xffff;
@@ -3912,7 +3922,7 @@ namespace PeterO {
           int wci = currentCount;
           short remainderShort = 0;
           int quo, rem;
-          bool firstdigit = false;
+          var firstdigit = false;
           short[] dividend = tempReg ?? this.words;
           // Divide by 10000
           while ((wci--) > 0) {
@@ -4011,7 +4021,7 @@ namespace PeterO {
         while (numWordCount != 0 && tempReg[numWordCount - 1] == 0) {
           --numWordCount;
         }
-        int i = 0;
+        var i = 0;
         var s = new char[(numWordCount << 4) + 1];
         while (numWordCount != 0) {
           if (numWordCount == 1 && tempReg[0] > 0 && tempReg[0] <= 0x7fff) {
@@ -4081,7 +4091,7 @@ namespace PeterO {
         if (this.negative) {
           sb.Append('-');
         }
-        bool firstBit = true;
+        var firstBit = true;
         int word = this.words[this.wordCount - 1];
         for (int i = 0; i < 4; ++i) {
           if (!firstBit || (word & 0xf000) != 0) {
@@ -4105,7 +4115,7 @@ namespace PeterO {
         if (this.negative) {
           sb.Append('-');
         }
-        bool firstBit = true;
+        var firstBit = true;
         int word = this.words[this.wordCount - 1];
         for (int i = 0; i < 16; ++i) {
           if (!firstBit || (word & 0x8000) != 0) {
@@ -4130,7 +4140,7 @@ namespace PeterO {
         while (numWordCount != 0 && tempReg[numWordCount - 1] == 0) {
           --numWordCount;
         }
-        int i = 0;
+        var i = 0;
         var s = new char[(numWordCount << 4) + 1];
         while (numWordCount != 0) {
           if (numWordCount == 1 && tempReg[0] > 0 && tempReg[0] <= 0x7fff) {
@@ -4262,7 +4272,7 @@ namespace PeterO {
       return fromRadixSubstring(str, 10, index, endIndex);
     }
 
-    private static int[] valueMaxSafeInts = { 1073741823, 715827881,
+    private static readonly int[] valueMaxSafeInts = { 1073741823, 715827881,
       536870911, 429496728, 357913940, 306783377, 268435455, 238609293,
       214748363, 195225785, 178956969, 165191048, 153391688, 143165575,
       134217727, 126322566, 119304646, 113025454, 107374181, 102261125,
@@ -4270,7 +4280,8 @@ namespace PeterO {
       74051159, 71582787, 69273665, 67108863, 65075261, 63161282, 61356674,
       59652322 };
 
-    private static int[] valueCharToDigit = { 36, 36, 36, 36, 36, 36, 36,
+ private static readonly int[] valueCharToDigit = { 36, 36, 36, 36, 36, 36,
+      36,
       36,
       36, 36, 36, 36, 36, 36, 36, 36,
       36, 36, 36, 36, 36, 36, 36, 36,
@@ -4344,7 +4355,7 @@ namespace PeterO {
       if (index == endIndex) {
         throw new FormatException("No digits");
       }
-      bool negative = false;
+      var negative = false;
       if (str[index] == '-') {
         ++index;
         if (index == endIndex) {
@@ -4376,7 +4387,7 @@ namespace PeterO {
         // Get most significant digits if effective
         // length is not divisible by 4
         if (leftover != 0) {
-          int extraWord = 0;
+          var extraWord = 0;
           for (int i = 0; i < leftover; ++i) {
             extraWord <<= 4;
             char c = str[index + i];
@@ -4429,10 +4440,10 @@ namespace PeterO {
         }
       } else {
         bigint = new short[4];
-        bool haveSmallInt = true;
+        var haveSmallInt = true;
         int maxSafeInt = valueMaxSafeInts[radix - 2];
         int maxShortPlusOneMinusRadix = 65536 - radix;
-        int smallInt = 0;
+        var smallInt = 0;
         for (int i = index; i < endIndex; ++i) {
           char c = str[i];
           int digit = (c >= 0x80) ? 36 : valueCharToDigit[(int)c];
@@ -4500,7 +4511,7 @@ namespace PeterO {
     /// if this value is 0 or odd. (NOTE: In future versions, may return -1
     /// instead if this value is 0.).</returns>
     public int getLowBit() {
-      int retSetBit = 0;
+      var retSetBit = 0;
       for (var i = 0; i < this.wordCount; ++i) {
         short c = this.words[i];
         if (c == (short)0) {
@@ -4648,7 +4659,7 @@ namespace PeterO {
     /// <summary>Returns the hash code for this instance.</summary>
     /// <returns>A 32-bit signed integer.</returns>
     public override int GetHashCode() {
-      int hashCodeValue = 0;
+      var hashCodeValue = 0;
       unchecked {
         hashCodeValue += 1000000007 * this.Sign.GetHashCode();
         if (this.words != null) {
@@ -4772,7 +4783,7 @@ namespace PeterO {
               (short)carry);
           }
         }
-        bool needShorten = true;
+        var needShorten = true;
         if (carry != 0) {
           int nextIndex = desiredLength;
           int len = RoundupSize(nextIndex + 1);
@@ -4801,7 +4812,7 @@ namespace PeterO {
       words1Size += words1Size & 1;
       int words2Size = subtrahend.wordCount;
       words2Size += words2Size & 1;
-      bool diffNeg = false;
+      var diffNeg = false;
       short borrow;
       var diffReg = new short[(
         int)Math.Max(
@@ -4925,7 +4936,7 @@ namespace PeterO {
       }
       short[] productreg;
       int productwordCount;
-      bool needShorten = true;
+      var needShorten = true;
       if (this.wordCount == 1) {
         int wc = bigintMult.wordCount;
         int regLength = RoundupSize(wc + 1);
@@ -5462,7 +5473,7 @@ namespace PeterO {
       if (thisValue.canFitInInt()) {
         int smallValue = thisValue.intValueChecked();
         // No need to check for zero; already done above
-        int smallintX = 0;
+        var smallintX = 0;
         int smallintY = 1 << powerBits;
         do {
           smallintX = smallintY;

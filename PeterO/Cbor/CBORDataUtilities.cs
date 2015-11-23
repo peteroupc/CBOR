@@ -44,23 +44,23 @@ namespace PeterO.Cbor {
       if (String.IsNullOrEmpty(str)) {
         return null;
       }
-      int offset = 0;
-      bool negative = false;
+      var offset = 0;
+      var negative = false;
       if (str[0] == '-' && !positiveOnly) {
         negative = true;
         ++offset;
       }
-      int mantInt = 0;
+      var mantInt = 0;
       FastInteger mant = null;
-      int mantBuffer = 0;
-      int mantBufferMult = 1;
-      int expBuffer = 0;
-      int expBufferMult = 1;
-      bool haveDecimalPoint = false;
-      bool haveDigits = false;
-      bool haveDigitsAfterDecimal = false;
-      bool haveExponent = false;
-      int newScaleInt = 0;
+      var mantBuffer = 0;
+      var mantBufferMult = 1;
+      var expBuffer = 0;
+      var expBufferMult = 1;
+      var haveDecimalPoint = false;
+      var haveDigits = false;
+      var haveDigitsAfterDecimal = false;
+      var haveExponent = false;
+      var newScaleInt = 0;
       FastInteger newScale = null;
       int i = offset;
       // Ordinary number
@@ -141,7 +141,7 @@ namespace PeterO.Cbor {
       }
       if (haveExponent) {
         FastInteger exp = null;
-        int expInt = 0;
+        var expInt = 0;
         offset = 1;
         haveDigits = false;
         if (i == str.Length) {

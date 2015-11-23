@@ -90,7 +90,7 @@ namespace Test {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
-      int type = 0;
+      var type = 0;
       byte[] bytes;
       if (value < 0) {
         ++value;

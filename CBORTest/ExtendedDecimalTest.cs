@@ -1095,16 +1095,18 @@ Assert.AreEqual(1, numberTemp);
       try {
         ExtendedDecimal.Min(null, ExtendedDecimal.One);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
+      } catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
         ExtendedDecimal.Min(ExtendedDecimal.One, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-      } catch (Exception ex) {
+      } catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
+} catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -1187,7 +1189,8 @@ stringTemp);
       try {
  ExtendedDecimal.One.MultiplyAndAdd(null, ExtendedDecimal.Zero, null);
 Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
+} catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1195,7 +1198,8 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
  ExtendedDecimal.One.MultiplyAndAdd(ExtendedDecimal.Zero, null, null);
 Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
+} catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1203,7 +1207,8 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
  ExtendedDecimal.One.MultiplyAndAdd(null, null, null);
 Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
+} catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1211,7 +1216,8 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
  ExtendedDecimal.One.MultiplyAndAdd(null, ExtendedDecimal.Zero);
 Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
+} catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1219,7 +1225,8 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
  ExtendedDecimal.One.MultiplyAndAdd(ExtendedDecimal.Zero, null);
 Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
+} catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1227,7 +1234,8 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
  ExtendedDecimal.One.MultiplyAndAdd(null, null);
 Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
+} catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1238,7 +1246,8 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
  ExtendedDecimal.One.MultiplyAndSubtract(null, ExtendedDecimal.Zero, null);
 Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
+} catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1246,7 +1255,8 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
  ExtendedDecimal.One.MultiplyAndSubtract(ExtendedDecimal.Zero, null, null);
 Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
+} catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1254,7 +1264,8 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
  ExtendedDecimal.One.MultiplyAndSubtract(null, null, null);
 Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
+} catch (ArgumentNullException ex) {
+Console.WriteLine(ex.Message);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);

@@ -27,7 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <DocumentationFile>bin\Debug\CBOR.xml</DocumentationFile>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>Portable.CBOR.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,6 +38,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\CBOR.xml</DocumentationFile>
     <NoWarn>1587</NoWarn>
+    <CodeAnalysisRuleSet>Portable.CBOR.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="PeterO\BigInteger.cs" />
@@ -112,6 +113,9 @@
     <Compile Include="PeterO\TrapException.cs" />
     <Compile Include="PeterO\TrappableRadixMath.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Portable.CBOR.ruleset" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -120,5 +124,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <!--
   <Import Project="$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets" />
+  -->
 </Project>

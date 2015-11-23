@@ -45,27 +45,28 @@ namespace CBOR {
 "DivideByZero: " + str);
     }
 
-    private bool Contains(string str, string sub) {
+    private static bool Contains(string str, string sub) {
       return (sub.Length == 1) ? (str.IndexOf(sub[0]) >= 0) :
         (str.IndexOf(sub, StringComparison.Ordinal) >= 0);
     }
 
-    private bool StartsWith(string str, string sub) {
+    private static bool StartsWith(string str, string sub) {
       return str.StartsWith(sub, StringComparison.Ordinal);
     }
 
-    private bool EndsWith(string str, string sub) {
+    private static bool EndsWith(string str, string sub) {
       return str.EndsWith(sub, StringComparison.Ordinal);
     }
 
-    private int HexInt(string str) {
+    private static int HexInt(string str) {
       return Int32.Parse(
         str,
         System.Globalization.NumberStyles.AllowHexSpecifier,
         System.Globalization.CultureInfo.InvariantCulture);
     }
 
-    private PrecisionContext SetRounding(PrecisionContext ctx, string round) {
+    private static PrecisionContext SetRounding(PrecisionContext ctx, string
+      round) {
       if (round.Equals(">")) {
         ctx = ctx.WithRounding(Rounding.Ceiling);
       }
@@ -85,10 +86,6 @@ namespace CBOR {
         ctx = ctx.WithRounding(Rounding.HalfDown);
       }
       return ctx;
-    }
-
-    private string DecFracString(ExtendedDecimal df) {
-      return "ExtendedDecimal.FromString(\"" + df + "\")";
     }
 
     private static string ConvertOp(string s) {
@@ -132,22 +129,22 @@ PrecisionContext ctx);
       private ExtendedDecimal ed;
 
       public static DecimalNumber Create(ExtendedDecimal dec) {
-        DecimalNumber dn = new ExtensiveTest.DecimalNumber();
-        dn.ed = dec;
+        var dn = new ExtensiveTest.DecimalNumber {
+          ed = dec };
         return dn;
       }
 
       #region Equals and GetHashCode implementation
       public override bool Equals(object obj) {
-        ExtensiveTest.DecimalNumber other = obj as ExtensiveTest.DecimalNumber;
-        return (other != null) && Object.Equals(this.ed, other.ed);
+        var other = obj as ExtensiveTest.DecimalNumber;
+        return (other != null) && Object.Equals(ed, other.ed);
       }
 
       public override int GetHashCode() {
-        int hashCode = 703582279;
+        var hashCode = 703582279;
         unchecked {
-          if (this.ed != null) {
-            hashCode += 703582387 * this.ed.GetHashCode();
+          if (ed != null) {
+            hashCode += 703582387 * ed.GetHashCode();
           }
         }
         return hashCode;
@@ -155,12 +152,12 @@ PrecisionContext ctx);
       #endregion
 
       public override string ToString() {
-        return this.ed.ToString();
+        return ed.ToString();
       }
 
       public object Value {
         get {
-          return this.ed;
+          return ed;
         }
       }
 
@@ -171,56 +168,56 @@ PrecisionContext ctx);
       public ExtensiveTest.IExtendedNumber Add(
         ExtensiveTest.IExtendedNumber b,
         PrecisionContext ctx) {
-        return Create(this.ed.Add(ToValue(b), ctx));
+        return Create(ed.Add(ToValue(b), ctx));
       }
 
       public ExtensiveTest.IExtendedNumber
         Subtract(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
-        return Create(this.ed.Subtract(ToValue(b), ctx));
+        return Create(ed.Subtract(ToValue(b), ctx));
       }
 
       public ExtensiveTest.IExtendedNumber
         Multiply(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
-        return Create(this.ed.Multiply(ToValue(b), ctx));
+        return Create(ed.Multiply(ToValue(b), ctx));
       }
 
       public ExtensiveTest.IExtendedNumber
         Divide(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
-        return Create(this.ed.Divide(ToValue(b), ctx));
+        return Create(ed.Divide(ToValue(b), ctx));
       }
 
       public ExtensiveTest.IExtendedNumber SquareRoot(PrecisionContext ctx) {
-        return Create(this.ed.SquareRoot(ctx));
+        return Create(ed.SquareRoot(ctx));
       }
 
       public ExtensiveTest.IExtendedNumber MultiplyAndAdd(
           ExtensiveTest.IExtendedNumber b,
           ExtensiveTest.IExtendedNumber c,
           PrecisionContext ctx) {
-        return Create(this.ed.MultiplyAndAdd(ToValue(b), ToValue(c), ctx));
+        return Create(ed.MultiplyAndAdd(ToValue(b), ToValue(c), ctx));
       }
 
       public ExtensiveTest.IExtendedNumber MultiplyAndSubtract(
           ExtensiveTest.IExtendedNumber b,
           ExtensiveTest.IExtendedNumber c,
           PrecisionContext ctx) {
-        return Create(this.ed.MultiplyAndSubtract(ToValue(b), ToValue(c), ctx));
+        return Create(ed.MultiplyAndSubtract(ToValue(b), ToValue(c), ctx));
       }
 
       public bool IsQuietNaN() {
-        return this.ed != null && ToValue(this).IsQuietNaN();
+        return ed != null && ToValue(this).IsQuietNaN();
       }
 
       public bool IsSignalingNaN() {
-        return this.ed != null && ToValue(this).IsSignalingNaN();
+        return ed != null && ToValue(this).IsSignalingNaN();
       }
 
       public bool IsInfinity() {
-        return this.ed != null && ToValue(this).IsInfinity();
+        return ed != null && ToValue(this).IsInfinity();
       }
 
       public bool IsZeroValue() {
-        return this.ed != null && ToValue(this).IsZero;
+        return ed != null && ToValue(this).IsZero;
       }
     }
 
@@ -228,7 +225,7 @@ PrecisionContext ctx);
       private ExtendedFloat ef;
 
       public static BinaryNumber Create(ExtendedFloat dec) {
-        BinaryNumber dn = new ExtensiveTest.BinaryNumber();
+        var dn = new ExtensiveTest.BinaryNumber();
         if (dec == null) {
           throw new ArgumentNullException("dec");
         }
@@ -261,19 +258,19 @@ PrecisionContext ctx);
         if (str.Equals("+Inf")) {
           return Create(ExtendedFloat.PositiveInfinity);
         }
-        int offset = 0;
-        bool negative = false;
+        var offset = 0;
+        var negative = false;
         if (str[0] == '+' || str[0] == '-') {
           negative = str[0] == '-';
           ++offset;
         }
-        int i = offset;
-        int beforeDec = 0;
-        int mantissa = 0;
-        int exponent = 0;
-        bool haveDec = false;
-        bool haveBinExp = false;
-        bool haveDigits = false;
+        var i = offset;
+        var beforeDec = 0;
+        var mantissa = 0;
+        var exponent = 0;
+        var haveDec = false;
+        var haveBinExp = false;
+        var haveDigits = false;
         for (; i < str.Length; ++i) {
           if (str[i] >= '0' && str[i] <= '9') {
             var thisdigit = (int)(str[i] - '0');
@@ -318,7 +315,7 @@ PrecisionContext ctx);
         }
         if (haveDec) {
           haveDigits = false;
-          int afterDec = 0;
+          var afterDec = 0;
           for (; i < str.Length; ++i) {
             if (str[i] >= '0' && str[i] <= '9') {
               var thisdigit = (int)(str[i] - '0');
@@ -365,7 +362,7 @@ PrecisionContext ctx);
         }
         if (haveBinExp) {
           haveDigits = false;
-          bool negexp = false;
+          var negexp = false;
           if (i < str.Length && str[i] == '-') {
             negexp = true;
             ++i;
@@ -406,9 +403,9 @@ ExtendedFloat.Create(
           throw new ArgumentException("words");
         }
         if (words.Length == 1) {
-          bool neg = (words[0] >> 31) != 0;
-          int exponent = (words[0] >> 23) & 0xff;
-          int mantissa = words[0] & 0x7fffff;
+          var neg = (words[0] >> 31) != 0;
+          var exponent = (words[0] >> 23) & 0xff;
+          var mantissa = words[0] & 0x7fffff;
           if (exponent == 255) {
          return (mantissa == 0) ? Create(neg ? ExtendedFloat.NegativeInfinity :
                     ExtendedFloat.PositiveInfinity) : (((mantissa &
@@ -438,10 +435,10 @@ bigmantissa,
 (BigInteger)exponent));
         }
         if (words.Length == 2) {
-          bool neg = (words[0] >> 31) != 0;
-          int exponent = (words[0] >> 20) & 0x7ff;
-          int mantissa = words[0] & 0xfffff;
-          int mantissaNonzero = mantissa | words[1];
+          var neg = (words[0] >> 31) != 0;
+          var exponent = (words[0] >> 20) & 0x7ff;
+          var mantissa = words[0] & 0xfffff;
+          var mantissaNonzero = mantissa | words[1];
           if (exponent == 2047) {
             return (mantissaNonzero == 0) ? Create(neg ?
   ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity) :
@@ -460,7 +457,7 @@ bigmantissa,
             exponent -= 1023;
             mantissa |= 0x100000;
           }
-          BigInteger bigmantissa = BigInteger.Zero;
+          var bigmantissa = BigInteger.Zero;
           bigmantissa += (BigInteger)((mantissa >> 16) & 0xffff);
           bigmantissa <<= 16;
           bigmantissa += (BigInteger)(mantissa & 0xffff);
@@ -478,10 +475,10 @@ bigmantissa,
 (BigInteger)exponent));
         }
         if (words.Length == 4) {
-          bool neg = (words[0] >> 31) != 0;
-          int exponent = (words[0] >> 16) & 0x7fff;
-          int mantissa = words[0] & 0xffff;
-          int mantissaNonzero = mantissa | words[3] | words[1] | words[2];
+          var neg = (words[0] >> 31) != 0;
+          var exponent = (words[0] >> 16) & 0x7fff;
+          var mantissa = words[0] & 0xffff;
+          var mantissaNonzero = mantissa | words[3] | words[1] | words[2];
           if (exponent == 0x7fff) {
             return (mantissaNonzero == 0) ? Create(neg ?
   ExtendedFloat.NegativeInfinity : ExtendedFloat.PositiveInfinity) :
@@ -500,7 +497,7 @@ bigmantissa,
             exponent -= 16383;
             mantissa |= 0x10000;
           }
-          BigInteger bigmantissa = BigInteger.Zero;
+          var bigmantissa = BigInteger.Zero;
           bigmantissa += (BigInteger)((mantissa >> 16) & 0xffff);
           bigmantissa <<= 16;
           bigmantissa += (BigInteger)(mantissa & 0xffff);
@@ -530,15 +527,15 @@ bigmantissa,
 
       #region Equals and GetHashCode implementation
       public override bool Equals(object obj) {
-        ExtensiveTest.BinaryNumber other = obj as ExtensiveTest.BinaryNumber;
-        return (other != null) && (this.ef.CompareTo(other.ef) == 0);
+        var other = obj as ExtensiveTest.BinaryNumber;
+        return (other != null) && (ef.CompareTo(other.ef) == 0);
       }
 
       public override int GetHashCode() {
-        int hashCode = 703582379;
+        var hashCode = 703582379;
         unchecked {
-          if (this.ef != null) {
-            hashCode += 703582447 * this.ef.GetHashCode();
+          if (ef != null) {
+            hashCode += 703582447 * ef.GetHashCode();
           }
         }
         return hashCode;
@@ -546,12 +543,12 @@ bigmantissa,
       #endregion
 
       public override string ToString() {
-        return this.ef.ToString();
+        return ef.ToString();
       }
 
       public object Value {
         get {
-          return this.ef;
+          return ef;
         }
       }
 
@@ -562,51 +559,51 @@ bigmantissa,
       public ExtensiveTest.IExtendedNumber Add(
         ExtensiveTest.IExtendedNumber b,
         PrecisionContext ctx) {
-        return Create(this.ef.Add(ToValue(b), ctx));
+        return Create(ef.Add(ToValue(b), ctx));
       }
 
       public ExtensiveTest.IExtendedNumber
         Subtract(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
-        return Create(this.ef.Subtract(ToValue(b), ctx));
+        return Create(ef.Subtract(ToValue(b), ctx));
       }
 
       public ExtensiveTest.IExtendedNumber
         Multiply(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
-        return Create(this.ef.Multiply(ToValue(b), ctx));
+        return Create(ef.Multiply(ToValue(b), ctx));
       }
 
       public ExtensiveTest.IExtendedNumber
         Divide(ExtensiveTest.IExtendedNumber b, PrecisionContext ctx) {
-        return Create(this.ef.Divide(ToValue(b), ctx));
+        return Create(ef.Divide(ToValue(b), ctx));
       }
 
       public BinaryNumber Pow(
 ExtensiveTest.IExtendedNumber b,
 PrecisionContext ctx) {
-        return Create(this.ef.Pow(ToValue(b), ctx));
+        return Create(ef.Pow(ToValue(b), ctx));
       }
 
       public ExtensiveTest.IExtendedNumber SquareRoot(PrecisionContext ctx) {
-        return Create(this.ef.SquareRoot(ctx));
+        return Create(ef.SquareRoot(ctx));
       }
 
       public ExtensiveTest.IExtendedNumber MultiplyAndAdd(
           ExtensiveTest.IExtendedNumber b,
           ExtensiveTest.IExtendedNumber c,
           PrecisionContext ctx) {
-        return Create(this.ef.MultiplyAndAdd(ToValue(b), ToValue(c), ctx));
+        return Create(ef.MultiplyAndAdd(ToValue(b), ToValue(c), ctx));
       }
 
       public ExtensiveTest.IExtendedNumber MultiplyAndSubtract(
           ExtensiveTest.IExtendedNumber b,
           ExtensiveTest.IExtendedNumber c,
           PrecisionContext ctx) {
-        return Create(this.ef.MultiplyAndSubtract(ToValue(b), ToValue(c), ctx));
+        return Create(ef.MultiplyAndSubtract(ToValue(b), ToValue(c), ctx));
       }
 
       public bool IsNear(IExtendedNumber bn) {
         // ComparePrint(bn);
-        ExtendedFloat ulpdiff = ExtendedFloat.Create(
+        var ulpdiff = ExtendedFloat.Create(
           (BigInteger)2,
           ToValue(this).Exponent);
         return ToValue(this).Subtract(ToValue(bn)).Abs().CompareTo(ulpdiff) <=
@@ -619,65 +616,65 @@ PrecisionContext ctx) {
       }
 
       public BinaryNumber RoundToIntegralExact(PrecisionContext ctx) {
-        return Create(this.ef.RoundToIntegralExact(ctx));
+        return Create(ef.RoundToIntegralExact(ctx));
       }
 
       public BinaryNumber Log(PrecisionContext ctx) {
-        return Create(this.ef.Log(ctx));
+        return Create(ef.Log(ctx));
       }
 
       public BinaryNumber Remainder(IExtendedNumber bn, PrecisionContext ctx) {
-        return Create(this.ef.Remainder(ToValue(bn), ctx));
+        return Create(ef.Remainder(ToValue(bn), ctx));
       }
 
       public BinaryNumber Exp(PrecisionContext ctx) {
-        return Create(this.ef.Exp(ctx));
+        return Create(ef.Exp(ctx));
       }
 
       public BinaryNumber Abs(PrecisionContext ctx) {
-        return Create(this.ef.Abs(ctx));
+        return Create(ef.Abs(ctx));
       }
 
       public BinaryNumber Log10(PrecisionContext ctx) {
-        return Create(this.ef.Log10(ctx));
+        return Create(ef.Log10(ctx));
       }
 
       public bool IsQuietNaN() {
-        return this.ef != null && ToValue(this).IsQuietNaN();
+        return ef != null && ToValue(this).IsQuietNaN();
       }
 
       public bool IsSignalingNaN() {
-        return this.ef != null && ToValue(this).IsSignalingNaN();
+        return ef != null && ToValue(this).IsSignalingNaN();
       }
 
       public bool IsInfinity() {
-        return this.ef != null && ToValue(this).IsInfinity();
+        return ef != null && ToValue(this).IsInfinity();
       }
 
       public bool IsZeroValue() {
-        return this.ef != null && ToValue(this).IsZero;
+        return ef != null && ToValue(this).IsZero;
       }
     }
 
     private int ParseLineInput(string ln) {
-      string[] chunks = this.Contains(ln, " " + " ") ?
+      var chunks = Contains(ln, " " + " ") ?
         Regex.Split(ln, " +") : ln.Split(' ');
       if (chunks.Length < 4) {
         return 0;
       }
-      string type = chunks[0];
+      var type = chunks[0];
       PrecisionContext ctx = null;
-      string op = String.Empty;
-      int size = 0;
-      if (this.EndsWith(type, "d")) {
+      var op = String.Empty;
+      var size = 0;
+      if (EndsWith(type, "d")) {
         op = type.Substring(0, type.Length - 1);
         ctx = PrecisionContext.Binary64;
         size = 1;
-      } else if (this.EndsWith(type, "s")) {
+      } else if (EndsWith(type, "s")) {
         op = type.Substring(0, type.Length - 1);
         ctx = PrecisionContext.Binary32;
         size = 0;
-      } else if (this.EndsWith(type, "q")) {
+      } else if (EndsWith(type, "q")) {
         op = type.Substring(0, type.Length - 1);
         ctx = PrecisionContext.Binary128;
         size = 2;
@@ -685,33 +682,39 @@ PrecisionContext ctx) {
       if (ctx == null) {
         return 0;
       }
-      string round = chunks[1];
-      string flags = chunks[3];
-      string compareOp = chunks[2];
-      if (round == "m") {
-        ctx = ctx.WithRounding(Rounding.Floor);
-      } else if (round == "p") {
-        ctx = ctx.WithRounding(Rounding.Ceiling);
-      } else if (round == "z") {
-        ctx = ctx.WithRounding(Rounding.Down);
-      } else if (round == "n") {
-        ctx = ctx.WithRounding(Rounding.HalfEven);
-      } else {
-        return 0;
+      var round = chunks[1];
+      var flags = chunks[3];
+      var compareOp = chunks[2];
+      switch (round) {
+        case "m":
+          ctx = ctx.WithRounding(Rounding.Floor);
+          break;
+        case "p":
+          ctx = ctx.WithRounding(Rounding.Ceiling);
+          break;
+        case "z":
+          ctx = ctx.WithRounding(Rounding.Down);
+          break;
+        case "n":
+          ctx = ctx.WithRounding(Rounding.HalfEven);
+          break;
+        default:
+          return 0;
       }
+
       BinaryNumber op1, op2, result;
       if (size == 0) {
         // single
         if (chunks.Length < 6) {
           return 0;
         }
-        op1 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[4]) });
-        op2 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[5]) });
+        op1 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[4]) });
+        op2 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[5]) });
         if (chunks.Length == 6 || chunks[6].Length == 0) {
           result = op2;
           op2 = null;
         } else {
-          result = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[6])
+          result = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[6])
                     });
         }
       } else if (size == 1) {
@@ -719,35 +722,35 @@ PrecisionContext ctx) {
         if (chunks.Length < 8) {
           return 0;
         }
-        op1 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[4]),
-                    this.HexInt(chunks[5]) });
-        op2 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[6]),
-                    this.HexInt(chunks[7]) });
+        op1 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[4]),
+                    HexInt(chunks[5]) });
+        op2 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[6]),
+                    HexInt(chunks[7]) });
         if (chunks.Length == 8 || chunks[8].Length == 0) {
           result = op2;
           op2 = null;
           return 0;
         }
-        result = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[8]),
-                    this.HexInt(chunks[9]) });
+        result = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[8]),
+                    HexInt(chunks[9]) });
       } else if (size == 2) {
         // quad
         if (chunks.Length < 12) {
           return 0;
         }
-        op1 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[4]),
-                this.HexInt(chunks[5]), this.HexInt(chunks[6]),
-                    this.HexInt(chunks[7]) });
-        op2 = BinaryNumber.FromFloatWords(new[] { this.HexInt(chunks[8]),
-                this.HexInt(chunks[9]), this.HexInt(chunks[10]),
-                    this.HexInt(chunks[11]) });
+        op1 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[4]),
+HexInt(chunks[5]), HexInt(chunks[6]),
+                    HexInt(chunks[7]) });
+        op2 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[8]),
+HexInt(chunks[9]), HexInt(chunks[10]),
+HexInt(chunks[11]) });
         if (chunks.Length == 12 || chunks[12].Length == 0) {
           result = op2;
           op2 = null;
         } else {
           result = BinaryNumber.FromFloatWords(new[] {
-                this.HexInt(chunks[12]), this.HexInt(chunks[13]),
-                this.HexInt(chunks[14]), this.HexInt(chunks[15]) });
+HexInt(chunks[12]), HexInt(chunks[13]),
+HexInt(chunks[14]), HexInt(chunks[15]) });
         }
       } else {
         return 0;
@@ -755,29 +758,29 @@ PrecisionContext ctx) {
       if (compareOp.Equals("uo")) {
         result = BinaryNumber.FromString("NaN");
       }
-      int expectedFlags = 0;
-      int ignoredFlags = 0;
-      if (this.Contains(flags, "?x")) {
+      var expectedFlags = 0;
+      var ignoredFlags = 0;
+      if (Contains(flags, "?x")) {
         ignoredFlags |= PrecisionContext.FlagInexact;
-      } else if (this.Contains(flags, "x")) {
+      } else if (Contains(flags, "x")) {
         expectedFlags |= PrecisionContext.FlagInexact;
       }
-      if (this.Contains(flags, "u")) {
+      if (Contains(flags, "u")) {
         expectedFlags |= PrecisionContext.FlagUnderflow;
       }
-      if (this.Contains(flags, "o")) {
+      if (Contains(flags, "o")) {
         expectedFlags |= PrecisionContext.FlagOverflow;
       }
-      if (this.Contains(flags, "v")) {
+      if (Contains(flags, "v")) {
         expectedFlags |= PrecisionContext.FlagInvalid;
       }
-      if (this.Contains(flags, "d")) {
+      if (Contains(flags, "d")) {
         expectedFlags |= PrecisionContext.FlagDivideByZero;
       }
 
       ctx = ctx.WithBlankFlags();
       if (op.Equals("add")) {
-        IExtendedNumber d3 = op1.Add(op2, ctx);
+        var d3 = op1.Add(op2, ctx);
         if (!result.Equals(d3)) {
           Assert.AreEqual(result, d3, ln);
         }
@@ -790,7 +793,7 @@ PrecisionContext ctx) {
           AssertFlags(expectedFlags, ctx.Flags, ln);
         }
       } else if (op.Equals("sub")) {
-        IExtendedNumber d3 = op1.Subtract(op2, ctx);
+        var d3 = op1.Subtract(op2, ctx);
         if (!result.Equals(d3)) {
           Assert.AreEqual(result, d3, ln);
         }
@@ -803,7 +806,7 @@ PrecisionContext ctx) {
           AssertFlags(expectedFlags, ctx.Flags, ln);
         }
       } else if (op.Equals("mul")) {
-        IExtendedNumber d3 = op1.Multiply(op2, ctx);
+        var d3 = op1.Multiply(op2, ctx);
         if (!result.Equals(d3)) {
           Assert.AreEqual(result, d3, ln);
         }
@@ -816,7 +819,7 @@ PrecisionContext ctx) {
           AssertFlags(expectedFlags, ctx.Flags, ln);
         }
       } else if (op.Equals("pow")) {
-        BinaryNumber d3 = op1.Pow(op2, ctx);
+        var d3 = op1.Pow(op2, ctx);
         // Check for cases that contradict the General Decimal
         // Arithmetic spec
         if (op1.IsZeroValue() && op2.IsZeroValue()) {
@@ -825,7 +828,7 @@ PrecisionContext ctx) {
         if (((ExtendedFloat)op1.Value).Sign < 0 && op2.IsInfinity()) {
           return 0;
         }
-        bool powIntegral = op2.Equals(op2.RoundToIntegralExact(null));
+        var powIntegral = op2.Equals(op2.RoundToIntegralExact(null));
         if (((ExtendedFloat)op1.Value).Sign < 0 &&
             !powIntegral) {
           return 0;
@@ -887,7 +890,7 @@ PrecisionContext ctx) {
         }
         AssertFlags(expectedFlags, ctx.Flags, ln);
       } else if (op.Equals("sqrt")) {
-        IExtendedNumber d3 = op1.SquareRoot(ctx);
+        var d3 = op1.SquareRoot(ctx);
         if (!result.Equals(d3)) {
           Assert.AreEqual(result, d3, ln);
         }
@@ -960,7 +963,7 @@ PrecisionContext ctx) {
           AssertFlags(expectedFlags, ctx.Flags, ln);
         }
       } else if (op.Equals("div")) {
-        IExtendedNumber d3 = op1.Divide(op2, ctx);
+        var d3 = op1.Divide(op2, ctx);
         if (!result.Equals(d3)) {
           Assert.AreEqual(result, d3, ln);
         }
@@ -994,42 +997,40 @@ PrecisionContext ctx) {
         } else {
           AssertFlags(expectedFlags, ctx.Flags, ln);
         }
-      } else {
-        // Console.WriteLine(ln);
       }
       return 0;
     }
 
     private int ParseLine(string ln) {
-      string[] chunks = ln.Split(' ');
+      var chunks = ln.Split(' ');
       if (chunks.Length < 4) {
         return 0;
       }
-      string type = chunks[0];
+      var type = chunks[0];
       PrecisionContext ctx = null;
-      bool binaryFP = false;
-      string op = String.Empty;
-      if (this.StartsWith(type, "d32")) {
+      var binaryFP = false;
+      var op = String.Empty;
+      if (StartsWith(type, "d32")) {
         ctx = PrecisionContext.Decimal32;
         op = type.Substring(3);
       }
-      if (this.StartsWith(type, "d64")) {
+      if (StartsWith(type, "d64")) {
         ctx = PrecisionContext.Decimal64;
         op = type.Substring(3);
       }
-      if (this.StartsWith(type, "b32")) {
+      if (StartsWith(type, "b32")) {
         ctx = PrecisionContext.Binary32;
         binaryFP = true;
         op = type.Substring(3);
       }
-      if (this.StartsWith(type, "d128")) {
+      if (StartsWith(type, "d128")) {
         ctx = PrecisionContext.Decimal128;
         op = type.Substring(4);
       }
       if (ctx == null) {
         return 0;
       }
-      if (this.Contains(type, "!")) {
+      if (Contains(type, "!")) {
         return 0;
       }
       if (op.Contains("cff")) {
@@ -1037,37 +1038,37 @@ PrecisionContext ctx) {
         // conversion to another floating point format
         return 0;
       }
-      bool squroot = op.Equals("V");
-      bool mod = op.Equals("%");
-      bool div = op.Equals("/");
-      bool fma = op.Equals("*+");
-      bool fms = op.Equals("*-");
-      bool addop = op.Equals("+");
-      bool subop = op.Equals("-");
-      bool mul = op.Equals("*");
-      string round = chunks[1];
-      ctx = this.SetRounding(ctx, round);
-      int offset = 0;
-      string traps = String.Empty;
-      if (this.Contains(chunks[2], "x") || chunks[2].Equals("i") ||
-          this.StartsWith(chunks[2], "o")) {
+      var squroot = op.Equals("V");
+      var mod = op.Equals("%");
+      var div = op.Equals("/");
+      var fma = op.Equals("*+");
+      var fms = op.Equals("*-");
+      var addop = op.Equals("+");
+      var subop = op.Equals("-");
+      var mul = op.Equals("*");
+      var round = chunks[1];
+      ctx = SetRounding(ctx, round);
+      var offset = 0;
+      var traps = String.Empty;
+      if (Contains(chunks[2], "x") || chunks[2].Equals("i") ||
+StartsWith(chunks[2], "o")) {
         // traps
         ++offset;
         traps = chunks[2];
       }
-      if (this.Contains(traps, "u") || this.Contains(traps, "o")) {
+      if (Contains(traps, "u") || Contains(traps, "o")) {
         // skip tests that trap underflow or overflow,
         // the results there may be wrong
         return 0;
       }
-      string op1str = ConvertOp(chunks[2 + offset]);
-      string op2str = ConvertOp(chunks[3 + offset]);
-      string op3str = String.Empty;
+      var op1str = ConvertOp(chunks[2 + offset]);
+      var op2str = ConvertOp(chunks[3 + offset]);
+      var op3str = String.Empty;
       if (chunks.Length <= 4 + offset) {
         return 0;
       }
-      string sresult = String.Empty;
-      string flags = String.Empty;
+      var sresult = String.Empty;
+      var flags = String.Empty;
       op3str = chunks[4 + offset];
       if (op2str.Equals("->")) {
         if (chunks.Length <= 5 + offset) {
@@ -1109,25 +1110,25 @@ PrecisionContext ctx) {
           DecimalNumber.Create(ExtendedDecimal.FromString(op3str));
         result = DecimalNumber.Create(ExtendedDecimal.FromString(sresult));
       }
-      int expectedFlags = 0;
-      if (this.Contains(flags, "x")) {
+      var expectedFlags = 0;
+      if (Contains(flags, "x")) {
         expectedFlags |= PrecisionContext.FlagInexact;
       }
-      if (this.Contains(flags, "u")) {
+      if (Contains(flags, "u")) {
         expectedFlags |= PrecisionContext.FlagUnderflow;
       }
-      if (this.Contains(flags, "o")) {
+      if (Contains(flags, "o")) {
         expectedFlags |= PrecisionContext.FlagOverflow;
       }
-      if (this.Contains(flags, "i")) {
+      if (Contains(flags, "i")) {
         expectedFlags |= PrecisionContext.FlagInvalid;
       }
-      if (this.Contains(flags, "z")) {
+      if (Contains(flags, "z")) {
         expectedFlags |= PrecisionContext.FlagDivideByZero;
       }
       ctx = ctx.WithBlankFlags();
       if (addop) {
-        IExtendedNumber d3 = op1.Add(op2, ctx);
+        var d3 = op1.Add(op2, ctx);
         if (!result.Equals(d3)) {
           Assert.AreEqual(result, d3, ln);
         }
@@ -1140,7 +1141,7 @@ PrecisionContext ctx) {
           AssertFlags(expectedFlags, ctx.Flags, ln);
         }
       } else if (subop) {
-        IExtendedNumber d3 = op1.Subtract(op2, ctx);
+        var d3 = op1.Subtract(op2, ctx);
         if (!result.Equals(d3)) {
           Assert.AreEqual(result, d3, ln);
         }
@@ -1153,7 +1154,7 @@ PrecisionContext ctx) {
           AssertFlags(expectedFlags, ctx.Flags, ln);
         }
       } else if (mul) {
-        IExtendedNumber d3 = op1.Multiply(op2, ctx);
+        var d3 = op1.Multiply(op2, ctx);
         if (!result.Equals(d3)) {
           Assert.AreEqual(result, d3, ln);
         }
@@ -1166,7 +1167,7 @@ PrecisionContext ctx) {
           AssertFlags(expectedFlags, ctx.Flags, ln);
         }
       } else if (div) {
-        IExtendedNumber d3 = op1.Divide(op2, ctx);
+        var d3 = op1.Divide(op2, ctx);
         if (!result.Equals(d3)) {
           Assert.AreEqual(result, d3, ln);
         }
@@ -1179,13 +1180,13 @@ PrecisionContext ctx) {
           AssertFlags(expectedFlags, ctx.Flags, ln);
         }
       } else if (squroot) {
-        IExtendedNumber d3 = op1.SquareRoot(ctx);
+        var d3 = op1.SquareRoot(ctx);
         if (!result.Equals(d3)) {
           Assert.AreEqual(result, d3, ln);
         }
         AssertFlags(expectedFlags, ctx.Flags, ln);
       } else if (fma) {
-        IExtendedNumber d3 = op1.MultiplyAndAdd(op2, op3, ctx);
+        var d3 = op1.MultiplyAndAdd(op2, op3, ctx);
         if (!result.Equals(d3)) {
           Assert.AreEqual(result, d3, ln);
         }
@@ -1200,7 +1201,7 @@ PrecisionContext ctx) {
           AssertFlags(expectedFlags, ctx.Flags, ln);
         }
       } else if (fms) {
-        IExtendedNumber d3 = op1.MultiplyAndSubtract(op2, op3, ctx);
+        var d3 = op1.MultiplyAndSubtract(op2, op3, ctx);
         if (!result.Equals(d3)) {
           Assert.AreEqual(result, d3, ln);
         }
@@ -1212,8 +1213,6 @@ PrecisionContext ctx) {
         } else {
           AssertFlags(expectedFlags, ctx.Flags, ln);
         }
-      } else {
-        // Console.WriteLine(ln);
       }
       return 0;
     }
@@ -1221,7 +1220,7 @@ PrecisionContext ctx) {
     public static string[] GetTestFiles() {
       var list = new List<string>(Directory.GetFiles("."));
       if (File.Exists("testfiles.cbor")) {
-CBORObject obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
+var obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
 "testfiles.cbor"));
         for (int i = 0; i < obj.Count; ++i) {
           list.AddRange(Directory.GetFiles(obj[i].AsString()));
@@ -1237,15 +1236,15 @@ CBORObject obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
       var dirfiles = new List<string>();
       var sw = new System.Diagnostics.Stopwatch();
       sw.Start();
-      TextWriter nullWriter = TextWriter.Null;
-      TextWriter standardOut = Console.Out;
-      int x = 0;
+      var nullWriter = TextWriter.Null;
+      var standardOut = Console.Out;
+      var x = 0;
       dirfiles.AddRange(GetTestFiles());
       foreach (var f in dirfiles) {
         Console.WriteLine(f);
         ++x;
-        string lowerF = f.ToLowerInvariant();
-        bool isinput = lowerF.Contains(".input");
+        var lowerF = f.ToLowerInvariant();
+        var isinput = lowerF.Contains(".input");
         if (!lowerF.Contains(".input") && !lowerF.Contains(".txt") &&
             !lowerF.Contains(".dectest") && !lowerF.Contains(".fptest")) {
           continue;
@@ -1257,9 +1256,9 @@ CBORObject obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
               try {
                 // Console.SetOut(nullWriter);
                 if (isinput) {
-                  this.ParseLineInput(ln);
+                  ParseLineInput(ln);
                 } else {
-                  this.ParseLine(ln);
+                  ParseLine(ln);
                 }
               } catch (Exception ex) {
                 errors.Add(ex.Message);
@@ -1267,9 +1266,9 @@ CBORObject obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
                 try {
                   Console.SetOut(standardOut);
                   if (isinput) {
-                    this.ParseLineInput(ln);
+                    ParseLineInput(ln);
                   } else {
-                    this.ParseLine(ln);
+                    ParseLine(ln);
                   }
                 } catch (Exception ex2) {
                   Console.WriteLine(ln);

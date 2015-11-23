@@ -53,7 +53,7 @@ CBORObject objectWithTags) {
       int neededLength = data.Length;
       byte[] bytes;
       BigInteger bi;
-      bool extended = false;
+      var extended = false;
       if (((data[0] >> 7) & 1) != 0) {
         // Increase the needed length
         // if the highest bit is set, to

@@ -11,7 +11,7 @@ using PeterO;
 
 namespace PeterO.Cbor {
   internal class SharedRefs {
-    private IList<CBORObject> sharedObjects;
+    private readonly IList<CBORObject> sharedObjects;
 
     public SharedRefs() {
       this.sharedObjects = new List<CBORObject>();

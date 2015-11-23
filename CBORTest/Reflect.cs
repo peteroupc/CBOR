@@ -7,7 +7,7 @@ namespace Test {
     /// <summary>Utility methods for accessing internal APIs via
     /// reflection.</summary>
   public static class Reflect {
-    private static IDictionary<string, Type> typeCache = new
+    private static readonly IDictionary<string, Type> typeCache = new
       Dictionary<string, Type>();
 
     // Check every assembly in the AppDomain; by default,
@@ -53,7 +53,7 @@ IReflect type,
 string name,
 bool staticMethod,
 int parameterCount) {
-      bool haveMethodName = false;
+      var haveMethodName = false;
       BindingFlags flags = (staticMethod ? BindingFlags.Static :
         BindingFlags.Instance) | BindingFlags.Public |
         BindingFlags.NonPublic | BindingFlags.InvokeMethod;

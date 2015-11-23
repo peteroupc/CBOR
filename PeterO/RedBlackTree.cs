@@ -184,7 +184,7 @@ namespace PeterO {
     // <summary>Return the number of nodes in the sub-tree.</summary>
     // <returns>A 32-bit signed integer.</returns>
       public int size() {
-        int c = 1;
+        var c = 1;
         if (this.leftValue != null) {
           c += this.leftValue.size();
         }
@@ -221,7 +221,7 @@ namespace PeterO {
     // <param name='cmp'>An IComparer object.</param>
     // <returns>A 32-bit signed integer.</returns>
       public int count(T element, IComparer<T> cmp) {
-        int c = 0;
+        var c = 0;
         RBCell t = this;
         while (t != null) {
           int diff = cmp.Compare(element, t.element());
@@ -469,7 +469,7 @@ namespace PeterO {
     private RBCell treeValue;
 
     // <summary>The comparator to use for ordering.</summary>
-    private IComparer<T> cmpValue;
+    private readonly IComparer<T> cmpValue;
 
     // <summary>Initializes a new instance of the RedBlackTree class. Make
     // an empty tree. Initialize to use DefaultIComparer for
@@ -625,7 +625,7 @@ this.treeValue);
     }
 
     private bool remove_(T element, bool allOccurrences) {
-      bool ret = false;
+      var ret = false;
       while (this.countValue > 0) {
         RBCell p = this.treeValue.find(element, this.cmpValue);
         if (p != null) {
@@ -682,6 +682,13 @@ this.treeValue);
     // <param name='array'>A T[] object.</param>
     // <param name='arrayIndex'>Starting index to copy to.</param>
     public void CopyTo(T[] array, int arrayIndex) {
+      if ((array) == null) {
+  throw new ArgumentNullException("array");
+}
+      if (arrayIndex < 0) {
+  throw new ArgumentException("arrayIndex (" + arrayIndex +
+    ") is less than " + 0);
+}
       if (this.treeValue != null) {
         RBCell t = this.treeValue.leftmost();
         while (t != null && arrayIndex < array.Length) {

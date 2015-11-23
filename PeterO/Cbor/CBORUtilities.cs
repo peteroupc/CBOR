@@ -48,7 +48,7 @@ namespace PeterO.Cbor {
       if (a == null) {
         return 0;
       }
-      int ret = 19;
+      var ret = 19;
       unchecked {
         ret = (ret * 31) + a.Length;
         for (var i = 0; i < a.Length; ++i) {
@@ -138,7 +138,7 @@ namespace PeterO.Cbor {
       }
       bool neg = value < 0;
       var chars = new char[24];
-      int count = 0;
+      var count = 0;
       if (neg) {
         chars[0] = '-';
         ++count;

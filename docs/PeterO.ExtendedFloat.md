@@ -765,15 +765,15 @@ A binary float with the same value as  <i>flt</i>
     public static PeterO.ExtendedFloat FromString(
         string str);
 
-Not documented yet.
+Creates a binary float from a string that represents a number. See the four-parameter FromString method.
 
 <b>Parameters:</b>
 
- * <i>str</i>: Not documented yet.
+ * <i>str</i>: A String object.
 
 <b>Returns:</b>
 
-An ExtendedFloat object.
+The parsed number, converted to ExtendedFloat.
 
 ### FromString
 
@@ -839,11 +839,11 @@ The format generally follows the definition in java.math.BigDecimal(), except th
 
  * <i>length</i>: The length, in code units, of the desired portion of "str" (but not more than "str" 's length).
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A PrecisionContext object specifying the precision, rounding, and exponent range to apply to the parsed number. Can be null.
 
 <b>Returns:</b>
 
-An ExtendedFloat object.
+The parsed number, converted to ExtendedFloat.
 
 <b>Exceptions:</b>
 
@@ -872,11 +872,11 @@ Not documented yet.
 
  * <i>str</i>: A String object.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A PrecisionContext object specifying the precision, rounding, and exponent range to apply to the parsed number. Can be null.
 
 <b>Returns:</b>
 
-An ExtendedFloat object.
+The parsed number, converted to ExtendedFloat.
 
 <b>Exceptions:</b>
 

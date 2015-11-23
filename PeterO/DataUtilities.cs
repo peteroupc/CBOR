@@ -114,7 +114,9 @@ bool replace) {
     /// <param name='replace'>If true, replaces unpaired surrogate code
     /// points with the replacement character (U + FFFD). If false, stops
     /// processing when an unpaired surrogate code point is seen.</param>
-    /// <param name='lenientLineBreaks'>A Boolean object.</param>
+    /// <param name='lenientLineBreaks'>If true, replaces carriage return
+    /// (CR) not followed by line feed (LF) and LF not preceded by CR with
+    /// CR-LF pairs.</param>
     /// <returns>The string encoded in UTF-8.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
@@ -130,7 +132,8 @@ bool lenientLineBreaks) {
       }
       try {
         using (var ms = new MemoryStream()) {
-          if (WriteUtf8(str, ms, replace) != 0) {
+       if (WriteUtf8(str, 0, str.Length, ms, replace, lenientLineBreaks) !=
+            0) {
             throw new ArgumentException("Unpaired surrogate code point");
           }
           return ms.ToArray();
@@ -317,9 +320,9 @@ int surrogateBehavior) {
       if (str == null) {
         return null;
       }
-      int len = str.Length;
+      var len = str.Length;
       var c = (char)0;
-      bool hasUpperCase = false;
+      var hasUpperCase = false;
       for (var i = 0; i < len; ++i) {
         c = str[i];
         if (c >= 'A' && c <= 'Z') {
@@ -370,7 +373,7 @@ int surrogateBehavior) {
           if ((ca & 0xf800) != 0xd800) {
             continue;
           }
-          bool incindex = false;
+          var incindex = false;
           if (i + 1 < strA.Length && strA[i + 1] >= 0xdc00 && strA[i + 1] <=
               0xdfff) {
             ca = 0x10000 + ((ca - 0xd800) << 10) + (strA[i + 1] - 0xdc00);
@@ -498,9 +501,9 @@ bool lenientLineBreaks) {
                 (str.Length - offset) + ") is less than " + length);
       }
       byte[] bytes;
-      int retval = 0;
+      var retval = 0;
       bytes = new byte[StreamedStringBufferLength];
-      int byteIndex = 0;
+      var byteIndex = 0;
       int endIndex = offset + length;
       for (int index = offset; index < endIndex; ++index) {
         int c = str[index];
@@ -671,11 +674,11 @@ bool replace) {
       if (builder == null) {
         throw new ArgumentNullException("builder");
       }
-      int cp = 0;
-      int bytesSeen = 0;
-      int bytesNeeded = 0;
-      int lower = 0x80;
-      int upper = 0xbf;
+      var cp = 0;
+      var bytesSeen = 0;
+      var bytesNeeded = 0;
+      var lower = 0x80;
+      var upper = 0xbf;
       int pointer = offset;
       int endpointer = offset + bytesCount;
       while (pointer < endpointer) {
@@ -782,8 +785,7 @@ Stream stream,
 int bytesCount,
 bool replace) {
       var builder = new StringBuilder();
-      int retval = DataUtilities.ReadUtf8(stream, bytesCount, builder, replace);
-      if (retval == -1) {
+      if (DataUtilities.ReadUtf8(stream, bytesCount, builder, replace) == -1) {
         throw new IOException(
        "Unpaired surrogate code point found.",
        new DecoderFallbackException());
@@ -823,12 +825,12 @@ bool replace) {
       if (builder == null) {
         throw new ArgumentNullException("builder");
       }
-      int cp = 0;
-      int bytesSeen = 0;
-      int bytesNeeded = 0;
-      int lower = 0x80;
-      int upper = 0xbf;
-      int pointer = 0;
+      var cp = 0;
+      var bytesSeen = 0;
+      var bytesNeeded = 0;
+      var lower = 0x80;
+      var upper = 0xbf;
+      var pointer = 0;
       while (pointer < bytesCount || bytesCount < 0) {
         int b = stream.ReadByte();
         if (b < 0) {

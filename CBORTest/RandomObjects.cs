@@ -111,7 +111,7 @@ namespace Test {
     public static CBORObject RandomCBORTaggedObject(
       FastRandom rand,
       int depth) {
-      int tag = 0;
+      var tag = 0;
       if (rand.NextValue(2) == 0) {
         int[] tagselection = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 30, 30,
           30, 0, 1, 25, 26, 27 };
