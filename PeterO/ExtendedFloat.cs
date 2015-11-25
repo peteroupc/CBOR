@@ -273,9 +273,10 @@ namespace PeterO {
     /// ('0' through '9').</para></summary>
     /// <param name='str'>A String object.</param>
     /// <param name='offset'>A zero-based index showing where the desired
-    /// portion of "str" begins.</param>
+    /// portion of <paramref name='str'/> begins.</param>
     /// <param name='length'>The length, in code units, of the desired
-    /// portion of "str" (but not more than "str" 's length).</param>
+    /// portion of <paramref name='str'/> (but not more than <paramref
+    /// name='str'/> 's length).</param>
     /// <param name='ctx'>A PrecisionContext object specifying the
     /// precision, rounding, and exponent range to apply to the parsed
     /// number. Can be null.</param>
@@ -293,7 +294,7 @@ namespace PeterO {
       int length,
       PrecisionContext ctx) {
       if (str == null) {
-        throw new ArgumentNullException("str");
+        throw new ArgumentNullException(<paramref name='str'/>);
       }
       return ExtendedDecimal.FromString(
         str,
@@ -325,9 +326,10 @@ namespace PeterO {
     /// <summary>Not documented yet.</summary>
     /// <param name='str'>A String object.</param>
     /// <param name='offset'>A zero-based index showing where the desired
-    /// portion of "str" begins.</param>
+    /// portion of <paramref name='str'/> begins.</param>
     /// <param name='length'>The length, in code units, of the desired
-    /// portion of "str" (but not more than "str" 's length).</param>
+    /// portion of <paramref name='str'/> (but not more than <paramref
+    /// name='str'/> 's length).</param>
     /// <returns>An ExtendedFloat object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
@@ -558,7 +560,7 @@ namespace PeterO {
         return Single.NegativeInfinity;
       }
       if (this.IsNaN()) {
-        int nan = 0x7f800000;
+        var nan = 0x7f800000;
         if (this.IsNegative) {
           nan |= unchecked((int)(1 << 31));
         }

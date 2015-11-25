@@ -749,6 +749,11 @@ StringBuilder builder) {
       this.WriteLine("\r\n\r\n");
     }
 
+    public override void VisitExample(Example example) {
+      base.VisitExample(example);
+      this.WriteLine("\r\n\r\n");
+    }
+
     public override void VisitText(Text text) {
       var t = text.Content;
       // Collapse multiple spaces into a single space
