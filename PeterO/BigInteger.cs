@@ -4236,6 +4236,22 @@ count);
     /// name='radix'/> is less than 2 or greater than 36.</exception>
     /// <exception cref='FormatException'>The string is empty or in an
     /// invalid format.</exception>
+    /// <example>
+    ///  The following example (C#) converts a number in the
+    /// form of a hex string to a big integer.
+    /// <code>
+    /// public static BigInteger HexToBigInteger(string hexString) {
+    ///   // Parse the hexadecimal string as a big integer.  Will
+    ///   // throw a FormatException if the parsing fails
+    ///   var bigInteger = BigInteger.fromRadixString(hexString, 16);
+    ///   // Optional: Check if the parsed integer is negative
+    ///   if (bigInteger.Sign &lt; 0) {
+    ///     throw new FormatException("negative hex string");
+    ///   }
+    ///   return bigInteger;
+    /// }
+    /// </code>
+    /// </example>
     public static BigInteger fromRadixString(string str, int radix) {
       if (str == null) {
         throw new ArgumentNullException("str");
