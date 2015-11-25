@@ -307,6 +307,17 @@ namespace PeterO {
     /// number. See the four-parameter FromString method.</summary>
     /// <param name='str'>A String object.</param>
     /// <returns>The parsed number, converted to ExtendedFloat.</returns>
+    /// <example>
+    ///  The following example converts a number in the form of
+    /// a string to a
+    /// <c>double</c>
+    /// , or a 64-bit floating point number.
+    /// <code>
+    /// public static double StringToDouble(String str) {
+    ///  return ExtendedFloat.FromString(str).ToDouble();
+    /// }
+    /// </code>
+    /// </example>
     public static ExtendedFloat FromString(String str) {
       return FromString(str, 0, str == null ? 0 : str.Length, null);
     }
@@ -663,17 +674,38 @@ namespace PeterO {
     }
 
     /// <summary>Converts this value to a 64-bit floating-point number. The
-    /// half-even rounding mode is used.
-    /// <para>If this value is a NaN, sets the high bit of the 64-bit
-    /// floating point number's mantissa for a quiet NaN, and clears it for
-    /// a signaling NaN. Then the next highest bit of the mantissa is
-    /// cleared for a quiet NaN, and set for a signaling NaN. Then the
-    /// other bits of the mantissa are set to the lowest bits of this
-    /// object's unsigned mantissa.</para></summary>
+    /// half-even rounding mode is used. <para>If this value is a NaN, sets
+    /// the high bit of the 64-bit floating point number's mantissa for a
+    /// quiet NaN, and clears it for a signaling NaN. Then the next highest
+    /// bit of the mantissa is cleared for a quiet NaN, and set for a
+    /// signaling NaN. Then the other bits of the mantissa are set to the
+    /// lowest bits of this object's unsigned mantissa.</para>
+    ///  </summary>
     /// <returns>The closest 64-bit floating-point number to this value.
     /// The return value can be positive infinity or negative infinity if
     /// this value exceeds the range of a 64-bit floating point
     /// number.</returns>
+    /// <example>
+    ///  The following example converts a number in the form of
+    /// a string to a
+    /// <c>double</c>
+    /// , or a 64-bit floating point number.
+    /// <code>
+    /// public static double StringToDouble(String str) {
+    ///  return ExtendedFloat.FromString(str).ToDouble();
+    /// }
+    /// </code>
+    /// </example>
+    /// <example>
+    ///  The following example converts a big integer to a
+    /// <c>double</c>
+    /// , or a 64-bit floating point number.
+    /// <code>
+    /// public static double BigIntegerToDouble(BigInteger bigInteger) {
+    ///  return ExtendedFloat.FromBigInteger(bigInteger).ToDouble();
+    /// }
+    /// </code>
+    /// </example>
     public double ToDouble() {
       if (this.IsPositiveInfinity()) {
         return Double.PositiveInfinity;
@@ -849,14 +881,16 @@ namespace PeterO {
         (BigInteger)(floatExponent - 150));
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Converts a big integer to the same value as a binary
+    /// float.</summary>
     /// <param name='bigint'>A BigInteger object.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public static ExtendedFloat FromBigInteger(BigInteger bigint) {
       return ExtendedFloat.Create(bigint, BigInteger.Zero);
     }
 
-    /// <summary>Not documented yet.</summary>
+    /// <summary>Converts a 64-bit integer to the same value as a binary
+    /// float.</summary>
     /// <param name='valueSmall'>A 64-bit signed integer.</param>
     /// <returns>An ExtendedFloat object.</returns>
     public static ExtendedFloat FromInt64(long valueSmall) {
