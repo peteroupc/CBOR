@@ -294,7 +294,7 @@ namespace PeterO {
       int length,
       PrecisionContext ctx) {
       if (str == null) {
-        throw new ArgumentNullException("str");
+        throw new ArgumentNullException(<paramref name='str'/>);
       }
       return ExtendedDecimal.FromString(
         str,
@@ -311,7 +311,7 @@ namespace PeterO {
     ///  The following example converts a number in the form of
     /// a string to a
     /// <c>double</c>
-    ///  , or a 64-bit floating point number.
+    /// , or a 64-bit floating point number.
     /// <code>
     /// public static double StringToDouble(String str) {
     ///  return ExtendedFloat.FromString(str).ToDouble();
@@ -689,7 +689,7 @@ namespace PeterO {
     ///  The following example converts a number in the form of
     /// a string to a
     /// <c>double</c>
-    ///  , or a 64-bit floating point number.
+    /// , or a 64-bit floating point number.
     /// <code>
     /// public static double StringToDouble(String str) {
     ///  return ExtendedFloat.FromString(str).ToDouble();
@@ -699,7 +699,7 @@ namespace PeterO {
     /// <example>
     ///  The following example converts a big integer to a
     /// <c>double</c>
-    ///  , or a 64-bit floating point number.
+    /// , or a 64-bit floating point number.
     /// <code>
     /// public static double BigIntegerToDouble(BigInteger bigInteger) {
     ///  return ExtendedFloat.FromBigInteger(bigInteger).ToDouble();
