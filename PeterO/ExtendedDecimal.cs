@@ -327,19 +327,20 @@ namespace PeterO {
     /// number.</para>
     /// <para>The format of the string generally consists of:</para>
     /// <list type=''>
-    /// <item>An optional '-' or '+' character (if '-' , the value is
-    /// negative.)</item>
+    /// <item>An optional plus sign ("+" , U+002B) or minus sign ("-",
+    /// U+002D) (if '-' , the value is negative.)</item>
     /// <item>One or more digits, with a single optional decimal point
     /// after the first digit and before the last digit.</item>
-    /// <item>Optionally, E+ (positive exponent) or E- (negative exponent)
-    /// plus one or more digits specifying the exponent.</item></list>
+    /// <item>Optionally, "E+" (positive exponent) or "E-" (negative
+    /// exponent) plus one or more digits specifying the
+    /// exponent.</item></list>
     /// <para>The string can also be "-INF", "-Infinity" , "Infinity",
     /// "INF" , quiet NaN ("qNaN" /"-qNaN") followed by any number of
     /// digits, or signaling NaN ("sNaN" /"-sNaN") followed by any number
     /// of digits, all in any combination of upper and lower case.</para>
     /// <para>The format generally follows the definition in
-    /// java.math.BigDecimal(), except that the digits must be ASCII digits
-    /// ('0' through '9').</para></summary>
+    /// java.math.BigDecimal(), except that the digits must be the basic
+    /// digits 0 to 9 (U + 0030 to U + 0039).</para></summary>
     /// <param name='str'>A string object, a portion of which represents a
     /// number.</param>
     /// <param name='offset'>A zero-based index that identifies the start

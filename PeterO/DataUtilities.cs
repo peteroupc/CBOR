@@ -310,9 +310,9 @@ int surrogateBehavior) {
       return c;
     }
 
-    /// <summary>Returns a string with upper-case ASCII letters (A to Z)
-    /// converted to lower-case. Other characters remain
-    /// unchanged.</summary>
+    /// <summary>Returns a string with the basic upper-case letters A to Z
+    /// (U + 0041 to U + 005A) converted to lower-case. Other characters
+    /// remain unchanged.</summary>
     /// <param name='str'>A string.</param>
     /// <returns>The converted string, or null if <paramref name='str'/> is
     /// null.</returns>
