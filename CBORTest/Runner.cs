@@ -31,7 +31,7 @@ namespace PeterO {
     }
 
     public static void Main() {
-      const String param = null;
+      const String ValueParam = null;
       // Run all the tests in this assembly
       foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
         if (!HasAttribute(type, typeof(TestClassAttribute))) {
@@ -40,8 +40,8 @@ namespace PeterO {
         Console.WriteLine("-------");
         Console.WriteLine(type.FullName);
         Console.WriteLine("-------");
-        if (!string.IsNullOrEmpty(param)) {
-          if (!type.FullName.Contains(param)) {
+        if (!string.IsNullOrEmpty(ValueParam)) {
+          if (!type.FullName.Contains(ValueParam)) {
             // continue;
           }
         }

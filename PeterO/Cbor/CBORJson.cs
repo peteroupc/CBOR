@@ -372,6 +372,7 @@ int quote) {
           // Control characters, and also the line and paragraph separators
           // which apparently can't appear in JavaScript (as opposed to
           // JSON) strings
+          // TODO: Also include 0x7f..0x9f in version 3
           if (first) {
             first = false;
             sb.WriteString(str, 0, i);

@@ -1096,7 +1096,7 @@ Assert.AreEqual(1, numberTemp);
         ExtendedDecimal.Min(null, ExtendedDecimal.One);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1105,7 +1105,7 @@ Console.WriteLine(ex.Message);
         ExtendedDecimal.Min(ExtendedDecimal.One, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1190,7 +1190,7 @@ stringTemp);
  ExtendedDecimal.One.MultiplyAndAdd(null, ExtendedDecimal.Zero, null);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1199,7 +1199,7 @@ throw new InvalidOperationException(String.Empty, ex);
  ExtendedDecimal.One.MultiplyAndAdd(ExtendedDecimal.Zero, null, null);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1208,7 +1208,7 @@ throw new InvalidOperationException(String.Empty, ex);
  ExtendedDecimal.One.MultiplyAndAdd(null, null, null);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1217,7 +1217,7 @@ throw new InvalidOperationException(String.Empty, ex);
  ExtendedDecimal.One.MultiplyAndAdd(null, ExtendedDecimal.Zero);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1226,7 +1226,7 @@ throw new InvalidOperationException(String.Empty, ex);
  ExtendedDecimal.One.MultiplyAndAdd(ExtendedDecimal.Zero, null);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1235,7 +1235,7 @@ throw new InvalidOperationException(String.Empty, ex);
  ExtendedDecimal.One.MultiplyAndAdd(null, null);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1247,7 +1247,7 @@ throw new InvalidOperationException(String.Empty, ex);
  ExtendedDecimal.One.MultiplyAndSubtract(null, ExtendedDecimal.Zero, null);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1256,7 +1256,7 @@ throw new InvalidOperationException(String.Empty, ex);
  ExtendedDecimal.One.MultiplyAndSubtract(ExtendedDecimal.Zero, null, null);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1265,7 +1265,7 @@ throw new InvalidOperationException(String.Empty, ex);
  ExtendedDecimal.One.MultiplyAndSubtract(null, null, null);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);

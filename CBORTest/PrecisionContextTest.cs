@@ -13,7 +13,7 @@ namespace Test {
           new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -24,7 +24,7 @@ Console.WriteLine(ex.Message);
           new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -67,7 +67,7 @@ Console.WriteLine(ex.Message);
  PrecisionContext.Unlimited.ExponentWithinRange(null);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -80,7 +80,7 @@ throw new InvalidOperationException(String.Empty, ex);
         ctx.Flags = 5;
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -97,7 +97,7 @@ Console.WriteLine(ex.Message);
         ctx.Flags = 5;
         Assert.Fail("Should have failed");
       } catch (InvalidOperationException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -209,7 +209,7 @@ Console.WriteLine(ex.Message);
         PrecisionContext.Unlimited.WithBigPrecision(BigInteger.One.negate());
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -229,7 +229,7 @@ Console.WriteLine(ex.Message);
         PrecisionContext.Unlimited.WithExponentRange(1, 0);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -238,7 +238,7 @@ Console.WriteLine(ex.Message);
         PrecisionContext.Unlimited.WithBigExponentRange(null, BigInteger.Zero);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -247,7 +247,7 @@ Console.WriteLine(ex.Message);
         PrecisionContext.Unlimited.WithBigExponentRange(BigInteger.Zero, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -259,7 +259,7 @@ Console.WriteLine(ex.Message);
           BigInteger.Zero);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -275,7 +275,7 @@ Console.WriteLine(ex.Message);
         PrecisionContext.Unlimited.WithPrecision(-1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);

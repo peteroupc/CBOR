@@ -63,9 +63,15 @@ string ln,
         output = valueQuotes.Replace(output, String.Empty);
         bool extended = GetKeyOrDefault(context, "extended", "1").Equals("1");
         bool clamp = GetKeyOrDefault(context, "clamp", "0").Equals("1");
-        int precision = Convert.ToInt32(context["precision"]);
-        int minexponent = Convert.ToInt32(context["minexponent"]);
-        int maxexponent = Convert.ToInt32(context["maxexponent"]);
+        int precision = Convert.ToInt32(
+context["precision"],
+System.Globalization.CultureInfo.InvariantCulture);
+        int minexponent = Convert.ToInt32(
+context["minexponent"],
+System.Globalization.CultureInfo.InvariantCulture);
+        int maxexponent = Convert.ToInt32(
+context["maxexponent"],
+System.Globalization.CultureInfo.InvariantCulture);
         // Skip tests that take null as input or output;
         // also skip tests that take a hex number format
         if (input1.Contains("#") || input2.Contains("#") ||

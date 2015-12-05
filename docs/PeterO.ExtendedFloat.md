@@ -688,7 +688,7 @@ The parameter  <i>ctx</i>
     public static PeterO.ExtendedFloat FromBigInteger(
         PeterO.BigInteger bigint);
 
-Not documented yet.
+Converts a big integer to the same value as a binary float.
 
 <b>Parameters:</b>
 
@@ -734,7 +734,7 @@ An ExtendedDecimal object.
     public static PeterO.ExtendedFloat FromInt64(
         long valueSmall);
 
-Not documented yet.
+Converts a 64-bit integer to the same value as a binary float.
 
 <b>Parameters:</b>
 
@@ -767,6 +767,10 @@ A binary float with the same value as  <i>flt</i>
 
 Creates a binary float from a string that represents a number. See the four-parameter FromString method.
 
+The following example converts a number in the form of string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
+     return ExtendedFloat.FromString(str).ToDouble();
+    }
+
 <b>Parameters:</b>
 
  * <i>str</i>: A String object.
@@ -788,9 +792,12 @@ Not documented yet.
 
  * <i>str</i>: A String object.
 
- * <i>offset</i>: A zero-based index showing where the desired portion of "str" begins.
+ * <i>offset</i>: A zero-based index showing where the desired portion of  <i>str</i>
+ begins.
 
- * <i>length</i>: The length, in code units, of the desired portion of "str" (but not more than "str" 's length).
+ * <i>length</i>: The length, in code units, of the desired portion of  <i>str</i>
+ (but not more than  <i>str</i>
+ 's length).
 
 <b>Returns:</b>
 
@@ -835,9 +842,12 @@ The format generally follows the definition in java.math.BigDecimal(), except th
 
  * <i>str</i>: A String object.
 
- * <i>offset</i>: A zero-based index showing where the desired portion of "str" begins.
+ * <i>offset</i>: A zero-based index showing where the desired portion of  <i>str</i>
+ begins.
 
- * <i>length</i>: The length, in code units, of the desired portion of "str" (but not more than "str" 's length).
+ * <i>length</i>: The length, in code units, of the desired portion of  <i>str</i>
+ (but not more than  <i>str</i>
+ 's length).
 
  * <i>ctx</i>: A PrecisionContext object specifying the precision, rounding, and exponent range to apply to the parsed number. Can be null.
 
@@ -2026,7 +2036,15 @@ This object's value is not an exact integer.
 
     public double ToDouble();
 
-Converts this value to a 64-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
+Converts this value to a 64-bit floating-point number. The half-even rounding mode is used. If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
+
+The following example converts a number in the form of string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
+     return ExtendedFloat.FromString(str).ToDouble();
+    }
+
+The following example converts a big integer to a `double` , or a 64-bit floating point number.    public static double BigIntegerToDouble(BigInteger bigInteger) {
+     return ExtendedFloat.FromBigInteger(bigInteger).ToDouble();
+    }
 
 <b>Returns:</b>
 
