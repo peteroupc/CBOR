@@ -30,7 +30,7 @@ namespace Test {
     }
 
     public static void doTestLong(long value) {
-      String b = "i" + value + "e";
+      String b = "i" + TestCommon.LongToString(value) + "e";
       CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
       Assert.AreEqual(value, beo.AsInt64());
       String newb = Encoding.UTF8.GetString(EncodingToBytes(beo));

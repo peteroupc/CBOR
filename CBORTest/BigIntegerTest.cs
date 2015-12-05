@@ -58,7 +58,7 @@ namespace Test {
         BigInteger.One.divideAndRemainder(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -86,7 +86,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromString(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -98,7 +98,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromSubstring(null, 0, 1);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -135,7 +135,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixString(null, 10);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -144,7 +144,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixString("0", 1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -153,7 +153,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixString("0", 0);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -162,7 +162,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixString("0", -37);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -171,7 +171,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixString("0", Int32.MinValue);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -180,7 +180,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixString("0", Int32.MaxValue);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -201,7 +201,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring(null, 10, 0, 1);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -210,7 +210,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("0", 1, 0, 1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -219,7 +219,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("0", 0, 0, 1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -228,7 +228,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("0", -37, 0, 1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -237,7 +237,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("0", Int32.MinValue, 0, 1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -246,7 +246,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("0", Int32.MaxValue, 0, 1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -255,7 +255,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("123", 10, -1, 2);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -264,7 +264,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("123", 10, 4, 5);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -273,7 +273,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("123", 10, 0, -8);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -282,7 +282,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("123", 10, 0, 6);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -291,7 +291,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("123", 10, 2, 0);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -300,7 +300,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("123", 10, 0, 0);
         Assert.Fail("Should have failed");
       } catch (FormatException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -309,7 +309,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("123", 10, 1, 1);
         Assert.Fail("Should have failed");
       } catch (FormatException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -318,7 +318,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("-", 10, 0, 1);
         Assert.Fail("Should have failed");
       } catch (FormatException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -327,7 +327,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("g", 16, 0, 1);
         Assert.Fail("Should have failed");
       } catch (FormatException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -336,7 +336,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("0123gggg", 16, 0, 8);
         Assert.Fail("Should have failed");
       } catch (FormatException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -345,7 +345,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("0123gggg", 10, 0, 8);
         Assert.Fail("Should have failed");
       } catch (FormatException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -354,7 +354,7 @@ Console.WriteLine(ex.Message);
         BigInteger.fromRadixSubstring("0123aaaa", 10, 0, 8);
         Assert.Fail("Should have failed");
       } catch (FormatException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -498,7 +498,7 @@ Console.WriteLine(ex.Message);
  BigInteger.Zero.gcd(null);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -733,7 +733,7 @@ stringTemp);
         BigInteger.valueOf(Int32.MinValue - 1L).intValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -742,7 +742,7 @@ Console.WriteLine(ex.Message);
         BigInteger.valueOf(Int32.MaxValue + 1L).intValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -751,7 +751,7 @@ Console.WriteLine(ex.Message);
   BigInteger.fromString("999999999999999999999999999999999").intValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -766,7 +766,7 @@ Console.WriteLine(ex.Message);
         BigInteger.valueOf(Int32.MinValue - 1L).intValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -775,7 +775,7 @@ Console.WriteLine(ex.Message);
         BigInteger.valueOf(Int32.MaxValue + 1L).intValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -826,7 +826,7 @@ Console.WriteLine(ex.Message);
 BigInteger.valueOf(Int64.MinValue).subtract(BigInteger.One).longValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -835,7 +835,7 @@ Console.WriteLine(ex.Message);
      BigInteger.valueOf(Int64.MaxValue).add(BigInteger.One).longValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -876,7 +876,7 @@ Console.WriteLine(ex.Message);
  BigInteger.fromString("999999999999999999999999999999999").longValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -892,7 +892,7 @@ Console.WriteLine(ex.Message);
           .longValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -902,7 +902,7 @@ Console.WriteLine(ex.Message);
           .longValueChecked();
         Assert.Fail("Should have failed");
       } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1005,7 +1005,7 @@ Console.WriteLine(ex.Message);
         BigInteger.One.mod(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1018,7 +1018,7 @@ Console.WriteLine(ex.Message);
  BigInteger.One.ModPow(null, null);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1027,7 +1027,7 @@ throw new InvalidOperationException(String.Empty, ex);
  BigInteger.One.ModPow(null, BigInteger.Zero);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1036,7 +1036,7 @@ throw new InvalidOperationException(String.Empty, ex);
  BigInteger.One.ModPow(BigInteger.Zero, null);
 Assert.Fail("Should have failed");
 } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1045,7 +1045,7 @@ throw new InvalidOperationException(String.Empty, ex);
  BigInteger.One.ModPow(BigInteger.fromString("-1"), BigInteger.fromString("1"));
 Assert.Fail("Should have failed");
 } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1054,7 +1054,7 @@ throw new InvalidOperationException(String.Empty, ex);
  BigInteger.One.ModPow(BigInteger.fromString("0"), BigInteger.fromString("0"));
 Assert.Fail("Should have failed");
 } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1063,7 +1063,7 @@ throw new InvalidOperationException(String.Empty, ex);
  BigInteger.One.ModPow(BigInteger.fromString("0"), BigInteger.fromString("-1"));
 Assert.Fail("Should have failed");
 } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1072,7 +1072,7 @@ throw new InvalidOperationException(String.Empty, ex);
  BigInteger.One.ModPow(BigInteger.fromString("1"), BigInteger.fromString("0"));
 Assert.Fail("Should have failed");
 } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1081,7 +1081,7 @@ throw new InvalidOperationException(String.Empty, ex);
  BigInteger.One.ModPow(BigInteger.fromString("1"), BigInteger.fromString("-1"));
 Assert.Fail("Should have failed");
 } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
@@ -1323,7 +1323,7 @@ throw new InvalidOperationException(String.Empty, ex);
         BigInteger.One.toRadixString(-1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1332,7 +1332,7 @@ Console.WriteLine(ex.Message);
         BigInteger.One.toRadixString(0);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1341,7 +1341,7 @@ Console.WriteLine(ex.Message);
         BigInteger.One.toRadixString(1);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1350,7 +1350,7 @@ Console.WriteLine(ex.Message);
         BigInteger.One.toRadixString(37);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1359,7 +1359,7 @@ Console.WriteLine(ex.Message);
         BigInteger.One.toRadixString(Int32.MinValue);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -1368,7 +1368,7 @@ Console.WriteLine(ex.Message);
         BigInteger.One.toRadixString(Int32.MaxValue);
         Assert.Fail("Should have failed");
       } catch (ArgumentException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);

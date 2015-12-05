@@ -25,7 +25,7 @@ namespace Test {
  return "null";
 }
       var sb = new System.Text.StringBuilder();
-      const string hex = "0123456789ABCDEF";
+      const string ValueHex = "0123456789ABCDEF";
       sb.Append("new byte[] { ");
       for (var i = 0; i < bytes.Length; ++i) {
         if (i > 0) {
@@ -35,8 +35,8 @@ namespace Test {
         } else {
           sb.Append("0x");
         }
-        sb.Append(hex[(bytes[i] >> 4) & 0xf]);
-        sb.Append(hex[bytes[i] & 0xf]);
+        sb.Append(ValueHex[(bytes[i] >> 4) & 0xf]);
+        sb.Append(ValueHex[bytes[i] & 0xf]);
       }
       sb.Append("}");
       return sb.ToString();
@@ -251,6 +251,74 @@ output,
       return oa;
     }
 
+    private static void ReverseChars(char[] chars, int offset, int length) {
+      int half = length >> 1;
+      int right = offset + length - 1;
+      for (var i = 0; i < half; i++, right--) {
+        char value = chars[offset + i];
+        chars[offset + i] = chars[right];
+        chars[right] = value;
+      }
+    }
+
+    private static string valueDigits = "0123456789";
+
+    public static string LongToString(long longValue) {
+      if (longValue == Int64.MinValue) {
+ return "-9223372036854775808";
+}
+      if (longValue == 0L) {
+ return "0";
+}
+      bool neg = longValue < 0;
+      var chars = new char[24];
+      var count = 0;
+      if (neg) {
+        chars[0] = '-';
+        ++count;
+        longValue = -longValue;
+      }
+      while (longValue != 0) {
+        char digit = valueDigits[(int)(longValue % 10)];
+        chars[count++] = digit;
+        longValue /= 10;
+      }
+      if (neg) {
+        ReverseChars(chars, 1, count - 1);
+      } else {
+        ReverseChars(chars, 0, count);
+      }
+      return new String(chars, 0, count);
+    }
+
+    public static string IntToString(int value) {
+      if (value == Int32.MinValue) {
+ return "-2147483648";
+}
+      if (value == 0) {
+ return "0";
+}
+      bool neg = value < 0;
+      var chars = new char[24];
+      var count = 0;
+      if (neg) {
+        chars[0] = '-';
+        ++count;
+        value = -value;
+      }
+      while (value != 0) {
+        char digit = valueDigits[(int)(value % 10)];
+        chars[count++] = digit;
+        value /= 10;
+      }
+      if (neg) {
+        ReverseChars(chars, 1, count - 1);
+      } else {
+        ReverseChars(chars, 0, count);
+      }
+      return new String(chars, 0, count);
+    }
+
     public static void AssertEqualsHashCode(Object o, Object o2) {
       if (o.Equals(o2)) {
         if (!o2.Equals(o)) {
@@ -281,6 +349,19 @@ CultureInfo.InvariantCulture,
 o,
 o2));
         }
+        // At least check that GetHashCode doesn't throw
+        try {
+ o.GetHashCode();
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        try {
+ o2.GetHashCode();
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       }
     }
 
@@ -294,7 +375,7 @@ o2));
           o.AsByte();
           Assert.Fail("Should have failed");
         } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -303,7 +384,7 @@ Console.WriteLine(ex.Message);
           o.AsInt16();
           Assert.Fail("Should have failed");
         } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -312,7 +393,7 @@ Console.WriteLine(ex.Message);
           o.AsInt32();
           Assert.Fail("Should have failed");
         } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -321,7 +402,7 @@ Console.WriteLine(ex.Message);
           o.AsInt64();
           Assert.Fail("Should have failed");
         } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);
@@ -342,7 +423,7 @@ Console.WriteLine(ex.Message);
           o.AsBigInteger();
           Assert.Fail("Should have failed");
         } catch (OverflowException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
             InvalidOperationException(String.Empty, ex);

@@ -341,6 +341,17 @@ The parameter  <i>bytes</i>
 
 Converts a string to an arbitrary-precision integer. The string portion can begin with a minus sign ('-') to indicate that it's negative.
 
+The following example (C#) converts a number in the orm of a hex string to a big integer.    public static BigInteger HexToBigInteger(string hexString) {
+      // Parse the hexadecimal string as a big integer.  Will
+      // throw a FormatException if the parsing fails
+      var bigInteger = BigInteger.fromRadixString(hexString, 16);
+      // Optional: Check if the parsed integer is negative
+      if (bigInteger.Sign < 0) {
+        throw new FormatException("negative hex string");
+      }
+      return bigInteger;
+    }
+
 <b>Parameters:</b>
 
  * <i>str</i>: A string object.

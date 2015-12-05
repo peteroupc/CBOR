@@ -3993,7 +3993,11 @@ count);
     /// <param name='radix'>A radix from 2 through 36. For example, to
     /// generate a hexadecimal string, specify 16. To generate a decimal
     /// string, specify 10.</param>
-    /// <returns>A string object.</returns>
+    /// <returns>A string representing the value of this object. If this
+    /// value is 0, returns "0". If negative, the string will begin with a
+    /// hyphen/minus ("-"). Depending on the radix, the string will use
+    /// ASCII characters ranging from 0 to 9 and then from A to Z. as the
+    /// digits.</returns>
     /// <exception cref='ArgumentException'>The parameter "index" is less
     /// than 0, "endIndex" is less than 0, or either is greater than the
     /// string's length, or "endIndex" is less than "index" ; or radix is
@@ -4195,7 +4199,9 @@ count);
 
     /// <summary>Converts this object to a text string in base
     /// 10.</summary>
-    /// <returns>A string representation of this object.</returns>
+    /// <returns>A string representation of this object. If negative, the
+    /// string will begin with a hyphen/minus ("-"). The string will use
+    /// the ASCII digits from 0 to 9.</returns>
     public override string ToString() {
       if (this.IsZero) {
         return "0";
@@ -4206,8 +4212,8 @@ count);
 
     /// <summary>Converts a string to an arbitrary-precision
     /// integer.</summary>
-    /// <param name='str'>A string containing only digits, except that it
-    /// may start with a minus sign.</param>
+    /// <param name='str'>A string containing only ASCII digits, except
+    /// that it may start with a minus sign.</param>
     /// <returns>A BigInteger object with the same value as given in the
     /// string.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -4225,9 +4231,10 @@ count);
     /// string portion can begin with a minus sign ('-') to indicate that
     /// it's negative.</summary>
     /// <param name='str'>A string object.</param>
-    /// <param name='radix'>A base from 2 to 36. The possible digits start
-    /// from 0 to 9, then from A to Z in base 36, and the possible digits
-    /// start from 0 to 9, then from A to F in base 16.</param>
+    /// <param name='radix'>A base from 2 to 36. The possible ASCII digits
+    /// start from 0 to 9, then from A to Z in base 36, and the possible
+    /// ASCII digits start from 0 to 9, then from A to F in base
+    /// 16.</param>
     /// <returns>A BigInteger object with the same value as given in the
     /// string.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref

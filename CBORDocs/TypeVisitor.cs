@@ -64,8 +64,6 @@ finalString,
 
     /// <summary>Compares a Type object with a Type.</summary>
     /// <param name='x'>Not documented yet.</param>
-    /// <param name='x'>Not documented yet.</param>
-    /// <param name='y'>Not documented yet.</param>
     /// <returns>Zero if both values are equal; a negative number if
     /// <paramref name='x'/> is less than <paramref name='y'/>, or a
     /// positive number if <paramref name='x'/> is greater than <paramref

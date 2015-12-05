@@ -222,7 +222,7 @@ namespace Test {
         ExtendedFloat.Max(null, ExtendedFloat.One);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -231,7 +231,7 @@ Console.WriteLine(ex.Message);
         ExtendedFloat.Max(ExtendedFloat.One, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -246,7 +246,7 @@ Console.WriteLine(ex.Message);
         ExtendedFloat.Min(null, ExtendedFloat.One);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -255,7 +255,7 @@ Console.WriteLine(ex.Message);
         ExtendedFloat.Min(ExtendedFloat.One, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -267,7 +267,7 @@ Console.WriteLine(ex.Message);
         ExtendedFloat.MinMagnitude(null, ExtendedFloat.One);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -276,7 +276,7 @@ Console.WriteLine(ex.Message);
         ExtendedFloat.MinMagnitude(ExtendedFloat.One, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException ex) {
-Console.WriteLine(ex.Message);
+Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);

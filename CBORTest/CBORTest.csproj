@@ -62,7 +62,7 @@
     <StartArguments>Test.</StartArguments>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+              <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -87,7 +87,6 @@
     <Compile Include="ExtendedRationalTest.cs" />
     <Compile Include="ExtensiveTest.cs" />
     <Compile Include="FastRandom.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MiniCBOR.cs" />
     <Compile Include="PrecisionContextTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
