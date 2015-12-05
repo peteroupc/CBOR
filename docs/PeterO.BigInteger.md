@@ -356,7 +356,7 @@ The following example (C#) converts a number in the orm of a hex string to a big
 
  * <i>str</i>: A string object.
 
- * <i>radix</i>: A base from 2 to 36. The possible digits start from 0 to 9, then from A to Z in base 36, and the possible digits start from 0 to 9, then from A to F in base 16.
+ * <i>radix</i>: A base from 2 to 36. The possible ASCII digits start from 0 to 9, then from A to Z in base 36, and the possible ASCII digits start from 0 to 9, then from A to F in base 16.
 
 <b>Returns:</b>
 
@@ -424,7 +424,7 @@ Converts a string to an arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string containing only digits, except that it may start with a minus sign.
+ * <i>str</i>: A string containing only ASCII digits, except that it may start with a minus sign.
 
 <b>Returns:</b>
 
@@ -1370,7 +1370,7 @@ Generates a string representing the value of this object, in the given radix.
 
 <b>Returns:</b>
 
-A string object.
+A string representing the value of this object. If this value is 0, returns "0". If negative, the string will begin with a hyphen/minus ("-"). Depending on the radix, the string will use ASCII characters ranging from 0 to 9 and then from A to Z. as the digits.
 
 <b>Exceptions:</b>
 
@@ -1385,7 +1385,7 @@ Converts this object to a text string in base 10.
 
 <b>Returns:</b>
 
-A string representation of this object.
+A string representation of this object. If negative, the string will begin with a hyphen/minus ("-"). The string will use the ASCII digits from 0 to 9.
 
 ### valueOf
 

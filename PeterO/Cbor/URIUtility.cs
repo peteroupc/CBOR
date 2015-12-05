@@ -19,13 +19,14 @@ namespace PeterO.Cbor {
     /// parsing IRIs and URIs.</summary>
     internal enum ParseMode {
     /// <summary>The rules follow the syntax for parsing IRIs. In
-    /// particular, many internationalized characters are allowed. Strings
-    /// with unpaired surrogate code points are considered
-    /// invalid.</summary>
+    /// particular, many code points outside the Basic Latin range (U +
+    /// 0000 to U + 007F) are allowed. Strings with unpaired surrogate code
+    /// points are considered invalid.</summary>
       IRIStrict,
 
     /// <summary>The rules follow the syntax for parsing IRIs, except that
-    /// non-ASCII characters are not allowed.</summary>
+    /// code points outside the Basic Latin range (U + 0000 to U + 007F)
+    /// are not allowed.</summary>
       URIStrict,
 
     /// <summary>The rules only check for the appropriate delimiters when
@@ -36,8 +37,8 @@ namespace PeterO.Cbor {
 
     /// <summary>The rules only check for the appropriate delimiters when
     /// splitting the path, without checking if all the characters in each
-    /// component are valid. Non-ASCII characters are not
-    /// allowed.</summary>
+    /// component are valid. Code points outside the Basic Latin range (U +
+    /// 0000 to U + 007F) are not allowed.</summary>
       URILenient,
 
     /// <summary>The rules only check for the appropriate delimiters when
@@ -453,17 +454,17 @@ s.Length,
 ParseMode.IRIStrict)) != null;
     }
 
-    private const string ValueValueDotSlash = "." + "/";
-    private const string ValueValueSlashDot = "/" + ".";
+    private const string ValueDotSlash = "." + "/";
+    private const string ValueSlashDot = "/" + ".";
 
     private static string normalizePath(string path) {
       int len = path.Length;
       if (len == 0 || path.Equals("..") || path.Equals(".")) {
         return String.Empty;
       }
-      if (path.IndexOf(ValueValueSlashDot, StringComparison.Ordinal) < 0 &&
+      if (path.IndexOf(ValueSlashDot, StringComparison.Ordinal) < 0 &&
           path.IndexOf(
-ValueValueDotSlash,
+ValueDotSlash,
 StringComparison.Ordinal) < 0) {
         return path;
       }
