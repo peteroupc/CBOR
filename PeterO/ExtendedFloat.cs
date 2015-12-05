@@ -295,7 +295,7 @@ namespace PeterO {
       int length,
       PrecisionContext ctx) {
       if (str == null) {
-        throw new ArgumentNullException(<paramref name='str'/>);
+        throw new ArgumentNullException("str");
       }
       return ExtendedDecimal.FromString(
         str,
