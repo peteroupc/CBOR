@@ -374,7 +374,7 @@ throw new InvalidOperationException(String.Empty, ex);
         try {
           o.AsByte();
           Assert.Fail("Should have failed");
-        } catch (OverflowException ex) {
+        } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
@@ -383,7 +383,7 @@ Console.Write(String.Empty);
         try {
           o.AsInt16();
           Assert.Fail("Should have failed");
-        } catch (OverflowException ex) {
+        } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
@@ -392,7 +392,7 @@ Console.Write(String.Empty);
         try {
           o.AsInt32();
           Assert.Fail("Should have failed");
-        } catch (OverflowException ex) {
+        } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
@@ -401,7 +401,7 @@ Console.Write(String.Empty);
         try {
           o.AsInt64();
           Assert.Fail("Should have failed");
-        } catch (OverflowException ex) {
+        } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new
@@ -422,7 +422,7 @@ Console.Write(String.Empty);
         try {
           o.AsBigInteger();
           Assert.Fail("Should have failed");
-        } catch (OverflowException ex) {
+        } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
           Assert.Fail("Object: " + o + ", " + ex); throw new

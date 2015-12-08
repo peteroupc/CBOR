@@ -7,7 +7,6 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 using PeterO;
 
@@ -443,7 +442,7 @@ int quote) {
               CBORObject.TrimDotZero(
                 Convert.ToString(
                   (float)f,
-                  CultureInfo.InvariantCulture)));
+                  System.Globalization.CultureInfo.InvariantCulture)));
             return;
           }
           case CBORObject.CBORObjectTypeDouble: {
@@ -454,9 +453,7 @@ int quote) {
               return;
             }
             writer.WriteString(CBORObject.TrimDotZero(
-              Convert.ToString(
-                (double)f,
-                CultureInfo.InvariantCulture)));
+              CBORUtilities.DoubleToString(f)));
             return;
           }
           case CBORObject.CBORObjectTypeInteger: {
@@ -497,9 +494,7 @@ int quote) {
               }
               writer.WriteString(
                 CBORObject.TrimDotZero(
-                  Convert.ToString(
-                    (double)f,
-                    CultureInfo.InvariantCulture)));
+                  CBORUtilities.DoubleToString(f)));
               return;
             }
             writer.WriteString(flo.ToString());

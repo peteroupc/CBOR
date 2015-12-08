@@ -6,7 +6,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using PeterO;
@@ -318,9 +317,9 @@ data);
   CBORUtilities.BigIntToString(bigintAdditional) + " is bigger than supported");
           }
           if (uadditional > Int32.MaxValue) {
-            throw new CBORException("Length of " + Convert.ToString(
-(long)uadditional,
-CultureInfo.InvariantCulture) + " is bigger than supported");
+            throw new CBORException("Length of " +
+              CBORUtilities.LongToString(uadditional) +
+              " is bigger than supported");
           }
           data = ReadByteData(this.stream, uadditional, null);
           var cbor = new CBORObject(CBORObject.CBORObjectTypeByteString, data);
@@ -370,9 +369,9 @@ false)) {
   CBORUtilities.BigIntToString(bigintAdditional) + " is bigger than supported");
           }
           if (uadditional > Int32.MaxValue) {
-            throw new CBORException("Length of " + Convert.ToString(
-(long)uadditional,
-CultureInfo.InvariantCulture) + " is bigger than supported");
+            throw new CBORException("Length of " +
+              CBORUtilities.LongToString(uadditional) +
+              " is bigger than supported");
           }
           var builder = new StringBuilder();
           switch (
@@ -433,9 +432,9 @@ filter == null ? null : filter.GetSubFilter(vtindex));
   CBORUtilities.BigIntToString(bigintAdditional) + " is bigger than supported");
         }
         if (uadditional > Int32.MaxValue) {
-          throw new CBORException("Length of " + Convert.ToString(
-(long)uadditional,
-CultureInfo.InvariantCulture) + " is bigger than supported");
+          throw new CBORException("Length of " +
+            CBORUtilities.LongToString(uadditional) +
+            " is bigger than supported");
         }
         if (filter != null && !filter.ArrayLengthMatches(uadditional)) {
           throw new CBORException("Array is too long");
@@ -478,9 +477,9 @@ CultureInfo.InvariantCulture) + " is bigger than supported");
   CBORUtilities.BigIntToString(bigintAdditional) + " is bigger than supported");
         }
         if (uadditional > Int32.MaxValue) {
-          throw new CBORException("Length of " + Convert.ToString(
-(long)uadditional,
-CultureInfo.InvariantCulture) + " is bigger than supported");
+          throw new CBORException("Length of " +
+            CBORUtilities.LongToString(uadditional) +
+            " is bigger than supported");
         }
         for (long i = 0; i < uadditional; ++i) {
           ++this.depth;

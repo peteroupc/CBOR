@@ -1002,7 +1002,7 @@ HexInt(chunks[14]), HexInt(chunks[15]) });
       return 0;
     }
 
-    private int ParseLine(string ln) {
+    private static int ParseLine(string ln) {
       var chunks = ln.Split(' ');
       if (chunks.Length < 4) {
         return 0;
@@ -1259,7 +1259,7 @@ var obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
                 if (isinput) {
                   this.ParseLineInput(ln);
                 } else {
-                  this.ParseLine(ln);
+                  ParseLine(ln);
                 }
               } catch (Exception ex) {
                 errors.Add(ex.Message);
@@ -1269,7 +1269,7 @@ var obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
                   if (isinput) {
                     this.ParseLineInput(ln);
                   } else {
-                    this.ParseLine(ln);
+                    ParseLine(ln);
                   }
                 } catch (Exception ex2) {
                   Console.WriteLine(ln);

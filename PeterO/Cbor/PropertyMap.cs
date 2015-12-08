@@ -38,7 +38,15 @@ namespace PeterO.Cbor {
       }
     }
 
- private static readonly IDictionary<Type, IList<PropertyData>>
+    private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
+      return t.GetRuntimeProperties();
+    }
+    private static MethodInfo GetTypeMethod(Type t, string name,
+      Type[] parameters) {
+       return t.GetRuntimeMethod(name, parameters);
+    }
+
+    private static readonly IDictionary<Type, IList<PropertyData>>
       propertyLists = new Dictionary<Type, IList<PropertyData>>();
 
     private static IList<PropertyData> GetPropertyList(Type t) {
@@ -49,8 +57,7 @@ namespace PeterO.Cbor {
         }
         ret = new List<PropertyData>();
         bool anonymous = t.Name.Contains("__AnonymousType");
-        foreach (PropertyInfo pi in t.GetProperties(BindingFlags.Public |
-        BindingFlags.Instance)) {
+        foreach (PropertyInfo pi in GetTypeProperties(t)) {
           if (pi.CanRead && (pi.CanWrite || anonymous) &&
           pi.GetIndexParameters().Length == 0) {
             PropertyData pd = new PropertyMap.PropertyData();
@@ -145,7 +152,7 @@ CBORObject obj) {
 object obj,
 string name,
 Type argtype) {
-      return obj.GetType().GetMethod(name, new[] { argtype });
+      return GetTypeMethod(obj.GetType(), name, new[] { argtype });
     }
 
     public static object InvokeOneArgumentMethod(

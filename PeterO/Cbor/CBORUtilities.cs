@@ -74,6 +74,20 @@ namespace PeterO.Cbor {
       return (a.Length != b.Length) ? ((a.Length < b.Length) ? -1 : 1) : 0;
     }
 
+    public static string DoubleToString(double dbl) {
+      return Convert.ToString((double)dbl,
+        System.Globalization.CultureInfo.InvariantCulture);
+      // TODO: Use this version in version 3
+      //return ExtendedFloat.FromDouble(dbl).ToString();
+    }
+
+    public static string SingleToString(float sing) {
+      return Convert.ToString((float)sing,
+        System.Globalization.CultureInfo.InvariantCulture);
+      // TODO: Use this version in version 3
+      //return ExtendedFloat.FromSingle(dbl).ToString();
+    }
+
     public static BigInteger BigIntegerFromSingle(float flt) {
       int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt), 0);
       var fpexponent = (int)((value >> 23) & 0xff);

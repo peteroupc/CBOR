@@ -22,7 +22,7 @@ namespace Test {
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -33,7 +33,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -43,7 +43,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -53,7 +53,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -63,7 +63,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -73,7 +73,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -89,7 +89,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -100,7 +100,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -110,7 +110,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -120,7 +120,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -130,7 +130,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -140,7 +140,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -159,7 +159,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.FromObject('\udddd');
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -175,7 +175,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.AddConverter(null, new FakeConverter());
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -184,7 +184,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.AddConverter(typeof(String), new FakeConverter());
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -193,7 +193,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.AddTagHandler(null, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -202,7 +202,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.True.Abs();
         Assert.Fail("Should have failed");
-      } catch (InvalidOperationException ex) {
+      } catch (InvalidOperationException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -211,7 +211,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.False.Abs();
         Assert.Fail("Should have failed");
-      } catch (InvalidOperationException ex) {
+      } catch (InvalidOperationException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -220,7 +220,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.NewArray().Abs();
         Assert.Fail("Should have failed");
-      } catch (InvalidOperationException ex) {
+      } catch (InvalidOperationException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -229,7 +229,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.NewMap().Abs();
         Assert.Fail("Should have failed");
-      } catch (InvalidOperationException ex) {
+      } catch (InvalidOperationException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -238,7 +238,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.True.AsExtendedRational();
         Assert.Fail("Should have failed");
-      } catch (InvalidOperationException ex) {
+      } catch (InvalidOperationException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -247,7 +247,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.False.AsExtendedRational();
         Assert.Fail("Should have failed");
-      } catch (InvalidOperationException ex) {
+      } catch (InvalidOperationException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -256,7 +256,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.NewArray().AsExtendedRational();
         Assert.Fail("Should have failed");
-      } catch (InvalidOperationException ex) {
+      } catch (InvalidOperationException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -265,7 +265,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.NewMap().AsExtendedRational();
         Assert.Fail("Should have failed");
-      } catch (InvalidOperationException ex) {
+      } catch (InvalidOperationException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -305,7 +305,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -320,7 +320,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -342,7 +342,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -353,7 +353,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(bytes);
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -373,7 +373,7 @@ Console.Write(String.Empty);
       try {
         ExtendedRational.PositiveInfinity.ToBigIntegerExact();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -382,7 +382,7 @@ Console.Write(String.Empty);
       try {
         ExtendedRational.NegativeInfinity.ToBigIntegerExact();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -391,7 +391,7 @@ Console.Write(String.Empty);
       try {
         ExtendedRational.NaN.ToBigIntegerExact();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -400,7 +400,7 @@ Console.Write(String.Empty);
       try {
         ExtendedRational.SignalingNaN.ToBigIntegerExact();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -413,7 +413,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.Create(null, BigInteger.One);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -422,7 +422,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.Create(null, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -431,7 +431,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.Create(BigInteger.One, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -440,7 +440,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString(null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -453,7 +453,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString(null, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -462,7 +462,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString(String.Empty);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -471,7 +471,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString(null, 0, 1);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -480,7 +480,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("x", -1, 1);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -489,7 +489,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("x", 2, 1);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -498,7 +498,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("x", 0, -1);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -507,7 +507,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("x", 0, 2);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -516,7 +516,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("x", 1, 1);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -525,7 +525,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString(null, 0, 1, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -534,7 +534,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("x", -1, 1, null);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -543,7 +543,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("x", 2, 1, null);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -552,7 +552,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("x", 0, -1, null);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -561,7 +561,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("x", 0, 2, null);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -570,7 +570,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("x", 1, 1, null);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -580,7 +580,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.Create(null, BigInteger.One);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -589,7 +589,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.Create(null, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -598,7 +598,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.Create(BigInteger.One, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -607,7 +607,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString(null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -618,7 +618,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString(null, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -627,7 +627,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString(String.Empty);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -636,7 +636,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString(null, 0, 1);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -645,7 +645,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("x", -1, 1);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -654,7 +654,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("x", 2, 1);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -663,7 +663,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("x", 0, -1);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -672,7 +672,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("x", 0, 2);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -681,7 +681,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("x", 1, 1);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -690,7 +690,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString(null, 0, 1, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -699,7 +699,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("x", -1, 1, null);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -708,7 +708,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("x", 2, 1, null);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -717,7 +717,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("x", 0, -1, null);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -726,7 +726,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("x", 0, 2, null);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -735,7 +735,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("x", 1, 1, null);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -746,7 +746,7 @@ Console.Write(String.Empty);
           "Infinity",
           PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -757,7 +757,7 @@ Console.Write(String.Empty);
           "-Infinity",
           PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -768,7 +768,7 @@ Console.Write(String.Empty);
           "NaN",
           PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -779,7 +779,7 @@ Console.Write(String.Empty);
           "sNaN",
           PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -790,7 +790,7 @@ Console.Write(String.Empty);
           "Infinity",
           PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -801,7 +801,7 @@ Console.Write(String.Empty);
           "-Infinity",
           PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -812,7 +812,7 @@ Console.Write(String.Empty);
           "NaN",
           PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -823,7 +823,7 @@ Console.Write(String.Empty);
           "sNaN",
           PrecisionContext.Unlimited.WithSimplified(true));
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -833,7 +833,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("0..1");
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -842,7 +842,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("0.1x+222");
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -851,7 +851,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.FromString("0.1g-222");
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -860,7 +860,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("0..1");
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -869,7 +869,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("0.1x+222");
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -878,7 +878,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.FromString("0.1g-222");
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -894,7 +894,7 @@ Console.Write(String.Empty);
       try {
         dec.ToBigIntegerExact();
         Assert.Fail("Should have failed");
-      } catch (ArithmeticException ex) {
+      } catch (ArithmeticException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -903,7 +903,7 @@ Console.Write(String.Empty);
       try {
         flo.ToBigIntegerExact();
         Assert.Fail("Should have failed");
-      } catch (ArithmeticException ex) {
+      } catch (ArithmeticException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -912,7 +912,7 @@ Console.Write(String.Empty);
       try {
         rat.ToBigIntegerExact();
         Assert.Fail("Should have failed");
-      } catch (ArithmeticException ex) {
+      } catch (ArithmeticException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -949,7 +949,7 @@ Console.Write(String.Empty);
           cbor.WriteTo(memoryStream);
         }
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -975,7 +975,7 @@ Console.Write(String.Empty);
           try {
             CBORObject.DecodeFromBytes(ms.ToArray());
             Assert.Fail("Should have failed");
-          } catch (CBORException ex) {
+          } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
             Assert.Fail(ex.ToString());
@@ -1014,7 +1014,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.FromObject(bi).AsInt64();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1023,7 +1023,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.FromObject(bi).AsInt32();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1034,7 +1034,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.FromObject(bi).AsInt64();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1043,7 +1043,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.FromObject(bi).AsInt32();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1053,7 +1053,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.FromObject(bi).AsInt32();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1207,7 +1207,7 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x00 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1216,7 +1216,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x20 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1225,7 +1225,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x60 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1234,7 +1234,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x80 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1243,7 +1243,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0xa0 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1252,7 +1252,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0xe0 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1262,7 +1262,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x00 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1271,7 +1271,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x20 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1280,7 +1280,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x60 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1289,7 +1289,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x80 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1298,7 +1298,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0xa0 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1307,7 +1307,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0xe0 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1317,7 +1317,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x00 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1326,7 +1326,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x20 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1335,7 +1335,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x40 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1344,7 +1344,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x60 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1353,7 +1353,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x80 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1368,7 +1368,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0x01, 0xff });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1377,7 +1377,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xd8, 0x1e, 0x9f, 0xff });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1398,7 +1398,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0x00, 0xff });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1407,7 +1407,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0x00, 0xff });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1416,7 +1416,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x9f, 0xff });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1425,7 +1425,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x9f, 0xff });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1434,7 +1434,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0x81, 0x00 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1443,7 +1443,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0xa0 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1452,7 +1452,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc4, 0xe0 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1462,7 +1462,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x00 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1471,7 +1471,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x20 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1480,7 +1480,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x40 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1489,7 +1489,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x60 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1498,7 +1498,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x80 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1507,7 +1507,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0x81, 0x00 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1516,7 +1516,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0xa0 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1525,7 +1525,7 @@ Console.Write(String.Empty);
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc5, 0xe0 });
         Assert.Fail("Should have failed");
-      } catch (CBORException ex) {
+      } catch (CBORException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1577,7 +1577,7 @@ Console.Write(String.Empty);
       try {
         MiniCBOR.ReadInt32(new MemoryStream(bytes));
         Assert.Fail("Should have failed");
-      } catch (IOException ex) {
+      } catch (IOException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1587,7 +1587,7 @@ Console.Write(String.Empty);
       try {
         MiniCBOR.ReadInt32(new MemoryStream(bytes));
         Assert.Fail("Should have failed");
-      } catch (IOException ex) {
+      } catch (IOException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1597,7 +1597,7 @@ Console.Write(String.Empty);
       try {
         MiniCBOR.ReadInt32(new MemoryStream(bytes));
         Assert.Fail("Should have failed");
-      } catch (IOException ex) {
+      } catch (IOException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1607,7 +1607,7 @@ Console.Write(String.Empty);
       try {
         MiniCBOR.ReadInt32(new MemoryStream(bytes));
         Assert.Fail("Should have failed");
-      } catch (IOException ex) {
+      } catch (IOException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1727,7 +1727,7 @@ CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
       try {
         ExtendedDecimal.PositiveInfinity.ToBigInteger();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1736,7 +1736,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.NegativeInfinity.ToBigInteger();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1745,7 +1745,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.NaN.ToBigInteger();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1754,7 +1754,7 @@ Console.Write(String.Empty);
       try {
         ExtendedDecimal.SignalingNaN.ToBigInteger();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1763,7 +1763,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.PositiveInfinity.ToBigInteger();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1772,7 +1772,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.NegativeInfinity.ToBigInteger();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1781,7 +1781,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.NaN.ToBigInteger();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -1790,7 +1790,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.SignalingNaN.ToBigInteger();
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());

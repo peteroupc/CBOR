@@ -7,7 +7,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>CBORTest</RootNamespace>
     <AssemblyName>CBORTest</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -61,8 +61,17 @@
     <StartAction>Project</StartAction>
     <StartArguments>Test.</StartArguments>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Dotnet|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
-              <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
@@ -102,9 +111,9 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Portable.CBOR.csproj">
+    <ProjectReference Include="..\CBOR.csproj">
       <Project>{23A1B70C-F064-47B6-8B7E-E2042CDAD8C7}</Project>
-      <Name>Portable.CBOR</Name>
+      <Name>CBOR</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

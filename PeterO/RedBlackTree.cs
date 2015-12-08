@@ -295,7 +295,7 @@ namespace PeterO {
           this.rightValue = null;
           this.parentValue = null;
           // fix replacement
-          if (this.colorValue == BLACK) {
+          if (this.colorValue) {
             root = replacement.fixAfterDeletion(root);
           }
           return root;
@@ -305,7 +305,7 @@ namespace PeterO {
           // and then unlink
           return null;
         }
-        if (this.colorValue == BLACK) {
+        if (this.colorValue) {
           root = this.fixAfterDeletion(root);
         }
         // Unlink (Couldn't before since fixAfterDeletion needs parent ptr)
@@ -361,10 +361,10 @@ namespace PeterO {
       /** From CLR **/ private RBCell fixAfterInsertion(RBCell rootValue) {
         this.colorValue = RED;
         RBCell x = this;
-        while (x != null && x != rootValue && x.parentValue.colorValue == RED) {
+        while (x != null && x != rootValue && !x.parentValue.colorValue) {
           if (parentOf(x) == leftOf(parentOf(parentOf(x)))) {
             RBCell y = rightOf(parentOf(parentOf(x)));
-            if (colorOf(y) == RED) {
+            if (!colorOf(y)) {
               setColor(parentOf(x), BLACK);
               setColor(y, BLACK);
               setColor(parentOf(parentOf(x)), RED);
@@ -382,7 +382,7 @@ namespace PeterO {
             }
           } else {
             RBCell y = leftOf(parentOf(parentOf(x)));
-            if (colorOf(y) == RED) {
+            if (!colorOf(y)) {
               setColor(parentOf(x), BLACK);
               setColor(y, BLACK);
               setColor(parentOf(parentOf(x)), RED);
@@ -406,21 +406,20 @@ namespace PeterO {
       /** From CLR **/
       private RBCell fixAfterDeletion(RBCell rootValue) {
         RBCell x = this;
-        while (x != rootValue && colorOf(x) == BLACK) {
+        while (x != rootValue && colorOf(x)) {
           if (x == leftOf(parentOf(x))) {
             RBCell sib = rightOf(parentOf(x));
-            if (colorOf(sib) == RED) {
+            if (!colorOf(sib)) {
               setColor(sib, BLACK);
               setColor(parentOf(x), RED);
               rootValue = parentOf(x).rotateLeft(rootValue);
               sib = rightOf(parentOf(x));
             }
-            if (colorOf(leftOf(sib)) == BLACK && colorOf(rightOf(sib)) ==
-            BLACK) {
+            if (colorOf(leftOf(sib)) && colorOf(rightOf(sib))) {
               setColor(sib, RED);
               x = parentOf(x);
             } else {
-              if (colorOf(rightOf(sib)) == BLACK) {
+              if (colorOf(rightOf(sib))) {
                 setColor(leftOf(sib), BLACK);
                 setColor(sib, RED);
                 rootValue = sib.rotateRight(rootValue);
@@ -434,18 +433,17 @@ namespace PeterO {
             }
           } else {  // symmetric
             RBCell sib = leftOf(parentOf(x));
-            if (colorOf(sib) == RED) {
+            if (!colorOf(sib)) {
               setColor(sib, BLACK);
               setColor(parentOf(x), RED);
               rootValue = parentOf(x).rotateRight(rootValue);
               sib = leftOf(parentOf(x));
             }
-            if (colorOf(rightOf(sib)) == BLACK && colorOf(leftOf(sib)) ==
-            BLACK) {
+            if (colorOf(rightOf(sib)) && colorOf(leftOf(sib))) {
               setColor(sib, RED);
               x = parentOf(x);
             } else {
-              if (colorOf(leftOf(sib)) == BLACK) {
+              if (colorOf(leftOf(sib))) {
                 setColor(rightOf(sib), BLACK);
                 setColor(sib, RED);
                 rootValue = sib.rotateLeft(rootValue);

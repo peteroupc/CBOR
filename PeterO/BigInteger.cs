@@ -3052,7 +3052,9 @@ count);
           int index2 = littleEndian ? i + 1 : len - 2 - i;
           newreg[j] = (short)(((int)bytes[index]) & 0xff);
           if (index2 >= 0 && index2 < len) {
-            newreg[j] |= unchecked((short)(((short)bytes[index2]) << 8));
+            unchecked {
+              newreg[j] |= unchecked((short)(((short)bytes[index2]) << 8));
+            }
           }
         }
       } else {
@@ -3061,7 +3063,9 @@ count);
           int index2 = littleEndian ? i + 1 : len - 2 - i;
           newreg[j] = (short)(((int)bytes[index]) & 0xff);
           if (index2 >= 0 && index2 < len) {
-            newreg[j] |= unchecked((short)(((short)bytes[index2]) << 8));
+            unchecked {
+              newreg[j] |= unchecked((short)(((short)bytes[index2]) << 8));
+            }
           } else {
             // sign extend the last byte
             newreg[j] |= unchecked((short)0xff00);
@@ -4215,7 +4219,7 @@ count);
     /// integer.</summary>
     /// <param name='str'>A string containing only basic digits 0 to 9 (U +
     /// 0030 to U + 0039), except that it may start with a minus sign ("-",
-    /// U+002D).</param>
+    /// U + 002D).</param>
     /// <returns>A BigInteger object with the same value as given in the
     /// string.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
