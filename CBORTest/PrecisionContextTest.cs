@@ -12,7 +12,7 @@ namespace Test {
           null,
           new PrecisionContext(-1, Rounding.HalfEven, 0, 0, false));
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -23,7 +23,7 @@ Console.Write(String.Empty);
           null,
           new PrecisionContext(0, Rounding.HalfEven, 0, -1, false));
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -66,7 +66,7 @@ Console.Write(String.Empty);
       try {
  PrecisionContext.Unlimited.ExponentWithinRange(null);
 Assert.Fail("Should have failed");
-} catch (ArgumentNullException ex) {
+} catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
  Assert.Fail(ex.ToString());
@@ -79,7 +79,7 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
         ctx.Flags = 5;
         Assert.Fail("Should have failed");
-      } catch (InvalidOperationException ex) {
+      } catch (InvalidOperationException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -96,7 +96,7 @@ Console.Write(String.Empty);
       try {
         ctx.Flags = 5;
         Assert.Fail("Should have failed");
-      } catch (InvalidOperationException ex) {
+      } catch (InvalidOperationException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -208,7 +208,7 @@ Console.Write(String.Empty);
       try {
         PrecisionContext.Unlimited.WithBigPrecision(BigInteger.One.negate());
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -228,7 +228,7 @@ Console.Write(String.Empty);
       try {
         PrecisionContext.Unlimited.WithExponentRange(1, 0);
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -237,7 +237,7 @@ Console.Write(String.Empty);
       try {
         PrecisionContext.Unlimited.WithBigExponentRange(null, BigInteger.Zero);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -246,7 +246,7 @@ Console.Write(String.Empty);
       try {
         PrecisionContext.Unlimited.WithBigExponentRange(BigInteger.Zero, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -258,7 +258,7 @@ Console.Write(String.Empty);
           bigintBig,
           BigInteger.Zero);
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -274,7 +274,7 @@ Console.Write(String.Empty);
       try {
         PrecisionContext.Unlimited.WithPrecision(-1);
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());

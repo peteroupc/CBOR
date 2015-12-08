@@ -4,6 +4,10 @@
 
 Interface implemented by classes that convert objects of arbitrary types to CBOR objects.
 
+<b>Parameters:</b>
+
+ * &lt;T&gt;: Type to convert to a CBOR object.
+
 ### ToCBORObject
 
     PeterO.Cbor.CBORObject ToCBORObject(

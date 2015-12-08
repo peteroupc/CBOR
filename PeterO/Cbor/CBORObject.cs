@@ -7,7 +7,6 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using PeterO;
@@ -3140,10 +3139,9 @@ namespace PeterO.Cbor {
             } else {
               sb = sb ?? (new StringBuilder());
               sb.Append("simple(");
+              var thisItemInt = (int)this.ThisItem;
               sb.Append(
-                Convert.ToString(
-                  (int)this.ThisItem,
-                  CultureInfo.InvariantCulture));
+                CBORUtilities.LongToString(thisItemInt));
               sb.Append(")");
             }
 
@@ -3153,9 +3151,7 @@ namespace PeterO.Cbor {
             var f = (float)this.ThisItem;
             simvalue = Single.IsNegativeInfinity(f) ? "-Infinity" :
               (Single.IsPositiveInfinity(f) ? "Infinity" : (Single.IsNaN(f) ?
-                    "NaN" : TrimDotZero(Convert.ToString(
-                    (float)f,
-                    CultureInfo.InvariantCulture))));
+                    "NaN" : TrimDotZero(CBORUtilities.SingleToString(f))));
             if (sb == null) {
               return simvalue;
             }
@@ -3166,9 +3162,7 @@ namespace PeterO.Cbor {
             var f = (double)this.ThisItem;
             simvalue = Double.IsNegativeInfinity(f) ? "-Infinity" :
               (Double.IsPositiveInfinity(f) ? "Infinity" : (Double.IsNaN(f) ?
-                    "NaN" : TrimDotZero(Convert.ToString(
-                    (double)f,
-                    CultureInfo.InvariantCulture))));
+                    "NaN" : TrimDotZero(CBORUtilities.DoubleToString(f))));
             if (sb == null) {
               return simvalue;
             }
@@ -4261,7 +4255,7 @@ namespace PeterO.Cbor {
         int low = curobject.tagLow;
         int high = curobject.tagHigh;
         if (high == 0 && (low >> 16) == 0) {
-          sb.Append(Convert.ToString((int)low, CultureInfo.InvariantCulture));
+          sb.Append(CBORUtilities.LongToString(low));
         } else {
           BigInteger bi = LowHighToBigInteger(low, high);
           sb.Append(CBORUtilities.BigIntToString(bi));

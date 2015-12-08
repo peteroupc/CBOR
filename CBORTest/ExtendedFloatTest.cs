@@ -221,7 +221,7 @@ namespace Test {
       try {
         ExtendedFloat.Max(null, ExtendedFloat.One);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -230,7 +230,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.Max(ExtendedFloat.One, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -245,7 +245,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.Min(null, ExtendedFloat.One);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -254,7 +254,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.Min(ExtendedFloat.One, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -266,7 +266,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.MinMagnitude(null, ExtendedFloat.One);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -275,7 +275,7 @@ Console.Write(String.Empty);
       try {
         ExtendedFloat.MinMagnitude(ExtendedFloat.One, null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());

@@ -182,7 +182,7 @@ bigintD,
       try {
         Console.WriteLine((int)minValueTimes2);
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -192,7 +192,7 @@ Console.Write(String.Empty);
       try {
         Console.WriteLine((int)verybig);
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -201,7 +201,7 @@ Console.Write(String.Empty);
       try {
         Console.WriteLine((long)verybig);
         Assert.Fail("Should have failed");
-      } catch (OverflowException ex) {
+      } catch (OverflowException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -210,7 +210,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.One.PowBigIntVar(null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -219,7 +219,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.One.divideAndRemainder(BigInteger.Zero);
         Assert.Fail("Should have failed");
-      } catch (DivideByZeroException ex) {
+      } catch (DivideByZeroException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -228,7 +228,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.One.pow(-1);
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -237,7 +237,7 @@ Console.Write(String.Empty);
       try {
         (BigInteger.Zero - BigInteger.One).PowBigIntVar(null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -256,7 +256,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromString("xyz");
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -265,7 +265,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromString(String.Empty);
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -275,7 +275,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromSubstring(null, 0, 1);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -284,7 +284,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromString(null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -294,7 +294,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.Zero.testBit(-1);
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -303,7 +303,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromBytes(null, false);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -313,7 +313,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromSubstring("123", -1, 2);
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -322,7 +322,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromSubstring("123", 4, 2);
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -331,7 +331,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromSubstring("123", 1, -1);
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -340,7 +340,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromSubstring("123", 1, 4);
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -349,7 +349,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromSubstring("123", 1, 0);
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -358,7 +358,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromSubstring("123", 2, 1);
         Assert.Fail("Should have failed");
-      } catch (ArgumentException ex) {
+      } catch (ArgumentException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -367,7 +367,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromString("x11");
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -376,7 +376,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromString(".");
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -385,7 +385,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromString("..");
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -394,7 +394,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.fromString("e200");
         Assert.Fail("Should have failed");
-      } catch (FormatException ex) {
+      } catch (FormatException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -404,7 +404,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.One.mod((BigInteger)(-1));
         Assert.Fail("Should have failed");
-      } catch (ArithmeticException ex) {
+      } catch (ArithmeticException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -413,7 +413,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.One.add(null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -422,7 +422,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.One.subtract(null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -431,7 +431,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.One.multiply(null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -440,7 +440,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.One.divide(null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -449,7 +449,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.One.divide(BigInteger.Zero);
         Assert.Fail("Should have failed");
-      } catch (DivideByZeroException ex) {
+      } catch (DivideByZeroException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -458,7 +458,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.One.remainder(BigInteger.Zero);
         Assert.Fail("Should have failed");
-      } catch (DivideByZeroException ex) {
+      } catch (DivideByZeroException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -467,7 +467,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.One.mod(BigInteger.Zero);
         Assert.Fail("Should have failed");
-      } catch (DivideByZeroException ex) {
+      } catch (DivideByZeroException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -476,7 +476,7 @@ Console.Write(String.Empty);
       try {
         BigInteger.One.remainder(null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -487,7 +487,7 @@ Console.Write(String.Empty);
       try {
         ((BigInteger)13).mod(null);
         Assert.Fail("Should have failed");
-      } catch (ArgumentNullException ex) {
+      } catch (ArgumentNullException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -496,7 +496,7 @@ Console.Write(String.Empty);
       try {
         ((BigInteger)13).mod((BigInteger)(-4));
         Assert.Fail("Should have failed");
-      } catch (ArithmeticException ex) {
+      } catch (ArithmeticException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -505,7 +505,7 @@ Console.Write(String.Empty);
       try {
         ((BigInteger)(-13)).mod((BigInteger)(-4));
         Assert.Fail("Should have failed");
-      } catch (ArithmeticException ex) {
+      } catch (ArithmeticException) {
 Console.Write(String.Empty);
 } catch (Exception ex) {
         Assert.Fail(ex.ToString());

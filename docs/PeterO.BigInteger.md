@@ -339,7 +339,7 @@ The parameter  <i>bytes</i>
         string str,
         int radix);
 
-Converts a string to an arbitrary-precision integer. The string portion can begin with a minus sign ('-') to indicate that it's negative.
+Converts a string to an arbitrary-precision integer. The string portion can begin with a minus sign ("-" , U+002D) to indicate that it's negative.
 
 The following example (C#) converts a number in the orm of a hex string to a big integer.    public static BigInteger HexToBigInteger(string hexString) {
       // Parse the hexadecimal string as a big integer.  Will
@@ -356,7 +356,7 @@ The following example (C#) converts a number in the orm of a hex string to a big
 
  * <i>str</i>: A string object.
 
- * <i>radix</i>: A base from 2 to 36. The possible ASCII digits start from 0 to 9, then from A to Z in base 36, and the possible ASCII digits start from 0 to 9, then from A to F in base 16.
+ * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U + 0030 to U + 0039) and then the basic letters A to Z (U + 0041 to U + 005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
 <b>Returns:</b>
 
@@ -383,13 +383,13 @@ The string is empty or in an invalid format.
         int index,
         int endIndex);
 
-Converts a portion of a string to an arbitrary-precision integer in a given radix. The string portion can begin with a minus sign ('-') to indicate that it's negative.
+Converts a portion of a string to an arbitrary-precision integer in a given radix. The string portion can begin with a minus sign ("-" , U+002D) to indicate that it's negative.
 
 <b>Parameters:</b>
 
  * <i>str</i>: A string object.
 
- * <i>radix</i>: A base from 2 to 36. The possible digits start from 0 to 9, then from A to Z in base 36, and the possible digits start from 0 to 9, then from A to F in base 16.
+ * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U + 0030 to U + 0039) and then the basic letters A to Z (U + 0041 to U + 005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
  * <i>index</i>: The index of the string that starts the string portion.
 
@@ -424,7 +424,7 @@ Converts a string to an arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string containing only ASCII digits, except that it may start with a minus sign.
+ * <i>str</i>: A string containing only basic digits 0 to 9 (U + 0030 to U + 0039), except that it may start with a minus sign ("-", U + 002D).
 
 <b>Returns:</b>
 
@@ -447,7 +447,7 @@ The parameter  <i>str</i>
         int index,
         int endIndex);
 
-Converts a portion of a string to an arbitrary-precision integer. The string portion can begin with a minus sign ('-') to indicate that it's negative.
+Converts a portion of a string to an arbitrary-precision integer. The string portion can begin with a minus sign ("-", U+002D) to indicate that it's negative.
 
 <b>Parameters:</b>
 
@@ -1366,11 +1366,11 @@ Generates a string representing the value of this object, in the given radix.
 
 <b>Parameters:</b>
 
- * <i>radix</i>: A radix from 2 through 36. For example, to generate a hexadecimal string, specify 16. To generate a decimal string, specify 10.
+ * <i>radix</i>: A radix from 2 through 36. For example, to generate a hexadecimal (base-16) string, specify 16. To generate a decimal (base-10) string, specify 10.
 
 <b>Returns:</b>
 
-A string representing the value of this object. If this value is 0, returns "0". If negative, the string will begin with a hyphen/minus ("-"). Depending on the radix, the string will use ASCII characters ranging from 0 to 9 and then from A to Z. as the digits.
+A string representing the value of this object. If this value is 0, returns "0". If negative, the string will begin with a hyphen/minus ("-"). Depending on the radix, the string will use the basic digits 0 to 9 (U + 0030 to U + 0039) and then the basic letters A to Z (U + 0041 to U + 005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
 <b>Exceptions:</b>
 
@@ -1385,7 +1385,7 @@ Converts this object to a text string in base 10.
 
 <b>Returns:</b>
 
-A string representation of this object. If negative, the string will begin with a hyphen/minus ("-"). The string will use the ASCII digits from 0 to 9.
+A string representation of this object. If negative, the string will begin with a minus sign ("-", U+002D). The string will use the basic digits 0 to 9 (U + 0030 to U + 0039).
 
 ### valueOf
 

@@ -779,7 +779,7 @@ DataUtilities.CodePointCompare(
           try {
             DataUtilities.ReadUtf8ToString(ms, -1, false);
             Assert.Fail("Should have failed");
-          } catch (IOException ex) {
+          } catch (IOException) {
             Console.Write(String.Empty);
 } catch (Exception ex) {
             Assert.Fail(ex.ToString());
