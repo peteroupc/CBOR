@@ -19,6 +19,15 @@ namespace PeterO {
       return valueOf(bigValue);
     }
 
+    /// <summary>Converts the value of a 32-bit signed integer to
+    /// BigInteger.</summary>
+    /// <param name='smallValue'>A 32-bit signed integer.</param>
+    /// <returns>A BigInteger object with the same value as the Int32
+    /// object.</returns>
+    public static implicit operator BigInteger(int smallValue) {
+      return valueOf((long)smallValue);
+    }
+
     /// <summary>Adds a BigInteger object and a BigInteger
     /// object.</summary>
     /// <param name='bthis'>A BigInteger object.</param>

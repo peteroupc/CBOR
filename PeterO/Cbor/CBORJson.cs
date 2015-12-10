@@ -440,9 +440,7 @@ int quote) {
             }
             writer.WriteString(
               CBORObject.TrimDotZero(
-                Convert.ToString(
-                  (float)f,
-                  System.Globalization.CultureInfo.InvariantCulture)));
+                CBORUtilities.SingleToString(f)));
             return;
           }
           case CBORObject.CBORObjectTypeDouble: {

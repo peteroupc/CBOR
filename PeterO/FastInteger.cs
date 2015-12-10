@@ -54,7 +54,7 @@ namespace PeterO {
         }
         this.data = new int[4];
         this.wordCount = (val == 0) ? 0 : 1;
-        this.data[0] = unchecked((int)(val & 0xFFFFFFFFL));
+        this.data[0] = val;
       }
 
       internal MutableNumber SetInt(int val) {
@@ -62,7 +62,7 @@ namespace PeterO {
           throw new ArgumentException("val (" + val + ") is less than " + "0 ");
         }
         this.wordCount = (val == 0) ? 0 : 1;
-        this.data[0] = unchecked((int)(val & 0xFFFFFFFFL));
+        this.data[0] = val;
         return this;
       }
 
@@ -981,14 +981,52 @@ out bigrem);
       }
     }
 
+    private static string HexAlphabet = "0123456789ABCDEF";
+
+    private static void ReverseChars(char[] chars, int offset, int length) {
+      int half = length >> 1;
+      int right = offset + length - 1;
+      for (var i = 0; i < half; i++, right--) {
+        char value = chars[offset + i];
+        chars[offset + i] = chars[right];
+        chars[right] = value;
+      }
+    }
+
+    private static string IntToString(int value) {
+      if (value == Int32.MinValue) {
+        return "-2147483648";
+      }
+      if (value == 0) {
+        return "0";
+      }
+      bool neg = value < 0;
+      var chars = new char[24];
+      var count = 0;
+      if (neg) {
+        chars[0] = '-';
+        ++count;
+        value = -value;
+      }
+      while (value != 0) {
+        char digit = HexAlphabet[(int)(value % 10)];
+        chars[count++] = digit;
+        value /= 10;
+      }
+      if (neg) {
+        ReverseChars(chars, 1, count - 1);
+      } else {
+        ReverseChars(chars, 0, count);
+      }
+      return new String(chars, 0, count);
+    }
+
     /// <summary>Converts this object to a text string.</summary>
     /// <returns>A string representation of this object.</returns>
     public override string ToString() {
       switch (this.integerMode) {
         case 0:
-          return Convert.ToString(
-(int)this.smallValue,
-System.Globalization.CultureInfo.InvariantCulture);
+          return IntToString(this.smallValue);
         case 1:
           return this.mnum.ToBigInteger().ToString();
         case 2:
@@ -1003,13 +1041,13 @@ System.Globalization.CultureInfo.InvariantCulture);
       get {
         switch (this.integerMode) {
           case 0:
-            return Math.Sign(this.smallValue);
+          return (this.smallValue == 0) ? (0) : ((this.smallValue< 0) ? -1 :
+              1);
           case 1:
             return this.mnum.Sign;
           case 2:
             return this.largeValue.Sign;
-          default:
-            return 0;
+          default: return 0;
         }
       }
     }

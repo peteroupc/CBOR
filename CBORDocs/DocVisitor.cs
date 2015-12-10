@@ -16,195 +16,22 @@ using System.Text.RegularExpressions;
 using ClariusLabs.NuDoc;
 
 namespace PeterO.DocGen {
-    /// <summary>A documentation visitor.</summary>
+  /// <summary>A documentation visitor.</summary>
   internal class DocVisitor : Visitor {
     private const string FourSpaces = " " + " " + " " + " ";
 
-    private readonly StringBuilder paramStr = new StringBuilder();
-    private readonly StringBuilder returnStr = new StringBuilder();
-    private readonly StringBuilder exceptionStr = new StringBuilder();
-    private StringBuilder currentBuffer;
+    private static readonly IDictionary<string, string> operators =
+          OperatorList();
+
     private readonly StringBuilder buffer = new StringBuilder();
-
-    private class BufferChanger : IDisposable {
-      private readonly StringBuilder oldBuffer;
-      private readonly DocVisitor vis;
-
-      public BufferChanger(DocVisitor vis, StringBuilder buffer) {
-        this.vis = vis;
-        this.oldBuffer = vis.currentBuffer;
-        vis.currentBuffer = buffer;
-      }
-
-      public void Dispose() {
-        this.vis.currentBuffer = this.oldBuffer;
-      }
-    }
+    private StringBuilder currentBuffer;
+    private readonly StringBuilder exceptionStr = new StringBuilder();
 
     private readonly IDictionary<string, StringBuilder> members = new
       SortedDictionary<string, StringBuilder>();
 
-    public override string ToString() {
-      var b = new StringBuilder();
-      b.Append(this.buffer.ToString());
-      foreach (var b2 in this.members.Keys) {
-        b.Append(this.members[b2].ToString());
-      }
-      return b.ToString();
-    }
-
-    public static string GetTypeID(Type type) {
-      var name = FormatType(type);
-      name = name.Replace(", ", ",");
-      var builder = new StringBuilder();
-      for (var i = 0; i < name.Length; ++i) {
-        var cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
-        var cp = DataUtilities.CodePointAt(name, i);
-        if (cp >= 0x10000) {
-          ++i;
-        }
-        if (cat == UnicodeCategory.UppercaseLetter ||
-            cat == UnicodeCategory.LowercaseLetter ||
-            cat == UnicodeCategory.TitlecaseLetter ||
-            cat == UnicodeCategory.OtherLetter ||
-            cat == UnicodeCategory.DecimalDigitNumber ||
-            cp == '_' || cp == '.') {
-          if (cp >= 0x10000) {
-            builder.Append(name, i, 2);
-          } else {
-            builder.Append(name[i]);
-          }
-        } else {
-          builder.Append(' ');
-        }
-      }
-      name = builder.ToString();
-      name = name.Trim();
-      name = name.Replace(' ', '-');
-      return name;
-    }
-
-    public static string FormatType(Type type) {
-      var rawfmt = FormatTypeRaw(type);
-      if (!type.IsArray && !type.IsGenericType) {
-        return rawfmt;
-      }
-      var sb = new StringBuilder();
-      sb.Append(rawfmt);
-      if (type.ContainsGenericParameters) {
-        sb.Append('<');
-        var first = true;
-        foreach (var arg in type.GetGenericArguments()) {
-          if (!first) {
-            sb.Append(", ");
-          }
-          sb.Append(FormatType(arg));
-          first = false;
-        }
-        sb.Append('>');
-      }
-      if (type.IsArray) {
-        for (var i = 0; i < type.GetArrayRank(); ++i) {
-          sb.Append("[]");
-        }
-      }
-      return sb.ToString();
-    }
-
-private static readonly IDictionary<string, string> operators =
-      OperatorList();
-
-    private static IDictionary<string, string> OperatorList() {
-      var ops = new Dictionary<string, string>();
-      ops["op_Addition"] = "+";
-      ops["op_UnaryPlus"] = "+";
-      ops["op_Subtraction"] = "-";
-      ops["op_UnaryNegation"] = "-";
-      ops["op_Multiply"] = "*";
-      ops["op_Division"] = "/";
-      ops["op_LeftShift"] = "<<";
-      ops["op_RightShift"] = ">>";
-      ops["op_BitwiseAnd"] = "&";
-      ops["op_BitwiseOr"] = "|";
-      ops["op_ExclusiveOr"] = "^";
-      ops["op_LogicalNot"] = "!";
-      ops["op_OnesComplement"] = "~";
-      ops["op_True"] = "true";
-      ops["op_False"] = "false";
-      ops["op_Modulus"] = "%";
-      ops["op_Decrement"] = "--";
-      ops["op_Increment"] = "++";
-      ops["op_Equality"] = "==";
-      ops["op_Inequality"] = "!=";
-      ops["op_GreaterThan"] = ">";
-      ops["op_GreaterThanOrEqual"] = ">=";
-      ops["op_LessThan"] = "<";
-      ops["op_LessThanOrEqual"] = "<=";
-      return ops;
-    }
-
-    public static string FormatTypeSig(Type typeInfo) {
-      var builder = new StringBuilder();
-      builder.Append(FourSpaces);
-      if (typeInfo.IsPublic) {
-        builder.Append("public ");
-      } else {
-        builder.Append("internal ");
-      }
-      if (typeInfo.IsAbstract && typeInfo.IsSealed) {
-        builder.Append("static ");
-      } else if (typeInfo.IsAbstract && !typeInfo.IsInterface) {
-        builder.Append("abstract ");
-      } else if (typeInfo.IsSealed) {
-        builder.Append("sealed ");
-      }
-      if (typeInfo.IsValueType) {
-        builder.Append("struct ");
-      } else if (typeInfo.IsClass) {
-        builder.Append("class ");
-      } else {
-        builder.Append("interface ");
-      }
-      builder.Append(TypeNameUtil.UndecorateTypeName(typeInfo.Name));
-      bool first;
-      if (typeInfo.GetGenericArguments().Length > 0) {
-        builder.Append('<');
-        first = true;
-        foreach (var arg in typeInfo.GetGenericArguments()) {
-          if (!first) {
-            builder.Append(", ");
-          }
-          builder.Append(FormatType(arg));
-          first = false;
-        }
-        builder.Append('>');
-      }
-      first = true;
-      var ifaces = typeInfo.GetInterfaces();
-      var derived = typeInfo.BaseType;
-      if (typeInfo.BaseType != null &&
-          typeInfo.BaseType.Equals(typeof(object))) {
-        derived = null;
-      }
-      if (derived != null || ifaces.Length > 0) {
-        builder.Append(" :\r\n" + FourSpaces);
-        if (derived != null) {
-          builder.Append(FourSpaces + FormatType(derived));
-          first = false;
-        }
-        if (ifaces.Length > 0) {
-          foreach (var iface in ifaces) {
-            if (!first) {
-              builder.Append(",\r\n" + FourSpaces);
-            }
-            builder.Append(FourSpaces + FormatType(iface));
-            first = false;
-          }
-        }
-      }
-      AppendConstraints(typeInfo.GetGenericArguments(), builder);
-      return builder.ToString();
-    }
+    private readonly StringBuilder paramStr = new StringBuilder();
+    private readonly StringBuilder returnStr = new StringBuilder();
 
     public static void AppendConstraints(
 Type[] genericArguments,
@@ -262,6 +89,46 @@ StringBuilder builder) {
       }
     }
 
+    public static string FormatField(FieldInfo field) {
+      var builder = new StringBuilder();
+      builder.Append(FourSpaces);
+      if (field.IsPublic) {
+        builder.Append("public ");
+      }
+      if (field.IsAssembly) {
+        builder.Append("internal ");
+      }
+      if (field.IsFamily) {
+        builder.Append("protected ");
+      }
+      if (field.IsStatic) {
+        builder.Append("static ");
+      }
+      if (field.IsInitOnly) {
+        builder.Append("readonly ");
+      }
+      builder.Append(FormatType(field.FieldType));
+      builder.Append(" ");
+      builder.Append(field.Name);
+      if (field.IsLiteral) {
+        try {
+          var obj = field.GetRawConstantValue();
+          if (obj is int) {
+            builder.Append(" = " + (int)obj + ";");
+          } else if (obj is long) {
+            builder.Append(" = " + (long)obj + "L;");
+          } else {
+            builder.Append(";");
+          }
+        } catch (InvalidOperationException) {
+          builder.Append(";");
+        }
+      } else {
+        builder.Append(";");
+      }
+      return builder.ToString();
+    }
+
     public static string FormatMethod(MethodBase method) {
       var builder = new StringBuilder();
       builder.Append(FourSpaces);
@@ -283,7 +150,8 @@ StringBuilder builder) {
         }
         if (method.IsFinal) {
           builder.Append("sealed ");
-     } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
+     } else if (method is MethodInfo &&
+          IsMethodOverride((MethodInfo)method)) {
           builder.Append("override ");
         } else if (method.IsVirtual) {
           builder.Append("virtual ");
@@ -312,7 +180,7 @@ StringBuilder builder) {
           builder.Append(method.Name);
         }
       } else {
-    builder.Append(TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
+  builder.Append(TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name));
       }
       bool first;
       if (method is MethodInfo && method.GetGenericArguments().Length > 0) {
@@ -353,15 +221,6 @@ StringBuilder builder) {
       }
       builder.Append(";");
       return builder.ToString();
-    }
-
-    private static bool PropertyIsPublicOrFamily(PropertyInfo property) {
-      var getter = property.GetGetMethod();
-      var setter = property.GetSetMethod();
-      return ((getter != null && getter.IsPublic) || (setter != null &&
-        setter.IsPublic)) || ((getter != null && getter.IsFamily) || (setter !=
-                null &&
-  setter.IsFamily));
     }
 
     public static string FormatProperty(PropertyInfo property) {
@@ -444,44 +303,31 @@ StringBuilder builder) {
       return builder.ToString();
     }
 
-    public static string FormatField(FieldInfo field) {
-      var builder = new StringBuilder();
-      builder.Append(FourSpaces);
-      if (field.IsPublic) {
-        builder.Append("public ");
+    public static string FormatType(Type type) {
+      var rawfmt = FormatTypeRaw(type);
+      if (!type.IsArray && !type.IsGenericType) {
+        return rawfmt;
       }
-      if (field.IsAssembly) {
-        builder.Append("internal ");
-      }
-      if (field.IsFamily) {
-        builder.Append("protected ");
-      }
-      if (field.IsStatic) {
-        builder.Append("static ");
-      }
-      if (field.IsInitOnly) {
-        builder.Append("readonly ");
-      }
-      builder.Append(FormatType(field.FieldType));
-      builder.Append(" ");
-      builder.Append(field.Name);
-      if (field.IsLiteral) {
-        try {
-          var obj = field.GetRawConstantValue();
-          if (obj is int) {
-            builder.Append(" = " + (int)obj + ";");
-          } else if (obj is long) {
-            builder.Append(" = " + (long)obj + "L;");
-          } else {
-            builder.Append(";");
+      var sb = new StringBuilder();
+      sb.Append(rawfmt);
+      if (type.ContainsGenericParameters) {
+        sb.Append('<');
+        var first = true;
+        foreach (var arg in type.GetGenericArguments()) {
+          if (!first) {
+            sb.Append(", ");
           }
-        } catch (InvalidOperationException) {
-          builder.Append(";");
+          sb.Append(FormatType(arg));
+          first = false;
         }
-      } else {
-        builder.Append(";");
+        sb.Append('>');
       }
-      return builder.ToString();
+      if (type.IsArray) {
+        for (var i = 0; i < type.GetArrayRank(); ++i) {
+          sb.Append("[]");
+        }
+      }
+      return sb.ToString();
     }
 
     public static string FormatTypeRaw(Type type) {
@@ -507,37 +353,136 @@ StringBuilder builder) {
   name))))))))))))));
     }
 
+    public static string FormatTypeSig(Type typeInfo) {
+      var builder = new StringBuilder();
+      builder.Append(FourSpaces);
+      if (typeInfo.IsPublic) {
+        builder.Append("public ");
+      } else {
+        builder.Append("internal ");
+      }
+      if (typeInfo.IsAbstract && typeInfo.IsSealed) {
+        builder.Append("static ");
+      } else if (typeInfo.IsAbstract && !typeInfo.IsInterface) {
+        builder.Append("abstract ");
+      } else if (typeInfo.IsSealed) {
+        builder.Append("sealed ");
+      }
+      if (typeInfo.IsValueType) {
+        builder.Append("struct ");
+      } else if (typeInfo.IsClass) {
+        builder.Append("class ");
+      } else {
+        builder.Append("interface ");
+      }
+      builder.Append(TypeNameUtil.UndecorateTypeName(typeInfo.Name));
+      bool first;
+      if (typeInfo.GetGenericArguments().Length > 0) {
+        builder.Append('<');
+        first = true;
+        foreach (var arg in typeInfo.GetGenericArguments()) {
+          if (!first) {
+            builder.Append(", ");
+          }
+          builder.Append(FormatType(arg));
+          first = false;
+        }
+        builder.Append('>');
+      }
+      first = true;
+      var ifaces = typeInfo.GetInterfaces();
+      var derived = typeInfo.BaseType;
+      if (typeInfo.BaseType != null &&
+          typeInfo.BaseType.Equals(typeof(object))) {
+        derived = null;
+      }
+      if (derived != null || ifaces.Length > 0) {
+        builder.Append(" :\r\n" + FourSpaces);
+        if (derived != null) {
+          builder.Append(FourSpaces + FormatType(derived));
+          first = false;
+        }
+        if (ifaces.Length > 0) {
+          foreach (var iface in ifaces) {
+            if (!first) {
+              builder.Append(",\r\n" + FourSpaces);
+            }
+            builder.Append(FourSpaces + FormatType(iface));
+            first = false;
+          }
+        }
+      }
+      AppendConstraints(typeInfo.GetGenericArguments(), builder);
+      return builder.ToString();
+    }
+
+    public static string GetTypeID(Type type) {
+      var name = FormatType(type);
+      name = name.Replace(", ", ",");
+      var builder = new StringBuilder();
+      for (var i = 0; i < name.Length; ++i) {
+        var cat = CharUnicodeInfo.GetUnicodeCategory(name, i);
+        var cp = DataUtilities.CodePointAt(name, i);
+        if (cp >= 0x10000) {
+          ++i;
+        }
+        if (cat == UnicodeCategory.UppercaseLetter ||
+            cat == UnicodeCategory.LowercaseLetter ||
+            cat == UnicodeCategory.TitlecaseLetter ||
+            cat == UnicodeCategory.OtherLetter ||
+            cat == UnicodeCategory.DecimalDigitNumber ||
+            cp == '_' || cp == '.') {
+          if (cp >= 0x10000) {
+            builder.Append(name, i, 2);
+          } else {
+            builder.Append(name[i]);
+          }
+        } else {
+          builder.Append(' ');
+        }
+      }
+      name = builder.ToString();
+      name = name.Trim();
+      name = name.Replace(' ', '-');
+      return name;
+    }
+
     public static bool IsMethodOverride(MethodInfo method) {
       var type = method.DeclaringType;
       var baseMethod = method.GetBaseDefinition();
       return (baseMethod != null) && (!method.Equals(baseMethod));
     }
 
-    private IDisposable Change(StringBuilder builder) {
-      return new BufferChanger(this, builder);
+    public void Debug(string ln) {
+      this.WriteLine(ln);
+      this.WriteLine(String.Empty);
     }
 
-    private IDisposable AddMember(MemberInfo member) {
-      var buffer = new StringBuilder();
-      var heading = this.HeadingUnambiguous(member);
-      this.members[heading] = buffer;
-      return new BufferChanger(this, buffer);
-    }
-
-    public override void VisitReturns(Returns returns) {
-      using (var ch = this.Change(this.returnStr)) {
-        this.WriteLine("<b>Returns:</b>\r\n");
-        base.VisitReturns(returns);
-        this.WriteLine("\r\n\r\n");
+    public override string ToString() {
+      var b = new StringBuilder();
+      b.Append(this.buffer.ToString());
+      foreach (var b2 in this.members.Keys) {
+        b.Append(this.members[b2].ToString());
       }
+      return b.ToString();
     }
 
-    public override void VisitValue(Value value) {
-      using (var ch = this.Change(this.returnStr)) {
-        this.WriteLine("<b>Returns:</b>\r\n");
-        base.VisitValue(value);
-        this.WriteLine("\r\n\r\n");
+    public override void VisitC(C code) {
+      this.Write(" `" + code.Content + "` ");
+      base.VisitC(code);
+    }
+
+    public override void VisitCode(Code code) {
+      foreach (var line in code.Content.Split('\n')) {
+        this.WriteLine(FourSpaces + line.TrimEnd());
       }
+      this.WriteLine("\r\n\r\n");
+      base.VisitCode(code);
+    }
+
+    public override void VisitExample(Example example) {
+      base.VisitExample(example);
+      this.WriteLine("\r\n\r\n");
     }
 
     public override void VisitException(ClariusLabs.NuDoc.Exception exception) {
@@ -552,80 +497,15 @@ StringBuilder builder) {
       }
     }
 
-    public override void VisitParam(Param param) {
-      using (var ch = this.Change(this.paramStr)) {
-        this.Write(" * <i>" + param.Name + "</i>: ");
-        base.VisitParam(param);
-        this.WriteLine("\r\n\r\n");
-      }
-    }
-
-    public override void VisitList(List list) {
-      this.WriteLine("\r\n\r\n");
-      base.VisitList(list);
-    }
-
     public override void VisitItem(Item item) {
       this.Write(" * ");
       base.VisitItem(item);
       this.WriteLine("\r\n\r\n");
     }
 
-    public override void VisitTypeParam(TypeParam typeParam) {
-      using (var ch = this.Change(this.paramStr)) {
-        this.Write(" * &lt;" + typeParam.Name + "&gt;: ");
-        base.VisitTypeParam(typeParam);
-        this.WriteLine("\r\n\r\n");
-      }
-    }
-
-    public override void VisitParamRef(ParamRef paramRef) {
-      this.WriteLine(" <i>" + paramRef.Name + "</i>");
-      base.VisitParamRef(paramRef);
-    }
-
-    private string HeadingUnambiguous(MemberInfo info) {
-      var ret = String.Empty;
-      if (info is MethodBase) {
-        var method = (MethodBase)info;
-        return (method is ConstructorInfo) ? ("<1>" + " " +
-          FormatMethod(method)) : ("<4>" + method.Name + " " +
-          FormatMethod(method));
-      }
-      if (info is Type) {
-        var type = (Type)info;
-        return "<0>" + FormatType(type);
-      } else if (info is PropertyInfo) {
-        var property = (PropertyInfo)info;
-        return "<3>" + property.Name;
-      } else if (info is FieldInfo) {
-        var field = (FieldInfo)info;
-        return "<2>" + field.Name;
-      }
-      return ret;
-    }
-
-    private string Heading(MemberInfo info) {
-      var ret = String.Empty;
-      if (info is MethodBase) {
-        var method = (MethodBase)info;
-        if (method is ConstructorInfo) {
-          return TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name) +
-          " Constructor";
-        }
-        return MethodNameHeading(method.Name);
-      }
-      if (info is Type) {
-        var type = (Type)info;
-        return FormatType(type);
-      } else if (info is PropertyInfo) {
-        var property = (PropertyInfo)info;
-        return property.Name;
-      } else if (info is FieldInfo) {
-        var field = (FieldInfo)info;
-        return field.Name;
-      }
-      return ret;
+    public override void VisitList(List list) {
+      this.WriteLine("\r\n\r\n");
+      base.VisitList(list);
     }
 
     public override void VisitMember(Member member) {
@@ -640,7 +520,7 @@ StringBuilder builder) {
         }
         using (var ch = this.AddMember(info)) {
           signature = FormatMethod(method);
-          this.WriteLine("### " + this.Heading(info) +
+          this.WriteLine("### " + Heading(info) +
                     "\r\n\r\n" + signature + "\r\n\r\n");
           var attr = method.GetCustomAttribute(typeof(ObsoleteAttribute)) as
             ObsoleteAttribute;
@@ -671,7 +551,7 @@ StringBuilder builder) {
           return;
         }
         using (var ch = this.AddMember(info)) {
-          this.WriteLine("## " + this.Heading(type) + "\r\n\r\n");
+          this.WriteLine("## " + Heading(type) + "\r\n\r\n");
           this.WriteLine(FormatTypeSig(type) + "\r\n\r\n");
           var attr = type.GetCustomAttribute(typeof(ObsoleteAttribute)) as
             ObsoleteAttribute;
@@ -733,15 +613,22 @@ StringBuilder builder) {
       }
     }
 
-    private static string MethodNameHeading(string p) {
-      return operators.ContainsKey(p) ? ("Operator `" + operators[p] + "`") :
-        (p.Equals("op_Explicit") ? "Explicit Operator" :
-         (p.Equals("op_Implicit") ? "Implicit Operator" : p));
+    public override void VisitPara(Para para) {
+      base.VisitPara(para);
+      this.WriteLine("\r\n\r\n");
     }
 
-    public override void VisitSummary(Summary summary) {
-      base.VisitSummary(summary);
-      this.WriteLine("\r\n\r\n");
+    public override void VisitParam(Param param) {
+      using (var ch = this.Change(this.paramStr)) {
+        this.Write(" * <i>" + param.Name + "</i>: ");
+        base.VisitParam(param);
+        this.WriteLine("\r\n\r\n");
+      }
+    }
+
+    public override void VisitParamRef(ParamRef paramRef) {
+      this.WriteLine(" <i>" + paramRef.Name + "</i>");
+      base.VisitParamRef(paramRef);
     }
 
     public override void VisitRemarks(Remarks remarks) {
@@ -749,8 +636,16 @@ StringBuilder builder) {
       this.WriteLine("\r\n\r\n");
     }
 
-    public override void VisitExample(Example example) {
-      base.VisitExample(example);
+    public override void VisitReturns(Returns returns) {
+      using (var ch = this.Change(this.returnStr)) {
+        this.WriteLine("<b>Returns:</b>\r\n");
+        base.VisitReturns(returns);
+        this.WriteLine("\r\n\r\n");
+      }
+    }
+
+    public override void VisitSummary(Summary summary) {
+      base.VisitSummary(summary);
       this.WriteLine("\r\n\r\n");
     }
 
@@ -762,17 +657,119 @@ StringBuilder builder) {
       base.VisitText(text);
     }
 
-    public override void VisitC(C code) {
-      this.Write(" `" + code.Content + "` ");
-      base.VisitC(code);
+    public override void VisitTypeParam(TypeParam typeParam) {
+      using (var ch = this.Change(this.paramStr)) {
+        this.Write(" * &lt;" + typeParam.Name + "&gt;: ");
+        base.VisitTypeParam(typeParam);
+        this.WriteLine("\r\n\r\n");
+      }
     }
 
-    public override void VisitCode(Code code) {
-      foreach (var line in code.Content.Split('\n')) {
-        this.WriteLine(FourSpaces + line.TrimEnd());
+    public override void VisitValue(Value value) {
+      using (var ch = this.Change(this.returnStr)) {
+        this.WriteLine("<b>Returns:</b>\r\n");
+        base.VisitValue(value);
+        this.WriteLine("\r\n\r\n");
       }
-      this.WriteLine("\r\n\r\n");
-      base.VisitCode(code);
+    }
+
+    private static string MethodNameHeading(string p) {
+      return operators.ContainsKey(p) ? ("Operator `" + operators[p] + "`") :
+        (p.Equals("op_Explicit") ? "Explicit Operator" :
+         (p.Equals("op_Implicit") ? "Implicit Operator" : p));
+    }
+
+    private static IDictionary<string, string> OperatorList() {
+      var ops = new Dictionary<string, string>();
+      ops["op_Addition"] = "+";
+      ops["op_UnaryPlus"] = "+";
+      ops["op_Subtraction"] = "-";
+      ops["op_UnaryNegation"] = "-";
+      ops["op_Multiply"] = "*";
+      ops["op_Division"] = "/";
+      ops["op_LeftShift"] = "<<";
+      ops["op_RightShift"] = ">>";
+      ops["op_BitwiseAnd"] = "&";
+      ops["op_BitwiseOr"] = "|";
+      ops["op_ExclusiveOr"] = "^";
+      ops["op_LogicalNot"] = "!";
+      ops["op_OnesComplement"] = "~";
+      ops["op_True"] = "true";
+      ops["op_False"] = "false";
+      ops["op_Modulus"] = "%";
+      ops["op_Decrement"] = "--";
+      ops["op_Increment"] = "++";
+      ops["op_Equality"] = "==";
+      ops["op_Inequality"] = "!=";
+      ops["op_GreaterThan"] = ">";
+      ops["op_GreaterThanOrEqual"] = ">=";
+      ops["op_LessThan"] = "<";
+      ops["op_LessThanOrEqual"] = "<=";
+      return ops;
+    }
+
+    private static bool PropertyIsPublicOrFamily(PropertyInfo property) {
+      var getter = property.GetGetMethod();
+      var setter = property.GetSetMethod();
+      return ((getter != null && getter.IsPublic) || (setter != null &&
+        setter.IsPublic)) || ((getter != null && getter.IsFamily) || (setter !=
+                null &&
+  setter.IsFamily));
+    }
+
+    private IDisposable AddMember(MemberInfo member) {
+      var buffer = new StringBuilder();
+      var heading = HeadingUnambiguous(member);
+      this.members[heading] = buffer;
+      return new BufferChanger(this, buffer);
+    }
+
+    private IDisposable Change(StringBuilder builder) {
+      return new BufferChanger(this, builder);
+    }
+
+    private static string Heading(MemberInfo info) {
+      var ret = String.Empty;
+      if (info is MethodBase) {
+        var method = (MethodBase)info;
+        if (method is ConstructorInfo) {
+          return TypeNameUtil.UndecorateTypeName(method.ReflectedType.Name) +
+          " Constructor";
+        }
+        return MethodNameHeading(method.Name);
+      }
+      if (info is Type) {
+        var type = (Type)info;
+        return FormatType(type);
+      } else if (info is PropertyInfo) {
+        var property = (PropertyInfo)info;
+        return property.Name;
+      } else if (info is FieldInfo) {
+        var field = (FieldInfo)info;
+        return field.Name;
+      }
+      return ret;
+    }
+
+    private static string HeadingUnambiguous(MemberInfo info) {
+      var ret = String.Empty;
+      if (info is MethodBase) {
+        var method = (MethodBase)info;
+        return (method is ConstructorInfo) ? ("<1>" + " " +
+          FormatMethod(method)) : ("<4>" + method.Name + " " +
+          FormatMethod(method));
+      }
+      if (info is Type) {
+        var type = (Type)info;
+        return "<0>" + FormatType(type);
+      } else if (info is PropertyInfo) {
+        var property = (PropertyInfo)info;
+        return "<3>" + property.Name;
+      } else if (info is FieldInfo) {
+        var field = (FieldInfo)info;
+        return "<2>" + field.Name;
+      }
+      return ret;
     }
 
     private void Write(string ln) {
@@ -793,14 +790,19 @@ StringBuilder builder) {
       }
     }
 
-    public void Debug(string ln) {
-      this.WriteLine(ln);
-      this.WriteLine(String.Empty);
-    }
+    private class BufferChanger : IDisposable {
+      private readonly StringBuilder oldBuffer;
+      private readonly DocVisitor vis;
 
-    public override void VisitPara(Para para) {
-      base.VisitPara(para);
-      this.WriteLine("\r\n\r\n");
+      public BufferChanger(DocVisitor vis, StringBuilder buffer) {
+        this.vis = vis;
+        this.oldBuffer = vis.currentBuffer;
+        vis.currentBuffer = buffer;
+      }
+
+      public void Dispose() {
+        this.vis.currentBuffer = this.oldBuffer;
+      }
     }
   }
 }

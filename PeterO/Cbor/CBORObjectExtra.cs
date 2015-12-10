@@ -248,9 +248,7 @@ newDecimal.Mantissa.Sign < 0);
       if (scale == 0 && Math.Round(value) == value) {
         // This is an integer
         return (value >= 0 && value <= UInt64.MaxValue) ?
-          FromObject((ulong)value) : ((value >= Int64.MinValue && value <=
-          Int64.MaxValue) ? FromObject((long)value) :
-          FromObject(DecimalToBigInteger(value)));
+          FromObject((ulong)value) : FromObject(DecimalToBigInteger(value));
       }
       var data = new byte[13];
       data[0] = (byte)(bits[0] & 0xff);
@@ -334,7 +332,7 @@ new[] { FromObject(-scale),
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
     public static CBORObject FromObject(uint value) {
-      return FromObject((long)value);
+      return FromObject((long)(Int64)value);
     }
 
     /// <summary>Converts a 16-bit unsigned integer to a CBOR
@@ -343,7 +341,7 @@ new[] { FromObject(-scale),
     /// <returns>A CBORObject object.</returns>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ushort value) {
-      return FromObject((long)value);
+      return FromObject((long)(Int64)value);
     }
 
     /// <summary>Generates a CBOR object from an arbitrary object and gives

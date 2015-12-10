@@ -505,8 +505,9 @@ StringComparison.Ordinal) < 0) {
           // is "/.."; remove last segment,
           // append "/" and return
           int index2 = builder.Length - 1;
+          string builderString = builder.ToString();
           while (index2 >= 0) {
-            if (builder[index2] == '/') {
+            if (builderString[index2] == '/') {
               break;
             }
             --index2;
@@ -522,8 +523,9 @@ StringComparison.Ordinal) < 0) {
             path[index + 2] == '.' && path[index + 3] == '/') {
           // begins with "/../"; remove last segment
           int index2 = builder.Length - 1;
+          string builderString = builder.ToString();
           while (index2 >= 0) {
-            if (builder[index2] == '/') {
+            if (builderString[index2] == '/') {
               break;
             }
             --index2;
