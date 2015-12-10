@@ -16,7 +16,7 @@ using System.Text.RegularExpressions;
 using ClariusLabs.NuDoc;
 
 namespace PeterO.DocGen {
-  /// <summary>A documentation visitor.</summary>
+    /// <summary>A documentation visitor.</summary>
   internal class DocVisitor : Visitor {
     private const string FourSpaces = " " + " " + " " + " ";
 
@@ -150,8 +150,7 @@ StringBuilder builder) {
         }
         if (method.IsFinal) {
           builder.Append("sealed ");
-     } else if (method is MethodInfo &&
-          IsMethodOverride((MethodInfo)method)) {
+     } else if (method is MethodInfo && IsMethodOverride((MethodInfo)method)) {
           builder.Append("override ");
         } else if (method.IsVirtual) {
           builder.Append("virtual ");
