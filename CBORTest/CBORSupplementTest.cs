@@ -1575,7 +1575,9 @@ Console.Write(String.Empty);
       byte[] bytes;
       bytes = new byte[] { 0x19, 2 };
       try {
-        MiniCBOR.ReadInt32(new MemoryStream(bytes));
+        using (var memoryStream = new MemoryStream(bytes)) {
+          MiniCBOR.ReadInt32(memoryStream);
+        }
         Assert.Fail("Should have failed");
       } catch (IOException) {
 Console.Write(String.Empty);
@@ -1585,7 +1587,9 @@ Console.Write(String.Empty);
       }
       bytes = new byte[] { 0x1a, 2 };
       try {
-        MiniCBOR.ReadInt32(new MemoryStream(bytes));
+        using (var memoryStream = new MemoryStream(bytes)) {
+          MiniCBOR.ReadInt32(memoryStream);
+        }
         Assert.Fail("Should have failed");
       } catch (IOException) {
 Console.Write(String.Empty);
@@ -1605,7 +1609,9 @@ Console.Write(String.Empty);
       }
       bytes = new byte[] { 0x1b, 2, 2, 2, 2, 2, 2, 2, 2 };
       try {
-        MiniCBOR.ReadInt32(new MemoryStream(bytes));
+        using (var memoryStream = new MemoryStream(bytes)) {
+          MiniCBOR.ReadInt32(memoryStream);
+        }
         Assert.Fail("Should have failed");
       } catch (IOException) {
 Console.Write(String.Empty);

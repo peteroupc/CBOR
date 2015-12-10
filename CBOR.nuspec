@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
     <id>PeterO.Cbor</id>
@@ -25,6 +25,7 @@ See the project page for release notes on previous versions: https://github.com/
     <tags>cbor data serialization binary json numbers arithmetic</tags>
     <dependencies>
       <group targetFramework="dotnet">
+        <dependency id="System.Text.Encoding" version="4.0.0" />
         <dependency id="System.Collections" version="4.0.0" />
         <dependency id="System.Diagnostics.Debug" version="4.0.0" />
         <dependency id="System.Globalization" version="4.0.0" />
@@ -33,7 +34,6 @@ See the project page for release notes on previous versions: https://github.com/
         <dependency id="System.Reflection.Extensions" version="4.0.0" />
         <dependency id="System.Runtime" version="4.0.0" />
         <dependency id="System.Runtime.Extensions" version="4.0.0" />
-        <dependency id="System.Text.Encoding" version="4.0.0" />
         <dependency id="System.Threading" version="4.0.0" />
       </group>
     </dependencies>

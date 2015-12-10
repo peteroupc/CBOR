@@ -1121,8 +1121,9 @@ namespace PeterO {
             adjustedExponent.Divide(10);
           }
           int count = builderReversed.Length;
+          string builderReversedString = builderReversed.ToString();
           for (var i = 0; i < count; ++i) {
-            builder.Append(builderReversed[count - 1 - i]);
+            builder.Append(builderReversedString[count - 1 - i]);
           }
         }
         return builder.ToString();

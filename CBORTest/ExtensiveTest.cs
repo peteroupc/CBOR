@@ -704,58 +704,65 @@ PrecisionContext ctx) {
       }
 
       BinaryNumber op1, op2, result;
-      if (size == 0) {
-        // single
-        if (chunks.Length < 6) {
-          return 0;
-        }
-        op1 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[4]) });
-        op2 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[5]) });
-        if (chunks.Length == 6 || chunks[6].Length == 0) {
-          result = op2;
-          op2 = null;
-        } else {
-          result = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[6])
+      switch (size) {
+        case 0:
+          // single
+          if (chunks.Length < 6) {
+            return 0;
+          }
+          op1 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[4]) });
+          op2 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[5]) });
+          if (chunks.Length == 6 || chunks[6].Length == 0) {
+            result = op2;
+            op2 = null;
+          } else {
+            result = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[6])
                     });
-        }
-      } else if (size == 1) {
-        // double
-        if (chunks.Length < 8) {
-          return 0;
-        }
-        op1 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[4]),
+          }
+
+          break;
+        case 1:
+          // double
+          if (chunks.Length < 8) {
+            return 0;
+          }
+          op1 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[4]),
                     HexInt(chunks[5]) });
-        op2 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[6]),
+          op2 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[6]),
                     HexInt(chunks[7]) });
-        if (chunks.Length == 8 || chunks[8].Length == 0) {
-          result = op2;
-          op2 = null;
-          return 0;
-        }
-        result = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[8]),
+          if (chunks.Length == 8 || chunks[8].Length == 0) {
+            result = op2;
+            op2 = null;
+            return 0;
+          }
+          result = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[8]),
                     HexInt(chunks[9]) });
-      } else if (size == 2) {
-        // quad
-        if (chunks.Length < 12) {
-          return 0;
-        }
-        op1 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[4]),
+          break;
+        case 2:
+          // quad
+          if (chunks.Length < 12) {
+            return 0;
+          }
+          op1 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[4]),
 HexInt(chunks[5]), HexInt(chunks[6]),
                     HexInt(chunks[7]) });
-        op2 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[8]),
+          op2 = BinaryNumber.FromFloatWords(new[] { HexInt(chunks[8]),
 HexInt(chunks[9]), HexInt(chunks[10]),
 HexInt(chunks[11]) });
-        if (chunks.Length == 12 || chunks[12].Length == 0) {
-          result = op2;
-          op2 = null;
-        } else {
-          result = BinaryNumber.FromFloatWords(new[] {
+          if (chunks.Length == 12 || chunks[12].Length == 0) {
+            result = op2;
+            op2 = null;
+          } else {
+            result = BinaryNumber.FromFloatWords(new[] {
 HexInt(chunks[12]), HexInt(chunks[13]),
 HexInt(chunks[14]), HexInt(chunks[15]) });
-        }
-      } else {
-        return 0;
+          }
+
+          break;
+        default:
+          return 0;
       }
+
       if (compareOp.Equals("uo")) {
         result = BinaryNumber.FromString("NaN");
       }

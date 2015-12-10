@@ -46,7 +46,7 @@ CBORObject objectWithTags) {
         }
         if (negative) {
           x = -x;
-          x -= 1L;
+          --x;
         }
         return FromObjectAndInnerTags(x, o);
       }

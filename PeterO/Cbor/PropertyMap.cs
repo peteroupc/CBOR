@@ -38,6 +38,16 @@ namespace PeterO.Cbor {
       }
     }
 
+#if NET40
+    private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
+      return t.GetProperties(BindingFlags.Public |
+        BindingFlags.Instance);
+    }
+    private static MethodInfo GetTypeMethod(Type t, string name,
+      Type[] parameters) {
+       return t.GetMethod(name, parameters);
+    }
+#else
     private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
       return t.GetRuntimeProperties();
     }
@@ -45,6 +55,7 @@ namespace PeterO.Cbor {
       Type[] parameters) {
        return t.GetRuntimeMethod(name, parameters);
     }
+#endif
 
     private static readonly IDictionary<Type, IList<PropertyData>>
       propertyLists = new Dictionary<Type, IList<PropertyData>>();

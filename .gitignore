@@ -3,6 +3,7 @@ obj/
 .settings/
 packages/
 Help/
+.vs/
 *.user
 *.nupkg
 *.versionsBackup
