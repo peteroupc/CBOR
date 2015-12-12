@@ -86,7 +86,13 @@ namespace Test {
     }
     [Test]
     public void TestCompareTo() {
-      // not implemented yet
+      var r = new FastRandom();
+      for (var i = 0; i < 500; ++i) {
+        ExtendedFloat bigintA = RandomObjects.RandomExtendedFloat(r);
+        ExtendedFloat bigintB = RandomObjects.RandomExtendedFloat(r);
+        ExtendedFloat bigintC = RandomObjects.RandomExtendedFloat(r);
+        TestCommon.CompareTestRelations(bigintA, bigintB, bigintC);
+      }
     }
     [Test]
     public void TestCompareToSignal() {

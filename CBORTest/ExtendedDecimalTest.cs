@@ -60,7 +60,13 @@ namespace Test {
     }
     [Test]
     public void TestCompareTo() {
-      // not implemented yet
+      var r = new FastRandom();
+      for (var i = 0; i < 500; ++i) {
+        ExtendedDecimal bigintA = RandomObjects.RandomExtendedDecimal(r);
+        ExtendedDecimal bigintB = RandomObjects.RandomExtendedDecimal(r);
+        ExtendedDecimal bigintC = RandomObjects.RandomExtendedDecimal(r);
+        TestCommon.CompareTestRelations(bigintA, bigintB, bigintC);
+      }
     }
     [Test]
     public void TestCompareToBinary() {

@@ -46,7 +46,14 @@ namespace Test {
     }
     [Test]
     public void TestCompareTo() {
-      // not implemented yet
+      var r = new FastRandom();
+      for (var i = 0; i < 500; ++i) {
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
+        BigInteger bigintB = RandomObjects.RandomBigInteger(r);
+        BigInteger bigintC = RandomObjects.RandomBigInteger(r);
+        TestCommon.CompareTestRelations(bigintA, bigintB, bigintC);
+        TestCommon.CompareTestConsistency(bigintA, bigintB, bigintC);
+      }
     }
     [Test]
     public void TestDivide() {

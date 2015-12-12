@@ -1049,8 +1049,116 @@ cbornumber.AsSingle());
         }
       }
     }
+
+    internal static void CompareDecimals(CBORObject o1, CBORObject o2) {
+      int cmpDecFrac = o1.AsExtendedDecimal().CompareTo(o2.AsExtendedDecimal());
+      int cmpCobj = TestCommon.CompareTestReciprocal(o1, o2);
+      if (cmpDecFrac != cmpCobj) {
+        Assert.AreEqual(
+          cmpDecFrac,
+          cmpCobj,
+          TestCommon.ObjectMessages(o1, o2, "Compare: Results don't match"));
+      }
+      TestCommon.AssertRoundTrip(o1);
+      TestCommon.AssertRoundTrip(o2);
+    }
+
     [Test]
     public void TestCompareTo() {
+      var r = new FastRandom();
+      const int CompareCount = 500;
+      for (var i = 0; i < CompareCount; ++i) {
+        CBORObject o1 = RandomObjects.RandomCBORObject(r);
+        CBORObject o2 = RandomObjects.RandomCBORObject(r);
+        CBORObject o3 = RandomObjects.RandomCBORObject(r);
+        TestCommon.CompareTestRelations(o1, o2, o3);
+      }
+      for (var i = 0; i < 5000; ++i) {
+        CBORObject o1 = RandomObjects.RandomNumber(r);
+        CBORObject o2 = RandomObjects.RandomNumber(r);
+        CompareDecimals(o1, o2);
+      }
+      for (var i = 0; i < 50; ++i) {
+        CBORObject o1 = CBORObject.FromObject(Single.NegativeInfinity);
+        CBORObject o2 = RandomObjects.RandomNumberOrRational(r);
+        if (o2.IsInfinity() || o2.IsNaN()) {
+          continue;
+        }
+        TestCommon.CompareTestLess(o1, o2);
+        o1 = CBORObject.FromObject(Double.NegativeInfinity);
+        TestCommon.CompareTestLess(o1, o2);
+        o1 = CBORObject.FromObject(Single.PositiveInfinity);
+        TestCommon.CompareTestLess(o2, o1);
+        o1 = CBORObject.FromObject(Double.PositiveInfinity);
+        TestCommon.CompareTestLess(o2, o1);
+        o1 = CBORObject.FromObject(Single.NaN);
+        TestCommon.CompareTestLess(o2, o1);
+        o1 = CBORObject.FromObject(Double.NaN);
+        TestCommon.CompareTestLess(o2, o1);
+      }
+      byte[] bytes1 = { 0, 1 };
+      byte[] bytes2 = { 0, 2 };
+      byte[] bytes3 = { 0, 2, 0 };
+      byte[] bytes4 = { 1, 1 };
+      byte[] bytes5 = { 1, 1, 4 };
+      byte[] bytes6 = { 1, 2 };
+      byte[] bytes7 = { 1, 2, 6 };
+      CBORObject[] sortedObjects = {
+        CBORObject.Undefined, CBORObject.Null,
+        CBORObject.False, CBORObject.True,
+        CBORObject.FromObject(Double.NegativeInfinity),
+        CBORObject.FromObject(ExtendedDecimal.FromString("-1E+5000")),
+        CBORObject.FromObject(Int64.MinValue),
+        CBORObject.FromObject(Int32.MinValue),
+        CBORObject.FromObject(-2), CBORObject.FromObject(-1),
+        CBORObject.FromObject(0), CBORObject.FromObject(1),
+        CBORObject.FromObject(2), CBORObject.FromObject(Int64.MaxValue),
+        CBORObject.FromObject(ExtendedDecimal.FromString("1E+5000")),
+        CBORObject.FromObject(Double.PositiveInfinity),
+        CBORObject.FromObject(Double.NaN), CBORObject.FromSimpleValue(0),
+        CBORObject.FromSimpleValue(19), CBORObject.FromSimpleValue(32),
+        CBORObject.FromSimpleValue(255), CBORObject.FromObject(bytes1),
+        CBORObject.FromObject(bytes2), CBORObject.FromObject(bytes3),
+        CBORObject.FromObject(bytes4), CBORObject.FromObject(bytes5),
+        CBORObject.FromObject(bytes6), CBORObject.FromObject(bytes7),
+        CBORObject.FromObject("aa"), CBORObject.FromObject("ab"),
+        CBORObject.FromObject("abc"), CBORObject.FromObject("ba"),
+        CBORObject.FromObject(CBORObject.NewArray()),
+        CBORObject.FromObject(CBORObject.NewMap()),
+      };
+      for (var i = 0; i < sortedObjects.Length; ++i) {
+        for (int j = i; j < sortedObjects.Length; ++j) {
+          if (i == j) {
+            TestCommon.CompareTestEqual(sortedObjects[i], sortedObjects[j]);
+          } else {
+            TestCommon.CompareTestLess(sortedObjects[i], sortedObjects[j]);
+          }
+        }
+        Assert.AreEqual(1, sortedObjects[i].CompareTo(null));
+      }
+      CBORObject sp = CBORObject.FromObject(Single.PositiveInfinity);
+      CBORObject sn = CBORObject.FromObject(Single.NegativeInfinity);
+      CBORObject snan = CBORObject.FromObject(Single.NaN);
+      CBORObject dp = CBORObject.FromObject(Double.PositiveInfinity);
+      CBORObject dn = CBORObject.FromObject(Double.NegativeInfinity);
+      CBORObject dnan = CBORObject.FromObject(Double.NaN);
+      TestCommon.CompareTestEqual(sp, sp);
+      TestCommon.CompareTestEqual(sp, dp);
+      TestCommon.CompareTestEqual(dp, dp);
+      TestCommon.CompareTestEqual(sn, sn);
+      TestCommon.CompareTestEqual(sn, dn);
+      TestCommon.CompareTestEqual(dn, dn);
+      TestCommon.CompareTestEqual(snan, snan);
+      TestCommon.CompareTestEqual(snan, dnan);
+      TestCommon.CompareTestEqual(dnan, dnan);
+      TestCommon.CompareTestLess(sn, sp);
+      TestCommon.CompareTestLess(sn, dp);
+      TestCommon.CompareTestLess(sn, snan);
+      TestCommon.CompareTestLess(sn, dnan);
+      TestCommon.CompareTestLess(sp, snan);
+      TestCommon.CompareTestLess(sp, dnan);
+      TestCommon.CompareTestLess(dn, dp);
+      TestCommon.CompareTestLess(dp, dnan);
       Assert.AreEqual(1, CBORObject.True.CompareTo(null));
       Assert.AreEqual(1, CBORObject.False.CompareTo(null));
       Assert.AreEqual(1, CBORObject.Null.CompareTo(null));
@@ -1058,21 +1166,23 @@ cbornumber.AsSingle());
       Assert.AreEqual(1, CBORObject.NewMap().CompareTo(null));
       Assert.AreEqual(1, CBORObject.FromObject(100).CompareTo(null));
       Assert.AreEqual(1, CBORObject.FromObject(Double.NaN).CompareTo(null));
-      CBORTest.CompareTestLess(CBORObject.Undefined, CBORObject.Null);
-      CBORTest.CompareTestLess(CBORObject.Null, CBORObject.False);
-      CBORTest.CompareTestLess(CBORObject.False, CBORObject.True);
-      CBORTest.CompareTestLess(CBORObject.False, CBORObject.FromObject(0));
-      CBORTest.CompareTestLess(CBORObject.False, CBORObject.FromSimpleValue(0));
-      CBORTest.CompareTestLess(
+      TestCommon.CompareTestLess(CBORObject.Undefined, CBORObject.Null);
+      TestCommon.CompareTestLess(CBORObject.Null, CBORObject.False);
+      TestCommon.CompareTestLess(CBORObject.False, CBORObject.True);
+      TestCommon.CompareTestLess(CBORObject.False, CBORObject.FromObject(0));
+   TestCommon.CompareTestLess(
+CBORObject.False,
+CBORObject.FromSimpleValue(0));
+      TestCommon.CompareTestLess(
         CBORObject.FromSimpleValue(0),
         CBORObject.FromSimpleValue(1));
-      CBORTest.CompareTestLess(
+      TestCommon.CompareTestLess(
         CBORObject.FromObject(0),
         CBORObject.FromObject(1));
-      CBORTest.CompareTestLess(
+      TestCommon.CompareTestLess(
         CBORObject.FromObject(0.0f),
         CBORObject.FromObject(1.0f));
-      CBORTest.CompareTestLess(
+      TestCommon.CompareTestLess(
         CBORObject.FromObject(0.0),
         CBORObject.FromObject(1.0));
     }

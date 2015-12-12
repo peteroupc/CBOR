@@ -19,7 +19,13 @@ namespace Test {
     }
     [Test]
     public void TestCompareTo() {
-      // not implemented yet
+      var r = new FastRandom();
+      for (var i = 0; i < 500; ++i) {
+        ExtendedRational bigintA = RandomObjects.RandomRational(r);
+        ExtendedRational bigintB = RandomObjects.RandomRational(r);
+        ExtendedRational bigintC = RandomObjects.RandomRational(r);
+        TestCommon.CompareTestRelations(bigintA, bigintB, bigintC);
+      }
     }
     [Test]
     public void TestCompareToBinary() {

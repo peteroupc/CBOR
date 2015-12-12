@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using System.Globalization;
+using System.Collections.Generic;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
@@ -345,7 +345,7 @@ output,
         if (!o2.Equals(o)) {
           Assert.Fail(
 String.Format(
-CultureInfo.InvariantCulture,
+System.Globalization.CultureInfo.InvariantCulture,
 "{0} equals {1} but not vice versa",
 o,
 o2));
@@ -357,7 +357,7 @@ o2));
           // quite a lot of overhead
           Assert.Fail(
 String.Format(
-CultureInfo.InvariantCulture,
+System.Globalization.CultureInfo.InvariantCulture,
 "{0} and {1} don't have equal hash codes",
 o,
 o2));
@@ -365,7 +365,7 @@ o2));
       } else {
         if (o2.Equals(o)) {
           Assert.Fail(String.Format(
-CultureInfo.InvariantCulture,
+System.Globalization.CultureInfo.InvariantCulture,
 "{0} does not equal {1} but not vice versa",
 o,
 o2));
@@ -465,9 +465,162 @@ Console.Write(String.Empty);
       }
     }
 
+    public static string ObjectMessages(
+      object o1,
+      object o2,
+      String s) {
+        CBORObject co1 = o1 as CBORObject;
+        CBORObject co2 = o2 as CBORObject;
+      if (co1 != null) {
+        TestCommon.ObjectMessages(co1, co2, s);
+      }
+      return s + ":\n" + o1 + " and\n" + o2;
+    }
+
+    public static string ObjectMessages(
+      CBORObject o1,
+      CBORObject o2,
+      String s) {
+      if (o1.Type == CBORType.Number && o2.Type == CBORType.Number) {
+        return s + ":\n" + o1 + " and\n" + o2 + "\nOR\n" +
+          o1.AsExtendedDecimal() + " and\n" + o2.AsExtendedDecimal() +
+       "\nOR\n" + "AddSubCompare(" + TestCommon.ToByteArrayString(o1) + ",\n" +
+          TestCommon.ToByteArrayString(o2) + ");";
+      }
+      return s + ":\n" + o1 + " and\n" + o2 + "\nOR\n" +
+TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2);
+    }
+
+    public static string ObjectMessages(
+      object o1,
+      object o2,
+      object o3,
+      String s) {
+      var co1 = o1 as CBORObject;
+      var co2 = o2 as CBORObject;
+      var co3 = o3 as CBORObject;
+      if (co1 != null) {
+        TestCommon.ObjectMessages(co1, co2, co3, s);
+      }
+      return s + ":\n" + o1 + " and\n" + o2 + " and\n" + o3;
+    }
+
+    public static string ObjectMessages(
+      CBORObject o1,
+      CBORObject o2,
+      CBORObject o3,
+      String s) {
+      return s + ":\n" + o1 + " and\n" + o2 + " and\n" + o3 + "\nOR\n" +
+TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2) +
+ " and\n" + TestCommon.ToByteArrayString(o3);
+    }
+
+  public static void CompareTestEqual<T>(T o1, T o2) where T :
+      IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) != 0) {
+        Assert.Fail(ObjectMessages(
+          o1,
+          o2,
+          "Not equal: " + CompareTestReciprocal(o1, o2)));
+      }
+    }
+
+    public static void CompareTestLess<T>(T o1, T o2) where T : IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) >= 0) {
+        Assert.Fail(ObjectMessages(
+          o1,
+          o2,
+          "Not less: " + CompareTestReciprocal(o1, o2)));
+      }
+    }
+
+    public static int CompareTestReciprocal<T>(T o1, T o2) where T :
+      IComparable<T> {
+      if (o1 == null) {
+        throw new ArgumentNullException("o1");
+      }
+      if (o2 == null) {
+        throw new ArgumentNullException("o2");
+      }
+      int cmp = Math.Sign(o1.CompareTo(o2));
+      int cmp2 = Math.Sign(o2.CompareTo(o1));
+      if (-cmp2 != cmp) {
+        Assert.AreEqual(cmp, -cmp2, ObjectMessages(o1, o2, "Not reciprocal"));
+      }
+      return cmp;
+    }
+
+    public static void CompareTestConsistency<T>(T o1, T o2, T o3) where T :
+      IComparable<T> {
+      if (o1 == null) {
+        throw new ArgumentNullException("o1");
+      }
+      if (o2 == null) {
+        throw new ArgumentNullException("o2");
+      }
+      if (o3 == null) {
+        throw new ArgumentNullException("o3");
+      }
+      int cmp = CompareTestReciprocal(o1, o2);
+      int cmp2 = CompareTestReciprocal(o2, o3);
+      int cmp3 = CompareTestReciprocal(o1, o3);
+      Assert.AreEqual(cmp == 0, o1.Equals(o2));
+      Assert.AreEqual(cmp == 0, o2.Equals(o1));
+      Assert.AreEqual(cmp2 == 0, o2.Equals(o3));
+      Assert.AreEqual(cmp2 == 0, o3.Equals(o2));
+      Assert.AreEqual(cmp3 == 0, o1.Equals(o3));
+      Assert.AreEqual(cmp3 == 0, o3.Equals(o1));
+    }
+
+    public static void CompareTestRelations<T>(T o1, T o2, T o3) where T :
+      IComparable<T> {
+      if (o1 == null) {
+        throw new ArgumentNullException("o1");
+      }
+      if (o2 == null) {
+        throw new ArgumentNullException("o2");
+      }
+      if (o3 == null) {
+        throw new ArgumentNullException("o3");
+      }
+      if (o1.CompareTo(o1) != 0) {
+        Assert.Fail(o1.ToString());
+      }
+      if (o2.CompareTo(o2) != 0) {
+        Assert.Fail(o2.ToString());
+      }
+      if (o3.CompareTo(o3) != 0) {
+        Assert.Fail(o3.ToString());
+      }
+      int cmp12 = CompareTestReciprocal(o1, o2);
+      int cmp23 = CompareTestReciprocal(o2, o3);
+      int cmp13 = CompareTestReciprocal(o1, o3);
+      int cmp21 = -cmp12;
+      int cmp32 = -cmp23;
+      int cmp31 = -cmp13;
+      // Transitivity checks
+      for (int i = -1; i <= 1; ++i) {
+        if (cmp12 == i) {
+          if (cmp23 == i && cmp13 != i) {
+ Assert.Fail(ObjectMessages(o1, o2, o3, "Not transitive"));
+}
+        }
+        if (cmp23 == i) {
+          if (cmp31 == i && cmp21 != i) {
+ Assert.Fail(ObjectMessages(o1, o2, o3, "Not transitive"));
+}
+        }
+        if (cmp31 == i) {
+          if (cmp12 == i && cmp32 != i) {
+ Assert.Fail(ObjectMessages(o1, o2, o3, "Not transitive"));
+}
+        }
+      }
+    }
+
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      int cmp = o.CompareTo(o2);
+      int cmp = CompareTestReciprocal(o, o2);
       if (cmp != 0) {
         Assert.AreEqual(0, cmp, o + "\nvs.\n" + o2);
       }
