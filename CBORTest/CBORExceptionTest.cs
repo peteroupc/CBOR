@@ -1,11 +1,11 @@
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO.Cbor;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class CBORExceptionTest {
-    [TestMethod]
+    [Test]
     [ExpectedException(typeof(CBORException))]
     public void TestConstructor() {
       throw new CBORException("Test exception");

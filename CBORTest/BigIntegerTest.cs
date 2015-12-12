@@ -1,17 +1,17 @@
 using System;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class BigIntegerTest {
-    [TestMethod]
+    [Test]
     public void TestAdd() {
       // not implemented yet
     }
 
-    [TestMethod]
+    [Test]
     public void TestBitLength() {
       Assert.AreEqual(31, BigInteger.valueOf(-2147483647L).bitLength());
       Assert.AreEqual(31, BigInteger.valueOf(-2147483648L).bitLength());
@@ -40,19 +40,19 @@ namespace Test {
       Assert.AreEqual(0, BigInteger.valueOf(-1).bitLength());
       Assert.AreEqual(1, BigInteger.valueOf(-2).bitLength());
     }
-    [TestMethod]
+    [Test]
     public void TestCanFitInInt() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestCompareTo() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestDivide() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestDivideAndRemainder() {
       try {
         BigInteger.One.divideAndRemainder(null);
@@ -64,23 +64,23 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
-    [TestMethod]
+    [Test]
     public void TestDivRem() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestEquals() {
       Assert.IsFalse(BigInteger.One.Equals(null));
       Assert.IsFalse(BigInteger.Zero.Equals(null));
       Assert.IsFalse(BigInteger.One.Equals(BigInteger.Zero));
       Assert.IsFalse(BigInteger.Zero.Equals(BigInteger.One));
     }
-    [TestMethod]
+    [Test]
     public void TestFromByteArray() {
       Assert.AreEqual(
         BigInteger.Zero, BigInteger.fromBytes(new byte[] { }, false));
     }
-    [TestMethod]
+    [Test]
     public void TestFromString() {
       try {
         BigInteger.fromString(null);
@@ -92,7 +92,7 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
-    [TestMethod]
+    [Test]
     public void TestFromSubstring() {
       try {
         BigInteger.fromSubstring(null, 0, 1);
@@ -129,7 +129,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestFromRadixString() {
       try {
         BigInteger.fromRadixString(null, 10);
@@ -195,7 +195,7 @@ Console.Write(String.Empty);
         }
       }
     }
-    [TestMethod]
+    [Test]
     public void TestFromRadixSubstring() {
       try {
         BigInteger.fromRadixSubstring(null, 10, 0, 1);
@@ -492,7 +492,7 @@ Console.Write(String.Empty);
       Assert.AreEqual(bb, biggcd);
     }
 
-    [TestMethod]
+    [Test]
     public void TestGcd() {
       try {
  BigInteger.Zero.gcd(null);
@@ -692,11 +692,11 @@ stringTemp);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestGetBits() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestGetDigitCount() {
       var r = new FastRandom();
       for (var i = 0; i < 1000; ++i) {
@@ -705,23 +705,23 @@ stringTemp);
         Assert.AreEqual(str.Length, bigintA.getDigitCount());
       }
     }
-    [TestMethod]
+    [Test]
     public void TestGetHashCode() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestGetLowestSetBit() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestGetUnsignedBitLength() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestGreatestCommonDivisor() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIntValueChecked() {
       Assert.AreEqual(
         Int32.MinValue,
@@ -781,7 +781,7 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
-    [TestMethod]
+    [Test]
     public void TestIntValueUnchecked() {
       Assert.AreEqual(0L, BigInteger.ZERO.intValueUnchecked());
       Assert.AreEqual(
@@ -797,7 +797,7 @@ Console.Write(String.Empty);
         Int32.MinValue,
         BigInteger.valueOf(Int32.MaxValue + 1L).intValueUnchecked());
     }
-    [TestMethod]
+    [Test]
     public void TestIsEven() {
       var r = new FastRandom();
       for (var i = 0; i < 1000; ++i) {
@@ -806,15 +806,15 @@ Console.Write(String.Empty);
         Assert.AreEqual(mod.IsZero, bigintA.IsEven);
       }
     }
-    [TestMethod]
+    [Test]
     public void TestIsPowerOfTwo() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIsZero() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestLongValueChecked() {
       Assert.AreEqual(
         Int64.MinValue,
@@ -944,7 +944,7 @@ Console.Write(String.Empty);
         0x90000000L,
         BigInteger.valueOf(0x90000000L).longValueChecked());
     }
-    [TestMethod]
+    [Test]
     public void TestLongValueUnchecked() {
       Assert.AreEqual(0L, BigInteger.ZERO.longValueUnchecked());
       Assert.AreEqual(
@@ -999,7 +999,7 @@ Console.Write(String.Empty);
         0x90000000L,
         BigInteger.valueOf(0x90000000L).longValueUnchecked());
     }
-    [TestMethod]
+    [Test]
     public void TestMod() {
       try {
         BigInteger.One.mod(null);
@@ -1012,7 +1012,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestBigIntegerModPow() {
       try {
  BigInteger.One.ModPow(null, null);
@@ -1087,7 +1087,7 @@ Console.Write(String.Empty);
 throw new InvalidOperationException(String.Empty, ex);
 }
     }
-    [TestMethod]
+    [Test]
     public void TestMultiply() {
       var r = new FastRandom();
       for (var i = 0; i < 1000; ++i) {
@@ -1118,91 +1118,91 @@ throw new InvalidOperationException(String.Empty, ex);
         }
       }
     }
-    [TestMethod]
+    [Test]
     public void TestNegate() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestNot() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOne() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorAddition() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorDivision() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorExplicit() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorGreaterThan() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorGreaterThanOrEqual() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorImplicit() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorLeftShift() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorLessThan() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorLessThanOrEqual() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorModulus() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorMultiply() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorRightShift() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorSubtraction() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOperatorUnaryNegation() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestOr() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestPow() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestPowBigIntVar() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestRemainder() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestShiftLeft() {
       BigInteger bigint = BigInteger.One;
       bigint <<= 100;
@@ -1224,7 +1224,7 @@ throw new InvalidOperationException(String.Empty, ex);
         }
       }
     }
-    [TestMethod]
+    [Test]
     public void TestShiftRight() {
       BigInteger bigint = BigInteger.One;
       bigint <<= 80;
@@ -1256,23 +1256,23 @@ throw new InvalidOperationException(String.Empty, ex);
         }
       }
     }
-    [TestMethod]
+    [Test]
     public void TestSign() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestSqrt() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestSqrtWithRemainder() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestSubtract() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestTestBit() {
       Assert.IsFalse(BigInteger.Zero.testBit(0));
       Assert.IsFalse(BigInteger.Zero.testBit(1));
@@ -1282,7 +1282,7 @@ throw new InvalidOperationException(String.Empty, ex);
         Assert.IsTrue(BigInteger.One.negate().testBit(i));
       }
     }
-    [TestMethod]
+    [Test]
     public void TestToByteArray() {
       // not implemented yet
     }
@@ -1316,7 +1316,7 @@ throw new InvalidOperationException(String.Empty, ex);
       return builder.ToString();
     }
 
-    [TestMethod]
+    [Test]
     public void TestToRadixString() {
       var fr = new FastRandom();
       try {
@@ -1402,19 +1402,19 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestToString() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestValueOf() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestXor() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestZero() {
       // not implemented yet
       {

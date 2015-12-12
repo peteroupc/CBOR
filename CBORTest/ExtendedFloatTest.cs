@@ -1,11 +1,11 @@
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO;
 
 namespace Test {
-[TestClass]
+[TestFixture]
   public class ExtendedFloatTest {
-    [TestMethod]
+    [Test]
     public void TestMovePointRight() {
       ExtendedFloat ef;
       ExtendedFloat ef2;
@@ -13,7 +13,7 @@ namespace Test {
       ef2 = ExtendedFloat.FromInt32(0x1000);
       Assert.AreEqual(0, ef.CompareTo(ef2));
     }
-    [TestMethod]
+    [Test]
     public void TestMovePointLeft() {
       ExtendedFloat ef;
       ExtendedFloat ef2;
@@ -76,147 +76,147 @@ namespace Test {
       return ExtendedFloat.Create(ret, (BigInteger)smallExponent);
     }
 
-    [TestMethod]
+    [Test]
     public void TestAbs() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestAdd() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestCompareTo() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestCompareToSignal() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestCompareToWithContext() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestCreate() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestCreateNaN() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestDivide() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestDivideToExponent() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestDivideToIntegerNaturalScale() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestDivideToIntegerZeroScale() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestDivideToSameExponent() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestEquals() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestEqualsInternal() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestExp() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestExponent() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestFromBigInteger() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestFromDouble() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestFromInt32() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestFromInt64() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestFromSingle() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestFromString() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestGetHashCode() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIsFinite() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIsInfinity() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIsNaN() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIsNegative() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIsNegativeInfinity() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIsPositiveInfinity() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIsQuietNaN() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIsSignalingNaN() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIsZero() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestLog() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestLog10() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestMantissa() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestMax() {
       try {
         ExtendedFloat.Max(null, ExtendedFloat.One);
@@ -236,11 +236,11 @@ Console.Write(String.Empty);
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       } }
-    [TestMethod]
+    [Test]
     public void TestMaxMagnitude() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestMin() {
       try {
         ExtendedFloat.Min(null, ExtendedFloat.One);
@@ -261,7 +261,7 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
-    [TestMethod]
+    [Test]
     public void TestMinMagnitude() {
       try {
         ExtendedFloat.MinMagnitude(null, ExtendedFloat.One);
@@ -282,135 +282,135 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
-    [TestMethod]
+    [Test]
     public void TestMultiply() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestMultiplyAndAdd() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestMultiplyAndSubtract() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestNegate() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestNextMinus() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestNextPlus() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestNextToward() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestPI() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestPlus() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestPow() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestQuantize() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestReduce() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestRemainder() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestRemainderNaturalScale() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestRemainderNear() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestRoundToBinaryPrecision() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestRoundToExponent() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestRoundToExponentExact() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestRoundToIntegralExact() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestRoundToIntegralNoRoundedFlag() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestRoundToPrecision() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestSign() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestSquareRoot() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestSubtract() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestToBigInteger() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestToBigIntegerExact() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestToDouble() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestToEngineeringString() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestToExtendedDecimal() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestToPlainString() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestToSingle() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestToString() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestUnsignedMantissa() {
       // not implemented yet
     }

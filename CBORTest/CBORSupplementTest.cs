@@ -7,14 +7,14 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class CBORSupplementTest {
-    [TestMethod]
+    [Test]
     public void IncorrectDecimalFrac() {
       byte[] bytes;
       // string instead of array
@@ -81,7 +81,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void IncorrectBigFloat() {
       byte[] bytes;
       // string instead of array
@@ -154,7 +154,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestCBORObjectArgumentValidation() {
       try {
         CBORObject.FromObject('\udddd');
@@ -273,7 +273,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestCBORObjectCanTruncatedIntFitInInt32() {
       Assert.IsFalse(CBORObject.True.CanTruncatedIntFitInInt32());
       Assert.IsFalse(CBORObject.False.CanTruncatedIntFitInInt32());
@@ -299,7 +299,7 @@ Console.Write(String.Empty);
                     .CanTruncatedIntFitInInt32());
     }
 
-    [TestMethod]
+    [Test]
     public void TestIncompleteCBORString() {
       byte[] bytes = { 0x65, 0x41, 0x41, 0x41, 0x41 };
       try {
@@ -313,7 +313,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestIncompleteIndefLengthArray() {
       byte[] bytes;
       bytes = new byte[] { 0x9f, 0, 0, 0, 0, 0 };
@@ -335,7 +335,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestIncompleteIndefLengthMap() {
       // Premature end after value
       byte[] bytes = { 0xbf, 0x61, 0x41, 0, 0x61, 0x42, 0 };
@@ -368,7 +368,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestExtendedRationalArgValidation() {
       try {
         ExtendedRational.PositiveInfinity.ToBigIntegerExact();
@@ -408,7 +408,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestExtendedDecimalArgValidation() {
       try {
         ExtendedDecimal.Create(null, BigInteger.One);
@@ -886,7 +886,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestExtendedToInteger() {
       ExtendedDecimal dec = ExtendedDecimal.Create(999, -1);
       ExtendedFloat flo = ExtendedFloat.Create(999, -1);
@@ -938,7 +938,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestCyclicRefs() {
       CBORObject cbor = CBORObject.NewArray();
       cbor.Add(CBORObject.NewArray());
@@ -957,7 +957,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestNestingDepth() {
       try {
         {
@@ -1007,7 +1007,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestCBORBigInteger() {
       var bi = (BigInteger)Int64.MaxValue;
       bi += BigInteger.One;
@@ -1061,7 +1061,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestEquivalentInfinities() {
       CBORObject co, co2;
       co = CBORObject.FromObject(ExtendedDecimal.PositiveInfinity);
@@ -1078,7 +1078,7 @@ Console.Write(String.Empty);
       Assert.AreEqual(0, co2.CompareTo(co));
     }
 
-    [TestMethod]
+    [Test]
     public void TestSharedRefs() {
       byte[] bytes;
       CBORObject cbor;
@@ -1102,7 +1102,7 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
       Assert.IsTrue(cbor == cbor[1], "objects not the same");
     }
 
-    [TestMethod]
+    [Test]
     public void TestRationalCompareDecimal() {
       var fr = new FastRandom();
        for (var i = 0; i < 100; ++i) {
@@ -1125,7 +1125,7 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
       // (sw2.ElapsedMilliseconds/1000.0) + " s");
     }
 
-    [TestMethod]
+    [Test]
     public void TestRationalDivide() {
       var fr = new FastRandom();
       for (var i = 0; i < 500; ++i) {
@@ -1149,7 +1149,7 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestRationalCompare() {
       var fr = new FastRandom();
       for (var i = 0; i < 100; ++i) {
@@ -1202,7 +1202,7 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestBuiltInTags() {
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0xc2, 0x00 });
@@ -1543,7 +1543,7 @@ Console.Write(String.Empty);
         CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x40 }).AsBigInteger());
     }
 
-    [TestMethod]
+    [Test]
     public void TestUUID() {
       CBORObject obj =
         CBORObject.FromObject(Guid.Parse(
@@ -1570,7 +1570,7 @@ Console.Write(String.Empty);
       Assert.AreEqual((byte)0xff, bytes[15]);
     }
 
-    // [TestMethod]
+    // [Test]
     public static void TestMiniCBOR() {
       byte[] bytes;
       bytes = new byte[] { 0x19, 2 };
@@ -1659,7 +1659,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestNegativeBigInts() {
       BigInteger minusone = BigInteger.Zero - BigInteger.One;
       Assert.AreEqual(
@@ -1698,7 +1698,7 @@ CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
                     0, 0, 0, 0, 0 }).AsBigInteger());
     }
 
-    [TestMethod]
+    [Test]
     public void TestStringRefs() {
       CBORObject cbor = CBORObject.DecodeFromBytes(
         new byte[] { 0xd9, 1, 0, 0x9f, 0x64, 0x61, 0x62, 0x63, 0x64, 0xd8,
@@ -1718,7 +1718,7 @@ CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
       Assert.AreEqual(expected, cbor.ToJSONString());
     }
 
-    [TestMethod]
+    [Test]
     public void TestExtendedNaNZero() {
       Assert.IsFalse(ExtendedDecimal.NaN.IsZero);
       Assert.IsFalse(ExtendedDecimal.SignalingNaN.IsZero);
@@ -1728,7 +1728,7 @@ CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
       Assert.IsFalse(ExtendedRational.SignalingNaN.IsZero);
     }
 
-    [TestMethod]
+    [Test]
     public void TestToBigIntegerNonFinite() {
       try {
         ExtendedDecimal.PositiveInfinity.ToBigInteger();

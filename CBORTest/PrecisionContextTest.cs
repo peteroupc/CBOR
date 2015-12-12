@@ -1,11 +1,11 @@
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class PrecisionContextTest {
-    [TestMethod]
+    [Test]
     public void TestConstructor() {
       try {
         Assert.AreEqual(
@@ -30,33 +30,33 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
-    [TestMethod]
+    [Test]
     public void TestAdjustExponent() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestClampNormalExponents() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestCopy() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestEMax() {
       PrecisionContext ctx = PrecisionContext.Unlimited;
       Assert.AreEqual(BigInteger.Zero, ctx.EMax);
       ctx = PrecisionContext.Unlimited.WithExponentRange(-5, 5);
       Assert.AreEqual((BigInteger)5, ctx.EMax);
     }
-    [TestMethod]
+    [Test]
     public void TestEMin() {
       PrecisionContext ctx = PrecisionContext.Unlimited;
       Assert.AreEqual(BigInteger.Zero, ctx.EMin);
       ctx = PrecisionContext.Unlimited.WithExponentRange(-5, 5);
       Assert.AreEqual((BigInteger)(-5), ctx.EMin);
     }
-    [TestMethod]
+    [Test]
     public void TestExponentWithinRange() {
   Assert.IsTrue(PrecisionContext.Unlimited.ExponentWithinRange(BigInteger.fromString(
 "-9999999")));
@@ -73,7 +73,7 @@ Console.Write(String.Empty);
 throw new InvalidOperationException(String.Empty, ex);
 }
     }
-    [TestMethod]
+    [Test]
     public void TestFlags() {
       PrecisionContext ctx = PrecisionContext.Unlimited;
       try {
@@ -104,7 +104,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestCliDecimal() {
       ExtendedDecimal valueEdTmp;
       valueEdTmp = ExtendedDecimal.FromString(
@@ -141,15 +141,15 @@ Console.Write(String.Empty);
 "90246605365627217170000000000" ).RoundToPrecision(PrecisionContext.CliDecimal));
     }
 
-    [TestMethod]
+    [Test]
     public void TestForPrecision() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestForPrecisionAndRounding() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestForRounding() {
       PrecisionContext ctx;
       ctx = PrecisionContext.ForRounding(Rounding.HalfEven);
@@ -157,53 +157,53 @@ Console.Write(String.Empty);
       ctx = PrecisionContext.ForRounding(Rounding.HalfUp);
       Assert.AreEqual(Rounding.HalfUp, ctx.Rounding);
     }
-    [TestMethod]
+    [Test]
     public void TestHasExponentRange() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestHasFlags() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestHasMaxPrecision() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIsPrecisionInBits() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestIsSimplified() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestPrecision() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestRounding() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestToString() {
       if (PrecisionContext.Unlimited.ToString() == null) {
  Assert.Fail();
  }
     }
-    [TestMethod]
+    [Test]
     public void TestTraps() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithAdjustExponent() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithBigExponentRange() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithBigPrecision() {
       try {
         PrecisionContext.Unlimited.WithBigPrecision(BigInteger.One.negate());
@@ -215,15 +215,15 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
-    [TestMethod]
+    [Test]
     public void TestWithBlankFlags() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithExponentClamp() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithExponentRange() {
       try {
         PrecisionContext.Unlimited.WithExponentRange(1, 0);
@@ -265,11 +265,11 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
-    [TestMethod]
+    [Test]
     public void TestWithNoFlags() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithPrecision() {
       try {
         PrecisionContext.Unlimited.WithPrecision(-1);
@@ -284,15 +284,15 @@ Console.Write(String.Empty);
       ctx = PrecisionContext.Unlimited.WithPrecision(6);
       Assert.AreEqual((BigInteger)6, ctx.Precision);
     }
-    [TestMethod]
+    [Test]
     public void TestWithPrecisionInBits() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithRounding() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithSimplified() {
       var pc = new PrecisionContext(0, Rounding.HalfUp, 0, 5, true);
       Assert.IsFalse(pc.IsSimplified);
@@ -301,11 +301,11 @@ Console.Write(String.Empty);
       pc = pc.WithSimplified(false);
       Assert.IsFalse(pc.IsSimplified);
     }
-    [TestMethod]
+    [Test]
     public void TestWithTraps() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithUnlimitedExponents() {
       var pc = new PrecisionContext(0, Rounding.HalfUp, 0, 5, true);
       Assert.IsTrue(pc.HasExponentRange);

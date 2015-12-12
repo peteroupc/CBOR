@@ -9,12 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
 
 namespace CBOR {
-  [TestClass]
+  [TestFixture]
   public class ExtensiveTest {
     public static void AssertFlags(int expected, int actual, string str) {
       actual &= PrecisionContext.FlagInexact | PrecisionContext.FlagUnderflow |
@@ -1237,7 +1237,7 @@ var obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
       return list.ToArray();
     }
 
-    [TestMethod]
+    [Test]
     public void TestParser() {
       long failures = 0;
       var errors = new List<string>();

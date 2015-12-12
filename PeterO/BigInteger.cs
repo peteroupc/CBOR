@@ -983,24 +983,6 @@ namespace PeterO {
         }
         return new[] { bigquo, BigInteger.valueOf(smallRemainder) };
       }
-      if (this.wordCount == 2 && divisor.wordCount == 2 &&
-          (this.words[1] >> 15) != 0 && (divisor.words[1] >> 15) != 0) {
-        int a = ((int)this.words[0]) & 0xffff;
-        int b = ((int)divisor.words[0]) & 0xffff;
-        unchecked {
-          a |= (((int)this.words[1]) & 0xffff) << 16;
-          b |= (((int)divisor.words[1]) & 0xffff) << 16;
-          int quo = a / b;
-          if (this.negative) {
-            quo = -quo;
-          }
-          int rem = a - (b * quo);
-          var quotAndRem = new BigInteger[2];
-          quotAndRem[0] = BigInteger.valueOf(quo);
-          quotAndRem[1] = BigInteger.valueOf(rem);
-          return quotAndRem;
-        }
-      }
       words1Size += words1Size & 1;
       words2Size += words2Size & 1;
       var bigRemainderreg = new short[RoundupSize((int)words2Size)];

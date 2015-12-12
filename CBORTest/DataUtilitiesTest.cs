@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class DataUtilitiesTest {
     public static IList<byte[]> GenerateIllegalUtf8Sequences() {
       List<byte[]> list = new List<byte[]>();
@@ -62,7 +62,7 @@ namespace Test {
       return list;
     }
 
-    [TestMethod]
+    [Test]
     public void TestCodePointAt() {
       try {
         DataUtilities.CodePointAt(null, 0);
@@ -138,7 +138,7 @@ Assert.AreEqual(-1, numberTemp);
       Assert.AreEqual(-1, DataUtilities.CodePointAt("\udc00\udc00", 0, 2));
       Assert.AreEqual(0x10000, DataUtilities.CodePointAt("\ud800\udc00", 0, 2));
     }
-    [TestMethod]
+    [Test]
     public void TestCodePointBefore() {
       try {
         DataUtilities.CodePointBefore(null, 0);
@@ -151,7 +151,7 @@ Assert.AreEqual(-1, numberTemp);
       }
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestCodePointCompare() {
       Assert.AreEqual(-1, Math.Sign(DataUtilities.CodePointCompare(null, "A")));
       Assert.AreEqual(1, Math.Sign(DataUtilities.CodePointCompare("A", null)));
@@ -221,7 +221,7 @@ DataUtilities.CodePointCompare(
           "a\ud7ff\udc00",
           "a\ud800\udc00") < 0);
     }
-    [TestMethod]
+    [Test]
     public void TestGetUtf8Bytes() {
       try {
         DataUtilities.GetUtf8Bytes(null, true);
@@ -347,7 +347,7 @@ DataUtilities.CodePointCompare(
         new byte[] { 0xf0, 0x90, 0x80, 0x80 },
         DataUtilities.GetUtf8Bytes("\ud800\udc00", false));
     }
-    [TestMethod]
+    [Test]
     public void TestGetUtf8Length() {
       try {
         DataUtilities.GetUtf8Length(null, true);
@@ -463,7 +463,7 @@ DataUtilities.CodePointCompare(
         Assert.AreEqual(4, numberTemp);
       }
     }
-    [TestMethod]
+    [Test]
     public void TestGetUtf8String() {
       try {
         DataUtilities.GetUtf8String(null, false);
@@ -587,7 +587,7 @@ DataUtilities.CodePointCompare(
         Assert.AreEqual('\ufffd', strret[0]);
       }
     }
-    [TestMethod]
+    [Test]
     public void TestReadUtf8() {
       try {
         DataUtilities.ReadUtf8(null, 1, null, true);
@@ -625,7 +625,7 @@ DataUtilities.CodePointCompare(
         }
       }
     }
-    [TestMethod]
+    [Test]
     public void TestReadUtf8FromBytes() {
       var builder = new StringBuilder();
       try {
@@ -753,7 +753,7 @@ DataUtilities.CodePointCompare(
         }
       }
     }
-    [TestMethod]
+    [Test]
     public void TestReadUtf8ToString() {
       try {
         DataUtilities.ReadUtf8ToString(null);
@@ -799,7 +799,7 @@ DataUtilities.CodePointCompare(
         }
       }
     }
-    [TestMethod]
+    [Test]
     public void TestToLowerCaseAscii() {
       if (DataUtilities.ToLowerCaseAscii(null) != null) {
         Assert.Fail();
@@ -817,7 +817,7 @@ DataUtilities.CodePointCompare(
           stringTemp);
       }
     }
-    [TestMethod]
+    [Test]
     public void TestWriteUtf8() {
       try {
         {

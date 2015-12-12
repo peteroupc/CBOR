@@ -16,10 +16,11 @@ namespace PeterO {
 #if NET40
       return t.GetMethod(name, parameters);
 #else
-        {
- return t.GetRuntimeMethod(name, parameters);
-}
+{
+        return t.GetRuntimeMethod(name, parameters);
+      }
 #endif
+    }
 
     public static void Log(string str) {
       Type type = Type.GetType("System.Console");

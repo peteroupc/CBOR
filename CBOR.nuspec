@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
     <id>PeterO.Cbor</id>
@@ -21,7 +21,7 @@ In version 2.2:
 - Add option to always use definite length string encoding when generating CBOR objects
 See the project page for release notes on previous versions: https://github.com/peteroupc/CBOR
     </releaseNotes>
-    <copyright>Written by Peter O. in 2013-2014.  Any copyright is released to the Public Domain.</copyright>
+    <copyright>Written by Peter O. in 2013-2015.  Any copyright is released to the Public Domain.</copyright>
     <tags>cbor data serialization binary json numbers arithmetic</tags>
     <dependencies>
       <group targetFramework="dotnet">

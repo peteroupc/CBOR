@@ -1,12 +1,12 @@
 using System;
 using System.IO;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class BEncodingTest {
     private static CBORObject EncodingFromBytes(byte[] b) {
       try {
@@ -45,7 +45,7 @@ namespace Test {
       Assert.AreEqual(b, newb);
     }
 
-    [TestMethod]
+    [Test]
     public void testLong() {
       doTestLong(0);
       doTestLong(-1);
@@ -55,7 +55,7 @@ namespace Test {
       doTestLong(Int64.MaxValue);
     }
 
-    [TestMethod]
+    [Test]
     public void testList() {
       CBORObject beo = CBORObject.NewArray();
       beo.Add(CBORObject.FromObject(1));
@@ -96,7 +96,7 @@ stringTemp);
 }
     }
 
-    [TestMethod]
+    [Test]
     public void testDictionary() {
       CBORObject beo = CBORObject.NewMap();
       beo["zero"] = CBORObject.FromObject(1);
@@ -137,7 +137,7 @@ stringTemp);
 }
     }
 
-    [TestMethod]
+    [Test]
     public void testString() {
       doTestString(String.Empty);
       doTestString(" ");

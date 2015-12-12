@@ -1,22 +1,22 @@
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class TrapExceptionTest {
-    [TestMethod]
+    [Test]
     public void TestConstructor() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestContext() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestError() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestResult() {
       // not implemented yet
     }
