@@ -47,7 +47,7 @@ namespace Test {
     private static void TestDecimalString(String r) {
       CBORObject o = CBORObject.FromObject(ExtendedDecimal.FromString(r));
       CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
-      CompareTestEqual(o, o2);
+      TestCommon.CompareTestEqual(o, o2);
     }
 
     [Test]
@@ -65,7 +65,7 @@ namespace Test {
           Assert.AreEqual(
             0,
             cmpDecFrac.CompareTo(cmpCobj),
-            ObjectMessages(o1, o2, "Results don't match"));
+            TestCommon.ObjectMessages(o1, o2, "Results don't match"));
         }
         TestCommon.AssertRoundTrip(o1);
         TestCommon.AssertRoundTrip(o2);
@@ -84,7 +84,7 @@ namespace Test {
         }
         var er = new ExtendedRational(o1.AsBigInteger(), o2.AsBigInteger());
         if (er.CompareTo(CBORObject.Divide(o1, o2).AsExtendedRational()) != 0) {
-          Assert.Fail(ObjectMessages(o1, o2, "Results don't match"));
+          Assert.Fail(TestCommon.ObjectMessages(o1, o2, "Results don't match"));
         }
       }
       for (var i = 0; i < 3000; ++i) {
@@ -93,7 +93,7 @@ namespace Test {
         ExtendedRational er =
           o1.AsExtendedRational().Divide(o2.AsExtendedRational());
         if (er.CompareTo(CBORObject.Divide(o1, o2).AsExtendedRational()) != 0) {
-          Assert.Fail(ObjectMessages(o1, o2, "Results don't match"));
+          Assert.Fail(TestCommon.ObjectMessages(o1, o2, "Results don't match"));
         }
       }
     }
@@ -112,7 +112,7 @@ namespace Test {
           Assert.AreEqual(
             0,
             cmpDecFrac.CompareTo(cmpCobj),
-            ObjectMessages(o1, o2, "Results don't match"));
+            TestCommon.ObjectMessages(o1, o2, "Results don't match"));
         }
         TestCommon.AssertRoundTrip(o1);
         TestCommon.AssertRoundTrip(o2);
@@ -134,58 +134,11 @@ namespace Test {
           Assert.AreEqual(
             0,
             cmpDecFrac.CompareTo(cmpCobj),
-            ObjectMessages(o1, o2, "Results don't match"));
+            TestCommon.ObjectMessages(o1, o2, "Results don't match"));
         }
         TestCommon.AssertRoundTrip(o1);
         TestCommon.AssertRoundTrip(o2);
       }
-    }
-
-    private static string ObjectMessages(
-      CBORObject o1,
-      CBORObject o2,
-      String s) {
-      if (o1.Type == CBORType.Number && o2.Type == CBORType.Number) {
-        return s + ":\n" + o1 + " and\n" + o2 + "\nOR\n" +
-          o1.AsExtendedDecimal() + " and\n" + o2.AsExtendedDecimal() +
-       "\nOR\n" + "AddSubCompare(" + TestCommon.ToByteArrayString(o1) + ",\n" +
-          TestCommon.ToByteArrayString(o2) + ");";
-      }
-      return s + ":\n" + o1 + " and\n" + o2 + "\nOR\n" +
-TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2);
-    }
-
-    public static void CompareTestEqual(CBORObject o1, CBORObject o2) {
-      if (CompareTestReciprocal(o1, o2) != 0) {
-        Assert.Fail(ObjectMessages(
-          o1,
-          o2,
-          "Not equal: " + CompareTestReciprocal(o1, o2)));
-      }
-    }
-
-    public static void CompareTestLess(CBORObject o1, CBORObject o2) {
-      if (CompareTestReciprocal(o1, o2) >= 0) {
-        Assert.Fail(ObjectMessages(
-          o1,
-          o2,
-          "Not less: " + CompareTestReciprocal(o1, o2)));
-      }
-    }
-
-    private static int CompareTestReciprocal(CBORObject o1, CBORObject o2) {
-      if (o1 == null) {
-        throw new ArgumentNullException("o1");
-      }
-      if (o2 == null) {
-        throw new ArgumentNullException("o2");
-      }
-      int cmp = o1.CompareTo(o2);
-      int cmp2 = o2.CompareTo(o1);
-      if (-cmp2 != cmp) {
-        Assert.AreEqual(cmp, -cmp2, ObjectMessages(o1, o2, "Not reciprocal"));
-      }
-      return cmp;
     }
 
     [Test]
@@ -216,19 +169,6 @@ Assert.AreEqual(-1, numberTemp);
       AddSubCompare(o1, o2);
     }
 
-    private static void CompareDecimals(CBORObject o1, CBORObject o2) {
-      int cmpDecFrac = o1.AsExtendedDecimal().CompareTo(o2.AsExtendedDecimal());
-      int cmpCobj = CompareTestReciprocal(o1, o2);
-      if (cmpDecFrac != cmpCobj) {
-        Assert.AreEqual(
-          cmpDecFrac,
-          cmpCobj,
-          ObjectMessages(o1, o2, "Compare: Results don't match"));
-      }
-      TestCommon.AssertRoundTrip(o1);
-      TestCommon.AssertRoundTrip(o2);
-    }
-
     private static void AddSubCompare(CBORObject o1, CBORObject o2) {
       ExtendedDecimal cmpDecFrac =
         o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
@@ -237,7 +177,7 @@ Assert.AreEqual(-1, numberTemp);
         Assert.AreEqual(
           0,
           cmpDecFrac.CompareTo(cmpCobj),
-          ObjectMessages(
+          TestCommon.ObjectMessages(
             o1,
             o2,
             "Add: Results don't match:\n" + cmpDecFrac + " vs\n" + cmpCobj));
@@ -248,12 +188,12 @@ Assert.AreEqual(-1, numberTemp);
         Assert.AreEqual(
           0,
           cmpDecFrac.CompareTo(cmpCobj),
-          ObjectMessages(
+          TestCommon.ObjectMessages(
             o1,
             o2,
             "Subtract: Results don't match:\n" + cmpDecFrac + " vs\n" + cmpCobj));
       }
-      CompareDecimals(o1, o2);
+      CBORObjectTest.CompareDecimals(o1, o2);
     }
 
     [Test]
@@ -273,7 +213,7 @@ Assert.AreEqual(-1, numberTemp);
           (byte)0x8c, (byte)0x8d }),
         CBORObject.DecodeFromBytes(new byte[] { (byte)0xfa, 0x7f,
           (byte)0x80, 0x00, 0x00 }));
-      CompareTestLess(
+      TestCommon.CompareTestLess(
         CBORObject.DecodeFromBytes(new byte[] { (byte)0xd8, 0x1e,
           (byte)0x82, (byte)0xc2, 0x58, 0x28, 0x77, 0x24, 0x73, (byte)0x84,
           (byte)0xbd, 0x72, (byte)0x82, 0x7c, (byte)0xd6, (byte)0x93, 0x18,
@@ -366,111 +306,12 @@ Assert.AreEqual(-1, numberTemp);
         ExtendedFloat ef2 = ed.ToExtendedFloat();
         // Tests that values converted from float to decimal and
         // back have the same numerical value
-        if (ef.CompareTo(ef2) != 0) {
-          Assert.AreEqual(
-            0,
-            ef.CompareTo(ef2),
-            "TestFloatDecimalRoundTrip " + ef + "; " + ef2);
-        }
+        TestCommon.CompareTestEqual(ef, ef2);
       }
     }
 
     [Test]
-    // [Timeout(10000)]
     public void TestCompare() {
-      var r = new FastRandom();
-      const int CompareCount = 500;
-      for (var i = 0; i < CompareCount; ++i) {
-        CBORObject o1 = RandomObjects.RandomCBORObject(r);
-        CBORObject o2 = RandomObjects.RandomCBORObject(r);
-        CompareTestReciprocal(o1, o2);
-      }
-      for (var i = 0; i < 5000; ++i) {
-        CBORObject o1 = RandomObjects.RandomNumber(r);
-        CBORObject o2 = RandomObjects.RandomNumber(r);
-        CompareDecimals(o1, o2);
-      }
-      for (var i = 0; i < 50; ++i) {
-        CBORObject o1 = CBORObject.FromObject(Single.NegativeInfinity);
-        CBORObject o2 = RandomObjects.RandomNumberOrRational(r);
-        if (o2.IsInfinity() || o2.IsNaN()) {
-          continue;
-        }
-        CompareTestLess(o1, o2);
-        o1 = CBORObject.FromObject(Double.NegativeInfinity);
-        CompareTestLess(o1, o2);
-        o1 = CBORObject.FromObject(Single.PositiveInfinity);
-        CompareTestLess(o2, o1);
-        o1 = CBORObject.FromObject(Double.PositiveInfinity);
-        CompareTestLess(o2, o1);
-        o1 = CBORObject.FromObject(Single.NaN);
-        CompareTestLess(o2, o1);
-        o1 = CBORObject.FromObject(Double.NaN);
-        CompareTestLess(o2, o1);
-      }
-      byte[] bytes1 = { 0, 1 };
-      byte[] bytes2 = { 0, 2 };
-      byte[] bytes3 = { 0, 2, 0 };
-      byte[] bytes4 = { 1, 1 };
-      byte[] bytes5 = { 1, 1, 4 };
-      byte[] bytes6 = { 1, 2 };
-      byte[] bytes7 = { 1, 2, 6 };
-      CBORObject[] sortedObjects = {
-        CBORObject.Undefined, CBORObject.Null,
-        CBORObject.False, CBORObject.True,
-        CBORObject.FromObject(Double.NegativeInfinity),
-        CBORObject.FromObject(ExtendedDecimal.FromString("-1E+5000")),
-        CBORObject.FromObject(Int64.MinValue),
-        CBORObject.FromObject(Int32.MinValue),
-        CBORObject.FromObject(-2), CBORObject.FromObject(-1),
-        CBORObject.FromObject(0), CBORObject.FromObject(1),
-        CBORObject.FromObject(2), CBORObject.FromObject(Int64.MaxValue),
-        CBORObject.FromObject(ExtendedDecimal.FromString("1E+5000")),
-        CBORObject.FromObject(Double.PositiveInfinity),
-        CBORObject.FromObject(Double.NaN), CBORObject.FromSimpleValue(0),
-        CBORObject.FromSimpleValue(19), CBORObject.FromSimpleValue(32),
-        CBORObject.FromSimpleValue(255), CBORObject.FromObject(bytes1),
-        CBORObject.FromObject(bytes2), CBORObject.FromObject(bytes3),
-        CBORObject.FromObject(bytes4), CBORObject.FromObject(bytes5),
-        CBORObject.FromObject(bytes6), CBORObject.FromObject(bytes7),
-        CBORObject.FromObject("aa"), CBORObject.FromObject("ab"),
-        CBORObject.FromObject("abc"), CBORObject.FromObject("ba"),
-        CBORObject.FromObject(CBORObject.NewArray()),
-        CBORObject.FromObject(CBORObject.NewMap()),
-      };
-      for (var i = 0; i < sortedObjects.Length; ++i) {
-        for (int j = i; j < sortedObjects.Length; ++j) {
-          if (i == j) {
-            CompareTestEqual(sortedObjects[i], sortedObjects[j]);
-          } else {
-            CompareTestLess(sortedObjects[i], sortedObjects[j]);
-          }
-        }
-        Assert.AreEqual(1, sortedObjects[i].CompareTo(null));
-      }
-      CBORObject sp = CBORObject.FromObject(Single.PositiveInfinity);
-      CBORObject sn = CBORObject.FromObject(Single.NegativeInfinity);
-      CBORObject snan = CBORObject.FromObject(Single.NaN);
-      CBORObject dp = CBORObject.FromObject(Double.PositiveInfinity);
-      CBORObject dn = CBORObject.FromObject(Double.NegativeInfinity);
-      CBORObject dnan = CBORObject.FromObject(Double.NaN);
-      CompareTestEqual(sp, sp);
-      CompareTestEqual(sp, dp);
-      CompareTestEqual(dp, dp);
-      CompareTestEqual(sn, sn);
-      CompareTestEqual(sn, dn);
-      CompareTestEqual(dn, dn);
-      CompareTestEqual(snan, snan);
-      CompareTestEqual(snan, dnan);
-      CompareTestEqual(dnan, dnan);
-      CompareTestLess(sn, sp);
-      CompareTestLess(sn, dp);
-      CompareTestLess(sn, snan);
-      CompareTestLess(sn, dnan);
-      CompareTestLess(sp, snan);
-      CompareTestLess(sp, dnan);
-      CompareTestLess(dn, dp);
-      CompareTestLess(dp, dnan);
     }
 
     [Test]
@@ -2264,7 +2105,7 @@ stringTemp);
     public static void AssertDecimalsEquivalent(string a, string b) {
       CBORObject ca = CBORDataUtilities.ParseJSONNumber(a);
       CBORObject cb = CBORDataUtilities.ParseJSONNumber(b);
-      CompareTestEqual(ca, cb);
+      TestCommon.CompareTestEqual(ca, cb);
       TestCommon.AssertRoundTrip(ca);
       TestCommon.AssertRoundTrip(cb);
     }
@@ -5292,7 +5133,7 @@ stringTemp);
           o,
           TestCommon.IntToString(i));
         if (oldobj != null) {
-          CompareTestLess(oldobj, o);
+          TestCommon.CompareTestLess(oldobj, o);
         }
         oldobj = o;
       }
