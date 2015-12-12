@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using ClariusLabs.NuDoc;
+using NuDoq;
 
 namespace PeterO.DocGen {
   internal class SummaryVisitor : Visitor, IComparer<Type> {

@@ -469,8 +469,8 @@ Console.Write(String.Empty);
       object o1,
       object o2,
       String s) {
-        CBORObject co1 = o1 as CBORObject;
-        CBORObject co2 = o2 as CBORObject;
+        var co1 = o1 as CBORObject;
+        var co2 = o2 as CBORObject;
       if (co1 != null) {
         TestCommon.ObjectMessages(co1, co2, s);
       }

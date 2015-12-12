@@ -42,8 +42,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ClariusLabs.NuDoc">
-      <HintPath>..\packages\NuDoc.0.4.1308.1316\lib\net35\ClariusLabs.NuDoc.dll</HintPath>
+    <Reference Include="NuDoq, Version=1.2.0.0, Culture=neutral, PublicKeyToken=197ef17e56afcdb9, processorArchitecture=MSIL">
+      <HintPath>..\packages\NuDoq.1.2.5\lib\net35\NuDoq.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -71,11 +72,4 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets" />
-  <Import Project="..\packages\NuSpec.ReferenceGenerator.1.4.0\build\dotnet\NuSpec.ReferenceGenerator.targets" Condition="Exists('..\packages\NuSpec.ReferenceGenerator.1.4.0\build\dotnet\NuSpec.ReferenceGenerator.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\NuSpec.ReferenceGenerator.1.4.0\build\dotnet\NuSpec.ReferenceGenerator.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NuSpec.ReferenceGenerator.1.4.0\build\dotnet\NuSpec.ReferenceGenerator.targets'))" />
-  </Target>
 </Project>

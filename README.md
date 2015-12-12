@@ -233,6 +233,16 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+In version 2.3:
+
+- The C# version of the library now also targets "dotnet", which should make it compatible with platform .NET runtime
+environments such as the upcoming cross-platform "coreclr" runtime.
+- Added GetUtf8Bytes overload to DataUtilities
+- Fixed line break bug when setting lenientLineBreaks to true in the PeterO.Cbor.DataUtilities.WriteUtf8 method
+- In BigInteger, fixed divideAndRemainder method, added certain methods and made other methods obsolete
+- Many additions to the documentation
+- Other bug fixes
+
 In version 2.2:
 - Portable Class Library compatibility expanded
 - Add option to always use definite length string encoding when generating CBOR objects
