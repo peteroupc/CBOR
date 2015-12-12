@@ -2,10 +2,10 @@
 <package>
   <metadata>
     <id>PeterO.Cbor</id>
-    <version>$version$</version>
+    <version>2.3.0</version>
     <title>CBOR</title>
-    <authors>$author$</authors>
-    <owners>$author$</owners>
+    <authors>Peter Occil</authors>
+    <owners>Peter Occil</owners>
     <licenseUrl>http://creativecommons.org/publicdomain/zero/1.0/</licenseUrl>
     <projectUrl>https://github.com/peteroupc/CBOR</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -16,9 +16,14 @@
     </description>
     <summary>A C# implementation of Concise Binary Object Representation (CBOR), a data serialization format. This implementation can also convert between CBOR and JSON.</summary>
     <releaseNotes>
-In version 2.2:
-- Portable Class Library compatibility expanded
-- Add option to always use definite length string encoding when generating CBOR objects
+In version 2.3:
+- The C# version of the library now also targets "dotnet", which should make it compatible with platform .NET runtime
+environments such as the upcoming cross-platform "coreclr" runtime.
+- Added GetUtf8Bytes overload to DataUtilities
+- Fixed line break bug when setting lenientLineBreaks to true in the PeterO.Cbor.DataUtilities.WriteUtf8 method
+- In BigInteger, fixed divideAndRemainder method, added certain methods and made other methods obsolete
+- Many additions to the documentation
+- Other bug fixes
 See the project page for release notes on previous versions: https://github.com/peteroupc/CBOR
     </releaseNotes>
     <copyright>Written by Peter O. in 2013-2015.  Any copyright is released to the Public Domain.</copyright>

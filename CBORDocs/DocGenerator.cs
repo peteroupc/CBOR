@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using ClariusLabs.NuDoc;
+using NuDoq;
 
 namespace PeterO.DocGen {
 /// <summary>A documentation generator.</summary>

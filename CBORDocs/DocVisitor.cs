@@ -13,7 +13,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using ClariusLabs.NuDoc;
+using NuDoq;
 
 namespace PeterO.DocGen {
     /// <summary>A documentation visitor.</summary>
@@ -484,7 +484,7 @@ StringBuilder builder) {
       this.WriteLine("\r\n\r\n");
     }
 
-    public override void VisitException(ClariusLabs.NuDoc.Exception exception) {
+    public override void VisitException(NuDoq.Exception exception) {
       using (var ch = this.Change(this.exceptionStr)) {
         var cref = exception.Cref;
         if (cref.StartsWith("T:", StringComparison.Ordinal)) {
