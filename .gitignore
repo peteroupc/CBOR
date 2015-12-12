@@ -2,6 +2,7 @@ bin/
 obj/
 .settings/
 packages/
+coverage/
 Help/
 .vs/
 *.user

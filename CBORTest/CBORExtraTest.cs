@@ -9,12 +9,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class CBORExtraTest {
     private static decimal RandomDecimal(FastRandom rand, int exponent) {
       var x = new int[4];
@@ -38,7 +38,7 @@ namespace Test {
       return new Decimal(x);
     }
 
-    [TestMethod]
+    [Test]
     public void TestCBORObjectDecimal() {
       var rand = new FastRandom();
       for (var i = 0; i <= 28; ++i) {
@@ -125,7 +125,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestSByte() {
       for (int i = SByte.MinValue; i <= SByte.MaxValue; ++i) {
         TestCommon.AssertSer(
@@ -133,7 +133,7 @@ Console.Write(String.Empty);
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
       }
     }
-    [TestMethod]
+    [Test]
     public void TestBigIntegerAbs() {
       try {
  BigInteger.Abs(null);
@@ -146,7 +146,7 @@ throw new InvalidOperationException(String.Empty, ex);
 }
     }
 
-    [TestMethod]
+    [Test]
     public void TestBigIntegerAnd() {
       try {
         BigInteger.And(BigInteger.Zero, null);
@@ -198,7 +198,7 @@ Console.Write(String.Empty);
       B
     }
 
-    [TestMethod]
+    [Test]
     public void TestArbitraryTypes() {
       CBORObject obj = CBORObject.FromObject(new { AByte.A, B = AInt.A, C =
                     AULong.A });
@@ -299,7 +299,7 @@ Console.Write(String.Empty);
       return new String(charbuf);
     }
 
-    [TestMethod]
+    [Test]
     public void TestFloatCloseToEdge() {
       try {
         CBORObject.FromObject(2.147483647E9d).AsUInt32();
@@ -4639,7 +4639,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestULong() {
       ulong[] ranges = {
         0, 65539, 0xFFFFF000UL, 0x100000400UL,
@@ -4696,7 +4696,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestOther() {
       CBORObject cbor = CBORObject.FromObject(new int[2, 3, 2]);
       {
@@ -4708,7 +4708,7 @@ stringTemp);
       TestCommon.AssertRoundTrip(cbor);
     }
 
-    [TestMethod]
+    [Test]
     public void TestDivideUnsigned() {
       var fr = new FastRandom();
       unchecked {
@@ -4730,7 +4730,7 @@ stringTemp);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestUInt() {
       uint[] ranges = { 0, 65539,
         0x7FFFF000U, 0x80000400U, UInt32.MaxValue - 1000, UInt32.MaxValue };
@@ -4751,7 +4751,7 @@ stringTemp);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestDecimal() {
       TestCommon.AssertSer(
         CBORObject.FromObject(Decimal.MinValue),
@@ -4772,7 +4772,7 @@ stringTemp);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestUShort() {
       for (int i = UInt16.MinValue; i <= UInt16.MaxValue; ++i) {
         TestCommon.AssertSer(
@@ -4781,7 +4781,7 @@ stringTemp);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestDoubleToOther() {
       CBORObject dbl1 = CBORObject.FromObject((double)Int32.MinValue);
       CBORObject dbl2 = CBORObject.FromObject((double)Int32.MaxValue);
@@ -4839,7 +4839,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestDateTime() {
       DateTime[] ranges = {
         new DateTime(1, 1, 1, 0, 0, 0, DateTimeKind.Utc),

@@ -1,74 +1,74 @@
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class CBORTypeFilterTest {
-    [TestMethod]
+    [Test]
     public void TestConstructor() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestArrayIndexAllowed() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestArrayLengthMatches() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestGetSubFilter() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestMajorTypeMatches() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestNonFPSimpleValueAllowed() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestTagAllowed() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithArrayAnyLength() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithArrayExactLength() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithArrayMinLength() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithByteString() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithFloatingPoint() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithMap() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithNegativeInteger() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithTags() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithTextString() {
       // not implemented yet
     }
-    [TestMethod]
+    [Test]
     public void TestWithUnsignedInteger() {
       // not implemented yet
     }

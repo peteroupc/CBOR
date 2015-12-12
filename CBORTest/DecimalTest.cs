@@ -9,11 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class DecimalTest {
     private static readonly Regex valuePropertyLine = new Regex(
       "^(\\w+)\\:\\s*(\\S+)",
@@ -309,7 +309,7 @@ System.Globalization.CultureInfo.InvariantCulture);
                     " s");
     }
 
-    [TestMethod]
+    [Test]
     public void TestPi() {
       var sw = new System.Diagnostics.Stopwatch();
       sw.Start();
@@ -318,7 +318,7 @@ System.Globalization.CultureInfo.InvariantCulture);
       PrintTime(sw);
     }
 
-    [TestMethod]
+    [Test]
     public void TestParser() {
       long failures = 0;
       for (var i = 0; i < 1; ++i) {

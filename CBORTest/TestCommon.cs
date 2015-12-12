@@ -7,7 +7,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 using System.Globalization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
 
@@ -81,12 +81,23 @@ string result) {
       BigInteger bigintB = BigInteger.fromString(divisor);
       if (bigintB.IsZero) {
         try {
-          bigintA.divide(bigintB); Assert.Fail("Expected divide by 0 error");
+          bigintA.divide(bigintB);
+          Assert.Fail("Expected divide by 0 error");
         } catch (ArithmeticException ex) {
           Console.WriteLine(ex.Message);
         }
+        try {
+ bigintA.divideAndRemainder(bigintB);
+Assert.Fail("Should have failed");
+} catch (ArithmeticException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       } else {
         AssertBigIntegersEqual(result, bigintA.divide(bigintB));
+        AssertBigIntegersEqual(result, bigintA.divideAndRemainder(bigintB)[0]);
       }
     }
 
@@ -102,8 +113,18 @@ string result) {
         } catch (ArithmeticException ex) {
           Console.WriteLine(ex.Message);
         }
+        try {
+ bigintA.divideAndRemainder(bigintB);
+Assert.Fail("Should have failed");
+} catch (ArithmeticException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
       } else {
         AssertBigIntegersEqual(result, bigintA.remainder(bigintB));
+        AssertBigIntegersEqual(result, bigintA.divideAndRemainder(bigintB)[1]);
       }
     }
 

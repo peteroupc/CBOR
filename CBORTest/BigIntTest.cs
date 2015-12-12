@@ -6,16 +6,20 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class BigIntTest {
     // Test some specific cases
-    [TestMethod]
+    [Test]
     public void TestSpecificCases() {
-  TestCommon.DoTestMultiply(
+      TestCommon.DoTestDivide("2472320648", "2831812081", "0");
+      TestCommon.DoTestDivide("-2472320648", "2831812081", "0");
+      TestCommon.DoTestRemainder("2472320648", "2831812081", "2472320648");
+      TestCommon.DoTestRemainder("-2472320648", "2831812081", "-2472320648");
+      TestCommon.DoTestMultiply(
 "39258416159456516340113264558732499166970244380745050",
 "39258416159456516340113264558732499166970244380745051",
 "1541223239349076530208308657654362309553698742116222355477449713742236585667505604058123112521437480247550" );
@@ -29,7 +33,7 @@ namespace Test {
 "35527136");
     }
 
-    [TestMethod]
+    [Test]
     public void TestToString() {
       var r = new FastRandom();
       for (var i = 0; i < 1000; ++i) {
@@ -40,10 +44,10 @@ namespace Test {
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestMultiplyDivide() {
       var r = new FastRandom();
-      for (var i = 0; i < 4000; ++i) {
+      for (var i = 0; i < 10000; ++i) {
         BigInteger bigintA = RandomObjects.RandomBigInteger(r);
         BigInteger bigintB = RandomObjects.RandomBigInteger(r);
         // Test that A*B/A = B and A*B/B = A
@@ -115,7 +119,7 @@ bigintD,
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestPow() {
       var r = new FastRandom();
       for (var i = 0; i < 200; ++i) {
@@ -129,7 +133,7 @@ bigintD,
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestSquareRoot() {
       var r = new FastRandom();
       for (var i = 0; i < 10000; ++i) {
@@ -155,7 +159,7 @@ bigintD,
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestSmallIntDivide() {
       int a, b;
       var fr = new FastRandom();
@@ -173,7 +177,7 @@ bigintD,
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestMiscellaneous() {
       Assert.AreEqual(1, BigInteger.Zero.getDigitCount());
       var minValue = (BigInteger)Int32.MinValue;
@@ -251,7 +255,7 @@ Console.Write(String.Empty);
       Assert.AreEqual(BigInteger.Zero, tmpsqrt[0]);
     }
 
-    [TestMethod]
+    [Test]
     public void TestExceptions() {
       try {
         BigInteger.fromString("xyz");
@@ -513,7 +517,7 @@ Console.Write(String.Empty);
       }
     }
 
-    [TestMethod]
+    [Test]
     public void TestAddSubtract() {
       var r = new FastRandom();
       for (var i = 0; i < 10000; ++i) {

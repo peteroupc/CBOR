@@ -1,9 +1,9 @@
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO.Cbor;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class URIUtilityTest {
     public static string CborNamespace() {
       return typeof(CBORObject).Namespace;
@@ -126,7 +126,7 @@ baseuri);
     Assert.AreEqual(dest, res);
   }
 
-  [TestMethod]
+  [Test]
   [Timeout(5000)]
   public void testRelativeResolve() {
     assertResolve(
@@ -151,7 +151,7 @@ baseuri);
         "http://example.com/a/b/.../.x");
   }
 
-  [TestMethod]
+  [Test]
   [Timeout(5000)]
   public void testUri() {
     assertIdempotency(String.Empty);

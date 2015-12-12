@@ -1,11 +1,11 @@
 using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using PeterO.Cbor;
 
 namespace Test {
-  [TestClass]
+  [TestFixture]
   public class CBORDataUtilitiesTest {
-    [TestMethod]
+    [Test]
     public void TestParseJSONNumber() {
       if (CBORDataUtilities.ParseJSONNumber("100.", false, false) != null) {
  Assert.Fail();
