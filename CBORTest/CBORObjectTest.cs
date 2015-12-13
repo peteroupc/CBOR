@@ -1051,7 +1051,9 @@ cbornumber.AsSingle());
     }
 
     internal static void CompareDecimals(CBORObject o1, CBORObject o2) {
-      int cmpDecFrac = o1.AsExtendedDecimal().CompareTo(o2.AsExtendedDecimal());
+      int cmpDecFrac = TestCommon.CompareTestReciprocal(
+        o1.AsExtendedDecimal(),
+        o2.AsExtendedDecimal());
       int cmpCobj = TestCommon.CompareTestReciprocal(o1, o2);
       if (cmpDecFrac != cmpCobj) {
         Assert.AreEqual(
@@ -1780,6 +1782,61 @@ CBORObject.FromSimpleValue(0));
         "/\b",
         stringTemp);
       }
+      {
+        string stringTemp = CBORObject.FromJSONString("\"\\/\\f\"").AsString();
+        Assert.AreEqual(
+        "/\f",
+        stringTemp);
+      }
+ string jsonTemp = TestCommon.Repeat(
+"[",
+2000) + TestCommon.Repeat("]",
+        2000);
+      try {
+ CBORObject.FromJSONString(jsonTemp);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromJSONString("\"abc");
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromJSONString("\"ab\u0004c\"");
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromJSONString("\u0004\"abc\"");
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromJSONString("[1,\u0004" + "2]");
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [Test]
     public void TestFromObject() {
@@ -3250,9 +3307,9 @@ using (var msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0, 0, 0xd8, 0,
     public void TestToJSONString() {
       {
         string stringTemp = CBORObject.FromObject(
-        "\u2027\u2028\u2029\u202a").ToJSONString();
+        "\u2027\u2028\u2029\u202a\u0008\u000c").ToJSONString();
         Assert.AreEqual(
-        "\"\u2027\\u2028\\u2029\u202a\"",
+        "\"\u2027\\u2028\\u2029\u202a\\b\\f\"",
         stringTemp);
       }
       {

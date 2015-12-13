@@ -984,7 +984,12 @@ Assert.AreEqual(1, numberTemp);
     }
     [Test]
     public void TestFromExtendedFloat() {
-      // not implemented yet
+      Assert.AreEqual(
+        ExtendedDecimal.Zero,
+        ExtendedDecimal.FromExtendedFloat(ExtendedFloat.Zero));
+      Assert.AreEqual(
+        ExtendedDecimal.NegativeZero,
+        ExtendedDecimal.FromExtendedFloat(ExtendedFloat.NegativeZero));
     }
     [Test]
     public void TestFromInt32() {
@@ -1080,11 +1085,14 @@ Assert.AreEqual(1, numberTemp);
     }
     [Test]
     public void TestLog() {
-      // not implemented yet
+      Assert.IsTrue(ExtendedDecimal.One.Log(null).IsNaN());
+Assert.IsTrue(ExtendedDecimal.One.Log(PrecisionContext.Unlimited).IsNaN());
     }
     [Test]
     public void TestLog10() {
-      // not implemented yet
+      Assert.IsTrue(ExtendedDecimal.One.Log10(null).IsNaN());
+Assert.IsTrue(ExtendedDecimal.One.Log10(PrecisionContext.Unlimited)
+        .IsNaN());
     }
     [Test]
     public void TestMantissa() {

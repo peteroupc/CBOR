@@ -361,9 +361,7 @@ RandomBigInteger(r),
         if (count != 0) {
           sb.Append(r.NextValue(2) == 0 ? '+' : '-');
         }
-        sb.Append(Convert.ToString(
-          (int)count,
-          System.Globalization.CultureInfo.InvariantCulture));
+        sb.Append(TestCommon.IntToString(count));
       }
       return sb.ToString();
     }

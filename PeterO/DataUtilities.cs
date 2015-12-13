@@ -198,7 +198,7 @@ bool lenientLineBreaks) {
     /// <returns>The Unicode code point at the previous position. Returns
     /// -1 if <paramref name='index'/> is 0 or less, or is greater than the
     /// string's length. Returns the replacement character (U + FFFD) if
-    /// the previous character is an unpaired surrogate code
+    /// the previous code unit is an unpaired surrogate code
     /// point.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
@@ -212,7 +212,7 @@ bool lenientLineBreaks) {
     /// <param name='index'>Index of the current position into the
     /// string.</param>
     /// <param name='surrogateBehavior'>Specifies what kind of value to
-    /// return if the previous character is an unpaired surrogate code
+    /// return if the previous code unit is an unpaired surrogate code
     /// point: if 0, return the replacement character (U + FFFD); if 1,
     /// return the value of the surrogate code point; if neither 0 nor 1,
     /// return -1.</param>

@@ -23,6 +23,20 @@ namespace PeterO.Cbor {
 }
     }
 
+    /// <summary>Not documented yet.</summary>
+    /// <param name='other'>An arbitrary object.</param>
+    /// <returns>A Boolean object.</returns>
+    public override bool Equals(object other) {
+      var enc = other as CBOREncodeOptions;
+      return (enc == null) ? (false) : (enc.Value == this.Value);
+    }
+
+    /// <summary>Not documented yet.</summary>
+    /// <returns>A 32-bit signed integer.</returns>
+    public override int GetHashCode() {
+      return this.Value;
+    }
+
     private CBOREncodeOptions(int value) {
       this.value = value;
     }

@@ -4852,9 +4852,13 @@ Console.Write(String.Empty);
       for (var i = 0; i < ranges.Length; i += 2) {
         DateTime j = ranges[i];
         while (true) {
+          DateTime j2 = j.AddMilliseconds(200);
           TestCommon.AssertSer(
             CBORObject.FromObject(j),
             "0(\"" + DateTimeToString(j) + "\")");
+          TestCommon.AssertSer(
+            CBORObject.FromObject(j2),
+            "0(\"" + DateTimeToString(j2) + "\")");
           if (j >= ranges[i + 1]) {
             break;
           }

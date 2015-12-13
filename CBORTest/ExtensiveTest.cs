@@ -1231,7 +1231,11 @@ StartsWith(chunks[2], "o")) {
 var obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
 "testfiles.cbor"));
         for (int i = 0; i < obj.Count; ++i) {
-          list.AddRange(Directory.GetFiles(obj[i].AsString()));
+          string directory = obj[i].AsString();
+          if (!Directory.Exists(directory)) {
+            continue;
+          }
+          list.AddRange(Directory.GetFiles(directory));
         }
       }
       return list.ToArray();
@@ -1248,6 +1252,7 @@ var obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
       var standardOut = Console.Out;
       var x = 0;
       dirfiles.AddRange(GetTestFiles());
+
       foreach (var f in dirfiles) {
         Console.WriteLine(f);
         ++x;
@@ -1282,6 +1287,7 @@ var obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
                   Console.WriteLine(ln);
                   Console.SetOut(nullWriter);
                   Console.WriteLine(ex2.Message);
+                  Console.SetOut(standardOut);
                 }
               }
             }

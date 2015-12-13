@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
+using System.Text;
 
 namespace Test {
   internal static class TestCommon {
@@ -344,11 +345,7 @@ output,
       if (o.Equals(o2)) {
         if (!o2.Equals(o)) {
           Assert.Fail(
-String.Format(
-System.Globalization.CultureInfo.InvariantCulture,
-"{0} equals {1} but not vice versa",
-o,
-o2));
+String.Empty + o + " equals " + o2 + " but not vice versa");
         }
         // Test for the guarantee that equal objects
         // must have equal hash codes
@@ -356,19 +353,12 @@ o2));
           // Don't use Assert.AreEqual directly because it has
           // quite a lot of overhead
           Assert.Fail(
-String.Format(
-System.Globalization.CultureInfo.InvariantCulture,
-"{0} and {1} don't have equal hash codes",
-o,
-o2));
+String.Empty + o + " and " + o2 + " don't have equal hash codes");
         }
       } else {
         if (o2.Equals(o)) {
-          Assert.Fail(String.Format(
-System.Globalization.CultureInfo.InvariantCulture,
-"{0} does not equal {1} but not vice versa",
-o,
-o2));
+          Assert.Fail(String.Empty + o + " does not equal " + o2 +
+            " but not vice versa");
         }
         // At least check that GetHashCode doesn't throw
         try {
@@ -384,6 +374,22 @@ Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
 }
       }
+    }
+
+    public static String Repeat(char c, int num) {
+      var sb = new StringBuilder();
+      for (var i = 0; i < num; ++i) {
+        sb.Append(c);
+      }
+      return sb.ToString();
+    }
+
+    public static String Repeat(String c, int num) {
+      var sb = new StringBuilder();
+      for (var i = 0; i < num; ++i) {
+        sb.Append(c);
+      }
+      return sb.ToString();
     }
 
     public static void TestNumber(CBORObject o) {
@@ -532,6 +538,11 @@ TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2) +
           o2,
           "Not less: " + CompareTestReciprocal(o1, o2)));
       }
+    }
+
+public static void CompareTestGreater<T>(T o1, T o2) where T :
+      IComparable<T> {
+      CompareTestLess(o2, o1);
     }
 
     public static int CompareTestReciprocal<T>(T o1, T o2) where T :
