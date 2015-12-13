@@ -31,17 +31,17 @@ namespace Test {
 
     public static void doTestLong(long value) {
       String b = "i" + TestCommon.LongToString(value) + "e";
-      CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
+      CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b, false));
       Assert.AreEqual(value, beo.AsInt64());
-      String newb = Encoding.UTF8.GetString(EncodingToBytes(beo));
+      String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo), false);
       Assert.AreEqual(b, newb);
     }
 
     public static void doTestString(String value) {
       String b = DataUtilities.GetUtf8Length(value, false) + ":" + value;
-      CBORObject beo = EncodingFromBytes(Encoding.UTF8.GetBytes(b));
+      CBORObject beo = EncodingFromBytes(DataUtilities.GetUtf8Bytes(b, false));
       Assert.AreEqual(value, beo.AsString());
-      String newb = Encoding.UTF8.GetString(EncodingToBytes(beo));
+      String newb = DataUtilities.GetUtf8String(EncodingToBytes(beo), false);
       Assert.AreEqual(b, newb);
     }
 

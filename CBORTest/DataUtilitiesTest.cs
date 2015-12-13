@@ -149,7 +149,31 @@ Assert.AreEqual(-1, numberTemp);
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-      // not implemented yet
+      Assert.AreEqual(-1, DataUtilities.CodePointBefore("A", 0));
+      Assert.AreEqual(-1, DataUtilities.CodePointBefore("A", -1));
+      Assert.AreEqual((int)'A', DataUtilities.CodePointBefore("A", 1));
+      Assert.AreEqual(-1, DataUtilities.CodePointBefore("A", 2));
+ Assert.AreEqual(
+(int)'A' ,
+DataUtilities.CodePointBefore("A\ud800\udc00B", 1));
+  Assert.AreEqual(
+0x10000,
+DataUtilities.CodePointBefore("A\ud800\udc00B", 3));
+   Assert.AreEqual(
+0xfffd,
+DataUtilities.CodePointBefore("A\ud800\udc00B", 2));
+ Assert.AreEqual(
+0xd800,
+DataUtilities.CodePointBefore("A\ud800\udc00B", 2, 1));
+    Assert.AreEqual(
+-1,
+DataUtilities.CodePointBefore("A\ud800\udc00B" , 2, 2));
+      Assert.AreEqual(0xfffd, DataUtilities.CodePointBefore("\udc00B", 1));
+      Assert.AreEqual(0xdc00, DataUtilities.CodePointBefore("\udc00B", 1, 1));
+      Assert.AreEqual(-1, DataUtilities.CodePointBefore("\udc00B", 1, 2));
+      Assert.AreEqual(0xfffd, DataUtilities.CodePointBefore("A\udc00B", 2));
+      Assert.AreEqual(0xdc00, DataUtilities.CodePointBefore("A\udc00B", 2, 1));
+      Assert.AreEqual(-1, DataUtilities.CodePointBefore("A\udc00B", 2, 2));
     }
     [Test]
     public void TestCodePointCompare() {
@@ -221,6 +245,21 @@ DataUtilities.CodePointCompare(
           "a\ud7ff\udc00",
           "a\ud800\udc00") < 0);
     }
+
+    public static String Repeat(String c, int num) {
+      var sb = new StringBuilder();
+      for (var i = 0; i < num; ++i) {
+        sb.Append(c);
+      }
+      return sb.ToString();
+    }
+
+    private void TestUtf8RoundTrip(string str) {
+      Assert.AreEqual(
+str,
+DataUtilities.GetUtf8String( DataUtilities.GetUtf8Bytes(str, true), true));
+    }
+
     [Test]
     public void TestGetUtf8Bytes() {
       try {
@@ -465,6 +504,18 @@ DataUtilities.CodePointCompare(
     }
     [Test]
     public void TestGetUtf8String() {
+      this.TestUtf8RoundTrip("A" + Repeat("\u00e0", 10000));
+      this.TestUtf8RoundTrip("AA" + Repeat("\u00e0", 10000));
+      this.TestUtf8RoundTrip("AAA" + Repeat("\u00e0", 10000));
+      this.TestUtf8RoundTrip("AAAA" + Repeat("\u00e0", 10000));
+      this.TestUtf8RoundTrip("A" + Repeat("\u0ae0", 10000));
+      this.TestUtf8RoundTrip("AA" + Repeat("\u0ae0", 10000));
+      this.TestUtf8RoundTrip("AAA" + Repeat("\u0ae0", 10000));
+      this.TestUtf8RoundTrip("AAAA" + Repeat("\u0ae0", 10000));
+      this.TestUtf8RoundTrip("A" + Repeat("\ud800\udc00", 10000));
+      this.TestUtf8RoundTrip("AA" + Repeat("\ud800\udc00", 10000));
+      this.TestUtf8RoundTrip("AAA" + Repeat("\ud800\udc00", 10000));
+      this.TestUtf8RoundTrip("AAAA" + Repeat("\ud800\udc00", 10000));
       try {
         DataUtilities.GetUtf8String(null, false);
         Assert.Fail("Should have failed");
@@ -587,6 +638,74 @@ DataUtilities.CodePointCompare(
         Assert.AreEqual('\ufffd', strret[0]);
       }
     }
+
+    public static void DoTestReadUtf8(
+  byte[] bytes,
+  int expectedRet,
+  string expectedString,
+  int noReplaceRet,
+  string noReplaceString) {
+      DoTestReadUtf8(
+        bytes,
+        bytes.Length,
+        expectedRet,
+        expectedString,
+        noReplaceRet,
+        noReplaceString);
+    }
+
+    public static void DoTestReadUtf8(
+      byte[] bytes,
+      int length,
+      int expectedRet,
+      string expectedString,
+      int noReplaceRet,
+      string noReplaceString) {
+      try {
+        var builder = new StringBuilder();
+        var ret = 0;
+        using (var ms = new MemoryStream(bytes)) {
+          ret = DataUtilities.ReadUtf8(ms, length, builder, true);
+          Assert.AreEqual(expectedRet, ret);
+          if (expectedRet == 0) {
+            Assert.AreEqual(expectedString, builder.ToString());
+          }
+          ms.Position = 0;
+          builder.Clear();
+          ret = DataUtilities.ReadUtf8(ms, length, builder, false);
+          Assert.AreEqual(noReplaceRet, ret);
+          if (noReplaceRet == 0) {
+            Assert.AreEqual(noReplaceString, builder.ToString());
+          }
+        }
+        if (bytes.Length >= length) {
+          builder.Clear();
+          ret = DataUtilities.ReadUtf8FromBytes(
+            bytes,
+            0,
+            length,
+            builder,
+            true);
+          Assert.AreEqual(expectedRet, ret);
+          if (expectedRet == 0) {
+            Assert.AreEqual(expectedString, builder.ToString());
+          }
+          builder.Clear();
+          ret = DataUtilities.ReadUtf8FromBytes(
+            bytes,
+            0,
+            length,
+            builder,
+            false);
+          Assert.AreEqual(noReplaceRet, ret);
+          if (noReplaceRet == 0) {
+            Assert.AreEqual(noReplaceString, builder.ToString());
+          }
+        }
+      } catch (IOException ex) {
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+    }
     [Test]
     public void TestReadUtf8() {
       try {
@@ -624,6 +743,80 @@ DataUtilities.CodePointCompare(
           }
         }
       }
+      DoTestReadUtf8(
+  new byte[] { 0x21, 0x21, 0x21 },
+  0, "!!!", 0, "!!!");
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xc2, 0x80 },
+        0, " \u0080", 0, " \u0080");
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xc2, 0x80, 0x20 },
+        0, " \u0080 ", 0, " \u0080 ");
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xc2, 0x80, 0xc2 },
+        0, " \u0080\ufffd", -1, null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xc2, 0x21, 0x21 },
+        0, " \ufffd!!", -1,
+        null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xc2, 0xff, 0x20 },
+        0, " \ufffd\ufffd ", -1, null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xe0, 0xa0, 0x80 },
+        0, " \u0800", 0, " \u0800");
+      DoTestReadUtf8(
+    new byte[] { 0x20, 0xe0, 0xa0, 0x80, 0x20 }, 0, " \u0800 ", 0, " \u0800 ");
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x80 }, 0, " \ud800\udc00", 0,
+          " \ud800\udc00");
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x80 },
+        3,
+        0, " \ufffd", -1, null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xf0, 0x90 },
+        5,
+        -2,
+        null,
+        -1,
+        null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0x20, 0x20 },
+        5,
+        -2,
+        null,
+        -2,
+        null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x80, 0x20 }, 0, " \ud800\udc00 ",
+          0, " \ud800\udc00 ");
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x20 }, 0, " \ufffd ", -1,
+        null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xf0, 0x90, 0x20 },
+        0, " \ufffd ", -1, null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xf0, 0x90, 0x80, 0xff },
+        0, " \ufffd\ufffd", -1, null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xf0, 0x90, 0xff },
+        0, " \ufffd\ufffd", -1,
+        null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xe0, 0xa0, 0x20 },
+        0, " \ufffd ", -1, null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xe0, 0x20 },
+        0, " \ufffd ", -1, null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xe0, 0xa0, 0xff },
+        0, " \ufffd\ufffd", -1,
+        null);
+      DoTestReadUtf8(
+        new byte[] { 0x20, 0xe0, 0xff }, 0, " \ufffd\ufffd", -1,
+        null);
     }
     [Test]
     public void TestReadUtf8FromBytes() {

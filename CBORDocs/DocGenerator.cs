@@ -22,7 +22,6 @@ if (docdir.Length == 0) {
   throw new ArgumentException("docdir" + " is empty.");
 }
       var directory = Path.GetFullPath(docdir);
-      Directory.CreateDirectory(directory);
       assemblyFile = Path.GetFullPath(assemblyFile);
       var appdomain = AppDomain.CreateDomain("docgen");
       Directory.SetCurrentDirectory(Path.GetDirectoryName(assemblyFile));
@@ -31,6 +30,7 @@ if (docdir.Length == 0) {
         return;
       }
       var assembly = Assembly.LoadFrom(assemblyFile);
+      Directory.CreateDirectory(directory);
       try {
         var members = DocReader.Read(assembly);
         var oldWriter = Console.Out;

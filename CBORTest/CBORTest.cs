@@ -143,12 +143,9 @@ namespace Test {
 
     [Test]
     public void TestExtendedCompare() {
-      {
-long numberTemp = ExtendedRational.Zero.CompareTo(ExtendedRational.NaN);
-Assert.AreEqual(-1, numberTemp);
-}
-      Assert.AreEqual(-1, ExtendedFloat.Zero.CompareTo(ExtendedFloat.NaN));
-      Assert.AreEqual(-1, ExtendedDecimal.Zero.CompareTo(ExtendedDecimal.NaN));
+      TestCommon.CompareTestLess(ExtendedRational.Zero, ExtendedRational.NaN);
+      TestCommon.CompareTestLess(ExtendedFloat.Zero, ExtendedFloat.NaN);
+      TestCommon.CompareTestLess(ExtendedDecimal.Zero, ExtendedDecimal.NaN);
     }
 
     [Test]
@@ -156,8 +153,7 @@ Assert.AreEqual(-1, numberTemp);
       ExtendedDecimal a = ExtendedDecimal.FromString(
         "7.00468923842476447758037175245551511770928808756622205663208" + "4784688080253355047487262563521426272927783429622650146484375");
       ExtendedDecimal b = ExtendedDecimal.FromString("5");
-      Assert.AreEqual(1, a.CompareTo(b));
-      Assert.AreEqual(-1, b.CompareTo(a));
+      TestCommon.CompareTestLess(b, a);
       CBORObject o1 = null;
       CBORObject o2 = null;
       o1 = CBORObject.DecodeFromBytes(new byte[] { (byte)0xfb, (byte)0x8b, 0x44,
@@ -173,26 +169,10 @@ Assert.AreEqual(-1, numberTemp);
       ExtendedDecimal cmpDecFrac =
         o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
       ExtendedDecimal cmpCobj = CBORObject.Addition(o1, o2).AsExtendedDecimal();
-      if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
-        Assert.AreEqual(
-          0,
-          cmpDecFrac.CompareTo(cmpCobj),
-          TestCommon.ObjectMessages(
-            o1,
-            o2,
-            "Add: Results don't match:\n" + cmpDecFrac + " vs\n" + cmpCobj));
-      }
+      TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
       cmpDecFrac = o1.AsExtendedDecimal().Subtract(o2.AsExtendedDecimal());
       cmpCobj = CBORObject.Subtract(o1, o2).AsExtendedDecimal();
-      if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
-        Assert.AreEqual(
-          0,
-          cmpDecFrac.CompareTo(cmpCobj),
-          TestCommon.ObjectMessages(
-            o1,
-            o2,
-            "Subtract: Results don't match:\n" + cmpDecFrac + " vs\n" + cmpCobj));
-      }
+      TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
       CBORObjectTest.CompareDecimals(o1, o2);
     }
 
@@ -1663,74 +1643,6 @@ stringTemp);
       }
     }
 
-    public static void DoTestReadUtf8(
-      byte[] bytes,
-      int expectedRet,
-      string expectedString,
-      int noReplaceRet,
-      string noReplaceString) {
-      DoTestReadUtf8(
-        bytes,
-        bytes.Length,
-        expectedRet,
-        expectedString,
-        noReplaceRet,
-        noReplaceString);
-    }
-
-    public static void DoTestReadUtf8(
-      byte[] bytes,
-      int length,
-      int expectedRet,
-      string expectedString,
-      int noReplaceRet,
-      string noReplaceString) {
-      try {
-        var builder = new StringBuilder();
-        var ret = 0;
-        using (var ms = new MemoryStream(bytes)) {
-          ret = DataUtilities.ReadUtf8(ms, length, builder, true);
-          Assert.AreEqual(expectedRet, ret);
-          if (expectedRet == 0) {
-            Assert.AreEqual(expectedString, builder.ToString());
-          }
-          ms.Position = 0;
-          builder.Clear();
-          ret = DataUtilities.ReadUtf8(ms, length, builder, false);
-          Assert.AreEqual(noReplaceRet, ret);
-          if (noReplaceRet == 0) {
-            Assert.AreEqual(noReplaceString, builder.ToString());
-          }
-        }
-        if (bytes.Length >= length) {
-          builder.Clear();
-          ret = DataUtilities.ReadUtf8FromBytes(
-            bytes,
-            0,
-            length,
-            builder,
-            true);
-          Assert.AreEqual(expectedRet, ret);
-          if (expectedRet == 0) {
-            Assert.AreEqual(expectedString, builder.ToString());
-          }
-          builder.Clear();
-          ret = DataUtilities.ReadUtf8FromBytes(
-            bytes,
-            0,
-            length,
-            builder,
-            false);
-          Assert.AreEqual(noReplaceRet, ret);
-          if (noReplaceRet == 0) {
-            Assert.AreEqual(noReplaceString, builder.ToString());
-          }
-        }
-      } catch (IOException ex) {
-        throw new CBORException(String.Empty, ex);
-      }
-    }
-
     [Test]
     public void TestFPToBigInteger() {
       {
@@ -1886,84 +1798,6 @@ Console.Write(String.Empty);
       }
     }
 
-    [Test]
-    public void TestReadUtf8() {
-      DoTestReadUtf8(
-        new byte[] { 0x21, 0x21, 0x21 },
-        0, "!!!", 0, "!!!");
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xc2, 0x80 },
-        0, " \u0080", 0, " \u0080");
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xc2, 0x80, 0x20 },
-        0, " \u0080 ", 0, " \u0080 ");
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xc2, 0x80, 0xc2 },
-        0, " \u0080\ufffd", -1, null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xc2, 0x21, 0x21 },
-        0, " \ufffd!!", -1,
-        null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xc2, 0xff, 0x20 },
-        0, " \ufffd\ufffd ", -1, null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xe0, 0xa0, 0x80 },
-        0, " \u0800", 0, " \u0800");
-      DoTestReadUtf8(
-    new byte[] { 0x20, 0xe0, 0xa0, 0x80, 0x20 }, 0, " \u0800 " , 0, " \u0800 ");
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x80 }, 0, " \ud800\udc00" , 0,
-          " \ud800\udc00");
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x80 },
-        3,
-        0, " \ufffd", -1, null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xf0, 0x90 },
-        5,
-        -2,
-        null,
-        -1,
-        null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0x20, 0x20 },
-        5,
-        -2,
-        null,
-        -2,
-        null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x80, 0x20 }, 0, " \ud800\udc00 ",
-          0, " \ud800\udc00 ");
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xf0, 0x90, 0x80, 0x20 }, 0, " \ufffd ", -1,
-        null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xf0, 0x90, 0x20 },
-        0, " \ufffd ", -1, null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xf0, 0x90, 0x80, 0xff },
-        0, " \ufffd\ufffd", -1, null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xf0, 0x90, 0xff },
-        0, " \ufffd\ufffd", -1,
-        null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xe0, 0xa0, 0x20 },
-        0, " \ufffd ", -1, null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xe0, 0x20 },
-        0, " \ufffd ", -1, null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xe0, 0xa0, 0xff },
-        0, " \ufffd\ufffd", -1,
-        null);
-      DoTestReadUtf8(
-        new byte[] { 0x20, 0xe0, 0xff }, 0, " \ufffd\ufffd", -1,
-        null);
-    }
-
     private static bool ByteArrayEquals(byte[] arrayA, byte[] arrayB) {
       if (arrayA == null) {
         return arrayB == null;
@@ -2031,22 +1865,6 @@ stringTemp);
       Assert.AreEqual(4, cbor[CBORObject.FromObject("b")].AsInt32());
     }
 
-    private static String Repeat(char c, int num) {
-      var sb = new StringBuilder();
-      for (var i = 0; i < num; ++i) {
-        sb.Append(c);
-      }
-      return sb.ToString();
-    }
-
-    private static String Repeat(String c, int num) {
-      var sb = new StringBuilder();
-      for (var i = 0; i < num; ++i) {
-        sb.Append(c);
-      }
-      return sb.ToString();
-    }
-
     private static void TestTextStringStreamOne(string longString) {
       CBORObject cbor, cbor2;
       cbor = CBORObject.FromObject(longString);
@@ -2072,10 +1890,10 @@ Assert.AreEqual(
 "..",
 stringTemp);
 }
-      TestTextStringStreamOne(Repeat('x', 200000));
-      TestTextStringStreamOne(Repeat('\u00e0', 200000));
-      TestTextStringStreamOne(Repeat('\u3000', 200000));
-      TestTextStringStreamOne(Repeat("\ud800\udc00", 200000));
+      TestTextStringStreamOne(TestCommon.Repeat('x', 200000));
+      TestTextStringStreamOne(TestCommon.Repeat('\u00e0', 200000));
+      TestTextStringStreamOne(TestCommon.Repeat('\u3000', 200000));
+      TestTextStringStreamOne(TestCommon.Repeat("\ud800\udc00", 200000));
     }
     [Test]
     [ExpectedException(typeof(CBORException))]
@@ -4352,12 +4170,6 @@ Console.Write(String.Empty);
 
     [Test]
     public void TestExtendedMiscellaneous() {
-      Assert.AreEqual(
-        ExtendedDecimal.Zero,
-        ExtendedDecimal.FromExtendedFloat(ExtendedFloat.Zero));
-      Assert.AreEqual(
-        ExtendedDecimal.NegativeZero,
-        ExtendedDecimal.FromExtendedFloat(ExtendedFloat.NegativeZero));
       Assert.AreEqual(ExtendedDecimal.Zero, ExtendedDecimal.FromInt32(0));
       Assert.AreEqual(ExtendedDecimal.One, ExtendedDecimal.FromInt32(1));
       {
