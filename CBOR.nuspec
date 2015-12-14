@@ -30,24 +30,11 @@ See the project page for release notes on previous versions: https://github.com/
     </releaseNotes>
     <copyright>Written by Peter O. in 2013-2015.  Any copyright is released to the Public Domain.</copyright>
     <tags>cbor data serialization binary json numbers arithmetic</tags>
-    <dependencies>
-      <group targetFramework="dotnet">
-        <dependency id="System.Collections" version="4.0.0" />
-        <dependency id="System.Diagnostics.Debug" version="4.0.0" />
-        <dependency id="System.Globalization" version="4.0.0" />
-        <dependency id="System.IO" version="4.0.0" />
-        <dependency id="System.Reflection" version="4.0.0" />
-        <dependency id="System.Reflection.Extensions" version="4.0.0" />
-        <dependency id="System.Runtime" version="4.0.0" />
-        <dependency id="System.Runtime.Extensions" version="4.0.0" />
-        <dependency id="System.Threading" version="4.0.0" />
-      </group>
-    </dependencies>
   </metadata>
   <files>
-    <file src="bin/Release/Encoding.dll" target="lib/portable-net45+dnxcore50+netcore45+win+wpa81+wp80" />
-    <file src="bin/Release/Encoding.xml" target="lib/portable-net45+dnxcore50+netcore45+win+wpa81+wp80" />
-    <file src="Encoding-Net4/bin/Release/Encoding.dll" target="lib/portable-net40+sl50+win+wpa81+wp80" />
-    <file src="Encoding-Net4/bin/Release/Encoding.xml" target="lib/portable-net40+sl50+win+wpa81+wp80" />
+    <file src="bin/Release/CBOR.dll" target="lib/portable-net45+dnxcore50+netcore45+win+wpa81+wp80" />
+    <file src="bin/Release/CBOR.xml" target="lib/portable-net45+dnxcore50+netcore45+win+wpa81+wp80" />
+    <file src="CBOR-Net4/bin/Release/CBOR.dll" target="lib/portable-net40+sl50+win+wpa81+wp80" />
+    <file src="CBOR-Net4/bin/Release/CBOR.xml" target="lib/portable-net40+sl50+win+wpa81+wp80" />
   </files>
 </package>
