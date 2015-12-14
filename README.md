@@ -233,6 +233,10 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
+In version 2.3.1 (.NET version only):
+
+- Fixed NuGet package
+
 In version 2.3:
 
 - The C# version of the library now also targets "dotnet", which should make it compatible with platform .NET runtime
