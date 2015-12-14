@@ -233,9 +233,10 @@ The following are some clarifications to RFC 7049.
 Release Notes
 -----------
 
-In version 2.3.1 (.NET version only):
+In version 2.3.1:
 
 - Fixed NuGet package
+- No changes of note in the Java version
 
 In version 2.3:
 
