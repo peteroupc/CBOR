@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>PeterO.Cbor</id>
-    <version>2.3.0</version>
+    <version>2.3.1</version>
     <title>CBOR</title>
     <authors>Peter Occil</authors>
     <owners>Peter Occil</owners>
@@ -16,6 +16,8 @@
     </description>
     <summary>A C# implementation of Concise Binary Object Representation (CBOR), a data serialization format. This implementation can also convert between CBOR and JSON.</summary>
     <releaseNotes>
+In version 2.3.1:
+- Fixed NuGet package
 In version 2.3:
 - The C# version of the library now also targets "dotnet", which should make it compatible with platform .NET runtime
 environments such as the upcoming cross-platform "coreclr" runtime.
@@ -30,7 +32,6 @@ See the project page for release notes on previous versions: https://github.com/
     <tags>cbor data serialization binary json numbers arithmetic</tags>
     <dependencies>
       <group targetFramework="dotnet">
-        <dependency id="System.Text.Encoding" version="4.0.0" />
         <dependency id="System.Collections" version="4.0.0" />
         <dependency id="System.Diagnostics.Debug" version="4.0.0" />
         <dependency id="System.Globalization" version="4.0.0" />
@@ -43,4 +44,10 @@ See the project page for release notes on previous versions: https://github.com/
       </group>
     </dependencies>
   </metadata>
+  <files>
+    <file src="bin/Release/Encoding.dll" target="lib/portable-net45+dnxcore50+netcore45+win+wpa81+wp80" />
+    <file src="bin/Release/Encoding.xml" target="lib/portable-net45+dnxcore50+netcore45+win+wpa81+wp80" />
+    <file src="Encoding-Net4/bin/Release/Encoding.dll" target="lib/portable-net40+sl50+win+wpa81+wp80" />
+    <file src="Encoding-Net4/bin/Release/Encoding.xml" target="lib/portable-net40+sl50+win+wpa81+wp80" />
+  </files>
 </package>

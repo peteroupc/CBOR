@@ -1065,8 +1065,7 @@ namespace PeterO.Cbor {
     /// following types are specially handled by this method: null ,
     /// primitive types, strings, CBORObject , ExtendedDecimal ,
     /// ExtendedFloat , ExtendedRational, the custom BigInteger , lists,
-    /// arrays, enumerations ( <c>Enum</c> objects), maps, and types with a
-    /// registered CBOR type converter.
+    /// arrays, enumerations ( <c>Enum</c> objects), and maps.
     /// <para>In the .NET version, if the object is a type not specially
     /// handled by this method, returns a CBOR map with the values of each
     /// of its read/write properties (or all properties in the case of an
@@ -3424,8 +3423,15 @@ namespace PeterO.Cbor {
         AddTagHandler((BigInteger)30, new CBORTag30());
       }
       lock (tagHandlers) {
-        return (tagHandlers.ContainsKey(bigintTag)) ?
-          (tagHandlers[bigintTag]) : (null);
+        if (tagHandlers.ContainsKey(bigintTag)) {
+          return tagHandlers[bigintTag];
+        }
+#if DEBUG
+        if (bigintTag.Equals((BigInteger)2)) {
+          throw new InvalidOperationException("Expected valid tag handler");
+        }
+#endif
+        return null;
       }
     }
 

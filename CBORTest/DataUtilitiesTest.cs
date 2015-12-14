@@ -165,9 +165,10 @@ DataUtilities.CodePointBefore("A\ud800\udc00B", 2));
  Assert.AreEqual(
 0xd800,
 DataUtilities.CodePointBefore("A\ud800\udc00B", 2, 1));
-    Assert.AreEqual(
--1,
-DataUtilities.CodePointBefore("A\ud800\udc00B" , 2, 2));
+    {
+long numberTemp = DataUtilities.CodePointBefore("A\ud800\udc00B" , 2, 2);
+Assert.AreEqual(-1, numberTemp);
+}
       Assert.AreEqual(0xfffd, DataUtilities.CodePointBefore("\udc00B", 1));
       Assert.AreEqual(0xdc00, DataUtilities.CodePointBefore("\udc00B", 1, 1));
       Assert.AreEqual(-1, DataUtilities.CodePointBefore("\udc00B", 1, 2));
@@ -257,7 +258,7 @@ DataUtilities.CodePointCompare(
     private void TestUtf8RoundTrip(string str) {
       Assert.AreEqual(
 str,
-DataUtilities.GetUtf8String( DataUtilities.GetUtf8Bytes(str, true), true));
+DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
     }
 
     [Test]

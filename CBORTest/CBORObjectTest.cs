@@ -1790,8 +1790,9 @@ CBORObject.FromSimpleValue(0));
       }
  string jsonTemp = TestCommon.Repeat(
 "[",
-2000) + TestCommon.Repeat("]",
-        2000);
+2000) + TestCommon.Repeat(
+"]",
+2000);
       try {
  CBORObject.FromJSONString(jsonTemp);
 Assert.Fail("Should have failed");
