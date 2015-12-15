@@ -53,6 +53,15 @@
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\CBOR.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <DocumentationFile>bin\Release\CBOR.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseNet40|AnyCPU'">
+    <DocumentationFile>bin\ReleaseNet40\CBOR.xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="PeterO\BigInteger.cs" />
     <Compile Include="PeterO\BigIntegerExtra.cs" />
