@@ -3110,7 +3110,7 @@ namespace PeterO {
     }
 
     /// <summary>Returns a number similar to this number but with the
-    /// decimal point moved to the right.</summary>
+    /// decimal point moved to the left.</summary>
     /// <param name='places'>A 32-bit signed integer.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal MovePointLeft(int places) {
