@@ -24,25 +24,41 @@ namespace PeterO.Cbor {
     private readonly string str;
     private readonly IByteReader stream;
 
-    /// <summary>Initializes a new instance of the CharacterReader
-    /// class.</summary>
-    /// <param name='str'>A string object.</param>
+    /// <summary>Initializes a new instance of the CharacterReader class
+    /// using a Unicode 16-bit string; if the string begins with a
+    /// byte-order mark (U+FEFF), it won't be skipped, and any unpaired
+    /// surrogate code points (U + D800 to U + DFFF) in the string are
+    /// replaced with replacement characters (U + FFFD).</summary>
+    /// <param name='str'>The string to read.</param>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str'/> is null.</exception>
     public CharacterReader(string str) : this(str, false, false) {
     }
 
-    /// <summary>Initializes a new instance of the CharacterReader
-    /// class.</summary>
-    /// <param name='str'>A string object.</param>
-    /// <param name='skipByteOrderMark'>A Boolean object.</param>
+    /// <summary>Initializes a new instance of the CharacterReader class
+    /// using a Unicode 16-bit string; any unpaired surrogate code points
+    /// (U + D800 to U + DFFF) in the string are replaced with replacement
+    /// characters (U + FFFD).</summary>
+    /// <param name='str'>The string to read.</param>
+    /// <param name='skipByteOrderMark'>If true and the string begins with
+    /// a byte-order mark (U + FEFF), will skip that code point as it reads
+    /// the string.</param>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str'/> is null.</exception>
     public CharacterReader(string str, bool skipByteOrderMark) :
       this(str, skipByteOrderMark, false) {
     }
 
-    /// <summary>Initializes a new instance of the CharacterReader
-    /// class.</summary>
-    /// <param name='str'>A string object.</param>
-    /// <param name='skipByteOrderMark'>A Boolean object.</param>
-    /// <param name='errorThrow'>Another Boolean object.</param>
+    /// <summary>Initializes a new instance of the CharacterReader class
+    /// using a Unicode 16-bit string.</summary>
+    /// <param name='str'>The string to read.</param>
+    /// <param name='skipByteOrderMark'>If true and the string begins with
+    /// a byte-order mark (U + FEFF), will skip that code point as it reads
+    /// the string.</param>
+    /// <param name='errorThrow'>If true, will throw an exception if
+    /// unpaired surrogate code points (U + D800 to U + DFFF) are found in
+    /// the string. If false, replaces those byte sequences with
+    /// replacement characters (U + FFFD) as the stream is read.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
   public CharacterReader(
@@ -61,36 +77,90 @@ bool errorThrow) {
       this.stream = null;
     }
 
-    /// <summary>Initializes a new instance of the CharacterReader
-    /// class.</summary>
+    /// <summary>Initializes a new instance of the CharacterReader class;
+    /// will read the stream as UTF-8, skip the byte-order mark (U + FEFF)
+    /// if it appears first in the stream, and replace invalidly encoded
+    /// bytes with replacement characters (U + FFFD).</summary>
     /// <param name='stream'>A readable data stream.</param>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
     public CharacterReader(Stream stream) : this(stream, 0, false) {
     }
 
-    /// <summary>Initializes a new instance of the CharacterReader
-    /// class.</summary>
-    /// <param name='stream'>A readable data stream.</param>
-    /// <param name='mode'>A 32-bit signed integer.</param>
-    /// <param name='errorThrow'>A Boolean object.</param>
+    /// <summary>Initializes a new instance of the CharacterReader class;
+    /// will skip the byte-order mark (U + FEFF) if it appears first in the
+    /// stream.</summary>
+    /// <param name='stream'>A readable byte stream.</param>
+    /// <param name='mode'>The method to use when detecting encodings other
+    /// than UTF-8 in the byte stream. This usually involves checking
+    /// whether the stream begins with a byte-order mark (BOM, U + FEFF) or
+    /// a non-zero basic code point (NZB, U + 0001 to U + 007F) before
+    /// reading the rest of the stream. This value can be one of the
+    /// following:
+    /// <list>
+    /// <item>0: UTF-8 only.</item>
+    /// <item>1: Detect UTF-16 using BOM or NZB, otherwise UTF-8.</item>
+    /// <item>2: Detect UTF-16/UTF-32 using BOM or NZB, otherwise UTF-8.
+    /// (Tries to detect UTF-32 first.)</item>
+    /// <item>3: Detect UTF-16 using BOM, otherwise UTF-8.</item>
+    /// <item>4: Detect UTF-16/UTF-32 using BOM, otherwise UTF-8. (Tries to
+    /// detect UTF-32 first.)</item></list>.</param>
+    /// <param name='errorThrow'>If true, will throw an exception if
+    /// invalid byte sequences (in the detected encoding) are found in the
+    /// byte stream. If false, replaces those byte sequences with
+    /// replacement characters (U + FFFD) as the stream is read.</param>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
     public CharacterReader(Stream stream, int mode, bool errorThrow) :
       this(stream, mode, errorThrow, false) {
     }
 
-    /// <summary>Initializes a new instance of the CharacterReader
-    /// class.</summary>
-    /// <param name='stream'>A readable data stream.</param>
-    /// <param name='mode'>A 32-bit signed integer.</param>
+    /// <summary>Initializes a new instance of the CharacterReader class;
+    /// will skip the byte-order mark (U + FEFF) if it appears first in the
+    /// stream and replace invalidly encoded bytes with replacement
+    /// characters (U + FFFD).</summary>
+    /// <param name='stream'>A readable byte stream.</param>
+    /// <param name='mode'>The method to use when detecting encodings other
+    /// than UTF-8 in the byte stream. This usually involves checking
+    /// whether the stream begins with a byte-order mark (BOM, U + FEFF) or
+    /// a non-zero basic code point (NZB, U + 0001 to U + 007F) before
+    /// reading the rest of the stream. This value can be one of the
+    /// following:
+    /// <list>
+    /// <item>0: UTF-8 only.</item>
+    /// <item>1: Detect UTF-16 using BOM or NZB, otherwise UTF-8.</item>
+    /// <item>2: Detect UTF-16/UTF-32 using BOM or NZB, otherwise UTF-8.
+    /// (Tries to detect UTF-32 first.)</item>
+    /// <item>3: Detect UTF-16 using BOM, otherwise UTF-8.</item>
+    /// <item>4: Detect UTF-16/UTF-32 using BOM, otherwise UTF-8. (Tries to
+    /// detect UTF-32 first.)</item></list>.</param>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
     public CharacterReader(Stream stream, int mode) :
       this(stream, mode, false, false) {
     }
 
     /// <summary>Initializes a new instance of the CharacterReader
     /// class.</summary>
-    /// <param name='stream'>Not documented yet.</param>
-    /// <param name='mode'>Not documented yet.</param>
+    /// <param name='stream'>A readable byte stream.</param>
+    /// <param name='mode'>The method to use when detecting encodings other
+    /// than UTF-8 in the byte stream. This usually involves checking
+    /// whether the stream begins with a byte-order mark (BOM, U + FEFF) or
+    /// a non-zero basic code point (NZB, U + 0001 to U + 007F) before
+    /// reading the rest of the stream. This value can be one of the
+    /// following:
+    /// <list>
+    /// <item>0: UTF-8 only.</item>
+    /// <item>1: Detect UTF-16 using BOM or NZB, otherwise UTF-8.</item>
+    /// <item>2: Detect UTF-16/UTF-32 using BOM or NZB, otherwise UTF-8.
+    /// (Tries to detect UTF-32 first.)</item>
+    /// <item>3: Detect UTF-16 using BOM, otherwise UTF-8.</item>
+    /// <item>4: Detect UTF-16/UTF-32 using BOM, otherwise UTF-8. (Tries to
+    /// detect UTF-32 first.)</item></list>.</param>
     /// <param name='errorThrow'>If true, will throw an exception if
     /// invalid byte sequences (in the detected encoding) are found in the
-    /// byte stream.</param>
+    /// byte stream. If false, replaces those byte sequences with
+    /// replacement characters (U + FFFD) as the stream is read.</param>
     /// <param name='dontSkipUtf8Bom'>If the stream is detected as UTF-8
     /// and this parameter is <c>true</c>, won't skip the BOM character if
     /// it occurs at the start of the stream.</param>
@@ -115,22 +185,25 @@ bool dontSkipUtf8Bom) {
       int ReadByte();
     }
 
-    /// <summary>Reads a series of characters from a Unicode stream or a
+    /// <summary>Reads a series of code points from a Unicode stream or a
     /// string.</summary>
-    /// <param name='chars'>Not documented yet.</param>
+    /// <param name='chars'>An array where the code points that were read
+    /// will be stored.</param>
     /// <param name='index'>A zero-based index showing where the desired
     /// portion of <paramref name='chars'/> begins.</param>
     /// <param name='length'>The number of elements in the desired portion
     /// of <paramref name='chars'/> (but not more than <paramref
     /// name='chars'/> 's length).</param>
-    /// <returns>A 32-bit signed integer.</returns>
+    /// <returns>The number of code points read from the stream. This can
+    /// be less than the <paramref name='length'/> parameter if the end of
+    /// the stream is reached.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='chars'/> is null.</exception>
-    /// <exception cref='ArgumentException'>Either &#x22;index&#x22; or
-    /// &#x22;length&#x22; is less than 0 or greater than
-    /// &#x22;chars&#x22;&#x27;s length, or &#x22;chars&#x22;&#x27;s length
-    /// minus &#x22;index&#x22; is less than
-    /// &#x22;length&#x22;.</exception>
+    /// <exception cref='ArgumentException'>Either <paramref name='index'/>
+    /// or <paramref name='length'/> is less than 0 or greater than
+    /// <paramref name='chars'/> 's length, or <paramref name='chars'/> 's
+    /// length minus <paramref name='index'/> is less than <paramref
+    /// name='length'/>.</exception>
     public int Read(int[] chars, int index, int length) {
       if (chars == null) {
         throw new ArgumentNullException("chars");
