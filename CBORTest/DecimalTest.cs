@@ -111,9 +111,9 @@ System.Globalization.CultureInfo.InvariantCulture);
           return;
         }
         PrecisionContext ctx = PrecisionContext.ForPrecision(precision)
-          .WithExponentClamp(clamp).WithBigExponentRange(
-            (BigInteger)minexponent,
-            (BigInteger)maxexponent);
+          .WithExponentClamp(clamp).WithExponentRange(
+            minexponent,
+            maxexponent);
         string rounding = context["rounding"];
         if (rounding.Equals("half_up")) {
           ctx = ctx.WithRounding(Rounding.HalfUp);

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{8FE63143-541E-448D-8337-A98D1FA51541}</ProjectGuid>
@@ -90,7 +90,6 @@
     <Compile Include="BEncoding.cs" />
     <Compile Include="BEncodingTest.cs" />
     <Compile Include="BigIntegerTest.cs" />
-    <Compile Include="BigIntTest.cs" />
     <Compile Include="CBORDataUtilitiesTest.cs" />
     <Compile Include="CBORExceptionTest.cs" />
     <Compile Include="CBORExtraTest.cs" />

@@ -12,67 +12,14 @@ using NUnit.Framework;
 namespace PeterO {
     /// <summary>Description of Runner.</summary>
   public class Runner {
-    private static bool HasAttribute(Type mi, Type t) {
-      foreach (object a in mi.GetCustomAttributes(t, false)) {
-        if (t.IsInstanceOfType(a)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    private static bool HasAttribute(MethodInfo mi, Type t) {
-      foreach (object a in mi.GetCustomAttributes(t, false)) {
-        if (t.IsInstanceOfType(a)) {
-          return true;
-        }
-      }
-      return false;
-    }
-
     public static void Main() {
-      const String ValueParam = null;
-      // Run all the tests in this assembly
-      foreach (var type in Assembly.GetExecutingAssembly().GetTypes()) {
-        if (!HasAttribute(type, typeof(TestFixtureAttribute))) {
-          continue;
-        }
-        Console.WriteLine("-------");
-        Console.WriteLine(type.FullName);
-        Console.WriteLine("-------");
-        if (!string.IsNullOrEmpty(ValueParam)) {
-          if (!type.FullName.Contains(ValueParam)) {
-            // continue;
-          }
-        }
-        object test = Activator.CreateInstance(type);
-        var setup = type.GetMethod("SetUp");
-        if (setup != null) {
-          setup.Invoke(test, new object[] { });
-        }
-        foreach (var method in test.GetType().GetMethods()) {
-          if (!HasAttribute(method, typeof(TestAttribute))) {
-            continue;
-          }
-          Console.WriteLine(method.Name);
-          Type exctype = null;
-          foreach (var a in method.GetCustomAttributes(false)) {
-            if (a is ExpectedExceptionAttribute) {
-              exctype = ((ExpectedExceptionAttribute)a).ExpectedException;
-              break;
-            }
-          }
-          try {
-            method.Invoke(test, new object[] { });
-          } catch (TargetInvocationException e) {
-          if (exctype == null || !e.InnerException.GetType().Equals(exctype)) {
-              Console.WriteLine(e.InnerException.GetType().FullName);
-              string message = e.InnerException.Message;
-              if (message.Length > 140) {
-                message = message.Substring(0, 140);
-              }
-              Console.WriteLine(message);
-            }
+      var methods = typeof(Test.BigIntegerTest).GetMethods();
+      object bi = new Test.BigIntegerTest();
+      for (var i = 0; i < 10; i++) {
+        foreach (var method in methods) {
+          if (method.GetParameters().Length == 0) {
+            Console.WriteLine(method.Name);
+            method.Invoke(bi, new object[] { });
           }
         }
       }

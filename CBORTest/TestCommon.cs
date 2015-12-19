@@ -13,14 +13,7 @@ using PeterO.Cbor;
 using System.Text;
 
 namespace Test {
-  internal static class TestCommon {
-    public static void AssertBigIntegersEqual(string a, BigInteger b) {
-      Assert.AreEqual(a, b.ToString());
-      BigInteger a2 = BigInteger.fromString(a);
-      Assert.AreEqual(a2, b);
-      AssertEqualsHashCode(a2, b);
-    }
-
+  public static class TestCommon {
     public static string ToByteArrayString(byte[] bytes) {
       if (bytes == null) {
  return "null";
@@ -72,122 +65,6 @@ namespace Test {
      Assert.Fail("Expected " + ToByteArrayString(arr1) + ", got " +
        ToByteArrayString(arr2));
       }
-    }
-
-    public static void DoTestDivide(
-string dividend,
-string divisor,
-string result) {
-      BigInteger bigintA = BigInteger.fromString(dividend);
-      BigInteger bigintB = BigInteger.fromString(divisor);
-      if (bigintB.IsZero) {
-        try {
-          bigintA.divide(bigintB);
-          Assert.Fail("Expected divide by 0 error");
-        } catch (ArithmeticException ex) {
-          Console.WriteLine(ex.Message);
-        }
-        try {
- bigintA.divideAndRemainder(bigintB);
-Assert.Fail("Should have failed");
-} catch (ArithmeticException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-      } else {
-        AssertBigIntegersEqual(result, bigintA.divide(bigintB));
-        AssertBigIntegersEqual(result, bigintA.divideAndRemainder(bigintB)[0]);
-      }
-    }
-
-    public static void DoTestRemainder(
-string dividend,
-string divisor,
-string result) {
-      BigInteger bigintA = BigInteger.fromString(dividend);
-      BigInteger bigintB = BigInteger.fromString(divisor);
-      if (bigintB.IsZero) {
-        try {
-          bigintA.remainder(bigintB); Assert.Fail("Expected divide by 0 error");
-        } catch (ArithmeticException ex) {
-          Console.WriteLine(ex.Message);
-        }
-        try {
- bigintA.divideAndRemainder(bigintB);
-Assert.Fail("Should have failed");
-} catch (ArithmeticException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-      } else {
-        AssertBigIntegersEqual(result, bigintA.remainder(bigintB));
-        AssertBigIntegersEqual(result, bigintA.divideAndRemainder(bigintB)[1]);
-      }
-    }
-
-    public static void DoTestDivideAndRemainder(
-string dividend,
-string divisor,
-string result,
-string rem) {
-      BigInteger bigintA = BigInteger.fromString(dividend);
-      BigInteger bigintB = BigInteger.fromString(divisor);
-      BigInteger rembi;
-      if (bigintB.IsZero) {
-        try {
-          BigInteger quo = BigInteger.DivRem(bigintA, bigintB, out rembi);
-          if (((object)quo) == null) {
-            Assert.Fail();
-          }
-          Assert.Fail("Expected divide by 0 error");
-        } catch (ArithmeticException ex) {
-          Console.WriteLine(ex.Message);
-        }
-      } else {
-        BigInteger quo = BigInteger.DivRem(bigintA, bigintB, out rembi);
-        AssertBigIntegersEqual(result, quo);
-        AssertBigIntegersEqual(rem, rembi);
-      }
-    }
-
-    public static void DoTestMultiply(string m1, string m2, string result) {
-      BigInteger bigintA = BigInteger.fromString(m1);
-      BigInteger bigintB = BigInteger.fromString(m2);
-      AssertBigIntegersEqual(result, bigintA.multiply(bigintB));
-    }
-
-    public static void DoTestAdd(string m1, string m2, string result) {
-      BigInteger bigintA = BigInteger.fromString(m1);
-      BigInteger bigintB = BigInteger.fromString(m2);
-      AssertBigIntegersEqual(result, bigintA.add(bigintB));
-    }
-
-    public static void DoTestSubtract(string m1, string m2, string result) {
-      BigInteger bigintA = BigInteger.fromString(m1);
-      BigInteger bigintB = BigInteger.fromString(m2);
-      AssertBigIntegersEqual(result, bigintA.subtract(bigintB));
-    }
-
-    public static void DoTestPow(string m1, int m2, string result) {
-      BigInteger bigintA = BigInteger.fromString(m1);
-      AssertBigIntegersEqual(result, bigintA.pow(m2));
-      AssertBigIntegersEqual(result, bigintA.PowBigIntVar((BigInteger)m2));
-    }
-
-    public static void DoTestShiftLeft(string m1, int m2, string result) {
-      BigInteger bigintA = BigInteger.fromString(m1);
-      AssertBigIntegersEqual(result, bigintA.shiftLeft(m2));
-      AssertBigIntegersEqual(result, bigintA.shiftRight(-m2));
-    }
-
-    public static void DoTestShiftRight(string m1, int m2, string result) {
-      BigInteger bigintA = BigInteger.fromString(m1);
-      AssertBigIntegersEqual(result, bigintA.shiftRight(m2));
-      AssertBigIntegersEqual(result, bigintA.shiftLeft(-m2));
     }
 
     public static void AssertDecFrac(
@@ -528,6 +405,27 @@ TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2) +
           o1,
           o2,
           "Not equal: " + CompareTestReciprocal(o1, o2)));
+      }
+    }
+    public static void CompareTestEqualAndConsistent<T>(T o1, T o2) where T :
+    IComparable<T> {
+      CompareTestEqualAndConsistent(o1, o2, null);
+    }
+    public static void CompareTestEqualAndConsistent<T>(T o1, T o2, string msg) where T :
+    IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) != 0) {
+        msg = (msg == null ? "" : (msg + "\r\n")) +
+          "Not equal: " + CompareTestReciprocal(o1, o2);
+        Assert.Fail(ObjectMessages(
+          o1,
+          o2,msg));
+      }
+      if (!o1.Equals(o2)) {
+        msg = (msg == null ? "" : (msg + "\r\n")) +
+          "Not equal: " + CompareTestReciprocal(o1, o2);
+        Assert.Fail(ObjectMessages(
+          o1,
+          o2,msg));
       }
     }
 
