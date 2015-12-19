@@ -394,9 +394,7 @@ PrecisionContext ctx);
         }
         // Console.WriteLine("mant=" + mantissa + " exp=" + exponent);
         return Create(
-ExtendedFloat.Create(
-(BigInteger)mantissa,
-(BigInteger)exponent));
+ExtendedFloat.Create(mantissa,exponent));
       }
 
       public static BinaryNumber FromFloatWords(int[] words) {
@@ -521,7 +519,7 @@ bigmantissa,
           return Create(
 ExtendedFloat.Create(
 bigmantissa,
-(BigInteger)exponent));
+(PeterO.BigInteger)exponent));
         }
         throw new ArgumentException("words has a bad length");
       }

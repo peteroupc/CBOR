@@ -4557,7 +4557,7 @@ stringTemp);
     public void TestCanFitInSpecificCases() {
       CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xfb,
         0x41, (byte)0xe0, (byte)0x85, 0x48, 0x2d, 0x14, 0x47, 0x7a });  // 2217361768.63373
-      Assert.AreEqual(BigInteger.fromString("2217361768"), cbor.AsBigInteger());
+      Assert.AreEqual(BigIntegerTest.BigFromString("2217361768"), cbor.AsBigInteger());
       Assert.IsFalse(cbor.AsBigInteger().canFitInInt());
       Assert.IsFalse(cbor.CanTruncatedIntFitInInt32());
       cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xc5, (byte)0x82,
@@ -4781,7 +4781,7 @@ stringTemp);
       CBORObject o = CBORObject.DecodeFromBytes(new byte[] { 0x3b, (byte)0xce,
         (byte)0xe2, 0x5a, 0x57, (byte)0xd8, 0x21, (byte)0xb9, (byte)0xa7 });
       Assert.AreEqual(
-        BigInteger.fromString("-14907577049884506536"),
+        BigIntegerTest.BigFromString("-14907577049884506536"),
         o.AsBigInteger());
     }
 
