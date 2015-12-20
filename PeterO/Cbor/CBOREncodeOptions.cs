@@ -1,17 +1,24 @@
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Specifies options for encoding CBOR objects to
-    /// bytes.</summary>
+    /// <summary>Specifies options for encoding and decoding CBOR
+    /// objects.</summary>
   public sealed class CBOREncodeOptions {
-    /// <summary>No special options for encoding. Value: 0.</summary>
+    /// <summary>No special options for encoding/decoding. Value:
+    /// 0.</summary>
     public static readonly CBOREncodeOptions None =
       new CBOREncodeOptions(0);
 
     /// <summary>Always encode strings with a definite-length encoding.
-    /// Value: 1.</summary>
+    /// Used only when encoding CBOR objects. Value: 1.</summary>
     public static readonly CBOREncodeOptions NoIndefLengthStrings =
       new CBOREncodeOptions(1);
+
+    /// <summary>Disallow duplicate keys when reading CBOR objects from a
+    /// data stream. Used only when decoding CBOR objects. Value:
+    /// 2.</summary>
+    public static readonly CBOREncodeOptions NoDuplicateKeys =
+      new CBOREncodeOptions(2);
 
     private readonly int value;
 

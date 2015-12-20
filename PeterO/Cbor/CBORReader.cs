@@ -17,10 +17,25 @@ namespace PeterO.Cbor {
     private readonly Stream stream;
     private bool addSharedRef;
     private int depth;
+    CBORDuplicatePolicy policy;
+
+    internal enum CBORDuplicatePolicy {
+      Overwrite, Disallow
+    }
 
     public CBORReader(Stream stream) {
       this.stream = stream;
       this.sharedRefs = new SharedRefs();
+      this.policy = CBORDuplicatePolicy.Overwrite;
+    }
+
+    public CBORDuplicatePolicy DuplicatePolicy {
+      get {
+        return policy;
+      }
+      set {
+        this.policy = value;
+      }
     }
 
     private static long ReadDataLength(
@@ -468,6 +483,11 @@ filter == null ? null : filter.GetSubFilter(vtindex));
             CBORObject key = this.ReadForFirstByte(headByte, null);
             CBORObject value = this.Read(null);
             --this.depth;
+            if (policy == CBORDuplicatePolicy.Disallow) {
+              if (cbor.ContainsKey(key)) {
+                throw new CBORException("Duplicate key already exists: " + key);
+              }
+            }
             cbor[key] = value;
           }
           return cbor;
@@ -486,6 +506,11 @@ filter == null ? null : filter.GetSubFilter(vtindex));
           CBORObject key = this.Read(null);
           CBORObject value = this.Read(null);
           --this.depth;
+          if (policy == CBORDuplicatePolicy.Disallow) {
+            if (cbor.ContainsKey(key)) {
+              throw new CBORException("Duplicate key already exists: " + key);
+            }
+          }
           cbor[key] = value;
         }
         return cbor;

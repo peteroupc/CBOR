@@ -1201,6 +1201,66 @@ CBORObject.FromSimpleValue(0));
     }
 
     [Test]
+    public void TestDecodeFromBytesNoDuplicateKeys() {
+      byte[] bytes;
+      bytes = new byte[] { 0xa2, 0x01, 0x00, 0x02, 0x03 };
+      try {
+ CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      bytes = new byte[] { 0xa2, 0x01, 0x00, 0x01, 0x03 };
+      try {
+ CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      bytes = new byte[] { 0xa2, 0x01, 0x00, 0x01, 0x03 };
+      try {
+ CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.None);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      bytes = new byte[] { 0xa2, 0x60, 0x00, 0x60, 0x03 };
+      try {
+ CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+   bytes = new byte[] { 0xa3, 0x60, 0x00, 0x62, 0x41, 0x41, 0x00, 0x60, 0x03
+        };
+      try {
+ CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      bytes = new byte[] { 0xa2, 0x61, 0x41, 0x00, 0x61, 0x41, 0x03 };
+      try {
+ CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
+Assert.Fail("Should have failed");
+} catch (CBORException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+    }
+
+    [Test]
     public void TestDecodeFromBytes() {
       try {
         CBORObject.DecodeFromBytes(new byte[] { });
@@ -1298,7 +1358,49 @@ CBORObject.FromSimpleValue(0));
     }
     [Test]
     public void TestEncodeToBytes() {
-      // not implemented yet
+      // Test minimum data length
+      int[] ranges = {
+        -24, 23, 1,
+        -256, -25, 2,
+        24, 255, 2,
+        256, 266, 3,
+        -266, -257, 3,
+        65525, 65535, 3,
+        -65536, -65525, 3,
+        65536, 65546, 5,
+        -65547, -65537, 5,
+      };
+      string[] bigRanges = {
+        "4294967285", "4294967295",
+        "4294967296", "4294967306",
+        "18446744073709551604", "18446744073709551615",
+        "-4294967296", "-4294967286",
+        "-4294967306", "-4294967297",
+        "-18446744073709551616", "-18446744073709551604"
+      };
+      int[] bigSizes = { 5, 9, 9, 5, 9, 9 };
+      for (int i = 0; i < ranges.Length; i += 3) {
+        for (int j = ranges[i]; j <= ranges[i + 1]; ++j) {
+          byte[] bytes = CBORObject.FromObject(j).EncodeToBytes();
+          if (bytes.Length != ranges[i + 2]) {
+            Assert.AreEqual(
+ranges[i + 2],
+bytes.Length,
+TestCommon.IntToString(j));
+          }
+        }
+      }
+      for (int i = 0; i < bigRanges.Length; i += 2) {
+        BigInteger bj = BigInteger.fromString(bigRanges[i]);
+        BigInteger valueBjEnd = BigInteger.fromString(bigRanges[i + 1]);
+        while (bj < valueBjEnd) {
+          byte[] bytes = CBORObject.FromObject(bj).EncodeToBytes();
+          if (bytes.Length != bigSizes[i / 2]) {
+            Assert.AreEqual(bigSizes[i / 2], bytes.Length, bj.ToString());
+          }
+          bj += BigInteger.One;
+        }
+      }
     }
     [Test]
     public void TestEquals() {

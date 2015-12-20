@@ -8,12 +8,12 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 using System.IO;
 
-namespace PeterO.Cbor {
+namespace PeterO.Text {
     /// <summary>A general-purpose character input for reading text from
     /// byte streams and text strings. When reading byte streams, this
     /// class supports the UTF-8 character encoding by default, but can be
     /// configured to support UTF-16 and UTF-32 as well.</summary>
-  internal sealed class CharacterReader : ICharacterInput {
+  public sealed class CharacterReader : ICharacterInput {
     private readonly int mode;
     private readonly bool errorThrow;
     private int offset;

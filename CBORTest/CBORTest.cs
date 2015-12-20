@@ -4557,7 +4557,9 @@ stringTemp);
     public void TestCanFitInSpecificCases() {
       CBORObject cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xfb,
         0x41, (byte)0xe0, (byte)0x85, 0x48, 0x2d, 0x14, 0x47, 0x7a });  // 2217361768.63373
-      Assert.AreEqual(BigIntegerTest.BigFromString("2217361768"), cbor.AsBigInteger());
+      Assert.AreEqual(
+BigIntegerTest.BigFromString("2217361768"),
+cbor.AsBigInteger());
       Assert.IsFalse(cbor.AsBigInteger().canFitInInt());
       Assert.IsFalse(cbor.CanTruncatedIntFitInInt32());
       cbor = CBORObject.DecodeFromBytes(new byte[] { (byte)0xc5, (byte)0x82,

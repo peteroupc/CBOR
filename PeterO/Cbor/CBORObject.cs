@@ -698,6 +698,22 @@ namespace PeterO.Cbor {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='data'/> is null.</exception>
     public static CBORObject DecodeFromBytes(byte[] data) {
+      return DecodeFromBytes(data, CBOREncodeOptions.None);
+    }
+
+    /// <summary>Generates a CBOR object from an array of CBOR-encoded
+    /// bytes.</summary>
+    /// <param name='data'>A byte array.</param>
+    /// <param name='options'>A CBOREncodeOptions object.</param>
+    /// <returns>A CBOR object corresponding to the data.</returns>
+    /// <exception cref='CBORException'>There was an error in reading or
+    /// parsing the data. This includes cases where not all of the byte
+    /// array represents a CBOR object. This exception is also thrown if
+    /// the parameter <paramref name='data'/> is empty.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='data'/> is null.</exception>
+    public static CBORObject DecodeFromBytes(byte[] data, CBOREncodeOptions
+      options) {
       if (data == null) {
         throw new ArgumentNullException("data");
       }
@@ -728,7 +744,7 @@ namespace PeterO.Cbor {
       // read the object as though
       // the byte array were a stream
       using (var ms = new MemoryStream(data)) {
-        CBORObject o = Read(ms);
+        CBORObject o = Read(ms, options);
         CheckCBORLength((long)data.Length, (long)ms.Position);
         return o;
       }
@@ -1346,6 +1362,29 @@ namespace PeterO.Cbor {
     public static CBORObject Read(Stream stream) {
       try {
         return new CBORReader(stream).Read(null);
+      } catch (IOException ex) {
+        throw new CBORException("I/O error occurred.", ex);
+      }
+    }
+
+    /// <summary>Reads an object in CBOR format from a data stream. This
+    /// method will read from the stream until the end of the CBOR object
+    /// is reached or an error occurs, whichever happens first.</summary>
+    /// <param name='stream'>A readable data stream.</param>
+    /// <param name='options'>A CBOREncodeOptions object.</param>
+    /// <returns>A CBOR object that was read.</returns>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='stream'/> is null.</exception>
+    /// <exception cref='CBORException'>There was an error in reading or
+    /// parsing the data.</exception>
+    public static CBORObject Read(Stream stream, CBOREncodeOptions options) {
+      try {
+        var reader = new CBORReader(stream);
+        if (options.And(CBOREncodeOptions.NoDuplicateKeys).Value==
+          CBOREncodeOptions.NoDuplicateKeys.Value) {
+          reader.DuplicatePolicy = CBORReader.CBORDuplicatePolicy.Disallow;
+        }
+        return reader.Read(null);
       } catch (IOException ex) {
         throw new CBORException("I/O error occurred.", ex);
       }

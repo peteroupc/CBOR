@@ -394,7 +394,7 @@ PrecisionContext ctx);
         }
         // Console.WriteLine("mant=" + mantissa + " exp=" + exponent);
         return Create(
-ExtendedFloat.Create(mantissa,exponent));
+ExtendedFloat.Create(mantissa, exponent));
       }
 
       public static BinaryNumber FromFloatWords(int[] words) {
