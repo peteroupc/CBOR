@@ -407,25 +407,32 @@ TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2) +
           "Not equal: " + CompareTestReciprocal(o1, o2)));
       }
     }
+
     public static void CompareTestEqualAndConsistent<T>(T o1, T o2) where T :
     IComparable<T> {
       CompareTestEqualAndConsistent(o1, o2, null);
     }
-    public static void CompareTestEqualAndConsistent<T>(T o1, T o2, string msg) where T :
+
+    public static void CompareTestEqualAndConsistent<T>(
+T o1,
+T o2,
+string msg) where T :
     IComparable<T> {
       if (CompareTestReciprocal(o1, o2) != 0) {
-        msg = (msg == null ? "" : (msg + "\r\n")) +
+        msg = (msg == null ? String.Empty : (msg + "\r\n")) +
           "Not equal: " + CompareTestReciprocal(o1, o2);
         Assert.Fail(ObjectMessages(
           o1,
-          o2,msg));
+          o2,
+          msg));
       }
       if (!o1.Equals(o2)) {
-        msg = (msg == null ? "" : (msg + "\r\n")) +
+        msg = (msg == null ? String.Empty : (msg + "\r\n")) +
           "Not equal: " + CompareTestReciprocal(o1, o2);
         Assert.Fail(ObjectMessages(
           o1,
-          o2,msg));
+          o2,
+          msg));
       }
     }
 

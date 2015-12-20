@@ -13,9 +13,11 @@ namespace PeterO {
     /// <summary>Description of Runner.</summary>
   public class Runner {
     public static void Main() {
-      var methods = typeof(Test.BigIntegerTest).GetMethods();
-      object bi = new Test.BigIntegerTest();
-      for (var i = 0; i < 10; i++) {
+      MethodInfo[] methods;
+      object bi;
+      methods = typeof(Test.BigIntegerTest).GetMethods();
+      bi = new Test.BigIntegerTest();
+      for (var i = 0; i < 10; ++i) {
         foreach (var method in methods) {
           if (method.GetParameters().Length == 0) {
             Console.WriteLine(method.Name);
