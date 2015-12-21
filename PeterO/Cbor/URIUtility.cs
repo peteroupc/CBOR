@@ -125,14 +125,13 @@ segments[1] - segments[0]));
       }
     }
 
-    /// <return>a string possibly containing escaped characters, or null if
-    /// s is null.</return>
     /// <summary>Escapes characters that cannot appear in URIs or IRIs. The
     /// function is idempotent; that is, calling the function again on the
     /// result with the same mode doesn't change the result.</summary>
     /// <param name='s'>A string to escape.</param>
     /// <param name='mode'>A 32-bit signed integer.</param>
-    /// <returns>A string object.</returns>
+    /// <returns>A string possibly containing escaped characters, or null
+    /// if s is null.</returns>
     public static string escapeURI(string s, int mode) {
       if (s == null) {
         return null;
@@ -856,7 +855,7 @@ int endIndex) {
     /// <summary>Resolves a URI or IRI relative to another URI or
     /// IRI.</summary>
     /// <param name='refValue'>A string representing a URI or IRI
-    /// reference. Example: <c>dir/file.txt</c>.</param>
+    /// reference. Example: <c>dir/file.txt</c>. Can be null.</param>
     /// <param name='baseURI'>A string representing an absolute URI
     /// reference. Example: <c>http://example.com/my/path/</c>.</param>
     /// <param name='parseMode'>Parse mode that specifies whether certain
@@ -945,7 +944,7 @@ segmentsBase[5]));
     /// component, respectively. If a component is absent, both indices in
     /// that pair will be -1. If the string is null or is not a valid IRI,
     /// returns null.</returns></summary>
-    /// <param name='s'>A string that contains an IRI.</param>
+    /// <param name='s'>A string that contains an IRI. Can be null.</param>
     public static int[] splitIRI(string s) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict);
     }
@@ -955,7 +954,7 @@ segmentsBase[5]));
     /// syntactically valid, splits the string into its components and
     /// returns an array containing the indices into the
     /// components.</summary>
-    /// <param name='s'>A string that contains an IRI.</param>
+    /// <param name='s'>A string that contains an IRI. Can be null.</param>
     /// <param name='offset'>A zero-based index showing where the desired
     /// portion of "s" begins.</param>
     /// <param name='length'>The length of the desired portion of "s" (but
@@ -984,9 +983,29 @@ ParseMode parseMode) {
       if (s == null) {
         return null;
       }
-      if (offset < 0 || length < 0 || offset + length > s.Length) {
-        throw new ArgumentOutOfRangeException();
-      }
+      if ((s) == null) {
+  throw new ArgumentNullException("s");
+}
+if (offset < 0) {
+  throw new ArgumentException("offset (" + offset +
+    ") is less than " + 0);
+}
+if (offset > s.Length) {
+  throw new ArgumentException("offset (" + offset +
+    ") is more than " + s.Length);
+}
+if (length < 0) {
+  throw new ArgumentException("length (" + length +
+    ") is less than " + 0);
+}
+if (length > s.Length) {
+  throw new ArgumentException("length (" + length +
+    ") is more than " + s.Length);
+}
+if (s.Length-offset < length) {
+  throw new ArgumentException("s's length minus " + offset + " (" +
+    (s.Length-offset) + ") is less than " + length);
+}
       int[] retval = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
       if (length == 0) {
         retval[4] = 0;

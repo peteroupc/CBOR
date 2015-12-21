@@ -1237,8 +1237,7 @@ Console.Write(String.Empty);
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
 }
-   bytes = new byte[] { 0xa3, 0x60, 0x00, 0x62, 0x41, 0x41, 0x00, 0x60, 0x03
-        };
+   bytes = new byte[] { 0xa3, 0x60, 0x00, 0x62, 0x41, 0x41, 0x00, 0x60, 0x03 };
       try {
  CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
 Assert.Fail("Should have failed");

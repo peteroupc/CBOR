@@ -1185,7 +1185,8 @@ namespace PeterO.Cbor {
         System.Collections.IDictionary objdic =
           (System.Collections.IDictionary)obj;
         foreach (object key in (System.Collections.IDictionary)objdic) {
-       objret[CBORObject.FromObject(key)] = CBORObject.FromObject(objdic[key]);
+       objret[CBORObject.FromObject(key)] =
+            CBORObject.FromObject(objdic[key]);
         }
         return objret;
       }
@@ -1380,7 +1381,7 @@ namespace PeterO.Cbor {
     public static CBORObject Read(Stream stream, CBOREncodeOptions options) {
       try {
         var reader = new CBORReader(stream);
-        if (options.And(CBOREncodeOptions.NoDuplicateKeys).Value==
+        if (options.And(CBOREncodeOptions.NoDuplicateKeys).Value ==
           CBOREncodeOptions.NoDuplicateKeys.Value) {
           reader.DuplicatePolicy = CBORReader.CBORDuplicatePolicy.Disallow;
         }
@@ -1448,7 +1449,10 @@ namespace PeterO.Cbor {
       return CBORObjectMath.Subtract(first, second);
     }
 
-    /// <summary>Writes a string in CBOR format to a data stream.</summary>
+    /// <summary>Writes a string in CBOR format to a data stream. The
+    /// string will be encoded using indefinite-length encoding if its
+    /// length exceeds a certain threshold (this behavior may change in
+    /// future versions of this library).</summary>
     /// <param name='str'>The string to write. Can be null.</param>
     /// <param name='stream'>A writable data stream.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -1721,7 +1725,7 @@ namespace PeterO.Cbor {
             stream.Write(bytes, 0, byteCount);
             break;
           default: stream.WriteByte((datatype == 0) ?
-           (byte)0xc2 : (byte)0xc3);
+    (byte)0xc2 : (byte)0xc3);
             WritePositiveInt(2, byteCount, stream);
             stream.Write(bytes, 0, byteCount);
             break;
@@ -1925,6 +1929,11 @@ namespace PeterO.Cbor {
     /// <item>Lists of CBORObject.</item>
     /// <item>Maps of CBORObject.</item>
     /// <item>Null.</item>
+    /// <item>Byte arrays, which will always be written as definite-length
+    /// byte strings.</item>
+    /// <item>String objects, which will be written as indefinite-length
+    /// text strings if their size exceeds a certain threshold (this
+    /// behavior may change in future versions of this library).</item>
     /// <item>Any object accepted by the FromObject static
     /// methods.</item></list></summary>
     /// <param name='objValue'>The arbitrary object to be serialized. Can
@@ -2523,18 +2532,22 @@ namespace PeterO.Cbor {
         } else {
           // DebugUtility.Log("a=" + this + " b=" + other);
           if (typeA == CBORObjectTypeExtendedRational) {
-        ExtendedRational e1 = NumberInterfaces[typeA].AsExtendedRational(objA);
+        ExtendedRational e1 =
+              NumberInterfaces[typeA].AsExtendedRational(objA);
             if (typeB == CBORObjectTypeExtendedDecimal) {
-          ExtendedDecimal e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
+          ExtendedDecimal e2 =
+                NumberInterfaces[typeB].AsExtendedDecimal(objB);
               cmp = e1.CompareToDecimal(e2);
             } else {
               ExtendedFloat e2 = NumberInterfaces[typeB].AsExtendedFloat(objB);
               cmp = e1.CompareToBinary(e2);
             }
           } else if (typeB == CBORObjectTypeExtendedRational) {
-        ExtendedRational e2 = NumberInterfaces[typeB].AsExtendedRational(objB);
+        ExtendedRational e2 =
+              NumberInterfaces[typeB].AsExtendedRational(objB);
             if (typeA == CBORObjectTypeExtendedDecimal) {
-          ExtendedDecimal e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
+          ExtendedDecimal e1 =
+                NumberInterfaces[typeA].AsExtendedDecimal(objA);
               cmp = e2.CompareToDecimal(e1);
               cmp = -cmp;
             } else {
@@ -3415,8 +3428,8 @@ namespace PeterO.Cbor {
             } else {
 #if DEBUG
               if (value < 32) {
-            throw new ArgumentException("value (" + value +
-                ") is less than " + "32");
+                throw new ArgumentException("value (" + value +
+                    ") is less than " + "32");
               }
 #endif
 

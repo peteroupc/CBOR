@@ -864,6 +864,34 @@ There was an error in reading or parsing the data. This includes cases where not
 The parameter  <i>data</i>
  is null.
 
+### DecodeFromBytes
+
+    public static PeterO.Cbor.CBORObject DecodeFromBytes(
+        byte[] data,
+        PeterO.Cbor.CBOREncodeOptions options);
+
+Generates a CBOR object from an array of CBOR-encoded bytes.
+
+<b>Parameters:</b>
+
+ * <i>data</i>: A byte array.
+
+ * <i>options</i>: A CBOREncodeOptions object.
+
+<b>Returns:</b>
+
+A CBOR object corresponding to the data.
+
+<b>Exceptions:</b>
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data. This includes cases where not all of the byte array represents a CBOR object. This exception is also thrown if the parameter  <i>data</i>
+ is empty.
+
+ * System.ArgumentNullException:
+The parameter  <i>data</i>
+ is null.
+
 ### Divide
 
     public static PeterO.Cbor.CBORObject Divide(
@@ -1796,6 +1824,33 @@ Reads an object in CBOR format from a data stream. This method will read from th
 <b>Parameters:</b>
 
  * <i>stream</i>: A readable data stream.
+
+<b>Returns:</b>
+
+A CBOR object that was read.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>stream</i>
+ is null.
+
+ * PeterO.Cbor.CBORException:
+There was an error in reading or parsing the data.
+
+### Read
+
+    public static PeterO.Cbor.CBORObject Read(
+        System.IO.Stream stream,
+        PeterO.Cbor.CBOREncodeOptions options);
+
+Reads an object in CBOR format from a data stream. This method will read from the stream until the end of the CBOR object is reached or an error occurs, whichever happens first.
+
+<b>Parameters:</b>
+
+ * <i>stream</i>: A readable data stream.
+
+ * <i>options</i>: A CBOREncodeOptions object.
 
 <b>Returns:</b>
 
