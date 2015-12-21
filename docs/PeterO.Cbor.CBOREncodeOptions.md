@@ -2,19 +2,25 @@
 
     public sealed class CBOREncodeOptions
 
-Specifies options for encoding CBOR objects to bytes.
+Specifies options for encoding and decoding CBOR objects.
+
+### NoDuplicateKeys
+
+    public static readonly PeterO.Cbor.CBOREncodeOptions NoDuplicateKeys;
+
+Disallow duplicate keys when reading CBOR objects from a data stream. Used only when decoding CBOR objects. Value: 2.
 
 ### NoIndefLengthStrings
 
     public static readonly PeterO.Cbor.CBOREncodeOptions NoIndefLengthStrings;
 
-Always encode strings with a definite-length encoding. Value: 1.
+Always encode strings with a definite-length encoding. Used only when encoding CBOR objects. Value: 1.
 
 ### None
 
     public static readonly PeterO.Cbor.CBOREncodeOptions None;
 
-No special options for encoding. Value: 0.
+No special options for encoding/decoding. Value: 0.
 
 ### Value
 

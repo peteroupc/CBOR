@@ -1,6 +1,6 @@
 * [PeterO.BigInteger](PeterO.BigInteger.md) - An arbitrary-precision integer.
  * [PeterO.Cbor.CBORDataUtilities](PeterO.Cbor.CBORDataUtilities.md) - Contains methods useful for reading and writing data, with             a focus on CBOR.
- * [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) - Specifies options for encoding CBOR objects to             bytes.
+ * [PeterO.Cbor.CBOREncodeOptions](PeterO.Cbor.CBOREncodeOptions.md) - Specifies options for encoding and decoding CBOR             objects.
  * [PeterO.Cbor.CBORException](PeterO.Cbor.CBORException.md) - Exception thrown for errors involving CBOR data.
  * [PeterO.Cbor.CBORObject](PeterO.Cbor.CBORObject.md) - Represents an object in Concise Binary Object             Representation (CBOR) and contains methods for reading and writing             CBOR data.
  * [PeterO.Cbor.CBORType](PeterO.Cbor.CBORType.md) - Represents a type that a CBOR object can have.
