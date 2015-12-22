@@ -266,12 +266,13 @@ namespace PeterO {
     /// exponent) plus one or more digits specifying the
     /// exponent.</item></list>
     /// <para>The string can also be "-INF", "-Infinity" , "Infinity",
-    /// "INF", quiet NaN ("qNaN") followed by any number of digits, or
+    /// "INF", quiet NaN ("NaN") followed by any number of digits, or
     /// signaling NaN ("sNaN") followed by any number of digits, all in any
     /// combination of upper and lower case.</para>
-    /// <para>The format generally follows the definition in
-    /// java.math.BigDecimal(), except that the digits must be the basic
-    /// digits 0 to 9 (U + 0030 to U + 0039).</para></summary>
+    /// <para>All characters mentioned above are the corresponding characters
+    /// in the Basic Latin range. In particular, the digits must be the basic
+    /// digits 0 to 9 (U + 0030 to U + 0039).  The string is not allowed
+    /// to contain white space characters, including spaces.</para></summary>
     /// <param name='str'>A String object.</param>
     /// <param name='offset'>A zero-based index showing where the desired
     /// portion of <paramref name='str'/> begins.</param>

@@ -8,5 +8,5 @@ must be placed in the same folder as the program:
   which is described at <http://speleotrove.com/decimal/dectest.html>.
 * Binary floating point test files in the *.fptest format,
   which is described at <https://www.research.ibm.com/haifa/projects/verification/fpgen/syntax.txt>.
-* Test cases in the *.input format, from <http://www.netlib.org/fp/ucbtest.gz>.
+* Test cases in the *.input format, from <http://www.netlib.org/fp/ucbtest.tgz>.
 * Decimal test cases in *.txt format, from <http://eece.cu.edu.eg/~hfahmy/arith_debug/>.
