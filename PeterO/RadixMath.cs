@@ -8,9 +8,9 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO {
-    /// <summary>Encapsulates radix-independent arithmetic.</summary>
-    /// <typeparam name='T'>Data type for a numeric value in a particular
-    /// radix.</typeparam>
+  /// <summary>Encapsulates radix-independent arithmetic.</summary>
+  /// <typeparam name='T'>Data type for a numeric value in a particular
+  /// radix.</typeparam>
   internal class RadixMath<T> : IRadixMath<T> {
     private const int IntegerModeFixedScale = 1;
     private const int IntegerModeRegular = 0;
@@ -142,82 +142,82 @@ bool roundToOperandPrecision) {
                     this.helper.CreateShiftAccumulator(op2MantAbs)
                     .GetDigitLength();
                     if (digitLength2.CompareTo(fastPrecision) < 0) {
-                    // Second operand's precision too short
-                    FastInteger precisionDiff =
-                    FastInteger.Copy(fastPrecision).Subtract(digitLength2);
+                      // Second operand's precision too short
+                      FastInteger precisionDiff =
+                      FastInteger.Copy(fastPrecision).Subtract(digitLength2);
+                      if (!oneOpIsZero && !sameSign) {
+                        precisionDiff.AddInt(2);
+                      }
+                      op2MantAbs = this.TryMultiplyByRadixPower(
+                    op2MantAbs,
+                    precisionDiff);
+                      if (op2MantAbs == null) {
+                        return this.SignalInvalidWithMessage(
+                        ctx,
+                        "Result requires too much memory");
+                      }
+                      BigInteger bigintTemp = precisionDiff.AsBigInteger();
+                      op2Exponent -= (BigInteger)bigintTemp;
+                      if (!oneOpIsZero && !sameSign) {
+                        op2MantAbs -= BigInteger.One;
+                      }
+                      other = this.helper.CreateNewWithFlags(
+          op2MantAbs,
+          op2Exponent,
+          this.helper.GetFlags(other));
+                      FastInteger shift =
+                      FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                      if (oneOpIsZero && ctx != null && ctx.HasFlags) {
+                        ctx.Flags |= PrecisionContext.FlagRounded;
+                      }
+                      // DebugUtility.Log("Second op's prec too short:
+                      // op2MantAbs=" + op2MantAbs + " precdiff= " +
+                      // (precisionDiff));
+                      return this.RoundToPrecisionWithShift(
+          other,
+                      ctx,
+           (oneOpIsZero || sameSign) ? 0 : 1,
+           (oneOpIsZero && !sameSign) ? 0 : 1,
+           shift,
+           false);
+                    }
                     if (!oneOpIsZero && !sameSign) {
-                    precisionDiff.AddInt(2);
-                    }
-                    op2MantAbs = this.TryMultiplyByRadixPower(
-                  op2MantAbs,
-                  precisionDiff);
-                    if (op2MantAbs == null) {
-                    return this.SignalInvalidWithMessage(
-                    ctx,
-                    "Result requires too much memory");
-                    }
-                    BigInteger bigintTemp = precisionDiff.AsBigInteger();
-                    op2Exponent -= (BigInteger)bigintTemp;
-                    if (!oneOpIsZero && !sameSign) {
-                    op2MantAbs -= BigInteger.One;
-                    }
-                    other = this.helper.CreateNewWithFlags(
-        op2MantAbs,
-        op2Exponent,
-        this.helper.GetFlags(other));
-                    FastInteger shift =
-                    FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                    if (oneOpIsZero && ctx != null && ctx.HasFlags) {
-                    ctx.Flags |= PrecisionContext.FlagRounded;
-                    }
-                    // DebugUtility.Log("Second op's prec too short:
-                    // op2MantAbs=" + op2MantAbs + " precdiff= " +
-                    // (precisionDiff));
-                    return this.RoundToPrecisionWithShift(
-        other,
-                    ctx,
-         (oneOpIsZero || sameSign) ? 0 : 1,
-         (oneOpIsZero && !sameSign) ? 0 : 1,
-         shift,
-         false);
-                    }
-                    if (!oneOpIsZero && !sameSign) {
-                    op2MantAbs = this.TryMultiplyByRadixPower(
-                  op2MantAbs,
-                  new FastInteger(2));
-                    if (op2MantAbs == null) {
-                    return this.SignalInvalidWithMessage(
-                    ctx,
-                    "Result requires too much memory");
-                    }
-                    op2Exponent -= (BigInteger)2;
-                    op2MantAbs -= BigInteger.One;
-                    other = this.helper.CreateNewWithFlags(
-                  op2MantAbs,
-                  op2Exponent,
-                  this.helper.GetFlags(other));
-                    FastInteger shift =
-                    FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                    return this.RoundToPrecisionWithShift(
-        other,
-        ctx,
-        0,
-        0,
-        shift,
-        false);
+                      op2MantAbs = this.TryMultiplyByRadixPower(
+                    op2MantAbs,
+                    new FastInteger(2));
+                      if (op2MantAbs == null) {
+                        return this.SignalInvalidWithMessage(
+                        ctx,
+                        "Result requires too much memory");
+                      }
+                      op2Exponent -= (BigInteger)2;
+                      op2MantAbs -= BigInteger.One;
+                      other = this.helper.CreateNewWithFlags(
+                    op2MantAbs,
+                    op2Exponent,
+                    this.helper.GetFlags(other));
+                      FastInteger shift =
+                      FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                      return this.RoundToPrecisionWithShift(
+          other,
+          ctx,
+          0,
+          0,
+          shift,
+          false);
                     } else {
-                    FastInteger shift2 =
-                    FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                    if (!sameSign && ctx != null && ctx.HasFlags) {
-                    ctx.Flags |= PrecisionContext.FlagRounded;
-                    }
-                    return this.RoundToPrecisionWithShift(
-                  other,
-                  ctx,
-                  0,
-                  sameSign ? 1 : 0,
-                  shift2,
-                  false);
+                      FastInteger shift2 =
+                      FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                      if (!sameSign && ctx != null && ctx.HasFlags) {
+                        ctx.Flags |= PrecisionContext.FlagRounded;
+                      }
+                      return this.RoundToPrecisionWithShift(
+                    other,
+                    ctx,
+                    0,
+                    sameSign ? 1 : 0,
+                    shift2,
+                    false);
                     }
                   }
                 }
@@ -248,82 +248,82 @@ bool roundToOperandPrecision) {
                     bool sameSign = this.helper.GetSign(thisValue) ==
                     this.helper.GetSign(other);
                     bool oneOpIsZero = op2MantAbs.IsZero;
-                digitLength2 = this.helper.CreateShiftAccumulator(op1MantAbs)
-                    .GetDigitLength();
+                    digitLength2 = this.helper.CreateShiftAccumulator(op1MantAbs)
+                        .GetDigitLength();
                     if (digitLength2.CompareTo(fastPrecision) < 0) {
-                    // Second operand's precision too short
-                    FastInteger precisionDiff =
-                    FastInteger.Copy(fastPrecision).Subtract(digitLength2);
+                      // Second operand's precision too short
+                      FastInteger precisionDiff =
+                      FastInteger.Copy(fastPrecision).Subtract(digitLength2);
+                      if (!oneOpIsZero && !sameSign) {
+                        precisionDiff.AddInt(2);
+                      }
+                      op1MantAbs = this.TryMultiplyByRadixPower(
+                    op1MantAbs,
+                    precisionDiff);
+                      if (op1MantAbs == null) {
+                        return this.SignalInvalidWithMessage(
+                        ctx,
+                        "Result requires too much memory");
+                      }
+                      BigInteger bigintTemp = precisionDiff.AsBigInteger();
+                      op1Exponent -= (BigInteger)bigintTemp;
+                      if (!oneOpIsZero && !sameSign) {
+                        op1MantAbs -= BigInteger.One;
+                      }
+                      thisValue = this.helper.CreateNewWithFlags(
+                    op1MantAbs,
+                    op1Exponent,
+                    this.helper.GetFlags(thisValue));
+                      FastInteger shift =
+                      FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                      if (oneOpIsZero && ctx != null && ctx.HasFlags) {
+                        ctx.Flags |= PrecisionContext.FlagRounded;
+                      }
+                      return this.RoundToPrecisionWithShift(
+                    thisValue,
+     ctx,
+     (oneOpIsZero || sameSign) ? 0 : 1,
+     (oneOpIsZero && !sameSign) ? 0 : 1,
+     shift,
+     false);
+                    }
                     if (!oneOpIsZero && !sameSign) {
-                    precisionDiff.AddInt(2);
-                    }
-                    op1MantAbs = this.TryMultiplyByRadixPower(
-                  op1MantAbs,
-                  precisionDiff);
-                    if (op1MantAbs == null) {
-                    return this.SignalInvalidWithMessage(
-                    ctx,
-                    "Result requires too much memory");
-                    }
-                    BigInteger bigintTemp = precisionDiff.AsBigInteger();
-                    op1Exponent -= (BigInteger)bigintTemp;
-                    if (!oneOpIsZero && !sameSign) {
-                    op1MantAbs -= BigInteger.One;
-                    }
-                    thisValue = this.helper.CreateNewWithFlags(
-                  op1MantAbs,
-                  op1Exponent,
-                  this.helper.GetFlags(thisValue));
-                    FastInteger shift =
-                    FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                    if (oneOpIsZero && ctx != null && ctx.HasFlags) {
-                    ctx.Flags |= PrecisionContext.FlagRounded;
-                    }
-                    return this.RoundToPrecisionWithShift(
-                  thisValue,
-   ctx,
-   (oneOpIsZero || sameSign) ? 0 : 1,
-   (oneOpIsZero && !sameSign) ? 0 : 1,
-   shift,
-   false);
-                    }
-                    if (!oneOpIsZero && !sameSign) {
-                    op1MantAbs = this.TryMultiplyByRadixPower(
-                  op1MantAbs,
-                  new FastInteger(2));
-                    if (op1MantAbs == null) {
-                    return this.SignalInvalidWithMessage(
-                    ctx,
-                    "Result requires too much memory");
-                    }
-                    op1Exponent -= (BigInteger)2;
-                    op1MantAbs -= BigInteger.One;
-                    thisValue = this.helper.CreateNewWithFlags(
-                  op1MantAbs,
-                  op1Exponent,
-                  this.helper.GetFlags(thisValue));
-                    FastInteger shift =
-                    FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                    return this.RoundToPrecisionWithShift(
-        thisValue,
-        ctx,
-        0,
-        0,
-        shift,
-        false);
+                      op1MantAbs = this.TryMultiplyByRadixPower(
+                    op1MantAbs,
+                    new FastInteger(2));
+                      if (op1MantAbs == null) {
+                        return this.SignalInvalidWithMessage(
+                        ctx,
+                        "Result requires too much memory");
+                      }
+                      op1Exponent -= (BigInteger)2;
+                      op1MantAbs -= BigInteger.One;
+                      thisValue = this.helper.CreateNewWithFlags(
+                    op1MantAbs,
+                    op1Exponent,
+                    this.helper.GetFlags(thisValue));
+                      FastInteger shift =
+                      FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                      return this.RoundToPrecisionWithShift(
+          thisValue,
+          ctx,
+          0,
+          0,
+          shift,
+          false);
                     } else {
-                    FastInteger shift2 =
-                    FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                    if (!sameSign && ctx != null && ctx.HasFlags) {
-                    ctx.Flags |= PrecisionContext.FlagRounded;
-                    }
-                    return this.RoundToPrecisionWithShift(
-                  thisValue,
-                  ctx,
-                  0,
-                  sameSign ? 1 : 0,
-                  shift2,
-                  false);
+                      FastInteger shift2 =
+                      FastInteger.Copy(digitLength2).Subtract(fastPrecision);
+                      if (!sameSign && ctx != null && ctx.HasFlags) {
+                        ctx.Flags |= PrecisionContext.FlagRounded;
+                      }
+                      return this.RoundToPrecisionWithShift(
+                    thisValue,
+                    ctx,
+                    0,
+                    sameSign ? 1 : 0,
+                    shift2,
+                    false);
                     }
                   }
                 }
@@ -695,7 +695,9 @@ ctx,
           thisValue,
           one,
           PrecisionContext.ForRounding(Rounding.Down));
-        // ArgumentAssert.IsTrue(this.GetHelper().GetExponent(intpart).IsZero);
+        if (!(this.GetHelper().GetExponent(intpart).IsZero)) {
+          throw new ArgumentException("integer part not zero, as expected");
+        }
         if (this.CompareTo(thisValue, this.helper.ValueOf(50000)) > 0 &&
             ctx.HasExponentRange) {
           // Try to check for overflow quickly
@@ -1640,9 +1642,9 @@ PrecisionContext.ForRounding(Rounding.Down));
       }
       if ((!isPowIntegral || powSign < 0) && (ctx == null ||
                     !ctx.HasMaxPrecision)) {
-      const string outputMessage =
-          "ctx is null or has unlimited precision, " +
-          "and pow's exponent is not an integer or is negative";
+        const string outputMessage =
+            "ctx is null or has unlimited precision, " +
+            "and pow's exponent is not an integer or is negative";
         return this.SignalInvalidWithMessage(
 ctx,
 outputMessage);
@@ -1801,7 +1803,7 @@ negativeFlag);
       } else if (expcmp > 0) {
         // Other exponent is less
         // DebugUtility.Log("other exp less");
-   FastInteger radixPower = FastInteger.FromBig(expThis).SubtractBig(expOther);
+        FastInteger radixPower = FastInteger.FromBig(expThis).SubtractBig(expOther);
         if (tmpctx.Precision.Sign > 0 &&
             radixPower.CompareTo(FastInteger.FromBig(tmpctx.Precision)
                 .AddInt(10)) > 0) {
@@ -1908,7 +1910,7 @@ BigInteger.Zero);
       if ((ctx2.Flags & PrecisionContext.FlagInvalid) != 0) {
         return this.SignalInvalid(ctx);
       }
- if (this.helper.GetFlags(ret2) == 0 && this.helper.GetMantissa(ret2).IsZero) {
+      if (this.helper.GetFlags(ret2) == 0 && this.helper.GetMantissa(ret2).IsZero) {
         ret2 = this.EnsureSign(
 ret2,
 (this.helper.GetFlags(thisValue) & BigNumberFlags.FlagNegative) != 0);
@@ -1981,7 +1983,7 @@ ctx,
           BigInteger.Abs(this.helper.GetMantissa(thisValue));
         FastInteger shift = FastInteger.FromBig(expOther)
           .SubtractBig(this.helper.GetExponent(thisValue));
-     IShiftAccumulator accum = this.helper.CreateShiftAccumulator(bigmantissa);
+        IShiftAccumulator accum = this.helper.CreateShiftAccumulator(bigmantissa);
         accum.ShiftRight(shift);
         bigmantissa = accum.ShiftedInt;
         thisValue = this.helper.CreateNewWithFlags(
@@ -2370,13 +2372,13 @@ null) : this.ValueOf(-1, null));
       BigInteger op2Exponent = this.helper.GetExponent(otherValue);
       FastInteger fastOp1Exp = FastInteger.FromBig(op1Exponent);
       FastInteger fastOp2Exp = FastInteger.FromBig(op2Exponent);
- FastInteger expdiff = FastInteger.Copy(fastOp1Exp).Subtract(fastOp2Exp).Abs();
+      FastInteger expdiff = FastInteger.Copy(fastOp1Exp).Subtract(fastOp2Exp).Abs();
       // Check if exponent difference is too big for
       // radix-power calculation to work quickly
       if (expdiff.CompareToInt(100) >= 0) {
         BigInteger op1MantAbs =
           BigInteger.Abs(this.helper.GetMantissa(thisValue));
-   BigInteger op2MantAbs = BigInteger.Abs(this.helper.GetMantissa(otherValue));
+        BigInteger op2MantAbs = BigInteger.Abs(this.helper.GetMantissa(otherValue));
         FastInteger precision1 =
           this.helper.CreateShiftAccumulator(op1MantAbs).GetDigitLength();
         FastInteger precision2 =
@@ -2529,7 +2531,7 @@ BigInteger desiredExponent) {
           FastInteger.FromBig(this.helper.GetExponent(thisValue));
         FastInteger expDivisor =
           FastInteger.FromBig(this.helper.GetExponent(divisor));
-      FastInteger expdiff = FastInteger.Copy(expDividend).Subtract(expDivisor);
+        FastInteger expdiff = FastInteger.Copy(expDividend).Subtract(expDivisor);
         var adjust = new FastInteger(0);
         var result = new FastInteger(0);
         FastInteger naturalExponent = FastInteger.Copy(expdiff);
@@ -2544,7 +2546,7 @@ BigInteger desiredExponent) {
         if (integerMode == IntegerModeFixedScale) {
           FastInteger shift;
           BigInteger rem;
-        FastInteger fastDesiredExponent = FastInteger.FromBig(desiredExponent);
+          FastInteger fastDesiredExponent = FastInteger.FromBig(desiredExponent);
           if (ctx != null && ctx.HasFlags &&
               fastDesiredExponent.CompareTo(naturalExponent) > 0) {
             // Treat as rounded if the desired exponent is greater
@@ -2624,8 +2626,8 @@ ctx,
 #endif
             BigInteger divid = mantissaDividend;
             FastInteger shift = FastInteger.FromBig(ctx.Precision);
-       dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend)
-                    .GetDigitLength();
+            dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend)
+                         .GetDigitLength();
             divisorPrecision =
               this.helper.CreateShiftAccumulator(mantissaDivisor)
               .GetDigitLength();
@@ -2658,8 +2660,8 @@ ctx,
             }
             dividendPrecision =
               this.helper.CreateShiftAccumulator(divid).GetDigitLength();
-         divisorPrecision = this.helper.CreateShiftAccumulator(mantissaDivisor)
-                    .GetDigitLength();
+            divisorPrecision = this.helper.CreateShiftAccumulator(mantissaDivisor)
+                       .GetDigitLength();
             if (shift.Sign != 0 || quo == null) {
               // if shift isn't zero, recalculate the quotient
               // and remainder
@@ -2713,8 +2715,8 @@ ctx,
         int mantcmp = mantissaDividend.CompareTo(mantissaDivisor);
         if (mantcmp < 0) {
           // dividend mantissa is less than divisor mantissa
-       dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend)
-                  .GetDigitLength();
+          dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend)
+                     .GetDigitLength();
           divisorPrecision =
             this.helper.CreateShiftAccumulator(mantissaDivisor)
             .GetDigitLength();
@@ -2745,8 +2747,8 @@ ctx,
           }
         } else if (mantcmp > 0) {
           // dividend mantissa is greater than divisor mantissa
-       dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend)
-                  .GetDigitLength();
+          dividendPrecision = this.helper.CreateShiftAccumulator(mantissaDividend)
+                     .GetDigitLength();
           divisorPrecision =
             this.helper.CreateShiftAccumulator(mantissaDivisor)
             .GetDigitLength();
@@ -2949,9 +2951,10 @@ T thisValue,
 BigInteger workingPrecision,
 PrecisionContext ctx) {
       T one = this.helper.ValueOf(1);
+      int precisionAdd = this.thisRadix == 2 ? 18 : 6;
       PrecisionContext ctxdiv = SetPrecisionIfLimited(
         ctx,
-        workingPrecision + (BigInteger)6)
+        workingPrecision + (BigInteger)precisionAdd)
         .WithRounding(Rounding.OddOrZeroFiveUp);
       var bigintN = (BigInteger)2;
       BigInteger facto = BigInteger.One;
@@ -3614,7 +3617,7 @@ PrecisionContext ctx) {
         // Fast path to check if rounding is necessary at all
         if (fastPrecision.Sign > 0 && (shift == null || shift.IsValueZero) &&
             (thisFlags & BigNumberFlags.FlagSpecial) == 0) {
-       BigInteger mantabs = BigInteger.Abs(this.helper.GetMantissa(thisValue));
+          BigInteger mantabs = BigInteger.Abs(this.helper.GetMantissa(thisValue));
           if (adjustNegativeZero && (thisFlags & BigNumberFlags.FlagNegative) !=
               0 && mantabs.IsZero && (ctx.Rounding != Rounding.Floor)) {
             // Change negative zero to positive zero
@@ -3710,7 +3713,7 @@ lastDiscarded,
         thisFlags = 0;
       }
       bool neg = (thisFlags & BigNumberFlags.FlagNegative) != 0;
-   BigInteger bigmantissa = BigInteger.Abs(this.helper.GetMantissa(thisValue));
+      BigInteger bigmantissa = BigInteger.Abs(this.helper.GetMantissa(thisValue));
       // save mantissa in case result is subnormal
       // and must be rounded again
       BigInteger oldmantissa = bigmantissa;
@@ -4223,7 +4226,7 @@ newmantissa)) {
             flags |= PrecisionContext.FlagRounded;
           }
           if ((accum.LastDiscardedDigit | accum.OlderDiscardedDigits) != 0) {
-          flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
+            flags |= PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
             if (rounding == Rounding.Unnecessary) {
               return this.SignalInvalidWithMessage(
                 ctx,
