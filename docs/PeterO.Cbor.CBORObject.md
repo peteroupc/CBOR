@@ -2219,6 +2219,10 @@ Writes an arbitrary object to a CBOR data stream. Currently, the following objec
 
  * Null.
 
+ * Byte arrays, which will always be written as definite-length byte strings.
+
+ * String objects, which will be written as indefinite-length text strings if their size exceeds a certain threshold (this behavior may change in future versions of this library).
+
  * Any object accepted by the FromObject static methods.
 
 <b>Parameters:</b>
@@ -2424,7 +2428,7 @@ An I/O error occurred.
         string str,
         System.IO.Stream stream);
 
-Writes a string in CBOR format to a data stream.
+Writes a string in CBOR format to a data stream. The string will be encoded using indefinite-length encoding if its length exceeds a certain threshold (this behavior may change in future versions of this library).
 
 <b>Parameters:</b>
 

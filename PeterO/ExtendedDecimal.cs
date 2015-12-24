@@ -335,13 +335,14 @@ namespace PeterO {
     /// exponent) plus one or more digits specifying the
     /// exponent.</item></list>
     /// <para>The string can also be "-INF", "-Infinity" , "Infinity",
-    /// "INF" , quiet NaN ("NaN" /"-NaN") followed by any number of
-    /// digits, or signaling NaN ("sNaN" /"-sNaN") followed by any number
-    /// of digits, all in any combination of upper and lower case.</para>
-    /// <para>All characters mentioned above are the corresponding characters
-    /// in the Basic Latin range. In particular, the digits must be the basic
-    /// digits 0 to 9 (U + 0030 to U + 0039).  The string is not allowed
-    /// to contain white space characters, including spaces.</para></summary>
+    /// "INF" , quiet NaN ("NaN" /"-NaN") followed by any number of digits,
+    /// or signaling NaN ("sNaN" /"-sNaN") followed by any number of
+    /// digits, all in any combination of upper and lower case.</para>
+    /// <para>All characters mentioned above are the corresponding
+    /// characters in the Basic Latin range. In particular, the digits must
+    /// be the basic digits 0 to 9 (U + 0030 to U + 0039). The string is
+    /// not allowed to contain white space characters, including
+    /// spaces.</para></summary>
     /// <param name='str'>A string object, a portion of which represents a
     /// number.</param>
     /// <param name='offset'>A zero-based index that identifies the start
@@ -878,8 +879,6 @@ namespace PeterO {
     }
 
     private string ToStringInternal(int mode) {
-      // Using Java's rules for converting ExtendedDecimal
-      // values to a string
       bool negative = (this.flags & BigNumberFlags.FlagNegative) != 0;
       if ((this.flags & BigNumberFlags.FlagInfinity) != 0) {
         return negative ? "-Infinity" : "Infinity";
@@ -1756,18 +1755,14 @@ namespace PeterO {
     }
 
     /// <summary>Same as toString(), except that when an exponent is used
-    /// it will be a multiple of 3. The format of the return value follows
-    /// the format of the java.math.BigDecimal.toEngineeringString()
-    /// method.</summary>
+    /// it will be a multiple of 3.</summary>
     /// <returns>A string object.</returns>
     public string ToEngineeringString() {
       return this.ToStringInternal(1);
     }
 
     /// <summary>Converts this value to a string, but without using
-    /// exponential notation. The format of the return value follows the
-    /// format of the java.math.BigDecimal.toPlainString()
-    /// method.</summary>
+    /// exponential notation.</summary>
     /// <returns>A string object.</returns>
     public string ToPlainString() {
       return this.ToStringInternal(2);
@@ -2003,9 +1998,7 @@ namespace PeterO {
 
     /// <summary>Removes trailing zeros from this object&#x27;s mantissa.
     /// For example, 1.000 becomes 1.
-    /// <para>If this object's value is 0, changes the exponent to 0. (This
-    /// is unlike the behavior in Java's BigDecimal method
-    /// "stripTrailingZeros" in Java 7 and earlier.)</para></summary>
+    /// <para>If this object's value is 0, changes the exponent to 0.</para></summary>
     /// <param name='ctx'>A precision context to control precision,
     /// rounding, and exponent range of the result. If HasFlags of the
     /// context is true, will also store the flags resulting from the
@@ -2020,8 +2013,7 @@ namespace PeterO {
     }
 
     /// <summary>Calculates the remainder of a number by the formula "this"
-    /// - (("this" / "divisor") * "divisor"). This is meant to be similar
-    /// to the remainder operation in Java's BigDecimal.</summary>
+    /// - (("this" / "divisor") * "divisor").</summary>
     /// <param name='divisor'>The number to divide by.</param>
     /// <returns>An ExtendedDecimal object.</returns>
     public ExtendedDecimal RemainderNaturalScale(ExtendedDecimal divisor) {
@@ -2029,8 +2021,7 @@ namespace PeterO {
     }
 
     /// <summary>Calculates the remainder of a number by the formula "this"
-    /// - (("this" / "divisor") * "divisor"). This is meant to be similar
-    /// to the remainder operation in Java's BigDecimal.</summary>
+    /// - (("this" / "divisor") * "divisor").</summary>
     /// <param name='divisor'>The number to divide by.</param>
     /// <param name='ctx'>A precision context object to control the
     /// precision, rounding, and exponent range of the result. This context
@@ -3305,8 +3296,7 @@ PrecisionContext ctx) {
 
     /// <summary>Calculates the quotient and remainder using the
     /// DivideToIntegerNaturalScale and the formula in
-    /// RemainderNaturalScale. This is meant to be similar to the
-    /// divideAndRemainder method in Java's BigDecimal.</summary>
+    /// RemainderNaturalScale.</summary>
     /// <param name='divisor'>The number to divide by.</param>
     /// <returns>A 2 element array consisting of the quotient and remainder
     /// in that order.</returns>
@@ -3317,8 +3307,7 @@ PrecisionContext ctx) {
 
     /// <summary>Calculates the quotient and remainder using the
     /// DivideToIntegerNaturalScale and the formula in
-    /// RemainderNaturalScale. This is meant to be similar to the
-    /// divideAndRemainder method in Java's BigDecimal.</summary>
+    /// RemainderNaturalScale.</summary>
     /// <param name='divisor'>The number to divide by.</param>
     /// <param name='ctx'>A precision context object to control the
     /// precision, rounding, and exponent range of the result. This context
