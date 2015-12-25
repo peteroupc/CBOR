@@ -1,6 +1,6 @@
-## PeterO.ExtendedDecimal
+## PeterO.Numbers.EDecimal
 
-    public sealed class ExtendedDecimal :
+    public sealed class EDecimal :
         System.IComparable,
         System.IEquatable
 
@@ -18,7 +18,7 @@ Passing a quiet NaN to any arithmetic operation shown here will return a quiet N
 
 Unless noted otherwise, passing a null ExtendedDecimal argument to any method here will throw an exception.
 
-When an arithmetic operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero, it will not throw an exception too, unless the flag's trap is enabled in the precision context (see PrecisionContext's Traps property).
+When an arithmetic operation signals the flag FlagInvalid, FlagOverflow, or FlagDivideByZero, it will not throw an exception too, unless the flag's trap is enabled in the precision context (see EContext's Traps property).
 
 An ExtendedDecimal value can be serialized in one of the following ways:
 
@@ -28,55 +28,55 @@ An ExtendedDecimal value can be serialized in one of the following ways:
 
 ### NaN
 
-    public static readonly PeterO.ExtendedDecimal NaN;
+    public static readonly PeterO.Numbers.EDecimal NaN;
 
 A not-a-number value.
 
 ### NegativeInfinity
 
-    public static readonly PeterO.ExtendedDecimal NegativeInfinity;
+    public static readonly PeterO.Numbers.EDecimal NegativeInfinity;
 
 Negative infinity, less than any other number.
 
 ### NegativeZero
 
-    public static readonly PeterO.ExtendedDecimal NegativeZero;
+    public static readonly PeterO.Numbers.EDecimal NegativeZero;
 
 Represents the number negative zero.
 
 ### One
 
-    public static readonly PeterO.ExtendedDecimal One;
+    public static readonly PeterO.Numbers.EDecimal One;
 
 Represents the number 1.
 
 ### PositiveInfinity
 
-    public static readonly PeterO.ExtendedDecimal PositiveInfinity;
+    public static readonly PeterO.Numbers.EDecimal PositiveInfinity;
 
 Positive infinity, greater than any other number.
 
 ### SignalingNaN
 
-    public static readonly PeterO.ExtendedDecimal SignalingNaN;
+    public static readonly PeterO.Numbers.EDecimal SignalingNaN;
 
 A not-a-number value that signals an invalid operation flag when it's passed as an argument to any arithmetic operation in ExtendedDecimal.
 
 ### Ten
 
-    public static readonly PeterO.ExtendedDecimal Ten;
+    public static readonly PeterO.Numbers.EDecimal Ten;
 
 Represents the number 10.
 
 ### Zero
 
-    public static readonly PeterO.ExtendedDecimal Zero;
+    public static readonly PeterO.Numbers.EDecimal Zero;
 
 Represents the number 0.
 
 ### Exponent
 
-    public PeterO.BigInteger Exponent { get; }
+    public PeterO.Numbers.EInteger Exponent { get; }
 
 Gets this object's exponent. This object's value will be an integer if the exponent is positive or zero.
 
@@ -116,7 +116,7 @@ True if this object's value equals 0; otherwise, false.
 
 ### Mantissa
 
-    public PeterO.BigInteger Mantissa { get; }
+    public PeterO.Numbers.EInteger Mantissa { get; }
 
 Gets this object's un-scaled value.
 
@@ -136,7 +136,7 @@ This value's sign: -1 if negative; 1 if positive; 0 if zero.
 
 ### UnsignedMantissa
 
-    public PeterO.BigInteger UnsignedMantissa { get; }
+    public PeterO.Numbers.EInteger UnsignedMantissa { get; }
 
 Gets the absolute value of this object's un-scaled value.
 
@@ -146,8 +146,8 @@ The absolute value of this object's un-scaled value.
 
 ### Abs
 
-    public PeterO.ExtendedDecimal Abs(
-        PeterO.PrecisionContext context);
+    public PeterO.Numbers.EDecimal Abs(
+        PeterO.Numbers.EContext context);
 
 Finds the absolute value of this object (if it's negative, it becomes positive).
 
@@ -159,15 +159,9 @@ Finds the absolute value of this object (if it's negative, it becomes positive).
 
 The absolute value of this object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>context</i>
- is null.
-
 ### Abs
 
-    public PeterO.ExtendedDecimal Abs();
+    public PeterO.Numbers.EDecimal Abs();
 
 Gets the absolute value of this object.
 
@@ -177,8 +171,8 @@ An ExtendedDecimal object.
 
 ### Add
 
-    public PeterO.ExtendedDecimal Add(
-        PeterO.ExtendedDecimal otherValue);
+    public PeterO.Numbers.EDecimal Add(
+        PeterO.Numbers.EDecimal otherValue);
 
 Adds this object and another decimal number and returns the result.
 
@@ -190,17 +184,11 @@ Adds this object and another decimal number and returns the result.
 
 The sum of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- is null.
-
 ### Add
 
-    public PeterO.ExtendedDecimal Add(
-        PeterO.ExtendedDecimal otherValue,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal Add(
+        PeterO.Numbers.EDecimal otherValue,
+        PeterO.Numbers.EContext ctx);
 
 Finds the sum of this object and another object. The result's exponent is set to the lower of the exponents of the two operands.
 
@@ -214,17 +202,10 @@ Finds the sum of this object and another object. The result's exponent is set to
 
 The sum of thisValue and the other object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- or  <i>ctx</i>
- is null.
-
 ### CompareTo
 
     public sealed int CompareTo(
-        PeterO.ExtendedDecimal other);
+        PeterO.Numbers.EDecimal other);
 
 Compares the mathematical values of this object and another object, accepting NaN values.This method is not consistent with the Equals method because two different numbers with the same mathematical value, but different exponents, will compare as equal.
 
@@ -241,18 +222,12 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if  <i>other</i>
  is null, or 0 if both values are equal.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- is null.
-
 ### CompareToBinary
 
     public int CompareToBinary(
-        PeterO.ExtendedFloat other);
+        PeterO.Numbers.EFloat other);
 
-Compares a ExtendedFloat object with this instance.
+Compares an EFloat object with this instance.
 
 <b>Parameters:</b>
 
@@ -264,9 +239,9 @@ Zero if the values are equal; a negative number if this instance is less, or a p
 
 ### CompareToSignal
 
-    public PeterO.ExtendedDecimal CompareToSignal(
-        PeterO.ExtendedDecimal other,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal CompareToSignal(
+        PeterO.Numbers.EDecimal other,
+        PeterO.Numbers.EContext ctx);
 
 Compares the mathematical values of this object and another object, treating quiet NaN as signaling.In this method, negative zero and positive zero are considered equal.
 
@@ -276,24 +251,17 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
  * <i>other</i>: An ExtendedDecimal object.
 
- * <i>ctx</i>: A precision context. The precision, ExtendedDecimal.ToERounding(rounding), and exponent range are ignored. If HasFlags of the context is true, will store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+ * <i>ctx</i>: A precision context. The precision, rounding, and exponent range are ignored. If HasFlags of the context is true, will store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
 <b>Returns:</b>
 
 Quiet NaN if this object or the other object is NaN, or 0 if both objects have the same value, or -1 if this object is less than the other value, or 1 if this object is greater.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- or  <i>ctx</i>
- is null.
-
 ### CompareToWithContext
 
-    public PeterO.ExtendedDecimal CompareToWithContext(
-        PeterO.ExtendedDecimal other,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal CompareToWithContext(
+        PeterO.Numbers.EDecimal other,
+        PeterO.Numbers.EContext ctx);
 
 Compares the mathematical values of this object and another object.In this method, negative zero and positive zero are considered equal.
 
@@ -303,22 +271,15 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
  * <i>other</i>: An ExtendedDecimal object.
 
- * <i>ctx</i>: A precision context. The precision, ExtendedDecimal.ToERounding(rounding), and exponent range are ignored. If HasFlags of the context is true, will store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
+ * <i>ctx</i>: A precision context. The precision, rounding, and exponent range are ignored. If HasFlags of the context is true, will store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
 <b>Returns:</b>
 
 Quiet NaN if this object or the other object is NaN, or 0 if both objects have the same value, or -1 if this object is less than the other value, or 1 if this object is greater.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- or  <i>ctx</i>
- is null.
-
 ### Create
 
-    public static PeterO.ExtendedDecimal Create(
+    public static PeterO.Numbers.EDecimal Create(
         int mantissaSmall,
         int exponentSmall);
 
@@ -336,9 +297,9 @@ An ExtendedDecimal object.
 
 ### Create
 
-    public static PeterO.ExtendedDecimal Create(
-        PeterO.BigInteger mantissa,
-        PeterO.BigInteger exponent);
+    public static PeterO.Numbers.EDecimal Create(
+        PeterO.Numbers.EInteger mantissa,
+        PeterO.Numbers.EInteger exponent);
 
 Creates a number with the value exponent*10^mantissa.
 
@@ -361,8 +322,8 @@ The parameter  <i>mantissa</i>
 
 ### CreateNaN
 
-    public static PeterO.ExtendedDecimal CreateNaN(
-        PeterO.BigInteger diag);
+    public static PeterO.Numbers.EDecimal CreateNaN(
+        PeterO.Numbers.EInteger diag);
 
 Creates a not-a-number ExtendedDecimal object.
 
@@ -382,11 +343,11 @@ The parameter  <i>diag</i>
 
 ### CreateNaN
 
-    public static PeterO.ExtendedDecimal CreateNaN(
-        PeterO.BigInteger diag,
+    public static PeterO.Numbers.EDecimal CreateNaN(
+        PeterO.Numbers.EInteger diag,
         bool signaling,
         bool negative,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Creates a not-a-number ExtendedDecimal object.
 
@@ -398,7 +359,7 @@ Creates a not-a-number ExtendedDecimal object.
 
  * <i>negative</i>: Whether the return value is negative.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: An EContext object.
 
 <b>Returns:</b>
 
@@ -412,8 +373,8 @@ The parameter  <i>diag</i>
 
 ### Divide
 
-    public PeterO.ExtendedDecimal Divide(
-        PeterO.ExtendedDecimal divisor);
+    public PeterO.Numbers.EDecimal Divide(
+        PeterO.Numbers.EDecimal divisor);
 
 Divides this object by another decimal number and returns the result. When possible, the result will be exact.
 
@@ -425,17 +386,11 @@ Divides this object by another decimal number and returns the result. When possi
 
 The quotient of the two numbers. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Returns NaN if the divisor and the dividend are 0. Returns NaN if the result can't be exact because it would have a nonterminating decimal expansion.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- is null.
-
 ### Divide
 
-    public PeterO.ExtendedDecimal Divide(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal Divide(
+        PeterO.Numbers.EDecimal divisor,
+        PeterO.Numbers.EContext ctx);
 
 Divides this ExtendedDecimal object by another ExtendedDecimal object. The preferred exponent for the result is this object's exponent minus the divisor's exponent.
 
@@ -451,16 +406,10 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
  is null or <i>ctx</i>
  's precision is 0, and the result would have a nonterminating decimal expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- is null.
-
 ### DivideAndRemainderNaturalScale
 
-    public PeterO.ExtendedDecimal[] DivideAndRemainderNaturalScale(
-        PeterO.ExtendedDecimal divisor);
+    public PeterO.Numbers.EDecimal[] DivideAndRemainderNaturalScale(
+        PeterO.Numbers.EDecimal divisor);
 
 Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale.
 
@@ -474,9 +423,9 @@ A 2 element array consisting of the quotient and remainder in that order.
 
 ### DivideAndRemainderNaturalScale
 
-    public PeterO.ExtendedDecimal[] DivideAndRemainderNaturalScale(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal[] DivideAndRemainderNaturalScale(
+        PeterO.Numbers.EDecimal divisor,
+        PeterO.Numbers.EContext ctx);
 
 Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale.
 
@@ -484,7 +433,7 @@ Calculates the quotient and remainder using the DivideToIntegerNaturalScale and 
 
  * <i>divisor</i>: The number to divide by.
 
- * <i>ctx</i>: A precision context object to control the precision, ExtendedDecimal.ToERounding(rounding), and exponent range of the result. This context will be used only in the division portion of the remainder calculation; as a result, it's possible for the remainder to have a higher precision than given in this context. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the division result doesn't fit the precision and exponent range without rounding.
+ * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the result. This context will be used only in the division portion of the remainder calculation; as a result, it's possible for the remainder to have a higher precision than given in this context. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the division result doesn't fit the precision and exponent range without rounding.
 
 <b>Returns:</b>
 
@@ -492,10 +441,10 @@ A 2 element array consisting of the quotient and remainder in that order.
 
 ### DivideToExponent
 
-    public PeterO.ExtendedDecimal DivideToExponent(
-        PeterO.ExtendedDecimal divisor,
+    public PeterO.Numbers.EDecimal DivideToExponent(
+        PeterO.Numbers.EDecimal divisor,
         long desiredExponentSmall,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Divides two ExtendedDecimal objects, and gives a particular exponent to the result.
 
@@ -511,19 +460,12 @@ Divides two ExtendedDecimal objects, and gives a particular exponent to the resu
 
 The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0. Signals FlagInvalid and returns NaN if the context defines an exponent range and the desired exponent is outside that range. Signals FlagInvalid and returns NaN if the rounding mode is Rounding.Unnecessary and the result is not exact.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
-
 ### DivideToExponent
 
-    public PeterO.ExtendedDecimal DivideToExponent(
-        PeterO.ExtendedDecimal divisor,
+    public PeterO.Numbers.EDecimal DivideToExponent(
+        PeterO.Numbers.EDecimal divisor,
         long desiredExponentSmall,
-        PeterO.Rounding rounding);
+        PeterO.Numbers.ERounding rounding);
 
 Divides two ExtendedDecimal objects, and gives a particular exponent to the result.
 
@@ -539,18 +481,12 @@ Divides two ExtendedDecimal objects, and gives a particular exponent to the resu
 
 The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0. Signals FlagInvalid and returns NaN if the rounding mode is Rounding.Unnecessary and the result is not exact.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- is null.
-
 ### DivideToExponent
 
-    public PeterO.ExtendedDecimal DivideToExponent(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.BigInteger desiredExponent,
-        PeterO.Rounding rounding);
+    public PeterO.Numbers.EDecimal DivideToExponent(
+        PeterO.Numbers.EDecimal divisor,
+        PeterO.Numbers.EInteger desiredExponent,
+        PeterO.Numbers.ERounding rounding);
 
 Divides two ExtendedDecimal objects, and gives a particular exponent to the result.
 
@@ -566,19 +502,12 @@ Divides two ExtendedDecimal objects, and gives a particular exponent to the resu
 
 The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Returns NaN if the divisor and the dividend are 0. Returns NaN if the rounding mode is Rounding.Unnecessary and the result is not exact.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>desiredExponent</i>
- is null.
-
 ### DivideToExponent
 
-    public PeterO.ExtendedDecimal DivideToExponent(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.BigInteger exponent,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal DivideToExponent(
+        PeterO.Numbers.EDecimal divisor,
+        PeterO.Numbers.EInteger exponent,
+        PeterO.Numbers.EContext ctx);
 
 Divides two ExtendedDecimal objects, and gives a particular exponent to the result.
 
@@ -594,18 +523,10 @@ Divides two ExtendedDecimal objects, and gives a particular exponent to the resu
 
 The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0. Signals FlagInvalid and returns NaN if the context defines an exponent range and the desired exponent is outside that range. Signals FlagInvalid and returns NaN if the rounding mode is Rounding.Unnecessary and the result is not exact.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>exponent</i>
- or  <i>ctx</i>
- is null.
-
 ### DivideToIntegerNaturalScale
 
-    public PeterO.ExtendedDecimal DivideToIntegerNaturalScale(
-        PeterO.ExtendedDecimal divisor);
+    public PeterO.Numbers.EDecimal DivideToIntegerNaturalScale(
+        PeterO.Numbers.EDecimal divisor);
 
 Divides two ExtendedDecimal objects, and returns the integer part of the result, rounded down, with the preferred exponent set to this value's exponent minus the divisor's exponent.
 
@@ -617,17 +538,11 @@ Divides two ExtendedDecimal objects, and returns the integer part of the result,
 
 The integer part of the quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- is null.
-
 ### DivideToIntegerNaturalScale
 
-    public PeterO.ExtendedDecimal DivideToIntegerNaturalScale(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal DivideToIntegerNaturalScale(
+        PeterO.Numbers.EDecimal divisor,
+        PeterO.Numbers.EContext ctx);
 
 Divides this object by another object, and returns the integer part of the result, with the preferred exponent set to this value's exponent minus the divisor's exponent.
 
@@ -635,24 +550,17 @@ Divides this object by another object, and returns the integer part of the resul
 
  * <i>divisor</i>: The divisor.
 
- * <i>ctx</i>: A precision context object to control the precision, ExtendedDecimal.ToERounding(rounding), and exponent range of the integer part of the result. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the result doesn't fit the precision and exponent range without rounding.
+ * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the integer part of the result. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the result doesn't fit the precision and exponent range without rounding.
 
 <b>Returns:</b>
 
 The integer part of the quotient of the two objects. Signals FlagInvalid and returns NaN if the return value would overflow the exponent range. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0. Signals FlagInvalid and returns NaN if the rounding mode is Rounding.Unnecessary and the result is not exact.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
-
 ### DivideToIntegerZeroScale
 
-    public PeterO.ExtendedDecimal DivideToIntegerZeroScale(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal DivideToIntegerZeroScale(
+        PeterO.Numbers.EDecimal divisor,
+        PeterO.Numbers.EContext ctx);
 
 Divides this object by another object, and returns the integer part of the result, with the exponent set to 0.
 
@@ -666,18 +574,11 @@ Divides this object by another object, and returns the integer part of the resul
 
 The integer part of the quotient of the two objects. The exponent will be set to 0. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0, or if the result doesn't fit the given precision.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
-
 ### DivideToSameExponent
 
-    public PeterO.ExtendedDecimal DivideToSameExponent(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.Rounding rounding);
+    public PeterO.Numbers.EDecimal DivideToSameExponent(
+        PeterO.Numbers.EDecimal divisor,
+        PeterO.Numbers.ERounding rounding);
 
 Divides this object by another decimal number and returns a result with the same exponent as this object (the dividend).
 
@@ -690,12 +591,6 @@ Divides this object by another decimal number and returns a result with the same
 <b>Returns:</b>
 
 The quotient of the two numbers. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0. Signals FlagInvalid and returns NaN if the rounding mode is Rounding.Unnecessary and the result is not exact.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- is null.
 
 ### Equals
 
@@ -715,7 +610,7 @@ True if the objects are equal; otherwise, false.
 ### Equals
 
     public sealed bool Equals(
-        PeterO.ExtendedDecimal other);
+        PeterO.Numbers.EDecimal other);
 
 Determines whether this object's mantissa and exponent are equal to those of another object.
 
@@ -729,8 +624,8 @@ True if this object's mantissa and exponent are equal to those of another object
 
 ### Exp
 
-    public PeterO.ExtendedDecimal Exp(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal Exp(
+        PeterO.Numbers.EContext ctx);
 
 Finds e (the base of natural logarithms) raised to the power of this object's value.
 
@@ -745,8 +640,8 @@ Exponential of this object. If this object's value is 1, returns an approximatio
 
 ### FromBigInteger
 
-    public static PeterO.ExtendedDecimal FromBigInteger(
-        PeterO.BigInteger bigint);
+    public static PeterO.Numbers.EDecimal FromBigInteger(
+        PeterO.Numbers.EInteger bigint);
 
 Converts a big integer to an arbitrary precision decimal.
 
@@ -758,15 +653,9 @@ Converts a big integer to an arbitrary precision decimal.
 
 An ExtendedDecimal object with the exponent set to 0.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigint</i>
- is null.
-
 ### FromDouble
 
-    public static PeterO.ExtendedDecimal FromDouble(
+    public static PeterO.Numbers.EDecimal FromDouble(
         double dbl);
 
 Creates a decimal number from a 64-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 64-bit floating-point number is not always the value you get when you pass a literal decimal number (for example, calling  `ExtendedDecimal.FromDouble(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting ExtendedDecimal will be the value of the closest "double" to 0.1, not 0.1 exactly). To create an ExtendedDecimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
@@ -782,8 +671,8 @@ A decimal number with the same value as  <i>dbl</i>
 
 ### FromExtendedFloat
 
-    public static PeterO.ExtendedDecimal FromExtendedFloat(
-        PeterO.ExtendedFloat bigfloat);
+    public static PeterO.Numbers.EDecimal FromExtendedFloat(
+        PeterO.Numbers.EFloat bigfloat);
 
 Creates a decimal number from an arbitrary-precision binary floating-point number.
 
@@ -803,7 +692,7 @@ The parameter  <i>bigfloat</i>
 
 ### FromInt32
 
-    public static PeterO.ExtendedDecimal FromInt32(
+    public static PeterO.Numbers.EDecimal FromInt32(
         int valueSmaller);
 
 Creates a decimal number from a 32-bit signed integer.
@@ -818,7 +707,7 @@ An ExtendedDecimal object.
 
 ### FromInt64
 
-    public static PeterO.ExtendedDecimal FromInt64(
+    public static PeterO.Numbers.EDecimal FromInt64(
         long valueSmall);
 
 Creates a decimal number from a 64-bit signed integer.
@@ -833,7 +722,7 @@ An ExtendedDecimal object with the exponent set to 0.
 
 ### FromSingle
 
-    public static PeterO.ExtendedDecimal FromSingle(
+    public static PeterO.Numbers.EDecimal FromSingle(
         float flt);
 
 Creates a decimal number from a 32-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 32-bit floating-point number is not always the value you get when you pass a literal decimal number (for example, calling  `ExtendedDecimal.FromSingle(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting ExtendedDecimal will be the the value of the closest "float" to 0.1, not 0.1 exactly). To create an ExtendedDecimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
@@ -849,10 +738,10 @@ A decimal number with the same value as  <i>flt</i>
 
 ### FromString
 
-    public static PeterO.ExtendedDecimal FromString(
+    public static PeterO.Numbers.EDecimal FromString(
         string str);
 
-Creates a decimal number from a string that represents a number. See  `FromString(String, int, int, PrecisionContext)` for more information.
+Creates a decimal number from a string that represents a number. See  `FromString(String, int, int, EContext)`  for more information.
 
 <b>Parameters:</b>
 
@@ -874,12 +763,12 @@ The parameter  <i>str</i>
 
 ### FromString
 
-    public static PeterO.ExtendedDecimal FromString(
+    public static PeterO.Numbers.EDecimal FromString(
         string str,
         int offset,
         int length);
 
-Creates a decimal number from a string that represents a number. See  `FromString(String, int, int, PrecisionContext)` for more information.
+Creates a decimal number from a string that represents a number. See  `FromString(String, int, int, EContext)`  for more information.
 
 <b>Parameters:</b>
 
@@ -905,11 +794,11 @@ The parameter  <i>str</i>
 
 ### FromString
 
-    public static PeterO.ExtendedDecimal FromString(
+    public static PeterO.Numbers.EDecimal FromString(
         string str,
         int offset,
         int length,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Creates a decimal number from a string that represents a number.
 
@@ -951,11 +840,11 @@ The parameter  <i>str</i>
 
 ### FromString
 
-    public static PeterO.ExtendedDecimal FromString(
+    public static PeterO.Numbers.EDecimal FromString(
         string str,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
-Creates a decimal number from a string that represents a number. See  `FromString(String, int, int, PrecisionContext)` for more information.
+Creates a decimal number from a string that represents a number. See  `FromString(String, int, int, EContext)`  for more information.
 
 <b>Parameters:</b>
 
@@ -1049,8 +938,8 @@ True if this object is a signaling not-a-number value; otherwise, false.
 
 ### Log
 
-    public PeterO.ExtendedDecimal Log(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal Log(
+        PeterO.Numbers.EContext ctx);
 
 Finds the natural logarithm of this object, that is, the power (exponent) that e (the base of natural logarithms) must be raised to in order to equal this object's value.
 
@@ -1065,8 +954,8 @@ Ln(this object). Signals the flag FlagInvalid and returns NaN if this object is 
 
 ### Log10
 
-    public PeterO.ExtendedDecimal Log10(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal Log10(
+        PeterO.Numbers.EContext ctx);
 
 Finds the base-10 logarithm of this object, that is, the power (exponent) that the number 10 must be raised to in order to equal this object's value.
 
@@ -1081,9 +970,9 @@ Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns NaN if this obj
 
 ### Max
 
-    public static PeterO.ExtendedDecimal Max(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second);
+    public static PeterO.Numbers.EDecimal Max(
+        PeterO.Numbers.EDecimal first,
+        PeterO.Numbers.EDecimal second);
 
 Gets the greater value between two decimal numbers.
 
@@ -1097,19 +986,12 @@ Gets the greater value between two decimal numbers.
 
 The larger value of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- is null.
-
 ### Max
 
-    public static PeterO.ExtendedDecimal Max(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second,
-        PeterO.PrecisionContext ctx);
+    public static PeterO.Numbers.EDecimal Max(
+        PeterO.Numbers.EDecimal first,
+        PeterO.Numbers.EDecimal second,
+        PeterO.Numbers.EContext ctx);
 
 Gets the greater value between two decimal numbers.
 
@@ -1125,19 +1007,11 @@ Gets the greater value between two decimal numbers.
 
 The larger value of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- or  <i>ctx</i>
- is null.
-
 ### MaxMagnitude
 
-    public static PeterO.ExtendedDecimal MaxMagnitude(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second);
+    public static PeterO.Numbers.EDecimal MaxMagnitude(
+        PeterO.Numbers.EDecimal first,
+        PeterO.Numbers.EDecimal second);
 
 Gets the greater value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Max.
 
@@ -1151,19 +1025,12 @@ Gets the greater value between two values, ignoring their signs. If the absolute
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- is null.
-
 ### MaxMagnitude
 
-    public static PeterO.ExtendedDecimal MaxMagnitude(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second,
-        PeterO.PrecisionContext ctx);
+    public static PeterO.Numbers.EDecimal MaxMagnitude(
+        PeterO.Numbers.EDecimal first,
+        PeterO.Numbers.EDecimal second,
+        PeterO.Numbers.EContext ctx);
 
 Gets the greater value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Max.
 
@@ -1179,19 +1046,11 @@ Gets the greater value between two values, ignoring their signs. If the absolute
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- or  <i>ctx</i>
- is null.
-
 ### Min
 
-    public static PeterO.ExtendedDecimal Min(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second);
+    public static PeterO.Numbers.EDecimal Min(
+        PeterO.Numbers.EDecimal first,
+        PeterO.Numbers.EDecimal second);
 
 Gets the lesser value between two decimal numbers.
 
@@ -1205,19 +1064,12 @@ Gets the lesser value between two decimal numbers.
 
 The smaller value of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- is null.
-
 ### Min
 
-    public static PeterO.ExtendedDecimal Min(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second,
-        PeterO.PrecisionContext ctx);
+    public static PeterO.Numbers.EDecimal Min(
+        PeterO.Numbers.EDecimal first,
+        PeterO.Numbers.EDecimal second,
+        PeterO.Numbers.EContext ctx);
 
 Gets the lesser value between two decimal numbers.
 
@@ -1233,19 +1085,11 @@ Gets the lesser value between two decimal numbers.
 
 The smaller value of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- or  <i>ctx</i>
- is null.
-
 ### MinMagnitude
 
-    public static PeterO.ExtendedDecimal MinMagnitude(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second);
+    public static PeterO.Numbers.EDecimal MinMagnitude(
+        PeterO.Numbers.EDecimal first,
+        PeterO.Numbers.EDecimal second);
 
 Gets the lesser value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Min.
 
@@ -1259,19 +1103,12 @@ Gets the lesser value between two values, ignoring their signs. If the absolute 
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- is null.
-
 ### MinMagnitude
 
-    public static PeterO.ExtendedDecimal MinMagnitude(
-        PeterO.ExtendedDecimal first,
-        PeterO.ExtendedDecimal second,
-        PeterO.PrecisionContext ctx);
+    public static PeterO.Numbers.EDecimal MinMagnitude(
+        PeterO.Numbers.EDecimal first,
+        PeterO.Numbers.EDecimal second,
+        PeterO.Numbers.EContext ctx);
 
 Gets the lesser value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Min.
 
@@ -1287,17 +1124,9 @@ Gets the lesser value between two values, ignoring their signs. If the absolute 
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- or  <i>ctx</i>
- is null.
-
 ### MovePointLeft
 
-    public PeterO.ExtendedDecimal MovePointLeft(
+    public PeterO.Numbers.EDecimal MovePointLeft(
         int places);
 
 Returns a number similar to this number but with the decimal point moved to the left.
@@ -1312,9 +1141,9 @@ An ExtendedDecimal object.
 
 ### MovePointLeft
 
-    public PeterO.ExtendedDecimal MovePointLeft(
+    public PeterO.Numbers.EDecimal MovePointLeft(
         int places,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Returns a number similar to this number but with the decimal point moved to the left.
 
@@ -1328,16 +1157,10 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### MovePointLeft
 
-    public PeterO.ExtendedDecimal MovePointLeft(
-        PeterO.BigInteger bigPlaces);
+    public PeterO.Numbers.EDecimal MovePointLeft(
+        PeterO.Numbers.EInteger bigPlaces);
 
 Returns a number similar to this number but with the decimal point moved to the left.
 
@@ -1349,17 +1172,11 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
- is null.
-
 ### MovePointLeft
 
-    public PeterO.ExtendedDecimal MovePointLeft(
-        PeterO.BigInteger bigPlaces,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal MovePointLeft(
+        PeterO.Numbers.EInteger bigPlaces,
+        PeterO.Numbers.EContext ctx);
 
 Returns a number similar to this number but with the decimal point moved to the left.
 
@@ -1373,15 +1190,9 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
- is null.
-
 ### MovePointRight
 
-    public PeterO.ExtendedDecimal MovePointRight(
+    public PeterO.Numbers.EDecimal MovePointRight(
         int places);
 
 Returns a number similar to this number but with the decimal point moved to the right.
@@ -1396,9 +1207,9 @@ An ExtendedDecimal object.
 
 ### MovePointRight
 
-    public PeterO.ExtendedDecimal MovePointRight(
+    public PeterO.Numbers.EDecimal MovePointRight(
         int places,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Returns a number similar to this number but with the decimal point moved to the right.
 
@@ -1412,16 +1223,10 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### MovePointRight
 
-    public PeterO.ExtendedDecimal MovePointRight(
-        PeterO.BigInteger bigPlaces);
+    public PeterO.Numbers.EDecimal MovePointRight(
+        PeterO.Numbers.EInteger bigPlaces);
 
 Returns a number similar to this number but with the decimal point moved to the right.
 
@@ -1433,17 +1238,11 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
- is null.
-
 ### MovePointRight
 
-    public PeterO.ExtendedDecimal MovePointRight(
-        PeterO.BigInteger bigPlaces,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal MovePointRight(
+        PeterO.Numbers.EInteger bigPlaces,
+        PeterO.Numbers.EContext ctx);
 
 Returns a number similar to this number but with the decimal point moved to the right.
 
@@ -1458,18 +1257,11 @@ Returns a number similar to this number but with the decimal point moved to the 
 A number whose scale is increased by  <i>bigPlaces</i>
 , but not to more than 0.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
- or  <i>ctx</i>
- is null.
-
 ### Multiply
 
-    public PeterO.ExtendedDecimal Multiply(
-        PeterO.ExtendedDecimal op,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal Multiply(
+        PeterO.Numbers.EDecimal op,
+        PeterO.Numbers.EContext ctx);
 
 Multiplies two decimal numbers. The resulting scale will be the sum of the scales of the two decimal numbers. The result's sign is positive if both operands have the same sign, and negative if they have different signs.
 
@@ -1483,17 +1275,10 @@ Multiplies two decimal numbers. The resulting scale will be the sum of the scale
 
 The product of the two decimal numbers.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>op</i>
- or  <i>ctx</i>
- is null.
-
 ### Multiply
 
-    public PeterO.ExtendedDecimal Multiply(
-        PeterO.ExtendedDecimal otherValue);
+    public PeterO.Numbers.EDecimal Multiply(
+        PeterO.Numbers.EDecimal otherValue);
 
 Multiplies two decimal numbers. The resulting exponent will be the sum of the exponents of the two decimal numbers.
 
@@ -1505,17 +1290,11 @@ Multiplies two decimal numbers. The resulting exponent will be the sum of the ex
 
 The product of the two decimal numbers.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- is null.
-
 ### MultiplyAndAdd
 
-    public PeterO.ExtendedDecimal MultiplyAndAdd(
-        PeterO.ExtendedDecimal multiplicand,
-        PeterO.ExtendedDecimal augend);
+    public PeterO.Numbers.EDecimal MultiplyAndAdd(
+        PeterO.Numbers.EDecimal multiplicand,
+        PeterO.Numbers.EDecimal augend);
 
 Multiplies by one decimal number, and then adds another decimal number.
 
@@ -1531,19 +1310,12 @@ The result this *  <i>multiplicand</i>
  + <i>augend</i>
 .
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>multiplicand</i>
- or  <i>augend</i>
- is null.
-
 ### MultiplyAndAdd
 
-    public PeterO.ExtendedDecimal MultiplyAndAdd(
-        PeterO.ExtendedDecimal op,
-        PeterO.ExtendedDecimal augend,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal MultiplyAndAdd(
+        PeterO.Numbers.EDecimal op,
+        PeterO.Numbers.EDecimal augend,
+        PeterO.Numbers.EContext ctx);
 
 Multiplies by one value, and then adds another value.
 
@@ -1559,20 +1331,12 @@ Multiplies by one value, and then adds another value.
 
 The result thisValue * multiplicand + augend.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>op</i>
- or  <i>augend</i>
- or  <i>ctx</i>
-is null.
-
 ### MultiplyAndSubtract
 
-    public PeterO.ExtendedDecimal MultiplyAndSubtract(
-        PeterO.ExtendedDecimal op,
-        PeterO.ExtendedDecimal subtrahend,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal MultiplyAndSubtract(
+        PeterO.Numbers.EDecimal op,
+        PeterO.Numbers.EDecimal subtrahend,
+        PeterO.Numbers.EContext ctx);
 
 Multiplies by one value, and then subtracts another value.
 
@@ -1597,8 +1361,8 @@ The parameter  <i>op</i>
 
 ### Negate
 
-    public PeterO.ExtendedDecimal Negate(
-        PeterO.PrecisionContext context);
+    public PeterO.Numbers.EDecimal Negate(
+        PeterO.Numbers.EContext context);
 
 Returns a decimal number with the same value as this object but with the sign reversed.
 
@@ -1610,15 +1374,9 @@ Returns a decimal number with the same value as this object but with the sign re
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>context</i>
- is null.
-
 ### Negate
 
-    public PeterO.ExtendedDecimal Negate();
+    public PeterO.Numbers.EDecimal Negate();
 
 Gets an object with the same value as this one, but with the sign reversed.
 
@@ -1628,8 +1386,8 @@ An ExtendedDecimal object.
 
 ### NextMinus
 
-    public PeterO.ExtendedDecimal NextMinus(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal NextMinus(
+        PeterO.Numbers.EContext ctx);
 
 Finds the largest value that's smaller than the given value.
 
@@ -1643,16 +1401,10 @@ Returns the largest value that's less than the given value. Returns negative inf
  is null, the precision is 0, or  <i>ctx</i>
  has an unlimited exponent range.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### NextPlus
 
-    public PeterO.ExtendedDecimal NextPlus(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal NextPlus(
+        PeterO.Numbers.EContext ctx);
 
 Finds the smallest value that's greater than the given value.
 
@@ -1666,17 +1418,11 @@ Returns the smallest value that's greater than the given value.Signals FlagInval
  is null, the precision is 0, or  <i>ctx</i>
  has an unlimited exponent range.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### NextToward
 
-    public PeterO.ExtendedDecimal NextToward(
-        PeterO.ExtendedDecimal otherValue,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal NextToward(
+        PeterO.Numbers.EDecimal otherValue,
+        PeterO.Numbers.EContext ctx);
 
 Finds the next value that is closer to the other object's value than this object's value. Returns a copy of this value with the same sign as the other value if both values are equal.
 
@@ -1692,17 +1438,10 @@ Returns the next value that is closer to the other object' s value than this obj
  is null, the precision is 0, or  <i>ctx</i>
  has an unlimited exponent range.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- or  <i>ctx</i>
- is null.
-
 ### PI
 
-    public static PeterO.ExtendedDecimal PI(
-        PeterO.PrecisionContext ctx);
+    public static PeterO.Numbers.EDecimal PI(
+        PeterO.Numbers.EContext ctx);
 
 Finds the constant pi.
 
@@ -1715,37 +1454,25 @@ Finds the constant pi.
 Pi rounded to the given precision. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### Plus
 
-    public PeterO.ExtendedDecimal Plus(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal Plus(
+        PeterO.Numbers.EContext ctx);
 
 Rounds this object's value to a given precision, using the given rounding mode and range of exponent, and also converts negative zero to positive zero.
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A context for controlling the precision, ExtendedDecimal.ToERounding(rounding) mode, and exponent range. Can be null.
+ * <i>ctx</i>: A context for controlling the precision, rounding mode, and exponent range. Can be null.
 
 <b>Returns:</b>
 
 The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if <i>ctx</i>
  is null or the precision and exponent range are unlimited.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### Pow
 
-    public PeterO.ExtendedDecimal Pow(
+    public PeterO.Numbers.EDecimal Pow(
         int exponentSmall);
 
 Raises this object's value to the given exponent.
@@ -1760,9 +1487,9 @@ This^exponent. Returns NaN if this object and exponent are both 0.
 
 ### Pow
 
-    public PeterO.ExtendedDecimal Pow(
+    public PeterO.Numbers.EDecimal Pow(
         int exponentSmall,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Raises this object's value to the given exponent.
 
@@ -1776,17 +1503,11 @@ Raises this object's value to the given exponent.
 
 This^exponent. Signals the flag FlagInvalid and returns NaN if this object and exponent are both 0.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### Pow
 
-    public PeterO.ExtendedDecimal Pow(
-        PeterO.ExtendedDecimal exponent,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal Pow(
+        PeterO.Numbers.EDecimal exponent,
+        PeterO.Numbers.EContext ctx);
 
 Raises this object's value to the given exponent.
 
@@ -1801,16 +1522,9 @@ Raises this object's value to the given exponent.
 This^exponent. Signals the flag FlagInvalid and returns NaN if this object and exponent are both 0; or if this value is less than 0 and the exponent either has a fractional part or is infinity. Signals FlagInvalid and returns NaN if the parameter <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0), and the exponent has a fractional part.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>exponent</i>
- or  <i>ctx</i>
- is null.
-
 ### Precision
 
-    public PeterO.BigInteger Precision();
+    public PeterO.Numbers.EInteger Precision();
 
 Finds the number of digits in this number's mantissa. Returns 1 if this value is 0, and 0 if this value is infinity or NaN.
 
@@ -1820,9 +1534,9 @@ A BigInteger object.
 
 ### Quantize
 
-    public PeterO.ExtendedDecimal Quantize(
+    public PeterO.Numbers.EDecimal Quantize(
         int desiredExponentSmall,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Returns a decimal number with the same value but a new exponent.Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
 
@@ -1836,17 +1550,11 @@ Returns a decimal number with the same value but a new exponent.Note that this i
 
 A decimal number with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### Quantize
 
-    public PeterO.ExtendedDecimal Quantize(
+    public PeterO.Numbers.EDecimal Quantize(
         int desiredExponentSmall,
-        PeterO.Rounding rounding);
+        PeterO.Numbers.ERounding rounding);
 
 Returns a decimal number with the same value as this one but a new exponent.
 
@@ -1862,34 +1570,9 @@ A decimal number with the same value as this object but with the exponent change
 
 ### Quantize
 
-    public PeterO.ExtendedDecimal Quantize(
-        PeterO.BigInteger desiredExponent,
-        PeterO.PrecisionContext ctx);
-
-Returns a decimal number with the same value but a new exponent.Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
-
-<b>Parameters:</b>
-
- * <i>desiredExponent</i>: A BigInteger object.
-
- * <i>ctx</i>: A precision context to control precision and rounding of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case the default rounding mode is HalfEven.
-
-<b>Returns:</b>
-
-A decimal number with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>desiredExponent</i>
- or  <i>ctx</i>
- is null.
-
-### Quantize
-
-    public PeterO.ExtendedDecimal Quantize(
-        PeterO.ExtendedDecimal otherValue,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal Quantize(
+        PeterO.Numbers.EDecimal otherValue,
+        PeterO.Numbers.EContext ctx);
 
 Returns a decimal number with the same value as this object but with the same exponent as another decimal number.Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
 
@@ -1903,17 +1586,28 @@ Returns a decimal number with the same value as this object but with the same ex
 
 A decimal number with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding, or if the precision context defines an exponent range and the given exponent is outside that range.
 
-<b>Exceptions:</b>
+### Quantize
 
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- or  <i>ctx</i>
- is null.
+    public PeterO.Numbers.EDecimal Quantize(
+        PeterO.Numbers.EInteger desiredExponent,
+        PeterO.Numbers.EContext ctx);
+
+Returns a decimal number with the same value but a new exponent.Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
+
+<b>Parameters:</b>
+
+ * <i>desiredExponent</i>: A BigInteger object.
+
+ * <i>ctx</i>: A precision context to control precision and rounding of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case the default rounding mode is HalfEven.
+
+<b>Returns:</b>
+
+A decimal number with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
 
 ### Reduce
 
-    public PeterO.ExtendedDecimal Reduce(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal Reduce(
+        PeterO.Numbers.EContext ctx);
 
 Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1.If this object's value is 0, changes the exponent to 0.
 
@@ -1925,17 +1619,11 @@ Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1
 
 This value with trailing zeros removed. Note that if the result has a very high exponent and the context says to clamp high exponents, there may still be some trailing zeros in the mantissa.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### Remainder
 
-    public PeterO.ExtendedDecimal Remainder(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal Remainder(
+        PeterO.Numbers.EDecimal divisor,
+        PeterO.Numbers.EContext ctx);
 
 Finds the remainder that results when dividing two ExtendedDecimal objects.
 
@@ -1943,23 +1631,16 @@ Finds the remainder that results when dividing two ExtendedDecimal objects.
 
  * <i>divisor</i>: An ExtendedDecimal object.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: An EContext object.
 
 <b>Returns:</b>
 
 The remainder of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
-
 ### RemainderNaturalScale
 
-    public PeterO.ExtendedDecimal RemainderNaturalScale(
-        PeterO.ExtendedDecimal divisor);
+    public PeterO.Numbers.EDecimal RemainderNaturalScale(
+        PeterO.Numbers.EDecimal divisor);
 
 Calculates the remainder of a number by the formula "this" - (("this" / "divisor") * "divisor").
 
@@ -1971,17 +1652,11 @@ Calculates the remainder of a number by the formula "this" - (("this" / "divisor
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- is null.
-
 ### RemainderNaturalScale
 
-    public PeterO.ExtendedDecimal RemainderNaturalScale(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal RemainderNaturalScale(
+        PeterO.Numbers.EDecimal divisor,
+        PeterO.Numbers.EContext ctx);
 
 Calculates the remainder of a number by the formula "this" - (("this" / "divisor") * "divisor").
 
@@ -1989,24 +1664,17 @@ Calculates the remainder of a number by the formula "this" - (("this" / "divisor
 
  * <i>divisor</i>: The number to divide by.
 
- * <i>ctx</i>: A precision context object to control the precision, ExtendedDecimal.ToERounding(rounding), and exponent range of the result. This context will be used only in the division portion of the remainder calculation; as a result, it's possible for the return value to have a higher precision than given in this context. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the division result doesn't fit the precision and exponent range without rounding.
+ * <i>ctx</i>: A precision context object to control the precision, rounding, and exponent range of the result. This context will be used only in the division portion of the remainder calculation; as a result, it's possible for the return value to have a higher precision than given in this context. Flags will be set on the given context only if the context's HasFlags is true and the integer part of the division result doesn't fit the precision and exponent range without rounding.
 
 <b>Returns:</b>
 
 An ExtendedDecimal object.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
 
 ### RemainderNear
 
-    public PeterO.ExtendedDecimal RemainderNear(
-        PeterO.ExtendedDecimal divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal RemainderNear(
+        PeterO.Numbers.EDecimal divisor,
+        PeterO.Numbers.EContext ctx);
 
 Finds the distance to the closest multiple of the given divisor, based on the result of dividing this object's value by another object's value.
 
@@ -2030,17 +1698,10 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
 The distance of the closest multiple. Signals FlagInvalid and returns NaN if the divisor is 0, or either the result of integer division (the quotient) or the remainder wouldn't fit the given precision.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
-
 ### RoundToBinaryPrecision
 
-    public PeterO.ExtendedDecimal RoundToBinaryPrecision(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal RoundToBinaryPrecision(
+        PeterO.Numbers.EContext ctx);
 
 <b>Deprecated.</b> Instead of this method use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.
 
@@ -2048,24 +1709,18 @@ Rounds this object's value to a given maximum bit length, using the given roundi
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A context for controlling the precision, ExtendedDecimal.ToERounding(rounding) mode, and exponent range. The precision is interpreted as the maximum bit length of the mantissa. Can be null.
+ * <i>ctx</i>: A context for controlling the precision, rounding mode, and exponent range. The precision is interpreted as the maximum bit length of the mantissa. Can be null.
 
 <b>Returns:</b>
 
 The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if <i>ctx</i>
  is null or the precision and exponent range are unlimited.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### RoundToExponent
 
-    public PeterO.ExtendedDecimal RoundToExponent(
+    public PeterO.Numbers.EDecimal RoundToExponent(
         int exponentSmall,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Returns a decimal number with the same value as this object, and rounds it to a new exponent if necessary.
 
@@ -2079,17 +1734,11 @@ Returns a decimal number with the same value as this object, and rounds it to a 
 
 A decimal number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### RoundToExponent
 
-    public PeterO.ExtendedDecimal RoundToExponent(
-        PeterO.BigInteger exponent,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal RoundToExponent(
+        PeterO.Numbers.EInteger exponent,
+        PeterO.Numbers.EContext ctx);
 
 Returns a decimal number with the same value as this object, and rounds it to a new exponent if necessary.
 
@@ -2103,18 +1752,11 @@ Returns a decimal number with the same value as this object, and rounds it to a 
 
 A decimal number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>exponent</i>
- or  <i>ctx</i>
- is null.
-
 ### RoundToExponentExact
 
-    public PeterO.ExtendedDecimal RoundToExponentExact(
+    public PeterO.Numbers.EDecimal RoundToExponentExact(
         int exponentSmall,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Returns a decimal number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
@@ -2122,23 +1764,17 @@ Returns a decimal number with the same value as this object but rounded to an in
 
  * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the thousandth (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A value of 0 rounds the number to an integer.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: An EContext object.
 
 <b>Returns:</b>
 
 A decimal number rounded to the closest value representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### RoundToExponentExact
 
-    public PeterO.ExtendedDecimal RoundToExponentExact(
-        PeterO.BigInteger exponent,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal RoundToExponentExact(
+        PeterO.Numbers.EInteger exponent,
+        PeterO.Numbers.EContext ctx);
 
 Returns a decimal number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
@@ -2146,23 +1782,16 @@ Returns a decimal number with the same value as this object but rounded to an in
 
  * <i>exponent</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the thousandth (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A value of 0 rounds the number to an integer.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: An EContext object.
 
 <b>Returns:</b>
 
 A decimal number rounded to the closest value representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>exponent</i>
- or  <i>ctx</i>
- is null.
 
 ### RoundToIntegralExact
 
-    public PeterO.ExtendedDecimal RoundToIntegralExact(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal RoundToIntegralExact(
+        PeterO.Numbers.EContext ctx);
 
 Returns a decimal number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
@@ -2174,16 +1803,10 @@ Returns a decimal number with the same value as this object but rounded to an in
 
 A decimal number rounded to the closest integer representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to 0 when rounding, and 0 is outside of the valid range of the precision context.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### RoundToIntegralNoRoundedFlag
 
-    public PeterO.ExtendedDecimal RoundToIntegralNoRoundedFlag(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal RoundToIntegralNoRoundedFlag(
+        PeterO.Numbers.EContext ctx);
 
 Returns a decimal number with the same value as this object but rounded to an integer, without adding the FlagInexact or FlagRounded flags.
 
@@ -2195,37 +1818,25 @@ Returns a decimal number with the same value as this object but rounded to an in
 
 A decimal number rounded to the closest integer representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to 0 when rounding, and 0 is outside of the valid range of the precision context.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### RoundToPrecision
 
-    public PeterO.ExtendedDecimal RoundToPrecision(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal RoundToPrecision(
+        PeterO.Numbers.EContext ctx);
 
 Rounds this object's value to a given precision, using the given rounding mode and range of exponent.
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A context for controlling the precision, ExtendedDecimal.ToERounding(rounding) mode, and exponent range. Can be null.
+ * <i>ctx</i>: A context for controlling the precision, rounding mode, and exponent range. Can be null.
 
 <b>Returns:</b>
 
 The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if <i>ctx</i>
  is null or the precision and exponent range are unlimited.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### ScaleByPowerOfTen
 
-    public PeterO.ExtendedDecimal ScaleByPowerOfTen(
+    public PeterO.Numbers.EDecimal ScaleByPowerOfTen(
         int places);
 
 Returns a number similar to this number but with the scale adjusted.
@@ -2240,9 +1851,9 @@ An ExtendedDecimal object.
 
 ### ScaleByPowerOfTen
 
-    public PeterO.ExtendedDecimal ScaleByPowerOfTen(
+    public PeterO.Numbers.EDecimal ScaleByPowerOfTen(
         int places,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Returns a number similar to this number but with the scale adjusted.
 
@@ -2256,16 +1867,10 @@ Returns a number similar to this number but with the scale adjusted.
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### ScaleByPowerOfTen
 
-    public PeterO.ExtendedDecimal ScaleByPowerOfTen(
-        PeterO.BigInteger bigPlaces);
+    public PeterO.Numbers.EDecimal ScaleByPowerOfTen(
+        PeterO.Numbers.EInteger bigPlaces);
 
 Returns a number similar to this number but with the scale adjusted.
 
@@ -2277,17 +1882,11 @@ Returns a number similar to this number but with the scale adjusted.
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
- is null.
-
 ### ScaleByPowerOfTen
 
-    public PeterO.ExtendedDecimal ScaleByPowerOfTen(
-        PeterO.BigInteger bigPlaces,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal ScaleByPowerOfTen(
+        PeterO.Numbers.EInteger bigPlaces,
+        PeterO.Numbers.EContext ctx);
 
 Returns a number similar to this number but with its scale adjusted.
 
@@ -2302,17 +1901,10 @@ Returns a number similar to this number but with its scale adjusted.
 A number whose scale is increased by  <i>bigPlaces</i>
 .
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
- or  <i>ctx</i>
- is null.
-
 ### SquareRoot
 
-    public PeterO.ExtendedDecimal SquareRoot(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal SquareRoot(
+        PeterO.Numbers.EContext ctx);
 
 Finds the square root of this object's value.
 
@@ -2325,16 +1917,10 @@ Finds the square root of this object's value.
 The square root. Signals the flag FlagInvalid and returns NaN if this object is less than 0 (the square root would be a complex number, but the return value is still NaN). Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
 is null or the precision is unlimited (the context's Precision property is 0).
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### Subtract
 
-    public PeterO.ExtendedDecimal Subtract(
-        PeterO.ExtendedDecimal otherValue);
+    public PeterO.Numbers.EDecimal Subtract(
+        PeterO.Numbers.EDecimal otherValue);
 
 Subtracts an ExtendedDecimal object from this instance and returns the result.
 
@@ -2346,17 +1932,11 @@ Subtracts an ExtendedDecimal object from this instance and returns the result.
 
 The difference of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- is null.
-
 ### Subtract
 
-    public PeterO.ExtendedDecimal Subtract(
-        PeterO.ExtendedDecimal otherValue,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal Subtract(
+        PeterO.Numbers.EDecimal otherValue,
+        PeterO.Numbers.EContext ctx);
 
 Subtracts an ExtendedDecimal object from this instance.
 
@@ -2378,7 +1958,7 @@ The parameter  <i>otherValue</i>
 
 ### ToBigInteger
 
-    public PeterO.BigInteger ToBigInteger();
+    public PeterO.Numbers.EInteger ToBigInteger();
 
 Converts this value to an arbitrary-precision integer. Any fractional part in this value will be discarded when converting to a big integer.
 
@@ -2393,7 +1973,7 @@ This object's value is infinity or NaN.
 
 ### ToBigIntegerExact
 
-    public PeterO.BigInteger ToBigIntegerExact();
+    public PeterO.Numbers.EInteger ToBigIntegerExact();
 
 Converts this value to an arbitrary-precision integer, checking whether the fractional part of the integer would be lost.
 
@@ -2431,7 +2011,7 @@ A string object.
 
 ### ToExtendedFloat
 
-    public PeterO.ExtendedFloat ToExtendedFloat();
+    public PeterO.Numbers.EFloat ToExtendedFloat();
 
 Creates a binary floating-point number from this object's value. Note that if the binary floating-point number contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double).
 
@@ -2471,7 +2051,7 @@ A string representation of this object.
 
 ### Ulp
 
-    public PeterO.ExtendedDecimal Ulp();
+    public PeterO.Numbers.EDecimal Ulp();
 
 Returns the unit in the last place. The mantissa will be 1 and the exponent will be this number's exponent. Returns 1 with an exponent of 0 if this number is infinity or NaN.
 

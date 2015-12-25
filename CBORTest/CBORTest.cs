@@ -96,6 +96,12 @@ namespace Test {
           Assert.Fail(TestCommon.ObjectMessages(o1, o2, "Results don't match"));
         }
       }
+      try {
+ ExtendedDecimal.FromString("1").Divide(ExtendedDecimal.FromString("3"), null);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [Test]
     public void TestMultiply() {
@@ -1433,6 +1439,7 @@ stringTemp);
 
     [Test]
     public void TestHalfPrecision() {
+      // TODO: Do exhaustive half precision decoding test
       CBORObject o = CBORObject.DecodeFromBytes(
         new byte[] { 0xf9, 0x7c, 0x00 });
       Assert.AreEqual(Single.PositiveInfinity, o.AsSingle());

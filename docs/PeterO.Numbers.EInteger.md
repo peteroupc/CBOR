@@ -1,6 +1,6 @@
-## PeterO.BigInteger
+## PeterO.Numbers.EInteger
 
-    public sealed class BigInteger :
+    public sealed class EInteger :
         System.IComparable,
         System.IEquatable
 
@@ -10,21 +10,21 @@ An arbitrary-precision integer.
 
 ### ONE
 
-    public static readonly PeterO.BigInteger ONE;
+    public static readonly PeterO.Numbers.EInteger ONE;
 
-BigInteger object for the number one.
+EInteger object for the number one.
 
 ### TEN
 
-    public static readonly PeterO.BigInteger TEN;
+    public static readonly PeterO.Numbers.EInteger TEN;
 
-BigInteger object for the number ten.
+EInteger object for the number ten.
 
 ### ZERO
 
-    public static readonly PeterO.BigInteger ZERO;
+    public static readonly PeterO.Numbers.EInteger ZERO;
 
-BigInteger object for the number zero.
+EInteger object for the number zero.
 
 ### IsEven
 
@@ -58,7 +58,7 @@ True if this value is 0; otherwise, false.
 
 ### One
 
-    public static PeterO.BigInteger One { get; }
+    public static PeterO.Numbers.EInteger One { get; }
 
 Gets the BigInteger object for one.
 
@@ -78,7 +78,7 @@ Gets the sign of this object's value.
 
 ### Zero
 
-    public static PeterO.BigInteger Zero { get; }
+    public static PeterO.Numbers.EInteger Zero { get; }
 
 Gets the BigInteger object for zero.
 
@@ -88,7 +88,7 @@ The BigInteger object for zero.
 
 ### abs
 
-    public PeterO.BigInteger abs();
+    public PeterO.Numbers.EInteger abs();
 
 Returns the absolute value of this object's value.
 
@@ -98,8 +98,8 @@ This object's value with the sign removed.
 
 ### Abs
 
-    public static PeterO.BigInteger Abs(
-        PeterO.BigInteger thisValue);
+    public static PeterO.Numbers.EInteger Abs(
+        PeterO.Numbers.EInteger thisValue);
 
 Not documented yet.
 
@@ -119,14 +119,14 @@ The parameter  <i>thisValue</i>
 
 ### add
 
-    public PeterO.BigInteger add(
-        PeterO.BigInteger bigintAugend);
+    public PeterO.Numbers.EInteger add(
+        PeterO.Numbers.EInteger bigintAugend);
 
 Adds this object and another object.
 
 <b>Parameters:</b>
 
- * <i>bigintAugend</i>: Another BigInteger object.
+ * <i>bigintAugend</i>: Another EInteger object.
 
 <b>Returns:</b>
 
@@ -140,9 +140,9 @@ The parameter  <i>bigintAugend</i>
 
 ### And
 
-    public static PeterO.BigInteger And(
-        PeterO.BigInteger a,
-        PeterO.BigInteger b);
+    public static PeterO.Numbers.EInteger And(
+        PeterO.Numbers.EInteger a,
+        PeterO.Numbers.EInteger b);
 
 Does an AND operation between two BigInteger values.
 
@@ -188,13 +188,13 @@ True if this object's value is MinValue or greater, and MaxValue or less; otherw
 ### CompareTo
 
     public sealed int CompareTo(
-        PeterO.BigInteger other);
+        PeterO.Numbers.EInteger other);
 
-Compares a BigInteger object with this instance.
+Compares a EInteger object with this instance.
 
 <b>Parameters:</b>
 
- * <i>other</i>: A BigInteger object.
+ * <i>other</i>: An EInteger object.
 
 <b>Returns:</b>
 
@@ -202,14 +202,14 @@ Zero if the values are equal; a negative number if this instance is less, or a p
 
 ### divide
 
-    public PeterO.BigInteger divide(
-        PeterO.BigInteger bigintDivisor);
+    public PeterO.Numbers.EInteger divide(
+        PeterO.Numbers.EInteger bigintDivisor);
 
-Divides this instance by the value of a BigInteger object. The result is rounded down (the fractional part is discarded). Except if the result is 0, it will be negative if this object is positive and the other is negative, or vice versa, and will be positive if both are positive or both are negative.
+Divides this instance by the value of a EInteger object. The result is rounded down (the fractional part is discarded). Except if the result is 0, it will be negative if this object is positive and the other is negative, or vice versa, and will be positive if both are positive or both are negative.
 
 <b>Parameters:</b>
 
- * <i>bigintDivisor</i>: Another BigInteger object.
+ * <i>bigintDivisor</i>: Another EInteger object.
 
 <b>Returns:</b>
 
@@ -229,14 +229,14 @@ Attempted to divide by zero.
 
 ### divideAndRemainder
 
-    public PeterO.BigInteger[] divideAndRemainder(
-        PeterO.BigInteger divisor);
+    public PeterO.Numbers.EInteger[] divideAndRemainder(
+        PeterO.Numbers.EInteger divisor);
 
 Divides this object by another big integer and returns the quotient and remainder.
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: A BigInteger object.
+ * <i>divisor</i>: An EInteger object.
 
 <b>Returns:</b>
 
@@ -245,12 +245,10 @@ An array with two big integers: the first is the quotient, and the second is the
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- is null.
+The parameter divisor is null.
 
  * System.DivideByZeroException:
-The parameter  <i>divisor</i>
- is 0.
+The parameter divisor is 0.
 
  * System.DivideByZeroException:
 Attempted to divide by zero.
@@ -273,7 +271,7 @@ True if this object and another object are equal; otherwise, false.
 ### Equals
 
     public sealed bool Equals(
-        PeterO.BigInteger other);
+        PeterO.Numbers.EInteger other);
 
 Not documented yet.
 
@@ -285,39 +283,13 @@ Not documented yet.
 
 A Boolean object.
 
-### fromByteArray
-
-    public static PeterO.BigInteger fromByteArray(
-        byte[] bytes,
-        bool littleEndian);
-
-<b>Deprecated.</b> Renamed to 'fromBytes'.
-
-Initializes a BigInteger object from an array of bytes.
-
-<b>Parameters:</b>
-
- * <i>bytes</i>: A byte array.
-
- * <i>littleEndian</i>: A Boolean object.
-
-<b>Returns:</b>
-
-A BigInteger object.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bytes</i>
- is null.
-
 ### fromBytes
 
-    public static PeterO.BigInteger fromBytes(
+    public static PeterO.Numbers.EInteger fromBytes(
         byte[] bytes,
         bool littleEndian);
 
-Initializes a BigInteger object from an array of bytes.
+Initializes a EInteger object from an array of bytes.
 
 <b>Parameters:</b>
 
@@ -327,7 +299,7 @@ Initializes a BigInteger object from an array of bytes.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An EInteger object.
 
 <b>Exceptions:</b>
 
@@ -337,21 +309,21 @@ The parameter  <i>bytes</i>
 
 ### fromRadixString
 
-    public static PeterO.BigInteger fromRadixString(
+    public static PeterO.Numbers.EInteger fromRadixString(
         string str,
         int radix);
 
 Converts a string to an arbitrary-precision integer. The string portion can begin with a minus sign ("-" , U+002D) to indicate that it's negative.
 
-The following example (C#) converts a number in the orm of a hex string to a big integer.    public static BigInteger HexToBigInteger(string hexString) {
+The following example (C#) converts a number in the orm of a hex string to a big integer.    public static EInteger HexToEInteger(string hexString) {
       // Parse the hexadecimal string as a big integer.  Will
       // throw a FormatException if the parsing fails
-      var bigInteger = BigInteger.fromRadixString(hexString, 16);
+      var EInteger = EInteger.fromRadixString(hexString, 16);
       // Optional: Check if the parsed integer is negative
-      if (bigInteger.Sign < 0) {
+      if (EInteger.Sign < 0) {
         throw new FormatException("negative hex string");
       }
-      return bigInteger;
+      return EInteger;
     }
 
 <b>Parameters:</b>
@@ -362,7 +334,7 @@ The following example (C#) converts a number in the orm of a hex string to a big
 
 <b>Returns:</b>
 
-A BigInteger object with the same value as given in the string.
+A EInteger object with the same value as given in the string.
 
 <b>Exceptions:</b>
 
@@ -379,7 +351,7 @@ The string is empty or in an invalid format.
 
 ### fromRadixSubstring
 
-    public static PeterO.BigInteger fromRadixSubstring(
+    public static PeterO.Numbers.EInteger fromRadixSubstring(
         string str,
         int radix,
         int index,
@@ -399,7 +371,7 @@ Converts a portion of a string to an arbitrary-precision integer in a given radi
 
 <b>Returns:</b>
 
-A BigInteger object with the same value as given in the string portion.
+A EInteger object with the same value as given in the string portion.
 
 <b>Exceptions:</b>
 
@@ -419,7 +391,7 @@ The string portion is empty or in an invalid format.
 
 ### fromString
 
-    public static PeterO.BigInteger fromString(
+    public static PeterO.Numbers.EInteger fromString(
         string str);
 
 Converts a string to an arbitrary-precision integer.
@@ -430,7 +402,7 @@ Converts a string to an arbitrary-precision integer.
 
 <b>Returns:</b>
 
-A BigInteger object with the same value as given in the string.
+A EInteger object with the same value as given in the string.
 
 <b>Exceptions:</b>
 
@@ -444,7 +416,7 @@ The parameter  <i>str</i>
 
 ### fromSubstring
 
-    public static PeterO.BigInteger fromSubstring(
+    public static PeterO.Numbers.EInteger fromSubstring(
         string str,
         int index,
         int endIndex);
@@ -461,7 +433,7 @@ Converts a portion of a string to an arbitrary-precision integer. The string por
 
 <b>Returns:</b>
 
-A BigInteger object with the same value as given in the string portion.
+A EInteger object with the same value as given in the string portion.
 
 <b>Exceptions:</b>
 
@@ -481,18 +453,18 @@ The string portion is empty or in an invalid format.
 
 ### gcd
 
-    public PeterO.BigInteger gcd(
-        PeterO.BigInteger bigintSecond);
+    public PeterO.Numbers.EInteger gcd(
+        PeterO.Numbers.EInteger bigintSecond);
 
 Returns the greatest common divisor of two integers. The greatest common divisor (GCD) is also known as the greatest common factor (GCF).
 
 <b>Parameters:</b>
 
- * <i>bigintSecond</i>: Another BigInteger object.
+ * <i>bigintSecond</i>: Another EInteger object.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An EInteger object.
 
 <b>Exceptions:</b>
 
@@ -548,18 +520,6 @@ Gets the lowest set bit in this number's absolute value.
 
 The lowest bit set in the number, starting at 0. Returns 0 if this value is 0 or odd. (NOTE: In future versions, may return -1 instead if this value is 0.).
 
-### getLowestSetBit
-
-    public int getLowestSetBit();
-
-<b>Deprecated.</b> Renamed to getLowBit.
-
-See  `getLowBit()`
-
-<b>Returns:</b>
-
-See getLowBit().
-
 ### getUnsignedBitLength
 
     public int getUnsignedBitLength();
@@ -572,9 +532,9 @@ The number of bits in this object's value. Returns 0 if this object's value is 0
 
 ### GreatestCommonDivisor
 
-    public static PeterO.BigInteger GreatestCommonDivisor(
-        PeterO.BigInteger bigintFirst,
-        PeterO.BigInteger bigintSecond);
+    public static PeterO.Numbers.EInteger GreatestCommonDivisor(
+        PeterO.Numbers.EInteger bigintFirst,
+        PeterO.Numbers.EInteger bigintSecond);
 
 Not documented yet.
 
@@ -594,28 +554,11 @@ A BigInteger object.
 The parameter  <i>bigintFirst</i>
  is null.
 
-### intValue
-
-    public int intValue();
-
-<b>Deprecated.</b> To make the conversion intention clearer use the 'intValueChecked' and 'intValueUnchecked' methods instead. Replace 'intValue' with 'intValueChecked' in your code.
-
-Converts this object's value to a 32-bit signed integer.
-
-<b>Returns:</b>
-
-A 32-bit signed integer.
-
-<b>Exceptions:</b>
-
- * System.OverflowException:
-This object's value is too big to fit a 32-bit signed integer.
-
 ### intValueChecked
 
     public int intValueChecked();
 
-Converts this object's value to a 32-bit signed integer.
+Converts this object's value to a 32-bit signed integer, throwing an exception if it can't fit.
 
 <b>Returns:</b>
 
@@ -636,28 +579,11 @@ Converts this object's value to a 32-bit signed integer. If the value can't fit 
 
 A 32-bit signed integer.
 
-### longValue
-
-    public long longValue();
-
-<b>Deprecated.</b> To make the conversion intention clearer use the 'longValueChecked' and 'longValueUnchecked' methods instead. Replace 'longValue' with 'longValueChecked' in your code.
-
-Converts this object's value to a 64-bit signed integer.
-
-<b>Returns:</b>
-
-A 64-bit signed integer.
-
-<b>Exceptions:</b>
-
- * System.OverflowException:
-This object's value is too big to fit a 64-bit signed integer.
-
 ### longValueChecked
 
     public long longValueChecked();
 
-Converts this object's value to a 64-bit signed integer.
+Converts this object's value to a 64-bit signed integer, throwing an exception if it can't fit.
 
 <b>Returns:</b>
 
@@ -680,10 +606,10 @@ A 64-bit signed integer.
 
 ### mod
 
-    public PeterO.BigInteger mod(
-        PeterO.BigInteger divisor);
+    public PeterO.Numbers.EInteger mod(
+        PeterO.Numbers.EInteger divisor);
 
-Finds the modulus remainder that results when this instance is divided by the value of a BigInteger object. The modulus remainder is the same as the normal remainder if the normal remainder is positive, and equals divisor plus normal remainder if the normal remainder is negative.
+Finds the modulus remainder that results when this instance is divided by the value of a EInteger object. The modulus remainder is the same as the normal remainder if the normal remainder is positive, and equals divisor plus normal remainder if the normal remainder is negative.
 
 <b>Parameters:</b>
 
@@ -691,7 +617,7 @@ Finds the modulus remainder that results when this instance is divided by the va
 
 <b>Returns:</b>
 
-A BigInteger object.
+An EInteger object.
 
 <b>Exceptions:</b>
 
@@ -705,21 +631,21 @@ The parameter  <i>divisor</i>
 
 ### ModPow
 
-    public PeterO.BigInteger ModPow(
-        PeterO.BigInteger pow,
-        PeterO.BigInteger mod);
+    public PeterO.Numbers.EInteger ModPow(
+        PeterO.Numbers.EInteger pow,
+        PeterO.Numbers.EInteger mod);
 
-Calculates the remainder when a BigInteger raised to a certain power is divided by another BigInteger.
+Calculates the remainder when a EInteger raised to a certain power is divided by another EInteger.
 
 <b>Parameters:</b>
 
- * <i>pow</i>: Another BigInteger object.
+ * <i>pow</i>: Another EInteger object.
 
- * <i>mod</i>: A BigInteger object. (3).
+ * <i>mod</i>: A EInteger object. (3).
 
 <b>Returns:</b>
 
-A BigInteger object.
+An EInteger object.
 
 <b>Exceptions:</b>
 
@@ -730,10 +656,10 @@ The parameter  <i>pow</i>
 
 ### ModPow
 
-    public static PeterO.BigInteger ModPow(
-        PeterO.BigInteger bigintValue,
-        PeterO.BigInteger pow,
-        PeterO.BigInteger mod);
+    public static PeterO.Numbers.EInteger ModPow(
+        PeterO.Numbers.EInteger bigintValue,
+        PeterO.Numbers.EInteger pow,
+        PeterO.Numbers.EInteger mod);
 
 Calculates the remainder when a BigInteger raised to a certain power is divided by another BigInteger.
 
@@ -760,14 +686,14 @@ The parameter  <i>bigintValue</i>
 
 ### multiply
 
-    public PeterO.BigInteger multiply(
-        PeterO.BigInteger bigintMult);
+    public PeterO.Numbers.EInteger multiply(
+        PeterO.Numbers.EInteger bigintMult);
 
-Multiplies this instance by the value of a BigInteger object.
+Multiplies this instance by the value of a EInteger object.
 
 <b>Parameters:</b>
 
- * <i>bigintMult</i>: Another BigInteger object.
+ * <i>bigintMult</i>: Another EInteger object.
 
 <b>Returns:</b>
 
@@ -781,7 +707,7 @@ The parameter  <i>bigintMult</i>
 
 ### negate
 
-    public PeterO.BigInteger negate();
+    public PeterO.Numbers.EInteger negate();
 
 Gets the value of this object with the sign reversed.
 
@@ -791,8 +717,8 @@ This object's value with the sign reversed.
 
 ### Not
 
-    public static PeterO.BigInteger Not(
-        PeterO.BigInteger valueA);
+    public static PeterO.Numbers.EInteger Not(
+        PeterO.Numbers.EInteger valueA);
 
 Returns a BigInteger with every bit flipped.
 
@@ -812,9 +738,9 @@ The parameter  <i>valueA</i>
 
 ### Operator `+`
 
-    public static PeterO.BigInteger operator +(
-        PeterO.BigInteger bthis,
-        PeterO.BigInteger augend);
+    public static PeterO.Numbers.EInteger operator +(
+        PeterO.Numbers.EInteger bthis,
+        PeterO.Numbers.EInteger augend);
 
 Adds a BigInteger object and a BigInteger object.
 
@@ -836,9 +762,9 @@ The parameter  <i>bthis</i>
 
 ### Operator `/`
 
-    public static PeterO.BigInteger operator /(
-        PeterO.BigInteger dividend,
-        PeterO.BigInteger divisor);
+    public static PeterO.Numbers.EInteger operator /(
+        PeterO.Numbers.EInteger dividend,
+        PeterO.Numbers.EInteger divisor);
 
 Divides a BigInteger object by the value of a BigInteger object.
 
@@ -861,8 +787,8 @@ The parameter  <i>dividend</i>
 ### Operator `>`
 
     public static bool operator >(
-        PeterO.BigInteger thisValue,
-        PeterO.BigInteger otherValue);
+        PeterO.Numbers.EInteger thisValue,
+        PeterO.Numbers.EInteger otherValue);
 
 Determines whether a BigInteger instance is greater than another BigInteger instance.
 
@@ -881,8 +807,8 @@ True if  <i>thisValue</i>
 ### Operator `>=`
 
     public static bool operator >=(
-        PeterO.BigInteger thisValue,
-        PeterO.BigInteger otherValue);
+        PeterO.Numbers.EInteger thisValue,
+        PeterO.Numbers.EInteger otherValue);
 
 Determines whether a BigInteger value is greater than another BigInteger value.
 
@@ -900,8 +826,8 @@ True if  <i>thisValue</i>
 
 ### Operator `<<`
 
-    public static PeterO.BigInteger operator <<(
-        PeterO.BigInteger bthis,
+    public static PeterO.Numbers.EInteger operator <<(
+        PeterO.Numbers.EInteger bthis,
         int bitCount);
 
 Not documented yet.
@@ -925,8 +851,8 @@ The parameter  <i>bthis</i>
 ### Operator `<`
 
     public static bool operator <(
-        PeterO.BigInteger thisValue,
-        PeterO.BigInteger otherValue);
+        PeterO.Numbers.EInteger thisValue,
+        PeterO.Numbers.EInteger otherValue);
 
 Determines whether a BigInteger instance is less than another BigInteger instance.
 
@@ -945,8 +871,8 @@ True if  <i>thisValue</i>
 ### Operator `<=`
 
     public static bool operator <=(
-        PeterO.BigInteger thisValue,
-        PeterO.BigInteger otherValue);
+        PeterO.Numbers.EInteger thisValue,
+        PeterO.Numbers.EInteger otherValue);
 
 Determines whether a BigInteger instance is less than or equal to another BigInteger instance.
 
@@ -964,9 +890,9 @@ True if  <i>thisValue</i>
 
 ### Operator `%`
 
-    public static PeterO.BigInteger operator %(
-        PeterO.BigInteger dividend,
-        PeterO.BigInteger divisor);
+    public static PeterO.Numbers.EInteger operator %(
+        PeterO.Numbers.EInteger dividend,
+        PeterO.Numbers.EInteger divisor);
 
 Finds the remainder that results when a BigInteger object is divided by the value of a BigInteger object.
 
@@ -988,9 +914,9 @@ The parameter  <i>dividend</i>
 
 ### Operator `*`
 
-    public static PeterO.BigInteger operator *(
-        PeterO.BigInteger operand1,
-        PeterO.BigInteger operand2);
+    public static PeterO.Numbers.EInteger operator *(
+        PeterO.Numbers.EInteger operand1,
+        PeterO.Numbers.EInteger operand2);
 
 Multiplies a BigInteger object by the value of a BigInteger object.
 
@@ -1012,13 +938,19 @@ The parameter  <i>operand1</i>
 
 ### Operator `>>`
 
-    public static PeterO.BigInteger operator >>(
-        PeterO.BigInteger bthis,
-        int smallValue);
+    public static PeterO.Numbers.EInteger operator >>(
+        PeterO.Numbers.EInteger bthis,
+        int bigValue);
 
-Returns a big integer with the bits shifted to the right.
+Shifts the bits of a BigInteger instance to the right.
 
 For this operation, the BigInteger is treated as a two's complement representation. Thus, for negative values, the BigInteger is sign-extended.
+
+<b>Parameters:</b>
+
+ * <i>bthis</i>: Another BigInteger object.
+
+ * <i>bigValue</i>: A 32-bit signed integer.
 
 <b>Returns:</b>
 
@@ -1032,9 +964,9 @@ The parameter  <i>bthis</i>
 
 ### Operator `-`
 
-    public static PeterO.BigInteger operator -(
-        PeterO.BigInteger bthis,
-        PeterO.BigInteger subtrahend);
+    public static PeterO.Numbers.EInteger operator -(
+        PeterO.Numbers.EInteger bthis,
+        PeterO.Numbers.EInteger subtrahend);
 
 Subtracts two BigInteger values.
 
@@ -1056,8 +988,8 @@ The parameter  <i>bthis</i>
 
 ### Operator `-`
 
-    public static PeterO.BigInteger operator -(
-        PeterO.BigInteger bigValue);
+    public static PeterO.Numbers.EInteger operator -(
+        PeterO.Numbers.EInteger bigValue);
 
 Negates a BigInteger object.
 
@@ -1077,9 +1009,9 @@ The parameter  <i>bigValue</i>
 
 ### Or
 
-    public static PeterO.BigInteger Or(
-        PeterO.BigInteger first,
-        PeterO.BigInteger second);
+    public static PeterO.Numbers.EInteger Or(
+        PeterO.Numbers.EInteger first,
+        PeterO.Numbers.EInteger second);
 
 Does an OR operation between two BigInteger instances.
 
@@ -1104,7 +1036,7 @@ The parameter  <i>first</i>
 
 ### pow
 
-    public PeterO.BigInteger pow(
+    public PeterO.Numbers.EInteger pow(
         int powerSmall);
 
 Raises a big integer to a power.
@@ -1126,8 +1058,8 @@ The parameter  <i>powerSmall</i>
 
 ### Pow
 
-    public static PeterO.BigInteger Pow(
-        PeterO.BigInteger bigValue,
+    public static PeterO.Numbers.EInteger Pow(
+        PeterO.Numbers.EInteger bigValue,
         int power);
 
 Not documented yet.
@@ -1150,9 +1082,9 @@ The parameter  <i>bigValue</i>
 
 ### Pow
 
-    public static PeterO.BigInteger Pow(
-        PeterO.BigInteger bigValue,
-        PeterO.BigInteger power);
+    public static PeterO.Numbers.EInteger Pow(
+        PeterO.Numbers.EInteger bigValue,
+        PeterO.Numbers.EInteger power);
 
 Not documented yet.
 
@@ -1175,8 +1107,8 @@ The parameter  <i>bigValue</i>
 
 ### PowBigIntVar
 
-    public PeterO.BigInteger PowBigIntVar(
-        PeterO.BigInteger power);
+    public PeterO.Numbers.EInteger PowBigIntVar(
+        PeterO.Numbers.EInteger power);
 
 Raises a big integer to a power, which is given as another big integer.
 
@@ -1201,14 +1133,14 @@ The parameter  <i>power</i>
 
 ### remainder
 
-    public PeterO.BigInteger remainder(
-        PeterO.BigInteger divisor);
+    public PeterO.Numbers.EInteger remainder(
+        PeterO.Numbers.EInteger divisor);
 
-Finds the remainder that results when this instance is divided by the value of a BigInteger object. The remainder is the value that remains when the absolute value of this object is divided by the absolute value of the other object; the remainder has the same sign (positive or negative) as this object.
+Finds the remainder that results when this instance is divided by the value of a EInteger object. The remainder is the value that remains when the absolute value of this object is divided by the absolute value of the other object; the remainder has the same sign (positive or negative) as this object.
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: Another BigInteger object.
+ * <i>divisor</i>: Another EInteger object.
 
 <b>Returns:</b>
 
@@ -1225,7 +1157,7 @@ Attempted to divide by zero.
 
 ### shiftLeft
 
-    public PeterO.BigInteger shiftLeft(
+    public PeterO.Numbers.EInteger shiftLeft(
         int numberBits);
 
 Returns a big integer with the bits shifted to the left by a number of bits. A value of 1 doubles this value, a value of 2 multiplies it by 4, a value of 3 by 8, a value of 4 by 16, and so on.
@@ -1236,14 +1168,14 @@ Returns a big integer with the bits shifted to the left by a number of bits. A v
 
 <b>Returns:</b>
 
-A BigInteger object.
+An EInteger object.
 
 ### shiftRight
 
-    public PeterO.BigInteger shiftRight(
+    public PeterO.Numbers.EInteger shiftRight(
         int numberBits);
 
-Returns a big integer with the bits shifted to the right. For this operation, the BigInteger is treated as a two's complement representation. Thus, for negative values, the BigInteger is sign-extended.
+Returns a big integer with the bits shifted to the right. For this operation, the big integer is treated as a two's complement representation. Thus, for negative values, the EInteger is sign-extended.
 
 <b>Parameters:</b>
 
@@ -1251,11 +1183,11 @@ Returns a big integer with the bits shifted to the right. For this operation, th
 
 <b>Returns:</b>
 
-A BigInteger object.
+An EInteger object.
 
 ### sqrt
 
-    public PeterO.BigInteger sqrt();
+    public PeterO.Numbers.EInteger sqrt();
 
 Finds the square root of this instance's value, rounded down.
 
@@ -1265,7 +1197,7 @@ The square root of this object's value. Returns 0 if this value is 0 or less.
 
 ### sqrtWithRemainder
 
-    public PeterO.BigInteger[] sqrtWithRemainder();
+    public PeterO.Numbers.EInteger[] sqrtWithRemainder();
 
 Calculates the square root and the remainder.
 
@@ -1275,14 +1207,14 @@ An array of two big integers: the first integer is the square root, and the seco
 
 ### subtract
 
-    public PeterO.BigInteger subtract(
-        PeterO.BigInteger subtrahend);
+    public PeterO.Numbers.EInteger subtract(
+        PeterO.Numbers.EInteger subtrahend);
 
-Subtracts a BigInteger from this BigInteger.
+Subtracts a EInteger from this EInteger.
 
 <b>Parameters:</b>
 
- * <i>subtrahend</i>: Another BigInteger object.
+ * <i>subtrahend</i>: Another EInteger object.
 
 <b>Returns:</b>
 
@@ -1308,35 +1240,6 @@ Returns whether a bit is set in the two's-complement representation of this obje
 <b>Returns:</b>
 
 True if a bit is set in the two's-complement representation of this object's value; otherwise, false.
-
-### toByteArray
-
-    public byte[] toByteArray(
-        bool littleEndian);
-
-<b>Deprecated.</b> Renamed to 'toBytes'.
-
-Returns a byte array of this object's value.
-
-<b>Parameters:</b>
-
- * <i>littleEndian</i>: A Boolean object.
-
-<b>Returns:</b>
-
-A byte array.
-
-### ToByteArray
-
-    public byte[] ToByteArray();
-
-<b>Deprecated.</b> Use 'toBytes(true)' instead.
-
-Not documented yet.
-
-<b>Returns:</b>
-
-A byte array.
 
 ### toBytes
 
@@ -1385,7 +1288,7 @@ A string representation of this object. If negative, the string will begin with 
 
 ### valueOf
 
-    public static PeterO.BigInteger valueOf(
+    public static PeterO.Numbers.EInteger valueOf(
         long longerValue);
 
 Converts a 64-bit signed integer to a big integer.
@@ -1396,13 +1299,13 @@ Converts a 64-bit signed integer to a big integer.
 
 <b>Returns:</b>
 
-A BigInteger object with the same value as the 64-bit number.
+A EInteger object with the same value as the 64-bit number.
 
 ### Xor
 
-    public static PeterO.BigInteger Xor(
-        PeterO.BigInteger a,
-        PeterO.BigInteger b);
+    public static PeterO.Numbers.EInteger Xor(
+        PeterO.Numbers.EInteger a,
+        PeterO.Numbers.EInteger b);
 
 Finds the exclusive "or" of two BigInteger objects.
 

@@ -65,8 +65,6 @@
   <ItemGroup>
     <Compile Include="PeterO\BigInteger.cs" />
     <Compile Include="PeterO\BigIntegerExtra.cs" />
-    <Compile Include="PeterO\BigNumberFlags.cs" />
-    <Compile Include="PeterO\BitShiftAccumulator.cs" />
     <Compile Include="PeterO\Cbor\Base64.cs" />
     <Compile Include="PeterO\Cbor\CBORBigInteger.cs" />
     <Compile Include="PeterO\Cbor\CBORDataUtilities.cs" />
@@ -103,6 +101,7 @@
     <Compile Include="PeterO\Cbor\CBORUtilities.cs" />
     <Compile Include="PeterO\Cbor\CharacterReader.cs" />
     <Compile Include="PeterO\Cbor\CharacterInputWithCount.cs" />
+    <Compile Include="PeterO\Cbor\FastInteger2.cs" />
     <Compile Include="PeterO\Cbor\ICBORConverter.cs" />
     <Compile Include="PeterO\Cbor\ICBORNumber.cs" />
     <Compile Include="PeterO\Cbor\ICBORTag.cs" />
@@ -114,26 +113,36 @@
     <Compile Include="PeterO\Cbor\URIUtility.cs" />
     <Compile Include="PeterO\DataUtilities.cs" />
     <Compile Include="PeterO\DebugUtility.cs" />
-    <Compile Include="PeterO\DecimalUtility.cs" />
-    <Compile Include="PeterO\DigitShiftAccumulator.cs" />
     <Compile Include="PeterO\ExtendedDecimal.cs" />
     <Compile Include="PeterO\ExtendedFloat.cs" />
-    <Compile Include="PeterO\ExtendedOrSimpleRadixMath.cs" />
     <Compile Include="PeterO\ExtendedRational.cs" />
-    <Compile Include="PeterO\Extras.cs" />
-    <Compile Include="PeterO\FastInteger.cs" />
-    <Compile Include="PeterO\IRadixMath.cs" />
-    <Compile Include="PeterO\IRadixMathHelper.cs" />
-    <Compile Include="PeterO\IShiftAccumulator.cs" />
+    <Compile Include="PeterO\Numbers\EInteger.cs" />
+    <Compile Include="PeterO\Numbers\EIntegerExtra.cs" />
+    <Compile Include="PeterO\Numbers\BigNumberFlags.cs" />
+    <Compile Include="PeterO\Numbers\BitShiftAccumulator.cs" />
+    <Compile Include="PeterO\Numbers\DecimalUtility.cs" />
+    <Compile Include="PeterO\Numbers\DigitShiftAccumulator.cs" />
+    <Compile Include="PeterO\Numbers\EDecimal.cs" />
+    <Compile Include="PeterO\Numbers\EFloat.cs" />
+    <Compile Include="PeterO\Numbers\ExtendedOrSimpleRadixMath.cs" />
+    <Compile Include="PeterO\Numbers\ERational.cs" />
+    <Compile Include="PeterO\Numbers\Extras.cs" />
+    <Compile Include="PeterO\Numbers\FastInteger.cs" />
+    <Compile Include="PeterO\Numbers\IRadixMath.cs" />
+    <Compile Include="PeterO\Numbers\IRadixMathHelper.cs" />
+    <Compile Include="PeterO\Numbers\IShiftAccumulator.cs" />
+    <Compile Include="PeterO\Numbers\EContext.cs" />
+    <Compile Include="PeterO\Numbers\RadixMath.cs" />
+    <Compile Include="PeterO\Numbers\ERounding.cs" />
+    <Compile Include="PeterO\Numbers\SimpleRadixMath.cs" />
+    <Compile Include="PeterO\Numbers\TrapException.cs" />
+    <Compile Include="PeterO\Numbers\TrappableRadixMath.cs" />
     <Compile Include="PeterO\PrecisionContext.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PeterO\RadixMath.cs" />
-    <Compile Include="PeterO\RedBlackTree.cs" />
     <Compile Include="PeterO\Rounding.cs" />
-    <Compile Include="PeterO\SimpleRadixMath.cs" />
-    <Compile Include="PeterO\SortedMap.cs" />
     <Compile Include="PeterO\TrapException.cs" />
-    <Compile Include="PeterO\TrappableRadixMath.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PeterO\RedBlackTree.cs" />
+    <Compile Include="PeterO\SortedMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CBOR.ruleset" />

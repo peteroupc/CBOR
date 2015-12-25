@@ -7,7 +7,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 
-namespace PeterO {
+namespace PeterO.Numbers {
   internal static class BigNumberFlags {
     internal const int FlagNegative = 1;
     internal const int FlagQuietNaN = 4;
@@ -17,12 +17,11 @@ namespace PeterO {
     FlagInfinity;
 
     internal const int FlagNaN = FlagQuietNaN | FlagSignalingNaN;
-    internal const int UnderflowFlags = PrecisionContext.FlagInexact |
-    PrecisionContext.FlagSubnormal |
-                PrecisionContext.FlagUnderflow | PrecisionContext.FlagRounded;
+    internal const int UnderflowFlags = EContext.FlagInexact |
+    EContext.FlagSubnormal | EContext.FlagUnderflow | EContext.FlagRounded;
 
-    internal const int LostDigitsFlags = PrecisionContext.FlagLostDigits |
-    PrecisionContext.FlagInexact | PrecisionContext.FlagRounded;
+    internal const int LostDigitsFlags = EContext.FlagLostDigits |
+    EContext.FlagInexact | EContext.FlagRounded;
 
     internal const int FiniteOnly = 0;
     internal const int FiniteAndNonFinite = 1;

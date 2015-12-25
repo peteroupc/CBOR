@@ -142,7 +142,12 @@ Assert.AreEqual(1, numberTemp);
     }
     [Test]
     public void TestEquals() {
-      // not implemented yet
+      var r = new FastRandom();
+      for (var i = 0; i < 500; ++i) {
+        ExtendedDecimal bigintA = RandomObjects.RandomExtendedDecimal(r);
+        ExtendedDecimal bigintB = RandomObjects.RandomExtendedDecimal(r);
+        TestCommon.AssertEqualsHashCode(bigintA, bigintB);
+      }
     }
     [Test]
     public void TestExp() {
@@ -1035,10 +1040,6 @@ Assert.AreEqual(1, numberTemp);
     }
     [Test]
     public void TestFromString() {
-      // not implemented yet
-    }
-    [Test]
-    public void TestGetHashCode() {
       // not implemented yet
     }
     [Test]

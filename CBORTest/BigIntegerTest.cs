@@ -297,6 +297,12 @@ string result) {
       Assert.IsFalse(BigInteger.Zero.Equals(null));
       Assert.IsFalse(BigInteger.One.Equals(BigInteger.Zero));
       Assert.IsFalse(BigInteger.Zero.Equals(BigInteger.One));
+      var r = new FastRandom();
+      for (var i = 0; i < 500; ++i) {
+        BigInteger bigintA = RandomObjects.RandomBigInteger(r);
+        BigInteger bigintB = RandomObjects.RandomBigInteger(r);
+        TestCommon.AssertEqualsHashCode(bigintA, bigintB);
+      }
     }
 
     public static int ModPow(int x, int pow, int intMod) {
@@ -415,7 +421,6 @@ string result) {
 
     [Test]
     public void TestGcd() {
-#if UNUSED
       try {
  BigInteger.Zero.gcd(null);
 Assert.Fail("Should have failed");
@@ -425,7 +430,6 @@ Console.Write(String.Empty);
  Assert.Fail(ex.ToString());
 throw new InvalidOperationException(String.Empty, ex);
 }
-#endif
       {
 string stringTemp = BigInteger.Zero.gcd(BigFromString(
 "244")).ToString();
@@ -620,19 +624,11 @@ stringTemp);
       // not implemented yet
     }
     [Test]
-    public void TestGetHashCode() {
-      // not implemented yet
-    }
-    [Test]
     public void TestGetLowBit() {
       // not implemented yet
     }
     [Test]
     public void TestGetUnsignedBitLength() {
-      // not implemented yet
-    }
-    [Test]
-    public void TestGreatestCommonDivisor() {
       // not implemented yet
     }
 
@@ -963,7 +959,7 @@ stringTemp);
     public void TestIsZero() {
       // not implemented yet
     }
-#if UNUSED
+#if true
 
     [Test]
     public void TestDivideAndRemainder() {
@@ -1703,6 +1699,15 @@ throw new InvalidOperationException(String.Empty, ex);
     }
     [Test]
     public void TestMultiply() {
+      try {
+        BigInteger.One.multiply(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       var r = new FastRandom();
       for (var i = 0; i < 10000; ++i) {
         BigInteger bigintA = RandomBigInteger(r);
@@ -1900,7 +1905,7 @@ throw new InvalidOperationException(String.Empty, ex);
       }
     }
 
-#if UNUSED
+#if true
     [Test]
     public void TestMiscellaneous() {
       Assert.AreEqual(1, BigInteger.Zero.getDigitCount());
@@ -1972,15 +1977,6 @@ Console.Write(String.Empty);
 
     [Test]
     public void TestExceptions() {
-      try {
-        BigInteger.fromSubstring(null, 0, 1);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
       try {
         BigFromString(null);
         Assert.Fail("Should have failed");
@@ -2057,15 +2053,6 @@ Console.Write(String.Empty);
       }
       try {
         BigInteger.One.subtract(null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        BigInteger.One.multiply(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
 Console.Write(String.Empty);

@@ -7,7 +7,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 
-namespace PeterO {
+namespace PeterO.Numbers {
   internal static class Extras {
     public static int[] DoubleToIntegers(double dbl) {
       long value = BitConverter.ToInt64(

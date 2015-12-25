@@ -732,7 +732,7 @@ namespace PeterO.Cbor {
       }
       if (firstbyte == 0xc0) {
         // value with tag 0
-        String s = GetOptimizedStringIfShortAscii(data, 1);
+        string s = GetOptimizedStringIfShortAscii(data, 1);
         if (s != null) {
           return new CBORObject(FromObject(s), 0, 0);
         }
@@ -1185,8 +1185,7 @@ namespace PeterO.Cbor {
         System.Collections.IDictionary objdic =
           (System.Collections.IDictionary)obj;
         foreach (object key in (System.Collections.IDictionary)objdic) {
-       objret[CBORObject.FromObject(key)] =
-            CBORObject.FromObject(objdic[key]);
+       objret[CBORObject.FromObject(key)] = CBORObject.FromObject(objdic[key]);
         }
         return objret;
       }
@@ -1361,6 +1360,9 @@ namespace PeterO.Cbor {
     /// <exception cref='CBORException'>There was an error in reading or
     /// parsing the data.</exception>
     public static CBORObject Read(Stream stream) {
+      if ((stream) == null) {
+  throw new ArgumentNullException("stream");
+}
       try {
         return new CBORReader(stream).Read(null);
       } catch (IOException ex) {
@@ -2168,8 +2170,8 @@ namespace PeterO.Cbor {
     /// this object's value. Note that if this object is a decimal number
     /// with a fractional part, the conversion may lose information
     /// depending on the number. If this object is a rational number with a
-    /// nonterminating binary expansion, returns a decimal number rounded
-    /// to 113 digits.</returns>
+    /// nonterminating binary expansion, returns a binary floating-point
+    /// number rounded to 113 bits.</returns>
     /// <exception cref='System.InvalidOperationException'>This object's
     /// type is not a number type, including if this object is
     /// CBORObject.Null.</exception>
@@ -2532,22 +2534,18 @@ namespace PeterO.Cbor {
         } else {
           // DebugUtility.Log("a=" + this + " b=" + other);
           if (typeA == CBORObjectTypeExtendedRational) {
-        ExtendedRational e1 =
-              NumberInterfaces[typeA].AsExtendedRational(objA);
+        ExtendedRational e1 = NumberInterfaces[typeA].AsExtendedRational(objA);
             if (typeB == CBORObjectTypeExtendedDecimal) {
-          ExtendedDecimal e2 =
-                NumberInterfaces[typeB].AsExtendedDecimal(objB);
+          ExtendedDecimal e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
               cmp = e1.CompareToDecimal(e2);
             } else {
               ExtendedFloat e2 = NumberInterfaces[typeB].AsExtendedFloat(objB);
               cmp = e1.CompareToBinary(e2);
             }
           } else if (typeB == CBORObjectTypeExtendedRational) {
-        ExtendedRational e2 =
-              NumberInterfaces[typeB].AsExtendedRational(objB);
+        ExtendedRational e2 = NumberInterfaces[typeB].AsExtendedRational(objB);
             if (typeA == CBORObjectTypeExtendedDecimal) {
-          ExtendedDecimal e1 =
-                NumberInterfaces[typeA].AsExtendedDecimal(objA);
+          ExtendedDecimal e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
               cmp = e2.CompareToDecimal(e1);
               cmp = -cmp;
             } else {
@@ -3521,7 +3519,7 @@ namespace PeterO.Cbor {
       int majortype = firstbyte >> 5;
       if (firstbyte >= 0x61 && firstbyte < 0x78) {
         // text string length 1 to 23
-        String s = GetOptimizedStringIfShortAscii(data, 0);
+        string s = GetOptimizedStringIfShortAscii(data, 0);
         if (s != null) {
           return new CBORObject(CBORObjectTypeTextString, s);
         }
@@ -4201,7 +4199,7 @@ namespace PeterO.Cbor {
       s.Write(bytes, 0, bytes.Length);
     }
 
-    private static void WriteStreamedString(String str, Stream stream) {
+    private static void WriteStreamedString(string str, Stream stream) {
       byte[] bytes;
       bytes = GetOptimizedBytesIfShortAscii(str, -1);
       if (bytes != null) {

@@ -9,6 +9,7 @@ Help/
 *.nupkg
 *.versionsBackup
 *.sdsettings
+*.vspx
 TestResults/
 CBORTest/bin/
 CBORTest/obj/

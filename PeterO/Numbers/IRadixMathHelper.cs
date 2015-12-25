@@ -7,7 +7,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 
-namespace PeterO {
+namespace PeterO.Numbers {
   internal interface IRadixMathHelper<T> {
     int GetRadix();
 
@@ -17,23 +17,23 @@ namespace PeterO {
 
     int GetFlags(T value);
 
-    BigInteger GetMantissa(T value);
+    EInteger GetMantissa(T value);
 
-    BigInteger GetExponent(T value);
+    EInteger GetExponent(T value);
 
     T ValueOf(int val);
 
-    T CreateNewWithFlags(BigInteger mantissa, BigInteger exponent, int flags);
+    T CreateNewWithFlags(EInteger mantissa, EInteger exponent, int flags);
 
     IShiftAccumulator CreateShiftAccumulatorWithDigits(
-BigInteger value,
+EInteger value,
 int lastDigit,
 int olderDigits);
 
-    IShiftAccumulator CreateShiftAccumulator(BigInteger value);
+    IShiftAccumulator CreateShiftAccumulator(EInteger value);
 
-    bool HasTerminatingRadixExpansion(BigInteger num, BigInteger den);
+    bool HasTerminatingRadixExpansion(EInteger num, EInteger den);
 
-    BigInteger MultiplyByRadixPower(BigInteger value, FastInteger power);
+    EInteger MultiplyByRadixPower(EInteger value, FastInteger power);
   }
 }

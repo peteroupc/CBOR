@@ -525,7 +525,7 @@ Converts this object to an arbitrary-precision binary floating point number.
 
 <b>Returns:</b>
 
-An arbitrary-precision binary floating point number for this object's value. Note that if this object is a decimal number with a fractional part, the conversion may lose information depending on the number. If this object is a rational number with a nonterminating binary expansion, returns a decimal number rounded to 113 digits.
+An arbitrary-precision binary floating point number for this object's value. Note that if this object is a decimal number with a fractional part, the conversion may lose information depending on the number. If this object is a rational number with a nonterminating binary expansion, returns a binary floating-point number rounded to 113 bits.
 
 <b>Exceptions:</b>
 
