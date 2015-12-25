@@ -24,7 +24,7 @@ namespace PeterO {
 
     public static void Log(string str) {
       Type type = Type.GetType("System.Console");
-      var types = new[] { typeof(String) };
+      var types = new[] { typeof(string) };
       GetTypeMethod(type,"WriteLine", types).Invoke(
         type,
         new object[] { str });

@@ -6,7 +6,6 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
 
 namespace PeterO.Cbor {
     /// <summary>Contains methods useful for reading and writing data, with
@@ -52,7 +51,7 @@ namespace PeterO.Cbor {
         ++offset;
       }
       var mantInt = 0;
-      FastInteger mant = null;
+      FastInteger2 mant = null;
       var mantBuffer = 0;
       var mantBufferMult = 1;
       var expBuffer = 0;
@@ -62,7 +61,7 @@ namespace PeterO.Cbor {
       var haveDigitsAfterDecimal = false;
       var haveExponent = false;
       var newScaleInt = 0;
-      FastInteger newScale = null;
+      FastInteger2 newScale = null;
       int i = offset;
       // Ordinary number
       if (i < str.Length && str[i] == '0') {
@@ -89,7 +88,7 @@ namespace PeterO.Cbor {
           var thisdigit = (int)(str[i] - '0');
           if (mantInt > MaxSafeInt) {
             if (mant == null) {
-              mant = new FastInteger(mantInt);
+              mant = new FastInteger2(mantInt);
               mantBuffer = thisdigit;
               mantBufferMult = 10;
             } else {
@@ -111,7 +110,7 @@ namespace PeterO.Cbor {
           if (haveDecimalPoint) {
             haveDigitsAfterDecimal = true;
             if (newScaleInt == Int32.MinValue) {
-              newScale = newScale ?? (new FastInteger(newScaleInt));
+              newScale = newScale ?? (new FastInteger2(newScaleInt));
               newScale.AddInt(-1);
             } else {
               --newScaleInt;
@@ -141,7 +140,7 @@ namespace PeterO.Cbor {
         mant.Multiply(mantBufferMult).AddInt(mantBuffer);
       }
       if (haveExponent) {
-        FastInteger exp = null;
+        FastInteger2 exp = null;
         var expInt = 0;
         offset = 1;
         haveDigits = false;
@@ -160,7 +159,7 @@ namespace PeterO.Cbor {
             var thisdigit = (int)(str[i] - '0');
             if (expInt > MaxSafeInt) {
               if (exp == null) {
-                exp = new FastInteger(expInt);
+                exp = new FastInteger2(expInt);
                 expBuffer = thisdigit;
                 expBufferMult = 10;
               } else {
@@ -193,14 +192,14 @@ namespace PeterO.Cbor {
             null) {
           newScaleInt = expInt;
         } else if (exp == null) {
-          newScale = newScale ?? (new FastInteger(newScaleInt));
+          newScale = newScale ?? (new FastInteger2(newScaleInt));
           if (offset < 0) {
             newScale.SubtractInt(expInt);
           } else if (expInt != 0) {
             newScale.AddInt(expInt);
           }
         } else {
-          newScale = newScale ?? (new FastInteger(newScaleInt));
+          newScale = newScale ?? (new FastInteger2(newScaleInt));
           if (offset < 0) {
             newScale.Subtract(exp);
           } else {

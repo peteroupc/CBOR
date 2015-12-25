@@ -1,6 +1,6 @@
-## PeterO.ExtendedFloat
+## PeterO.Numbers.EFloat
 
-    public sealed class ExtendedFloat :
+    public sealed class EFloat :
         System.IComparable,
         System.IEquatable
 
@@ -20,55 +20,55 @@ An ExtendedFloat value can be serialized in one of the following ways:
 
 ### NaN
 
-    public static readonly PeterO.ExtendedFloat NaN;
+    public static readonly PeterO.Numbers.EFloat NaN;
 
 A not-a-number value.
 
 ### NegativeInfinity
 
-    public static readonly PeterO.ExtendedFloat NegativeInfinity;
+    public static readonly PeterO.Numbers.EFloat NegativeInfinity;
 
 Negative infinity, less than any other number.
 
 ### NegativeZero
 
-    public static readonly PeterO.ExtendedFloat NegativeZero;
+    public static readonly PeterO.Numbers.EFloat NegativeZero;
 
 Represents the number negative zero.
 
 ### One
 
-    public static readonly PeterO.ExtendedFloat One;
+    public static readonly PeterO.Numbers.EFloat One;
 
 Represents the number 1.
 
 ### PositiveInfinity
 
-    public static readonly PeterO.ExtendedFloat PositiveInfinity;
+    public static readonly PeterO.Numbers.EFloat PositiveInfinity;
 
 Positive infinity, greater than any other number.
 
 ### SignalingNaN
 
-    public static readonly PeterO.ExtendedFloat SignalingNaN;
+    public static readonly PeterO.Numbers.EFloat SignalingNaN;
 
 A not-a-number value that signals an invalid operation flag when it's passed as an argument to any arithmetic operation in ExtendedFloat.
 
 ### Ten
 
-    public static readonly PeterO.ExtendedFloat Ten;
+    public static readonly PeterO.Numbers.EFloat Ten;
 
 Represents the number 10.
 
 ### Zero
 
-    public static readonly PeterO.ExtendedFloat Zero;
+    public static readonly PeterO.Numbers.EFloat Zero;
 
 Represents the number 0.
 
 ### Exponent
 
-    public PeterO.BigInteger Exponent { get; }
+    public PeterO.Numbers.EInteger Exponent { get; }
 
 Gets this object's exponent. This object's value will be an integer if the exponent is positive or zero.
 
@@ -108,7 +108,7 @@ True if this object's value equals 0; otherwise, false.
 
 ### Mantissa
 
-    public PeterO.BigInteger Mantissa { get; }
+    public PeterO.Numbers.EInteger Mantissa { get; }
 
 Gets this object's un-scaled value.
 
@@ -128,7 +128,7 @@ This value's sign: -1 if negative; 1 if positive; 0 if zero.
 
 ### UnsignedMantissa
 
-    public PeterO.BigInteger UnsignedMantissa { get; }
+    public PeterO.Numbers.EInteger UnsignedMantissa { get; }
 
 Gets the absolute value of this object's un-scaled value.
 
@@ -138,8 +138,8 @@ The absolute value of this object's un-scaled value.
 
 ### Abs
 
-    public PeterO.ExtendedFloat Abs(
-        PeterO.PrecisionContext context);
+    public PeterO.Numbers.EFloat Abs(
+        PeterO.Numbers.EContext context);
 
 Finds the absolute value of this object (if it's negative, it becomes positive).
 
@@ -151,15 +151,9 @@ Finds the absolute value of this object (if it's negative, it becomes positive).
 
 The absolute value of this object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>context</i>
- is null.
-
 ### Abs
 
-    public PeterO.ExtendedFloat Abs();
+    public PeterO.Numbers.EFloat Abs();
 
 Gets the absolute value of this object.
 
@@ -169,8 +163,8 @@ An ExtendedFloat object.
 
 ### Add
 
-    public PeterO.ExtendedFloat Add(
-        PeterO.ExtendedFloat otherValue);
+    public PeterO.Numbers.EFloat Add(
+        PeterO.Numbers.EFloat otherValue);
 
 Adds this object and another binary float and returns the result.
 
@@ -182,17 +176,11 @@ Adds this object and another binary float and returns the result.
 
 The sum of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- is null.
-
 ### Add
 
-    public PeterO.ExtendedFloat Add(
-        PeterO.ExtendedFloat otherValue,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat Add(
+        PeterO.Numbers.EFloat otherValue,
+        PeterO.Numbers.EContext ctx);
 
 Finds the sum of this object and another object. The result's exponent is set to the lower of the exponents of the two operands.
 
@@ -206,17 +194,10 @@ Finds the sum of this object and another object. The result's exponent is set to
 
 The sum of thisValue and the other object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- or  <i>ctx</i>
- is null.
-
 ### CompareTo
 
     public sealed int CompareTo(
-        PeterO.ExtendedFloat other);
+        PeterO.Numbers.EFloat other);
 
 Compares the mathematical values of this object and another object, accepting NaN values.This method is not consistent with the Equals method because two different numbers with the same mathematical value, but different exponents, will compare as equal.
 
@@ -233,17 +214,11 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 Less than 0 if this object's value is less than the other value, or greater than 0 if this object's value is greater than the other value or if  <i>other</i>
  is null, or 0 if both values are equal.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- is null.
-
 ### CompareToSignal
 
-    public PeterO.ExtendedFloat CompareToSignal(
-        PeterO.ExtendedFloat other,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat CompareToSignal(
+        PeterO.Numbers.EFloat other,
+        PeterO.Numbers.EContext ctx);
 
 Compares the mathematical values of this object and another object, treating quiet NaN as signaling.In this method, negative zero and positive zero are considered equal.
 
@@ -259,18 +234,11 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
 Quiet NaN if this object or the other object is NaN, or 0 if both objects have the same value, or -1 if this object is less than the other value, or 1 if this object is greater.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- or  <i>ctx</i>
- is null.
-
 ### CompareToWithContext
 
-    public PeterO.ExtendedFloat CompareToWithContext(
-        PeterO.ExtendedFloat other,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat CompareToWithContext(
+        PeterO.Numbers.EFloat other,
+        PeterO.Numbers.EContext ctx);
 
 Compares the mathematical values of this object and another object.In this method, negative zero and positive zero are considered equal.
 
@@ -286,16 +254,9 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
 Quiet NaN if this object or the other object is NaN, or 0 if both objects have the same value, or -1 if this object is less than the other value, or 1 if this object is greater.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- or  <i>ctx</i>
- is null.
-
 ### Create
 
-    public static PeterO.ExtendedFloat Create(
+    public static PeterO.Numbers.EFloat Create(
         int mantissaSmall,
         int exponentSmall);
 
@@ -313,9 +274,9 @@ An ExtendedFloat object.
 
 ### Create
 
-    public static PeterO.ExtendedFloat Create(
-        PeterO.BigInteger mantissa,
-        PeterO.BigInteger exponent);
+    public static PeterO.Numbers.EFloat Create(
+        PeterO.Numbers.EInteger mantissa,
+        PeterO.Numbers.EInteger exponent);
 
 Creates a number with the value exponent*2^mantissa.
 
@@ -338,8 +299,8 @@ The parameter  <i>mantissa</i>
 
 ### CreateNaN
 
-    public static PeterO.ExtendedFloat CreateNaN(
-        PeterO.BigInteger diag);
+    public static PeterO.Numbers.EFloat CreateNaN(
+        PeterO.Numbers.EInteger diag);
 
 Creates a not-a-number ExtendedFloat object.
 
@@ -363,11 +324,11 @@ The parameter  <i>diag</i>
 
 ### CreateNaN
 
-    public static PeterO.ExtendedFloat CreateNaN(
-        PeterO.BigInteger diag,
+    public static PeterO.Numbers.EFloat CreateNaN(
+        PeterO.Numbers.EInteger diag,
         bool signaling,
         bool negative,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Creates a not-a-number ExtendedFloat object.
 
@@ -397,8 +358,8 @@ The parameter  <i>diag</i>
 
 ### Divide
 
-    public PeterO.ExtendedFloat Divide(
-        PeterO.ExtendedFloat divisor);
+    public PeterO.Numbers.EFloat Divide(
+        PeterO.Numbers.EFloat divisor);
 
 Divides this object by another binary float and returns the result. When possible, the result will be exact.
 
@@ -415,15 +376,11 @@ The quotient of the two numbers. Signals FlagDivideByZero and returns infinity i
  * System.ArithmeticException:
 The result can't be exact because it would have a nonterminating binary expansion.
 
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- is null.
-
 ### Divide
 
-    public PeterO.ExtendedFloat Divide(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat Divide(
+        PeterO.Numbers.EFloat divisor,
+        PeterO.Numbers.EContext ctx);
 
 Divides this ExtendedFloat object by another ExtendedFloat object. The preferred exponent for the result is this object's exponent minus the divisor's exponent.
 
@@ -444,15 +401,10 @@ Either  <i>ctx</i>
 is null or  <i>ctx</i>
  's precision is 0, and the result would have a nonterminating binary expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
 
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
-
 ### DivideAndRemainderNaturalScale
 
-    public PeterO.ExtendedFloat[] DivideAndRemainderNaturalScale(
-        PeterO.ExtendedFloat divisor);
+    public PeterO.Numbers.EFloat[] DivideAndRemainderNaturalScale(
+        PeterO.Numbers.EFloat divisor);
 
 Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale. This is meant to be similar to the divideAndRemainder method in Java's BigDecimal.
 
@@ -466,9 +418,9 @@ A 2 element array consisting of the quotient and remainder in that order.
 
 ### DivideAndRemainderNaturalScale
 
-    public PeterO.ExtendedFloat[] DivideAndRemainderNaturalScale(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat[] DivideAndRemainderNaturalScale(
+        PeterO.Numbers.EFloat divisor,
+        PeterO.Numbers.EContext ctx);
 
 Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale. This is meant to be similar to the divideAndRemainder method in Java's BigDecimal.
 
@@ -484,10 +436,10 @@ A 2 element array consisting of the quotient and remainder in that order.
 
 ### DivideToExponent
 
-    public PeterO.ExtendedFloat DivideToExponent(
-        PeterO.ExtendedFloat divisor,
+    public PeterO.Numbers.EFloat DivideToExponent(
+        PeterO.Numbers.EFloat divisor,
         long desiredExponentSmall,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Divides two ExtendedFloat objects, and gives a particular exponent to the result.
 
@@ -508,17 +460,12 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
  * System.ArithmeticException:
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
-
 ### DivideToExponent
 
-    public PeterO.ExtendedFloat DivideToExponent(
-        PeterO.ExtendedFloat divisor,
+    public PeterO.Numbers.EFloat DivideToExponent(
+        PeterO.Numbers.EFloat divisor,
         long desiredExponentSmall,
-        PeterO.Rounding rounding);
+        PeterO.Numbers.ERounding rounding);
 
 Divides two ExtendedFloat objects, and gives a particular exponent to the result.
 
@@ -539,16 +486,12 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
  * System.ArithmeticException:
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- is null.
-
 ### DivideToExponent
 
-    public PeterO.ExtendedFloat DivideToExponent(
-        PeterO.ExtendedFloat divisor,
-        PeterO.BigInteger desiredExponent,
-        PeterO.Rounding rounding);
+    public PeterO.Numbers.EFloat DivideToExponent(
+        PeterO.Numbers.EFloat divisor,
+        PeterO.Numbers.EInteger desiredExponent,
+        PeterO.Numbers.ERounding rounding);
 
 Divides two ExtendedFloat objects, and gives a particular exponent to the result.
 
@@ -569,17 +512,12 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
  * System.ArithmeticException:
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>desiredExponent</i>
- is null.
-
 ### DivideToExponent
 
-    public PeterO.ExtendedFloat DivideToExponent(
-        PeterO.ExtendedFloat divisor,
-        PeterO.BigInteger exponent,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat DivideToExponent(
+        PeterO.Numbers.EFloat divisor,
+        PeterO.Numbers.EInteger exponent,
+        PeterO.Numbers.EContext ctx);
 
 Divides two ExtendedFloat objects, and gives a particular exponent to the result.
 
@@ -600,16 +538,10 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
  * System.ArithmeticException:
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>exponent</i>
- or  <i>ctx</i>
- is null.
-
 ### DivideToIntegerNaturalScale
 
-    public PeterO.ExtendedFloat DivideToIntegerNaturalScale(
-        PeterO.ExtendedFloat divisor);
+    public PeterO.Numbers.EFloat DivideToIntegerNaturalScale(
+        PeterO.Numbers.EFloat divisor);
 
 Divides two ExtendedFloat objects, and returns the integer part of the result, rounded down, with the preferred exponent set to this value's exponent minus the divisor's exponent.
 
@@ -621,17 +553,11 @@ Divides two ExtendedFloat objects, and returns the integer part of the result, r
 
 The integer part of the quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- is null.
-
 ### DivideToIntegerNaturalScale
 
-    public PeterO.ExtendedFloat DivideToIntegerNaturalScale(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat DivideToIntegerNaturalScale(
+        PeterO.Numbers.EFloat divisor,
+        PeterO.Numbers.EContext ctx);
 
 Divides this object by another object, and returns the integer part of the result, with the preferred exponent set to this value's exponent minus the divisor's exponent.
 
@@ -650,16 +576,11 @@ The integer part of the quotient of the two objects. Returns null if the return 
  * System.ArithmeticException:
 The rounding mode is Rounding.Unnecessary and the integer part of the result is not exact.
 
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
-
 ### DivideToIntegerZeroScale
 
-    public PeterO.ExtendedFloat DivideToIntegerZeroScale(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat DivideToIntegerZeroScale(
+        PeterO.Numbers.EFloat divisor,
+        PeterO.Numbers.EContext ctx);
 
 Divides this object by another object, and returns the integer part of the result, with the exponent set to 0.
 
@@ -673,18 +594,11 @@ Divides this object by another object, and returns the integer part of the resul
 
 The integer part of the quotient of the two objects. The exponent will be set to 0. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0, or if the result doesn't fit the given precision.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
-
 ### DivideToSameExponent
 
-    public PeterO.ExtendedFloat DivideToSameExponent(
-        PeterO.ExtendedFloat divisor,
-        PeterO.Rounding rounding);
+    public PeterO.Numbers.EFloat DivideToSameExponent(
+        PeterO.Numbers.EFloat divisor,
+        PeterO.Numbers.ERounding rounding);
 
 Divides this object by another binary float and returns a result with the same exponent as this object (the dividend).
 
@@ -702,10 +616,6 @@ The quotient of the two numbers. Signals FlagDivideByZero and returns infinity i
 
  * System.ArithmeticException:
 The rounding mode is Rounding.Unnecessary and the result is not exact.
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- is null.
 
 ### Equals
 
@@ -725,7 +635,7 @@ True if the objects are equal; otherwise, false.
 ### Equals
 
     public sealed bool Equals(
-        PeterO.ExtendedFloat other);
+        PeterO.Numbers.EFloat other);
 
 Determines whether this object's mantissa and exponent are equal to those of another object.
 
@@ -737,16 +647,10 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 True if this object's mantissa and exponent are equal to those of another object; otherwise, false.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- is null.
-
 ### EqualsInternal
 
     public bool EqualsInternal(
-        PeterO.ExtendedFloat otherValue);
+        PeterO.Numbers.EFloat otherValue);
 
 Determines whether this object's mantissa and exponent are equal to those of another object.
 
@@ -758,16 +662,10 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 True if this object's mantissa and exponent are equal to those of another object; otherwise, false.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- is null.
-
 ### Exp
 
-    public PeterO.ExtendedFloat Exp(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat Exp(
+        PeterO.Numbers.EContext ctx);
 
 Finds e (the base of natural logarithms) raised to the power of this object's value.
 
@@ -785,14 +683,10 @@ Exponential of this object. If this object's value is 1, returns an approximatio
 The parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### FromBigInteger
 
-    public static PeterO.ExtendedFloat FromBigInteger(
-        PeterO.BigInteger bigint);
+    public static PeterO.Numbers.EFloat FromBigInteger(
+        PeterO.Numbers.EInteger bigint);
 
 Converts a big integer to the same value as a binary float.
 
@@ -804,15 +698,9 @@ Converts a big integer to the same value as a binary float.
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigint</i>
- is null.
-
 ### FromDouble
 
-    public static PeterO.ExtendedFloat FromDouble(
+    public static PeterO.Numbers.EFloat FromDouble(
         double dbl);
 
 Creates a binary float from a 64-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first.
@@ -828,7 +716,7 @@ A binary float with the same value as  <i>dbl</i>
 
 ### FromInt32
 
-    public static PeterO.ExtendedFloat FromInt32(
+    public static PeterO.Numbers.EFloat FromInt32(
         int valueSmaller);
 
 Creates a binary float from a 32-bit signed integer.
@@ -843,7 +731,7 @@ An ExtendedDecimal object.
 
 ### FromInt64
 
-    public static PeterO.ExtendedFloat FromInt64(
+    public static PeterO.Numbers.EFloat FromInt64(
         long valueSmall);
 
 Converts a 64-bit integer to the same value as a binary float.
@@ -858,7 +746,7 @@ An ExtendedFloat object.
 
 ### FromSingle
 
-    public static PeterO.ExtendedFloat FromSingle(
+    public static PeterO.Numbers.EFloat FromSingle(
         float flt);
 
 Creates a binary float from a 32-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first.
@@ -874,7 +762,7 @@ A binary float with the same value as  <i>flt</i>
 
 ### FromString
 
-    public static PeterO.ExtendedFloat FromString(
+    public static PeterO.Numbers.EFloat FromString(
         string str);
 
 Creates a binary float from a string that represents a number. See the four-parameter FromString method.
@@ -893,7 +781,7 @@ The parsed number, converted to ExtendedFloat.
 
 ### FromString
 
-    public static PeterO.ExtendedFloat FromString(
+    public static PeterO.Numbers.EFloat FromString(
         string str,
         int offset,
         int length);
@@ -932,11 +820,11 @@ Either  <i>offset</i>
 
 ### FromString
 
-    public static PeterO.ExtendedFloat FromString(
+    public static PeterO.Numbers.EFloat FromString(
         string str,
         int offset,
         int length,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Creates a binary float from a string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double).The format of the string generally consists of:
 
@@ -984,9 +872,9 @@ Either  <i>offset</i>
 
 ### FromString
 
-    public static PeterO.ExtendedFloat FromString(
+    public static PeterO.Numbers.EFloat FromString(
         string str,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Not documented yet.
 
@@ -1078,8 +966,8 @@ True if this object is a signaling not-a-number value; otherwise, false.
 
 ### Log
 
-    public PeterO.ExtendedFloat Log(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat Log(
+        PeterO.Numbers.EContext ctx);
 
 Finds the natural logarithm of this object, that is, the power (exponent) that e (the base of natural logarithms) must be raised to in order to equal this object's value.
 
@@ -1099,8 +987,8 @@ The parameter  <i>ctx</i>
 
 ### Log10
 
-    public PeterO.ExtendedFloat Log10(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat Log10(
+        PeterO.Numbers.EContext ctx);
 
 Finds the base-10 logarithm of this object, that is, the power (exponent) that the number 10 must be raised to in order to equal this object's value.
 
@@ -1115,9 +1003,9 @@ Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns NaN if this obj
 
 ### Max
 
-    public static PeterO.ExtendedFloat Max(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second);
+    public static PeterO.Numbers.EFloat Max(
+        PeterO.Numbers.EFloat first,
+        PeterO.Numbers.EFloat second);
 
 Gets the greater value between two binary floats.
 
@@ -1130,20 +1018,13 @@ Gets the greater value between two binary floats.
 <b>Returns:</b>
 
 The larger value of the two objects.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- is null.
 
 ### Max
 
-    public static PeterO.ExtendedFloat Max(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second,
-        PeterO.PrecisionContext ctx);
+    public static PeterO.Numbers.EFloat Max(
+        PeterO.Numbers.EFloat first,
+        PeterO.Numbers.EFloat second,
+        PeterO.Numbers.EContext ctx);
 
 Gets the greater value between two binary floats.
 
@@ -1159,19 +1040,11 @@ Gets the greater value between two binary floats.
 
 The larger value of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- or  <i>ctx</i>
- is null.
-
 ### MaxMagnitude
 
-    public static PeterO.ExtendedFloat MaxMagnitude(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second);
+    public static PeterO.Numbers.EFloat MaxMagnitude(
+        PeterO.Numbers.EFloat first,
+        PeterO.Numbers.EFloat second);
 
 Gets the greater value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Max.
 
@@ -1185,19 +1058,12 @@ Gets the greater value between two values, ignoring their signs. If the absolute
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- is null.
-
 ### MaxMagnitude
 
-    public static PeterO.ExtendedFloat MaxMagnitude(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second,
-        PeterO.PrecisionContext ctx);
+    public static PeterO.Numbers.EFloat MaxMagnitude(
+        PeterO.Numbers.EFloat first,
+        PeterO.Numbers.EFloat second,
+        PeterO.Numbers.EContext ctx);
 
 Gets the greater value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Max.
 
@@ -1213,19 +1079,11 @@ Gets the greater value between two values, ignoring their signs. If the absolute
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- or  <i>ctx</i>
- is null.
-
 ### Min
 
-    public static PeterO.ExtendedFloat Min(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second);
+    public static PeterO.Numbers.EFloat Min(
+        PeterO.Numbers.EFloat first,
+        PeterO.Numbers.EFloat second);
 
 Gets the lesser value between two binary floats.
 
@@ -1239,19 +1097,12 @@ Gets the lesser value between two binary floats.
 
 The smaller value of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- is null.
-
 ### Min
 
-    public static PeterO.ExtendedFloat Min(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second,
-        PeterO.PrecisionContext ctx);
+    public static PeterO.Numbers.EFloat Min(
+        PeterO.Numbers.EFloat first,
+        PeterO.Numbers.EFloat second,
+        PeterO.Numbers.EContext ctx);
 
 Gets the lesser value between two binary floats.
 
@@ -1267,19 +1118,11 @@ Gets the lesser value between two binary floats.
 
 The smaller value of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- or  <i>ctx</i>
- is null.
-
 ### MinMagnitude
 
-    public static PeterO.ExtendedFloat MinMagnitude(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second);
+    public static PeterO.Numbers.EFloat MinMagnitude(
+        PeterO.Numbers.EFloat first,
+        PeterO.Numbers.EFloat second);
 
 Gets the lesser value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Min.
 
@@ -1293,19 +1136,12 @@ Gets the lesser value between two values, ignoring their signs. If the absolute 
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- is null.
-
 ### MinMagnitude
 
-    public static PeterO.ExtendedFloat MinMagnitude(
-        PeterO.ExtendedFloat first,
-        PeterO.ExtendedFloat second,
-        PeterO.PrecisionContext ctx);
+    public static PeterO.Numbers.EFloat MinMagnitude(
+        PeterO.Numbers.EFloat first,
+        PeterO.Numbers.EFloat second,
+        PeterO.Numbers.EContext ctx);
 
 Gets the lesser value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Min.
 
@@ -1321,17 +1157,9 @@ Gets the lesser value between two values, ignoring their signs. If the absolute 
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>first</i>
- or  <i>second</i>
- or  <i>ctx</i>
- is null.
-
 ### MovePointLeft
 
-    public PeterO.ExtendedFloat MovePointLeft(
+    public PeterO.Numbers.EFloat MovePointLeft(
         int places);
 
 Returns a number similar to this number but with the radix point moved to the left.
@@ -1346,9 +1174,9 @@ An ExtendedFloat object.
 
 ### MovePointLeft
 
-    public PeterO.ExtendedFloat MovePointLeft(
+    public PeterO.Numbers.EFloat MovePointLeft(
         int places,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Returns a number similar to this number but with the radix point moved to the left.
 
@@ -1362,16 +1190,10 @@ Returns a number similar to this number but with the radix point moved to the le
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### MovePointLeft
 
-    public PeterO.ExtendedFloat MovePointLeft(
-        PeterO.BigInteger bigPlaces);
+    public PeterO.Numbers.EFloat MovePointLeft(
+        PeterO.Numbers.EInteger bigPlaces);
 
 Returns a number similar to this number but with the radix point moved to the left.
 
@@ -1383,17 +1205,11 @@ Returns a number similar to this number but with the radix point moved to the le
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
- is null.
-
 ### MovePointLeft
 
-    public PeterO.ExtendedFloat MovePointLeft(
-        PeterO.BigInteger bigPlaces,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat MovePointLeft(
+        PeterO.Numbers.EInteger bigPlaces,
+        PeterO.Numbers.EContext ctx);
 
 Returns a number similar to this number but with the radix point moved to the left.
 
@@ -1407,16 +1223,9 @@ Returns a number similar to this number but with the radix point moved to the le
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
- or  <i>ctx</i>
- is null.
-
 ### MovePointRight
 
-    public PeterO.ExtendedFloat MovePointRight(
+    public PeterO.Numbers.EFloat MovePointRight(
         int places);
 
 Returns a number similar to this number but with the radix point moved to the right.
@@ -1431,9 +1240,9 @@ An ExtendedFloat object.
 
 ### MovePointRight
 
-    public PeterO.ExtendedFloat MovePointRight(
+    public PeterO.Numbers.EFloat MovePointRight(
         int places,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Returns a number similar to this number but with the radix point moved to the right.
 
@@ -1447,16 +1256,10 @@ Returns a number similar to this number but with the radix point moved to the ri
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### MovePointRight
 
-    public PeterO.ExtendedFloat MovePointRight(
-        PeterO.BigInteger bigPlaces);
+    public PeterO.Numbers.EFloat MovePointRight(
+        PeterO.Numbers.EInteger bigPlaces);
 
 Returns a number similar to this number but with the radix point moved to the right.
 
@@ -1468,17 +1271,11 @@ Returns a number similar to this number but with the radix point moved to the ri
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
- is null.
-
 ### MovePointRight
 
-    public PeterO.ExtendedFloat MovePointRight(
-        PeterO.BigInteger bigPlaces,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat MovePointRight(
+        PeterO.Numbers.EInteger bigPlaces,
+        PeterO.Numbers.EContext ctx);
 
 Returns a number similar to this number but with the radix point moved to the right.
 
@@ -1493,18 +1290,11 @@ Returns a number similar to this number but with the radix point moved to the ri
 A number whose scale is increased by  <i>bigPlaces</i>
 , but not to more than 0.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
- or  <i>ctx</i>
- is null.
-
 ### Multiply
 
-    public PeterO.ExtendedFloat Multiply(
-        PeterO.ExtendedFloat op,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat Multiply(
+        PeterO.Numbers.EFloat op,
+        PeterO.Numbers.EContext ctx);
 
 Multiplies two binary floats. The resulting scale will be the sum of the scales of the two binary floats. The result's sign is positive if both operands have the same sign, and negative if they have different signs.
 
@@ -1518,17 +1308,10 @@ Multiplies two binary floats. The resulting scale will be the sum of the scales 
 
 The product of the two binary floats.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>op</i>
- or  <i>ctx</i>
- is null.
-
 ### Multiply
 
-    public PeterO.ExtendedFloat Multiply(
-        PeterO.ExtendedFloat otherValue);
+    public PeterO.Numbers.EFloat Multiply(
+        PeterO.Numbers.EFloat otherValue);
 
 Multiplies two binary floats. The resulting exponent will be the sum of the exponents of the two binary floats.
 
@@ -1540,17 +1323,11 @@ Multiplies two binary floats. The resulting exponent will be the sum of the expo
 
 The product of the two binary floats.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- is null.
-
 ### MultiplyAndAdd
 
-    public PeterO.ExtendedFloat MultiplyAndAdd(
-        PeterO.ExtendedFloat multiplicand,
-        PeterO.ExtendedFloat augend);
+    public PeterO.Numbers.EFloat MultiplyAndAdd(
+        PeterO.Numbers.EFloat multiplicand,
+        PeterO.Numbers.EFloat augend);
 
 Multiplies by one binary float, and then adds another binary float.
 
@@ -1564,19 +1341,12 @@ Multiplies by one binary float, and then adds another binary float.
 
 The result this * multiplicand + augend.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>multiplicand</i>
- or  <i>augend</i>
- is null.
-
 ### MultiplyAndAdd
 
-    public PeterO.ExtendedFloat MultiplyAndAdd(
-        PeterO.ExtendedFloat op,
-        PeterO.ExtendedFloat augend,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat MultiplyAndAdd(
+        PeterO.Numbers.EFloat op,
+        PeterO.Numbers.EFloat augend,
+        PeterO.Numbers.EContext ctx);
 
 Multiplies by one value, and then adds another value.
 
@@ -1592,20 +1362,12 @@ Multiplies by one value, and then adds another value.
 
 The result thisValue * multiplicand + augend.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>op</i>
- or  <i>augend</i>
- or  <i>ctx</i>
-is null.
-
 ### MultiplyAndSubtract
 
-    public PeterO.ExtendedFloat MultiplyAndSubtract(
-        PeterO.ExtendedFloat op,
-        PeterO.ExtendedFloat subtrahend,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat MultiplyAndSubtract(
+        PeterO.Numbers.EFloat op,
+        PeterO.Numbers.EFloat subtrahend,
+        PeterO.Numbers.EContext ctx);
 
 Multiplies by one value, and then subtracts another value.
 
@@ -1630,8 +1392,8 @@ The parameter  <i>op</i>
 
 ### Negate
 
-    public PeterO.ExtendedFloat Negate(
-        PeterO.PrecisionContext context);
+    public PeterO.Numbers.EFloat Negate(
+        PeterO.Numbers.EContext context);
 
 Returns a binary float with the same value as this object but with the sign reversed.
 
@@ -1643,15 +1405,9 @@ Returns a binary float with the same value as this object but with the sign reve
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>context</i>
- is null.
-
 ### Negate
 
-    public PeterO.ExtendedFloat Negate();
+    public PeterO.Numbers.EFloat Negate();
 
 Gets an object with the same value as this one, but with the sign reversed.
 
@@ -1661,8 +1417,8 @@ An ExtendedFloat object.
 
 ### NextMinus
 
-    public PeterO.ExtendedFloat NextMinus(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat NextMinus(
+        PeterO.Numbers.EContext ctx);
 
 Finds the largest value that's smaller than the given value.
 
@@ -1681,14 +1437,10 @@ The parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
 has an unlimited exponent range.
 
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### NextPlus
 
-    public PeterO.ExtendedFloat NextPlus(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat NextPlus(
+        PeterO.Numbers.EContext ctx);
 
 Finds the smallest value that's greater than the given value.
 
@@ -1707,15 +1459,11 @@ The parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
 has an unlimited exponent range.
 
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### NextToward
 
-    public PeterO.ExtendedFloat NextToward(
-        PeterO.ExtendedFloat otherValue,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat NextToward(
+        PeterO.Numbers.EFloat otherValue,
+        PeterO.Numbers.EContext ctx);
 
 Finds the next value that is closer to the other object's value than this object's value.
 
@@ -1736,15 +1484,10 @@ The parameter  <i>ctx</i>
  is null, the precision is 0, or  <i>ctx</i>
 has an unlimited exponent range.
 
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- or  <i>ctx</i>
- is null.
-
 ### PI
 
-    public PeterO.ExtendedFloat PI(
-        PeterO.PrecisionContext ctx);
+    public static PeterO.Numbers.EFloat PI(
+        PeterO.Numbers.EContext ctx);
 
 Finds the constant pi.
 
@@ -1762,14 +1505,10 @@ Pi rounded to the given precision.
 The parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### Plus
 
-    public PeterO.ExtendedFloat Plus(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat Plus(
+        PeterO.Numbers.EContext ctx);
 
 Rounds this object's value to a given precision, using the given rounding mode and range of exponent, and also converts negative zero to positive zero.
 
@@ -1782,15 +1521,9 @@ Rounds this object's value to a given precision, using the given rounding mode a
 The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if <i>ctx</i>
  is null or the precision and exponent range are unlimited.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### Pow
 
-    public PeterO.ExtendedFloat Pow(
+    public PeterO.Numbers.EFloat Pow(
         int exponentSmall);
 
 Raises this object's value to the given exponent.
@@ -1805,9 +1538,9 @@ This^exponent. Returns NaN if this object and exponent are both 0.
 
 ### Pow
 
-    public PeterO.ExtendedFloat Pow(
+    public PeterO.Numbers.EFloat Pow(
         int exponentSmall,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Raises this object's value to the given exponent.
 
@@ -1821,17 +1554,11 @@ Raises this object's value to the given exponent.
 
 This^exponent. Signals the flag FlagInvalid and returns NaN if this object and exponent are both 0.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### Pow
 
-    public PeterO.ExtendedFloat Pow(
-        PeterO.ExtendedFloat exponent,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat Pow(
+        PeterO.Numbers.EFloat exponent,
+        PeterO.Numbers.EContext ctx);
 
 Raises this object's value to the given exponent.
 
@@ -1851,14 +1578,9 @@ This^exponent. Signals the flag FlagInvalid and returns NaN if this object and e
 The parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0), and the exponent has a fractional part.
 
- * System.ArgumentNullException:
-The parameter  <i>exponent</i>
- or  <i>ctx</i>
- is null.
-
 ### Precision
 
-    public PeterO.BigInteger Precision();
+    public PeterO.Numbers.EInteger Precision();
 
 Finds the number of digits in this number's mantissa. Returns 1 if this value is 0, and 0 if this value is infinity or NaN.
 
@@ -1868,9 +1590,9 @@ A BigInteger object.
 
 ### Quantize
 
-    public PeterO.ExtendedFloat Quantize(
+    public PeterO.Numbers.EFloat Quantize(
         int desiredExponentSmall,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Returns a binary float with the same value but a new exponent.
 
@@ -1884,42 +1606,11 @@ Returns a binary float with the same value but a new exponent.
 
 A binary float with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if an overflow error occurred, or the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### Quantize
 
-    public PeterO.ExtendedFloat Quantize(
-        PeterO.BigInteger desiredExponent,
-        PeterO.PrecisionContext ctx);
-
-Returns a binary float with the same value but a new exponent.
-
-<b>Parameters:</b>
-
- * <i>desiredExponent</i>: A BigInteger object.
-
- * <i>ctx</i>: A PrecisionContext object.
-
-<b>Returns:</b>
-
-A binary float with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if an overflow error occurred, or the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>desiredExponent</i>
- or  <i>ctx</i>
- is null.
-
-### Quantize
-
-    public PeterO.ExtendedFloat Quantize(
-        PeterO.ExtendedFloat otherValue,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat Quantize(
+        PeterO.Numbers.EFloat otherValue,
+        PeterO.Numbers.EContext ctx);
 
 Returns a binary float with the same value as this object but with the same exponent as another binary float.
 
@@ -1933,17 +1624,28 @@ Returns a binary float with the same value as this object but with the same expo
 
 A binary float with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if an overflow error occurred, or the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the new exponent is outside of the valid range of the precision context, if it defines an exponent range.
 
-<b>Exceptions:</b>
+### Quantize
 
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- or  <i>ctx</i>
- is null.
+    public PeterO.Numbers.EFloat Quantize(
+        PeterO.Numbers.EInteger desiredExponent,
+        PeterO.Numbers.EContext ctx);
+
+Returns a binary float with the same value but a new exponent.
+
+<b>Parameters:</b>
+
+ * <i>desiredExponent</i>: A BigInteger object.
+
+ * <i>ctx</i>: A PrecisionContext object.
+
+<b>Returns:</b>
+
+A binary float with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if an overflow error occurred, or the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
 
 ### Reduce
 
-    public PeterO.ExtendedFloat Reduce(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat Reduce(
+        PeterO.Numbers.EContext ctx);
 
 Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1.If this object's value is 0, changes the exponent to 0. (This is unlike the behavior in Java's BigDecimal method "stripTrailingZeros" in Java 7 and earlier.)
 
@@ -1955,17 +1657,11 @@ Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1
 
 This value with trailing zeros removed. Note that if the result has a very high exponent and the context says to clamp high exponents, there may still be some trailing zeros in the mantissa.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### Remainder
 
-    public PeterO.ExtendedFloat Remainder(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat Remainder(
+        PeterO.Numbers.EFloat divisor,
+        PeterO.Numbers.EContext ctx);
 
 Finds the remainder that results when dividing two ExtendedFloat objects.
 
@@ -1979,17 +1675,10 @@ Finds the remainder that results when dividing two ExtendedFloat objects.
 
 The remainder of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
-
 ### RemainderNaturalScale
 
-    public PeterO.ExtendedFloat RemainderNaturalScale(
-        PeterO.ExtendedFloat divisor);
+    public PeterO.Numbers.EFloat RemainderNaturalScale(
+        PeterO.Numbers.EFloat divisor);
 
 Not documented yet.
 
@@ -2001,17 +1690,11 @@ Not documented yet.
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- is null.
-
 ### RemainderNaturalScale
 
-    public PeterO.ExtendedFloat RemainderNaturalScale(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat RemainderNaturalScale(
+        PeterO.Numbers.EFloat divisor,
+        PeterO.Numbers.EContext ctx);
 
 Calculates the remainder of a number by the formula this - ((this / divisor) * divisor). This is meant to be similar to the remainder operation in Java's BigDecimal.
 
@@ -2025,18 +1708,11 @@ Calculates the remainder of a number by the formula this - ((this / divisor) * d
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
-
 ### RemainderNear
 
-    public PeterO.ExtendedFloat RemainderNear(
-        PeterO.ExtendedFloat divisor,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat RemainderNear(
+        PeterO.Numbers.EFloat divisor,
+        PeterO.Numbers.EContext ctx);
 
 Finds the distance to the closest multiple of the given divisor, based on the result of dividing this object's value by another object's value.
 
@@ -2060,17 +1736,10 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
 The distance of the closest multiple. Signals FlagInvalid and returns NaN if the divisor is 0, or either the result of integer division (the quotient) or the remainder wouldn't fit the given precision.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>divisor</i>
- or  <i>ctx</i>
- is null.
-
 ### RoundToBinaryPrecision
 
-    public PeterO.ExtendedFloat RoundToBinaryPrecision(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat RoundToBinaryPrecision(
+        PeterO.Numbers.EContext ctx);
 
 <b>Deprecated.</b> Instead of this method use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.
 
@@ -2085,17 +1754,11 @@ Rounds this object's value to a given maximum bit length, using the given roundi
 The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if <i>ctx</i>
  is null or the precision and exponent range are unlimited.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### RoundToExponent
 
-    public PeterO.ExtendedFloat RoundToExponent(
+    public PeterO.Numbers.EFloat RoundToExponent(
         int exponentSmall,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Returns a binary number with the same value as this object, and rounds it to a new exponent if necessary.
 
@@ -2109,17 +1772,11 @@ Returns a binary number with the same value as this object, and rounds it to a n
 
 A binary number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### RoundToExponent
 
-    public PeterO.ExtendedFloat RoundToExponent(
-        PeterO.BigInteger exponent,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat RoundToExponent(
+        PeterO.Numbers.EInteger exponent,
+        PeterO.Numbers.EContext ctx);
 
 Returns a binary number with the same value as this object, and rounds it to a new exponent if necessary.
 
@@ -2133,18 +1790,11 @@ Returns a binary number with the same value as this object, and rounds it to a n
 
 A binary number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>exponent</i>
- or  <i>ctx</i>
- is null.
-
 ### RoundToExponentExact
 
-    public PeterO.ExtendedFloat RoundToExponentExact(
+    public PeterO.Numbers.EFloat RoundToExponentExact(
         int exponentSmall,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Returns a binary number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
@@ -2158,17 +1808,11 @@ Returns a binary number with the same value as this object but rounded to an int
 
 A binary number rounded to the closest value representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### RoundToExponentExact
 
-    public PeterO.ExtendedFloat RoundToExponentExact(
-        PeterO.BigInteger exponent,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat RoundToExponentExact(
+        PeterO.Numbers.EInteger exponent,
+        PeterO.Numbers.EContext ctx);
 
 Returns a binary number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
@@ -2181,18 +1825,11 @@ Returns a binary number with the same value as this object but rounded to an int
 <b>Returns:</b>
 
 A binary number rounded to the closest value representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>exponent</i>
- or  <i>ctx</i>
- is null.
 
 ### RoundToIntegralExact
 
-    public PeterO.ExtendedFloat RoundToIntegralExact(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat RoundToIntegralExact(
+        PeterO.Numbers.EContext ctx);
 
 Returns a binary number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
@@ -2204,16 +1841,10 @@ Returns a binary number with the same value as this object but rounded to an int
 
 A binary number rounded to the closest integer representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to 0 when rounding, and 0 is outside of the valid range of the precision context.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### RoundToIntegralNoRoundedFlag
 
-    public PeterO.ExtendedFloat RoundToIntegralNoRoundedFlag(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat RoundToIntegralNoRoundedFlag(
+        PeterO.Numbers.EContext ctx);
 
 Returns a binary number with the same value as this object but rounded to an integer, without adding the FlagInexact or FlagRounded flags.
 
@@ -2225,16 +1856,10 @@ Returns a binary number with the same value as this object but rounded to an int
 
 A binary number rounded to the closest integer representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to 0 when rounding, and 0 is outside of the valid range of the precision context.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### RoundToPrecision
 
-    public PeterO.ExtendedFloat RoundToPrecision(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat RoundToPrecision(
+        PeterO.Numbers.EContext ctx);
 
 Rounds this object's value to a given precision, using the given rounding mode and range of exponent.
 
@@ -2247,15 +1872,9 @@ Rounds this object's value to a given precision, using the given rounding mode a
 The closest value to this object's value, rounded to the specified precision. Returns the same value as this object if <i>ctx</i>
  is null or the precision and exponent range are unlimited.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### ScaleByPowerOfTwo
 
-    public PeterO.ExtendedFloat ScaleByPowerOfTwo(
+    public PeterO.Numbers.EFloat ScaleByPowerOfTwo(
         int places);
 
 Returns a number similar to this number but with the scale adjusted.
@@ -2270,9 +1889,9 @@ An ExtendedDecimal object.
 
 ### ScaleByPowerOfTwo
 
-    public PeterO.ExtendedFloat ScaleByPowerOfTwo(
+    public PeterO.Numbers.EFloat ScaleByPowerOfTwo(
         int places,
-        PeterO.PrecisionContext ctx);
+        PeterO.Numbers.EContext ctx);
 
 Returns a number similar to this number but with the scale adjusted.
 
@@ -2286,16 +1905,10 @@ Returns a number similar to this number but with the scale adjusted.
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### ScaleByPowerOfTwo
 
-    public PeterO.ExtendedFloat ScaleByPowerOfTwo(
-        PeterO.BigInteger bigPlaces);
+    public PeterO.Numbers.EFloat ScaleByPowerOfTwo(
+        PeterO.Numbers.EInteger bigPlaces);
 
 Returns a number similar to this number but with the scale adjusted.
 
@@ -2307,17 +1920,11 @@ Returns a number similar to this number but with the scale adjusted.
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
- is null.
-
 ### ScaleByPowerOfTwo
 
-    public PeterO.ExtendedFloat ScaleByPowerOfTwo(
-        PeterO.BigInteger bigPlaces,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat ScaleByPowerOfTwo(
+        PeterO.Numbers.EInteger bigPlaces,
+        PeterO.Numbers.EContext ctx);
 
 Returns a number similar to this number but with its scale adjusted.
 
@@ -2332,17 +1939,10 @@ Returns a number similar to this number but with its scale adjusted.
 A number whose scale is increased by  <i>bigPlaces</i>
 .
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
- or  <i>ctx</i>
- is null.
-
 ### SquareRoot
 
-    public PeterO.ExtendedFloat SquareRoot(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat SquareRoot(
+        PeterO.Numbers.EContext ctx);
 
 Finds the square root of this object's value.
 
@@ -2360,14 +1960,10 @@ The square root. Signals the flag FlagInvalid and returns NaN if this object is 
 The parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### Subtract
 
-    public PeterO.ExtendedFloat Subtract(
-        PeterO.ExtendedFloat otherValue);
+    public PeterO.Numbers.EFloat Subtract(
+        PeterO.Numbers.EFloat otherValue);
 
 Subtracts an ExtendedFloat object from this instance and returns the result..
 
@@ -2379,17 +1975,11 @@ Subtracts an ExtendedFloat object from this instance and returns the result..
 
 The difference of the two objects.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
- is null.
-
 ### Subtract
 
-    public PeterO.ExtendedFloat Subtract(
-        PeterO.ExtendedFloat otherValue,
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat Subtract(
+        PeterO.Numbers.EFloat otherValue,
+        PeterO.Numbers.EContext ctx);
 
 Subtracts an ExtendedFloat object from this instance.
 
@@ -2411,7 +2001,7 @@ The parameter  <i>otherValue</i>
 
 ### ToBigInteger
 
-    public PeterO.BigInteger ToBigInteger();
+    public PeterO.Numbers.EInteger ToBigInteger();
 
 Converts this value to an arbitrary-precision integer. Any fractional part of this value will be discarded when converting to a big integer.
 
@@ -2426,7 +2016,7 @@ This object's value is infinity or NaN.
 
 ### ToBigIntegerExact
 
-    public PeterO.BigInteger ToBigIntegerExact();
+    public PeterO.Numbers.EInteger ToBigIntegerExact();
 
 Converts this value to an arbitrary-precision integer, checking whether the value contains a fractional part.
 
@@ -2468,11 +2058,11 @@ Converts this value to an extended decimal, then returns the value of that decim
 
 <b>Returns:</b>
 
-A string representation of this object.
+A string object.
 
 ### ToExtendedDecimal
 
-    public PeterO.ExtendedDecimal ToExtendedDecimal();
+    public PeterO.Numbers.EDecimal ToExtendedDecimal();
 
 Not documented yet.
 
@@ -2484,11 +2074,11 @@ An ExtendedDecimal object.
 
     public string ToPlainString();
 
-Converts this value to a string in decimal form, but without exponential notation.
+Converts this value to a string, but without exponential notation.
 
 <b>Returns:</b>
 
-A string representation of this object.
+A string object.
 
 ### ToSingle
 
@@ -2512,7 +2102,7 @@ A string representation of this object. The value is converted to decimal and th
 
 ### Ulp
 
-    public PeterO.ExtendedFloat Ulp();
+    public PeterO.Numbers.EFloat Ulp();
 
 Returns the unit in the last place. The mantissa will be 1 and the exponent will be this number's exponent. Returns 1 with an exponent of 0 if this number is infinity or NaN.
 

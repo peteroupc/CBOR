@@ -112,7 +112,12 @@ namespace Test {
     }
     [Test]
     public void TestDivide() {
-      // not implemented yet
+      try {
+ ExtendedDecimal.FromString("1").Divide(ExtendedDecimal.FromString("3"), null);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [Test]
     public void TestDivideToExponent() {
@@ -132,7 +137,12 @@ namespace Test {
     }
     [Test]
     public void TestEquals() {
-      // not implemented yet
+      var r = new FastRandom();
+      for (var i = 0; i < 500; ++i) {
+        ExtendedFloat bigintA = RandomObjects.RandomExtendedFloat(r);
+        ExtendedFloat bigintB = RandomObjects.RandomExtendedFloat(r);
+        TestCommon.AssertEqualsHashCode(bigintA, bigintB);
+      }
     }
     [Test]
     public void TestEqualsInternal() {
@@ -168,23 +178,31 @@ namespace Test {
     }
     [Test]
     public void TestFromString() {
-      // not implemented yet
-    }
-    [Test]
-    public void TestGetHashCode() {
-      // not implemented yet
+      try {
+ ExtendedFloat.FromString("2", 0, 1, null);
+} catch (Exception ex) {
+Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [Test]
     public void TestIsFinite() {
       // not implemented yet
     }
+
     [Test]
     public void TestIsInfinity() {
-      // not implemented yet
+      Assert.IsTrue(ExtendedFloat.PositiveInfinity.IsInfinity());
+      Assert.IsTrue(ExtendedFloat.NegativeInfinity.IsInfinity());
+      Assert.IsFalse(ExtendedFloat.Zero.IsInfinity());
+      Assert.IsFalse(ExtendedFloat.NaN.IsInfinity());
     }
     [Test]
     public void TestIsNaN() {
-      // not implemented yet
+      Assert.IsFalse(ExtendedFloat.PositiveInfinity.IsNaN());
+      Assert.IsFalse(ExtendedFloat.NegativeInfinity.IsNaN());
+      Assert.IsFalse(ExtendedFloat.Zero.IsNaN());
+      Assert.IsTrue(ExtendedFloat.NaN.IsNaN());
     }
     [Test]
     public void TestIsNegative() {
@@ -212,11 +230,14 @@ namespace Test {
     }
     [Test]
     public void TestLog() {
-      // not implemented yet
+      Assert.IsTrue(ExtendedFloat.One.Log(null).IsNaN());
+      Assert.IsTrue(ExtendedFloat.One.Log(PrecisionContext.Unlimited).IsNaN());
     }
     [Test]
     public void TestLog10() {
-      // not implemented yet
+      Assert.IsTrue(ExtendedFloat.One.Log10(null).IsNaN());
+      Assert.IsTrue(ExtendedFloat.One.Log10(PrecisionContext.Unlimited)
+              .IsNaN());
     }
     [Test]
     public void TestMantissa() {

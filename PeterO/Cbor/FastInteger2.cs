@@ -7,46 +7,11 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 
-namespace PeterO {
-  internal sealed class FastInteger : IComparable<FastInteger> {
+namespace PeterO.Cbor {
+  internal sealed class FastInteger2 {
     private sealed class MutableNumber {
       private int[] data;
       private int wordCount;
-
-      internal static MutableNumber FromBigInteger(BigInteger bigintVal) {
-        var mnum = new MutableNumber(0);
-        if (bigintVal.Sign < 0) {
-          throw new ArgumentException("bigintVal's sign (" + bigintVal.Sign +
-            ") is less than " + "0 ");
-        }
-        byte[] bytes = bigintVal.toBytes(true);
-        int len = bytes.Length;
-        int newWordCount = Math.Max(4, (len / 4) + 1);
-        if (newWordCount > mnum.data.Length) {
-          mnum.data = new int[newWordCount];
-        }
-        mnum.wordCount = newWordCount;
-        unchecked {
-          for (var i = 0; i < len; i += 4) {
-            int x = ((int)bytes[i]) & 0xff;
-            if (i + 1 < len) {
-              x |= (((int)bytes[i + 1]) & 0xff) << 8;
-            }
-            if (i + 2 < len) {
-              x |= (((int)bytes[i + 2]) & 0xff) << 16;
-            }
-            if (i + 3 < len) {
-              x |= (((int)bytes[i + 3]) & 0xff) << 24;
-            }
-            mnum.data[i >> 2] = x;
-          }
-        }
-        // Calculate the correct data length
-        while (mnum.wordCount != 0 && mnum.data[mnum.wordCount - 1] == 0) {
-          --mnum.wordCount;
-        }
-        return mnum;
-      }
 
       internal MutableNumber(int val) {
         if (val < 0) {
@@ -55,15 +20,6 @@ namespace PeterO {
         this.data = new int[4];
         this.wordCount = (val == 0) ? 0 : 1;
         this.data[0] = val;
-      }
-
-      internal MutableNumber SetInt(int val) {
-        if (val < 0) {
-          throw new ArgumentException("val (" + val + ") is less than " + "0 ");
-        }
-        this.wordCount = (val == 0) ? 0 : 1;
-        this.data[0] = val;
-        return this;
       }
 
       internal BigInteger ToBigInteger() {
@@ -96,17 +52,7 @@ namespace PeterO {
         return this.wordCount == 0 ? 0 : this.data[0];
       }
 
-      internal MutableNumber Copy() {
-        var mbi = new MutableNumber(0);
-        if (this.wordCount > mbi.data.Length) {
-          mbi.data = new int[this.wordCount];
-        }
-        Array.Copy(this.data, mbi.data, this.wordCount);
-        mbi.wordCount = this.wordCount;
-        return mbi;
-      }
-
-        internal MutableNumber Multiply(int multiplicand) {
+      internal MutableNumber Multiply(int multiplicand) {
         if (multiplicand < 0) {
           throw new ArgumentException("multiplicand (" + multiplicand +
             ") is less than " + "0 ");
@@ -222,28 +168,6 @@ namespace PeterO {
         }
       }
 
-     internal bool IsEvenNumber {
-        get {
-          return this.wordCount == 0 || (this.data[0] & 1) == 0;
-        }
-      }
-
-      internal int CompareToInt(int val) {
-        if (val < 0 || this.wordCount > 1) {
-          return 1;
-        }
-        if (this.wordCount == 0) {
-          // this value is 0
-          return (val == 0) ? 0 : -1;
-        }
-        if (this.data[0] == val) {
-          return 0;
-        }
-        return (((this.data[0] >> 31) == (val >> 31)) ? ((this.data[0] &
-        Int32.MaxValue) < (val & Int32.MaxValue)) :
-                  ((this.data[0] >> 31) == 0)) ? -1 : 1;
-      }
-
       internal MutableNumber SubtractInt(int other) {
         if (other < 0) {
      throw new ArgumentException("other (" + other + ") is less than " +
@@ -330,27 +254,6 @@ namespace PeterO {
         }
       }
 
-      public int CompareTo(MutableNumber other) {
-        if (this.wordCount != other.wordCount) {
-          return (this.wordCount < other.wordCount) ? -1 : 1;
-        }
-        int valueN = this.wordCount;
-        while (unchecked(valueN--) != 0) {
-          int an = this.data[valueN];
-          int bn = other.data[valueN];
-          // Unsigned less-than check
-          if (((an >> 31) == (bn >> 31)) ?
-              ((an & Int32.MaxValue) < (bn & Int32.MaxValue)) :
-              ((an >> 31) == 0)) {
-            return -1;
-          }
-          if (an != bn) {
-            return 1;
-          }
-        }
-        return 0;
-      }
-
        internal MutableNumber Add(int augend) {
         if (augend < 0) {
    throw new ArgumentException("augend (" + augend + ") is less than " +
@@ -410,34 +313,8 @@ namespace PeterO {
     private static readonly BigInteger valueNegativeInt32MinValue =
     -(BigInteger)valueInt32MinValue;
 
-    internal FastInteger(int value) {
+    internal FastInteger2(int value) {
       this.smallValue = value;
-    }
-
-    internal static FastInteger Copy(FastInteger value) {
-      var fi = new FastInteger(value.smallValue);
-      fi.integerMode = value.integerMode;
-      fi.largeValue = value.largeValue;
-      fi.mnum = (value.mnum == null || value.integerMode != 1) ? null :
-      value.mnum.Copy();
-      return fi;
-    }
-
-    internal static FastInteger FromBig(BigInteger bigintVal) {
-      if (bigintVal.canFitInInt()) {
-        return new FastInteger(bigintVal.intValueChecked());
-      }
-      if (bigintVal.Sign > 0) {
-        var fi = new FastInteger(0);
-        fi.integerMode = 1;
-        fi.mnum = MutableNumber.FromBigInteger(bigintVal);
-        return fi;
-      } else {
-        var fi = new FastInteger(0);
-        fi.integerMode = 2;
-        fi.largeValue = bigintVal;
-        return fi;
-      }
     }
 
     internal int AsInt32() {
@@ -450,35 +327,6 @@ namespace PeterO {
           return (int)this.largeValue;
         default: throw new InvalidOperationException();
       }
-    }
-
-     public int CompareTo(FastInteger val) {
-      switch ((this.integerMode << 2) | val.integerMode) {
-          case (0 << 2) | 0: {
-            int vsv = val.smallValue;
-        return (this.smallValue == vsv) ? 0 : (this.smallValue < vsv ? -1 :
-              1);
-          }
-        case (0 << 2) | 1:
-          return -val.mnum.CompareToInt(this.smallValue);
-        case (0 << 2) | 2:
-          return this.AsBigInteger().CompareTo(val.largeValue);
-        case (1 << 2) | 0:
-          return this.mnum.CompareToInt(val.smallValue);
-        case (1 << 2) | 1:
-          return this.mnum.CompareTo(val.mnum);
-        case (1 << 2) | 2:
-          return this.AsBigInteger().CompareTo(val.largeValue);
-        case (2 << 2) | 0:
-        case (2 << 2) | 1:
-        case (2 << 2) | 2:
-          return this.largeValue.CompareTo(val.AsBigInteger());
-        default: throw new InvalidOperationException();
-      }
-    }
-
-    internal FastInteger Abs() {
-      return (this.Sign < 0) ? this.Negate() : this;
     }
 
     internal static BigInteger WordsToBigInteger(int[] words) {
@@ -497,69 +345,17 @@ namespace PeterO {
       return BigInteger.fromBytes(bytes, true);
     }
 
-    internal static int[] GetLastWords(BigInteger bigint, int numWords32Bit) {
-      return
-      MutableNumber.FromBigInteger(bigint).GetLastWordsInternal(numWords32Bit);
-    }
-
-    internal FastInteger SetInt(int val) {
+    internal FastInteger2 SetInt(int val) {
       this.smallValue = val;
       this.integerMode = 0;
       return this;
-    }
-
-    internal int RepeatedSubtract(FastInteger divisor) {
-      if (this.integerMode == 1) {
-        var count = 0;
-        if (divisor.integerMode == 1) {
-          while (this.mnum.CompareTo(divisor.mnum) >= 0) {
-            this.mnum.Subtract(divisor.mnum);
-            ++count;
-          }
-          return count;
-        }
-        if (divisor.integerMode == 0 && divisor.smallValue >= 0) {
-          if (this.mnum.CanFitInInt32()) {
-            int small = this.mnum.ToInt32();
-            count = small / divisor.smallValue;
-            this.mnum.SetInt(small % divisor.smallValue);
-          } else {
-            var dmnum = new MutableNumber(divisor.smallValue);
-            while (this.mnum.CompareTo(dmnum) >= 0) {
-              this.mnum.Subtract(dmnum);
-              ++count;
-            }
-          }
-          return count;
-        } else {
-          BigInteger bigrem;
-          BigInteger bigquo = BigInteger.DivRem(
-this.AsBigInteger(),
-divisor.AsBigInteger(),
-out bigrem);
-          var smallquo = (int)bigquo;
-          this.integerMode = 2;
-          this.largeValue = bigrem;
-          return smallquo;
-        }
-      } else {
-        BigInteger bigrem;
-        BigInteger bigquo = BigInteger.DivRem(
-this.AsBigInteger(),
-divisor.AsBigInteger(),
-out bigrem);
-        var smallquo = (int)bigquo;
-        this.integerMode = 2;
-        this.largeValue = bigrem;
-        return smallquo;
-      }
     }
 
     /// <summary>Sets this object&#x27;s value to the current value times
     /// another integer.</summary>
     /// <param name='val'>The integer to multiply by.</param>
     /// <returns>This object.</returns>
-    internal FastInteger Multiply(int val) {
+    internal FastInteger2 Multiply(int val) {
       if (val == 0) {
         this.smallValue = 0;
         this.integerMode = 0;
@@ -610,40 +406,11 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&#x27;s value to 0 minus its current value
-    /// (reverses its sign).</summary>
-    /// <returns>This object.</returns>
-    internal FastInteger Negate() {
-      switch (this.integerMode) {
-        case 0:
-          if (this.smallValue == Int32.MinValue) {
-            // would overflow, convert to large
-            this.integerMode = 1;
-            this.mnum =
-            MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
-          } else {
-            smallValue = -smallValue;
-          }
-          break;
-        case 1:
-          this.integerMode = 2;
-          this.largeValue = this.mnum.ToBigInteger();
-          this.largeValue = -(BigInteger)this.largeValue;
-          break;
-        case 2:
-          this.largeValue = -(BigInteger)this.largeValue;
-          break;
-        default:
-          throw new InvalidOperationException();
-      }
-      return this;
-    }
-
     /// <summary>Sets this object&#x27;s value to the current value minus
     /// the given FastInteger value.</summary>
     /// <param name='val'>The subtrahend.</param>
     /// <returns>This object.</returns>
-    internal FastInteger Subtract(FastInteger val) {
+    internal FastInteger2 Subtract(FastInteger2 val) {
       BigInteger valValue;
       switch (this.integerMode) {
         case 0:
@@ -692,9 +459,9 @@ out bigrem);
     /// the given integer.</summary>
     /// <param name='val'>The subtrahend.</param>
     /// <returns>This object.</returns>
-    internal FastInteger SubtractInt(int val) {
+    internal FastInteger2 SubtractInt(int val) {
       if (val == Int32.MinValue) {
-        return this.AddBig(valueNegativeInt32MinValue);
+        return this.AddInt(Int32.MaxValue).AddInt(1);
       }
       if (this.integerMode == 0) {
         if ((val < 0 && Int32.MaxValue + val < this.smallValue) ||
@@ -711,57 +478,7 @@ out bigrem);
       return this.AddInt(-val);
     }
 
-    /// <summary>Sets this object&#x27;s value to the current value plus
-    /// the given integer.</summary>
-    /// <param name='bigintVal'>The number to add.</param>
-    /// <returns>This object.</returns>
-    internal FastInteger AddBig(BigInteger bigintVal) {
-      switch (this.integerMode) {
-          case 0: {
-            return bigintVal.canFitInInt() ? this.AddInt((int)bigintVal) :
-            this.Add(FastInteger.FromBig(bigintVal));
-          }
-        case 1:
-          this.integerMode = 2;
-          this.largeValue = this.mnum.ToBigInteger();
-          this.largeValue += bigintVal;
-          break;
-        case 2:
-          this.largeValue += bigintVal;
-          break;
-        default:
-          throw new InvalidOperationException();
-      }
-      return this;
-    }
-
-    /// <summary>Sets this object&#x27;s value to the current value minus
-    /// the given integer.</summary>
-    /// <param name='bigintVal'>The subtrahend.</param>
-    /// <returns>This object.</returns>
-    internal FastInteger SubtractBig(BigInteger bigintVal) {
-      if (this.integerMode == 2) {
-        this.largeValue -= (BigInteger)bigintVal;
-        return this;
-      } else {
-        int sign = bigintVal.Sign;
-        if (sign == 0) {
-          return this;
-        }
-        // Check if this value fits an int, except if
-        // it's MinValue
-        if (sign < 0 && bigintVal.CompareTo(valueInt32MinValue) > 0) {
-          return this.AddInt(-((int)bigintVal));
-        }
-        if (sign > 0 && bigintVal.CompareTo(valueInt32MaxValue) <= 0) {
-          return this.SubtractInt((int)bigintVal);
-        }
-        bigintVal = -bigintVal;
-        return this.AddBig(bigintVal);
-      }
-    }
-
-    internal FastInteger Add(FastInteger val) {
+    internal FastInteger2 Add(FastInteger2 val) {
       BigInteger valValue;
       switch (this.integerMode) {
         case 0:
@@ -809,125 +526,7 @@ out bigrem);
       return this;
     }
 
-    /// <summary>Sets this object&#x27;s value to the remainder of the
-    /// current value divided by the given integer.</summary>
-    /// <param name='divisor'>The divisor.</param>
-    /// <returns>This object.</returns>
-    /// <exception cref='System.DivideByZeroException'>Attempted to divide
-    /// by zero.</exception>
-    internal FastInteger Remainder(int divisor) {
-      // Mod operator will always result in a
-      // number that fits an int for int divisors
-      if (divisor != 0) {
-        switch (this.integerMode) {
-          case 0:
-            this.smallValue %= divisor;
-            break;
-          case 1:
-            this.largeValue = this.mnum.ToBigInteger();
-            this.largeValue %= (BigInteger)divisor;
-            this.smallValue = (int)this.largeValue;
-            this.integerMode = 0;
-            break;
-          case 2:
-            this.largeValue %= (BigInteger)divisor;
-            this.smallValue = (int)this.largeValue;
-            this.integerMode = 0;
-            break;
-          default:
-            throw new InvalidOperationException();
-        }
-      } else {
-        throw new DivideByZeroException();
-      }
-      return this;
-    }
-
-    internal FastInteger Increment() {
-      if (this.integerMode == 0) {
-        if (this.smallValue != Int32.MaxValue) {
-          ++this.smallValue;
-        } else {
-          this.integerMode = 1;
-          this.mnum = MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
-        }
-        return this;
-      }
-      return this.AddInt(1);
-    }
-
-    internal FastInteger Decrement() {
-      if (this.integerMode == 0) {
-        if (this.smallValue != Int32.MinValue) {
-          --this.smallValue;
-        } else {
-          this.integerMode = 1;
-          this.mnum = MutableNumber.FromBigInteger(valueInt32MinValue);
-          this.mnum.SubtractInt(1);
-        }
-        return this;
-      }
-      return this.SubtractInt(1);
-    }
-
-    internal FastInteger Divide(int divisor) {
-      if (divisor != 0) {
-        switch (this.integerMode) {
-          case 0:
-            if (divisor == -1 && this.smallValue == Int32.MinValue) {
-              // would overflow, convert to large
-              this.integerMode = 1;
-              this.mnum =
-              MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
-            } else {
-              smallValue /= divisor;
-            }
-            break;
-          case 1:
-            this.integerMode = 2;
-            this.largeValue = this.mnum.ToBigInteger();
-            this.largeValue /= (BigInteger)divisor;
-            if (this.largeValue.IsZero) {
-              this.integerMode = 0;
-              this.smallValue = 0;
-            }
-            break;
-          case 2:
-            this.largeValue /= (BigInteger)divisor;
-            if (this.largeValue.IsZero) {
-              this.integerMode = 0;
-              this.smallValue = 0;
-            }
-            break;
-          default:
-            throw new InvalidOperationException();
-        }
-      } else {
-        throw new DivideByZeroException();
-      }
-      return this;
-    }
-
-    /// <summary>Gets a value indicating whether this object&#x27;s value
-    /// is even.</summary>
-    /// <value>True if this object&apos;s value is even; otherwise,
-    /// false.</value>
-    internal bool IsEvenNumber {
-      get {
-        switch (this.integerMode) {
-          case 0:
-            return (this.smallValue & 1) == 0;
-          case 1:
-            return this.mnum.IsEvenNumber;
-          case 2:
-            return this.largeValue.IsEven;
-          default:
-            throw new InvalidOperationException();
-        }
-      }
-    }
-
-    internal FastInteger AddInt(int val) {
+    internal FastInteger2 AddInt(int val) {
       BigInteger valValue;
       switch (this.integerMode) {
         case 0:
@@ -981,60 +580,6 @@ out bigrem);
       }
     }
 
-    private static string HexAlphabet = "0123456789ABCDEF";
-
-    private static void ReverseChars(char[] chars, int offset, int length) {
-      int half = length >> 1;
-      int right = offset + length - 1;
-      for (var i = 0; i < half; i++, right--) {
-        char value = chars[offset + i];
-        chars[offset + i] = chars[right];
-        chars[right] = value;
-      }
-    }
-
-    private static string IntToString(int value) {
-      if (value == Int32.MinValue) {
-        return "-2147483648";
-      }
-      if (value == 0) {
-        return "0";
-      }
-      bool neg = value < 0;
-      var chars = new char[24];
-      var count = 0;
-      if (neg) {
-        chars[0] = '-';
-        ++count;
-        value = -value;
-      }
-      while (value != 0) {
-        char digit = HexAlphabet[(int)(value % 10)];
-        chars[count++] = digit;
-        value /= 10;
-      }
-      if (neg) {
-        ReverseChars(chars, 1, count - 1);
-      } else {
-        ReverseChars(chars, 0, count);
-      }
-      return new String(chars, 0, count);
-    }
-
-    /// <summary>Converts this object to a text string.</summary>
-    /// <returns>A string representation of this object.</returns>
-    public override string ToString() {
-      switch (this.integerMode) {
-        case 0:
-          return IntToString(this.smallValue);
-        case 1:
-          return this.mnum.ToBigInteger().ToString();
-        case 2:
-          return this.largeValue.ToString();
-        default: return String.Empty;
-      }
-    }
-
     /// <summary>Gets the sign of this object&#x27;s value.</summary>
     /// <value>1 if positive, -1 if negative, 0 if zero.</value>
     internal int Sign {
@@ -1049,37 +594,6 @@ out bigrem);
             return this.largeValue.Sign;
           default: return 0;
         }
-      }
-    }
-
-    /// <summary>Gets a value indicating whether this value is
-    /// zero.</summary>
-    /// <value>True if this value is zero; otherwise, false.</value>
-    internal bool IsValueZero {
-      get {
-        switch (this.integerMode) {
-          case 0:
-            return this.smallValue == 0;
-          case 1:
-            return this.mnum.Sign == 0;
-          case 2:
-            return this.largeValue.IsZero;
-          default:
-            return false;
-        }
-      }
-    }
-
-    internal int CompareToInt(int val) {
-      switch (this.integerMode) {
-        case 0:
-          return (val == this.smallValue) ? 0 : (this.smallValue < val ? -1 :
-          1);
-        case 1:
-          return this.mnum.ToBigInteger().CompareTo((BigInteger)val);
-        case 2:
-          return this.largeValue.CompareTo((BigInteger)val);
-        default: return 0;
       }
     }
 

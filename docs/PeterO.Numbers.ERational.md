@@ -1,16 +1,16 @@
-## PeterO.ExtendedRational
+## PeterO.Numbers.ERational
 
-    public sealed class ExtendedRational :
+    public sealed class ERational :
         System.IComparable,
         System.IEquatable
 
 Arbitrary-precision rational number. This class cannot be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.
 
-### ExtendedRational Constructor
+### ERational Constructor
 
-    public ExtendedRational(
-        PeterO.BigInteger numerator,
-        PeterO.BigInteger denominator);
+    public ERational(
+        PeterO.Numbers.EInteger numerator,
+        PeterO.Numbers.EInteger denominator);
 
 Initializes a new instance of the ExtendedRational class.
 
@@ -29,55 +29,55 @@ The parameter  <i>numerator</i>
 
 ### NaN
 
-    public static readonly PeterO.ExtendedRational NaN;
+    public static readonly PeterO.Numbers.ERational NaN;
 
 A not-a-number value.
 
 ### NegativeInfinity
 
-    public static readonly PeterO.ExtendedRational NegativeInfinity;
+    public static readonly PeterO.Numbers.ERational NegativeInfinity;
 
 Negative infinity, less than any other number.
 
 ### NegativeZero
 
-    public static readonly PeterO.ExtendedRational NegativeZero;
+    public static readonly PeterO.Numbers.ERational NegativeZero;
 
 A rational number for negative zero.
 
 ### One
 
-    public static readonly PeterO.ExtendedRational One;
+    public static readonly PeterO.Numbers.ERational One;
 
 The rational number one.
 
 ### PositiveInfinity
 
-    public static readonly PeterO.ExtendedRational PositiveInfinity;
+    public static readonly PeterO.Numbers.ERational PositiveInfinity;
 
 Positive infinity, greater than any other number.
 
 ### SignalingNaN
 
-    public static readonly PeterO.ExtendedRational SignalingNaN;
+    public static readonly PeterO.Numbers.ERational SignalingNaN;
 
 A signaling not-a-number value.
 
 ### Ten
 
-    public static readonly PeterO.ExtendedRational Ten;
+    public static readonly PeterO.Numbers.ERational Ten;
 
 The rational number ten.
 
 ### Zero
 
-    public static readonly PeterO.ExtendedRational Zero;
+    public static readonly PeterO.Numbers.ERational Zero;
 
 A rational number for zero.
 
 ### Denominator
 
-    public PeterO.BigInteger Denominator { get; }
+    public PeterO.Numbers.EInteger Denominator { get; }
 
 Gets this object's denominator.
 
@@ -117,7 +117,7 @@ True if this object's value equals 0; otherwise, false.
 
 ### Numerator
 
-    public PeterO.BigInteger Numerator { get; }
+    public PeterO.Numbers.EInteger Numerator { get; }
 
 Gets this object's numerator.
 
@@ -137,7 +137,7 @@ Zero if this value is zero or negative zero; -1 if this value is less than 0; an
 
 ### UnsignedNumerator
 
-    public PeterO.BigInteger UnsignedNumerator { get; }
+    public PeterO.Numbers.EInteger UnsignedNumerator { get; }
 
 Gets this object's numerator with the sign removed.
 
@@ -147,7 +147,7 @@ This object's numerator. If this object is a not-a-number value, returns the dia
 
 ### Abs
 
-    public PeterO.ExtendedRational Abs();
+    public PeterO.Numbers.ERational Abs();
 
 Not documented yet.
 
@@ -157,8 +157,8 @@ An ExtendedRational object.
 
 ### Add
 
-    public PeterO.ExtendedRational Add(
-        PeterO.ExtendedRational otherValue);
+    public PeterO.Numbers.ERational Add(
+        PeterO.Numbers.ERational otherValue);
 
 Adds two rational numbers.
 
@@ -179,7 +179,7 @@ The parameter  <i>otherValue</i>
 ### CompareTo
 
     public sealed int CompareTo(
-        PeterO.ExtendedRational other);
+        PeterO.Numbers.ERational other);
 
 Compares an ExtendedRational object with this instance.
 
@@ -191,16 +191,10 @@ Compares an ExtendedRational object with this instance.
 
 Zero if the values are equal; a negative number if this instance is less, or a positive number if this instance is greater.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- is null.
-
 ### CompareToBinary
 
     public int CompareToBinary(
-        PeterO.ExtendedFloat other);
+        PeterO.Numbers.EFloat other);
 
 Compares an ExtendedFloat object with this instance.
 
@@ -212,16 +206,10 @@ Compares an ExtendedFloat object with this instance.
 
 Zero if the values are equal; a negative number if this instance is less, or a positive number if this instance is greater.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- is null.
-
 ### CompareToDecimal
 
     public int CompareToDecimal(
-        PeterO.ExtendedDecimal other);
+        PeterO.Numbers.EDecimal other);
 
 Compares an ExtendedDecimal object with this instance.
 
@@ -233,15 +221,9 @@ Compares an ExtendedDecimal object with this instance.
 
 Zero if the values are equal; a negative number if this instance is less, or a positive number if this instance is greater.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- is null.
-
 ### Create
 
-    public static PeterO.ExtendedRational Create(
+    public static PeterO.Numbers.ERational Create(
         int numeratorSmall,
         int denominatorSmall);
 
@@ -259,9 +241,9 @@ An ExtendedRational object.
 
 ### Create
 
-    public static PeterO.ExtendedRational Create(
-        PeterO.BigInteger numerator,
-        PeterO.BigInteger denominator);
+    public static PeterO.Numbers.ERational Create(
+        PeterO.Numbers.EInteger numerator,
+        PeterO.Numbers.EInteger denominator);
 
 Creates a number with the given numerator and denominator.
 
@@ -275,17 +257,10 @@ Creates a number with the given numerator and denominator.
 
 An ExtendedRational object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>numerator</i>
- or  <i>denominator</i>
- is null.
-
 ### CreateNaN
 
-    public static PeterO.ExtendedRational CreateNaN(
-        PeterO.BigInteger diag);
+    public static PeterO.Numbers.ERational CreateNaN(
+        PeterO.Numbers.EInteger diag);
 
 Creates a not-a-number ExtendedRational object.
 
@@ -309,8 +284,8 @@ The parameter  <i>diag</i>
 
 ### CreateNaN
 
-    public static PeterO.ExtendedRational CreateNaN(
-        PeterO.BigInteger diag,
+    public static PeterO.Numbers.ERational CreateNaN(
+        PeterO.Numbers.EInteger diag,
         bool signaling,
         bool negative);
 
@@ -340,8 +315,8 @@ The parameter  <i>diag</i>
 
 ### Divide
 
-    public PeterO.ExtendedRational Divide(
-        PeterO.ExtendedRational otherValue);
+    public PeterO.Numbers.ERational Divide(
+        PeterO.Numbers.ERational otherValue);
 
 Divides this instance by the value of an ExtendedRational object.
 
@@ -377,7 +352,7 @@ True if the objects are equal; otherwise, false.
 ### Equals
 
     public sealed bool Equals(
-        PeterO.ExtendedRational other);
+        PeterO.Numbers.ERational other);
 
 Not documented yet.
 
@@ -389,16 +364,10 @@ Not documented yet.
 
 A Boolean object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- is null.
-
 ### FromBigInteger
 
-    public static PeterO.ExtendedRational FromBigInteger(
-        PeterO.BigInteger bigint);
+    public static PeterO.Numbers.ERational FromBigInteger(
+        PeterO.Numbers.EInteger bigint);
 
 Converts a big integer to a rational number.
 
@@ -412,7 +381,7 @@ The exact value of the integer as a rational number.
 
 ### FromDouble
 
-    public static PeterO.ExtendedRational FromDouble(
+    public static PeterO.Numbers.ERational FromDouble(
         double flt);
 
 Converts a 64-bit floating-point number to a rational number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the number to a string.
@@ -428,8 +397,8 @@ A rational number with the same value as  <i>flt</i>
 
 ### FromExtendedDecimal
 
-    public static PeterO.ExtendedRational FromExtendedDecimal(
-        PeterO.ExtendedDecimal ef);
+    public static PeterO.Numbers.ERational FromExtendedDecimal(
+        PeterO.Numbers.EDecimal ef);
 
 Not documented yet.
 
@@ -449,8 +418,8 @@ The parameter  <i>ef</i>
 
 ### FromExtendedFloat
 
-    public static PeterO.ExtendedRational FromExtendedFloat(
-        PeterO.ExtendedFloat ef);
+    public static PeterO.Numbers.ERational FromExtendedFloat(
+        PeterO.Numbers.EFloat ef);
 
 Not documented yet.
 
@@ -470,7 +439,7 @@ The parameter  <i>ef</i>
 
 ### FromInt32
 
-    public static PeterO.ExtendedRational FromInt32(
+    public static PeterO.Numbers.ERational FromInt32(
         int smallint);
 
 Not documented yet.
@@ -485,7 +454,7 @@ An ExtendedRational object.
 
 ### FromInt64
 
-    public static PeterO.ExtendedRational FromInt64(
+    public static PeterO.Numbers.ERational FromInt64(
         long longInt);
 
 Not documented yet.
@@ -500,7 +469,7 @@ An ExtendedRational object.
 
 ### FromSingle
 
-    public static PeterO.ExtendedRational FromSingle(
+    public static PeterO.Numbers.ERational FromSingle(
         float flt);
 
 Converts a 32-bit floating-point number to a rational number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the number to a string.
@@ -586,8 +555,8 @@ True if this object is a signaling not-a-number value (which causes an error if 
 
 ### Multiply
 
-    public PeterO.ExtendedRational Multiply(
-        PeterO.ExtendedRational otherValue);
+    public PeterO.Numbers.ERational Multiply(
+        PeterO.Numbers.ERational otherValue);
 
 Multiplies this instance by the value of an ExtendedRational object.
 
@@ -607,7 +576,7 @@ The parameter  <i>otherValue</i>
 
 ### Negate
 
-    public PeterO.ExtendedRational Negate();
+    public PeterO.Numbers.ERational Negate();
 
 Not documented yet.
 
@@ -617,8 +586,8 @@ An ExtendedRational object.
 
 ### Remainder
 
-    public PeterO.ExtendedRational Remainder(
-        PeterO.ExtendedRational otherValue);
+    public PeterO.Numbers.ERational Remainder(
+        PeterO.Numbers.ERational otherValue);
 
 Finds the remainder that results when this instance is divided by the value of a ExtendedRational object.
 
@@ -638,8 +607,8 @@ The parameter  <i>otherValue</i>
 
 ### Subtract
 
-    public PeterO.ExtendedRational Subtract(
-        PeterO.ExtendedRational otherValue);
+    public PeterO.Numbers.ERational Subtract(
+        PeterO.Numbers.ERational otherValue);
 
 Subtracts an ExtendedRational object from this instance.
 
@@ -659,7 +628,7 @@ The parameter  <i>otherValue</i>
 
 ### ToBigInteger
 
-    public PeterO.BigInteger ToBigInteger();
+    public PeterO.Numbers.EInteger ToBigInteger();
 
 Converts this value to an arbitrary-precision integer. Any fractional part in this value will be discarded when converting to a big integer.
 
@@ -674,7 +643,7 @@ This object's value is infinity or NaN.
 
 ### ToBigIntegerExact
 
-    public PeterO.BigInteger ToBigIntegerExact();
+    public PeterO.Numbers.EInteger ToBigIntegerExact();
 
 Converts this value to an arbitrary-precision integer, checking whether the value is an exact integer.
 
@@ -702,8 +671,8 @@ The closest 64-bit floating-point number to this value. The return value can be 
 
 ### ToExtendedDecimal
 
-    public PeterO.ExtendedDecimal ToExtendedDecimal(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal ToExtendedDecimal(
+        PeterO.Numbers.EContext ctx);
 
 Converts this rational number to a decimal number and rounds the result to the given precision.
 
@@ -715,15 +684,9 @@ Converts this rational number to a decimal number and rounds the result to the g
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### ToExtendedDecimal
 
-    public PeterO.ExtendedDecimal ToExtendedDecimal();
+    public PeterO.Numbers.EDecimal ToExtendedDecimal();
 
 Converts this rational number to a decimal number.
 
@@ -733,8 +696,8 @@ The exact value of the rational number, or not-a-number (NaN) if the result can'
 
 ### ToExtendedDecimalExactIfPossible
 
-    public PeterO.ExtendedDecimal ToExtendedDecimalExactIfPossible(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EDecimal ToExtendedDecimalExactIfPossible(
+        PeterO.Numbers.EContext ctx);
 
 Converts this rational number to a decimal number, but if the result would have a nonterminating decimal expansion, rounds that result to the given precision.
 
@@ -746,16 +709,10 @@ Converts this rational number to a decimal number, but if the result would have 
 
 An ExtendedDecimal object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### ToExtendedFloat
 
-    public PeterO.ExtendedFloat ToExtendedFloat(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat ToExtendedFloat(
+        PeterO.Numbers.EContext ctx);
 
 Converts this rational number to a binary number and rounds the result to the given precision.
 
@@ -767,15 +724,9 @@ Converts this rational number to a binary number and rounds the result to the gi
 
 An ExtendedFloat object.
 
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
-
 ### ToExtendedFloat
 
-    public PeterO.ExtendedFloat ToExtendedFloat();
+    public PeterO.Numbers.EFloat ToExtendedFloat();
 
 Converts this rational number to a binary number.
 
@@ -785,8 +736,8 @@ The exact value of the rational number, or not-a-number (NaN) if the result can'
 
 ### ToExtendedFloatExactIfPossible
 
-    public PeterO.ExtendedFloat ToExtendedFloatExactIfPossible(
-        PeterO.PrecisionContext ctx);
+    public PeterO.Numbers.EFloat ToExtendedFloatExactIfPossible(
+        PeterO.Numbers.EContext ctx);
 
 Converts this rational number to a binary number, but if the result would have a nonterminating binary expansion, rounds that result to the given precision.
 
@@ -797,12 +748,6 @@ Converts this rational number to a binary number, but if the result would have a
 <b>Returns:</b>
 
 An ExtendedFloat object.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
 
 ### ToSingle
 

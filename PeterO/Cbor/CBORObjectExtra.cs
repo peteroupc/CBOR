@@ -7,7 +7,6 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 using System.IO;
-using PeterO;
 
 namespace PeterO.Cbor {
   // Contains extra methods placed separately

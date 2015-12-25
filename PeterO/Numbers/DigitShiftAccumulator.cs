@@ -7,7 +7,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 
-namespace PeterO {
+namespace PeterO.Numbers {
   internal sealed class DigitShiftAccumulator : IShiftAccumulator {
     private int bitLeftmost;
 
@@ -33,7 +33,7 @@ namespace PeterO {
       }
     }
 
-    private BigInteger shiftedBigInt;
+    private EInteger shiftedBigInt;
     private FastInteger knownBitLength;
 
     public FastInteger GetDigitLength() {
@@ -52,19 +52,19 @@ namespace PeterO {
       }
     }
 
-    private static readonly BigInteger valueTen = (BigInteger)10;
+    private static readonly EInteger valueTen = (EInteger)10;
 
     /// <summary>Gets the current integer after shifting.</summary>
     /// <value>The current integer after shifting.</value>
-    public BigInteger ShiftedInt {
+    public EInteger ShiftedInt {
       get {
-        return this.isSmall ? ((BigInteger)this.shiftedSmall) :
+        return this.isSmall ? ((EInteger)this.shiftedSmall) :
         this.shiftedBigInt;
       }
     }
 
     public DigitShiftAccumulator(
-BigInteger bigint,
+EInteger bigint,
 int lastDiscarded,
 int olderDiscarded) {
       if (bigint.canFitInInt()) {
@@ -115,14 +115,14 @@ int olderDiscarded) {
       if (fastint.CanFitInInt32()) {
         this.ShiftRightInt(fastint.AsInt32());
       } else {
-        BigInteger bi = fastint.AsBigInteger();
+        EInteger bi = fastint.AsBigInteger();
         while (bi.Sign > 0) {
           var count = 1000000;
-          if (bi.CompareTo((BigInteger)1000000) < 0) {
+          if (bi.CompareTo((EInteger)1000000) < 0) {
             count = (int)bi;
           }
           this.ShiftRightInt(count);
-          bi -= (BigInteger)count;
+          bi -= (EInteger)count;
           if (this.isSmall ? this.shiftedSmall == 0 :
           this.shiftedBigInt.IsZero) {
             break;
@@ -145,10 +145,10 @@ int olderDiscarded) {
       }
       // Console.WriteLine("digits=" + digits);
       if (digits == 1) {
-        BigInteger bigrem;
-        BigInteger bigquo = BigInteger.DivRem(
+        EInteger bigrem;
+        EInteger bigquo = EInteger.DivRem(
 this.shiftedBigInt,
-(BigInteger)10,
+(EInteger)10,
 out bigrem);
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
@@ -166,9 +166,9 @@ out bigrem);
       }
       int startCount = Math.Min(4, digits - 1);
       if (startCount > 0) {
-        BigInteger bigrem;
-        BigInteger radixPower = DecimalUtility.FindPowerOfTen(startCount);
-        BigInteger bigquo = BigInteger.DivRem(
+        EInteger bigrem;
+        EInteger radixPower = DecimalUtility.FindPowerOfTen(startCount);
+        EInteger bigquo = EInteger.DivRem(
 this.shiftedBigInt,
 radixPower,
 out bigrem);
@@ -191,8 +191,8 @@ out bigrem);
         }
       }
       if (digits == 1) {
-        BigInteger bigrem;
-        BigInteger bigquo = BigInteger.DivRem(
+        EInteger bigrem;
+        EInteger bigquo = EInteger.DivRem(
 this.shiftedBigInt,
 valueTen,
 out bigrem);
@@ -226,7 +226,7 @@ out bigrem);
         this.ShiftRightSmall(digits);
         return;
       }
-      String str = this.shiftedBigInt.ToString();
+      string str = this.shiftedBigInt.ToString();
       // NOTE: Will be 1 if the value is 0
       int digitLength = str.Length;
       var bitDiff = 0;
@@ -249,7 +249,7 @@ out bigrem);
           this.isSmall = true;
           this.shiftedSmall = FastParseLong(str, 0, newLength);
         } else {
-          this.shiftedBigInt = BigInteger.fromSubstring(str, 0, newLength);
+          this.shiftedBigInt = EInteger.fromSubstring(str, 0, newLength);
         }
       }
       for (int i = str.Length - 1; i >= 0; --i) {
@@ -278,7 +278,7 @@ out bigrem);
           return;
         }
       }
-      String str;
+      string str;
       this.knownBitLength = this.knownBitLength ?? this.GetDigitLength();
       if (this.knownBitLength.CompareToInt(digits) <= 0) {
         return;
@@ -286,8 +286,8 @@ out bigrem);
       FastInteger digitDiff =
       FastInteger.Copy(this.knownBitLength).SubtractInt(digits);
       if (digitDiff.CompareToInt(1) == 0) {
-        BigInteger bigrem;
-        BigInteger bigquo = BigInteger.DivRem(
+        EInteger bigrem;
+        EInteger bigquo = EInteger.DivRem(
 this.shiftedBigInt,
 valueTen,
 out bigrem);
@@ -301,10 +301,10 @@ out bigrem);
         return;
       }
       if (digitDiff.CompareToInt(9) <= 0) {
-        BigInteger bigrem;
+        EInteger bigrem;
         int diffInt = digitDiff.AsInt32();
-        BigInteger radixPower = DecimalUtility.FindPowerOfTen(diffInt);
-        BigInteger bigquo = BigInteger.DivRem(
+        EInteger radixPower = DecimalUtility.FindPowerOfTen(diffInt);
+        EInteger bigquo = EInteger.DivRem(
 this.shiftedBigInt,
 radixPower,
 out bigrem);
@@ -326,10 +326,10 @@ out bigrem);
         return;
       }
       if (digitDiff.CompareToInt(Int32.MaxValue) <= 0) {
-        BigInteger bigrem;
-        BigInteger radixPower =
+        EInteger bigrem;
+        EInteger radixPower =
         DecimalUtility.FindPowerOfTen(digitDiff.AsInt32() - 1);
-        BigInteger bigquo = BigInteger.DivRem(
+        EInteger bigquo = EInteger.DivRem(
 this.shiftedBigInt,
 radixPower,
 out bigrem);
@@ -338,7 +338,7 @@ out bigrem);
           this.bitsAfterLeftmost |= 1;
         }
         {
-          BigInteger bigquo2 = BigInteger.DivRem(bigquo, valueTen, out bigrem);
+          EInteger bigquo2 = EInteger.DivRem(bigquo, valueTen, out bigrem);
           this.bitLeftmost = (int)bigrem;
           this.shiftedBigInt = bigquo2;
         }
@@ -363,7 +363,7 @@ out bigrem);
         if (digitShift <= Int32.MaxValue) {
           this.discardedBitCount.AddInt((int)digitShift);
         } else {
-          this.discardedBitCount.AddBig((BigInteger)digitShift);
+          this.discardedBitCount.AddBig((EInteger)digitShift);
         }
         for (int i = str.Length - 1; i >= 0; --i) {
           this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -377,7 +377,7 @@ out bigrem);
           this.isSmall = true;
           this.shiftedSmall = FastParseLong(str, 0, newLength);
         } else {
-          this.shiftedBigInt = BigInteger.fromSubstring(str, 0, newLength);
+          this.shiftedBigInt = EInteger.fromSubstring(str, 0, newLength);
         }
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
       }
@@ -452,9 +452,9 @@ out bigrem);
             ") is less than 0");
         }
         this.knownBitLength = this.CalcKnownDigitLength();
-        BigInteger bigintDiff = this.knownBitLength.AsBigInteger();
-        BigInteger bitsBig = bits.AsBigInteger();
-        bigintDiff -= (BigInteger)bitsBig;
+        EInteger bigintDiff = this.knownBitLength.AsBigInteger();
+        EInteger bitsBig = bits.AsBigInteger();
+        bigintDiff -= (EInteger)bitsBig;
         if (bigintDiff.Sign > 0) {
           // current length is greater than the
           // desired bit length

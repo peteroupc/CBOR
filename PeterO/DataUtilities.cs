@@ -154,7 +154,7 @@ bool lenientLineBreaks) {
     /// point and <paramref name='replace'/> is false.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
-    public static long GetUtf8Length(String str, bool replace) {
+    public static long GetUtf8Length(string str, bool replace) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
@@ -356,7 +356,7 @@ int surrogateBehavior) {
     /// null and a isn't; or the first code point that's different is
     /// greater in A than in B; or a starts with b and is longer than
     /// b.</returns>
-    public static int CodePointCompare(String strA, String strB) {
+    public static int CodePointCompare(string strA, string strB) {
       if (strA == null) {
         return (strB == null) ? 0 : -1;
       }
@@ -433,7 +433,7 @@ int surrogateBehavior) {
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
     public static int WriteUtf8(
-String str,
+string str,
 int offset,
 int length,
 Stream stream,
@@ -468,7 +468,7 @@ bool replace) {
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
     public static int WriteUtf8(
-String str,
+string str,
 int offset,
 int length,
 Stream stream,
@@ -613,7 +613,7 @@ bool lenientLineBreaks) {
     /// null.</exception>
     /// <exception cref='System.IO.IOException'>An I/O error
     /// occurred.</exception>
-    public static int WriteUtf8(String str, Stream stream, bool replace) {
+    public static int WriteUtf8(string str, Stream stream, bool replace) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }

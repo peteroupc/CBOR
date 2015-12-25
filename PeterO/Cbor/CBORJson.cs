@@ -595,7 +595,7 @@ int quote) {
             } else {
               // This map has non-string keys
               IDictionary<string, CBORObject> stringMap = new
-                Dictionary<String, CBORObject>();
+                Dictionary<string, CBORObject>();
               // Copy to a map with String keys, since
               // some keys could be duplicates
               // when serialized to strings

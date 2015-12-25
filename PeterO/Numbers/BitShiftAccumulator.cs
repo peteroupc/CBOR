@@ -7,7 +7,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 
-namespace PeterO {
+namespace PeterO.Numbers {
   internal sealed class BitShiftAccumulator : IShiftAccumulator
   {
     private const int SmallBitLength = 32;
@@ -39,7 +39,7 @@ namespace PeterO {
       }
     }
 
-    private BigInteger shiftedBigInt;
+    private EInteger shiftedBigInt;
     private FastInteger knownBitLength;
 
     public FastInteger GetDigitLength() {
@@ -56,9 +56,9 @@ namespace PeterO {
         this.ShiftToDigitsInt(bits.AsInt32());
       } else {
         this.knownBitLength = this.CalcKnownBitLength();
-        BigInteger bigintDiff = this.knownBitLength.AsBigInteger();
-        BigInteger bitsBig = bits.AsBigInteger();
-        bigintDiff -= (BigInteger)bitsBig;
+        EInteger bigintDiff = this.knownBitLength.AsBigInteger();
+        EInteger bitsBig = bits.AsBigInteger();
+        bigintDiff -= (EInteger)bitsBig;
         if (bigintDiff.Sign > 0) {
           // current length is greater than the
           // desired bit length
@@ -70,10 +70,10 @@ namespace PeterO {
     private int shiftedSmall;
     private bool isSmall;
 
-    public BigInteger ShiftedInt
+    public EInteger ShiftedInt
     {
       get {
-        return this.isSmall ? ((BigInteger)this.shiftedSmall) :
+        return this.isSmall ? ((EInteger)this.shiftedSmall) :
         this.shiftedBigInt;
       }
     }
@@ -99,7 +99,7 @@ namespace PeterO {
     }
 
     public BitShiftAccumulator(
-BigInteger bigint,
+EInteger bigint,
 int lastDiscarded,
 int olderDiscarded) {
       if (bigint.Sign < 0) {
@@ -122,7 +122,7 @@ int olderDiscarded) {
         throw new ArgumentException("smallNumber (" + smallNumber +
           ") is less than 0");
       }
-      var bsa = new BitShiftAccumulator(BigInteger.Zero, 0, 0);
+      var bsa = new BitShiftAccumulator(EInteger.Zero, 0, 0);
       bsa.shiftedSmall = smallNumber;
       bsa.discardedBitCount = new FastInteger(0);
       bsa.isSmall = true;
@@ -136,14 +136,14 @@ int olderDiscarded) {
       if (fastint.CanFitInInt32()) {
         this.ShiftRightInt(fastint.AsInt32());
       } else {
-        BigInteger bi = fastint.AsBigInteger();
+        EInteger bi = fastint.AsBigInteger();
         while (bi.Sign > 0) {
           var count = 1000000;
-          if (bi.CompareTo((BigInteger)1000000) < 0) {
+          if (bi.CompareTo((EInteger)1000000) < 0) {
             count = (int)bi;
           }
           this.ShiftRightInt(count);
-          bi -= (BigInteger)count;
+          bi -= (EInteger)count;
           if (this.isSmall ? this.shiftedSmall == 0 :
           this.shiftedBigInt.IsZero) {
             break;
