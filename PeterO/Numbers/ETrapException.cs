@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO.Numbers {
     /// <summary>Exception thrown for arithmetic trap errors.</summary>
-  public class TrapException : ArithmeticException {
+  internal class ETrapException : ArithmeticException {
     private readonly Object result;
     private readonly EContext ctx;
 
@@ -61,9 +61,9 @@ namespace PeterO.Numbers {
     /// <summary>Initializes a new instance of the TrapException
     /// class.</summary>
     /// <param name='flag'>A 32-bit signed integer.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'>An EContext object.</param>
     /// <param name='result'>An arbitrary object.</param>
-    public TrapException(int flag, EContext ctx, Object result) :
+    public ETrapException(int flag, EContext ctx, Object result) :
       base(FlagToMessage(flag)) {
       this.error = flag;
       this.ctx = (ctx == null) ? null : ctx.Copy();

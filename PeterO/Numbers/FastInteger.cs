@@ -78,7 +78,7 @@ namespace PeterO.Numbers {
           bytes[(i * 4) + 3] = (byte)((this.data[i] >> 24) & 0xff);
         }
         bytes[bytes.Length - 1] = (byte)0;
-        return EInteger.fromBytes(bytes, true);
+        return EInteger.FromBytes(bytes, true);
       }
 
       internal int[] GetLastWordsInternal(int numWords32Bit) {
@@ -425,7 +425,7 @@ namespace PeterO.Numbers {
 
     internal static FastInteger FromBig(EInteger bigintVal) {
       if (bigintVal.canFitInInt()) {
-        return new FastInteger(bigintVal.intValueChecked());
+        return new FastInteger(bigintVal.AsInt32Checked());
       }
       if (bigintVal.Sign > 0) {
         var fi = new FastInteger(0);
@@ -494,7 +494,7 @@ namespace PeterO.Numbers {
         bytes[(i * 4) + 3] = (byte)((words[i] >> 24) & 0xff);
       }
       bytes[bytes.Length - 1] = (byte)0;
-      return EInteger.fromBytes(bytes, true);
+      return EInteger.FromBytes(bytes, true);
     }
 
     internal static int[] GetLastWords(EInteger bigint, int numWords32Bit) {
@@ -1086,7 +1086,7 @@ out bigrem);
     internal EInteger AsBigInteger() {
       switch (this.integerMode) {
         case 0:
-          return EInteger.valueOf(this.smallValue);
+          return EInteger.FromInt64(this.smallValue);
         case 1:
           return this.mnum.ToBigInteger();
         case 2:

@@ -11,7 +11,7 @@ namespace PeterO.Numbers {
     /// <summary>Contains parameters for controlling the precision,
     /// rounding, and exponent range of arbitrary-precision
     /// numbers.</summary>
-  public sealed class EContext {
+  internal sealed class EContext {
     /// <summary>Signals that the exponent was adjusted to fit the exponent
     /// range.</summary>
     public const int FlagClamped = 32;

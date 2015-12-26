@@ -906,10 +906,8 @@ namespace PeterO {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='context'/> is null.</exception>
     public ExtendedFloat Abs(PrecisionContext context) {
-      if ((context) == null) {
-        throw new ArgumentNullException("context");
-      }
-      return new ExtendedFloat(this.ef.Abs(context == null ? null : context.ec));
+    return new ExtendedFloat(this.ef.Abs(context == null ? null :
+        context.ec));
     }
 
     /// <summary>Returns a binary float with the same value as this object
@@ -1575,9 +1573,6 @@ return new ExtendedFloat(this.ef.DivideToIntegerZeroScale(divisor.ef,
       if ((otherValue) == null) {
         throw new ArgumentNullException("otherValue");
       }
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
       return new ExtendedFloat(this.ef.Quantize(otherValue.ef, ctx == null ?
         null : ctx.ec));
     }
@@ -1600,9 +1595,6 @@ return new ExtendedFloat(this.ef.DivideToIntegerZeroScale(divisor.ef,
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='ctx'/> is null.</exception>
     public ExtendedFloat RoundToIntegralExact(PrecisionContext ctx) {
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
       return new ExtendedFloat(this.ef.RoundToIntegralExact(ctx == null ? null:
         ctx.ec));
     }
@@ -1627,9 +1619,6 @@ return new ExtendedFloat(this.ef.DivideToIntegerZeroScale(divisor.ef,
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='ctx'/> is null.</exception>
     public ExtendedFloat RoundToIntegralNoRoundedFlag(PrecisionContext ctx) {
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
       return new
         ExtendedFloat(this.ef.RoundToIntegralNoRoundedFlag(ctx == null ? null:
         ctx.ec));
@@ -1645,7 +1634,12 @@ return new ExtendedFloat(this.ef.DivideToIntegerZeroScale(divisor.ef,
     /// means round to the sixteenth (10b^-3, 0.0001b), and 3 means round
     /// to the sixteen-place (10b^3, 1000b). A value of 0 rounds the number
     /// to an integer.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null, in which case the default rounding mode is
+    /// HalfEven.</param>
     /// <returns>A binary number rounded to the closest value representable
     /// in the given precision. Signals FlagInvalid and returns NaN if the
     /// result can't fit the given precision without rounding. Signals
@@ -1713,7 +1707,11 @@ return new ExtendedFloat(this.ef.DivideToIntegerZeroScale(divisor.ef,
     /// to the sixteenth (10b^-3, 0.0001b), and 3 means round to the
     /// sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an
     /// integer.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>A binary number rounded to the closest value representable
     /// in the given precision. Signals FlagInvalid and returns NaN if the
     /// result can't fit the given precision without rounding. Signals
@@ -2001,13 +1999,10 @@ return new ExtendedFloat(this.ef.DivideToIntegerZeroScale(divisor.ef,
     /// Precision property is 0), and the exponent has a fractional
     /// part.</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='exponent'/> or <paramref name='ctx'/> is null.</exception>
+    /// name='exponent'/> is null.</exception>
     public ExtendedFloat Pow(ExtendedFloat exponent, PrecisionContext ctx) {
       if ((exponent) == null) {
         throw new ArgumentNullException("exponent");
-      }
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
       }
  return new ExtendedFloat(this.ef.Pow(exponent.ef, ctx == null ? null :
         ctx.ec));
@@ -2026,9 +2021,6 @@ return new ExtendedFloat(this.ef.DivideToIntegerZeroScale(divisor.ef,
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='ctx'/> is null.</exception>
     public ExtendedFloat Pow(int exponentSmall, PrecisionContext ctx) {
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
       return new ExtendedFloat(this.ef.Pow(exponentSmall, ctx == null ? null :
         ctx.ec));
     }

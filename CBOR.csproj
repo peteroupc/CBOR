@@ -135,7 +135,7 @@
     <Compile Include="PeterO\Numbers\RadixMath.cs" />
     <Compile Include="PeterO\Numbers\ERounding.cs" />
     <Compile Include="PeterO\Numbers\SimpleRadixMath.cs" />
-    <Compile Include="PeterO\Numbers\TrapException.cs" />
+    <Compile Include="PeterO\Numbers\ETrapException.cs" />
     <Compile Include="PeterO\Numbers\TrappableRadixMath.cs" />
     <Compile Include="PeterO\PrecisionContext.cs" />
     <Compile Include="PeterO\Rounding.cs" />

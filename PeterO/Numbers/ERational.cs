@@ -11,7 +11,7 @@ namespace PeterO.Numbers {
     /// <summary>Arbitrary-precision rational number. This class cannot be
     /// inherited; this is a change in version 2.0 from previous versions,
     /// where the class was inadvertently left inheritable.</summary>
-  public sealed class ERational : IComparable<ERational>,
+  internal sealed class ERational : IComparable<ERational>,
     IEquatable<ERational> {
     private EInteger unsignedNumerator;
 
@@ -51,7 +51,7 @@ namespace PeterO.Numbers {
     #region Equals and GetHashCode implementation
     /// <summary>Determines whether this object and another object are
     /// equal.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
+    /// <param name='obj'>Not documented yet.</param>
     /// <returns>True if the objects are equal; otherwise, false.</returns>
     public override bool Equals(object obj) {
       var other = obj as ERational;
@@ -83,10 +83,7 @@ other.denominator) && this.flags == other.flags);
 
     /// <summary>Creates a number with the given numerator and
     /// denominator.</summary>
-    /// <param name='numeratorSmall'>A 32-bit signed integer.</param>
-    /// <param name='denominatorSmall'>A 32-bit signed integer.
-    /// (2).</param>
-    /// <returns>An ExtendedRational object.</returns>
+    /// <returns>An ERational object.</returns>
     public static ERational Create(
 int numeratorSmall,
 int denominatorSmall) {
@@ -95,9 +92,7 @@ int denominatorSmall) {
 
     /// <summary>Creates a number with the given numerator and
     /// denominator.</summary>
-    /// <param name='numerator'>A BigInteger object.</param>
-    /// <param name='denominator'>Another BigInteger object.</param>
-    /// <returns>An ExtendedRational object.</returns>
+    /// <returns>An ERational object.</returns>
     public static ERational Create(
 EInteger numerator,
 EInteger denominator) {
@@ -106,8 +101,8 @@ EInteger denominator) {
 
     /// <summary>Initializes a new instance of the ExtendedRational
     /// class.</summary>
-    /// <param name='numerator'>A BigInteger object.</param>
-    /// <param name='denominator'>Another BigInteger object.</param>
+    /// <param name='numerator'>Not documented yet.</param>
+    /// <param name='denominator'>Not documented yet.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='numerator'/> or <paramref name='denominator'/> is
     /// null.</exception>
@@ -170,7 +165,7 @@ EInteger denominator) {
     }
 
     /// <summary>Converts a big integer to a rational number.</summary>
-    /// <param name='bigint'>A BigInteger object.</param>
+    /// <param name='bigint'>Not documented yet.</param>
     /// <returns>The exact value of the integer as a rational
     /// number.</returns>
     public static ERational FromBigInteger(EInteger bigint) {
@@ -190,7 +185,7 @@ EInteger denominator) {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting
     /// the number to a string.</summary>
-    /// <param name='flt'>A 32-bit floating-point number.</param>
+    /// <param name='flt'>Not documented yet.</param>
     /// <returns>A rational number with the same value as <paramref
     /// name='flt'/>.</returns>
     public static ERational FromSingle(float flt) {
@@ -201,7 +196,7 @@ EInteger denominator) {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting
     /// the number to a string.</summary>
-    /// <param name='flt'>A 64-bit floating-point number.</param>
+    /// <param name='flt'>Not documented yet.</param>
     /// <returns>A rational number with the same value as <paramref
     /// name='flt'/>.</returns>
     public static ERational FromDouble(double flt) {
@@ -212,7 +207,7 @@ EInteger denominator) {
     /// <param name='diag'>A number to use as diagnostic information
     /// associated with this object. If none is needed, should be
     /// zero.</param>
-    /// <returns>An ExtendedRational object.</returns>
+    /// <returns>An ERational object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='diag'/> is null.</exception>
     /// <exception cref='ArgumentException'>The parameter <paramref
@@ -238,7 +233,7 @@ int flags) {
     /// (true) or quiet (false).</param>
     /// <param name='negative'>Whether the return value is
     /// negative.</param>
-    /// <returns>An ExtendedRational object.</returns>
+    /// <returns>An ERational object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='diag'/> is null.</exception>
     /// <exception cref='ArgumentException'>The parameter <paramref
@@ -269,9 +264,8 @@ bool negative) {
       return er;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='ef'>An ExtendedFloat object.</param>
-    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='ef'>Not documented yet.</param>
+    /// <returns>An ERational object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='ef'/> is null.</exception>
     public static ERational FromExtendedFloat(EFloat ef) {
@@ -316,9 +310,8 @@ bool negative) {
       return new ERational(num, den);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='ef'>An ExtendedDecimal object.</param>
-    /// <returns>An ExtendedRational object.</returns>
+    /// <param name='ef'>Not documented yet.</param>
+    /// <returns>An ERational object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='ef'/> is null.</exception>
     public static ERational FromExtendedDecimal(EDecimal ef) {
@@ -366,8 +359,8 @@ bool negative) {
 
     /// <summary>Converts this rational number to a decimal number and
     /// rounds the result to the given precision.</summary>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>An ExtendedDecimal object.</returns>
+    /// <param name='ctx'>Not documented yet.</param>
+    /// <returns>An EDecimal object.</returns>
     public EDecimal ToExtendedDecimal(EContext ctx) {
       if (this.IsNaN()) {
         return EDecimal.CreateNaN(
@@ -398,7 +391,7 @@ ctx);
     /// operation (the flags are in addition to the pre-existing flags).
     /// Can be null, in which case this method is the same as
     /// ToExtendedDecimal.</param>
-    /// <returns>An ExtendedDecimal object.</returns>
+    /// <returns>An EDecimal object.</returns>
 public EDecimal ToExtendedDecimalExactIfPossible(EContext
       ctx) {
       if (ctx == null) {
@@ -442,8 +435,8 @@ ctx);
 
     /// <summary>Converts this rational number to a binary number and
     /// rounds the result to the given precision.</summary>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>An ExtendedFloat object.</returns>
+    /// <param name='ctx'>Not documented yet.</param>
+    /// <returns>An EFloat object.</returns>
     public EFloat ToExtendedFloat(EContext ctx) {
       if (this.IsNaN()) {
         return EFloat.CreateNaN(
@@ -474,7 +467,7 @@ ctx);
     /// operation (the flags are in addition to the pre-existing flags).
     /// Can be null, in which case this method is the same as
     /// ToExtendedFloat.</param>
-    /// <returns>An ExtendedFloat object.</returns>
+    /// <returns>An EFloat object.</returns>
     public EFloat ToExtendedFloatExactIfPossible(EContext ctx) {
       if (ctx == null) {
         return this.ToExtendedFloat(null);
@@ -520,7 +513,7 @@ ctx);
     /// <summary>Converts this value to an arbitrary-precision integer. Any
     /// fractional part in this value will be discarded when converting to
     /// a big integer.</summary>
-    /// <returns>A BigInteger object.</returns>
+    /// <returns>An EInteger object.</returns>
     /// <exception cref='OverflowException'>This object's value is infinity
     /// or NaN.</exception>
     public EInteger ToBigInteger() {
@@ -532,7 +525,7 @@ ctx);
 
     /// <summary>Converts this value to an arbitrary-precision integer,
     /// checking whether the value is an exact integer.</summary>
-    /// <returns>A BigInteger object.</returns>
+    /// <returns>An EInteger object.</returns>
     /// <exception cref='OverflowException'>This object's value is infinity
     /// or NaN.</exception>
     /// <exception cref='ArithmeticException'>This object's value is not an
@@ -552,16 +545,10 @@ out rem);
       return quo;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='smallint'>A 32-bit signed integer.</param>
-    /// <returns>An ExtendedRational object.</returns>
     public static ERational FromInt32(int smallint) {
       return new ERational((EInteger)smallint, EInteger.One);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='longInt'>A 64-bit signed integer.</param>
-    /// <returns>An ExtendedRational object.</returns>
     public static ERational FromInt64(long longInt) {
       return new ERational((EInteger)longInt, EInteger.One);
     }
@@ -590,8 +577,6 @@ out rem);
         .ToSingle();
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedRational object.</returns>
     public ERational Abs() {
       if (this.IsNegative) {
         var er = new ERational(this.unsignedNumerator, this.denominator);
@@ -601,8 +586,6 @@ out rem);
       return this;
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <returns>An ExtendedRational object.</returns>
     public ERational Negate() {
       var er = new ERational(this.unsignedNumerator, this.denominator);
       er.flags = this.flags ^ BigNumberFlags.FlagNegative;
@@ -634,7 +617,7 @@ out rem);
 
     /// <summary>Compares an ExtendedRational object with this
     /// instance.</summary>
-    /// <param name='other'>An ExtendedRational object.</param>
+    /// <param name='other'>Not documented yet.</param>
     /// <returns>Zero if the values are equal; a negative number if this
     /// instance is less, or a positive number if this instance is
     /// greater.</returns>
@@ -706,7 +689,7 @@ out rem);
 
     /// <summary>Compares an ExtendedFloat object with this
     /// instance.</summary>
-    /// <param name='other'>An ExtendedFloat object.</param>
+    /// <param name='other'>Not documented yet.</param>
     /// <returns>Zero if the values are equal; a negative number if this
     /// instance is less, or a positive number if this instance is
     /// greater.</returns>
@@ -823,7 +806,7 @@ out thisRem);
 
     /// <summary>Compares an ExtendedDecimal object with this
     /// instance.</summary>
-    /// <param name='other'>An ExtendedDecimal object.</param>
+    /// <param name='other'>Not documented yet.</param>
     /// <returns>Zero if the values are equal; a negative number if this
     /// instance is less, or a positive number if this instance is
     /// greater.</returns>
@@ -940,9 +923,6 @@ out thisRem);
       return ad.CompareTo(bc);
     }
 
-    /// <summary>Not documented yet.</summary>
-    /// <param name='other'>An ExtendedRational object.</param>
-    /// <returns>A Boolean object.</returns>
     public bool Equals(ERational other) {
       return this.Equals((object)other);
     }
@@ -1100,7 +1080,7 @@ otherValue.IsNegative);
 
     /// <summary>Subtracts an ExtendedRational object from this
     /// instance.</summary>
-    /// <param name='otherValue'>An ExtendedRational object.</param>
+    /// <param name='otherValue'>Not documented yet.</param>
     /// <returns>The difference of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='otherValue'/> is null.</exception>
@@ -1142,7 +1122,7 @@ otherValue.IsNegative);
 
     /// <summary>Multiplies this instance by the value of an
     /// ExtendedRational object.</summary>
-    /// <param name='otherValue'>An ExtendedRational object.</param>
+    /// <param name='otherValue'>Not documented yet.</param>
     /// <returns>The product of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='otherValue'/> is null.</exception>
@@ -1182,7 +1162,7 @@ otherValue.IsNegative);
 
     /// <summary>Divides this instance by the value of an ExtendedRational
     /// object.</summary>
-    /// <param name='otherValue'>An ExtendedRational object.</param>
+    /// <param name='otherValue'>Not documented yet.</param>
     /// <returns>The quotient of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='otherValue'/> is null.</exception>
@@ -1227,7 +1207,7 @@ otherValue.IsNegative);
 
     /// <summary>Finds the remainder that results when this instance is
     /// divided by the value of a ExtendedRational object.</summary>
-    /// <param name='otherValue'>An ExtendedRational object.</param>
+    /// <param name='otherValue'>Not documented yet.</param>
     /// <returns>The remainder of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='otherValue'/> is null.</exception>

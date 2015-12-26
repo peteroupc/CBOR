@@ -282,7 +282,7 @@ namespace PeterO.Numbers {
               this.outputs[i] = this.outputs[i - 1];
             }
             this.inputs[0] = input;
-       this.inputsInts[0] = input.canFitInInt() ? input.intValueChecked() : -1;
+       this.inputsInts[0] = input.canFitInInt() ? input.AsInt32Checked() : -1;
             this.outputs[0] = output;
             ++this.size;
           } else {
@@ -293,7 +293,7 @@ namespace PeterO.Numbers {
               this.outputs[i] = this.outputs[i - 1];
             }
             this.inputs[0] = input;
-       this.inputsInts[0] = input.canFitInInt() ? input.intValueChecked() : -1;
+       this.inputsInts[0] = input.canFitInInt() ? input.AsInt32Checked() : -1;
             this.outputs[0] = output;
           }
         }

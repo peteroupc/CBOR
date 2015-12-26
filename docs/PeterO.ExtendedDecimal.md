@@ -941,13 +941,12 @@ An arbitrary-precision decimal number with the same value as the given string.
 
 <b>Exceptions:</b>
 
- * System.ArgumentNullException:
-The parameter  <i>str</i>
- is null.
-
  * System.FormatException:
 The parameter  <i>str</i>
  is not a correctly formatted number string.
+
+ * System.ArgumentNullException:
+The parameter "str" is null.
 
 ### FromString
 

@@ -17,7 +17,7 @@ namespace PeterO {
     /// <returns>A BigInteger object with the same value as the Int64
     /// object.</returns>
     public static implicit operator BigInteger(long bigValue) {
-      return new BigInteger(EInteger.valueOf(bigValue));
+      return new BigInteger(EInteger.FromInt64(bigValue));
  }
 
     /// <summary>Converts the value of a 32-bit signed integer to
@@ -26,7 +26,7 @@ namespace PeterO {
     /// <returns>A BigInteger object with the same value as the Int32
     /// object.</returns>
     public static implicit operator BigInteger(int smallValue) {
-      return new BigInteger(EInteger.valueOf(smallValue));
+      return new BigInteger(EInteger.FromInt64(smallValue));
     }
 
     /// <summary>Adds a BigInteger object and a BigInteger
@@ -137,6 +137,8 @@ BigInteger mod) {
 
     /// <summary>Returns a big integer with the bits shifted to the
     /// right.</summary>
+    /// <param name='bthis'>Not documented yet.</param>
+    /// <param name='smallValue'>Not documented yet.</param>
     /// <returns>A BigInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bthis'/> is null.</exception>
@@ -191,8 +193,8 @@ BigInteger mod) {
     /// <returns>True if <paramref name='thisValue'/> is less than
     /// <paramref name='otherValue'/> ; otherwise, false.</returns>
     public static bool operator <(BigInteger thisValue, BigInteger otherValue) {
-      return (thisValue == null) ? ((otherValue != null)) :
-        ((thisValue.CompareTo(otherValue) < 0));
+      return (thisValue == null) ? (otherValue != null) :
+        (thisValue.CompareTo(otherValue) < 0);
     }
 
     /// <summary>Determines whether a BigInteger instance is less than or
