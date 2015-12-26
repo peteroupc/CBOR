@@ -13,13 +13,13 @@ public static class DocGenerator {
   throw new ArgumentNullException("assemblyFile");
 }
 if (assemblyFile.Length == 0) {
-  throw new ArgumentException("assemblyFile" + " is empty.");
+  throw new ArgumentException("assemblyFile is empty.");
 }
       if (docdir == null) {
   throw new ArgumentNullException("docdir");
 }
 if (docdir.Length == 0) {
-  throw new ArgumentException("docdir" + " is empty.");
+  throw new ArgumentException("docdir is empty.");
 }
       var directory = Path.GetFullPath(docdir);
       assemblyFile = Path.GetFullPath(assemblyFile);

@@ -32,7 +32,7 @@ namespace PeterO {
 
     public static readonly BigInteger ONE = new BigInteger(EInteger.One);
 
-    internal EInteger ei;
+    internal readonly EInteger ei;
 
     internal BigInteger(EInteger ei) {
       if ((ei) == null) {

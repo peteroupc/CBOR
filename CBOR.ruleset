@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Rules for Portable.CBOR" Description="Code analysis rules for Portable.CBOR.csproj." ToolsVersion="14.0">
+<RuleSet Name="Rules for the CBOR project" Description="Code analysis rules for the CBOR project." ToolsVersion="14.0">
   <Rules AnalyzerId="CodeCracker.CSharp" RuleNamespace="CodeCracker.CSharp">
     <Rule Id="CC0001" Action="None" />
     <Rule Id="CC0006" Action="None" />
     <Rule Id="CC0021" Action="None" />
     <Rule Id="CC0084" Action="Info" />
+    <Rule Id="CC0105" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <Rule Id="CA1001" Action="Warning" />

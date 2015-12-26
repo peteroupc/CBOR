@@ -11,13 +11,15 @@ using PeterO.Numbers;
 namespace PeterO {
     /// <summary>Exception thrown for arithmetic trap errors.</summary>
   public class TrapException : ArithmeticException {
+
+    // TODO: Edit ExtendedDecimal and ExtendedFloat methods to
+    // catch ETrapException and rethrow TrapException
+    internal readonly ETrapException ete;
+
     /// <summary>Gets the precision context used during the operation that
     /// triggered the trap. May be null.</summary>
     /// <value>The precision context used during the operation that
     /// triggered the trap. May be null.</value>
-    ETrapException ete;
-
-  /// <summary>Not documented yet.</summary>
     public PrecisionContext Context { get {
         return new PrecisionContext(ete.Context);
 } }

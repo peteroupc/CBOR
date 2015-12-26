@@ -363,10 +363,11 @@ int surrogateBehavior) {
       if (strB == null) {
         return 1;
       }
-      int len = Math.Min(strA.Length, strB.Length);
+      int len, ca, cb;
+      len = Math.Min(strA.Length, strB.Length);
       for (var i = 0; i < len; ++i) {
-        int ca = strA[i];
-        int cb = strB[i];
+         ca = strA[i];
+         cb = strB[i];
         if (ca == cb) {
           // normal code units and illegal surrogates
           // are treated as single code points
@@ -500,13 +501,14 @@ bool lenientLineBreaks) {
         throw new ArgumentException("str.Length minus offset (" +
                 (str.Length - offset) + ") is less than " + length);
       }
+      int endIndex, c;
       byte[] bytes;
       var retval = 0;
       bytes = new byte[StreamedStringBufferLength];
       var byteIndex = 0;
-      int endIndex = offset + length;
+       endIndex = offset + length;
       for (int index = offset; index < endIndex; ++index) {
-        int c = str[index];
+         c = str[index];
         if (c <= 0x7f) {
           if (lenientLineBreaks) {
             if (c == 0x0d && (index + 1 >= endIndex || str[index + 1] !=
@@ -679,10 +681,11 @@ bool replace) {
       var bytesNeeded = 0;
       var lower = 0x80;
       var upper = 0xbf;
-      int pointer = offset;
-      int endpointer = offset + bytesCount;
+      int pointer, endpointer, b;
+       pointer = offset;
+       endpointer = offset + bytesCount;
       while (pointer < endpointer) {
-        int b = data[pointer] & (int)0xff;
+         b = data[pointer] & (int)0xff;
         ++pointer;
         if (bytesNeeded == 0) {
           if ((b & 0x7f) == b) {
@@ -727,16 +730,17 @@ bool replace) {
           if (bytesSeen != bytesNeeded) {
             continue;
           }
-          int ret = cp;
+          int ret, ch, lead, trail;
+           ret = cp;
           cp = 0;
           bytesSeen = 0;
           bytesNeeded = 0;
           if (ret <= 0xffff) {
             builder.Append((char)ret);
           } else {
-            int ch = ret - 0x10000;
-            int lead = (ch / 0x400) + 0xd800;
-            int trail = (ch & 0x3ff) + 0xdc00;
+             ch = ret - 0x10000;
+             lead = (ch / 0x400) + 0xd800;
+             trail = (ch & 0x3ff) + 0xdc00;
             builder.Append((char)lead);
             builder.Append((char)trail);
           }
@@ -825,6 +829,7 @@ bool replace) {
       if (builder == null) {
         throw new ArgumentNullException("builder");
       }
+      int b;
       var cp = 0;
       var bytesSeen = 0;
       var bytesNeeded = 0;
@@ -832,7 +837,7 @@ bool replace) {
       var upper = 0xbf;
       var pointer = 0;
       while (pointer < bytesCount || bytesCount < 0) {
-        int b = stream.ReadByte();
+        b = stream.ReadByte();
         if (b < 0) {
           if (bytesNeeded != 0) {
             bytesNeeded = 0;
@@ -914,16 +919,17 @@ bool replace) {
           if (bytesSeen != bytesNeeded) {
             continue;
           }
-          int ret = cp;
+          int ret, ch, lead, trail;
+          ret = cp;
           cp = 0;
           bytesSeen = 0;
           bytesNeeded = 0;
           if (ret <= 0xffff) {
             builder.Append((char)ret);
           } else {
-            int ch = ret - 0x10000;
-            int lead = (ch / 0x400) + 0xd800;
-            int trail = (ch & 0x3ff) + 0xdc00;
+             ch = ret - 0x10000;
+             lead = (ch / 0x400) + 0xd800;
+             trail = (ch & 0x3ff) + 0xdc00;
             builder.Append((char)lead);
             builder.Append((char)trail);
           }

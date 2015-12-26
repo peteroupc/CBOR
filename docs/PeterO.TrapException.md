@@ -28,11 +28,7 @@ Initializes a new instance of the TrapException class.
 
     public PeterO.PrecisionContext Context { get; }
 
-Gets the precision context used during the operation that triggered the trap. May be null.
-
-<b>Returns:</b>
-
-The precision context used during the operation that triggered the trap. May be null.
+Not documented yet.
 
 ### Error
 

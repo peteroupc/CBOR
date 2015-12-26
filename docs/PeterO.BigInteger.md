@@ -1020,6 +1020,12 @@ Returns a big integer with the bits shifted to the right.
 
 For this operation, the BigInteger is treated as a two's complement representation. Thus, for negative values, the BigInteger is sign-extended.
 
+<b>Parameters:</b>
+
+ * <i>bthis</i>: Not documented yet.
+
+ * <i>smallValue</i>: Not documented yet.
+
 <b>Returns:</b>
 
 A BigInteger object.

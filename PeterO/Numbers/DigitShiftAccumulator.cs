@@ -146,10 +146,11 @@ int olderDiscarded) {
       // Console.WriteLine("digits=" + digits);
       if (digits == 1) {
         EInteger bigrem;
-        EInteger bigquo = EInteger.DivRem(
-this.shiftedBigInt,
-(EInteger)10,
-out bigrem);
+        EInteger bigquo;
+{
+EInteger[] divrem=(this.shiftedBigInt).DivRem((EInteger)10);
+bigquo = divrem[0];
+bigrem = divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
         this.shiftedBigInt = bigquo;
@@ -168,10 +169,11 @@ out bigrem);
       if (startCount > 0) {
         EInteger bigrem;
         EInteger radixPower = DecimalUtility.FindPowerOfTen(startCount);
-        EInteger bigquo = EInteger.DivRem(
-this.shiftedBigInt,
-radixPower,
-out bigrem);
+        EInteger bigquo;
+{
+EInteger[] divrem=(this.shiftedBigInt).DivRem(radixPower);
+bigquo = divrem[0];
+bigrem = divrem[1]; }
         if (!bigrem.IsZero) {
           this.bitsAfterLeftmost |= 1;
         }
@@ -192,10 +194,11 @@ out bigrem);
       }
       if (digits == 1) {
         EInteger bigrem;
-        EInteger bigquo = EInteger.DivRem(
-this.shiftedBigInt,
-valueTen,
-out bigrem);
+        EInteger bigquo;
+{
+EInteger[] divrem=(this.shiftedBigInt).DivRem(valueTen);
+bigquo = divrem[0];
+bigrem = divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
         this.shiftedBigInt = bigquo;
@@ -287,10 +290,11 @@ out bigrem);
       FastInteger.Copy(this.knownBitLength).SubtractInt(digits);
       if (digitDiff.CompareToInt(1) == 0) {
         EInteger bigrem;
-        EInteger bigquo = EInteger.DivRem(
-this.shiftedBigInt,
-valueTen,
-out bigrem);
+        EInteger bigquo;
+{
+EInteger[] divrem=(this.shiftedBigInt).DivRem(valueTen);
+bigquo = divrem[0];
+bigrem = divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
         this.bitLeftmost = (int)bigrem;
         this.shiftedBigInt = bigquo;
@@ -304,10 +308,11 @@ out bigrem);
         EInteger bigrem;
         int diffInt = digitDiff.AsInt32();
         EInteger radixPower = DecimalUtility.FindPowerOfTen(diffInt);
-        EInteger bigquo = EInteger.DivRem(
-this.shiftedBigInt,
-radixPower,
-out bigrem);
+        EInteger bigquo;
+{
+EInteger[] divrem=(this.shiftedBigInt).DivRem(radixPower);
+bigquo = divrem[0];
+bigrem = divrem[1]; }
         var rem = (int)bigrem;
         this.bitsAfterLeftmost |= this.bitLeftmost;
         for (var i = 0; i < diffInt; ++i) {
@@ -329,16 +334,21 @@ out bigrem);
         EInteger bigrem;
         EInteger radixPower =
         DecimalUtility.FindPowerOfTen(digitDiff.AsInt32() - 1);
-        EInteger bigquo = EInteger.DivRem(
-this.shiftedBigInt,
-radixPower,
-out bigrem);
+        EInteger bigquo;
+{
+EInteger[] divrem=(this.shiftedBigInt).DivRem(radixPower);
+bigquo = divrem[0];
+bigrem = divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
         if (!bigrem.IsZero) {
           this.bitsAfterLeftmost |= 1;
         }
         {
-          EInteger bigquo2 = EInteger.DivRem(bigquo, valueTen, out bigrem);
+          EInteger bigquo2;
+{
+EInteger[] divrem=(bigquo).DivRem(valueTen);
+bigquo2 = divrem[0];
+bigrem = divrem[1]; }
           this.bitLeftmost = (int)bigrem;
           this.shiftedBigInt = bigquo2;
         }

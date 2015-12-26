@@ -15,9 +15,8 @@ namespace PeterO.Numbers {
     // radix.</typeparam>
   internal class TrappableRadixMath<T> : IRadixMath<T>
   {
-    private void ThrowTrapException(int flag, EContext ctx, object result) {
-      throw new TrapException(flag, ctx == null ? null : new
-        PrecisionContext(ctx), result);
+    private static void ThrowTrapException(int flag, EContext ctx, object result) {
+      throw new ETrapException(flag, ctx, result);
     }
 
     private static EContext GetTrappableContext(EContext ctx) {
