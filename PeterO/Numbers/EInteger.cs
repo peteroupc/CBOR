@@ -13,14 +13,20 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-    /// <summary>An arbitrary-precision integer.
-    /// <para>Instances of this class are immutable, so they are inherently
-    /// safe for use by multiple threads. Multiple instances of this object
-    /// with the same value are interchangeable, so they should not be
-    /// compared using the "==" operator (which only checks if each side of
-    /// the operator is the same instance).</para></summary>
+  /// <summary>An arbitrary-precision integer.
+  /// <para>Instances of this class are immutable, so they are inherently
+  /// safe for use by multiple threads. Multiple instances of this object
+  /// with the same value are interchangeable, so they should not be
+  /// compared using the "==" operator (which only checks if each side of
+  /// the operator is the same instance).</para></summary>
   internal sealed partial class EInteger : IComparable<EInteger>,
     IEquatable<EInteger> {
+    private const string Digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    private const int RecursionLimit = 10;
+
+    private const int ShortMask = 0xffff;
+
     /// <summary>EInteger object for the number one.</summary>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -42,22 +48,6 @@ namespace PeterO.Numbers {
 
     private static readonly EInteger ten = new EInteger(
       1, new short[] { 10, 0 }, false);
-
-    /// <summary>EInteger object for the number zero.</summary>
-#if CODE_ANALYSIS
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "Microsoft.Security",
-      "CA2104",
-      Justification = "EInteger is immutable")]
-#endif
-    private static readonly EInteger zero = new EInteger(
-      0, new short[] { 0, 0 }, false);
-
-    private const string Digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-    private const int RecursionLimit = 10;
-
-    private const int ShortMask = 0xffff;
 
     private static readonly int[] valueCharToDigit = { 36, 36, 36, 36, 36, 36,
       36,
@@ -81,6 +71,16 @@ namespace PeterO.Numbers {
       74051159, 71582787, 69273665, 67108863, 65075261, 63161282, 61356674,
       59652322 };
 
+    /// <summary>EInteger object for the number zero.</summary>
+#if CODE_ANALYSIS
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+      "Microsoft.Security",
+      "CA2104",
+      Justification = "EInteger is immutable")]
+#endif
+    private static readonly EInteger zero = new EInteger(
+      0, new short[] { 0, 0 }, false);
+
     private readonly bool negative;
     private readonly int wordCount;
     private readonly short[] words;
@@ -89,6 +89,24 @@ namespace PeterO.Numbers {
       this.wordCount = wordCount;
       this.words = reg;
       this.negative = negative;
+    }
+
+    public static EInteger One {
+      get {
+        return one;
+      }
+    }
+
+    public static EInteger Ten {
+      get {
+        return ten;
+      }
+    }
+
+    public static EInteger Zero {
+      get {
+        return zero;
+      }
     }
 
     /// <summary>Gets a value indicating whether this value is
@@ -114,24 +132,6 @@ namespace PeterO.Numbers {
     public int Sign {
       get {
         return (this.wordCount == 0) ? 0 : (this.negative ? -1 : 1);
-      }
-    }
-
-    public static EInteger One {
-      get {
-        return one;
-      }
-    }
-
-    public static EInteger Ten {
-      get {
-        return ten;
-      }
-    }
-
-    public static EInteger Zero {
-      get {
-        return zero;
       }
     }
 
@@ -165,7 +165,7 @@ namespace PeterO.Numbers {
           if (index2 >= 0 && index2 < len) {
             nrj |= (((int)bytes[index2]) << 8);
           }
-            newreg[j] = unchecked((short)nrj);
+          newreg[j] = unchecked((short)nrj);
         }
       } else {
         for (var i = 0; i < len; i += 2, j++) {
@@ -196,9 +196,65 @@ namespace PeterO.Numbers {
                     newnegative));
     }
 
+    /// <summary>Converts a 64-bit signed integer to a big
+    /// integer.</summary>
+    /// <param name='longerValue'>Not documented yet.</param>
+    /// <returns>A EInteger object with the same value as the 64-bit
+    /// number.</returns>
+    public static EInteger FromInt64(long longerValue) {
+      if (longerValue == 0) {
+        return EInteger.Zero;
+      }
+      if (longerValue == 1) {
+        return EInteger.One;
+      }
+      if (longerValue == 10) {
+        return EInteger.Ten;
+      }
+      short[] retreg;
+      bool retnegative;
+      int retwordcount;
+      unchecked {
+        retnegative = longerValue < 0;
+        retreg = new short[4];
+        if (longerValue == Int64.MinValue) {
+          retreg[0] = 0;
+          retreg[1] = 0;
+          retreg[2] = 0;
+          retreg[3] = unchecked((short)0x8000);
+          retwordcount = 4;
+        } else {
+          long ut = longerValue;
+          if (ut < 0) {
+            ut = -ut;
+          }
+          retreg[0] = (short)(ut & 0xffff);
+          ut >>= 16;
+          retreg[1] = (short)(ut & 0xffff);
+          ut >>= 16;
+          retreg[2] = (short)(ut & 0xffff);
+          ut >>= 16;
+          retreg[3] = (short)(ut & 0xffff);
+          // at this point, the word count can't
+          // be 0 (the check for 0 was already done above)
+          retwordcount = 4;
+          while (retwordcount != 0 &&
+                 retreg[retwordcount - 1] == 0) {
+            --retwordcount;
+          }
+        }
+      }
+      return new EInteger(retwordcount, retreg, retnegative);
+    }
+
     /// <summary>Converts a string to an arbitrary-precision integer. The
     /// string portion can begin with a minus sign ("-" , U+002D) to
     /// indicate that it's negative.</summary>
+    /// <param name='str'>Not documented yet.</param>
+    /// <param name='radix'>A base from 2 to 36. Depending on the radix,
+    /// the string can use the basic digits 0 to 9 (U + 0030 to U + 0039)
+    /// and then the basic letters A to Z (U + 0041 to U + 005A). For
+    /// example, 0-9 in radix 10, and 0-9, then A-F in radix 16.</param>
     /// <returns>A EInteger object with the same value as given in the
     /// string.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -233,6 +289,15 @@ namespace PeterO.Numbers {
     /// <summary>Converts a portion of a string to an arbitrary-precision
     /// integer in a given radix. The string portion can begin with a minus
     /// sign ("-" , U+002D) to indicate that it's negative.</summary>
+    /// <param name='str'>Not documented yet.</param>
+    /// <param name='radix'>A base from 2 to 36. Depending on the radix,
+    /// the string can use the basic digits 0 to 9 (U + 0030 to U + 0039)
+    /// and then the basic letters A to Z (U + 0041 to U + 005A). For
+    /// example, 0-9 in radix 10, and 0-9, then A-F in radix 16.</param>
+    /// <param name='index'>The index of the string that starts the string
+    /// portion.</param>
+    /// <param name='endIndex'>The index of the string that ends the string
+    /// portion. The length will be index + endIndex - 1.</param>
     /// <returns>A EInteger object with the same value as given in the
     /// string portion.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -392,11 +457,11 @@ namespace PeterO.Numbers {
             int n = bigint.Length;
             for (int j = 0; j < n; ++j) {
               int p;
-                p = unchecked((((int)bigint[j]) & 0xffff) * radix);
-                int p2 = ((int)carry) & 0xffff;
-                p = unchecked(p + p2);
-                bigint[j] = unchecked((short)p);
-                carry = unchecked((short)(p >> 16));
+              p = unchecked((((int)bigint[j]) & 0xffff) * radix);
+              int p2 = ((int)carry) & 0xffff;
+              p = unchecked(p + p2);
+              bigint[j] = unchecked((short)p);
+              carry = unchecked((short)(p >> 16));
             }
             if (carry != 0) {
               bigint = GrowForCarry(bigint, carry);
@@ -446,6 +511,11 @@ namespace PeterO.Numbers {
     /// <summary>Converts a portion of a string to an arbitrary-precision
     /// integer. The string portion can begin with a minus sign ("-",
     /// U+002D) to indicate that it's negative.</summary>
+    /// <param name='str'>Not documented yet.</param>
+    /// <param name='index'>The index of the string that starts the string
+    /// portion.</param>
+    /// <param name='endIndex'>The index of the string that ends the string
+    /// portion. The length will be index + endIndex - 1.</param>
     /// <returns>A EInteger object with the same value as given in the
     /// string portion.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -465,57 +535,6 @@ namespace PeterO.Numbers {
         throw new ArgumentNullException("str");
       }
       return FromRadixSubstring(str, 10, index, endIndex);
-    }
-
-    /// <summary>Converts a 64-bit signed integer to a big
-    /// integer.</summary>
-    /// <param name='longerValue'>Not documented yet.</param>
-    /// <returns>A EInteger object with the same value as the 64-bit
-    /// number.</returns>
-    public static EInteger FromInt64(long longerValue) {
-      if (longerValue == 0) {
-        return EInteger.Zero;
-      }
-      if (longerValue == 1) {
-        return EInteger.One;
-      }
-      if (longerValue == 10) {
-        return EInteger.Ten;
-      }
-      short[] retreg;
-      bool retnegative;
-      int retwordcount;
-      unchecked {
-        retnegative = longerValue < 0;
-        retreg = new short[4];
-        if (longerValue == Int64.MinValue) {
-          retreg[0] = 0;
-          retreg[1] = 0;
-          retreg[2] = 0;
-          retreg[3] = unchecked((short)0x8000);
-          retwordcount = 4;
-        } else {
-          long ut = longerValue;
-          if (ut < 0) {
-            ut = -ut;
-          }
-          retreg[0] = (short)(ut & 0xffff);
-          ut >>= 16;
-          retreg[1] = (short)(ut & 0xffff);
-          ut >>= 16;
-          retreg[2] = (short)(ut & 0xffff);
-          ut >>= 16;
-          retreg[3] = (short)(ut & 0xffff);
-          // at this point, the word count can't
-          // be 0 (the check for 0 was already done above)
-          retwordcount = 4;
-          while (retwordcount != 0 &&
-                 retreg[retwordcount - 1] == 0) {
-            --retwordcount;
-          }
-        }
-      }
-      return new EInteger(retwordcount, retreg, retnegative);
     }
 
     /// <summary>Returns the absolute value of this object's
@@ -742,6 +761,51 @@ namespace PeterO.Numbers {
       return new EInteger(count, diffReg, diffNeg);
     }
 
+    /// <summary>Converts this object's value to a 32-bit signed integer,
+    /// throwing an exception if it can't fit.</summary>
+    /// <returns>A 32-bit signed integer.</returns>
+    /// <exception cref='OverflowException'>This object's value is too big
+    /// to fit a 32-bit signed integer.</exception>
+    public int AsInt32Checked() {
+      int count = this.wordCount;
+      if (count == 0) {
+        return 0;
+      }
+      if (count > 2) {
+        throw new OverflowException();
+      }
+      if (count == 2 && (this.words[1] & 0x8000) != 0) {
+        if (this.negative && this.words[1] == unchecked((short)0x8000) &&
+            this.words[0] == 0) {
+          return Int32.MinValue;
+        }
+        throw new OverflowException();
+      }
+      return this.AsInt32Unchecked();
+    }
+
+    /// <summary>Converts this object's value to a 32-bit signed integer.
+    /// If the value can't fit in a 32-bit integer, returns the lower 32
+    /// bits of this object's two's complement representation (in which
+    /// case the return value might have a different sign than this
+    /// object's value).</summary>
+    /// <returns>A 32-bit signed integer.</returns>
+    public int AsInt32Unchecked() {
+      var c = (int)this.wordCount;
+      if (c == 0) {
+        return 0;
+      }
+      int intRetValue = ((int)this.words[0]) & 0xffff;
+      if (c > 1) {
+        intRetValue |= (((int)this.words[1]) & 0xffff) << 16;
+      }
+      if (this.negative) {
+        intRetValue = unchecked(intRetValue - 1);
+        intRetValue = unchecked(~intRetValue);
+      }
+      return intRetValue;
+    }
+
     /// <summary>Finds the minimum number of bits needed to represent this
     /// object&#x27;s value, except for its sign. If the value is negative,
     /// finds the number of bits in a value equal to this object's absolute
@@ -836,6 +900,24 @@ namespace PeterO.Numbers {
         }
       }
       return ((size > tempSize) ^ (sa <= 0)) ? 1 : -1;
+    }
+
+    /// <summary>Gets a value indicating whether this object&#x27;s value
+    /// is a power of two.</summary>
+    /// <value>True if this object&#x27;s value is a power of two;
+    /// otherwise, false.</value>
+    public bool IsPowerOfTwo {
+      get {
+        int bits = this.bitLength();
+        var ret = 0;
+        for (var i = 0; i < bits; ++i) {
+          ret += this.GetUnsignedBit(i) ? 1 : 0;
+          if (ret >= 2) {
+            return false;
+          }
+        }
+        return ret == 1;
+      }
     }
 
     /// <summary>Divides this instance by the value of a EInteger object.
@@ -1007,7 +1089,7 @@ namespace PeterO.Numbers {
     /// <inheritdoc/>
     /// <summary>Determines whether this object and another object are
     /// equal.</summary>
-    /// <param name='obj'>Not documented yet.</param>
+    /// <param name='obj'>An arbitrary object.</param>
     /// <returns>True if this object and another object are equal;
     /// otherwise, false.</returns>
     public override bool Equals(object obj) {
@@ -1041,12 +1123,12 @@ namespace PeterO.Numbers {
         throw new ArgumentNullException("bigintSecond");
       }
       if (this.IsZero) {
-        return EInteger.Abs(bigintSecond);
-      }
-      if (bigintSecond.IsZero) {
-        return EInteger.Abs(this);
+        return bigintSecond.Abs();
       }
       EInteger thisValue = this.Abs();
+      if (bigintSecond.IsZero) {
+        return thisValue;
+      }
       bigintSecond = bigintSecond.Abs();
       if (bigintSecond.Equals(EInteger.One) ||
           thisValue.Equals(bigintSecond)) {
@@ -1340,51 +1422,6 @@ namespace PeterO.Numbers {
       return 0;
     }
 
-    /// <summary>Converts this object's value to a 32-bit signed integer,
-    /// throwing an exception if it can't fit.</summary>
-    /// <returns>A 32-bit signed integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is too big
-    /// to fit a 32-bit signed integer.</exception>
-    public int AsInt32Checked() {
-      int count = this.wordCount;
-      if (count == 0) {
-        return 0;
-      }
-      if (count > 2) {
-        throw new OverflowException();
-      }
-      if (count == 2 && (this.words[1] & 0x8000) != 0) {
-        if (this.negative && this.words[1] == unchecked((short)0x8000) &&
-            this.words[0] == 0) {
-          return Int32.MinValue;
-        }
-        throw new OverflowException();
-      }
-      return this.AsInt32Unchecked();
-    }
-
-    /// <summary>Converts this object's value to a 32-bit signed integer.
-    /// If the value can't fit in a 32-bit integer, returns the lower 32
-    /// bits of this object's two's complement representation (in which
-    /// case the return value might have a different sign than this
-    /// object's value).</summary>
-    /// <returns>A 32-bit signed integer.</returns>
-    public int AsInt32Unchecked() {
-      var c = (int)this.wordCount;
-      if (c == 0) {
-        return 0;
-      }
-      int intRetValue = ((int)this.words[0]) & 0xffff;
-      if (c > 1) {
-        intRetValue |= (((int)this.words[1]) & 0xffff) << 16;
-      }
-      if (this.negative) {
-        intRetValue = unchecked(intRetValue - 1);
-        intRetValue = unchecked(~intRetValue);
-      }
-      return intRetValue;
-    }
-
     /// <summary>Converts this object's value to a 64-bit signed integer,
     /// throwing an exception if it can't fit.</summary>
     /// <returns>A 64-bit signed integer.</returns>
@@ -1440,8 +1477,8 @@ namespace PeterO.Numbers {
           intRetValue = unchecked(~intRetValue);
           intRetValue2 = unchecked(~intRetValue2);
         }
-       ivv = ((long)intRetValue) & 0xFFFFFFFFL;
- ivv |= ((long)intRetValue2) << 32;
+        ivv = ((long)intRetValue) & 0xFFFFFFFFL;
+        ivv |= ((long)intRetValue2) << 32;
         return ivv;
       }
       ivv = ((long)intRetValue) & 0xFFFFFFFFL;
@@ -1480,7 +1517,7 @@ namespace PeterO.Numbers {
     /// <summary>Calculates the remainder when a EInteger raised to a
     /// certain power is divided by another EInteger.</summary>
     /// <param name='pow'>Another EInteger object.</param>
-    /// <param name='mod'>An EInteger object.</param>
+    /// <param name='mod'>A EInteger object. (3).</param>
     /// <returns>An EInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='pow'/> or <paramref name='mod'/> is null.</exception>
@@ -1898,60 +1935,6 @@ namespace PeterO.Numbers {
       return SqrtRemInternal(true);
     }
 
-    /// <summary>Calculates the square root and the remainder.</summary>
-    /// <param name='useRem'>Not documented yet.</param>
-    /// <returns>An array of two big integers: the first integer is the
-    /// square root, and the second is the difference between this value
-    /// and the square of the first integer. Returns two zeros if this
-    /// value is 0 or less, or one and zero if this value equals
-    /// 1.</returns>
-    private EInteger[] SqrtRemInternal(bool useRem) {
-      if (this.Sign <= 0) {
-        return new[] { EInteger.Zero, EInteger.Zero };
-      }
-      if (this.Equals(EInteger.One)) {
-        return new[] { EInteger.One, EInteger.Zero };
-      }
-      EInteger bigintX;
-      EInteger bigintY;
-      EInteger thisValue = this;
-      int powerBits = (thisValue.getUnsignedBitLength() + 1) / 2;
-      if (thisValue.canFitInInt()) {
-        int smallValue = thisValue.AsInt32Checked();
-        // No need to check for zero; already done above
-        var smallintX = 0;
-        int smallintY = 1 << powerBits;
-        do {
-          smallintX = smallintY;
-          smallintY = smallValue / smallintX;
-          smallintY += smallintX;
-          smallintY >>= 1;
-        } while (smallintY < smallintX);
-        if (!useRem) {
-          return new[] { (EInteger)smallintX, null };
-        }
-        smallintY = smallintX * smallintX;
-        smallintY = smallValue - smallintY;
-        return new[] {
-          (EInteger)smallintX, (EInteger)smallintY };
-      }
-      bigintX = EInteger.Zero;
-      bigintY = EInteger.One << powerBits;
-      do {
-        bigintX = bigintY;
-        bigintY = thisValue / (EInteger)bigintX;
-        bigintY += bigintX;
-        bigintY >>= 1;
-      } while (bigintY != null && bigintY.CompareTo(bigintX) < 0);
-      if (!useRem) {
-        return new[] { bigintX, null };
-      }
-      bigintY = bigintX * (EInteger)bigintX;
-      bigintY = thisValue - (EInteger)bigintY;
-      return new[] {
-        bigintX, bigintY };
-    }
-
     /// <summary>Subtracts a EInteger from this EInteger.</summary>
     /// <param name='subtrahend'>Another EInteger object.</param>
     /// <returns>The difference of the two objects.</returns>
@@ -2169,7 +2152,7 @@ namespace PeterO.Numbers {
         if (this.negative) {
           var sb = new System.Text.StringBuilder(i + 1);
           sb.Append('-');
-          for (var j = 0;j< i; ++j) {
+          for (var j = 0; j < i; ++j) {
             sb.Append(s[j]);
           }
           return sb.ToString();
@@ -2277,7 +2260,7 @@ namespace PeterO.Numbers {
         if (this.negative) {
           var sb = new System.Text.StringBuilder(i + 1);
           sb.Append('-');
-          for (var j = 0;j< i; ++j) {
+          for (var j = 0; j < i; ++j) {
             sb.Append(s[j]);
           }
           return sb.ToString();
@@ -5517,6 +5500,60 @@ count);
         ReverseChars(chars, 0, count);
       }
       return new String(chars, 0, count);
+    }
+
+    /// <summary>Calculates the square root and the remainder.</summary>
+    /// <param name='useRem'>Not documented yet.</param>
+    /// <returns>An array of two big integers: the first integer is the
+    /// square root, and the second is the difference between this value
+    /// and the square of the first integer. Returns two zeros if this
+    /// value is 0 or less, or one and zero if this value equals
+    /// 1.</returns>
+    private EInteger[] SqrtRemInternal(bool useRem) {
+      if (this.Sign <= 0) {
+        return new[] { EInteger.Zero, EInteger.Zero };
+      }
+      if (this.Equals(EInteger.One)) {
+        return new[] { EInteger.One, EInteger.Zero };
+      }
+      EInteger bigintX;
+      EInteger bigintY;
+      EInteger thisValue = this;
+      int powerBits = (thisValue.getUnsignedBitLength() + 1) / 2;
+      if (thisValue.canFitInInt()) {
+        int smallValue = thisValue.AsInt32Checked();
+        // No need to check for zero; already done above
+        var smallintX = 0;
+        int smallintY = 1 << powerBits;
+        do {
+          smallintX = smallintY;
+          smallintY = smallValue / smallintX;
+          smallintY += smallintX;
+          smallintY >>= 1;
+        } while (smallintY < smallintX);
+        if (!useRem) {
+          return new[] { (EInteger)smallintX, null };
+        }
+        smallintY = smallintX * smallintX;
+        smallintY = smallValue - smallintY;
+        return new[] {
+          (EInteger)smallintX, (EInteger)smallintY };
+      }
+      bigintX = EInteger.Zero;
+      bigintY = EInteger.One << powerBits;
+      do {
+        bigintX = bigintY;
+        bigintY = thisValue / (EInteger)bigintX;
+        bigintY += bigintX;
+        bigintY >>= 1;
+      } while (bigintY != null && bigintY.CompareTo(bigintX) < 0);
+      if (!useRem) {
+        return new[] { bigintX, null };
+      }
+      bigintY = bigintX * (EInteger)bigintX;
+      bigintY = thisValue - (EInteger)bigintY;
+      return new[] {
+        bigintX, bigintY };
     }
   }
 }

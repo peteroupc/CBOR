@@ -17,8 +17,9 @@ namespace PeterO.Cbor {
     /// to.</param>
     /// <param name='length'>Maximum number of code points to
     /// write.</param>
-    /// <returns>The number of Unicode code points read, or 0 if the end of
-    /// the source is reached.</returns>
+    /// <returns>Either a Unicode code point (from 0-0xd7ff or from 0xe000
+    /// to 0x10ffff), or the value -1 indicating the end of the
+    /// source.</returns>
     int Read(int[] chars, int index, int length);
   }
 }

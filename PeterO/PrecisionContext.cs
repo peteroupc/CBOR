@@ -54,7 +54,7 @@ namespace PeterO {
     /// to the original.</summary>
     public const int FlagUnderflow = 8;
 
-    internal EContext ec;
+    internal readonly EContext ec;
 
     internal PrecisionContext(EContext ec) {
       this.ec = ec;

@@ -533,10 +533,11 @@ namespace PeterO.Numbers {
           return count;
         } else {
           EInteger bigrem;
-          EInteger bigquo = EInteger.DivRem(
-this.AsBigInteger(),
-divisor.AsBigInteger(),
-out bigrem);
+          EInteger bigquo;
+{
+EInteger[] divrem=(this.AsBigInteger()).DivRem(divisor.AsBigInteger());
+bigquo = divrem[0];
+bigrem = divrem[1]; }
           var smallquo = (int)bigquo;
           this.integerMode = 2;
           this.largeValue = bigrem;
@@ -544,10 +545,11 @@ out bigrem);
         }
       } else {
         EInteger bigrem;
-        EInteger bigquo = EInteger.DivRem(
-this.AsBigInteger(),
-divisor.AsBigInteger(),
-out bigrem);
+        EInteger bigquo;
+{
+EInteger[] divrem=(this.AsBigInteger()).DivRem(divisor.AsBigInteger());
+bigquo = divrem[0];
+bigrem = divrem[1]; }
         var smallquo = (int)bigquo;
         this.integerMode = 2;
         this.largeValue = bigrem;
@@ -981,7 +983,7 @@ out bigrem);
       }
     }
 
-    private static string HexAlphabet = "0123456789ABCDEF";
+    private static readonly string HexAlphabet = "0123456789ABCDEF";
 
     private static void ReverseChars(char[] chars, int offset, int length) {
       int half = length >> 1;

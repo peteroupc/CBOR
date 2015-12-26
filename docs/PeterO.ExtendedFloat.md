@@ -1853,7 +1853,6 @@ The parameter  <i>ctx</i>
 
  * System.ArgumentNullException:
 The parameter  <i>exponent</i>
- or  <i>ctx</i>
  is null.
 
 ### Precision
@@ -2152,7 +2151,7 @@ Returns a binary number with the same value as this object but rounded to an int
 
  * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an integer.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
 <b>Returns:</b>
 
@@ -2176,7 +2175,7 @@ Returns a binary number with the same value as this object but rounded to an int
 
  * <i>exponent</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the sixteenth (10b^-3, 0.0001b), and 3 means round to the sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an integer.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case the default rounding mode is HalfEven.
 
 <b>Returns:</b>
 

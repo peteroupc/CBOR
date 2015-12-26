@@ -160,7 +160,7 @@ output,
       }
     }
 
-    private static string valueDigits = "0123456789";
+    private static readonly string valueDigits = "0123456789";
 
     public static string LongToString(long longValue) {
       if (longValue == Int64.MinValue) {

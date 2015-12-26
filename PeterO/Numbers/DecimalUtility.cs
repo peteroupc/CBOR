@@ -643,7 +643,11 @@ throw new ArgumentException("doesn't satisfy precision==null || digits!=null");
           }
         } else {
           EInteger bigrem;
-          EInteger bigquo = EInteger.DivRem(bigmant, bigradix, out bigrem);
+          EInteger bigquo;
+{
+EInteger[] divrem=(bigmant).DivRem(bigradix);
+bigquo = divrem[0];
+bigrem = divrem[1]; }
           if (!bigrem.IsZero) {
             break;
           }

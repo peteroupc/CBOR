@@ -74,7 +74,7 @@ namespace PeterO.Numbers {
     #region Equals and GetHashCode implementation
     /// <summary>Determines whether this object&#x27;s mantissa and
     /// exponent are equal to those of another object.</summary>
-    /// <param name='otherValue'>Not documented yet.</param>
+    /// <param name='otherValue'>An ExtendedFloat object.</param>
     /// <returns>True if this object's mantissa and exponent are equal to
     /// those of another object; otherwise, false.</returns>
     public bool EqualsInternal(EFloat otherValue) {
@@ -88,7 +88,7 @@ namespace PeterO.Numbers {
 
     /// <summary>Determines whether this object&#x27;s mantissa and
     /// exponent are equal to those of another object.</summary>
-    /// <param name='other'>Not documented yet.</param>
+    /// <param name='other'>An ExtendedFloat object.</param>
     /// <returns>True if this object's mantissa and exponent are equal to
     /// those of another object; otherwise, false.</returns>
     public bool Equals(EFloat other) {
@@ -98,7 +98,7 @@ namespace PeterO.Numbers {
     /// <summary>Determines whether this object&#x27;s mantissa and
     /// exponent are equal to those of another object and that other object
     /// is a decimal fraction.</summary>
-    /// <param name='obj'>Not documented yet.</param>
+    /// <param name='obj'>An arbitrary object.</param>
     /// <returns>True if the objects are equal; otherwise, false.</returns>
     public override bool Equals(object obj) {
       return this.EqualsInternal(obj as EFloat);
@@ -138,7 +138,7 @@ namespace PeterO.Numbers {
     /// (true) or quiet (false).</param>
     /// <param name='negative'>Whether the return value is
     /// negative.</param>
-    /// <param name='ctx'>An EContext object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An EFloat object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='diag'/> is null.</exception>
@@ -274,6 +274,15 @@ namespace PeterO.Numbers {
     /// be the basic digits 0 to 9 (U + 0030 to U + 0039). The string is
     /// not allowed to contain white space characters, including
     /// spaces.</para></summary>
+    /// <param name='str'>A String object.</param>
+    /// <param name='offset'>A zero-based index showing where the desired
+    /// portion of <paramref name='str'/> begins.</param>
+    /// <param name='length'>The length, in code units, of the desired
+    /// portion of <paramref name='str'/> (but not more than <paramref
+    /// name='str'/> 's length).</param>
+    /// <param name='ctx'>A PrecisionContext object specifying the
+    /// precision, rounding, and exponent range to apply to the parsed
+    /// number. Can be null.</param>
     /// <returns>The parsed number, converted to ExtendedFloat.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
@@ -316,6 +325,10 @@ namespace PeterO.Numbers {
       return FromString(str, 0, str == null ? 0 : str.Length, null);
     }
 
+    /// <param name='str'>A String object.</param>
+    /// <param name='ctx'>A PrecisionContext object specifying the
+    /// precision, rounding, and exponent range to apply to the parsed
+    /// number. Can be null.</param>
     /// <returns>The parsed number, converted to ExtendedFloat.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
@@ -323,6 +336,12 @@ namespace PeterO.Numbers {
       return FromString(str, 0, str == null ? 0 : str.Length, ctx);
     }
 
+    /// <param name='str'>A String object.</param>
+    /// <param name='offset'>A zero-based index showing where the desired
+    /// portion of <paramref name='str'/> begins.</param>
+    /// <param name='length'>The length, in code units, of the desired
+    /// portion of <paramref name='str'/> (but not more than <paramref
+    /// name='str'/> 's length).</param>
     /// <returns>An EFloat object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='str'/> is null.</exception>
@@ -343,30 +362,30 @@ namespace PeterO.Numbers {
       }
 
     /// <summary>This is an internal method.</summary>
-    /// <param name='value'>Not documented yet.</param>
+    /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetSign(EFloat value) {
         return value.Sign;
       }
 
     /// <summary>This is an internal method.</summary>
-    /// <param name='value'>Not documented yet.</param>
+    /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>An EInteger object.</returns>
       public EInteger GetMantissa(EFloat value) {
         return value.Mantissa;
       }
 
     /// <summary>This is an internal method.</summary>
-    /// <param name='value'>Not documented yet.</param>
+    /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>An EInteger object.</returns>
       public EInteger GetExponent(EFloat value) {
         return value.exponent;
       }
 
     /// <summary>This is an internal method.</summary>
-    /// <param name='bigint'>Not documented yet.</param>
-    /// <param name='lastDigit'>Not documented yet.</param>
-    /// <param name='olderDigits'>Not documented yet. (3).</param>
+    /// <param name='bigint'>A BigInteger object.</param>
+    /// <param name='lastDigit'>A 32-bit signed integer.</param>
+    /// <param name='olderDigits'>A 32-bit signed integer. (2).</param>
     /// <returns>An IShiftAccumulator object.</returns>
       public IShiftAccumulator CreateShiftAccumulatorWithDigits(
         EInteger bigint,
@@ -376,13 +395,15 @@ namespace PeterO.Numbers {
       }
 
     /// <summary>This is an internal method.</summary>
-    /// <param name='bigint'>Not documented yet.</param>
+    /// <param name='bigint'>A BigInteger object.</param>
     /// <returns>An IShiftAccumulator object.</returns>
       public IShiftAccumulator CreateShiftAccumulator(EInteger bigint) {
         return new BitShiftAccumulator(bigint, 0, 0);
       }
 
     /// <summary>This is an internal method.</summary>
+    /// <param name='num'>A BigInteger object.</param>
+    /// <param name='den'>Another BigInteger object.</param>
     /// <returns>A Boolean object.</returns>
       public bool HasTerminatingRadixExpansion(EInteger num, EInteger den) {
         EInteger gcd = EInteger.GreatestCommonDivisor(num, den);
@@ -428,13 +449,16 @@ namespace PeterO.Numbers {
       }
 
     /// <summary>This is an internal method.</summary>
-    /// <param name='value'>Not documented yet.</param>
+    /// <param name='value'>An ExtendedFloat object.</param>
     /// <returns>A 32-bit signed integer.</returns>
       public int GetFlags(EFloat value) {
         return value.flags;
       }
 
     /// <summary>This is an internal method.</summary>
+    /// <param name='mantissa'>A BigInteger object.</param>
+    /// <param name='exponent'>Another BigInteger object.</param>
+    /// <param name='flags'>A 32-bit signed integer.</param>
     /// <returns>An EFloat object.</returns>
       public EFloat CreateNewWithFlags(
         EInteger mantissa,
@@ -450,7 +474,7 @@ namespace PeterO.Numbers {
       }
 
     /// <summary>This is an internal method.</summary>
-    /// <param name='val'>Not documented yet.</param>
+    /// <param name='val'>A 32-bit signed integer.</param>
     /// <returns>An EFloat object.</returns>
       public EFloat ValueOf(int val) {
         return FromInt64(val);
@@ -509,7 +533,7 @@ namespace PeterO.Numbers {
       } else {
         EInteger bigmantissa = this.Mantissa;
         FastInteger bigexponent = FastInteger.FromBig(this.Exponent).Negate();
-        bigmantissa = EInteger.Abs(bigmantissa);
+        bigmantissa = bigmantissa.Abs();
         var acc = new BitShiftAccumulator(bigmantissa, 0, 0);
         acc.ShiftRight(bigexponent);
         if (exact && (acc.LastDiscardedDigit != 0 || acc.OlderDiscardedDigits !=
@@ -566,7 +590,7 @@ namespace PeterO.Numbers {
       if (this.IsNegative && this.IsZero) {
         return BitConverter.ToSingle(BitConverter.GetBytes((int)1 << 31), 0);
       }
-      EInteger bigmant = EInteger.Abs(this.unsignedMantissa);
+      EInteger bigmant = this.unsignedMantissa.Abs();
       FastInteger bigexponent = FastInteger.FromBig(this.exponent);
       var bitLeftmost = 0;
       var bitsAfterLeftmost = 0;
@@ -713,7 +737,7 @@ namespace PeterO.Numbers {
       if (this.IsNegative && this.IsZero) {
         return Extras.IntegersToDouble(new[] { unchecked((int)(1 << 31)), 0 });
       }
-      EInteger bigmant = EInteger.Abs(this.unsignedMantissa);
+      EInteger bigmant = this.unsignedMantissa.Abs();
       FastInteger bigexponent = FastInteger.FromBig(this.exponent);
       var bitLeftmost = 0;
       var bitsAfterLeftmost = 0;
@@ -810,7 +834,7 @@ namespace PeterO.Numbers {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting
     /// the floating point number to a string first.</summary>
-    /// <param name='flt'>Not documented yet.</param>
+    /// <param name='flt'>A 32-bit floating-point number.</param>
     /// <returns>A binary float with the same value as <paramref
     /// name='flt'/>.</returns>
     public static EFloat FromSingle(float flt) {
@@ -860,7 +884,7 @@ namespace PeterO.Numbers {
 
     /// <summary>Converts a big integer to the same value as a binary
     /// float.</summary>
-    /// <param name='bigint'>Not documented yet.</param>
+    /// <param name='bigint'>A BigInteger object.</param>
     /// <returns>An EFloat object.</returns>
     public static EFloat FromBigInteger(EInteger bigint) {
       return EFloat.Create(bigint, EInteger.Zero);
@@ -868,7 +892,7 @@ namespace PeterO.Numbers {
 
     /// <summary>Converts a 64-bit integer to the same value as a binary
     /// float.</summary>
-    /// <param name='valueSmall'>Not documented yet.</param>
+    /// <param name='valueSmall'>A 64-bit signed integer.</param>
     /// <returns>An EFloat object.</returns>
     public static EFloat FromInt64(long valueSmall) {
       var bigint = (EInteger)valueSmall;
@@ -877,7 +901,7 @@ namespace PeterO.Numbers {
 
     /// <summary>Creates a binary float from a 32-bit signed
     /// integer.</summary>
-    /// <param name='valueSmaller'>Not documented yet.</param>
+    /// <param name='valueSmaller'>A 32-bit signed integer.</param>
     /// <returns>An EFloat object.</returns>
     public static EFloat FromInt32(int valueSmaller) {
       var bigint = (EInteger)valueSmaller;
@@ -888,7 +912,7 @@ namespace PeterO.Numbers {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting
     /// the floating point number to a string first.</summary>
-    /// <param name='dbl'>Not documented yet.</param>
+    /// <param name='dbl'>A 64-bit floating-point number.</param>
     /// <returns>A binary float with the same value as <paramref
     /// name='dbl'/>.</returns>
     public static EFloat FromDouble(double dbl) {
@@ -1237,6 +1261,21 @@ namespace PeterO.Numbers {
 
     /// <summary>Divides two ExtendedFloat objects, and gives a particular
     /// exponent to the result.</summary>
+    /// <param name='divisor'>An ExtendedFloat object.</param>
+    /// <param name='desiredExponentSmall'>The desired exponent. A negative
+    /// number places the cutoff point to the right of the usual decimal
+    /// point. A positive number places the cutoff point to the left of the
+    /// usual decimal point.</param>
+    /// <param name='ctx'>A precision context object to control the
+    /// rounding mode to use if the result must be scaled down to have the
+    /// same exponent as this value. If the precision given in the context
+    /// is other than 0, calls the Quantize method with both arguments
+    /// equal to the result of the operation (and can signal FlagInvalid
+    /// and return NaN if the result doesn't fit the given precision). If
+    /// HasFlags of the context is true, will also store the flags
+    /// resulting from the operation (the flags are in addition to the
+    /// pre-existing flags). Can be null, in which case the default
+    /// rounding mode is HalfEven.</param>
     /// <returns>The quotient of the two objects. Signals FlagDivideByZero
     /// and returns infinity if the divisor is 0 and the dividend is
     /// nonzero. Signals FlagInvalid and returns NaN if the divisor and the
@@ -1280,6 +1319,13 @@ namespace PeterO.Numbers {
 
     /// <summary>Divides two ExtendedFloat objects, and gives a particular
     /// exponent to the result.</summary>
+    /// <param name='divisor'>An ExtendedFloat object.</param>
+    /// <param name='desiredExponentSmall'>The desired exponent. A negative
+    /// number places the cutoff point to the right of the usual decimal
+    /// point. A positive number places the cutoff point to the left of the
+    /// usual decimal point.</param>
+    /// <param name='rounding'>The rounding mode to use if the result must
+    /// be scaled down to have the same exponent as this value.</param>
     /// <returns>The quotient of the two objects. Signals FlagDivideByZero
     /// and returns infinity if the divisor is 0 and the dividend is
     /// nonzero. Signals FlagInvalid and returns NaN if the divisor and the
@@ -1298,6 +1344,21 @@ namespace PeterO.Numbers {
 
     /// <summary>Divides two ExtendedFloat objects, and gives a particular
     /// exponent to the result.</summary>
+    /// <param name='divisor'>An ExtendedFloat object.</param>
+    /// <param name='exponent'>The desired exponent. A negative number
+    /// places the cutoff point to the right of the usual decimal point. A
+    /// positive number places the cutoff point to the left of the usual
+    /// decimal point.</param>
+    /// <param name='ctx'>A precision context object to control the
+    /// rounding mode to use if the result must be scaled down to have the
+    /// same exponent as this value. If the precision given in the context
+    /// is other than 0, calls the Quantize method with both arguments
+    /// equal to the result of the operation (and can signal FlagInvalid
+    /// and return NaN if the result doesn't fit the given precision). If
+    /// HasFlags of the context is true, will also store the flags
+    /// resulting from the operation (the flags are in addition to the
+    /// pre-existing flags). Can be null, in which case the default
+    /// rounding mode is HalfEven.</param>
     /// <returns>The quotient of the two objects. Signals FlagDivideByZero
     /// and returns infinity if the divisor is 0 and the dividend is
     /// nonzero. Signals FlagInvalid and returns NaN if the divisor and the
@@ -1315,6 +1376,13 @@ namespace PeterO.Numbers {
 
     /// <summary>Divides two ExtendedFloat objects, and gives a particular
     /// exponent to the result.</summary>
+    /// <param name='divisor'>An ExtendedFloat object.</param>
+    /// <param name='desiredExponent'>The desired exponent. A negative
+    /// number places the cutoff point to the right of the usual decimal
+    /// point. A positive number places the cutoff point to the left of the
+    /// usual decimal point.</param>
+    /// <param name='rounding'>The rounding mode to use if the result must
+    /// be scaled down to have the same exponent as this value.</param>
     /// <returns>The quotient of the two objects. Signals FlagDivideByZero
     /// and returns infinity if the divisor is 0 and the dividend is
     /// nonzero. Signals FlagInvalid and returns NaN if the divisor and the
@@ -1357,7 +1425,7 @@ namespace PeterO.Numbers {
 
     /// <summary>Adds this object and another binary float and returns the
     /// result.</summary>
-    /// <param name='otherValue'>Not documented yet.</param>
+    /// <param name='otherValue'>An ExtendedFloat object.</param>
     /// <returns>The sum of the two objects.</returns>
     public EFloat Add(EFloat otherValue) {
       return this.Add(otherValue, EContext.Unlimited);
@@ -1365,7 +1433,7 @@ namespace PeterO.Numbers {
 
     /// <summary>Subtracts an ExtendedFloat object from this instance and
     /// returns the result..</summary>
-    /// <param name='otherValue'>Not documented yet.</param>
+    /// <param name='otherValue'>An ExtendedFloat object.</param>
     /// <returns>The difference of the two objects.</returns>
     public EFloat Subtract(EFloat otherValue) {
       return this.Subtract(otherValue, null);
@@ -1373,6 +1441,12 @@ namespace PeterO.Numbers {
 
     /// <summary>Subtracts an ExtendedFloat object from this
     /// instance.</summary>
+    /// <param name='otherValue'>An ExtendedFloat object.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>The difference of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='otherValue'/> is null.</exception>
@@ -1464,8 +1538,8 @@ namespace PeterO.Numbers {
 
     /// <summary>Finds the remainder that results when dividing two
     /// ExtendedFloat objects.</summary>
-    /// <param name='divisor'>Not documented yet.</param>
-    /// <param name='ctx'>Not documented yet.</param>
+    /// <param name='divisor'>An ExtendedFloat object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>The remainder of the two objects.</returns>
     public EFloat Remainder(
       EFloat divisor,
@@ -1544,6 +1618,12 @@ namespace PeterO.Numbers {
 
     /// <summary>Finds the next value that is closer to the other
     /// object&#x27;s value than this object&#x27;s value.</summary>
+    /// <param name='otherValue'>An ExtendedFloat object.</param>
+    /// <param name='ctx'>A precision context object to control the
+    /// precision and exponent range of the result. The rounding mode from
+    /// this context is ignored. If HasFlags of the context is true, will
+    /// also store the flags resulting from the operation (the flags are in
+    /// addition to the pre-existing flags).</param>
     /// <returns>Returns the next value that is closer to the other object'
     /// s value than this object's value.</returns>
     /// <exception cref='ArgumentException'>The parameter <paramref
@@ -1557,6 +1637,13 @@ namespace PeterO.Numbers {
 
     /// <summary>Gets the greater value between two binary
     /// floats.</summary>
+    /// <param name='first'>An ExtendedFloat object.</param>
+    /// <param name='second'>Another ExtendedFloat object.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>The larger value of the two objects.</returns>
     public static EFloat Max(
       EFloat first,
@@ -1566,6 +1653,13 @@ namespace PeterO.Numbers {
     }
 
     /// <summary>Gets the lesser value between two binary floats.</summary>
+    /// <param name='first'>An ExtendedFloat object.</param>
+    /// <param name='second'>Another ExtendedFloat object.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>The smaller value of the two objects.</returns>
     public static EFloat Min(
       EFloat first,
@@ -1577,6 +1671,13 @@ namespace PeterO.Numbers {
     /// <summary>Gets the greater value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as
     /// Max.</summary>
+    /// <param name='first'>Another ExtendedFloat object.</param>
+    /// <param name='second'>An ExtendedFloat object. (3).</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>An EFloat object.</returns>
     public static EFloat MaxMagnitude(
       EFloat first,
@@ -1588,6 +1689,13 @@ namespace PeterO.Numbers {
     /// <summary>Gets the lesser value between two values, ignoring their
     /// signs. If the absolute values are equal, has the same effect as
     /// Min.</summary>
+    /// <param name='first'>Another ExtendedFloat object.</param>
+    /// <param name='second'>An ExtendedFloat object. (3).</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>An EFloat object.</returns>
     public static EFloat MinMagnitude(
       EFloat first,
@@ -1598,6 +1706,8 @@ namespace PeterO.Numbers {
 
     /// <summary>Gets the greater value between two binary
     /// floats.</summary>
+    /// <param name='first'>An ExtendedFloat object.</param>
+    /// <param name='second'>Another ExtendedFloat object.</param>
     /// <returns>The larger value of the two objects.</returns>
     public static EFloat Max(
       EFloat first,
@@ -1606,6 +1716,8 @@ namespace PeterO.Numbers {
     }
 
     /// <summary>Gets the lesser value between two binary floats.</summary>
+    /// <param name='first'>An ExtendedFloat object.</param>
+    /// <param name='second'>Another ExtendedFloat object.</param>
     /// <returns>The smaller value of the two objects.</returns>
     public static EFloat Min(
       EFloat first,
@@ -1617,7 +1729,7 @@ namespace PeterO.Numbers {
     /// signs. If the absolute values are equal, has the same effect as
     /// Max.</summary>
     /// <param name='first'>Another ExtendedFloat object.</param>
-    /// <param name='second'>An EFloat object.</param>
+    /// <param name='second'>An ExtendedFloat object. (3).</param>
     /// <returns>An EFloat object.</returns>
     public static EFloat MaxMagnitude(
       EFloat first,
@@ -1629,7 +1741,7 @@ namespace PeterO.Numbers {
     /// signs. If the absolute values are equal, has the same effect as
     /// Min.</summary>
     /// <param name='first'>Another ExtendedFloat object.</param>
-    /// <param name='second'>An EFloat object.</param>
+    /// <param name='second'>An ExtendedFloat object. (3).</param>
     /// <returns>An EFloat object.</returns>
     public static EFloat MinMagnitude(
       EFloat first,
@@ -1648,7 +1760,7 @@ namespace PeterO.Numbers {
     /// signaling NaN, this method will not trigger an error. Instead, NaN
     /// will compare greater than any other number, including infinity. Two
     /// different NaN values will be considered equal.</para></summary>
-    /// <param name='other'>Not documented yet.</param>
+    /// <param name='other'>An ExtendedFloat object.</param>
     /// <returns>Less than 0 if this object's value is less than the other
     /// value, or greater than 0 if this object's value is greater than the
     /// other value or if <paramref name='other'/> is null, or 0 if both
@@ -1664,6 +1776,11 @@ namespace PeterO.Numbers {
     /// <para>If this object or the other object is a quiet NaN or
     /// signaling NaN, this method returns a quiet NaN, and will signal a
     /// FlagInvalid flag if either is a signaling NaN.</para></summary>
+    /// <param name='other'>An ExtendedFloat object.</param>
+    /// <param name='ctx'>A precision context. The precision, rounding, and
+    /// exponent range are ignored. If HasFlags of the context is true,
+    /// will store the flags resulting from the operation (the flags are in
+    /// addition to the pre-existing flags). Can be null.</param>
     /// <returns>Quiet NaN if this object or the other object is NaN, or 0
     /// if both objects have the same value, or -1 if this object is less
     /// than the other value, or 1 if this object is greater.</returns>
@@ -1680,6 +1797,11 @@ namespace PeterO.Numbers {
     /// <para>If this object or the other object is a quiet NaN or
     /// signaling NaN, this method will return a quiet NaN and will signal
     /// a FlagInvalid flag.</para></summary>
+    /// <param name='other'>An ExtendedFloat object.</param>
+    /// <param name='ctx'>A precision context. The precision, rounding, and
+    /// exponent range are ignored. If HasFlags of the context is true,
+    /// will store the flags resulting from the operation (the flags are in
+    /// addition to the pre-existing flags). Can be null.</param>
     /// <returns>Quiet NaN if this object or the other object is NaN, or 0
     /// if both objects have the same value, or -1 if this object is less
     /// than the other value, or 1 if this object is greater.</returns>
@@ -1707,8 +1829,8 @@ namespace PeterO.Numbers {
 
     /// <summary>Returns a binary float with the same value but a new
     /// exponent.</summary>
-    /// <param name='desiredExponent'>Not documented yet.</param>
-    /// <param name='ctx'>Not documented yet.</param>
+    /// <param name='desiredExponent'>A BigInteger object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A binary float with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an
     /// overflow error occurred, or the rounded result can't fit the given
@@ -1724,8 +1846,8 @@ namespace PeterO.Numbers {
 
     /// <summary>Returns a binary float with the same value but a new
     /// exponent.</summary>
-    /// <param name='desiredExponentSmall'>Not documented yet.</param>
-    /// <param name='ctx'>Not documented yet.</param>
+    /// <param name='desiredExponentSmall'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A binary float with the same value as this object but with
     /// the exponent changed. Signals FlagInvalid and returns NaN if an
     /// overflow error occurred, or the rounded result can't fit the given
@@ -1815,7 +1937,7 @@ namespace PeterO.Numbers {
     /// means round to the sixteenth (10b^-3, 0.0001b), and 3 means round
     /// to the sixteen-place (10b^3, 1000b). A value of 0 rounds the number
     /// to an integer.</param>
-    /// <param name='ctx'>An EContext object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A binary number rounded to the closest value representable
     /// in the given precision. Signals FlagInvalid and returns NaN if the
     /// result can't fit the given precision without rounding. Signals
@@ -1867,7 +1989,7 @@ namespace PeterO.Numbers {
     /// to the sixteenth (10b^-3, 0.0001b), and 3 means round to the
     /// sixteen-place (10b^3, 1000b). A value of 0 rounds the number to an
     /// integer.</param>
-    /// <param name='ctx'>An EContext object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>A binary number rounded to the closest value representable
     /// in the given precision. Signals FlagInvalid and returns NaN if the
     /// result can't fit the given precision without rounding. Signals
@@ -2104,8 +2226,8 @@ namespace PeterO.Numbers {
 
     /// <summary>Raises this object&#x27;s value to the given
     /// exponent.</summary>
-    /// <param name='exponent'>Not documented yet.</param>
-    /// <param name='ctx'>Not documented yet.</param>
+    /// <param name='exponent'>An ExtendedFloat object.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>This^exponent. Signals the flag FlagInvalid and returns
     /// NaN if this object and exponent are both 0; or if this value is
     /// less than 0 and the exponent either has a fractional part or is
@@ -2120,6 +2242,12 @@ namespace PeterO.Numbers {
 
     /// <summary>Raises this object&#x27;s value to the given
     /// exponent.</summary>
+    /// <param name='exponentSmall'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing
+    /// flags).</param>
     /// <returns>This^exponent. Signals the flag FlagInvalid and returns
     /// NaN if this object and exponent are both 0.</returns>
     public EFloat Pow(int exponentSmall, EContext ctx) {
@@ -2128,7 +2256,7 @@ namespace PeterO.Numbers {
 
     /// <summary>Raises this object&#x27;s value to the given
     /// exponent.</summary>
-    /// <param name='exponentSmall'>Not documented yet.</param>
+    /// <param name='exponentSmall'>A 32-bit signed integer.</param>
     /// <returns>This^exponent. Returns NaN if this object and exponent are
     /// both 0.</returns>
     public EFloat Pow(int exponentSmall) {
@@ -2152,7 +2280,7 @@ namespace PeterO.Numbers {
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point moved to the left.</summary>
-    /// <param name='places'>Not documented yet.</param>
+    /// <param name='places'>A 32-bit signed integer.</param>
     /// <returns>An EFloat object.</returns>
     public EFloat MovePointLeft(int places) {
       return this.MovePointLeft((EInteger)places, null);
@@ -2160,6 +2288,12 @@ namespace PeterO.Numbers {
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point moved to the left.</summary>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>An EFloat object.</returns>
     public EFloat MovePointLeft(int places, EContext ctx) {
       return this.MovePointLeft((EInteger)places, ctx);
@@ -2167,7 +2301,7 @@ namespace PeterO.Numbers {
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point moved to the left.</summary>
-    /// <param name='bigPlaces'>Not documented yet.</param>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
     /// <returns>An EFloat object.</returns>
     public EFloat MovePointLeft(EInteger bigPlaces) {
       return this.MovePointLeft(bigPlaces, null);
@@ -2175,6 +2309,12 @@ namespace PeterO.Numbers {
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point moved to the left.</summary>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>An EFloat object.</returns>
     public EFloat MovePointLeft(
 EInteger bigPlaces,
@@ -2188,7 +2328,7 @@ EContext ctx) {
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point moved to the right.</summary>
-    /// <param name='places'>Not documented yet.</param>
+    /// <param name='places'>A 32-bit signed integer.</param>
     /// <returns>An EFloat object.</returns>
     public EFloat MovePointRight(int places) {
       return this.MovePointRight((EInteger)places, null);
@@ -2196,6 +2336,12 @@ EContext ctx) {
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point moved to the right.</summary>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>An EFloat object.</returns>
     public EFloat MovePointRight(int places, EContext ctx) {
       return this.MovePointRight((EInteger)places, ctx);
@@ -2203,7 +2349,7 @@ EContext ctx) {
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point moved to the right.</summary>
-    /// <param name='bigPlaces'>Not documented yet.</param>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
     /// <returns>An EFloat object.</returns>
     public EFloat MovePointRight(EInteger bigPlaces) {
       return this.MovePointRight(bigPlaces, null);
@@ -2211,6 +2357,12 @@ EContext ctx) {
 
     /// <summary>Returns a number similar to this number but with the radix
     /// point moved to the right.</summary>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>A number whose scale is increased by <paramref
     /// name='bigPlaces'/>, but not to more than 0.</returns>
     public EFloat MovePointRight(
@@ -2241,7 +2393,7 @@ this.flags).RoundToPrecision(ctx);
 
     /// <summary>Returns a number similar to this number but with the scale
     /// adjusted.</summary>
-    /// <param name='places'>Not documented yet.</param>
+    /// <param name='places'>A 32-bit signed integer.</param>
     /// <returns>An EFloat object.</returns>
     public EFloat ScaleByPowerOfTwo(int places) {
       return this.ScaleByPowerOfTwo((EInteger)places, null);
@@ -2249,6 +2401,12 @@ this.flags).RoundToPrecision(ctx);
 
     /// <summary>Returns a number similar to this number but with the scale
     /// adjusted.</summary>
+    /// <param name='places'>A 32-bit signed integer.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>An EFloat object.</returns>
     public EFloat ScaleByPowerOfTwo(int places, EContext ctx) {
       return this.ScaleByPowerOfTwo((EInteger)places, ctx);
@@ -2256,7 +2414,7 @@ this.flags).RoundToPrecision(ctx);
 
     /// <summary>Returns a number similar to this number but with the scale
     /// adjusted.</summary>
-    /// <param name='bigPlaces'>Not documented yet.</param>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
     /// <returns>An EFloat object.</returns>
     public EFloat ScaleByPowerOfTwo(EInteger bigPlaces) {
       return this.ScaleByPowerOfTwo(bigPlaces, null);
@@ -2264,6 +2422,12 @@ this.flags).RoundToPrecision(ctx);
 
     /// <summary>Returns a number similar to this number but with its scale
     /// adjusted.</summary>
+    /// <param name='bigPlaces'>A BigInteger object.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>A number whose scale is increased by <paramref
     /// name='bigPlaces'/>.</returns>
     public EFloat ScaleByPowerOfTwo(

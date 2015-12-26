@@ -11,24 +11,24 @@ namespace PeterO.Numbers {
     /// <summary>An arbitrary-precision integer.</summary>
   internal sealed partial class EInteger {
     /// <summary>Converts the value of a 64-bit signed integer to
-    /// BigInteger.</summary>
-    /// <param name='bigValue'>Not documented yet.</param>
-    /// <returns>A BigInteger object with the same value as the Int64
+    /// EInteger.</summary>
+    /// <param name='bigValue'>A 64-bit signed integer.</param>
+    /// <returns>A EInteger object with the same value as the Int64
     /// object.</returns>
     public static implicit operator EInteger(long bigValue) {
       return FromInt64(bigValue);
     }
 
     /// <summary>Converts the value of a 32-bit signed integer to
-    /// BigInteger.</summary>
-    /// <param name='smallValue'>Not documented yet.</param>
-    /// <returns>A BigInteger object with the same value as the Int32
+    /// EInteger.</summary>
+    /// <param name='smallValue'>A 32-bit signed integer.</param>
+    /// <returns>A EInteger object with the same value as the Int32
     /// object.</returns>
     public static implicit operator EInteger(int smallValue) {
       return FromInt64((long)smallValue);
     }
 
-    /// <summary>Adds a BigInteger object and a BigInteger
+    /// <summary>Adds a EInteger object and a EInteger
     /// object.</summary>
     /// <returns>The sum of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -40,9 +40,9 @@ namespace PeterO.Numbers {
       return bthis.add(augend);
     }
 
-    /// <summary>Subtracts two BigInteger values.</summary>
-    /// <param name='bthis'>A BigInteger value.</param>
-    /// <param name='subtrahend'>An EInteger object.</param>
+    /// <summary>Subtracts two EInteger values.</summary>
+    /// <param name='bthis'>A EInteger value.</param>
+    /// <param name='subtrahend'>A EInteger object.</param>
     /// <returns>The difference of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bthis'/> is null.</exception>
@@ -55,8 +55,8 @@ EInteger subtrahend) {
       return bthis.Subtract(subtrahend);
     }
 
-    /// <summary>Multiplies a BigInteger object by the value of a
-    /// BigInteger object.</summary>
+    /// <summary>Multiplies a EInteger object by the value of a
+    /// EInteger object.</summary>
     /// <returns>The product of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='operand1'/> is null.</exception>
@@ -69,7 +69,7 @@ EInteger operand2) {
       return operand1.multiply(operand2);
     }
 
-    /// <summary>Divides a BigInteger object by the value of a BigInteger
+    /// <summary>Divides a EInteger object by the value of a EInteger
     /// object.</summary>
     /// <returns>The quotient of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -83,8 +83,8 @@ EInteger divisor) {
       return dividend.divide(divisor);
     }
 
-    /// <summary>Finds the remainder that results when a BigInteger object
-    /// is divided by the value of a BigInteger object.</summary>
+    /// <summary>Finds the remainder that results when a EInteger object
+    /// is divided by the value of a EInteger object.</summary>
     /// <returns>The remainder of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='dividend'/> is null.</exception>
@@ -97,7 +97,7 @@ EInteger divisor) {
       return dividend.remainder(divisor);
     }
 
-    /// <param name='bthis'>Another BigInteger object.</param>
+    /// <param name='bthis'>Another EInteger object.</param>
     /// <param name='bitCount'>A 32-bit signed integer.</param>
     /// <returns>An EInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -109,12 +109,8 @@ EInteger divisor) {
       return bthis.ShiftLeft(bitCount);
     }
 
-    /// <summary>Calculates the remainder when a BigInteger raised to a
-    /// certain power is divided by another BigInteger.</summary>
-    /// <param name='pow'>Another BigInteger object.</param>
-    /// <param name='bigintValue'>Not documented yet.</param>
-    /// <param name='pow'>Not documented yet.</param>
-    /// <param name='mod'>Not documented yet. (3).</param>
+    /// <summary>Calculates the remainder when a EInteger raised to a
+    /// certain power is divided by another EInteger.</summary>
     /// <returns>The value (<paramref name='bigintValue'/> ^ <paramref
     /// name='pow'/>)% <paramref name='mod'/>.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -129,16 +125,16 @@ EInteger mod) {
       return bigintValue.ModPow(pow, mod);
     }
 
-    /// <summary>Shifts the bits of a BigInteger instance to the
+    /// <summary>Shifts the bits of a EInteger instance to the
     /// right.</summary>
-    /// <param name='bthis'>Another BigInteger object.</param>
+    /// <param name='bthis'>Another EInteger object.</param>
     /// <param name='bigValue'>A 32-bit signed integer.</param>
     /// <returns>An EInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bthis'/> is null.</exception>
-    /// <remarks>For this operation, the BigInteger is treated as a two's
+    /// <remarks>For this operation, the EInteger is treated as a two's
     /// complement representation. Thus, for negative values, the
-    /// BigInteger is sign-extended.</remarks>
+    /// EInteger is sign-extended.</remarks>
     public static EInteger operator >>(EInteger bthis, int bigValue) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
@@ -146,8 +142,8 @@ EInteger mod) {
       return bthis.ShiftRight(bigValue);
     }
 
-    /// <summary>Negates a BigInteger object.</summary>
-    /// <param name='bigValue'>Another BigInteger object.</param>
+    /// <summary>Negates a EInteger object.</summary>
+    /// <param name='bigValue'>Another EInteger object.</param>
     /// <returns>An EInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigValue'/> is null.</exception>
@@ -158,32 +154,32 @@ EInteger mod) {
       return bigValue.negate();
     }
 
-    /// <summary>Converts the value of a BigInteger object to a 64-bit
+    /// <summary>Converts the value of a EInteger object to a 64-bit
     /// signed integer.</summary>
-    /// <param name='bigValue'>Not documented yet.</param>
+    /// <param name='bigValue'>A EInteger object.</param>
     /// <returns>A 64-bit signed integer with the same value as the
-    /// BigInteger object.</returns>
+    /// EInteger object.</returns>
     /// <exception cref='OverflowException'>This object's value is too big
     /// to fit a 64-bit signed integer.</exception>
     public static explicit operator long(EInteger bigValue) {
       return bigValue.longValueChecked();
     }
 
-    /// <summary>Converts the value of a BigInteger object to a 32-bit
+    /// <summary>Converts the value of a EInteger object to a 32-bit
     /// signed integer.</summary>
-    /// <param name='bigValue'>Not documented yet.</param>
+    /// <param name='bigValue'>A EInteger object.</param>
     /// <returns>A 32-bit signed integer with the same value as the
-    /// BigInteger object.</returns>
+    /// EInteger object.</returns>
     /// <exception cref='OverflowException'>This object's value is too big
     /// to fit a 32-bit signed integer.</exception>
     public static explicit operator int(EInteger bigValue) {
       return bigValue.AsInt32Checked();
     }
 
-    /// <summary>Determines whether a BigInteger instance is less than
-    /// another BigInteger instance.</summary>
-    /// <param name='thisValue'>The first BigInteger object.</param>
-    /// <param name='otherValue'>The second BigInteger object.</param>
+    /// <summary>Determines whether a EInteger instance is less than
+    /// another EInteger instance.</summary>
+    /// <param name='thisValue'>The first EInteger object.</param>
+    /// <param name='otherValue'>The second EInteger object.</param>
     /// <returns>True if <paramref name='thisValue'/> is less than
     /// <paramref name='otherValue'/> ; otherwise, false.</returns>
     public static bool operator <(EInteger thisValue, EInteger otherValue) {
@@ -191,10 +187,10 @@ EInteger mod) {
         (thisValue.CompareTo(otherValue) < 0);
     }
 
-    /// <summary>Determines whether a BigInteger instance is less than or
-    /// equal to another BigInteger instance.</summary>
-    /// <param name='thisValue'>The first BigInteger object.</param>
-    /// <param name='otherValue'>The second BigInteger object.</param>
+    /// <summary>Determines whether a EInteger instance is less than or
+    /// equal to another EInteger instance.</summary>
+    /// <param name='thisValue'>The first EInteger object.</param>
+    /// <param name='otherValue'>The second EInteger object.</param>
     /// <returns>True if <paramref name='thisValue'/> is up to <paramref
     /// name='otherValue'/> ; otherwise, false.</returns>
   public static bool operator <=(
@@ -203,20 +199,20 @@ EInteger otherValue) {
       return (thisValue == null) || (thisValue.CompareTo(otherValue) <= 0);
     }
 
-    /// <summary>Determines whether a BigInteger instance is greater than
-    /// another BigInteger instance.</summary>
-    /// <param name='thisValue'>The first BigInteger object.</param>
-    /// <param name='otherValue'>The second BigInteger object.</param>
+    /// <summary>Determines whether a EInteger instance is greater than
+    /// another EInteger instance.</summary>
+    /// <param name='thisValue'>The first EInteger object.</param>
+    /// <param name='otherValue'>The second EInteger object.</param>
     /// <returns>True if <paramref name='thisValue'/> is greater than
     /// <paramref name='otherValue'/> ; otherwise, false.</returns>
     public static bool operator >(EInteger thisValue, EInteger otherValue) {
       return (thisValue != null) && (thisValue.CompareTo(otherValue) > 0);
     }
 
-    /// <summary>Determines whether a BigInteger value is greater than
-    /// another BigInteger value.</summary>
-    /// <param name='thisValue'>The first BigInteger object.</param>
-    /// <param name='otherValue'>The second BigInteger object.</param>
+    /// <summary>Determines whether a EInteger value is greater than
+    /// another EInteger value.</summary>
+    /// <param name='thisValue'>The first EInteger object.</param>
+    /// <param name='otherValue'>The second EInteger object.</param>
     /// <returns>True if <paramref name='thisValue'/> is at least <paramref
     /// name='otherValue'/> ; otherwise, false.</returns>
   public static bool operator >=(
@@ -225,39 +221,7 @@ EInteger otherValue) {
       return (thisValue == null) ? (otherValue == null) :
         (thisValue.CompareTo(otherValue) >= 0);
     }
-
-    /// <summary>Gets a value indicating whether this object&#x27;s value
-    /// is a power of two.</summary>
-    /// <value>True if this object&#x27;s value is a power of two;
-    /// otherwise, false.</value>
-    public bool IsPowerOfTwo
-    {
-      get
-      {
-        int bits = this.bitLength();
-        var ret = 0;
-        for (var i = 0; i < bits; ++i) {
-          ret += this.GetUnsignedBit(i) ? 1 : 0;
-          if (ret >= 2) {
-            return false;
-          }
-        }
-        return ret == 1;
-      }
-    }
-
-    /// <param name='thisValue'>Another BigInteger object.</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='thisValue'/> is null.</exception>
-    [CLSCompliant(false)]
-    public static EInteger Abs(EInteger thisValue) {
-      if (thisValue == null) {
-        throw new ArgumentNullException("thisValue");
-      }
-      return thisValue.Abs();
-    }
-
+    
     public long GetBits(int index, int numberBits) {
       if (numberBits < 0 || numberBits > 64) {
         throw new ArgumentOutOfRangeException("numberBits");
@@ -270,8 +234,8 @@ EInteger otherValue) {
     }
 
     /// <param name='dividend'>Big integer to be divided.</param>
-    /// <param name='divisor'>An EInteger object.</param>
-    /// <param name='remainder'>An EInteger object.</param>
+    /// <param name='divisor'>A EInteger object. (3).</param>
+    /// <param name='remainder'>A EInteger object. (4).</param>
     /// <returns>An array of two big integers: the first is the quotient,
     /// and the second is the remainder.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
@@ -292,8 +256,8 @@ out EInteger remainder) {
       return result[0];
     }
 
-    /// <param name='bigintFirst'>Another BigInteger object.</param>
-    /// <param name='bigintSecond'>An EInteger object.</param>
+    /// <param name='bigintFirst'>Another EInteger object.</param>
+    /// <param name='bigintSecond'>A EInteger object. (3).</param>
     /// <returns>An EInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigintFirst'/> is null.</exception>
@@ -306,12 +270,11 @@ EInteger bigintSecond) {
       return bigintFirst.gcd(bigintSecond);
     }
 
-    /// <param name='bigValue'>Another BigInteger object.</param>
-    /// <param name='power'>An EInteger object.</param>
+    /// <param name='bigValue'>Another EInteger object.</param>
+    /// <param name='power'>A EInteger object. (3).</param>
     /// <returns>An EInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigValue'/> or <paramref name='power'/> is null.</exception>
-    [CLSCompliant(false)]
     public static EInteger Pow(EInteger bigValue, EInteger power) {
       if (bigValue == null) {
         throw new ArgumentNullException("bigValue");
@@ -333,12 +296,11 @@ EInteger bigintSecond) {
       return val;
     }
 
-    /// <param name='bigValue'>Another BigInteger object.</param>
+    /// <param name='bigValue'>Another EInteger object.</param>
     /// <param name='power'>A 32-bit signed integer.</param>
     /// <returns>An EInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bigValue'/> is null.</exception>
-    [CLSCompliant(false)]
     public static EInteger Pow(EInteger bigValue, int power) {
       if (bigValue == null) {
         throw new ArgumentNullException("bigValue");
@@ -378,8 +340,8 @@ EInteger bigintSecond) {
       return (other != null) && (this.CompareTo(other) == 0);
     }
 
-    /// <summary>Returns a BigInteger with every bit flipped.</summary>
-    /// <param name='valueA'>Another BigInteger object.</param>
+    /// <summary>Returns a EInteger with every bit flipped.</summary>
+    /// <param name='valueA'>Another EInteger object.</param>
     /// <returns>An EInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='valueA'/> is null.</exception>
@@ -407,14 +369,14 @@ EInteger bigintSecond) {
         EInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
-    /// <summary>Does an AND operation between two BigInteger
+    /// <summary>Does an AND operation between two EInteger
     /// values.</summary>
-    /// <param name='a'>A BigInteger instance.</param>
-    /// <param name='b'>Another BigInteger instance.</param>
+    /// <param name='a'>A EInteger instance.</param>
+    /// <param name='b'>Another EInteger instance.</param>
     /// <returns>An EInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='a'/> or <paramref name='b'/> is null.</exception>
-    /// <remarks>Each BigInteger instance is treated as a two's complement
+    /// <remarks>Each EInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
     public static EInteger And(EInteger a, EInteger b) {
       if (a == null) {
@@ -464,14 +426,14 @@ Math.Max(valueXaReg.Length, valueXbReg.Length));
         EInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
-    /// <summary>Does an OR operation between two BigInteger
+    /// <summary>Does an OR operation between two EInteger
     /// instances.</summary>
-    /// <param name='first'>Another BigInteger object.</param>
-    /// <param name='second'>An EInteger object.</param>
+    /// <param name='first'>Another EInteger object.</param>
+    /// <param name='second'>A EInteger object. (3).</param>
     /// <returns>An EInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='first'/> or <paramref name='second'/> is null.</exception>
-    /// <remarks>Each BigInteger instance is treated as a two's complement
+    /// <remarks>Each EInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
     public static EInteger Or(EInteger first, EInteger second) {
       if (first == null) {
@@ -518,14 +480,14 @@ Math.Max(valueXaReg.Length, valueXbReg.Length));
         EInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
-    /// <summary>Finds the exclusive "or" of two BigInteger
+    /// <summary>Finds the exclusive "or" of two EInteger
     /// objects.</summary>
-    /// <param name='a'>A BigInteger instance.</param>
-    /// <param name='b'>Another BigInteger instance.</param>
+    /// <param name='a'>A EInteger instance.</param>
+    /// <param name='b'>Another EInteger instance.</param>
     /// <returns>An EInteger object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='a'/> or <paramref name='b'/> is null.</exception>
-    /// <remarks>Each BigInteger instance is treated as a two's complement
+    /// <remarks>Each EInteger instance is treated as a two's complement
     /// representation for the purposes of this operator.</remarks>
     public static EInteger Xor(EInteger a, EInteger b) {
       if (a == null) {

@@ -51,7 +51,7 @@ namespace PeterO.Numbers {
     #region Equals and GetHashCode implementation
     /// <summary>Determines whether this object and another object are
     /// equal.</summary>
-    /// <param name='obj'>Not documented yet.</param>
+    /// <param name='obj'>An arbitrary object.</param>
     /// <returns>True if the objects are equal; otherwise, false.</returns>
     public override bool Equals(object obj) {
       var other = obj as ERational;
@@ -83,6 +83,9 @@ other.denominator) && this.flags == other.flags);
 
     /// <summary>Creates a number with the given numerator and
     /// denominator.</summary>
+    /// <param name='numeratorSmall'>A 32-bit signed integer.</param>
+    /// <param name='denominatorSmall'>A 32-bit signed integer.
+    /// (2).</param>
     /// <returns>An ERational object.</returns>
     public static ERational Create(
 int numeratorSmall,
@@ -92,6 +95,8 @@ int denominatorSmall) {
 
     /// <summary>Creates a number with the given numerator and
     /// denominator.</summary>
+    /// <param name='numerator'>A BigInteger object.</param>
+    /// <param name='denominator'>Another BigInteger object.</param>
     /// <returns>An ERational object.</returns>
     public static ERational Create(
 EInteger numerator,
@@ -101,8 +106,8 @@ EInteger denominator) {
 
     /// <summary>Initializes a new instance of the ExtendedRational
     /// class.</summary>
-    /// <param name='numerator'>Not documented yet.</param>
-    /// <param name='denominator'>Not documented yet.</param>
+    /// <param name='numerator'>A BigInteger object.</param>
+    /// <param name='denominator'>Another BigInteger object.</param>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='numerator'/> or <paramref name='denominator'/> is
     /// null.</exception>
@@ -165,7 +170,7 @@ EInteger denominator) {
     }
 
     /// <summary>Converts a big integer to a rational number.</summary>
-    /// <param name='bigint'>Not documented yet.</param>
+    /// <param name='bigint'>A BigInteger object.</param>
     /// <returns>The exact value of the integer as a rational
     /// number.</returns>
     public static ERational FromBigInteger(EInteger bigint) {
@@ -185,7 +190,7 @@ EInteger denominator) {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting
     /// the number to a string.</summary>
-    /// <param name='flt'>Not documented yet.</param>
+    /// <param name='flt'>A 32-bit floating-point number.</param>
     /// <returns>A rational number with the same value as <paramref
     /// name='flt'/>.</returns>
     public static ERational FromSingle(float flt) {
@@ -196,7 +201,7 @@ EInteger denominator) {
     /// number. This method computes the exact value of the floating point
     /// number, not an approximation, as is often the case by converting
     /// the number to a string.</summary>
-    /// <param name='flt'>Not documented yet.</param>
+    /// <param name='flt'>A 64-bit floating-point number.</param>
     /// <returns>A rational number with the same value as <paramref
     /// name='flt'/>.</returns>
     public static ERational FromDouble(double flt) {
@@ -264,7 +269,7 @@ bool negative) {
       return er;
     }
 
-    /// <param name='ef'>Not documented yet.</param>
+    /// <param name='ef'>An ExtendedFloat object.</param>
     /// <returns>An ERational object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='ef'/> is null.</exception>
@@ -296,7 +301,7 @@ bool negative) {
         return FromBigInteger(num);
       }
       bool neg = num.Sign < 0;
-      num = EInteger.Abs(num);
+      num = num.Abs();
       EInteger den = EInteger.One;
       if (exp.Sign < 0) {
         exp = -(EInteger)exp;
@@ -310,7 +315,7 @@ bool negative) {
       return new ERational(num, den);
     }
 
-    /// <param name='ef'>Not documented yet.</param>
+    /// <param name='ef'>An ExtendedDecimal object.</param>
     /// <returns>An ERational object.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='ef'/> is null.</exception>
@@ -342,7 +347,7 @@ bool negative) {
         return FromBigInteger(num);
       }
       bool neg = num.Sign < 0;
-      num = EInteger.Abs(num);
+      num = num.Abs();
       EInteger den = EInteger.One;
       if (exp.Sign < 0) {
         exp = -(EInteger)exp;
@@ -359,7 +364,7 @@ bool negative) {
 
     /// <summary>Converts this rational number to a decimal number and
     /// rounds the result to the given precision.</summary>
-    /// <param name='ctx'>Not documented yet.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An EDecimal object.</returns>
     public EDecimal ToExtendedDecimal(EContext ctx) {
       if (this.IsNaN()) {
@@ -435,7 +440,7 @@ ctx);
 
     /// <summary>Converts this rational number to a binary number and
     /// rounds the result to the given precision.</summary>
-    /// <param name='ctx'>Not documented yet.</param>
+    /// <param name='ctx'>A PrecisionContext object.</param>
     /// <returns>An EFloat object.</returns>
     public EFloat ToExtendedFloat(EContext ctx) {
       if (this.IsNaN()) {
@@ -535,10 +540,11 @@ ctx);
         throw new OverflowException("Value is infinity or NaN");
       }
       EInteger rem;
- EInteger quo = EInteger.DivRem(
-this.Numerator,
-this.denominator,
-out rem);
+ EInteger quo;
+{
+EInteger[] divrem=(this.Numerator).DivRem(this.denominator);
+quo = divrem[0];
+rem = divrem[1]; }
       if (!rem.IsZero) {
         throw new ArithmeticException("Value is not an integral value");
       }
@@ -617,7 +623,7 @@ out rem);
 
     /// <summary>Compares an ExtendedRational object with this
     /// instance.</summary>
-    /// <param name='other'>Not documented yet.</param>
+    /// <param name='other'>An ExtendedRational object.</param>
     /// <returns>Zero if the values are equal; a negative number if this
     /// instance is less, or a positive number if this instance is
     /// greater.</returns>
@@ -689,7 +695,7 @@ out rem);
 
     /// <summary>Compares an ExtendedFloat object with this
     /// instance.</summary>
-    /// <param name='other'>Not documented yet.</param>
+    /// <param name='other'>An ExtendedFloat object.</param>
     /// <returns>Zero if the values are equal; a negative number if this
     /// instance is less, or a positive number if this instance is
     /// greater.</returns>
@@ -730,22 +736,24 @@ out rem);
       if (!other.IsFinite) {
         throw new ArgumentException("doesn't satisfy other.IsFinite");
       }
-      #endif
-      if (other.Exponent.IsZero) {
+#endif
+      EInteger bigExponent = other.Exponent;
+      if (bigExponent.IsZero) {
         // Special case: other has exponent 0
         EInteger otherMant = other.Mantissa;
         EInteger bcx = this.Denominator * (EInteger)otherMant;
         return this.Numerator.CompareTo(bcx);
       }
-      if (EInteger.Abs(other.Exponent).CompareTo((EInteger)1000) > 0) {
+      if (bigExponent.Abs().CompareTo((EInteger)1000) > 0) {
         // Other has a high absolute value of exponent, so try different
         // approaches to
         // comparison
         EInteger thisRem;
-        EInteger thisInt = EInteger.DivRem(
-this.UnsignedNumerator,
-this.Denominator,
-out thisRem);
+        EInteger thisInt;
+{
+EInteger[] divrem=(this.UnsignedNumerator).DivRem(this.Denominator);
+thisInt = divrem[0];
+thisRem = divrem[1]; }
         EFloat otherAbs = other.Abs();
         EFloat thisIntDec = EFloat.FromBigInteger(thisInt);
         if (thisRem.IsZero) {
@@ -806,7 +814,7 @@ out thisRem);
 
     /// <summary>Compares an ExtendedDecimal object with this
     /// instance.</summary>
-    /// <param name='other'>Not documented yet.</param>
+    /// <param name='other'>An ExtendedDecimal object.</param>
     /// <returns>Zero if the values are equal; a negative number if this
     /// instance is less, or a positive number if this instance is
     /// greater.</returns>
@@ -855,15 +863,16 @@ out thisRem);
         EInteger bcx = this.Denominator * (EInteger)otherMant;
         return this.Numerator.CompareTo(bcx);
       }
-      if (EInteger.Abs(other.Exponent).CompareTo((EInteger)50) > 0) {
+      if (other.Exponent.Abs().CompareTo((EInteger)50) > 0) {
         // Other has a high absolute value of exponent, so try different
         // approaches to
         // comparison
         EInteger thisRem;
-        EInteger thisInt = EInteger.DivRem(
-this.UnsignedNumerator,
-this.Denominator,
-out thisRem);
+        EInteger thisInt;
+{
+EInteger[] divrem=(this.UnsignedNumerator).DivRem(this.Denominator);
+thisInt = divrem[0];
+thisRem = divrem[1]; }
         EDecimal otherAbs = other.Abs();
         EDecimal thisIntDec = EDecimal.FromBigInteger(thisInt);
         if (thisRem.IsZero) {
@@ -1080,7 +1089,7 @@ otherValue.IsNegative);
 
     /// <summary>Subtracts an ExtendedRational object from this
     /// instance.</summary>
-    /// <param name='otherValue'>Not documented yet.</param>
+    /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The difference of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='otherValue'/> is null.</exception>
@@ -1122,7 +1131,7 @@ otherValue.IsNegative);
 
     /// <summary>Multiplies this instance by the value of an
     /// ExtendedRational object.</summary>
-    /// <param name='otherValue'>Not documented yet.</param>
+    /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The product of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='otherValue'/> is null.</exception>
@@ -1162,7 +1171,7 @@ otherValue.IsNegative);
 
     /// <summary>Divides this instance by the value of an ExtendedRational
     /// object.</summary>
-    /// <param name='otherValue'>Not documented yet.</param>
+    /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The quotient of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='otherValue'/> is null.</exception>
@@ -1207,7 +1216,7 @@ otherValue.IsNegative);
 
     /// <summary>Finds the remainder that results when this instance is
     /// divided by the value of a ExtendedRational object.</summary>
-    /// <param name='otherValue'>Not documented yet.</param>
+    /// <param name='otherValue'>An ExtendedRational object.</param>
     /// <returns>The remainder of the two objects.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='otherValue'/> is null.</exception>

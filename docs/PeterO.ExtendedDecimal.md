@@ -946,7 +946,8 @@ The parameter  <i>str</i>
  is not a correctly formatted number string.
 
  * System.ArgumentNullException:
-The parameter "str" is null.
+The parameter  <i>str</i>
+ is null.
 
 ### FromString
 
@@ -1804,7 +1805,6 @@ This^exponent. Signals the flag FlagInvalid and returns NaN if this object and e
 
  * System.ArgumentNullException:
 The parameter  <i>exponent</i>
- or  <i>ctx</i>
  is null.
 
 ### Precision
@@ -2096,7 +2096,7 @@ Returns a decimal number with the same value as this object, and rounds it to a 
 
  * <i>exponent</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the thousandth (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A value of 0 rounds the number to an integer.
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case the default rounding mode is HalfEven.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
 <b>Returns:</b>
 
@@ -2121,7 +2121,7 @@ Returns a decimal number with the same value as this object but rounded to an in
 
  * <i>exponentSmall</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the thousandth (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A value of 0 rounds the number to an integer.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
 <b>Returns:</b>
 
@@ -2145,7 +2145,7 @@ Returns a decimal number with the same value as this object but rounded to an in
 
  * <i>exponent</i>: The minimum exponent the result can have. This is the maximum number of fractional digits in the result, expressed as a negative number. Can also be positive, which eliminates lower-order places from the number. For example, -3 means round to the thousandth (10^-3, 0.0001), and 3 means round to the thousand (10^3, 1000). A value of 0 rounds the number to an integer.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null, in which case the default rounding mode is HalfEven.
 
 <b>Returns:</b>
 

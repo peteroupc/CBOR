@@ -126,7 +126,7 @@ return this.ed.GetHashCode();
       return new ExtendedDecimal(EDecimal.Create(mantissaSmall, exponentSmall));
  }
 
-    internal EDecimal ed;
+    internal readonly EDecimal ed;
     internal ExtendedDecimal(EDecimal ed) {
       if ((ed) == null) {
   throw new ArgumentNullException("ed");
@@ -1796,7 +1796,8 @@ return new ExtendedDecimal(this.ed.RoundToExponentExact(exponent.ei,
     /// rounding, and exponent range of the result. If HasFlags of the
     /// context is true, will also store the flags resulting from the
     /// operation (the flags are in addition to the pre-existing flags).
-    /// Can be null.</param>
+    /// Can be null, in which case the default rounding mode is
+    /// HalfEven.</param>
     /// <returns>A decimal number rounded to the closest value
     /// representable in the given precision, meaning if the result can't
     /// fit the precision, additional digits are discarded to make it fit.
@@ -2362,7 +2363,10 @@ return new ExtendedDecimal(this.ed.Ulp());
     /// in that order.</returns>
     public ExtendedDecimal[] DivideAndRemainderNaturalScale(ExtendedDecimal
       divisor) {
-throw new NotImplementedException();
+      EDecimal[] edec = this.ed.DivideAndRemainderNaturalScale(divisor == null ? null : divisor.ed);
+      return new ExtendedDecimal[] {
+        new ExtendedDecimal(edec[0]),new ExtendedDecimal(edec[1])
+      };
  }
 
     /// <summary>Calculates the quotient and remainder using the
@@ -2383,7 +2387,11 @@ throw new NotImplementedException();
     public ExtendedDecimal[] DivideAndRemainderNaturalScale(
       ExtendedDecimal divisor,
       PrecisionContext ctx) {
-throw new NotImplementedException();
- }
+      EDecimal[] edec = this.ed.DivideAndRemainderNaturalScale(divisor == null ? null : divisor.ed,
+        ctx==null ? null : ctx.ec);
+      return new ExtendedDecimal[] {
+        new ExtendedDecimal(edec[0]),new ExtendedDecimal(edec[1])
+      };
+    }
   }
 }

@@ -105,7 +105,7 @@ return new ExtendedRational(ERational.Create(numerator.ei, denominator.ei));
 return this.er.ToString();
 }
 
-    internal ERational er;
+    internal readonly ERational er;
     internal ExtendedRational(ERational er) {
       if ((er) == null) {
   throw new ArgumentNullException("er");

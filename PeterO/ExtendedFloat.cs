@@ -37,7 +37,7 @@ namespace PeterO {
     /// identify a particular ExtendedFloat value.</item></list></summary>
   public sealed class ExtendedFloat : IComparable<ExtendedFloat>,
   IEquatable<ExtendedFloat> {
-    internal EFloat ef;
+    internal readonly EFloat ef;
     internal ExtendedFloat(EFloat ef) {
       this.ef = ef;
     }
@@ -2047,7 +2047,7 @@ return new ExtendedFloat(this.ef.DivideToIntegerZeroScale(divisor.ef,
     /// Precision property is 0).</exception>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='ctx'/> is null.</exception>
-    public ExtendedFloat PI(PrecisionContext ctx) {
+    public static ExtendedFloat PI(PrecisionContext ctx) {
       if ((ctx) == null) {
         throw new ArgumentNullException("ctx");
       }
@@ -2263,20 +2263,21 @@ PrecisionContext ctx) {
 
     /// <summary>Calculates the quotient and remainder using the
     /// DivideToIntegerNaturalScale and the formula in
-    /// RemainderNaturalScale. This is meant to be similar to the
-    /// divideAndRemainder method in Java's BigDecimal.</summary>
+    /// RemainderNaturalScale.</summary>
     /// <param name='divisor'>The number to divide by.</param>
     /// <returns>A 2 element array consisting of the quotient and remainder
     /// in that order.</returns>
  public ExtendedFloat[] DivideAndRemainderNaturalScale(ExtendedFloat
       divisor) {
-      throw new NotImplementedException();
+      EFloat[] edec = this.ef.DivideAndRemainderNaturalScale(divisor == null ? null : divisor.ef);
+      return new ExtendedFloat[] {
+        new ExtendedFloat(edec[0]),new ExtendedFloat(edec[1])
+      };
     }
 
     /// <summary>Calculates the quotient and remainder using the
     /// DivideToIntegerNaturalScale and the formula in
-    /// RemainderNaturalScale. This is meant to be similar to the
-    /// divideAndRemainder method in Java's BigDecimal.</summary>
+    /// RemainderNaturalScale.</summary>
     /// <param name='divisor'>The number to divide by.</param>
     /// <param name='ctx'>A precision context object to control the
     /// precision, rounding, and exponent range of the result. This context
@@ -2291,7 +2292,11 @@ PrecisionContext ctx) {
     public ExtendedFloat[] DivideAndRemainderNaturalScale(
       ExtendedFloat divisor,
       PrecisionContext ctx) {
-      throw new NotImplementedException();
+      EFloat[] edec = this.ef.DivideAndRemainderNaturalScale(divisor == null ? null : divisor.ef,
+        ctx == null ? null : ctx.ec);
+      return new ExtendedFloat[] {
+        new ExtendedFloat(edec[0]),new ExtendedFloat(edec[1])
+      };
     }
   }
 }
