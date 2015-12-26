@@ -9,23 +9,26 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO {
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="T:PeterO.BigInteger"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Numbers.EInteger"]'/>
   public sealed partial class BigInteger {
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_Implicit(System.Int64)~PeterO.BigInteger"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Implicit(System.Int64)~PeterO.Numbers.EInteger"]'
+    /// />
     public static implicit operator BigInteger(long bigValue) {
       return new BigInteger(EInteger.FromInt64(bigValue));
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_Implicit(System.Int32)~PeterO.BigInteger"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Implicit(System.Int32)~PeterO.Numbers.EInteger"]'
+    /// />
     public static implicit operator BigInteger(int smallValue) {
       return new BigInteger(EInteger.FromInt64(smallValue));
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_Addition(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Addition(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     public static BigInteger operator +(BigInteger bthis, BigInteger augend) {
       if ((bthis) == null) {
   throw new ArgumentNullException("bthis");
@@ -33,8 +36,9 @@ namespace PeterO {
       return bthis.add(augend);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_Subtraction(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Subtraction(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     public static BigInteger operator -(
 BigInteger bthis,
 BigInteger subtrahend) {
@@ -44,8 +48,9 @@ BigInteger subtrahend) {
       return bthis.subtract(subtrahend);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_Multiply(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Multiply(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     public static BigInteger operator *(
 BigInteger operand1,
 BigInteger operand2) {
@@ -55,8 +60,9 @@ BigInteger operand2) {
       return operand1.multiply(operand2);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_Division(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Division(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
  public static BigInteger operator /(
 BigInteger dividend,
 BigInteger divisor) {
@@ -66,8 +72,9 @@ BigInteger divisor) {
       return dividend.divide(divisor);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_Modulus(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Modulus(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     public static BigInteger operator %(
 BigInteger dividend,
 BigInteger divisor) {
@@ -77,8 +84,9 @@ BigInteger divisor) {
       return dividend.remainder(divisor);
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_LeftShift(PeterO.BigInteger,System.Int32)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_LeftShift(PeterO.Numbers.EInteger,System.Int32)"]'
+    /// />
     public static BigInteger operator <<(BigInteger bthis, int bitCount) {
       if ((bthis) == null) {
   throw new ArgumentNullException("bthis");
@@ -86,8 +94,9 @@ BigInteger divisor) {
       return bthis.shiftLeft(bitCount);
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.ModPow(PeterO.BigInteger,PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.ModPow(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     public static BigInteger ModPow(
 BigInteger bigintValue,
 BigInteger pow,
@@ -95,8 +104,9 @@ BigInteger mod) {
       return bigintValue.ModPow(pow, mod);
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_RightShift(PeterO.BigInteger,System.Int32)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_RightShift(PeterO.Numbers.EInteger,System.Int32)"]'
+    /// />
     public static BigInteger operator >>(BigInteger bthis, int smallValue) {
       if ((bthis) == null) {
   throw new ArgumentNullException("bthis");
@@ -104,8 +114,9 @@ BigInteger mod) {
       return bthis.shiftRight(smallValue);
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_UnaryNegation(PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_UnaryNegation(PeterO.Numbers.EInteger)"]'
+    /// />
     public static BigInteger operator -(BigInteger bigValue) {
       if ((bigValue) == null) {
   throw new ArgumentNullException("bigValue");
@@ -113,41 +124,47 @@ BigInteger mod) {
       return bigValue.negate();
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_Explicit(PeterO.BigInteger)~System.Int64"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Explicit(PeterO.Numbers.EInteger)~System.Int64"]'
+    /// />
     public static explicit operator long(BigInteger bigValue) {
       return bigValue.longValueChecked();
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_Explicit(PeterO.BigInteger)~System.Int32"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Explicit(PeterO.Numbers.EInteger)~System.Int32"]'
+    /// />
     public static explicit operator int(BigInteger bigValue) {
       return bigValue.intValueChecked();
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_LessThan(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_LessThan(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     public static bool operator <(BigInteger thisValue, BigInteger otherValue) {
       return (thisValue == null) ? (otherValue != null) :
         (thisValue.CompareTo(otherValue) < 0);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_LessThanOrEqual(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_LessThanOrEqual(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     public static bool operator <=(
 BigInteger thisValue,
 BigInteger otherValue) {
       return (thisValue == null) || (thisValue.CompareTo(otherValue) <= 0);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_GreaterThan(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_GreaterThan(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     public static bool operator >(BigInteger thisValue, BigInteger otherValue) {
       return otherValue < thisValue;
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.op_GreaterThanOrEqual(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_GreaterThanOrEqual(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
   public static bool operator >=(
 BigInteger thisValue,
 BigInteger otherValue) {
@@ -155,13 +172,13 @@ BigInteger otherValue) {
         (thisValue.CompareTo(otherValue) >= 0);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="P:PeterO.BigInteger.IsPowerOfTwo"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.EInteger.IsPowerOfTwo"]'/>
     public bool IsPowerOfTwo { get {
         return this.ei.IsPowerOfTwo;
 } }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.Abs(PeterO.BigInteger)"]'/>
     [CLSCompliant(false)]
     public static BigInteger Abs(BigInteger thisValue) {
@@ -171,28 +188,30 @@ BigInteger otherValue) {
       return thisValue.abs();
  }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.BigInteger.Zero"]'/>
     [CLSCompliant(false)]
     public static BigInteger Zero { get {
  return BigInteger.ZERO;
 } }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.BigInteger.One"]'/>
     [CLSCompliant(false)]
     public static BigInteger One { get {
  return BigInteger.ONE;
 } }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.GetBits(System.Int32,System.Int32)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.GetBits(System.Int32,System.Int32)"]'
+    /// />
     public long GetBits(int index, int numberBits) {
       return this.ei.GetBits(index, numberBits);
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.DivRem(PeterO.BigInteger,PeterO.BigInteger,PeterO.BigInteger@)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.DivRem(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger,PeterO.Numbers.EInteger@)"]'
+    /// />
     public static BigInteger DivRem(
 BigInteger dividend,
 BigInteger divisor,
@@ -205,15 +224,16 @@ out BigInteger remainder) {
       return ret[0];
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.GreatestCommonDivisor(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.GreatestCommonDivisor(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     public static BigInteger GreatestCommonDivisor(
 BigInteger bigintFirst,
 BigInteger bigintSecond) {
       return bigintFirst.gcd(bigintSecond);
  }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.ToByteArray"]'/>
     [Obsolete("Use 'toBytes(true)' instead.")]
     [CLSCompliant(false)]
@@ -221,34 +241,38 @@ BigInteger bigintSecond) {
       return toBytes(true);
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.Pow(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Pow(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     [CLSCompliant(false)]
     public static BigInteger Pow(BigInteger bigValue, BigInteger power) {
       return bigValue.PowBigIntVar(power);
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.Pow(PeterO.BigInteger,System.Int32)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Pow(PeterO.Numbers.EInteger,System.Int32)"]'
+    /// />
     [CLSCompliant(false)]
     public static BigInteger Pow(BigInteger bigValue, int power) {
       return bigValue.pow(power);
  }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.Equals(PeterO.BigInteger)"]'/>
     public bool Equals(BigInteger other) {
       return this.Equals((object)other);
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.Not(PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Not(PeterO.Numbers.EInteger)"]'
+    /// />
     public static BigInteger Not(BigInteger valueA) {
       return new BigInteger(EInteger.Not(valueA.ei));
  }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.And(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.And(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     public static BigInteger And(BigInteger a, BigInteger b) {
       if ((a) == null) {
   throw new ArgumentNullException("a");
@@ -259,8 +283,9 @@ BigInteger bigintSecond) {
       return new BigInteger(EInteger.And(a.ei, b.ei));
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.Or(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Or(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     public static BigInteger Or(BigInteger first, BigInteger second) {
       if ((first) == null) {
   throw new ArgumentNullException("first");
@@ -271,8 +296,9 @@ BigInteger bigintSecond) {
       return new BigInteger(EInteger.Or(first.ei, second.ei));
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.BigInteger.Xor(PeterO.BigInteger,PeterO.BigInteger)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Xor(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
+    /// />
     public static BigInteger Xor(BigInteger a, BigInteger b) {
       if ((a) == null) {
   throw new ArgumentNullException("a");

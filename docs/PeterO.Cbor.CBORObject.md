@@ -358,30 +358,13 @@ This object is not an array.
         System.Type type,
         PeterO.Cbor.ICBORConverter<T> converter);
 
-Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
-
-<b>Parameters:</b>
-
- * <i>type</i>: A Type object specifying the type that the converter converts to CBOR objects.
-
- * <i>converter</i>: An ICBORConverter object.
-
- * &lt;T&gt;: Must be the same as the "type" parameter.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>type</i>
- or  <i>converter</i>
- is null.
-
 ### Addition
 
     public static PeterO.Cbor.CBORObject Addition(
         PeterO.Cbor.CBORObject first,
         PeterO.Cbor.CBORObject second);
 
-Finds the sum of two CBOR number objects.
+Finds the sum of two CBOR numbers.
 
 <b>Parameters:</b>
 
@@ -408,7 +391,7 @@ Registers an object that validates CBOR objects with new tags.
 
 <b>Parameters:</b>
 
- * <i>bigintTag</i>: A BigInteger object.
+ * <i>bigintTag</i>: An arbitrary-precision integer object.
 
  * <i>handler</i>: An ICBORTag object.
 
@@ -970,7 +953,7 @@ True if the objects are equal; otherwise, false.
     public static PeterO.Cbor.CBORObject FromJSONString(
         string str);
 
-Generates a CBOR object from a string in JavaScript Object Notation (JSON) format.If a JSON object has the same key, only the last given value will be used for each duplicated key. The JSON string may not begin with a byte order mark (U + FEFF).
+Generates a CBOR object from a string in JavaScript Object Notation (JSON) format.If a JSON object has the same key, only the last given value will be used for each duplicated key. The JSON string may not begin with a byte order mark (U+FEFF).
 
 <b>Parameters:</b>
 
@@ -1150,7 +1133,7 @@ A CBOR array object where each element of the given array is copied to a new arr
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
-Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null , primitive types, strings, CBORObject , ExtendedDecimal , ExtendedFloat , ExtendedRational, the custom BigInteger , lists, arrays, enumerations (  `Enum`  objects), and maps.In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET  `Enum`  objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.
+Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null , primitive types, strings, CBORObject , arbitrary-precision decimal , arbitrary-precision binary float , arbitrary-precision rational number, the custom arbitrary-precision integer , lists, arrays, enumerations (  `Enum`  objects), and maps.In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET  `Enum`  objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.
 
 In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum`  objects will be converted to the result of their name method.
 
@@ -1177,7 +1160,7 @@ Generates a CBOR object from an arbitrary-precision integer.
 
 <b>Returns:</b>
 
-A CBOR number object.
+A CBOR number.
 
 ### FromObject
 
@@ -1222,7 +1205,7 @@ Generates a CBOR object from a decimal number.
 
 <b>Returns:</b>
 
-A CBOR number object.
+A CBOR number.
 
 ### FromObject
 
@@ -1237,7 +1220,7 @@ Generates a CBOR object from an arbitrary-precision binary floating-point number
 
 <b>Returns:</b>
 
-A CBOR number object.
+A CBOR number.
 
 ### FromObject
 
@@ -1252,7 +1235,7 @@ Generates a CBOR object from a rational number.
 
 <b>Returns:</b>
 
-A CBOR number object.
+A CBOR number.
 
 ### FromObject
 
@@ -1369,54 +1352,15 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObject<T>(
         System.Collections.Generic.IEnumerable<T> value);
 
-Generates a CBOR object from an enumerable set of objects.
-
-<b>Parameters:</b>
-
- * <i>value</i>: An object that implements the IEnumerable interface. In the .NET version, this can be the return value of an iterator or the result of a LINQ query.
-
- * &lt;T&gt;: A type convertible to CBORObject.
-
-<b>Returns:</b>
-
-A CBOR object where each element of the given enumerable object is converted to a CBOR object and copied to a new array, or CBORObject.Null if the value is null.
-
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject<T>(
         System.Collections.Generic.IList<T> value);
 
-Generates a CBOR object from a list of objects.
-
-<b>Parameters:</b>
-
- * <i>value</i>: An array of CBOR objects. Can be null.
-
- * &lt;T&gt;: A type convertible to CBORObject.
-
-<b>Returns:</b>
-
-A CBOR object where each element of the given array is converted to a CBOR object and copied to a new array, or CBORObject.Null if the value is null.
-
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject<TKey, TValue>(
         System.Collections.Generic.IDictionary<TKey, TValue> dic);
-
-Generates a CBOR object from a map of objects.
-
-<b>Parameters:</b>
-
- * <i>dic</i>: A map of CBOR objects.
-
- * &lt;TKey&gt;: A type convertible to CBORObject; the type of the keys.
-
- * &lt;TValue&gt;: A type convertible to CBORObject; the type of the values.
-
-<b>Returns:</b>
-
-A CBOR object where each key and value of the given map is converted to a CBOR object and copied to a new map, or CBORObject.Null if  <i>dic</i>
- is null.
 
 ### FromObjectAndTag
 
@@ -1672,7 +1616,7 @@ True if this CBOR object represents positive infinity; otherwise, false.
         PeterO.Cbor.CBORObject first,
         PeterO.Cbor.CBORObject second);
 
-Multiplies two CBOR number objects.
+Multiplies two CBOR numbers.
 
 <b>Parameters:</b>
 
@@ -1870,7 +1814,7 @@ There was an error in reading or parsing the data.
     public static PeterO.Cbor.CBORObject ReadJSON(
         System.IO.Stream stream);
 
-Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte order mark (U + FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte order mark or a nonzero basic character (U + 0001 to U + 007F). (In previous versions, only UTF-8 was allowed.)If a JSON object has the same key, only the last given value will be used for each duplicated key.
+Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.)If a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -1995,7 +1939,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format. Th
 
  * If a number in the form of a big float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the big float is converted to null.)
 
- * The string will not begin with a byte-order mark (U + FEFF); RFC 7159 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
+ * The string will not begin with a byte-order mark (U+FEFF); RFC 7159 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
  * Byte strings are converted to Base64 URL by default.
 
@@ -2349,7 +2293,7 @@ Writes a binary floating-point number in CBOR format to a data stream as follows
 
 <b>Parameters:</b>
 
- * <i>bignum</i>: An ExtendedFloat object.
+ * <i>bignum</i>: An arbitrary-precision binary float.
 
  * <i>stream</i>: A writable data stream.
 
@@ -2372,7 +2316,7 @@ Writes a rational number in CBOR format to a data stream.
 
 <b>Parameters:</b>
 
- * <i>rational</i>: An ExtendedRational object.
+ * <i>rational</i>: An arbitrary-precision rational number.
 
  * <i>stream</i>: A writable data stream.
 

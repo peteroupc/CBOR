@@ -11,7 +11,7 @@ namespace PeterO.Numbers {
   internal sealed class DigitShiftAccumulator : IShiftAccumulator {
     private int bitLeftmost;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.DigitShiftAccumulator.LastDiscardedDigit"]'/>
     public int LastDiscardedDigit {
       get {
@@ -21,7 +21,7 @@ namespace PeterO.Numbers {
 
     private int bitsAfterLeftmost;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.DigitShiftAccumulator.OlderDiscardedDigits"]'/>
     public int OlderDiscardedDigits {
       get {
@@ -50,7 +50,7 @@ namespace PeterO.Numbers {
 
     private static readonly EInteger valueTen = (EInteger)10;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.DigitShiftAccumulator.ShiftedInt"]'/>
     public EInteger ShiftedInt {
       get {

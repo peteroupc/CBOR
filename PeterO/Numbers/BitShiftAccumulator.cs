@@ -13,7 +13,7 @@ namespace PeterO.Numbers {
     private const int SmallBitLength = 32;
     private int bitLeftmost;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.BitShiftAccumulator.LastDiscardedDigit"]'/>
     public int LastDiscardedDigit
     {
@@ -25,7 +25,7 @@ namespace PeterO.Numbers {
 
     private int bitsAfterLeftmost;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.BitShiftAccumulator.OlderDiscardedDigits"]'/>
     public int OlderDiscardedDigits
     {
@@ -84,7 +84,7 @@ namespace PeterO.Numbers {
 
     private FastInteger discardedBitCount;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.BitShiftAccumulator.DiscardedDigitCount"]'/>
     public FastInteger DiscardedDigitCount
     {

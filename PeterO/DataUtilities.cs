@@ -10,13 +10,14 @@ using System.IO;
 using System.Text;
 
 namespace PeterO {
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="T:PeterO.DataUtilities"]'/>
   public static class DataUtilities {
     private const int StreamedStringBufferLength = 4096;
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8String(System.Byte[],System.Boolean)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8String(System.Byte[],System.Boolean)"]'
+    /// />
     public static string GetUtf8String(byte[] bytes, bool replace) {
       if (bytes == null) {
         throw new ArgumentNullException("bytes");
@@ -28,8 +29,9 @@ namespace PeterO {
       return b.ToString();
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8String(System.Byte[],System.Int32,System.Int32,System.Boolean)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8String(System.Byte[],System.Int32,System.Int32,System.Boolean)"]'
+    /// />
     public static string GetUtf8String(
 byte[] bytes,
 int offset,
@@ -65,14 +67,16 @@ bool replace) {
       return b.ToString();
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean)"]'
+    /// />
         public static byte[] GetUtf8Bytes(string str, bool replace) {
           return GetUtf8Bytes(str, replace, false);
         }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean,System.Boolean)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8Bytes(System.String,System.Boolean,System.Boolean)"]'
+    /// />
     public static byte[] GetUtf8Bytes(
 string str,
 bool replace,
@@ -93,8 +97,9 @@ bool lenientLineBreaks) {
       }
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8Length(System.String,System.Boolean)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.GetUtf8Length(System.String,System.Boolean)"]'
+    /// />
     public static long GetUtf8Length(string str, bool replace) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -131,14 +136,16 @@ bool lenientLineBreaks) {
       return size;
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32)"]'
+    /// />
     public static int CodePointBefore(string str, int index) {
       return CodePointBefore(str, index, 0);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32,System.Int32)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32,System.Int32)"]'
+    /// />
     public static int CodePointBefore(
 string str,
 int index,
@@ -166,14 +173,16 @@ int surrogateBehavior) {
       return c;
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32)"]'
+    /// />
     public static int CodePointAt(string str, int index) {
       return CodePointAt(str, index, 0);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32,System.Int32)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32,System.Int32)"]'
+    /// />
     public static int CodePointAt(
 string str,
 int index,
@@ -201,8 +210,9 @@ int surrogateBehavior) {
       return c;
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.ToLowerCaseAscii(System.String)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.ToLowerCaseAscii(System.String)"]'
+    /// />
     public static string ToLowerCaseAscii(string str) {
       if (str == null) {
         return null;
@@ -232,8 +242,9 @@ int surrogateBehavior) {
       return builder.ToString();
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointCompare(System.String,System.String)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.CodePointCompare(System.String,System.String)"]'
+    /// />
     public static int CodePointCompare(string strA, string strB) {
       if (strA == null) {
         return (strB == null) ? 0 : -1;
@@ -288,8 +299,9 @@ int surrogateBehavior) {
                     -1 : 1);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.WriteUtf8(System.String,System.Int32,System.Int32,System.IO.Stream,System.Boolean)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.WriteUtf8(System.String,System.Int32,System.Int32,System.IO.Stream,System.Boolean)"]'
+    /// />
     public static int WriteUtf8(
 string str,
 int offset,
@@ -299,8 +311,9 @@ bool replace) {
       return WriteUtf8(str, offset, length, stream, replace, false);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.WriteUtf8(System.String,System.Int32,System.Int32,System.IO.Stream,System.Boolean,System.Boolean)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.WriteUtf8(System.String,System.Int32,System.Int32,System.IO.Stream,System.Boolean,System.Boolean)"]'
+    /// />
     public static int WriteUtf8(
 string str,
 int offset,
@@ -433,8 +446,9 @@ bool lenientLineBreaks) {
       return retval;
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.WriteUtf8(System.String,System.IO.Stream,System.Boolean)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.WriteUtf8(System.String,System.IO.Stream,System.Boolean)"]'
+    /// />
     public static int WriteUtf8(string str, Stream stream, bool replace) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -442,8 +456,9 @@ bool lenientLineBreaks) {
       return WriteUtf8(str, 0, str.Length, stream, replace);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.ReadUtf8FromBytes(System.Byte[],System.Int32,System.Int32,System.Text.StringBuilder,System.Boolean)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.ReadUtf8FromBytes(System.Byte[],System.Int32,System.Int32,System.Text.StringBuilder,System.Boolean)"]'
+    /// />
     public static int ReadUtf8FromBytes(
 byte[] data,
 int offset,
@@ -556,14 +571,16 @@ bool replace) {
       return 0;
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.ReadUtf8ToString(System.IO.Stream)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.ReadUtf8ToString(System.IO.Stream)"]'
+    /// />
     public static string ReadUtf8ToString(Stream stream) {
       return ReadUtf8ToString(stream, -1, true);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.ReadUtf8ToString(System.IO.Stream,System.Int32,System.Boolean)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.ReadUtf8ToString(System.IO.Stream,System.Int32,System.Boolean)"]'
+    /// />
     public static string ReadUtf8ToString(
 Stream stream,
 int bytesCount,
@@ -577,8 +594,9 @@ bool replace) {
       return builder.ToString();
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.DataUtilities.ReadUtf8(System.IO.Stream,System.Int32,System.Text.StringBuilder,System.Boolean)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.DataUtilities.ReadUtf8(System.IO.Stream,System.Int32,System.Text.StringBuilder,System.Boolean)"]'
+    /// />
     public static int ReadUtf8(
 Stream stream,
 int bytesCount,

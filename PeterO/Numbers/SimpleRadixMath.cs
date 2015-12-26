@@ -426,12 +426,9 @@ namespace PeterO.Numbers {
       pow = this.RoundBeforeOp(pow, ctx2);
       // Console.WriteLine("op now " + thisValue + ", "+pow);
       int powSign = this.GetHelper().GetSign(pow);
-      if (powSign == 0 && this.GetHelper().GetSign(thisValue) == 0) {
-        thisValue =
-          this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(1), ctx2);
-      } else {
-          thisValue = this.wrapper.Power(thisValue, pow, ctx2);
-      }
+      thisValue = (powSign == 0 && this.GetHelper().GetSign(thisValue) == 0)?
+        (this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(1), ctx2)):
+        (this.wrapper.Power(thisValue, pow, ctx2));
       // Console.WriteLine("was " + thisValue);
       thisValue = this.PostProcessAfterDivision(thisValue, ctx, ctx2);
       // Console.WriteLine("result was " + thisValue);
@@ -659,8 +656,7 @@ namespace PeterO.Numbers {
           this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) :
           augend;
         thisValue = this.RoundToPrecision(thisValue, ctx2);
-      } else
-        thisValue = !zeroB ? this.wrapper.MultiplyAndAdd(
+      } else thisValue = !zeroB ? this.wrapper.MultiplyAndAdd(
      thisValue,
      multiplicand,
      augend,

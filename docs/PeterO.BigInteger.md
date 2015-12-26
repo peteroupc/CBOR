@@ -8,6 +8,10 @@ An arbitrary-precision integer.Instances of this class are immutable, so they ar
 
 An arbitrary-precision integer.
 
+An arbitrary-precision integer.Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
+
+An arbitrary-precision integer.
+
 ### ONE
 
     public static readonly PeterO.BigInteger ONE;
@@ -60,11 +64,11 @@ True if this value is 0; otherwise, false.
 
     public static PeterO.BigInteger One { get; }
 
-Gets the BigInteger object for one.
+Gets the arbitrary-precision integer object for one.
 
 <b>Returns:</b>
 
-The BigInteger object for one.
+The arbitrary-precision integer object for one.
 
 ### Sign
 
@@ -80,11 +84,11 @@ Gets the sign of this object's value.
 
     public static PeterO.BigInteger Zero { get; }
 
-Gets the BigInteger object for zero.
+Gets the arbitrary-precision integer object for zero.
 
 <b>Returns:</b>
 
-The BigInteger object for zero.
+The arbitrary-precision integer object for zero.
 
 ### abs
 
@@ -105,11 +109,11 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>thisValue</i>: Another BigInteger object.
+ * <i>thisValue</i>: Another arbitrary-precision integer object.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer object.
 
 <b>Exceptions:</b>
 
@@ -126,7 +130,7 @@ Adds this object and another object.
 
 <b>Parameters:</b>
 
- * <i>bigintAugend</i>: Another BigInteger object.
+ * <i>bigintAugend</i>: Another arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -144,19 +148,19 @@ The parameter  <i>bigintAugend</i>
         PeterO.BigInteger a,
         PeterO.BigInteger b);
 
-Does an AND operation between two BigInteger values.
+Does an AND operation between two arbitrary-precision integer values.
 
-Each BigInteger instance is treated as a two's complement representation for the purposes of this operator.
+Each arbitrary-precision integer is treated as a two's complement representation for the purposes of this operator.
 
 <b>Parameters:</b>
 
- * <i>a</i>: A BigInteger instance.
+ * <i>a</i>: An arbitrary-precision integer.
 
- * <i>b</i>: Another BigInteger instance.
+ * <i>b</i>: Another arbitrary-precision integer.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -190,11 +194,11 @@ True if this object's value is MinValue or greater, and MaxValue or less; otherw
     public sealed int CompareTo(
         PeterO.BigInteger other);
 
-Compares a BigInteger object with this instance.
+Compares an arbitrary-precision integer with this instance.
 
 <b>Parameters:</b>
 
- * <i>other</i>: A BigInteger object.
+ * <i>other</i>: Not documented yet.
 
 <b>Returns:</b>
 
@@ -205,11 +209,11 @@ Zero if the values are equal; a negative number if this instance is less, or a p
     public PeterO.BigInteger divide(
         PeterO.BigInteger bigintDivisor);
 
-Divides this instance by the value of a BigInteger object. The result is rounded down (the fractional part is discarded). Except if the result is 0, it will be negative if this object is positive and the other is negative, or vice versa, and will be positive if both are positive or both are negative.
+Divides this instance by the value of an arbitrary-precision integer. The result is rounded down (the fractional part is discarded). Except if the result is 0, it will be negative if this object is positive and the other is negative, or vice versa, and will be positive if both are positive or both are negative.
 
 <b>Parameters:</b>
 
- * <i>bigintDivisor</i>: Another BigInteger object.
+ * <i>bigintDivisor</i>: Another arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -236,7 +240,7 @@ Divides this object by another big integer and returns the quotient and remainde
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: A BigInteger object.
+ * <i>divisor</i>: An arbitrary-precision integer object.
 
 <b>Returns:</b>
 
@@ -279,7 +283,7 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>other</i>: A BigInteger object.
+ * <i>other</i>: An arbitrary-precision integer object.
 
 <b>Returns:</b>
 
@@ -293,7 +297,7 @@ A Boolean object.
 
 <b>Deprecated.</b> Renamed to 'fromBytes'.
 
-Initializes a BigInteger object from an array of bytes.
+Initializes an arbitrary-precision integer object from an array of bytes.
 
 <b>Parameters:</b>
 
@@ -303,7 +307,7 @@ Initializes a BigInteger object from an array of bytes.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer object.
 
 <b>Exceptions:</b>
 
@@ -317,7 +321,7 @@ The parameter  <i>bytes</i>
         byte[] bytes,
         bool littleEndian);
 
-Initializes a BigInteger object from an array of bytes.
+Initializes an arbitrary-precision integer object from an array of bytes.
 
 <b>Parameters:</b>
 
@@ -327,7 +331,7 @@ Initializes a BigInteger object from an array of bytes.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer object.
 
 <b>Exceptions:</b>
 
@@ -343,10 +347,10 @@ The parameter  <i>bytes</i>
 
 Converts a string to an arbitrary-precision integer. The string portion can begin with a minus sign ("-" , U+002D) to indicate that it's negative.
 
-The following example (C#) converts a number in the orm of a hex string to a big integer.    public static BigInteger HexToBigInteger(string hexString) {
+The following example (C#) converts a number in the orm of a hex string to a big integer.    public static arbitrary-precision integer HexToBigInteger(string hexString) {
       // Parse the hexadecimal string as a big integer.  Will
       // throw a FormatException if the parsing fails
-      var bigInteger = BigInteger.fromRadixString(hexString, 16);
+      var bigInteger = arbitrary-precision integer.fromRadixString(hexString, 16);
       // Optional: Check if the parsed integer is negative
       if (bigInteger.Sign < 0) {
         throw new FormatException("negative hex string");
@@ -358,11 +362,11 @@ The following example (C#) converts a number in the orm of a hex string to a big
 
  * <i>str</i>: A string object.
 
- * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U + 0030 to U + 0039) and then the basic letters A to Z (U + 0041 to U + 005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
+ * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U+0030 to U+0039) and then the basic letters A to Z (U+0041 to U+005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
 <b>Returns:</b>
 
-A BigInteger object with the same value as given in the string.
+An arbitrary-precision integer object with the same value as given in the string.
 
 <b>Exceptions:</b>
 
@@ -391,7 +395,7 @@ Converts a portion of a string to an arbitrary-precision integer in a given radi
 
  * <i>str</i>: A string object.
 
- * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U + 0030 to U + 0039) and then the basic letters A to Z (U + 0041 to U + 005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
+ * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U+0030 to U+0039) and then the basic letters A to Z (U+0041 to U+005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
  * <i>index</i>: The index of the string that starts the string portion.
 
@@ -399,7 +403,7 @@ Converts a portion of a string to an arbitrary-precision integer in a given radi
 
 <b>Returns:</b>
 
-A BigInteger object with the same value as given in the string portion.
+An arbitrary-precision integer object with the same value as given in the string portion.
 
 <b>Exceptions:</b>
 
@@ -426,11 +430,11 @@ Converts a string to an arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string containing only basic digits 0 to 9 (U + 0030 to U + 0039), except that it may start with a minus sign ("-", U + 002D).
+ * <i>str</i>: A string containing only basic digits 0 to 9 (U + 0030 to U+0039), except that it may start with a minus sign ("-", U+002D).
 
 <b>Returns:</b>
 
-A BigInteger object with the same value as given in the string.
+An arbitrary-precision integer with the same value as given in the string.
 
 <b>Exceptions:</b>
 
@@ -461,7 +465,7 @@ Converts a portion of a string to an arbitrary-precision integer. The string por
 
 <b>Returns:</b>
 
-A BigInteger object with the same value as given in the string portion.
+An arbitrary-precision integer object with the same value as given in the string portion.
 
 <b>Exceptions:</b>
 
@@ -488,11 +492,11 @@ Returns the greatest common divisor of two integers. The greatest common divisor
 
 <b>Parameters:</b>
 
- * <i>bigintSecond</i>: Another BigInteger object.
+ * <i>bigintSecond</i>: Another arbitrary-precision integer.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -576,17 +580,15 @@ The number of bits in this object's value. Returns 0 if this object's value is 0
         PeterO.BigInteger bigintFirst,
         PeterO.BigInteger bigintSecond);
 
-Not documented yet.
-
 <b>Parameters:</b>
 
- * <i>bigintFirst</i>: Another BigInteger object.
+ * <i>bigintFirst</i>: Another arbitrary-precision integer.
 
- * <i>bigintSecond</i>: A BigInteger object. (3).
+ * <i>bigintSecond</i>: An arbitrary-precision integer. (3).
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -657,7 +659,7 @@ This object's value is too big to fit a 64-bit signed integer.
 
     public long longValueChecked();
 
-Converts this object's value to a 64-bit signed integer.
+Converts this object's value to a 64-bit signed integer, throwing an exception if it can't fit.
 
 <b>Returns:</b>
 
@@ -683,7 +685,7 @@ A 64-bit signed integer.
     public PeterO.BigInteger mod(
         PeterO.BigInteger divisor);
 
-Finds the modulus remainder that results when this instance is divided by the value of a BigInteger object. The modulus remainder is the same as the normal remainder if the normal remainder is positive, and equals divisor plus normal remainder if the normal remainder is negative.
+Finds the modulus remainder that results when this instance is divided by the value of an arbitrary-precision integer. The modulus remainder is the same as the normal remainder if the normal remainder is positive, and equals divisor plus normal remainder if the normal remainder is negative.
 
 <b>Parameters:</b>
 
@@ -691,7 +693,7 @@ Finds the modulus remainder that results when this instance is divided by the va
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -709,17 +711,17 @@ The parameter  <i>divisor</i>
         PeterO.BigInteger pow,
         PeterO.BigInteger mod);
 
-Calculates the remainder when a BigInteger raised to a certain power is divided by another BigInteger.
+Calculates the remainder when an arbitrary-precision integer raised to a certain power is divided by another arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>pow</i>: Another BigInteger object.
+ * <i>pow</i>: Another arbitrary-precision integer.
 
- * <i>mod</i>: A BigInteger object. (3).
+ * <i>mod</i>: An arbitrary-precision integer. (3).
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -735,21 +737,13 @@ The parameter  <i>pow</i>
         PeterO.BigInteger pow,
         PeterO.BigInteger mod);
 
-Calculates the remainder when a BigInteger raised to a certain power is divided by another BigInteger.
-
-<b>Parameters:</b>
-
- * <i>bigintValue</i>: A BigInteger object.
-
- * <i>pow</i>: Another BigInteger object.
-
- * <i>mod</i>: A BigInteger object. (3).
+Calculates the remainder when an arbitrary-precision integer raised to a certain power is divided by another arbitrary-precision integer.
 
 <b>Returns:</b>
 
-The value (  <i>bigintValue</i>
+The value ( <i>bigintValue</i>
  ^  <i>pow</i>
- )%  <i>mod</i>
+)%  <i>mod</i>
 .
 
 <b>Exceptions:</b>
@@ -763,11 +757,11 @@ The parameter  <i>bigintValue</i>
     public PeterO.BigInteger multiply(
         PeterO.BigInteger bigintMult);
 
-Multiplies this instance by the value of a BigInteger object.
+Multiplies this instance by the value of an arbitrary-precision integer object.
 
 <b>Parameters:</b>
 
- * <i>bigintMult</i>: Another BigInteger object.
+ * <i>bigintMult</i>: Another arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -794,15 +788,15 @@ This object's value with the sign reversed.
     public static PeterO.BigInteger Not(
         PeterO.BigInteger valueA);
 
-Returns a BigInteger with every bit flipped.
+Returns an arbitrary-precision integer with every bit flipped.
 
 <b>Parameters:</b>
 
- * <i>valueA</i>: Another BigInteger object.
+ * <i>valueA</i>: Another arbitrary-precision integer.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -816,13 +810,7 @@ The parameter  <i>valueA</i>
         PeterO.BigInteger bthis,
         PeterO.BigInteger augend);
 
-Adds a BigInteger object and a BigInteger object.
-
-<b>Parameters:</b>
-
- * <i>bthis</i>: A BigInteger object.
-
- * <i>augend</i>: Another BigInteger object.
+Adds an arbitrary-precision integer and an arbitrary-precision integer object.
 
 <b>Returns:</b>
 
@@ -840,13 +828,7 @@ The parameter  <i>bthis</i>
         PeterO.BigInteger dividend,
         PeterO.BigInteger divisor);
 
-Divides a BigInteger object by the value of a BigInteger object.
-
-<b>Parameters:</b>
-
- * <i>dividend</i>: A BigInteger object.
-
- * <i>divisor</i>: Another BigInteger object.
+Divides an arbitrary-precision integer by the value of an arbitrary-precision integer object.
 
 <b>Returns:</b>
 
@@ -864,13 +846,13 @@ The parameter  <i>dividend</i>
         PeterO.BigInteger thisValue,
         PeterO.BigInteger otherValue);
 
-Determines whether a BigInteger instance is greater than another BigInteger instance.
+Determines whether an arbitrary-precision integer is greater than another arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>thisValue</i>: The first BigInteger object.
+ * <i>thisValue</i>: The first arbitrary-precision integer.
 
- * <i>otherValue</i>: The second BigInteger object.
+ * <i>otherValue</i>: The second arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -884,13 +866,13 @@ True if  <i>thisValue</i>
         PeterO.BigInteger thisValue,
         PeterO.BigInteger otherValue);
 
-Determines whether a BigInteger value is greater than another BigInteger value.
+Determines whether an arbitrary-precision integer value is greater than another arbitrary-precision integer value.
 
 <b>Parameters:</b>
 
- * <i>thisValue</i>: The first BigInteger object.
+ * <i>thisValue</i>: The first arbitrary-precision integer.
 
- * <i>otherValue</i>: The second BigInteger object.
+ * <i>otherValue</i>: The second arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -904,17 +886,15 @@ True if  <i>thisValue</i>
         PeterO.BigInteger bthis,
         int bitCount);
 
-Not documented yet.
-
 <b>Parameters:</b>
 
- * <i>bthis</i>: Another BigInteger object.
+ * <i>bthis</i>: Another arbitrary-precision integer.
 
  * <i>bitCount</i>: A 32-bit signed integer.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -928,13 +908,13 @@ The parameter  <i>bthis</i>
         PeterO.BigInteger thisValue,
         PeterO.BigInteger otherValue);
 
-Determines whether a BigInteger instance is less than another BigInteger instance.
+Determines whether an arbitrary-precision integer is less than another arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>thisValue</i>: The first BigInteger object.
+ * <i>thisValue</i>: The first arbitrary-precision integer.
 
- * <i>otherValue</i>: The second BigInteger object.
+ * <i>otherValue</i>: The second arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -948,13 +928,13 @@ True if  <i>thisValue</i>
         PeterO.BigInteger thisValue,
         PeterO.BigInteger otherValue);
 
-Determines whether a BigInteger instance is less than or equal to another BigInteger instance.
+Determines whether an arbitrary-precision integer is less than or equal to another arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>thisValue</i>: The first BigInteger object.
+ * <i>thisValue</i>: The first arbitrary-precision integer.
 
- * <i>otherValue</i>: The second BigInteger object.
+ * <i>otherValue</i>: The second arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -968,13 +948,7 @@ True if  <i>thisValue</i>
         PeterO.BigInteger dividend,
         PeterO.BigInteger divisor);
 
-Finds the remainder that results when a BigInteger object is divided by the value of a BigInteger object.
-
-<b>Parameters:</b>
-
- * <i>dividend</i>: A BigInteger object.
-
- * <i>divisor</i>: Another BigInteger object.
+Finds the remainder that results when an arbitrary-precision integer is divided by the value of an arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -992,13 +966,7 @@ The parameter  <i>dividend</i>
         PeterO.BigInteger operand1,
         PeterO.BigInteger operand2);
 
-Multiplies a BigInteger object by the value of a BigInteger object.
-
-<b>Parameters:</b>
-
- * <i>operand1</i>: A BigInteger object.
-
- * <i>operand2</i>: Another BigInteger object.
+Multiplies an arbitrary-precision integer by the value of a arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -1016,19 +984,19 @@ The parameter  <i>operand1</i>
         PeterO.BigInteger bthis,
         int smallValue);
 
-Returns a big integer with the bits shifted to the right.
+Shifts the bits of an arbitrary-precision integer to the right.
 
-For this operation, the BigInteger is treated as a two's complement representation. Thus, for negative values, the BigInteger is sign-extended.
+For this operation, the arbitrary-precision integer is treated as a two's complement representation. Thus, for negative values, the arbitrary-precision integer is sign-extended.
 
 <b>Parameters:</b>
 
- * <i>bthis</i>: Not documented yet.
+ * <i>bthis</i>: Another arbitrary-precision integer.
 
- * <i>smallValue</i>: Not documented yet.
+ * <i>bigValue</i>: A 32-bit signed integer.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -1042,13 +1010,13 @@ The parameter  <i>bthis</i>
         PeterO.BigInteger bthis,
         PeterO.BigInteger subtrahend);
 
-Subtracts two BigInteger values.
+Subtracts two arbitrary-precision integer values.
 
 <b>Parameters:</b>
 
- * <i>bthis</i>: A BigInteger value.
+ * <i>bthis</i>: An arbitrary-precision integer value.
 
- * <i>subtrahend</i>: A BigInteger object.
+ * <i>subtrahend</i>: An arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -1065,15 +1033,15 @@ The parameter  <i>bthis</i>
     public static PeterO.BigInteger operator -(
         PeterO.BigInteger bigValue);
 
-Negates a BigInteger object.
+Negates an arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>bigValue</i>: Another BigInteger object.
+ * <i>bigValue</i>: Another arbitrary-precision integer.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -1087,19 +1055,19 @@ The parameter  <i>bigValue</i>
         PeterO.BigInteger first,
         PeterO.BigInteger second);
 
-Does an OR operation between two BigInteger instances.
+Does an OR operation between two arbitrary-precision integer instances.
 
-Each BigInteger instance is treated as a two's complement representation for the purposes of this operator.
+Each arbitrary-precision integer is treated as a two's complement representation for the purposes of this operator.
 
 <b>Parameters:</b>
 
- * <i>first</i>: Another BigInteger object.
+ * <i>first</i>: Another arbitrary-precision integer.
 
- * <i>second</i>: A BigInteger object. (3).
+ * <i>second</i>: An arbitrary-precision integer. (3).
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -1136,17 +1104,15 @@ The parameter  <i>powerSmall</i>
         PeterO.BigInteger bigValue,
         int power);
 
-Not documented yet.
-
 <b>Parameters:</b>
 
- * <i>bigValue</i>: Another BigInteger object.
+ * <i>bigValue</i>: Another arbitrary-precision integer.
 
  * <i>power</i>: A 32-bit signed integer.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -1160,17 +1126,15 @@ The parameter  <i>bigValue</i>
         PeterO.BigInteger bigValue,
         PeterO.BigInteger power);
 
-Not documented yet.
-
 <b>Parameters:</b>
 
- * <i>bigValue</i>: Another BigInteger object.
+ * <i>bigValue</i>: Another arbitrary-precision integer.
 
- * <i>power</i>: A BigInteger object. (3).
+ * <i>power</i>: An arbitrary-precision integer. (3).
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -1210,11 +1174,11 @@ The parameter  <i>power</i>
     public PeterO.BigInteger remainder(
         PeterO.BigInteger divisor);
 
-Finds the remainder that results when this instance is divided by the value of a BigInteger object. The remainder is the value that remains when the absolute value of this object is divided by the absolute value of the other object; the remainder has the same sign (positive or negative) as this object.
+Finds the remainder that results when this instance is divided by the value of an arbitrary-precision integer. The remainder is the value that remains when the absolute value of this object is divided by the absolute value of the other object; the remainder has the same sign (positive or negative) as this object.
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: Another BigInteger object.
+ * <i>divisor</i>: Another arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -1242,14 +1206,14 @@ Returns a big integer with the bits shifted to the left by a number of bits. A v
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer object.
 
 ### shiftRight
 
     public PeterO.BigInteger shiftRight(
         int numberBits);
 
-Returns a big integer with the bits shifted to the right. For this operation, the BigInteger is treated as a two's complement representation. Thus, for negative values, the BigInteger is sign-extended.
+Returns a big integer with the bits shifted to the right. For this operation, the arbitrary-precision integer is treated as a two's complement representation. Thus, for negative values, the arbitrary-precision integer is sign-extended.
 
 <b>Parameters:</b>
 
@@ -1257,7 +1221,7 @@ Returns a big integer with the bits shifted to the right. For this operation, th
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer object.
 
 ### sqrt
 
@@ -1284,11 +1248,11 @@ An array of two big integers: the first integer is the square root, and the seco
     public PeterO.BigInteger subtract(
         PeterO.BigInteger subtrahend);
 
-Subtracts a BigInteger from this BigInteger.
+Subtracts an arbitrary-precision integer from this arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>subtrahend</i>: Another BigInteger object.
+ * <i>subtrahend</i>: Another arbitrary-precision integer object.
 
 <b>Returns:</b>
 
@@ -1372,7 +1336,7 @@ Generates a string representing the value of this object, in the given radix.
 
 <b>Returns:</b>
 
-A string representing the value of this object. If this value is 0, returns "0". If negative, the string will begin with a hyphen/minus ("-"). Depending on the radix, the string will use the basic digits 0 to 9 (U + 0030 to U + 0039) and then the basic letters A to Z (U + 0041 to U + 005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
+A string representing the value of this object. If this value is 0, returns "0". If negative, the string will begin with a hyphen/minus ("-"). Depending on the radix, the string will use the basic digits 0 to 9 (U+0030 to U+0039) and then the basic letters A to Z (U+0041 to U+005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
 <b>Exceptions:</b>
 
@@ -1387,7 +1351,7 @@ Converts this object to a text string in base 10.
 
 <b>Returns:</b>
 
-A string representation of this object. If negative, the string will begin with a minus sign ("-", U+002D). The string will use the basic digits 0 to 9 (U + 0030 to U + 0039).
+A string representation of this object. If negative, the string will begin with a minus sign ("-", U+002D). The string will use the basic digits 0 to 9 (U+0030 to U+0039).
 
 ### valueOf
 
@@ -1402,7 +1366,7 @@ Converts a 64-bit signed integer to a big integer.
 
 <b>Returns:</b>
 
-A BigInteger object with the same value as the 64-bit number.
+An arbitrary-precision integer object with the same value as the 64-bit number.
 
 ### Xor
 
@@ -1410,19 +1374,19 @@ A BigInteger object with the same value as the 64-bit number.
         PeterO.BigInteger a,
         PeterO.BigInteger b);
 
-Finds the exclusive "or" of two BigInteger objects.
+Finds the exclusive "or" of two arbitrary-precision integer objects.
 
-Each BigInteger instance is treated as a two's complement representation for the purposes of this operator.
+Each arbitrary-precision integer is treated as a two's complement representation for the purposes of this operator.
 
 <b>Parameters:</b>
 
- * <i>a</i>: A BigInteger instance.
+ * <i>a</i>: An arbitrary-precision integer.
 
- * <i>b</i>: Another BigInteger instance.
+ * <i>b</i>: Another arbitrary-precision integer.
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 

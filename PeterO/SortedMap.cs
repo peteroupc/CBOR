@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 
 namespace PeterO {
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="T:PeterO.SortedMap`2"]'/>
   internal class SortedMap<T1, T2> : IDictionary<T1, T2> {
     private readonly RedBlackTree<KeyValuePair<T1, T2>> tree;
@@ -110,8 +110,9 @@ out kvp)) {
       return this.tree.Contains(item);
     }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.SortedMap`2.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.SortedMap`2.CopyTo(System.Collections.Generic.KeyValuePair
+    /// {`0,`1}[],System.Int32)"]'/>
     public void CopyTo(KeyValuePair<T1, T2>[] array, int arrayIndex) {
       this.tree.CopyTo(array, arrayIndex);
     }
@@ -122,7 +123,7 @@ out kvp)) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.SortedMap`2.IsReadOnly"]'/>
     public bool IsReadOnly {
       get {

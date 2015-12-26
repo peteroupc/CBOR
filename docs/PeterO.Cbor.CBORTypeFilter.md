@@ -94,7 +94,7 @@ Returns whether an array's length is allowed under a filter.
 
 <b>Parameters:</b>
 
- * <i>bigLength</i>: A BigInteger object.
+ * <i>bigLength</i>: An arbitrary-precision integer object.
 
 <b>Returns:</b>
 
@@ -344,7 +344,7 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>tags</i>: A BigInteger[] object.
+ * <i>tags</i>: An arbitrary-precision integer[] object.
 
 <b>Returns:</b>
 

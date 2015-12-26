@@ -2,7 +2,7 @@
 
     public class PrecisionContext
 
-Contains parameters for controlling the precision, rounding, and exponent range of arbitrary-precision numbers. NOTE: This class is not designed for inheritance, and inheriting from this class is not recommended since it may break in future versions.
+Contains parameters for controlling the precision, rounding, and exponent range of arbitrary-precision numbers.
 
 ### PrecisionContext Constructor
 
@@ -17,15 +17,15 @@ Initializes a new instance of the PrecisionContext class. HasFlags will be set t
 
 <b>Parameters:</b>
 
- * <i>precision</i>: A 32-bit signed integer.
+ * <i>precision</i>: Not documented yet.
 
- * <i>rounding</i>: A Rounding object.
+ * <i>rounding</i>: Not documented yet.
 
- * <i>exponentMinSmall</i>: A 32-bit signed integer. (2).
+ * <i>exponentMinSmall</i>: Not documented yet. (3).
 
- * <i>exponentMaxSmall</i>: A 32-bit signed integer. (3).
+ * <i>exponentMaxSmall</i>: Not documented yet. (4).
 
- * <i>clampNormalExponents</i>: A Boolean object.
+ * <i>clampNormalExponents</i>: Not documented yet. (5).
 
 ### Basic
 
@@ -292,7 +292,7 @@ Initializes a new PrecisionContext that is a copy of another PrecisionContext.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### ExponentWithinRange
 
@@ -303,7 +303,7 @@ Determines whether a number can have the given Exponent property under this prec
 
 <b>Parameters:</b>
 
- * <i>exponent</i>: A BigInteger object indicating the desired exponent.
+ * <i>exponent</i>: An arbitrary-precision integer object indicating the desired exponent.
 
 <b>Returns:</b>
 
@@ -328,7 +328,7 @@ Creates a new precision context using the given maximum number of digits, an unl
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### ForPrecisionAndRounding
 
@@ -342,11 +342,11 @@ Creates a new PrecisionContext object initialized with an unlimited exponent ran
 
  * <i>precision</i>: Maximum number of digits (precision).
 
- * <i>rounding</i>: A Rounding object.
+ * <i>rounding</i>: An ERounding object.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### ForRounding
 
@@ -361,7 +361,7 @@ Creates a new PrecisionContext object initialized with an unlimited precision, a
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### ToString
 
@@ -382,11 +382,11 @@ Copies this PrecisionContext and sets the copy's "AdjustExponent" property to th
 
 <b>Parameters:</b>
 
- * <i>adjustExponent</i>: A Boolean object.
+ * <i>adjustExponent</i>: Not documented yet.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### WithBigExponentRange
 
@@ -404,7 +404,7 @@ Copies this precision context and sets the copy's exponent range.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 <b>Exceptions:</b>
 
@@ -425,11 +425,11 @@ Copies this PrecisionContext and gives it a particular precision value.
 
 <b>Parameters:</b>
 
- * <i>bigintPrecision</i>: A BigInteger object.
+ * <i>bigintPrecision</i>: Not documented yet.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 <b>Exceptions:</b>
 
@@ -445,7 +445,7 @@ Copies this PrecisionContext with HasFlags set to true and a Flags value of 0.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### WithExponentClamp
 
@@ -456,11 +456,11 @@ Copies this precision context and sets the copy's "ClampNormalExponents" flag to
 
 <b>Parameters:</b>
 
- * <i>clamp</i>: A Boolean object.
+ * <i>clamp</i>: Not documented yet.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### WithExponentRange
 
@@ -478,7 +478,7 @@ Copies this precision context and sets the copy's exponent range.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### WithNoFlags
 
@@ -488,7 +488,7 @@ Copies this PrecisionContext with HasFlags set to false and a Flags value of 0.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### WithPrecision
 
@@ -503,7 +503,7 @@ Copies this PrecisionContext and gives it a particular precision value.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### WithPrecisionInBits
 
@@ -514,11 +514,11 @@ Copies this PrecisionContext and sets the copy's "IsPrecisionInBits" property to
 
 <b>Parameters:</b>
 
- * <i>isPrecisionBits</i>: A Boolean object.
+ * <i>isPrecisionBits</i>: Not documented yet.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### WithRounding
 
@@ -529,11 +529,11 @@ Copies this PrecisionContext with the specified rounding mode.
 
 <b>Parameters:</b>
 
- * <i>rounding</i>: A Rounding object.
+ * <i>rounding</i>: Not documented yet.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### WithSimplified
 
@@ -544,11 +544,11 @@ Copies this PrecisionContext and sets the copy's "IsSimplified" property to the 
 
 <b>Parameters:</b>
 
- * <i>simplified</i>: A Boolean object.
+ * <i>simplified</i>: Not documented yet.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### WithTraps
 
@@ -563,7 +563,7 @@ Copies this PrecisionContext with Traps set to the given value.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.
 
 ### WithUnlimitedExponents
 
@@ -573,4 +573,4 @@ Copies this PrecisionContext with an unlimited exponent range.
 
 <b>Returns:</b>
 
-A PrecisionContext object.
+An EContext object.

@@ -9,7 +9,7 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.CBORTypeFilter"]'/>
   public sealed class CBORTypeFilter {
     private bool any;
@@ -54,37 +54,37 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithUnsignedInteger"]'/>
     public CBORTypeFilter WithUnsignedInteger() {
       return this.WithType(0);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithNegativeInteger"]'/>
     public CBORTypeFilter WithNegativeInteger() {
       return this.WithType(1);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithByteString"]'/>
     public CBORTypeFilter WithByteString() {
       return this.WithType(2).WithTags(25);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithMap"]'/>
     public CBORTypeFilter WithMap() {
       return this.WithType(5);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithTextString"]'/>
     public CBORTypeFilter WithTextString() {
       return this.WithType(3).WithTags(25);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithTags(System.Int32[])"]'/>
     public CBORTypeFilter WithTags(params int[] tags) {
       if (this.any) {
@@ -107,7 +107,7 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithTags(PeterO.BigInteger[])"]'/>
     public CBORTypeFilter WithTags(params BigInteger[] tags) {
       if (this.any) {
@@ -133,7 +133,7 @@ namespace PeterO.Cbor {
       return filter;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithArrayExactLength(System.Int32,PeterO.Cbor.CBORTypeFilter[])"]'/>
     public CBORTypeFilter WithArrayExactLength(
 int arrayLength,
@@ -161,7 +161,7 @@ params CBORTypeFilter[] elements) {
       return filter;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithArrayMinLength(System.Int32,PeterO.Cbor.CBORTypeFilter[])"]'/>
     public CBORTypeFilter WithArrayMinLength(
 int arrayLength,
@@ -189,7 +189,7 @@ params CBORTypeFilter[] elements) {
       return filter;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithArrayAnyLength"]'/>
     public CBORTypeFilter WithArrayAnyLength() {
       if (this.any) {
@@ -209,7 +209,7 @@ params CBORTypeFilter[] elements) {
       return filter;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithFloatingPoint"]'/>
     public CBORTypeFilter WithFloatingPoint() {
       if (this.any) {
@@ -221,7 +221,7 @@ params CBORTypeFilter[] elements) {
       return filter;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.MajorTypeMatches(System.Int32)"]'/>
     public bool MajorTypeMatches(int type) {
       #if DEBUG
@@ -236,7 +236,7 @@ params CBORTypeFilter[] elements) {
       return type >= 0 && type <= 7 && (this.types & (1 << type)) != 0;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(System.Int32)"]'/>
     public bool ArrayLengthMatches(int length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
@@ -244,7 +244,7 @@ params CBORTypeFilter[] elements) {
                 this.arrayLength == length));
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(System.Int64)"]'/>
     public bool ArrayLengthMatches(long length) {
       return (this.types & (1 << 4)) != 0 && (this.anyArrayLength ||
@@ -252,7 +252,7 @@ params CBORTypeFilter[] elements) {
                 this.arrayLength == length));
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(PeterO.BigInteger)"]'/>
     public bool ArrayLengthMatches(BigInteger bigLength) {
       if (bigLength == null) {
@@ -265,19 +265,19 @@ params CBORTypeFilter[] elements) {
         bigLength.CompareTo((BigInteger)this.arrayLength) >= 0)));
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int32)"]'/>
     public bool TagAllowed(int tag) {
       return this.any || this.TagAllowed((BigInteger)tag);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int64)"]'/>
     public bool TagAllowed(long tag) {
       return this.any || this.TagAllowed((BigInteger)tag);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(PeterO.BigInteger)"]'/>
     public bool TagAllowed(BigInteger bigTag) {
       if (bigTag == null) {
@@ -303,7 +303,7 @@ params CBORTypeFilter[] elements) {
       return false;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.ArrayIndexAllowed(System.Int32)"]'/>
     public bool ArrayIndexAllowed(int index) {
    return (this.types & (1 << 4)) != 0 && index >= 0 && (this.anyArrayLength ||
@@ -311,7 +311,7 @@ params CBORTypeFilter[] elements) {
                     0));
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.GetSubFilter(System.Int32)"]'/>
     public CBORTypeFilter GetSubFilter(int index) {
       if (this.anyArrayLength || this.any) {
@@ -335,7 +335,7 @@ params CBORTypeFilter[] elements) {
       return this.elements[index];
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.GetSubFilter(System.Int64)"]'/>
     public CBORTypeFilter GetSubFilter(long index) {
       if (this.anyArrayLength || this.any) {
@@ -361,36 +361,36 @@ params CBORTypeFilter[] elements) {
       return this.elements[(int)index];
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.NonFPSimpleValueAllowed"]'/>
     public bool NonFPSimpleValueAllowed() {
       return this.MajorTypeMatches(7) && !this.floatingpoint;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBORTypeFilter.None"]'/>
     public static readonly CBORTypeFilter None = new CBORTypeFilter();
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBORTypeFilter.UnsignedInteger"]'/>
     public static readonly CBORTypeFilter UnsignedInteger = new
       CBORTypeFilter().WithUnsignedInteger();
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBORTypeFilter.NegativeInteger"]'/>
     public static readonly CBORTypeFilter NegativeInteger = new
       CBORTypeFilter().WithNegativeInteger();
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBORTypeFilter.Any"]'/>
     public static readonly CBORTypeFilter Any = new CBORTypeFilter().WithAny();
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBORTypeFilter.ByteString"]'/>
     public static readonly CBORTypeFilter ByteString = new
       CBORTypeFilter().WithByteString();
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Cbor.CBORTypeFilter.TextString"]'/>
     public static readonly CBORTypeFilter TextString = new
       CBORTypeFilter().WithTextString();

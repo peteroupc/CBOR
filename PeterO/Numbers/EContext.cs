@@ -8,46 +8,46 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="T:PeterO.Numbers.EContext"]'/>
   internal sealed class EContext {
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.FlagClamped"]'/>
     public const int FlagClamped = 32;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.FlagDivideByZero"]'/>
     public const int FlagDivideByZero = 128;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.FlagInexact"]'/>
     public const int FlagInexact = 1;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.FlagInvalid"]'/>
     public const int FlagInvalid = 64;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.FlagLostDigits"]'/>
     public const int FlagLostDigits = 256;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.FlagOverflow"]'/>
     public const int FlagOverflow = 16;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.FlagRounded"]'/>
     public const int FlagRounded = 2;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.FlagSubnormal"]'/>
     public const int FlagSubnormal = 4;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.FlagUnderflow"]'/>
     public const int FlagUnderflow = 8;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.Basic"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -58,7 +58,7 @@ namespace PeterO.Numbers {
     public static readonly EContext Basic =
       EContext.ForPrecisionAndRounding(9, ERounding.HalfUp);
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.BigDecimalJava"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -73,7 +73,7 @@ namespace PeterO.Numbers {
 EInteger.Zero - (EInteger)Int32.MaxValue,
 EInteger.One + (EInteger)Int32.MaxValue);
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.Binary128"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -85,7 +85,7 @@ EInteger.One + (EInteger)Int32.MaxValue);
       EContext.ForPrecisionAndRounding(113, ERounding.HalfEven)
       .WithExponentClamp(true).WithExponentRange(-16382, 16383);
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.Binary16"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -97,7 +97,7 @@ EInteger.One + (EInteger)Int32.MaxValue);
       EContext.ForPrecisionAndRounding(11, ERounding.HalfEven)
       .WithExponentClamp(true).WithExponentRange(-14, 15);
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.Binary32"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -109,7 +109,7 @@ EInteger.One + (EInteger)Int32.MaxValue);
       EContext.ForPrecisionAndRounding(24, ERounding.HalfEven)
       .WithExponentClamp(true).WithExponentRange(-126, 127);
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.Binary64"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -121,7 +121,7 @@ EInteger.One + (EInteger)Int32.MaxValue);
       EContext.ForPrecisionAndRounding(53, ERounding.HalfEven)
       .WithExponentClamp(true).WithExponentRange(-1022, 1023);
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.CliDecimal"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -134,7 +134,7 @@ EInteger.One + (EInteger)Int32.MaxValue);
       new EContext(96, ERounding.HalfEven, 0, 28, true)
       .WithPrecisionInBits(true);
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.Decimal128"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -146,7 +146,7 @@ EInteger.One + (EInteger)Int32.MaxValue);
     public static readonly EContext Decimal128 =
       new EContext(34, ERounding.HalfEven, -6143, 6144, true);
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.Decimal32"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -158,7 +158,7 @@ EInteger.One + (EInteger)Int32.MaxValue);
     public static readonly EContext Decimal32 =
       new EContext(7, ERounding.HalfEven, -95, 96, true);
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.Decimal64"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -170,7 +170,7 @@ EInteger.One + (EInteger)Int32.MaxValue);
     public static readonly EContext Decimal64 =
       new EContext(16, ERounding.HalfEven, -383, 384, true);
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="F:PeterO.Numbers.EContext.Unlimited"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -204,7 +204,7 @@ EInteger.One + (EInteger)Int32.MaxValue);
 
     private int traps;
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.#ctor(System.Int32,PeterO.Numbers.ERounding,System.Int32,System.Int32,System.Boolean)"]'/>
     public EContext(
 int precision,
@@ -232,7 +232,7 @@ bool clampNormalExponents) {
         (EInteger)exponentMinSmall;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.AdjustExponent"]'/>
     public bool AdjustExponent {
       get {
@@ -240,7 +240,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.ClampNormalExponents"]'/>
     public bool ClampNormalExponents {
       get {
@@ -248,7 +248,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.EMax"]'/>
     public EInteger EMax {
       get {
@@ -256,7 +256,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.EMin"]'/>
     public EInteger EMin {
       get {
@@ -264,7 +264,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.Flags"]'/>
     public int Flags {
       get {
@@ -279,7 +279,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.HasExponentRange"]'/>
     public bool HasExponentRange {
       get {
@@ -287,7 +287,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.HasFlags"]'/>
     public bool HasFlags {
       get {
@@ -295,7 +295,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.HasMaxPrecision"]'/>
     public bool HasMaxPrecision {
       get {
@@ -303,7 +303,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.IsPrecisionInBits"]'/>
     public bool IsPrecisionInBits {
       get {
@@ -311,7 +311,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.IsSimplified"]'/>
     public bool IsSimplified {
       get {
@@ -319,7 +319,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.Precision"]'/>
     public EInteger Precision {
       get {
@@ -327,7 +327,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.Rounding"]'/>
     public ERounding Rounding {
       get {
@@ -335,7 +335,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.EContext.Traps"]'/>
     public int Traps {
       get {
@@ -343,7 +343,7 @@ bool clampNormalExponents) {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.ForPrecision(System.Int32)"]'/>
     public static EContext ForPrecision(int precision) {
       return new EContext(
@@ -354,7 +354,7 @@ ERounding.HalfUp,
 false).WithUnlimitedExponents();
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.ForPrecisionAndRounding(System.Int32,PeterO.Numbers.ERounding)"]'/>
     public static EContext ForPrecisionAndRounding(
       int precision,
@@ -367,7 +367,7 @@ rounding,
 false).WithUnlimitedExponents();
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.ForRounding(PeterO.Numbers.ERounding)"]'/>
     public static EContext ForRounding(ERounding rounding) {
       return new EContext(
@@ -378,7 +378,7 @@ rounding,
 false).WithUnlimitedExponents();
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.Copy"]'/>
     public EContext Copy() {
       var pcnew = new EContext(
@@ -401,7 +401,7 @@ false).WithUnlimitedExponents();
       return pcnew;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.ExponentWithinRange(PeterO.Numbers.EInteger)"]'/>
     public bool ExponentWithinRange(EInteger exponent) {
       if (exponent == null) {
@@ -426,7 +426,7 @@ false).WithUnlimitedExponents();
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.ToString"]'/>
     public override string ToString() {
       return "[PrecisionContext ExponentMax=" + this.exponentMax +
@@ -437,7 +437,7 @@ false).WithUnlimitedExponents();
         this.flags + ", HasFlags=" + this.hasFlags + "]";
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithAdjustExponent(System.Boolean)"]'/>
     public EContext WithAdjustExponent(bool adjustExponent) {
       EContext pc = this.Copy();
@@ -445,7 +445,7 @@ false).WithUnlimitedExponents();
       return pc;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithBigExponentRange(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public EContext WithBigExponentRange(
       EInteger exponentMin,
@@ -466,7 +466,7 @@ false).WithUnlimitedExponents();
       return pc;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithBigPrecision(PeterO.Numbers.EInteger)"]'/>
     public EContext WithBigPrecision(EInteger bigintPrecision) {
       if (bigintPrecision == null) {
@@ -481,7 +481,7 @@ false).WithUnlimitedExponents();
       return pc;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithBlankFlags"]'/>
     public EContext WithBlankFlags() {
       EContext pc = this.Copy();
@@ -490,7 +490,7 @@ false).WithUnlimitedExponents();
       return pc;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithExponentClamp(System.Boolean)"]'/>
     public EContext WithExponentClamp(bool clamp) {
       EContext pc = this.Copy();
@@ -498,7 +498,7 @@ false).WithUnlimitedExponents();
       return pc;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithExponentRange(System.Int32,System.Int32)"]'/>
     public EContext WithExponentRange(
       int exponentMinSmall,
@@ -514,7 +514,7 @@ false).WithUnlimitedExponents();
       return pc;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithNoFlags"]'/>
     public EContext WithNoFlags() {
       EContext pc = this.Copy();
@@ -523,7 +523,7 @@ false).WithUnlimitedExponents();
       return pc;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithPrecision(System.Int32)"]'/>
     public EContext WithPrecision(int precision) {
       if (precision < 0) {
@@ -535,7 +535,7 @@ false).WithUnlimitedExponents();
       return pc;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithPrecisionInBits(System.Boolean)"]'/>
     public EContext WithPrecisionInBits(bool isPrecisionBits) {
       EContext pc = this.Copy();
@@ -543,7 +543,7 @@ false).WithUnlimitedExponents();
       return pc;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithRounding(PeterO.Numbers.ERounding)"]'/>
     public EContext WithRounding(ERounding rounding) {
       EContext pc = this.Copy();
@@ -551,7 +551,7 @@ false).WithUnlimitedExponents();
       return pc;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithSimplified(System.Boolean)"]'/>
     public EContext WithSimplified(bool simplified) {
       EContext pc = this.Copy();
@@ -559,7 +559,7 @@ false).WithUnlimitedExponents();
       return pc;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithTraps(System.Int32)"]'/>
     public EContext WithTraps(int traps) {
       EContext pc = this.Copy();
@@ -568,7 +568,7 @@ false).WithUnlimitedExponents();
       return pc;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.WithUnlimitedExponents"]'/>
     public EContext WithUnlimitedExponents() {
       EContext pc = this.Copy();

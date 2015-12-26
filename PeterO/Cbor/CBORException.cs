@@ -7,20 +7,20 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Cbor {
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.CBORException"]'/>
   public class CBORException : Exception {
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor"]'/>
     public CBORException() {
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor(System.String)"]'/>
     public CBORException(string message) : base(message) {
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor(System.String,System.Exception)"]'/>
     public CBORException(string message, Exception innerException) :
       base(message, innerException) {

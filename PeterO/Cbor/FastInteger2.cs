@@ -351,7 +351,7 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)"]'/>
     internal FastInteger2 Multiply(int val) {
       if (val == 0) {
@@ -404,7 +404,7 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)"]'/>
     internal FastInteger2 Subtract(FastInteger2 val) {
       BigInteger valValue;
@@ -451,7 +451,7 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)"]'/>
     internal FastInteger2 SubtractInt(int val) {
       if (val == Int32.MinValue) {
@@ -574,7 +574,7 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.FastInteger2.Sign"]'/>
     internal int Sign {
       get {

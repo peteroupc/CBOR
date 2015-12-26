@@ -12,13 +12,13 @@ Arbitrary-precision rational number. This class cannot be inherited; this is a c
         PeterO.BigInteger numerator,
         PeterO.BigInteger denominator);
 
-Initializes a new instance of the ExtendedRational class.
+Initializes a new instance of the arbitrary-precision rational number class.
 
 <b>Parameters:</b>
 
- * <i>numerator</i>: A BigInteger object.
+ * <i>numerator</i>: An arbitrary-precision integer object.
 
- * <i>denominator</i>: Another BigInteger object.
+ * <i>denominator</i>: Another arbitrary-precision integer object.
 
 <b>Exceptions:</b>
 
@@ -149,11 +149,11 @@ This object's numerator. If this object is a not-a-number value, returns the dia
 
     public PeterO.ExtendedRational Abs();
 
-Not documented yet.
+Finds the absolute value of this rational number.
 
 <b>Returns:</b>
 
-An ExtendedRational object.
+An arbitrary-precision rational number.
 
 ### Add
 
@@ -164,7 +164,7 @@ Adds two rational numbers.
 
 <b>Parameters:</b>
 
- * <i>otherValue</i>: Another ExtendedRational object.
+ * <i>otherValue</i>: Another arbitrary-precision rational number.
 
 <b>Returns:</b>
 
@@ -181,63 +181,45 @@ The parameter  <i>otherValue</i>
     public sealed int CompareTo(
         PeterO.ExtendedRational other);
 
-Compares an ExtendedRational object with this instance.
+Compares an arbitrary-precision rational number with this instance.
 
 <b>Parameters:</b>
 
- * <i>other</i>: An ExtendedRational object.
+ * <i>other</i>: An arbitrary-precision rational number.
 
 <b>Returns:</b>
 
 Zero if the values are equal; a negative number if this instance is less, or a positive number if this instance is greater.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- is null.
 
 ### CompareToBinary
 
     public int CompareToBinary(
         PeterO.ExtendedFloat other);
 
-Compares an ExtendedFloat object with this instance.
+Compares an arbitrary-precision binary float with this instance.
 
 <b>Parameters:</b>
 
- * <i>other</i>: An ExtendedFloat object.
+ * <i>other</i>: An arbitrary-precision binary float.
 
 <b>Returns:</b>
 
 Zero if the values are equal; a negative number if this instance is less, or a positive number if this instance is greater.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- is null.
 
 ### CompareToDecimal
 
     public int CompareToDecimal(
         PeterO.ExtendedDecimal other);
 
-Compares an ExtendedDecimal object with this instance.
+Compares an arbitrary-precision decimal object with this instance.
 
 <b>Parameters:</b>
 
- * <i>other</i>: An ExtendedDecimal object.
+ * <i>other</i>: An arbitrary-precision decimal object.
 
 <b>Returns:</b>
 
 Zero if the values are equal; a negative number if this instance is less, or a positive number if this instance is greater.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>other</i>
- is null.
 
 ### Create
 
@@ -255,7 +237,7 @@ Creates a number with the given numerator and denominator.
 
 <b>Returns:</b>
 
-An ExtendedRational object.
+An arbitrary-precision rational number.
 
 ### Create
 
@@ -267,27 +249,20 @@ Creates a number with the given numerator and denominator.
 
 <b>Parameters:</b>
 
- * <i>numerator</i>: A BigInteger object.
+ * <i>numerator</i>: An arbitrary-precision integer object.
 
- * <i>denominator</i>: Another BigInteger object.
+ * <i>denominator</i>: Another arbitrary-precision integer object.
 
 <b>Returns:</b>
 
-An ExtendedRational object.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>numerator</i>
- or  <i>denominator</i>
- is null.
+An arbitrary-precision rational number.
 
 ### CreateNaN
 
     public static PeterO.ExtendedRational CreateNaN(
         PeterO.BigInteger diag);
 
-Creates a not-a-number ExtendedRational object.
+Creates a not-a-number arbitrary-precision rational number.
 
 <b>Parameters:</b>
 
@@ -295,7 +270,7 @@ Creates a not-a-number ExtendedRational object.
 
 <b>Returns:</b>
 
-An ExtendedRational object.
+An arbitrary-precision rational number.
 
 <b>Exceptions:</b>
 
@@ -314,7 +289,7 @@ The parameter  <i>diag</i>
         bool signaling,
         bool negative);
 
-Creates a not-a-number ExtendedRational object.
+Creates a not-a-number arbitrary-precision rational number.
 
 <b>Parameters:</b>
 
@@ -326,7 +301,7 @@ Creates a not-a-number ExtendedRational object.
 
 <b>Returns:</b>
 
-An ExtendedRational object.
+An arbitrary-precision rational number.
 
 <b>Exceptions:</b>
 
@@ -343,11 +318,11 @@ The parameter  <i>diag</i>
     public PeterO.ExtendedRational Divide(
         PeterO.ExtendedRational otherValue);
 
-Divides this instance by the value of an ExtendedRational object.
+Divides this instance by the value of an arbitrary-precision rational number object.
 
 <b>Parameters:</b>
 
- * <i>otherValue</i>: An ExtendedRational object.
+ * <i>otherValue</i>: An arbitrary-precision rational number.
 
 <b>Returns:</b>
 
@@ -383,7 +358,7 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>other</i>: An ExtendedRational object.
+ * <i>other</i>: An arbitrary-precision rational number.
 
 <b>Returns:</b>
 
@@ -404,7 +379,7 @@ Converts a big integer to a rational number.
 
 <b>Parameters:</b>
 
- * <i>bigint</i>: A BigInteger object.
+ * <i>bigint</i>: An arbitrary-precision integer object.
 
 <b>Returns:</b>
 
@@ -431,15 +406,13 @@ A rational number with the same value as  <i>flt</i>
     public static PeterO.ExtendedRational FromExtendedDecimal(
         PeterO.ExtendedDecimal ef);
 
-Not documented yet.
-
 <b>Parameters:</b>
 
- * <i>ef</i>: An ExtendedDecimal object.
+ * <i>ef</i>: An arbitrary-precision decimal object.
 
 <b>Returns:</b>
 
-An ExtendedRational object.
+An arbitrary-precision rational number.
 
 <b>Exceptions:</b>
 
@@ -452,15 +425,13 @@ The parameter  <i>ef</i>
     public static PeterO.ExtendedRational FromExtendedFloat(
         PeterO.ExtendedFloat ef);
 
-Not documented yet.
-
 <b>Parameters:</b>
 
- * <i>ef</i>: An ExtendedFloat object.
+ * <i>ef</i>: An arbitrary-precision binary float.
 
 <b>Returns:</b>
 
-An ExtendedRational object.
+An arbitrary-precision rational number.
 
 <b>Exceptions:</b>
 
@@ -481,7 +452,7 @@ Not documented yet.
 
 <b>Returns:</b>
 
-An ExtendedRational object.
+An arbitrary-precision rational number.
 
 ### FromInt64
 
@@ -496,7 +467,7 @@ Not documented yet.
 
 <b>Returns:</b>
 
-An ExtendedRational object.
+An arbitrary-precision rational number.
 
 ### FromSingle
 
@@ -589,11 +560,11 @@ True if this object is a signaling not-a-number value (which causes an error if 
     public PeterO.ExtendedRational Multiply(
         PeterO.ExtendedRational otherValue);
 
-Multiplies this instance by the value of an ExtendedRational object.
+Multiplies this instance by the value of an arbitrary-precision rational number.
 
 <b>Parameters:</b>
 
- * <i>otherValue</i>: An ExtendedRational object.
+ * <i>otherValue</i>: An arbitrary-precision rational number.
 
 <b>Returns:</b>
 
@@ -613,18 +584,18 @@ Not documented yet.
 
 <b>Returns:</b>
 
-An ExtendedRational object.
+An arbitrary-precision rational number.
 
 ### Remainder
 
     public PeterO.ExtendedRational Remainder(
         PeterO.ExtendedRational otherValue);
 
-Finds the remainder that results when this instance is divided by the value of a ExtendedRational object.
+Finds the remainder that results when this instance is divided by the value of an arbitrary-precision rational number.
 
 <b>Parameters:</b>
 
- * <i>otherValue</i>: An ExtendedRational object.
+ * <i>otherValue</i>: An arbitrary-precision rational number.
 
 <b>Returns:</b>
 
@@ -641,11 +612,11 @@ The parameter  <i>otherValue</i>
     public PeterO.ExtendedRational Subtract(
         PeterO.ExtendedRational otherValue);
 
-Subtracts an ExtendedRational object from this instance.
+Subtracts an arbitrary-precision rational number from this instance.
 
 <b>Parameters:</b>
 
- * <i>otherValue</i>: An ExtendedRational object.
+ * <i>otherValue</i>: An arbitrary-precision rational number.
 
 <b>Returns:</b>
 
@@ -665,7 +636,7 @@ Converts this value to an arbitrary-precision integer. Any fractional part in th
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -680,7 +651,7 @@ Converts this value to an arbitrary-precision integer, checking whether the valu
 
 <b>Returns:</b>
 
-A BigInteger object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -713,13 +684,7 @@ Converts this rational number to a decimal number and rounds the result to the g
 
 <b>Returns:</b>
 
-An ExtendedDecimal object.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
+An arbitrary-precision decimal.
 
 ### ToExtendedDecimal
 
@@ -744,13 +709,7 @@ Converts this rational number to a decimal number, but if the result would have 
 
 <b>Returns:</b>
 
-An ExtendedDecimal object.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
+An arbitrary-precision decimal.
 
 ### ToExtendedFloat
 
@@ -765,13 +724,7 @@ Converts this rational number to a binary number and rounds the result to the gi
 
 <b>Returns:</b>
 
-An ExtendedFloat object.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
+An arbitrary-precision binary float.
 
 ### ToExtendedFloat
 
@@ -796,13 +749,7 @@ Converts this rational number to a binary number, but if the result would have a
 
 <b>Returns:</b>
 
-An ExtendedFloat object.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>ctx</i>
- is null.
+An arbitrary-precision binary float.
 
 ### ToSingle
 
