@@ -29,9 +29,8 @@ namespace PeterO.Cbor {
       CBORObject.AddConverter(typeof(Guid), new CBORTag37());
     }
 
-    /// <summary>Converts a UUID to a CBOR object.</summary>
-    /// <param name='obj'>A UUID.</param>
-    /// <returns>A CBORObject object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTag37.ToCBORObject(System.Guid)"]'/>
     public CBORObject ToCBORObject(Guid obj) {
       byte[] bytes = obj.ToByteArray();
       var bytes2 = new byte[16];

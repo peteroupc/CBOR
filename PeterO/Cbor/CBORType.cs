@@ -8,30 +8,35 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Represents a type that a CBOR object can have.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORType"]'/>
   public enum CBORType {
-    /// <summary>A number of any kind, including integers, big integers,
-    /// floating point numbers, and decimal numbers. The floating-point
-    /// value Not-a-Number is also included in the Number type.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.Number"]'/>
     Number,
 
-    /// <summary>The simple values true and false.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.Boolean"]'/>
     Boolean,
 
-    /// <summary>A &#x22;simple value&#x22; other than floating point
-    /// values, true, and false.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.SimpleValue"]'/>
     SimpleValue,
 
-    /// <summary>An array of bytes.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.ByteString"]'/>
     ByteString,
 
-    /// <summary>A text string.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.TextString"]'/>
     TextString,
 
-    /// <summary>An array of CBOR objects.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.Array"]'/>
     Array,
 
-    /// <summary>A map of CBOR objects.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBORType.Map"]'/>
     Map
   }
 }

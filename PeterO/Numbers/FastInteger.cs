@@ -557,10 +557,8 @@ bigrem = divrem[1]; }
       }
     }
 
-    /// <summary>Sets this object&#x27;s value to the current value times
-    /// another integer.</summary>
-    /// <param name='val'>The integer to multiply by.</param>
-    /// <returns>This object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Multiply(System.Int32)"]'/>
     internal FastInteger Multiply(int val) {
       if (val == 0) {
         this.smallValue = 0;
@@ -612,9 +610,8 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <summary>Sets this object&#x27;s value to 0 minus its current value
-    /// (reverses its sign).</summary>
-    /// <returns>This object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Negate"]'/>
     internal FastInteger Negate() {
       switch (this.integerMode) {
         case 0:
@@ -641,10 +638,8 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <summary>Sets this object&#x27;s value to the current value minus
-    /// the given FastInteger value.</summary>
-    /// <param name='val'>The subtrahend.</param>
-    /// <returns>This object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Subtract(PeterO.Numbers.FastInteger)"]'/>
     internal FastInteger Subtract(FastInteger val) {
       EInteger valValue;
       switch (this.integerMode) {
@@ -690,10 +685,8 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <summary>Sets this object&#x27;s value to the current value minus
-    /// the given integer.</summary>
-    /// <param name='val'>The subtrahend.</param>
-    /// <returns>This object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.SubtractInt(System.Int32)"]'/>
     internal FastInteger SubtractInt(int val) {
       if (val == Int32.MinValue) {
         return this.AddBig(valueNegativeInt32MinValue);
@@ -713,10 +706,8 @@ bigrem = divrem[1]; }
       return this.AddInt(-val);
     }
 
-    /// <summary>Sets this object&#x27;s value to the current value plus
-    /// the given integer.</summary>
-    /// <param name='bigintVal'>The number to add.</param>
-    /// <returns>This object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.AddBig(PeterO.Numbers.EInteger)"]'/>
     internal FastInteger AddBig(EInteger bigintVal) {
       switch (this.integerMode) {
           case 0: {
@@ -737,10 +728,8 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <summary>Sets this object&#x27;s value to the current value minus
-    /// the given integer.</summary>
-    /// <param name='bigintVal'>The subtrahend.</param>
-    /// <returns>This object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.SubtractBig(PeterO.Numbers.EInteger)"]'/>
     internal FastInteger SubtractBig(EInteger bigintVal) {
       if (this.integerMode == 2) {
         this.largeValue -= (EInteger)bigintVal;
@@ -811,12 +800,8 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <summary>Sets this object&#x27;s value to the remainder of the
-    /// current value divided by the given integer.</summary>
-    /// <param name='divisor'>The divisor.</param>
-    /// <returns>This object.</returns>
-    /// <exception cref='System.DivideByZeroException'>Attempted to divide
-    /// by zero.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Remainder(System.Int32)"]'/>
     internal FastInteger Remainder(int divisor) {
       // Mod operator will always result in a
       // number that fits an int for int divisors
@@ -910,10 +895,8 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <summary>Gets a value indicating whether this object&#x27;s value
-    /// is even.</summary>
-    /// <value>True if this object&apos;s value is even; otherwise,
-    /// false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.FastInteger.IsEvenNumber"]'/>
     internal bool IsEvenNumber {
       get {
         switch (this.integerMode) {
@@ -1023,8 +1006,8 @@ bigrem = divrem[1]; }
       return new String(chars, 0, count);
     }
 
-    /// <summary>Converts this object to a text string.</summary>
-    /// <returns>A string representation of this object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.ToString"]'/>
     public override string ToString() {
       switch (this.integerMode) {
         case 0:
@@ -1037,8 +1020,8 @@ bigrem = divrem[1]; }
       }
     }
 
-    /// <summary>Gets the sign of this object&#x27;s value.</summary>
-    /// <value>1 if positive, -1 if negative, 0 if zero.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.FastInteger.Sign"]'/>
     internal int Sign {
       get {
         switch (this.integerMode) {
@@ -1054,9 +1037,8 @@ bigrem = divrem[1]; }
       }
     }
 
-    /// <summary>Gets a value indicating whether this value is
-    /// zero.</summary>
-    /// <value>True if this value is zero; otherwise, false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.FastInteger.IsValueZero"]'/>
     internal bool IsValueZero {
       get {
         switch (this.integerMode) {

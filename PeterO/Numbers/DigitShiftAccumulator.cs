@@ -11,10 +11,8 @@ namespace PeterO.Numbers {
   internal sealed class DigitShiftAccumulator : IShiftAccumulator {
     private int bitLeftmost;
 
-    /// <summary>Gets a value indicating whether the last discarded digit
-    /// was set.</summary>
-    /// <value>True if the last discarded digit was set; otherwise,
-    /// false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.DigitShiftAccumulator.LastDiscardedDigit"]'/>
     public int LastDiscardedDigit {
       get {
         return this.bitLeftmost;
@@ -23,10 +21,8 @@ namespace PeterO.Numbers {
 
     private int bitsAfterLeftmost;
 
-    /// <summary>Gets a value indicating whether any of the discarded
-    /// digits to the right of the last one was set.</summary>
-    /// <value>True if any of the discarded digits to the right of the last
-    /// one was set; otherwise, false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.DigitShiftAccumulator.OlderDiscardedDigits"]'/>
     public int OlderDiscardedDigits {
       get {
         return this.bitsAfterLeftmost;
@@ -54,8 +50,8 @@ namespace PeterO.Numbers {
 
     private static readonly EInteger valueTen = (EInteger)10;
 
-    /// <summary>Gets the current integer after shifting.</summary>
-    /// <value>The current integer after shifting.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.DigitShiftAccumulator.ShiftedInt"]'/>
     public EInteger ShiftedInt {
       get {
         return this.isSmall ? ((EInteger)this.shiftedSmall) :

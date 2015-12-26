@@ -9,44 +9,30 @@ namespace PeterO.Cbor {
   using System;
   using System.Text;
 
-    /// <summary>Contains utility methods for processing Uniform Resource
-    /// Identifiers (URIs) and Internationalized Resource Identifiers
-    /// (IRIs) under RFC3986 and RFC3987, respectively. In the following
-    /// documentation, URIs and IRIs include URI references and IRI
-    /// references, for convenience.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.Cbor.URIUtility"]'/>
   internal static class URIUtility {
-    /// <summary>Specifies whether certain characters are allowed when
-    /// parsing IRIs and URIs.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.Cbor.URIUtility.ParseMode"]'/>
     internal enum ParseMode {
-    /// <summary>The rules follow the syntax for parsing IRIs. In
-    /// particular, many code points outside the Basic Latin range (U +
-    /// 0000 to U + 007F) are allowed. Strings with unpaired surrogate code
-    /// points are considered invalid.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.URIUtility.ParseMode.IRIStrict"]'/>
       IRIStrict,
 
-    /// <summary>The rules follow the syntax for parsing IRIs, except that
-    /// code points outside the Basic Latin range (U + 0000 to U + 007F)
-    /// are not allowed.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.URIUtility.ParseMode.URIStrict"]'/>
       URIStrict,
 
-    /// <summary>The rules only check for the appropriate delimiters when
-    /// splitting the path, without checking if all the characters in each
-    /// component are valid. Even with this mode, strings with unpaired
-    /// surrogate code points are considered invalid.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.URIUtility.ParseMode.IRILenient"]'/>
       IRILenient,
 
-    /// <summary>The rules only check for the appropriate delimiters when
-    /// splitting the path, without checking if all the characters in each
-    /// component are valid. Code points outside the Basic Latin range (U +
-    /// 0000 to U + 007F) are not allowed.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.URIUtility.ParseMode.URILenient"]'/>
       URILenient,
 
-    /// <summary>The rules only check for the appropriate delimiters when
-    /// splitting the path, without checking if all the characters in each
-    /// component are valid. Unpaired surrogate code points are treated as
-    /// though they were replacement characters instead for the purposes of
-    /// these rules, so that strings with those code points are not
-    /// considered invalid strings.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.URIUtility.ParseMode.IRISurrogateLenient"]'/>
       IRISurrogateLenient
     }
 
@@ -125,13 +111,8 @@ segments[1] - segments[0]));
       }
     }
 
-    /// <summary>Escapes characters that cannot appear in URIs or IRIs. The
-    /// function is idempotent; that is, calling the function again on the
-    /// result with the same mode doesn't change the result.</summary>
-    /// <param name='s'>A string to escape.</param>
-    /// <param name='mode'>A 32-bit signed integer.</param>
-    /// <returns>A string possibly containing escaped characters, or null
-    /// if s is null.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.escapeURI(System.String,System.Int32)"]'/>
     public static string escapeURI(string s, int mode) {
       if (s == null) {
         return null;
@@ -243,19 +224,8 @@ ParseMode.IRISurrogateLenient);
       return builder.ToString();
     }
 
-    /// <summary>
-    /// Determines whether the string is a valid IRI with a
-    /// scheme component. This can be used to check for
-    /// relative IRI references.
-    /// <para>The following cases return true:</para>
-    /// <code> xx-x:mm example:/ww </code>
-    ///  The following cases return false:
-    /// <code> x@y:/z /x/y/z example.xyz </code>
-    /// </summary>
-    /// <param name='refValue'>A string representing an IRI to
-    /// check.</param>
-    /// <returns>True if the string is a valid IRI with a scheme component;
-    /// otherwise, false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.hasScheme(System.String)"]'/>
     public static bool hasScheme(string refValue) {
       int[] segments = (refValue == null) ? null : splitIRI(
         refValue,
@@ -265,19 +235,8 @@ ParseMode.IRISurrogateLenient);
       return segments != null && segments[0] >= 0;
     }
 
-    /// <summary>
-    /// Determines whether the string is a valid URI with a
-    /// scheme component. This can be used to check for
-    /// relative URI references. The following cases return
-    /// true:
-    /// <code> http://example/z xx-x:mm example:/ww </code>
-    ///  The following cases return false:
-    /// <code> x@y:/z /x/y/z example.xyz </code>
-    /// </summary>
-    /// <param name='refValue'>A string representing an IRI to
-    /// check.</param>
-    /// <returns>True if the string is a valid URI with a scheme component;
-    /// otherwise, false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.hasSchemeForURI(System.String)"]'/>
     public static bool hasSchemeForURI(string refValue) {
       int[] segments = (refValue == null) ? null : splitIRI(
         refValue,
@@ -342,24 +301,8 @@ ParseMode.IRISurrogateLenient);
         (c >= 0x10000 && c <= 0xefffd && (c & 0xfffe) != 0xfffe);
     }
 
-    /// <summary>Determines whether the substring is a valid CURIE
-    /// reference under RDFA 1.1. (The CURIE reference is the part after
-    /// the colon.).</summary>
-    /// <param name='s'>A string containing a CURIE reference. Can be
-    /// null.</param>
-    /// <param name='offset'>A zero-based index showing where the desired
-    /// portion of "s" begins.</param>
-    /// <param name='length'>The number of elements in the desired portion
-    /// of "s" (but not more than "s" 's length).</param>
-    /// <returns>True if the substring is a valid CURIE reference under
-    /// RDFA 1; otherwise, false. Returns false if <paramref name='s'/> is
-    /// null.</returns>
-    /// <exception cref='ArgumentException'>Either <paramref
-    /// name='offset'/> or <paramref name='length'/> is less than 0 or
-    /// greater than <paramref name='s'/> 's length, or <paramref
-    /// name='s'/> 's length minus <paramref name='offset'/> is less than
-    /// <paramref name='length'/>.</exception>
-    /// <exception cref='ArgumentNullException'>--.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.isValidCurieReference(System.String,System.Int32,System.Int32)"]'/>
     public static bool isValidCurieReference(string s, int offset, int length) {
       if (s == null) {
         return false;
@@ -838,31 +781,14 @@ int endIndex) {
       }
     }
 
-    /// <summary>Resolves a URI or IRI relative to another URI or
-    /// IRI.</summary>
-    /// <param name='refValue'>A string representing a URI or IRI
-    /// reference. Example: <c>dir/file.txt</c>.</param>
-    /// <param name='baseURI'>A string representing an absolute URI
-    /// reference. Example: <c>http://example.com/my/path/</c>.</param>
-    /// <returns>The resolved IRI, or null if <paramref name='refValue'/>
-    /// is null or is not a valid IRI. If base is null or is not a valid
-    /// IRI, returns refValue. Example:
-    /// http://example.com/my/path/dir/file.txt.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.relativeResolve(System.String,System.String)"]'/>
     public static string relativeResolve(string refValue, string baseURI) {
       return relativeResolve(refValue, baseURI, ParseMode.IRIStrict);
     }
 
-    /// <summary>Resolves a URI or IRI relative to another URI or
-    /// IRI.</summary>
-    /// <param name='refValue'>A string representing a URI or IRI
-    /// reference. Example: <c>dir/file.txt</c>. Can be null.</param>
-    /// <param name='baseURI'>A string representing an absolute URI
-    /// reference. Example: <c>http://example.com/my/path/</c>.</param>
-    /// <param name='parseMode'>Parse mode that specifies whether certain
-    /// characters are allowed when parsing IRIs and URIs.</param>
-    /// <returns>The resolved IRI, or null if <paramref name='refValue'/>
-    /// is null or is not a valid IRI. If base is null or is not a valid
-    /// IRI, returns refValue.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.relativeResolve(System.String,System.String,PeterO.Cbor.URIUtility.ParseMode)"]'/>
     public static string relativeResolve(
 string refValue,
 string baseURI,
@@ -934,47 +860,14 @@ segmentsBase[5]));
       return builder.ToString();
     }
 
-    /// <summary>Parses an Internationalized Resource Identifier (IRI)
-    /// reference under RFC3987. If the IRI reference is syntactically
-    /// valid, splits the string into its components and returns an array
-    /// containing the indices into the components.
-    /// <returns>If the string is a valid IRI reference, returns an array
-    /// of 10 integers. Each of the five pairs corresponds to the start and
-    /// end index of the IRI's scheme, authority, path, query, or fragment
-    /// component, respectively. If a component is absent, both indices in
-    /// that pair will be -1. If the string is null or is not a valid IRI,
-    /// returns null.</returns></summary>
-    /// <param name='s'>A string that contains an IRI. Can be null.</param>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.splitIRI(System.String)"]'/>
     public static int[] splitIRI(string s) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict);
     }
 
-    /// <summary>Parses a substring that represents an Internationalized
-    /// Resource Identifier (IRI) under RFC3987. If the IRI is
-    /// syntactically valid, splits the string into its components and
-    /// returns an array containing the indices into the
-    /// components.</summary>
-    /// <param name='s'>A string that contains an IRI. Can be null.</param>
-    /// <param name='offset'>A zero-based index showing where the desired
-    /// portion of "s" begins.</param>
-    /// <param name='length'>The length of the desired portion of "s" (but
-    /// not more than "s" 's length).</param>
-    /// <param name='parseMode'>Parse mode that specifies whether certain
-    /// characters are allowed when parsing IRIs and URIs.</param>
-    /// <returns>If the string is a valid IRI, returns an array of 10
-    /// integers. Each of the five pairs corresponds to the start and end
-    /// index of the IRI's scheme, authority, path, query, or fragment
-    /// component, respectively. If a component is absent, both indices in
-    /// that pair will be -1 (an index won't be less than 0 in any other
-    /// case). If the string is null or is not a valid IRI, returns
-    /// null.</returns>
-    /// <exception cref='ArgumentException'>Either <paramref
-    /// name='offset'/> or <paramref name='length'/> is less than 0 or
-    /// greater than <paramref name='s'/> 's length, or <paramref
-    /// name='s'/> 's length minus <paramref name='offset'/> is less than
-    /// <paramref name='length'/>.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='s'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.splitIRI(System.String,System.Int32,System.Int32,PeterO.Cbor.URIUtility.ParseMode)"]'/>
     public static int[] splitIRI(
 string s,
 int offset,
@@ -1227,18 +1120,8 @@ if (s.Length-offset < length) {
       return retval;
     }
 
-    /// <summary>Parses an Internationalized Resource Identifier (IRI)
-    /// reference under RFC3987. If the IRI is syntactically valid, splits
-    /// the string into its components and returns an array containing the
-    /// indices into the components.</summary>
-    /// <param name='s'>A string representing an IRI. Can be null.</param>
-    /// <param name='parseMode'>A ParseMode object.</param>
-    /// <returns>If the string is a valid IRI reference, returns an array
-    /// of 10 integers. Each of the five pairs corresponds to the start and
-    /// end index of the IRI's scheme, authority, path, query, or fragment
-    /// component, respectively. If a component is absent, both indices in
-    /// that pair will be -1. If the string is null or is not a valid IRI,
-    /// returns null.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.splitIRI(System.String,PeterO.Cbor.URIUtility.ParseMode)"]'/>
     public static int[] splitIRI(string s, ParseMode parseMode) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, parseMode);
     }

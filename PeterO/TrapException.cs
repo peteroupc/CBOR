@@ -9,44 +9,34 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO {
-    /// <summary>Exception thrown for arithmetic trap errors.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.TrapException"]'/>
   public class TrapException : ArithmeticException {
 
     // TODO: Edit ExtendedDecimal and ExtendedFloat methods to
     // catch ETrapException and rethrow TrapException
     internal readonly ETrapException ete;
 
-    /// <summary>Gets the precision context used during the operation that
-    /// triggered the trap. May be null.</summary>
-    /// <value>The precision context used during the operation that
-    /// triggered the trap. May be null.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.TrapException.Context"]'/>
     public PrecisionContext Context { get {
         return new PrecisionContext(ete.Context);
 } }
 
-    /// <summary>Gets the defined result of the operation that caused the
-    /// trap.</summary>
-    /// <value>The defined result of the operation that caused the
-    /// trap.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.TrapException.Result"]'/>
     public Object Result { get {
         return ete.Result;
 } }
 
-    /// <summary>Gets the flag that specifies the kind of error
-    /// (PrecisionContext.FlagXXX). This will only be one flag, such as
-    /// FlagInexact or FlagSubnormal.</summary>
-    /// <value>The flag that specifies the kind of error
-    /// (PrecisionContext.FlagXXX). This will only be one flag, such as
-    /// FlagInexact or FlagSubnormal.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.TrapException.Error"]'/>
     public int Error { get {
         return ete.Error;
 } }
 
-    /// <summary>Initializes a new instance of the TrapException
-    /// class.</summary>
-    /// <param name='flag'>A 32-bit signed integer.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <param name='result'>An arbitrary object.</param>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.TrapException.#ctor(System.Int32,PeterO.PrecisionContext,System.Object)"]'/>
     public TrapException(int flag, PrecisionContext ctx, Object result) {
       Object wrappedResult = result;
       var ed = result as EDecimal;

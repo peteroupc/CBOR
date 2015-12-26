@@ -10,29 +10,20 @@ using System;
 namespace PeterO.Numbers {
     /// <summary>An arbitrary-precision integer.</summary>
   internal sealed partial class EInteger {
-    /// <summary>Converts the value of a 64-bit signed integer to
-    /// EInteger.</summary>
-    /// <param name='bigValue'>A 64-bit signed integer.</param>
-    /// <returns>A EInteger object with the same value as the Int64
-    /// object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Implicit(System.Int64)~PeterO.Numbers.EInteger"]'/>
     public static implicit operator EInteger(long bigValue) {
       return FromInt64(bigValue);
     }
 
-    /// <summary>Converts the value of a 32-bit signed integer to
-    /// EInteger.</summary>
-    /// <param name='smallValue'>A 32-bit signed integer.</param>
-    /// <returns>A EInteger object with the same value as the Int32
-    /// object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Implicit(System.Int32)~PeterO.Numbers.EInteger"]'/>
     public static implicit operator EInteger(int smallValue) {
       return FromInt64((long)smallValue);
     }
 
-    /// <summary>Adds a EInteger object and a EInteger
-    /// object.</summary>
-    /// <returns>The sum of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bthis'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Addition(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public static EInteger operator +(EInteger bthis, EInteger augend) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
@@ -40,12 +31,8 @@ namespace PeterO.Numbers {
       return bthis.add(augend);
     }
 
-    /// <summary>Subtracts two EInteger values.</summary>
-    /// <param name='bthis'>A EInteger value.</param>
-    /// <param name='subtrahend'>A EInteger object.</param>
-    /// <returns>The difference of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bthis'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Subtraction(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
  public static EInteger operator -(
 EInteger bthis,
 EInteger subtrahend) {
@@ -55,11 +42,8 @@ EInteger subtrahend) {
       return bthis.Subtract(subtrahend);
     }
 
-    /// <summary>Multiplies a EInteger object by the value of a
-    /// EInteger object.</summary>
-    /// <returns>The product of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='operand1'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Multiply(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
 public static EInteger operator *(
 EInteger operand1,
 EInteger operand2) {
@@ -69,11 +53,8 @@ EInteger operand2) {
       return operand1.multiply(operand2);
     }
 
-    /// <summary>Divides a EInteger object by the value of a EInteger
-    /// object.</summary>
-    /// <returns>The quotient of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='dividend'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Division(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
  public static EInteger operator /(
 EInteger dividend,
 EInteger divisor) {
@@ -83,11 +64,8 @@ EInteger divisor) {
       return dividend.divide(divisor);
     }
 
-    /// <summary>Finds the remainder that results when a EInteger object
-    /// is divided by the value of a EInteger object.</summary>
-    /// <returns>The remainder of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='dividend'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Modulus(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
  public static EInteger operator %(
 EInteger dividend,
 EInteger divisor) {
@@ -97,11 +75,8 @@ EInteger divisor) {
       return dividend.remainder(divisor);
     }
 
-    /// <param name='bthis'>Another EInteger object.</param>
-    /// <param name='bitCount'>A 32-bit signed integer.</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bthis'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_LeftShift(PeterO.Numbers.EInteger,System.Int32)"]'/>
     public static EInteger operator <<(EInteger bthis, int bitCount) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
@@ -109,12 +84,8 @@ EInteger divisor) {
       return bthis.ShiftLeft(bitCount);
     }
 
-    /// <summary>Calculates the remainder when a EInteger raised to a
-    /// certain power is divided by another EInteger.</summary>
-    /// <returns>The value (<paramref name='bigintValue'/> ^ <paramref
-    /// name='pow'/>)% <paramref name='mod'/>.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bigintValue'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.ModPow(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public static EInteger ModPow(
 EInteger bigintValue,
 EInteger pow,
@@ -125,16 +96,8 @@ EInteger mod) {
       return bigintValue.ModPow(pow, mod);
     }
 
-    /// <summary>Shifts the bits of a EInteger instance to the
-    /// right.</summary>
-    /// <param name='bthis'>Another EInteger object.</param>
-    /// <param name='bigValue'>A 32-bit signed integer.</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bthis'/> is null.</exception>
-    /// <remarks>For this operation, the EInteger is treated as a two's
-    /// complement representation. Thus, for negative values, the
-    /// EInteger is sign-extended.</remarks>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_RightShift(PeterO.Numbers.EInteger,System.Int32)"]'/>
     public static EInteger operator >>(EInteger bthis, int bigValue) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
@@ -142,11 +105,8 @@ EInteger mod) {
       return bthis.ShiftRight(bigValue);
     }
 
-    /// <summary>Negates a EInteger object.</summary>
-    /// <param name='bigValue'>Another EInteger object.</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bigValue'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_UnaryNegation(PeterO.Numbers.EInteger)"]'/>
     public static EInteger operator -(EInteger bigValue) {
       if (bigValue == null) {
         throw new ArgumentNullException("bigValue");
@@ -154,67 +114,41 @@ EInteger mod) {
       return bigValue.negate();
     }
 
-    /// <summary>Converts the value of a EInteger object to a 64-bit
-    /// signed integer.</summary>
-    /// <param name='bigValue'>A EInteger object.</param>
-    /// <returns>A 64-bit signed integer with the same value as the
-    /// EInteger object.</returns>
-    /// <exception cref='OverflowException'>This object's value is too big
-    /// to fit a 64-bit signed integer.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Explicit(PeterO.Numbers.EInteger)~System.Int64"]'/>
     public static explicit operator long(EInteger bigValue) {
       return bigValue.longValueChecked();
     }
 
-    /// <summary>Converts the value of a EInteger object to a 32-bit
-    /// signed integer.</summary>
-    /// <param name='bigValue'>A EInteger object.</param>
-    /// <returns>A 32-bit signed integer with the same value as the
-    /// EInteger object.</returns>
-    /// <exception cref='OverflowException'>This object's value is too big
-    /// to fit a 32-bit signed integer.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Explicit(PeterO.Numbers.EInteger)~System.Int32"]'/>
     public static explicit operator int(EInteger bigValue) {
       return bigValue.AsInt32Checked();
     }
 
-    /// <summary>Determines whether a EInteger instance is less than
-    /// another EInteger instance.</summary>
-    /// <param name='thisValue'>The first EInteger object.</param>
-    /// <param name='otherValue'>The second EInteger object.</param>
-    /// <returns>True if <paramref name='thisValue'/> is less than
-    /// <paramref name='otherValue'/> ; otherwise, false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_LessThan(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public static bool operator <(EInteger thisValue, EInteger otherValue) {
       return (thisValue == null) ? (otherValue != null) :
         (thisValue.CompareTo(otherValue) < 0);
     }
 
-    /// <summary>Determines whether a EInteger instance is less than or
-    /// equal to another EInteger instance.</summary>
-    /// <param name='thisValue'>The first EInteger object.</param>
-    /// <param name='otherValue'>The second EInteger object.</param>
-    /// <returns>True if <paramref name='thisValue'/> is up to <paramref
-    /// name='otherValue'/> ; otherwise, false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_LessThanOrEqual(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
   public static bool operator <=(
 EInteger thisValue,
 EInteger otherValue) {
       return (thisValue == null) || (thisValue.CompareTo(otherValue) <= 0);
     }
 
-    /// <summary>Determines whether a EInteger instance is greater than
-    /// another EInteger instance.</summary>
-    /// <param name='thisValue'>The first EInteger object.</param>
-    /// <param name='otherValue'>The second EInteger object.</param>
-    /// <returns>True if <paramref name='thisValue'/> is greater than
-    /// <paramref name='otherValue'/> ; otherwise, false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_GreaterThan(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public static bool operator >(EInteger thisValue, EInteger otherValue) {
       return (thisValue != null) && (thisValue.CompareTo(otherValue) > 0);
     }
 
-    /// <summary>Determines whether a EInteger value is greater than
-    /// another EInteger value.</summary>
-    /// <param name='thisValue'>The first EInteger object.</param>
-    /// <param name='otherValue'>The second EInteger object.</param>
-    /// <returns>True if <paramref name='thisValue'/> is at least <paramref
-    /// name='otherValue'/> ; otherwise, false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_GreaterThanOrEqual(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
   public static bool operator >=(
 EInteger thisValue,
 EInteger otherValue) {
@@ -233,14 +167,8 @@ EInteger otherValue) {
       return v;
     }
 
-    /// <param name='dividend'>Big integer to be divided.</param>
-    /// <param name='divisor'>A EInteger object. (3).</param>
-    /// <param name='remainder'>A EInteger object. (4).</param>
-    /// <returns>An array of two big integers: the first is the quotient,
-    /// and the second is the remainder.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='dividend'/> or <paramref name='divisor'/> is
-    /// null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.DivRem(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger,PeterO.Numbers.EInteger@)"]'/>
     public static EInteger DivRem(
 EInteger dividend,
 EInteger divisor,
@@ -256,11 +184,8 @@ out EInteger remainder) {
       return result[0];
     }
 
-    /// <param name='bigintFirst'>Another EInteger object.</param>
-    /// <param name='bigintSecond'>A EInteger object. (3).</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bigintFirst'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.GreatestCommonDivisor(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public static EInteger GreatestCommonDivisor(
 EInteger bigintFirst,
 EInteger bigintSecond) {
@@ -270,11 +195,8 @@ EInteger bigintSecond) {
       return bigintFirst.gcd(bigintSecond);
     }
 
-    /// <param name='bigValue'>Another EInteger object.</param>
-    /// <param name='power'>A EInteger object. (3).</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bigValue'/> or <paramref name='power'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Pow(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public static EInteger Pow(EInteger bigValue, EInteger power) {
       if (bigValue == null) {
         throw new ArgumentNullException("bigValue");
@@ -296,11 +218,8 @@ EInteger bigintSecond) {
       return val;
     }
 
-    /// <param name='bigValue'>Another EInteger object.</param>
-    /// <param name='power'>A 32-bit signed integer.</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bigValue'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Pow(PeterO.Numbers.EInteger,System.Int32)"]'/>
     public static EInteger Pow(EInteger bigValue, int power) {
       if (bigValue == null) {
         throw new ArgumentNullException("bigValue");
@@ -340,11 +259,8 @@ EInteger bigintSecond) {
       return (other != null) && (this.CompareTo(other) == 0);
     }
 
-    /// <summary>Returns a EInteger with every bit flipped.</summary>
-    /// <param name='valueA'>Another EInteger object.</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='valueA'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Not(PeterO.Numbers.EInteger)"]'/>
     public static EInteger Not(EInteger valueA) {
       if (valueA == null) {
         throw new ArgumentNullException("valueA");
@@ -369,15 +285,8 @@ EInteger bigintSecond) {
         EInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
-    /// <summary>Does an AND operation between two EInteger
-    /// values.</summary>
-    /// <param name='a'>A EInteger instance.</param>
-    /// <param name='b'>Another EInteger instance.</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='a'/> or <paramref name='b'/> is null.</exception>
-    /// <remarks>Each EInteger instance is treated as a two's complement
-    /// representation for the purposes of this operator.</remarks>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.And(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public static EInteger And(EInteger a, EInteger b) {
       if (a == null) {
         throw new ArgumentNullException("a");
@@ -426,15 +335,8 @@ Math.Max(valueXaReg.Length, valueXbReg.Length));
         EInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
-    /// <summary>Does an OR operation between two EInteger
-    /// instances.</summary>
-    /// <param name='first'>Another EInteger object.</param>
-    /// <param name='second'>A EInteger object. (3).</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='first'/> or <paramref name='second'/> is null.</exception>
-    /// <remarks>Each EInteger instance is treated as a two's complement
-    /// representation for the purposes of this operator.</remarks>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Or(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public static EInteger Or(EInteger first, EInteger second) {
       if (first == null) {
         throw new ArgumentNullException("first");
@@ -480,15 +382,8 @@ Math.Max(valueXaReg.Length, valueXbReg.Length));
         EInteger(valueXaWordCount, valueXaReg, valueXaNegative));
     }
 
-    /// <summary>Finds the exclusive "or" of two EInteger
-    /// objects.</summary>
-    /// <param name='a'>A EInteger instance.</param>
-    /// <param name='b'>Another EInteger instance.</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='a'/> or <paramref name='b'/> is null.</exception>
-    /// <remarks>Each EInteger instance is treated as a two's complement
-    /// representation for the purposes of this operator.</remarks>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Xor(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public static EInteger Xor(EInteger a, EInteger b) {
       if (a == null) {
         throw new ArgumentNullException("a");

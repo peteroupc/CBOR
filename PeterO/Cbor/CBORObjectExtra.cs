@@ -13,11 +13,8 @@ namespace PeterO.Cbor {
   // because they are not CLS-compliant or they
   // are specific to the .NET framework.
   public sealed partial class CBORObject {
-    /// <summary>Converts this object to a 16-bit unsigned integer. The
-    /// return value will be truncated as necessary.</summary>
-    /// <returns>A 16-bit unsigned integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is outside
-    /// the range of a 16-bit unsigned integer.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsUInt16"]'/>
     [CLSCompliant(false)]
     public ushort AsUInt16() {
       int v = this.AsInt32();
@@ -27,11 +24,8 @@ namespace PeterO.Cbor {
       return (ushort)v;
     }
 
-    /// <summary>Converts this object to a 32-bit unsigned integer. The
-    /// return value will be truncated as necessary.</summary>
-    /// <returns>A 32-bit unsigned integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is outside
-    /// the range of a 32-bit unsigned integer.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsUInt32"]'/>
     [CLSCompliant(false)]
     public uint AsUInt32() {
       ulong v = this.AsUInt64();
@@ -41,8 +35,8 @@ namespace PeterO.Cbor {
       return (uint)v;
     }
 
-    /// <summary>Converts this object to an 8-bit signed integer.</summary>
-    /// <returns>An 8-bit signed integer.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsSByte"]'/>
     [CLSCompliant(false)]
     public sbyte AsSByte() {
       int v = this.AsInt32();
@@ -154,12 +148,8 @@ newDecimal.Mantissa.Sign < 0);
       }
     }
 
-    /// <summary>Converts this object to a .NET decimal.</summary>
-    /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object's
-    /// type is not a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object's value
-    /// exceeds the range of a .NET decimal.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsDecimal"]'/>
     [CLSCompliant(false)]
     public decimal AsDecimal() {
       return (this.ItemType == CBORObjectTypeInteger) ?
@@ -169,13 +159,8 @@ newDecimal.Mantissa.Sign < 0);
         ExtendedDecimalToDecimal(this.AsExtendedDecimal()));
     }
 
-    /// <summary>Converts this object to a 64-bit unsigned integer.
-    /// Floating point values are truncated to an integer.</summary>
-    /// <returns>The closest big integer to this object.</returns>
-    /// <exception cref='System.InvalidOperationException'>This object's
-    /// type is not a number type.</exception>
-    /// <exception cref='System.OverflowException'>This object's value
-    /// exceeds the range of a 64-bit unsigned integer.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsUInt64"]'/>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
       BigInteger bigint = this.AsBigInteger();
@@ -202,21 +187,15 @@ newDecimal.Mantissa.Sign < 0);
       }
     }
 
-    /// <summary>Writes an 8-bit signed integer in CBOR format to a data
-    /// stream.</summary>
-    /// <param name='value'>An 8-bit signed integer.</param>
-    /// <param name='stream'>A writable data stream.</param>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.SByte,System.IO.Stream)"]'/>
     [CLSCompliant(false)]
     public static void Write(sbyte value, Stream stream) {
       Write((long)value, stream);
     }
 
-    /// <summary>Writes a 64-bit unsigned integer in CBOR format to a data
-    /// stream.</summary>
-    /// <param name='value'>A 64-bit unsigned integer.</param>
-    /// <param name='stream'>A writable data stream.</param>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='stream'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.UInt64,System.IO.Stream)"]'/>
     [CLSCompliant(false)]
     public static void Write(ulong value, Stream stream) {
       if (stream == null) {
@@ -237,10 +216,8 @@ newDecimal.Mantissa.Sign < 0);
       }
     }
 
-    /// <summary>Converts a .NET decimal to a CBOR object.</summary>
-    /// <param name='value'>A Decimal object.</param>
-    /// <returns>A CBORObject object with the same value as the .NET
-    /// decimal.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Decimal)"]'/>
     public static CBORObject FromObject(decimal value) {
       int[] bits = Decimal.GetBits(value);
       int scale = (bits[3] >> 16) & 0xff;
@@ -274,28 +251,22 @@ new[] { FromObject(-scale),
  4);
     }
 
-    /// <summary>Writes a 32-bit unsigned integer in CBOR format to a data
-    /// stream.</summary>
-    /// <param name='value'>A 32-bit unsigned integer.</param>
-    /// <param name='stream'>A writable data stream.</param>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.UInt32,System.IO.Stream)"]'/>
     [CLSCompliant(false)]
     public static void Write(uint value, Stream stream) {
       Write((ulong)value, stream);
     }
 
-    /// <summary>Writes a 16-bit unsigned integer in CBOR format to a data
-    /// stream.</summary>
-    /// <param name='value'>A 16-bit unsigned integer.</param>
-    /// <param name='stream'>A writable data stream.</param>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.UInt16,System.IO.Stream)"]'/>
     [CLSCompliant(false)]
     public static void Write(ushort value, Stream stream) {
       Write((ulong)value, stream);
     }
 
-    /// <summary>Converts a signed 8-bit integer to a CBOR
-    /// object.</summary>
-    /// <param name='value'>An 8-bit signed integer.</param>
-    /// <returns>A CBORObject object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.SByte)"]'/>
     [CLSCompliant(false)]
     public static CBORObject FromObject(sbyte value) {
       return FromObject((long)value);
@@ -316,86 +287,60 @@ new[] { FromObject(-scale),
       return BigInteger.fromBytes(data, true);
     }
 
-    /// <summary>Converts a 64-bit unsigned integer to a CBOR
-    /// object.</summary>
-    /// <param name='value'>A 64-bit unsigned integer.</param>
-    /// <returns>A CBORObject object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.UInt64)"]'/>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ulong value) {
       return CBORObject.FromObject(UInt64ToBigInteger(value));
     }
 
-    /// <summary>Converts a 32-bit unsigned integer to a CBOR
-    /// object.</summary>
-    /// <param name='value'>A 32-bit unsigned integer.</param>
-    /// <returns>A CBORObject object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.UInt32)"]'/>
     [CLSCompliant(false)]
     public static CBORObject FromObject(uint value) {
       return FromObject((long)(Int64)value);
     }
 
-    /// <summary>Converts a 16-bit unsigned integer to a CBOR
-    /// object.</summary>
-    /// <param name='value'>A 16-bit unsigned integer.</param>
-    /// <returns>A CBORObject object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.UInt16)"]'/>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ushort value) {
       return FromObject((long)(Int64)value);
     }
 
-    /// <summary>Generates a CBOR object from an arbitrary object and gives
-    /// the resulting object a tag.</summary>
-    /// <param name='o'>An arbitrary object.</param>
-    /// <param name='tag'>A 64-bit unsigned integer.</param>
-    /// <returns>A CBOR object where the object <paramref name='o'/> is
-    /// converted to a CBOR object and given the tag <paramref name='tag'/>
-    /// .</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.UInt64)"]'/>
     [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
       return FromObjectAndTag(o, UInt64ToBigInteger(tag));
     }
 
-    /// <summary>Adds a CBORObject object and a CBORObject
-    /// object.</summary>
-    /// <param name='a'>A CBORObject object.</param>
-    /// <param name='b'>Another CBORObject object.</param>
-    /// <returns>The sum of the two objects.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]'/>
     public static CBORObject operator +(CBORObject a, CBORObject b) {
       return Addition(a, b);
     }
 
-    /// <summary>Subtracts a CBORObject object from a CBORObject
-    /// object.</summary>
-    /// <param name='a'>A CBORObject object.</param>
-    /// <param name='b'>Another CBORObject object.</param>
-    /// <returns>The difference of the two objects.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Subtraction(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]'/>
     public static CBORObject operator -(CBORObject a, CBORObject b) {
       return Subtract(a, b);
     }
 
-    /// <summary>Multiplies a CBORObject object by the value of a
-    /// CBORObject object.</summary>
-    /// <param name='a'>A CBORObject object.</param>
-    /// <param name='b'>Another CBORObject object.</param>
-    /// <returns>The product of the two objects.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]'/>
     public static CBORObject operator *(CBORObject a, CBORObject b) {
       return Multiply(a, b);
     }
 
-    /// <summary>Divides a CBORObject object by the value of a CBORObject
-    /// object.</summary>
-    /// <param name='a'>A CBORObject object.</param>
-    /// <param name='b'>Another CBORObject object.</param>
-    /// <returns>The quotient of the two objects.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Division(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]'/>
     public static CBORObject operator /(CBORObject a, CBORObject b) {
       return Divide(a, b);
     }
 
-    /// <summary>Finds the remainder that results when a CBORObject object
-    /// is divided by the value of a CBORObject object.</summary>
-    /// <param name='a'>A CBORObject object.</param>
-    /// <param name='b'>Another CBORObject object.</param>
-    /// <returns>The remainder of the two objects.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Modulus(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]'/>
     public static CBORObject operator %(CBORObject a, CBORObject b) {
       return Remainder(a, b);
     }

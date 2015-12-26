@@ -1,29 +1,28 @@
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Specifies options for encoding and decoding CBOR
-    /// objects.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBOREncodeOptions"]'/>
   public sealed class CBOREncodeOptions {
-    /// <summary>No special options for encoding/decoding. Value:
-    /// 0.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.None"]'/>
     public static readonly CBOREncodeOptions None =
       new CBOREncodeOptions(0);
 
-    /// <summary>Always encode strings with a definite-length encoding.
-    /// Used only when encoding CBOR objects. Value: 1.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.NoIndefLengthStrings"]'/>
     public static readonly CBOREncodeOptions NoIndefLengthStrings =
       new CBOREncodeOptions(1);
 
-    /// <summary>Disallow duplicate keys when reading CBOR objects from a
-    /// data stream. Used only when decoding CBOR objects. Value:
-    /// 2.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Cbor.CBOREncodeOptions.NoDuplicateKeys"]'/>
     public static readonly CBOREncodeOptions NoDuplicateKeys =
       new CBOREncodeOptions(2);
 
     private readonly int value;
 
-    /// <summary>Gets this options object's value.</summary>
-    /// <value>This options object&apos;s value.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBOREncodeOptions.Value"]'/>
     public int Value {
       get {
  return this.value;
@@ -34,18 +33,14 @@ namespace PeterO.Cbor {
       this.value = value;
     }
 
-    /// <summary>Combines the flags of this options object with another
-    /// options object.</summary>
-    /// <param name='o'>Another CBOREncodeOptions object.</param>
-    /// <returns>A CBOREncodeOptions object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.Or(PeterO.Cbor.CBOREncodeOptions)"]'/>
     public CBOREncodeOptions Or(CBOREncodeOptions o) {
       return new CBOREncodeOptions(this.value | o.value);
     }
 
-    /// <summary>Returns an options object whose flags are shared by this
-    /// and another options object.</summary>
-    /// <param name='o'>Another CBOREncodeOptions object.</param>
-    /// <returns>A CBOREncodeOptions object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBOREncodeOptions.And(PeterO.Cbor.CBOREncodeOptions)"]'/>
     public CBOREncodeOptions And(CBOREncodeOptions o) {
       return new CBOREncodeOptions(this.value & o.value);
     }

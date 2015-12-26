@@ -8,17 +8,14 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-    /// <summary>Arbitrary-precision rational number. This class cannot be
-    /// inherited; this is a change in version 2.0 from previous versions,
-    /// where the class was inadvertently left inheritable.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.Numbers.ERational"]'/>
   internal sealed class ERational : IComparable<ERational>,
     IEquatable<ERational> {
     private EInteger unsignedNumerator;
 
-    /// <summary>Gets this object's numerator.</summary>
-    /// <value>This object&apos;s numerator. If this object is a
-    /// not-a-number value, returns the diagnostic information (which will
-    /// be negative if this object is negative).</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.Numerator"]'/>
     public EInteger Numerator {
       get {
         return this.IsNegative ? (-(EInteger)this.unsignedNumerator) :
@@ -26,10 +23,8 @@ namespace PeterO.Numbers {
       }
     }
 
-    /// <summary>Gets this object's numerator with the sign
-    /// removed.</summary>
-    /// <value>This object&apos;s numerator. If this object is a
-    /// not-a-number value, returns the diagnostic information.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.UnsignedNumerator"]'/>
     public EInteger UnsignedNumerator {
       get {
         return this.unsignedNumerator;
@@ -38,8 +33,8 @@ namespace PeterO.Numbers {
 
     private EInteger denominator;
 
-    /// <summary>Gets this object's denominator.</summary>
-    /// <value>This object&apos;s denominator.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.Denominator"]'/>
     public EInteger Denominator {
       get {
         return this.denominator;
@@ -49,10 +44,8 @@ namespace PeterO.Numbers {
     private int flags;
 
     #region Equals and GetHashCode implementation
-    /// <summary>Determines whether this object and another object are
-    /// equal.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>True if the objects are equal; otherwise, false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Equals(System.Object)"]'/>
     public override bool Equals(object obj) {
       var other = obj as ERational;
       return (
@@ -64,8 +57,8 @@ this.denominator,
 other.denominator) && this.flags == other.flags);
     }
 
-    /// <summary>Returns the hash code for this instance.</summary>
-    /// <returns>A 32-bit hash code.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.GetHashCode"]'/>
     public override int GetHashCode() {
       var hashCode = 1857066527;
       unchecked {
@@ -81,36 +74,24 @@ other.denominator) && this.flags == other.flags);
     }
     #endregion
 
-    /// <summary>Creates a number with the given numerator and
-    /// denominator.</summary>
-    /// <param name='numeratorSmall'>A 32-bit signed integer.</param>
-    /// <param name='denominatorSmall'>A 32-bit signed integer.
-    /// (2).</param>
-    /// <returns>An ERational object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Create(System.Int32,System.Int32)"]'/>
     public static ERational Create(
 int numeratorSmall,
 int denominatorSmall) {
       return Create((EInteger)numeratorSmall, (EInteger)denominatorSmall);
     }
 
-    /// <summary>Creates a number with the given numerator and
-    /// denominator.</summary>
-    /// <param name='numerator'>A BigInteger object.</param>
-    /// <param name='denominator'>Another BigInteger object.</param>
-    /// <returns>An ERational object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Create(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public static ERational Create(
 EInteger numerator,
 EInteger denominator) {
       return new ERational(numerator, denominator);
     }
 
-    /// <summary>Initializes a new instance of the ExtendedRational
-    /// class.</summary>
-    /// <param name='numerator'>A BigInteger object.</param>
-    /// <param name='denominator'>Another BigInteger object.</param>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='numerator'/> or <paramref name='denominator'/> is
-    /// null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.#ctor(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public ERational(EInteger numerator, EInteger denominator) {
       if (numerator == null) {
         throw new ArgumentNullException("numerator");
@@ -141,11 +122,8 @@ EInteger denominator) {
       this.denominator = denominator;
     }
 
-    /// <summary>Converts this object to a text string.</summary>
-    /// <returns>A string representation of this object. The result can be
-    /// Infinity, NaN, or sNaN (with a minus sign before it for negative
-    /// values), or a number of the following form:
-    /// [-]numerator/denominator.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToString"]'/>
     public override string ToString() {
       if (!this.IsFinite) {
         if (this.IsSignalingNaN()) {
@@ -169,54 +147,32 @@ EInteger denominator) {
       return this.Numerator + "/" + this.Denominator;
     }
 
-    /// <summary>Converts a big integer to a rational number.</summary>
-    /// <param name='bigint'>A BigInteger object.</param>
-    /// <returns>The exact value of the integer as a rational
-    /// number.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromBigInteger(PeterO.Numbers.EInteger)"]'/>
     public static ERational FromBigInteger(EInteger bigint) {
       return new ERational(bigint, EInteger.One);
     }
 
-    /// <summary>Converts this rational number to a decimal
-    /// number.</summary>
-    /// <returns>The exact value of the rational number, or not-a-number
-    /// (NaN) if the result can't be exact because it has a nonterminating
-    /// decimal expansion.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedDecimal"]'/>
     public EDecimal ToExtendedDecimal() {
       return this.ToExtendedDecimal(null);
     }
 
-    /// <summary>Converts a 32-bit floating-point number to a rational
-    /// number. This method computes the exact value of the floating point
-    /// number, not an approximation, as is often the case by converting
-    /// the number to a string.</summary>
-    /// <param name='flt'>A 32-bit floating-point number.</param>
-    /// <returns>A rational number with the same value as <paramref
-    /// name='flt'/>.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromSingle(System.Single)"]'/>
     public static ERational FromSingle(float flt) {
       return FromExtendedFloat(EFloat.FromSingle(flt));
     }
 
-    /// <summary>Converts a 64-bit floating-point number to a rational
-    /// number. This method computes the exact value of the floating point
-    /// number, not an approximation, as is often the case by converting
-    /// the number to a string.</summary>
-    /// <param name='flt'>A 64-bit floating-point number.</param>
-    /// <returns>A rational number with the same value as <paramref
-    /// name='flt'/>.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromDouble(System.Double)"]'/>
     public static ERational FromDouble(double flt) {
       return FromExtendedFloat(EFloat.FromDouble(flt));
     }
 
-    /// <summary>Creates a not-a-number ExtendedRational object.</summary>
-    /// <param name='diag'>A number to use as diagnostic information
-    /// associated with this object. If none is needed, should be
-    /// zero.</param>
-    /// <returns>An ERational object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='diag'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='diag'/> is less than 0.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CreateNaN(PeterO.Numbers.EInteger)"]'/>
     public static ERational CreateNaN(EInteger diag) {
       return CreateNaN(diag, false, false);
     }
@@ -230,19 +186,8 @@ int flags) {
       return er;
     }
 
-    /// <summary>Creates a not-a-number ExtendedRational object.</summary>
-    /// <param name='diag'>A number to use as diagnostic information
-    /// associated with this object. If none is needed, should be
-    /// zero.</param>
-    /// <param name='signaling'>Whether the return value will be signaling
-    /// (true) or quiet (false).</param>
-    /// <param name='negative'>Whether the return value is
-    /// negative.</param>
-    /// <returns>An ERational object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='diag'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='diag'/> is less than 0.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CreateNaN(PeterO.Numbers.EInteger,System.Boolean,System.Boolean)"]'/>
     public static ERational CreateNaN(
 EInteger diag,
 bool signaling,
@@ -269,10 +214,8 @@ bool negative) {
       return er;
     }
 
-    /// <param name='ef'>An ExtendedFloat object.</param>
-    /// <returns>An ERational object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='ef'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromExtendedFloat(PeterO.Numbers.EFloat)"]'/>
     public static ERational FromExtendedFloat(EFloat ef) {
       if (ef == null) {
         throw new ArgumentNullException("ef");
@@ -315,10 +258,8 @@ bool negative) {
       return new ERational(num, den);
     }
 
-    /// <param name='ef'>An ExtendedDecimal object.</param>
-    /// <returns>An ERational object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='ef'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromExtendedDecimal(PeterO.Numbers.EDecimal)"]'/>
     public static ERational FromExtendedDecimal(EDecimal ef) {
       if (ef == null) {
         throw new ArgumentNullException("ef");
@@ -362,10 +303,8 @@ bool negative) {
       return new ERational(num, den);
     }
 
-    /// <summary>Converts this rational number to a decimal number and
-    /// rounds the result to the given precision.</summary>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>An EDecimal object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedDecimal(PeterO.Numbers.EContext)"]'/>
     public EDecimal ToExtendedDecimal(EContext ctx) {
       if (this.IsNaN()) {
         return EDecimal.CreateNaN(
@@ -385,18 +324,8 @@ ctx);
       return ef.Divide(EDecimal.FromBigInteger(this.Denominator), ctx);
     }
 
-    /// <summary>Converts this rational number to a decimal number, but if
-    /// the result would have a nonterminating decimal expansion, rounds
-    /// that result to the given precision.</summary>
-    /// <param name='ctx'>A precision context object to control the
-    /// precision. The rounding and exponent range settings of this context
-    /// are ignored. This context will be used only if the exact result
-    /// would have a nonterminating decimal expansion. If HasFlags of the
-    /// context is true, will also store the flags resulting from the
-    /// operation (the flags are in addition to the pre-existing flags).
-    /// Can be null, in which case this method is the same as
-    /// ToExtendedDecimal.</param>
-    /// <returns>An EDecimal object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedDecimalExactIfPossible(PeterO.Numbers.EContext)"]'/>
 public EDecimal ToExtendedDecimalExactIfPossible(EContext
       ctx) {
       if (ctx == null) {
@@ -429,19 +358,14 @@ ctx);
       return ed;
     }
 
-    /// <summary>Converts this rational number to a binary
-    /// number.</summary>
-    /// <returns>The exact value of the rational number, or not-a-number
-    /// (NaN) if the result can't be exact because it has a nonterminating
-    /// binary expansion.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedFloat"]'/>
     public EFloat ToExtendedFloat() {
       return this.ToExtendedFloat(null);
     }
 
-    /// <summary>Converts this rational number to a binary number and
-    /// rounds the result to the given precision.</summary>
-    /// <param name='ctx'>A PrecisionContext object.</param>
-    /// <returns>An EFloat object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedFloat(PeterO.Numbers.EContext)"]'/>
     public EFloat ToExtendedFloat(EContext ctx) {
       if (this.IsNaN()) {
         return EFloat.CreateNaN(
@@ -461,18 +385,8 @@ ctx);
       return ef.Divide(EFloat.FromBigInteger(this.Denominator), ctx);
     }
 
-    /// <summary>Converts this rational number to a binary number, but if
-    /// the result would have a nonterminating binary expansion, rounds
-    /// that result to the given precision.</summary>
-    /// <param name='ctx'>A precision context object to control the
-    /// precision. The rounding and exponent range settings of this context
-    /// are ignored. This context will be used only if the exact result
-    /// would have a nonterminating binary expansion. If HasFlags of the
-    /// context is true, will also store the flags resulting from the
-    /// operation (the flags are in addition to the pre-existing flags).
-    /// Can be null, in which case this method is the same as
-    /// ToExtendedFloat.</param>
-    /// <returns>An EFloat object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedFloatExactIfPossible(PeterO.Numbers.EContext)"]'/>
     public EFloat ToExtendedFloatExactIfPossible(EContext ctx) {
       if (ctx == null) {
         return this.ToExtendedFloat(null);
@@ -505,22 +419,16 @@ ctx);
       return ed;
     }
 
-    /// <summary>Gets a value indicating whether this object is finite (not
-    /// infinity or NaN).</summary>
-    /// <value>True if this object is finite (not infinity or NaN);
-    /// otherwise, false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.IsFinite"]'/>
     public bool IsFinite {
       get {
         return !this.IsNaN() && !this.IsInfinity();
       }
     }
 
-    /// <summary>Converts this value to an arbitrary-precision integer. Any
-    /// fractional part in this value will be discarded when converting to
-    /// a big integer.</summary>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='OverflowException'>This object's value is infinity
-    /// or NaN.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToBigInteger"]'/>
     public EInteger ToBigInteger() {
       if (!this.IsFinite) {
         throw new OverflowException("Value is infinity or NaN");
@@ -528,13 +436,8 @@ ctx);
       return this.Numerator / (EInteger)this.denominator;
     }
 
-    /// <summary>Converts this value to an arbitrary-precision integer,
-    /// checking whether the value is an exact integer.</summary>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='OverflowException'>This object's value is infinity
-    /// or NaN.</exception>
-    /// <exception cref='ArithmeticException'>This object's value is not an
-    /// exact integer.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToBigIntegerExact"]'/>
     public EInteger ToBigIntegerExact() {
       if (!this.IsFinite) {
         throw new OverflowException("Value is infinity or NaN");
@@ -559,24 +462,16 @@ rem = divrem[1]; }
       return new ERational((EInteger)longInt, EInteger.One);
     }
 
-    /// <summary>Converts this value to a 64-bit floating-point number. The
-    /// half-even rounding mode is used.</summary>
-    /// <returns>The closest 64-bit floating-point number to this value.
-    /// The return value can be positive infinity or negative infinity if
-    /// this value exceeds the range of a 64-bit floating point
-    /// number.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToDouble"]'/>
     public double ToDouble() {
       return
   this.ToExtendedFloat(EContext.Binary64.WithRounding(ERounding.Odd))
         .ToDouble();
     }
 
-    /// <summary>Converts this value to a 32-bit floating-point number. The
-    /// half-even rounding mode is used.</summary>
-    /// <returns>The closest 32-bit floating-point number to this value.
-    /// The return value can be positive infinity or negative infinity if
-    /// this value exceeds the range of a 32-bit floating point
-    /// number.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToSingle"]'/>
     public float ToSingle() {
       return
   this.ToExtendedFloat(EContext.Binary32.WithRounding(ERounding.Odd))
@@ -598,10 +493,8 @@ rem = divrem[1]; }
       return er;
     }
 
-    /// <summary>Gets a value indicating whether this object's value equals
-    /// 0.</summary>
-    /// <value>True if this object&apos;s value equals 0; otherwise,
-    /// false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.IsZero"]'/>
     public bool IsZero {
       get {
         return ((this.flags & (BigNumberFlags.FlagInfinity |
@@ -609,10 +502,8 @@ rem = divrem[1]; }
       }
     }
 
-    /// <summary>Gets the sign of this rational number.</summary>
-    /// <value>Zero if this value is zero or negative zero; -1 if this
-    /// value is less than 0; and 1 if this value is greater than
-    /// 0.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.Sign"]'/>
     public int Sign {
       get {
         return ((this.flags & (BigNumberFlags.FlagInfinity |
@@ -621,12 +512,8 @@ rem = divrem[1]; }
       }
     }
 
-    /// <summary>Compares an ExtendedRational object with this
-    /// instance.</summary>
-    /// <param name='other'>An ExtendedRational object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is less, or a positive number if this instance is
-    /// greater.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CompareTo(PeterO.Numbers.ERational)"]'/>
     public int CompareTo(ERational other) {
       if (other == null) {
         return 1;
@@ -693,12 +580,8 @@ rem = divrem[1]; }
       return ad.CompareTo(bc);
     }
 
-    /// <summary>Compares an ExtendedFloat object with this
-    /// instance.</summary>
-    /// <param name='other'>An ExtendedFloat object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is less, or a positive number if this instance is
-    /// greater.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CompareToBinary(PeterO.Numbers.EFloat)"]'/>
     public int CompareToBinary(EFloat other) {
       if (other == null) {
         return 1;
@@ -812,12 +695,8 @@ thisRem = divrem[1]; }
       return ad.CompareTo(bc);
     }
 
-    /// <summary>Compares an ExtendedDecimal object with this
-    /// instance.</summary>
-    /// <param name='other'>An ExtendedDecimal object.</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is less, or a positive number if this instance is
-    /// greater.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CompareToDecimal(PeterO.Numbers.EDecimal)"]'/>
     public int CompareToDecimal(EDecimal other) {
       if (other == null) {
         return 1;
@@ -936,91 +815,78 @@ thisRem = divrem[1]; }
       return this.Equals((object)other);
     }
 
-    /// <summary>Returns whether this object is negative
-    /// infinity.</summary>
-    /// <returns>True if this object is negative infinity; otherwise,
-    /// false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsNegativeInfinity"]'/>
     public bool IsNegativeInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity |
         BigNumberFlags.FlagNegative)) ==
         (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
-    /// <summary>Returns whether this object is positive
-    /// infinity.</summary>
-    /// <returns>True if this object is positive infinity; otherwise,
-    /// false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsPositiveInfinity"]'/>
     public bool IsPositiveInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity |
         BigNumberFlags.FlagNegative)) == BigNumberFlags.FlagInfinity;
     }
 
-    /// <summary>Returns whether this object is a not-a-number
-    /// value.</summary>
-    /// <returns>True if this object is a not-a-number value; otherwise,
-    /// false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsNaN"]'/>
     public bool IsNaN() {
       return (this.flags & BigNumberFlags.FlagNaN) != 0;
     }
 
-    /// <summary>Gets a value indicating whether this object's value is
-    /// negative (including negative zero).</summary>
-    /// <value>True if this object&apos;s value is negative; otherwise,
-    /// false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.IsNegative"]'/>
     public bool IsNegative {
       get {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
       }
     }
 
-    /// <summary>Gets a value indicating whether this object's value is
-    /// infinity.</summary>
-    /// <returns>True if this object's value is infinity; otherwise,
-    /// false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsInfinity"]'/>
     public bool IsInfinity() {
       return (this.flags & BigNumberFlags.FlagInfinity) != 0;
     }
 
-    /// <summary>Returns whether this object is a quiet not-a-number
-    /// value.</summary>
-    /// <returns>True if this object is a quiet not-a-number value;
-    /// otherwise, false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsQuietNaN"]'/>
     public bool IsQuietNaN() {
       return (this.flags & BigNumberFlags.FlagQuietNaN) != 0;
     }
 
-    /// <summary>Returns whether this object is a signaling not-a-number
-    /// value (which causes an error if the value is passed to any
-    /// arithmetic operation in this class).</summary>
-    /// <returns>True if this object is a signaling not-a-number value
-    /// (which causes an error if the value is passed to any arithmetic
-    /// operation in this class); otherwise, false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsSignalingNaN"]'/>
     public bool IsSignalingNaN() {
       return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
     }
 
-    /// <summary>A not-a-number value.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.NaN"]'/>
     public static readonly ERational NaN = CreateWithFlags(
 EInteger.Zero,
 EInteger.One,
 BigNumberFlags.FlagQuietNaN);
 
-    /// <summary>A signaling not-a-number value.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.SignalingNaN"]'/>
     public static readonly ERational SignalingNaN =
       CreateWithFlags(
 EInteger.Zero,
 EInteger.One,
 BigNumberFlags.FlagSignalingNaN);
 
-    /// <summary>Positive infinity, greater than any other
-    /// number.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.PositiveInfinity"]'/>
     public static readonly ERational PositiveInfinity =
       CreateWithFlags(
 EInteger.Zero,
 EInteger.One,
 BigNumberFlags.FlagInfinity);
 
-    /// <summary>Negative infinity, less than any other number.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.NegativeInfinity"]'/>
     public static readonly ERational NegativeInfinity =
       CreateWithFlags(
 EInteger.Zero,
@@ -1048,12 +914,8 @@ BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
       return this;
     }
 
-    /// <summary>Adds two rational numbers.</summary>
-    /// <param name='otherValue'>Another ExtendedRational object.</param>
-    /// <returns>The sum of the two numbers. Returns NaN if either operand
-    /// is NaN.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='otherValue'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Add(PeterO.Numbers.ERational)"]'/>
     public ERational Add(ERational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -1087,12 +949,8 @@ otherValue.IsNegative);
       return new ERational(ad, bd).Simplify();
     }
 
-    /// <summary>Subtracts an ExtendedRational object from this
-    /// instance.</summary>
-    /// <param name='otherValue'>An ExtendedRational object.</param>
-    /// <returns>The difference of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='otherValue'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Subtract(PeterO.Numbers.ERational)"]'/>
     public ERational Subtract(ERational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -1129,12 +987,8 @@ otherValue.IsNegative);
       return new ERational(ad, bd).Simplify();
     }
 
-    /// <summary>Multiplies this instance by the value of an
-    /// ExtendedRational object.</summary>
-    /// <param name='otherValue'>An ExtendedRational object.</param>
-    /// <returns>The product of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='otherValue'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Multiply(PeterO.Numbers.ERational)"]'/>
     public ERational Multiply(ERational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -1169,12 +1023,8 @@ otherValue.IsNegative);
         ERational(ac, bd).Simplify().ChangeSign(resultNeg);
     }
 
-    /// <summary>Divides this instance by the value of an ExtendedRational
-    /// object.</summary>
-    /// <param name='otherValue'>An ExtendedRational object.</param>
-    /// <returns>The quotient of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='otherValue'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Divide(PeterO.Numbers.ERational)"]'/>
     public ERational Divide(ERational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -1214,12 +1064,8 @@ otherValue.IsNegative);
       return new ERational(ad, bc).Simplify().ChangeSign(resultNeg);
     }
 
-    /// <summary>Finds the remainder that results when this instance is
-    /// divided by the value of a ExtendedRational object.</summary>
-    /// <param name='otherValue'>An ExtendedRational object.</param>
-    /// <returns>The remainder of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='otherValue'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Remainder(PeterO.Numbers.ERational)"]'/>
     public ERational Remainder(ERational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -1265,18 +1111,22 @@ otherValue.IsNegative);
       return new ERational(ad, tden).Simplify().ChangeSign(resultNeg);
     }
 
-    /// <summary>A rational number for zero.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.Zero"]'/>
 public static readonly ERational Zero =
       FromBigInteger(EInteger.Zero);
 
-    /// <summary>A rational number for negative zero.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.NegativeZero"]'/>
     public static readonly ERational NegativeZero =
       FromBigInteger(EInteger.Zero).ChangeSign(false);
 
-    /// <summary>The rational number one.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.One"]'/>
   public static readonly ERational One = FromBigInteger(EInteger.One);
 
-    /// <summary>The rational number ten.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.Ten"]'/>
   public static readonly ERational Ten = FromBigInteger((EInteger)10);
   }
 }

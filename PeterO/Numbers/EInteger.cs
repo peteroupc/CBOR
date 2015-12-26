@@ -13,12 +13,8 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-  /// <summary>An arbitrary-precision integer.
-  /// <para>Instances of this class are immutable, so they are inherently
-  /// safe for use by multiple threads. Multiple instances of this object
-  /// with the same value are interchangeable, so they should not be
-  /// compared using the "==" operator (which only checks if each side of
-  /// the operator is the same instance).</para></summary>
+  /// <include file='docs.xml' 
+  /// path='docs/doc[@name="T:PeterO.Numbers.EInteger"]'/>
   internal sealed partial class EInteger : IComparable<EInteger>,
     IEquatable<EInteger> {
     private const string Digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -27,7 +23,8 @@ namespace PeterO.Numbers {
 
     private const int ShortMask = 0xffff;
 
-    /// <summary>EInteger object for the number one.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Numbers.EInteger.one"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -38,7 +35,8 @@ namespace PeterO.Numbers {
     private static readonly EInteger one = new EInteger(
       1, new short[] { 1, 0 }, false);
 
-    /// <summary>EInteger object for the number ten.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Numbers.EInteger.ten"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -71,7 +69,8 @@ namespace PeterO.Numbers {
       74051159, 71582787, 69273665, 67108863, 65075261, 63161282, 61356674,
       59652322 };
 
-    /// <summary>EInteger object for the number zero.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="F:PeterO.Numbers.EInteger.zero"]'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -109,39 +108,32 @@ namespace PeterO.Numbers {
       }
     }
 
-    /// <summary>Gets a value indicating whether this value is
-    /// even.</summary>
-    /// <value>True if this value is even; otherwise, false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.EInteger.IsEven"]'/>
     public bool IsEven {
       get {
         return !this.GetUnsignedBit(0);
       }
     }
 
-    /// <summary>Gets a value indicating whether this value is 0.</summary>
-    /// <value>True if this value is 0; otherwise, false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.EInteger.IsZero"]'/>
     public bool IsZero {
       get {
         return this.wordCount == 0;
       }
     }
 
-    /// <summary>Gets the sign of this object's value.</summary>
-    /// <value>0 if this value is zero; -1 if this value is negative, or 1
-    /// if this value is positive.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.EInteger.Sign"]'/>
     public int Sign {
       get {
         return (this.wordCount == 0) ? 0 : (this.negative ? -1 : 1);
       }
     }
 
-    /// <summary>Initializes a EInteger object from an array of
-    /// bytes.</summary>
-    /// <param name='bytes'>A byte array.</param>
-    /// <param name='littleEndian'>A Boolean object.</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bytes'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.FromBytes(System.Byte[],System.Boolean)"]'/>
     public static EInteger FromBytes(byte[] bytes, bool littleEndian) {
       if (bytes == null) {
         throw new ArgumentNullException("bytes");
@@ -196,11 +188,8 @@ namespace PeterO.Numbers {
                     newnegative));
     }
 
-    /// <summary>Converts a 64-bit signed integer to a big
-    /// integer.</summary>
-    /// <param name='longerValue'>Not documented yet.</param>
-    /// <returns>A EInteger object with the same value as the 64-bit
-    /// number.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.FromInt64(System.Int64)"]'/>
     public static EInteger FromInt64(long longerValue) {
       if (longerValue == 0) {
         return EInteger.Zero;
@@ -247,38 +236,8 @@ namespace PeterO.Numbers {
       return new EInteger(retwordcount, retreg, retnegative);
     }
 
-    /// <summary>Converts a string to an arbitrary-precision integer. The
-    /// string portion can begin with a minus sign ("-" , U+002D) to
-    /// indicate that it's negative.</summary>
-    /// <param name='str'>Not documented yet.</param>
-    /// <param name='radix'>A base from 2 to 36. Depending on the radix,
-    /// the string can use the basic digits 0 to 9 (U + 0030 to U + 0039)
-    /// and then the basic letters A to Z (U + 0041 to U + 005A). For
-    /// example, 0-9 in radix 10, and 0-9, then A-F in radix 16.</param>
-    /// <returns>A EInteger object with the same value as given in the
-    /// string.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='radix'/> is less than 2 or greater than 36.</exception>
-    /// <exception cref='FormatException'>The string is empty or in an
-    /// invalid format.</exception>
-    /// <example>
-    ///  The following example (C#) converts a number in the
-    /// form of a hex string to a big integer.
-    /// <code>
-    /// public static EInteger HexToEInteger(string hexString) {
-    ///   // Parse the hexadecimal string as a big integer.  Will
-    ///   // throw a FormatException if the parsing fails
-    ///   var EInteger = EInteger.fromRadixString(hexString, 16);
-    ///   // Optional: Check if the parsed integer is negative
-    ///   if (EInteger.Sign &lt; 0) {
-    ///     throw new FormatException("negative hex string");
-    ///   }
-    ///   return EInteger;
-    /// }
-    /// </code>
-    /// </example>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.FromRadixString(System.String,System.Int32)"]'/>
     public static EInteger FromRadixString(string str, int radix) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -286,29 +245,8 @@ namespace PeterO.Numbers {
       return FromRadixSubstring(str, radix, 0, str.Length);
     }
 
-    /// <summary>Converts a portion of a string to an arbitrary-precision
-    /// integer in a given radix. The string portion can begin with a minus
-    /// sign ("-" , U+002D) to indicate that it's negative.</summary>
-    /// <param name='str'>Not documented yet.</param>
-    /// <param name='radix'>A base from 2 to 36. Depending on the radix,
-    /// the string can use the basic digits 0 to 9 (U + 0030 to U + 0039)
-    /// and then the basic letters A to Z (U + 0041 to U + 005A). For
-    /// example, 0-9 in radix 10, and 0-9, then A-F in radix 16.</param>
-    /// <param name='index'>The index of the string that starts the string
-    /// portion.</param>
-    /// <param name='endIndex'>The index of the string that ends the string
-    /// portion. The length will be index + endIndex - 1.</param>
-    /// <returns>A EInteger object with the same value as given in the
-    /// string portion.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='index'/> is less than 0, <paramref name='endIndex'/> is less
-    /// than 0, or either is greater than the string's length, or <paramref
-    /// name='endIndex'/> is less than <paramref name='index'/>
-    /// .</exception>
-    /// <exception cref='FormatException'>The string portion is empty or in
-    /// an invalid format.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.FromRadixSubstring(System.String,System.Int32,System.Int32,System.Int32)"]'/>
     public static EInteger FromRadixSubstring(
       string str,
       int radix,
@@ -490,17 +428,8 @@ namespace PeterO.Numbers {
         negative);
     }
 
-    /// <summary>Converts a string to an arbitrary-precision
-    /// integer.</summary>
-    /// <param name='str'>A string containing only basic digits 0 to 9 (U +
-    /// 0030 to U + 0039), except that it may start with a minus sign ("-",
-    /// U + 002D).</param>
-    /// <returns>A EInteger object with the same value as given in the
-    /// string.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
-    /// <exception cref='FormatException'>The parameter <paramref
-    /// name='str'/> is in an invalid format.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.fromString(System.String)"]'/>
     public static EInteger fromString(string str) {
       if (str == null) {
         throw new ArgumentNullException("str");
@@ -508,25 +437,8 @@ namespace PeterO.Numbers {
       return FromRadixSubstring(str, 10, 0, str.Length);
     }
 
-    /// <summary>Converts a portion of a string to an arbitrary-precision
-    /// integer. The string portion can begin with a minus sign ("-",
-    /// U+002D) to indicate that it's negative.</summary>
-    /// <param name='str'>Not documented yet.</param>
-    /// <param name='index'>The index of the string that starts the string
-    /// portion.</param>
-    /// <param name='endIndex'>The index of the string that ends the string
-    /// portion. The length will be index + endIndex - 1.</param>
-    /// <returns>A EInteger object with the same value as given in the
-    /// string portion.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='str'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='index'/> is less than 0, <paramref name='endIndex'/> is less
-    /// than 0, or either is greater than the string's length, or <paramref
-    /// name='endIndex'/> is less than <paramref name='index'/>
-    /// .</exception>
-    /// <exception cref='FormatException'>The string portion is empty or in
-    /// an invalid format.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.FromSubstring(System.String,System.Int32,System.Int32)"]'/>
     public static EInteger FromSubstring(
       string str,
       int index,
@@ -537,19 +449,15 @@ namespace PeterO.Numbers {
       return FromRadixSubstring(str, 10, index, endIndex);
     }
 
-    /// <summary>Returns the absolute value of this object's
-    /// value.</summary>
-    /// <returns>This object's value with the sign removed.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Abs"]'/>
     public EInteger Abs() {
       return (this.wordCount == 0 || !this.negative) ? this : new
         EInteger(this.wordCount, this.words, false);
     }
 
-    /// <summary>Adds this object and another object.</summary>
-    /// <param name='bigintAugend'>Another EInteger object.</param>
-    /// <returns>The sum of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bigintAugend'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.add(PeterO.Numbers.EInteger)"]'/>
     public EInteger add(EInteger bigintAugend) {
       if (bigintAugend == null) {
         throw new ArgumentNullException("bigintAugend");
@@ -761,11 +669,8 @@ namespace PeterO.Numbers {
       return new EInteger(count, diffReg, diffNeg);
     }
 
-    /// <summary>Converts this object's value to a 32-bit signed integer,
-    /// throwing an exception if it can't fit.</summary>
-    /// <returns>A 32-bit signed integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is too big
-    /// to fit a 32-bit signed integer.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.AsInt32Checked"]'/>
     public int AsInt32Checked() {
       int count = this.wordCount;
       if (count == 0) {
@@ -784,12 +689,8 @@ namespace PeterO.Numbers {
       return this.AsInt32Unchecked();
     }
 
-    /// <summary>Converts this object's value to a 32-bit signed integer.
-    /// If the value can't fit in a 32-bit integer, returns the lower 32
-    /// bits of this object's two's complement representation (in which
-    /// case the return value might have a different sign than this
-    /// object's value).</summary>
-    /// <returns>A 32-bit signed integer.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.AsInt32Unchecked"]'/>
     public int AsInt32Unchecked() {
       var c = (int)this.wordCount;
       if (c == 0) {
@@ -806,12 +707,8 @@ namespace PeterO.Numbers {
       return intRetValue;
     }
 
-    /// <summary>Finds the minimum number of bits needed to represent this
-    /// object&#x27;s value, except for its sign. If the value is negative,
-    /// finds the number of bits in a value equal to this object's absolute
-    /// value minus 1.</summary>
-    /// <returns>The number of bits in this object's value. Returns 0 if
-    /// this object's value is 0 or negative 1.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.bitLength"]'/>
     public int bitLength() {
       int wc = this.wordCount;
       if (wc != 0) {
@@ -843,10 +740,8 @@ namespace PeterO.Numbers {
       return 0;
     }
 
-    /// <summary>Returns whether this object's value can fit in a 32-bit
-    /// signed integer.</summary>
-    /// <returns>True if this object's value is MinValue or greater, and
-    /// MaxValue or less; otherwise, false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.canFitInInt"]'/>
     public bool canFitInInt() {
       var c = (int)this.wordCount;
       if (c > 2) {
@@ -859,11 +754,8 @@ namespace PeterO.Numbers {
       return true;
     }
 
-    /// <summary>Compares a EInteger object with this instance.</summary>
-    /// <param name='other'>Not documented yet.</param>
-    /// <returns>Zero if the values are equal; a negative number if this
-    /// instance is less, or a positive number if this instance is
-    /// greater.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.CompareTo(PeterO.Numbers.EInteger)"]'/>
     public int CompareTo(EInteger other) {
       if (other == null) {
         return 1;
@@ -902,10 +794,8 @@ namespace PeterO.Numbers {
       return ((size > tempSize) ^ (sa <= 0)) ? 1 : -1;
     }
 
-    /// <summary>Gets a value indicating whether this object&#x27;s value
-    /// is a power of two.</summary>
-    /// <value>True if this object&#x27;s value is a power of two;
-    /// otherwise, false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.EInteger.IsPowerOfTwo"]'/>
     public bool IsPowerOfTwo {
       get {
         int bits = this.bitLength();
@@ -920,19 +810,8 @@ namespace PeterO.Numbers {
       }
     }
 
-    /// <summary>Divides this instance by the value of a EInteger object.
-    /// The result is rounded down (the fractional part is discarded).
-    /// Except if the result is 0, it will be negative if this object is
-    /// positive and the other is negative, or vice versa, and will be
-    /// positive if both are positive or both are negative.</summary>
-    /// <param name='bigintDivisor'>Another EInteger object.</param>
-    /// <returns>The quotient of the two objects.</returns>
-    /// <exception cref='DivideByZeroException'>The divisor is
-    /// zero.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bigintDivisor'/> is null.</exception>
-    /// <exception cref='System.DivideByZeroException'>Attempted to divide
-    /// by zero.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.divide(PeterO.Numbers.EInteger)"]'/>
     public EInteger divide(EInteger bigintDivisor) {
       if (bigintDivisor == null) {
         throw new ArgumentNullException("bigintDivisor");
@@ -1002,17 +881,8 @@ namespace PeterO.Numbers {
           this.negative ^ bigintDivisor.negative)) : EInteger.Zero;
     }
 
-    /// <summary>Divides this object by another big integer and returns the
-    /// quotient and remainder.</summary>
-    /// <param name='divisor'>Not documented yet.</param>
-    /// <returns>An array with two big integers: the first is the quotient,
-    /// and the second is the remainder.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter divisor is
-    /// null.</exception>
-    /// <exception cref='DivideByZeroException'>The parameter divisor is
-    /// 0.</exception>
-    /// <exception cref='System.DivideByZeroException'>Attempted to divide
-    /// by zero.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.DivRem(PeterO.Numbers.EInteger)"]'/>
     public EInteger[] DivRem(EInteger divisor) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
@@ -1086,12 +956,8 @@ namespace PeterO.Numbers {
       return new[] { bigquo2, bigrem };
     }
 
-    /// <inheritdoc/>
-    /// <summary>Determines whether this object and another object are
-    /// equal.</summary>
-    /// <param name='obj'>An arbitrary object.</param>
-    /// <returns>True if this object and another object are equal;
-    /// otherwise, false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Equals(System.Object)"]'/>
     public override bool Equals(object obj) {
       var other = obj as EInteger;
       if (other == null) {
@@ -1111,13 +977,8 @@ namespace PeterO.Numbers {
       return false;
     }
 
-    /// <summary>Returns the greatest common divisor of two integers. The
-    /// greatest common divisor (GCD) is also known as the greatest common
-    /// factor (GCF).</summary>
-    /// <param name='bigintSecond'>Another EInteger object.</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bigintSecond'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.gcd(PeterO.Numbers.EInteger)"]'/>
     public EInteger gcd(EInteger bigintSecond) {
       if (bigintSecond == null) {
         throw new ArgumentNullException("bigintSecond");
@@ -1169,10 +1030,8 @@ namespace PeterO.Numbers {
       }
     }
 
-    /// <summary>Finds the number of decimal digits this number
-    /// has.</summary>
-    /// <returns>The number of decimal digits. Returns 1 if this object' s
-    /// value is 0.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.getDigitCount"]'/>
     public int getDigitCount() {
       if (this.IsZero) {
         return 1;
@@ -1338,8 +1197,8 @@ namespace PeterO.Numbers {
       return i;
     }
 
-    /// <summary>Returns the hash code for this instance.</summary>
-    /// <returns>A 32-bit signed integer.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.GetHashCode"]'/>
     public override int GetHashCode() {
       var hashCodeValue = 0;
       unchecked {
@@ -1353,11 +1212,8 @@ namespace PeterO.Numbers {
       return hashCodeValue;
     }
 
-    /// <summary>Gets the lowest set bit in this number's absolute
-    /// value.</summary>
-    /// <returns>The lowest bit set in the number, starting at 0. Returns 0
-    /// if this value is 0 or odd. (NOTE: In future versions, may return -1
-    /// instead if this value is 0.).</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.getLowBit"]'/>
     public int getLowBit() {
       var retSetBit = 0;
       for (var i = 0; i < this.wordCount; ++i) {
@@ -1386,11 +1242,8 @@ namespace PeterO.Numbers {
       return 0;
     }
 
-    /// <summary>Finds the minimum number of bits needed to represent this
-    /// object&#x27;s absolute value.</summary>
-    /// <returns>The number of bits in this object's value. Returns 0 if
-    /// this object's value is 0, and returns 1 if the value is negative
-    /// 1.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.getUnsignedBitLength"]'/>
     public int getUnsignedBitLength() {
       int wc = this.wordCount;
       if (wc != 0) {
@@ -1422,11 +1275,8 @@ namespace PeterO.Numbers {
       return 0;
     }
 
-    /// <summary>Converts this object's value to a 64-bit signed integer,
-    /// throwing an exception if it can't fit.</summary>
-    /// <returns>A 64-bit signed integer.</returns>
-    /// <exception cref='OverflowException'>This object's value is too big
-    /// to fit a 64-bit signed integer.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.longValueChecked"]'/>
     public long longValueChecked() {
       int count = this.wordCount;
       if (count == 0) {
@@ -1446,12 +1296,8 @@ namespace PeterO.Numbers {
       return this.longValueUnchecked();
     }
 
-    /// <summary>Converts this object's value to a 64-bit signed integer.
-    /// If the value can't fit in a 64-bit integer, returns the lower 64
-    /// bits of this object's two's complement representation (in which
-    /// case the return value might have a different sign than this
-    /// object's value).</summary>
-    /// <returns>A 64-bit signed integer.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.longValueUnchecked"]'/>
     public long longValueUnchecked() {
       var c = (int)this.wordCount;
       if (c == 0) {
@@ -1488,18 +1334,8 @@ namespace PeterO.Numbers {
       return ivv;
     }
 
-    /// <summary>Finds the modulus remainder that results when this
-    /// instance is divided by the value of a EInteger object. The modulus
-    /// remainder is the same as the normal remainder if the normal
-    /// remainder is positive, and equals divisor plus normal remainder if
-    /// the normal remainder is negative.</summary>
-    /// <param name='divisor'>A divisor greater than 0 (the
-    /// modulus).</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArithmeticException'>The parameter <paramref
-    /// name='divisor'/> is negative.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='divisor'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.mod(PeterO.Numbers.EInteger)"]'/>
     public EInteger mod(EInteger divisor) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
@@ -1514,13 +1350,8 @@ namespace PeterO.Numbers {
       return rem;
     }
 
-    /// <summary>Calculates the remainder when a EInteger raised to a
-    /// certain power is divided by another EInteger.</summary>
-    /// <param name='pow'>Another EInteger object.</param>
-    /// <param name='mod'>A EInteger object. (3).</param>
-    /// <returns>An EInteger object.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='pow'/> or <paramref name='mod'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.ModPow(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public EInteger ModPow(EInteger pow, EInteger mod) {
       if (pow == null) {
         throw new ArgumentNullException("pow");
@@ -1548,12 +1379,8 @@ namespace PeterO.Numbers {
       return r;
     }
 
-    /// <summary>Multiplies this instance by the value of a EInteger
-    /// object.</summary>
-    /// <param name='bigintMult'>Another EInteger object.</param>
-    /// <returns>The product of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='bigintMult'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.multiply(PeterO.Numbers.EInteger)"]'/>
     public EInteger multiply(EInteger bigintMult) {
       if (bigintMult == null) {
         throw new ArgumentNullException("bigintMult");
@@ -1657,9 +1484,8 @@ namespace PeterO.Numbers {
         this.negative ^ bigintMult.negative);
     }
 
-    /// <summary>Gets the value of this object with the sign
-    /// reversed.</summary>
-    /// <returns>This object's value with the sign reversed.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.negate"]'/>
     public EInteger negate() {
       return this.wordCount == 0 ? this : new EInteger(
         this.wordCount,
@@ -1667,12 +1493,8 @@ namespace PeterO.Numbers {
         !this.negative);
     }
 
-    /// <summary>Raises a big integer to a power.</summary>
-    /// <param name='powerSmall'>The exponent to raise to.</param>
-    /// <returns>The result. Returns 1 if <paramref name='powerSmall'/> is
-    /// 0.</returns>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='powerSmall'/> is less than 0.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.pow(System.Int32)"]'/>
     public EInteger pow(int powerSmall) {
       if (powerSmall < 0) {
         throw new ArgumentException("powerSmall (" + powerSmall +
@@ -1705,15 +1527,8 @@ namespace PeterO.Numbers {
       return r;
     }
 
-    /// <summary>Raises a big integer to a power, which is given as another
-    /// big integer.</summary>
-    /// <param name='power'>The exponent to raise to.</param>
-    /// <returns>The result. Returns 1 if <paramref name='power'/> is
-    /// 0.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='power'/> is null.</exception>
-    /// <exception cref='ArgumentException'>The parameter <paramref
-    /// name='power'/> is less than 0.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.PowBigIntVar(PeterO.Numbers.EInteger)"]'/>
     public EInteger PowBigIntVar(EInteger power) {
       if (power == null) {
         throw new ArgumentNullException("power");
@@ -1749,17 +1564,8 @@ namespace PeterO.Numbers {
       return r;
     }
 
-    /// <summary>Finds the remainder that results when this instance is
-    /// divided by the value of a EInteger object. The remainder is the
-    /// value that remains when the absolute value of this object is
-    /// divided by the absolute value of the other object; the remainder
-    /// has the same sign (positive or negative) as this object.</summary>
-    /// <param name='divisor'>Another EInteger object.</param>
-    /// <returns>The remainder of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='divisor'/> is null.</exception>
-    /// <exception cref='System.DivideByZeroException'>Attempted to divide
-    /// by zero.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.remainder(PeterO.Numbers.EInteger)"]'/>
     public EInteger remainder(EInteger divisor) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
@@ -1812,14 +1618,8 @@ namespace PeterO.Numbers {
       return new EInteger(count, remainderReg, this.negative);
     }
 
-    /// <summary>Returns a big integer with the bits shifted to the left by
-    /// a number of bits. A value of 1 doubles this value, a value of 2
-    /// multiplies it by 4, a value of 3 by 8, a value of 4 by 16, and so
-    /// on.</summary>
-    /// <param name='numberBits'>The number of bits to shift. Can be
-    /// negative, in which case this is the same as shiftRight with the
-    /// absolute value of numberBits.</param>
-    /// <returns>An EInteger object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.ShiftLeft(System.Int32)"]'/>
     public EInteger ShiftLeft(int numberBits) {
       if (numberBits == 0 || this.wordCount == 0) {
         return this;
@@ -1858,12 +1658,8 @@ namespace PeterO.Numbers {
       }
     }
 
-    /// <summary>Returns a big integer with the bits shifted to the right.
-    /// For this operation, the big integer is treated as a two's
-    /// complement representation. Thus, for negative values, the EInteger
-    /// is sign-extended.</summary>
-    /// <param name='numberBits'>Number of bits to shift right.</param>
-    /// <returns>An EInteger object.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.ShiftRight(System.Int32)"]'/>
     public EInteger ShiftRight(int numberBits) {
       if (numberBits == 0 || this.wordCount == 0) {
         return this;
@@ -1916,30 +1712,21 @@ namespace PeterO.Numbers {
       return new EInteger(retWordCount, ret, this.negative);
     }
 
-    /// <summary>Finds the square root of this instance&#x27;s value,
-    /// rounded down.</summary>
-    /// <returns>The square root of this object's value. Returns 0 if this
-    /// value is 0 or less.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Sqrt"]'/>
     public EInteger Sqrt() {
       EInteger[] srrem = this.SqrtRemInternal(false);
       return srrem[0];
     }
 
-    /// <summary>Calculates the square root and the remainder.</summary>
-    /// <returns>An array of two big integers: the first integer is the
-    /// square root, and the second is the difference between this value
-    /// and the square of the first integer. Returns two zeros if this
-    /// value is 0 or less, or one and zero if this value equals
-    /// 1.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.SqrtRem"]'/>
     public EInteger[] SqrtRem() {
       return SqrtRemInternal(true);
     }
 
-    /// <summary>Subtracts a EInteger from this EInteger.</summary>
-    /// <param name='subtrahend'>Another EInteger object.</param>
-    /// <returns>The difference of the two objects.</returns>
-    /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='subtrahend'/> is null.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Subtract(PeterO.Numbers.EInteger)"]'/>
     public EInteger Subtract(EInteger subtrahend) {
       if (subtrahend == null) {
         throw new ArgumentNullException("subtrahend");
@@ -1948,12 +1735,8 @@ namespace PeterO.Numbers {
         ((subtrahend.wordCount == 0) ? this : this.add(subtrahend.negate()));
     }
 
-    /// <summary>Returns whether a bit is set in the two's-complement
-    /// representation of this object's value.</summary>
-    /// <param name='index'>Zero based index of the bit to test. 0 means
-    /// the least significant bit.</param>
-    /// <returns>True if a bit is set in the two's-complement
-    /// representation of this object's value; otherwise, false.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.testBit(System.Int32)"]'/>
     public bool testBit(int index) {
       if (index < 0) {
         throw new ArgumentOutOfRangeException("index");
@@ -1983,16 +1766,8 @@ namespace PeterO.Numbers {
       return this.GetUnsignedBit(index);
     }
 
-    /// <summary>Returns a byte array of this object&#x27;s value. The byte
-    /// array will take the form of the number's two' s-complement
-    /// representation, using the fewest bytes necessary to represent its
-    /// value unambiguously. If this value is negative, the bits that
-    /// appear "before" the most significant bit of the number will be all
-    /// ones.</summary>
-    /// <param name='littleEndian'>If true, the least significant bits will
-    /// appear first.</param>
-    /// <returns>A byte array. If this value is 0, returns a byte array
-    /// with the single element 0.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.toBytes(System.Boolean)"]'/>
     public byte[] toBytes(bool littleEndian) {
       int sign = this.Sign;
       if (sign == 0) {
@@ -2055,21 +1830,8 @@ namespace PeterO.Numbers {
       }
     }
 
-    /// <summary>Generates a string representing the value of this object,
-    /// in the given radix.</summary>
-    /// <param name='radix'>A radix from 2 through 36. For example, to
-    /// generate a hexadecimal (base-16) string, specify 16. To generate a
-    /// decimal (base-10) string, specify 10.</param>
-    /// <returns>A string representing the value of this object. If this
-    /// value is 0, returns "0". If negative, the string will begin with a
-    /// hyphen/minus ("-"). Depending on the radix, the string will use the
-    /// basic digits 0 to 9 (U + 0030 to U + 0039) and then the basic
-    /// letters A to Z (U + 0041 to U + 005A). For example, 0-9 in radix
-    /// 10, and 0-9, then A-F in radix 16.</returns>
-    /// <exception cref='ArgumentException'>The parameter "index" is less
-    /// than 0, "endIndex" is less than 0, or either is greater than the
-    /// string's length, or "endIndex" is less than "index" ; or radix is
-    /// less than 2 or greater than 36.</exception>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.toRadixString(System.Int32)"]'/>
     public string toRadixString(int radix) {
       if (radix < 2) {
         throw new ArgumentException("radix (" + radix +
@@ -2269,11 +2031,8 @@ namespace PeterO.Numbers {
       }
     }
 
-    /// <summary>Converts this object to a text string in base
-    /// 10.</summary>
-    /// <returns>A string representation of this object. If negative, the
-    /// string will begin with a minus sign ("-", U+002D). The string will
-    /// use the basic digits 0 to 9 (U + 0030 to U + 0039).</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.ToString"]'/>
     public override string ToString() {
       if (this.IsZero) {
         return "0";
@@ -5502,13 +5261,8 @@ count);
       return new String(chars, 0, count);
     }
 
-    /// <summary>Calculates the square root and the remainder.</summary>
-    /// <param name='useRem'>Not documented yet.</param>
-    /// <returns>An array of two big integers: the first integer is the
-    /// square root, and the second is the difference between this value
-    /// and the square of the first integer. Returns two zeros if this
-    /// value is 0 or less, or one and zero if this value equals
-    /// 1.</returns>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.SqrtRemInternal(System.Boolean)"]'/>
     private EInteger[] SqrtRemInternal(bool useRem) {
       if (this.Sign <= 0) {
         return new[] { EInteger.Zero, EInteger.Zero };
