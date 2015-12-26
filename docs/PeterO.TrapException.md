@@ -20,7 +20,7 @@ Initializes a new instance of the TrapException class.
 
  * <i>flag</i>: A 32-bit signed integer.
 
- * <i>ctx</i>: A PrecisionContext object.
+ * <i>ctx</i>: An EContext object.
 
  * <i>result</i>: An arbitrary object.
 
@@ -28,7 +28,11 @@ Initializes a new instance of the TrapException class.
 
     public PeterO.PrecisionContext Context { get; }
 
-Not documented yet.
+Gets the precision context used during the operation that triggered the trap. May be null.
+
+<b>Returns:</b>
+
+The precision context used during the operation that triggered the trap. May be null.
 
 ### Error
 

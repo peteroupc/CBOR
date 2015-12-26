@@ -557,7 +557,7 @@ bigrem = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Multiply(System.Int32)"]'/>
     internal FastInteger Multiply(int val) {
       if (val == 0) {
@@ -610,7 +610,7 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Negate"]'/>
     internal FastInteger Negate() {
       switch (this.integerMode) {
@@ -638,7 +638,7 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Subtract(PeterO.Numbers.FastInteger)"]'/>
     internal FastInteger Subtract(FastInteger val) {
       EInteger valValue;
@@ -685,7 +685,7 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.SubtractInt(System.Int32)"]'/>
     internal FastInteger SubtractInt(int val) {
       if (val == Int32.MinValue) {
@@ -706,7 +706,7 @@ bigrem = divrem[1]; }
       return this.AddInt(-val);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.AddBig(PeterO.Numbers.EInteger)"]'/>
     internal FastInteger AddBig(EInteger bigintVal) {
       switch (this.integerMode) {
@@ -728,7 +728,7 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.SubtractBig(PeterO.Numbers.EInteger)"]'/>
     internal FastInteger SubtractBig(EInteger bigintVal) {
       if (this.integerMode == 2) {
@@ -800,7 +800,7 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Remainder(System.Int32)"]'/>
     internal FastInteger Remainder(int divisor) {
       // Mod operator will always result in a
@@ -895,7 +895,7 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.FastInteger.IsEvenNumber"]'/>
     internal bool IsEvenNumber {
       get {
@@ -1006,7 +1006,7 @@ bigrem = divrem[1]; }
       return new String(chars, 0, count);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.ToString"]'/>
     public override string ToString() {
       switch (this.integerMode) {
@@ -1020,7 +1020,7 @@ bigrem = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.FastInteger.Sign"]'/>
     internal int Sign {
       get {
@@ -1037,7 +1037,7 @@ bigrem = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="P:PeterO.Numbers.FastInteger.IsValueZero"]'/>
     internal bool IsValueZero {
       get {

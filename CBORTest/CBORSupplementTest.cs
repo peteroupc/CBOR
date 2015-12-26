@@ -1599,7 +1599,7 @@ Console.Write(String.Empty);
       }
       bytes = new byte[] { 0x1b, 2 };
       try {
-        using (var ms=new MemoryStream(bytes)) {
+        using (var ms = new MemoryStream(bytes)) {
           MiniCBOR.ReadInt32(ms);
         }
         Assert.Fail("Should have failed");

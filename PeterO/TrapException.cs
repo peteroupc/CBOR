@@ -9,35 +9,42 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO {
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="T:PeterO.TrapException"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Numbers.ETrapException"]'/>
   public class TrapException : ArithmeticException {
+    internal ETrapException ete;
 
-    // TODO: Edit ExtendedDecimal and ExtendedFloat methods to
-    // catch ETrapException and rethrow TrapException
-    internal readonly ETrapException ete;
-
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="P:PeterO.TrapException.Context"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Context"]'/>
     public PrecisionContext Context { get {
         return new PrecisionContext(ete.Context);
 } }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="P:PeterO.TrapException.Result"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Result"]'/>
     public Object Result { get {
         return ete.Result;
 } }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="P:PeterO.TrapException.Error"]'/>
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Error"]'/>
     public int Error { get {
         return ete.Error;
 } }
 
-    /// <include file='docs.xml' 
-    /// path='docs/doc[@name="M:PeterO.TrapException.#ctor(System.Int32,PeterO.PrecisionContext,System.Object)"]'/>
-    public TrapException(int flag, PrecisionContext ctx, Object result) {
+    private TrapException() : base() {
+    }
+
+    internal static TrapException Create(ETrapException ete) {
+      var ex = new TrapException();
+      ex.ete = ete;
+      return ex;
+    }
+
+    /// <include file='docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ETrapException.#ctor(System.Int32,PeterO.Numbers.EContext,System.Object)"]'/>
+    public TrapException(int flag, PrecisionContext ctx, Object result) :
+      base(String.Empty) {
       Object wrappedResult = result;
       var ed = result as EDecimal;
       var er = result as ERational;

@@ -9,7 +9,7 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.CBORObjectMath"]'/>
   internal static class CBORObjectMath {
     public static CBORObject Addition(CBORObject a, CBORObject b) {

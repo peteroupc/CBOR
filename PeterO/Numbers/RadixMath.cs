@@ -8,7 +8,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="T:PeterO.Numbers.RadixMath`1"]'/>
   internal class RadixMath<T> : IRadixMath<T> {
     private const int IntegerModeFixedScale = 1;
@@ -2526,10 +2526,8 @@ EInteger desiredExponent) {
         }
         return retval;
       } else {
-        EInteger mantissaDividend =
-          AbsInt(this.helper.GetMantissa(thisValue));
-        EInteger mantissaDivisor =
-          AbsInt(this.helper.GetMantissa(divisor));
+        EInteger mantissaDividend = AbsInt(this.helper.GetMantissa(thisValue));
+        EInteger mantissaDivisor = AbsInt(this.helper.GetMantissa(divisor));
         FastInteger expDividend =
           FastInteger.FromBig(this.helper.GetExponent(thisValue));
         FastInteger expDivisor =

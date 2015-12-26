@@ -13,7 +13,7 @@ namespace PeterO.Cbor {
   // because they are not CLS-compliant or they
   // are specific to the .NET framework.
   public sealed partial class CBORObject {
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsUInt16"]'/>
     [CLSCompliant(false)]
     public ushort AsUInt16() {
@@ -24,7 +24,7 @@ namespace PeterO.Cbor {
       return (ushort)v;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsUInt32"]'/>
     [CLSCompliant(false)]
     public uint AsUInt32() {
@@ -35,7 +35,7 @@ namespace PeterO.Cbor {
       return (uint)v;
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsSByte"]'/>
     [CLSCompliant(false)]
     public sbyte AsSByte() {
@@ -148,7 +148,7 @@ newDecimal.Mantissa.Sign < 0);
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsDecimal"]'/>
     [CLSCompliant(false)]
     public decimal AsDecimal() {
@@ -159,7 +159,7 @@ newDecimal.Mantissa.Sign < 0);
         ExtendedDecimalToDecimal(this.AsExtendedDecimal()));
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsUInt64"]'/>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
@@ -187,14 +187,14 @@ newDecimal.Mantissa.Sign < 0);
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.SByte,System.IO.Stream)"]'/>
     [CLSCompliant(false)]
     public static void Write(sbyte value, Stream stream) {
       Write((long)value, stream);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.UInt64,System.IO.Stream)"]'/>
     [CLSCompliant(false)]
     public static void Write(ulong value, Stream stream) {
@@ -216,7 +216,7 @@ newDecimal.Mantissa.Sign < 0);
       }
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Decimal)"]'/>
     public static CBORObject FromObject(decimal value) {
       int[] bits = Decimal.GetBits(value);
@@ -251,21 +251,21 @@ new[] { FromObject(-scale),
  4);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.UInt32,System.IO.Stream)"]'/>
     [CLSCompliant(false)]
     public static void Write(uint value, Stream stream) {
       Write((ulong)value, stream);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.UInt16,System.IO.Stream)"]'/>
     [CLSCompliant(false)]
     public static void Write(ushort value, Stream stream) {
       Write((ulong)value, stream);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.SByte)"]'/>
     [CLSCompliant(false)]
     public static CBORObject FromObject(sbyte value) {
@@ -287,59 +287,59 @@ new[] { FromObject(-scale),
       return BigInteger.fromBytes(data, true);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.UInt64)"]'/>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ulong value) {
       return CBORObject.FromObject(UInt64ToBigInteger(value));
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.UInt32)"]'/>
     [CLSCompliant(false)]
     public static CBORObject FromObject(uint value) {
       return FromObject((long)(Int64)value);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.UInt16)"]'/>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ushort value) {
       return FromObject((long)(Int64)value);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.UInt64)"]'/>
     [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
       return FromObjectAndTag(o, UInt64ToBigInteger(tag));
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]'/>
     public static CBORObject operator +(CBORObject a, CBORObject b) {
       return Addition(a, b);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Subtraction(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]'/>
     public static CBORObject operator -(CBORObject a, CBORObject b) {
       return Subtract(a, b);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]'/>
     public static CBORObject operator *(CBORObject a, CBORObject b) {
       return Multiply(a, b);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Division(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]'/>
     public static CBORObject operator /(CBORObject a, CBORObject b) {
       return Divide(a, b);
     }
 
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.op_Modulus(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]'/>
     public static CBORObject operator %(CBORObject a, CBORObject b) {
       return Remainder(a, b);

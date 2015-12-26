@@ -10,7 +10,7 @@ using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <include file='docs.xml' 
+    /// <include file='docs.xml'
     /// path='docs/doc[@name="T:PeterO.Cbor.CBORUtilities"]'/>
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
