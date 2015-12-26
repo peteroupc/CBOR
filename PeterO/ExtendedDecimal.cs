@@ -288,8 +288,8 @@ return new ExtendedDecimal(EDecimal.FromString(str, offset, length));
     /// <exception cref='FormatException'>The parameter <paramref
     /// name='str'/> is not a correctly formatted number
     /// string.</exception>
-    /// <exception cref='ArgumentNullException'>The parameter
-    /// &quot;str&quot; is null.</exception>
+    /// <exception cref='ArgumentNullException'>The parameter <paramref
+    /// name='str'/> is null.</exception>
     public static ExtendedDecimal FromString(string str,
       int offset,
       int length,
@@ -989,9 +989,6 @@ return new ExtendedDecimal(this.ed.DivideToExponent(divisor.ed,
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='context'/> is null.</exception>
     public ExtendedDecimal Abs(PrecisionContext context) {
-  if ((context) == null) {
-  throw new ArgumentNullException("context");
-}
 return new ExtendedDecimal(this.ed.Abs(context == null ? null : context.ec));
 }
 
@@ -1702,9 +1699,6 @@ return new ExtendedDecimal(this.ed.Quantize(desiredExponentSmall, ctx == null?
   if ((otherValue) == null) {
   throw new ArgumentNullException("otherValue");
 }
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
 return new ExtendedDecimal(this.ed.Quantize(otherValue.ed, ctx == null ? null:
   ctx.ec));
 }
@@ -1727,9 +1721,6 @@ return new ExtendedDecimal(this.ed.Quantize(otherValue.ed, ctx == null ? null:
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='ctx'/> is null.</exception>
     public ExtendedDecimal RoundToIntegralExact(PrecisionContext ctx) {
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
 return new ExtendedDecimal(this.ed.RoundToIntegralExact(ctx == null ? null :
   ctx.ec));
 }
@@ -1754,9 +1745,6 @@ return new ExtendedDecimal(this.ed.RoundToIntegralExact(ctx == null ? null :
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='ctx'/> is null.</exception>
     public ExtendedDecimal RoundToIntegralNoRoundedFlag(PrecisionContext ctx) {
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
 return new ExtendedDecimal(this.ed.RoundToIntegralNoRoundedFlag(ctx == null ?
   null : ctx.ec));
 }
@@ -1771,7 +1759,12 @@ return new ExtendedDecimal(this.ed.RoundToIntegralNoRoundedFlag(ctx == null ?
     /// means round to the thousandth (10^-3, 0.0001), and 3 means round to
     /// the thousand (10^3, 1000). A value of 0 rounds the number to an
     /// integer.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null, in which case the default rounding mode is
+    /// HalfEven.</param>
     /// <returns>A decimal number rounded to the closest value
     /// representable in the given precision. Signals FlagInvalid and
     /// returns NaN if the result can't fit the given precision without
@@ -1785,9 +1778,6 @@ return new ExtendedDecimal(this.ed.RoundToIntegralNoRoundedFlag(ctx == null ?
       PrecisionContext ctx) {
   if ((exponent) == null) {
   throw new ArgumentNullException("exponent");
-}
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
 }
 return new ExtendedDecimal(this.ed.RoundToExponentExact(exponent.ei,
   ctx == null ? null : ctx.ec));
@@ -1806,8 +1796,7 @@ return new ExtendedDecimal(this.ed.RoundToExponentExact(exponent.ei,
     /// rounding, and exponent range of the result. If HasFlags of the
     /// context is true, will also store the flags resulting from the
     /// operation (the flags are in addition to the pre-existing flags).
-    /// Can be null, in which case the default rounding mode is
-    /// HalfEven.</param>
+    /// Can be null.</param>
     /// <returns>A decimal number rounded to the closest value
     /// representable in the given precision, meaning if the result can't
     /// fit the precision, additional digits are discarded to make it fit.
@@ -1821,9 +1810,6 @@ return new ExtendedDecimal(this.ed.RoundToExponentExact(exponent.ei,
       PrecisionContext ctx) {
   if ((exponent) == null) {
   throw new ArgumentNullException("exponent");
-}
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
 }
 return new ExtendedDecimal(this.ed.RoundToExponent(exponent.ei, ctx == null ?
   null : ctx.ec));
@@ -1839,7 +1825,11 @@ return new ExtendedDecimal(this.ed.RoundToExponent(exponent.ei, ctx == null ?
     /// means round to the thousandth (10^-3, 0.0001), and 3 means round to
     /// the thousand (10^3, 1000). A value of 0 rounds the number to an
     /// integer.</param>
-    /// <param name='ctx'>A PrecisionContext object.</param>
+    /// <param name='ctx'>A precision context to control precision,
+    /// rounding, and exponent range of the result. If HasFlags of the
+    /// context is true, will also store the flags resulting from the
+    /// operation (the flags are in addition to the pre-existing flags).
+    /// Can be null.</param>
     /// <returns>A decimal number rounded to the closest value
     /// representable in the given precision. Signals FlagInvalid and
     /// returns NaN if the result can't fit the given precision without
@@ -1851,9 +1841,6 @@ return new ExtendedDecimal(this.ed.RoundToExponent(exponent.ei, ctx == null ?
     /// name='ctx'/> is null.</exception>
     public ExtendedDecimal RoundToExponentExact(int exponentSmall,
       PrecisionContext ctx) {
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
 return new ExtendedDecimal(this.ed.RoundToExponentExact(exponentSmall,
   ctx == null ? null : ctx.ec));
 }
@@ -1884,9 +1871,6 @@ return new ExtendedDecimal(this.ed.RoundToExponentExact(exponentSmall,
     /// name='ctx'/> is null.</exception>
     public ExtendedDecimal RoundToExponent(int exponentSmall,
       PrecisionContext ctx) {
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
 return new ExtendedDecimal(this.ed.RoundToExponent(exponentSmall, ctx == null?
   null : ctx.ec));
 }
@@ -1908,10 +1892,8 @@ return new ExtendedDecimal(this.ed.RoundToExponent(exponentSmall, ctx == null?
   if ((op) == null) {
   throw new ArgumentNullException("op");
 }
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
-return new ExtendedDecimal(this.ed.Multiply(op.ed, ctx == null ? null : ctx.ec));
+return new ExtendedDecimal(this.ed.Multiply(op.ed, ctx == null ? null :
+  ctx.ec));
 }
 
     /// <summary>Multiplies by one value, and then adds another
@@ -1935,9 +1917,6 @@ return new ExtendedDecimal(this.ed.Multiply(op.ed, ctx == null ? null : ctx.ec))
 }
   if ((augend) == null) {
   throw new ArgumentNullException("augend");
-}
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
 }
 return new ExtendedDecimal(this.ed.MultiplyAndAdd(op.ed, augend.ed,
   ctx == null ? null : ctx.ec));
@@ -1965,9 +1944,6 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(op.ed, augend.ed,
   if ((subtrahend) == null) {
   throw new ArgumentNullException("subtrahend");
 }
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
 return new ExtendedDecimal(this.ed.MultiplyAndSubtract(op.ed, subtrahend.ed,
   ctx.ec));
 }
@@ -1984,10 +1960,8 @@ return new ExtendedDecimal(this.ed.MultiplyAndSubtract(op.ed, subtrahend.ed,
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='ctx'/> is null.</exception>
     public ExtendedDecimal RoundToPrecision(PrecisionContext ctx) {
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
-return new ExtendedDecimal(this.ed.RoundToPrecision(ctx == null ? null : ctx.ec));
+return new ExtendedDecimal(this.ed.RoundToPrecision(ctx == null ? null :
+  ctx.ec));
 }
 
     /// <summary>Rounds this object&#x27;s value to a given precision,
@@ -2025,9 +1999,6 @@ return new ExtendedDecimal(this.ed.Plus(ctx == null ? null : ctx.ec));
     [Obsolete(
       "Instead of this method use RoundToPrecision and pass a " + "precision context with the IsPrecisionInBits property set.")]
     public ExtendedDecimal RoundToBinaryPrecision(PrecisionContext ctx) {
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
 return new ExtendedDecimal(this.ed.RoundToBinaryPrecision(ctx == null ? null :
   ctx.ec));
 }
@@ -2127,15 +2098,13 @@ return new ExtendedDecimal(this.ed.Log10(ctx == null ? null : ctx.ec));
     /// context's Precision property is 0), and the exponent has a
     /// fractional part.</returns>
     /// <exception cref='ArgumentNullException'>The parameter <paramref
-    /// name='exponent'/> or <paramref name='ctx'/> is null.</exception>
+    /// name='exponent'/> is null.</exception>
     public ExtendedDecimal Pow(ExtendedDecimal exponent, PrecisionContext ctx) {
   if ((exponent) == null) {
   throw new ArgumentNullException("exponent");
 }
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
-return new ExtendedDecimal(this.ed.Pow(exponent.ed, ctx == null ? null : ctx.ec));
+return new ExtendedDecimal(this.ed.Pow(exponent.ed, ctx == null ? null :
+  ctx.ec));
 }
 
     /// <summary>Raises this object&#x27;s value to the given
@@ -2151,9 +2120,6 @@ return new ExtendedDecimal(this.ed.Pow(exponent.ed, ctx == null ? null : ctx.ec)
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='ctx'/> is null.</exception>
     public ExtendedDecimal Pow(int exponentSmall, PrecisionContext ctx) {
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
 return new ExtendedDecimal(this.ed.Pow(exponentSmall, ctx == null ? null :
   ctx.ec));
 }

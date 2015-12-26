@@ -249,7 +249,7 @@ out bigrem);
           this.isSmall = true;
           this.shiftedSmall = FastParseLong(str, 0, newLength);
         } else {
-          this.shiftedBigInt = EInteger.fromSubstring(str, 0, newLength);
+          this.shiftedBigInt = EInteger.FromSubstring(str, 0, newLength);
         }
       }
       for (int i = str.Length - 1; i >= 0; --i) {
@@ -377,7 +377,7 @@ out bigrem);
           this.isSmall = true;
           this.shiftedSmall = FastParseLong(str, 0, newLength);
         } else {
-          this.shiftedBigInt = EInteger.fromSubstring(str, 0, newLength);
+          this.shiftedBigInt = EInteger.FromSubstring(str, 0, newLength);
         }
         this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
       }

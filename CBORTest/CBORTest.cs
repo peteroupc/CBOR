@@ -1439,7 +1439,6 @@ stringTemp);
 
     [Test]
     public void TestHalfPrecision() {
-      // TODO: Do exhaustive half precision decoding test
       CBORObject o = CBORObject.DecodeFromBytes(
         new byte[] { 0xf9, 0x7c, 0x00 });
       Assert.AreEqual(Single.PositiveInfinity, o.AsSingle());

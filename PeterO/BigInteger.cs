@@ -30,7 +30,7 @@ namespace PeterO {
       Justification = "BigInteger is immutable")]
 #endif
 
-    public static readonly BigInteger ONE = new BigInteger(EInteger.ONE);
+    public static readonly BigInteger ONE = new BigInteger(EInteger.One);
 
     internal EInteger ei;
 
@@ -58,7 +58,7 @@ namespace PeterO {
       "CA2104",
       Justification = "BigInteger is immutable")]
 #endif
-    public static readonly BigInteger ZERO = new BigInteger(EInteger.ZERO);
+    public static readonly BigInteger ZERO = new BigInteger(EInteger.Zero);
 
     /// <summary>Gets a value indicating whether this value is
     /// even.</summary>
@@ -89,7 +89,7 @@ namespace PeterO {
     /// name='bytes'/> is null.</exception>
     [Obsolete("Renamed to 'fromBytes'.")]
     public static BigInteger fromByteArray(byte[] bytes, bool littleEndian) {
-      return new BigInteger(EInteger.fromBytes(bytes, littleEndian));
+      return new BigInteger(EInteger.FromBytes(bytes, littleEndian));
  }
 
     /// <summary>Initializes a BigInteger object from an array of
@@ -100,7 +100,7 @@ namespace PeterO {
     /// <exception cref='ArgumentNullException'>The parameter <paramref
     /// name='bytes'/> is null.</exception>
     public static BigInteger fromBytes(byte[] bytes, bool littleEndian) {
-      return new BigInteger(EInteger.fromBytes(bytes, littleEndian));
+      return new BigInteger(EInteger.FromBytes(bytes, littleEndian));
     }
 
     /// <summary>Converts a string to an arbitrary-precision integer. The
@@ -136,7 +136,7 @@ namespace PeterO {
     /// </code>
     /// </example>
     public static BigInteger fromRadixString(string str, int radix) {
-      return new BigInteger(EInteger.fromRadixString(str, radix));
+      return new BigInteger(EInteger.FromRadixString(str, radix));
     }
 
     /// <summary>Converts a portion of a string to an arbitrary-precision
@@ -167,7 +167,7 @@ namespace PeterO {
       int radix,
       int index,
       int endIndex) {
- return new BigInteger(EInteger.fromRadixSubstring(str,
+ return new BigInteger(EInteger.FromRadixSubstring(str,
         radix, index, endIndex));
     }
 
@@ -208,7 +208,7 @@ return new BigInteger(EInteger.fromString(str));
     public static BigInteger fromSubstring(string str,
       int index,
       int endIndex) {
-return new BigInteger(EInteger.fromSubstring(str, index, endIndex));
+return new BigInteger(EInteger.FromSubstring(str, index, endIndex));
 }
 
     /// <summary>Converts a 64-bit signed integer to a big
@@ -217,14 +217,14 @@ return new BigInteger(EInteger.fromSubstring(str, index, endIndex));
     /// <returns>A BigInteger object with the same value as the 64-bit
     /// number.</returns>
     public static BigInteger valueOf(long longerValue) {
-      return new BigInteger(EInteger.valueOf(longerValue));
+      return new BigInteger(EInteger.FromInt64(longerValue));
  }
 
     /// <summary>Returns the absolute value of this object's
     /// value.</summary>
     /// <returns>This object's value with the sign removed.</returns>
     public BigInteger abs() {
-      return new BigInteger(this.ei.abs());
+      return new BigInteger(this.ei.Abs());
  }
 
     /// <summary>Adds this object and another object.</summary>
@@ -301,7 +301,7 @@ return this.ei.canFitInInt();
       if ((divisor) == null) {
   throw new ArgumentNullException("divisor");
 }
-      EInteger[] eia = this.ei.divideAndRemainder(divisor.ei);
+      EInteger[] eia = this.ei.DivRem(divisor.ei);
     return new BigInteger[] { new BigInteger(eia[0]), new BigInteger(eia[1])
         };
  }
@@ -378,7 +378,7 @@ return new BigInteger(this.ei.gcd(bigintSecond.ei));
     [Obsolete(
   "To make the conversion intention clearer use the 'intValueChecked' and 'intValueUnchecked' methods instead. Replace 'intValue' with 'intValueChecked' in your code." )]
     public int intValue() {
-return this.ei.intValueChecked();
+return this.ei.AsInt32Checked();
 }
 
     /// <summary>Converts this object's value to a 32-bit signed
@@ -387,7 +387,7 @@ return this.ei.intValueChecked();
     /// <exception cref='OverflowException'>This object's value is too big
     /// to fit a 32-bit signed integer.</exception>
     public int intValueChecked() {
-return this.ei.intValueChecked();
+return this.ei.AsInt32Checked();
 }
 
     /// <summary>Converts this object's value to a 32-bit signed integer.
@@ -397,7 +397,7 @@ return this.ei.intValueChecked();
     /// object's value).</summary>
     /// <returns>A 32-bit signed integer.</returns>
     public int intValueUnchecked() {
-return this.ei.intValueUnchecked();
+return this.ei.AsInt32Unchecked();
 }
 
     /// <summary>Converts this object's value to a 64-bit signed
@@ -539,7 +539,7 @@ return new BigInteger(this.ei.remainder(divisor.ei));
     /// absolute value of numberBits.</param>
     /// <returns>A BigInteger object.</returns>
     public BigInteger shiftLeft(int numberBits) {
-      return new BigInteger(this.ei.shiftLeft(numberBits));
+      return new BigInteger(this.ei.ShiftLeft(numberBits));
  }
 
     /// <summary>Returns a big integer with the bits shifted to the right.
@@ -549,7 +549,7 @@ return new BigInteger(this.ei.remainder(divisor.ei));
     /// <param name='numberBits'>Number of bits to shift right.</param>
     /// <returns>A BigInteger object.</returns>
     public BigInteger shiftRight(int numberBits) {
-      return new BigInteger(this.ei.shiftRight(numberBits));
+      return new BigInteger(this.ei.ShiftRight(numberBits));
     }
 
     /// <summary>Finds the square root of this instance&#x27;s value,
@@ -557,7 +557,7 @@ return new BigInteger(this.ei.remainder(divisor.ei));
     /// <returns>The square root of this object's value. Returns 0 if this
     /// value is 0 or less.</returns>
     public BigInteger sqrt() {
-      return new BigInteger(this.ei.sqrt());
+      return new BigInteger(this.ei.Sqrt());
     }
 
     /// <summary>Calculates the square root and the remainder.</summary>
@@ -567,7 +567,7 @@ return new BigInteger(this.ei.remainder(divisor.ei));
     /// value is 0 or less, or one and zero if this value equals
     /// 1.</returns>
     public BigInteger[] sqrtWithRemainder() {
-      EInteger[] eia = this.ei.sqrtWithRemainder();
+      EInteger[] eia = this.ei.SqrtRem();
       return new BigInteger[] { new BigInteger(eia[0]), new BigInteger(eia[1])
         };
     }
@@ -581,7 +581,7 @@ return new BigInteger(this.ei.remainder(divisor.ei));
       if ((subtrahend) == null) {
   throw new ArgumentNullException("subtrahend");
 }
-      return new BigInteger(this.ei.subtract(subtrahend.ei));
+      return new BigInteger(this.ei.Subtract(subtrahend.ei));
  }
 
     /// <summary>Returns whether a bit is set in the two's-complement

@@ -2066,7 +2066,7 @@ ctx,
             "Result requires too much memory");
         }
       }
-      EInteger[] sr = mantissa.sqrtWithRemainder();
+      EInteger[] sr = mantissa.SqrtRem();
       digitCount = this.helper.CreateShiftAccumulator(sr[0]).GetDigitLength();
       EInteger squareRootRemainder = sr[1];
       // DebugUtility.Log("I " + mantissa + " -> " + sr[0] + " [target="+
@@ -3590,7 +3590,7 @@ EContext ctx) {
       }
       // get the precision
       FastInteger fastPrecision = ctx.Precision.canFitInInt() ? new
-    FastInteger(ctx.Precision.intValueChecked()) :
+    FastInteger(ctx.Precision.AsInt32Checked()) :
       FastInteger.FromBig(ctx.Precision);
       // No need to check if precision is less than 0, since the
       // PrecisionContext object should already ensure this
@@ -3606,9 +3606,9 @@ EContext ctx) {
       // get the exponent range
       if (ctx != null && ctx.HasExponentRange) {
         fastEMax = ctx.EMax.canFitInInt() ? new
-       FastInteger(ctx.EMax.intValueChecked()) : FastInteger.FromBig(ctx.EMax);
+       FastInteger(ctx.EMax.AsInt32Checked()) : FastInteger.FromBig(ctx.EMax);
         fastEMin = ctx.EMin.canFitInInt() ? new
-       FastInteger(ctx.EMin.intValueChecked()) : FastInteger.FromBig(ctx.EMin);
+       FastInteger(ctx.EMin.AsInt32Checked()) : FastInteger.FromBig(ctx.EMin);
       }
       ERounding rounding = (ctx == null) ? ERounding.HalfEven : ctx.Rounding;
       bool unlimitedPrec = fastPrecision.IsValueZero;
@@ -3644,7 +3644,7 @@ lastDiscarded,
               }
               EInteger bigexp = this.helper.GetExponent(thisValue);
               FastInteger fastExp = bigexp.canFitInInt() ? new
-           FastInteger(bigexp.intValueChecked()) : FastInteger.FromBig(bigexp);
+           FastInteger(bigexp.AsInt32Checked()) : FastInteger.FromBig(bigexp);
               FastInteger fastAdjustedExp = FastInteger.Copy(fastExp);
               FastInteger fastNormalMin = FastInteger.Copy(fastEMin);
               if (ctx == null || ctx.AdjustExponent) {
@@ -3682,7 +3682,7 @@ lastDiscarded,
                 thisFlags);
                 }
                 FastInteger fastExp = bigexp.canFitInInt() ? new
-           FastInteger(bigexp.intValueChecked()) : FastInteger.FromBig(bigexp);
+           FastInteger(bigexp.AsInt32Checked()) : FastInteger.FromBig(bigexp);
                 FastInteger fastAdjustedExp = FastInteger.Copy(fastExp);
                 FastInteger fastNormalMin = FastInteger.Copy(fastEMin);
                 if (ctx == null || ctx.AdjustExponent) {

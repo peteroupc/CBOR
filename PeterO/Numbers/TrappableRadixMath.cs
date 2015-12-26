@@ -6,6 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
+using PeterO;
 
 namespace PeterO.Numbers {
     // <summary>Implements arithmetic methods that support
@@ -14,6 +15,11 @@ namespace PeterO.Numbers {
     // radix.</typeparam>
   internal class TrappableRadixMath<T> : IRadixMath<T>
   {
+    private void ThrowTrapException(int flag, EContext ctx, object result) {
+      throw new TrapException(flag, ctx == null ? null : new
+        PrecisionContext(ctx), result);
+    }
+
     private static EContext GetTrappableContext(EContext ctx) {
       return (ctx == null) ? null : ((ctx.Traps == 0) ? ctx :
       ctx.WithBlankFlags());
@@ -40,30 +46,30 @@ EContext dst) {
         for (var i = 0; i < 32; ++i) {
           int flag = mutexConditions & (i << 1);
           if (flag != 0) {
-            throw new TrapException(flag, dst, result);
+            ThrowTrapException(flag, dst, result);
           }
         }
       }
       if ((traps & EContext.FlagSubnormal) != 0) {
-        throw new TrapException(
+        ThrowTrapException(
 traps & EContext.FlagSubnormal,
 dst,
 result);
       }
       if ((traps & EContext.FlagInexact) != 0) {
-        throw new TrapException(
+        ThrowTrapException(
 traps & EContext.FlagInexact,
 dst,
 result);
       }
       if ((traps & EContext.FlagRounded) != 0) {
-        throw new TrapException(
+        ThrowTrapException(
 traps & EContext.FlagRounded,
 dst,
 result);
       }
       if ((traps & EContext.FlagClamped) != 0) {
-        throw new TrapException(
+        ThrowTrapException(
 traps & EContext.FlagClamped,
 dst,
 result);
