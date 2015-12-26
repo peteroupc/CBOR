@@ -8,7 +8,8 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Implements CBOR tag 3.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORTag3"]'/>
   internal class CBORTag3 : ICBORTag
   {
     public CBORTypeFilter GetTypeFilter() {

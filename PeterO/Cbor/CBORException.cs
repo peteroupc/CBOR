@@ -7,23 +7,21 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>Exception thrown for errors involving CBOR data.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORException"]'/>
   public class CBORException : Exception {
-    /// <summary>Initializes a new instance of the CBORException
-    /// class.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor"]'/>
     public CBORException() {
     }
 
-    /// <summary>Initializes a new instance of the CBORException
-    /// class.</summary>
-    /// <param name='message'>A string object.</param>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor(System.String)"]'/>
     public CBORException(string message) : base(message) {
     }
 
-    /// <summary>Initializes a new instance of the CBORException class.
-    /// Uses the given message and inner exception.</summary>
-    /// <param name='message'>A string object.</param>
-    /// <param name='innerException'>An Exception object.</param>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor(System.String,System.Exception)"]'/>
     public CBORException(string message, Exception innerException) :
       base(message, innerException) {
     }

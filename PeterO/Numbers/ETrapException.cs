@@ -8,15 +8,14 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-    /// <summary>Exception thrown for arithmetic trap errors.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.Numbers.ETrapException"]'/>
   internal class ETrapException : ArithmeticException {
     private readonly Object result;
     private readonly EContext ctx;
 
-    /// <summary>Gets the precision context used during the operation that
-    /// triggered the trap. May be null.</summary>
-    /// <value>The precision context used during the operation that
-    /// triggered the trap. May be null.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Context"]'/>
     public EContext Context {
       get {
         return this.ctx;
@@ -25,22 +24,16 @@ namespace PeterO.Numbers {
 
     private readonly int error;
 
-    /// <summary>Gets the defined result of the operation that caused the
-    /// trap.</summary>
-    /// <value>The defined result of the operation that caused the
-    /// trap.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Result"]'/>
     public Object Result {
       get {
         return this.result;
       }
     }
 
-    /// <summary>Gets the flag that specifies the kind of error
-    /// (PrecisionContext.FlagXXX). This will only be one flag, such as
-    /// FlagInexact or FlagSubnormal.</summary>
-    /// <value>The flag that specifies the kind of error
-    /// (PrecisionContext.FlagXXX). This will only be one flag, such as
-    /// FlagInexact or FlagSubnormal.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Error"]'/>
     public int Error {
       get {
         return this.error;
@@ -58,11 +51,8 @@ namespace PeterO.Numbers {
         EContext.FlagUnderflow) ? "Underflow" : "Trap")))))));
     }
 
-    /// <summary>Initializes a new instance of the TrapException
-    /// class.</summary>
-    /// <param name='flag'>A 32-bit signed integer.</param>
-    /// <param name='ctx'>An EContext object.</param>
-    /// <param name='result'>An arbitrary object.</param>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.Numbers.ETrapException.#ctor(System.Int32,PeterO.Numbers.EContext,System.Object)"]'/>
     public ETrapException(int flag, EContext ctx, Object result) :
       base(FlagToMessage(flag)) {
       this.error = flag;

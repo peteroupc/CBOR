@@ -8,9 +8,8 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-    /// <summary>Encapsulates radix-independent arithmetic.</summary>
-    /// <typeparam name='T'>Data type for a numeric value in a particular
-    /// radix.</typeparam>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.Numbers.RadixMath`1"]'/>
   internal class RadixMath<T> : IRadixMath<T> {
     private const int IntegerModeFixedScale = 1;
     private const int IntegerModeRegular = 0;

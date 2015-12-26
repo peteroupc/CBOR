@@ -13,10 +13,8 @@ namespace PeterO.Numbers {
     private const int SmallBitLength = 32;
     private int bitLeftmost;
 
-    /// <summary>Gets a value indicating whether the last discarded bit was
-    /// set.</summary>
-    /// <value>True if the last discarded bit was set; otherwise,
-    /// false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.BitShiftAccumulator.LastDiscardedDigit"]'/>
     public int LastDiscardedDigit
     {
       get
@@ -27,10 +25,8 @@ namespace PeterO.Numbers {
 
     private int bitsAfterLeftmost;
 
-    /// <summary>Gets a value indicating whether any of the discarded bits
-    /// to the right of the last one was set.</summary>
-    /// <value>True if any of the discarded bits to the right of the last
-    /// one was set; otherwise, false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.BitShiftAccumulator.OlderDiscardedDigits"]'/>
     public int OlderDiscardedDigits
     {
       get
@@ -88,8 +84,8 @@ namespace PeterO.Numbers {
 
     private FastInteger discardedBitCount;
 
-    /// <summary>Gets the number of digits discarded.</summary>
-    /// <value>The number of digits discarded.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.Numbers.BitShiftAccumulator.DiscardedDigitCount"]'/>
     public FastInteger DiscardedDigitCount
     {
       get

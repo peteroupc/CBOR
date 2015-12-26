@@ -8,9 +8,8 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-    /// <summary>Common interface for classes that shift a number of digits
-    /// and record information on whether a non-zero digit was discarded
-    /// this way.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.Numbers.IShiftAccumulator"]'/>
   internal interface IShiftAccumulator {
     EInteger ShiftedInt { get; }
 

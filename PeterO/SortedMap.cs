@@ -9,11 +9,8 @@ using System;
 using System.Collections.Generic;
 
 namespace PeterO {
-    /// <summary>A dictionary sorted by key. It is here because the
-    /// Portable Class Library subset used by CBOR doesn't include the
-    /// System.Collections.Generic.SortedDictionary class.</summary>
-    /// <typeparam name='T1'>The type of each key.</typeparam>
-    /// <typeparam name='T2'>The type of each value.</typeparam>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.SortedMap`2"]'/>
   internal class SortedMap<T1, T2> : IDictionary<T1, T2> {
     private readonly RedBlackTree<KeyValuePair<T1, T2>> tree;
     private static readonly IComparer<KeyValuePair<T1, T2>> comp = new
@@ -113,9 +110,8 @@ out kvp)) {
       return this.tree.Contains(item);
     }
 
-    /// <summary>Copies this object's elements to another array.</summary>
-    /// <param name='array'>An array of KeyValuePair.</param>
-    /// <param name='arrayIndex'>Index into the array to copy to.</param>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="M:PeterO.SortedMap`2.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)"]'/>
     public void CopyTo(KeyValuePair<T1, T2>[] array, int arrayIndex) {
       this.tree.CopyTo(array, arrayIndex);
     }
@@ -126,9 +122,8 @@ out kvp)) {
       }
     }
 
-    /// <summary>Gets a value indicating whether this map is
-    /// read-only.</summary>
-    /// <value>Always false.</value>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="P:PeterO.SortedMap`2.IsReadOnly"]'/>
     public bool IsReadOnly {
       get {
         return false;

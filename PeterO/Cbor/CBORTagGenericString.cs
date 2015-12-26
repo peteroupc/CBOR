@@ -8,7 +8,8 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Cbor {
-    /// <summary>A generic CBOR tag class for strings.</summary>
+    /// <include file='docs.xml' 
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORTagGenericString"]'/>
   internal class CBORTagGenericString : ICBORTag
   {
     public CBORTypeFilter GetTypeFilter() {
