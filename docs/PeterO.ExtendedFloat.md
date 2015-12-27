@@ -369,7 +369,7 @@ Divides this object by another binary float and returns the result. When possibl
 
 <b>Returns:</b>
 
-The quotient of the two numbers. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0.
+The quotient of the two numbers. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns not-a-number (NaN) if the divisor and the dividend are 0.
 
 <b>Exceptions:</b>
 
@@ -392,7 +392,7 @@ Divides this arbitrary-precision binary float by another arbitrary-precision bin
 
 <b>Returns:</b>
 
-The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0.
+The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns not-a-number (NaN) if the divisor and the dividend are 0.
 
 <b>Exceptions:</b>
 
@@ -453,7 +453,7 @@ Divides two arbitrary-precision binary floats, and gives a particular exponent t
 
 <b>Returns:</b>
 
-The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0. Signals FlagInvalid and returns NaN if the context defines an exponent range and the desired exponent is outside that range.
+The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns not-a-number (NaN) if the divisor and the dividend are 0. Signals FlagInvalid and returns not-a-number (NaN) if the context defines an exponent range and the desired exponent is outside that range.
 
 <b>Exceptions:</b>
 
@@ -479,7 +479,7 @@ Divides two arbitrary-precision binary floats, and gives a particular exponent t
 
 <b>Returns:</b>
 
-The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0.
+The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns not-a-number (NaN) if the divisor and the dividend are 0.
 
 <b>Exceptions:</b>
 
@@ -505,7 +505,7 @@ Divides two arbitrary-precision binary floats, and gives a particular exponent t
 
 <b>Returns:</b>
 
-The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0.
+The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns not-a-number (NaN) if the divisor and the dividend are 0.
 
 <b>Exceptions:</b>
 
@@ -531,7 +531,7 @@ Divides two arbitrary-precision binary floats, and gives a particular exponent t
 
 <b>Returns:</b>
 
-The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0. Signals FlagInvalid and returns NaN if the context defines an exponent range and the desired exponent is outside that range.
+The quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns not-a-number (NaN) if the divisor and the dividend are 0. Signals FlagInvalid and returns not-a-number (NaN) if the context defines an exponent range and the desired exponent is outside that range.
 
 <b>Exceptions:</b>
 
@@ -551,7 +551,7 @@ Divides two arbitrary-precision binary floats, and returns the integer part of t
 
 <b>Returns:</b>
 
-The integer part of the quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0.
+The integer part of the quotient of the two objects. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns not-a-number (NaN) if the divisor and the dividend are 0.
 
 ### DivideToIntegerNaturalScale
 
@@ -569,7 +569,7 @@ Divides this object by another object, and returns the integer part of the resul
 
 <b>Returns:</b>
 
-The integer part of the quotient of the two objects. Returns null if the return value would overflow the exponent range. A caller can handle a null return value by treating it as positive infinity if both operands have the same sign or as negative infinity if both operands have different signs. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0.
+The integer part of the quotient of the two objects. Returns null if the return value would overflow the exponent range. A caller can handle a null return value by treating it as positive infinity if both operands have the same sign or as negative infinity if both operands have different signs. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns not-a-number (NaN) if the divisor and the dividend are 0.
 
 <b>Exceptions:</b>
 
@@ -592,7 +592,7 @@ Divides this object by another object, and returns the integer part of the resul
 
 <b>Returns:</b>
 
-The integer part of the quotient of the two objects. The exponent will be set to 0. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0, or if the result doesn't fit the given precision.
+The integer part of the quotient of the two objects. The exponent will be set to 0. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns not-a-number (NaN) if the divisor and the dividend are 0, or if the result doesn't fit the given precision.
 
 ### DivideToSameExponent
 
@@ -610,7 +610,7 @@ Divides this object by another binary float and returns a result with the same e
 
 <b>Returns:</b>
 
-The quotient of the two numbers. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns NaN if the divisor and the dividend are 0.
+The quotient of the two numbers. Signals FlagDivideByZero and returns infinity if the divisor is 0 and the dividend is nonzero. Signals FlagInvalid and returns not-a-number (NaN) if the divisor and the dividend are 0.
 
 <b>Exceptions:</b>
 
@@ -692,7 +692,7 @@ Converts a big integer to the same value as a binary float.
 
 <b>Parameters:</b>
 
- * <i>bigint</i>: An arbitrary-precision integer object.
+ * <i>bigint</i>: An arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -994,7 +994,7 @@ Finds the base-10 logarithm of this object, that is, the power (exponent) that t
 
 <b>Returns:</b>
 
-Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns NaN if this object is less than 0. Signals FlagInvalid and returns NaN if the parameter  <i>ctx</i>
+Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns not-a-number (NaN) if this object is less than 0. Signals FlagInvalid and returns not-a-number (NaN) if the parameter  <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Max
@@ -1195,7 +1195,7 @@ Returns a number similar to this number but with the radix point moved to the le
 
 <b>Parameters:</b>
 
- * <i>bigPlaces</i>: An arbitrary-precision integer object.
+ * <i>bigPlaces</i>: An arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -1211,7 +1211,7 @@ Returns a number similar to this number but with the radix point moved to the le
 
 <b>Parameters:</b>
 
- * <i>bigPlaces</i>: An arbitrary-precision integer object.
+ * <i>bigPlaces</i>: An arbitrary-precision integer.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
@@ -1261,7 +1261,7 @@ Returns a number similar to this number but with the radix point moved to the ri
 
 <b>Parameters:</b>
 
- * <i>bigPlaces</i>: An arbitrary-precision integer object.
+ * <i>bigPlaces</i>: An arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -1277,7 +1277,7 @@ Returns a number similar to this number but with the radix point moved to the ri
 
 <b>Parameters:</b>
 
- * <i>bigPlaces</i>: An arbitrary-precision integer object.
+ * <i>bigPlaces</i>: An arbitrary-precision integer.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
@@ -1530,7 +1530,7 @@ Raises this object's value to the given exponent.
 
 <b>Returns:</b>
 
-This^exponent. Returns NaN if this object and exponent are both 0.
+This^exponent. returns not-a-number (NaN) if this object and exponent are both 0.
 
 ### Pow
 
@@ -1600,7 +1600,7 @@ Returns a binary float with the same value but a new exponent.
 
 <b>Returns:</b>
 
-A binary float with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if an overflow error occurred, or the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
+A binary float with the same value as this object but with the exponent changed. Signals FlagInvalid and returns not-a-number (NaN) if an overflow error occurred, or the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
 
 ### Quantize
 
@@ -1612,13 +1612,13 @@ Returns a binary float with the same value but a new exponent.
 
 <b>Parameters:</b>
 
- * <i>desiredExponent</i>: An arbitrary-precision integer object.
+ * <i>desiredExponent</i>: An arbitrary-precision integer.
 
  * <i>ctx</i>: A PrecisionContext object.
 
 <b>Returns:</b>
 
-A binary float with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if an overflow error occurred, or the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
+A binary float with the same value as this object but with the exponent changed. Signals FlagInvalid and returns not-a-number (NaN) if an overflow error occurred, or the rounded result can't fit the given precision, or if the context defines an exponent range and the given exponent is outside that range.
 
 ### Quantize
 
@@ -1636,7 +1636,7 @@ Returns a binary float with the same value as this object but with the same expo
 
 <b>Returns:</b>
 
-A binary float with the same value as this object but with the exponent changed. Signals FlagInvalid and returns NaN if an overflow error occurred, or the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the new exponent is outside of the valid range of the precision context, if it defines an exponent range.
+A binary float with the same value as this object but with the exponent changed. Signals FlagInvalid and returns not-a-number (NaN) if an overflow error occurred, or the result can't fit the given precision without rounding. Signals FlagInvalid and returns not-a-number (NaN) if the new exponent is outside of the valid range of the precision context, if it defines an exponent range.
 
 ### Reduce
 
@@ -1728,7 +1728,7 @@ Finds the distance to the closest multiple of the given divisor, based on the re
 
 <b>Returns:</b>
 
-The distance of the closest multiple. Signals FlagInvalid and returns NaN if the divisor is 0, or either the result of integer division (the quotient) or the remainder wouldn't fit the given precision.
+The distance of the closest multiple. Signals FlagInvalid and returns not-a-number (NaN) if the divisor is 0, or either the result of integer division (the quotient) or the remainder wouldn't fit the given precision.
 
 ### RoundToBinaryPrecision
 
@@ -1764,7 +1764,7 @@ Returns a binary number with the same value as this object, and rounds it to a n
 
 <b>Returns:</b>
 
-A binary number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
+A binary number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns not-a-number (NaN) if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
 ### RoundToExponent
 
@@ -1782,7 +1782,7 @@ Returns a binary number with the same value as this object, and rounds it to a n
 
 <b>Returns:</b>
 
-A binary number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
+A binary number rounded to the closest value representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns not-a-number (NaN) if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
 ### RoundToExponentExact
 
@@ -1800,7 +1800,7 @@ Returns a binary number with the same value as this object but rounded to an int
 
 <b>Returns:</b>
 
-A binary number rounded to the closest value representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
+A binary number rounded to the closest value representable in the given precision. Signals FlagInvalid and returns not-a-number (NaN) if the result can't fit the given precision without rounding. Signals FlagInvalid and returns not-a-number (NaN) if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
 ### RoundToExponentExact
 
@@ -1818,7 +1818,7 @@ Returns a binary number with the same value as this object but rounded to an int
 
 <b>Returns:</b>
 
-A binary number rounded to the closest value representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
+A binary number rounded to the closest value representable in the given precision. Signals FlagInvalid and returns not-a-number (NaN) if the result can't fit the given precision without rounding. Signals FlagInvalid and returns not-a-number (NaN) if the precision context defines an exponent range, the new exponent must be changed to the given exponent when rounding, and the given exponent is outside of the valid range of the precision context.
 
 ### RoundToIntegralExact
 
@@ -1833,7 +1833,7 @@ Returns a binary number with the same value as this object but rounded to an int
 
 <b>Returns:</b>
 
-A binary number rounded to the closest integer representable in the given precision. Signals FlagInvalid and returns NaN if the result can't fit the given precision without rounding. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to 0 when rounding, and 0 is outside of the valid range of the precision context.
+A binary number rounded to the closest integer representable in the given precision. Signals FlagInvalid and returns not-a-number (NaN) if the result can't fit the given precision without rounding. Signals FlagInvalid and returns not-a-number (NaN) if the precision context defines an exponent range, the new exponent must be changed to 0 when rounding, and 0 is outside of the valid range of the precision context.
 
 ### RoundToIntegralNoRoundedFlag
 
@@ -1848,7 +1848,7 @@ Returns a binary number with the same value as this object but rounded to an int
 
 <b>Returns:</b>
 
-A binary number rounded to the closest integer representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns NaN if the precision context defines an exponent range, the new exponent must be changed to 0 when rounding, and 0 is outside of the valid range of the precision context.
+A binary number rounded to the closest integer representable in the given precision, meaning if the result can't fit the precision, additional digits are discarded to make it fit. Signals FlagInvalid and returns not-a-number (NaN) if the precision context defines an exponent range, the new exponent must be changed to 0 when rounding, and 0 is outside of the valid range of the precision context.
 
 ### RoundToPrecision
 
@@ -1908,7 +1908,7 @@ Returns a number similar to this number but with the scale adjusted.
 
 <b>Parameters:</b>
 
- * <i>bigPlaces</i>: An arbitrary-precision integer object.
+ * <i>bigPlaces</i>: An arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -1924,7 +1924,7 @@ Returns a number similar to this number but with its scale adjusted.
 
 <b>Parameters:</b>
 
- * <i>bigPlaces</i>: An arbitrary-precision integer object.
+ * <i>bigPlaces</i>: An arbitrary-precision integer.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 

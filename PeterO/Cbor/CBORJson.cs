@@ -211,23 +211,28 @@ int quote) {
       CharacterInputWithCount reader,
       bool noDuplicates,
       bool objectOrArrayOnly,
+      int[] nextchar,
       int depth) {
       if (depth > 1000) {
         reader.RaiseError("Too deeply nested");
       }
       int c;
+      CBORObject ret;
       c = SkipWhitespaceJSON(reader);
       if (c == '[') {
-        return ParseJSONArray(reader, noDuplicates, depth);
+        ret = ParseJSONArray(reader, noDuplicates, depth);
+        nextchar[0] = SkipWhitespaceJSON(reader);
+        return ret;
       }
       if (c == '{') {
-        return ParseJSONObject(reader, noDuplicates, depth);
+        ret = ParseJSONObject(reader, noDuplicates, depth);
+        nextchar[0] = SkipWhitespaceJSON(reader);
+        return ret;
       }
       if (objectOrArrayOnly) {
         reader.RaiseError("A JSON object must begin with '{' or '['");
       }
-      var nextChar = new int[1];
-      return NextJSONValue(reader, c, noDuplicates, nextChar, depth);
+      return NextJSONValue(reader, c, noDuplicates, nextchar, depth);
     }
 
     internal static CBORObject ParseJSONObject(

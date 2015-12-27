@@ -251,10 +251,11 @@
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bytes'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.BigInteger.fromRadixString(System.String,System.Int32)">
-<summary>Converts a string to an arbitrary-precision integer. The
-            string portion can begin with a minus sign ("-" , U+002D) to
-            indicate that it's negative.</summary>
-            <param name='str'>A string object.</param>
+<summary>Converts a string to an arbitrary-precision integer.</summary>
+            <param name='str'>A text string. The string must contain only characters allowed by the given radix, except that it may start with a minus sign ("-",
+            U+002D) to indicate a negative number. The string is
+            not allowed to contain white space characters, including
+            spaces.</param>
             <param name='radix'>A base from 2 to 36. Depending on the radix,
             the string can use the basic digits 0 to 9 (U+0030 to U+0039)
             and then the basic letters A to Z (U+0041 to U+005A). For
@@ -284,9 +285,11 @@
 </doc>
 <doc name="M:PeterO.BigInteger.fromRadixSubstring(System.String,System.Int32,System.Int32,System.Int32)">
 <summary>Converts a portion of a string to an arbitrary-precision
-            integer in a given radix. The string portion can begin with a minus
-            sign ("-" , U+002D) to indicate that it's negative.</summary>
-            <param name='str'>A string object.</param>
+            integer in a given radix.</summary>
+            <param name='str'>A text string. The desired portion of the string must contain only characters allowed by the given radix, except that it may start with a minus sign ("-",
+            U+002D) to indicate a negative number. The desired portion is
+            not allowed to contain white space characters, including
+            spaces.</param>
             <param name='radix'>A base from 2 to 36. Depending on the radix,
             the string can use the basic digits 0 to 9 (U+0030 to U+0039)
             and then the basic letters A to Z (U+0041 to U+005A). For
@@ -308,7 +311,9 @@
 <summary>Converts a string to an arbitrary-precision
             integer.</summary>
             <param name='str'>A string containing only basic digits 0 to 9 (U+0030 to U+0039), except that it may start with a minus sign ("-",
-            U+002D).</param>
+            U+002D) to indicate a negative number.  The string is
+            not allowed to contain white space characters, including
+            spaces.</param>
             <returns>An arbitrary-precision integer with the same value as given in the
             string.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
@@ -316,9 +321,11 @@
 </doc>
 <doc name="M:PeterO.BigInteger.fromSubstring(System.String,System.Int32,System.Int32)">
 <summary>Converts a portion of a string to an arbitrary-precision
-            integer. The string portion can begin with a minus sign ("-",
-            U+002D) to indicate that it's negative.</summary>
-            <param name='str'>A string object.</param>
+            integer.</summary>
+            <param name='str'>A text string.  The desired portion of the string must contain only basic digits 0 to 9 (U+0030 to U+0039), except that it may start with a minus sign ("-",
+            U+002D) to indicate a negative number. The desired portion is
+            not allowed to contain white space characters, including
+            spaces.</param>
             <param name='index'>The index of the string that starts the string
             portion.</param>
             <param name='endIndex'>The index of the string that ends the string
@@ -841,7 +848,7 @@
             null reference to CBORObject.Null, for convenience with the Object
             overload of this method.).</summary>
             <param name='obj'>A CBOR object.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
             <exception cref='T:System.InvalidOperationException'>This object is
             not an array.</exception>
 </doc>
@@ -849,7 +856,7 @@
 <summary>Converts an object to a CBOR object and adds it to the end
             of this array.</summary>
             <param name='obj'>A CBOR object.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
             <exception cref='T:System.InvalidOperationException'>This object is
             not an array.</exception>
             <exception cref='T:System.ArgumentException'>The type of <paramref name='obj'/> is not supported.</exception>
@@ -863,7 +870,7 @@
             <param name='valueOb'>An object representing the value, which will
             be converted to a CBORObject. Can be null, in which case this value
             is converted to CBORObject.Null.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
             <exception cref='T:System.ArgumentException'>The parameter <paramref name='key'/> already exists in this map.</exception>
             <exception cref='T:System.InvalidOperationException'>This object is not a
             map.</exception>
@@ -1242,7 +1249,7 @@
             Notation (JSON) format.
             <para>If a JSON object has the same key, only the last given value
             will be used for each duplicated key. The JSON string may not begin
-            with a byte order mark (U+FEFF).</para></summary>
+            with a byte-order mark (U+FEFF).</para></summary>
             <param name='str'>A string in JSON format.</param>
             <returns>A CBORObject object.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
@@ -1568,7 +1575,7 @@
             <param name='valueOb'>An object representing the value, which will
             be converted to a CBORObject. Can be null, in which case this value
             is converted to CBORObject.Null.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
             <exception cref='T:System.InvalidOperationException'>This object is not an
             array.</exception>
             <exception cref='T:System.ArgumentException'>The parameter <paramref name='valueOb'/> has an unsupported type; or <paramref name='index'/> is not a valid index into this array.</exception>
@@ -1751,9 +1758,9 @@
 <doc name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream)">
 <summary>Generates a CBOR object from a data stream in JavaScript
             Object Notation (JSON) format. The JSON stream may begin with a
-            byte order mark (U+FEFF). Since version 2.0, the JSON stream can
+            byte-order mark (U+FEFF). Since version 2.0, the JSON stream can
             be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected
-            by assuming that the first character read must be a byte order mark
+            by assuming that the first character read must be a byte-order mark
             or a nonzero basic character (U+0001 to U+007F). (In previous
             versions, only UTF-8 was allowed.)
             <para>If a JSON object has the same key, only the last given value
@@ -1792,7 +1799,7 @@
             <param name='valueOb'>An object representing the value, which will
             be converted to a CBORObject. Can be null, in which case this value
             is converted to CBORObject.Null.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
             <exception cref='T:System.InvalidOperationException'>This object is not a
             map.</exception>
             <exception cref='T:System.ArgumentException'>The parameter <paramref name='key'/> or <paramref name='valueOb'/> has an unsupported
@@ -2549,7 +2556,7 @@
 <summary>Sets this object&#x27;s value to the current value times
             another integer.</summary>
             <param name='val'>The integer to multiply by.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
 </doc>
 <doc name="P:PeterO.Cbor.FastInteger2.Sign">
 <summary>Gets the sign of this object&#x27;s value.</summary>
@@ -2559,13 +2566,13 @@
 <summary>Sets this object&#x27;s value to the current value minus
             the given FastInteger value.</summary>
             <param name='val'>The subtrahend.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)">
 <summary>Sets this object&#x27;s value to the current value minus
             the given integer.</summary>
             <param name='val'>The subtrahend.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
 </doc>
 <doc name="T:PeterO.Cbor.ICBORConverter`1">
 <summary>Interface implemented by classes that convert objects of
@@ -2799,12 +2806,24 @@
 <doc name="T:PeterO.DataUtilities">
 <summary>Contains methods useful for reading and writing strings.
             It is designed to have no dependencies other than the basic runtime
-            class library.</summary>
+            class library.
+            <para>In C# and Java, text strings are represented as sequences
+            of 16-bit values called <c>char</c>s.  These sequences
+            are well-formed under the UTF-16 encoding form of Unicode, except if they
+            contain unpaired surrogate code points.  (A surrogate code point is used
+            to encode supplementary characters, those with code points U+10000 or
+            higher, in UTF-16.  A surrogate pair is a high surrogate [U+D800 to U+DBFF]
+            followed by a low surrogate [U+DC00 to U+DFFF]. An unpaired surrogate
+            code point is a surrogate not appearing in a surrogate pair.)
+            Many of the methods in the class allow setting the behavior to follow
+            when unpaired surrogate code points are found in text strings, such as
+            throwing an error or treating the unpaired surrogate as a replacement
+            character (U+FFFD).</para></summary>
 </doc>
 <doc name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32)">
 <summary>Gets the Unicode code point at the given index of the
             string.</summary>
-            <param name='str'>A string.</param>
+            <param name='str'>A text string.</param>
             <param name='index'>Index of the current position into the
             string.</param>
             <returns>The Unicode code point at the given position. Returns -1
@@ -2817,7 +2836,7 @@
 <doc name="M:PeterO.DataUtilities.CodePointAt(System.String,System.Int32,System.Int32)">
 <summary>Gets the Unicode code point at the given index of the
             string.</summary>
-            <param name='str'>A string.</param>
+            <param name='str'>A text string.</param>
             <param name='index'>Index of the current position into the
             string.</param>
             <param name='surrogateBehavior'>Specifies what kind of value to
@@ -2834,7 +2853,7 @@
 <doc name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32)">
 <summary>Gets the Unicode code point just before the given index of
             the string.</summary>
-            <param name='str'>A string.</param>
+            <param name='str'>A text string.</param>
             <param name='index'>Index of the current position into the
             string.</param>
             <returns>The Unicode code point at the previous position. Returns
@@ -2847,7 +2866,7 @@
 <doc name="M:PeterO.DataUtilities.CodePointBefore(System.String,System.Int32,System.Int32)">
 <summary>Gets the Unicode code point just before the given index of
             the string.</summary>
-            <param name='str'>A string.</param>
+            <param name='str'>A text string.</param>
             <param name='index'>Index of the current position into the
             string.</param>
             <param name='surrogateBehavior'>Specifies what kind of value to
@@ -3019,7 +3038,7 @@
 <summary>Returns a string with the basic upper-case letters A to Z
             (U+0041 to U+005A) converted to lower-case. Other characters
             remain unchanged.</summary>
-            <param name='str'>A string.</param>
+            <param name='str'>A text string.</param>
             <returns>The converted string, or null if <paramref name='str'/> is
             null.</returns>
 </doc>
@@ -5679,9 +5698,7 @@
 <doc name="M:PeterO.ExtendedFloat.Reduce(PeterO.PrecisionContext)">
 <summary>Removes trailing zeros from this object's mantissa.
             For example, 1.000 becomes 1.
-            <para>If this object's value is 0, changes the exponent to 0. (This
-            is unlike the behavior in Java's BigDecimal method
-            "stripTrailingZeros" in Java 7 and earlier.)</para></summary>
+            <para>If this object's value is 0, changes the exponent to 0.</para></summary>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
@@ -9459,9 +9476,7 @@
 <doc name="M:PeterO.Numbers.EFloat.Reduce(PeterO.Numbers.EContext)">
 <summary>Removes trailing zeros from this object&#x27;s mantissa.
             For example, 1.000 becomes 1.
-            <para>If this object's value is 0, changes the exponent to 0. (This
-            is unlike the behavior in Java's BigDecimal method
-            "stripTrailingZeros" in Java 7 and earlier.)</para></summary>
+            <para>If this object's value is 0, changes the exponent to 0.</para></summary>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
@@ -9944,10 +9959,11 @@
             number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.FromRadixString(System.String,System.Int32)">
-<summary>Converts a string to an arbitrary-precision integer. The
-            string portion can begin with a minus sign ("-" , U+002D) to
-            indicate that it's negative.</summary>
-            <param name='str'>Not documented yet.</param>
+<summary>Converts a string to an arbitrary-precision integer.</summary>
+            <param name='str'>A text string. The string must contain only characters allowed by the given radix, except that it may start with a minus sign ("-",
+            U+002D) to indicate a negative number. The string is
+            not allowed to contain white space characters, including
+            spaces.</param>
             <param name='radix'>A base from 2 to 36. Depending on the radix,
             the string can use the basic digits 0 to 9 (U+0030 to U+0039)
             and then the basic letters A to Z (U+0041 to U+005A). For
@@ -9977,9 +9993,11 @@
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.FromRadixSubstring(System.String,System.Int32,System.Int32,System.Int32)">
 <summary>Converts a portion of a string to an arbitrary-precision
-            integer in a given radix. The string portion can begin with a minus
-            sign ("-" , U+002D) to indicate that it's negative.</summary>
-            <param name='str'>Not documented yet.</param>
+            integer in a given radix.</summary>
+            <param name='str'>A text string. The desired portion of the string must contain only characters allowed by the given radix, except that it may start with a minus sign ("-",
+            U+002D) to indicate a negative number. The desired portion is
+            not allowed to contain white space characters, including
+            spaces.</param>
             <param name='radix'>A base from 2 to 36. Depending on the radix,
             the string can use the basic digits 0 to 9 (U+0030 to U+0039)
             and then the basic letters A to Z (U+0041 to U+005A). For
@@ -9999,9 +10017,11 @@
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.FromSubstring(System.String,System.Int32,System.Int32)">
 <summary>Converts a portion of a string to an arbitrary-precision
-            integer. The string portion can begin with a minus sign ("-",
-            U+002D) to indicate that it's negative.</summary>
-            <param name='str'>Not documented yet.</param>
+            integer.</summary>
+            <param name='str'>A text string. The desired portion of the string must contain only basic digits 0 to 9 (U+0030 to U+0039), except that it may start with a minus sign ("-",
+            U+002D) to indicate a negative number. The desired portion is
+            not allowed to contain white space characters, including
+            spaces.</param>
             <param name='index'>The index of the string that starts the string
             portion.</param>
             <param name='endIndex'>The index of the string that ends the string
@@ -10197,9 +10217,10 @@
 <doc name="M:PeterO.Numbers.EInteger.fromString(System.String)">
 <summary>Converts a string to an arbitrary-precision
             integer.</summary>
-            <param name='str'>A string containing only basic digits 0 to 9 (U +
-            0030 to U+0039), except that it may start with a minus sign ("-",
-            U+002D).</param>
+            <param name='str'>A text string. The string must contain only basic digits 0 to 9 (U+0030 to U+0039), except that it may start with a minus sign ("-",
+            U+002D) to indicate a negative number. The string is
+            not allowed to contain white space characters, including
+            spaces.</param>
             <returns>An arbitrary-precision integer with the same value as given in the
             string.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
@@ -10870,7 +10891,9 @@
 <doc name="M:PeterO.Numbers.ETrapException.#ctor(System.Int32,PeterO.Numbers.EContext,System.Object)">
 <summary>Initializes a new instance of the TrapException
             class.</summary>
-            <param name='flag'>A 32-bit signed integer.</param>
+            <param name='flag'>A flag that specifies the kind of error
+            (PrecisionContext.FlagXXX). This will only be one flag, such as
+            FlagInexact or FlagSubnormal.</param>
             <param name='ctx'>An EContext object.</param>
             <param name='result'>An arbitrary object.</param>
 </doc>
@@ -10898,7 +10921,7 @@
 <summary>Sets this object&#x27;s value to the current value plus
             the given integer.</summary>
             <param name='bigintVal'>The number to add.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
 </doc>
 <doc name="P:PeterO.Numbers.FastInteger.IsEvenNumber">
 <summary>Gets a value indicating whether this object&#x27;s value
@@ -10915,18 +10938,18 @@
 <summary>Sets this object&#x27;s value to the current value times
             another integer.</summary>
             <param name='val'>The integer to multiply by.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.FastInteger.Negate">
 <summary>Sets this object&#x27;s value to 0 minus its current value
             (reverses its sign).</summary>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.FastInteger.Remainder(System.Int32)">
 <summary>Sets this object's value to the remainder of the
             current value divided by the given integer.</summary>
             <param name='divisor'>The divisor.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
             <exception cref='T:System.DivideByZeroException'>Attempted to divide
             by zero.</exception>
 </doc>
@@ -10938,19 +10961,19 @@
 <summary>Sets this object&#x27;s value to the current value minus
             the given FastInteger value.</summary>
             <param name='val'>The subtrahend.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.FastInteger.SubtractBig(PeterO.Numbers.EInteger)">
 <summary>Sets this object&#x27;s value to the current value minus
             the given integer.</summary>
             <param name='bigintVal'>The subtrahend.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.FastInteger.SubtractInt(System.Int32)">
 <summary>Sets this object&#x27;s value to the current value minus
             the given integer.</summary>
             <param name='val'>The subtrahend.</param>
-            <returns>This object.</returns>
+            <returns>This instance.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.FastInteger.ToString">
 <summary>Converts this object to a text string.</summary>

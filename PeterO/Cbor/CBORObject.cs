@@ -597,8 +597,11 @@ namespace PeterO.Cbor {
       }
       var reader = new CharacterInputWithCount(
         new CharacterReader(str, false, true));
-      CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, 0);
-      if (CBORJson.SkipWhitespaceJSON(reader) != -1) {
+      // TODO: Support no-duplicates option for next version
+      var nextchar = new int[1];
+   CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, nextchar,
+        0);
+      if (nextchar[0] != -1) {
         reader.RaiseError("End of string not reached");
       }
       return obj;
@@ -1067,8 +1070,11 @@ namespace PeterO.Cbor {
       var reader = new CharacterInputWithCount(
         new CharacterReader(stream, 2, true));
       try {
-        CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, 0);
-        if (CBORJson.SkipWhitespaceJSON(reader) != -1) {
+        // TODO: Support no-duplicates option for next version
+        var nextchar = new int[1];
+   CBORObject obj = CBORJson.ParseJSONValue(reader, false, false, nextchar,
+          0);
+        if (nextchar[0] != -1) {
           reader.RaiseError("End of data stream not reached");
         }
         return obj;

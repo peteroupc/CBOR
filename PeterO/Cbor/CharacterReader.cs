@@ -10,7 +10,7 @@ using System.IO;
 
 namespace PeterO.Cbor {
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CharacterReader"]'/>
+    /// path='docs/doc[@name="T:PeterO.Text.CharacterReader"]'/>
   internal sealed class CharacterReader : ICharacterInput {
     private readonly int mode;
     private readonly bool errorThrow;
@@ -23,20 +23,20 @@ namespace PeterO.Cbor {
     private readonly IByteReader stream;
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String)"]'
+    /// path='docs/doc[@name="M:PeterO.Text.CharacterReader.#ctor(System.String)"]'
     /// />
     public CharacterReader(string str) : this(str, false, false) {
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Boolean)"]'
+    /// path='docs/doc[@name="M:PeterO.Text.CharacterReader.#ctor(System.String,System.Boolean)"]'
     /// />
     public CharacterReader(string str, bool skipByteOrderMark) :
       this(str, skipByteOrderMark, false) {
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Boolean,System.Boolean)"]'
+    /// path='docs/doc[@name="M:PeterO.Text.CharacterReader.#ctor(System.String,System.Boolean,System.Boolean)"]'
     /// />
   public CharacterReader(
 string str,
@@ -55,27 +55,27 @@ bool errorThrow) {
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream)"]'
+    /// path='docs/doc[@name="M:PeterO.Text.CharacterReader.#ctor(System.IO.Stream)"]'
     /// />
     public CharacterReader(Stream stream) : this(stream, 0, false) {
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32,System.Boolean)"]'
+    /// path='docs/doc[@name="M:PeterO.Text.CharacterReader.#ctor(System.IO.Stream,System.Int32,System.Boolean)"]'
     /// />
     public CharacterReader(Stream stream, int mode, bool errorThrow) :
       this(stream, mode, errorThrow, false) {
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32)"]'
+    /// path='docs/doc[@name="M:PeterO.Text.CharacterReader.#ctor(System.IO.Stream,System.Int32)"]'
     /// />
     public CharacterReader(Stream stream, int mode) :
       this(stream, mode, false, false) {
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32,System.Boolean,System.Boolean)"]'
+    /// path='docs/doc[@name="M:PeterO.Text.CharacterReader.#ctor(System.IO.Stream,System.Int32,System.Boolean,System.Boolean)"]'
     /// />
     public CharacterReader(
 Stream stream,
@@ -97,7 +97,7 @@ bool dontSkipUtf8Bom) {
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.Read(System.Int32[],System.Int32,System.Int32)"]'
+    /// path='docs/doc[@name="M:PeterO.Text.CharacterReader.Read(System.Int32[],System.Int32,System.Int32)"]'
     /// />
     public int Read(int[] chars, int index, int length) {
       if (chars == null) {
@@ -136,7 +136,7 @@ bool dontSkipUtf8Bom) {
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.ReadChar"]'/>
+    /// path='docs/doc[@name="M:PeterO.Text.CharacterReader.ReadChar"]'/>
     public int ReadChar() {
       if (this.reader != null) {
         return this.reader.ReadChar();

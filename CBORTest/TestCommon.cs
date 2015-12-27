@@ -14,208 +14,13 @@ using System.Text;
 
 namespace Test {
   public static class TestCommon {
-    public static string ToByteArrayString(byte[] bytes) {
-      if (bytes == null) {
- return "null";
-}
-      var sb = new System.Text.StringBuilder();
-      const string ValueHex = "0123456789ABCDEF";
-      sb.Append("new byte[] { ");
-      for (var i = 0; i < bytes.Length; ++i) {
-        if (i > 0) {
-          sb.Append(","); }
-        if ((bytes[i] & 0x80) != 0) {
-          sb.Append("(byte)0x");
-        } else {
-          sb.Append("0x");
-        }
-        sb.Append(ValueHex[(bytes[i] >> 4) & 0xf]);
-        sb.Append(ValueHex[bytes[i] & 0xf]);
-      }
-      sb.Append("}");
-      return sb.ToString();
-    }
-
-    public static string ToByteArrayString(CBORObject obj) {
-   return new System.Text.StringBuilder().Append("CBORObject.DecodeFromBytes(")
-        .Append(ToByteArrayString(obj.EncodeToBytes()))
-        .Append(")").ToString();
-    }
-
-    private static bool ByteArraysEqual(byte[] arr1, byte[] arr2) {
-      if (arr1 == null) {
- return arr2 == null;
-}
-      if (arr2 == null) {
- return false;
-}
-      if (arr1.Length != arr2.Length) {
-        return false;
-      }
-      for (var i = 0; i < arr1.Length; ++i) {
-        if (arr1[i] != arr2[i]) {
- return false;
-}
-      }
-      return true;
-    }
+    private static readonly string valueDigits = "0123456789";
 
     public static void AssertByteArraysEqual(byte[] arr1, byte[] arr2) {
       if (!ByteArraysEqual(arr1, arr2)) {
-     Assert.Fail("Expected " + ToByteArrayString(arr1) + ", got " +
-       ToByteArrayString(arr2));
+        Assert.Fail("Expected " + ToByteArrayString(arr1) + ", got " +
+          ToByteArrayString(arr2));
       }
-    }
-
-    public static void AssertDecFrac(
-ExtendedDecimal d3,
-string output,
-string name) {
-      if (output == null && d3 != null) {
-        Assert.Fail(name + ": d3 must be null");
-      }
-      if (output != null && !d3.ToString().Equals(output)) {
-        ExtendedDecimal d4 = ExtendedDecimal.FromString(output);
-        Assert.AreEqual(
-output,
-          d3.ToString(),
-          name + ": expected: [" + d4.UnsignedMantissa + " " + d4.Exponent +
-            "]\\n" + "but was: [" + d3.UnsignedMantissa + " " + d3.Exponent +
-            "]");
-      }
-    }
-
-    public static void AssertFlags(int expected, int actual, string name) {
-      if (expected == actual) {
-        return;
-      }
-      Assert.AreEqual(
-        (expected & PrecisionContext.FlagInexact) != 0,
-        (actual & PrecisionContext.FlagInexact) != 0,
-        name + ": Inexact");
-      Assert.AreEqual(
-        (expected & PrecisionContext.FlagRounded) != 0,
-        (actual & PrecisionContext.FlagRounded) != 0,
-        name + ": Rounded");
-      Assert.AreEqual(
-        (expected & PrecisionContext.FlagSubnormal) != 0,
-        (actual & PrecisionContext.FlagSubnormal) != 0,
-        name + ": Subnormal");
-      Assert.AreEqual(
-        (expected & PrecisionContext.FlagOverflow) != 0,
-        (actual & PrecisionContext.FlagOverflow) != 0,
-        name + ": Overflow");
-      Assert.AreEqual(
-        (expected & PrecisionContext.FlagUnderflow) != 0,
-        (actual & PrecisionContext.FlagUnderflow) != 0,
-        name + ": Underflow");
-      Assert.AreEqual(
-        (expected & PrecisionContext.FlagClamped) != 0,
-        (actual & PrecisionContext.FlagClamped) != 0,
-        name + ": Clamped");
-      Assert.AreEqual(
-        (expected & PrecisionContext.FlagInvalid) != 0,
-        (actual & PrecisionContext.FlagInvalid) != 0,
-        name + ": Invalid");
-      Assert.AreEqual(
-        (expected & PrecisionContext.FlagDivideByZero) != 0,
-        (actual & PrecisionContext.FlagDivideByZero) != 0,
-        name + ": DivideByZero");
-      Assert.AreEqual(
-        (expected & PrecisionContext.FlagLostDigits) != 0,
-        (actual & PrecisionContext.FlagLostDigits) != 0,
-        name + ": LostDigits");
-    }
-
-    private static CBORObject FromBytesA(byte[] b) {
-      return CBORObject.DecodeFromBytes(b);
-    }
-
-    private static CBORObject FromBytesB(byte[] b) {
-      using (var ms = new System.IO.MemoryStream(b)) {
-        CBORObject o = CBORObject.Read(ms);
-        if (ms.Position != ms.Length) {
-          throw new CBORException("not at EOF");
-        }
-        return o;
-      }
-    }
-    // Tests the equivalence of the FromBytes and Read methods.
-    public static CBORObject FromBytesTestAB(byte[] b) {
-      CBORObject oa = FromBytesA(b);
-      CBORObject ob = FromBytesB(b);
-      if (!oa.Equals(ob)) {
-        Assert.AreEqual(oa, ob);
-      }
-      return oa;
-    }
-
-    private static void ReverseChars(char[] chars, int offset, int length) {
-      int half = length >> 1;
-      int right = offset + length - 1;
-      for (var i = 0; i < half; i++, right--) {
-        char value = chars[offset + i];
-        chars[offset + i] = chars[right];
-        chars[right] = value;
-      }
-    }
-
-    private static readonly string valueDigits = "0123456789";
-
-    public static string LongToString(long longValue) {
-      if (longValue == Int64.MinValue) {
- return "-9223372036854775808";
-}
-      if (longValue == 0L) {
- return "0";
-}
-      bool neg = longValue < 0;
-      var chars = new char[24];
-      var count = 0;
-      if (neg) {
-        chars[0] = '-';
-        ++count;
-        longValue = -longValue;
-      }
-      while (longValue != 0) {
-        char digit = valueDigits[(int)(longValue % 10)];
-        chars[count++] = digit;
-        longValue /= 10;
-      }
-      if (neg) {
-        ReverseChars(chars, 1, count - 1);
-      } else {
-        ReverseChars(chars, 0, count);
-      }
-      return new String(chars, 0, count);
-    }
-
-    public static string IntToString(int value) {
-      if (value == Int32.MinValue) {
- return "-2147483648";
-}
-      if (value == 0) {
- return "0";
-}
-      bool neg = value < 0;
-      var chars = new char[24];
-      var count = 0;
-      if (neg) {
-        chars[0] = '-';
-        ++count;
-        value = -value;
-      }
-      while (value != 0) {
-        char digit = valueDigits[(int)(value % 10)];
-        chars[count++] = digit;
-        value /= 10;
-      }
-      if (neg) {
-        ReverseChars(chars, 1, count - 1);
-      } else {
-        ReverseChars(chars, 0, count);
-      }
-      return new String(chars, 0, count);
     }
 
     public static void AssertEqualsHashCode(Object o, Object o2) {
@@ -239,121 +44,253 @@ String.Empty + o + " and " + o2 + " don't have equal hash codes");
         }
         // At least check that GetHashCode doesn't throw
         try {
- o.GetHashCode();
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-        try {
- o2.GetHashCode();
-} catch (Exception ex) {
-Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-      }
-    }
-
-    public static String Repeat(char c, int num) {
-      var sb = new StringBuilder();
-      for (var i = 0; i < num; ++i) {
-        sb.Append(c);
-      }
-      return sb.ToString();
-    }
-
-    public static String Repeat(String c, int num) {
-      var sb = new StringBuilder();
-      for (var i = 0; i < num; ++i) {
-        sb.Append(c);
-      }
-      return sb.ToString();
-    }
-
-    public static void TestNumber(CBORObject o) {
-      if (o.Type != CBORType.Number) {
-        return;
-      }
-      if (o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
-          o.IsNaN()) {
-        try {
-          o.AsByte();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsInt16();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsInt32();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsInt64();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsSingle();
+          o.GetHashCode();
         } catch (Exception ex) {
           Assert.Fail(ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
         }
         try {
-          o.AsDouble();
+          o2.GetHashCode();
         } catch (Exception ex) {
           Assert.Fail(ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
         }
-        try {
-          o.AsBigInteger();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
+      }
+    }
+
+    public static void AssertRoundTrip(CBORObject o) {
+      CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
+      int cmp = CompareTestReciprocal(o, o2);
+      if (cmp != 0) {
+        Assert.AreEqual(0, cmp, o + "\nvs.\n" + o2);
+      }
+      TestNumber(o);
+      AssertEqualsHashCode(o, o2);
+    }
+
+    public static void AssertSer(CBORObject o, String s) {
+      if (!s.Equals(o.ToString())) {
+        Assert.AreEqual(s, o.ToString(), "o is not equal to s");
+      }
+      // Test round-tripping
+      CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
+      if (!s.Equals(o2.ToString())) {
+        Assert.AreEqual(s, o2.ToString(), "o2 is not equal to s");
+      }
+      TestNumber(o);
+      AssertEqualsHashCode(o, o2);
+    }
+
+    public static void CompareTestConsistency<T>(T o1, T o2, T o3) where T :
+      IComparable<T> {
+      if (o1 == null) {
+        throw new ArgumentNullException("o1");
+      }
+      if (o2 == null) {
+        throw new ArgumentNullException("o2");
+      }
+      if (o3 == null) {
+        throw new ArgumentNullException("o3");
+      }
+      int cmp = CompareTestReciprocal(o1, o2);
+      int cmp2 = CompareTestReciprocal(o2, o3);
+      int cmp3 = CompareTestReciprocal(o1, o3);
+      Assert.AreEqual(cmp == 0, o1.Equals(o2));
+      Assert.AreEqual(cmp == 0, o2.Equals(o1));
+      Assert.AreEqual(cmp2 == 0, o2.Equals(o3));
+      Assert.AreEqual(cmp2 == 0, o3.Equals(o2));
+      Assert.AreEqual(cmp3 == 0, o1.Equals(o3));
+      Assert.AreEqual(cmp3 == 0, o3.Equals(o1));
+    }
+
+    public static void CompareTestEqual<T>(T o1, T o2) where T :
+        IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) != 0) {
+        Assert.Fail(ObjectMessages(
+          o1,
+          o2,
+          "Not equal: " + CompareTestReciprocal(o1, o2)));
+      }
+    }
+
+    public static void CompareTestEqualAndConsistent<T>(T o1, T o2) where T :
+    IComparable<T> {
+      CompareTestEqualAndConsistent(o1, o2, null);
+    }
+
+    public static void CompareTestEqualAndConsistent<T>(
+T o1,
+T o2,
+string msg) where T :
+    IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) != 0) {
+        msg = (msg == null ? String.Empty : (msg + "\r\n")) +
+          "Not equal: " + CompareTestReciprocal(o1, o2);
+        Assert.Fail(ObjectMessages(
+          o1,
+          o2,
+          msg));
+      }
+      if (!o1.Equals(o2)) {
+        msg = (msg == null ? String.Empty : (msg + "\r\n")) +
+          "Not equal: " + CompareTestReciprocal(o1, o2);
+        Assert.Fail(ObjectMessages(
+          o1,
+          o2,
+          msg));
+      }
+    }
+
+    public static void CompareTestGreater<T>(T o1, T o2) where T :
+          IComparable<T> {
+      CompareTestLess(o2, o1);
+    }
+
+    public static void CompareTestLess<T>(T o1, T o2) where T : IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) >= 0) {
+        Assert.Fail(ObjectMessages(
+          o1,
+          o2,
+          "Not less: " + CompareTestReciprocal(o1, o2)));
+      }
+    }
+
+    public static int CompareTestReciprocal<T>(T o1, T o2) where T :
+      IComparable<T> {
+      if (o1 == null) {
+        throw new ArgumentNullException("o1");
+      }
+      if (o2 == null) {
+        throw new ArgumentNullException("o2");
+      }
+      int cmp = Math.Sign(o1.CompareTo(o2));
+      int cmp2 = Math.Sign(o2.CompareTo(o1));
+      if (-cmp2 != cmp) {
+        Assert.AreEqual(cmp, -cmp2, ObjectMessages(o1, o2, "Not reciprocal"));
+      }
+      return cmp;
+    }
+
+    public static void CompareTestRelations<T>(T o1, T o2, T o3) where T :
+      IComparable<T> {
+      if (o1 == null) {
+        throw new ArgumentNullException("o1");
+      }
+      if (o2 == null) {
+        throw new ArgumentNullException("o2");
+      }
+      if (o3 == null) {
+        throw new ArgumentNullException("o3");
+      }
+      if (o1.CompareTo(o1) != 0) {
+        Assert.Fail(o1.ToString());
+      }
+      if (o2.CompareTo(o2) != 0) {
+        Assert.Fail(o2.ToString());
+      }
+      if (o3.CompareTo(o3) != 0) {
+        Assert.Fail(o3.ToString());
+      }
+      int cmp12 = CompareTestReciprocal(o1, o2);
+      int cmp23 = CompareTestReciprocal(o2, o3);
+      int cmp13 = CompareTestReciprocal(o1, o3);
+      // CompareTestReciprocal tests CompareTo both
+      // ways, so shortcutting by negating the values
+      // is allowed here
+      int cmp21 = -cmp12;
+      int cmp32 = -cmp23;
+      int cmp31 = -cmp13;
+      // Transitivity checks
+      for (int i = -1; i <= 1; ++i) {
+        if (cmp12 == i) {
+          if (cmp23 == i && cmp13 != i) {
+            Assert.Fail(ObjectMessages(o1, o2, o3, "Not transitive"));
+          }
         }
-        return;
+        if (cmp23 == i) {
+          if (cmp31 == i && cmp21 != i) {
+            Assert.Fail(ObjectMessages(o1, o2, o3, "Not transitive"));
+          }
+        }
+        if (cmp31 == i) {
+          if (cmp12 == i && cmp32 != i) {
+            Assert.Fail(ObjectMessages(o1, o2, o3, "Not transitive"));
+          }
+        }
       }
-      try {
-        o.AsSingle();
-      } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex); throw new
-          InvalidOperationException(String.Empty, ex);
+    }
+    // Tests the equivalence of the FromBytes and Read methods.
+    public static CBORObject FromBytesTestAB(byte[] b) {
+      CBORObject oa = FromBytesA(b);
+      CBORObject ob = FromBytesB(b);
+      if (!oa.Equals(ob)) {
+        Assert.AreEqual(oa, ob);
       }
-      try {
-        o.AsDouble();
-      } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex); throw new
-          InvalidOperationException(String.Empty, ex);
+      return oa;
+    }
+
+    public static string IntToString(int value) {
+      if (value == Int32.MinValue) {
+        return "-2147483648";
       }
+      if (value == 0) {
+        return "0";
+      }
+      bool neg = value < 0;
+      var chars = new char[24];
+      var count = 0;
+      if (neg) {
+        chars[0] = '-';
+        ++count;
+        value = -value;
+      }
+      while (value != 0) {
+        char digit = valueDigits[(int)(value % 10)];
+        chars[count++] = digit;
+        value /= 10;
+      }
+      if (neg) {
+        ReverseChars(chars, 1, count - 1);
+      } else {
+        ReverseChars(chars, 0, count);
+      }
+      return new String(chars, 0, count);
+    }
+
+    public static string LongToString(long longValue) {
+      if (longValue == Int64.MinValue) {
+        return "-9223372036854775808";
+      }
+      if (longValue == 0L) {
+        return "0";
+      }
+      bool neg = longValue < 0;
+      var chars = new char[24];
+      var count = 0;
+      if (neg) {
+        chars[0] = '-';
+        ++count;
+        longValue = -longValue;
+      }
+      while (longValue != 0) {
+        char digit = valueDigits[(int)(longValue % 10)];
+        chars[count++] = digit;
+        longValue /= 10;
+      }
+      if (neg) {
+        ReverseChars(chars, 1, count - 1);
+      } else {
+        ReverseChars(chars, 0, count);
+      }
+      return new String(chars, 0, count);
     }
 
     public static string ObjectMessages(
       object o1,
       object o2,
       String s) {
-        var co1 = o1 as CBORObject;
-        var co2 = o2 as CBORObject;
+      var co1 = o1 as CBORObject;
+      var co2 = o2 as CBORObject;
       if (co1 != null) {
         TestCommon.ObjectMessages(co1, co2, s);
       }
@@ -398,163 +335,169 @@ TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2) +
  " and\n" + TestCommon.ToByteArrayString(o3);
     }
 
-  public static void CompareTestEqual<T>(T o1, T o2) where T :
-      IComparable<T> {
-      if (CompareTestReciprocal(o1, o2) != 0) {
-        Assert.Fail(ObjectMessages(
-          o1,
-          o2,
-          "Not equal: " + CompareTestReciprocal(o1, o2)));
+    public static String Repeat(char c, int num) {
+      var sb = new StringBuilder();
+      for (var i = 0; i < num; ++i) {
+        sb.Append(c);
       }
+      return sb.ToString();
     }
 
-    public static void CompareTestEqualAndConsistent<T>(T o1, T o2) where T :
-    IComparable<T> {
-      CompareTestEqualAndConsistent(o1, o2, null);
+    public static String Repeat(String c, int num) {
+      var sb = new StringBuilder();
+      for (var i = 0; i < num; ++i) {
+        sb.Append(c);
+      }
+      return sb.ToString();
     }
 
-    public static void CompareTestEqualAndConsistent<T>(
-T o1,
-T o2,
-string msg) where T :
-    IComparable<T> {
-      if (CompareTestReciprocal(o1, o2) != 0) {
-        msg = (msg == null ? String.Empty : (msg + "\r\n")) +
-          "Not equal: " + CompareTestReciprocal(o1, o2);
-        Assert.Fail(ObjectMessages(
-          o1,
-          o2,
-          msg));
+    public static void TestNumber(CBORObject o) {
+      if (o.Type != CBORType.Number) {
+        return;
       }
-      if (!o1.Equals(o2)) {
-        msg = (msg == null ? String.Empty : (msg + "\r\n")) +
-          "Not equal: " + CompareTestReciprocal(o1, o2);
-        Assert.Fail(ObjectMessages(
-          o1,
-          o2,
-          msg));
-      }
-    }
-
-    public static void CompareTestLess<T>(T o1, T o2) where T : IComparable<T> {
-      if (CompareTestReciprocal(o1, o2) >= 0) {
-        Assert.Fail(ObjectMessages(
-          o1,
-          o2,
-          "Not less: " + CompareTestReciprocal(o1, o2)));
-      }
-    }
-
-public static void CompareTestGreater<T>(T o1, T o2) where T :
-      IComparable<T> {
-      CompareTestLess(o2, o1);
-    }
-
-    public static int CompareTestReciprocal<T>(T o1, T o2) where T :
-      IComparable<T> {
-      if (o1 == null) {
-        throw new ArgumentNullException("o1");
-      }
-      if (o2 == null) {
-        throw new ArgumentNullException("o2");
-      }
-      int cmp = Math.Sign(o1.CompareTo(o2));
-      int cmp2 = Math.Sign(o2.CompareTo(o1));
-      if (-cmp2 != cmp) {
-        Assert.AreEqual(cmp, -cmp2, ObjectMessages(o1, o2, "Not reciprocal"));
-      }
-      return cmp;
-    }
-
-    public static void CompareTestConsistency<T>(T o1, T o2, T o3) where T :
-      IComparable<T> {
-      if (o1 == null) {
-        throw new ArgumentNullException("o1");
-      }
-      if (o2 == null) {
-        throw new ArgumentNullException("o2");
-      }
-      if (o3 == null) {
-        throw new ArgumentNullException("o3");
-      }
-      int cmp = CompareTestReciprocal(o1, o2);
-      int cmp2 = CompareTestReciprocal(o2, o3);
-      int cmp3 = CompareTestReciprocal(o1, o3);
-      Assert.AreEqual(cmp == 0, o1.Equals(o2));
-      Assert.AreEqual(cmp == 0, o2.Equals(o1));
-      Assert.AreEqual(cmp2 == 0, o2.Equals(o3));
-      Assert.AreEqual(cmp2 == 0, o3.Equals(o2));
-      Assert.AreEqual(cmp3 == 0, o1.Equals(o3));
-      Assert.AreEqual(cmp3 == 0, o3.Equals(o1));
-    }
-
-    public static void CompareTestRelations<T>(T o1, T o2, T o3) where T :
-      IComparable<T> {
-      if (o1 == null) {
-        throw new ArgumentNullException("o1");
-      }
-      if (o2 == null) {
-        throw new ArgumentNullException("o2");
-      }
-      if (o3 == null) {
-        throw new ArgumentNullException("o3");
-      }
-      if (o1.CompareTo(o1) != 0) {
-        Assert.Fail(o1.ToString());
-      }
-      if (o2.CompareTo(o2) != 0) {
-        Assert.Fail(o2.ToString());
-      }
-      if (o3.CompareTo(o3) != 0) {
-        Assert.Fail(o3.ToString());
-      }
-      int cmp12 = CompareTestReciprocal(o1, o2);
-      int cmp23 = CompareTestReciprocal(o2, o3);
-      int cmp13 = CompareTestReciprocal(o1, o3);
-      int cmp21 = -cmp12;
-      int cmp32 = -cmp23;
-      int cmp31 = -cmp13;
-      // Transitivity checks
-      for (int i = -1; i <= 1; ++i) {
-        if (cmp12 == i) {
-          if (cmp23 == i && cmp13 != i) {
- Assert.Fail(ObjectMessages(o1, o2, o3, "Not transitive"));
-}
+      if (o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
+          o.IsNaN()) {
+        try {
+          o.AsByte();
+          Assert.Fail("Should have failed");
+        } catch (OverflowException) {
+          Console.Write(String.Empty);
+        } catch (Exception ex) {
+          Assert.Fail("Object: " + o + ", " + ex); throw new
+            InvalidOperationException(String.Empty, ex);
         }
-        if (cmp23 == i) {
-          if (cmp31 == i && cmp21 != i) {
- Assert.Fail(ObjectMessages(o1, o2, o3, "Not transitive"));
-}
+        try {
+          o.AsInt16();
+          Assert.Fail("Should have failed");
+        } catch (OverflowException) {
+          Console.Write(String.Empty);
+        } catch (Exception ex) {
+          Assert.Fail("Object: " + o + ", " + ex); throw new
+            InvalidOperationException(String.Empty, ex);
         }
-        if (cmp31 == i) {
-          if (cmp12 == i && cmp32 != i) {
- Assert.Fail(ObjectMessages(o1, o2, o3, "Not transitive"));
-}
+        try {
+          o.AsInt32();
+          Assert.Fail("Should have failed");
+        } catch (OverflowException) {
+          Console.Write(String.Empty);
+        } catch (Exception ex) {
+          Assert.Fail("Object: " + o + ", " + ex); throw new
+            InvalidOperationException(String.Empty, ex);
         }
+        try {
+          o.AsInt64();
+          Assert.Fail("Should have failed");
+        } catch (OverflowException) {
+          Console.Write(String.Empty);
+        } catch (Exception ex) {
+          Assert.Fail("Object: " + o + ", " + ex); throw new
+            InvalidOperationException(String.Empty, ex);
+        }
+        try {
+          o.AsSingle();
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+        try {
+          o.AsDouble();
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+        try {
+          o.AsBigInteger();
+          Assert.Fail("Should have failed");
+        } catch (OverflowException) {
+          Console.Write(String.Empty);
+        } catch (Exception ex) {
+          Assert.Fail("Object: " + o + ", " + ex); throw new
+            InvalidOperationException(String.Empty, ex);
+        }
+        return;
+      }
+      try {
+        o.AsSingle();
+      } catch (Exception ex) {
+        Assert.Fail("Object: " + o + ", " + ex); throw new
+          InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        o.AsDouble();
+      } catch (Exception ex) {
+        Assert.Fail("Object: " + o + ", " + ex); throw new
+          InvalidOperationException(String.Empty, ex);
+      }
+    }
+    public static string ToByteArrayString(byte[] bytes) {
+      if (bytes == null) {
+        return "null";
+      }
+      var sb = new System.Text.StringBuilder();
+      const string ValueHex = "0123456789ABCDEF";
+      sb.Append("new byte[] { ");
+      for (var i = 0; i < bytes.Length; ++i) {
+        if (i > 0) {
+          sb.Append(","); }
+        if ((bytes[i] & 0x80) != 0) {
+          sb.Append("(byte)0x");
+        } else {
+          sb.Append("0x");
+        }
+        sb.Append(ValueHex[(bytes[i] >> 4) & 0xf]);
+        sb.Append(ValueHex[bytes[i] & 0xf]);
+      }
+      sb.Append("}");
+      return sb.ToString();
+    }
+
+    public static string ToByteArrayString(CBORObject obj) {
+      return new System.Text.StringBuilder()
+        .Append("CBORObject.DecodeFromBytes(")
+           .Append(ToByteArrayString(obj.EncodeToBytes()))
+           .Append(")").ToString();
+    }
+
+    private static bool ByteArraysEqual(byte[] arr1, byte[] arr2) {
+      if (arr1 == null) {
+        return arr2 == null;
+      }
+      if (arr2 == null) {
+        return false;
+      }
+      if (arr1.Length != arr2.Length) {
+        return false;
+      }
+      for (var i = 0; i < arr1.Length; ++i) {
+        if (arr1[i] != arr2[i]) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    private static CBORObject FromBytesA(byte[] b) {
+      return CBORObject.DecodeFromBytes(b);
+    }
+
+    private static CBORObject FromBytesB(byte[] b) {
+      using (var ms = new System.IO.MemoryStream(b)) {
+        CBORObject o = CBORObject.Read(ms);
+        if (ms.Position != ms.Length) {
+          throw new CBORException("not at EOF");
+        }
+        return o;
       }
     }
 
-    public static void AssertRoundTrip(CBORObject o) {
-      CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      int cmp = CompareTestReciprocal(o, o2);
-      if (cmp != 0) {
-        Assert.AreEqual(0, cmp, o + "\nvs.\n" + o2);
+    private static void ReverseChars(char[] chars, int offset, int length) {
+      int half = length >> 1;
+      int right = offset + length - 1;
+      for (var i = 0; i < half; i++, right--) {
+        char value = chars[offset + i];
+        chars[offset + i] = chars[right];
+        chars[right] = value;
       }
-      TestNumber(o);
-      AssertEqualsHashCode(o, o2);
-    }
-
-    public static void AssertSer(CBORObject o, String s) {
-      if (!s.Equals(o.ToString())) {
-        Assert.AreEqual(s, o.ToString(), "o is not equal to s");
-      }
-      // Test round-tripping
-      CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (!s.Equals(o2.ToString())) {
-        Assert.AreEqual(s, o2.ToString(), "o2 is not equal to s");
-      }
-      TestNumber(o);
-      AssertEqualsHashCode(o, o2);
     }
   }
 }

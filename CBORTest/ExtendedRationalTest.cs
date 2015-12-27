@@ -26,6 +26,45 @@ namespace Test {
         ExtendedRational bigintC = RandomObjects.RandomRational(r);
         TestCommon.CompareTestRelations(bigintA, bigintB, bigintC);
       }
+      TestCommon.CompareTestLess(ExtendedRational.Zero, ExtendedRational.NaN);
+      for (var i = 0; i < 100; ++i) {
+        BigInteger num = RandomObjects.RandomBigInteger(r);
+        if (num.IsZero) {
+          // Skip if number is 0; 0/1 and 0/2 are
+          // equal in that case
+          continue;
+        }
+        num = BigInteger.Abs(num);
+        var rat = new ExtendedRational(num, BigInteger.One);
+        var rat2 = new ExtendedRational(num, (BigInteger)2);
+        TestCommon.CompareTestLess(rat2, rat);
+        TestCommon.CompareTestGreater(rat, rat2);
+      }
+      TestCommon.CompareTestLess(
+        new ExtendedRational(
+          BigInteger.One,
+          (BigInteger)2), (
+          new ExtendedRational((BigInteger)4, BigInteger.One)));
+      for (var i = 0; i < 100; ++i) {
+        BigInteger num = RandomObjects.RandomBigInteger(r);
+        BigInteger den = RandomObjects.RandomBigInteger(r);
+        if (den.IsZero) {
+          den = BigInteger.One;
+        }
+        var rat = new ExtendedRational(num, den);
+        for (int j = 0; j < 10; ++j) {
+          BigInteger num2 = num;
+          BigInteger den2 = den;
+          BigInteger mult = RandomObjects.RandomBigInteger(r);
+          if (mult.IsZero || mult.Equals(BigInteger.One)) {
+            mult = (BigInteger)2;
+          }
+          num2 *= (BigInteger)mult;
+          den2 *= (BigInteger)mult;
+          var rat2 = new ExtendedRational(num2, den2);
+          TestCommon.CompareTestEqual(rat, rat2);
+        }
+      }
     }
     [Test]
     public void TestCompareToBinary() {
@@ -49,7 +88,22 @@ namespace Test {
     }
     [Test]
     public void TestDivide() {
-      // not implemented yet
+      var fr = new FastRandom();
+      for (var i = 0; i < 500; ++i) {
+        ExtendedRational er = RandomObjects.RandomRational(fr);
+        ExtendedRational er2 = RandomObjects.RandomRational(fr);
+        if (er2.IsZero || !er2.IsFinite) {
+          continue;
+        }
+        if (er.IsZero || !er.IsFinite) {
+          continue;
+        }
+        ExtendedRational ermult = er.Multiply(er2);
+        ExtendedRational erdiv = ermult.Divide(er);
+        TestCommon.CompareTestEqual(erdiv, er2);
+        erdiv = ermult.Divide(er2);
+        TestCommon.CompareTestEqual(erdiv, er);
+      }
     }
     [Test]
     public void TestEquals() {
@@ -207,7 +261,42 @@ namespace Test {
     }
     [Test]
     public void TestToBigIntegerExact() {
-      // not implemented yet
+      try {
+        ExtendedRational.PositiveInfinity.ToBigIntegerExact();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedRational.NegativeInfinity.ToBigIntegerExact();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedRational.NaN.ToBigIntegerExact();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedRational.SignalingNaN.ToBigIntegerExact();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestToDouble() {

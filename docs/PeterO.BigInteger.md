@@ -12,19 +12,19 @@ An arbitrary-precision integer.Instances of this class are immutable, so they ar
 
     public static readonly PeterO.BigInteger ONE;
 
-BigInteger object for the number one.
+BigInteger for the number one.
 
 ### TEN
 
     public static readonly PeterO.BigInteger TEN;
 
-BigInteger object for the number ten.
+BigInteger for the number ten.
 
 ### ZERO
 
     public static readonly PeterO.BigInteger ZERO;
 
-BigInteger object for the number zero.
+BigInteger for the number zero.
 
 ### IsEven
 
@@ -60,11 +60,11 @@ True if this value is 0; otherwise, false.
 
     public static PeterO.BigInteger One { get; }
 
-Gets the arbitrary-precision integer object for one.
+Gets the arbitrary-precision integer for one.
 
 <b>Returns:</b>
 
-The arbitrary-precision integer object for one.
+The arbitrary-precision integer for one.
 
 ### Sign
 
@@ -80,11 +80,11 @@ Gets the sign of this object's value.
 
     public static PeterO.BigInteger Zero { get; }
 
-Gets the arbitrary-precision integer object for zero.
+Gets the arbitrary-precision integer for zero.
 
 <b>Returns:</b>
 
-The arbitrary-precision integer object for zero.
+The arbitrary-precision integer for zero.
 
 ### abs
 
@@ -105,11 +105,11 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>thisValue</i>: Another arbitrary-precision integer object.
+ * <i>thisValue</i>: Another arbitrary-precision integer.
 
 <b>Returns:</b>
 
-An arbitrary-precision integer object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -236,7 +236,7 @@ Divides this object by another big integer and returns the quotient and remainde
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: An arbitrary-precision integer object.
+ * <i>divisor</i>: An arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -279,7 +279,7 @@ Not documented yet.
 
 <b>Parameters:</b>
 
- * <i>other</i>: An arbitrary-precision integer object.
+ * <i>other</i>: An arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -293,7 +293,7 @@ A Boolean object.
 
 <b>Deprecated.</b> Renamed to 'fromBytes'.
 
-Initializes an arbitrary-precision integer object from an array of bytes.
+Initializes an arbitrary-precision integer from an array of bytes.
 
 <b>Parameters:</b>
 
@@ -303,7 +303,7 @@ Initializes an arbitrary-precision integer object from an array of bytes.
 
 <b>Returns:</b>
 
-An arbitrary-precision integer object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -317,7 +317,7 @@ The parameter  <i>bytes</i>
         byte[] bytes,
         bool littleEndian);
 
-Initializes an arbitrary-precision integer object from an array of bytes.
+Initializes an arbitrary-precision integer from an array of bytes.
 
 <b>Parameters:</b>
 
@@ -327,7 +327,7 @@ Initializes an arbitrary-precision integer object from an array of bytes.
 
 <b>Returns:</b>
 
-An arbitrary-precision integer object.
+An arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -341,7 +341,7 @@ The parameter  <i>bytes</i>
         string str,
         int radix);
 
-Converts a string to an arbitrary-precision integer. The string portion can begin with a minus sign ("-" , U+002D) to indicate that it's negative.
+Converts a string to an arbitrary-precision integer.
 
 The following example (C#) converts a number in the orm of a hex string to a big integer.    public static arbitrary-precision integer HexToBigInteger(string hexString) {
       // Parse the hexadecimal string as a big integer.  Will
@@ -356,13 +356,13 @@ The following example (C#) converts a number in the orm of a hex string to a big
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string object.
+ * <i>str</i>: A text string. The string must contain only characters allowed by the given radix, except that it may start with a minus sign ("-", U+002D) to indicate a negative number. The string is not allowed to contain white space characters, including spaces.
 
  * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U+0030 to U+0039) and then the basic letters A to Z (U+0041 to U+005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
 <b>Returns:</b>
 
-An arbitrary-precision integer object with the same value as given in the string.
+An arbitrary-precision integer with the same value as given in the string.
 
 <b>Exceptions:</b>
 
@@ -385,11 +385,11 @@ The string is empty or in an invalid format.
         int index,
         int endIndex);
 
-Converts a portion of a string to an arbitrary-precision integer in a given radix. The string portion can begin with a minus sign ("-" , U+002D) to indicate that it's negative.
+Converts a portion of a string to an arbitrary-precision integer in a given radix.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string object.
+ * <i>str</i>: A text string. The desired portion of the string must contain only characters allowed by the given radix, except that it may start with a minus sign ("-", U+002D) to indicate a negative number. The desired portion is not allowed to contain white space characters, including spaces.
 
  * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U+0030 to U+0039) and then the basic letters A to Z (U+0041 to U+005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
@@ -399,7 +399,7 @@ Converts a portion of a string to an arbitrary-precision integer in a given radi
 
 <b>Returns:</b>
 
-An arbitrary-precision integer object with the same value as given in the string portion.
+An arbitrary-precision integer with the same value as given in the string portion.
 
 <b>Exceptions:</b>
 
@@ -426,7 +426,7 @@ Converts a string to an arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string containing only basic digits 0 to 9 (U + 0030 to U+0039), except that it may start with a minus sign ("-", U+002D).
+ * <i>str</i>: A text string. The string must contain only basic digits 0 to 9 (U+0030 to U+0039), except that it may start with a minus sign ("-", U+002D) to indicate a negative number. The string is not allowed to contain white space characters, including spaces.
 
 <b>Returns:</b>
 
@@ -449,11 +449,11 @@ The parameter  <i>str</i>
         int index,
         int endIndex);
 
-Converts a portion of a string to an arbitrary-precision integer. The string portion can begin with a minus sign ("-", U+002D) to indicate that it's negative.
+Converts a portion of a string to an arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string object.
+ * <i>str</i>: A text string. The desired portion of the string must contain only basic digits 0 to 9 (U+0030 to U+0039), except that it may start with a minus sign ("-", U+002D) to indicate a negative number. The desired portion is not allowed to contain white space characters, including spaces.
 
  * <i>index</i>: The index of the string that starts the string portion.
 
@@ -461,7 +461,7 @@ Converts a portion of a string to an arbitrary-precision integer. The string por
 
 <b>Returns:</b>
 
-An arbitrary-precision integer object with the same value as given in the string portion.
+An arbitrary-precision integer with the same value as given in the string portion.
 
 <b>Exceptions:</b>
 
@@ -1169,7 +1169,7 @@ Returns a big integer with the bits shifted to the left by a number of bits. A v
 
 <b>Returns:</b>
 
-An arbitrary-precision integer object.
+An arbitrary-precision integer.
 
 ### shiftRight
 
@@ -1184,7 +1184,7 @@ Returns a big integer with the bits shifted to the right. For this operation, th
 
 <b>Returns:</b>
 
-An arbitrary-precision integer object.
+An arbitrary-precision integer.
 
 ### sqrt
 
@@ -1215,7 +1215,7 @@ Subtracts an arbitrary-precision integer from this arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>subtrahend</i>: Another arbitrary-precision integer object.
+ * <i>subtrahend</i>: Another arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -1329,7 +1329,7 @@ Converts a 64-bit signed integer to a big integer.
 
 <b>Returns:</b>
 
-An arbitrary-precision integer object with the same value as the 64-bit number.
+An arbitrary-precision integer with the same value as the 64-bit number.
 
 ### Xor
 

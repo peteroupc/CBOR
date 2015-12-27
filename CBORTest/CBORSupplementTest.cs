@@ -369,74 +369,7 @@ Console.Write(String.Empty);
     }
 
     [Test]
-    public void TestExtendedRationalArgValidation() {
-      try {
-        ExtendedRational.PositiveInfinity.ToBigIntegerExact();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedRational.NegativeInfinity.ToBigIntegerExact();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedRational.NaN.ToBigIntegerExact();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedRational.SignalingNaN.ToBigIntegerExact();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-    }
-
-    [Test]
     public void TestExtendedDecimalArgValidation() {
-      try {
-        ExtendedDecimal.Create(null, BigInteger.One);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedDecimal.Create(null, null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedDecimal.Create(BigInteger.One, null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
       try {
         ExtendedDecimal.FromString(null);
         Assert.Fail("Should have failed");
@@ -1066,16 +999,14 @@ Console.Write(String.Empty);
       CBORObject co, co2;
       co = CBORObject.FromObject(ExtendedDecimal.PositiveInfinity);
       co2 = CBORObject.FromObject(Double.PositiveInfinity);
-      Assert.AreEqual(0, co.CompareTo(co2));
-      Assert.AreEqual(0, co2.CompareTo(co));
+      TestCommon.CompareTestEqual(co, co2);
       co = CBORObject.NewMap().Add(
         ExtendedDecimal.PositiveInfinity,
         CBORObject.Undefined);
       co2 = CBORObject.NewMap().Add(
         Double.PositiveInfinity,
         CBORObject.Undefined);
-      Assert.AreEqual(0, co.CompareTo(co2));
-      Assert.AreEqual(0, co2.CompareTo(co));
+      TestCommon.CompareTestEqual(co, co2);
     }
 
     [Test]
@@ -1118,87 +1049,6 @@ bytes = new byte[] { 0x9f, 0xd8, 28, 1, 0xd8, 29, 0, 3, 3, 0xd8, 29, 0, 0xff };
         int c2d = er.CompareToDecimal(ed);
         // sw2.Stop();
         Assert.AreEqual(c2r, c2d);
-      }
-      // Console.WriteLine("CompareTo: " + (sw1.ElapsedMilliseconds/1000.0)
-      // + " s");
-      // Console.WriteLine("CompareToDecimal: " +
-      // (sw2.ElapsedMilliseconds/1000.0) + " s");
-    }
-
-    [Test]
-    public void TestRationalDivide() {
-      var fr = new FastRandom();
-      for (var i = 0; i < 500; ++i) {
-        ExtendedRational er = RandomObjects.RandomRational(fr);
-        ExtendedRational er2 = RandomObjects.RandomRational(fr);
-        if (er2.IsZero || !er2.IsFinite) {
-          continue;
-        }
-        if (er.IsZero || !er.IsFinite) {
-          continue;
-        }
-        ExtendedRational ermult = er.Multiply(er2);
-        ExtendedRational erdiv = ermult.Divide(er);
-        if (erdiv.CompareTo(er2) != 0) {
-          Assert.Fail(er + "; " + erdiv + "; " + er2);
-        }
-        erdiv = ermult.Divide(er2);
-        if (erdiv.CompareTo(er) != 0) {
-          Assert.Fail(er + "; " + erdiv + "; " + er2);
-        }
-      }
-    }
-
-    [Test]
-    public void TestRationalCompare() {
-      var fr = new FastRandom();
-      for (var i = 0; i < 100; ++i) {
-        BigInteger num = RandomObjects.RandomBigInteger(fr);
-        if (num.IsZero) {
-          // Skip if number is 0; 0/1 and 0/2 are
-          // equal in that case
-          continue;
-        }
-        num = BigInteger.Abs(num);
-        var rat = new ExtendedRational(num, BigInteger.One);
-        var rat2 = new ExtendedRational(num, (BigInteger)2);
-        if (rat2.CompareTo(rat) != -1) {
-          Assert.Fail(rat + "; " + rat2);
-        }
-        if (rat.CompareTo(rat2) != 1) {
-          Assert.Fail(rat + "; " + rat2);
-        }
-      }
-      Assert.AreEqual(
-        -1,
-        new ExtendedRational(
-          BigInteger.One,
-          (BigInteger)2).CompareTo(
-          new ExtendedRational((BigInteger)4, BigInteger.One)));
-      for (var i = 0; i < 100; ++i) {
-        BigInteger num = RandomObjects.RandomBigInteger(fr);
-        BigInteger den = RandomObjects.RandomBigInteger(fr);
-        if (den.IsZero) {
-          den = BigInteger.One;
-        }
-        var rat = new ExtendedRational(num, den);
-        for (int j = 0; j < 10; ++j) {
-          BigInteger num2 = num;
-          BigInteger den2 = den;
-          BigInteger mult = RandomObjects.RandomBigInteger(fr);
-          if (mult.IsZero || mult.Equals(BigInteger.One)) {
-            mult = (BigInteger)2;
-          }
-          num2 *= (BigInteger)mult;
-          den2 *= (BigInteger)mult;
-          var rat2 = new ExtendedRational(num2, den2);
-          if (rat.CompareTo(rat2) != 0) {
-            Assert.AreEqual(
-              0,
-        rat.CompareTo(rat2), rat + "; " + rat2 + "; " + rat.ToDouble() + "; " +
-              rat2.ToDouble());
-          }
-        }
       }
     }
 
@@ -1728,82 +1578,6 @@ CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
       Assert.IsFalse(ExtendedFloat.SignalingNaN.IsZero);
       Assert.IsFalse(ExtendedRational.NaN.IsZero);
       Assert.IsFalse(ExtendedRational.SignalingNaN.IsZero);
-    }
-
-    [Test]
-    public void TestToBigIntegerNonFinite() {
-      try {
-        ExtendedDecimal.PositiveInfinity.ToBigInteger();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedDecimal.NegativeInfinity.ToBigInteger();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedDecimal.NaN.ToBigInteger();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedDecimal.SignalingNaN.ToBigInteger();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedFloat.PositiveInfinity.ToBigInteger();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedFloat.NegativeInfinity.ToBigInteger();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedFloat.NaN.ToBigInteger();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        ExtendedFloat.SignalingNaN.ToBigInteger();
-        Assert.Fail("Should have failed");
-      } catch (OverflowException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
     }
   }
 }
