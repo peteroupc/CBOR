@@ -1100,44 +1100,11 @@ The parameter  <i>powerSmall</i>
         PeterO.BigInteger bigValue,
         int power);
 
-<b>Parameters:</b>
-
- * <i>bigValue</i>: Another arbitrary-precision integer.
-
- * <i>power</i>: A 32-bit signed integer.
-
-<b>Returns:</b>
-
-An arbitrary-precision integer.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigValue</i>
- is null.
-
 ### Pow
 
     public static PeterO.BigInteger Pow(
         PeterO.BigInteger bigValue,
         PeterO.BigInteger power);
-
-<b>Parameters:</b>
-
- * <i>bigValue</i>: Another arbitrary-precision integer.
-
- * <i>power</i>: An arbitrary-precision integer. (3).
-
-<b>Returns:</b>
-
-An arbitrary-precision integer.
-
-<b>Exceptions:</b>
-
- * System.ArgumentNullException:
-The parameter  <i>bigValue</i>
- or  <i>power</i>
- is null.
 
 ### PowBigIntVar
 

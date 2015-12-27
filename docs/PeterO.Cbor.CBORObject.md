@@ -358,6 +358,23 @@ This object is not an array.
         System.Type type,
         PeterO.Cbor.ICBORConverter<T> converter);
 
+Registers an object that converts objects of a given type to CBOR objects (called a CBOR converter).
+
+<b>Parameters:</b>
+
+ * <i>type</i>: A Type object specifying the type that the converter converts to CBOR objects.
+
+ * <i>converter</i>: An ICBORConverter object.
+
+ * &lt;T&gt;: Must be the same as the "type" parameter.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>type</i>
+ or  <i>converter</i>
+ is null.
+
 ### Addition
 
     public static PeterO.Cbor.CBORObject Addition(
@@ -1352,15 +1369,54 @@ A CBORObject object.
     public static PeterO.Cbor.CBORObject FromObject<T>(
         System.Collections.Generic.IEnumerable<T> value);
 
+Generates a CBOR object from an enumerable set of objects.
+
+<b>Parameters:</b>
+
+ * <i>value</i>: An object that implements the IEnumerable interface. In the .NET version, this can be the return value of an iterator or the result of a LINQ query.
+
+ * &lt;T&gt;: A type convertible to CBORObject.
+
+<b>Returns:</b>
+
+A CBOR object where each element of the given enumerable object is converted to a CBOR object and copied to a new array, or CBORObject.Null if the value is null.
+
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject<T>(
         System.Collections.Generic.IList<T> value);
 
+Generates a CBOR object from a list of objects.
+
+<b>Parameters:</b>
+
+ * <i>value</i>: An array of CBOR objects. Can be null.
+
+ * &lt;T&gt;: A type convertible to CBORObject.
+
+<b>Returns:</b>
+
+A CBOR object where each element of the given array is converted to a CBOR object and copied to a new array, or CBORObject.Null if the value is null.
+
 ### FromObject
 
     public static PeterO.Cbor.CBORObject FromObject<TKey, TValue>(
         System.Collections.Generic.IDictionary<TKey, TValue> dic);
+
+Generates a CBOR object from a map of objects.
+
+<b>Parameters:</b>
+
+ * <i>dic</i>: A map of CBOR objects.
+
+ * &lt;TKey&gt;: A type convertible to CBORObject; the type of the keys.
+
+ * &lt;TValue&gt;: A type convertible to CBORObject; the type of the values.
+
+<b>Returns:</b>
+
+A CBOR object where each key and value of the given map is converted to a CBOR object and copied to a new map, or CBORObject.Null if  <i>dic</i>
+ is null.
 
 ### FromObjectAndTag
 

@@ -5029,7 +5029,8 @@ Assert.AreEqual(
                 stringTemp);
 }
             }
-            if (!bi[0].Equals((BigInteger)bigintTemp + BigInteger.One)) {
+            bigintNew = bigintTemp + BigInteger.One;
+            if (!bi[0].Equals(bigintNew)) {
               {
 string stringTemp = String.Format(
                   CultureInfo.InvariantCulture,
