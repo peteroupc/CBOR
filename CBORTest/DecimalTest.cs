@@ -288,7 +288,20 @@ System.Globalization.CultureInfo.InvariantCulture);
           }
         } else {
           if (!output.Equals("?")) {
-            TestCommon.AssertDecFrac(d3, output, name);
+            if (output == null && d3 != null) {
+              Assert.Fail(name + ": d3 must be null");
+            }
+            if (output != null && !d3.ToString().Equals(output)) {
+              ExtendedDecimal d4 = ExtendedDecimal.FromString(output);
+              Assert.AreEqual(
+      output,
+                d3.ToString(),
+             name + ": expected: [" + d4.UnsignedMantissa + " " +
+                  d4.Exponent +
+              "]\\n" + "but was: [" + d3.UnsignedMantissa + " " +
+                    d3.Exponent +
+                  "]");
+            }
           }
         }
         // Don't check flags for five simplified arithmetic
@@ -299,9 +312,51 @@ System.Globalization.CultureInfo.InvariantCulture);
         if (!name.Equals("pow118") && !name.Equals("pow119") &&
             !name.Equals("pow120") && !name.Equals("pow121") &&
             !name.Equals("pow122")) {
-          TestCommon.AssertFlags(expectedFlags, ctx.Flags, name);
+          AssertFlags(expectedFlags, ctx.Flags, name);
         }
       }
+    }
+
+    public static void AssertFlags(int expected, int actual, string name) {
+      if (expected == actual) {
+        return;
+      }
+      Assert.AreEqual(
+        (expected & PrecisionContext.FlagInexact) != 0,
+        (actual & PrecisionContext.FlagInexact) != 0,
+        name + ": Inexact");
+      Assert.AreEqual(
+        (expected & PrecisionContext.FlagRounded) != 0,
+        (actual & PrecisionContext.FlagRounded) != 0,
+        name + ": Rounded");
+      Assert.AreEqual(
+        (expected & PrecisionContext.FlagSubnormal) != 0,
+        (actual & PrecisionContext.FlagSubnormal) != 0,
+        name + ": Subnormal");
+      Assert.AreEqual(
+        (expected & PrecisionContext.FlagOverflow) != 0,
+        (actual & PrecisionContext.FlagOverflow) != 0,
+        name + ": Overflow");
+      Assert.AreEqual(
+        (expected & PrecisionContext.FlagUnderflow) != 0,
+        (actual & PrecisionContext.FlagUnderflow) != 0,
+        name + ": Underflow");
+      Assert.AreEqual(
+        (expected & PrecisionContext.FlagClamped) != 0,
+        (actual & PrecisionContext.FlagClamped) != 0,
+        name + ": Clamped");
+      Assert.AreEqual(
+        (expected & PrecisionContext.FlagInvalid) != 0,
+        (actual & PrecisionContext.FlagInvalid) != 0,
+        name + ": Invalid");
+      Assert.AreEqual(
+        (expected & PrecisionContext.FlagDivideByZero) != 0,
+        (actual & PrecisionContext.FlagDivideByZero) != 0,
+        name + ": DivideByZero");
+      Assert.AreEqual(
+        (expected & PrecisionContext.FlagLostDigits) != 0,
+        (actual & PrecisionContext.FlagLostDigits) != 0,
+        name + ": LostDigits");
     }
 
     private static void PrintTime(System.Diagnostics.Stopwatch sw) {

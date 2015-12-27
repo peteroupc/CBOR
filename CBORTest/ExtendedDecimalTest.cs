@@ -6,57 +6,20 @@ namespace Test {
   [TestFixture]
   public class ExtendedDecimalTest {
     [Test]
-    public void TestScaling() {
-      {
-        string stringTemp = ExtendedDecimal.FromString(
-          "5.000").ScaleByPowerOfTen(5).ToString();
-        Assert.AreEqual(
-          "5.000E+5",
-          stringTemp);
-      }
-      {
-        string stringTemp = ExtendedDecimal.FromString(
-          "5.000").ScaleByPowerOfTen(-5).ToString();
-        Assert.AreEqual(
-          "0.00005000",
-          stringTemp);
-      }
-      {
-        string stringTemp = ExtendedDecimal.FromString(
-          "500000").MovePointRight(5).ToString();
-        Assert.AreEqual(
-          "50000000000",
-          stringTemp);
-      }
-      {
-        string stringTemp = ExtendedDecimal.FromString(
-          "500000").MovePointRight(-5).ToString();
-        Assert.AreEqual(
-          "5.00000",
-          stringTemp);
-      }
-      {
-        string stringTemp = ExtendedDecimal.FromString(
-          "500000").MovePointLeft(-5).ToString();
-        Assert.AreEqual(
-          "50000000000",
-          stringTemp);
-      }
-      {
-        string stringTemp = ExtendedDecimal.FromString(
-          "500000").MovePointLeft(5).ToString();
-        Assert.AreEqual(
-          "5.00000",
-          stringTemp);
-      }
-    }
-    [Test]
     public void TestAbs() {
       // not implemented yet
     }
     [Test]
     public void TestAdd() {
-      // not implemented yet
+      try {
+        ExtendedDecimal.Zero.Add(null, PrecisionContext.Unlimited);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestCompareTo() {
@@ -67,42 +30,47 @@ namespace Test {
         ExtendedDecimal bigintC = RandomObjects.RandomExtendedDecimal(r);
         TestCommon.CompareTestRelations(bigintA, bigintB, bigintC);
       }
+      TestCommon.CompareTestLess(ExtendedDecimal.Zero, ExtendedDecimal.NaN);
     }
     [Test]
     public void TestCompareToBinary() {
-    Assert.AreEqual(1, ExtendedDecimal.NegativeInfinity.CompareToBinary(null));
-    Assert.AreEqual(1, ExtendedDecimal.PositiveInfinity.CompareToBinary(null));
+    Assert.AreEqual(1,
+        ExtendedDecimal.NegativeInfinity.CompareToBinary(null));
+    Assert.AreEqual(1,
+        ExtendedDecimal.PositiveInfinity.CompareToBinary(null));
       Assert.AreEqual(1, ExtendedDecimal.NaN.CompareToBinary(null));
       Assert.AreEqual(1, ExtendedDecimal.SignalingNaN.CompareToBinary(null));
       Assert.AreEqual(1, ExtendedDecimal.Zero.CompareToBinary(null));
       Assert.AreEqual(1, ExtendedDecimal.One.CompareToBinary(null));
 
-    Assert.AreEqual(0, ExtendedDecimal.NaN.CompareToBinary(ExtendedFloat.NaN));
+    Assert.AreEqual(0,
+        ExtendedDecimal.NaN.CompareToBinary(ExtendedFloat.NaN));
 
-  {
-long numberTemp =
-  ExtendedDecimal.SignalingNaN.CompareToBinary(ExtendedFloat.NaN);
-Assert.AreEqual(0, numberTemp);
-}
+      {
+        long numberTemp =
+          ExtendedDecimal.SignalingNaN.CompareToBinary(ExtendedFloat.NaN);
+        Assert.AreEqual(0, numberTemp);
+      }
 
-  {
-long numberTemp =
-  ExtendedDecimal.NaN.CompareToBinary(ExtendedFloat.SignalingNaN);
-Assert.AreEqual(0, numberTemp);
-}
+      {
+        long numberTemp =
+          ExtendedDecimal.NaN.CompareToBinary(ExtendedFloat.SignalingNaN);
+        Assert.AreEqual(0, numberTemp);
+      }
 
-  {
-long numberTemp =
+      {
+        long numberTemp =
   ExtendedDecimal.SignalingNaN.CompareToBinary(ExtendedFloat.SignalingNaN);
-Assert.AreEqual(0, numberTemp);
-}
-    Assert.AreEqual(1, ExtendedDecimal.NaN.CompareToBinary(ExtendedFloat.Zero));
+        Assert.AreEqual(0, numberTemp);
+      }
+   Assert.AreEqual(1,
+        ExtendedDecimal.NaN.CompareToBinary(ExtendedFloat.Zero));
 
-  {
-long numberTemp =
-  ExtendedDecimal.SignalingNaN.CompareToBinary(ExtendedFloat.Zero);
-Assert.AreEqual(1, numberTemp);
-}
+      {
+        long numberTemp =
+          ExtendedDecimal.SignalingNaN.CompareToBinary(ExtendedFloat.Zero);
+        Assert.AreEqual(1, numberTemp);
+      }
     }
     [Test]
     public void TestCompareToSignal() {
@@ -114,7 +82,33 @@ Assert.AreEqual(1, numberTemp);
     }
     [Test]
     public void TestCreate() {
-      // not implemented yet
+      try {
+        ExtendedDecimal.Create(null, BigInteger.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.Create(null, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.Create(BigInteger.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestCreateNaN() {
@@ -995,6 +989,38 @@ Assert.AreEqual(1, numberTemp);
       Assert.AreEqual(
         ExtendedDecimal.NegativeZero,
         ExtendedDecimal.FromExtendedFloat(ExtendedFloat.NegativeZero));
+      try {
+        ExtendedDecimal.FromExtendedFloat(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+
+      ExtendedFloat bf;
+      bf = ExtendedFloat.FromInt64(20);
+      {
+        string stringTemp = ExtendedDecimal.FromExtendedFloat(bf).ToString();
+        Assert.AreEqual(
+        "20",
+        stringTemp);
+      }
+      bf = ExtendedFloat.Create((BigInteger)3, (BigInteger)(-1));
+      {
+        string stringTemp = ExtendedDecimal.FromExtendedFloat(bf).ToString();
+        Assert.AreEqual(
+        "1.5",
+        stringTemp);
+      }
+      bf = ExtendedFloat.Create((BigInteger)(-3), (BigInteger)(-1));
+      {
+        string stringTemp = ExtendedDecimal.FromExtendedFloat(bf).ToString();
+        Assert.AreEqual(
+        "-1.5",
+        stringTemp);
+      }
     }
     [Test]
     public void TestFromInt32() {
@@ -1040,7 +1066,15 @@ Assert.AreEqual(1, numberTemp);
     }
     [Test]
     public void TestFromString() {
-      // not implemented yet
+      try {
+        ExtendedDecimal.FromString(String.Empty);
+        Assert.Fail("Should have failed");
+      } catch (FormatException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestIsFinite() {
@@ -1087,13 +1121,13 @@ Assert.AreEqual(1, numberTemp);
     [Test]
     public void TestLog() {
       Assert.IsTrue(ExtendedDecimal.One.Log(null).IsNaN());
-Assert.IsTrue(ExtendedDecimal.One.Log(PrecisionContext.Unlimited).IsNaN());
+Assert.IsTrue(ExtendedDecimal.One.Log(PrecisionContext.Unlimited) .IsNaN());
     }
     [Test]
     public void TestLog10() {
       Assert.IsTrue(ExtendedDecimal.One.Log10(null).IsNaN());
-Assert.IsTrue(ExtendedDecimal.One.Log10(PrecisionContext.Unlimited)
-        .IsNaN());
+      Assert.IsTrue(ExtendedDecimal.One.Log10(PrecisionContext.Unlimited)
+              .IsNaN());
     }
     [Test]
     public void TestMantissa() {
@@ -1101,11 +1135,66 @@ Assert.IsTrue(ExtendedDecimal.One.Log10(PrecisionContext.Unlimited)
     }
     [Test]
     public void TestMax() {
-      // not implemented yet
+      try {
+        ExtendedDecimal.Max(null, ExtendedDecimal.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.Max(ExtendedDecimal.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      var r = new FastRandom();
+      for (var i = 0; i < 500; ++i) {
+        ExtendedDecimal bigintA = RandomObjects.RandomExtendedDecimal(r);
+        ExtendedDecimal bigintB = RandomObjects.RandomExtendedDecimal(r);
+        if (!bigintA.IsFinite || !bigintB.IsFinite) {
+          continue;
+        }
+        int cmp = TestCommon.CompareTestReciprocal(bigintA, bigintB);
+        if (cmp < 0) {
+   TestCommon.CompareTestEqual(bigintB, ExtendedDecimal.Max(bigintA,
+            bigintB));
+        } else if (cmp > 0) {
+   TestCommon.CompareTestEqual(bigintA, ExtendedDecimal.Max(bigintA,
+            bigintB));
+        } else {
+   TestCommon.CompareTestEqual(bigintA, ExtendedDecimal.Max(bigintA,
+            bigintB));
+   TestCommon.CompareTestEqual(bigintB, ExtendedDecimal.Max(bigintA,
+            bigintB));
+        }
+      }
     }
     [Test]
     public void TestMaxMagnitude() {
-      // not implemented yet
+      try {
+        ExtendedDecimal.MaxMagnitude(null, ExtendedDecimal.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.MaxMagnitude(ExtendedDecimal.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestMin() {
@@ -1113,8 +1202,8 @@ Assert.IsTrue(ExtendedDecimal.One.Log10(PrecisionContext.Unlimited)
         ExtendedDecimal.Min(null, ExtendedDecimal.One);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -1122,8 +1211,50 @@ Console.Write(String.Empty);
         ExtendedDecimal.Min(ExtendedDecimal.One, null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      var r = new FastRandom();
+      for (var i = 0; i < 500; ++i) {
+        ExtendedDecimal bigintA = RandomObjects.RandomExtendedDecimal(r);
+        ExtendedDecimal bigintB = RandomObjects.RandomExtendedDecimal(r);
+        if (!bigintA.IsFinite || !bigintB.IsFinite) {
+          continue;
+        }
+        int cmp = TestCommon.CompareTestReciprocal(bigintA, bigintB);
+        if (cmp < 0) {
+   TestCommon.CompareTestEqual(bigintA, ExtendedDecimal.Min(bigintA,
+            bigintB));
+        } else if (cmp > 0) {
+   TestCommon.CompareTestEqual(bigintB, ExtendedDecimal.Min(bigintA,
+            bigintB));
+        } else {
+   TestCommon.CompareTestEqual(bigintA, ExtendedDecimal.Min(bigintA,
+            bigintB));
+   TestCommon.CompareTestEqual(bigintB, ExtendedDecimal.Min(bigintA,
+            bigintB));
+        }
+      }
+    }
+    [Test]
+    public void TestMinMagnitude() {
+      try {
+        ExtendedDecimal.MinMagnitude(null, ExtendedDecimal.One);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.MinMagnitude(ExtendedDecimal.One, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
@@ -1131,71 +1262,68 @@ Console.Write(String.Empty);
     [Test]
     public void TestMovePointLeft() {
       {
-string stringTemp = ExtendedDecimal.FromString(
-"1").MovePointLeft(BigInteger.Zero, null).ToString();
-Assert.AreEqual(
-"1",
-stringTemp);
-}
+        string stringTemp = ExtendedDecimal.FromString(
+        "1").MovePointLeft(BigInteger.Zero, null).ToString();
+        Assert.AreEqual(
+        "1",
+        stringTemp);
+      }
       {
-string stringTemp = ExtendedDecimal.FromString(
-"0.1").MovePointLeft(BigInteger.Zero, null).ToString();
-Assert.AreEqual(
-"0.1",
-stringTemp);
-}
+        string stringTemp = ExtendedDecimal.FromString(
+        "0.1").MovePointLeft(BigInteger.Zero, null).ToString();
+        Assert.AreEqual(
+        "0.1",
+        stringTemp);
+      }
       {
-string stringTemp = ExtendedDecimal.FromString(
-"0.01").MovePointLeft(BigInteger.Zero, null).ToString();
-Assert.AreEqual(
-"0.01",
-stringTemp);
-}
+        string stringTemp = ExtendedDecimal.FromString(
+        "0.01").MovePointLeft(BigInteger.Zero, null).ToString();
+        Assert.AreEqual(
+        "0.01",
+        stringTemp);
+      }
       {
-string stringTemp = ExtendedDecimal.FromString(
-"1").MovePointLeft(0, null).ToString();
-Assert.AreEqual(
-"1",
-stringTemp);
-}
+        string stringTemp = ExtendedDecimal.FromString(
+        "1").MovePointLeft(0, null).ToString();
+        Assert.AreEqual(
+        "1",
+        stringTemp);
+      }
       {
-string stringTemp = ExtendedDecimal.FromString(
-"0.1").MovePointLeft(0, null).ToString();
-Assert.AreEqual(
-"0.1",
-stringTemp);
-}
+        string stringTemp = ExtendedDecimal.FromString(
+        "0.1").MovePointLeft(0, null).ToString();
+        Assert.AreEqual(
+        "0.1",
+        stringTemp);
+      }
       {
-string stringTemp = ExtendedDecimal.FromString(
-"0.01").MovePointLeft(0, null).ToString();
-Assert.AreEqual(
-"0.01",
-stringTemp);
-}
+        string stringTemp = ExtendedDecimal.FromString(
+        "0.01").MovePointLeft(0, null).ToString();
+        Assert.AreEqual(
+        "0.01",
+        stringTemp);
+      }
       {
-string stringTemp = ExtendedDecimal.FromString("1").MovePointLeft(0).ToString();
-Assert.AreEqual(
-"1",
-stringTemp);
-}
+        string stringTemp = ExtendedDecimal.FromString("1"
+).MovePointLeft(0).ToString();
+        Assert.AreEqual(
+        "1",
+        stringTemp);
+      }
       {
-string stringTemp = ExtendedDecimal.FromString(
-"0.1").MovePointLeft(0).ToString();
-Assert.AreEqual(
-"0.1",
-stringTemp);
-}
+        string stringTemp = ExtendedDecimal.FromString(
+        "0.1").MovePointLeft(0).ToString();
+        Assert.AreEqual(
+        "0.1",
+        stringTemp);
+      }
       {
-string stringTemp = ExtendedDecimal.FromString(
-"0.01").MovePointLeft(0).ToString();
-Assert.AreEqual(
-"0.01",
-stringTemp);
-}
-    }
-    [Test]
-    public void TestMinMagnitude() {
-      // not implemented yet
+        string stringTemp = ExtendedDecimal.FromString(
+        "0.01").MovePointLeft(0).ToString();
+        Assert.AreEqual(
+        "0.01",
+        stringTemp);
+      }
     }
     [Test]
     public void TestMultiply() {
@@ -1204,89 +1332,91 @@ stringTemp);
     [Test]
     public void TestMultiplyAndAdd() {
       try {
- ExtendedDecimal.One.MultiplyAndAdd(null, ExtendedDecimal.Zero, null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        ExtendedDecimal.One.MultiplyAndAdd(null, ExtendedDecimal.Zero, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- ExtendedDecimal.One.MultiplyAndAdd(ExtendedDecimal.Zero, null, null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        ExtendedDecimal.One.MultiplyAndAdd(ExtendedDecimal.Zero, null, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- ExtendedDecimal.One.MultiplyAndAdd(null, null, null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        ExtendedDecimal.One.MultiplyAndAdd(null, null, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- ExtendedDecimal.One.MultiplyAndAdd(null, ExtendedDecimal.Zero);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        ExtendedDecimal.One.MultiplyAndAdd(null, ExtendedDecimal.Zero);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- ExtendedDecimal.One.MultiplyAndAdd(ExtendedDecimal.Zero, null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        ExtendedDecimal.One.MultiplyAndAdd(ExtendedDecimal.Zero, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- ExtendedDecimal.One.MultiplyAndAdd(null, null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        ExtendedDecimal.One.MultiplyAndAdd(null, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestMultiplyAndSubtract() {
       try {
- ExtendedDecimal.One.MultiplyAndSubtract(null, ExtendedDecimal.Zero, null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+     ExtendedDecimal.One.MultiplyAndSubtract(null, ExtendedDecimal.Zero,
+          null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- ExtendedDecimal.One.MultiplyAndSubtract(ExtendedDecimal.Zero, null, null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+     ExtendedDecimal.One.MultiplyAndSubtract(ExtendedDecimal.Zero, null,
+          null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
- ExtendedDecimal.One.MultiplyAndSubtract(null, null, null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        ExtendedDecimal.One.MultiplyAndSubtract(null, null, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestNegate() {
@@ -1423,8 +1553,74 @@ throw new InvalidOperationException(String.Empty, ex);
       // not implemented yet
     }
     [Test]
+    public void TestScaling() {
+      {
+        string stringTemp = ExtendedDecimal.FromString(
+          "5.000").ScaleByPowerOfTen(5).ToString();
+        Assert.AreEqual(
+          "5.000E+5",
+          stringTemp);
+      }
+      {
+        string stringTemp = ExtendedDecimal.FromString(
+          "5.000").ScaleByPowerOfTen(-5).ToString();
+        Assert.AreEqual(
+          "0.00005000",
+          stringTemp);
+      }
+      {
+        string stringTemp = ExtendedDecimal.FromString(
+          "500000").MovePointRight(5).ToString();
+        Assert.AreEqual(
+          "50000000000",
+          stringTemp);
+      }
+      {
+        string stringTemp = ExtendedDecimal.FromString(
+          "500000").MovePointRight(-5).ToString();
+        Assert.AreEqual(
+          "5.00000",
+          stringTemp);
+      }
+      {
+        string stringTemp = ExtendedDecimal.FromString(
+          "500000").MovePointLeft(-5).ToString();
+        Assert.AreEqual(
+          "50000000000",
+          stringTemp);
+      }
+      {
+        string stringTemp = ExtendedDecimal.FromString(
+          "500000").MovePointLeft(5).ToString();
+        Assert.AreEqual(
+          "5.00000",
+          stringTemp);
+      }
+    }
+    [Test]
     public void TestSign() {
       // not implemented yet
+    }
+    [Test]
+    public void TestSignalingNaN() {
+      {
+        string stringTemp = ExtendedDecimal.SignalingNaN.ToString();
+        Assert.AreEqual(
+        "sNaN",
+        stringTemp);
+      }
+      {
+        string stringTemp = ExtendedDecimal.SignalingNaN.ToEngineeringString();
+        Assert.AreEqual(
+        "sNaN",
+        stringTemp);
+      }
+      {
+        string stringTemp = ExtendedDecimal.SignalingNaN.ToPlainString();
+        Assert.AreEqual(
+        "sNaN",
+        stringTemp);
+      }
     }
     [Test]
     public void TestSquareRoot() {
@@ -1432,11 +1628,54 @@ throw new InvalidOperationException(String.Empty, ex);
     }
     [Test]
     public void TestSubtract() {
-      // not implemented yet
+      try {
+        ExtendedDecimal.Zero.Subtract(null, PrecisionContext.Unlimited);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestToBigInteger() {
-      // not implemented yet
+      try {
+        ExtendedDecimal.PositiveInfinity.ToBigInteger();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.NegativeInfinity.ToBigInteger();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.NaN.ToBigInteger();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        ExtendedDecimal.SignalingNaN.ToBigInteger();
+        Assert.Fail("Should have failed");
+      } catch (OverflowException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestToBigIntegerExact() {
@@ -1487,7 +1726,8 @@ throw new InvalidOperationException(String.Empty, ex);
           stringTemp);
       }
       {
-string stringTemp = ExtendedDecimal.FromString("55.0E6").ToEngineeringString();
+string stringTemp = ExtendedDecimal.FromString("55.0E6"
+).ToEngineeringString();
         Assert.AreEqual(
           "55.0E+6",
           stringTemp);
@@ -1619,7 +1859,8 @@ string stringTemp = ExtendedDecimal.FromString("55.0E6").ToEngineeringString();
           stringTemp);
       }
       {
-string stringTemp = ExtendedDecimal.FromString("4.32E8").ToEngineeringString();
+string stringTemp = ExtendedDecimal.FromString("4.32E8"
+).ToEngineeringString();
         Assert.AreEqual(
           "432E+6",
           stringTemp);
@@ -1688,7 +1929,8 @@ string stringTemp = ExtendedDecimal.FromString("4.32E8").ToEngineeringString();
           stringTemp);
       }
       {
-string stringTemp = ExtendedDecimal.FromString("43.9E0").ToEngineeringString();
+string stringTemp = ExtendedDecimal.FromString("43.9E0"
+).ToEngineeringString();
         Assert.AreEqual(
           "43.9",
           stringTemp);
@@ -1820,7 +2062,8 @@ string stringTemp = ExtendedDecimal.FromString("43.9E0").ToEngineeringString();
           stringTemp);
       }
       {
-string stringTemp = ExtendedDecimal.FromString("29.0E4").ToEngineeringString();
+string stringTemp = ExtendedDecimal.FromString("29.0E4"
+).ToEngineeringString();
         Assert.AreEqual(
           "290E+3",
           stringTemp);
@@ -1994,7 +2237,8 @@ string stringTemp = ExtendedDecimal.FromString("29.0E4").ToEngineeringString();
           stringTemp);
       }
       {
-string stringTemp = ExtendedDecimal.FromString("61.4E8").ToEngineeringString();
+string stringTemp = ExtendedDecimal.FromString("61.4E8"
+).ToEngineeringString();
         Assert.AreEqual(
           "6.14E+9",
           stringTemp);
@@ -2007,7 +2251,8 @@ string stringTemp = ExtendedDecimal.FromString("61.4E8").ToEngineeringString();
           stringTemp);
       }
       {
- string stringTemp = ExtendedDecimal.FromString("5.4E6").ToEngineeringString();
+ string stringTemp = ExtendedDecimal.FromString("5.4E6"
+).ToEngineeringString();
         Assert.AreEqual(
           "5.4E+6",
           stringTemp);
@@ -2076,7 +2321,8 @@ string stringTemp = ExtendedDecimal.FromString("61.4E8").ToEngineeringString();
           stringTemp);
       }
       {
-string stringTemp = ExtendedDecimal.FromString("97.7E3").ToEngineeringString();
+string stringTemp = ExtendedDecimal.FromString("97.7E3"
+).ToEngineeringString();
         Assert.AreEqual(
           "97.7E+3",
           stringTemp);
@@ -2089,7 +2335,8 @@ string stringTemp = ExtendedDecimal.FromString("97.7E3").ToEngineeringString();
           stringTemp);
       }
       {
-string stringTemp = ExtendedDecimal.FromString("69.4E2").ToEngineeringString();
+string stringTemp = ExtendedDecimal.FromString("69.4E2"
+).ToEngineeringString();
         Assert.AreEqual(
           "6.94E+3",
           stringTemp);
@@ -2144,7 +2391,8 @@ string stringTemp = ExtendedDecimal.FromString("69.4E2").ToEngineeringString();
           stringTemp);
       }
       {
-string stringTemp = ExtendedDecimal.FromString("70.7E6").ToEngineeringString();
+string stringTemp = ExtendedDecimal.FromString("70.7E6"
+).ToEngineeringString();
         Assert.AreEqual(
           "70.7E+6",
           stringTemp);
@@ -2157,607 +2405,707 @@ string stringTemp = ExtendedDecimal.FromString("70.7E6").ToEngineeringString();
     [Test]
     public void TestToPlainString() {
       {
-string stringTemp = ExtendedDecimal.NegativeZero.ToPlainString();
-Assert.AreEqual(
-"-0",
-stringTemp);
-}
+        string stringTemp = ExtendedDecimal.NegativeZero.ToPlainString();
+        Assert.AreEqual(
+        "-0",
+        stringTemp);
+      }
       {
-    string stringTemp = ExtendedDecimal.FromString("277.22E9").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("277.22E9"
+).ToPlainString();
         Assert.AreEqual(
           "277220000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("391.19E4").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("391.19E4"
+).ToPlainString();
         Assert.AreEqual(
           "3911900",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("383.27E-9").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("383.27E-9"
+).ToPlainString();
         Assert.AreEqual(
           "0.00000038327",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("47.33E9").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("47.33E9"
+).ToPlainString();
         Assert.AreEqual(
           "47330000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("322.21E3").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("322.21E3"
+).ToPlainString();
         Assert.AreEqual(
           "322210",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("191.3E-2").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("191.3E-2"
+).ToPlainString();
         Assert.AreEqual(
           "1.913",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("119.17E2").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("119.17E2"
+).ToPlainString();
         Assert.AreEqual(
           "11917",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("159.6E-6").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("159.6E-6"
+).ToPlainString();
         Assert.AreEqual(
           "0.0001596",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("70.16E9").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("70.16E9"
+).ToPlainString();
         Assert.AreEqual(
           "70160000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("166.24E9").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("166.24E9"
+).ToPlainString();
         Assert.AreEqual(
           "166240000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("235.25E3").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("235.25E3"
+).ToPlainString();
         Assert.AreEqual(
           "235250",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("37.22E7").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("37.22E7"
+).ToPlainString();
         Assert.AreEqual(
           "372200000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("320.26E8").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("320.26E8"
+).ToPlainString();
         Assert.AreEqual(
           "32026000000",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("127.11E-9").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("127.11E-9"
+).ToPlainString();
         Assert.AreEqual(
           "0.00000012711",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("97.29E-7").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("97.29E-7"
+).ToPlainString();
         Assert.AreEqual(
           "0.000009729",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("175.13E9").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("175.13E9"
+).ToPlainString();
         Assert.AreEqual(
           "175130000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("38.21E-7").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("38.21E-7"
+).ToPlainString();
         Assert.AreEqual(
           "0.000003821",
           stringTemp);
       }
       {
-      string stringTemp = ExtendedDecimal.FromString("6.28E1").ToPlainString();
+      string stringTemp = ExtendedDecimal.FromString("6.28E1"
+).ToPlainString();
         Assert.AreEqual(
           "62.8",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("138.29E6").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("138.29E6"
+).ToPlainString();
         Assert.AreEqual(
           "138290000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("160.19E1").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("160.19E1"
+).ToPlainString();
         Assert.AreEqual(
           "1601.9",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("358.12E2").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("358.12E2"
+).ToPlainString();
         Assert.AreEqual(
           "35812",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("249.28E10").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("249.28E10"
+).ToPlainString();
         Assert.AreEqual(
           "2492800000000",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("311.23E-6").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("311.23E-6"
+).ToPlainString();
         Assert.AreEqual(
           "0.00031123",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("164.33E-3").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("164.33E-3"
+).ToPlainString();
         Assert.AreEqual(
           "0.16433",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("299.20E-1").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("299.20E-1"
+).ToPlainString();
         Assert.AreEqual(
           "29.920",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("105.39E3").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("105.39E3"
+).ToPlainString();
         Assert.AreEqual(
           "105390",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("382.5E4").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("382.5E4"
+).ToPlainString();
         Assert.AreEqual(
           "3825000",
           stringTemp);
       }
       {
-      string stringTemp = ExtendedDecimal.FromString("90.9E1").ToPlainString();
+      string stringTemp = ExtendedDecimal.FromString("90.9E1"
+).ToPlainString();
         Assert.AreEqual(
           "909",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("329.15E8").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("329.15E8"
+).ToPlainString();
         Assert.AreEqual(
           "32915000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("245.23E8").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("245.23E8"
+).ToPlainString();
         Assert.AreEqual(
           "24523000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("97.19E-8").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("97.19E-8"
+).ToPlainString();
         Assert.AreEqual(
           "0.0000009719",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("55.12E7").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("55.12E7"
+).ToPlainString();
         Assert.AreEqual(
           "551200000",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("12.38E2").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("12.38E2"
+).ToPlainString();
         Assert.AreEqual(
           "1238",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("250.20E-5").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("250.20E-5"
+).ToPlainString();
         Assert.AreEqual(
           "0.0025020",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("53.20E2").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("53.20E2"
+).ToPlainString();
         Assert.AreEqual(
           "5320",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("141.5E8").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("141.5E8"
+).ToPlainString();
         Assert.AreEqual(
           "14150000000",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("338.34E-5").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("338.34E-5"
+).ToPlainString();
         Assert.AreEqual(
           "0.0033834",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("160.39E9").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("160.39E9"
+).ToPlainString();
         Assert.AreEqual(
           "160390000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("152.17E6").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("152.17E6"
+).ToPlainString();
         Assert.AreEqual(
           "152170000",
           stringTemp);
       }
       {
-      string stringTemp = ExtendedDecimal.FromString("13.3E9").ToPlainString();
+      string stringTemp = ExtendedDecimal.FromString("13.3E9"
+).ToPlainString();
         Assert.AreEqual(
           "13300000000",
           stringTemp);
       }
       {
-      string stringTemp = ExtendedDecimal.FromString("1.38E1").ToPlainString();
+      string stringTemp = ExtendedDecimal.FromString("1.38E1"
+).ToPlainString();
         Assert.AreEqual(
           "13.8",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("348.21E-9").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("348.21E-9"
+).ToPlainString();
         Assert.AreEqual(
           "0.00000034821",
           stringTemp);
       }
       {
-      string stringTemp = ExtendedDecimal.FromString("52.5E7").ToPlainString();
+      string stringTemp = ExtendedDecimal.FromString("52.5E7"
+).ToPlainString();
         Assert.AreEqual(
           "525000000",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("215.21E10").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("215.21E10"
+).ToPlainString();
         Assert.AreEqual(
           "2152100000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("234.28E9").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("234.28E9"
+).ToPlainString();
         Assert.AreEqual(
           "234280000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("310.24E9").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("310.24E9"
+).ToPlainString();
         Assert.AreEqual(
           "310240000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("345.39E9").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("345.39E9"
+).ToPlainString();
         Assert.AreEqual(
           "345390000000",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("116.38E-9").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("116.38E-9"
+).ToPlainString();
         Assert.AreEqual(
           "0.00000011638",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("276.25E10").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("276.25E10"
+).ToPlainString();
         Assert.AreEqual(
           "2762500000000",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("158.32E-8").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("158.32E-8"
+).ToPlainString();
         Assert.AreEqual(
           "0.0000015832",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("272.5E2").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("272.5E2"
+).ToPlainString();
         Assert.AreEqual(
           "27250",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("389.33E-9").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("389.33E-9"
+).ToPlainString();
         Assert.AreEqual(
           "0.00000038933",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("381.15E7").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("381.15E7"
+).ToPlainString();
         Assert.AreEqual(
           "3811500000",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("280.0E3").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("280.0E3"
+).ToPlainString();
         Assert.AreEqual(
           "280000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("274.2E-6").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("274.2E-6"
+).ToPlainString();
         Assert.AreEqual(
           "0.0002742",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("387.14E-7").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("387.14E-7"
+).ToPlainString();
         Assert.AreEqual(
           "0.000038714",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("227.7E-7").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("227.7E-7"
+).ToPlainString();
         Assert.AreEqual(
           "0.00002277",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("201.21E2").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("201.21E2"
+).ToPlainString();
         Assert.AreEqual(
           "20121",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("255.4E3").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("255.4E3"
+).ToPlainString();
         Assert.AreEqual(
           "255400",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("187.27E-7").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("187.27E-7"
+).ToPlainString();
         Assert.AreEqual(
           "0.000018727",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("169.7E-4").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("169.7E-4"
+).ToPlainString();
         Assert.AreEqual(
           "0.01697",
           stringTemp);
       }
       {
-      string stringTemp = ExtendedDecimal.FromString("69.9E9").ToPlainString();
+      string stringTemp = ExtendedDecimal.FromString("69.9E9"
+).ToPlainString();
         Assert.AreEqual(
           "69900000000",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("3.20E-2").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("3.20E-2"
+).ToPlainString();
         Assert.AreEqual(
           "0.0320",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("236.30E2").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("236.30E2"
+).ToPlainString();
         Assert.AreEqual(
           "23630",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("220.22E-9").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("220.22E-9"
+).ToPlainString();
         Assert.AreEqual(
           "0.00000022022",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("287.30E-1").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("287.30E-1"
+).ToPlainString();
         Assert.AreEqual(
           "28.730",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("156.3E-9").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("156.3E-9"
+).ToPlainString();
         Assert.AreEqual(
           "0.0000001563",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("136.23E-1").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("136.23E-1"
+).ToPlainString();
         Assert.AreEqual(
           "13.623",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("125.27E8").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("125.27E8"
+).ToPlainString();
         Assert.AreEqual(
           "12527000000",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("180.30E-7").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("180.30E-7"
+).ToPlainString();
         Assert.AreEqual(
           "0.000018030",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("351.5E7").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("351.5E7"
+).ToPlainString();
         Assert.AreEqual(
           "3515000000",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("28.28E9").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("28.28E9"
+).ToPlainString();
         Assert.AreEqual(
           "28280000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("288.4E-3").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("288.4E-3"
+).ToPlainString();
         Assert.AreEqual(
           "0.2884",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("12.22E4").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("12.22E4"
+).ToPlainString();
         Assert.AreEqual(
           "122200",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("257.5E-5").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("257.5E-5"
+).ToPlainString();
         Assert.AreEqual(
           "0.002575",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("389.20E3").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("389.20E3"
+).ToPlainString();
         Assert.AreEqual(
           "389200",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("394.9E-4").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("394.9E-4"
+).ToPlainString();
         Assert.AreEqual(
           "0.03949",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("134.26E-7").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("134.26E-7"
+).ToPlainString();
         Assert.AreEqual(
           "0.000013426",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("58.29E5").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("58.29E5"
+).ToPlainString();
         Assert.AreEqual(
           "5829000",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("88.5E-5").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("88.5E-5"
+).ToPlainString();
         Assert.AreEqual(
           "0.000885",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("193.29E-4").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("193.29E-4"
+).ToPlainString();
         Assert.AreEqual(
           "0.019329",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("71.35E10").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("71.35E10"
+).ToPlainString();
         Assert.AreEqual(
           "713500000000",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("252.0E1").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("252.0E1"
+).ToPlainString();
         Assert.AreEqual(
           "2520",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("53.2E-8").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("53.2E-8"
+).ToPlainString();
         Assert.AreEqual(
           "0.000000532",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("181.20E-1").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("181.20E-1"
+).ToPlainString();
         Assert.AreEqual(
           "18.120",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("55.21E-9").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("55.21E-9"
+).ToPlainString();
         Assert.AreEqual(
           "0.00000005521",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("57.31E0").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("57.31E0"
+).ToPlainString();
         Assert.AreEqual(
           "57.31",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("113.13E-9").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("113.13E-9"
+).ToPlainString();
         Assert.AreEqual(
           "0.00000011313",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("53.23E1").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("53.23E1"
+).ToPlainString();
         Assert.AreEqual(
           "532.3",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("368.37E-7").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("368.37E-7"
+).ToPlainString();
         Assert.AreEqual(
           "0.000036837",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("187.4E-4").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("187.4E-4"
+).ToPlainString();
         Assert.AreEqual(
           "0.01874",
           stringTemp);
       }
       {
-      string stringTemp = ExtendedDecimal.FromString("5.26E8").ToPlainString();
+      string stringTemp = ExtendedDecimal.FromString("5.26E8"
+).ToPlainString();
         Assert.AreEqual(
           "526000000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("308.32E4").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("308.32E4"
+).ToPlainString();
         Assert.AreEqual(
           "3083200",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("76.15E-2").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("76.15E-2"
+).ToPlainString();
         Assert.AreEqual(
           "0.7615",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("117.38E7").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("117.38E7"
+).ToPlainString();
         Assert.AreEqual(
           "1173800000",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("15.37E-4").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("15.37E-4"
+).ToPlainString();
         Assert.AreEqual(
           "0.001537",
           stringTemp);
       }
       {
-     string stringTemp = ExtendedDecimal.FromString("145.3E0").ToPlainString();
+     string stringTemp = ExtendedDecimal.FromString("145.3E0"
+).ToPlainString();
         Assert.AreEqual(
           "145.3",
           stringTemp);
       }
       {
-    string stringTemp = ExtendedDecimal.FromString("226.29E8").ToPlainString();
+    string stringTemp = ExtendedDecimal.FromString("226.29E8"
+).ToPlainString();
         Assert.AreEqual(
           "22629000000",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("224.26E10").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("224.26E10"
+).ToPlainString();
         Assert.AreEqual(
           "2242600000000",
           stringTemp);
       }
       {
-   string stringTemp = ExtendedDecimal.FromString("268.18E-9").ToPlainString();
+   string stringTemp = ExtendedDecimal.FromString("268.18E-9"
+).ToPlainString();
         Assert.AreEqual(
           "0.00000026818",
           stringTemp);
@@ -2767,9 +3115,111 @@ stringTemp);
     public void TestToSingle() {
       // not implemented yet
     }
+
+    private static readonly string[] testStrings = { "1.265e-4",
+      "0.0001265" , "0.0001265" , "0.0001265" , "0.000E-1" , "0.0000",
+      "0.0000" , "0.0000" , "0.0000000000000e-3" , "0E-16" , "0.0E-15",
+      "0.0000000000000000" , "0.000000000e+1" , "0E-8" , "0.00E-6",
+      "0.00000000" , "0.000000000000000e+12" , "0.000" , "0.000" , "0.000",
+      "0.00000000000000e-11" , "0E-25" , "0.0E-24",
+      "0.0000000000000000000000000" , "0.000000000000e+5" , "0E-7",
+      "0.0E-6" , "0.0000000" , "0.0000e-4" , "0E-8" , "0.00E-6",
+      "0.00000000" , "0.000000e+2" , "0.0000" , "0.0000" , "0.0000",
+      "0.0e+3" , "0E+2" , "0.0E+3" , "0" , "0.000000000000000e+8" , "0E-7",
+      "0.0E-6" , "0.0000000" , "0.000e+10" , "0E+7" , "0.00E+9" , "0",
+      "0.0000000000000000000e-12" , "0E-31" , "0.0E-30",
+      "0.0000000000000000000000000000000" , "0.0000e-1" , "0.00000",
+      "0.00000" , "0.00000" , "0.00000000000e-11" , "0E-22" , "0.0E-21",
+      "0.0000000000000000000000" , "0.00000000000e-17" , "0E-28" , "0.0E-27"
+      , "0.0000000000000000000000000000" , "0.00000000000000e+9" , "0.00000"
+      , "0.00000" , "0.00000" , "0.0000000000e-18" , "0E-28" , "0.0E-27",
+      "0.0000000000000000000000000000" , "0.0e-13" , "0E-14" , "0.00E-12",
+      "0.00000000000000" , "0.000000000000000000e+10" , "0E-8" , "0.00E-6",
+      "0.00000000" , "0.0000e+19" , "0E+15" , "0E+15" , "0" , "0.00000e-8",
+      "0E-13" , "0.0E-12" , "0.0000000000000" , "0.00000000000e+14" , "0E+3"
+      , "0E+3" , "0" , "0.000e-14" , "0E-17" , "0.00E-15",
+      "0.00000000000000000" , "0.000000e-19" , "0E-25" , "0.0E-24",
+      "0.0000000000000000000000000" , "0.000000000000e+19" , "0E+7",
+      "0.00E+9" , "0" , "0.0000000000000e+18" , "0E+5" , "0.0E+6" , "0",
+      "0.00000000000000e-2" , "0E-16" , "0.0E-15" , "0.0000000000000000",
+      "0.0000000000000e-18" , "0E-31" , "0.0E-30",
+      "0.0000000000000000000000000000000" , "0e-17" , "0E-17" , "0.00E-15",
+      "0.00000000000000000" , "0e+17" , "0E+17" , "0.0E+18" , "0",
+      "0.00000000000000000e+0" , "0E-17" , "0.00E-15",
+      "0.00000000000000000" , "0.0000000000000e+0" , "0E-13" , "0.0E-12",
+      "0.0000000000000" , "0.0000000000000000000e-12" , "0E-31" , "0.0E-30"
+      , "0.0000000000000000000000000000000" , "0.0000000000000000000e+10",
+      "0E-9" , "0E-9" , "0.000000000" , "0.00000e-2" , "0E-7" , "0.0E-6",
+      "0.0000000" , "0.000000e+15" , "0E+9" , "0E+9" , "0",
+      "0.000000000e-10" , "0E-19" , "0.0E-18" , "0.0000000000000000000",
+      "0.00000000000000e+6" , "0E-8" , "0.00E-6" , "0.00000000",
+      "0.00000e+17" , "0E+12" , "0E+12" , "0" , "0.000000000000000000e-0",
+      "0E-18" , "0E-18" , "0.000000000000000000" , "0.0000000000000000e+11"
+      , "0.00000" , "0.00000" , "0.00000" , "0.000000000000e+15" , "0E+3",
+      "0E+3" , "0" , "0.00000000e-19" , "0E-27" , "0E-27",
+      "0.000000000000000000000000000" , "0.00000e-6" , "0E-11" , "0.00E-9",
+      "0.00000000000" , "0e-14" , "0E-14" , "0.00E-12" , "0.00000000000000"
+      , "0.000000000e+9" , "0" , "0" , "0" , "0.00000e+13" , "0E+8",
+      "0.0E+9" , "0" , "0.000e-0" , "0.000" , "0.000" , "0.000",
+      "0.000000000000000e+6" , "0E-9" , "0E-9" , "0.000000000",
+      "0.000000000e+17" , "0E+8" , "0.0E+9" , "0" , "0.00000000000e+6",
+      "0.00000" , "0.00000" , "0.00000" , "0.00000000000000e+3" , "0E-11",
+      "0.00E-9" , "0.00000000000" , "0e+0" , "0" , "0" , "0" , "0.000e+12",
+      "0E+9" , "0E+9" , "0" , "0.00000000000e+9" , "0.00" , "0.00" , "0.00"
+      , "0.00000000000000e-9" , "0E-23" , "0.00E-21",
+      "0.00000000000000000000000" , "0e-1" , "0.0" , "0.0" , "0.0",
+      "0.0000e-13" , "0E-17" , "0.00E-15" , "0.00000000000000000",
+      "0.00000000000e-7" , "0E-18" , "0E-18" , "0.000000000000000000",
+      "0.00000000000000e+4" , "0E-10" , "0.0E-9" , "0.0000000000",
+      "0.00000000e-8" , "0E-16" , "0.0E-15" , "0.0000000000000000",
+      "0.00e-6" , "0E-8" , "0.00E-6" , "0.00000000" , "0.0e-1" , "0.00",
+      "0.00" , "0.00" , "0.0000000000000000e-10" , "0E-26" , "0.00E-24",
+      "0.00000000000000000000000000" , "0.00e+14" , "0E+12" , "0E+12" , "0"
+      , "0.000000000000000000e+5" , "0E-13" , "0.0E-12" , "0.0000000000000"
+      , "0.0e+7" , "0E+6" , "0E+6" , "0" , "0.00000000e+8" , "0" , "0" , "0"
+      , "0.000000000e+0" , "0E-9" , "0E-9" , "0.000000000" , "0.000e+13",
+      "0E+10" , "0.00E+12" , "0" , "0.0000000000000000e+16" , "0" , "0",
+      "0" , "0.00000000e-1" , "0E-9" , "0E-9" , "0.000000000",
+      "0.00000000000e-15" , "0E-26" , "0.00E-24",
+      "0.00000000000000000000000000" , "0.0e+11" , "0E+10" , "0.00E+12",
+      "0" , "0.00000e+7" , "0E+2" , "0.0E+3" , "0",
+      "0.0000000000000000000e-19" , "0E-38" , "0.00E-36",
+      "0.00000000000000000000000000000000000000" , "0.0000000000e-6",
+      "0E-16" , "0.0E-15" , "0.0000000000000000" , "0.00000000000000000e-15"
+      , "0E-32" , "0.00E-30" , "0.00000000000000000000000000000000",
+      "0.000000000000000e+2" , "0E-13" , "0.0E-12" , "0.0000000000000",
+      "0.0e-18" , "0E-19" , "0.0E-18" , "0.0000000000000000000",
+      "0.00000000000000e-6" , "0E-20" , "0.00E-18",
+      "0.00000000000000000000" , "0.000e-17" , "0E-20" , "0.00E-18",
+      "0.00000000000000000000" , "0.00000000000000e-7" , "0E-21" , "0E-21",
+      "0.000000000000000000000" , "0.000000e-9" , "0E-15" , "0E-15",
+      "0.000000000000000" , "0e-11" , "0E-11" , "0.00E-9" , "0.00000000000"
+      , "0.000000000e+11" , "0E+2" , "0.0E+3" , "0",
+      "0.0000000000000000e+15" , "0.0" , "0.0" , "0.0",
+      "0.0000000000000000e+10" , "0.000000" , "0.000000" , "0.000000",
+      "0.000000000e+4" , "0.00000" , "0.00000" , "0.00000",
+      "0.000000000000000e-13" , "0E-28" , "0.0E-27",
+      "0.0000000000000000000000000000" , "0.0000000000000000000e-8",
+      "0E-27" , "0E-27" , "0.000000000000000000000000000",
+      "0.00000000000e-15" , "0E-26" , "0.00E-24",
+      "0.00000000000000000000000000" , "0.00e+12" , "0E+10" , "0.00E+12",
+      "0" , "0.0e+5" , "0E+4" , "0.00E+6" , "0" , "0.0000000000000000e+7",
+      "0E-9" , "0E-9" , "0.000000000" , "0.0000000000000000e-0" , "0E-16",
+      "0.0E-15" , "0.0000000000000000" , "0.000000000000000e+13" , "0.00",
+      "0.00" , "0.00" , "0.00000000000e-13" , "0E-24" , "0E-24",
+      "0.000000000000000000000000" , "0.000e-10" , "0E-13" , "0.0E-12",
+      "0.0000000000000" };
+
     [Test]
     public void TestToString() {
-      // not implemented yet
+      for (var i = 0; i < testStrings.Length; i += 4) {
+        Assert.AreEqual(testStrings[i + 1],
+          ExtendedDecimal.FromString(testStrings[i]).ToString());
+        Assert.AreEqual(testStrings[i + 2],
+          ExtendedDecimal.FromString(testStrings[i]).ToEngineeringString());
+        Assert.AreEqual(testStrings[i + 3],
+          ExtendedDecimal.FromString(testStrings[i]).ToPlainString());
+      }
     }
     [Test]
     public void TestUnsignedMantissa() {

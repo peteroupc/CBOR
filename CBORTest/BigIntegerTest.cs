@@ -244,9 +244,30 @@ string result) {
       }
     }
 
+    public static void AssertAdd(BigInteger bi, BigInteger bi2, string s) {
+      BigIntegerTest.AssertBigIntegersEqual(s, bi + (BigInteger)bi2);
+      BigIntegerTest.AssertBigIntegersEqual(s, bi2 + (BigInteger)bi);
+      BigInteger negbi = BigInteger.Zero - (BigInteger)bi;
+      BigInteger negbi2 = BigInteger.Zero - (BigInteger)bi2;
+      BigIntegerTest.AssertBigIntegersEqual(s, bi - (BigInteger)negbi2);
+      BigIntegerTest.AssertBigIntegersEqual(s, bi2 - (BigInteger)negbi);
+    }
     [Test]
     public void TestAdd() {
-      // not implemented yet
+      var posSmall = (BigInteger)5;
+      BigInteger negSmall = -(BigInteger)5;
+      var posLarge = (BigInteger)5555555;
+      BigInteger negLarge = -(BigInteger)5555555;
+      AssertAdd(posSmall, posSmall, "10");
+      AssertAdd(posSmall, negSmall, "0");
+      AssertAdd(posSmall, posLarge, "5555560");
+      AssertAdd(posSmall, negLarge, "-5555550");
+      AssertAdd(negSmall, negSmall, "-10");
+      AssertAdd(negSmall, posLarge, "5555550");
+      AssertAdd(negSmall, negLarge, "-5555560");
+      AssertAdd(posLarge, posLarge, "11111110");
+      AssertAdd(posLarge, negLarge, "0");
+      AssertAdd(negLarge, negLarge, "-11111110");
     }
 
     [Test]
@@ -1876,8 +1897,17 @@ throw new InvalidOperationException(String.Empty, ex);
       }
       return builder.ToString();
     }
+
     [Test]
     public void TestToString() {
+      var bi = (BigInteger)3;
+      AssertBigIntegersEqual("3", bi);
+      var negseven = (BigInteger)(-7);
+      AssertBigIntegersEqual("-7", negseven);
+      var other = (BigInteger)(-898989);
+      AssertBigIntegersEqual("-898989", other);
+      other = (BigInteger)898989;
+      AssertBigIntegersEqual("898989", other);
       var r = new FastRandom();
       for (var i = 0; i < 1000; ++i) {
         BigInteger bigintA = RandomBigInteger(r);

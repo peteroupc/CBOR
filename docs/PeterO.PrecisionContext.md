@@ -303,7 +303,7 @@ Determines whether a number can have the given Exponent property under this prec
 
 <b>Parameters:</b>
 
- * <i>exponent</i>: An arbitrary-precision integer object indicating the desired exponent.
+ * <i>exponent</i>: An arbitrary-precision integer indicating the desired exponent.
 
 <b>Returns:</b>
 

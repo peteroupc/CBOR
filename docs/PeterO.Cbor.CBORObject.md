@@ -292,7 +292,7 @@ Adds a new key and its value to this CBOR map, or adds the value if the key does
 
 <b>Returns:</b>
 
-This object.
+This instance.
 
 <b>Exceptions:</b>
 
@@ -321,7 +321,7 @@ Converts an object to a CBOR object and adds it to the end of this array.
 
 <b>Returns:</b>
 
-This object.
+This instance.
 
 <b>Exceptions:</b>
 
@@ -345,7 +345,7 @@ Adds a new object to the end of this array. (Used to throw ArgumentNullException
 
 <b>Returns:</b>
 
-This object.
+This instance.
 
 <b>Exceptions:</b>
 
@@ -408,7 +408,7 @@ Registers an object that validates CBOR objects with new tags.
 
 <b>Parameters:</b>
 
- * <i>bigintTag</i>: An arbitrary-precision integer object.
+ * <i>bigintTag</i>: An arbitrary-precision integer.
 
  * <i>handler</i>: An ICBORTag object.
 
@@ -970,7 +970,7 @@ True if the objects are equal; otherwise, false.
     public static PeterO.Cbor.CBORObject FromJSONString(
         string str);
 
-Generates a CBOR object from a string in JavaScript Object Notation (JSON) format.If a JSON object has the same key, only the last given value will be used for each duplicated key. The JSON string may not begin with a byte order mark (U+FEFF).
+Generates a CBOR object from a string in JavaScript Object Notation (JSON) format.If a JSON object has the same key, only the last given value will be used for each duplicated key. The JSON string may not begin with a byte-order mark (U+FEFF).
 
 <b>Parameters:</b>
 
@@ -1614,7 +1614,7 @@ Inserts an object at the specified position in this CBOR array.
 
 <b>Returns:</b>
 
-This object.
+This instance.
 
 <b>Exceptions:</b>
 
@@ -1870,7 +1870,7 @@ There was an error in reading or parsing the data.
     public static PeterO.Cbor.CBORObject ReadJSON(
         System.IO.Stream stream);
 
-Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.)If a JSON object has the same key, only the last given value will be used for each duplicated key.
+Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.)If a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -1950,7 +1950,7 @@ Maps an object to a key in this CBOR map, or adds the value if the key doesn't e
 
 <b>Returns:</b>
 
-This object.
+This instance.
 
 <b>Exceptions:</b>
 

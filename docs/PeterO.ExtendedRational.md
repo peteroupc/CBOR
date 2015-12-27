@@ -16,9 +16,9 @@ Initializes a new instance of the arbitrary-precision rational number class.
 
 <b>Parameters:</b>
 
- * <i>numerator</i>: An arbitrary-precision integer object.
+ * <i>numerator</i>: An arbitrary-precision integer.
 
- * <i>denominator</i>: Another arbitrary-precision integer object.
+ * <i>denominator</i>: Another arbitrary-precision integer.
 
 <b>Exceptions:</b>
 
@@ -168,7 +168,7 @@ Adds two rational numbers.
 
 <b>Returns:</b>
 
-The sum of the two numbers. Returns NaN if either operand is NaN.
+The sum of the two numbers. returns not-a-number (NaN) if either operand is NaN.
 
 <b>Exceptions:</b>
 
@@ -249,9 +249,9 @@ Creates a number with the given numerator and denominator.
 
 <b>Parameters:</b>
 
- * <i>numerator</i>: An arbitrary-precision integer object.
+ * <i>numerator</i>: An arbitrary-precision integer.
 
- * <i>denominator</i>: Another arbitrary-precision integer object.
+ * <i>denominator</i>: Another arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -379,7 +379,7 @@ Converts a big integer to a rational number.
 
 <b>Parameters:</b>
 
- * <i>bigint</i>: An arbitrary-precision integer object.
+ * <i>bigint</i>: An arbitrary-precision integer.
 
 <b>Returns:</b>
 

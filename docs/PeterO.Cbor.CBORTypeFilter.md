@@ -94,7 +94,7 @@ Returns whether an array's length is allowed under a filter.
 
 <b>Parameters:</b>
 
- * <i>bigLength</i>: An arbitrary-precision integer object.
+ * <i>bigLength</i>: An arbitrary-precision integer.
 
 <b>Returns:</b>
 

@@ -18,7 +18,7 @@ Initializes a new instance of the TrapException class.
 
 <b>Parameters:</b>
 
- * <i>flag</i>: A 32-bit signed integer.
+ * <i>flag</i>: A flag that specifies the kind of error (PrecisionContext.FlagXXX). This will only be one flag, such as FlagInexact or FlagSubnormal.
 
  * <i>ctx</i>: An EContext object.
 
