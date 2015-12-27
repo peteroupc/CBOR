@@ -139,7 +139,7 @@ return new BigInteger(EInteger.FromSubstring(str, index, endIndex));
       if ((bigintAugend) == null) {
   throw new ArgumentNullException("bigintAugend");
 }
-return new BigInteger(this.ei.add(bigintAugend.ei));
+return new BigInteger(this.ei.Add(bigintAugend.ei));
  }
 
     /// <include file='docs.xml'
@@ -166,7 +166,7 @@ return this.ei.canFitInInt();
       if ((bigintDivisor) == null) {
         throw new ArgumentNullException("bigintDivisor");
       }
-      return new BigInteger(this.ei.divide(bigintDivisor.ei));
+      return new BigInteger(this.ei.Divide(bigintDivisor.ei));
  }
 
     /// <include file='docs.xml'
@@ -252,19 +252,19 @@ return this.ei.AsInt32Unchecked();
     [Obsolete(
   "To make the conversion intention clearer use the 'longValueChecked' and 'longValueUnchecked' methods instead. Replace 'longValue' with 'longValueChecked' in your code." )]
     public long longValue() {
-return this.ei.longValueChecked();
+return this.ei.AsInt64Checked();
 }
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.longValueChecked"]'/>
     public long longValueChecked() {
-return this.ei.longValueChecked();
+return this.ei.AsInt64Checked();
 }
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.longValueUnchecked"]'/>
     public long longValueUnchecked() {
-      return this.ei.longValueUnchecked();
+      return this.ei.AsInt64Unchecked();
  }
 
     /// <include file='docs.xml'
@@ -294,13 +294,13 @@ return new BigInteger(this.ei.ModPow(pow.ei, mod.ei));
       if ((bigintMult) == null) {
         throw new ArgumentNullException("bigintMult");
       }
-      return new BigInteger(this.ei.multiply(bigintMult.ei));
+      return new BigInteger(this.ei.Multiply(bigintMult.ei));
     }
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.negate"]'/>
     public BigInteger negate() {
-      return new BigInteger(this.ei.negate());
+      return new BigInteger(this.ei.Negate());
  }
 
     /// <include file='docs.xml'
@@ -324,7 +324,7 @@ return new BigInteger(this.ei.PowBigIntVar(power.ei));
   if ((divisor) == null) {
   throw new ArgumentNullException("divisor");
 }
-return new BigInteger(this.ei.remainder(divisor.ei));
+return new BigInteger(this.ei.Remainder(divisor.ei));
 }
 
     /// <include file='docs.xml'

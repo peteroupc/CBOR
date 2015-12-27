@@ -153,9 +153,6 @@ return new ExtendedRational(ERational.FromExtendedDecimal(ef.ed));
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedDecimal(PeterO.Numbers.EContext)"]'/>
     public ExtendedDecimal ToExtendedDecimal(PrecisionContext ctx) {
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
 return new ExtendedDecimal(this.er.ToExtendedDecimal(ctx == null ? null :
   ctx.ec));
 }
@@ -164,9 +161,6 @@ return new ExtendedDecimal(this.er.ToExtendedDecimal(ctx == null ? null :
     /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedDecimalExactIfPossible(PeterO.Numbers.EContext)"]'/>
     public ExtendedDecimal ToExtendedDecimalExactIfPossible(PrecisionContext
       ctx) {
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
 return new
   ExtendedDecimal(this.er.ToExtendedDecimalExactIfPossible(ctx == null ? null:
   ctx.ec));
@@ -181,18 +175,12 @@ return new ExtendedFloat(this.er.ToExtendedFloat());
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedFloat(PeterO.Numbers.EContext)"]'/>
     public ExtendedFloat ToExtendedFloat(PrecisionContext ctx) {
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
 return new ExtendedFloat(this.er.ToExtendedFloat(ctx == null ? null : ctx.ec));
 }
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedFloatExactIfPossible(PeterO.Numbers.EContext)"]'/>
     public ExtendedFloat ToExtendedFloatExactIfPossible(PrecisionContext ctx) {
-  if ((ctx) == null) {
-  throw new ArgumentNullException("ctx");
-}
 return new ExtendedFloat(this.er.ToExtendedFloatExactIfPossible(ctx == null ?
   null : ctx.ec));
 }

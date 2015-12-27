@@ -242,16 +242,16 @@ BigInteger bigintSecond) {
  }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Pow(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Numbers.(PeterO.Numbers.EInteger)
+    /// .pow(PeterO.Numbers.EInteger)"]'/>
     [CLSCompliant(false)]
     public static BigInteger Pow(BigInteger bigValue, BigInteger power) {
       return bigValue.PowBigIntVar(power);
  }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Pow(PeterO.Numbers.EInteger,System.Int32)"]'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Numbers.(PeterO.Numbers.EInteger)
+    /// .pow(System.Int32)"]'/>
     [CLSCompliant(false)]
     public static BigInteger Pow(BigInteger bigValue, int power) {
       return bigValue.pow(power);

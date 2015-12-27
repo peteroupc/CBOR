@@ -341,12 +341,12 @@ namespace PeterO.Numbers {
           break;
         }
         if (intcurexp.CompareToInt(9999999) <= 0) {
-          bigpow = EInteger.Pow(FindPowerOfFive(1), intcurexp.AsInt32());
+          bigpow = FindPowerOfFive(1).pow(intcurexp.AsInt32());
           mantissa *= (EInteger)bigpow;
           break;
         }
         if (bigpow.IsZero) {
-          bigpow = EInteger.Pow(FindPowerOfFive(1), 9999999);
+          bigpow = FindPowerOfFive(1).pow(9999999);
         }
         mantissa *= bigpow;
         intcurexp.AddInt(-9999999);
@@ -473,7 +473,7 @@ namespace PeterO.Numbers {
         }
         if (precision <= 9999999) {
           // Console.WriteLine("calcing pow for "+precision);
-          bigpow = EInteger.Pow(valueBigIntPowersOfFive[1], precision);
+          bigpow = valueBigIntPowersOfFive[1].pow(precision);
           if (precision != startPrecision) {
             var bigprec = (EInteger)precision;
             powerOfFiveCache.AddPower(bigprec, bigpow);

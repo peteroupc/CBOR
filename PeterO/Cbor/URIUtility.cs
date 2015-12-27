@@ -32,7 +32,8 @@ namespace PeterO.Cbor {
       URILenient,
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Cbor.URIUtility.ParseMode.IRISurrogateLenient"]'/>
+    /// path='docs/doc[@name="F:PeterO.Cbor.URIUtility.ParseMode.IRISurrogateLenient"]'
+    /// />
       IRISurrogateLenient
     }
 
@@ -112,7 +113,8 @@ segments[1] - segments[0]));
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.escapeURI(System.String,System.Int32)"]'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.escapeURI(System.String,System.Int32)"]'
+    /// />
     public static string escapeURI(string s, int mode) {
       if (s == null) {
         return null;
@@ -225,7 +227,8 @@ ParseMode.IRISurrogateLenient);
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.hasScheme(System.String)"]'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.hasScheme(System.String)"]'
+    /// />
     public static bool hasScheme(string refValue) {
       int[] segments = (refValue == null) ? null : splitIRI(
         refValue,
@@ -236,7 +239,8 @@ ParseMode.IRISurrogateLenient);
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.hasSchemeForURI(System.String)"]'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.hasSchemeForURI(System.String)"]'
+    /// />
     public static bool hasSchemeForURI(string refValue) {
       int[] segments = (refValue == null) ? null : splitIRI(
         refValue,
@@ -302,7 +306,8 @@ ParseMode.IRISurrogateLenient);
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.isValidCurieReference(System.String,System.Int32,System.Int32)"]'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.isValidCurieReference(System.String,System.Int32,System.Int32)"]'
+    /// />
     public static bool isValidCurieReference(string s, int offset, int length) {
       if (s == null) {
         return false;
@@ -782,13 +787,15 @@ int endIndex) {
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.relativeResolve(System.String,System.String)"]'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.relativeResolve(System.String,System.String)"]'
+    /// />
     public static string relativeResolve(string refValue, string baseURI) {
       return relativeResolve(refValue, baseURI, ParseMode.IRIStrict);
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.relativeResolve(System.String,System.String,PeterO.Cbor.URIUtility.ParseMode)"]'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.relativeResolve(System.String,System.String,PeterO.Cbor.URIUtility.ParseMode)"]'
+    /// />
     public static string relativeResolve(
 string refValue,
 string baseURI,
@@ -861,13 +868,15 @@ segmentsBase[5]));
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.splitIRI(System.String)"]'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.splitIRI(System.String)"]'
+    /// />
     public static int[] splitIRI(string s) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, ParseMode.IRIStrict);
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.splitIRI(System.String,System.Int32,System.Int32,PeterO.Cbor.URIUtility.ParseMode)"]'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.splitIRI(System.String,System.Int32,System.Int32,PeterO.Cbor.URIUtility.ParseMode)"]'
+    /// />
     public static int[] splitIRI(
 string s,
 int offset,
@@ -1121,7 +1130,8 @@ if (s.Length-offset < length) {
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.splitIRI(System.String,PeterO.Cbor.URIUtility.ParseMode)"]'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.URIUtility.splitIRI(System.String,PeterO.Cbor.URIUtility.ParseMode)"]'
+    /// />
     public static int[] splitIRI(string s, ParseMode parseMode) {
       return (s == null) ? null : splitIRI(s, 0, s.Length, parseMode);
     }
