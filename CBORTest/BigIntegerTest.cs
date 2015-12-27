@@ -266,17 +266,17 @@ string result) {
     }
     [Test]
     public void TestDivide() {
-      int a, b;
+      int intA, intB;
       var fr = new FastRandom();
       for (var i = 0; i < 10000; ++i) {
-        a = fr.NextValue(0x1000000);
-        b = fr.NextValue(0x1000000);
-        if (b == 0) {
+        intA = fr.NextValue(0x1000000);
+        intB = fr.NextValue(0x1000000);
+        if (intB == 0) {
           continue;
         }
-        int c = a / b;
-        var bigintA = (BigInteger)a;
-        var bigintB = (BigInteger)b;
+        int c = intA / intB;
+        var bigintA = (BigInteger)intA;
+        var bigintB = (BigInteger)intB;
         BigInteger bigintC = bigintA / (BigInteger)bigintB;
         Assert.AreEqual((int)bigintC, c);
       }
@@ -607,12 +607,12 @@ stringTemp);
         if (rand.NextValue(2) == 0) {
           prime = -prime;
         }
-        int b = rand.NextValue(0x7fffffff);
+        int intB = rand.NextValue(0x7fffffff);
         if (rand.NextValue(2) == 0) {
-          b = -b;
+          intB = -intB;
         }
         var biga = (BigInteger)prime;
-        var bigb = (BigInteger)b;
+        var bigb = (BigInteger)intB;
         BigInteger ba = BigInteger.GreatestCommonDivisor(biga, bigb);
         BigInteger bb = BigInteger.GreatestCommonDivisor(bigb, biga);
         Assert.AreEqual(ba, bb);

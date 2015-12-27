@@ -6,7 +6,6 @@
             with the same value are interchangeable, so they should not be
             compared using the "==" operator (which only checks if each side of
             the operator is the same instance).</para></summary>
-            <summary>An arbitrary-precision integer.</summary>
 </doc>
 <doc name="M:PeterO.BigInteger.Abs(PeterO.BigInteger)">
 <summary>Not documented yet.</summary>
@@ -308,8 +307,7 @@
 <doc name="M:PeterO.BigInteger.fromString(System.String)">
 <summary>Converts a string to an arbitrary-precision
             integer.</summary>
-            <param name='str'>A string containing only basic digits 0 to 9 (U +
-            0030 to U+0039), except that it may start with a minus sign ("-",
+            <param name='str'>A string containing only basic digits 0 to 9 (U+0030 to U+0039), except that it may start with a minus sign ("-",
             U+002D).</param>
             <returns>An arbitrary-precision integer object with the same value as given in the
             string.</returns>
@@ -2642,8 +2640,7 @@
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.IRIStrict">
 <summary>The rules follow the syntax for parsing IRIs. In
-            particular, many code points outside the Basic Latin range (U +
-            0000 to U+007F) are allowed. Strings with unpaired surrogate code
+            particular, many code points outside the Basic Latin range (U+0000 to U+007F) are allowed. Strings with unpaired surrogate code
             points are considered invalid.</summary>
 </doc>
 <doc name="F:PeterO.Cbor.URIUtility.ParseMode.IRISurrogateLenient">
@@ -9857,15 +9854,12 @@
 <summary>Represents the number 0.</summary>
 </doc>
 <doc name="T:PeterO.Numbers.EInteger">
-<doc name='T:PeterO.Numbers.EInteger'>
 <summary>An arbitrary-precision integer.
             <para>Instances of this class are immutable, so they are inherently
             safe for use by multiple threads. Multiple instances of this object
             with the same value are interchangeable, so they should not be
             compared using the "==" operator (which only checks if each side of
             the operator is the same instance).</para></summary>
-</doc>
-            <summary>An arbitrary-precision integer.</summary>
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.Abs">
 <summary>Returns the absolute value of this object's

@@ -29,7 +29,7 @@ namespace PeterO.Numbers {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
       }
-      return bthis.add(augend);
+      return bthis.Add(augend);
     }
 
     /// <include file='docs.xml'
@@ -51,7 +51,7 @@ EInteger operand2) {
       if (operand1 == null) {
         throw new ArgumentNullException("operand1");
       }
-      return operand1.multiply(operand2);
+      return operand1.Multiply(operand2);
     }
 
     /// <include file='docs.xml'
@@ -62,7 +62,7 @@ EInteger divisor) {
       if (dividend == null) {
         throw new ArgumentNullException("dividend");
       }
-      return dividend.divide(divisor);
+      return dividend.Divide(divisor);
     }
 
     /// <include file='docs.xml'
@@ -73,7 +73,7 @@ EInteger divisor) {
       if (dividend == null) {
         throw new ArgumentNullException("dividend");
       }
-      return dividend.remainder(divisor);
+      return dividend.Remainder(divisor);
     }
 
     /// <include file='docs.xml'
@@ -112,13 +112,13 @@ EInteger mod) {
       if (bigValue == null) {
         throw new ArgumentNullException("bigValue");
       }
-      return bigValue.negate();
+      return bigValue.Negate();
     }
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Explicit(PeterO.Numbers.EInteger)~System.Int64"]'/>
     public static explicit operator long(EInteger bigValue) {
-      return bigValue.longValueChecked();
+      return bigValue.AsInt64Checked();
     }
 
     /// <include file='docs.xml'
@@ -197,7 +197,8 @@ EInteger bigintSecond) {
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Pow(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
+    /// path='docs/doc[@name="M:PeterO.Numbers.(PeterO.Numbers.EInteger)
+    /// .pow(PeterO.Numbers.EInteger)"]'/>
     public static EInteger Pow(EInteger bigValue, EInteger power) {
       if (bigValue == null) {
         throw new ArgumentNullException("bigValue");
@@ -220,7 +221,8 @@ EInteger bigintSecond) {
     }
 
     /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Pow(PeterO.Numbers.EInteger,System.Int32)"]'/>
+    /// path='docs/doc[@name="M:PeterO.Numbers.(PeterO.Numbers.EInteger)
+    /// .pow(System.Int32)"]'/>
     public static EInteger Pow(EInteger bigValue, int power) {
       if (bigValue == null) {
         throw new ArgumentNullException("bigValue");
@@ -267,7 +269,7 @@ EInteger bigintSecond) {
         throw new ArgumentNullException("valueA");
       }
       if (valueA.wordCount == 0) {
-        return EInteger.One.negate();
+        return EInteger.One.Negate();
       }
       var valueXaNegative = false; int valueXaWordCount = 0;
       var valueXaReg = new short[valueA.wordCount];

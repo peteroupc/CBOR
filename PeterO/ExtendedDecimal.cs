@@ -106,12 +106,9 @@ namespace PeterO {
       if ((diag) == null) {
         throw new ArgumentNullException("diag");
       }
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
     return new ExtendedDecimal(EDecimal.CreateNaN(diag.ei, signaling,
         negative,
-        ctx.ec));
+        ctx == null ? null : ctx.ec));
     }
 
     /// <include file='docs.xml'
@@ -475,17 +472,13 @@ try {
       if ((divisor) == null) {
         throw new ArgumentNullException("divisor");
       }
-   return new
-        ExtendedDecimal(this.ed.DivideToIntegerNaturalScale(divisor.ed));
+   return new ExtendedDecimal(this.ed.DivideToIntegerNaturalScale(divisor.ed));
     }
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Reduce(PeterO.Numbers.EContext)"]'/>
     public ExtendedDecimal Reduce(PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedDecimal(this.ed.Reduce(ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
@@ -509,9 +502,6 @@ try {
         if ((divisor) == null) {
           throw new ArgumentNullException("divisor");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedDecimal(this.ed.RemainderNaturalScale(divisor.ed,
           ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
@@ -527,9 +517,6 @@ try {
       try {
         if ((divisor) == null) {
           throw new ArgumentNullException("divisor");
-        }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
         }
         return new ExtendedDecimal(this.ed.DivideToExponent(divisor.ed,
           desiredExponentSmall, ctx == null ? null : ctx.ec));
@@ -547,8 +534,7 @@ try {
           throw new ArgumentNullException("divisor");
         }
      return new ExtendedDecimal(this.ed.Divide(divisor.ed, ctx == null ?
-          null :
-          ctx.ec));
+          null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -578,12 +564,9 @@ try {
         if ((exponent) == null) {
           throw new ArgumentNullException("exponent");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
    return new ExtendedDecimal(this.ed.DivideToExponent(divisor.ed,
           exponent.ei,
-          ctx.ec));
+          ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -655,12 +638,8 @@ try {
         if ((otherValue) == null) {
           throw new ArgumentNullException("otherValue");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
 return new ExtendedDecimal(this.ed.Subtract(otherValue.ed, ctx == null ?
-          null :
-          ctx.ec));
+          null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -697,12 +676,8 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(multiplicand.ed,
         if ((divisor) == null) {
           throw new ArgumentNullException("divisor");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
-     return new
-          ExtendedDecimal(this.ed.DivideToIntegerNaturalScale(divisor.ed,
-          ctx.ec));
+     return new ExtendedDecimal(this.ed.DivideToIntegerNaturalScale(divisor.ed,
+          ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -716,11 +691,8 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(multiplicand.ed,
         if ((divisor) == null) {
           throw new ArgumentNullException("divisor");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedDecimal(this.ed.DivideToIntegerZeroScale(divisor.ed,
-          ctx.ec));
+          ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -734,12 +706,8 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(multiplicand.ed,
         if ((divisor) == null) {
           throw new ArgumentNullException("divisor");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
   return new ExtendedDecimal(this.ed.Remainder(divisor.ed, ctx == null ?
-          null :
-          ctx.ec));
+          null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -753,12 +721,8 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(multiplicand.ed,
         if ((divisor) == null) {
           throw new ArgumentNullException("divisor");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
      return new ExtendedDecimal(this.ed.RemainderNear(divisor.ed, ctx ==
-          null ?
-          null : ctx.ec));
+          null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -768,9 +732,6 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(multiplicand.ed,
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.NextMinus(PeterO.Numbers.EContext)"]'/>
     public ExtendedDecimal NextMinus(PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
     return new ExtendedDecimal(this.ed.NextMinus(ctx == null ? null :
           ctx.ec));
       } catch (ETrapException ex) {
@@ -782,9 +743,6 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(multiplicand.ed,
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.NextPlus(PeterO.Numbers.EContext)"]'/>
     public ExtendedDecimal NextPlus(PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
      return new ExtendedDecimal(this.ed.NextPlus(ctx == null ? null :
           ctx.ec));
       } catch (ETrapException ex) {
@@ -800,12 +758,8 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(multiplicand.ed,
         if ((otherValue) == null) {
           throw new ArgumentNullException("otherValue");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
      return new ExtendedDecimal(this.ed.NextToward(otherValue.ed, ctx ==
-          null ?
-          null : ctx.ec));
+          null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -822,9 +776,6 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(multiplicand.ed,
       if ((second) == null) {
         throw new ArgumentNullException("second");
       }
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
       return new ExtendedDecimal(EDecimal.Max(first.ed, second.ed, ctx == null ?
         null : ctx.ec));
     }
@@ -839,9 +790,6 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(multiplicand.ed,
       }
       if ((second) == null) {
         throw new ArgumentNullException("second");
-      }
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
       }
       return new ExtendedDecimal(EDecimal.Min(first.ed, second.ed, ctx == null ?
         null : ctx.ec));
@@ -858,9 +806,6 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(multiplicand.ed,
       if ((second) == null) {
         throw new ArgumentNullException("second");
       }
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
       return new ExtendedDecimal(EDecimal.MaxMagnitude(first.ed, second.ed,
         ctx == null ? null : ctx.ec));
     }
@@ -875,9 +820,6 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(multiplicand.ed,
       }
       if ((second) == null) {
         throw new ArgumentNullException("second");
-      }
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
       }
       return new ExtendedDecimal(EDecimal.MinMagnitude(first.ed, second.ed,
         ctx == null ? null : ctx.ec));
@@ -952,12 +894,8 @@ return new ExtendedDecimal(this.ed.MultiplyAndAdd(multiplicand.ed,
         if ((other) == null) {
           throw new ArgumentNullException("other");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
 return new ExtendedDecimal(this.ed.CompareToWithContext(other.ed, ctx ==
-          null ?
-          null : ctx.ec));
+          null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -971,12 +909,8 @@ return new ExtendedDecimal(this.ed.CompareToWithContext(other.ed, ctx ==
         if ((other) == null) {
           throw new ArgumentNullException("other");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
      return new ExtendedDecimal(this.ed.CompareToSignal(other.ed, ctx ==
-          null ?
-          null : ctx.ec));
+          null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -990,12 +924,8 @@ return new ExtendedDecimal(this.ed.CompareToWithContext(other.ed, ctx ==
         if ((otherValue) == null) {
           throw new ArgumentNullException("otherValue");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
      return new ExtendedDecimal(this.ed.Add(otherValue.ed, ctx == null ?
-          null :
-          ctx.ec));
+          null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1009,12 +939,8 @@ return new ExtendedDecimal(this.ed.CompareToWithContext(other.ed, ctx ==
         if ((desiredExponent) == null) {
           throw new ArgumentNullException("desiredExponent");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
   return new ExtendedDecimal(this.ed.Quantize(desiredExponent.ei, ctx ==
-          null ?
-          null : ctx.ec));
+          null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1033,12 +959,8 @@ return new ExtendedDecimal(this.ed.CompareToWithContext(other.ed, ctx ==
     public ExtendedDecimal Quantize(int desiredExponentSmall,
       PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
 return new ExtendedDecimal(this.ed.Quantize(desiredExponentSmall, ctx ==
-          null ?
-          null : ctx.ec));
+          null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1053,8 +975,7 @@ return new ExtendedDecimal(this.ed.Quantize(desiredExponentSmall, ctx ==
           throw new ArgumentNullException("otherValue");
         }
 return new ExtendedDecimal(this.ed.Quantize(otherValue.ed, ctx == null ?
-          null :
-          ctx.ec));
+          null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1065,8 +986,7 @@ return new ExtendedDecimal(this.ed.Quantize(otherValue.ed, ctx == null ?
     public ExtendedDecimal RoundToIntegralExact(PrecisionContext ctx) {
       try {
    return new ExtendedDecimal(this.ed.RoundToIntegralExact(ctx == null ?
-          null :
-          ctx.ec));
+          null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1077,8 +997,7 @@ return new ExtendedDecimal(this.ed.Quantize(otherValue.ed, ctx == null ?
     public ExtendedDecimal RoundToIntegralNoRoundedFlag(PrecisionContext ctx) {
       try {
   return new ExtendedDecimal(this.ed.RoundToIntegralNoRoundedFlag(ctx ==
-          null ?
-          null : ctx.ec));
+          null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1108,8 +1027,7 @@ return new ExtendedDecimal(this.ed.Quantize(otherValue.ed, ctx == null ?
           throw new ArgumentNullException("exponent");
         }
   return new ExtendedDecimal(this.ed.RoundToExponent(exponent.ei, ctx ==
-          null ?
-          null : ctx.ec));
+          null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1133,8 +1051,7 @@ return new ExtendedDecimal(this.ed.Quantize(otherValue.ed, ctx == null ?
       PrecisionContext ctx) {
       try {
 return new ExtendedDecimal(this.ed.RoundToExponent(exponentSmall, ctx ==
-          null ?
-          null : ctx.ec));
+          null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1186,8 +1103,7 @@ return new ExtendedDecimal(this.ed.RoundToExponent(exponentSmall, ctx ==
           throw new ArgumentNullException("subtrahend");
         }
    return new ExtendedDecimal(this.ed.MultiplyAndSubtract(op.ed,
-          subtrahend.ed,
-          ctx.ec));
+          subtrahend.ed, ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1208,9 +1124,6 @@ return new ExtendedDecimal(this.ed.RoundToExponent(exponentSmall, ctx ==
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Plus(PeterO.Numbers.EContext)"]'/>
     public ExtendedDecimal Plus(PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedDecimal(this.ed.Plus(ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
@@ -1224,8 +1137,7 @@ return new ExtendedDecimal(this.ed.RoundToExponent(exponentSmall, ctx ==
     public ExtendedDecimal RoundToBinaryPrecision(PrecisionContext ctx) {
       try {
  return new ExtendedDecimal(this.ed.RoundToBinaryPrecision(ctx == null ?
-          null :
-          ctx.ec));
+          null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1235,9 +1147,6 @@ return new ExtendedDecimal(this.ed.RoundToExponent(exponentSmall, ctx ==
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.SquareRoot(PeterO.Numbers.EContext)"]'/>
     public ExtendedDecimal SquareRoot(PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
    return new ExtendedDecimal(this.ed.SquareRoot(ctx == null ? null :
           ctx.ec));
       } catch (ETrapException ex) {
@@ -1294,8 +1203,7 @@ return new ExtendedDecimal(this.ed.RoundToExponent(exponentSmall, ctx ==
     public ExtendedDecimal Pow(int exponentSmall, PrecisionContext ctx) {
       try {
      return new ExtendedDecimal(this.ed.Pow(exponentSmall, ctx == null ?
-          null :
-          ctx.ec));
+          null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1310,9 +1218,6 @@ return new ExtendedDecimal(this.ed.RoundToExponent(exponentSmall, ctx ==
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.PI(PeterO.Numbers.EContext)"]'/>
     public static ExtendedDecimal PI(PrecisionContext ctx) {
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
       return new ExtendedDecimal(EDecimal.PI(ctx == null ? null : ctx.ec));
     }
 
@@ -1327,8 +1232,7 @@ return new ExtendedDecimal(this.ed.RoundToExponent(exponentSmall, ctx ==
     public ExtendedDecimal MovePointLeft(int places, PrecisionContext ctx) {
       try {
   return new ExtendedDecimal(this.ed.MovePointLeft(places, ctx == null ?
-          null :
-          ctx.ec));
+          null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1368,12 +1272,8 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointRight(System.Int32,PeterO.Numbers.EContext)"]'/>
     public ExtendedDecimal MovePointRight(int places, PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
  return new ExtendedDecimal(this.ed.MovePointRight(places, ctx == null ?
-          null :
-          ctx.ec));
+          null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1396,12 +1296,9 @@ PrecisionContext ctx) {
         if ((bigPlaces) == null) {
           throw new ArgumentNullException("bigPlaces");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
   return new ExtendedDecimal(this.ed.MovePointRight(bigPlaces.ei, ctx ==
-          null ?
-          null : ctx.ec));
+          null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1417,12 +1314,8 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ScaleByPowerOfTen(System.Int32,PeterO.Numbers.EContext)"]'/>
     public ExtendedDecimal ScaleByPowerOfTen(int places, PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
      return new ExtendedDecimal(this.ed.ScaleByPowerOfTen(places, ctx ==
-          null ?
-          null : ctx.ec));
+          null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1445,12 +1338,9 @@ PrecisionContext ctx) {
         if ((bigPlaces) == null) {
           throw new ArgumentNullException("bigPlaces");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedDecimal(this.ed.ScaleByPowerOfTen(bigPlaces.ei,
-          ctx == null ?
-          null : ctx.ec));
+          ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }

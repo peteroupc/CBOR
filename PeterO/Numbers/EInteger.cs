@@ -1,5 +1,5 @@
 /*
-Written in 2013 by Peter O.
+Written in 2013-2015 by Peter O.
 
 Parts of the code were adapted by Peter O. from
 the public-domain code from the library
@@ -192,13 +192,13 @@ namespace PeterO.Numbers {
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.FromInt64(System.Int64)"]'/>
     public static EInteger FromInt64(long longerValue) {
       if (longerValue == 0) {
-        return EInteger.Zero;
+        return zero;
       }
       if (longerValue == 1) {
-        return EInteger.One;
+        return one;
       }
       if (longerValue == 10) {
-        return EInteger.Ten;
+        return ten;
       }
       short[] retreg;
       bool retnegative;
@@ -458,7 +458,7 @@ namespace PeterO.Numbers {
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.add(PeterO.Numbers.EInteger)"]'/>
-    public EInteger add(EInteger bigintAugend) {
+    public EInteger Add(EInteger bigintAugend) {
       if (bigintAugend == null) {
         throw new ArgumentNullException("bigintAugend");
       }
@@ -812,7 +812,7 @@ namespace PeterO.Numbers {
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.divide(PeterO.Numbers.EInteger)"]'/>
-    public EInteger divide(EInteger bigintDivisor) {
+    public EInteger Divide(EInteger bigintDivisor) {
       if (bigintDivisor == null) {
         throw new ArgumentNullException("bigintDivisor");
       }
@@ -1037,7 +1037,7 @@ namespace PeterO.Numbers {
         return 1;
       }
       if (this.HasSmallValue()) {
-        long value = this.longValueChecked();
+        long value = this.AsInt64Checked();
         if (value == Int64.MinValue) {
           return 19;
         }
@@ -1277,7 +1277,7 @@ namespace PeterO.Numbers {
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.longValueChecked"]'/>
-    public long longValueChecked() {
+    public long AsInt64Checked() {
       int count = this.wordCount;
       if (count == 0) {
         return (long)0;
@@ -1293,12 +1293,12 @@ namespace PeterO.Numbers {
         }
         throw new OverflowException();
       }
-      return this.longValueUnchecked();
+      return this.AsInt64Unchecked();
     }
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.longValueUnchecked"]'/>
-    public long longValueUnchecked() {
+    public long AsInt64Unchecked() {
       var c = (int)this.wordCount;
       if (c == 0) {
         return (long)0;
@@ -1343,9 +1343,9 @@ namespace PeterO.Numbers {
       if (divisor.Sign < 0) {
         throw new ArithmeticException("Divisor is negative");
       }
-      EInteger rem = this.remainder(divisor);
+      EInteger rem = this.Remainder(divisor);
       if (rem.Sign < 0) {
-        rem = divisor.add(rem);
+        rem = divisor.Add(rem);
       }
       return rem;
     }
@@ -1381,7 +1381,7 @@ namespace PeterO.Numbers {
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.multiply(PeterO.Numbers.EInteger)"]'/>
-    public EInteger multiply(EInteger bigintMult) {
+    public EInteger Multiply(EInteger bigintMult) {
       if (bigintMult == null) {
         throw new ArgumentNullException("bigintMult");
       }
@@ -1389,10 +1389,10 @@ namespace PeterO.Numbers {
         return EInteger.Zero;
       }
       if (this.wordCount == 1 && this.words[0] == 1) {
-        return this.negative ? bigintMult.negate() : bigintMult;
+        return this.negative ? bigintMult.Negate() : bigintMult;
       }
       if (bigintMult.wordCount == 1 && bigintMult.words[0] == 1) {
-        return bigintMult.negative ? this.negate() : this;
+        return bigintMult.negative ? this.Negate() : this;
       }
       short[] productreg;
       int productwordCount;
@@ -1486,7 +1486,7 @@ namespace PeterO.Numbers {
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.negate"]'/>
-    public EInteger negate() {
+    public EInteger Negate() {
       return this.wordCount == 0 ? this : new EInteger(
         this.wordCount,
         this.words,
@@ -1566,7 +1566,7 @@ namespace PeterO.Numbers {
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.remainder(PeterO.Numbers.EInteger)"]'/>
-    public EInteger remainder(EInteger divisor) {
+    public EInteger Remainder(EInteger divisor) {
       if (divisor == null) {
         throw new ArgumentNullException("divisor");
       }
@@ -1731,8 +1731,8 @@ namespace PeterO.Numbers {
       if (subtrahend == null) {
         throw new ArgumentNullException("subtrahend");
       }
-      return (this.wordCount == 0) ? subtrahend.negate() :
-        ((subtrahend.wordCount == 0) ? this : this.add(subtrahend.negate()));
+      return (this.wordCount == 0) ? subtrahend.Negate() :
+        ((subtrahend.wordCount == 0) ? this : this.Add(subtrahend.Negate()));
     }
 
     /// <include file='docs.xml'
@@ -5236,7 +5236,7 @@ count);
     }
 
     private string SmallValueToString() {
-      long value = this.longValueChecked();
+      long value = this.AsInt64Checked();
       if (value == Int64.MinValue) {
         return "-9223372036854775808";
       }

@@ -85,8 +85,8 @@ namespace PeterO.Numbers {
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Create(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
     public static EDecimal Create(
-      PeterO.Numbers.EInteger mantissa,
-      PeterO.Numbers.EInteger exponent) {
+      EInteger mantissa,
+      EInteger exponent) {
       if (mantissa == null) {
         throw new ArgumentNullException("mantissa");
       }

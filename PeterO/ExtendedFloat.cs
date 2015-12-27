@@ -92,11 +92,9 @@ namespace PeterO {
       if ((diag) == null) {
         throw new ArgumentNullException("diag");
       }
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
-      return new ExtendedFloat(EFloat.CreateNaN(diag.ei, signaling, negative,
-        ctx.ec));
+
+      return new ExtendedFloat(EFloat.CreateNaN(diag.ei, signaling,
+        negative, ctx == null ? null : ctx.ec));
     }
 
     /// <include file='docs.xml'
@@ -416,9 +414,6 @@ try {
     /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.Reduce(PeterO.Numbers.EContext)"]'/>
     public ExtendedFloat Reduce(PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedFloat(this.ef.Reduce(ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
@@ -442,11 +437,9 @@ try {
         if ((divisor) == null) {
           throw new ArgumentNullException("divisor");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.RemainderNaturalScale(divisor.ef,
-             ctx.ec));
+          ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -461,9 +454,7 @@ try {
         if ((divisor) == null) {
           throw new ArgumentNullException("divisor");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.DivideToExponent(divisor.ef,
           desiredExponentSmall, ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
@@ -510,12 +501,9 @@ try {
         if ((exponent) == null) {
           throw new ArgumentNullException("exponent");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
      return new ExtendedFloat(this.ef.DivideToExponent(divisor.ef,
-          exponent.ei,
-          ctx.ec));
+          exponent.ei, ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -587,9 +575,7 @@ try {
         if ((otherValue) == null) {
           throw new ArgumentNullException("otherValue");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.Subtract(otherValue.ef, ctx == null ?
           null : ctx.ec));
       } catch (ETrapException ex) {
@@ -628,11 +614,9 @@ try {
         if ((divisor) == null) {
           throw new ArgumentNullException("divisor");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.DivideToIntegerNaturalScale(divisor.ef,
-          ctx.ec));
+          ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -646,11 +630,9 @@ try {
         if ((divisor) == null) {
           throw new ArgumentNullException("divisor");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.DivideToIntegerZeroScale(divisor.ef,
-                ctx.ec));
+          ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -664,9 +646,7 @@ try {
         if ((divisor) == null) {
           throw new ArgumentNullException("divisor");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.Remainder(divisor.ef, ctx == null ?
           null : ctx.ec));
       } catch (ETrapException ex) {
@@ -682,9 +662,7 @@ try {
         if ((divisor) == null) {
           throw new ArgumentNullException("divisor");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.RemainderNear(divisor.ef, ctx == null ?
           null : ctx.ec));
       } catch (ETrapException ex) {
@@ -696,9 +674,6 @@ try {
     /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.NextMinus(PeterO.Numbers.EContext)"]'/>
     public ExtendedFloat NextMinus(PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
       return new ExtendedFloat(this.ef.NextMinus(ctx == null ? null :
           ctx.ec));
       } catch (ETrapException ex) {
@@ -710,9 +685,6 @@ try {
     /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.NextPlus(PeterO.Numbers.EContext)"]'/>
     public ExtendedFloat NextPlus(PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedFloat(this.ef.NextPlus(ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
@@ -727,9 +699,7 @@ try {
         if ((otherValue) == null) {
           throw new ArgumentNullException("otherValue");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.NextToward(otherValue.ef, ctx == null ?
           null : ctx.ec));
       } catch (ETrapException ex) {
@@ -748,9 +718,7 @@ try {
       if ((second) == null) {
         throw new ArgumentNullException("second");
       }
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
+
       return new ExtendedFloat(EFloat.Max(first.ef, second.ef, ctx == null ?
         null : ctx.ec));
     }
@@ -766,9 +734,7 @@ try {
       if ((second) == null) {
         throw new ArgumentNullException("second");
       }
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
+
       return new ExtendedFloat(EFloat.Min(first.ef, second.ef, ctx == null ?
         null : ctx.ec));
     }
@@ -784,11 +750,9 @@ try {
       if ((second) == null) {
         throw new ArgumentNullException("second");
       }
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
+
       return new ExtendedFloat(EFloat.MaxMagnitude(first.ef, second.ef,
-          ctx.ec));
+        ctx == null ? null : ctx.ec));
     }
 
     /// <include file='docs.xml'
@@ -802,11 +766,9 @@ try {
       if ((second) == null) {
         throw new ArgumentNullException("second");
       }
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
+
       return new ExtendedFloat(EFloat.MinMagnitude(first.ef, second.ef,
-          ctx.ec));
+        ctx == null ? null : ctx.ec));
     }
 
     /// <include file='docs.xml'
@@ -878,9 +840,7 @@ try {
         if ((other) == null) {
           throw new ArgumentNullException("other");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.CompareToWithContext(other.ef,
           ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
@@ -896,9 +856,7 @@ try {
         if ((other) == null) {
           throw new ArgumentNullException("other");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.CompareToSignal(other.ef, ctx == null ?
           null : ctx.ec));
       } catch (ETrapException ex) {
@@ -914,9 +872,7 @@ try {
         if ((otherValue) == null) {
           throw new ArgumentNullException("otherValue");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.Add(otherValue.ef, ctx == null ? null :
           ctx.ec));
       } catch (ETrapException ex) {
@@ -932,9 +888,7 @@ try {
         if ((desiredExponent) == null) {
           throw new ArgumentNullException("desiredExponent");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.Quantize(desiredExponent.ei,
           ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
@@ -947,9 +901,6 @@ try {
     public ExtendedFloat Quantize(int desiredExponentSmall,
       PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedFloat(this.ef.Quantize(desiredExponentSmall,
           ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
@@ -977,8 +928,7 @@ try {
     public ExtendedFloat RoundToIntegralExact(PrecisionContext ctx) {
       try {
      return new ExtendedFloat(this.ef.RoundToIntegralExact(ctx == null ?
-          null :
-          ctx.ec));
+          null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -990,8 +940,7 @@ try {
       try {
         return new
         ExtendedFloat(this.ef.RoundToIntegralNoRoundedFlag(ctx == null ?
-            null :
-          ctx.ec));
+            null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1005,11 +954,9 @@ try {
         if ((exponent) == null) {
           throw new ArgumentNullException("exponent");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.RoundToExponentExact(exponent.ei,
-             ctx.ec));
+          ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1023,9 +970,7 @@ try {
         if ((exponent) == null) {
           throw new ArgumentNullException("exponent");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.RoundToExponent(exponent.ei,
           ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
@@ -1038,11 +983,8 @@ try {
     public ExtendedFloat RoundToExponentExact(int exponentSmall,
       PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedFloat(this.ef.RoundToExponentExact(exponentSmall,
-               ctx.ec));
+          ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1053,9 +995,6 @@ try {
     public ExtendedFloat RoundToExponent(int exponentSmall,
       PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedFloat(this.ef.RoundToExponent(exponentSmall,
           ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
@@ -1071,9 +1010,7 @@ try {
         if ((op) == null) {
           throw new ArgumentNullException("op");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.Multiply(op.ef, ctx == null ? null :
               ctx.ec));
       } catch (ETrapException ex) {
@@ -1093,11 +1030,9 @@ try {
         if ((augend) == null) {
           throw new ArgumentNullException("augend");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.MultiplyAndAdd(op.ef, augend.ef,
-            ctx.ec));
+          ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1115,12 +1050,9 @@ try {
         if ((subtrahend) == null) {
           throw new ArgumentNullException("subtrahend");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
      return new ExtendedFloat(this.ef.MultiplyAndSubtract(op.ef,
-          subtrahend.ef,
-          ctx.ec));
+          subtrahend.ef, ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1130,9 +1062,6 @@ try {
     /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.RoundToPrecision(PeterO.Numbers.EContext)"]'/>
     public ExtendedFloat RoundToPrecision(PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedFloat(this.ef.RoundToPrecision(ctx == null ? null :
                ctx.ec));
       } catch (ETrapException ex) {
@@ -1144,9 +1073,6 @@ try {
     /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.Plus(PeterO.Numbers.EContext)"]'/>
     public ExtendedFloat Plus(PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedFloat(this.ef.Plus(ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
@@ -1159,9 +1085,6 @@ try {
       "Instead of this method use RoundToPrecision and pass a precision " + "context with the IsPrecisionInBits property set.")]
     public ExtendedFloat RoundToBinaryPrecision(PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedFloat(this.ef.RoundToBinaryPrecision(ctx == null ?
           null : ctx.ec));
       } catch (ETrapException ex) {
@@ -1173,9 +1096,6 @@ try {
     /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.SquareRoot(PeterO.Numbers.EContext)"]'/>
     public ExtendedFloat SquareRoot(PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
      return new ExtendedFloat(this.ef.SquareRoot(ctx == null ? null :
           ctx.ec));
       } catch (ETrapException ex) {
@@ -1247,9 +1167,6 @@ try {
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.PI(PeterO.Numbers.EContext)"]'/>
     public static ExtendedFloat PI(PrecisionContext ctx) {
-      if ((ctx) == null) {
-        throw new ArgumentNullException("ctx");
-      }
       return new ExtendedFloat(EFloat.PI(ctx == null ? null : ctx.ec));
     }
 
@@ -1263,9 +1180,6 @@ try {
     /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.MovePointLeft(System.Int32,PeterO.Numbers.EContext)"]'/>
     public ExtendedFloat MovePointLeft(int places, PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedFloat(this.ef.MovePointLeft(places, ctx == null ?
           null : ctx.ec));
       } catch (ETrapException ex) {
@@ -1290,12 +1204,9 @@ PrecisionContext ctx) {
         if ((bigPlaces) == null) {
           throw new ArgumentNullException("bigPlaces");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
      return new ExtendedFloat(this.ef.MovePointLeft(bigPlaces.ei, ctx ==
-          null ?
-          null : ctx.ec));
+          null ? null : ctx.ec));
       } catch (ETrapException ex) {
         throw TrapException.Create(ex);
       }
@@ -1311,9 +1222,6 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.MovePointRight(System.Int32,PeterO.Numbers.EContext)"]'/>
     public ExtendedFloat MovePointRight(int places, PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedFloat(this.ef.MovePointRight(places, ctx == null ?
           null : ctx.ec));
       } catch (ETrapException ex) {
@@ -1338,9 +1246,7 @@ PrecisionContext ctx) {
         if ((bigPlaces) == null) {
           throw new ArgumentNullException("bigPlaces");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.MovePointRight(bigPlaces.ei,
           ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
@@ -1358,9 +1264,6 @@ PrecisionContext ctx) {
     /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.ScaleByPowerOfTwo(System.Int32,PeterO.Numbers.EContext)"]'/>
     public ExtendedFloat ScaleByPowerOfTwo(int places, PrecisionContext ctx) {
       try {
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
         return new ExtendedFloat(this.ef.ScaleByPowerOfTwo(places, ctx == null ?
           null : ctx.ec));
       } catch (ETrapException ex) {
@@ -1385,9 +1288,7 @@ PrecisionContext ctx) {
         if ((bigPlaces) == null) {
           throw new ArgumentNullException("bigPlaces");
         }
-        if ((ctx) == null) {
-          throw new ArgumentNullException("ctx");
-        }
+
         return new ExtendedFloat(this.ef.ScaleByPowerOfTwo(bigPlaces.ei,
           ctx == null ? null : ctx.ec));
       } catch (ETrapException ex) {
