@@ -1248,9 +1248,23 @@
 <summary>Generates a CBOR object from a string in JavaScript Object
             Notation (JSON) format.
             <para>If a JSON object has the same key, only the last given value
-            will be used for each duplicated key. The JSON string may not begin
-            with a byte-order mark (U+FEFF).</para></summary>
-            <param name='str'>A string in JSON format.</param>
+            will be used for each duplicated key.</para></summary>
+            <param name='str'>A string in JSON format.  The entire string must contain a single
+            JSON object and not multiple objects. The string may not begin
+            with a byte-order mark (U+FEFF).</param>
+            <returns>A CBORObject object.</returns>
+            <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
+            <exception cref='T:PeterO.Cbor.CBORException'>The string is not in JSON
+            format.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.CBOREncodeOptions)">
+<summary>Generates a CBOR object from a string in JavaScript Object
+            Notation (JSON) format.
+            <para>By default, if a JSON object has the same key, only the last given value
+            will be used for each duplicated key. </para></summary>
+            <param name='str'>A string in JSON format.  The entire string must contain a single
+            JSON object and not multiple objects. The string may not begin
+            with a byte-order mark (U+FEFF).</param>
             <returns>A CBORObject object.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='str'/> is null.</exception>
             <exception cref='T:PeterO.Cbor.CBORException'>The string is not in JSON
@@ -1765,7 +1779,27 @@
             versions, only UTF-8 was allowed.)
             <para>If a JSON object has the same key, only the last given value
             will be used for each duplicated key.</para></summary>
-            <param name='stream'>A readable data stream.</param>
+            <param name='stream'>A readable data stream.  The sequence of bytes read from the data stream must contain a single
+            JSON object and not multiple objects.</param>
+            <returns>A CBORObject object.</returns>
+            <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception>
+            <exception cref='T:System.IO.IOException'>An I/O error
+            occurred.</exception>
+            <exception cref='T:PeterO.Cbor.CBORException'>The data stream contains invalid
+            encoding or is not in JSON format.</exception>
+</doc>
+<doc name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)">
+<summary>Generates a CBOR object from a data stream in JavaScript
+            Object Notation (JSON) format. The JSON stream may begin with a
+            byte-order mark (U+FEFF). Since version 2.0, the JSON stream can
+            be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected
+            by assuming that the first character read must be a byte-order mark
+            or a nonzero basic character (U+0001 to U+007F). (In previous
+            versions, only UTF-8 was allowed.)
+            <para>By default, if a JSON object has the same key, only the last given value
+            will be used for each duplicated key.</para></summary>
+            <param name='stream'>A readable data stream.  The sequence of bytes read from the data stream must contain a single
+            JSON object and not multiple objects.</param>
             <returns>A CBORObject object.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='stream'/> is null.</exception>
             <exception cref='T:System.IO.IOException'>An I/O error
@@ -2815,7 +2849,7 @@
             higher, in UTF-16.  A surrogate pair is a high surrogate [U+D800 to U+DBFF]
             followed by a low surrogate [U+DC00 to U+DFFF]. An unpaired surrogate
             code point is a surrogate not appearing in a surrogate pair.)
-            Many of the methods in the class allow setting the behavior to follow
+            Many of the methods in this class allow setting the behavior to follow
             when unpaired surrogate code points are found in text strings, such as
             throwing an error or treating the unpaired surrogate as a replacement
             character (U+FFFD).</para></summary>

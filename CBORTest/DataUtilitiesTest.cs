@@ -264,6 +264,51 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
     [Test]
     public void TestGetUtf8Bytes() {
       try {
+        DataUtilities.GetUtf8Bytes("\ud800", false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\udc00", false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\ud800\ud800", false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\udc00\udc00", false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
+        DataUtilities.GetUtf8Bytes("\udc00\ud800", false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
         DataUtilities.GetUtf8Bytes(null, true);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
@@ -517,6 +562,16 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
       this.TestUtf8RoundTrip("AA" + Repeat("\ud800\udc00", 10000));
       this.TestUtf8RoundTrip("AAA" + Repeat("\ud800\udc00", 10000));
       this.TestUtf8RoundTrip("AAAA" + Repeat("\ud800\udc00", 10000));
+
+      try {
+        DataUtilities.GetUtf8String(null, 0, 1, false);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
         DataUtilities.GetUtf8String(null, false);
         Assert.Fail("Should have failed");
@@ -1014,6 +1069,42 @@ DataUtilities.GetUtf8String(DataUtilities.GetUtf8Bytes(str, true), true));
     [Test]
     public void TestWriteUtf8() {
       try {
+        try {
+          DataUtilities.WriteUtf8(null, 0, 1, null, false);
+          Assert.Fail("Should have failed");
+        } catch (ArgumentNullException) {
+          Console.Write(String.Empty);
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+        try {
+          DataUtilities.WriteUtf8("xyz", 0, 1, null, false);
+          Assert.Fail("Should have failed");
+        } catch (ArgumentNullException) {
+          Console.Write(String.Empty);
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+        try {
+          DataUtilities.WriteUtf8(null, null, false);
+          Assert.Fail("Should have failed");
+        } catch (ArgumentNullException) {
+          Console.Write(String.Empty);
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
+        try {
+          DataUtilities.WriteUtf8("xyz", null, false);
+          Assert.Fail("Should have failed");
+        } catch (ArgumentNullException) {
+          Console.Write(String.Empty);
+        } catch (Exception ex) {
+          Assert.Fail(ex.ToString());
+          throw new InvalidOperationException(String.Empty, ex);
+        }
         {
           using (var ms = new MemoryStream()) {
             try {

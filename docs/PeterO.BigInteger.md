@@ -988,7 +988,7 @@ For this operation, the arbitrary-precision integer is treated as a two's comple
 
  * <i>bthis</i>: Another arbitrary-precision integer.
 
- * <i>bigValue</i>: A 32-bit signed integer.
+ * <i>smallValue</i>: A 32-bit signed integer.
 
 <b>Returns:</b>
 

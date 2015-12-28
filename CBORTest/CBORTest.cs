@@ -18,14 +18,6 @@ namespace Test {
     /// <returns>Not documented yet.</returns>
   [TestFixture]
   public class CBORTest {
-    public static void AssertDecimalsEquivalent(string a, string b) {
-      CBORObject ca = CBORDataUtilities.ParseJSONNumber(a);
-      CBORObject cb = CBORDataUtilities.ParseJSONNumber(b);
-      TestCommon.CompareTestEqual(ca, cb);
-      TestCommon.AssertRoundTrip(ca);
-      TestCommon.AssertRoundTrip(cb);
-    }
-
     public static void TestCBORMapAdd() {
       CBORObject cbor = CBORObject.NewMap();
       cbor.Add(1, 2);
@@ -296,15 +288,6 @@ cbor.AsBigInteger());
     [Test]
     public void TestCBORExceptions() {
       try {
-        CBORObject.DecodeFromBytes(null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
         CBORObject.NewArray().Remove(null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
@@ -484,8 +467,6 @@ cbor.AsBigInteger());
     [Test]
     public void TestCompareB() {
       Assert.IsTrue(CBORObject.DecodeFromBytes(new byte[] { (byte)0xfa, 0x7f,
-        (byte)0x80, 0x00, 0x00 }).IsInfinity());
-      Assert.IsTrue(CBORObject.DecodeFromBytes(new byte[] { (byte)0xfa, 0x7f,
         (byte)0x80, 0x00, 0x00 }).AsExtendedRational().IsInfinity());
       AddSubCompare(
         CBORObject.DecodeFromBytes(new byte[] { (byte)0xd8, 0x1e,
@@ -621,6 +602,14 @@ cbor.AsBigInteger());
         o.AsExtendedDecimal());
     }
 
+    private static void AssertDecimalsEquivalent(string a, string b) {
+      CBORObject ca = CBORDataUtilities.ParseJSONNumber(a);
+      CBORObject cb = CBORDataUtilities.ParseJSONNumber(b);
+      TestCommon.CompareTestEqual(ca, cb);
+      TestCommon.AssertRoundTrip(ca);
+      TestCommon.AssertRoundTrip(cb);
+    }
+
     [Test]
     public void TestDecimalsEquivalent() {
       AssertDecimalsEquivalent("1.310E-7", "131.0E-9");
@@ -731,8 +720,7 @@ cbor.AsBigInteger());
       for (var i = 0; i < 3000; ++i) {
         CBORObject o1 =
           CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
-      CBORObject o2 =
-          CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
+      CBORObject o2 = CBORObject.FromObject(RandomObjects.RandomBigInteger(r));
         if (o2.IsZero) {
           continue;
         }
@@ -803,127 +791,6 @@ cbor.AsBigInteger());
       byte[] bytes = cbor.EncodeToBytes();
       // The following converts the map to JSON
       string json = cbor.ToJSONString();
-    }
-
-    [Test]
-    public void TestExceptions() {
-      try {
-        PrecisionContext.Unlimited.WithBigPrecision(null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        DataUtilities.GetUtf8String(null, false);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        DataUtilities.GetUtf8Bytes(null, false);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        DataUtilities.WriteUtf8(null, 0, 1, null, false);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        DataUtilities.WriteUtf8("xyz", 0, 1, null, false);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        DataUtilities.WriteUtf8(null, null, false);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        DataUtilities.WriteUtf8("xyz", null, false);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        DataUtilities.GetUtf8Bytes("\ud800", false);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        DataUtilities.GetUtf8Bytes("\udc00", false);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        DataUtilities.GetUtf8Bytes("\ud800\ud800", false);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        DataUtilities.GetUtf8Bytes("\udc00\udc00", false);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        DataUtilities.GetUtf8Bytes("\udc00\ud800", false);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        DataUtilities.GetUtf8String(null, 0, 1, false);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-        Console.Write(String.Empty);
-      } catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
     }
 
     [Test]
@@ -1462,39 +1329,6 @@ cbor.AsBigInteger());
     }
 
     [Test]
-    public void TestExtendedFloatDecFrac() {
-      ExtendedDecimal df;
-      df = ExtendedDecimal.FromInt64(20);
-      {
-        string stringTemp = df.ToExtendedFloat().ToString();
-        Assert.AreEqual(
-        "20",
-        stringTemp);
-      }
-      df = ExtendedDecimal.FromInt64(-20);
-      {
-        string stringTemp = df.ToExtendedFloat().ToString();
-        Assert.AreEqual(
-        "-20",
-        stringTemp);
-      }
-      df = ExtendedDecimal.Create((BigInteger)15, (BigInteger)(-1));
-      {
-        string stringTemp = df.ToExtendedFloat().ToString();
-        Assert.AreEqual(
-        "1.5",
-        stringTemp);
-      }
-      df = ExtendedDecimal.Create((BigInteger)(-15), (BigInteger)(-1));
-      {
-        string stringTemp = df.ToExtendedFloat().ToString();
-        Assert.AreEqual(
-        "-1.5",
-        stringTemp);
-      }
-    }
-
-    [Test]
     public void TestExtendedFloatDouble() {
       TestExtendedFloatDoubleCore(3.5, "3.5");
       TestExtendedFloatDoubleCore(7, "7");
@@ -1934,27 +1768,6 @@ cbor.AsBigInteger());
       oo4.Add(oo3, CBORObject.True);
       oo.Add(oo4);
       TestCommon.AssertRoundTrip(oo);
-    }
-    [Test]
-    public void TestMultiply() {
-      var r = new FastRandom();
-      for (var i = 0; i < 3000; ++i) {
-        CBORObject o1 = RandomObjects.RandomNumber(r);
-        CBORObject o2 = RandomObjects.RandomNumber(r);
-        ExtendedDecimal cmpDecFrac =
-          o1.AsExtendedDecimal().Multiply(o2.AsExtendedDecimal());
-        ExtendedDecimal cmpCobj = CBORObject.Multiply(
-          o1,
-          o2).AsExtendedDecimal();
-        if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
-          Assert.AreEqual(
-            0,
-            cmpDecFrac.CompareTo(cmpCobj),
-            TestCommon.ObjectMessages(o1, o2, "Results don't match"));
-        }
-        TestCommon.AssertRoundTrip(o1);
-        TestCommon.AssertRoundTrip(o2);
-      }
     }
 
     [Test]
