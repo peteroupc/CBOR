@@ -307,16 +307,20 @@ throw new InvalidOperationException(String.Empty, ex);
         }
         int cmp = TestCommon.CompareTestReciprocal(bigintA, bigintB);
         if (cmp < 0) {
-     TestCommon.CompareTestEqual(bigintB, ExtendedFloat.Max(bigintA,
-            bigintB));
+     TestCommon.CompareTestEqual(
+bigintB,
+ExtendedFloat.Max(bigintA, bigintB));
         } else if (cmp > 0) {
-     TestCommon.CompareTestEqual(bigintA, ExtendedFloat.Max(bigintA,
-            bigintB));
+     TestCommon.CompareTestEqual(
+bigintA,
+ExtendedFloat.Max(bigintA, bigintB));
         } else {
-     TestCommon.CompareTestEqual(bigintA, ExtendedFloat.Max(bigintA,
-            bigintB));
-     TestCommon.CompareTestEqual(bigintB, ExtendedFloat.Max(bigintA,
-            bigintB));
+     TestCommon.CompareTestEqual(
+bigintA,
+ExtendedFloat.Max(bigintA, bigintB));
+     TestCommon.CompareTestEqual(
+bigintB,
+ExtendedFloat.Max(bigintA, bigintB));
         }
       }
     }
@@ -371,16 +375,20 @@ throw new InvalidOperationException(String.Empty, ex);
         }
         int cmp = TestCommon.CompareTestReciprocal(bigintA, bigintB);
         if (cmp < 0) {
-     TestCommon.CompareTestEqual(bigintA, ExtendedFloat.Min(bigintA,
-            bigintB));
+     TestCommon.CompareTestEqual(
+bigintA,
+ExtendedFloat.Min(bigintA, bigintB));
         } else if (cmp > 0) {
-     TestCommon.CompareTestEqual(bigintB, ExtendedFloat.Min(bigintA,
-            bigintB));
+     TestCommon.CompareTestEqual(
+bigintB,
+ExtendedFloat.Min(bigintA, bigintB));
         } else {
-     TestCommon.CompareTestEqual(bigintA, ExtendedFloat.Min(bigintA,
-            bigintB));
-     TestCommon.CompareTestEqual(bigintB, ExtendedFloat.Min(bigintA,
-            bigintB));
+     TestCommon.CompareTestEqual(
+bigintA,
+ExtendedFloat.Min(bigintA, bigintB));
+     TestCommon.CompareTestEqual(
+bigintB,
+ExtendedFloat.Min(bigintA, bigintB));
         }
       }
     }

@@ -429,6 +429,7 @@ TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2) +
           InvalidOperationException(String.Empty, ex);
       }
     }
+
     public static string ToByteArrayString(byte[] bytes) {
       if (bytes == null) {
         return "null";

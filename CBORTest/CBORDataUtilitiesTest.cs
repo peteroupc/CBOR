@@ -105,49 +105,51 @@ false,
 false)) != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber("0000")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber("0000") != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber("0x1")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber("0x1") != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber("0xf")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber("0xf") != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber("0x20")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber("0x20") != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber("0x01")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber("0x01") != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber(".2")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber(".2") != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber(".05")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber(".05") != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber("-.2")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber("-.2") != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber("-.05")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber("-.05") != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber("23.")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber("23.") != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber("23.e0")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber("23.e0") != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber("23.e1")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber("23.e1") != null) {
  Assert.Fail();
  }
-      if ((CBORDataUtilities.ParseJSONNumber("0.")) != null) {
+      if (CBORDataUtilities.ParseJSONNumber("0.") != null) {
  Assert.Fail();
  }
-      TestCommon.CompareTestEqual(CBORObject.FromObject(230),
-        CBORDataUtilities.ParseJSONNumber("23.0e01"));
-      TestCommon.CompareTestEqual(CBORObject.FromObject(23),
-        CBORDataUtilities.ParseJSONNumber("23.0e00"));
+      TestCommon.CompareTestEqual(
+CBORObject.FromObject(230),
+CBORDataUtilities.ParseJSONNumber("23.0e01"));
+      TestCommon.CompareTestEqual(
+CBORObject.FromObject(23),
+CBORDataUtilities.ParseJSONNumber("23.0e00"));
       CBORObject cbor;
       cbor = CBORDataUtilities.ParseJSONNumber(
 "1e+99999999999999999999999999",

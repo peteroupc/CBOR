@@ -10392,7 +10392,7 @@
 <summary>Shifts the bits of an arbitrary-precision integer to the
             right.</summary>
             <param name='bthis'>Another arbitrary-precision integer.</param>
-            <param name='bigValue'>A 32-bit signed integer.</param>
+            <param name='smallValue'>A 32-bit signed integer.</param>
             <returns>An arbitrary-precision integer.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bthis'/> is null.</exception>
             <remarks>For this operation, the arbitrary-precision integer is treated as a two's

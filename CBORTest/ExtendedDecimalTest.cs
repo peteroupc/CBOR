@@ -34,17 +34,20 @@ namespace Test {
     }
     [Test]
     public void TestCompareToBinary() {
-    Assert.AreEqual(1,
-        ExtendedDecimal.NegativeInfinity.CompareToBinary(null));
-    Assert.AreEqual(1,
-        ExtendedDecimal.PositiveInfinity.CompareToBinary(null));
+    Assert.AreEqual(
+1,
+ExtendedDecimal.NegativeInfinity.CompareToBinary(null));
+    Assert.AreEqual(
+1,
+ExtendedDecimal.PositiveInfinity.CompareToBinary(null));
       Assert.AreEqual(1, ExtendedDecimal.NaN.CompareToBinary(null));
       Assert.AreEqual(1, ExtendedDecimal.SignalingNaN.CompareToBinary(null));
       Assert.AreEqual(1, ExtendedDecimal.Zero.CompareToBinary(null));
       Assert.AreEqual(1, ExtendedDecimal.One.CompareToBinary(null));
 
-    Assert.AreEqual(0,
-        ExtendedDecimal.NaN.CompareToBinary(ExtendedFloat.NaN));
+    Assert.AreEqual(
+0,
+ExtendedDecimal.NaN.CompareToBinary(ExtendedFloat.NaN));
 
       {
         long numberTemp =
@@ -63,8 +66,9 @@ namespace Test {
   ExtendedDecimal.SignalingNaN.CompareToBinary(ExtendedFloat.SignalingNaN);
         Assert.AreEqual(0, numberTemp);
       }
-   Assert.AreEqual(1,
-        ExtendedDecimal.NaN.CompareToBinary(ExtendedFloat.Zero));
+   Assert.AreEqual(
+1,
+ExtendedDecimal.NaN.CompareToBinary(ExtendedFloat.Zero));
 
       {
         long numberTemp =
@@ -1121,7 +1125,7 @@ namespace Test {
     [Test]
     public void TestLog() {
       Assert.IsTrue(ExtendedDecimal.One.Log(null).IsNaN());
-Assert.IsTrue(ExtendedDecimal.One.Log(PrecisionContext.Unlimited) .IsNaN());
+Assert.IsTrue(ExtendedDecimal.One.Log(PrecisionContext.Unlimited).IsNaN());
     }
     [Test]
     public void TestLog10() {
@@ -1162,16 +1166,20 @@ Assert.IsTrue(ExtendedDecimal.One.Log(PrecisionContext.Unlimited) .IsNaN());
         }
         int cmp = TestCommon.CompareTestReciprocal(bigintA, bigintB);
         if (cmp < 0) {
-   TestCommon.CompareTestEqual(bigintB, ExtendedDecimal.Max(bigintA,
-            bigintB));
+   TestCommon.CompareTestEqual(
+bigintB,
+ExtendedDecimal.Max(bigintA, bigintB));
         } else if (cmp > 0) {
-   TestCommon.CompareTestEqual(bigintA, ExtendedDecimal.Max(bigintA,
-            bigintB));
+   TestCommon.CompareTestEqual(
+bigintA,
+ExtendedDecimal.Max(bigintA, bigintB));
         } else {
-   TestCommon.CompareTestEqual(bigintA, ExtendedDecimal.Max(bigintA,
-            bigintB));
-   TestCommon.CompareTestEqual(bigintB, ExtendedDecimal.Max(bigintA,
-            bigintB));
+   TestCommon.CompareTestEqual(
+bigintA,
+ExtendedDecimal.Max(bigintA, bigintB));
+   TestCommon.CompareTestEqual(
+bigintB,
+ExtendedDecimal.Max(bigintA, bigintB));
         }
       }
     }
@@ -1225,16 +1233,20 @@ Assert.IsTrue(ExtendedDecimal.One.Log(PrecisionContext.Unlimited) .IsNaN());
         }
         int cmp = TestCommon.CompareTestReciprocal(bigintA, bigintB);
         if (cmp < 0) {
-   TestCommon.CompareTestEqual(bigintA, ExtendedDecimal.Min(bigintA,
-            bigintB));
+   TestCommon.CompareTestEqual(
+bigintA,
+ExtendedDecimal.Min(bigintA, bigintB));
         } else if (cmp > 0) {
-   TestCommon.CompareTestEqual(bigintB, ExtendedDecimal.Min(bigintA,
-            bigintB));
+   TestCommon.CompareTestEqual(
+bigintB,
+ExtendedDecimal.Min(bigintA, bigintB));
         } else {
-   TestCommon.CompareTestEqual(bigintA, ExtendedDecimal.Min(bigintA,
-            bigintB));
-   TestCommon.CompareTestEqual(bigintB, ExtendedDecimal.Min(bigintA,
-            bigintB));
+   TestCommon.CompareTestEqual(
+bigintA,
+ExtendedDecimal.Min(bigintA, bigintB));
+   TestCommon.CompareTestEqual(
+bigintB,
+ExtendedDecimal.Min(bigintA, bigintB));
         }
       }
     }
@@ -1389,8 +1401,10 @@ Assert.IsTrue(ExtendedDecimal.One.Log(PrecisionContext.Unlimited) .IsNaN());
     [Test]
     public void TestMultiplyAndSubtract() {
       try {
-     ExtendedDecimal.One.MultiplyAndSubtract(null, ExtendedDecimal.Zero,
-          null);
+     ExtendedDecimal.One.MultiplyAndSubtract(
+null,
+ExtendedDecimal.Zero,
+null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         Console.Write(String.Empty);
@@ -1399,8 +1413,10 @@ Assert.IsTrue(ExtendedDecimal.One.Log(PrecisionContext.Unlimited) .IsNaN());
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
-     ExtendedDecimal.One.MultiplyAndSubtract(ExtendedDecimal.Zero, null,
-          null);
+     ExtendedDecimal.One.MultiplyAndSubtract(
+ExtendedDecimal.Zero,
+null,
+null);
         Assert.Fail("Should have failed");
       } catch (ArgumentNullException) {
         Console.Write(String.Empty);
@@ -3213,12 +3229,15 @@ string stringTemp = ExtendedDecimal.FromString("70.7E6"
     [Test]
     public void TestToString() {
       for (var i = 0; i < testStrings.Length; i += 4) {
-        Assert.AreEqual(testStrings[i + 1],
-          ExtendedDecimal.FromString(testStrings[i]).ToString());
-        Assert.AreEqual(testStrings[i + 2],
-          ExtendedDecimal.FromString(testStrings[i]).ToEngineeringString());
-        Assert.AreEqual(testStrings[i + 3],
-          ExtendedDecimal.FromString(testStrings[i]).ToPlainString());
+        Assert.AreEqual(
+testStrings[i + 1],
+ExtendedDecimal.FromString(testStrings[i]).ToString());
+        Assert.AreEqual(
+testStrings[i + 2],
+ExtendedDecimal.FromString(testStrings[i]).ToEngineeringString());
+        Assert.AreEqual(
+testStrings[i + 3],
+ExtendedDecimal.FromString(testStrings[i]).ToPlainString());
       }
     }
     [Test]
