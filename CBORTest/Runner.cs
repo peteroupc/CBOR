@@ -13,7 +13,8 @@ namespace PeterO {
     /// <summary>Description of Runner.</summary>
   public class Runner {
     public static void Main() {
-      MethodInfo[] methods;
+      new Test.CBORTest().TestRandomNonsense();
+      /* MethodInfo[] methods;
       object bi;
       methods = typeof(Test.BigIntegerTest).GetMethods();
       bi = new Test.BigIntegerTest();
@@ -25,6 +26,7 @@ namespace PeterO {
           }
         }
       }
+      */
     }
   }
 }

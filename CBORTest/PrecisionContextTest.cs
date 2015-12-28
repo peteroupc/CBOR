@@ -206,6 +206,15 @@ Console.Write(String.Empty);
     [Test]
     public void TestWithBigPrecision() {
       try {
+        PrecisionContext.Unlimited.WithBigPrecision(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
+      try {
         PrecisionContext.Unlimited.WithBigPrecision(BigInteger.One.negate());
         Assert.Fail("Should have failed");
       } catch (ArgumentException) {
