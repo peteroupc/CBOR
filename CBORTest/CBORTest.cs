@@ -751,7 +751,8 @@ cbor.AsBigInteger());
         }
       }
       try {
- ExtendedDecimal.FromString("1").Divide(ExtendedDecimal.FromString("3"),
+ ExtendedDecimal.FromString(
+"1").Divide(ExtendedDecimal.FromString("3"),
           null);
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
@@ -2403,6 +2404,7 @@ stringTemp);
       CBORObject o2 = CBORDataUtilities.ParseJSONNumber(r);
       TestCommon.CompareTestEqual(o, o2);
     }
+
     private static void TestExtendedFloatDoubleCore(double d, string s) {
       double oldd = d;
       ExtendedFloat bf = ExtendedFloat.FromDouble(d);

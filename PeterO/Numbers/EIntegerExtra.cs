@@ -99,11 +99,11 @@ EInteger mod) {
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_RightShift(PeterO.Numbers.EInteger,System.Int32)"]'/>
-    public static EInteger operator >>(EInteger bthis, int bigValue) {
+    public static EInteger operator >>(EInteger bthis, int smallValue) {
       if (bthis == null) {
         throw new ArgumentNullException("bthis");
       }
-      return bthis.ShiftRight(bigValue);
+      return bthis.ShiftRight(smallValue);
     }
 
     /// <include file='docs.xml'

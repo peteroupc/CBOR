@@ -1643,7 +1643,7 @@ A binary float with the same value as this object but with the exponent changed.
     public PeterO.ExtendedFloat Reduce(
         PeterO.PrecisionContext ctx);
 
-Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1.If this object's value is 0, changes the exponent to 0. (This is unlike the behavior in Java's BigDecimal method "stripTrailingZeros" in Java 7 and earlier.)
+Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1.If this object's value is 0, changes the exponent to 0.
 
 <b>Parameters:</b>
 
