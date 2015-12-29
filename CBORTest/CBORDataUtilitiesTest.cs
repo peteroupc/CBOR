@@ -6,6 +6,58 @@ namespace Test {
   [TestFixture]
   public class CBORDataUtilitiesTest {
     [Test]
+    public void TestParseJSONNumberNegativeZero() {
+      {
+string stringTemp = CBORDataUtilities.ParseJSONNumber("-0").ToString();
+Assert.AreEqual(
+"0",
+stringTemp);
+}
+      {
+string stringTemp = CBORDataUtilities.ParseJSONNumber("-0E+0").ToString();
+Assert.AreEqual(
+"0",
+stringTemp);
+}
+      {
+string stringTemp = CBORDataUtilities.ParseJSONNumber("-0E-0").ToString();
+Assert.AreEqual(
+"0",
+stringTemp);
+}
+      {
+string stringTemp = CBORDataUtilities.ParseJSONNumber("-0E-1").ToString();
+Assert.AreEqual(
+"0.0",
+stringTemp);
+}
+      {
+string stringTemp = CBORDataUtilities.ParseJSONNumber("-0.00").ToString();
+Assert.AreEqual(
+"0.00",
+stringTemp);
+}
+      {
+string stringTemp = CBORDataUtilities.ParseJSONNumber("-0.00E+0").ToString();
+Assert.AreEqual(
+"0.00",
+stringTemp);
+}
+      {
+string stringTemp = CBORDataUtilities.ParseJSONNumber("-0.00E-0").ToString();
+Assert.AreEqual(
+"0.00",
+stringTemp);
+}
+      {
+string stringTemp = CBORDataUtilities.ParseJSONNumber("-0.00E-1").ToString();
+Assert.AreEqual(
+"0.000",
+stringTemp);
+}
+    }
+
+    [Test]
     public void TestParseJSONNumber() {
       if (CBORDataUtilities.ParseJSONNumber("100.", false, false) != null) {
  Assert.Fail();
@@ -54,7 +106,7 @@ false)) != null) {
       if (CBORDataUtilities.ParseJSONNumber(null, false, false) != null) {
  Assert.Fail();
  }
-  if ((
+      if ((
 CBORDataUtilities.ParseJSONNumber(
 String.Empty,
 false,

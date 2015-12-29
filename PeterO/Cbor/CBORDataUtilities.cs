@@ -26,6 +26,8 @@ namespace PeterO.Cbor {
       string str,
       bool integersOnly,
       bool positiveOnly) {
+      // TODO: Add parameter allowing negative zero
+      // to be preserved
       if (String.IsNullOrEmpty(str)) {
         return null;
       }

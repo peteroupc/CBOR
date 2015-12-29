@@ -761,7 +761,7 @@ Multiplies this instance by the value of an arbitrary-precision integer object.
 
 <b>Returns:</b>
 
-The product of the two objects.
+The product of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -862,7 +862,7 @@ True if  <i>thisValue</i>
         PeterO.BigInteger thisValue,
         PeterO.BigInteger otherValue);
 
-Determines whether an arbitrary-precision integer value is greater than another arbitrary-precision integer value.
+Determines whether an arbitrary-precision integer value is greater than another arbitrary-precision integer.
 
 <b>Parameters:</b>
 
@@ -966,7 +966,7 @@ Multiplies an arbitrary-precision integer by the value of a arbitrary-precision 
 
 <b>Returns:</b>
 
-The product of the two objects.
+The product of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -1010,7 +1010,7 @@ Subtracts two arbitrary-precision integer values.
 
 <b>Parameters:</b>
 
- * <i>bthis</i>: An arbitrary-precision integer value.
+ * <i>bthis</i>: An arbitrary-precision integer.
 
  * <i>subtrahend</i>: An arbitrary-precision integer.
 
@@ -1337,19 +1337,17 @@ An arbitrary-precision integer with the same value as the 64-bit number.
         PeterO.BigInteger a,
         PeterO.BigInteger b);
 
-Finds the exclusive "or" of two arbitrary-precision integer objects.
-
-Each arbitrary-precision integer is treated as a two's complement representation for the purposes of this operator.
+Finds the exclusive "or" of two arbitrary-precision integer objects.Each arbitrary-precision integer is treated as a two's complement representation for the purposes of this operator.
 
 <b>Parameters:</b>
 
- * <i>a</i>: An arbitrary-precision integer.
+ * <i>a</i>: The first arbitrary-precision integer.
 
- * <i>b</i>: Another arbitrary-precision integer.
+ * <i>b</i>: The second arbitrary-precision integer.
 
 <b>Returns:</b>
 
-An arbitrary-precision integer.
+An arbitrary-precision integer in which each bit is set if it's set in one input integer but not the other.
 
 <b>Exceptions:</b>
 

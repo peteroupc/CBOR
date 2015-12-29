@@ -211,11 +211,11 @@ Zero if the values are equal; a negative number if this instance is less, or a p
     public int CompareToDecimal(
         PeterO.ExtendedDecimal other);
 
-Compares an arbitrary-precision decimal object with this instance.
+Compares an arbitrary-precision decimal number with this instance.
 
 <b>Parameters:</b>
 
- * <i>other</i>: An arbitrary-precision decimal object.
+ * <i>other</i>: An arbitrary-precision decimal number.
 
 <b>Returns:</b>
 
@@ -227,7 +227,7 @@ Zero if the values are equal; a negative number if this instance is less, or a p
         int numeratorSmall,
         int denominatorSmall);
 
-Creates a number with the given numerator and denominator.
+Creates a rational number with the given numerator and denominator.
 
 <b>Parameters:</b>
 
@@ -245,7 +245,7 @@ An arbitrary-precision rational number.
         PeterO.BigInteger numerator,
         PeterO.BigInteger denominator);
 
-Creates a number with the given numerator and denominator.
+Creates a rational number with the given numerator and denominator.
 
 <b>Parameters:</b>
 
@@ -406,9 +406,11 @@ A rational number with the same value as  <i>flt</i>
     public static PeterO.ExtendedRational FromExtendedDecimal(
         PeterO.ExtendedDecimal ef);
 
+Converts an arbitrary-precision decimal number to a rational number.
+
 <b>Parameters:</b>
 
- * <i>ef</i>: An arbitrary-precision decimal object.
+ * <i>ef</i>: An arbitrary-precision decimal number.
 
 <b>Returns:</b>
 
@@ -568,7 +570,7 @@ Multiplies this instance by the value of an arbitrary-precision rational number.
 
 <b>Returns:</b>
 
-The product of the two objects.
+The product of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -580,11 +582,11 @@ The parameter  <i>otherValue</i>
 
     public PeterO.ExtendedRational Negate();
 
-Not documented yet.
+Finds a rational number with the same value as this object but with the sign reversed.
 
 <b>Returns:</b>
 
-An arbitrary-precision rational number.
+The negated form of this rational number.
 
 ### Remainder
 

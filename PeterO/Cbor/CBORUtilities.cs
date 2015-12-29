@@ -77,14 +77,16 @@ namespace PeterO.Cbor {
     public static string DoubleToString(double dbl) {
       return Convert.ToString((double)dbl,
         System.Globalization.CultureInfo.InvariantCulture);
-      // TODO: Use this version in version 3
+      // TODO: Use this version in version 3, and preserve
+      // TODO: negative zeros in that version
       //return ExtendedFloat.FromDouble(dbl).ToString();
     }
 
     public static string SingleToString(float sing) {
       return Convert.ToString((float)sing,
         System.Globalization.CultureInfo.InvariantCulture);
-      // TODO: Use this version in version 3
+      // TODO: Use this version in version 3, and preserve
+      // TODO: negative zeros in that version
       //return ExtendedFloat.FromSingle(dbl).ToString();
     }
 

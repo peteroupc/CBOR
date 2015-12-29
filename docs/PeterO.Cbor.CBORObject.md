@@ -42,7 +42,9 @@ To find the type of a CBOR object, call its Type property (or "getType()" in Jav
 
 Nesting Depth:
 
-The DecodeFromBytes method can only read objects with a limited maximum depth of arrays and maps nested within other arrays and maps. The code sets this maximum depth to 500 (allowing more than enough nesting for most purposes), but it's possible that stack overflows in some runtimes might lower the effective maximum nesting depth. When the nesting depth goes above 500, the DecodeFromBytes method throws a CBORException.
+The DecodeFromBytes and Read methods can only read objects with a limited maximum depth of arrays and maps nested within other arrays and maps. The code sets this maximum depth to 500 (allowing more than enough nesting for most purposes), but it's possible that stack overflows in some runtimes might lower the effective maximum nesting depth. When the nesting depth goes above 500, the DecodeFromBytes and Read methods throw a CBORException.
+
+The ReadJSON and FromJSONString methods currently have nesting depths of 1000.
 
 ### False
 
@@ -1707,7 +1709,7 @@ Multiplies two CBOR numbers.
 
 <b>Returns:</b>
 
-The product of the two objects.
+The product of the two numbers.
 
 <b>Exceptions:</b>
 
@@ -1819,7 +1821,7 @@ Multiplies a CBORObject object by the value of a CBORObject object.
 
 <b>Returns:</b>
 
-The product of the two objects.
+The product of the two numbers.
 
 ### Operator `-`
 
