@@ -431,7 +431,7 @@
 <summary>Multiplies this instance by the value of an arbitrary-precision integer
             object.</summary>
             <param name='bigintMult'>Another arbitrary-precision integer.</param>
-            <returns>The product of the two objects.</returns>
+            <returns>The product of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigintMult'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.BigInteger.negate">
@@ -483,7 +483,7 @@
 </doc>
 <doc name="M:PeterO.BigInteger.op_GreaterThanOrEqual(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Determines whether an arbitrary-precision integer value is greater than
-            another arbitrary-precision integer value.</summary>
+            another arbitrary-precision integer.</summary>
             <param name='thisValue'>The first arbitrary-precision integer.</param>
             <param name='otherValue'>The second arbitrary-precision integer.</param>
             <returns>True if <paramref name='thisValue'/> is at least <paramref name='otherValue'/> ; otherwise, false.</returns>
@@ -537,7 +537,7 @@
             arbitrary-precision integer.</summary>
             <param name='operand1'>An arbitrary-precision integer.</param>
             <param name='operand2'>Another arbitrary-precision integer.</param>
-            <returns>The product of the two objects.</returns>
+            <returns>The product of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='operand1'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.BigInteger.op_RightShift(PeterO.BigInteger,System.Int32)">
@@ -553,7 +553,7 @@
 </doc>
 <doc name="M:PeterO.BigInteger.op_Subtraction(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Subtracts two arbitrary-precision integer values.</summary>
-            <param name='bthis'>An arbitrary-precision integer value.</param>
+            <param name='bthis'>An arbitrary-precision integer.</param>
             <param name='subtrahend'>An arbitrary-precision integer.</param>
             <returns>The difference of the two objects.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bthis'/> is null.</exception>
@@ -680,7 +680,8 @@
             specification. See #ParseJSONNumber(String, integersOnly,
             parseOnly) for more information.</summary>
             <param name='str'>A string to parse.</param>
-            <returns>A CBOR object that represents the parsed number. Returns
+            <returns>A CBOR object that represents the parsed number. Returns positive zero if the number is a zero that starts with a minus
+            sign (such as "-0" or "-0.0"). Returns
             null if the parsing fails.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean)">
@@ -696,7 +697,9 @@
             are allowed in the string.</param>
             <param name='positiveOnly'>If true, only positive numbers are
             allowed (the leading minus is disallowed).</param>
-            <returns>A CBOR object that represents the parsed number. Returns
+            <returns>A CBOR object that represents the parsed number. 
+            Returns positive zero if the number is a zero that starts with a minus
+            sign (such as "-0" or "-0.0"). Returns
             null if the parsing fails.</returns>
 </doc>
 <doc name="T:PeterO.Cbor.CBOREncodeOptions">
@@ -827,13 +830,15 @@
             SimpleValue, or TextString for immutable CBOR objects, and Array,
             Map, or ByteString for mutable CBOR objects.</para>
             <para><b>Nesting Depth:</b></para>
-            <para>The DecodeFromBytes method can only read objects with a
+            <para>The DecodeFromBytes and Read methods can only read objects with a
             limited maximum depth of arrays and maps nested within other arrays
             and maps. The code sets this maximum depth to 500 (allowing more
             than enough nesting for most purposes), but it's possible that
             stack overflows in some runtimes might lower the effective maximum
             nesting depth. When the nesting depth goes above 500, the
-            DecodeFromBytes method throws a CBORException.</para></summary>
+            DecodeFromBytes and Read methods throw a CBORException.</para>
+            <para>The ReadJSON and FromJSONString methods currently
+            have nesting depths of 1000.</para></summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.Abs">
 <summary>Gets this object's absolute value.</summary>
@@ -1711,7 +1716,7 @@
 <summary>Multiplies two CBOR numbers.</summary>
             <param name='first'>A CBORObject object.</param>
             <param name='second'>Another CBOR object.</param>
-            <returns>The product of the two objects.</returns>
+            <returns>The product of the two numbers.</returns>
             <exception cref='T:System.ArgumentException'>Either or both operands are not
             numbers (as opposed to Not-a-Number, NaN).</exception>
 </doc>
@@ -2206,7 +2211,7 @@
             CBORObject object.</summary>
             <param name='a'>A CBORObject object.</param>
             <param name='b'>Another CBORObject object.</param>
-            <returns>The product of the two objects.</returns>
+            <returns>The product of the two numbers.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.op_Subtraction(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)">
 <summary>Subtracts a CBORObject object from a CBORObject
@@ -2841,9 +2846,14 @@
 <summary>Contains methods useful for reading and writing strings.
             It is designed to have no dependencies other than the basic runtime
             class library.
+            <para>Many of these methods work with text encoded in UTF-8, an
+            encoding form of the Unicode Standard which uses one byte to encode
+            the most basic characters and two to four bytes to encode other
+            characters.  For example, the <c>GetUtf8</c> method converts
+            a text string to an array of bytes in UTF-8.</para>
             <para>In C# and Java, text strings are represented as sequences
             of 16-bit values called <c>char</c>s.  These sequences
-            are well-formed under the UTF-16 encoding form of Unicode, except if they
+            are well-formed under UTF-16, a 16-bit encoding form of Unicode, except if they
             contain unpaired surrogate code points.  (A surrogate code point is used
             to encode supplementary characters, those with code points U+10000 or
             higher, in UTF-16.  A surrogate pair is a high surrogate [U+D800 to U+DBFF]
@@ -3198,7 +3208,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Abs">
 <summary>Gets the absolute value of this object.</summary>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Abs(PeterO.PrecisionContext)">
 <summary>Finds the absolute value of this object (if it's
@@ -3214,7 +3224,7 @@
 <doc name="M:PeterO.ExtendedDecimal.Add(PeterO.ExtendedDecimal)">
 <summary>Adds this object and another decimal number and returns
             the result.</summary>
-            <param name='otherValue'>An arbitrary-precision decimal object.</param>
+            <param name='otherValue'>An arbitrary-precision decimal number.</param>
             <returns>The sum of the two objects.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='otherValue'/> is null.</exception>
 </doc>
@@ -3243,7 +3253,7 @@
             signaling NaN, this method will not trigger an error. Instead, NaN
             will compare greater than any other number, including infinity. Two
             different NaN values will be considered equal.</para></summary>
-            <param name='other'>An arbitrary-precision decimal object.</param>
+            <param name='other'>An arbitrary-precision decimal number.</param>
             <returns>Less than 0 if this object's value is less than the other
             value, or greater than 0 if this object's value is greater than the
             other value or if <paramref name='other'/> is null, or 0 if both
@@ -3269,7 +3279,7 @@
             <para>If this object or the other object is a quiet NaN or
             signaling NaN, this method will return a quiet NaN and will signal
             a FlagInvalid flag.</para></summary>
-            <param name='other'>An arbitrary-precision decimal object.</param>
+            <param name='other'>An arbitrary-precision decimal number.</param>
             <param name='ctx'>A precision context. The precision,
             arbitrary-precision decimal.ToERounding(rounding), and exponent range are
             ignored. If HasFlags of the context is true, will store the flags
@@ -3288,7 +3298,7 @@
             <para>If this object or the other object is a quiet NaN or
             signaling NaN, this method returns a quiet NaN, and will signal a
             FlagInvalid flag if either is a signaling NaN.</para></summary>
-            <param name='other'>An arbitrary-precision decimal object.</param>
+            <param name='other'>An arbitrary-precision decimal number.</param>
             <param name='ctx'>A precision context. The precision,
             arbitrary-precision decimal.ToERounding(rounding), and exponent range are
             ignored. If HasFlags of the context is true, will store the flags
@@ -3304,7 +3314,7 @@
             exponent*10^mantissa.</summary>
             <param name='mantissa'>The un-scaled value.</param>
             <param name='exponent'>The decimal exponent.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='mantissa'/> or <paramref name='exponent'/> is
             null.</exception>
 </doc>
@@ -3313,10 +3323,10 @@
             exponent*10^mantissa.</summary>
             <param name='mantissaSmall'>The un-scaled value.</param>
             <param name='exponentSmall'>The decimal exponent.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.CreateNaN(PeterO.BigInteger)">
-<summary>Creates a not-a-number arbitrary-precision decimal object.</summary>
+<summary>Creates a not-a-number arbitrary-precision decimal number.</summary>
             <param name='diag'>A number to use as diagnostic information
             associated with this object. If none is needed, should be
             zero.</param>
@@ -3324,7 +3334,7 @@
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='diag'/> is null or is less than 0.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.CreateNaN(PeterO.BigInteger,System.Boolean,System.Boolean,PeterO.PrecisionContext)">
-<summary>Creates a not-a-number arbitrary-precision decimal object.</summary>
+<summary>Creates a not-a-number arbitrary-precision decimal number.</summary>
             <param name='diag'>A number to use as diagnostic information
             associated with this object. If none is needed, should be
             zero.</param>
@@ -3333,7 +3343,7 @@
             <param name='negative'>Whether the return value is
             negative.</param>
             <param name='ctx'>A PrecisionContext object.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='diag'/> is null or is less than 0.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Divide(PeterO.ExtendedDecimal)">
@@ -3348,8 +3358,8 @@
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='divisor'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Divide(PeterO.ExtendedDecimal,PeterO.PrecisionContext)">
-<summary>Divides this arbitrary-precision decimal object by another
-            arbitrary-precision decimal object. The preferred exponent for the result is
+<summary>Divides this arbitrary-precision decimal number by another
+            arbitrary-precision decimal number. The preferred exponent for the result is
             this object's exponent minus the divisor's
             exponent.</summary>
             <param name='divisor'>The divisor.</param>
@@ -3393,9 +3403,9 @@
             in that order.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.DivideToExponent(PeterO.ExtendedDecimal,PeterO.BigInteger,PeterO.PrecisionContext)">
-<summary>Divides two arbitrary-precision decimal objects, and gives a
+<summary>Divides two arbitrary-precision decimal numbers, and gives a
             particular exponent to the result.</summary>
-            <param name='divisor'>An arbitrary-precision decimal object.</param>
+            <param name='divisor'>An arbitrary-precision decimal number.</param>
             <param name='exponent'>The desired exponent. A negative number
             places the cutoff point to the right of the usual decimal point. A
             positive number places the cutoff point to the left of the usual
@@ -3420,9 +3430,9 @@
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='divisor'/> or <paramref name='exponent'/> or <paramref name='ctx'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.DivideToExponent(PeterO.ExtendedDecimal,PeterO.BigInteger,PeterO.Rounding)">
-<summary>Divides two arbitrary-precision decimal objects, and gives a
+<summary>Divides two arbitrary-precision decimal numbers, and gives a
             particular exponent to the result.</summary>
-            <param name='divisor'>An arbitrary-precision decimal object.</param>
+            <param name='divisor'>An arbitrary-precision decimal number.</param>
             <param name='desiredExponent'>The desired exponent. A negative
             number places the cutoff point to the right of the usual decimal
             point. A positive number places the cutoff point to the left of the
@@ -3438,9 +3448,9 @@
             null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.DivideToExponent(PeterO.ExtendedDecimal,System.Int64,PeterO.PrecisionContext)">
-<summary>Divides two arbitrary-precision decimal objects, and gives a
+<summary>Divides two arbitrary-precision decimal numbers, and gives a
             particular exponent to the result.</summary>
-            <param name='divisor'>An arbitrary-precision decimal object.</param>
+            <param name='divisor'>An arbitrary-precision decimal number.</param>
             <param name='desiredExponentSmall'>The desired exponent. A negative
             number places the cutoff point to the right of the usual decimal
             point. A positive number places the cutoff point to the left of the
@@ -3465,9 +3475,9 @@
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='divisor'/> or <paramref name='ctx'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.DivideToExponent(PeterO.ExtendedDecimal,System.Int64,PeterO.Rounding)">
-<summary>Divides two arbitrary-precision decimal objects, and gives a
+<summary>Divides two arbitrary-precision decimal numbers, and gives a
             particular exponent to the result.</summary>
-            <param name='divisor'>An arbitrary-precision decimal object.</param>
+            <param name='divisor'>An arbitrary-precision decimal number.</param>
             <param name='desiredExponentSmall'>The desired exponent. A negative
             number places the cutoff point to the right of the usual decimal
             point. A positive number places the cutoff point to the left of the
@@ -3482,7 +3492,7 @@
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='divisor'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.DivideToIntegerNaturalScale(PeterO.ExtendedDecimal)">
-<summary>Divides two arbitrary-precision decimal objects, and returns the
+<summary>Divides two arbitrary-precision decimal numbers, and returns the
             integer part of the result, rounded down, with the preferred
             exponent set to this value's exponent minus the divisor's
             exponent.</summary>
@@ -3546,7 +3556,7 @@
 <doc name="M:PeterO.ExtendedDecimal.Equals(PeterO.ExtendedDecimal)">
 <summary>Determines whether this object&#x27;s mantissa and
             exponent are equal to those of another object.</summary>
-            <param name='other'>An arbitrary-precision decimal object.</param>
+            <param name='other'>An arbitrary-precision decimal number.</param>
             <returns>True if this object's mantissa and exponent are equal to
             those of another object; otherwise, false.</returns>
 </doc>
@@ -3581,7 +3591,7 @@
 <summary>Converts a big integer to an arbitrary precision
             decimal.</summary>
             <param name='bigint'>An arbitrary-precision integer.</param>
-            <returns>An arbitrary-precision decimal object with the exponent set to
+            <returns>An arbitrary-precision decimal number with the exponent set to
             0.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigint'/> is null.</exception>
 </doc>
@@ -3592,7 +3602,7 @@
             the floating point number to a string first. Remember, though, that
             the exact value of a 64-bit floating-point number is not always the
             value you get when you pass a literal decimal number (for example,
-            calling <c>ExtendedDecimal.FromDouble(0.1f)</c> ), since not all
+            calling <c>ExtendedDecimal.FromDouble(0.1)</c> ), since not all
             decimal numbers can be converted to exact binary numbers (in the
             example given, the resulting arbitrary-precision decimal will be the value of
             the closest "double" to 0.1, not 0.1 exactly). To create an
@@ -3606,20 +3616,20 @@
 <summary>Creates a decimal number from an arbitrary-precision
             binary floating-point number.</summary>
             <param name='bigfloat'>A big floating-point number.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigfloat'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromInt32(System.Int32)">
 <summary>Creates a decimal number from a 32-bit signed
             integer.</summary>
             <param name='valueSmaller'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromInt64(System.Int64)">
 <summary>Creates a decimal number from a 64-bit signed
             integer.</summary>
             <param name='valueSmall'>A 64-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object with the exponent set to
+            <returns>An arbitrary-precision decimal number with the exponent set to
             0.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromSingle(System.Single)">
@@ -3691,7 +3701,7 @@
             U+002D) (if '-' , the value is negative.)</item>
             <item>One or more digits, with a single optional decimal point
             after the first digit and before the last digit.</item>
-            <item>Optionally, "E+" (positive exponent) or "E-" (negative
+            <item>Optionally, "E+"/"e+" (positive exponent) or "E-"/"e-" (negative
             exponent) plus one or more digits specifying the
             exponent.</item></list>
             <para>The string can also be "-INF", "-Infinity" , "Infinity",
@@ -3821,8 +3831,8 @@
 <doc name="M:PeterO.ExtendedDecimal.Max(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal)">
 <summary>Gets the greater value between two decimal
             numbers.</summary>
-            <param name='first'>An arbitrary-precision decimal object.</param>
-            <param name='second'>Another arbitrary-precision decimal object.</param>
+            <param name='first'>An arbitrary-precision decimal number.</param>
+            <param name='second'>Another arbitrary-precision decimal number.</param>
             <returns>The larger value of the two objects.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='first'/> or <paramref name='second'/> is null.</exception>
 </doc>
@@ -3845,7 +3855,7 @@
             Max.</summary>
             <param name='first'>The first value to compare.</param>
             <param name='second'>The second value to compare.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='first'/> or <paramref name='second'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.MaxMagnitude(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal,PeterO.PrecisionContext)">
@@ -3859,7 +3869,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='first'/> or <paramref name='second'/> or <paramref name='ctx'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Min(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal)">
@@ -3889,7 +3899,7 @@
             Min.</summary>
             <param name='first'>The first value to compare.</param>
             <param name='second'>The second value to compare.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='first'/> or <paramref name='second'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.MinMagnitude(PeterO.ExtendedDecimal,PeterO.ExtendedDecimal,PeterO.PrecisionContext)">
@@ -3903,14 +3913,14 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='first'/> or <paramref name='second'/> or <paramref name='ctx'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.MovePointLeft(PeterO.BigInteger)">
 <summary>Returns a number similar to this number but with the
             decimal point moved to the left.</summary>
             <param name='bigPlaces'>An arbitrary-precision integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigPlaces'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.MovePointLeft(PeterO.BigInteger,PeterO.PrecisionContext)">
@@ -3922,14 +3932,14 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigPlaces'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.MovePointLeft(System.Int32)">
 <summary>Returns a number similar to this number but with the
             decimal point moved to the left.</summary>
             <param name='places'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.MovePointLeft(System.Int32,PeterO.PrecisionContext)">
 <summary>Returns a number similar to this number but with the
@@ -3940,14 +3950,14 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='ctx'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.MovePointRight(PeterO.BigInteger)">
 <summary>Returns a number similar to this number but with the
             decimal point moved to the right.</summary>
             <param name='bigPlaces'>An arbitrary-precision integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigPlaces'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.MovePointRight(PeterO.BigInteger,PeterO.PrecisionContext)">
@@ -3966,7 +3976,7 @@
 <summary>Returns a number similar to this number but with the
             decimal point moved to the right.</summary>
             <param name='places'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.MovePointRight(System.Int32,PeterO.PrecisionContext)">
 <summary>Returns a number similar to this number but with the
@@ -3977,7 +3987,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='ctx'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Multiply(PeterO.ExtendedDecimal)">
@@ -4046,7 +4056,7 @@
 <doc name="M:PeterO.ExtendedDecimal.Negate">
 <summary>Gets an object with the same value as this one, but with
             the sign reversed.</summary>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Negate(PeterO.PrecisionContext)">
 <summary>Returns a decimal number with the same value as this
@@ -4056,7 +4066,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='context'/> is null.</exception>
 </doc>
 <doc name="F:PeterO.ExtendedDecimal.NegativeInfinity">
@@ -4097,7 +4107,7 @@
             object's value than this object's value. Returns a copy
             of this value with the same sign as the other value if both values
             are equal.</summary>
-            <param name='otherValue'>An arbitrary-precision decimal object.</param>
+            <param name='otherValue'>An arbitrary-precision decimal number.</param>
             <param name='ctx'>A precision context object to control the
             precision and exponent range of the result. The rounding mode from
             this context is ignored. If HasFlags of the context is true, will
@@ -4147,7 +4157,7 @@
 <doc name="M:PeterO.ExtendedDecimal.Pow(PeterO.ExtendedDecimal,PeterO.PrecisionContext)">
 <summary>Raises this object's value to the given
             exponent.</summary>
-            <param name='exponent'>An arbitrary-precision decimal object.</param>
+            <param name='exponent'>An arbitrary-precision decimal number.</param>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
@@ -4294,8 +4304,8 @@
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Remainder(PeterO.ExtendedDecimal,PeterO.PrecisionContext)">
 <summary>Finds the remainder that results when dividing two
-            arbitrary-precision decimal objects.</summary>
-            <param name='divisor'>An arbitrary-precision decimal object.</param>
+            arbitrary-precision decimal numbers.</summary>
+            <param name='divisor'>An arbitrary-precision decimal number.</param>
             <param name='ctx'>A PrecisionContext object.</param>
             <returns>The remainder of the two objects.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='divisor'/> or <paramref name='ctx'/> is null.</exception>
@@ -4304,7 +4314,7 @@
 <summary>Calculates the remainder of a number by the formula "this"
             - (("this" / "divisor") * "divisor").</summary>
             <param name='divisor'>The number to divide by.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='divisor'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.RemainderNaturalScale(PeterO.ExtendedDecimal,PeterO.PrecisionContext)">
@@ -4320,7 +4330,7 @@
             context's HasFlags is true and the integer part of the division
             result doesn't fit the precision and exponent range without
             rounding.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='divisor'/> or <paramref name='ctx'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.RemainderNear(PeterO.ExtendedDecimal,PeterO.PrecisionContext)">
@@ -4525,7 +4535,7 @@
 <summary>Returns a number similar to this number but with the scale
             adjusted.</summary>
             <param name='bigPlaces'>An arbitrary-precision integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigPlaces'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.ScaleByPowerOfTen(PeterO.BigInteger,PeterO.PrecisionContext)">
@@ -4544,7 +4554,7 @@
 <summary>Returns a number similar to this number but with the scale
             adjusted.</summary>
             <param name='places'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.ScaleByPowerOfTen(System.Int32,PeterO.PrecisionContext)">
 <summary>Returns a number similar to this number but with the scale
@@ -4555,7 +4565,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='ctx'/> is null.</exception>
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.Sign">
@@ -4587,16 +4597,16 @@
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='ctx'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Subtract(PeterO.ExtendedDecimal)">
-<summary>Subtracts an arbitrary-precision decimal object from this instance and
+<summary>Subtracts an arbitrary-precision decimal number from this instance and
             returns the result.</summary>
-            <param name='otherValue'>An arbitrary-precision decimal object.</param>
+            <param name='otherValue'>An arbitrary-precision decimal number.</param>
             <returns>The difference of the two objects.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='otherValue'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Subtract(PeterO.ExtendedDecimal,PeterO.PrecisionContext)">
-<summary>Subtracts an arbitrary-precision decimal object from this
+<summary>Subtracts an arbitrary-precision decimal number from this
             instance.</summary>
-            <param name='otherValue'>An arbitrary-precision decimal object.</param>
+            <param name='otherValue'>An arbitrary-precision decimal number.</param>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
@@ -4682,7 +4692,7 @@
 <summary>Returns the unit in the last place. The mantissa will be 1
             and the exponent will be this number's exponent. Returns 1 with an
             exponent of 0 if this number is infinity or NaN.</summary>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="P:PeterO.ExtendedDecimal.UnsignedMantissa">
 <summary>Gets the absolute value of this object&#x27;s un-scaled
@@ -5132,7 +5142,7 @@
 <summary>Creates a binary float from a 32-bit signed
             integer.</summary>
             <param name='valueSmaller'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromInt64(System.Int64)">
 <summary>Converts a 64-bit integer to the same value as a binary
@@ -5199,7 +5209,7 @@
             U+002D) (if '-' , the value is negative.)</item>
             <item>One or more digits, with a single optional decimal point
             after the first digit and before the last digit.</item>
-            <item>Optionally, "E+" (positive exponent) or "E-" (negative
+            <item>Optionally, "E+"/"e+" (positive exponent) or "E-"/"e-" (negative
             exponent) plus one or more digits specifying the
             exponent.</item></list>
             <para>The string can also be "-INF", "-Infinity" , "Infinity",
@@ -5973,7 +5983,7 @@
 <summary>Returns a number similar to this number but with the scale
             adjusted.</summary>
             <param name='bigPlaces'>An arbitrary-precision integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigPlaces'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.ScaleByPowerOfTwo(PeterO.BigInteger,PeterO.PrecisionContext)">
@@ -5992,7 +6002,7 @@
 <summary>Returns a number similar to this number but with the scale
             adjusted.</summary>
             <param name='places'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.ScaleByPowerOfTwo(System.Int32,PeterO.PrecisionContext)">
 <summary>Returns a number similar to this number but with the scale
@@ -6003,7 +6013,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='ctx'/> is null.</exception>
 </doc>
 <doc name="P:PeterO.ExtendedFloat.Sign">
@@ -6199,9 +6209,9 @@
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='other'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedRational.CompareToDecimal(PeterO.ExtendedDecimal)">
-<summary>Compares an arbitrary-precision decimal object with this
+<summary>Compares an arbitrary-precision decimal number with this
             instance.</summary>
-            <param name='other'>An arbitrary-precision decimal object.</param>
+            <param name='other'>An arbitrary-precision decimal number.</param>
             <returns>Zero if the values are equal; a negative number if this
             instance is less, or a positive number if this instance is
             greater.</returns>
@@ -6284,7 +6294,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedRational.FromExtendedDecimal(PeterO.ExtendedDecimal)">
 <summary>Not documented yet.</summary>
-            <param name='ef'>An arbitrary-precision decimal object.</param>
+            <param name='ef'>An arbitrary-precision decimal number.</param>
             <returns>An arbitrary-precision rational number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='ef'/> is null.</exception>
 </doc>
@@ -6376,15 +6386,15 @@
 <summary>Multiplies this instance by the value of an
             arbitrary-precision rational number.</summary>
             <param name='otherValue'>An arbitrary-precision rational number.</param>
-            <returns>The product of the two objects.</returns>
+            <returns>The product of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='otherValue'/> is null.</exception>
 </doc>
 <doc name="F:PeterO.ExtendedRational.NaN">
 <summary>A not-a-number value.</summary>
 </doc>
 <doc name="M:PeterO.ExtendedRational.Negate">
-<summary>Not documented yet.</summary>
-            <returns>An arbitrary-precision rational number.</returns>
+<summary>Finds a rational number with the same value as this object but with the sign reversed.</summary>
+            <returns>The negated form of this rational number.</returns>
 </doc>
 <doc name="F:PeterO.ExtendedRational.NegativeInfinity">
 <summary>Negative infinity, less than any other number.</summary>
@@ -6467,7 +6477,7 @@
 <summary>Converts this rational number to a decimal number and
             rounds the result to the given precision.</summary>
             <param name='ctx'>A PrecisionContext object.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='ctx'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedRational.ToExtendedDecimalExactIfPossible(PeterO.PrecisionContext)">
@@ -6482,7 +6492,7 @@
             operation (the flags are in addition to the pre-existing flags).
             Can be null, in which case this method is the same as
             ToExtendedDecimal.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='ctx'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedRational.ToExtendedFloat">
@@ -6986,7 +6996,7 @@
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Abs">
 <summary>Gets the absolute value of this object.</summary>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Abs(PeterO.Numbers.EContext)">
 <summary>Finds the absolute value of this object (if it&#x27;s
@@ -7001,7 +7011,7 @@
 <doc name="M:PeterO.Numbers.EDecimal.Add(PeterO.Numbers.EDecimal)">
 <summary>Adds this object and another decimal number and returns
             the result.</summary>
-            <param name='otherValue'>An arbitrary-precision decimal object.</param>
+            <param name='otherValue'>An arbitrary-precision decimal number.</param>
             <returns>The sum of the two objects.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Add(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)">
@@ -7028,7 +7038,7 @@
             signaling NaN, this method will not trigger an error. Instead, NaN
             will compare greater than any other number, including infinity. Two
             different NaN values will be considered equal.</para></summary>
-            <param name='other'>An arbitrary-precision decimal object.</param>
+            <param name='other'>An arbitrary-precision decimal number.</param>
             <returns>Less than 0 if this object's value is less than the other
             value, or greater than 0 if this object's value is greater than the
             other value or if <paramref name='other'/> is null, or 0 if both
@@ -7052,7 +7062,7 @@
             <para>If this object or the other object is a quiet NaN or
             signaling NaN, this method will return a quiet NaN and will signal
             a FlagInvalid flag.</para></summary>
-            <param name='other'>An arbitrary-precision decimal object.</param>
+            <param name='other'>An arbitrary-precision decimal number.</param>
             <param name='ctx'>A precision context. The precision, rounding, and
             exponent range are ignored. If HasFlags of the context is true,
             will store the flags resulting from the operation (the flags are in
@@ -7069,7 +7079,7 @@
             <para>If this object or the other object is a quiet NaN or
             signaling NaN, this method returns a quiet NaN, and will signal a
             FlagInvalid flag if either is a signaling NaN.</para></summary>
-            <param name='other'>An arbitrary-precision decimal object.</param>
+            <param name='other'>An arbitrary-precision decimal number.</param>
             <param name='ctx'>A precision context. The precision, rounding, and
             exponent range are ignored. If HasFlags of the context is true,
             will store the flags resulting from the operation (the flags are in
@@ -7083,7 +7093,7 @@
             exponent*10^mantissa.</summary>
             <param name='mantissa'>The un-scaled value.</param>
             <param name='exponent'>The decimal exponent.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='mantissa'/> or <paramref name='exponent'/> is
             null.</exception>
 </doc>
@@ -7092,10 +7102,10 @@
             exponent*10^mantissa.</summary>
             <param name='mantissaSmall'>The un-scaled value.</param>
             <param name='exponentSmall'>The decimal exponent.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.CreateNaN(PeterO.Numbers.EInteger)">
-<summary>Creates a not-a-number arbitrary-precision decimal object.</summary>
+<summary>Creates a not-a-number arbitrary-precision decimal number.</summary>
             <param name='diag'>A number to use as diagnostic information
             associated with this object. If none is needed, should be
             zero.</param>
@@ -7103,7 +7113,7 @@
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='diag'/> is null or is less than 0.</exception>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.CreateNaN(PeterO.Numbers.EInteger,System.Boolean,System.Boolean,PeterO.Numbers.EContext)">
-<summary>Creates a not-a-number arbitrary-precision decimal object.</summary>
+<summary>Creates a not-a-number arbitrary-precision decimal number.</summary>
             <param name='diag'>A number to use as diagnostic information
             associated with this object. If none is needed, should be
             zero.</param>
@@ -7112,7 +7122,7 @@
             <param name='negative'>Whether the return value is
             negative.</param>
             <param name='ctx'>An EContext object.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='diag'/> is null or is less than 0.</exception>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.CreateNewWithFlags(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger,System.Int32)">
@@ -7120,7 +7130,7 @@
             <param name='mantissa'>An arbitrary-precision integer.</param>
             <param name='exponent'>Another arbitrary-precision integer.</param>
             <param name='flags'>Not documented yet. (3).</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.CreateShiftAccumulator(PeterO.Numbers.EInteger)">
 <summary>This is an internal method.</summary>
@@ -7140,17 +7150,17 @@
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetExponent(PeterO.Numbers.EDecimal)">
 <summary>This is an internal method.</summary>
-            <param name='value'>An arbitrary-precision decimal object.</param>
+            <param name='value'>An arbitrary-precision decimal number.</param>
             <returns>An arbitrary-precision integer.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetFlags(PeterO.Numbers.EDecimal)">
 <summary>This is an internal method.</summary>
-            <param name='value'>An arbitrary-precision decimal object.</param>
+            <param name='value'>An arbitrary-precision decimal number.</param>
             <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetMantissa(PeterO.Numbers.EDecimal)">
 <summary>This is an internal method.</summary>
-            <param name='value'>An arbitrary-precision decimal object.</param>
+            <param name='value'>An arbitrary-precision decimal number.</param>
             <returns>An arbitrary-precision integer.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetRadix">
@@ -7159,7 +7169,7 @@
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetSign(PeterO.Numbers.EDecimal)">
 <summary>This is an internal method.</summary>
-            <param name='value'>An arbitrary-precision decimal object.</param>
+            <param name='value'>An arbitrary-precision decimal number.</param>
             <returns>A 32-bit signed integer.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.HasTerminatingRadixExpansion(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)">
@@ -7177,7 +7187,7 @@
 <doc name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.ValueOf(System.Int32)">
 <summary>This is an internal method.</summary>
             <param name='val'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Divide(PeterO.Numbers.EDecimal)">
 <summary>Divides this object by another decimal number and returns
@@ -7190,8 +7200,8 @@
             nonterminating decimal expansion.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Divide(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)">
-<summary>Divides this arbitrary-precision decimal object by another
-            arbitrary-precision decimal object. The preferred exponent for the result is
+<summary>Divides this arbitrary-precision decimal number by another
+            arbitrary-precision decimal number. The preferred exponent for the result is
             this object&#x27;s exponent minus the divisor&#x27;s
             exponent.</summary>
             <param name='divisor'>The divisor.</param>
@@ -7233,9 +7243,9 @@
             in that order.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DivideToExponent(PeterO.Numbers.EDecimal,PeterO.Numbers.EInteger,PeterO.Numbers.EContext)">
-<summary>Divides two arbitrary-precision decimal objects, and gives a
+<summary>Divides two arbitrary-precision decimal numbers, and gives a
             particular exponent to the result.</summary>
-            <param name='divisor'>An arbitrary-precision decimal object.</param>
+            <param name='divisor'>An arbitrary-precision decimal number.</param>
             <param name='exponent'>The desired exponent. A negative number
             places the cutoff point to the right of the usual decimal point. A
             positive number places the cutoff point to the left of the usual
@@ -7259,9 +7269,9 @@
             Rounding.Unnecessary and the result is not exact.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DivideToExponent(PeterO.Numbers.EDecimal,PeterO.Numbers.EInteger,PeterO.Numbers.ERounding)">
-<summary>Divides two arbitrary-precision decimal objects, and gives a
+<summary>Divides two arbitrary-precision decimal numbers, and gives a
             particular exponent to the result.</summary>
-            <param name='divisor'>An arbitrary-precision decimal object.</param>
+            <param name='divisor'>An arbitrary-precision decimal number.</param>
             <param name='desiredExponent'>The desired exponent. A negative
             number places the cutoff point to the right of the usual decimal
             point. A positive number places the cutoff point to the left of the
@@ -7275,9 +7285,9 @@
             not exact.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DivideToExponent(PeterO.Numbers.EDecimal,System.Int64,PeterO.Numbers.EContext)">
-<summary>Divides two arbitrary-precision decimal objects, and gives a
+<summary>Divides two arbitrary-precision decimal numbers, and gives a
             particular exponent to the result.</summary>
-            <param name='divisor'>An arbitrary-precision decimal object.</param>
+            <param name='divisor'>An arbitrary-precision decimal number.</param>
             <param name='desiredExponentSmall'>The desired exponent. A negative
             number places the cutoff point to the right of the usual decimal
             point. A positive number places the cutoff point to the left of the
@@ -7301,9 +7311,9 @@
             Rounding.Unnecessary and the result is not exact.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DivideToExponent(PeterO.Numbers.EDecimal,System.Int64,PeterO.Numbers.ERounding)">
-<summary>Divides two arbitrary-precision decimal objects, and gives a
+<summary>Divides two arbitrary-precision decimal numbers, and gives a
             particular exponent to the result.</summary>
-            <param name='divisor'>An arbitrary-precision decimal object.</param>
+            <param name='divisor'>An arbitrary-precision decimal number.</param>
             <param name='desiredExponentSmall'>The desired exponent. A negative
             number places the cutoff point to the right of the usual decimal
             point. A positive number places the cutoff point to the left of the
@@ -7317,7 +7327,7 @@
             mode is Rounding.Unnecessary and the result is not exact.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.DivideToIntegerNaturalScale(PeterO.Numbers.EDecimal)">
-<summary>Divides two arbitrary-precision decimal objects, and returns the
+<summary>Divides two arbitrary-precision decimal numbers, and returns the
             integer part of the result, rounded down, with the preferred
             exponent set to this value&#x27;s exponent minus the divisor&#x27;s
             exponent.</summary>
@@ -7377,7 +7387,7 @@
 <doc name="M:PeterO.Numbers.EDecimal.Equals(PeterO.Numbers.EDecimal)">
 <summary>Determines whether this object&#x27;s mantissa and
             exponent are equal to those of another object.</summary>
-            <param name='other'>An arbitrary-precision decimal object.</param>
+            <param name='other'>An arbitrary-precision decimal number.</param>
             <returns>True if this object's mantissa and exponent are equal to
             those of another object; otherwise, false.</returns>
 </doc>
@@ -7412,7 +7422,7 @@
 <summary>Converts a big integer to an arbitrary precision
             decimal.</summary>
             <param name='bigint'>An arbitrary-precision integer.</param>
-            <returns>An arbitrary-precision decimal object with the exponent set to
+            <returns>An arbitrary-precision decimal number with the exponent set to
             0.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.FromDouble(System.Double)">
@@ -7436,20 +7446,20 @@
 <summary>Creates a decimal number from an arbitrary-precision
             binary floating-point number.</summary>
             <param name='bigfloat'>A big floating-point number.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigfloat'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.FromInt32(System.Int32)">
 <summary>Creates a decimal number from a 32-bit signed
             integer.</summary>
             <param name='valueSmaller'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.FromInt64(System.Int64)">
 <summary>Creates a decimal number from a 64-bit signed
             integer.</summary>
             <param name='valueSmall'>A 64-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object with the exponent set to
+            <returns>An arbitrary-precision decimal number with the exponent set to
             0.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.FromSingle(System.Single)">
@@ -7521,7 +7531,7 @@
             U+002D) (if '-' , the value is negative.)</item>
             <item>One or more digits, with a single optional decimal point
             after the first digit and before the last digit.</item>
-            <item>Optionally, "E+" (positive exponent) or "E-" (negative
+            <item>Optionally, "E+"/"e+" (positive exponent) or "E-"/"e-" (negative
             exponent) plus one or more digits specifying the
             exponent.</item></list>
             <para>The string can also be "-INF", "-Infinity" , "Infinity",
@@ -7651,8 +7661,8 @@
 <doc name="M:PeterO.Numbers.EDecimal.Max(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal)">
 <summary>Gets the greater value between two decimal
             numbers.</summary>
-            <param name='first'>An arbitrary-precision decimal object.</param>
-            <param name='second'>Another arbitrary-precision decimal object.</param>
+            <param name='first'>An arbitrary-precision decimal number.</param>
+            <param name='second'>Another arbitrary-precision decimal number.</param>
             <returns>The larger value of the two objects.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Max(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)">
@@ -7673,7 +7683,7 @@
             Max.</summary>
             <param name='first'>The first value to compare.</param>
             <param name='second'>The second value to compare.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.MaxMagnitude(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)">
 <summary>Gets the greater value between two values, ignoring their
@@ -7686,7 +7696,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Min(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal)">
 <summary>Gets the lesser value between two decimal
@@ -7713,7 +7723,7 @@
             Min.</summary>
             <param name='first'>The first value to compare.</param>
             <param name='second'>The second value to compare.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.MinMagnitude(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)">
 <summary>Gets the lesser value between two values, ignoring their
@@ -7726,13 +7736,13 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.MovePointLeft(PeterO.Numbers.EInteger)">
 <summary>Returns a number similar to this number but with the
             decimal point moved to the left.</summary>
             <param name='bigPlaces'>An arbitrary-precision integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.MovePointLeft(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)">
 <summary>Returns a number similar to this number but with the
@@ -7743,13 +7753,13 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.MovePointLeft(System.Int32)">
 <summary>Returns a number similar to this number but with the
             decimal point moved to the left.</summary>
             <param name='places'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.MovePointLeft(System.Int32,PeterO.Numbers.EContext)">
 <summary>Returns a number similar to this number but with the
@@ -7760,13 +7770,13 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.MovePointRight(PeterO.Numbers.EInteger)">
 <summary>Returns a number similar to this number but with the
             decimal point moved to the right.</summary>
             <param name='bigPlaces'>An arbitrary-precision integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.MovePointRight(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)">
 <summary>Returns a number similar to this number but with the
@@ -7783,7 +7793,7 @@
 <summary>Returns a number similar to this number but with the
             decimal point moved to the right.</summary>
             <param name='places'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.MovePointRight(System.Int32,PeterO.Numbers.EContext)">
 <summary>Returns a number similar to this number but with the
@@ -7794,7 +7804,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Multiply(PeterO.Numbers.EDecimal)">
 <summary>Multiplies two decimal numbers. The resulting exponent
@@ -7856,7 +7866,7 @@
 <doc name="M:PeterO.Numbers.EDecimal.Negate">
 <summary>Gets an object with the same value as this one, but with
             the sign reversed.</summary>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Negate(PeterO.Numbers.EContext)">
 <summary>Returns a decimal number with the same value as this
@@ -7866,7 +7876,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="F:PeterO.Numbers.EDecimal.NegativeInfinity">
 <summary>Negative infinity, less than any other number.</summary>
@@ -7904,7 +7914,7 @@
             object&#x27;s value than this object&#x27;s value. Returns a copy
             of this value with the same sign as the other value if both values
             are equal.</summary>
-            <param name='otherValue'>An arbitrary-precision decimal object.</param>
+            <param name='otherValue'>An arbitrary-precision decimal number.</param>
             <param name='ctx'>A precision context object to control the
             precision and exponent range of the result. The rounding mode from
             this context is ignored. If HasFlags of the context is true, will
@@ -7950,7 +7960,7 @@
 <doc name="M:PeterO.Numbers.EDecimal.Pow(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)">
 <summary>Raises this object&#x27;s value to the given
             exponent.</summary>
-            <param name='exponent'>An arbitrary-precision decimal object.</param>
+            <param name='exponent'>An arbitrary-precision decimal number.</param>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
@@ -8090,8 +8100,8 @@
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Remainder(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)">
 <summary>Finds the remainder that results when dividing two
-            arbitrary-precision decimal objects.</summary>
-            <param name='divisor'>An arbitrary-precision decimal object.</param>
+            arbitrary-precision decimal numbers.</summary>
+            <param name='divisor'>An arbitrary-precision decimal number.</param>
             <param name='ctx'>Not documented yet.</param>
             <returns>The remainder of the two objects.</returns>
 </doc>
@@ -8099,7 +8109,7 @@
 <summary>Calculates the remainder of a number by the formula "this"
             - (("this" / "divisor") * "divisor").</summary>
             <param name='divisor'>The number to divide by.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.RemainderNaturalScale(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)">
 <summary>Calculates the remainder of a number by the formula "this"
@@ -8113,7 +8123,7 @@
             set on the given context only if the context's HasFlags is true and
             the integer part of the division result doesn't fit the precision
             and exponent range without rounding.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.RemainderNear(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)">
 <summary>Finds the distance to the closest multiple of the given
@@ -8297,7 +8307,7 @@
 <summary>Returns a number similar to this number but with the scale
             adjusted.</summary>
             <param name='bigPlaces'>An arbitrary-precision integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.ScaleByPowerOfTen(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)">
 <summary>Returns a number similar to this number but with its scale
@@ -8314,7 +8324,7 @@
 <summary>Returns a number similar to this number but with the scale
             adjusted.</summary>
             <param name='places'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.ScaleByPowerOfTen(System.Int32,PeterO.Numbers.EContext)">
 <summary>Returns a number similar to this number but with the scale
@@ -8325,7 +8335,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="P:PeterO.Numbers.EDecimal.Sign">
 <summary>Gets this value&#x27;s sign: -1 if negative; 1 if
@@ -8355,15 +8365,15 @@
             property is 0).</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Subtract(PeterO.Numbers.EDecimal)">
-<summary>Subtracts an arbitrary-precision decimal object from this instance and
+<summary>Subtracts an arbitrary-precision decimal number from this instance and
             returns the result.</summary>
-            <param name='otherValue'>An arbitrary-precision decimal object.</param>
+            <param name='otherValue'>An arbitrary-precision decimal number.</param>
             <returns>The difference of the two objects.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Subtract(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)">
-<summary>Subtracts an arbitrary-precision decimal object from this
+<summary>Subtracts an arbitrary-precision decimal number from this
             instance.</summary>
-            <param name='otherValue'>An arbitrary-precision decimal object.</param>
+            <param name='otherValue'>An arbitrary-precision decimal number.</param>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
@@ -8449,7 +8459,7 @@
 <summary>Returns the unit in the last place. The mantissa will be 1
             and the exponent will be this number's exponent. Returns 1 with an
             exponent of 0 if this number is infinity or NaN.</summary>
-            <returns>An arbitrary-precision decimal object.</returns>
+            <returns>An arbitrary-precision decimal number.</returns>
 </doc>
 <doc name="P:PeterO.Numbers.EDecimal.UnsignedMantissa">
 <summary>Gets the absolute value of this object&#x27;s un-scaled
@@ -9009,7 +9019,7 @@
             U+002D) (if '-' , the value is negative.)</item>
             <item>One or more digits, with a single optional decimal point
             after the first digit and before the last digit.</item>
-            <item>Optionally, "E+" (positive exponent) or "E-" (negative
+            <item>Optionally, "E+"/"e+" (positive exponent) or "E-"/"e-" (negative
             exponent) plus one or more digits specifying the
             exponent.</item></list>
             <para>The string can also be "-INF", "-Infinity" , "Infinity",
@@ -10206,13 +10216,14 @@
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.Xor(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)">
 <summary>Finds the exclusive "or" of two arbitrary-precision integer
-            objects.</summary>
-            <param name='a'>An arbitrary-precision integer.</param>
-            <param name='b'>Another arbitrary-precision integer.</param>
-            <returns>An arbitrary-precision integer.</returns>
+            objects.<para>Each arbitrary-precision integer is treated as a two's complement
+            representation for the purposes of this operator.</para></summary>
+            <param name='a'>The first arbitrary-precision integer.</param>
+            <param name='b'>The second arbitrary-precision integer.</param>
+            <returns>An arbitrary-precision integer in which each bit is set if it's
+            set in one input integer but not the other.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='a'/> or <paramref name='b'/> is null.</exception>
-            <remarks>Each arbitrary-precision integer is treated as a two's complement
-            representation for the purposes of this operator.</remarks>
+            
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.add(PeterO.Numbers.EInteger)">
 <summary>Adds this object and another object.</summary>
@@ -10319,7 +10330,7 @@
 <summary>Multiplies this instance by the value of an arbitrary-precision integer
             object.</summary>
             <param name='bigintMult'>Another arbitrary-precision integer.</param>
-            <returns>The product of the two objects.</returns>
+            <returns>The product of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bigintMult'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.negate">
@@ -10370,7 +10381,7 @@
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.op_GreaterThanOrEqual(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)">
 <summary>Determines whether an arbitrary-precision integer value is greater than
-            another arbitrary-precision integer value.</summary>
+            another arbitrary-precision integer.</summary>
             <param name='thisValue'>The first arbitrary-precision integer.</param>
             <param name='otherValue'>The second arbitrary-precision integer.</param>
             <returns>True if <paramref name='thisValue'/> is at least <paramref name='otherValue'/> ; otherwise, false.</returns>
@@ -10419,7 +10430,7 @@
 <doc name="M:PeterO.Numbers.EInteger.op_Multiply(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)">
 <summary>Multiplies an arbitrary-precision integer by the value of a
             arbitrary-precision integer.</summary>
-            <returns>The product of the two objects.</returns>
+            <returns>The product of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='operand1'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.op_RightShift(PeterO.Numbers.EInteger,System.Int32)">
@@ -10435,7 +10446,7 @@
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.op_Subtraction(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)">
 <summary>Subtracts two arbitrary-precision integer values.</summary>
-            <param name='bthis'>An arbitrary-precision integer value.</param>
+            <param name='bthis'>An arbitrary-precision integer.</param>
             <param name='subtrahend'>An arbitrary-precision integer.</param>
             <returns>The difference of the two objects.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='bthis'/> is null.</exception>
@@ -10545,22 +10556,22 @@
             greater.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.ERational.CompareToDecimal(PeterO.Numbers.EDecimal)">
-<summary>Compares an arbitrary-precision decimal object with this
+<summary>Compares an arbitrary-precision decimal number with this
             instance.</summary>
-            <param name='other'>An arbitrary-precision decimal object.</param>
+            <param name='other'>An arbitrary-precision decimal number.</param>
             <returns>Zero if the values are equal; a negative number if this
             instance is less, or a positive number if this instance is
             greater.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.ERational.Create(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)">
-<summary>Creates a number with the given numerator and
+<summary>Creates a rational number with the given numerator and
             denominator.</summary>
             <param name='numerator'>An arbitrary-precision integer.</param>
             <param name='denominator'>Another arbitrary-precision integer.</param>
             <returns>An arbitrary-precision rational number.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.ERational.Create(System.Int32,System.Int32)">
-<summary>Creates a number with the given numerator and
+<summary>Creates a rational number with the given numerator and
             denominator.</summary>
             <param name='numeratorSmall'>A 32-bit signed integer.</param>
             <param name='denominatorSmall'>A 32-bit signed integer.
@@ -10621,7 +10632,8 @@
             <returns>A rational number with the same value as <paramref name='flt'/>.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.ERational.FromExtendedDecimal(PeterO.Numbers.EDecimal)">
-<param name='ef'>An arbitrary-precision decimal object.</param>
+<summary>Converts an arbitrary-precision decimal number to a rational number.</summary>
+<param name='ef'>An arbitrary-precision decimal number.</param>
             <returns>An arbitrary-precision rational number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='ef'/> is null.</exception>
 </doc>
@@ -10702,7 +10714,7 @@
 <summary>Multiplies this instance by the value of an
             arbitrary-precision rational number.</summary>
             <param name='otherValue'>An arbitrary-precision rational number.</param>
-            <returns>The product of the two objects.</returns>
+            <returns>The product of the two numbers.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter <paramref name='otherValue'/> is null.</exception>
 </doc>
 <doc name="F:PeterO.Numbers.ERational.NaN">

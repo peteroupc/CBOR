@@ -167,7 +167,7 @@ Gets the absolute value of this object.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### Add
 
@@ -178,7 +178,7 @@ Adds this object and another decimal number and returns the result.
 
 <b>Parameters:</b>
 
- * <i>otherValue</i>: An arbitrary-precision decimal object.
+ * <i>otherValue</i>: An arbitrary-precision decimal number.
 
 <b>Returns:</b>
 
@@ -215,7 +215,7 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
 <b>Parameters:</b>
 
- * <i>other</i>: An arbitrary-precision decimal object.
+ * <i>other</i>: An arbitrary-precision decimal number.
 
 <b>Returns:</b>
 
@@ -249,7 +249,7 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
 <b>Parameters:</b>
 
- * <i>other</i>: An arbitrary-precision decimal object.
+ * <i>other</i>: An arbitrary-precision decimal number.
 
  * <i>ctx</i>: A precision context. The precision, rounding, and exponent range are ignored. If HasFlags of the context is true, will store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
@@ -269,7 +269,7 @@ If this object or the other object is a quiet NaN or signaling NaN, this method 
 
 <b>Parameters:</b>
 
- * <i>other</i>: An arbitrary-precision decimal object.
+ * <i>other</i>: An arbitrary-precision decimal number.
 
  * <i>ctx</i>: A precision context. The precision, rounding, and exponent range are ignored. If HasFlags of the context is true, will store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
@@ -293,7 +293,7 @@ Creates a number with the value exponent*10^mantissa.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### Create
 
@@ -311,7 +311,7 @@ Creates a number with the value exponent*10^mantissa.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 <b>Exceptions:</b>
 
@@ -325,7 +325,7 @@ The parameter  <i>mantissa</i>
     public static PeterO.ExtendedDecimal CreateNaN(
         PeterO.BigInteger diag);
 
-Creates a not-a-number arbitrary-precision decimal object.
+Creates a not-a-number arbitrary-precision decimal number.
 
 <b>Parameters:</b>
 
@@ -349,7 +349,7 @@ The parameter  <i>diag</i>
         bool negative,
         PeterO.PrecisionContext ctx);
 
-Creates a not-a-number arbitrary-precision decimal object.
+Creates a not-a-number arbitrary-precision decimal number.
 
 <b>Parameters:</b>
 
@@ -363,7 +363,7 @@ Creates a not-a-number arbitrary-precision decimal object.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 <b>Exceptions:</b>
 
@@ -392,7 +392,7 @@ The quotient of the two numbers. Signals FlagDivideByZero and returns infinity i
         PeterO.ExtendedDecimal divisor,
         PeterO.PrecisionContext ctx);
 
-Divides this arbitrary-precision decimal object by another arbitrary-precision decimal object. The preferred exponent for the result is this object's exponent minus the divisor's exponent.
+Divides this arbitrary-precision decimal number by another arbitrary-precision decimal number. The preferred exponent for the result is this object's exponent minus the divisor's exponent.
 
 <b>Parameters:</b>
 
@@ -446,11 +446,11 @@ A 2 element array consisting of the quotient and remainder in that order.
         long desiredExponentSmall,
         PeterO.PrecisionContext ctx);
 
-Divides two arbitrary-precision decimal objects, and gives a particular exponent to the result.
+Divides two arbitrary-precision decimal numbers, and gives a particular exponent to the result.
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: An arbitrary-precision decimal object.
+ * <i>divisor</i>: An arbitrary-precision decimal number.
 
  * <i>desiredExponentSmall</i>: The desired exponent. A negative number places the cutoff point to the right of the usual decimal point. A positive number places the cutoff point to the left of the usual decimal point.
 
@@ -467,11 +467,11 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
         long desiredExponentSmall,
         PeterO.Rounding rounding);
 
-Divides two arbitrary-precision decimal objects, and gives a particular exponent to the result.
+Divides two arbitrary-precision decimal numbers, and gives a particular exponent to the result.
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: An arbitrary-precision decimal object.
+ * <i>divisor</i>: An arbitrary-precision decimal number.
 
  * <i>desiredExponentSmall</i>: The desired exponent. A negative number places the cutoff point to the right of the usual decimal point. A positive number places the cutoff point to the left of the usual decimal point.
 
@@ -488,11 +488,11 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
         PeterO.BigInteger desiredExponent,
         PeterO.Rounding rounding);
 
-Divides two arbitrary-precision decimal objects, and gives a particular exponent to the result.
+Divides two arbitrary-precision decimal numbers, and gives a particular exponent to the result.
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: An arbitrary-precision decimal object.
+ * <i>divisor</i>: An arbitrary-precision decimal number.
 
  * <i>desiredExponent</i>: The desired exponent. A negative number places the cutoff point to the right of the usual decimal point. A positive number places the cutoff point to the left of the usual decimal point.
 
@@ -509,11 +509,11 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
         PeterO.BigInteger exponent,
         PeterO.PrecisionContext ctx);
 
-Divides two arbitrary-precision decimal objects, and gives a particular exponent to the result.
+Divides two arbitrary-precision decimal numbers, and gives a particular exponent to the result.
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: An arbitrary-precision decimal object.
+ * <i>divisor</i>: An arbitrary-precision decimal number.
 
  * <i>exponent</i>: The desired exponent. A negative number places the cutoff point to the right of the usual decimal point. A positive number places the cutoff point to the left of the usual decimal point.
 
@@ -528,7 +528,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
     public PeterO.ExtendedDecimal DivideToIntegerNaturalScale(
         PeterO.ExtendedDecimal divisor);
 
-Divides two arbitrary-precision decimal objects, and returns the integer part of the result, rounded down, with the preferred exponent set to this value's exponent minus the divisor's exponent.
+Divides two arbitrary-precision decimal numbers, and returns the integer part of the result, rounded down, with the preferred exponent set to this value's exponent minus the divisor's exponent.
 
 <b>Parameters:</b>
 
@@ -616,7 +616,7 @@ Determines whether this object's mantissa and exponent are equal to those of ano
 
 <b>Parameters:</b>
 
- * <i>other</i>: An arbitrary-precision decimal object.
+ * <i>other</i>: An arbitrary-precision decimal number.
 
 <b>Returns:</b>
 
@@ -651,7 +651,7 @@ Converts a big integer to an arbitrary precision decimal.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object with the exponent set to 0.
+An arbitrary-precision decimal number with the exponent set to 0.
 
 ### FromDouble
 
@@ -682,7 +682,7 @@ Creates a decimal number from an arbitrary-precision binary floating-point numbe
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 <b>Exceptions:</b>
 
@@ -703,7 +703,7 @@ Creates a decimal number from a 32-bit signed integer.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### FromInt64
 
@@ -718,7 +718,7 @@ Creates a decimal number from a 64-bit signed integer.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object with the exponent set to 0.
+An arbitrary-precision decimal number with the exponent set to 0.
 
 ### FromSingle
 
@@ -808,7 +808,7 @@ The format of the string generally consists of:
 
  * One or more digits, with a single optional decimal point after the first digit and before the last digit.
 
- * Optionally, "E+" (positive exponent) or "E-" (negative exponent) plus one or more digits specifying the exponent.
+ * Optionally, "E+"/"e+" (positive exponent) or "E-"/"e-" (negative exponent) plus one or more digits specifying the exponent.
 
 The string can also be "-INF", "-Infinity" , "Infinity", "INF" , quiet NaN ("NaN" /"-NaN") followed by any number of digits, or signaling NaN ("sNaN" /"-sNaN") followed by any number of digits, all in any combination of upper and lower case.
 
@@ -978,9 +978,9 @@ Gets the greater value between two decimal numbers.
 
 <b>Parameters:</b>
 
- * <i>first</i>: An arbitrary-precision decimal object.
+ * <i>first</i>: An arbitrary-precision decimal number.
 
- * <i>second</i>: Another arbitrary-precision decimal object.
+ * <i>second</i>: Another arbitrary-precision decimal number.
 
 <b>Returns:</b>
 
@@ -1023,7 +1023,7 @@ Gets the greater value between two values, ignoring their signs. If the absolute
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### MaxMagnitude
 
@@ -1044,7 +1044,7 @@ Gets the greater value between two values, ignoring their signs. If the absolute
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### Min
 
@@ -1101,7 +1101,7 @@ Gets the lesser value between two values, ignoring their signs. If the absolute 
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### MinMagnitude
 
@@ -1122,7 +1122,7 @@ Gets the lesser value between two values, ignoring their signs. If the absolute 
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### MovePointLeft
 
@@ -1137,7 +1137,7 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### MovePointLeft
 
@@ -1155,7 +1155,7 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### MovePointLeft
 
@@ -1170,7 +1170,7 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### MovePointLeft
 
@@ -1188,7 +1188,7 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### MovePointRight
 
@@ -1203,7 +1203,7 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### MovePointRight
 
@@ -1221,7 +1221,7 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### MovePointRight
 
@@ -1236,7 +1236,7 @@ Returns a number similar to this number but with the decimal point moved to the 
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### MovePointRight
 
@@ -1372,7 +1372,7 @@ Returns a decimal number with the same value as this object but with the sign re
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### Negate
 
@@ -1382,7 +1382,7 @@ Gets an object with the same value as this one, but with the sign reversed.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### NextMinus
 
@@ -1428,7 +1428,7 @@ Finds the next value that is closer to the other object's value than this object
 
 <b>Parameters:</b>
 
- * <i>otherValue</i>: An arbitrary-precision decimal object.
+ * <i>otherValue</i>: An arbitrary-precision decimal number.
 
  * <i>ctx</i>: A precision context object to control the precision and exponent range of the result. The rounding mode from this context is ignored. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).
 
@@ -1513,7 +1513,7 @@ Raises this object's value to the given exponent.
 
 <b>Parameters:</b>
 
- * <i>exponent</i>: An arbitrary-precision decimal object.
+ * <i>exponent</i>: An arbitrary-precision decimal number.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).
 
@@ -1625,11 +1625,11 @@ This value with trailing zeros removed. Note that if the result has a very high 
         PeterO.ExtendedDecimal divisor,
         PeterO.PrecisionContext ctx);
 
-Finds the remainder that results when dividing two arbitrary-precision decimal objects.
+Finds the remainder that results when dividing two arbitrary-precision decimal numbers.
 
 <b>Parameters:</b>
 
- * <i>divisor</i>: An arbitrary-precision decimal object.
+ * <i>divisor</i>: An arbitrary-precision decimal number.
 
  * <i>ctx</i>: Not documented yet.
 
@@ -1650,7 +1650,7 @@ Calculates the remainder of a number by the formula "this" - (("this" / "divisor
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### RemainderNaturalScale
 
@@ -1668,7 +1668,7 @@ Calculates the remainder of a number by the formula "this" - (("this" / "divisor
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### RemainderNear
 
@@ -1847,7 +1847,7 @@ Returns a number similar to this number but with the scale adjusted.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### ScaleByPowerOfTen
 
@@ -1865,7 +1865,7 @@ Returns a number similar to this number but with the scale adjusted.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### ScaleByPowerOfTen
 
@@ -1880,7 +1880,7 @@ Returns a number similar to this number but with the scale adjusted.
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.
 
 ### ScaleByPowerOfTen
 
@@ -1922,11 +1922,11 @@ is null or the precision is unlimited (the context's Precision property is 0).
     public PeterO.ExtendedDecimal Subtract(
         PeterO.ExtendedDecimal otherValue);
 
-Subtracts an arbitrary-precision decimal object from this instance and returns the result.
+Subtracts an arbitrary-precision decimal number from this instance and returns the result.
 
 <b>Parameters:</b>
 
- * <i>otherValue</i>: An arbitrary-precision decimal object.
+ * <i>otherValue</i>: An arbitrary-precision decimal number.
 
 <b>Returns:</b>
 
@@ -1938,11 +1938,11 @@ The difference of the two objects.
         PeterO.ExtendedDecimal otherValue,
         PeterO.PrecisionContext ctx);
 
-Subtracts an arbitrary-precision decimal object from this instance.
+Subtracts an arbitrary-precision decimal number from this instance.
 
 <b>Parameters:</b>
 
- * <i>otherValue</i>: An arbitrary-precision decimal object.
+ * <i>otherValue</i>: An arbitrary-precision decimal number.
 
  * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). Can be null.
 
@@ -2057,4 +2057,4 @@ Returns the unit in the last place. The mantissa will be 1 and the exponent will
 
 <b>Returns:</b>
 
-An arbitrary-precision decimal object.
+An arbitrary-precision decimal number.

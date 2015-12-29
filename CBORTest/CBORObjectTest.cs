@@ -1628,6 +1628,7 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
         bytes = DataUtilities.GetUtf8Bytes(str, false);
       } catch (ArgumentException ex2) {
+        Console.WriteLine(ex2.Message);
         // Check only FromJSONString
         try {
           if (opt.Value == 0) {
@@ -1655,7 +1656,7 @@ throw new InvalidOperationException(String.Empty, ex);
         } catch (CBORException) {
           Console.Write(String.Empty);
         } catch (Exception ex) {
-          Assert.Fail(ex.ToString());
+          Assert.Fail(str + "\r\n"+ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
         }
       }

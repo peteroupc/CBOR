@@ -622,8 +622,7 @@ namespace PeterO.Cbor {
       CBOREncodeOptions opt = options.And(CBOREncodeOptions.NoDuplicateKeys);
       var nextchar = new int[1];
 CBORObject obj = CBORJson.ParseJSONValue(reader, opt.Value != 0, false,
-        nextchar,
-           0);
+        nextchar);
       if (nextchar[0] != -1) {
         reader.RaiseError("End of string not reached");
       }
@@ -634,7 +633,8 @@ CBORObject obj = CBORJson.ParseJSONValue(reader, opt.Value != 0, false,
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int64)"]'
     /// />
     public static CBORObject FromObject(long value) {
-      return new CBORObject(CBORObjectTypeInteger, value);
+      return (value >= 0 && value < 24) ? (valueFixedObjects[value]) : (new
+        CBORObject(CBORObjectTypeInteger, value));
     }
 
     /// <include file='docs.xml'
@@ -725,14 +725,16 @@ CBORObject obj = CBORJson.ParseJSONValue(reader, opt.Value != 0, false,
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int32)"]'
     /// />
     public static CBORObject FromObject(int value) {
-      return FromObject((long)value);
+      return (value >= 0 && value < 24) ? (valueFixedObjects[value]) :
+        (FromObject((long)value));
     }
 
     /// <include file='docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int16)"]'
     /// />
     public static CBORObject FromObject(short value) {
-      return FromObject((long)value);
+      return (value >= 0 && value < 24) ? (valueFixedObjects[value]) :
+        (FromObject((long)value));
     }
 
     /// <include file='docs.xml'
@@ -1139,8 +1141,7 @@ CBORObject obj = CBORJson.ParseJSONValue(reader, opt.Value != 0, false,
         CBOREncodeOptions opt = options.And(CBOREncodeOptions.NoDuplicateKeys);
         var nextchar = new int[1];
    CBORObject obj = CBORJson.ParseJSONValue(reader, opt.Value != 0, false,
-     nextchar,
-          0);
+     nextchar);
         if (nextchar[0] != -1) {
           reader.RaiseError("End of data stream not reached");
         }
