@@ -8,13 +8,14 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Numbers.RadixMath`1"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Numbers.RadixMath`1"]/*'/>
   internal class RadixMath<T> : IRadixMath<T> {
     private const int IntegerModeFixedScale = 1;
     private const int IntegerModeRegular = 0;
-    private static readonly EInteger valueMinusOne = EInteger.Zero -
+    private static readonly EInteger ValueMinusOne = EInteger.Zero -
       EInteger.One;
+
     private readonly IRadixMathHelper<T> helper;
     private readonly int support;
     private readonly int thisRadix;
@@ -534,7 +535,7 @@ this.helper.GetFlags(ret));
             EInteger bigrem;
             EInteger bigquo;
 {
-EInteger[] divrem=(bigmantissa).DivRem(bigradix);
+EInteger[] divrem = bigmantissa.DivRem(bigradix);
 bigquo = divrem[0];
 bigrem = divrem[1]; }
             if (!bigrem.IsZero) {
@@ -694,7 +695,7 @@ ctx,
           thisValue,
           one,
           EContext.ForRounding(ERounding.Down));
-        if (!(this.GetHelper().GetExponent(intpart).IsZero)) {
+        if (!this.GetHelper().GetExponent(intpart).IsZero) {
           throw new ArgumentException("integer part not zero, as expected");
         }
         if (this.CompareTo(thisValue, this.helper.ValueOf(50000)) > 0 &&
@@ -982,7 +983,7 @@ ctxCopy);
             EInteger bigrem;
             EInteger bigquo;
 {
-EInteger[] divrem=(mantissa).DivRem(tenBig);
+EInteger[] divrem = mantissa.DivRem(tenBig);
 bigquo = divrem[0];
 bigrem = divrem[1]; }
             if (!bigrem.IsZero) {
@@ -1490,7 +1491,7 @@ ctx,
       T half = ((this.thisRadix & 1) == 0) ?
         this.helper.CreateNewWithFlags(
 (EInteger)(this.thisRadix / 2),
-valueMinusOne,
+ValueMinusOne,
 0) : default(T);
       T t = this.Divide(a, four, ctxdiv);
       var more = true;
@@ -1645,12 +1646,12 @@ EContext.ForRounding(ERounding.Down));
       }
       if ((!isPowIntegral || powSign < 0) && (ctx == null ||
                     !ctx.HasMaxPrecision)) {
-        const string outputMessage =
+        const string ValueOutputMessage =
             "ctx is null or has unlimited precision, " +
             "and pow's exponent is not an integer or is negative";
         return this.SignalInvalidWithMessage(
 ctx,
-outputMessage);
+ValueOutputMessage);
       }
       if (thisSign < 0 && !isPowIntegral) {
         return this.SignalInvalid(ctx);
@@ -1707,10 +1708,10 @@ EContext.ForRounding(ERounding.Down));
       if (this.thisRadix == 10 || this.thisRadix == 2) {
         T half = (this.thisRadix == 10) ? this.helper.CreateNewWithFlags(
             (EInteger)5,
-            valueMinusOne,
+            ValueMinusOne,
             0) : this.helper.CreateNewWithFlags(
 EInteger.One,
-valueMinusOne,
+ValueMinusOne,
 0);
         if (this.CompareTo(pow, half) == 0 &&
             this.IsWithinExponentRangeForPow(pow, ctx) &&
@@ -2558,7 +2559,7 @@ EInteger desiredExponent) {
             shift = FastInteger.Copy(fastDesiredExponent).Subtract(expdiff);
             EInteger quo;
 {
-EInteger[] divrem=(mantissaDividend).DivRem(mantissaDivisor);
+EInteger[] divrem = mantissaDividend.DivRem(mantissaDivisor);
 quo = divrem[0];
 rem = divrem[1]; }
             return this.RoundToScale(
@@ -2590,7 +2591,7 @@ ctx,
             }
             EInteger quo;
 {
-EInteger[] divrem=(mantissaDividend).DivRem(mantissaDivisor);
+EInteger[] divrem = mantissaDividend.DivRem(mantissaDivisor);
 quo = divrem[0];
 rem = divrem[1]; }
             return this.RoundToScale(
@@ -2610,7 +2611,7 @@ rem = divrem[1]; }
           // (mantissaDividend.getUnsignedBitLength()) + " divs= " +
           // (mantissaDivisor.getUnsignedBitLength()));
           {
-EInteger[] divrem=(mantissaDividend).DivRem(mantissaDivisor);
+EInteger[] divrem = mantissaDividend.DivRem(mantissaDivisor);
 quo = divrem[0];
 rem = divrem[1]; }
           if (rem.IsZero) {
@@ -2672,7 +2673,7 @@ rem = divrem[1]; }
               // if shift isn't zero, recalculate the quotient
               // and remainder
               {
-EInteger[] divrem=(divid).DivRem(mantissaDivisor);
+EInteger[] divrem = divid.DivRem(mantissaDivisor);
 quo = divrem[0];
 rem = divrem[1]; }
             }
@@ -2842,7 +2843,7 @@ ctx,
         var lastDiscarded = 0;
         var olderDiscarded = 0;
         if (!mantissaDividend.IsZero) {
-        if (rounding == ERounding.HalfDown || rounding == ERounding.HalfEven||
+        if (rounding == ERounding.HalfDown || rounding == ERounding.HalfEven ||
             rounding == ERounding.HalfUp) {
             EInteger halfDivisor = mantissaDivisor >> 1;
             int cmpHalf = mantissaDividend.CompareTo(halfDivisor);
@@ -3855,7 +3856,7 @@ thisFlags);
         }
         if (!unlimitedPrec && (rounding == ERounding.Down || rounding ==
                 ERounding.ZeroFiveUp ||
-              (rounding == ERounding.OddOrZeroFiveUp && this.thisRadix != 2)||
+              (rounding == ERounding.OddOrZeroFiveUp && this.thisRadix != 2) ||
                 (rounding == ERounding.Ceiling && neg) || (rounding ==
                   ERounding.Floor && !neg))) {
           // Set to the highest possible value for
@@ -4065,7 +4066,7 @@ neg ? BigNumberFlags.FlagNegative : 0);
             EContext.FlagInexact | EContext.FlagRounded;
           if (!unlimitedPrec && (rounding == ERounding.Down || rounding ==
                    ERounding.ZeroFiveUp ||
-        (rounding == ERounding.OddOrZeroFiveUp || rounding == ERounding.Odd)||
+        (rounding == ERounding.OddOrZeroFiveUp || rounding == ERounding.Odd) ||
             (rounding == ERounding.Ceiling &&
                 neg) || (rounding == ERounding.Floor && !neg))) {
             // Set to the highest possible value for

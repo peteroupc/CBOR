@@ -20,7 +20,7 @@ namespace PeterO.DocGen {
   internal class DocVisitor : Visitor {
     private const string FourSpaces = " " + " " + " " + " ";
 
-    private static readonly IDictionary<string, string> operators =
+    private static readonly IDictionary<string, string> ValueOperators =
           OperatorList();
 
     private readonly StringBuilder buffer = new StringBuilder();
@@ -169,10 +169,10 @@ StringBuilder builder) {
         } else if (method.Name.Equals("op_Implicit")) {
           builder.Append("implicit operator ");
           builder.Append(FormatType(methodInfo.ReturnType));
-        } else if (operators.ContainsKey(method.Name)) {
+        } else if (ValueOperators.ContainsKey(method.Name)) {
           builder.Append(FormatType(methodInfo.ReturnType));
           builder.Append(" operator ");
-          builder.Append(operators[method.Name]);
+          builder.Append(ValueOperators[method.Name]);
         } else {
           builder.Append(FormatType(methodInfo.ReturnType));
           builder.Append(" ");
@@ -673,7 +673,8 @@ StringBuilder builder) {
     }
 
     private static string MethodNameHeading(string p) {
-      return operators.ContainsKey(p) ? ("Operator `" + operators[p] + "`") :
+      return ValueOperators.ContainsKey(p) ? ("Operator `" +
+        ValueOperators[p] + "`") :
         (p.Equals("op_Explicit") ? "Explicit Operator" :
          (p.Equals("op_Implicit") ? "Implicit Operator" : p));
     }

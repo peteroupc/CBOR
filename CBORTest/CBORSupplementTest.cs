@@ -1520,34 +1520,52 @@ Console.Write(String.Empty);
       Assert.AreEqual(
         minusone - (BigInteger.One << 16),
 CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
-      Assert.AreEqual(
-        minusone - (BigInteger.One << 24),
-        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x44, 1, 0, 0, 0
-          }).AsBigInteger());
-      Assert.AreEqual(
-        minusone - (BigInteger.One << 32),
-        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x45, 1, 0, 0, 0, 0
-          }).AsBigInteger());
-      Assert.AreEqual(
-        minusone - (BigInteger.One << 40),
-        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x46, 1, 0, 0, 0, 0, 0
-          }).AsBigInteger());
-      Assert.AreEqual(
-        minusone - (BigInteger.One << 48),
-        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x47, 1, 0, 0, 0, 0,
-                    0, 0 }).AsBigInteger());
-      Assert.AreEqual(
-        minusone - (BigInteger.One << 56),
-        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x48, 1, 0, 0, 0, 0,
-                    0, 0, 0 }).AsBigInteger());
-      Assert.AreEqual(
-        minusone - (BigInteger.One << 64),
-        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x49, 1, 0, 0, 0, 0,
-                    0, 0, 0, 0 }).AsBigInteger());
-      Assert.AreEqual(
-        minusone - (BigInteger.One << 72),
-        CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x4a, 1, 0, 0, 0, 0,
-                    0, 0, 0, 0, 0 }).AsBigInteger());
+      {
+object objectTemp = minusone - (BigInteger.One << 24);
+object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x44, 1,
+  0, 0, 0 }).AsBigInteger();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
+      {
+object objectTemp = minusone - (BigInteger.One << 32);
+object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x45, 1,
+  0, 0, 0, 0 }).AsBigInteger();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
+      {
+object objectTemp = minusone - (BigInteger.One << 40);
+object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x46, 1,
+  0, 0, 0, 0, 0 }).AsBigInteger();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
+      {
+object objectTemp = minusone - (BigInteger.One << 48);
+object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x47, 1,
+  0, 0, 0, 0,
+                    0, 0 }).AsBigInteger();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
+      {
+object objectTemp = minusone - (BigInteger.One << 56);
+object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x48, 1,
+  0, 0, 0, 0,
+                    0, 0, 0 }).AsBigInteger();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
+      {
+object objectTemp = minusone - (BigInteger.One << 64);
+object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x49, 1,
+  0, 0, 0, 0,
+                    0, 0, 0, 0 }).AsBigInteger();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
+      {
+object objectTemp = minusone - (BigInteger.One << 72);
+object objectTemp2 = CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x4a, 1,
+  0, 0, 0, 0,
+                    0, 0, 0, 0, 0 }).AsBigInteger();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
     }
 
     [Test]
@@ -1565,8 +1583,7 @@ CBORObject.DecodeFromBytes(new byte[] { 0xc3, 0x43, 1, 0, 0 }).AsBigInteger());
                       0x62, 0x63, 0x64, 0xd8, 0x19, 0x01, 0xd8, 0x19, 0x00,
                       0xd8, 0x19, 0x01, 0xff });
       expected =
-      "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]"
-;
+     "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
     }
 

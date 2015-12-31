@@ -103,7 +103,7 @@ True if this filter allows CBOR arrays and an array's length is allowed under a 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigLength</i>
+The parameter <i>bigLength</i>
  is null.
 
 ### GetSubFilter
@@ -209,7 +209,7 @@ True if CBOR objects can have the given tag number; otherwise, false.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigTag</i>
+The parameter <i>bigTag</i>
  is null.
 
 ### WithArrayAnyLength

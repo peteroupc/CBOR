@@ -8,14 +8,14 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Numbers.ERational"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Numbers.ERational"]/*'/>
   internal sealed class ERational : IComparable<ERational>,
     IEquatable<ERational> {
     private EInteger unsignedNumerator;
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.Numerator"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.Numerator"]/*'/>
     public EInteger Numerator {
       get {
         return this.IsNegative ? (-(EInteger)this.unsignedNumerator) :
@@ -23,8 +23,8 @@ namespace PeterO.Numbers {
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.UnsignedNumerator"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.UnsignedNumerator"]/*'/>
     public EInteger UnsignedNumerator {
       get {
         return this.unsignedNumerator;
@@ -33,8 +33,8 @@ namespace PeterO.Numbers {
 
     private EInteger denominator;
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.Denominator"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.Denominator"]/*'/>
     public EInteger Denominator {
       get {
         return this.denominator;
@@ -44,8 +44,8 @@ namespace PeterO.Numbers {
     private int flags;
 
     #region Equals and GetHashCode implementation
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Equals(System.Object)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Equals(System.Object)"]/*'/>
     public override bool Equals(object obj) {
       var other = obj as ERational;
       return (
@@ -57,8 +57,8 @@ this.denominator,
 other.denominator) && this.flags == other.flags);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.GetHashCode"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.GetHashCode"]/*'/>
     public override int GetHashCode() {
       var hashCode = 1857066527;
       unchecked {
@@ -74,24 +74,24 @@ other.denominator) && this.flags == other.flags);
     }
     #endregion
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Create(System.Int32,System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Create(System.Int32,System.Int32)"]/*'/>
     public static ERational Create(
 int numeratorSmall,
 int denominatorSmall) {
       return Create((EInteger)numeratorSmall, (EInteger)denominatorSmall);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Create(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Create(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]/*'/>
     public static ERational Create(
 EInteger numerator,
 EInteger denominator) {
       return new ERational(numerator, denominator);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.#ctor(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.#ctor(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]/*'/>
     public ERational(EInteger numerator, EInteger denominator) {
       if (numerator == null) {
         throw new ArgumentNullException("numerator");
@@ -122,8 +122,8 @@ EInteger denominator) {
       this.denominator = denominator;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToString"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToString"]/*'/>
     public override string ToString() {
       if (!this.IsFinite) {
         if (this.IsSignalingNaN()) {
@@ -147,32 +147,32 @@ EInteger denominator) {
       return this.Numerator + "/" + this.Denominator;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromBigInteger(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromBigInteger(PeterO.Numbers.EInteger)"]/*'/>
     public static ERational FromBigInteger(EInteger bigint) {
       return new ERational(bigint, EInteger.One);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedDecimal"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedDecimal"]/*'/>
     public EDecimal ToExtendedDecimal() {
       return this.ToExtendedDecimal(null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromSingle(System.Single)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromSingle(System.Single)"]/*'/>
     public static ERational FromSingle(float flt) {
       return FromExtendedFloat(EFloat.FromSingle(flt));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromDouble(System.Double)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromDouble(System.Double)"]/*'/>
     public static ERational FromDouble(double flt) {
       return FromExtendedFloat(EFloat.FromDouble(flt));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CreateNaN(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CreateNaN(PeterO.Numbers.EInteger)"]/*'/>
     public static ERational CreateNaN(EInteger diag) {
       return CreateNaN(diag, false, false);
     }
@@ -186,8 +186,8 @@ int flags) {
       return er;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CreateNaN(PeterO.Numbers.EInteger,System.Boolean,System.Boolean)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CreateNaN(PeterO.Numbers.EInteger,System.Boolean,System.Boolean)"]/*'/>
     public static ERational CreateNaN(
 EInteger diag,
 bool signaling,
@@ -214,8 +214,8 @@ bool negative) {
       return er;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromExtendedFloat(PeterO.Numbers.EFloat)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromExtendedFloat(PeterO.Numbers.EFloat)"]/*'/>
     public static ERational FromExtendedFloat(EFloat ef) {
       if (ef == null) {
         throw new ArgumentNullException("ef");
@@ -258,8 +258,8 @@ bool negative) {
       return new ERational(num, den);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromExtendedDecimal(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.FromExtendedDecimal(PeterO.Numbers.EDecimal)"]/*'/>
     public static ERational FromExtendedDecimal(EDecimal ef) {
       if (ef == null) {
         throw new ArgumentNullException("ef");
@@ -303,8 +303,8 @@ bool negative) {
       return new ERational(num, den);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedDecimal(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedDecimal(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal ToExtendedDecimal(EContext ctx) {
       if (this.IsNaN()) {
         return EDecimal.CreateNaN(
@@ -324,8 +324,8 @@ ctx);
       return ef.Divide(EDecimal.FromBigInteger(this.Denominator), ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedDecimalExactIfPossible(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedDecimalExactIfPossible(PeterO.Numbers.EContext)"]/*'/>
 public EDecimal ToExtendedDecimalExactIfPossible(EContext
       ctx) {
       if (ctx == null) {
@@ -358,14 +358,14 @@ ctx);
       return ed;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedFloat"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedFloat"]/*'/>
     public EFloat ToExtendedFloat() {
       return this.ToExtendedFloat(null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedFloat(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedFloat(PeterO.Numbers.EContext)"]/*'/>
     public EFloat ToExtendedFloat(EContext ctx) {
       if (this.IsNaN()) {
         return EFloat.CreateNaN(
@@ -385,8 +385,8 @@ ctx);
       return ef.Divide(EFloat.FromBigInteger(this.Denominator), ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedFloatExactIfPossible(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToExtendedFloatExactIfPossible(PeterO.Numbers.EContext)"]/*'/>
     public EFloat ToExtendedFloatExactIfPossible(EContext ctx) {
       if (ctx == null) {
         return this.ToExtendedFloat(null);
@@ -419,16 +419,16 @@ ctx);
       return ed;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.IsFinite"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.IsFinite"]/*'/>
     public bool IsFinite {
       get {
         return !this.IsNaN() && !this.IsInfinity();
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToBigInteger"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToBigInteger"]/*'/>
     public EInteger ToBigInteger() {
       if (!this.IsFinite) {
         throw new OverflowException("Value is infinity or NaN");
@@ -436,8 +436,8 @@ ctx);
       return this.Numerator / (EInteger)this.denominator;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToBigIntegerExact"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToBigIntegerExact"]/*'/>
     public EInteger ToBigIntegerExact() {
       if (!this.IsFinite) {
         throw new OverflowException("Value is infinity or NaN");
@@ -445,7 +445,7 @@ ctx);
       EInteger rem;
  EInteger quo;
 {
-EInteger[] divrem=(this.Numerator).DivRem(this.denominator);
+EInteger[] divrem = this.Numerator.DivRem(this.denominator);
 quo = divrem[0];
 rem = divrem[1]; }
       if (!rem.IsZero) {
@@ -462,16 +462,16 @@ rem = divrem[1]; }
       return new ERational((EInteger)longInt, EInteger.One);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToDouble"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToDouble"]/*'/>
     public double ToDouble() {
       return
   this.ToExtendedFloat(EContext.Binary64.WithRounding(ERounding.Odd))
         .ToDouble();
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToSingle"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.ToSingle"]/*'/>
     public float ToSingle() {
       return
   this.ToExtendedFloat(EContext.Binary32.WithRounding(ERounding.Odd))
@@ -493,8 +493,8 @@ rem = divrem[1]; }
       return er;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.IsZero"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.IsZero"]/*'/>
     public bool IsZero {
       get {
         return ((this.flags & (BigNumberFlags.FlagInfinity |
@@ -502,8 +502,8 @@ rem = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.Sign"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.Sign"]/*'/>
     public int Sign {
       get {
         return ((this.flags & (BigNumberFlags.FlagInfinity |
@@ -512,8 +512,8 @@ rem = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CompareTo(PeterO.Numbers.ERational)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CompareTo(PeterO.Numbers.ERational)"]/*'/>
     public int CompareTo(ERational other) {
       if (other == null) {
         return 1;
@@ -580,8 +580,8 @@ rem = divrem[1]; }
       return ad.CompareTo(bc);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CompareToBinary(PeterO.Numbers.EFloat)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CompareToBinary(PeterO.Numbers.EFloat)"]/*'/>
     public int CompareToBinary(EFloat other) {
       if (other == null) {
         return 1;
@@ -634,7 +634,7 @@ rem = divrem[1]; }
         EInteger thisRem;
         EInteger thisInt;
 {
-EInteger[] divrem=(this.UnsignedNumerator).DivRem(this.Denominator);
+EInteger[] divrem = this.UnsignedNumerator.DivRem(this.Denominator);
 thisInt = divrem[0];
 thisRem = divrem[1]; }
         EFloat otherAbs = other.Abs();
@@ -695,8 +695,8 @@ thisRem = divrem[1]; }
       return ad.CompareTo(bc);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CompareToDecimal(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.CompareToDecimal(PeterO.Numbers.EDecimal)"]/*'/>
     public int CompareToDecimal(EDecimal other) {
       if (other == null) {
         return 1;
@@ -749,7 +749,7 @@ thisRem = divrem[1]; }
         EInteger thisRem;
         EInteger thisInt;
 {
-EInteger[] divrem=(this.UnsignedNumerator).DivRem(this.Denominator);
+EInteger[] divrem = this.UnsignedNumerator.DivRem(this.Denominator);
 thisInt = divrem[0];
 thisRem = divrem[1]; }
         EDecimal otherAbs = other.Abs();
@@ -815,78 +815,78 @@ thisRem = divrem[1]; }
       return this.Equals((object)other);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsNegativeInfinity"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsNegativeInfinity"]/*'/>
     public bool IsNegativeInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity |
         BigNumberFlags.FlagNegative)) ==
         (BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsPositiveInfinity"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsPositiveInfinity"]/*'/>
     public bool IsPositiveInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity |
         BigNumberFlags.FlagNegative)) == BigNumberFlags.FlagInfinity;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsNaN"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsNaN"]/*'/>
     public bool IsNaN() {
       return (this.flags & BigNumberFlags.FlagNaN) != 0;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.IsNegative"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ERational.IsNegative"]/*'/>
     public bool IsNegative {
       get {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsInfinity"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsInfinity"]/*'/>
     public bool IsInfinity() {
       return (this.flags & BigNumberFlags.FlagInfinity) != 0;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsQuietNaN"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsQuietNaN"]/*'/>
     public bool IsQuietNaN() {
       return (this.flags & BigNumberFlags.FlagQuietNaN) != 0;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsSignalingNaN"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.IsSignalingNaN"]/*'/>
     public bool IsSignalingNaN() {
       return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.NaN"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.NaN"]/*'/>
     public static readonly ERational NaN = CreateWithFlags(
 EInteger.Zero,
 EInteger.One,
 BigNumberFlags.FlagQuietNaN);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.SignalingNaN"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.SignalingNaN"]/*'/>
     public static readonly ERational SignalingNaN =
       CreateWithFlags(
 EInteger.Zero,
 EInteger.One,
 BigNumberFlags.FlagSignalingNaN);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.PositiveInfinity"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.PositiveInfinity"]/*'/>
     public static readonly ERational PositiveInfinity =
       CreateWithFlags(
 EInteger.Zero,
 EInteger.One,
 BigNumberFlags.FlagInfinity);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.NegativeInfinity"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.NegativeInfinity"]/*'/>
     public static readonly ERational NegativeInfinity =
       CreateWithFlags(
 EInteger.Zero,
@@ -914,8 +914,8 @@ BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
       return this;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Add(PeterO.Numbers.ERational)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Add(PeterO.Numbers.ERational)"]/*'/>
     public ERational Add(ERational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -949,8 +949,8 @@ otherValue.IsNegative);
       return new ERational(ad, bd).Simplify();
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Subtract(PeterO.Numbers.ERational)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Subtract(PeterO.Numbers.ERational)"]/*'/>
     public ERational Subtract(ERational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -987,8 +987,8 @@ otherValue.IsNegative);
       return new ERational(ad, bd).Simplify();
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Multiply(PeterO.Numbers.ERational)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Multiply(PeterO.Numbers.ERational)"]/*'/>
     public ERational Multiply(ERational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -1023,8 +1023,8 @@ otherValue.IsNegative);
         ERational(ac, bd).Simplify().ChangeSign(resultNeg);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Divide(PeterO.Numbers.ERational)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Divide(PeterO.Numbers.ERational)"]/*'/>
     public ERational Divide(ERational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -1064,8 +1064,8 @@ otherValue.IsNegative);
       return new ERational(ad, bc).Simplify().ChangeSign(resultNeg);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Remainder(PeterO.Numbers.ERational)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ERational.Remainder(PeterO.Numbers.ERational)"]/*'/>
     public ERational Remainder(ERational otherValue) {
       if (otherValue == null) {
         throw new ArgumentNullException("otherValue");
@@ -1111,22 +1111,22 @@ otherValue.IsNegative);
       return new ERational(ad, tden).Simplify().ChangeSign(resultNeg);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.Zero"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.Zero"]/*'/>
 public static readonly ERational Zero =
       FromBigInteger(EInteger.Zero);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.NegativeZero"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.NegativeZero"]/*'/>
     public static readonly ERational NegativeZero =
       FromBigInteger(EInteger.Zero).ChangeSign(false);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.One"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.One"]/*'/>
   public static readonly ERational One = FromBigInteger(EInteger.One);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.Ten"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.ERational.Ten"]/*'/>
   public static readonly ERational Ten = FromBigInteger((EInteger)10);
   }
 }

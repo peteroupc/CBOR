@@ -65,18 +65,18 @@ stringTemp);
       if (CBORDataUtilities.ParseJSONNumber("-100.", false, false) != null) {
  Assert.Fail();
  }
-    if ((
+    if (
 CBORDataUtilities.ParseJSONNumber(
 "100.e+20",
 false,
-false)) != null) {
+false) != null) {
  Assert.Fail();
  }
-    if ((
+    if (
 CBORDataUtilities.ParseJSONNumber(
 "-100.e20",
 false,
-false)) != null) {
+false) != null) {
  Assert.Fail();
  }
       if (CBORDataUtilities.ParseJSONNumber("100.e20", false, false) != null) {
@@ -106,11 +106,11 @@ false)) != null) {
       if (CBORDataUtilities.ParseJSONNumber(null, false, false) != null) {
  Assert.Fail();
  }
-      if ((
+      if (
 CBORDataUtilities.ParseJSONNumber(
 String.Empty,
 false,
-false)) != null) {
+false) != null) {
  Assert.Fail();
  }
       if (CBORDataUtilities.ParseJSONNumber("xyz", false, false) != null) {
@@ -143,18 +143,18 @@ false)) != null) {
       if (CBORDataUtilities.ParseJSONNumber("0.5ee88", false, false) != null) {
  Assert.Fail();
  }
-    if ((
+    if (
 CBORDataUtilities.ParseJSONNumber(
 "0.5e+xyz",
 false,
-false)) != null) {
+false) != null) {
  Assert.Fail();
  }
-  if ((
+  if (
 CBORDataUtilities.ParseJSONNumber(
 "0.5e+88xyz",
 false,
-false)) != null) {
+false) != null) {
  Assert.Fail();
  }
       if (CBORDataUtilities.ParseJSONNumber("0000") != null) {

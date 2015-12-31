@@ -11,8 +11,10 @@ using System.Reflection;
 
 namespace PeterO {
   internal static class DebugUtility {
-    private static MethodInfo GetTypeMethod(Type t, string name, Type[]
-      parameters) {
+    private static MethodInfo GetTypeMethod(
+      Type t,
+      string name,
+      Type[] parameters) {
 #if NET40
       return t.GetMethod(name, parameters);
 #else
@@ -25,7 +27,7 @@ namespace PeterO {
     public static void Log(string str) {
       Type type = Type.GetType("System.Console");
       var types = new[] { typeof(string) };
-      GetTypeMethod(type,"WriteLine", types).Invoke(
+      GetTypeMethod(type, "WriteLine", types).Invoke(
         type,
         new object[] { str });
     }

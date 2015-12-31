@@ -6,51 +6,51 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 namespace PeterO {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Numbers.ERounding"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Rounding"]/*'/>
   public enum Rounding {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERounding.Up"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Rounding.Up"]/*'/>
     Up,
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERounding.Down"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Rounding.Down"]/*'/>
     Down,
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERounding.Ceiling"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Rounding.Ceiling"]/*'/>
     Ceiling,
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERounding.Floor"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Rounding.Floor"]/*'/>
     Floor,
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERounding.HalfUp"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Rounding.HalfUp"]/*'/>
     HalfUp,
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERounding.HalfDown"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Rounding.HalfDown"]/*'/>
     HalfDown,
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERounding.HalfEven"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Rounding.HalfEven"]/*'/>
     HalfEven,
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Rounding.Unnecessary"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Rounding.Unnecessary"]/*'/>
     Unnecessary,
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERounding.ZeroFiveUp"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Rounding.ZeroFiveUp"]/*'/>
     ZeroFiveUp,
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERounding.Odd"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Rounding.Odd"]/*'/>
     Odd,
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.ERounding.OddOrZeroFiveUp"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Rounding.OddOrZeroFiveUp"]/*'/>
     OddOrZeroFiveUp
   }
 }

@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Rules for the CBOR project" Description="Code analysis rules for the CBOR project." ToolsVersion="14.0">
+<RuleSet Name="Rules for PeterO projects" Description="Code analysis rules for PeterO projects." ToolsVersion="14.0">
   <Rules AnalyzerId="CodeCracker.CSharp" RuleNamespace="CodeCracker.CSharp">
     <Rule Id="CC0001" Action="None" />
+    <Rule Id="CC0008" Action="None" />
     <Rule Id="CC0006" Action="None" />
+    <Rule Id="CC0057" Action="None" />
     <Rule Id="CC0021" Action="None" />
     <Rule Id="CC0084" Action="Info" />
     <Rule Id="CC0090" Action="None" />

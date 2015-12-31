@@ -15,15 +15,15 @@ using PeterO;
 namespace Test {
   [TestFixture]
   public class DecimalTest {
-    private static readonly Regex valuePropertyLine = new Regex(
+    private static readonly Regex ValuePropertyLine = new Regex(
       "^(\\w+)\\:\\s*(\\S+)",
       RegexOptions.Compiled);
 
-    private static readonly Regex valueQuotes = new Regex(
+    private static readonly Regex ValueQuotes = new Regex(
       "^[\\'\\\"]|[\\'\\\"]$",
       RegexOptions.Compiled);
 
-    private static readonly Regex valueTestLine = new Regex(
+    private static readonly Regex ValueTestLine = new Regex(
   "^([A-Za-z0-9_]+)\\s+([A-Za-z0-9_\\-]+)\\s+(\\'[^\\']*\\'|\\S+)\\s+(?:(\\S+)\\s+)?(?:(\\S+)\\s+)?->\\s+(\\S+)\\s*(.*)",
   RegexOptions.Compiled);
 
@@ -36,19 +36,18 @@ IDictionary<TKey, TValue> dict,
 
     public static void ParseDecTest(
 string ln,
- IDictionary<string,
- string> context) {
+ IDictionary<string, string> context) {
       Match match;
       if (ln.Contains("-- ")) {
         ln = ln.Substring(0, ln.IndexOf("-- ", StringComparison.Ordinal));
       }
-      match = (!ln.Contains(":")) ? null : valuePropertyLine.Match(ln);
+      match = (!ln.Contains(":")) ? null : ValuePropertyLine.Match(ln);
       if (match != null && match.Success) {
         context[match.Groups[1].ToString().ToLowerInvariant()] =
           match.Groups[2].ToString();
         return;
       }
-      match = valueTestLine.Match(ln);
+      match = ValueTestLine.Match(ln);
       if (match.Success) {
         string name = match.Groups[1].ToString();
         string op = match.Groups[2].ToString();
@@ -57,10 +56,10 @@ string ln,
         string input3 = match.Groups[5].ToString();
         string output = match.Groups[6].ToString();
         string flags = match.Groups[7].ToString();
-        input1 = valueQuotes.Replace(input1, String.Empty);
-        input2 = valueQuotes.Replace(input2, String.Empty);
-        input3 = valueQuotes.Replace(input3, String.Empty);
-        output = valueQuotes.Replace(output, String.Empty);
+        input1 = ValueQuotes.Replace(input1, String.Empty);
+        input2 = ValueQuotes.Replace(input2, String.Empty);
+        input3 = ValueQuotes.Replace(input3, String.Empty);
+        output = ValueQuotes.Replace(output, String.Empty);
         bool extended = GetKeyOrDefault(context, "extended", "1").Equals("1");
         bool clamp = GetKeyOrDefault(context, "clamp", "0").Equals("1");
         int precision = Convert.ToInt32(
@@ -293,14 +292,15 @@ System.Globalization.CultureInfo.InvariantCulture);
             }
             if (output != null && !d3.ToString().Equals(output)) {
               ExtendedDecimal d4 = ExtendedDecimal.FromString(output);
-              Assert.AreEqual(
-      output,
-                d3.ToString(),
-             name + ": expected: [" + d4.UnsignedMantissa + " " +
+              {
+object objectTemp = output;
+object objectTemp2 = d3.ToString();
+string messageTemp = name + ": expected: [" + d4.UnsignedMantissa + " " +
                   d4.Exponent +
               "]\\n" + "but was: [" + d3.UnsignedMantissa + " " +
-                    d3.Exponent +
-                  "]");
+                d3.Exponent + "]";
+Assert.AreEqual(objectTemp, objectTemp2, messageTemp);
+}
             }
           }
         }

@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO.Numbers {
   internal static class DecimalUtility {
-    private static readonly EInteger[] valueBigIntPowersOfTen = {
+    private static readonly EInteger[] ValueBigIntPowersOfTen = {
       EInteger.One, (EInteger)10, (EInteger)100, (EInteger)1000,
       (EInteger)10000, (EInteger)100000, (EInteger)1000000,
       (EInteger)10000000, (EInteger)100000000, (EInteger)1000000000,
@@ -20,7 +20,7 @@ namespace PeterO.Numbers {
       (EInteger)100000000000000000L, (EInteger)1000000000000000000L
     };
 
-    private static readonly EInteger[] valueBigIntPowersOfFive = {
+    private static readonly EInteger[] ValueBigIntPowersOfFive = {
       EInteger.One, (EInteger)5, (EInteger)25, (EInteger)125,
       (EInteger)625, (EInteger)3125, (EInteger)15625,
       (EInteger)78125, (EInteger)390625,
@@ -133,7 +133,7 @@ namespace PeterO.Numbers {
       }
     }
 
-    private static readonly EInteger valueBigShiftIteration =
+    private static readonly EInteger ValueBigShiftIteration =
       (EInteger)1000000;
 
     internal static EInteger ShiftLeft(EInteger val, EInteger bigShift) {
@@ -148,9 +148,9 @@ namespace PeterO.Numbers {
       if (val.IsZero) {
         return val;
       }
-      while (bigShift.CompareTo(valueBigShiftIteration) > 0) {
+      while (bigShift.CompareTo(ValueBigShiftIteration) > 0) {
         val <<= 1000000;
-        bigShift -= (EInteger)valueBigShiftIteration;
+        bigShift -= (EInteger)ValueBigShiftIteration;
       }
       var lastshift = (int)bigShift;
       val <<= lastshift;
@@ -300,10 +300,10 @@ namespace PeterO.Numbers {
       }
     }
 
-    private static readonly PowerCache powerOfFiveCache = new
+    private static readonly PowerCache ValuePowerOfFiveCache = new
     DecimalUtility.PowerCache();
 
-    private static readonly PowerCache powerOfTenCache = new
+    private static readonly PowerCache ValuePowerOfTenCache = new
       DecimalUtility.PowerCache();
 
     internal static EInteger FindPowerOfFiveFromBig(EInteger diff) {
@@ -321,12 +321,12 @@ namespace PeterO.Numbers {
       EInteger mantissa = EInteger.One;
       EInteger bigpow;
       EInteger origdiff = diff;
-      bigpow = powerOfFiveCache.GetCachedPower(origdiff);
+      bigpow = ValuePowerOfFiveCache.GetCachedPower(origdiff);
       if (bigpow != null) {
         return bigpow;
       }
       EInteger[] otherPower =
-      powerOfFiveCache.FindCachedPowerOrSmaller(origdiff);
+      ValuePowerOfFiveCache.FindCachedPowerOrSmaller(origdiff);
       if (otherPower != null) {
         intcurexp.SubtractBig(otherPower[0]);
         bigpow = otherPower[1];
@@ -351,11 +351,11 @@ namespace PeterO.Numbers {
         mantissa *= bigpow;
         intcurexp.AddInt(-9999999);
       }
-      powerOfFiveCache.AddPower(origdiff, mantissa);
+      ValuePowerOfFiveCache.AddPower(origdiff, mantissa);
       return mantissa;
     }
 
-    private static readonly EInteger valueBigInt36 = (EInteger)36;
+    private static readonly EInteger ValueBigInt36 = (EInteger)36;
 
     internal static EInteger FindPowerOfTenFromBig(EInteger
     bigintExponent) {
@@ -366,7 +366,7 @@ namespace PeterO.Numbers {
       if (sign == 0) {
         return EInteger.One;
       }
-      if (bigintExponent.CompareTo(valueBigInt36) <= 0) {
+      if (bigintExponent.CompareTo(ValueBigInt36) <= 0) {
         return FindPowerOfTen((int)bigintExponent);
       }
       FastInteger intcurexp = FastInteger.FromBig(bigintExponent);
@@ -395,7 +395,7 @@ namespace PeterO.Numbers {
       return mantissa;
     }
 
-    private static readonly EInteger valueFivePower40 =
+    private static readonly EInteger ValueFivePower40 =
     ((EInteger)95367431640625L) * (EInteger)95367431640625L;
 
     internal static EInteger FindPowerOfFive(int precision) {
@@ -408,35 +408,35 @@ namespace PeterO.Numbers {
       EInteger bigpow;
       EInteger ret;
       if (precision <= 27) {
-        return valueBigIntPowersOfFive[(int)precision];
+        return ValueBigIntPowersOfFive[(int)precision];
       }
       if (precision == 40) {
-        return valueFivePower40;
+        return ValueFivePower40;
       }
       int startPrecision = precision;
-      bigpow = powerOfFiveCache.GetCachedPowerInt(precision);
+      bigpow = ValuePowerOfFiveCache.GetCachedPowerInt(precision);
       if (bigpow != null) {
         return bigpow;
       }
       var origPrecision = (EInteger)precision;
       if (precision <= 54) {
         if ((precision & 1) == 0) {
-          ret = valueBigIntPowersOfFive[(int)(precision >> 1)];
+          ret = ValueBigIntPowersOfFive[(int)(precision >> 1)];
           ret *= (EInteger)ret;
-          powerOfFiveCache.AddPower(origPrecision, ret);
+          ValuePowerOfFiveCache.AddPower(origPrecision, ret);
           return ret;
         }
-        ret = valueBigIntPowersOfFive[27];
-        bigpow = valueBigIntPowersOfFive[((int)precision) - 27];
+        ret = ValueBigIntPowersOfFive[27];
+        bigpow = ValueBigIntPowersOfFive[((int)precision) - 27];
         ret *= (EInteger)bigpow;
-        powerOfFiveCache.AddPower(origPrecision, ret);
+        ValuePowerOfFiveCache.AddPower(origPrecision, ret);
         return ret;
       }
       if (precision > 40 && precision <= 94) {
-        ret = valueFivePower40;
+        ret = ValueFivePower40;
         bigpow = FindPowerOfFive(precision - 40);
         ret *= (EInteger)bigpow;
-        powerOfFiveCache.AddPower(origPrecision, ret);
+        ValuePowerOfFiveCache.AddPower(origPrecision, ret);
         return ret;
       }
       EInteger[] otherPower;
@@ -444,7 +444,7 @@ namespace PeterO.Numbers {
       bigpow = EInteger.Zero;
       while (true) {
         otherPower =
-        powerOfFiveCache.FindCachedPowerOrSmaller((EInteger)precision);
+        ValuePowerOfFiveCache.FindCachedPowerOrSmaller((EInteger)precision);
         if (otherPower != null) {
           EInteger otherPower0 = otherPower[0];
           EInteger otherPower1 = otherPower[1];
@@ -462,7 +462,7 @@ namespace PeterO.Numbers {
       ret = !first ? bigpow : EInteger.One;
       while (precision > 0) {
         if (precision <= 27) {
-          bigpow = valueBigIntPowersOfFive[(int)precision];
+          bigpow = ValueBigIntPowersOfFive[(int)precision];
           if (first) {
             ret = bigpow;
           } else {
@@ -473,10 +473,10 @@ namespace PeterO.Numbers {
         }
         if (precision <= 9999999) {
           // Console.WriteLine("calcing pow for "+precision);
-          bigpow = valueBigIntPowersOfFive[1].pow(precision);
+          bigpow = ValueBigIntPowersOfFive[1].pow(precision);
           if (precision != startPrecision) {
             var bigprec = (EInteger)precision;
-            powerOfFiveCache.AddPower(bigprec, bigpow);
+            ValuePowerOfFiveCache.AddPower(bigprec, bigpow);
           }
           if (first) {
             ret = bigpow;
@@ -497,7 +497,7 @@ namespace PeterO.Numbers {
         first = false;
         precision -= 9999999;
       }
-      powerOfFiveCache.AddPower(origPrecision, ret);
+      ValuePowerOfFiveCache.AddPower(origPrecision, ret);
       return ret;
     }
 
@@ -511,32 +511,32 @@ namespace PeterO.Numbers {
       EInteger bigpow;
       EInteger ret;
       if (precision <= 18) {
-        return valueBigIntPowersOfTen[(int)precision];
+        return ValueBigIntPowersOfTen[(int)precision];
       }
       int startPrecision = precision;
-      bigpow = powerOfTenCache.GetCachedPowerInt(precision);
+      bigpow = ValuePowerOfTenCache.GetCachedPowerInt(precision);
       if (bigpow != null) {
         return bigpow;
       }
       var origPrecision = (EInteger)precision;
       if (precision <= 27) {
         var prec = (int)precision;
-        ret = valueBigIntPowersOfFive[prec];
+        ret = ValueBigIntPowersOfFive[prec];
         ret <<= prec;
-        powerOfTenCache.AddPower(origPrecision, ret);
+        ValuePowerOfTenCache.AddPower(origPrecision, ret);
         return ret;
       }
       if (precision <= 36) {
         if ((precision & 1) == 0) {
-          ret = valueBigIntPowersOfTen[(int)(precision >> 1)];
+          ret = ValueBigIntPowersOfTen[(int)(precision >> 1)];
           ret *= (EInteger)ret;
-          powerOfTenCache.AddPower(origPrecision, ret);
+          ValuePowerOfTenCache.AddPower(origPrecision, ret);
           return ret;
         }
-        ret = valueBigIntPowersOfTen[18];
-        bigpow = valueBigIntPowersOfTen[((int)precision) - 18];
+        ret = ValueBigIntPowersOfTen[18];
+        bigpow = ValueBigIntPowersOfTen[((int)precision) - 18];
         ret *= (EInteger)bigpow;
-        powerOfTenCache.AddPower(origPrecision, ret);
+        ValuePowerOfTenCache.AddPower(origPrecision, ret);
         return ret;
       }
       EInteger[] otherPower;
@@ -544,7 +544,7 @@ namespace PeterO.Numbers {
       bigpow = EInteger.Zero;
       while (true) {
         otherPower =
-        powerOfTenCache.FindCachedPowerOrSmaller((EInteger)precision);
+        ValuePowerOfTenCache.FindCachedPowerOrSmaller((EInteger)precision);
         if (otherPower != null) {
           EInteger otherPower0 = otherPower[0];
           EInteger otherPower1 = otherPower[1];
@@ -562,7 +562,7 @@ namespace PeterO.Numbers {
       ret = !first ? bigpow : EInteger.One;
       while (precision > 0) {
         if (precision <= 18) {
-          bigpow = valueBigIntPowersOfTen[(int)precision];
+          bigpow = ValueBigIntPowersOfTen[(int)precision];
           if (first) {
             ret = bigpow;
           } else {
@@ -577,7 +577,7 @@ namespace PeterO.Numbers {
           bigpow <<= precision;
           if (precision != startPrecision) {
             var bigprec = (EInteger)precision;
-            powerOfTenCache.AddPower(bigprec, bigpow);
+            ValuePowerOfTenCache.AddPower(bigprec, bigpow);
           }
           if (first) {
             ret = bigpow;
@@ -598,7 +598,7 @@ namespace PeterO.Numbers {
         first = false;
         precision -= 9999999;
       }
-      powerOfTenCache.AddPower(origPrecision, ret);
+      ValuePowerOfTenCache.AddPower(origPrecision, ret);
       return ret;
     }
 
@@ -645,7 +645,7 @@ throw new ArgumentException("doesn't satisfy precision==null || digits!=null");
           EInteger bigrem;
           EInteger bigquo;
 {
-EInteger[] divrem=(bigmant).DivRem(bigradix);
+EInteger[] divrem = bigmant.DivRem(bigradix);
 bigquo = divrem[0];
 bigrem = divrem[1]; }
           if (!bigrem.IsZero) {

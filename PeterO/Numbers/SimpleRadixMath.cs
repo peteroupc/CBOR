@@ -84,7 +84,7 @@ namespace PeterO.Numbers {
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
         return (ctxDest.Flags == 0) ? this.SignalInvalid(ctxDest) : thisValue;
       }
-      EInteger mant = (this.GetHelper().GetMantissa(thisValue)).Abs();
+      EInteger mant = this.GetHelper().GetMantissa(thisValue).Abs();
       if (mant.IsZero) {
         return afterQuantize ? this.GetHelper().CreateNewWithFlags(
           mant,
@@ -148,7 +148,7 @@ namespace PeterO.Numbers {
     }
 
     private T ReturnQuietNaN(T thisValue, EContext ctx) {
-      EInteger mant = (this.GetHelper().GetMantissa(thisValue)).Abs();
+      EInteger mant = this.GetHelper().GetMantissa(thisValue).Abs();
       var mantChanged = false;
       if (!mant.IsZero && ctx != null && ctx.HasMaxPrecision) {
         EInteger limit = this.GetHelper().MultiplyByRadixPower(
@@ -238,7 +238,7 @@ namespace PeterO.Numbers {
         return val;
       }
       FastInteger fastPrecision = FastInteger.FromBig(ctx.Precision);
-      EInteger mant = (this.GetHelper().GetMantissa(val)).Abs();
+      EInteger mant = this.GetHelper().GetMantissa(val).Abs();
       FastInteger digits =
         this.GetHelper().CreateShiftAccumulator(mant).GetDigitLength();
       EContext ctx2 = ctx.WithBlankFlags().WithTraps(0);
@@ -426,9 +426,9 @@ namespace PeterO.Numbers {
       pow = this.RoundBeforeOp(pow, ctx2);
       // Console.WriteLine("op now " + thisValue + ", "+pow);
       int powSign = this.GetHelper().GetSign(pow);
-      thisValue = (powSign == 0 && this.GetHelper().GetSign(thisValue) == 0)?
-        (this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(1), ctx2)):
-        (this.wrapper.Power(thisValue, pow, ctx2));
+      thisValue = (powSign == 0 && this.GetHelper().GetSign(thisValue) == 0) ?
+        this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(1), ctx2) :
+        this.wrapper.Power(thisValue, pow, ctx2);
       // Console.WriteLine("was " + thisValue);
       thisValue = this.PostProcessAfterDivision(thisValue, ctx, ctx2);
       // Console.WriteLine("result was " + thisValue);
@@ -656,11 +656,13 @@ namespace PeterO.Numbers {
           this.wrapper.RoundToPrecision(this.GetHelper().ValueOf(0), ctx2) :
           augend;
         thisValue = this.RoundToPrecision(thisValue, ctx2);
-      } else thisValue = !zeroB ? this.wrapper.MultiplyAndAdd(
-     thisValue,
-     multiplicand,
-     augend,
-     ctx2) : this.wrapper.Multiply(thisValue, multiplicand, ctx2);
+      } else {
+        thisValue = !zeroB ? this.wrapper.MultiplyAndAdd(
+thisValue,
+multiplicand,
+augend,
+ctx2) : this.wrapper.Multiply(thisValue, multiplicand, ctx2);
+      }
       return this.PostProcess(thisValue, ctx, ctx2);
     }
 
