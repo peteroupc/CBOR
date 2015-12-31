@@ -14,8 +14,6 @@ Arbitrary-precision rational number. This class cannot be inherited; this is a c
 
 Initializes a new instance of the arbitrary-precision rational number class.
 
-Not documented yet.
-
 <b>Parameters:</b>
 
  * <i>numerator</i>: An arbitrary-precision integer.
@@ -196,7 +194,7 @@ Zero if the values are equal; a negative number if this instance is less, or a p
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>other</i>
+The parameter <i>other</i>
  is null.
 
 ### CompareToBinary
@@ -217,7 +215,7 @@ Zero if the values are equal; a negative number if this instance is less, or a p
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>other</i>
+The parameter <i>other</i>
  is null.
 
 ### CompareToDecimal
@@ -238,7 +236,7 @@ Zero if the values are equal; a negative number if this instance is less, or a p
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>other</i>
+The parameter <i>other</i>
  is null.
 
 ### Create
@@ -280,7 +278,7 @@ An arbitrary-precision rational number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>numerator</i>
+The parameter <i>numerator</i>
  or  <i>denominator</i>
  is null.
 

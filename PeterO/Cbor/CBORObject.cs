@@ -427,8 +427,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Item(PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Item(PeterO.Cbor.CBORObject)"]/*'/>
     public CBORObject this[CBORObject key] {
       get {
         if (key == null) {
@@ -458,8 +457,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Item(System.String)"]/*'
-    /// />
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.Item(System.String)"]/*'/>
     public CBORObject this[string key] {
       get {
         if (key == null) {
@@ -487,8 +485,7 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddConverter``1(System.Type,PeterO.Cbor.ICBORConverter{``0})"]/*'/>
     public static void AddConverter<T>(Type type, ICBORConverter<T> converter) {
       if (type == null) {
         throw new ArgumentNullException("type");
@@ -512,15 +509,13 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Addition(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Addition(CBORObject first, CBORObject second) {
       return CBORObjectMath.Addition(first, second);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.BigInteger,PeterO.Cbor.ICBORTag)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.BigInteger,PeterO.Cbor.ICBORTag)"]/*'/>
     public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
       if (bigintTag == null) {
         throw new ArgumentNullException("bigintTag");
@@ -543,15 +538,13 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[])"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[])"]/*'/>
     public static CBORObject DecodeFromBytes(byte[] data) {
       return DecodeFromBytes(data, CBOREncodeOptions.None);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.DecodeFromBytes(System.Byte[],PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject DecodeFromBytes(
 byte[] data,
 CBOREncodeOptions options) {
@@ -595,22 +588,19 @@ CBOREncodeOptions options) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Divide(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Divide(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Divide(CBORObject first, CBORObject second) {
       return CBORObjectMath.Divide(first, second);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String)"]/*'/>
     public static CBORObject FromJSONString(string str) {
       return FromJSONString(str, CBOREncodeOptions.None);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.CBOREncodeOptions)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromJSONString(System.String,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject FromJSONString(
 string str,
 CBOREncodeOptions options) {
@@ -640,23 +630,20 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int64)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int64)"]/*'/>
     public static CBORObject FromObject(long value) {
       return (value >= 0L && value < 24L) ? valueFixedObjects[(int)value] :
         (new CBORObject(CBORObjectTypeInteger, value));
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject FromObject(CBORObject value) {
       return value ?? CBORObject.Null;
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.BigInteger)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.BigInteger)"]/*'/>
     public static CBORObject FromObject(BigInteger bigintValue) {
       if ((object)bigintValue == (object)null) {
         return CBORObject.Null;
@@ -671,8 +658,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedFloat)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedFloat)"]/*'/>
     public static CBORObject FromObject(ExtendedFloat bigValue) {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
@@ -689,8 +675,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedRational)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedRational)"]/*'/>
     public static CBORObject FromObject(ExtendedRational bigValue) {
       return ((object)bigValue == (object)null) ? CBORObject.Null :
         ((bigValue.IsFinite && bigValue.Denominator.Equals(BigInteger.One)) ?
@@ -700,8 +685,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedDecimal)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedDecimal)"]/*'/>
     public static CBORObject FromObject(ExtendedDecimal otherValue) {
       if ((object)otherValue == (object)null) {
         return CBORObject.Null;
@@ -718,8 +702,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.String)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.String)"]/*'/>
     public static CBORObject FromObject(string strValue) {
       if (strValue == null) {
         return CBORObject.Null;
@@ -732,60 +715,52 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int32)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int32)"]/*'/>
     public static CBORObject FromObject(int value) {
       return (value >= 0 && value < 24) ? valueFixedObjects[value] :
         FromObject((long)value);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int16)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int16)"]/*'/>
     public static CBORObject FromObject(short value) {
       return (value >= 0 && value < 24) ? valueFixedObjects[value] :
         FromObject((long)value);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Char)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Char)"]/*'/>
     public static CBORObject FromObject(char value) {
       char[] valueChar = { value };
       return FromObject(new String(valueChar));
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Boolean)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Boolean)"]/*'/>
     public static CBORObject FromObject(bool value) {
       return value ? CBORObject.True : CBORObject.False;
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Byte)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Byte)"]/*'/>
     public static CBORObject FromObject(byte value) {
       return FromObject(((int)value) & 0xff);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Single)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Single)"]/*'/>
     public static CBORObject FromObject(float value) {
       return new CBORObject(CBORObjectTypeSingle, value);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Double)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Double)"]/*'/>
     public static CBORObject FromObject(double value) {
       return new CBORObject(CBORObjectTypeDouble, value);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Byte[])"]/*'/>
     public static CBORObject FromObject(byte[] bytes) {
       if (bytes == null) {
         return CBORObject.Null;
@@ -796,8 +771,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Cbor.CBORObject[])"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Cbor.CBORObject[])"]/*'/>
     public static CBORObject FromObject(CBORObject[] array) {
       if (array == null) {
         return CBORObject.Null;
@@ -810,8 +784,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int32[])"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int32[])"]/*'/>
     public static CBORObject FromObject(int[] array) {
       if (array == null) {
         return CBORObject.Null;
@@ -824,8 +797,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int64[])"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Int64[])"]/*'/>
     public static CBORObject FromObject(long[] array) {
       if (array == null) {
         return CBORObject.Null;
@@ -839,8 +811,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``1(System.Collections.Generic.IList{``0})"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``1(System.Collections.Generic.IList{``0})"]/*'/>
     public static CBORObject FromObject<T>(IList<T> value) {
       if (value == null) {
         return CBORObject.Null;
@@ -856,8 +827,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``1(System.Collections.Generic.IEnumerable{``0})"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``1(System.Collections.Generic.IEnumerable{``0})"]/*'/>
     public static CBORObject FromObject<T>(IEnumerable<T> value) {
       if (value == null) {
         return CBORObject.Null;
@@ -870,8 +840,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``2(System.Collections.Generic.IDictionary{``0,``1})"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject``2(System.Collections.Generic.IDictionary{``0,``1})"]/*'/>
     public static CBORObject FromObject<TKey, TValue>(IDictionary<TKey,
                     TValue> dic) {
       if (dic == null) {
@@ -887,8 +856,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.Object)"]/*'/>
     public static CBORObject FromObject(object obj) {
       if (obj == null) {
         return CBORObject.Null;
@@ -994,8 +962,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,PeterO.BigInteger)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,PeterO.BigInteger)"]/*'/>
     public static CBORObject FromObjectAndTag(
       object valueOb,
       BigInteger bigintTag) {
@@ -1036,8 +1003,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.Int32)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.Int32)"]/*'/>
     public static CBORObject FromObjectAndTag(
       object valueObValue,
       int smallTag) {
@@ -1052,8 +1018,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromSimpleValue(System.Int32)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromSimpleValue(System.Int32)"]/*'/>
     public static CBORObject FromSimpleValue(int simpleValue) {
       if (simpleValue < 0) {
         throw new ArgumentException("simpleValue (" + simpleValue +
@@ -1076,8 +1041,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Multiply(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Multiply(CBORObject first, CBORObject second) {
       return CBORObjectMath.Multiply(first, second);
     }
@@ -1095,8 +1059,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream)"]/*'/>
     public static CBORObject Read(Stream stream) {
       if (stream == null) {
   throw new ArgumentNullException("stream");
@@ -1109,8 +1072,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject Read(Stream stream, CBOREncodeOptions options) {
       if (options == null) {
   throw new ArgumentNullException("options");
@@ -1128,15 +1090,13 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream)"]/*'/>
     public static CBORObject ReadJSON(Stream stream) {
       return ReadJSON(stream, CBOREncodeOptions.None);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
   public static CBORObject ReadJSON(
 Stream stream,
 CBOREncodeOptions options) {
@@ -1170,22 +1130,19 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remainder(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remainder(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Remainder(CBORObject first, CBORObject second) {
       return CBORObjectMath.Remainder(first, second);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Subtract(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Subtract(PeterO.Cbor.CBORObject,PeterO.Cbor.CBORObject)"]/*'/>
     public static CBORObject Subtract(CBORObject first, CBORObject second) {
       return CBORObjectMath.Subtract(first, second);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream)"]/*'/>
     public static void Write(string str, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -1198,8 +1155,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.String,System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static void Write(
       string str,
       Stream stream,
@@ -1225,8 +1181,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedFloat,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedFloat,System.IO.Stream)"]/*'/>
     public static void Write(ExtendedFloat bignum, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -1259,8 +1214,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedRational,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedRational,System.IO.Stream)"]/*'/>
     public static void Write(ExtendedRational rational, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -1285,8 +1239,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedDecimal,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedDecimal,System.IO.Stream)"]/*'/>
     public static void Write(ExtendedDecimal bignum, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -1319,8 +1272,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.BigInteger,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.BigInteger,System.IO.Stream)"]/*'/>
     public static void Write(BigInteger bigint, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -1412,8 +1364,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int64,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int64,System.IO.Stream)"]/*'/>
     public static void Write(long value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -1428,8 +1379,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int32,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int32,System.IO.Stream)"]/*'/>
     public static void Write(int value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -1458,15 +1408,13 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int16,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Int16,System.IO.Stream)"]/*'/>
     public static void Write(short value, Stream stream) {
       Write((long)value, stream);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Char,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Char,System.IO.Stream)"]/*'/>
     public static void Write(char value, Stream stream) {
       if (value >= 0xd800 && value < 0xe000) {
         throw new ArgumentException("Value is a surrogate code point.");
@@ -1476,8 +1424,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Boolean,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Boolean,System.IO.Stream)"]/*'/>
     public static void Write(bool value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -1486,8 +1433,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Byte,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Byte,System.IO.Stream)"]/*'/>
     public static void Write(byte value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -1501,8 +1447,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Single,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Single,System.IO.Stream)"]/*'/>
     public static void Write(float value, Stream s) {
       if (s == null) {
         throw new ArgumentNullException("s");
@@ -1515,8 +1460,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Double,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Double,System.IO.Stream)"]/*'/>
     public static void Write(double value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -1534,8 +1478,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Cbor.CBORObject,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Cbor.CBORObject,System.IO.Stream)"]/*'/>
     public static void Write(CBORObject value, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -1548,15 +1491,13 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream)"]/*'/>
     public static void Write(object objValue, Stream stream) {
       Write(objValue, stream, CBOREncodeOptions.None);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(System.Object,System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static void Write(
       object objValue,
       Stream output,
@@ -1595,8 +1536,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSON(System.Object,System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSON(System.Object,System.IO.Stream)"]/*'/>
     public static void WriteJSON(object obj, Stream outputStream) {
       if (obj == null) {
         outputStream.Write(ValueNullBytes, 0, ValueNullBytes.Length);
@@ -1626,8 +1566,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Add(System.Object,System.Object)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Add(System.Object,System.Object)"]/*'/>
     public CBORObject Add(object key, object valueOb) {
       if (this.ItemType == CBORObjectTypeMap) {
         CBORObject mapKey;
@@ -1656,8 +1595,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Add(PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Add(PeterO.Cbor.CBORObject)"]/*'/>
     public CBORObject Add(CBORObject obj) {
       if (this.ItemType == CBORObjectTypeArray) {
         IList<CBORObject> list = this.AsList();
@@ -1816,24 +1754,21 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt32"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt32"]/*'/>
     public bool CanTruncatedIntFitInInt32() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return (cn != null) && cn.CanTruncatedIntFitInInt32(this.ThisItem);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt64"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CanTruncatedIntFitInInt64"]/*'/>
     public bool CanTruncatedIntFitInInt64() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       return cn != null && cn.CanTruncatedIntFitInInt64(this.ThisItem);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CompareTo(PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CompareTo(PeterO.Cbor.CBORObject)"]/*'/>
     public int CompareTo(CBORObject other) {
       if (other == null) {
         return 1;
@@ -2049,16 +1984,14 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CompareToIgnoreTags(PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.CompareToIgnoreTags(PeterO.Cbor.CBORObject)"]/*'/>
     public int CompareToIgnoreTags(CBORObject other) {
       return (other == null) ? 1 : ((this == other) ? 0 :
                     this.Untag().CompareTo(other.Untag()));
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(PeterO.Cbor.CBORObject)"]/*'/>
     public bool ContainsKey(CBORObject key) {
       if (key == null) {
         throw new ArgumentNullException("key");
@@ -2071,8 +2004,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(System.String)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ContainsKey(System.String)"]/*'/>
     public bool ContainsKey(string key) {
       if (key == null) {
         throw new ArgumentNullException("key");
@@ -2091,8 +2023,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public byte[] EncodeToBytes(CBOREncodeOptions options) {
       if (options == null) {
   throw new ArgumentNullException("options");
@@ -2208,15 +2139,13 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Equals(System.Object)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Equals(System.Object)"]/*'/>
     public override bool Equals(object obj) {
       return this.Equals(obj as CBORObject);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Equals(PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Equals(PeterO.Cbor.CBORObject)"]/*'/>
     public bool Equals(CBORObject other) {
       var otherValue = other as CBORObject;
       if (otherValue == null) {
@@ -2319,8 +2248,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(System.Int32)"]/*'/>
     public bool HasTag(int tagValue) {
       if (tagValue < 0) {
         throw new ArgumentException("tagValue (" + tagValue +
@@ -2344,8 +2272,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.HasTag(PeterO.BigInteger)"]/*'/>
     public bool HasTag(BigInteger bigTagValue) {
       if (bigTagValue == null) {
         throw new ArgumentNullException("bigTagValue");
@@ -2363,8 +2290,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Insert(System.Int32,System.Object)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Insert(System.Int32,System.Object)"]/*'/>
     public CBORObject Insert(int index, object valueOb) {
       if (this.ItemType == CBORObjectTypeArray) {
         CBORObject mapValue;
@@ -2424,8 +2350,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remove(PeterO.Cbor.CBORObject)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Remove(PeterO.Cbor.CBORObject)"]/*'/>
     public bool Remove(CBORObject obj) {
       if (obj == null) {
         throw new ArgumentNullException("obj");
@@ -2447,8 +2372,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Set(System.Object,System.Object)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Set(System.Object,System.Object)"]/*'/>
     public CBORObject Set(object key, object valueOb) {
       if (this.ItemType == CBORObjectTypeMap) {
         CBORObject mapKey;
@@ -2689,8 +2613,7 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteJSONTo(System.IO.Stream)"]/*'/>
     public void WriteJSONTo(Stream outputStream) {
       if (outputStream == null) {
         throw new ArgumentNullException("outputStream");
@@ -2699,15 +2622,13 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream)"]/*'/>
     public void WriteTo(Stream stream) {
       this.WriteTo(stream, CBOREncodeOptions.None);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'
-    /// />
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.WriteTo(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public void WriteTo(Stream stream, CBOREncodeOptions options) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
@@ -3696,8 +3617,7 @@ nextchar);
       private object toObject;
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'
-    /// />
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.ToObject"]/*'/>
       public object ToObject {
         get {
           return this.toObject;
@@ -3711,8 +3631,7 @@ nextchar);
       private object converter;
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'
-    /// />
+    /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.ConverterInfo.Converter"]/*'/>
       public object Converter {
         get {
           return this.converter;

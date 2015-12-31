@@ -179,7 +179,7 @@ The sum of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### Add
@@ -203,7 +203,7 @@ The sum of thisValue and the other object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### CompareTo
@@ -229,7 +229,7 @@ Less than 0 if this object's value is less than the other value, or greater than
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>other</i>
+The parameter <i>other</i>
  is null.
 
 ### CompareToSignal
@@ -255,7 +255,7 @@ Quiet NaN if this object or the other object is NaN, or 0 if both objects have t
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>other</i>
+The parameter <i>other</i>
  is null.
 
 ### CompareToWithContext
@@ -281,7 +281,7 @@ Quiet NaN if this object or the other object is NaN, or 0 if both objects have t
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>other</i>
+The parameter <i>other</i>
  is null.
 
 ### Create
@@ -407,7 +407,7 @@ The quotient of the two numbers. Signals FlagDivideByZero and returns infinity i
 The result can't be exact because it would have a nonterminating binary expansion.
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### Divide
@@ -436,7 +436,7 @@ Either  <i>ctx</i>
  's precision is 0, and the result would have a nonterminating binary expansion; or, the rounding mode is Rounding.Unnecessary and the result is not exact.
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### DivideAndRemainderNaturalScale
@@ -499,7 +499,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### DivideToExponent
@@ -529,7 +529,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### DivideToExponent
@@ -559,7 +559,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  or  <i>desiredExponent</i>
  is null.
 
@@ -590,7 +590,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  or  <i>exponent</i>
  is null.
 
@@ -612,7 +612,7 @@ The integer part of the quotient of the two objects. Signals FlagDivideByZero an
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### DivideToIntegerNaturalScale
@@ -639,7 +639,7 @@ The integer part of the quotient of the two objects. Returns null if the return 
 The rounding mode is Rounding.Unnecessary and the integer part of the result is not exact.
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### DivideToIntegerZeroScale
@@ -663,7 +663,7 @@ The integer part of the quotient of the two objects. The exponent will be set to
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### DivideToSameExponent
@@ -690,7 +690,7 @@ The quotient of the two numbers. Signals FlagDivideByZero and returns infinity i
 The rounding mode is Rounding.Unnecessary and the result is not exact.
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### Equals
@@ -726,7 +726,7 @@ True if this object's mantissa and exponent are equal to those of another object
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>other</i>
+The parameter <i>other</i>
  is null.
 
 ### EqualsInternal
@@ -747,7 +747,7 @@ True if this object's mantissa and exponent are equal to those of another object
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### Exp
@@ -789,7 +789,7 @@ An arbitrary-precision binary float.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigint</i>
+The parameter <i>bigint</i>
  is null.
 
 ### FromDouble
@@ -861,7 +861,7 @@ A binary float with the same value as  <i>flt</i>
 
 Creates a binary float from a string that represents a number. See the four-parameter FromString method.
 
-The following example converts a number in the form of a string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
+The following example converts a number in the form of string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
     return arbitrary-precision binary float.FromString(str).ToDouble();
     }
 
@@ -929,9 +929,9 @@ Creates a binary float from a string that represents a number. Note that if the 
 
  * Optionally, "E+"/"e+" (positive exponent) or "E-"/"e-" (negative exponent) plus one or more digits specifying the exponent.
 
-The string can also be "-INF", "-Infinity" , "Infinity", "INF", quiet NaN ("NaN") followed by any number of digits, or signaling NaN ("sNaN") followed by any number of digits, all in any combination of upper and lower case.
+The string can also be "-INF", "-Infinity", "Infinity", "INF", quiet NaN ("NaN") followed by any number of digits, or signaling NaN ("sNaN") followed by any number of digits, all in any combination of upper and lower case.
 
-All characters mentioned above are the corresponding characters in the Basic Latin range. In particular, the digits must be the basic digits 0 to 9 (U+0030 to U+0039). The string is not allowed to contain white space characters, including spaces.
+All characters mentioned above are the corresponding characters in the Basic Latin range. In particular, the digits must be the basic digits 0 to 9 (U + 0030 to U + 0039). The string is not allowed to contain white space characters, including spaces.
 
 <b>Parameters:</b>
 
@@ -1117,7 +1117,7 @@ The larger value of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1145,7 +1145,7 @@ The larger value of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1170,7 +1170,7 @@ An arbitrary-precision binary float.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1198,7 +1198,7 @@ An arbitrary-precision binary float.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1223,7 +1223,7 @@ The smaller value of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1251,7 +1251,7 @@ The smaller value of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1276,7 +1276,7 @@ An arbitrary-precision binary float.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1304,7 +1304,7 @@ An arbitrary-precision binary float.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1359,7 +1359,7 @@ An arbitrary-precision binary float.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
+The parameter <i>bigPlaces</i>
  is null.
 
 ### MovePointLeft
@@ -1383,7 +1383,7 @@ An arbitrary-precision binary float.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
+The parameter <i>bigPlaces</i>
  is null.
 
 ### MovePointRight
@@ -1437,7 +1437,7 @@ An arbitrary-precision binary float.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
+The parameter <i>bigPlaces</i>
  is null.
 
 ### MovePointRight
@@ -1462,7 +1462,7 @@ A number whose scale is increased by  <i>bigPlaces</i>
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
+The parameter <i>bigPlaces</i>
  is null.
 
 ### Multiply
@@ -1486,7 +1486,7 @@ The product of the two binary floats.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>op</i>
+The parameter <i>op</i>
  is null.
 
 ### Multiply
@@ -1507,7 +1507,7 @@ The product of the two binary floats.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### MultiplyAndAdd
@@ -1531,7 +1531,7 @@ The result this * multiplicand + augend.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>multiplicand</i>
+The parameter <i>multiplicand</i>
  or  <i>augend</i>
  is null.
 
@@ -1559,7 +1559,7 @@ The result thisValue * multiplicand + augend.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>op</i>
+The parameter <i>op</i>
  or  <i>augend</i>
  is null.
 
@@ -1609,7 +1609,7 @@ An arbitrary-precision binary float.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>context</i>
+The parameter <i>context</i>
  is null.
 
 ### Negate
@@ -1692,7 +1692,7 @@ The parameter <i>ctx</i>
  has an unlimited exponent range.
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### PI
@@ -1790,7 +1790,7 @@ The parameter <i>ctx</i>
  is null or the precision is unlimited (the context's Precision property is 0), and the exponent has a fractional part.
 
  * System.ArgumentNullException:
-The parameter  <i>exponent</i>
+The parameter <i>exponent</i>
  is null.
 
 ### Precision
@@ -1842,7 +1842,7 @@ A binary float with the same value as this object but with the exponent changed.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>desiredExponent</i>
+The parameter <i>desiredExponent</i>
  is null.
 
 ### Quantize
@@ -1866,7 +1866,7 @@ A binary float with the same value as this object but with the exponent changed.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### Reduce
@@ -1905,7 +1905,7 @@ The remainder of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### RemainderNaturalScale
@@ -1926,7 +1926,7 @@ An arbitrary-precision binary float.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### RemainderNaturalScale
@@ -1950,7 +1950,7 @@ An arbitrary-precision binary float.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### RemainderNear
@@ -1984,7 +1984,7 @@ The distance of the closest multiple. Signals FlagInvalid and returns not-a-numb
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### RoundToBinaryPrecision
@@ -2044,7 +2044,7 @@ A binary number rounded to the closest value representable in the given precisio
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>exponent</i>
+The parameter <i>exponent</i>
  is null.
 
 ### RoundToExponentExact
@@ -2086,7 +2086,7 @@ A binary number rounded to the closest value representable in the given precisio
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>exponent</i>
+The parameter <i>exponent</i>
  is null.
 
 ### RoundToIntegralExact
@@ -2186,7 +2186,7 @@ An arbitrary-precision binary float.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
+The parameter <i>bigPlaces</i>
  is null.
 
 ### ScaleByPowerOfTwo
@@ -2211,7 +2211,7 @@ A number whose scale is increased by  <i>bigPlaces</i>
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
+The parameter <i>bigPlaces</i>
  is null.
 
 ### SquareRoot
@@ -2253,7 +2253,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### Subtract
@@ -2319,7 +2319,7 @@ This object's value is not an exact integer.
 
 Converts this value to a 64-bit floating-point number. The half-even rounding mode is used. If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
-The following example converts a number in the form of a string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
+The following example converts a number in the form of string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
     return arbitrary-precision binary float.FromString(str).ToDouble();
     }
 

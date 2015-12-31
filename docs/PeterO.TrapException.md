@@ -14,7 +14,7 @@ Exception thrown for arithmetic trap errors.
         PeterO.PrecisionContext ctx,
         object result);
 
-Initializes a new instance of the  class.
+Initializes a new instance of the class.
 
 <b>Parameters:</b>
 
@@ -22,7 +22,7 @@ Initializes a new instance of the  class.
 
  * <i>ctx</i>: A context object for arbitrary-precision arithmetic settings.
 
- * <i>result</i>: The desired result of the operation that caused the trap, such as an  `ExtendedDecimal`  or  `ExtendedFloat` .
+ * <i>result</i>: The desired result of the operation that caused the trap, such as an  `ExtendedDecimal`  or `ExtendedFloat` .
 
 ### Context
 

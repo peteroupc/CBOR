@@ -930,7 +930,7 @@ A byte array in CBOR format.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>options</i>
+The parameter <i>options</i>
  is null.
 
 ### EncodeToBytes
@@ -982,7 +982,7 @@ Generates a CBOR object from a string in JavaScript Object Notation (JSON) forma
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U+FEFF).
+ * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U + FEFF).
 
 <b>Returns:</b>
 
@@ -1007,7 +1007,7 @@ Generates a CBOR object from a string in JavaScript Object Notation (JSON) forma
 
 <b>Parameters:</b>
 
- * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U+FEFF).
+ * <i>str</i>: A string in JSON format. The entire string must contain a single JSON object and not multiple objects. The string may not begin with a byte-order mark (U + FEFF).
 
  * <i>options</i>: A CBOREncodeOptions object.
 
@@ -1185,7 +1185,7 @@ A CBOR array object where each element of the given array is copied to a new arr
     public static PeterO.Cbor.CBORObject FromObject(
         object obj);
 
-Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null , primitive types, strings, CBORObject , arbitrary-precision decimal , arbitrary-precision binary float , arbitrary-precision rational number, the custom arbitrary-precision integer , lists, arrays, enumerations ( `Enum`  objects), and maps.In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET  `Enum`  objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.
+Generates a CBORObject from an arbitrary object. The following types are specially handled by this method: null , primitive types, strings, CBORObject , arbitrary-precision decimal , arbitrary-precision binary float , arbitrary-precision rational number, the custom arbitrary-precision integer , lists, arrays, enumerations (  `Enum`  objects), and maps.In the .NET version, if the object is a type not specially handled by this method, returns a CBOR map with the values of each of its read/write properties (or all properties in the case of an anonymous type). Properties are converted to their camel-case names (meaning if a name starts with A to Z, that letter is lower-cased). If the property name begins with the word "Is", that word is deleted from the name. Also, .NET  `Enum`  objects will be converted to their integer values, and a multidimensional array is converted to an array of arrays.
 
 In the Java version, if the object is a type not specially handled by this method, this method checks the CBOR object for methods starting with the word "get" or "is" that take no parameters, and returns a CBOR map with one entry for each such method found. For each method found, the starting word "get" or "is" is deleted from its name, and the name is converted to camel case (meaning if a name starts with A to Z, that letter is lower-cased). Also, Java  `Enum`  objects will be converted to the result of their name method.
 
@@ -1905,7 +1905,7 @@ There was an error in reading or parsing the data.
     public static PeterO.Cbor.CBORObject ReadJSON(
         System.IO.Stream stream);
 
-Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.)If a JSON object has the same key, only the last given value will be used for each duplicated key.
+Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U + FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U + 0001 to U + 007F). (In previous versions, only UTF-8 was allowed.)If a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -1933,7 +1933,7 @@ The data stream contains invalid encoding or is not in JSON format.
         System.IO.Stream stream,
         PeterO.Cbor.CBOREncodeOptions options);
 
-Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U+FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U+0001 to U+007F). (In previous versions, only UTF-8 was allowed.)By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
+Generates a CBOR object from a data stream in JavaScript Object Notation (JSON) format. The JSON stream may begin with a byte-order mark (U + FEFF). Since version 2.0, the JSON stream can be in UTF-8, UTF-16, or UTF-32 encoding; the encoding is detected by assuming that the first character read must be a byte-order mark or a nonzero basic character (U + 0001 to U + 007F). (In previous versions, only UTF-8 was allowed.)By default, if a JSON object has the same key, only the last given value will be used for each duplicated key.
 
 <b>Parameters:</b>
 
@@ -2060,7 +2060,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format. Th
 
  * If a number in the form of a big float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the big float is converted to null.)
 
- * The string will not begin with a byte-order mark (U+FEFF); RFC 7159 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
+ * The string will not begin with a byte-order mark (U + FEFF); RFC 7159 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
  * Byte strings are converted to Base64 URL by default.
 

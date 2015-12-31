@@ -187,7 +187,7 @@ The sum of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### Add
@@ -211,7 +211,7 @@ The sum of thisValue and the other object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### CompareTo
@@ -237,7 +237,7 @@ Less than 0 if this object's value is less than the other value, or greater than
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>other</i>
+The parameter <i>other</i>
  is null.
 
 ### CompareToBinary
@@ -278,7 +278,7 @@ Quiet NaN if this object or the other object is NaN, or 0 if both objects have t
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>other</i>
+The parameter <i>other</i>
  is null.
 
 ### CompareToWithContext
@@ -304,7 +304,7 @@ Quiet NaN if this object or the other object is NaN, or 0 if both objects have t
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>other</i>
+The parameter <i>other</i>
  is null.
 
 ### Create
@@ -419,7 +419,7 @@ The quotient of the two numbers. Signals FlagDivideByZero and returns infinity i
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### Divide
@@ -445,7 +445,7 @@ is null or  <i>ctx</i>
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### DivideAndRemainderNaturalScale
@@ -505,7 +505,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### DivideToExponent
@@ -532,7 +532,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### DivideToExponent
@@ -559,7 +559,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  or  <i>desiredExponent</i>
  is null.
 
@@ -587,7 +587,7 @@ The quotient of the two objects. Signals FlagDivideByZero and returns infinity i
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  or  <i>exponent</i>
  is null.
 
@@ -609,7 +609,7 @@ The integer part of the quotient of the two objects. Signals FlagDivideByZero an
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### DivideToIntegerNaturalScale
@@ -633,7 +633,7 @@ The integer part of the quotient of the two objects. Signals FlagInvalid and ret
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### DivideToIntegerZeroScale
@@ -657,7 +657,7 @@ The integer part of the quotient of the two objects. The exponent will be set to
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### DivideToSameExponent
@@ -681,7 +681,7 @@ The quotient of the two numbers. Signals FlagDivideByZero and returns infinity i
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### Equals
@@ -748,7 +748,7 @@ An arbitrary-precision decimal number with the exponent set to 0.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigint</i>
+The parameter <i>bigint</i>
  is null.
 
 ### FromDouble
@@ -756,7 +756,7 @@ The parameter  <i>bigint</i>
     public static PeterO.ExtendedDecimal FromDouble(
         double dbl);
 
-Creates a decimal number from a 64-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 64-bit floating-point number is not always the value you get when you pass a literal decimal number (for example, calling  `ExtendedDecimal.FromDouble(0.1f)` ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the value of the closest "double" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")` ).
+Creates a decimal number from a 64-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 64-bit floating-point number is not always the value you get when you pass a literal decimal number (for example, calling  `ExtendedDecimal.FromDouble(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the value of the closest "double" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
 
 <b>Parameters:</b>
 
@@ -823,7 +823,7 @@ An arbitrary-precision decimal number with the exponent set to 0.
     public static PeterO.ExtendedDecimal FromSingle(
         float flt);
 
-Creates a decimal number from a 32-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 32-bit floating-point number is not always the value you get when you pass a literal decimal number (for example, calling  `ExtendedDecimal.FromSingle(0.1f)` ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the the value of the closest "float" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")` ).
+Creates a decimal number from a 32-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 32-bit floating-point number is not always the value you get when you pass a literal decimal number (for example, calling  `ExtendedDecimal.FromSingle(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the the value of the closest "float" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
 
 <b>Parameters:</b>
 
@@ -911,9 +911,9 @@ The format of the string generally consists of:
 
  * Optionally, "E+"/"e+" (positive exponent) or "E-"/"e-" (negative exponent) plus one or more digits specifying the exponent.
 
-The string can also be "-INF", "-Infinity" , "Infinity", "INF" , quiet NaN ("NaN" /"-NaN") followed by any number of digits, or signaling NaN ("sNaN" /"-sNaN") followed by any number of digits, all in any combination of upper and lower case.
+The string can also be "-INF", "-Infinity", "Infinity", "INF" , quiet NaN ("NaN" /"-NaN") followed by any number of digits, or signaling NaN ("sNaN" /"-sNaN") followed by any number of digits, all in any combination of upper and lower case.
 
-All characters mentioned above are the corresponding characters in the Basic Latin range. In particular, the digits must be the basic digits 0 to 9 (U+0030 to U+0039). The string is not allowed to contain white space characters, including spaces.
+All characters mentioned above are the corresponding characters in the Basic Latin range. In particular, the digits must be the basic digits 0 to 9 (U + 0030 to U + 0039). The string is not allowed to contain white space characters, including spaces.
 
 <b>Parameters:</b>
 
@@ -1090,7 +1090,7 @@ The larger value of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1118,7 +1118,7 @@ The larger value of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1143,7 +1143,7 @@ An arbitrary-precision decimal number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1171,7 +1171,7 @@ An arbitrary-precision decimal number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1196,7 +1196,7 @@ The smaller value of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1224,7 +1224,7 @@ The smaller value of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1249,7 +1249,7 @@ An arbitrary-precision decimal number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1277,7 +1277,7 @@ An arbitrary-precision decimal number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1332,7 +1332,7 @@ An arbitrary-precision decimal number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
+The parameter <i>bigPlaces</i>
  is null.
 
 ### MovePointLeft
@@ -1356,7 +1356,7 @@ An arbitrary-precision decimal number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
+The parameter <i>bigPlaces</i>
  is null.
 
 ### MovePointRight
@@ -1410,7 +1410,7 @@ An arbitrary-precision decimal number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
+The parameter <i>bigPlaces</i>
  is null.
 
 ### MovePointRight
@@ -1435,7 +1435,7 @@ A number whose scale is increased by  <i>bigPlaces</i>
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
+The parameter <i>bigPlaces</i>
  is null.
 
 ### Multiply
@@ -1459,7 +1459,7 @@ The product of the two decimal numbers.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>op</i>
+The parameter <i>op</i>
  is null.
 
 ### Multiply
@@ -1480,7 +1480,7 @@ The product of the two decimal numbers.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### MultiplyAndAdd
@@ -1506,7 +1506,7 @@ The result this *  <i>multiplicand</i>
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>multiplicand</i>
+The parameter <i>multiplicand</i>
  or  <i>augend</i>
  is null.
 
@@ -1534,7 +1534,7 @@ The result thisValue * multiplicand + augend.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>op</i>
+The parameter <i>op</i>
  or  <i>augend</i>
  is null.
 
@@ -1584,7 +1584,7 @@ An arbitrary-precision decimal number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>context</i>
+The parameter <i>context</i>
  is null.
 
 ### Negate
@@ -1654,7 +1654,7 @@ Returns the next value that is closer to the other object' s value than this obj
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### PI
@@ -1744,7 +1744,7 @@ This^exponent. Signals the flag FlagInvalid and returns NaN if this object and e
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>exponent</i>
+The parameter <i>exponent</i>
  is null.
 
 ### Precision
@@ -1815,7 +1815,7 @@ A decimal number with the same value as this object but with the exponent change
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>desiredExponent</i>
+The parameter <i>desiredExponent</i>
  is null.
 
 ### Quantize
@@ -1839,7 +1839,7 @@ A decimal number with the same value as this object but with the exponent change
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### Reduce
@@ -1879,7 +1879,7 @@ The remainder of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### RemainderNaturalScale
@@ -1900,7 +1900,7 @@ An arbitrary-precision decimal number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### RemainderNaturalScale
@@ -1924,7 +1924,7 @@ An arbitrary-precision decimal number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### RemainderNear
@@ -1958,7 +1958,7 @@ The distance of the closest multiple. Signals FlagInvalid and returns not-a-numb
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### RoundToBinaryPrecision
@@ -2018,7 +2018,7 @@ A decimal number rounded to the closest value representable in the given precisi
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>exponent</i>
+The parameter <i>exponent</i>
  is null.
 
 ### RoundToExponentExact
@@ -2060,7 +2060,7 @@ A decimal number rounded to the closest value representable in the given precisi
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>exponent</i>
+The parameter <i>exponent</i>
  is null.
 
 ### RoundToIntegralExact
@@ -2160,7 +2160,7 @@ An arbitrary-precision decimal number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
+The parameter <i>bigPlaces</i>
  is null.
 
 ### ScaleByPowerOfTen
@@ -2185,7 +2185,7 @@ A number whose scale is increased by  <i>bigPlaces</i>
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigPlaces</i>
+The parameter <i>bigPlaces</i>
  is null.
 
 ### SquareRoot
@@ -2222,7 +2222,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### Subtract
