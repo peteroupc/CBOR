@@ -103,14 +103,12 @@ parameters);
     }
 
     public static object GetProperty(object obj, string name) {
-      BindingFlags flags = BindingFlags.Public | 
+      BindingFlags flags = BindingFlags.Public |
         BindingFlags.NonPublic |
         BindingFlags.Instance | BindingFlags.GetProperty;
       return InvokeMethod(
 obj,
- obj.GetType().GetProperty(
-name,
-flags).GetGetMethod());
+obj.GetType().GetProperty(name, flags).GetGetMethod());
     }
 
     public static object GetPropertyStatic(string type, string name) {

@@ -8,6 +8,7 @@
     <Rule Id="CC0021" Action="None" />
     <Rule Id="CC0084" Action="Info" />
     <Rule Id="CC0090" Action="None" />
+    <Rule Id="CC0091" Action="None" />
     <Rule Id="CC0105" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">

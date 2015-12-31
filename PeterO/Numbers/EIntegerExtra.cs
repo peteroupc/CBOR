@@ -8,8 +8,12 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-    /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Numbers.EInteger"]/*'/>
+    /// <summary>An arbitrary-precision integer.
+    /// <para>Instances of this class are immutable, so they are inherently
+    /// safe for use by multiple threads. Multiple instances of this object
+    /// with the same value are interchangeable, so they should not be
+    /// compared using the "==" operator (which only checks if each side of
+    /// the operator is the same instance).</para></summary>
   internal sealed partial class EInteger {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Implicit(System.Int64)~PeterO.Numbers.EInteger"]/*'/>
@@ -198,8 +202,6 @@ EInteger bigintSecond) {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Pow(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]/*'/>
-    /// <summary>Not documented yet.</summary>
-    /// <returns>Not documented yet.</returns>
     public static EInteger Pow(EInteger bigValue, EInteger power) {
       if (bigValue == null) {
         throw new ArgumentNullException("bigValue");
@@ -223,8 +225,6 @@ EInteger bigintSecond) {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Pow(PeterO.Numbers.EInteger,System.Int32)"]/*'/>
-    /// <summary>Not documented yet.</summary>
-    /// <returns>Not documented yet.</returns>
     public static EInteger Pow(EInteger bigValue, int power) {
       if (bigValue == null) {
         throw new ArgumentNullException("bigValue");

@@ -17,8 +17,6 @@ namespace PeterO.Cbor {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORException.#ctor(System.String)"]/*'/>
-    /// <summary>Initializes a new instance of the
-    /// <see cref='CBORException'/> class.</summary>
     public CBORException(string message) : base(message) {
     }
 

@@ -13,12 +13,12 @@ Contains parameters for controlling the precision, rounding, and exponent range 
         int exponentMaxSmall,
         bool clampNormalExponents);
 
-Initializes a new instance of the  class. HasFlags will be set to false.
+Initializes a new instance of the class. HasFlags will be set to false.
 
 <b>Parameters:</b>
 
  * <i>precision</i>: The parameter  <i>precision</i>
- is not documented yet.
+is not documented yet.
 
  * <i>rounding</i>: The parameter  <i>rounding</i>
  is not documented yet.
