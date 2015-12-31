@@ -9,35 +9,32 @@ using System;
 using System.IO;
 
 namespace PeterO.Cbor {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CharacterReader"]'/>
+    // <include file='../../docs.xml'
+    // path='docs/doc[@name="T:PeterO.Cbor.CharacterReader"]/*'/>
   internal sealed class CharacterReader : ICharacterInput {
     private readonly int mode;
     private readonly bool errorThrow;
-    private int offset;
     private readonly bool dontSkipUtf8Bom;
-
-    private ICharacterInput reader;
-
     private readonly string str;
+    private readonly int strLength;
     private readonly IByteReader stream;
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String)"]'
-    /// />
+    private int offset;
+    private ICharacterInput reader;
+
+    // <include file='../../docs.xml'
+    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String)"]/*'/>
     public CharacterReader(string str) : this(str, false, false) {
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Boolean)"]'
-    /// />
+    // <include file='../../docs.xml'
+    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Boolean)"]/*'/>
     public CharacterReader(string str, bool skipByteOrderMark) :
       this(str, skipByteOrderMark, false) {
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Boolean,System.Boolean)"]'
-    /// />
+    // <include file='../../docs.xml'
+    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Boolean,System.Boolean)"]/*'/>
   public CharacterReader(
 string str,
 bool skipByteOrderMark,
@@ -45,7 +42,8 @@ bool errorThrow) {
       if (str == null) {
         throw new ArgumentNullException("str");
       }
-      this.offset = (skipByteOrderMark && str.Length > 0 && str[0] ==
+      this.strLength = str.Length;
+      this.offset = (skipByteOrderMark && this.strLength > 0 && str[0] ==
         0xfeff) ? 1 : 0;
       this.str = str;
       this.errorThrow = errorThrow;
@@ -54,29 +52,72 @@ bool errorThrow) {
       this.stream = null;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream)"]'
-    /// />
+    // <include file='../../docs.xml'
+    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Int32,System.Int32)"]/*'/>
+    public CharacterReader(string str, int offset, int length) :
+      this(str, offset, length, false, false) {
+    }
+
+    // <include file='../../docs.xml'
+    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.String,System.Int32,System.Int32,System.Boolean,System.Boolean)"]/*'/>
+    public CharacterReader(
+string str,
+int offset,
+int length,
+bool skipByteOrderMark,
+bool errorThrow) {
+      if (str == null) {
+  throw new ArgumentNullException("str");
+}
+if (offset < 0) {
+  throw new ArgumentException("offset (" + offset +
+    ") is less than " + 0);
+}
+if (offset > str.Length) {
+  throw new ArgumentException("offset (" + offset +
+    ") is more than " + str.Length);
+}
+if (length < 0) {
+  throw new ArgumentException("length (" + length +
+    ") is less than " + 0);
+}
+if (length > str.Length) {
+  throw new ArgumentException("length (" + length +
+    ") is more than " + str.Length);
+}
+if (str.Length - offset < length) {
+  throw new ArgumentException("str's length minus " + offset + " (" +
+    (str.Length - offset) + ") is less than " + length);
+}
+      this.strLength = length;
+      this.offset = (skipByteOrderMark && length > 0 && str[offset] ==
+        0xfeff) ? offset + 1 : 0;
+      this.str = str;
+      this.errorThrow = errorThrow;
+      this.mode = -1;
+      this.dontSkipUtf8Bom = false;
+      this.stream = null;
+    }
+
+    // <include file='../../docs.xml'
+    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream)"]/*'/>
     public CharacterReader(Stream stream) : this(stream, 0, false) {
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32,System.Boolean)"]'
-    /// />
+    // <include file='../../docs.xml'
+    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32,System.Boolean)"]/*'/>
     public CharacterReader(Stream stream, int mode, bool errorThrow) :
       this(stream, mode, errorThrow, false) {
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32)"]'
-    /// />
+    // <include file='../../docs.xml'
+    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32)"]/*'/>
     public CharacterReader(Stream stream, int mode) :
       this(stream, mode, false, false) {
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32,System.Boolean,System.Boolean)"]'
-    /// />
+    // <include file='../../docs.xml'
+    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32,System.Boolean,System.Boolean)"]/*'/>
     public CharacterReader(
 Stream stream,
 int mode,
@@ -96,9 +137,8 @@ bool dontSkipUtf8Bom) {
       int ReadByte();
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.Read(System.Int32[],System.Int32,System.Int32)"]'
-    /// />
+    // <include file='../../docs.xml'
+    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.Read(System.Int32[],System.Int32,System.Int32)"]/*'/>
     public int Read(int[] chars, int index, int length) {
       if (chars == null) {
         throw new ArgumentNullException("chars");
@@ -135,8 +175,8 @@ bool dontSkipUtf8Bom) {
       return count;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.ReadChar"]'/>
+    // <include file='../../docs.xml'
+    // path='docs/doc[@name="M:PeterO.Cbor.CharacterReader.ReadChar"]/*'/>
     public int ReadChar() {
       if (this.reader != null) {
         return this.reader.ReadChar();
@@ -144,8 +184,8 @@ bool dontSkipUtf8Bom) {
       if (this.stream != null) {
         return this.DetectUnicodeEncoding();
       } else {
-        int c = (this.offset < this.str.Length) ? this.str[this.offset] : -1;
-        if ((c & 0xfc00) == 0xd800 && this.offset + 1 < this.str.Length &&
+        int c = (this.offset < this.strLength) ? this.str[this.offset] : -1;
+        if ((c & 0xfc00) == 0xd800 && this.offset + 1 < this.strLength &&
                 this.str[this.offset + 1] >= 0xdc00 && this.str[this.offset + 1]
                 <= 0xdfff) {
           // Get the Unicode code point for the surrogate pair
@@ -573,9 +613,9 @@ this.errorThrow);
 
     private sealed class Utf8Reader : ICharacterInput {
       private readonly IByteReader stream;
-      private int lastChar;
       private readonly SavedState state;
       private readonly bool errorThrow;
+      private int lastChar;
 
       public Utf8Reader(IByteReader stream, bool errorThrow) {
         this.stream = stream;

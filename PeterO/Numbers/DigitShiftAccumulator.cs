@@ -11,8 +11,8 @@ namespace PeterO.Numbers {
   internal sealed class DigitShiftAccumulator : IShiftAccumulator {
     private int bitLeftmost;
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.DigitShiftAccumulator.LastDiscardedDigit"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.DigitShiftAccumulator.LastDiscardedDigit"]/*'/>
     public int LastDiscardedDigit {
       get {
         return this.bitLeftmost;
@@ -21,8 +21,8 @@ namespace PeterO.Numbers {
 
     private int bitsAfterLeftmost;
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.DigitShiftAccumulator.OlderDiscardedDigits"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.DigitShiftAccumulator.OlderDiscardedDigits"]/*'/>
     public int OlderDiscardedDigits {
       get {
         return this.bitsAfterLeftmost;
@@ -48,10 +48,10 @@ namespace PeterO.Numbers {
       }
     }
 
-    private static readonly EInteger valueTen = (EInteger)10;
+    private static readonly EInteger ValueTen = (EInteger)10;
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.DigitShiftAccumulator.ShiftedInt"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.DigitShiftAccumulator.ShiftedInt"]/*'/>
     public EInteger ShiftedInt {
       get {
         return this.isSmall ? ((EInteger)this.shiftedSmall) :
@@ -144,7 +144,7 @@ int olderDiscarded) {
         EInteger bigrem;
         EInteger bigquo;
 {
-EInteger[] divrem=(this.shiftedBigInt).DivRem((EInteger)10);
+EInteger[] divrem = this.shiftedBigInt.DivRem((EInteger)10);
 bigquo = divrem[0];
 bigrem = divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -167,7 +167,7 @@ bigrem = divrem[1]; }
         EInteger radixPower = DecimalUtility.FindPowerOfTen(startCount);
         EInteger bigquo;
 {
-EInteger[] divrem=(this.shiftedBigInt).DivRem(radixPower);
+EInteger[] divrem = this.shiftedBigInt.DivRem(radixPower);
 bigquo = divrem[0];
 bigrem = divrem[1]; }
         if (!bigrem.IsZero) {
@@ -192,7 +192,7 @@ bigrem = divrem[1]; }
         EInteger bigrem;
         EInteger bigquo;
 {
-EInteger[] divrem=(this.shiftedBigInt).DivRem(valueTen);
+EInteger[] divrem = this.shiftedBigInt.DivRem(ValueTen);
 bigquo = divrem[0];
 bigrem = divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -288,7 +288,7 @@ bigrem = divrem[1]; }
         EInteger bigrem;
         EInteger bigquo;
 {
-EInteger[] divrem=(this.shiftedBigInt).DivRem(valueTen);
+EInteger[] divrem = this.shiftedBigInt.DivRem(ValueTen);
 bigquo = divrem[0];
 bigrem = divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -306,7 +306,7 @@ bigrem = divrem[1]; }
         EInteger radixPower = DecimalUtility.FindPowerOfTen(diffInt);
         EInteger bigquo;
 {
-EInteger[] divrem=(this.shiftedBigInt).DivRem(radixPower);
+EInteger[] divrem = this.shiftedBigInt.DivRem(radixPower);
 bigquo = divrem[0];
 bigrem = divrem[1]; }
         var rem = (int)bigrem;
@@ -332,7 +332,7 @@ bigrem = divrem[1]; }
         DecimalUtility.FindPowerOfTen(digitDiff.AsInt32() - 1);
         EInteger bigquo;
 {
-EInteger[] divrem=(this.shiftedBigInt).DivRem(radixPower);
+EInteger[] divrem = this.shiftedBigInt.DivRem(radixPower);
 bigquo = divrem[0];
 bigrem = divrem[1]; }
         this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -342,7 +342,7 @@ bigrem = divrem[1]; }
         {
           EInteger bigquo2;
 {
-EInteger[] divrem=(bigquo).DivRem(valueTen);
+EInteger[] divrem = bigquo.DivRem(ValueTen);
 bigquo2 = divrem[0];
 bigrem = divrem[1]; }
           this.bitLeftmost = (int)bigrem;

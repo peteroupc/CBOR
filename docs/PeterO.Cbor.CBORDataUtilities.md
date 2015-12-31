@@ -17,7 +17,7 @@ Parses a number whose format follows the JSON specification. See #ParseJSONNumbe
 
 <b>Returns:</b>
 
-A CBOR object that represents the parsed number. Returns null if the parsing fails.
+A CBOR object that represents the parsed number. Returns positive zero if the number is a zero that starts with a minus sign (such as "-0" or "-0.0"). Returns null if the parsing fails.
 
 ### ParseJSONNumber
 
@@ -38,4 +38,4 @@ Parses a number whose format follows the JSON specification (RFC 7159). Roughly 
 
 <b>Returns:</b>
 
-A CBOR object that represents the parsed number. Returns null if the parsing fails.
+A CBOR object that represents the parsed number. Returns positive zero if the number is a zero that starts with a minus sign (such as "-0" or "-0.0"). Returns null if the parsing fails.

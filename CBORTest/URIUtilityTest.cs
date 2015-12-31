@@ -9,108 +9,128 @@ namespace Test {
       return typeof(CBORObject).Namespace;
     }
 
+    private static readonly string URIUtilityName =
+      CborNamespace() + ".URIUtility";
+
   private static void assertIdempotency(string s) {
-    Assert.IsTrue((bool)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility",
+    var cond = (bool)Reflect.InvokeStatic(
+URIUtilityName,
 "isValidIRI",
-s));
-    Assert.AreEqual(
-(string)Reflect.InvokeStatic(
-CborNamespace() + ".URIUtility",
+s);
+      Assert.IsTrue(cond);
+    {
+string stringTemp = (string)Reflect.InvokeStatic(
+URIUtilityName,
 "escapeURI",
 s,
-0),
-        (string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility" , "escapeURI",
-(string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility",
-"escapeURI" , s, 0), 0));
-    Assert.AreEqual(
-(string)Reflect.InvokeStatic(
-CborNamespace() + ".URIUtility",
+0);
+string stringTemp2 = (string)Reflect.InvokeStatic(
+URIUtilityName,
+"escapeURI",
+(string)Reflect.InvokeStatic(URIUtilityName, "escapeURI", s, 0),
+0);
+Assert.AreEqual(stringTemp, stringTemp2);
+}
+    {
+string stringTemp = (string)Reflect.InvokeStatic(
+URIUtilityName,
 "escapeURI",
 s,
-1),
-        (string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility" , "escapeURI",
-(string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility",
-"escapeURI" , s, 1), 1));
-    Assert.AreEqual(
-(string)Reflect.InvokeStatic(
-CborNamespace() + ".URIUtility",
+1);
+string stringTemp2 = (string)Reflect.InvokeStatic(
+URIUtilityName,
+"escapeURI",
+(string)Reflect.InvokeStatic(URIUtilityName, "escapeURI", s, 1),
+1);
+Assert.AreEqual(stringTemp, stringTemp2);
+}
+    {
+string stringTemp = (string)Reflect.InvokeStatic(
+URIUtilityName,
 "escapeURI",
 s,
-2),
-        (string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility" , "escapeURI",
-(string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility",
-"escapeURI" , s, 2), 2));
-    Assert.AreEqual(
-(string)Reflect.InvokeStatic(
-CborNamespace() + ".URIUtility",
+2);
+string stringTemp2 = (string)Reflect.InvokeStatic(
+URIUtilityName,
+"escapeURI",
+(string)Reflect.InvokeStatic(URIUtilityName, "escapeURI", s, 2),
+2);
+Assert.AreEqual(stringTemp, stringTemp2);
+}
+    {
+string stringTemp = (string)Reflect.InvokeStatic(
+URIUtilityName,
 "escapeURI",
 s,
-3),
-        (string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility" , "escapeURI",
-(string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility",
-"escapeURI" , s, 3), 3));
+3);
+string stringTemp2 = (string)Reflect.InvokeStatic(
+URIUtilityName,
+"escapeURI",
+(string)Reflect.InvokeStatic(URIUtilityName, "escapeURI", s, 3),
+3);
+Assert.AreEqual(stringTemp, stringTemp2);
+}
   }
 
   private static void assertIdempotencyNeg(string s) {
     Assert.IsTrue(!(
 (
 bool)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility",
+URIUtilityName,
 "isValidIRI",
 s)));
-    Assert.AreEqual(
-(string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility",
+    {
+string stringTemp = (string)Reflect.InvokeStatic(
+URIUtilityName,
 "escapeURI",
 s,
-0),
-        (string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility" , "escapeURI",
-(string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility",
-"escapeURI" , s, 0), 0));
-    Assert.AreEqual(
-(string)Reflect.InvokeStatic(
-CborNamespace() + ".URIUtility",
+0);
+string stringTemp2 = (string)Reflect.InvokeStatic(
+URIUtilityName,
+"escapeURI",
+(string)Reflect.InvokeStatic(URIUtilityName, "escapeURI", s, 0),
+0);
+Assert.AreEqual(stringTemp, stringTemp2);
+}
+    {
+string stringTemp = (string)Reflect.InvokeStatic(
+URIUtilityName,
 "escapeURI",
 s,
-1),
-        (string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility" , "escapeURI",
-(string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility",
-"escapeURI" , s, 1), 1));
-    Assert.AreEqual(
-(string)Reflect.InvokeStatic(
-CborNamespace() + ".URIUtility",
+1);
+string stringTemp2 = (string)Reflect.InvokeStatic(
+URIUtilityName,
+"escapeURI",
+(string)Reflect.InvokeStatic(URIUtilityName, "escapeURI", s, 1),
+1);
+Assert.AreEqual(stringTemp, stringTemp2);
+}
+    {
+string stringTemp = (string)Reflect.InvokeStatic(
+URIUtilityName,
 "escapeURI",
 s,
-2),
-        (string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility" , "escapeURI",
-(string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility",
-"escapeURI" , s, 2), 2));
-    Assert.AreEqual(
-(string)Reflect.InvokeStatic(
-CborNamespace() + ".URIUtility",
+2);
+string stringTemp2 = (string)Reflect.InvokeStatic(
+URIUtilityName,
+"escapeURI",
+(string)Reflect.InvokeStatic(URIUtilityName, "escapeURI", s, 2),
+2);
+Assert.AreEqual(stringTemp, stringTemp2);
+}
+    {
+string stringTemp = (string)Reflect.InvokeStatic(
+URIUtilityName,
 "escapeURI",
 s,
-3),
-        (string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility" , "escapeURI",
-(string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility",
-"escapeURI" , s, 3), 3));
+3);
+string stringTemp2 = (string)Reflect.InvokeStatic(
+URIUtilityName,
+"escapeURI",
+(string)Reflect.InvokeStatic(URIUtilityName, "escapeURI", s, 3),
+3);
+Assert.AreEqual(stringTemp, stringTemp2);
+}
   }
 
   private static void assertResolve(String src, String baseuri, String dest) {
@@ -118,7 +138,7 @@ CborNamespace() +".URIUtility",
     assertIdempotency(baseuri);
     assertIdempotency(dest);
     var res = (string)Reflect.InvokeStatic(
-CborNamespace() +".URIUtility",
+URIUtilityName,
 "relativeResolve",
 src,
 baseuri);

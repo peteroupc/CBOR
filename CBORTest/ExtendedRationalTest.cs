@@ -41,11 +41,8 @@ namespace Test {
         TestCommon.CompareTestGreater(rat, rat2);
       }
       TestCommon.CompareTestLess(
-        new ExtendedRational(
-          BigInteger.One,
-          (BigInteger)2),
- (
-          new ExtendedRational((BigInteger)4, BigInteger.One)));
+        new ExtendedRational(BigInteger.One, (BigInteger)2),
+        new ExtendedRational((BigInteger)4, BigInteger.One));
       for (var i = 0; i < 100; ++i) {
         BigInteger num = RandomObjects.RandomBigInteger(r);
         BigInteger den = RandomObjects.RandomBigInteger(r);

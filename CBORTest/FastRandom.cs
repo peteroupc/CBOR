@@ -20,29 +20,29 @@ namespace Test {
 
     private int w = 521288629;
     private int z = 362436069;
-    private static readonly int[] seeds = new int[32];
+    private static readonly int[] ValueSeeds = new int[32];
 
     private static void AddSeed(int seed) {
-      lock (seeds) {
+      lock (ValueSeeds) {
         if (seedIndex == -1) {
           seedIndex = 0;
         }
-        seeds[seedIndex ]^=seed;
+        ValueSeeds[seedIndex] ^= seed;
         seedCount = Math.Max(seedCount, seedIndex + 1);
         ++seedIndex;
-        seedIndex %= seeds.Length;
+        seedIndex %= ValueSeeds.Length;
       }
     }
 
     private static int GetSeed() {
-      lock (seeds) {
+      lock (ValueSeeds) {
         if (seedCount == 0) {
           return 0;
         }
         if (seedReadIndex >= seedCount) {
           seedReadIndex = 0;
         }
-        return seeds[seedReadIndex++];
+        return ValueSeeds[seedReadIndex++];
       }
     }
 
@@ -53,7 +53,7 @@ namespace Test {
     public FastRandom() {
       int randseed = GetSeed();
       this.rand = (randseed == 0) ? (new Random()) : (new Random(randseed));
-      int randseed2 = unchecked(GetSeed() ^SysRandNext(this.rand, this.rand));
+      int randseed2 = unchecked(GetSeed() ^ SysRandNext(this.rand, this.rand));
       this.rand2 = (randseed2 == 0) ? (new Random()) : (new Random(randseed2));
       this.count = ReseedCount;
     }

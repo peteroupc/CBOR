@@ -823,22 +823,22 @@ stringTemp);
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+      long longV = unchecked((long)0xFFFFFFF200000000L);
       Assert.AreEqual(
-        unchecked((long)0xFFFFFFF200000000L),
-        BigValueOf(unchecked((long)0xFFFFFFF200000000L))
-        .longValueChecked());
+longV,
+BigValueOf(longV).longValueChecked());
+      longV = unchecked((long)0xFFFFFFF280000000L);
       Assert.AreEqual(
-        unchecked((long)0xFFFFFFF280000000L),
-        BigValueOf(unchecked((long)0xFFFFFFF280000000L))
-        .longValueChecked());
+longV,
+BigValueOf(longV).longValueChecked());
+      longV = unchecked((long)0xFFFFFFF280000001L);
       Assert.AreEqual(
-        unchecked((long)0xFFFFFFF280000001L),
-        BigValueOf(unchecked((long)0xFFFFFFF280000001L))
-        .longValueChecked());
+longV,
+BigValueOf(longV).longValueChecked());
+      longV = unchecked((long)0xFFFFFFF27FFFFFFFL);
       Assert.AreEqual(
-        unchecked((long)0xFFFFFFF27FFFFFFFL),
-        BigValueOf(unchecked((long)0xFFFFFFF27FFFFFFFL))
-        .longValueChecked());
+longV,
+BigValueOf(longV).longValueChecked());
       Assert.AreEqual(
         0x0000000380000001L,
         BigValueOf(0x0000000380000001L).longValueChecked());
@@ -926,29 +926,31 @@ stringTemp);
       Assert.AreEqual(
         Int64.MaxValue,
         BigValueOf(Int64.MaxValue).longValueUnchecked());
-      Assert.AreEqual(
-        Int64.MaxValue,
-        BigValueOf(Int64.MinValue)
-        .subtract(BigInteger.One).longValueUnchecked());
+      {
+object objectTemp = Int64.MaxValue;
+object objectTemp2 = BigValueOf(Int64.MinValue)
+        .subtract(BigInteger.One).longValueUnchecked();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
       Assert.AreEqual(
         Int64.MinValue,
         BigValueOf(Int64.MaxValue).add(BigInteger.One).longValueUnchecked());
+      long aa = unchecked((long)0xFFFFFFF200000000L);
       Assert.AreEqual(
-        unchecked((long)0xFFFFFFF200000000L),
-        BigValueOf(unchecked((long)0xFFFFFFF200000000L))
-        .longValueUnchecked());
+              aa,
+              BigValueOf(aa).longValueUnchecked());
+      aa = unchecked((long)0xFFFFFFF280000000L);
       Assert.AreEqual(
-        unchecked((long)0xFFFFFFF280000000L),
-        BigValueOf(unchecked((long)0xFFFFFFF280000000L))
-        .longValueUnchecked());
+              aa,
+              BigValueOf(aa).longValueUnchecked());
+      aa = unchecked((long)0xFFFFFFF200000001L);
       Assert.AreEqual(
-        unchecked((long)0xFFFFFFF280000001L),
-        BigValueOf(unchecked((long)0xFFFFFFF280000001L))
-        .longValueUnchecked());
+              aa,
+              BigValueOf(aa).longValueUnchecked());
+      aa = unchecked((long)0xFFFFFFF27FFFFFFFL);
       Assert.AreEqual(
-        unchecked((long)0xFFFFFFF27FFFFFFFL),
-        BigValueOf(unchecked((long)0xFFFFFFF27FFFFFFFL))
-        .longValueUnchecked());
+              aa,
+              BigValueOf(aa).longValueUnchecked());
       Assert.AreEqual(
         0x0000000380000001L,
         BigValueOf(0x0000000380000001L).longValueUnchecked());
@@ -1144,25 +1146,37 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
       {
- string stringTemp = BigInteger.fromSubstring("0123456789" , 9, 10).ToString();
+ string stringTemp = BigInteger.fromSubstring(
+   "0123456789",
+   9,
+   10).ToString();
         Assert.AreEqual(
           "9",
           stringTemp);
       }
       {
- string stringTemp = BigInteger.fromSubstring("0123456789" , 8, 10).ToString();
+ string stringTemp = BigInteger.fromSubstring(
+   "0123456789",
+   8,
+   10).ToString();
         Assert.AreEqual(
           "89",
           stringTemp);
       }
       {
- string stringTemp = BigInteger.fromSubstring("0123456789" , 7, 10).ToString();
+ string stringTemp = BigInteger.fromSubstring(
+   "0123456789",
+   7,
+   10).ToString();
         Assert.AreEqual(
           "789",
           stringTemp);
       }
       {
- string stringTemp = BigInteger.fromSubstring("0123456789" , 6, 10).ToString();
+ string stringTemp = BigInteger.fromSubstring(
+   "0123456789",
+   6,
+   10).ToString();
         Assert.AreEqual(
           "6789",
           stringTemp);
@@ -1760,11 +1774,11 @@ throw new InvalidOperationException(String.Empty, ex);
       DoTestMultiply(
 "39258416159456516340113264558732499166970244380745050",
 "39258416159456516340113264558732499166970244380745051",
-"1541223239349076530208308657654362309553698742116222355477449713742236585667505604058123112521437480247550" );
+"1541223239349076530208308657654362309553698742116222355477449713742236585667505604058123112521437480247550");
       DoTestMultiply(
   "5786426269322750882632312999752639738983363095641642905722171221986067189342123124290107105663618428969517616421742429671402859775667602123564",
   "331378991485809774307751183645559883724387697397707434271522313077548174328632968616330900320595966360728317363190772921",
-  "1917500101435169880779183578665955372346028226046021044867189027856189131730889958057717187493786883422516390996639766012958050987359732634213213442579444095928862861132583117668061032227577386757036981448703231972963300147061503108512300577364845823910107210444" );
+  "1917500101435169880779183578665955372346028226046021044867189027856189131730889958057717187493786883422516390996639766012958050987359732634213213442579444095928862861132583117668061032227577386757036981448703231972963300147061503108512300577364845823910107210444");
     }
     [Test]
     public void TestPowBigIntVar() {

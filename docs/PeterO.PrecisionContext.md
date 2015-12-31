@@ -13,19 +13,24 @@ Contains parameters for controlling the precision, rounding, and exponent range 
         int exponentMaxSmall,
         bool clampNormalExponents);
 
-Initializes a new instance of the PrecisionContext class. HasFlags will be set to false.
+Initializes a new instance of the  class. HasFlags will be set to false.
 
 <b>Parameters:</b>
 
- * <i>precision</i>: Not documented yet.
+ * <i>precision</i>: The parameter  <i>precision</i>
+ is not documented yet.
 
- * <i>rounding</i>: Not documented yet.
+ * <i>rounding</i>: The parameter  <i>rounding</i>
+ is not documented yet.
 
- * <i>exponentMinSmall</i>: Not documented yet. (3).
+ * <i>exponentMinSmall</i>: The parameter  <i>exponentMinSmall</i>
+ is not documented yet.
 
- * <i>exponentMaxSmall</i>: Not documented yet. (4).
+ * <i>exponentMaxSmall</i>: The parameter  <i>exponentMaxSmall</i>
+ is not documented yet.
 
- * <i>clampNormalExponents</i>: Not documented yet. (5).
+ * <i>clampNormalExponents</i>: The parameter  <i>clampNormalExponents</i>
+ is not documented yet.
 
 ### Basic
 
@@ -292,7 +297,7 @@ Initializes a new PrecisionContext that is a copy of another PrecisionContext.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### ExponentWithinRange
 
@@ -312,7 +317,7 @@ True if a number can have the given Exponent property under this precision conte
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>exponent</i>
+The parameter <i>exponent</i>
  is null.
 
 ### ForPrecision
@@ -328,7 +333,7 @@ Creates a new precision context using the given maximum number of digits, an unl
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### ForPrecisionAndRounding
 
@@ -346,7 +351,7 @@ Creates a new PrecisionContext object initialized with an unlimited exponent ran
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### ForRounding
 
@@ -361,7 +366,7 @@ Creates a new PrecisionContext object initialized with an unlimited precision, a
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### ToString
 
@@ -382,11 +387,12 @@ Copies this PrecisionContext and sets the copy's "AdjustExponent" property to th
 
 <b>Parameters:</b>
 
- * <i>adjustExponent</i>: Not documented yet.
+ * <i>adjustExponent</i>: The parameter  <i>adjustExponent</i>
+ is not documented yet.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### WithBigExponentRange
 
@@ -404,16 +410,16 @@ Copies this precision context and sets the copy's exponent range.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>exponentMin</i>
+The parameter <i>exponentMin</i>
  is null.
 
  * System.ArgumentNullException:
-The parameter  <i>exponentMax</i>
+The parameter <i>exponentMax</i>
  is null.
 
 ### WithBigPrecision
@@ -425,16 +431,17 @@ Copies this PrecisionContext and gives it a particular precision value.
 
 <b>Parameters:</b>
 
- * <i>bigintPrecision</i>: Not documented yet.
+ * <i>bigintPrecision</i>: The parameter  <i>bigintPrecision</i>
+ is not documented yet.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigintPrecision</i>
+The parameter <i>bigintPrecision</i>
  is null.
 
 ### WithBlankFlags
@@ -445,7 +452,7 @@ Copies this PrecisionContext with HasFlags set to true and a Flags value of 0.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### WithExponentClamp
 
@@ -456,11 +463,12 @@ Copies this precision context and sets the copy's "ClampNormalExponents" flag to
 
 <b>Parameters:</b>
 
- * <i>clamp</i>: Not documented yet.
+ * <i>clamp</i>: The parameter  <i>clamp</i>
+ is not documented yet.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### WithExponentRange
 
@@ -478,7 +486,7 @@ Copies this precision context and sets the copy's exponent range.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### WithNoFlags
 
@@ -488,7 +496,7 @@ Copies this PrecisionContext with HasFlags set to false and a Flags value of 0.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### WithPrecision
 
@@ -503,7 +511,7 @@ Copies this PrecisionContext and gives it a particular precision value.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### WithPrecisionInBits
 
@@ -514,11 +522,12 @@ Copies this PrecisionContext and sets the copy's "IsPrecisionInBits" property to
 
 <b>Parameters:</b>
 
- * <i>isPrecisionBits</i>: Not documented yet.
+ * <i>isPrecisionBits</i>: The parameter  <i>isPrecisionBits</i>
+ is not documented yet.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### WithRounding
 
@@ -529,11 +538,12 @@ Copies this PrecisionContext with the specified rounding mode.
 
 <b>Parameters:</b>
 
- * <i>rounding</i>: Not documented yet.
+ * <i>rounding</i>: The parameter  <i>rounding</i>
+ is not documented yet.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### WithSimplified
 
@@ -544,11 +554,12 @@ Copies this PrecisionContext and sets the copy's "IsSimplified" property to the 
 
 <b>Parameters:</b>
 
- * <i>simplified</i>: Not documented yet.
+ * <i>simplified</i>: The parameter  <i>simplified</i>
+ is not documented yet.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### WithTraps
 
@@ -563,7 +574,7 @@ Copies this PrecisionContext with Traps set to the given value.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.
 
 ### WithUnlimitedExponents
 
@@ -573,4 +584,4 @@ Copies this PrecisionContext with an unlimited exponent range.
 
 <b>Returns:</b>
 
-An EContext object.
+A context object for arbitrary-precision arithmetic settings.

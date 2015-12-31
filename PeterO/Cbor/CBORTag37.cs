@@ -29,8 +29,8 @@ namespace PeterO.Cbor {
       CBORObject.AddConverter(typeof(Guid), new CBORTag37());
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTag37.ToCBORObject(System.Guid)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTag37.ToCBORObject(System.Guid)"]/*'/>
     public CBORObject ToCBORObject(Guid obj) {
       byte[] bytes = obj.ToByteArray();
       var bytes2 = new byte[16];

@@ -143,8 +143,7 @@ stringTemp);
       doTestString(" ");
       doTestString("test");
 
-  doTestString(
-  "testoifdoifdodfioidfifdidfoiidofiosidoiofdsoiiofdsiofdiosiodfiosdoiffiodsiosdfiods" );
+  doTestString(TestCommon.Repeat("three", 15));
       doTestString("te\u007fst");
       doTestString("te\u0080st");
       doTestString("te\u3000st");

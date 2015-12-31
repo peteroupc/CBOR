@@ -10,8 +10,8 @@ using System.Text;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORUtilities"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORUtilities"]/*'/>
   internal static class CBORUtilities {
     private const string HexAlphabet = "0123456789ABCDEF";
 
@@ -75,19 +75,21 @@ namespace PeterO.Cbor {
     }
 
     public static string DoubleToString(double dbl) {
-      return Convert.ToString((double)dbl,
-        System.Globalization.CultureInfo.InvariantCulture);
+      return Convert.ToString(
+(double)dbl,
+System.Globalization.CultureInfo.InvariantCulture);
       // TODO: Use this version in version 3, and preserve
       // TODO: negative zeros in that version
-      //return ExtendedFloat.FromDouble(dbl).ToString();
+      // return ExtendedFloat.FromDouble(dbl).ToString();
     }
 
     public static string SingleToString(float sing) {
-      return Convert.ToString((float)sing,
-        System.Globalization.CultureInfo.InvariantCulture);
+      return Convert.ToString(
+(float)sing,
+System.Globalization.CultureInfo.InvariantCulture);
       // TODO: Use this version in version 3, and preserve
       // TODO: negative zeros in that version
-      //return ExtendedFloat.FromSingle(dbl).ToString();
+      // return ExtendedFloat.FromSingle(dbl).ToString();
     }
 
     public static BigInteger BigIntegerFromSingle(float flt) {
