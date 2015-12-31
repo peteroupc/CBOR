@@ -8,6 +8,10 @@ An arbitrary-precision integer.Instances of this class are immutable, so they ar
 
 An arbitrary-precision integer.Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
 
+An arbitrary-precision integer.Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
+
+An arbitrary-precision integer.Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
+
 ### ONE
 
     public static readonly PeterO.BigInteger ONE;
@@ -150,9 +154,9 @@ Each arbitrary-precision integer is treated as a two's complement representation
 
 <b>Parameters:</b>
 
- * <i>a</i>: An arbitrary-precision integer.
+ * <i>a</i>: The first arbitrary-precision integer.
 
- * <i>b</i>: Another arbitrary-precision integer.
+ * <i>b</i>: The second arbitrary-precision integer.
 
 <b>Returns:</b>
 
@@ -361,7 +365,7 @@ The following example (C#) converts a number in the orm of a hex string to a big
 
  * <i>str</i>: A text string. The string must contain only characters allowed by the given radix, except that it may start with a minus sign ("-", U+002D) to indicate a negative number. The string is not allowed to contain white space characters, including spaces.
 
- * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U + 0030 to U + 0039) and then the basic letters A to Z (U + 0041 to U + 005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
+ * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U+0030 to U+0039) and then the basic letters A to Z (U+0041 to U+005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
 <b>Returns:</b>
 
@@ -394,7 +398,7 @@ Converts a portion of a string to an arbitrary-precision integer in a given radi
 
  * <i>str</i>: A text string. The desired portion of the string must contain only characters allowed by the given radix, except that it may start with a minus sign ("-", U+002D) to indicate a negative number. The desired portion is not allowed to contain white space characters, including spaces.
 
- * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U + 0030 to U + 0039) and then the basic letters A to Z (U + 0041 to U + 005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
+ * <i>radix</i>: A base from 2 to 36. Depending on the radix, the string can use the basic digits 0 to 9 (U+0030 to U+0039) and then the basic letters A to Z (U+0041 to U+005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
  * <i>index</i>: The index of the string that starts the string portion.
 
@@ -429,7 +433,7 @@ Converts a string to an arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A text string. The string must contain only basic digits 0 to 9 (U + 0030 to U + 0039), except that it may start with a minus sign ("-", U+002D) to indicate a negative number. The string is not allowed to contain white space characters, including spaces.
+ * <i>str</i>: A text string. The string must contain only basic digits 0 to 9 (U+0030 to U+0039), except that it may start with a minus sign ("-", U+002D) to indicate a negative number. The string is not allowed to contain white space characters, including spaces.
 
 <b>Returns:</b>
 
@@ -456,7 +460,7 @@ Converts a portion of a string to an arbitrary-precision integer.
 
 <b>Parameters:</b>
 
- * <i>str</i>: A text string. The desired portion of the string must contain only basic digits 0 to 9 (U + 0030 to U + 0039), except that it may start with a minus sign ("-", U+002D) to indicate a negative number. The desired portion is not allowed to contain white space characters, including spaces.
+ * <i>str</i>: A text string. The desired portion of the string must contain only basic digits 0 to 9 (U+0030 to U+0039), except that it may start with a minus sign ("-", U+002D) to indicate a negative number. The desired portion is not allowed to contain white space characters, including spaces.
 
  * <i>index</i>: The index of the string that starts the string portion.
 
@@ -1377,7 +1381,7 @@ Generates a string representing the value of this object, in the given radix.
 
 <b>Returns:</b>
 
-A string representing the value of this object. If this value is 0, returns "0". If negative, the string will begin with a hyphen/minus ("-"). Depending on the radix, the string will use the basic digits 0 to 9 (U + 0030 to U + 0039) and then the basic letters A to Z (U + 0041 to U + 005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
+A string representing the value of this object. If this value is 0, returns "0". If negative, the string will begin with a hyphen/minus ("-"). Depending on the radix, the string will use the basic digits 0 to 9 (U+0030 to U+0039) and then the basic letters A to Z (U+0041 to U+005A). For example, 0-9 in radix 10, and 0-9, then A-F in radix 16.
 
 <b>Exceptions:</b>
 
@@ -1392,7 +1396,7 @@ Converts this object to a text string in base 10.
 
 <b>Returns:</b>
 
-A string representation of this object. If negative, the string will begin with a minus sign ("-", U+002D). The string will use the basic digits 0 to 9 (U + 0030 to U + 0039).
+A string representation of this object. If negative, the string will begin with a minus sign ("-", U+002D). The string will use the basic digits 0 to 9 (U+0030 to U+0039).
 
 ### valueOf
 

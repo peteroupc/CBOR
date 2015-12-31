@@ -12,7 +12,7 @@ Arbitrary-precision rational number. This class cannot be inherited; this is a c
         PeterO.BigInteger numerator,
         PeterO.BigInteger denominator);
 
-Initializes a new instance of the arbitrary-precision rational number class.
+Initializes a new instance of the  class.
 
 <b>Parameters:</b>
 
