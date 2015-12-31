@@ -739,9 +739,8 @@ cbor.AsBigInteger());
         }
       }
       try {
- ExtendedDecimal.FromString(
-"1").Divide(ExtendedDecimal.FromString("3"),
-          null);
+ ExtendedDecimal.FromString("1")
+          .Divide(ExtendedDecimal.FromString("3"), null);
       } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
@@ -2251,10 +2250,12 @@ stringTemp);
       Assert.AreEqual(
         longString,
         CBORObject.DecodeFromBytes(cbor.EncodeToBytes()).AsString());
-      Assert.AreEqual(
-        longString,
-        CBORObject.DecodeFromBytes(cbor.EncodeToBytes(
-          CBOREncodeOptions.NoIndefLengthStrings)).AsString());
+      {
+object objectTemp = longString;
+object objectTemp2 = CBORObject.DecodeFromBytes(cbor.EncodeToBytes(
+          CBOREncodeOptions.NoIndefLengthStrings)).AsString();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
       TestCommon.AssertEqualsHashCode(cbor, cbor2);
       Assert.AreEqual(longString, cbor2.AsString());
     }

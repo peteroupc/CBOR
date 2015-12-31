@@ -823,22 +823,22 @@ stringTemp);
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+      long longV = unchecked((long)0xFFFFFFF200000000L);
       Assert.AreEqual(
-        unchecked((long)0xFFFFFFF200000000L),
-        BigValueOf(unchecked((long)0xFFFFFFF200000000L))
-        .longValueChecked());
+longV,
+BigValueOf(longV).longValueChecked());
+      longV = unchecked((long)0xFFFFFFF280000000L);
       Assert.AreEqual(
-        unchecked((long)0xFFFFFFF280000000L),
-        BigValueOf(unchecked((long)0xFFFFFFF280000000L))
-        .longValueChecked());
+longV,
+BigValueOf(longV).longValueChecked());
+      longV = unchecked((long)0xFFFFFFF280000001L);
       Assert.AreEqual(
-        unchecked((long)0xFFFFFFF280000001L),
-        BigValueOf(unchecked((long)0xFFFFFFF280000001L))
-        .longValueChecked());
+longV,
+BigValueOf(longV).longValueChecked());
+      longV = unchecked((long)0xFFFFFFF27FFFFFFFL);
       Assert.AreEqual(
-        unchecked((long)0xFFFFFFF27FFFFFFFL),
-        BigValueOf(unchecked((long)0xFFFFFFF27FFFFFFFL))
-        .longValueChecked());
+longV,
+BigValueOf(longV).longValueChecked());
       Assert.AreEqual(
         0x0000000380000001L,
         BigValueOf(0x0000000380000001L).longValueChecked());
@@ -926,10 +926,12 @@ stringTemp);
       Assert.AreEqual(
         Int64.MaxValue,
         BigValueOf(Int64.MaxValue).longValueUnchecked());
-      Assert.AreEqual(
-        Int64.MaxValue,
-        BigValueOf(Int64.MinValue)
-        .subtract(BigInteger.One).longValueUnchecked());
+      {
+object objectTemp = Int64.MaxValue;
+object objectTemp2 = BigValueOf(Int64.MinValue)
+        .subtract(BigInteger.One).longValueUnchecked();
+Assert.AreEqual(objectTemp, objectTemp2);
+}
       Assert.AreEqual(
         Int64.MinValue,
         BigValueOf(Int64.MaxValue).add(BigInteger.One).longValueUnchecked());
@@ -1144,25 +1146,37 @@ Console.Write(String.Empty);
         throw new InvalidOperationException(String.Empty, ex);
       }
       {
- string stringTemp = BigInteger.fromSubstring("0123456789" , 9, 10).ToString();
+ string stringTemp = BigInteger.fromSubstring(
+   "0123456789",
+   9,
+   10).ToString();
         Assert.AreEqual(
           "9",
           stringTemp);
       }
       {
- string stringTemp = BigInteger.fromSubstring("0123456789" , 8, 10).ToString();
+ string stringTemp = BigInteger.fromSubstring(
+   "0123456789",
+   8,
+   10).ToString();
         Assert.AreEqual(
           "89",
           stringTemp);
       }
       {
- string stringTemp = BigInteger.fromSubstring("0123456789" , 7, 10).ToString();
+ string stringTemp = BigInteger.fromSubstring(
+   "0123456789",
+   7,
+   10).ToString();
         Assert.AreEqual(
           "789",
           stringTemp);
       }
       {
- string stringTemp = BigInteger.fromSubstring("0123456789" , 6, 10).ToString();
+ string stringTemp = BigInteger.fromSubstring(
+   "0123456789",
+   6,
+   10).ToString();
         Assert.AreEqual(
           "6789",
           stringTemp);

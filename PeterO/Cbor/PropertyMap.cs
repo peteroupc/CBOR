@@ -51,19 +51,22 @@ namespace PeterO.Cbor {
     private static IEnumerable<PropertyInfo> GetTypeProperties(Type t) {
       return t.GetRuntimeProperties();
     }
-    private static MethodInfo GetTypeMethod(Type t, string name,
-      Type[] parameters) {
+
+    private static MethodInfo GetTypeMethod(
+Type t,
+string name,
+Type[] parameters) {
        return t.GetRuntimeMethod(name, parameters);
     }
 #endif
 
     private static readonly IDictionary<Type, IList<PropertyData>>
-      propertyLists = new Dictionary<Type, IList<PropertyData>>();
+      ValuePropertyLists = new Dictionary<Type, IList<PropertyData>>();
 
     private static IList<PropertyData> GetPropertyList(Type t) {
-      lock (propertyLists) {
+      lock (ValuePropertyLists) {
         IList<PropertyData> ret;
-        if (propertyLists.TryGetValue(t, out ret)) {
+        if (ValuePropertyLists.TryGetValue(t, out ret)) {
           return ret;
         }
         ret = new List<PropertyData>();
@@ -89,7 +92,7 @@ namespace PeterO.Cbor {
             ret.Add(pd);
           }
         }
-        propertyLists.Add(t, ret);
+        ValuePropertyLists.Add(t, ret);
         return ret;
       }
     }

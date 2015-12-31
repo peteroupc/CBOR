@@ -9,8 +9,8 @@ using System;
 using System.Text;
 
 namespace PeterO.Numbers {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Numbers.EDecimal"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Numbers.EDecimal"]/*'/>
   internal sealed class EDecimal : IComparable<EDecimal>,
   IEquatable<EDecimal> {
     private const int MaxSafeInt = 214748363;
@@ -19,24 +19,24 @@ namespace PeterO.Numbers {
     private readonly EInteger unsignedMantissa;
     private readonly int flags;
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.Exponent"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.Exponent"]/*'/>
     public EInteger Exponent {
       get {
         return this.exponent;
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.UnsignedMantissa"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.UnsignedMantissa"]/*'/>
     public EInteger UnsignedMantissa {
       get {
         return this.unsignedMantissa;
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.Mantissa"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.Mantissa"]/*'/>
     public EInteger Mantissa {
       get {
         return this.IsNegative ? (-(EInteger)this.unsignedMantissa) :
@@ -51,20 +51,20 @@ namespace PeterO.Numbers {
                 this.exponent.Equals(otherValue.exponent));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Equals(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Equals(PeterO.Numbers.EDecimal)"]/*'/>
     public bool Equals(EDecimal other) {
       return this.EqualsInternal(other);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Equals(System.Object)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Equals(System.Object)"]/*'/>
     public override bool Equals(object obj) {
       return this.EqualsInternal(obj as EDecimal);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.GetHashCode"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.GetHashCode"]/*'/>
     public override int GetHashCode() {
       var hashCode = 964453631;
       unchecked {
@@ -76,14 +76,14 @@ namespace PeterO.Numbers {
     }
     #endregion
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Create(System.Int32,System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Create(System.Int32,System.Int32)"]/*'/>
     public static EDecimal Create(int mantissaSmall, int exponentSmall) {
       return Create((EInteger)mantissaSmall, (EInteger)exponentSmall);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Create(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Create(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]/*'/>
     public static EDecimal Create(
       EInteger mantissa,
       EInteger exponent) {
@@ -137,14 +137,14 @@ namespace PeterO.Numbers {
         flags);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CreateNaN(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CreateNaN(PeterO.Numbers.EInteger)"]/*'/>
     public static EDecimal CreateNaN(EInteger diag) {
       return CreateNaN(diag, false, false, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CreateNaN(PeterO.Numbers.EInteger,System.Boolean,System.Boolean,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CreateNaN(PeterO.Numbers.EInteger,System.Boolean,System.Boolean,PeterO.Numbers.EContext)"]/*'/>
     public static EDecimal CreateNaN(
       EInteger diag,
       bool signaling,
@@ -182,20 +182,20 @@ namespace PeterO.Numbers {
       return CreateWithFlags(diag, EInteger.Zero, flags);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromString(System.String)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromString(System.String)"]/*'/>
     public static EDecimal FromString(string str) {
       return FromString(str, 0, str == null ? 0 : str.Length, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromString(System.String,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromString(System.String,PeterO.Numbers.EContext)"]/*'/>
     public static EDecimal FromString(string str, EContext ctx) {
       return FromString(str, 0, str == null ? 0 : str.Length, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromString(System.String,System.Int32,System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromString(System.String,System.Int32,System.Int32)"]/*'/>
     public static EDecimal FromString(
       string str,
       int offset,
@@ -203,8 +203,8 @@ namespace PeterO.Numbers {
       return FromString(str, offset, length, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromString(System.String,System.Int32,System.Int32,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromString(System.String,System.Int32,System.Int32,PeterO.Numbers.EContext)"]/*'/>
     public static EDecimal FromString(
       string str,
       int offset,
@@ -564,32 +564,32 @@ namespace PeterO.Numbers {
     }
 
     private sealed class DecimalMathHelper : IRadixMathHelper<EDecimal> {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetRadix"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetRadix"]/*'/>
       public int GetRadix() {
         return 10;
       }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetSign(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetSign(PeterO.Numbers.EDecimal)"]/*'/>
       public int GetSign(EDecimal value) {
         return value.Sign;
       }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetMantissa(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetMantissa(PeterO.Numbers.EDecimal)"]/*'/>
       public EInteger GetMantissa(EDecimal value) {
         return value.unsignedMantissa;
       }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetExponent(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetExponent(PeterO.Numbers.EDecimal)"]/*'/>
       public EInteger GetExponent(EDecimal value) {
         return value.exponent;
       }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.CreateShiftAccumulatorWithDigits(PeterO.Numbers.EInteger,System.Int32,System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.CreateShiftAccumulatorWithDigits(PeterO.Numbers.EInteger,System.Int32,System.Int32)"]/*'/>
       public IShiftAccumulator CreateShiftAccumulatorWithDigits(
         EInteger bigint,
         int lastDigit,
@@ -597,14 +597,14 @@ namespace PeterO.Numbers {
         return new DigitShiftAccumulator(bigint, lastDigit, olderDigits);
       }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.CreateShiftAccumulator(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.CreateShiftAccumulator(PeterO.Numbers.EInteger)"]/*'/>
       public IShiftAccumulator CreateShiftAccumulator(EInteger bigint) {
         return new DigitShiftAccumulator(bigint, 0, 0);
       }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.HasTerminatingRadixExpansion(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.HasTerminatingRadixExpansion(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]/*'/>
       public bool HasTerminatingRadixExpansion(
         EInteger numerator,
         EInteger denominator) {
@@ -626,7 +626,7 @@ namespace PeterO.Numbers {
           EInteger bigrem;
           EInteger bigquo;
 {
-EInteger[] divrem=(tmpden).DivRem((EInteger)5);
+EInteger[] divrem = tmpden.DivRem((EInteger)5);
 bigquo = divrem[0];
 bigrem = divrem[1]; }
           if (!bigrem.IsZero) {
@@ -637,8 +637,8 @@ bigrem = divrem[1]; }
         return tmpden.CompareTo(EInteger.One) == 0;
       }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.MultiplyByRadixPower(PeterO.Numbers.EInteger,PeterO.Numbers.FastInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.MultiplyByRadixPower(PeterO.Numbers.EInteger,PeterO.Numbers.FastInteger)"]/*'/>
       public EInteger MultiplyByRadixPower(
         EInteger bigint,
         FastInteger power) {
@@ -665,14 +665,14 @@ bigrem = divrem[1]; }
           DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger());
       }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetFlags(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetFlags(PeterO.Numbers.EDecimal)"]/*'/>
       public int GetFlags(EDecimal value) {
         return value.flags;
       }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.CreateNewWithFlags(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger,System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.CreateNewWithFlags(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger,System.Int32)"]/*'/>
       public EDecimal CreateNewWithFlags(
         EInteger mantissa,
         EInteger exponent,
@@ -680,14 +680,14 @@ bigrem = divrem[1]; }
         return CreateWithFlags(mantissa, exponent, flags);
       }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetArithmeticSupport"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.GetArithmeticSupport"]/*'/>
       public int GetArithmeticSupport() {
         return BigNumberFlags.FiniteAndNonFinite;
       }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.ValueOf(System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DecimalMathHelper.ValueOf(System.Int32)"]/*'/>
       public EDecimal ValueOf(int val) {
         return (val == 0) ? Zero : ((val == 1) ? One : FromInt64(val));
       }
@@ -959,8 +959,8 @@ bigrem = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CompareToBinary(PeterO.Numbers.EFloat)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CompareToBinary(PeterO.Numbers.EFloat)"]/*'/>
     public int CompareToBinary(EFloat other) {
       if (other == null) {
         return 1;
@@ -1056,14 +1056,14 @@ bigrem = divrem[1]; }
       return this.CompareTo(otherDec);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToBigInteger"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToBigInteger"]/*'/>
     public EInteger ToBigInteger() {
       return this.ToBigIntegerInternal(false);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToBigIntegerExact"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToBigIntegerExact"]/*'/>
     public EInteger ToBigIntegerExact() {
       return this.ToBigIntegerInternal(true);
     }
@@ -1105,10 +1105,10 @@ bigrem = divrem[1]; }
       }
     }
 
-    private static readonly EInteger valueOneShift62 = EInteger.One << 62;
+    private static readonly EInteger ValueOneShift62 = EInteger.One << 62;
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToExtendedFloat"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToExtendedFloat"]/*'/>
     public EFloat ToExtendedFloat() {
       return this.ToExtendedFloatInternal(false);
     }
@@ -1151,12 +1151,12 @@ bigrem = divrem[1]; }
         while (true) {
           EInteger quotient;
 {
-EInteger[] divrem=(bigmantissa).DivRem(divisor);
+EInteger[] divrem = bigmantissa.DivRem(divisor);
 quotient = divrem[0];
 remainder = divrem[1]; }
           // Ensure that the quotient has enough precision
           // to be converted accurately to a single or double
-          if (!remainder.IsZero && quotient.CompareTo(valueOneShift62) < 0) {
+          if (!remainder.IsZero && quotient.CompareTo(ValueOneShift62) < 0) {
             // At this point, the quotient has 62 or fewer bits
             int[] bits = FastInteger.GetLastWords(quotient, 2);
             var shift = 0;
@@ -1207,8 +1207,8 @@ remainder = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToSingle"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToSingle"]/*'/>
     public float ToSingle() {
       if (this.IsPositiveInfinity()) {
         return Single.PositiveInfinity;
@@ -1265,8 +1265,8 @@ remainder = divrem[1]; }
       return ret;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToDouble"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToDouble"]/*'/>
     public double ToDouble() {
       if (this.IsPositiveInfinity()) {
         return Double.PositiveInfinity;
@@ -1296,8 +1296,8 @@ remainder = divrem[1]; }
       return this.ToExtendedFloatInternal(true).ToDouble();
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromSingle(System.Single)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromSingle(System.Single)"]/*'/>
     public static EDecimal FromSingle(float flt) {
       int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt), 0);
       bool neg = (value >> 31) != 0;
@@ -1358,28 +1358,28 @@ remainder = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromBigInteger(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromBigInteger(PeterO.Numbers.EInteger)"]/*'/>
     public static EDecimal FromBigInteger(EInteger bigint) {
       return EDecimal.Create(bigint, EInteger.Zero);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromInt64(System.Int64)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromInt64(System.Int64)"]/*'/>
     public static EDecimal FromInt64(long valueSmall) {
       var bigint = (EInteger)valueSmall;
       return EDecimal.Create(bigint, EInteger.Zero);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromInt32(System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromInt32(System.Int32)"]/*'/>
     public static EDecimal FromInt32(int valueSmaller) {
       var bigint = (EInteger)valueSmaller;
       return EDecimal.Create(bigint, EInteger.Zero);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromDouble(System.Double)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromDouble(System.Double)"]/*'/>
     public static EDecimal FromDouble(double dbl) {
       int[] value = Extras.DoubleToIntegers(dbl);
       var floatExponent = (int)((value[1] >> 20) & 0x7ff);
@@ -1441,8 +1441,8 @@ remainder = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromExtendedFloat(PeterO.Numbers.EFloat)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.FromExtendedFloat(PeterO.Numbers.EFloat)"]/*'/>
     public static EDecimal FromExtendedFloat(EFloat bigfloat) {
       if (bigfloat == null) {
         throw new ArgumentNullException("bigfloat");
@@ -1497,26 +1497,26 @@ remainder = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToString"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToString"]/*'/>
     public override string ToString() {
       return this.ToStringInternal(0);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToEngineeringString"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToEngineeringString"]/*'/>
     public string ToEngineeringString() {
       return this.ToStringInternal(1);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToPlainString"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ToPlainString"]/*'/>
     public string ToPlainString() {
       return this.ToStringInternal(2);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.One"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.One"]/*'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
                 "CA2104", Justification = "ExtendedDecimal is immutable")]
@@ -1524,8 +1524,8 @@ remainder = divrem[1]; }
     public static readonly EDecimal One =
       EDecimal.Create(EInteger.One, EInteger.Zero);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.Zero"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.Zero"]/*'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
                 "CA2104", Justification = "ExtendedDecimal is immutable")]
@@ -1533,8 +1533,8 @@ remainder = divrem[1]; }
     public static readonly EDecimal Zero =
       EDecimal.Create(EInteger.Zero, EInteger.Zero);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.NegativeZero"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.NegativeZero"]/*'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
                 "CA2104", Justification = "ExtendedDecimal is immutable")]
@@ -1545,8 +1545,8 @@ remainder = divrem[1]; }
         EInteger.Zero,
         BigNumberFlags.FlagNegative);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.Ten"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.Ten"]/*'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
                 "CA2104", Justification = "ExtendedDecimal is immutable")]
@@ -1557,67 +1557,67 @@ remainder = divrem[1]; }
 
     //----------------------------------------------------------------
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.NaN"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.NaN"]/*'/>
     public static readonly EDecimal NaN = CreateWithFlags(
         EInteger.Zero,
         EInteger.Zero,
         BigNumberFlags.FlagQuietNaN);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.SignalingNaN"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.SignalingNaN"]/*'/>
     public static readonly EDecimal SignalingNaN =
       CreateWithFlags(
         EInteger.Zero,
         EInteger.Zero,
         BigNumberFlags.FlagSignalingNaN);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.PositiveInfinity"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.PositiveInfinity"]/*'/>
     public static readonly EDecimal PositiveInfinity =
       CreateWithFlags(
         EInteger.Zero,
         EInteger.Zero,
         BigNumberFlags.FlagInfinity);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.NegativeInfinity"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.Numbers.EDecimal.NegativeInfinity"]/*'/>
     public static readonly EDecimal NegativeInfinity =
       CreateWithFlags(
         EInteger.Zero,
         EInteger.Zero,
         BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.IsNegativeInfinity"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.IsNegativeInfinity"]/*'/>
     public bool IsNegativeInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity |
                 BigNumberFlags.FlagNegative)) == (BigNumberFlags.FlagInfinity |
                     BigNumberFlags.FlagNegative);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.IsPositiveInfinity"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.IsPositiveInfinity"]/*'/>
     public bool IsPositiveInfinity() {
       return (this.flags & (BigNumberFlags.FlagInfinity |
                   BigNumberFlags.FlagNegative)) == BigNumberFlags.FlagInfinity;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.IsNaN"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.IsNaN"]/*'/>
     public bool IsNaN() {
       return (this.flags & (BigNumberFlags.FlagQuietNaN |
                     BigNumberFlags.FlagSignalingNaN)) != 0;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.IsInfinity"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.IsInfinity"]/*'/>
     public bool IsInfinity() {
       return (this.flags & BigNumberFlags.FlagInfinity) != 0;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.IsFinite"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.IsFinite"]/*'/>
     public bool IsFinite {
       get {
         return (this.flags & (BigNumberFlags.FlagInfinity |
@@ -1625,28 +1625,28 @@ remainder = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.IsNegative"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.IsNegative"]/*'/>
     public bool IsNegative {
       get {
         return (this.flags & BigNumberFlags.FlagNegative) != 0;
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.IsQuietNaN"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.IsQuietNaN"]/*'/>
     public bool IsQuietNaN() {
       return (this.flags & BigNumberFlags.FlagQuietNaN) != 0;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.IsSignalingNaN"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.IsSignalingNaN"]/*'/>
     public bool IsSignalingNaN() {
       return (this.flags & BigNumberFlags.FlagSignalingNaN) != 0;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.Sign"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.Sign"]/*'/>
     public int Sign {
       get {
         return (((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
@@ -1655,8 +1655,8 @@ remainder = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.IsZero"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.EDecimal.IsZero"]/*'/>
     public bool IsZero {
       get {
         return ((this.flags & BigNumberFlags.FlagSpecial) == 0) &&
@@ -1664,28 +1664,28 @@ remainder = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Abs"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Abs"]/*'/>
     public EDecimal Abs() {
       return this.Abs(null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Negate"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Negate"]/*'/>
     public EDecimal Negate() {
       return this.Negate(null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Divide(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Divide(PeterO.Numbers.EDecimal)"]/*'/>
     public EDecimal Divide(EDecimal divisor) {
       return this.Divide(
         divisor,
         EContext.ForRounding(ERounding.None));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToSameExponent(PeterO.Numbers.EDecimal,PeterO.Numbers.ERounding)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToSameExponent(PeterO.Numbers.EDecimal,PeterO.Numbers.ERounding)"]/*'/>
     public EDecimal DivideToSameExponent(
       EDecimal divisor,
       ERounding rounding) {
@@ -1695,8 +1695,8 @@ remainder = divrem[1]; }
         EContext.ForRounding(rounding));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToIntegerNaturalScale(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToIntegerNaturalScale(PeterO.Numbers.EDecimal)"]/*'/>
     public EDecimal DivideToIntegerNaturalScale(EDecimal
                     divisor) {
       return this.DivideToIntegerNaturalScale(
@@ -1704,20 +1704,20 @@ remainder = divrem[1]; }
         EContext.ForRounding(ERounding.Down));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Reduce(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Reduce(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Reduce(EContext ctx) {
       return MathValue.Reduce(this, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RemainderNaturalScale(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RemainderNaturalScale(PeterO.Numbers.EDecimal)"]/*'/>
     public EDecimal RemainderNaturalScale(EDecimal divisor) {
       return this.RemainderNaturalScale(divisor, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RemainderNaturalScale(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RemainderNaturalScale(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RemainderNaturalScale(
       EDecimal divisor,
       EContext ctx) {
@@ -1726,8 +1726,8 @@ remainder = divrem[1]; }
         null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToExponent(PeterO.Numbers.EDecimal,System.Int64,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToExponent(PeterO.Numbers.EDecimal,System.Int64,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal DivideToExponent(
       EDecimal divisor,
       long desiredExponentSmall,
@@ -1738,16 +1738,16 @@ remainder = divrem[1]; }
         ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Divide(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Divide(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Divide(
       EDecimal divisor,
       EContext ctx) {
       return MathValue.Divide(this, divisor, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToExponent(PeterO.Numbers.EDecimal,System.Int64,PeterO.Numbers.ERounding)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToExponent(PeterO.Numbers.EDecimal,System.Int64,PeterO.Numbers.ERounding)"]/*'/>
     public EDecimal DivideToExponent(
       EDecimal divisor,
       long desiredExponentSmall,
@@ -1758,8 +1758,8 @@ remainder = divrem[1]; }
         EContext.ForRounding(rounding));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToExponent(PeterO.Numbers.EDecimal,PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToExponent(PeterO.Numbers.EDecimal,PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal DivideToExponent(
       EDecimal divisor,
       EInteger exponent,
@@ -1767,8 +1767,8 @@ remainder = divrem[1]; }
       return MathValue.DivideToExponent(this, divisor, exponent, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToExponent(PeterO.Numbers.EDecimal,PeterO.Numbers.EInteger,PeterO.Numbers.ERounding)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToExponent(PeterO.Numbers.EDecimal,PeterO.Numbers.EInteger,PeterO.Numbers.ERounding)"]/*'/>
     public EDecimal DivideToExponent(
       EDecimal divisor,
       EInteger desiredExponent,
@@ -1779,32 +1779,32 @@ remainder = divrem[1]; }
         EContext.ForRounding(rounding));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Abs(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Abs(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Abs(EContext context) {
       return MathValue.Abs(this, context);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Negate(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Negate(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Negate(EContext context) {
       return MathValue.Negate(this, context);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Add(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Add(PeterO.Numbers.EDecimal)"]/*'/>
     public EDecimal Add(EDecimal otherValue) {
       return this.Add(otherValue, EContext.Unlimited);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Subtract(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Subtract(PeterO.Numbers.EDecimal)"]/*'/>
     public EDecimal Subtract(EDecimal otherValue) {
       return this.Subtract(otherValue, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Subtract(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Subtract(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Subtract(
       EDecimal otherValue,
       EContext ctx) {
@@ -1822,14 +1822,14 @@ remainder = divrem[1]; }
       return this.Add(negated, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Multiply(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Multiply(PeterO.Numbers.EDecimal)"]/*'/>
     public EDecimal Multiply(EDecimal otherValue) {
       return this.Multiply(otherValue, EContext.Unlimited);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MultiplyAndAdd(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MultiplyAndAdd(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal)"]/*'/>
     public EDecimal MultiplyAndAdd(
       EDecimal multiplicand,
       EDecimal augend) {
@@ -1841,60 +1841,60 @@ remainder = divrem[1]; }
         new ExtendedOrSimpleRadixMath<EDecimal>(new
                     DecimalMathHelper()));
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToIntegerNaturalScale(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToIntegerNaturalScale(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal DivideToIntegerNaturalScale(
       EDecimal divisor,
       EContext ctx) {
       return MathValue.DivideToIntegerNaturalScale(this, divisor, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToIntegerZeroScale(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToIntegerZeroScale(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal DivideToIntegerZeroScale(
       EDecimal divisor,
       EContext ctx) {
       return MathValue.DivideToIntegerZeroScale(this, divisor, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Remainder(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Remainder(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Remainder(
       EDecimal divisor,
       EContext ctx) {
       return MathValue.Remainder(this, divisor, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RemainderNear(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RemainderNear(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RemainderNear(
       EDecimal divisor,
       EContext ctx) {
       return MathValue.RemainderNear(this, divisor, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.NextMinus(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.NextMinus(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal NextMinus(EContext ctx) {
       return MathValue.NextMinus(this, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.NextPlus(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.NextPlus(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal NextPlus(EContext ctx) {
       return MathValue.NextPlus(this, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.NextToward(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.NextToward(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal NextToward(
       EDecimal otherValue,
       EContext ctx) {
       return MathValue.NextToward(this, otherValue, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Max(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Max(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public static EDecimal Max(
       EDecimal first,
       EDecimal second,
@@ -1902,8 +1902,8 @@ remainder = divrem[1]; }
       return MathValue.Max(first, second, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Min(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Min(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public static EDecimal Min(
       EDecimal first,
       EDecimal second,
@@ -1911,8 +1911,8 @@ remainder = divrem[1]; }
       return MathValue.Min(first, second, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MaxMagnitude(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MaxMagnitude(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public static EDecimal MaxMagnitude(
       EDecimal first,
       EDecimal second,
@@ -1920,8 +1920,8 @@ remainder = divrem[1]; }
       return MathValue.MaxMagnitude(first, second, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MinMagnitude(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MinMagnitude(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public static EDecimal MinMagnitude(
       EDecimal first,
       EDecimal second,
@@ -1929,70 +1929,70 @@ remainder = divrem[1]; }
       return MathValue.MinMagnitude(first, second, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Max(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Max(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal)"]/*'/>
     public static EDecimal Max(
       EDecimal first,
       EDecimal second) {
       return Max(first, second, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Min(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Min(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal)"]/*'/>
     public static EDecimal Min(
       EDecimal first,
       EDecimal second) {
       return Min(first, second, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MaxMagnitude(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MaxMagnitude(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal)"]/*'/>
     public static EDecimal MaxMagnitude(
       EDecimal first,
       EDecimal second) {
       return MaxMagnitude(first, second, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MinMagnitude(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MinMagnitude(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal)"]/*'/>
     public static EDecimal MinMagnitude(
       EDecimal first,
       EDecimal second) {
       return MinMagnitude(first, second, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CompareTo(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CompareTo(PeterO.Numbers.EDecimal)"]/*'/>
     public int CompareTo(EDecimal other) {
       return MathValue.CompareTo(this, other);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CompareToWithContext(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CompareToWithContext(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal CompareToWithContext(
       EDecimal other,
       EContext ctx) {
       return MathValue.CompareToWithContext(this, other, false, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CompareToSignal(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CompareToSignal(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal CompareToSignal(
       EDecimal other,
       EContext ctx) {
       return MathValue.CompareToWithContext(this, other, true, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Add(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Add(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Add(
       EDecimal otherValue,
       EContext ctx) {
       return MathValue.Add(this, otherValue, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Quantize(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Quantize(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Quantize(
       EInteger desiredExponent,
       EContext ctx) {
@@ -2001,8 +2001,8 @@ remainder = divrem[1]; }
         ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Quantize(System.Int32,PeterO.Numbers.ERounding)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Quantize(System.Int32,PeterO.Numbers.ERounding)"]/*'/>
     public EDecimal Quantize(
       int desiredExponentSmall,
       ERounding rounding) {
@@ -2011,8 +2011,8 @@ remainder = divrem[1]; }
       EContext.ForRounding(rounding));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Quantize(System.Int32,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Quantize(System.Int32,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Quantize(
       int desiredExponentSmall,
       EContext ctx) {
@@ -2021,66 +2021,66 @@ remainder = divrem[1]; }
       ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Quantize(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Quantize(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Quantize(
       EDecimal otherValue,
       EContext ctx) {
       return MathValue.Quantize(this, otherValue, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToIntegralExact(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToIntegralExact(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RoundToIntegralExact(EContext ctx) {
       return MathValue.RoundToExponentExact(this, EInteger.Zero, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToIntegralNoRoundedFlag(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToIntegralNoRoundedFlag(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RoundToIntegralNoRoundedFlag(EContext ctx) {
       return MathValue.RoundToExponentNoRoundedFlag(this, EInteger.Zero, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToExponentExact(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToExponentExact(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RoundToExponentExact(
       EInteger exponent,
       EContext ctx) {
       return MathValue.RoundToExponentExact(this, exponent, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToExponent(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToExponent(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RoundToExponent(
       EInteger exponent,
       EContext ctx) {
       return MathValue.RoundToExponentSimple(this, exponent, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToExponentExact(System.Int32,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToExponentExact(System.Int32,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RoundToExponentExact(
       int exponentSmall,
       EContext ctx) {
       return this.RoundToExponentExact((EInteger)exponentSmall, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToExponent(System.Int32,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToExponent(System.Int32,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RoundToExponent(
       int exponentSmall,
       EContext ctx) {
       return this.RoundToExponent((EInteger)exponentSmall, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Multiply(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Multiply(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Multiply(EDecimal op, EContext ctx) {
       return MathValue.Multiply(this, op, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MultiplyAndAdd(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MultiplyAndAdd(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal MultiplyAndAdd(
       EDecimal op,
       EDecimal augend,
@@ -2088,8 +2088,8 @@ remainder = divrem[1]; }
       return MathValue.MultiplyAndAdd(this, op, augend, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MultiplyAndSubtract(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MultiplyAndSubtract(PeterO.Numbers.EDecimal,PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal MultiplyAndSubtract(
       EDecimal op,
       EDecimal subtrahend,
@@ -2111,20 +2111,20 @@ remainder = divrem[1]; }
       return MathValue.MultiplyAndAdd(this, op, negated, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToPrecision(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToPrecision(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RoundToPrecision(EContext ctx) {
       return MathValue.RoundToPrecision(this, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Plus(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Plus(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Plus(EContext ctx) {
       return MathValue.Plus(this, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToBinaryPrecision(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToBinaryPrecision(PeterO.Numbers.EContext)"]/*'/>
     [Obsolete(
       "Instead of this method use RoundToPrecision and pass a " + "precision context with the IsPrecisionInBits property set.")]
     public EDecimal RoundToBinaryPrecision(EContext ctx) {
@@ -2139,74 +2139,74 @@ remainder = divrem[1]; }
       return ret;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.SquareRoot(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.SquareRoot(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal SquareRoot(EContext ctx) {
       return MathValue.SquareRoot(this, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Exp(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Exp(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Exp(EContext ctx) {
       return MathValue.Exp(this, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Log(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Log(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Log(EContext ctx) {
       return MathValue.Ln(this, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Log10(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Log10(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Log10(EContext ctx) {
       return MathValue.Log10(this, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Pow(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Pow(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Pow(EDecimal exponent, EContext ctx) {
       return MathValue.Power(this, exponent, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Pow(System.Int32,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Pow(System.Int32,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Pow(int exponentSmall, EContext ctx) {
       return this.Pow(EDecimal.FromInt64(exponentSmall), ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Pow(System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Pow(System.Int32)"]/*'/>
     public EDecimal Pow(int exponentSmall) {
       return this.Pow(EDecimal.FromInt64(exponentSmall), null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.PI(PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.PI(PeterO.Numbers.EContext)"]/*'/>
     public static EDecimal PI(EContext ctx) {
       return MathValue.Pi(ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointLeft(System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointLeft(System.Int32)"]/*'/>
     public EDecimal MovePointLeft(int places) {
       return this.MovePointLeft((EInteger)places, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointLeft(System.Int32,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointLeft(System.Int32,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal MovePointLeft(int places, EContext ctx) {
       return this.MovePointLeft((EInteger)places, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointLeft(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointLeft(PeterO.Numbers.EInteger)"]/*'/>
     public EDecimal MovePointLeft(EInteger bigPlaces) {
       return this.MovePointLeft(bigPlaces, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointLeft(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointLeft(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal MovePointLeft(
 EInteger bigPlaces,
 EContext ctx) {
@@ -2217,26 +2217,26 @@ EContext ctx) {
         this.MovePointRight(-(EInteger)bigPlaces, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointRight(System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointRight(System.Int32)"]/*'/>
     public EDecimal MovePointRight(int places) {
       return this.MovePointRight((EInteger)places, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointRight(System.Int32,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointRight(System.Int32,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal MovePointRight(int places, EContext ctx) {
       return this.MovePointRight((EInteger)places, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointRight(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointRight(PeterO.Numbers.EInteger)"]/*'/>
     public EDecimal MovePointRight(EInteger bigPlaces) {
       return this.MovePointRight(bigPlaces, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointRight(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.MovePointRight(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal MovePointRight(
 EInteger bigPlaces,
 EContext ctx) {
@@ -2263,26 +2263,26 @@ this.flags).RoundToPrecision(ctx);
         this.flags).RoundToPrecision(ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ScaleByPowerOfTen(System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ScaleByPowerOfTen(System.Int32)"]/*'/>
     public EDecimal ScaleByPowerOfTen(int places) {
       return this.ScaleByPowerOfTen((EInteger)places, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ScaleByPowerOfTen(System.Int32,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ScaleByPowerOfTen(System.Int32,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal ScaleByPowerOfTen(int places, EContext ctx) {
       return this.ScaleByPowerOfTen((EInteger)places, ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ScaleByPowerOfTen(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ScaleByPowerOfTen(PeterO.Numbers.EInteger)"]/*'/>
     public EDecimal ScaleByPowerOfTen(EInteger bigPlaces) {
       return this.ScaleByPowerOfTen(bigPlaces, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ScaleByPowerOfTen(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.ScaleByPowerOfTen(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal ScaleByPowerOfTen(
 EInteger bigPlaces,
 EContext ctx) {
@@ -2300,8 +2300,8 @@ EContext ctx) {
         this.flags).RoundToPrecision(ctx);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Precision"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Precision"]/*'/>
     public EInteger Precision() {
       if (!this.IsFinite) {
  return EInteger.Zero;
@@ -2313,22 +2313,22 @@ EContext ctx) {
       return (EInteger)digcount;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Ulp"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Ulp"]/*'/>
     public EDecimal Ulp() {
       return (!this.IsFinite) ? EDecimal.One :
         EDecimal.Create(EInteger.One, this.exponent);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideAndRemainderNaturalScale(PeterO.Numbers.EDecimal)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideAndRemainderNaturalScale(PeterO.Numbers.EDecimal)"]/*'/>
     public EDecimal[] DivideAndRemainderNaturalScale(EDecimal
       divisor) {
       return this.DivideAndRemainderNaturalScale(divisor, null);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideAndRemainderNaturalScale(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideAndRemainderNaturalScale(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal[] DivideAndRemainderNaturalScale(
       EDecimal divisor,
       EContext ctx) {

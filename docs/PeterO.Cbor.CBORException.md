@@ -12,11 +12,13 @@ Exception thrown for errors involving CBOR data.
     public CBORException(
         string message);
 
-Initializes a new instance of the CBORException class.
+Initializes a new instance of the class.
+
+Initializes a new instance of the class.
 
 <b>Parameters:</b>
 
- * <i>message</i>: A string object.
+ * <i>message</i>: A text string.
 
 ### CBORException Constructor
 
@@ -24,11 +26,11 @@ Initializes a new instance of the CBORException class.
         string message,
         System.Exception innerException);
 
-Initializes a new instance of the CBORException class. Uses the given message and inner exception.
+Initializes a new instance of the  class. Uses the given message and inner exception.
 
 <b>Parameters:</b>
 
- * <i>message</i>: A string object.
+ * <i>message</i>: A text string.
 
  * <i>innerException</i>: An Exception object.
 
@@ -36,4 +38,6 @@ Initializes a new instance of the CBORException class. Uses the given message an
 
     public CBORException();
 
-Initializes a new instance of the CBORException class.
+Initializes a new instance of the class.
+
+Initializes a new instance of the class.

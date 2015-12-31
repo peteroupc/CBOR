@@ -393,8 +393,8 @@ namespace Test {
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                     ].AsString()));
+          CBORObject.FromObject(ExtendedDecimal.FromString(
+  numberinfo["number"].AsString()));
         if (numberinfo["byte"].AsBoolean()) {
           Assert.AreEqual(
     BigInteger.fromString(numberinfo["integer"].AsString()).intValueChecked(),
@@ -489,8 +489,8 @@ namespace Test {
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                     ].AsString()));
+          CBORObject.FromObject(ExtendedDecimal.FromString(
+  numberinfo["number"].AsString()));
         AreEqualExact(
 (double)ExtendedDecimal.FromString(numberinfo["number"].AsString()).ToDouble(),
 cbornumber.AsDouble());
@@ -981,8 +981,8 @@ cbornumber.AsDouble());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                     ].AsString()));
+          CBORObject.FromObject(ExtendedDecimal.FromString(
+  numberinfo["number"].AsString()));
         AreEqualExact(
 (float)ExtendedDecimal.FromString(numberinfo["number"].AsString()).ToSingle(),
 cbornumber.AsSingle());
@@ -1018,8 +1018,8 @@ cbornumber.AsSingle());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                     ].AsString()));
+          CBORObject.FromObject(ExtendedDecimal.FromString(
+  numberinfo["number"].AsString()));
         if (numberinfo["double"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInDouble());
         } else {
@@ -1041,10 +1041,10 @@ cbornumber.AsSingle());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                     ].AsString()));
-        if (numberinfo["int32"].AsBoolean() && numberinfo["isintegral"
-                     ].AsBoolean()) {
+          CBORObject.FromObject(ExtendedDecimal.FromString(
+  numberinfo["number"].AsString()));
+        if (numberinfo["int32"].AsBoolean() &&
+  numberinfo["isintegral"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInInt32());
           Assert.IsTrue(CBORObject.FromObject(cbornumber.AsInt32())
                     .CanFitInInt32());
@@ -1067,10 +1067,10 @@ cbornumber.AsSingle());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                     ].AsString()));
-        if (numberinfo["int64"].AsBoolean() && numberinfo["isintegral"
-                     ].AsBoolean()) {
+          CBORObject.FromObject(ExtendedDecimal.FromString(
+  numberinfo["number"].AsString()));
+        if (numberinfo["int64"].AsBoolean() &&
+  numberinfo["isintegral"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInInt64());
           Assert.IsTrue(CBORObject.FromObject(cbornumber.AsInt64())
                     .CanFitInInt64());
@@ -1093,8 +1093,8 @@ cbornumber.AsSingle());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                     ].AsString()));
+          CBORObject.FromObject(ExtendedDecimal.FromString(
+  numberinfo["number"].AsString()));
         if (numberinfo["single"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanFitInSingle());
         } else {
@@ -1195,8 +1195,8 @@ cbornumber.AsSingle());
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                     ].AsString()));
+          CBORObject.FromObject(ExtendedDecimal.FromString(
+  numberinfo["number"].AsString()));
         if (numberinfo["int64"].AsBoolean()) {
           Assert.IsTrue(cbornumber.CanTruncatedIntFitInInt64());
         } else {
@@ -1656,7 +1656,7 @@ throw new InvalidOperationException(String.Empty, ex);
         } catch (CBORException) {
           Console.Write(String.Empty);
         } catch (Exception ex) {
-          Assert.Fail(str + "\r\n"+ex.ToString());
+          Assert.Fail(str + "\r\n" + ex.ToString());
           throw new InvalidOperationException(String.Empty, ex);
         }
       }
@@ -1692,38 +1692,41 @@ throw new InvalidOperationException(String.Empty, ex);
     }
     }
 
-    private static string[] jsonFails = {"\"\\uxxxx\"" , "\"\\ud800\udc00\"",
-      "\"\ud800\\udc00\"" , "\"\\U0023\"" , "\"\\u002x\"" , "\"\\u00xx\"",
-      "\"\\u0xxx\"" , "\"\\u0\"" , "\"\\u00\"" , "\"\\u000\"" , "trbb",
-      "trub" , "falsb" , "nulb" , "[true" , "[true," , "[true]!",
-      "[\"\ud800\\udc00\"]" , "[\"\\ud800\udc00\"]",
-      "[\"\\udc00\ud800\udc00\"]" , "[\"\\ud800\ud800\udc00\"]",
-      "[\"\\ud800\"]" , "[1,2," , "[1,2,3" , "{,\"0\":0,\"1\":1}",
-      "{\"0\":0,,\"1\":1}" , "{\"0\":0,\"1\":1,}" , "[,0,1,2]" , "[0,,1,2]",
-"[0,1,,2]" , "[0,1,2,]" , "[0001]" , "{a:true}",
-      "{\"a\"://comment\ntrue}" , "{\"a\":/*comment*/true}" , "{'a':true}",
-      "{\"a\":'b'}" , "{\"a\t\":true}" , "{\"a\r\":true}" , "{\"a\n\":true}",
-"['a']" , "{\"a\":\"a\t\"}" , "[\"a\\'\"]" , "[NaN]" , "[+Infinity]",
-"[-Infinity]" , "[Infinity]" , "{\"a\":\"a\r\"}" , "{\"a\":\"a\n\"}",
-"[\"a\t\"]" , "\"test\"\"" , "\"test\"x" , "\"test\"\u0300",
-      "\"test\"\u0005" , "[5]\"" , "[5]x" , "[5]\u0300" , "[5]\u0005",
-      "{\"test\":5}\"" , "{\"test\":5}x" , "{\"test\":5}\u0300",
-      "{\"test\":5}\u0005" , "true\"" , "truex" , "true}" , "true\u0300",
-      "true\u0005" , "8024\"" , "8024x" , "8024}" , "8024\u0300",
-      "8024\u0005" , "{\"test\":5}}" , "{\"test\":5}{" , "[5]]" , "[5][",
-      "0000" , "0x1" , "0xf" , "0x20" , "0x01",
-      "0X1" , "0Xf" , "0X20" , "0X01" , ".2" , ".05" , "-.2",
-      "-.05" , "23." , "23.e0" , "23.e1" , "0." , "[0000]" , "[0x1]",
-      "[0xf]" , "[0x20]" , "[0x01]" , "[.2]" , "[.05]" , "[-.2]" , "[-.05]",
-"[23.]" , "[23.e0]" , "[23.e1]" , "[0.]" , "\"abc" , "\"ab\u0004c\"",
-"\u0004\"abc\"" , "[1,\u0004" + "2]" };
+    private static string[] jsonFails = { "\"\\uxxxx\"",
+      "\"\\ud800\udc00\"",
+      "\"\ud800\\udc00\"", "\"\\U0023\"", "\"\\u002x\"", "\"\\u00xx\"",
+      "\"\\u0xxx\"", "\"\\u0\"", "\"\\u00\"", "\"\\u000\"", "trbb",
+      "trub", "falsb", "nulb", "[true", "[true,", "[true]!",
+      "[\"\ud800\\udc00\"]", "[\"\\ud800\udc00\"]",
+      "[\"\\udc00\ud800\udc00\"]", "[\"\\ud800\ud800\udc00\"]",
+      "[\"\\ud800\"]", "[1,2,", "[1,2,3", "{,\"0\":0,\"1\":1}",
+      "{\"0\":0,,\"1\":1}", "{\"0\":0,\"1\":1,}", "[,0,1,2]", "[0,,1,2]",
+"[0,1,,2]", "[0,1,2,]", "[0001]", "{a:true}",
+      "{\"a\"://comment\ntrue}", "{\"a\":/*comment*/true}", "{'a':true}",
+      "{\"a\":'b'}", "{\"a\t\":true}", "{\"a\r\":true}", "{\"a\n\":true}",
+"['a']", "{\"a\":\"a\t\"}", "[\"a\\'\"]", "[NaN]", "[+Infinity]",
+"[-Infinity]", "[Infinity]", "{\"a\":\"a\r\"}", "{\"a\":\"a\n\"}",
+"[\"a\t\"]", "\"test\"\"", "\"test\"x", "\"test\"\u0300",
+      "\"test\"\u0005", "[5]\"", "[5]x", "[5]\u0300", "[5]\u0005",
+      "{\"test\":5}\"", "{\"test\":5}x", "{\"test\":5}\u0300",
+      "{\"test\":5}\u0005", "true\"", "truex", "true}", "true\u0300",
+      "true\u0005", "8024\"", "8024x", "8024}", "8024\u0300",
+      "8024\u0005", "{\"test\":5}}", "{\"test\":5}{", "[5]]", "[5][",
+      "0000", "0x1", "0xf", "0x20", "0x01",
+      "0X1", "0Xf", "0X20", "0X01", ".2", ".05", "-.2",
+      "-.05", "23.", "23.e0", "23.e1", "0.", "[0000]", "[0x1]",
+      "[0xf]", "[0x20]", "[0x01]", "[.2]", "[.05]", "[-.2]", "[-.05]",
+"[23.]", "[23.e0]", "[23.e1]", "[0.]", "\"abc", "\"ab\u0004c\"",
+"\u0004\"abc\"", "[1,\u0004" + "2]" };
 
- private static string[] jsonSucceeds ={"[0]" , "[0.1]" , "[0.1001]",
+    private static readonly string[] ValueJsonSucceeds = { "[0]",
+      "[0.1]",
+      "[0.1001]",
       "[0.0]",
-"[0.00]" , "[0.000]" , "[0.01]" , "[0.001]" , "[0.5]" , "[0E5]",
-  "[0E+6]" , "[\"\ud800\udc00\"]" , "[\"\\ud800\\udc00\"]",
-  "[\"\\ud800\\udc00\ud800\udc00\"]" , "23.0e01" , "23.0e00" , "[23.0e01]",
-  "[23.0e00]" , "0" ,"1" ,"0.2" ,"0.05" ,"-0.2" ,"-0.05" };
+"[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]",
+  "[0E+6]", "[\"\ud800\udc00\"]", "[\"\\ud800\\udc00\"]",
+  "[\"\\ud800\\udc00\ud800\udc00\"]", "23.0e01", "23.0e00", "[23.0e01]",
+  "[23.0e00]", "0", "1", "0.2", "0.05", "-0.2", "-0.05" };
 
     [Test]
     public void TestFromJSONString() {
@@ -1748,7 +1751,7 @@ throw new InvalidOperationException(String.Empty, ex);
       foreach (string str in jsonFails) {
         TestFailingJSON(str);
       }
-      foreach (string str in jsonSucceeds) {
+      foreach (string str in ValueJsonSucceeds) {
         TestSucceedingJSON(str);
       }
       try {
@@ -2130,8 +2133,8 @@ throw new InvalidOperationException(String.Empty, ex);
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                     ].AsString()));
+          CBORObject.FromObject(ExtendedDecimal.FromString(
+  numberinfo["number"].AsString()));
         if (!numberinfo["integer"].Equals(CBORObject.Null)) {
           Assert.IsTrue(cbornumber.IsFinite);
         } else {
@@ -3332,8 +3335,8 @@ throw new InvalidOperationException(String.Empty, ex);
       for (int i = 0; i < numbers.Count; ++i) {
         CBORObject numberinfo = numbers[i];
         CBORObject cbornumber =
-          CBORObject.FromObject(ExtendedDecimal.FromString(numberinfo["number"
-                     ].AsString()));
+          CBORObject.FromObject(ExtendedDecimal.FromString(
+  numberinfo["number"].AsString()));
         if (cbornumber.IsNaN()) {
           try {
             Assert.Fail(String.Empty + cbornumber.Sign);

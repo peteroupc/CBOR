@@ -7,14 +7,14 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 using System.Collections.Generic;
+using System.Text;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
-using System.Text;
 
 namespace Test {
   public static class TestCommon {
-    private static readonly string valueDigits = "0123456789";
+    private static readonly string ValueDigits = "0123456789";
 
     public static void AssertByteArraysEqual(byte[] arr1, byte[] arr2) {
       if (!ByteArraysEqual(arr1, arr2)) {
@@ -245,7 +245,7 @@ string msg) where T :
         value = -value;
       }
       while (value != 0) {
-        char digit = valueDigits[(int)(value % 10)];
+        char digit = ValueDigits[(int)(value % 10)];
         chars[count++] = digit;
         value /= 10;
       }
@@ -273,7 +273,7 @@ string msg) where T :
         longValue = -longValue;
       }
       while (longValue != 0) {
-        char digit = valueDigits[(int)(longValue % 10)];
+        char digit = ValueDigits[(int)(longValue % 10)];
         chars[count++] = digit;
         longValue /= 10;
       }

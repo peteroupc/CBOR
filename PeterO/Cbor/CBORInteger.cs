@@ -56,7 +56,7 @@ namespace PeterO.Cbor {
       if (intItem == Int64.MinValue) {
         return true;
       }
-      intItem = (intItem< 0) ? -intItem : intItem;
+      intItem = (intItem < 0) ? -intItem : intItem;
       while (intItem >= (1L << 24) && (intItem & 1) == 0) {
         intItem >>= 1;
       }

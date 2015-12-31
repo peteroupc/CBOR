@@ -243,15 +243,17 @@ Console.Write(String.Empty);
       Assert.AreEqual(1, obj[1].AsInt32());
       TestCommon.AssertRoundTrip(obj);
       // Select all even numbers
-      obj = CBORObject.FromObject(from i in RangeExclusive(0, 10) where i %
-                    2 == 0 select i);
+      var query = from i in RangeExclusive(0, 10) where i %
+                    2 == 0 select i;
+      obj = CBORObject.FromObject(query);
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(2, obj[1].AsInt32());
       TestCommon.AssertRoundTrip(obj);
       // Select all even numbers
-      obj = CBORObject.FromObject(from i in RangeExclusive(0, 10) where i %
-                    2 == 0 select new { A = i, B = i + 1 });
+      var query2 = from i in RangeExclusive(0, 10) where i %
+                    2 == 0 select new { A = i, B = i + 1 };
+      obj = CBORObject.FromObject(query2);
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0]["a"].AsInt32());
       Assert.AreEqual(3, obj[1]["b"].AsInt32());
@@ -4765,10 +4767,11 @@ stringTemp);
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
         TestCommon.AssertSer(
           CBORObject.FromObject((decimal)i + 0.1m),
-        String.Format(CultureInfo.InvariantCulture, "{0}" , (decimal)i + 0.1m));
+        String.Format(CultureInfo.InvariantCulture, "{0}", (decimal)i +
+            0.1m));
         TestCommon.AssertSer(
           CBORObject.FromObject((decimal)i + 0.1111m),
-     String.Format(CultureInfo.InvariantCulture, "{0}" , (decimal)i + 0.1111m));
+     String.Format(CultureInfo.InvariantCulture, "{0}", (decimal)i + 0.1111m));
       }
     }
 

@@ -9,27 +9,27 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Numbers.ETrapException"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.TrapException"]/*'/>
   public class TrapException : ArithmeticException {
-    internal ETrapException ete;
+    private ETrapException ete;
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Context"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.TrapException.Context"]/*'/>
     public PrecisionContext Context { get {
-        return new PrecisionContext(ete.Context);
+        return new PrecisionContext(this.ete.Context);
 } }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Result"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.TrapException.Result"]/*'/>
     public Object Result { get {
-        return ete.Result;
+        return this.ete.Result;
 } }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Error"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.TrapException.Error"]/*'/>
     public int Error { get {
-        return ete.Error;
+        return this.ete.Error;
 } }
 
     private TrapException() : base() {
@@ -41,8 +41,9 @@ namespace PeterO {
       return ex;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ETrapException.#ctor(System.Int32,PeterO.Numbers.EContext,System.Object)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.TrapException.#ctor(System.Int32,PeterO.PrecisionContext,System.Object)"]/*'
+    /// />
     public TrapException(int flag, PrecisionContext ctx, Object result) :
       base(String.Empty) {
       Object wrappedResult = result;
@@ -58,8 +59,10 @@ namespace PeterO {
       if (ef != null) {
  wrappedResult = new ExtendedFloat(ef);
 }
-      ete = new ETrapException(flag, ctx == null ? null : ctx.ec,
-        wrappedResult);
+      this.ete = new ETrapException(
+flag,
+ctx == null ? null : ctx.Ec,
+wrappedResult);
     }
   }
 }

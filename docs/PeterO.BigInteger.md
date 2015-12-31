@@ -114,7 +114,7 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>thisValue</i>
+The parameter <i>thisValue</i>
  is null.
 
 ### add
@@ -135,7 +135,7 @@ The sum of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigintAugend</i>
+The parameter <i>bigintAugend</i>
  is null.
 
 ### And
@@ -161,7 +161,7 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>a</i>
+The parameter <i>a</i>
  or  <i>b</i>
  is null.
 
@@ -194,7 +194,8 @@ Compares an arbitrary-precision integer with this instance.
 
 <b>Parameters:</b>
 
- * <i>other</i>: Not documented yet.
+ * <i>other</i>: The parameter  <i>other</i>
+ is not documented yet.
 
 <b>Returns:</b>
 
@@ -221,7 +222,7 @@ The quotient of the two objects.
 The divisor is zero.
 
  * System.ArgumentNullException:
-The parameter  <i>bigintDivisor</i>
+The parameter <i>bigintDivisor</i>
  is null.
 
  * System.DivideByZeroException:
@@ -245,11 +246,11 @@ An array with two big integers: the first is the quotient, and the second is the
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
  * System.DivideByZeroException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is 0.
 
  * System.DivideByZeroException:
@@ -308,7 +309,7 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bytes</i>
+The parameter <i>bytes</i>
  is null.
 
 ### fromBytes
@@ -332,7 +333,7 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bytes</i>
+The parameter <i>bytes</i>
  is null.
 
 ### fromRadixString
@@ -343,15 +344,17 @@ The parameter  <i>bytes</i>
 
 Converts a string to an arbitrary-precision integer.
 
-The following example (C#) converts a number in the orm of a hex string to a big integer.    public static arbitrary-precision integer HexToBigInteger(string hexString) {
-      // Parse the hexadecimal string as a big integer.  Will
-      // throw a FormatException if the parsing fails
-      var bigInteger = arbitrary-precision integer.fromRadixString(hexString, 16);
-      // Optional: Check if the parsed integer is negative
-      if (bigInteger.Sign < 0) {
-        throw new FormatException("negative hex string");
-      }
-      return bigInteger;
+The following example (C#) converts a number in the form of a hex string to a big integer.    public static arbitrary-precision integer HexToBigInteger(string
+    hexString) {
+    // Parse the hexadecimal string as a big integer. Will
+    // throw a FormatException if the parsing fails
+    var bigInteger = arbitrary-precision
+    integer.fromRadixString(hexString, 16);
+    // Optional: Check if the parsed integer is negative
+    if (bigInteger.Sign < 0) {
+    throw new FormatException("negative hex string");
+    }
+    return bigInteger;
     }
 
 <b>Parameters:</b>
@@ -367,11 +370,11 @@ An arbitrary-precision integer with the same value as given in the string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
  * System.ArgumentException:
-The parameter  <i>radix</i>
+The parameter <i>radix</i>
  is less than 2 or greater than 36.
 
  * System.FormatException:
@@ -404,14 +407,14 @@ An arbitrary-precision integer with the same value as given in the string portio
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
  * System.ArgumentException:
-The parameter  <i>index</i>
+The parameter <i>index</i>
  is less than 0,  <i>endIndex</i>
  is less than 0, or either is greater than the string's length, or  <i>endIndex</i>
- is less than  <i>index</i>
+ is less than <i>index</i>
 .
 
  * System.FormatException:
@@ -435,7 +438,7 @@ An arbitrary-precision integer with the same value as given in the string.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
  * System.FormatException:
@@ -466,14 +469,14 @@ An arbitrary-precision integer with the same value as given in the string portio
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>str</i>
+The parameter <i>str</i>
  is null.
 
  * System.ArgumentException:
-The parameter  <i>index</i>
+The parameter <i>index</i>
  is less than 0,  <i>endIndex</i>
  is less than 0, or either is greater than the string's length, or  <i>endIndex</i>
- is less than  <i>index</i>
+ is less than <i>index</i>
 .
 
  * System.FormatException:
@@ -497,7 +500,7 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigintSecond</i>
+The parameter <i>bigintSecond</i>
  is null.
 
 ### GetBits
@@ -576,6 +579,8 @@ The number of bits in this object's value. Returns 0 if this object's value is 0
         PeterO.BigInteger bigintFirst,
         PeterO.BigInteger bigintSecond);
 
+Not documented yet.
+
 <b>Parameters:</b>
 
  * <i>bigintFirst</i>: Another arbitrary-precision integer.
@@ -589,14 +594,14 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigintFirst</i>
+The parameter <i>bigintFirst</i>
  is null.
 
 ### intValue
 
     public int intValue();
 
-<b>Deprecated.</b> To make the conversion intention clearer use the 'intValueChecked' and 'intValueUnchecked' methods instead. Replace 'intValue' with 'intValueChecked' in your code.
+<b>Deprecated.</b> To make the conversion intention clearer use the 'intValueChecked' and 'intValueUnchecked' methods instead.
 
 Converts this object's value to a 32-bit signed integer.
 
@@ -638,7 +643,7 @@ A 32-bit signed integer.
 
     public long longValue();
 
-<b>Deprecated.</b> To make the conversion intention clearer use the 'longValueChecked' and 'longValueUnchecked' methods instead. Replace 'longValue' with 'longValueChecked' in your code.
+<b>Deprecated.</b> To make the conversion intention clearer use the 'longValueChecked' and 'longValueUnchecked' methods instead.
 
 Converts this object's value to a 64-bit signed integer.
 
@@ -694,11 +699,11 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArithmeticException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is negative.
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
 ### ModPow
@@ -722,7 +727,7 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>pow</i>
+The parameter <i>pow</i>
  or  <i>mod</i>
  is null.
 
@@ -735,6 +740,17 @@ The parameter  <i>pow</i>
 
 Calculates the remainder when an arbitrary-precision integer raised to a certain power is divided by another arbitrary-precision integer.
 
+<b>Parameters:</b>
+
+ * <i>bigintValue</i>: The parameter  <i>bigintValue</i>
+ is not documented yet.
+
+ * <i>pow</i>: The parameter  <i>pow</i>
+ is not documented yet.
+
+ * <i>mod</i>: The parameter  <i>mod</i>
+ is not documented yet.
+
 <b>Returns:</b>
 
 The value ( <i>bigintValue</i>
@@ -745,7 +761,7 @@ The value ( <i>bigintValue</i>
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigintValue</i>
+The parameter <i>bigintValue</i>
  is null.
 
 ### multiply
@@ -766,7 +782,7 @@ The product of the two numbers.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigintMult</i>
+The parameter <i>bigintMult</i>
  is null.
 
 ### negate
@@ -797,7 +813,7 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>valueA</i>
+The parameter <i>valueA</i>
  is null.
 
 ### Operator `+`
@@ -808,6 +824,14 @@ The parameter  <i>valueA</i>
 
 Adds an arbitrary-precision integer and an arbitrary-precision integer object.
 
+<b>Parameters:</b>
+
+ * <i>bthis</i>: The parameter  <i>bthis</i>
+ is not documented yet.
+
+ * <i>augend</i>: The parameter  <i>augend</i>
+ is not documented yet.
+
 <b>Returns:</b>
 
 The sum of the two objects.
@@ -815,7 +839,7 @@ The sum of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bthis</i>
+The parameter <i>bthis</i>
  is null.
 
 ### Operator `/`
@@ -826,6 +850,14 @@ The parameter  <i>bthis</i>
 
 Divides an arbitrary-precision integer by the value of an arbitrary-precision integer object.
 
+<b>Parameters:</b>
+
+ * <i>dividend</i>: The parameter  <i>dividend</i>
+ is not documented yet.
+
+ * <i>divisor</i>: The parameter  <i>divisor</i>
+ is not documented yet.
+
 <b>Returns:</b>
 
 The quotient of the two objects.
@@ -833,7 +865,7 @@ The quotient of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>dividend</i>
+The parameter <i>dividend</i>
  is null.
 
 ### Operator `>`
@@ -882,6 +914,8 @@ True if  <i>thisValue</i>
         PeterO.BigInteger bthis,
         int bitCount);
 
+Not documented yet.
+
 <b>Parameters:</b>
 
  * <i>bthis</i>: Another arbitrary-precision integer.
@@ -895,7 +929,7 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bthis</i>
+The parameter <i>bthis</i>
  is null.
 
 ### Operator `<`
@@ -946,6 +980,14 @@ True if  <i>thisValue</i>
 
 Finds the remainder that results when an arbitrary-precision integer is divided by the value of an arbitrary-precision integer.
 
+<b>Parameters:</b>
+
+ * <i>dividend</i>: The parameter  <i>dividend</i>
+ is not documented yet.
+
+ * <i>divisor</i>: The parameter  <i>divisor</i>
+ is not documented yet.
+
 <b>Returns:</b>
 
 The remainder of the two objects.
@@ -953,7 +995,7 @@ The remainder of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>dividend</i>
+The parameter <i>dividend</i>
  is null.
 
 ### Operator `*`
@@ -964,6 +1006,14 @@ The parameter  <i>dividend</i>
 
 Multiplies an arbitrary-precision integer by the value of a arbitrary-precision integer.
 
+<b>Parameters:</b>
+
+ * <i>operand1</i>: The parameter  <i>operand1</i>
+ is not documented yet.
+
+ * <i>operand2</i>: The parameter  <i>operand2</i>
+ is not documented yet.
+
 <b>Returns:</b>
 
 The product of the two numbers.
@@ -971,7 +1021,7 @@ The product of the two numbers.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>operand1</i>
+The parameter <i>operand1</i>
  is null.
 
 ### Operator `>>`
@@ -997,7 +1047,7 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bthis</i>
+The parameter <i>bthis</i>
  is null.
 
 ### Operator `-`
@@ -1021,7 +1071,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bthis</i>
+The parameter <i>bthis</i>
  is null.
 
 ### Operator `-`
@@ -1042,7 +1092,7 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>bigValue</i>
+The parameter <i>bigValue</i>
  is null.
 
 ### Or
@@ -1068,7 +1118,7 @@ An arbitrary-precision integer.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>first</i>
+The parameter <i>first</i>
  or  <i>second</i>
  is null.
 
@@ -1091,7 +1141,7 @@ The result. Returns 1 if  <i>powerSmall</i>
 <b>Exceptions:</b>
 
  * System.ArgumentException:
-The parameter  <i>powerSmall</i>
+The parameter <i>powerSmall</i>
  is less than 0.
 
 ### Pow
@@ -1125,11 +1175,11 @@ The result. Returns 1 if  <i>power</i>
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>power</i>
+The parameter <i>power</i>
  is null.
 
  * System.ArgumentException:
-The parameter  <i>power</i>
+The parameter <i>power</i>
  is less than 0.
 
 ### remainder
@@ -1150,7 +1200,7 @@ The remainder of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>divisor</i>
+The parameter <i>divisor</i>
  is null.
 
  * System.DivideByZeroException:
@@ -1224,7 +1274,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>subtrahend</i>
+The parameter <i>subtrahend</i>
  is null.
 
 ### testBit
@@ -1352,6 +1402,6 @@ An arbitrary-precision integer in which each bit is set if it's set in one input
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>a</i>
+The parameter <i>a</i>
  or  <i>b</i>
  is null.

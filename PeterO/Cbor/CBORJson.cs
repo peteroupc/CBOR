@@ -27,47 +27,47 @@ namespace PeterO.Cbor {
 
     private string NextJSONString() {
       int c;
-      sb = sb ?? new StringBuilder();
-      sb.Clear();
+      this.sb = this.sb ?? new StringBuilder();
+      this.sb.Clear();
       while (true) {
-        c = reader.ReadChar();
+        c = this.reader.ReadChar();
         if (c == -1 || c < 0x20) {
-          reader.RaiseError("Unterminated string");
+          this.reader.RaiseError("Unterminated string");
         }
         switch (c) {
           case '\\':
-            c = reader.ReadChar();
+            c = this.reader.ReadChar();
             switch (c) {
               case '\\':
-                sb.Append('\\');
+                this.sb.Append('\\');
                 break;
               case '/':
                 // Now allowed to be escaped under RFC 7159
-                sb.Append('/');
+                this.sb.Append('/');
                 break;
               case '\"':
-                sb.Append('\"');
+                this.sb.Append('\"');
                 break;
               case 'b':
-                sb.Append('\b');
+                this.sb.Append('\b');
                 break;
               case 'f':
-                sb.Append('\f');
+                this.sb.Append('\f');
                 break;
               case 'n':
-                sb.Append('\n');
+                this.sb.Append('\n');
                 break;
               case 'r':
-                sb.Append('\r');
+                this.sb.Append('\r');
                 break;
               case 't':
-                sb.Append('\t');
+                this.sb.Append('\t');
                 break;
                 case 'u': { // Unicode escape
                   c = 0;
                   // Consists of 4 hex digits
                   for (var i = 0; i < 4; ++i) {
-                    int ch = reader.ReadChar();
+                    int ch = this.reader.ReadChar();
                     if (ch >= '0' && ch <= '9') {
                     c <<= 4;
                     c |= ch - '0';
@@ -78,20 +78,20 @@ namespace PeterO.Cbor {
                     c <<= 4;
                     c |= ch + 10 - 'a';
                     } else {
-                reader.RaiseError("Invalid Unicode escaped character");
+                this.reader.RaiseError("Invalid Unicode escaped character");
                     }
                   }
                   if ((c & 0xf800) != 0xd800) {
                     // Non-surrogate
-                    sb.Append((char)c);
+                    this.sb.Append((char)c);
                   } else if ((c & 0xfc00) == 0xd800) {
-                    int ch = reader.ReadChar();
-                    if (ch!='\\' || reader.ReadChar() != 'u') {
-                    reader.RaiseError("Invalid escaped character");
+                    int ch = this.reader.ReadChar();
+                    if (ch != '\\' || this.reader.ReadChar() != 'u') {
+                    this.reader.RaiseError("Invalid escaped character");
                     }
                     var c2 = 0;
                     for (var i = 0; i < 4; ++i) {
-                    ch = reader.ReadChar();
+                    ch = this.reader.ReadChar();
                     if (ch >= '0' && ch <= '9') {
                     c2 <<= 4;
                     c2 |= ch - '0';
@@ -102,39 +102,40 @@ namespace PeterO.Cbor {
                     c2 <<= 4;
                     c2 |= ch + 10 - 'a';
                     } else {
-                    reader.RaiseError("Invalid Unicode escaped character");
+                    this.reader.RaiseError("Invalid Unicode escaped character");
                     }
                     }
                     if ((c2 & 0xfc00) != 0xdc00) {
-                    reader.RaiseError("Unpaired surrogate code point");
+                    this.reader.RaiseError("Unpaired surrogate code point");
                     } else {
-                    sb.Append((char)c);
-                    sb.Append((char)c2);
+                    this.sb.Append((char)c);
+                    this.sb.Append((char)c2);
                     }
                   } else {
-                    reader.RaiseError("Unpaired surrogate code point");
+                    this.reader.RaiseError("Unpaired surrogate code point");
                   }
                   break;
                 }
               default:
                 {
-                  reader.RaiseError("Invalid escaped character");
+                  this.reader.RaiseError("Invalid escaped character");
                   break;
                 }
             }
             break;
           case 0x22:  // double quote
-            return sb.ToString();
+            return this.sb.ToString();
           default: {
               // NOTE: Assumes the character reader
               // throws an error on finding illegal surrogate
               // pairs in the string or invalid encoding
               // in the stream
               if ((c >> 16) == 0) {
-                sb.Append((char)c);
+                this.sb.Append((char)c);
               } else {
-                sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) + 0xd800));
-                sb.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
+              this.sb.Append((char)((((c - 0x10000) >> 10) & 0x3ff) +
+                  0xd800));
+                this.sb.Append((char)(((c - 0x10000) & 0x3ff) + 0xdc00));
               }
               break;
             }
@@ -150,7 +151,7 @@ namespace PeterO.Cbor {
       int c = firstChar;
       CBORObject obj = null;
       if (c < 0) {
-        reader.RaiseError("Unexpected end of data");
+        this.reader.RaiseError("Unexpected end of data");
       }
       switch (c) {
         case '"':
@@ -159,66 +160,66 @@ namespace PeterO.Cbor {
             // The tokenizer already checked the string for invalid
             // surrogate pairs, so just call the CBORObject
             // constructor directly
-            obj = CBORObject.FromRaw(NextJSONString());
-            nextChar[0] = SkipWhitespaceJSON(reader);
+            obj = CBORObject.FromRaw(this.NextJSONString());
+            nextChar[0] = SkipWhitespaceJSON(this.reader);
             return obj;
           }
         case '{':
           {
             // Parse an object
-            obj = ParseJSONObject(depth + 1);
-            nextChar[0] = SkipWhitespaceJSON(reader);
+            obj = this.ParseJSONObject(depth + 1);
+            nextChar[0] = SkipWhitespaceJSON(this.reader);
             return obj;
           }
         case '[':
           {
             // Parse an array
-            obj = ParseJSONArray(depth + 1);
-            nextChar[0] = SkipWhitespaceJSON(reader);
+            obj = this.ParseJSONArray(depth + 1);
+            nextChar[0] = SkipWhitespaceJSON(this.reader);
             return obj;
           }
         case 't':
           {
             // Parse true
-            if (reader.ReadChar() != 'r' || reader.ReadChar() != 'u' ||
-                reader.ReadChar() != 'e') {
-              reader.RaiseError("Value can't be parsed.");
+          if (this.reader.ReadChar() != 'r' || this.reader.ReadChar() != 'u' ||
+              this.reader.ReadChar() != 'e') {
+              this.reader.RaiseError("Value can't be parsed.");
             }
-            nextChar[0] = SkipWhitespaceJSON(reader);
+            nextChar[0] = SkipWhitespaceJSON(this.reader);
             return CBORObject.True;
           }
         case 'f':
           {
             // Parse false
-            if (reader.ReadChar() != 'a' || reader.ReadChar() != 'l' ||
-                reader.ReadChar() != 's' || reader.ReadChar() != 'e') {
-              reader.RaiseError("Value can't be parsed.");
+          if (this.reader.ReadChar() != 'a' || this.reader.ReadChar() != 'l' ||
+              this.reader.ReadChar() != 's' || this.reader.ReadChar() != 'e') {
+              this.reader.RaiseError("Value can't be parsed.");
             }
-            nextChar[0] = SkipWhitespaceJSON(reader);
+            nextChar[0] = SkipWhitespaceJSON(this.reader);
             return CBORObject.False;
           }
         case 'n':
           {
             // Parse null
-            if (reader.ReadChar() != 'u' || reader.ReadChar() != 'l' ||
-                reader.ReadChar() != 'l') {
-              reader.RaiseError("Value can't be parsed.");
+          if (this.reader.ReadChar() != 'u' || this.reader.ReadChar() != 'l' ||
+              this.reader.ReadChar() != 'l') {
+              this.reader.RaiseError("Value can't be parsed.");
             }
-            nextChar[0] = SkipWhitespaceJSON(reader);
+            nextChar[0] = SkipWhitespaceJSON(this.reader);
             return CBORObject.Null;
           }
         case '-':
           {
             // Parse a negative number
             var lengthTwo = true;
-            c = reader.ReadChar();
+            c = this.reader.ReadChar();
             if (c < '0' || c > '9') {
-              reader.RaiseError("JSON number can't be parsed.");
+              this.reader.RaiseError("JSON number can't be parsed.");
             }
             int cval = -(c - '0');
             int cstart = c;
             StringBuilder sb = null;
-            c = reader.ReadChar();
+            c = this.reader.ReadChar();
             while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
                    c == 'e' || c == 'E') {
               if (lengthTwo) {
@@ -228,26 +229,23 @@ namespace PeterO.Cbor {
                 lengthTwo = false;
               }
               sb.Append((char)c);
-              c = reader.ReadChar();
+              c = this.reader.ReadChar();
             }
             if (lengthTwo) {
-              if (cval == 0) {
-                // TODO: Preserve negative zero in JSON in version 3
-                obj = CBORDataUtilities.ParseJSONNumber("-0");
-              } else {
-                obj = CBORObject.FromObject(cval);
-              }
+              // TODO: Preserve negative zero in JSON in version 3
+              obj = cval == 0 ? CBORDataUtilities.ParseJSONNumber("-0") :
+                CBORObject.FromObject(cval);
             } else {
               str = sb.ToString();
               obj = CBORDataUtilities.ParseJSONNumber(str);
               if (obj == null) {
-                reader.RaiseError("JSON number can't be parsed. " + str);
+                this.reader.RaiseError("JSON number can't be parsed. " + str);
               }
             }
             if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
               nextChar[0] = c;
             } else {
-              nextChar[0] = SkipWhitespaceJSON(reader);
+              nextChar[0] = SkipWhitespaceJSON(this.reader);
             }
             return obj;
           }
@@ -264,10 +262,10 @@ namespace PeterO.Cbor {
           {
             // Parse a number
             var lengthOne = true;
-            int cval = (c - '0');
+            int cval = c - '0';
             int cstart = c;
             StringBuilder sb = null;
-            c = reader.ReadChar();
+            c = this.reader.ReadChar();
             while (c == '-' || c == '+' || c == '.' || (c >= '0' && c <= '9') ||
                    c == 'e' || c == 'E') {
               if (lengthOne) {
@@ -276,7 +274,7 @@ namespace PeterO.Cbor {
                 lengthOne = false;
               }
               sb.Append((char)c);
-              c = reader.ReadChar();
+              c = this.reader.ReadChar();
             }
             if (lengthOne) {
               obj = CBORObject.FromObject(cval);
@@ -284,18 +282,18 @@ namespace PeterO.Cbor {
               str = sb.ToString();
               obj = CBORDataUtilities.ParseJSONNumber(str);
               if (obj == null) {
-                reader.RaiseError("JSON number can't be parsed. " + str);
+                this.reader.RaiseError("JSON number can't be parsed. " + str);
               }
             }
             if (c == -1 || (c != 0x20 && c != 0x0a && c != 0x0d && c != 0x09)) {
               nextChar[0] = c;
             } else {
-              nextChar[0] = SkipWhitespaceJSON(reader);
+              nextChar[0] = SkipWhitespaceJSON(this.reader);
             }
             return obj;
           }
         default:
-          reader.RaiseError("Value can't be parsed.");
+          this.reader.RaiseError("Value can't be parsed.");
           break;
       }
       return null;
@@ -312,21 +310,21 @@ namespace PeterO.Cbor {
     public CBORObject ParseJSON(bool objectOrArrayOnly, int[] nextchar) {
       int c;
       CBORObject ret;
-      c = SkipWhitespaceJSON(reader);
+      c = SkipWhitespaceJSON(this.reader);
       if (c == '[') {
-        ret = ParseJSONArray(0);
-        nextchar[0] = SkipWhitespaceJSON(reader);
+        ret = this.ParseJSONArray(0);
+        nextchar[0] = SkipWhitespaceJSON(this.reader);
         return ret;
       }
       if (c == '{') {
-        ret = ParseJSONObject(0);
-        nextchar[0] = SkipWhitespaceJSON(reader);
+        ret = this.ParseJSONObject(0);
+        nextchar[0] = SkipWhitespaceJSON(this.reader);
         return ret;
       }
       if (objectOrArrayOnly) {
-        reader.RaiseError("A JSON object must begin with '{' or '['");
+        this.reader.RaiseError("A JSON object must begin with '{' or '['");
       }
-      return NextJSONValue(c, nextchar, 0);
+      return this.NextJSONValue(c, nextchar, 0);
     }
 
     internal static CBORObject ParseJSONValue(
@@ -341,7 +339,7 @@ namespace PeterO.Cbor {
     private CBORObject ParseJSONObject(int depth) {
       // Assumes that the last character read was '{'
       if (depth > 1000) {
-        reader.RaiseError("Too deeply nested");
+        this.reader.RaiseError("Too deeply nested");
       }
       int c;
       CBORObject key = null;
@@ -350,47 +348,47 @@ namespace PeterO.Cbor {
       var seenComma = false;
       var myHashMap = new Dictionary<CBORObject, CBORObject>();
       while (true) {
-        c = SkipWhitespaceJSON(reader);
+        c = SkipWhitespaceJSON(this.reader);
         switch (c) {
           case -1:
-            reader.RaiseError("A JSONObject must end with '}'");
+            this.reader.RaiseError("A JSONObject must end with '}'");
             break;
           case '}':
             if (seenComma) {
               // Situation like '{"0"=>1,}'
-              reader.RaiseError("Trailing comma");
+              this.reader.RaiseError("Trailing comma");
               return null;
             }
             return CBORObject.FromRaw(myHashMap);
             default: {
               // Read the next string
               if (c < 0) {
-                reader.RaiseError("Unexpected end of data");
+                this.reader.RaiseError("Unexpected end of data");
                 return null;
               }
               if (c != '"') {
-                reader.RaiseError("Expected a string as a key");
+                this.reader.RaiseError("Expected a string as a key");
                 return null;
               }
               // Parse a string that represents the object's key
               // The tokenizer already checked the string for invalid
               // surrogate pairs, so just call the CBORObject
               // constructor directly
-              obj = CBORObject.FromRaw(NextJSONString());
+              obj = CBORObject.FromRaw(this.NextJSONString());
               key = obj;
-              if (noDuplicates && myHashMap.ContainsKey(obj)) {
-                reader.RaiseError("Key already exists: " + key);
+              if (this.noDuplicates && myHashMap.ContainsKey(obj)) {
+                this.reader.RaiseError("Key already exists: " + key);
                 return null;
               }
               break;
             }
         }
-        if (SkipWhitespaceJSON(reader) != ':') {
-          reader.RaiseError("Expected a ':' after a key");
+        if (SkipWhitespaceJSON(this.reader) != ':') {
+          this.reader.RaiseError("Expected a ':' after a key");
         }
         // NOTE: Will overwrite existing value
-        myHashMap[key] = NextJSONValue(
-          SkipWhitespaceJSON(reader),
+        myHashMap[key] = this.NextJSONValue(
+          SkipWhitespaceJSON(this.reader),
           nextchar,
           depth);
         switch (nextchar[0]) {
@@ -399,7 +397,7 @@ namespace PeterO.Cbor {
             break;
           case '}':
             return CBORObject.FromRaw(myHashMap);
-            default: reader.RaiseError("Expected a ',' or '}'");
+            default: this.reader.RaiseError("Expected a ',' or '}'");
             break;
         }
       }
@@ -408,26 +406,26 @@ namespace PeterO.Cbor {
     internal CBORObject ParseJSONArray(int depth) {
       // Assumes that the last character read was '['
       if (depth > 1000) {
-        reader.RaiseError("Too deeply nested");
+        this.reader.RaiseError("Too deeply nested");
       }
       var myArrayList = new List<CBORObject>();
       var seenComma = false;
       var nextchar = new int[1];
       while (true) {
-        int c = SkipWhitespaceJSON(reader);
+        int c = SkipWhitespaceJSON(this.reader);
         if (c == ']') {
           if (seenComma) {
             // Situation like '[0,1,]'
-            reader.RaiseError("Trailing comma");
+            this.reader.RaiseError("Trailing comma");
           }
           return CBORObject.FromRaw(myArrayList);
         }
         if (c == ',') {
           // Situation like '[,0,1,2]' or '[0,,1]'
-          reader.RaiseError("Empty array element");
+          this.reader.RaiseError("Empty array element");
         }
         myArrayList.Add(
-          NextJSONValue(
+          this.NextJSONValue(
             c,
             nextchar,
             depth));
@@ -439,7 +437,7 @@ namespace PeterO.Cbor {
           case ']':
             return CBORObject.FromRaw(myArrayList);
           default:
-            reader.RaiseError("Expected a ',' or ']'");
+            this.reader.RaiseError("Expected a ',' or ']'");
             break;
         }
       }

@@ -9,19 +9,19 @@ using System;
 using PeterO;
 
 namespace PeterO.Cbor {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Cbor.CBORDataUtilities"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Cbor.CBORDataUtilities"]/*'/>
   public static class CBORDataUtilities {
     private const int MaxSafeInt = 214748363;
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String)"]/*'/>
     public static CBORObject ParseJSONNumber(string str) {
       return ParseJSONNumber(str, false, false);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean)"]/*'/>
     public static CBORObject ParseJSONNumber(
       string str,
       bool integersOnly,

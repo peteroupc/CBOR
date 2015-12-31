@@ -8,8 +8,8 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Numbers.IShiftAccumulator"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Numbers.IShiftAccumulator"]/*'/>
   internal interface IShiftAccumulator {
     EInteger ShiftedInt { get; }
 
