@@ -8,14 +8,14 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 
 namespace PeterO.Numbers {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Numbers.ETrapException"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.Numbers.ETrapException"]/*'/>
   internal class ETrapException : ArithmeticException {
     private readonly Object result;
     private readonly EContext ctx;
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Context"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Context"]/*'/>
     public EContext Context {
       get {
         return this.ctx;
@@ -24,16 +24,16 @@ namespace PeterO.Numbers {
 
     private readonly int error;
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Result"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Result"]/*'/>
     public Object Result {
       get {
         return this.result;
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Error"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.ETrapException.Error"]/*'/>
     public int Error {
       get {
         return this.error;
@@ -51,8 +51,9 @@ namespace PeterO.Numbers {
         EContext.FlagUnderflow) ? "Underflow" : "Trap")))))));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.ETrapException.#ctor(System.Int32,PeterO.Numbers.EContext,System.Object)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.ETrapException.#ctor(System.Int32,PeterO.Numbers.EContext,System.Object)"]/*'
+    /// />
     public ETrapException(int flag, EContext ctx, Object result) :
       base(FlagToMessage(flag)) {
       this.error = flag;

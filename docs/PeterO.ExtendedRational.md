@@ -14,6 +14,8 @@ Arbitrary-precision rational number. This class cannot be inherited; this is a c
 
 Initializes a new instance of the arbitrary-precision rational number class.
 
+Not documented yet.
+
 <b>Parameters:</b>
 
  * <i>numerator</i>: An arbitrary-precision integer.
@@ -23,7 +25,7 @@ Initializes a new instance of the arbitrary-precision rational number class.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>numerator</i>
+The parameter <i>numerator</i>
  or  <i>denominator</i>
  is null.
 
@@ -168,12 +170,12 @@ Adds two rational numbers.
 
 <b>Returns:</b>
 
-The sum of the two numbers. returns not-a-number (NaN) if either operand is NaN.
+The sum of the two numbers. Returns not-a-number (NaN) if either operand is NaN.
 
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### CompareTo
@@ -191,6 +193,12 @@ Compares an arbitrary-precision rational number with this instance.
 
 Zero if the values are equal; a negative number if this instance is less, or a positive number if this instance is greater.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>other</i>
+ is null.
+
 ### CompareToBinary
 
     public int CompareToBinary(
@@ -206,6 +214,12 @@ Compares an arbitrary-precision binary float with this instance.
 
 Zero if the values are equal; a negative number if this instance is less, or a positive number if this instance is greater.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>other</i>
+ is null.
+
 ### CompareToDecimal
 
     public int CompareToDecimal(
@@ -220,6 +234,12 @@ Compares an arbitrary-precision decimal number with this instance.
 <b>Returns:</b>
 
 Zero if the values are equal; a negative number if this instance is less, or a positive number if this instance is greater.
+
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>other</i>
+ is null.
 
 ### Create
 
@@ -257,6 +277,13 @@ Creates a rational number with the given numerator and denominator.
 
 An arbitrary-precision rational number.
 
+<b>Exceptions:</b>
+
+ * System.ArgumentNullException:
+The parameter  <i>numerator</i>
+ or  <i>denominator</i>
+ is null.
+
 ### CreateNaN
 
     public static PeterO.ExtendedRational CreateNaN(
@@ -275,11 +302,11 @@ An arbitrary-precision rational number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>diag</i>
+The parameter <i>diag</i>
  is null.
 
  * System.ArgumentException:
-The parameter  <i>diag</i>
+The parameter <i>diag</i>
  is less than 0.
 
 ### CreateNaN
@@ -306,11 +333,11 @@ An arbitrary-precision rational number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>diag</i>
+The parameter <i>diag</i>
  is null.
 
  * System.ArgumentException:
-The parameter  <i>diag</i>
+The parameter <i>diag</i>
  is less than 0.
 
 ### Divide
@@ -331,7 +358,7 @@ The quotient of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### Equals
@@ -367,7 +394,7 @@ A Boolean object.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>other</i>
+The parameter <i>other</i>
  is null.
 
 ### FromBigInteger
@@ -419,13 +446,15 @@ An arbitrary-precision rational number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>ef</i>
+The parameter <i>ef</i>
  is null.
 
 ### FromExtendedFloat
 
     public static PeterO.ExtendedRational FromExtendedFloat(
         PeterO.ExtendedFloat ef);
+
+Not documented yet.
 
 <b>Parameters:</b>
 
@@ -438,7 +467,7 @@ An arbitrary-precision rational number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>ef</i>
+The parameter <i>ef</i>
  is null.
 
 ### FromInt32
@@ -575,7 +604,7 @@ The product of the two numbers.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### Negate
@@ -606,7 +635,7 @@ The remainder of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### Subtract
@@ -627,7 +656,7 @@ The difference of the two objects.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter  <i>otherValue</i>
+The parameter <i>otherValue</i>
  is null.
 
 ### ToBigInteger

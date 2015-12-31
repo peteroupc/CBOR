@@ -307,12 +307,14 @@ namespace PeterO.Cbor {
     private MutableNumber mnum;  // if integerMode is 1
     private BigInteger largeValue;  // if integerMode is 2
     private int integerMode;
-    private static readonly BigInteger valueInt32MinValue =
+    private static readonly BigInteger ValueInt32MinValue =
       (BigInteger)Int32.MinValue;
-    private static readonly BigInteger valueInt32MaxValue =
+
+    private static readonly BigInteger ValueInt32MaxValue =
       (BigInteger)Int32.MaxValue;
-    private static readonly BigInteger valueNegativeInt32MinValue =
-    -(BigInteger)valueInt32MinValue;
+
+    private static readonly BigInteger ValueNegativeInt32MinValue =
+    -(BigInteger)ValueInt32MinValue;
 
     internal FastInteger2(int value) {
       this.smallValue = value;
@@ -352,8 +354,8 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Multiply(System.Int32)"]/*'/>
     internal FastInteger2 Multiply(int val) {
       if (val == 0) {
         this.smallValue = 0;
@@ -405,8 +407,8 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)"]/*'/>
     internal FastInteger2 Subtract(FastInteger2 val) {
       BigInteger valValue;
       switch (this.integerMode) {
@@ -452,8 +454,8 @@ namespace PeterO.Cbor {
       return this;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.SubtractInt(System.Int32)"]/*'/>
     internal FastInteger2 SubtractInt(int val) {
       if (val == Int32.MinValue) {
         return this.AddInt(Int32.MaxValue).AddInt(1);
@@ -575,13 +577,13 @@ namespace PeterO.Cbor {
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Cbor.FastInteger2.Sign"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Cbor.FastInteger2.Sign"]/*'/>
     internal int Sign {
       get {
         switch (this.integerMode) {
           case 0:
-          return (this.smallValue == 0) ? (0) : ((this.smallValue< 0) ? -1 :
+          return (this.smallValue == 0) ? 0 : ((this.smallValue < 0) ? -1 :
               1);
           case 1:
             return this.mnum.Sign;

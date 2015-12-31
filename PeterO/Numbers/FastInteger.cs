@@ -403,12 +403,14 @@ namespace PeterO.Numbers {
     private MutableNumber mnum;  // if integerMode is 1
     private EInteger largeValue;  // if integerMode is 2
     private int integerMode;
-    private static readonly EInteger valueInt32MinValue =
+    private static readonly EInteger ValueInt32MinValue =
       (EInteger)Int32.MinValue;
-    private static readonly EInteger valueInt32MaxValue =
+
+    private static readonly EInteger ValueInt32MaxValue =
       (EInteger)Int32.MaxValue;
-    private static readonly EInteger valueNegativeInt32MinValue =
-    -(EInteger)valueInt32MinValue;
+
+    private static readonly EInteger ValueNegativeInt32MinValue =
+    -(EInteger)ValueInt32MinValue;
 
     internal FastInteger(int value) {
       this.smallValue = value;
@@ -535,7 +537,7 @@ namespace PeterO.Numbers {
           EInteger bigrem;
           EInteger bigquo;
 {
-EInteger[] divrem=(this.AsBigInteger()).DivRem(divisor.AsBigInteger());
+EInteger[] divrem = this.AsBigInteger().DivRem(divisor.AsBigInteger());
 bigquo = divrem[0];
 bigrem = divrem[1]; }
           var smallquo = (int)bigquo;
@@ -547,7 +549,7 @@ bigrem = divrem[1]; }
         EInteger bigrem;
         EInteger bigquo;
 {
-EInteger[] divrem=(this.AsBigInteger()).DivRem(divisor.AsBigInteger());
+EInteger[] divrem = this.AsBigInteger().DivRem(divisor.AsBigInteger());
 bigquo = divrem[0];
 bigrem = divrem[1]; }
         var smallquo = (int)bigquo;
@@ -557,8 +559,8 @@ bigrem = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Multiply(System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Multiply(System.Int32)"]/*'/>
     internal FastInteger Multiply(int val) {
       if (val == 0) {
         this.smallValue = 0;
@@ -610,8 +612,8 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Negate"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Negate"]/*'/>
     internal FastInteger Negate() {
       switch (this.integerMode) {
         case 0:
@@ -619,7 +621,7 @@ bigrem = divrem[1]; }
             // would overflow, convert to large
             this.integerMode = 1;
             this.mnum =
-            MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
+            MutableNumber.FromBigInteger(ValueNegativeInt32MinValue);
           } else {
             smallValue = -smallValue;
           }
@@ -638,8 +640,8 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Subtract(PeterO.Numbers.FastInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Subtract(PeterO.Numbers.FastInteger)"]/*'/>
     internal FastInteger Subtract(FastInteger val) {
       EInteger valValue;
       switch (this.integerMode) {
@@ -685,11 +687,11 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.SubtractInt(System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.SubtractInt(System.Int32)"]/*'/>
     internal FastInteger SubtractInt(int val) {
       if (val == Int32.MinValue) {
-        return this.AddBig(valueNegativeInt32MinValue);
+        return this.AddBig(ValueNegativeInt32MinValue);
       }
       if (this.integerMode == 0) {
         if ((val < 0 && Int32.MaxValue + val < this.smallValue) ||
@@ -706,8 +708,8 @@ bigrem = divrem[1]; }
       return this.AddInt(-val);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.AddBig(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.AddBig(PeterO.Numbers.EInteger)"]/*'/>
     internal FastInteger AddBig(EInteger bigintVal) {
       switch (this.integerMode) {
           case 0: {
@@ -728,8 +730,8 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.SubtractBig(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.SubtractBig(PeterO.Numbers.EInteger)"]/*'/>
     internal FastInteger SubtractBig(EInteger bigintVal) {
       if (this.integerMode == 2) {
         this.largeValue -= (EInteger)bigintVal;
@@ -741,10 +743,10 @@ bigrem = divrem[1]; }
         }
         // Check if this value fits an int, except if
         // it's MinValue
-        if (sign < 0 && bigintVal.CompareTo(valueInt32MinValue) > 0) {
+        if (sign < 0 && bigintVal.CompareTo(ValueInt32MinValue) > 0) {
           return this.AddInt(-((int)bigintVal));
         }
-        if (sign > 0 && bigintVal.CompareTo(valueInt32MaxValue) <= 0) {
+        if (sign > 0 && bigintVal.CompareTo(ValueInt32MaxValue) <= 0) {
           return this.SubtractInt((int)bigintVal);
         }
         bigintVal = -bigintVal;
@@ -800,8 +802,8 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Remainder(System.Int32)"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.Remainder(System.Int32)"]/*'/>
     internal FastInteger Remainder(int divisor) {
       // Mod operator will always result in a
       // number that fits an int for int divisors
@@ -836,7 +838,7 @@ bigrem = divrem[1]; }
           ++this.smallValue;
         } else {
           this.integerMode = 1;
-          this.mnum = MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
+          this.mnum = MutableNumber.FromBigInteger(ValueNegativeInt32MinValue);
         }
         return this;
       }
@@ -849,7 +851,7 @@ bigrem = divrem[1]; }
           --this.smallValue;
         } else {
           this.integerMode = 1;
-          this.mnum = MutableNumber.FromBigInteger(valueInt32MinValue);
+          this.mnum = MutableNumber.FromBigInteger(ValueInt32MinValue);
           this.mnum.SubtractInt(1);
         }
         return this;
@@ -865,7 +867,7 @@ bigrem = divrem[1]; }
               // would overflow, convert to large
               this.integerMode = 1;
               this.mnum =
-              MutableNumber.FromBigInteger(valueNegativeInt32MinValue);
+              MutableNumber.FromBigInteger(ValueNegativeInt32MinValue);
             } else {
               smallValue /= divisor;
             }
@@ -895,8 +897,8 @@ bigrem = divrem[1]; }
       return this;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.FastInteger.IsEvenNumber"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.FastInteger.IsEvenNumber"]/*'/>
     internal bool IsEvenNumber {
       get {
         switch (this.integerMode) {
@@ -1006,8 +1008,8 @@ bigrem = divrem[1]; }
       return new String(chars, 0, count);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.ToString"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Numbers.FastInteger.ToString"]/*'/>
     public override string ToString() {
       switch (this.integerMode) {
         case 0:
@@ -1020,13 +1022,13 @@ bigrem = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.FastInteger.Sign"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.FastInteger.Sign"]/*'/>
     internal int Sign {
       get {
         switch (this.integerMode) {
           case 0:
-          return (this.smallValue == 0) ? (0) : ((this.smallValue< 0) ? -1 :
+          return (this.smallValue == 0) ? 0 : ((this.smallValue < 0) ? -1 :
               1);
           case 1:
             return this.mnum.Sign;
@@ -1037,8 +1039,8 @@ bigrem = divrem[1]; }
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.FastInteger.IsValueZero"]'/>
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.Numbers.FastInteger.IsValueZero"]/*'/>
     internal bool IsValueZero {
       get {
         switch (this.integerMode) {

@@ -14,12 +14,12 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.Numbers.EInteger"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.BigInteger"]/*'/>
   public sealed partial class BigInteger : IComparable<BigInteger>,
     IEquatable<BigInteger> {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.BigInteger.ONE"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.BigInteger.ONE"]/*'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -29,17 +29,17 @@ namespace PeterO {
 
     public static readonly BigInteger ONE = new BigInteger(EInteger.One);
 
-    internal readonly EInteger ei;
+    internal readonly EInteger Ei;
 
     internal BigInteger(EInteger ei) {
-      if ((ei) == null) {
+      if (ei == null) {
   throw new ArgumentNullException("ei");
 }
-      this.ei = ei;
+      this.Ei = ei;
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.BigInteger.TEN"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.BigInteger.TEN"]/*'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -49,8 +49,8 @@ namespace PeterO {
 
     public static readonly BigInteger TEN = BigInteger.valueOf(10);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="F:PeterO.BigInteger.ZERO"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="F:PeterO.BigInteger.ZERO"]/*'/>
 #if CODE_ANALYSIS
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
       "Microsoft.Security",
@@ -59,338 +59,360 @@ namespace PeterO {
 #endif
     public static readonly BigInteger ZERO = new BigInteger(EInteger.Zero);
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.EInteger.IsEven"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.BigInteger.IsEven"]/*'/>
     public bool IsEven { get {
- return this.ei.IsEven;
+ return this.Ei.IsEven;
 } }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.EInteger.IsZero"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.BigInteger.IsZero"]/*'/>
     public bool IsZero { get {
- return this.ei.IsZero;
+ return this.Ei.IsZero;
 } }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.Numbers.EInteger.Sign"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.BigInteger.Sign"]/*'/>
     public int Sign { get {
- return this.ei.Sign;
+ return this.Ei.Sign;
 } }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.fromByteArray(System.Byte[],System.Boolean)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.fromByteArray(System.Byte[],System.Boolean)"]/*'
+    /// />
     [Obsolete("Renamed to 'fromBytes'.")]
     public static BigInteger fromByteArray(byte[] bytes, bool littleEndian) {
       return new BigInteger(EInteger.FromBytes(bytes, littleEndian));
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.fromBytes(System.Byte[],System.Boolean)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.fromBytes(System.Byte[],System.Boolean)"]/*'
+    /// />
     public static BigInteger fromBytes(byte[] bytes, bool littleEndian) {
       return new BigInteger(EInteger.FromBytes(bytes, littleEndian));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.fromRadixString(System.String,System.Int32)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.fromRadixString(System.String,System.Int32)"]/*'
+    /// />
     public static BigInteger fromRadixString(string str, int radix) {
       return new BigInteger(EInteger.FromRadixString(str, radix));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.fromRadixSubstring(System.String,System.Int32,System.Int32,System.Int32)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.fromRadixSubstring(System.String,System.Int32,System.Int32,System.Int32)"]/*'
+    /// />
     public static BigInteger fromRadixSubstring(
       string str,
       int radix,
       int index,
       int endIndex) {
- return new BigInteger(EInteger.FromRadixSubstring(str,
-        radix, index, endIndex));
+ return new BigInteger(
+EInteger.FromRadixSubstring(
+str,
+radix,
+index,
+endIndex));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.fromString(System.String)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.fromString(System.String)"]/*'
+    /// />
     public static BigInteger fromString(string str) {
 return new BigInteger(EInteger.fromString(str));
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.fromSubstring(System.String,System.Int32,System.Int32)"]'/>
-    public static BigInteger fromSubstring(string str,
-      int index,
-      int endIndex) {
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.fromSubstring(System.String,System.Int32,System.Int32)"]/*'
+    /// />
+    public static BigInteger fromSubstring(
+string str,
+int index,
+int endIndex) {
 return new BigInteger(EInteger.FromSubstring(str, index, endIndex));
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.valueOf(System.Int64)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.valueOf(System.Int64)"]/*'/>
     public static BigInteger valueOf(long longerValue) {
       return new BigInteger(EInteger.FromInt64(longerValue));
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.abs"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.abs"]/*'/>
     public BigInteger abs() {
-      return new BigInteger(this.ei.Abs());
+      return new BigInteger(this.Ei.Abs());
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.add(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.add(PeterO.BigInteger)"]/*'/>
     public BigInteger add(BigInteger bigintAugend) {
-      if ((bigintAugend) == null) {
+      if (bigintAugend == null) {
   throw new ArgumentNullException("bigintAugend");
 }
-return new BigInteger(this.ei.Add(bigintAugend.ei));
+return new BigInteger(this.Ei.Add(bigintAugend.Ei));
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.bitLength"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.bitLength"]/*'/>
     public int bitLength() {
-return this.ei.bitLength();
+return this.Ei.bitLength();
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.canFitInInt"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.canFitInInt"]/*'/>
     public bool canFitInInt() {
-return this.ei.canFitInInt();
+return this.Ei.canFitInInt();
       }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.CompareTo(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.CompareTo(PeterO.BigInteger)"]/*'
+    /// />
     public int CompareTo(BigInteger other) {
-      return (other == null) ? (1) : (this.ei.CompareTo(other.ei));
+      return (other == null) ? 1 : this.Ei.CompareTo(other.Ei);
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.divide(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.divide(PeterO.BigInteger)"]/*'
+    /// />
     public BigInteger divide(BigInteger bigintDivisor) {
-      if ((bigintDivisor) == null) {
+      if (bigintDivisor == null) {
         throw new ArgumentNullException("bigintDivisor");
       }
-      return new BigInteger(this.ei.Divide(bigintDivisor.ei));
+      return new BigInteger(this.Ei.Divide(bigintDivisor.Ei));
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.divideAndRemainder(PeterO.BigInteger)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.divideAndRemainder(PeterO.BigInteger)"]/*'
+    /// />
     public BigInteger[] divideAndRemainder(BigInteger divisor) {
-      if ((divisor) == null) {
+      if (divisor == null) {
   throw new ArgumentNullException("divisor");
 }
-      EInteger[] eia = this.ei.DivRem(divisor.ei);
+      EInteger[] eia = this.Ei.DivRem(divisor.Ei);
     return new BigInteger[] { new BigInteger(eia[0]), new BigInteger(eia[1])
         };
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.Equals(System.Object)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.Equals(System.Object)"]/*'/>
     public override bool Equals(object obj) {
       var bi = obj as BigInteger;
-      return (bi == null) ? (false) : (this.ei.Equals(bi.ei));
+      return (bi == null) ? false : this.Ei.Equals(bi.Ei);
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.gcd(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.gcd(PeterO.BigInteger)"]/*'/>
     public BigInteger gcd(BigInteger bigintSecond) {
-  if ((bigintSecond) == null) {
+  if (bigintSecond == null) {
   throw new ArgumentNullException("bigintSecond");
 }
-return new BigInteger(this.ei.gcd(bigintSecond.ei));
+return new BigInteger(this.Ei.gcd(bigintSecond.Ei));
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.getDigitCount"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.getDigitCount"]/*'/>
     public int getDigitCount() {
-      return this.ei.getDigitCount();
+      return this.Ei.getDigitCount();
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.GetHashCode"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.GetHashCode"]/*'/>
     public override int GetHashCode() {
-      return this.ei.GetHashCode();
+      return this.Ei.GetHashCode();
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.getLowBit"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.getLowBit"]/*'/>
     public int getLowBit() {
-      return this.ei.getLowBit();
+      return this.Ei.getLowBit();
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.getLowestSetBit"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.getLowestSetBit"]/*'/>
     [Obsolete("Renamed to getLowBit.")]
     public int getLowestSetBit() {
-      return getLowBit();
+      return this.getLowBit();
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.getUnsignedBitLength"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.getUnsignedBitLength"]/*'/>
     public int getUnsignedBitLength() {
-      return getUnsignedBitLength();
+      return this.getUnsignedBitLength();
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.intValue"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.intValue"]/*'/>
     [Obsolete(
-  "To make the conversion intention clearer use the 'intValueChecked' and 'intValueUnchecked' methods instead. Replace 'intValue' with 'intValueChecked' in your code." )]
+  "To make the conversion intention clearer use the 'intValueChecked' and 'intValueUnchecked' methods instead." )]
     public int intValue() {
-return this.ei.AsInt32Checked();
+return this.Ei.AsInt32Checked();
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.intValueChecked"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.intValueChecked"]/*'/>
     public int intValueChecked() {
-return this.ei.AsInt32Checked();
+return this.Ei.AsInt32Checked();
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.intValueUnchecked"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.intValueUnchecked"]/*'/>
     public int intValueUnchecked() {
-return this.ei.AsInt32Unchecked();
+return this.Ei.AsInt32Unchecked();
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.longValue"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.longValue"]/*'/>
     [Obsolete(
-  "To make the conversion intention clearer use the 'longValueChecked' and 'longValueUnchecked' methods instead. Replace 'longValue' with 'longValueChecked' in your code." )]
+  "To make the conversion intention clearer use the 'longValueChecked' and 'longValueUnchecked' methods instead." )]
     public long longValue() {
-return this.ei.AsInt64Checked();
+return this.Ei.AsInt64Checked();
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.longValueChecked"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.longValueChecked"]/*'/>
     public long longValueChecked() {
-return this.ei.AsInt64Checked();
+return this.Ei.AsInt64Checked();
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.longValueUnchecked"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.longValueUnchecked"]/*'/>
     public long longValueUnchecked() {
-      return this.ei.AsInt64Unchecked();
+      return this.Ei.AsInt64Unchecked();
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.mod(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.mod(PeterO.BigInteger)"]/*'/>
     public BigInteger mod(BigInteger divisor) {
-  if ((divisor) == null) {
+  if (divisor == null) {
   throw new ArgumentNullException("divisor");
 }
-return new BigInteger(this.ei.mod(divisor.ei));
+return new BigInteger(this.Ei.mod(divisor.Ei));
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.ModPow(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.ModPow(PeterO.BigInteger,PeterO.BigInteger)"]/*'
+    /// />
     public BigInteger ModPow(BigInteger pow, BigInteger mod) {
-  if ((pow) == null) {
+  if (pow == null) {
   throw new ArgumentNullException("pow");
 }
-  if ((mod) == null) {
+  if (mod == null) {
   throw new ArgumentNullException("mod");
 }
-return new BigInteger(this.ei.ModPow(pow.ei, mod.ei));
+return new BigInteger(this.Ei.ModPow(pow.Ei, mod.Ei));
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.multiply(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.multiply(PeterO.BigInteger)"]/*'
+    /// />
     public BigInteger multiply(BigInteger bigintMult) {
-      if ((bigintMult) == null) {
+      if (bigintMult == null) {
         throw new ArgumentNullException("bigintMult");
       }
-      return new BigInteger(this.ei.Multiply(bigintMult.ei));
+      return new BigInteger(this.Ei.Multiply(bigintMult.Ei));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.negate"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.negate"]/*'/>
     public BigInteger negate() {
-      return new BigInteger(this.ei.Negate());
+      return new BigInteger(this.Ei.Negate());
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.pow(System.Int32)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.pow(System.Int32)"]/*'/>
     public BigInteger pow(int powerSmall) {
-return new BigInteger(this.ei.pow(powerSmall));
+return new BigInteger(this.Ei.pow(powerSmall));
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.PowBigIntVar(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.PowBigIntVar(PeterO.BigInteger)"]/*'
+    /// />
     public BigInteger PowBigIntVar(BigInteger power) {
-  if ((power) == null) {
+  if (power == null) {
   throw new ArgumentNullException("power");
 }
-return new BigInteger(this.ei.PowBigIntVar(power.ei));
+return new BigInteger(this.Ei.PowBigIntVar(power.Ei));
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.remainder(PeterO.Numbers.EInteger)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.remainder(PeterO.BigInteger)"]/*'
+    /// />
     public BigInteger remainder(BigInteger divisor) {
-  if ((divisor) == null) {
+  if (divisor == null) {
   throw new ArgumentNullException("divisor");
 }
-return new BigInteger(this.ei.Remainder(divisor.ei));
+return new BigInteger(this.Ei.Remainder(divisor.Ei));
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.shiftLeft(System.Int32)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.shiftLeft(System.Int32)"]/*'/>
     public BigInteger shiftLeft(int numberBits) {
-      return new BigInteger(this.ei.ShiftLeft(numberBits));
+      return new BigInteger(this.Ei.ShiftLeft(numberBits));
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.shiftRight(System.Int32)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.shiftRight(System.Int32)"]/*'
+    /// />
     public BigInteger shiftRight(int numberBits) {
-      return new BigInteger(this.ei.ShiftRight(numberBits));
+      return new BigInteger(this.Ei.ShiftRight(numberBits));
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.sqrt"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.sqrt"]/*'/>
     public BigInteger sqrt() {
-      return new BigInteger(this.ei.Sqrt());
+      return new BigInteger(this.Ei.Sqrt());
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.sqrtWithRemainder"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.sqrtWithRemainder"]/*'/>
     public BigInteger[] sqrtWithRemainder() {
-      EInteger[] eia = this.ei.SqrtRem();
+      EInteger[] eia = this.Ei.SqrtRem();
       return new BigInteger[] { new BigInteger(eia[0]), new BigInteger(eia[1])
         };
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.subtract(PeterO.BigInteger)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.subtract(PeterO.BigInteger)"]/*'
+    /// />
     public BigInteger subtract(BigInteger subtrahend) {
-      if ((subtrahend) == null) {
+      if (subtrahend == null) {
   throw new ArgumentNullException("subtrahend");
 }
-      return new BigInteger(this.ei.Subtract(subtrahend.ei));
+      return new BigInteger(this.Ei.Subtract(subtrahend.Ei));
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.testBit(System.Int32)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.testBit(System.Int32)"]/*'/>
     public bool testBit(int index) {
-return this.ei.testBit(index);
+return this.Ei.testBit(index);
 }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.BigInteger.toByteArray(System.Boolean)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.toByteArray(System.Boolean)"]/*'
+    /// />
     [Obsolete("Renamed to 'toBytes'.")]
     public byte[] toByteArray(bool littleEndian) {
-      return toBytes(littleEndian);
+      return this.toBytes(littleEndian);
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.toBytes(System.Boolean)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.toBytes(System.Boolean)"]/*'/>
     public byte[] toBytes(bool littleEndian) {
-      return this.ei.toBytes(littleEndian);
+      return this.Ei.toBytes(littleEndian);
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.toRadixString(System.Int32)"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.toRadixString(System.Int32)"]/*'
+    /// />
     public string toRadixString(int radix) {
-      return this.ei.toRadixString(radix);
+      return this.Ei.toRadixString(radix);
  }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.ToString"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.BigInteger.ToString"]/*'/>
     public override string ToString() {
-      return this.ei.ToString();
+      return this.Ei.ToString();
     }
   }
 }

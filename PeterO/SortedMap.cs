@@ -9,11 +9,11 @@ using System;
 using System.Collections.Generic;
 
 namespace PeterO {
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="T:PeterO.SortedMap`2"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.SortedMap`2"]/*'/>
   internal class SortedMap<T1, T2> : IDictionary<T1, T2> {
     private readonly RedBlackTree<KeyValuePair<T1, T2>> tree;
-    private static readonly IComparer<KeyValuePair<T1, T2>> comp = new
+    private static readonly IComparer<KeyValuePair<T1, T2>> ValueComp = new
       KeyComparer();
 
     private sealed class KeyComparer : IComparer<KeyValuePair<T1, T2>> {
@@ -25,11 +25,11 @@ namespace PeterO {
     }
 
     public SortedMap() {
-      this.tree = new RedBlackTree<KeyValuePair<T1, T2>>(comp);
+      this.tree = new RedBlackTree<KeyValuePair<T1, T2>>(ValueComp);
     }
 
     public SortedMap(IDictionary<T1, T2> mapA) {
-      this.tree = new RedBlackTree<KeyValuePair<T1, T2>>(comp);
+      this.tree = new RedBlackTree<KeyValuePair<T1, T2>>(ValueComp);
       foreach (var item in mapA) {
         this.tree.AddOverwrite(item);
       }
@@ -110,9 +110,6 @@ out kvp)) {
       return this.tree.Contains(item);
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="M:PeterO.SortedMap`2.CopyTo(System.Collections.Generic.KeyValuePair
-    /// {`0,`1}[],System.Int32)"]'/>
     public void CopyTo(KeyValuePair<T1, T2>[] array, int arrayIndex) {
       this.tree.CopyTo(array, arrayIndex);
     }
@@ -123,8 +120,8 @@ out kvp)) {
       }
     }
 
-    /// <include file='docs.xml'
-    /// path='docs/doc[@name="P:PeterO.SortedMap`2.IsReadOnly"]'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="P:PeterO.SortedMap`2.IsReadOnly"]/*'/>
     public bool IsReadOnly {
       get {
         return false;
