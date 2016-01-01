@@ -783,11 +783,13 @@
 <summary>Parses a number whose format follows the JSON
             specification. See #ParseJSONNumber(String, integersOnly,
             parseOnly) for more information.</summary>
-            <param name='str'>A string to parse.</param>
+            <param name='str'>A string to parse.  The string is
+            not allowed to contain white space characters, including
+            spaces.</param>
             <returns>A CBOR object that represents the parsed number. Returns
             positive zero if the number is a zero that starts with a minus sign
             (such as "-0" or "-0.0"). Returns null if the parsing
-            fails.</returns>
+            fails, including if the string is null or empty.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean)">
 <summary>Parses a number whose format follows the JSON
@@ -797,7 +799,9 @@
             , full stop) with one or more basic digits, and an optional letter
             E or e with an optional plus or minus sign and one or more basic
             digits (the exponent).</summary>
-            <param name='str'>A string to parse.</param>
+            <param name='str'>A string to parse.  The string is
+            not allowed to contain white space characters, including
+            spaces.</param>
             <param name='integersOnly'>If true, no decimal points or exponents
             are allowed in the string.</param>
             <param name='positiveOnly'>If true, only positive numbers are
@@ -805,7 +809,28 @@
             <returns>A CBOR object that represents the parsed number. Returns
             positive zero if the number is a zero that starts with a minus sign
             (such as "-0" or "-0.0"). Returns null if the parsing
-            fails.</returns>
+            fails, including if the string is null or empty.</returns>
+</doc>
+<doc name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean,System.Boolean)">
+<summary>Parses a number whose format follows the JSON
+            specification (RFC 7159). Roughly speaking, a valid number consists
+            of an optional minus sign, one or more basic digits (starting with
+            1 to 9 unless the only digit is 0), an optional decimal point ("."
+            , full stop) with one or more basic digits, and an optional letter
+            E or e with an optional plus or minus sign and one or more basic
+            digits (the exponent).</summary>
+            <param name='str'>A string to parse.  The string is
+            not allowed to contain white space characters, including
+            spaces.</param>
+            <param name='integersOnly'>If true, no decimal points or exponents
+            are allowed in the string.</param>
+            <param name='positiveOnly'>If true, only positive numbers are
+            allowed (the leading minus is disallowed).</param>
+            <param name='preserveNegativeZero'>If true, returns
+            positive zero if the number is a zero that starts with a minus sign
+            (such as "-0" or "-0.0").  Otherwise, returns negative zero in this case.</param>
+            <returns>A CBOR object that represents the parsed number.  Returns null if the parsing
+            fails, including if the string is null or empty.</returns>
 </doc>
 <doc name="T:PeterO.Cbor.CBOREncodeOptions">
 <summary>Specifies options for encoding and decoding CBOR
@@ -3928,7 +3953,7 @@
             all in any combination of upper and lower case.</para>
             <para>All characters mentioned above are the corresponding
             characters in the Basic Latin range. In particular, the digits must
-            be the basic digits 0 to 9 (U+0030 to U+0039). The string is
+            be the basic digits 0 to 9 (U+0030 to U+0039). The string portion is
             not allowed to contain white space characters, including
             spaces.</para></summary>
             <param name='str'>A text string, a portion of which represents a
@@ -4301,7 +4326,7 @@
 <doc name="M:PeterO.ExtendedDecimal.Negate">
 <summary>Gets an object with the same value as this one, but with
             the sign reversed.</summary>
-            <returns>An arbitrary-precision decimal number.</returns>
+            <returns>An arbitrary-precision decimal number.  If this value is positive zero, returns positive zero.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Negate(PeterO.PrecisionContext)">
 <summary>Returns a decimal number with the same value as this
@@ -4311,7 +4336,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal number.</returns>
+            <returns>An arbitrary-precision decimal number.  If this value is positive zero, returns positive zero.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='context'/> is null.</exception>
 </doc>
@@ -5880,7 +5905,7 @@
 <doc name="M:PeterO.ExtendedFloat.Negate">
 <summary>Gets an object with the same value as this one, but with
             the sign reversed.</summary>
-            <returns>An arbitrary-precision binary float.</returns>
+            <returns>An arbitrary-precision binary float.  If this value is positive zero, returns positive zero.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.Negate(PeterO.PrecisionContext)">
 <summary>Returns a binary float with the same value as this object
@@ -5890,7 +5915,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision binary float.</returns>
+            <returns>An arbitrary-precision binary float.  If this value is positive zero, returns positive zero.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='context'/> is null.</exception>
 </doc>
@@ -8278,7 +8303,7 @@
 <doc name="M:PeterO.Numbers.EDecimal.Negate">
 <summary>Gets an object with the same value as this one, but with
             the sign reversed.</summary>
-            <returns>An arbitrary-precision decimal number.</returns>
+            <returns>An arbitrary-precision decimal number.  If this value is positive zero, returns positive zero.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Negate(PeterO.Numbers.EContext)">
 <summary>Returns a decimal number with the same value as this
@@ -8288,7 +8313,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision decimal number.</returns>
+            <returns>An arbitrary-precision decimal number.  If this value is positive zero, returns positive zero.</returns>
 </doc>
 <doc name="F:PeterO.Numbers.EDecimal.NegativeInfinity">
 <summary>Negative infinity, less than any other number.</summary>
@@ -9813,7 +9838,7 @@
 <doc name="M:PeterO.Numbers.EFloat.Negate">
 <summary>Gets an object with the same value as this one, but with
             the sign reversed.</summary>
-            <returns>An arbitrary-precision binary float.</returns>
+            <returns>An arbitrary-precision binary float.  If this value is positive zero, returns positive zero.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EFloat.Negate(PeterO.Numbers.EContext)">
 <summary>Returns a binary float with the same value as this object
@@ -9823,7 +9848,7 @@
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
             Can be null.</param>
-            <returns>An arbitrary-precision binary float.</returns>
+            <returns>An arbitrary-precision binary float.  If this value is positive zero, returns positive zero.</returns>
 </doc>
 <doc name="F:PeterO.Numbers.EFloat.NegativeInfinity">
 <summary>Negative infinity, less than any other number.</summary>

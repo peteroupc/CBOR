@@ -1283,8 +1283,7 @@ remainder = divrem[1]; }
       EInteger adjExp = this.GetAdjustedExponent();
       if (adjExp.CompareTo((EInteger)(-326)) < 0) {
         // Very low exponent, treat as 0
-        return this.IsNegative ?
-          Extras.IntegersToDouble(new[] { 0,
+        return this.IsNegative ? Extras.IntegersToDouble(new[] { 0,
             unchecked((int)(1 << 31)) }) : 0.0;
       }
       if (adjExp.CompareTo((EInteger)309) > 0) {
