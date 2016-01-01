@@ -1221,6 +1221,13 @@ cbornumber.AsSingle());
     }
 
     [Test]
+    public void TestNegativeZero() {
+      CBORObject negzero = CBORObject.FromObject(
+        ExtendedDecimal.FromString("-0"));
+      TestCommon.AssertRoundTrip(negzero);
+    }
+
+    [Test]
     public void TestCompareTo() {
       var r = new FastRandom();
       const int CompareCount = 500;

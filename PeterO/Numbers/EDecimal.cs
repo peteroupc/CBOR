@@ -1275,8 +1275,7 @@ remainder = divrem[1]; }
         return Double.NegativeInfinity;
       }
       if (this.IsNegative && this.IsZero) {
-        return Extras.IntegersToDouble(new[] { unchecked((int)(1 << 31)),
-                    0 });
+        return Extras.IntegersToDouble(new[] { 0, unchecked((int)(1 << 31)) });
       }
       if (this.IsZero) {
         return 0.0;
@@ -1285,8 +1284,8 @@ remainder = divrem[1]; }
       if (adjExp.CompareTo((EInteger)(-326)) < 0) {
         // Very low exponent, treat as 0
         return this.IsNegative ?
-          Extras.IntegersToDouble(new[] { unchecked((int)(1 << 31)),
-                    0 }) : 0.0;
+          Extras.IntegersToDouble(new[] { 0,
+            unchecked((int)(1 << 31)) }) : 0.0;
       }
       if (adjExp.CompareTo((EInteger)309) > 0) {
         // Very high exponent, treat as infinity
