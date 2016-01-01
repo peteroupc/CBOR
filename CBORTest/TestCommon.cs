@@ -60,10 +60,7 @@ String.Empty + o + " and " + o2 + " don't have equal hash codes");
 
     public static void AssertRoundTrip(CBORObject o) {
       CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      int cmp = CompareTestReciprocal(o, o2);
-      if (cmp != 0) {
-        Assert.AreEqual(0, cmp, o + "\nvs.\n" + o2);
-      }
+      CompareTestEqual(o, o2);
       TestNumber(o);
       AssertEqualsHashCode(o, o2);
     }
@@ -292,7 +289,7 @@ string msg) where T :
       var co1 = o1 as CBORObject;
       var co2 = o2 as CBORObject;
       if (co1 != null) {
-        TestCommon.ObjectMessages(co1, co2, s);
+        return TestCommon.ObjectMessages(co1,co2, s);
       }
       return s + ":\n" + o1 + " and\n" + o2;
     }
@@ -320,7 +317,7 @@ TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2);
       var co2 = o2 as CBORObject;
       var co3 = o3 as CBORObject;
       if (co1 != null) {
-        TestCommon.ObjectMessages(co1, co2, co3, s);
+        return TestCommon.ObjectMessages(co1, co2, co3, s);
       }
       return s + ":\n" + o1 + " and\n" + o2 + " and\n" + o3;
     }

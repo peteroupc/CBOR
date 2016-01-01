@@ -263,7 +263,8 @@ namespace Test {
         // Signaling NaN currently not generated because
         // it doesn't round-trip as well
       }
-      return ExtendedDecimal.FromString(RandomDecimalString(r));
+      string str = RandomDecimalString(r);
+      return ExtendedDecimal.FromString(str);
     }
 
     public static BigInteger RandomBigInteger(FastRandom r) {
@@ -336,13 +337,13 @@ RandomBigInteger(r),
     }
 
     public static String RandomDecimalString(FastRandom r) {
-      int count = r.NextValue(20) + 1;
+      int count = r.NextValue(40) + 1;
       var sb = new StringBuilder();
       if (r.NextValue(2) == 0) {
         sb.Append('-');
       }
       for (var i = 0; i < count; ++i) {
-        if (i == 0) {
+        if (i == 0 && count > 1) {
           sb.Append((char)('1' + r.NextValue(9)));
         } else {
           sb.Append((char)('0' + r.NextValue(10)));
@@ -350,14 +351,18 @@ RandomBigInteger(r),
       }
       if (r.NextValue(2) == 0) {
         sb.Append('.');
-        count = r.NextValue(20) + 1;
+        count = r.NextValue(30) + 1;
         for (var i = 0; i < count; ++i) {
           sb.Append((char)('0' + r.NextValue(10)));
         }
       }
       if (r.NextValue(2) == 0) {
         sb.Append('E');
-        count = r.NextValue(20);
+        if (r.NextValue(100) < 10) {
+          count = r.NextValue(5000);
+        } else {
+          count = r.NextValue(20);
+        }
         if (count != 0) {
           sb.Append(r.NextValue(2) == 0 ? '+' : '-');
         }

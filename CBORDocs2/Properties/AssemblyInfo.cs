@@ -12,8 +12,7 @@ using System.Reflection;
   AssemblyCopyright(
   "Written by Peter O. in 2013-2015. Any copyright is " +
   "dedicated to the Public Domain. " +
-  "<http://creativecommons.org/publicdomain/zero/1.0/>"
-)]
+  "<http://creativecommons.org/publicdomain/zero/1.0/>")]
 [assembly: AssemblyProduct("CBORDocs2")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

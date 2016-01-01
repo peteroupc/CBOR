@@ -20,6 +20,7 @@ BitConverter.GetBytes((double)dbl),
     }
 
     public static double IntegersToDouble(int[] integers) {
+      // NOTE: least significant word first
       long value = ((long)integers[0]) & 0xFFFFFFFFL;
       value |= (((long)integers[1]) & 0xFFFFFFFFL) << 32;
       return BitConverter.ToDouble(BitConverter.GetBytes((long)value), 0);

@@ -534,7 +534,7 @@ namespace PeterO.Numbers {
         return Extras.IntegersToDouble(nan);
       }
       if (this.IsNegative && this.IsZero) {
-        return Extras.IntegersToDouble(new[] { unchecked((int)(1 << 31)), 0 });
+        return Extras.IntegersToDouble(new[] { 0, unchecked((int)(1 << 31)) });
       }
       EInteger bigmant = this.unsignedMantissa.Abs();
       FastInteger bigexponent = FastInteger.FromBig(this.exponent);
