@@ -288,10 +288,8 @@ string msg) where T :
       String s) {
       var co1 = o1 as CBORObject;
       var co2 = o2 as CBORObject;
-      if (co1 != null) {
-        return TestCommon.ObjectMessages(co1,co2, s);
-      }
-      return s + ":\n" + o1 + " and\n" + o2;
+      return (co1 != null) ? TestCommon.ObjectMessages(co1, co2, s) : (s +
+        ":\n" + o1 + " and\n" + o2);
     }
 
     public static string ObjectMessages(
@@ -316,10 +314,8 @@ TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2);
       var co1 = o1 as CBORObject;
       var co2 = o2 as CBORObject;
       var co3 = o3 as CBORObject;
-      if (co1 != null) {
-        return TestCommon.ObjectMessages(co1, co2, co3, s);
-      }
-      return s + ":\n" + o1 + " and\n" + o2 + " and\n" + o3;
+      return (co1 != null) ? TestCommon.ObjectMessages(co1, co2, co3, s) :
+        (s + ":\n" + o1 + " and\n" + o2 + " and\n" + o3);
     }
 
     public static string ObjectMessages(

@@ -26,8 +26,16 @@ namespace PeterO.Cbor {
       string str,
       bool integersOnly,
       bool positiveOnly) {
-      // TODO: Add parameter allowing negative zero
-      // to be preserved
+      return ParseJSONNumber(str, integersOnly, positiveOnly, false);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORDataUtilities.ParseJSONNumber(System.String,System.Boolean,System.Boolean,System.Boolean)"]/*'/>
+    public static CBORObject ParseJSONNumber(
+      string str,
+      bool integersOnly,
+      bool positiveOnly,
+      bool preserveNegativeZero) {
       if (String.IsNullOrEmpty(str)) {
         return null;
       }
@@ -55,6 +63,10 @@ namespace PeterO.Cbor {
         ++i;
         haveDigits = true;
         if (i == str.Length) {
+          if (preserveNegativeZero && negative) {
+            return CBORObject.FromObject(
+             ExtendedDecimal.NegativeZero);
+          }
           return CBORObject.FromObject(0);
         }
         if (!integersOnly) {
@@ -206,16 +218,20 @@ namespace PeterO.Cbor {
           mant = null;
         }
         if (mant == null) {
-          // NOTE: mantInt can only be positive, so overflow is impossible
-          #if DEBUG
+          // NOTE: mantInt can only be 0 or greater, so overflow is impossible
+#if DEBUG
           if (mantInt < 0) {
             throw new ArgumentException("mantInt (" + mantInt +
               ") is less than 0");
           }
-          #endif
+#endif
 
           if (negative) {
             mantInt = -mantInt;
+            if (preserveNegativeZero && mantInt == 0) {
+              return CBORObject.FromObject(
+                ExtendedDecimal.NegativeZero);
+            }
           }
           return CBORObject.FromObject(mantInt);
         } else {
@@ -233,9 +249,14 @@ namespace PeterO.Cbor {
         if (negative) {
           bigmant = -(BigInteger)bigmant;
         }
-        return CBORObject.FromObject(ExtendedDecimal.Create(
+        ExtendedDecimal edec;
+        edec = ExtendedDecimal.Create(
           bigmant,
-          bigexp));
+          bigexp);
+        if (negative && preserveNegativeZero && bigmant.IsZero) {
+          edec = ExtendedDecimal.NegativeZero.Subtract(edec);
+        }
+        return CBORObject.FromObject(edec);
       }
     }
   }

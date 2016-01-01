@@ -358,11 +358,8 @@ RandomBigInteger(r),
       }
       if (r.NextValue(2) == 0) {
         sb.Append('E');
-        if (r.NextValue(100) < 10) {
-          count = r.NextValue(5000);
-        } else {
-          count = r.NextValue(20);
-        }
+     count = (r.NextValue(100) < 10) ? r.NextValue(5000) :
+          r.NextValue(20);
         if (count != 0) {
           sb.Append(r.NextValue(2) == 0 ? '+' : '-');
         }
