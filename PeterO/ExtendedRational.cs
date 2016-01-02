@@ -74,7 +74,7 @@ return new ExtendedRational(ERational.Create(numerator.Ei, denominator.Ei));
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.#ctor(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
     public ExtendedRational(BigInteger numerator, BigInteger denominator) {
-      this.Er = new ERational(numerator.Ei, denominator.Ei);
+      this.er = new ERational(numerator.Ei, denominator.Ei);
  }
 
     /// <include file='../docs.xml'
@@ -83,13 +83,13 @@ return new ExtendedRational(ERational.Create(numerator.Ei, denominator.Ei));
 return this.Er.ToString();
 }
 
-    internal readonly ERational Er;
+    private readonly ERational er;
 
     internal ExtendedRational(ERational er) {
       if (er == null) {
   throw new ArgumentNullException("er");
 }
-      this.Er = er;
+      this.er = er;
     }
 
     /// <include file='../docs.xml'
@@ -319,6 +319,12 @@ return this.Er.IsNaN();
 get {
 return this.Er.IsNegative;
 } }
+
+    internal ERational Er {
+      get {
+        return this.er;
+      }
+    }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.IsInfinity"]/*'/>

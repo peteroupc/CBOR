@@ -66,13 +66,13 @@ namespace PeterO {
       return new ExtendedDecimal(EDecimal.Create(mantissaSmall, exponentSmall));
     }
 
-    internal readonly EDecimal Ed;
+    private readonly EDecimal ed;
 
     internal ExtendedDecimal(EDecimal ed) {
       if (ed == null) {
         throw new ArgumentNullException("ed");
       }
-      this.Ed = ed;
+      this.ed = ed;
     }
 
     /// <include file='../docs.xml'
@@ -443,6 +443,12 @@ ctx == null ? null : ctx.Ec));
     public bool IsZero {
       get {
         return this.Ed.IsZero;
+      }
+    }
+
+    internal EDecimal Ed {
+      get {
+        return this.ed;
       }
     }
 

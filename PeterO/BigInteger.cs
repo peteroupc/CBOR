@@ -29,13 +29,13 @@ namespace PeterO {
 
     public static readonly BigInteger ONE = new BigInteger(EInteger.One);
 
-    internal readonly EInteger Ei;
+    private readonly EInteger ei;
 
     internal BigInteger(EInteger ei) {
       if (ei == null) {
   throw new ArgumentNullException("ei");
 }
-      this.Ei = ei;
+      this.ei = ei;
     }
 
     /// <include file='../docs.xml'
@@ -76,6 +76,12 @@ namespace PeterO {
     public int Sign { get {
  return this.Ei.Sign;
 } }
+
+    internal EInteger Ei {
+      get {
+        return this.ei;
+      }
+    }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.fromByteArray(System.Byte[],System.Boolean)"]/*'/>

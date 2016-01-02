@@ -50,10 +50,10 @@ namespace PeterO {
     /// path='docs/doc[@name="F:PeterO.PrecisionContext.FlagUnderflow"]/*'/>
     public const int FlagUnderflow = 8;
 
-    internal readonly EContext Ec;
+    private readonly EContext ec;
 
     internal PrecisionContext(EContext ec) {
-      this.Ec = ec;
+      this.ec = ec;
     }
 
     /// <include file='../docs.xml'
@@ -202,7 +202,7 @@ Rounding rounding,
 int exponentMinSmall,
 int exponentMaxSmall,
 bool clampNormalExponents) {
-      this.Ec = new EContext(
+      this.ec = new EContext(
 precision,
         ExtendedDecimal.ToERounding(rounding),
         exponentMinSmall,
@@ -304,6 +304,12 @@ get {
 get {
 return this.Ec.Traps;
 } }
+
+    internal EContext Ec {
+      get {
+        return this.ec;
+      }
+    }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.PrecisionContext.ForPrecision(System.Int32)"]/*'/>
