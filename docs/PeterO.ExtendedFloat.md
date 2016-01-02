@@ -18,6 +18,10 @@ An arbitrary-precision binary float value can be serialized in one of the follow
 
  * By calling the UnsignedMantissa, Exponent, and IsNegative properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN methods. The return values combined will uniquely identify a particular arbitrary-precision binary float value.
 
+If an operation requires creating an intermediate value that might be too big to fit in memory (or might require more than 2 gigabytes of memory to store -- due to the current use of a 32-bit integer internally as a length), the operation may signal an invalid-operation flag and return not-a-number (NaN). In certain rare cases, the CompareTo method may throw OutOfMemoryException (called OutOfMemoryError in Java) in the same circumstances.
+
+Thread safety:Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
+
 ### NaN
 
     public static readonly PeterO.ExtendedFloat NaN;
@@ -444,7 +448,7 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedFloat[] DivideAndRemainderNaturalScale(
         PeterO.ExtendedFloat divisor);
 
-Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale. This is meant to be similar to the divideAndRemainder method in Java's BigDecimal.
+Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale.
 
 <b>Parameters:</b>
 
@@ -460,7 +464,7 @@ A 2 element array consisting of the quotient and remainder in that order.
         PeterO.ExtendedFloat divisor,
         PeterO.PrecisionContext ctx);
 
-Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale. This is meant to be similar to the divideAndRemainder method in Java's BigDecimal.
+Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale.
 
 <b>Parameters:</b>
 
@@ -698,7 +702,7 @@ The parameter <i>divisor</i>
     public override bool Equals(
         object obj);
 
-Determines whether this object's mantissa and exponent are equal to those of another object and that other object is a decimal fraction.
+Determines whether this object's mantissa and exponent are equal to those of another object and that other object is an arbitrary-precision decimal number.
 
 <b>Parameters:</b>
 
@@ -2011,7 +2015,7 @@ The closest value to this object's value, rounded to the specified precision. Re
         int exponentSmall,
         PeterO.PrecisionContext ctx);
 
-Returns a binary number with the same value as this object, and rounds it to a new exponent if necessary.
+Returns a binary number with the same value as this object but rounded to a new exponent if necessary.
 
 <b>Parameters:</b>
 
@@ -2029,7 +2033,7 @@ A binary number rounded to the closest value representable in the given precisio
         PeterO.BigInteger exponent,
         PeterO.PrecisionContext ctx);
 
-Returns a binary number with the same value as this object, and rounds it to a new exponent if necessary.
+Returns a binary number with the same value as this object but rounded to a new exponent if necessary.
 
 <b>Parameters:</b>
 
@@ -2053,7 +2057,7 @@ The parameter <i>exponent</i>
         int exponentSmall,
         PeterO.PrecisionContext ctx);
 
-Returns a binary number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
+Returns a binary number with the same value as this object but rounded to the given exponent, and signals an invalid operation if the result would be inexact.
 
 <b>Parameters:</b>
 
@@ -2071,7 +2075,7 @@ A binary number rounded to the closest value representable in the given precisio
         PeterO.BigInteger exponent,
         PeterO.PrecisionContext ctx);
 
-Returns a binary number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
+Returns a binary number with the same value as this object but rounded to the given exponent, and signals an invalid operation if the result would be inexact.
 
 <b>Parameters:</b>
 

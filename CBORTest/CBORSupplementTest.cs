@@ -274,32 +274,6 @@ Console.Write(String.Empty);
     }
 
     [Test]
-    public void TestCBORObjectCanTruncatedIntFitInInt32() {
-      Assert.IsFalse(CBORObject.True.CanTruncatedIntFitInInt32());
-      Assert.IsFalse(CBORObject.False.CanTruncatedIntFitInInt32());
-      Assert.IsFalse(CBORObject.NewArray().CanTruncatedIntFitInInt32());
-      Assert.IsFalse(CBORObject.NewMap().CanTruncatedIntFitInInt32());
-      Assert.IsTrue(CBORObject.FromObject(0).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(CBORObject.FromObject(2.5).CanTruncatedIntFitInInt32());
-      Assert.IsTrue(CBORObject.FromObject(Int32.MinValue)
-                    .CanTruncatedIntFitInInt32());
-      Assert.IsTrue(CBORObject.FromObject(Int32.MaxValue)
-                    .CanTruncatedIntFitInInt32());
-      Assert.IsFalse(CBORObject.FromObject(Double.PositiveInfinity)
-                    .CanTruncatedIntFitInInt32());
-      Assert.IsFalse(CBORObject.FromObject(Double.NegativeInfinity)
-                    .CanTruncatedIntFitInInt32());
-      Assert.IsFalse(CBORObject.FromObject(Double.NaN)
-                    .CanTruncatedIntFitInInt32());
-      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity)
-                    .CanTruncatedIntFitInInt32());
-      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity)
-                    .CanTruncatedIntFitInInt32());
-      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN)
-                    .CanTruncatedIntFitInInt32());
-    }
-
-    [Test]
     public void TestIncompleteCBORString() {
       byte[] bytes = { 0x65, 0x41, 0x41, 0x41, 0x41 };
       try {
@@ -1585,16 +1559,6 @@ Assert.AreEqual(objectTemp, objectTemp2);
       expected =
      "[\"abcd\",\"aa\",\"abcd\",\"abcd\",\"bbcd\",\"bbcd\",\"abcd\",\"bbcd\"]";
       Assert.AreEqual(expected, cbor.ToJSONString());
-    }
-
-    [Test]
-    public void TestExtendedNaNZero() {
-      Assert.IsFalse(ExtendedDecimal.NaN.IsZero);
-      Assert.IsFalse(ExtendedDecimal.SignalingNaN.IsZero);
-      Assert.IsFalse(ExtendedFloat.NaN.IsZero);
-      Assert.IsFalse(ExtendedFloat.SignalingNaN.IsZero);
-      Assert.IsFalse(ExtendedRational.NaN.IsZero);
-      Assert.IsFalse(ExtendedRational.SignalingNaN.IsZero);
     }
   }
 }

@@ -196,6 +196,8 @@ namespace Test {
       Assert.IsFalse(ExtendedRational.One.IsZero);
       Assert.IsFalse(ExtendedRational.NegativeInfinity.IsZero);
       Assert.IsFalse(ExtendedRational.PositiveInfinity.IsZero);
+      Assert.IsFalse(ExtendedRational.NaN.IsZero);
+      Assert.IsFalse(ExtendedRational.SignalingNaN.IsZero);
     }
     [Test]
     public void TestMultiply() {

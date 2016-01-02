@@ -4,13 +4,9 @@
         System.IComparable,
         System.IEquatable
 
-An arbitrary-precision integer.Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
+An arbitrary-precision integer.Thread safety:Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
 
-An arbitrary-precision integer.Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
-
-An arbitrary-precision integer.Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
-
-An arbitrary-precision integer.Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
+An arbitrary-precision integer.Thread safety:Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same value are interchangeable, but they should be compared using the "Equals" method rather than the "==" operator.
 
 ### ONE
 
@@ -1008,7 +1004,7 @@ The parameter <i>dividend</i>
         PeterO.BigInteger operand1,
         PeterO.BigInteger operand2);
 
-Multiplies an arbitrary-precision integer by the value of a arbitrary-precision integer.
+Multiplies an arbitrary-precision integer by the value of an arbitrary-precision integer.
 
 <b>Parameters:</b>
 

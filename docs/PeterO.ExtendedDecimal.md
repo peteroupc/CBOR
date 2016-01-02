@@ -26,6 +26,10 @@ An arbitrary-precision decimal value can be serialized in one of the following w
 
  * By calling the UnsignedMantissa, Exponent, and IsNegative properties, and calling the IsInfinity, IsQuietNaN, and IsSignalingNaN methods. The return values combined will uniquely identify a particular arbitrary-precision decimal value.
 
+If an operation requires creating an intermediate value that might be too big to fit in memory (or might require more than 2 gigabytes of memory to store -- due to the current use of a 32-bit integer internally as a length), the operation may signal an invalid-operation flag and return not-a-number (NaN). In certain rare cases, the CompareTo method may throw OutOfMemoryException (called OutOfMemoryError in Java) in the same circumstances.
+
+Thread safety:Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
+
 ### NaN
 
     public static readonly PeterO.ExtendedDecimal NaN;
@@ -689,7 +693,7 @@ The parameter <i>divisor</i>
     public override bool Equals(
         object obj);
 
-Determines whether this object's mantissa and exponent are equal to those of another object and that other object is a decimal fraction.
+Determines whether this object's mantissa and exponent are equal to those of another object and that other object is an arbitrary-precision decimal number.
 
 <b>Parameters:</b>
 
@@ -756,7 +760,7 @@ The parameter <i>bigint</i>
     public static PeterO.ExtendedDecimal FromDouble(
         double dbl);
 
-Creates a decimal number from a 64-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 64-bit floating-point number is not always the value you get when you pass a literal decimal number (for example, calling  `ExtendedDecimal.FromDouble(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the value of the closest "double" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
+Creates a decimal number from a 64-bit binary floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 64-bit binary floating-point number is not always the value that results when passing a literal decimal number (for example, calling  `ExtendedDecimal.FromDouble(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the value of the closest "double" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
 
 <b>Parameters:</b>
 
@@ -776,7 +780,7 @@ Creates a decimal number from an arbitrary-precision binary floating-point numbe
 
 <b>Parameters:</b>
 
- * <i>bigfloat</i>: A big floating-point number.
+ * <i>arbitrary-precision binary float</i>: An arbitrary-precision binary floating-point number.
 
 <b>Returns:</b>
 
@@ -785,7 +789,7 @@ An arbitrary-precision decimal number.
 <b>Exceptions:</b>
 
  * System.ArgumentNullException:
-The parameter <i>bigfloat</i>
+The parameter <i>arbitrary-precision binary float</i>
  is null.
 
 ### FromInt32
@@ -823,7 +827,7 @@ An arbitrary-precision decimal number with the exponent set to 0.
     public static PeterO.ExtendedDecimal FromSingle(
         float flt);
 
-Creates a decimal number from a 32-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 32-bit floating-point number is not always the value you get when you pass a literal decimal number (for example, calling  `ExtendedDecimal.FromSingle(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the the value of the closest "float" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
+Creates a decimal number from a 32-bit binary floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 32-bit binary floating-point number is not always the value that results when passing a literal decimal number (for example, calling  `ExtendedDecimal.FromSingle(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the the value of the closest "float" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
 
 <b>Parameters:</b>
 
@@ -1985,7 +1989,7 @@ The closest value to this object's value, rounded to the specified precision. Re
         int exponentSmall,
         PeterO.PrecisionContext ctx);
 
-Returns a decimal number with the same value as this object, and rounds it to a new exponent if necessary.
+Returns a decimal number with the same value as this object but rounded to a new exponent if necessary.
 
 <b>Parameters:</b>
 
@@ -2003,7 +2007,7 @@ A decimal number rounded to the closest value representable in the given precisi
         PeterO.BigInteger exponent,
         PeterO.PrecisionContext ctx);
 
-Returns a decimal number with the same value as this object, and rounds it to a new exponent if necessary.
+Returns a decimal number with the same value as this object but rounded to a new exponent if necessary.
 
 <b>Parameters:</b>
 
