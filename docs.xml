@@ -5,17 +5,6 @@
             safe for use by multiple threads. Multiple instances of this object
             with the same value are interchangeable, so they should not be
             compared using the "==" operator (which only checks if each side of
-            the operator is the same instance).</para></summary><summary>An arbitrary-precision integer.
-            <para>Instances of this class are immutable, so they are inherently
-            safe for use by multiple threads. Multiple instances of this object
-            with the same value are interchangeable, so they should not be
-            compared using the "==" operator (which only checks if each side of
-            the operator is the same instance).</para></summary>
-            <xmlbegin id='0'/><summary>An arbitrary-precision integer.
-            <para>Instances of this class are immutable, so they are inherently
-            safe for use by multiple threads. Multiple instances of this object
-            with the same value are interchangeable, so they should not be
-            compared using the "==" operator (which only checks if each side of
             the operator is the same instance).</para></summary>
 </doc>
 <doc name="M:PeterO.BigInteger.Abs(PeterO.BigInteger)">
@@ -869,17 +858,14 @@
 <summary>Exception thrown for errors involving CBOR data.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORException.#ctor">
-<summary>Initializes a new instance of the
-            <see cref='T:PeterO.Cbor.CBORException'/> class.</summary>
+<summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.CBORException'/> class.</summary>
 </doc>
 <doc name="M:PeterO.Cbor.CBORException.#ctor(System.String)">
-<summary>Initializes a new instance of the
-            <see cref='T:PeterO.Cbor.CBORException'/> class.</summary>
+<summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.CBORException'/> class.</summary>
             <param name='message'>A text string.</param>
 </doc>
 <doc name="M:PeterO.Cbor.CBORException.#ctor(System.String,System.Exception)">
-<summary>Initializes a new instance of the
-            <see cref='T:PeterO.Cbor.CBORException'/> class. Uses the given message and inner
+<summary>Initializes a new instance of the <see cref='T:PeterO.Cbor.CBORException'/> class. Uses the given message and inner
             exception.</summary>
             <param name='message'>A text string.</param>
             <param name='innerException'>An Exception object.</param>
@@ -6966,8 +6952,7 @@
             numbers.</summary>
 </doc>
 <doc name="M:PeterO.Numbers.EContext.#ctor(System.Int32,PeterO.Numbers.ERounding,System.Int32,System.Int32,System.Boolean)">
-<summary>Initializes a new instance of the
-            <see cref='T:PeterO.Numbers.EContext'/> class. HasFlags will be set to
+<summary>Initializes a new instance of the <see cref='T:PeterO.Numbers.EContext'/> class. HasFlags will be set to
             false.</summary>
             <param name='precision'>The parameter <paramref name='precision'/>
             is not documented yet.</param>
@@ -10425,17 +10410,6 @@
             safe for use by multiple threads. Multiple instances of this object
             with the same value are interchangeable, so they should not be
             compared using the "==" operator (which only checks if each side of
-            the operator is the same instance).</para></summary><summary>An arbitrary-precision integer.
-            <para>Instances of this class are immutable, so they are inherently
-            safe for use by multiple threads. Multiple instances of this object
-            with the same value are interchangeable, so they should not be
-            compared using the "==" operator (which only checks if each side of
-            the operator is the same instance).</para></summary>
-            <xmlbegin id='1'/><summary>An arbitrary-precision integer.
-            <para>Instances of this class are immutable, so they are inherently
-            safe for use by multiple threads. Multiple instances of this object
-            with the same value are interchangeable, so they should not be
-            compared using the "==" operator (which only checks if each side of
             the operator is the same instance).</para></summary>
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.Abs">
@@ -11209,8 +11183,7 @@
             where the class was inadvertently left inheritable.</summary>
 </doc>
 <doc name="M:PeterO.Numbers.ERational.#ctor(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)">
-<summary>Initializes a new instance of the
-            <see cref='T:PeterO.Numbers.ERational'/> class.</summary>
+<summary>Initializes a new instance of the <see cref='T:PeterO.Numbers.ERational'/> class.</summary>
             <param name='numerator'>An arbitrary-precision integer.</param>
             <param name='denominator'>Another arbitrary-precision
             integer.</param>
@@ -11643,8 +11616,7 @@
 <summary>Exception thrown for arithmetic trap errors.</summary>
 </doc>
 <doc name="M:PeterO.Numbers.ETrapException.#ctor(System.Int32,PeterO.Numbers.EContext,System.Object)">
-<summary>Initializes a new instance of the
-            <see cref='T:PeterO.Numbers.ETrapException'/> class.</summary>
+<summary>Initializes a new instance of the <see cref='T:PeterO.Numbers.ETrapException'/> class.</summary>
             <param name='flag'>A flag that specifies the kind of error
             (EContext.FlagXXX). This will only be one flag, such as
             FlagInexact or FlagSubnormal.</param>
@@ -11750,8 +11722,7 @@
             numbers.</summary>
 </doc>
 <doc name="M:PeterO.PrecisionContext.#ctor(System.Int32,PeterO.Rounding,System.Int32,System.Int32,System.Boolean)">
-<summary>Initializes a new instance of the
-            <see cref='T:PeterO.PrecisionContext'/> class. HasFlags will be set to
+<summary>Initializes a new instance of the <see cref='T:PeterO.PrecisionContext'/> class. HasFlags will be set to
             false.</summary>
             <param name='precision'>The parameter <paramref name='precision'/>
             is not documented yet.</param>
@@ -12216,8 +12187,7 @@
 <summary>Exception thrown for arithmetic trap errors.</summary>
 </doc>
 <doc name="M:PeterO.TrapException.#ctor(System.Int32,PeterO.PrecisionContext,System.Object)">
-<summary>Initializes a new instance of the
-            <see cref='T:PeterO.TrapException'/> class.</summary>
+<summary>Initializes a new instance of the <see cref='T:PeterO.TrapException'/> class.</summary>
             <param name='flag'>A flag that specifies the kind of error
             (PrecisionContext.FlagXXX). This will only be one flag, such as
             FlagInexact or FlagSubnormal.</param>
