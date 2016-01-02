@@ -254,7 +254,9 @@ namespace PeterO.Cbor {
           bigmant,
           bigexp);
         if (negative && preserveNegativeZero && bigmant.IsZero) {
-          edec = ExtendedDecimal.NegativeZero.Subtract(edec);
+          ExtendedDecimal negzero = ExtendedDecimal.NegativeZero;
+          negzero = negzero.Quantize(bigexp, null);
+          edec = negzero.Subtract(edec);
         }
         return CBORObject.FromObject(edec);
       }
