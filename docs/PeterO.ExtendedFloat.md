@@ -1604,7 +1604,7 @@ Returns a binary float with the same value as this object but with the sign reve
 
 <b>Returns:</b>
 
-An arbitrary-precision binary float.
+An arbitrary-precision binary float. If this value is positive zero, returns positive zero.
 
 <b>Exceptions:</b>
 
@@ -1620,7 +1620,7 @@ Gets an object with the same value as this one, but with the sign reversed.
 
 <b>Returns:</b>
 
-An arbitrary-precision binary float.
+An arbitrary-precision binary float. If this value is positive zero, returns positive zero.
 
 ### NextMinus
 

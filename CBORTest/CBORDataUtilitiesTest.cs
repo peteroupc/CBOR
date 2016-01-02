@@ -14,130 +14,131 @@ namespace Test {
     [Test]
     public void TestPreserveNegativeZero() {
    this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0", false,
-
- false,
-        true));
+CBORDataUtilities.ParseJSONNumber(
+"-0",
+false,
+false,
+true));
  this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.0", false,
-
- false,
-        true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.0",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.0000",
-
- false,
-        false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.0000",
+false,
+false,
+true));
  this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0e0", false,
-
- false,
-        true));
+CBORDataUtilities.ParseJSONNumber(
+"-0e0",
+false,
+false,
+true));
 AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0e+1", false,
-
- false,
-        true));
+CBORDataUtilities.ParseJSONNumber(
+"-0e+1",
+false,
+false,
+true));
 AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0e-1", false,
-
- false,
-        true));
+CBORDataUtilities.ParseJSONNumber(
+"-0e-1",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0e+999999999999",
-        false, false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0e+999999999999",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0e-999999999999",
-        false, false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0e-999999999999",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.0e0",
-
- false,
-        false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.0e0",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.0e+1",
-
- false,
-        false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.0e+1",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.0e-1",
-
- false,
-        false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.0e-1",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.0e+999999999999",
-false, false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.0e+999999999999",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.0e-999999999999",
-false, false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.0e-999999999999",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.000e0",
-
- false,
-        false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.000e0",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.000e+0",
-
- false,
-        false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.000e+0",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.000e-0",
-
- false,
-        false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.000e-0",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.000e1",
-
- false,
-        false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.000e1",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.000e+1",
-
- false,
-        false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.000e+1",
+false,
+false,
+true));
       this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.000e-1",
-
- false,
-        false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.000e-1",
+false,
+false,
+true));
   this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.000e+999999999999",
-        false, false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.000e+999999999999",
+false,
+false,
+true));
   this.AssertNegative(
-CBORDataUtilities.ParseJSONNumber("-0.000e-999999999999",
-        false, false,
-
- true));
+CBORDataUtilities.ParseJSONNumber(
+"-0.000e-999999999999",
+false,
+false,
+true));
     }
     [Test]
     public void TestParseJSONNumberNegativeZero() {

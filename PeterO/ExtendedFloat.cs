@@ -13,10 +13,10 @@ namespace PeterO {
     /// path='docs/doc[@name="T:PeterO.ExtendedFloat"]/*'/>
   public sealed class ExtendedFloat : IComparable<ExtendedFloat>,
   IEquatable<ExtendedFloat> {
-    internal readonly EFloat Ef;
+    private readonly EFloat ef;
 
     internal ExtendedFloat(EFloat ef) {
-      this.Ef = ef;
+      this.ef = ef;
     }
 
     /// <include file='../docs.xml'
@@ -381,6 +381,12 @@ ctx == null ? null : ctx.Ec));
     public bool IsZero {
       get {
         return this.Ef.IsZero;
+      }
+    }
+
+    internal EFloat Ef {
+      get {
+        return this.ef;
       }
     }
 

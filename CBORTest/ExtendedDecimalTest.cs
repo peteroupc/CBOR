@@ -170,10 +170,10 @@ Assert.AreEqual(1, numberTemp);
         (BigInteger)(-22),
         ExtendedDecimal.FromString("0.485448e-16").Exponent);
       {
-BigInteger stringTemp = -20;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-20);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.5657575351495151495649565150e+8").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
+Assert.AreEqual(bigintTemp, bigintTemp2);
 }
       Assert.AreEqual(
         (BigInteger)(-10),
@@ -185,10 +185,10 @@ Assert.AreEqual(stringTemp, stringTemp2);
         (BigInteger)(-13),
         ExtendedDecimal.FromString("0e-13").Exponent);
       {
-BigInteger stringTemp = -43;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-43);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.49495052535648555757515648e-17").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
+Assert.AreEqual(bigintTemp, bigintTemp2);
 }
       Assert.AreEqual(
         (BigInteger)7,
@@ -197,10 +197,10 @@ Assert.AreEqual(stringTemp, stringTemp2);
         BigInteger.Zero,
         ExtendedDecimal.FromString("0.48515648e+8").Exponent);
       {
-BigInteger stringTemp = -45;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-45);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.49485251485649535552535451544956e-13").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
+Assert.AreEqual(bigintTemp, bigintTemp2);
 }
       Assert.AreEqual(
         (BigInteger)(-6),
@@ -221,16 +221,16 @@ Assert.AreEqual(stringTemp, stringTemp2);
         (BigInteger)(-25),
         ExtendedDecimal.FromString("0.4956504855525748575456e-3").Exponent);
       {
-BigInteger stringTemp = -26;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-26);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.55575355495654484948525354545053494854e+12").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
+Assert.AreEqual(bigintTemp, bigintTemp2);
 }
       {
-BigInteger stringTemp = -22;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-22);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.484853575350494950575749545057e+8").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
+Assert.AreEqual(bigintTemp, bigintTemp2);
 }
       Assert.AreEqual(
         (BigInteger)11,
@@ -239,16 +239,16 @@ Assert.AreEqual(stringTemp, stringTemp2);
         (BigInteger)(-29),
         ExtendedDecimal.FromString("0.48485654495751485754e-9").Exponent);
       {
-BigInteger stringTemp = -38;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-38);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.56525456555549545257535556495655574848e+0").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
+Assert.AreEqual(bigintTemp, bigintTemp2);
 }
       {
-BigInteger stringTemp = -15;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-15);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.485456485657545752495450554857e+15").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
+Assert.AreEqual(bigintTemp, bigintTemp2);
 }
       Assert.AreEqual(
         (BigInteger)(-37),
@@ -257,26 +257,26 @@ Assert.AreEqual(stringTemp, stringTemp2);
         (BigInteger)(-29),
         ExtendedDecimal.FromString("0.494952485550514953565655e-5").Exponent);
       {
-BigInteger stringTemp = -8;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-8);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.50495454554854505051534950e+18").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
+Assert.AreEqual(bigintTemp, bigintTemp2);
 }
       {
-BigInteger stringTemp = -37;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-37);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.5156524853575655535351554949525449e-3").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
-}
+        Assert.AreEqual(bigintTemp, bigintTemp2);
+      }
       Assert.AreEqual(
         (BigInteger)3,
         ExtendedDecimal.FromString("0e+3").Exponent);
       {
-BigInteger stringTemp = -8;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-8);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.51505056554957575255555250e+18").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
-}
+        Assert.AreEqual(bigintTemp, bigintTemp2);
+      }
       Assert.AreEqual(
         (BigInteger)(-14),
         ExtendedDecimal.FromString("0.5456e-10").Exponent);
@@ -284,22 +284,22 @@ Assert.AreEqual(stringTemp, stringTemp2);
         (BigInteger)(-36),
         ExtendedDecimal.FromString("0.494850515656505252555154e-12").Exponent);
       {
-BigInteger stringTemp = -42;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-42);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.535155525253485757525253555749575749e-6").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
-}
+        Assert.AreEqual(bigintTemp, bigintTemp2);
+      }
       {
-BigInteger stringTemp = -29;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-29);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.56554952554850525552515549564948e+3").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
+Assert.AreEqual(bigintTemp, bigintTemp2);
 }
       {
-BigInteger stringTemp = -40;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-40);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.494855545257545656515554495057e-10").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
+Assert.AreEqual(bigintTemp, bigintTemp2);
 }
       Assert.AreEqual(
         (BigInteger)(-18),
@@ -311,11 +311,11 @@ Assert.AreEqual(stringTemp, stringTemp2);
         (BigInteger)(-32),
         ExtendedDecimal.FromString("0.55535551515249535049495256e-6").Exponent);
       {
-BigInteger stringTemp = -31;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-31);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.4948534853564853565654514855e-3").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
-}
+        Assert.AreEqual(bigintTemp, bigintTemp2);
+      }
       Assert.AreEqual(
         (BigInteger)(-38),
         ExtendedDecimal.FromString("0.5048485057535249555455e-16").Exponent);
@@ -329,11 +329,11 @@ Assert.AreEqual(stringTemp, stringTemp2);
         BigInteger.One,
         ExtendedDecimal.FromString("0.54e+3").Exponent);
       {
-BigInteger stringTemp = -38;
-BigInteger stringTemp2 = ExtendedDecimal.FromString(
+BigInteger bigintTemp = BigInteger.valueOf(-38);
+BigInteger bigintTemp2 = ExtendedDecimal.FromString(
           "0.4849525755545751574853494948e-10").Exponent;
-Assert.AreEqual(stringTemp, stringTemp2);
-}
+        Assert.AreEqual(bigintTemp, bigintTemp2);
+      }
       Assert.AreEqual(
         (BigInteger)(-33),
         ExtendedDecimal.FromString("0.52514853565252565251565548e-7").Exponent);

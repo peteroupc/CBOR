@@ -618,9 +618,8 @@ namespace PeterO.Numbers {
           return false;
         }
         // Eliminate factors of 2
-        while (tmpden.IsEven) {
-          tmpden >>= 1;
-        }
+        int lowBit = tmpden.getLowBit();
+        tmpden >>= lowBit;
         // Eliminate factors of 5
         while (true) {
           EInteger bigrem;

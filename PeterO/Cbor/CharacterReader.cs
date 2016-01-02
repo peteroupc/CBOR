@@ -131,6 +131,7 @@ bool dontSkipUtf8Bom) {
       this.errorThrow = errorThrow;
       this.dontSkipUtf8Bom = dontSkipUtf8Bom;
       this.str = String.Empty;
+      this.strLength = -1;
     }
 
     private interface IByteReader {
