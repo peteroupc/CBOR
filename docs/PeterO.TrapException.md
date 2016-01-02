@@ -14,7 +14,7 @@ Exception thrown for arithmetic trap errors.
         PeterO.PrecisionContext ctx,
         object result);
 
-Initializes a new instance of the class.
+Initializes a new instance of the  class.
 
 <b>Parameters:</b>
 

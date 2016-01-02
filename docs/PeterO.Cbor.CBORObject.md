@@ -22,7 +22,7 @@ Comparison Considerations:
 
 Instances of CBORObject should not be compared for equality using the "==" operator; it's possible to create two CBOR objects with the same value but not the same reference. (The "==" operator only checks if each side of the operator is the same instance.)
 
-This class's natural ordering (under the CompareTo method) is not consistent with the Equals method. This means that two values that compare as equal under the CompareTo method might not be equal under the Equals method. This is important to consider especially if an application wants to compare numbers, since the CBOR number type supports numbers of different formats, such as big integers, rational numbers, and decimal fractions.
+This class's natural ordering (under the CompareTo method) is not consistent with the Equals method. This means that two values that compare as equal under the CompareTo method might not be equal under the Equals method. This is important to consider especially if an application wants to compare numbers, since the CBOR number type supports numbers of different formats, such as big integers, rational numbers, and arbitrary-precision decimal numbers.
 
 Another consideration is that two values that are otherwise equal may have different tags. To strip the tags from a CBOR object before comparing, use the  `Untag`  method.
 
@@ -2058,7 +2058,7 @@ Converts this object to a string in JavaScript Object Notation (JSON) format. Th
 
  * If this object contains maps with non-string keys, the keys are converted to JSON strings before writing the map as a JSON string.
 
- * If a number in the form of a big float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the big float is converted to null.)
+ * If a number in the form of an arbitrary-precision binary float has a very high binary exponent, it will be converted to a double before being converted to a JSON string. (The resulting double could overflow to infinity, in which case the arbitrary-precision binary float is converted to null.)
 
  * The string will not begin with a byte-order mark (U+FEFF); RFC 7159 (the JSON specification) forbids placing a byte-order mark at the beginning of a JSON string.
 
@@ -2383,7 +2383,7 @@ Writes a decimal floating-point number in CBOR format to a data stream, as follo
 
 <b>Parameters:</b>
 
- * <i>bignum</i>: Decimal fraction to write. Can be null.
+ * <i>bignum</i>: The arbitrary-precision decimal number to write. Can be null.
 
  * <i>stream</i>: Stream to write to.
 

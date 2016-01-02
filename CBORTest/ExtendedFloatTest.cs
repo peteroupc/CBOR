@@ -261,7 +261,8 @@ throw new InvalidOperationException(String.Empty, ex);
     }
     [Test]
     public void TestIsZero() {
-      // not implemented yet
+      Assert.IsFalse(ExtendedFloat.NaN.IsZero);
+      Assert.IsFalse(ExtendedFloat.SignalingNaN.IsZero);
     }
     [Test]
     public void TestLog() {

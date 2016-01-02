@@ -30,7 +30,12 @@ namespace Test {
     }
     [Test]
     public void TestAdd() {
-      // not implemented yet
+      CBORObject cbor = CBORObject.NewMap();
+      CBORObject cborNull = CBORObject.Null;
+      cbor.Add(null, true);
+      Assert.AreEqual(CBORObject.True, cbor[cborNull]);
+      cbor.Add("key", null);
+      Assert.AreEqual(CBORObject.Null, cbor["key"]);
     }
     [Test]
     public void TestAddConverter() {
@@ -38,6 +43,19 @@ namespace Test {
     }
     [Test]
     public void TestAddition() {
+      var r = new FastRandom();
+      for (var i = 0; i < 3000; ++i) {
+        CBORObject o1 = RandomObjects.RandomNumber(r);
+        CBORObject o2 = RandomObjects.RandomNumber(r);
+        ExtendedDecimal cmpDecFrac =
+          o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
+        ExtendedDecimal cmpCobj = CBORObject.Addition(
+          o1,
+          o2).AsExtendedDecimal();
+        TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
+        TestCommon.AssertRoundTrip(o1);
+        TestCommon.AssertRoundTrip(o2);
+      }
       try {
         CBORObject.Addition(null, CBORObject.FromObject(2));
         Assert.Fail("Should have failed");
@@ -990,7 +1008,66 @@ cbornumber.AsSingle());
     }
     [Test]
     public void TestAsString() {
-      // not implemented yet
+      {
+string stringTemp = CBORObject.FromObject("test").AsString();
+Assert.AreEqual(
+"test",
+stringTemp);
+}
+      try {
+ CBORObject.FromObject(CBORObject.Null).AsString();
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromObject(true).AsString();
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromObject(false).AsString();
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.FromObject(5).AsString();
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.NewArray().AsString();
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.NewMap().AsString();
+Assert.Fail("Should have failed");
+} catch (InvalidOperationException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
     }
     [Test]
     public void TestAsUInt16() {
@@ -1152,6 +1229,29 @@ cbornumber.AsSingle());
           Assert.IsFalse(cbornumber.CanTruncatedIntFitInInt32());
         }
       }
+
+      Assert.IsFalse(CBORObject.True.CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.False.CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.NewArray().CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.NewMap().CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(0).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(2.5).CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(Int32.MinValue)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsTrue(CBORObject.FromObject(Int32.MaxValue)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(Double.PositiveInfinity)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(Double.NegativeInfinity)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(Double.NaN)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity)
+                    .CanTruncatedIntFitInInt32());
+      Assert.IsFalse(CBORObject.FromObject(ExtendedDecimal.NaN)
+                    .CanTruncatedIntFitInInt32());
     }
     [Test]
     public void TestCanTruncatedIntFitInInt64() {
@@ -1448,14 +1548,14 @@ CBORObject.FromObject(0.1f));
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
- CBORObject.DecodeFromBytes(new byte[] { 0 }, null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.DecodeFromBytes(new byte[] { 0 }, null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       try {
         CBORObject.DecodeFromBytes(new byte[] { 0x1c });
         Assert.Fail("Should have failed");
@@ -1541,6 +1641,7 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
     }
+
     [Test]
     public void TestEncodeToBytes() {
       // Test minimum data length
@@ -1587,14 +1688,14 @@ TestCommon.IntToString(j));
         }
       }
       try {
- CBORObject.True.EncodeToBytes(null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.True.EncodeToBytes(null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
     }
     [Test]
     public void TestEquals() {
@@ -1685,18 +1786,18 @@ throw new InvalidOperationException(String.Empty, ex);
     public static CBORObject TestSucceedingJSON(string str) {
       byte[] bytes = DataUtilities.GetUtf8Bytes(str, false);
       try {
-      using (var ms = new MemoryStream(bytes)) {
-        CBORObject obj = CBORObject.ReadJSON(ms);
-        TestCommon.CompareTestEqualAndConsistent(
-          obj,
-          CBORObject.FromJSONString(str));
-        TestCommon.AssertRoundTrip(obj);
-        return obj;
-      }
-    } catch (Exception ex) {
+        using (var ms = new MemoryStream(bytes)) {
+          CBORObject obj = CBORObject.ReadJSON(ms);
+          TestCommon.CompareTestEqualAndConsistent(
+            obj,
+            CBORObject.FromJSONString(str));
+          TestCommon.AssertRoundTrip(obj);
+          return obj;
+        }
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-    }
+      }
     }
 
     private static string[] jsonFails = { "\"\\uxxxx\"",
@@ -1720,6 +1821,7 @@ throw new InvalidOperationException(String.Empty, ex);
       "true\u0005", "8024\"", "8024x", "8024}", "8024\u0300",
       "8024\u0005", "{\"test\":5}}", "{\"test\":5}{", "[5]]", "[5][",
       "0000", "0x1", "0xf", "0x20", "0x01",
+"-3x", "-3e89x",
       "0X1", "0Xf", "0X20", "0X01", ".2", ".05", "-.2",
       "-.05", "23.", "23.e0", "23.e1", "0.", "[0000]", "[0x1]",
       "[0xf]", "[0x20]", "[0x01]", "[.2]", "[.05]", "[-.2]", "[-.05]",
@@ -1730,6 +1832,7 @@ throw new InvalidOperationException(String.Empty, ex);
       "[0.1]",
       "[0.1001]",
       "[0.0]",
+      "[-3 " + ",-5]",
 "[0.00]", "[0.000]", "[0.01]", "[0.001]", "[0.5]", "[0E5]",
   "[0E+6]", "[\"\ud800\udc00\"]", "[\"\\ud800\\udc00\"]",
   "[\"\\ud800\\udc00\ud800\udc00\"]", "23.0e01", "23.0e00", "[23.0e01]",
@@ -1771,14 +1874,14 @@ throw new InvalidOperationException(String.Empty, ex);
         throw new InvalidOperationException(String.Empty, ex);
       }
       try {
- CBORObject.FromJSONString("[]", null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+        CBORObject.FromJSONString("[]", null);
+        Assert.Fail("Should have failed");
+      } catch (ArgumentNullException) {
+        Console.Write(String.Empty);
+      } catch (Exception ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(String.Empty, ex);
+      }
       TestFailingJSON("{\"a\":1,\"a\":2}", CBOREncodeOptions.NoDuplicateKeys);
       string aba = "{\"a\":1,\"b\":3,\"a\":2}";
       TestFailingJSON(aba, CBOREncodeOptions.NoDuplicateKeys);
@@ -1786,6 +1889,13 @@ throw new InvalidOperationException(String.Empty, ex);
       Assert.AreEqual(CBORObject.FromObject(2), cbor["a"]);
       cbor = TestSucceedingJSON("{\"a\":1,\"a\":4}");
       Assert.AreEqual(CBORObject.FromObject(4), cbor["a"]);
+      cbor = TestSucceedingJSON("\"\\t\"");
+      {
+string stringTemp = cbor.AsString();
+Assert.AreEqual(
+"\t",
+stringTemp);
+}
       Assert.AreEqual(CBORObject.True, TestSucceedingJSON("true"));
       Assert.AreEqual(CBORObject.False, TestSucceedingJSON("false"));
       Assert.AreEqual(CBORObject.Null, TestSucceedingJSON("null"));
@@ -2496,33 +2606,33 @@ throw new InvalidOperationException(String.Empty, ex);
       try {
         using (var ms2 = new MemoryStream(new byte[] { 0 })) {
           try {
- CBORObject.Read(ms2, null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+            CBORObject.Read(ms2, null);
+            Assert.Fail("Should have failed");
+          } catch (ArgumentNullException) {
+            Console.Write(String.Empty);
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
         }
-    } catch (Exception ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
-    }
+      }
     }
     [Test]
     public void TestReadJSON() {
       try {
         using (var ms2 = new MemoryStream(new byte[] { 0x30 })) {
           try {
- CBORObject.ReadJSON(ms2, null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
+            CBORObject.ReadJSON(ms2, null);
+            Assert.Fail("Should have failed");
+          } catch (ArgumentNullException) {
+            Console.Write(String.Empty);
+          } catch (Exception ex) {
+            Assert.Fail(ex.ToString());
+            throw new InvalidOperationException(String.Empty, ex);
+          }
         }
         using (var ms = new MemoryStream(new byte[] { 0xef, 0xbb, 0xbf, 0x7b,
         0x7d })) {
@@ -2598,7 +2708,7 @@ throw new InvalidOperationException(String.Empty, ex);
                     0x72, 0, 0, 0, 0x75, 0, 0, 0, 0x65, 0, 0, 0 })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
-      using (var msjson = new MemoryStream(new byte[] { 0x74, 0, 0, 0, 0x72,
+        using (var msjson = new MemoryStream(new byte[] { 0x74, 0, 0, 0, 0x72,
           0,
           0,
         0,
@@ -2752,7 +2862,7 @@ throw new InvalidOperationException(String.Empty, ex);
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-      using (var msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0, 0,
+        using (var msjson = new MemoryStream(new byte[] { 0x22, 0, 0, 0, 0,
           0xd8,
           0,
         0,
@@ -3560,9 +3670,671 @@ throw new InvalidOperationException(String.Empty, ex);
     public void TestValues() {
       // not implemented yet
     }
+
+    private static void AssertWriteThrow(CBORObject cbor) {
+      try {
+ cbor.WriteTo(null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+      try {
+ CBORObject.Write(cbor, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+    }
+
+    private static void AssertReadThree(byte[] bytes) {
+      try {
+        using (var ms = new MemoryStream(bytes)) {
+          CBORObject cbor1, cbor2, cbor3;
+          cbor1 = CBORObject.Read(ms);
+          cbor2 = CBORObject.Read(ms);
+          cbor3 = CBORObject.Read(ms);
+          TestCommon.CompareTestRelations(cbor1, cbor2, cbor3);
+          TestCommon.CompareTestEqualAndConsistent(cbor1, cbor2);
+          TestCommon.CompareTestEqualAndConsistent(cbor2, cbor3);
+          TestCommon.CompareTestEqualAndConsistent(cbor3, cbor1);
+        }
+      } catch (IOException ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(ex.ToString(), ex);
+      }
+    }
+
+    private static void AssertReadThree(byte[] bytes, CBORObject cbor) {
+      try {
+        using (var ms = new MemoryStream(bytes)) {
+          CBORObject cbor1, cbor2, cbor3;
+          cbor1 = CBORObject.Read(ms);
+          cbor2 = CBORObject.Read(ms);
+          cbor3 = CBORObject.Read(ms);
+          TestCommon.CompareTestEqualAndConsistent(cbor1, cbor);
+          TestCommon.CompareTestRelations(cbor1, cbor2, cbor3);
+          TestCommon.CompareTestEqualAndConsistent(cbor1, cbor2);
+          TestCommon.CompareTestEqualAndConsistent(cbor2, cbor3);
+          TestCommon.CompareTestEqualAndConsistent(cbor3, cbor1);
+        }
+      } catch (IOException ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(ex.ToString(), ex);
+      }
+    }
+
+    private static void TestWriteObj(object obj) {
+      try {
+        {
+          CBORObject cborTemp1 = CBORObject.FromObject(obj);
+          try {
+ CBORObject.Write(obj, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          AssertWriteThrow(cborTemp1);
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(obj, ms);
+            CBORObject.Write(CBORObject.FromObject(obj), ms);
+            CBORObject.FromObject(obj).WriteTo(ms);
+            AssertReadThree(ms.ToArray());
+          }
+        }
+      } catch (IOException ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(ex.ToString(), ex);
+      }
+    }
+
+    private void TestWriteObj(object obj, object objTest) {
+      try {
+        {
+          CBORObject cborTemp1 = CBORObject.FromObject(obj);
+          try {
+ CBORObject.Write(obj, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          AssertWriteThrow(cborTemp1);
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(obj, ms);
+            CBORObject.Write(CBORObject.FromObject(obj), ms);
+            CBORObject.FromObject(obj).WriteTo(ms);
+            AssertReadThree(ms.ToArray(), CBORObject.FromObject(objTest));
+          }
+        }
+      } catch (IOException ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(ex.ToString(), ex);
+      }
+    }
+
     [Test]
     public void TestWrite() {
-      // not implemented yet
+      try {
+        string str = null;
+        var fr = new FastRandom();
+        {
+          CBORObject cborTemp1 = CBORObject.FromObject(str);
+          CBORObject cborTemp2 = CBORObject.FromObject((object)str);
+          TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+          try {
+ CBORObject.Write(str, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          AssertWriteThrow(cborTemp1);
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(str, ms);
+            CBORObject.Write(cborTemp1, ms);
+            cborTemp1.WriteTo(ms);
+            AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
+          }
+          TestWriteObj((object)str, null);
+        }
+
+        {
+          CBORObject cborTemp1 = CBORObject.FromObject("test");
+          CBORObject cborTemp2 = CBORObject.FromObject((object)"test");
+          TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+          try {
+ CBORObject.Write("test", null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          AssertWriteThrow(cborTemp1);
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write("test", ms);
+            CBORObject.Write(cborTemp1, ms);
+            cborTemp1.WriteTo(ms);
+            AssertReadThree(ms.ToArray(), CBORObject.FromObject("test"));
+          }
+          TestWriteObj((object)"test", "test");
+        }
+
+        str = TestCommon.Repeat("test", 4000);
+        {
+          CBORObject cborTemp1 = CBORObject.FromObject(str);
+          CBORObject cborTemp2 = CBORObject.FromObject((object)str);
+          TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+          try {
+ CBORObject.Write(str, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          AssertWriteThrow(cborTemp1);
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(str, ms);
+            CBORObject.Write(cborTemp1, ms);
+            cborTemp1.WriteTo(ms);
+            AssertReadThree(ms.ToArray(), CBORObject.FromObject(str));
+          }
+          TestWriteObj((object)str, str);
+        }
+
+        ExtendedFloat ef = null;
+        {
+          CBORObject cborTemp1 = CBORObject.FromObject(ef);
+          CBORObject cborTemp2 = CBORObject.FromObject((object)ef);
+          TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+          try {
+ CBORObject.Write(ef, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          AssertWriteThrow(cborTemp1);
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(ef, ms);
+            CBORObject.Write(cborTemp1, ms);
+            cborTemp1.WriteTo(ms);
+            AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
+          }
+          TestWriteObj((object)ef, null);
+        }
+
+        ef = ExtendedFloat.FromInt32(20);
+        {
+          CBORObject cborTemp1 = CBORObject.FromObject(ef);
+          CBORObject cborTemp2 = CBORObject.FromObject((object)ef);
+          TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+          try {
+ CBORObject.Write(ef, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          AssertWriteThrow(cborTemp1);
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(ef, ms);
+            CBORObject.Write(cborTemp1, ms);
+            cborTemp1.WriteTo(ms);
+            AssertReadThree(ms.ToArray(), CBORObject.FromObject(ef));
+          }
+          TestWriteObj((object)ef, ef);
+        }
+
+        for (var i = 0; i < 50; ++i) {
+          ef = RandomObjects.RandomExtendedFloat(fr);
+          if (!ef.IsNaN()) {
+            CBORObject cborTemp1 = CBORObject.FromObject(ef);
+            CBORObject cborTemp2 = CBORObject.FromObject((object)ef);
+            TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+            try {
+ CBORObject.Write(ef, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+            AssertWriteThrow(cborTemp1);
+            using (var ms = new MemoryStream()) {
+              CBORObject.Write(ef, ms);
+              CBORObject.Write(cborTemp1, ms);
+              cborTemp1.WriteTo(ms);
+              AssertReadThree(ms.ToArray(), CBORObject.FromObject(ef));
+            }
+            TestWriteObj((object)ef, ef);
+          }
+
+          ef = ExtendedFloat.Create(
+           RandomObjects.RandomBigInteger(fr),
+           RandomObjects.RandomBigInteger(fr));
+          {
+            CBORObject cborTemp1 = CBORObject.FromObject(ef);
+            CBORObject cborTemp2 = CBORObject.FromObject((object)ef);
+            TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+            try {
+ CBORObject.Write(ef, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+            AssertWriteThrow(cborTemp1);
+            using (var ms = new MemoryStream()) {
+              CBORObject.Write(ef, ms);
+              CBORObject.Write(cborTemp1, ms);
+              cborTemp1.WriteTo(ms);
+              AssertReadThree(ms.ToArray(), CBORObject.FromObject(ef));
+            }
+            TestWriteObj((object)ef, ef);
+          }
+        }
+        ExtendedRational er = null;
+        {
+          CBORObject cborTemp1 = CBORObject.FromObject(er);
+          CBORObject cborTemp2 = CBORObject.FromObject((object)er);
+          TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+          try {
+ CBORObject.Write(er, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          AssertWriteThrow(cborTemp1);
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(er, ms);
+            CBORObject.Write(cborTemp1, ms);
+            cborTemp1.WriteTo(ms);
+            AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
+          }
+          TestWriteObj((object)er, null);
+        }
+
+        er = ExtendedRational.Create(
+          RandomObjects.RandomBigInteger(fr),
+          RandomObjects.RandomBigInteger(fr));
+        {
+          CBORObject cborTemp1 = CBORObject.FromObject(er);
+          CBORObject cborTemp2 = CBORObject.FromObject((object)er);
+          TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+          try {
+ CBORObject.Write(er, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          AssertWriteThrow(cborTemp1);
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(er, ms);
+            CBORObject.Write(cborTemp1, ms);
+            cborTemp1.WriteTo(ms);
+            AssertReadThree(ms.ToArray(), CBORObject.FromObject(er));
+          }
+          TestWriteObj((object)er, er);
+        }
+
+        ExtendedDecimal ed = null;
+        {
+          CBORObject cborTemp1 = CBORObject.FromObject(ed);
+          CBORObject cborTemp2 = CBORObject.FromObject((object)ed);
+          TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+          try {
+ CBORObject.Write(ed, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          AssertWriteThrow(cborTemp1);
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(ed, ms);
+            CBORObject.Write(cborTemp1, ms);
+            cborTemp1.WriteTo(ms);
+            AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
+          }
+          TestWriteObj((object)ed, null);
+        }
+
+        for (var i = 0; i < 50; ++i) {
+          ed = RandomObjects.RandomExtendedDecimal(fr);
+          if (ed.IsNaN()) {
+            CBORObject cborTemp1 = CBORObject.FromObject(ed);
+            CBORObject cborTemp2 = CBORObject.FromObject((object)ed);
+            TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+            try {
+ CBORObject.Write(ed, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+            AssertWriteThrow(cborTemp1);
+            using (var ms = new MemoryStream()) {
+              CBORObject.Write(ed, ms);
+              CBORObject.Write(cborTemp1, ms);
+              cborTemp1.WriteTo(ms);
+              AssertReadThree(ms.ToArray(), CBORObject.FromObject(ed));
+            }
+            TestWriteObj((object)ed, ed);
+          }
+
+          ed = ExtendedDecimal.Create(
+           RandomObjects.RandomBigInteger(fr),
+           RandomObjects.RandomBigInteger(fr));
+          {
+            CBORObject cborTemp1 = CBORObject.FromObject(ed);
+            CBORObject cborTemp2 = CBORObject.FromObject((object)ed);
+            TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+            try {
+ CBORObject.Write(ed, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+            AssertWriteThrow(cborTemp1);
+            using (var ms = new MemoryStream()) {
+              CBORObject.Write(ed, ms);
+              CBORObject.Write(cborTemp1, ms);
+              cborTemp1.WriteTo(ms);
+              AssertReadThree(ms.ToArray(), CBORObject.FromObject(ed));
+            }
+            TestWriteObj((object)ed, ed);
+          }
+        }
+
+      BigInteger bigint = null;
+      {
+        CBORObject cborTemp1 = CBORObject.FromObject(bigint);
+        CBORObject cborTemp2 = CBORObject.FromObject((object)bigint);
+        TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+        try {
+ CBORObject.Write(bigint, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        AssertWriteThrow(cborTemp1);
+        using (var ms = new MemoryStream()) {
+          CBORObject.Write(bigint, ms);
+          CBORObject.Write(cborTemp1, ms);
+          cborTemp1.WriteTo(ms);
+          AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
+        }
+        TestWriteObj((object)bigint, null);
+      }
+      long[] values ={ 0, 1, 23, 24, -1, -23, -24, -25,
+   0x7f, -128, 255, 256, 0x7fff, -32768, 0x7fff,
+  -32768, -65536, -32769, -65537,
+  0x7fffff, 0x7fff7f, 0x7fff7fff, 0x7fff7fff7fL,
+  0x7fff7fff7fffL, 0x7fff7fff7fff7fL, 0x7fff7fff7fff7fffL,
+      Int64.MaxValue, Int64.MinValue, Int32.MinValue,
+      Int32.MaxValue };
+      for (var i = 0; i < values.Length; ++i) {
+        {
+          CBORObject cborTemp1 = CBORObject.FromObject(values[i]);
+          CBORObject cborTemp2 = CBORObject.FromObject((object)values[i]);
+          TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+          try {
+ CBORObject.Write(values[i], null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          AssertWriteThrow(cborTemp1);
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(values[i], ms);
+            CBORObject.Write(cborTemp1, ms);
+            cborTemp1.WriteTo(ms);
+            AssertReadThree(ms.ToArray(), CBORObject.FromObject(values[i]));
+          }
+          TestWriteObj((object)values[i], values[i]);
+        }
+
+        BigInteger bigintVal = BigInteger.valueOf(values[i]);
+        {
+          CBORObject cborTemp1 = CBORObject.FromObject(bigintVal);
+          CBORObject cborTemp2 = CBORObject.FromObject((object)bigintVal);
+          TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+          try {
+ CBORObject.Write(bigintVal, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+          AssertWriteThrow(cborTemp1);
+          using (var ms = new MemoryStream()) {
+            CBORObject.Write(bigintVal, ms);
+            CBORObject.Write(cborTemp1, ms);
+            cborTemp1.WriteTo(ms);
+            AssertReadThree(ms.ToArray(), CBORObject.FromObject(bigintVal));
+          }
+          TestWriteObj((object)bigintVal, bigintVal);
+        }
+
+  if (values[i] >= (long)Int32.MinValue && values[i] <=
+          (long)Int32.MaxValue) {
+          var intval = (int)values[i];
+          {
+            CBORObject cborTemp1 = CBORObject.FromObject(intval);
+            CBORObject cborTemp2 = CBORObject.FromObject((object)intval);
+            TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+            try {
+ CBORObject.Write(intval, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+            AssertWriteThrow(cborTemp1);
+            using (var ms = new MemoryStream()) {
+              CBORObject.Write(intval, ms);
+              CBORObject.Write(cborTemp1, ms);
+              cborTemp1.WriteTo(ms);
+              AssertReadThree(ms.ToArray(), CBORObject.FromObject(intval));
+            }
+            TestWriteObj((object)intval, intval);
+          }
+        }
+        if (values[i] >= -32768L && values[i] <= 32767) {
+          var shortval = (short)values[i];
+          {
+            CBORObject cborTemp1 = CBORObject.FromObject(shortval);
+            CBORObject cborTemp2 = CBORObject.FromObject((object)shortval);
+            TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+            try {
+ CBORObject.Write(shortval, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+            AssertWriteThrow(cborTemp1);
+            using (var ms = new MemoryStream()) {
+              CBORObject.Write(shortval, ms);
+              CBORObject.Write(cborTemp1, ms);
+              cborTemp1.WriteTo(ms);
+              AssertReadThree(ms.ToArray(), CBORObject.FromObject(shortval));
+            }
+            TestWriteObj((object)shortval, shortval);
+          }
+        }
+        if (values[i] >= 0L && values[i] <= 255) {
+          var byteval = (byte)values[i];
+          {
+            CBORObject cborTemp1 = CBORObject.FromObject(byteval);
+            CBORObject cborTemp2 = CBORObject.FromObject((object)byteval);
+            TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+            try {
+ CBORObject.Write(byteval, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+            AssertWriteThrow(cborTemp1);
+            using (var ms = new MemoryStream()) {
+              CBORObject.Write(byteval, ms);
+              CBORObject.Write(cborTemp1, ms);
+              cborTemp1.WriteTo(ms);
+              AssertReadThree(ms.ToArray(), CBORObject.FromObject(byteval));
+            }
+            TestWriteObj((object)byteval, byteval);
+          }
+        }
+      }
+      {
+        CBORObject cborTemp1 = CBORObject.FromObject(0.0f);
+        CBORObject cborTemp2 = CBORObject.FromObject((object)0.0f);
+        TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+        try {
+ CBORObject.Write(0.0f, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        AssertWriteThrow(cborTemp1);
+        using (var ms = new MemoryStream()) {
+          CBORObject.Write(0.0f, ms);
+          CBORObject.Write(cborTemp1, ms);
+          cborTemp1.WriteTo(ms);
+          AssertReadThree(ms.ToArray(), CBORObject.FromObject(0.0f));
+        }
+        TestWriteObj((object)0.0f, 0.0f);
+      }
+
+      {
+        CBORObject cborTemp1 = CBORObject.FromObject(2.6);
+        CBORObject cborTemp2 = CBORObject.FromObject((object)2.6);
+        TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+        try {
+ CBORObject.Write(2.6, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        AssertWriteThrow(cborTemp1);
+        using (var ms = new MemoryStream()) {
+          CBORObject.Write(2.6, ms);
+          CBORObject.Write(cborTemp1, ms);
+          cborTemp1.WriteTo(ms);
+          AssertReadThree(ms.ToArray(), CBORObject.FromObject(2.6));
+        }
+        TestWriteObj((object)2.6, 2.6);
+      }
+
+      CBORObject cbor = null;
+      {
+        CBORObject cborTemp1 = CBORObject.FromObject(cbor);
+        CBORObject cborTemp2 = CBORObject.FromObject((object)cbor);
+        TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+        try {
+ CBORObject.Write(cbor, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        AssertWriteThrow(cborTemp1);
+        using (var ms = new MemoryStream()) {
+          CBORObject.Write(cbor, ms);
+          CBORObject.Write(cborTemp1, ms);
+          cborTemp1.WriteTo(ms);
+          AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
+        }
+        TestWriteObj((object)cbor, null);
+      }
+
+      object aobj = null;
+      {
+        CBORObject cborTemp1 = CBORObject.FromObject(aobj);
+        CBORObject cborTemp2 = CBORObject.FromObject((object)aobj);
+        TestCommon.CompareTestEqualAndConsistent(cborTemp1, cborTemp2);
+        try {
+ CBORObject.Write(aobj, null);
+Assert.Fail("Should have failed");
+} catch (ArgumentNullException) {
+Console.Write(String.Empty);
+} catch (Exception ex) {
+ Assert.Fail(ex.ToString());
+throw new InvalidOperationException(String.Empty, ex);
+}
+        AssertWriteThrow(cborTemp1);
+        using (var ms = new MemoryStream()) {
+          CBORObject.Write(aobj, ms);
+          CBORObject.Write(cborTemp1, ms);
+          cborTemp1.WriteTo(ms);
+          AssertReadThree(ms.ToArray(), CBORObject.FromObject((object)null));
+        }
+        TestWriteObj((object)aobj, null);
+      }
+      } catch (IOException ex) {
+        Assert.Fail(ex.ToString());
+        throw new InvalidOperationException(ex.ToString(), ex);
+      }
     }
     [Test]
     public void TestWriteJSON() {

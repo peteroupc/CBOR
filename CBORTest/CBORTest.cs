@@ -39,23 +39,6 @@ namespace Test {
     }
 
     [Test]
-    public void TestAdd() {
-      var r = new FastRandom();
-      for (var i = 0; i < 3000; ++i) {
-        CBORObject o1 = RandomObjects.RandomNumber(r);
-        CBORObject o2 = RandomObjects.RandomNumber(r);
-        ExtendedDecimal cmpDecFrac =
-          o1.AsExtendedDecimal().Add(o2.AsExtendedDecimal());
-        ExtendedDecimal cmpCobj = CBORObject.Addition(
-          o1,
-          o2).AsExtendedDecimal();
-        TestCommon.CompareTestEqual(cmpDecFrac, cmpCobj);
-        TestCommon.AssertRoundTrip(o1);
-        TestCommon.AssertRoundTrip(o2);
-      }
-    }
-
-    [Test]
     public void TestArray() {
       CBORObject cbor = CBORObject.FromJSONString("[]");
       cbor.Add(CBORObject.FromObject(3));

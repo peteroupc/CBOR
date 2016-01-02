@@ -9,7 +9,7 @@ using System;
 
 namespace PeterO.Numbers {
     /// <include file='../../docs.xml'
-  /// path='docs/doc[@name="T:PeterO.Numbers.EInteger"]/*'/>
+    /// path='docs/doc[@name="T:PeterO.Numbers.EInteger"]/*'/>
   internal sealed partial class EInteger {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Implicit(System.Int64)~PeterO.Numbers.EInteger"]/*'/>

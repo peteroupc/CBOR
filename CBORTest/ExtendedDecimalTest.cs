@@ -1154,7 +1154,8 @@ BigInteger bigintTemp2 = ExtendedDecimal.FromString(
     }
     [Test]
     public void TestIsZero() {
-      // not implemented yet
+      Assert.IsFalse(ExtendedDecimal.NaN.IsZero);
+      Assert.IsFalse(ExtendedDecimal.SignalingNaN.IsZero);
     }
     [Test]
     public void TestLog() {

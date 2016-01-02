@@ -1,11 +1,10 @@
-<docs>
+  <docs>
 <doc name="T:PeterO.BigInteger">
 <summary>An arbitrary-precision integer.
-            <para>Instances of this class are immutable, so they are inherently
+            <para><b>Thread safety:</b>Instances of this class are immutable, so they are inherently
             safe for use by multiple threads. Multiple instances of this object
-            with the same value are interchangeable, so they should not be
-            compared using the "==" operator (which only checks if each side of
-            the operator is the same instance).</para></summary>
+            with the same value are interchangeable, but they should be
+            compared using the "Equals" method rather than the "==" operator.</para></summary>
 </doc>
 <doc name="M:PeterO.BigInteger.Abs(PeterO.BigInteger)">
 <summary>Not documented yet.</summary>
@@ -613,7 +612,7 @@
 </doc>
 <doc name="M:PeterO.BigInteger.op_Multiply(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Multiplies an arbitrary-precision integer by the value of
-            a arbitrary-precision integer.</summary>
+            an arbitrary-precision integer.</summary>
             <param name='operand1'>The parameter <paramref name='operand1'/> is
             not documented yet.</param>
             <param name='operand2'>The parameter <paramref name='operand2'/> is
@@ -913,7 +912,7 @@
             under the Equals method. This is important to consider especially
             if an application wants to compare numbers, since the CBOR number
             type supports numbers of different formats, such as big integers,
-            rational numbers, and decimal fractions.</para>
+            rational numbers, and arbitrary-precision decimal numbers.</para>
             <para>Another consideration is that two values that are otherwise
             equal may have different tags. To strip the tags from a CBOR object
             before comparing, use the <c>Untag</c> method.</para>
@@ -2029,10 +2028,10 @@
             <item>If this object contains maps with non-string keys, the keys
             are converted to JSON strings before writing the map as a JSON
             string.</item>
-            <item>If a number in the form of a big float has a very high binary
+            <item>If a number in the form of an arbitrary-precision binary float has a very high binary
             exponent, it will be converted to a double before being converted
             to a JSON string. (The resulting double could overflow to infinity,
-            in which case the big float is converted to null.)</item>
+            in which case the arbitrary-precision binary float is converted to null.)</item>
             <item>The string will not begin with a byte-order mark (U+FEFF);
             RFC 7159 (the JSON specification) forbids placing a byte-order mark
             at the beginning of a JSON string.</item>
@@ -2119,7 +2118,7 @@
             type or as a big integer otherwise.</item>
             <item>In all other cases, writes the value as a decimal
             number.</item></list></summary>
-            <param name='bignum'>Decimal fraction to write. Can be
+            <param name='bignum'>The arbitrary-precision decimal number to write. Can be
             null.</param>
             <param name='stream'>Stream to write to.</param>
             <exception cref='T:System.ArgumentNullException'>The parameter
@@ -3398,7 +3397,19 @@
             properties, and calling the IsInfinity, IsQuietNaN, and
             IsSignalingNaN methods. The return values combined will uniquely
             identify a particular arbitrary-precision decimal
-            value.</item></list></summary>
+            value.</item></list>
+            <para>If an operation requires creating an intermediate value that might be too big to
+            fit in memory (or might require more than 2 gigabytes of memory to
+            store -- due to the current use of a 32-bit integer internally as a length), the
+            operation may signal an invalid-operation flag and return not-a-number
+            (NaN).  In certain rare cases, the CompareTo method may throw OutOfMemoryException
+            (called OutOfMemoryError in Java) in the same circumstances.</para>
+             <para><b>Thread safety:</b>Instances of this class are immutable, so they are inherently
+            safe for use by multiple threads. Multiple instances of this object
+            with the same properties are interchangeable, so they should not be
+            compared using the "==" operator (which only checks if each side of
+            the operator is the same instance).</para>
+            </summary>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Abs">
 <summary>Gets the absolute value of this object.</summary>
@@ -3786,7 +3797,7 @@
 <doc name="M:PeterO.ExtendedDecimal.Equals(System.Object)">
 <summary>Determines whether this object&#x27;s mantissa and
             exponent are equal to those of another object and that other object
-            is a decimal fraction.</summary>
+            is an arbitrary-precision decimal number.</summary>
             <param name='obj'>An arbitrary object.</param>
             <returns>True if the objects are equal; otherwise, false.</returns>
 </doc>
@@ -3821,12 +3832,12 @@
             <paramref name='bigint'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromDouble(System.Double)">
-<summary>Creates a decimal number from a 64-bit floating-point
+<summary>Creates a decimal number from a 64-bit binary floating-point
             number. This method computes the exact value of the floating point
             number, not an approximation, as is often the case by converting
             the floating point number to a string first. Remember, though, that
-            the exact value of a 64-bit floating-point number is not always the
-            value you get when you pass a literal decimal number (for example,
+            the exact value of a 64-bit binary floating-point number is not always the
+            value that results when passing a literal decimal number (for example,
             calling <c>ExtendedDecimal.FromDouble(0.1f)</c> ), since not all
             decimal numbers can be converted to exact binary numbers (in the
             example given, the resulting arbitrary-precision decimal will be
@@ -3840,10 +3851,10 @@
 <doc name="M:PeterO.ExtendedDecimal.FromExtendedFloat(PeterO.ExtendedFloat)">
 <summary>Creates a decimal number from an arbitrary-precision
             binary floating-point number.</summary>
-            <param name='bigfloat'>A big floating-point number.</param>
+            <param name='arbitrary-precision binary float'>An arbitrary-precision binary floating-point number.</param>
             <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
-            <paramref name='bigfloat'/> is null.</exception>
+            <paramref name='arbitrary-precision binary float'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromInt32(System.Int32)">
 <summary>Creates a decimal number from a 32-bit signed
@@ -3859,12 +3870,12 @@
             set to 0.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromSingle(System.Single)">
-<summary>Creates a decimal number from a 32-bit floating-point
+<summary>Creates a decimal number from a 32-bit binary floating-point
             number. This method computes the exact value of the floating point
             number, not an approximation, as is often the case by converting
             the floating point number to a string first. Remember, though, that
-            the exact value of a 32-bit floating-point number is not always the
-            value you get when you pass a literal decimal number (for example,
+            the exact value of a 32-bit binary floating-point number is not always the
+            value that results when passing a literal decimal number (for example,
             calling <c>ExtendedDecimal.FromSingle(0.1f)</c> ), since not all
             decimal numbers can be converted to exact binary numbers (in the
             example given, the resulting arbitrary-precision decimal will be
@@ -4644,7 +4655,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.RoundToExponent(PeterO.BigInteger,PeterO.PrecisionContext)">
 <summary>Returns a decimal number with the same value as this
-            object, and rounds it to a new exponent if necessary.</summary>
+            object but rounded to a new exponent if necessary.</summary>
             <param name='exponent'>The minimum exponent the result can have.
             This is the maximum number of fractional digits in the result,
             expressed as a negative number. Can also be positive, which
@@ -4670,7 +4681,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.RoundToExponent(System.Int32,PeterO.PrecisionContext)">
 <summary>Returns a decimal number with the same value as this
-            object, and rounds it to a new exponent if necessary.</summary>
+            object but rounded to a new exponent if necessary.</summary>
             <param name='exponentSmall'>The minimum exponent the result can
             have. This is the maximum number of fractional digits in the
             result, expressed as a negative number. Can also be positive, which
@@ -4990,7 +5001,18 @@
             properties, and calling the IsInfinity, IsQuietNaN, and
             IsSignalingNaN methods. The return values combined will uniquely
             identify a particular arbitrary-precision binary float
-            value.</item></list></summary>
+            value.</item></list>
+                        <para>If an operation requires creating an intermediate value that might be too big to
+            fit in memory (or might require more than 2 gigabytes of memory to
+            store -- due to the current use of a 32-bit integer internally as a length), the
+            operation may signal an invalid-operation flag and return not-a-number
+            (NaN).  In certain rare cases, the CompareTo method may throw OutOfMemoryException
+            (called OutOfMemoryError in Java) in the same circumstances.</para>
+            <para><b>Thread safety:</b>Instances of this class are immutable, so they are inherently
+            safe for use by multiple threads. Multiple instances of this object
+            with the same properties are interchangeable, so they should not be
+            compared using the "==" operator (which only checks if each side of
+            the operator is the same instance).</para></summary>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.Abs">
 <summary>Gets the absolute value of this object.</summary>
@@ -5172,8 +5194,7 @@
 <doc name="M:PeterO.ExtendedFloat.DivideAndRemainderNaturalScale(PeterO.ExtendedFloat)">
 <summary>Calculates the quotient and remainder using the
             DivideToIntegerNaturalScale and the formula in
-            RemainderNaturalScale. This is meant to be similar to the
-            divideAndRemainder method in Java's BigDecimal.</summary>
+            RemainderNaturalScale.</summary>
             <param name='divisor'>The number to divide by.</param>
             <returns>A 2 element array consisting of the quotient and remainder
             in that order.</returns>
@@ -5181,8 +5202,7 @@
 <doc name="M:PeterO.ExtendedFloat.DivideAndRemainderNaturalScale(PeterO.ExtendedFloat,PeterO.PrecisionContext)">
 <summary>Calculates the quotient and remainder using the
             DivideToIntegerNaturalScale and the formula in
-            RemainderNaturalScale. This is meant to be similar to the
-            divideAndRemainder method in Java's BigDecimal.</summary>
+            RemainderNaturalScale. </summary>
             <param name='divisor'>The number to divide by.</param>
             <param name='ctx'>A precision context object to control the
             precision, rounding, and exponent range of the result. This context
@@ -5377,7 +5397,7 @@
 <doc name="M:PeterO.ExtendedFloat.Equals(System.Object)">
 <summary>Determines whether this object&#x27;s mantissa and
             exponent are equal to those of another object and that other object
-            is a decimal fraction.</summary>
+            is an arbitrary-precision decimal number.</summary>
             <param name='obj'>An arbitrary object.</param>
             <returns>True if the objects are equal; otherwise, false.</returns>
 </doc>
@@ -6174,7 +6194,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedFloat.RoundToExponent(PeterO.BigInteger,PeterO.PrecisionContext)">
 <summary>Returns a binary number with the same value as this
-            object, and rounds it to a new exponent if necessary.</summary>
+            object but rounded to a new exponent if necessary.</summary>
             <param name='exponent'>The minimum exponent the result can have.
             This is the maximum number of fractional digits in the result,
             expressed as a negative number. Can also be positive, which
@@ -6200,7 +6220,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedFloat.RoundToExponent(System.Int32,PeterO.PrecisionContext)">
 <summary>Returns a binary number with the same value as this
-            object, and rounds it to a new exponent if necessary.</summary>
+            object but rounded to a new exponent if necessary.</summary>
             <param name='exponentSmall'>The minimum exponent the result can
             have. This is the maximum number of fractional digits in the
             result, expressed as a negative number. Can also be positive, which
@@ -6224,7 +6244,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedFloat.RoundToExponentExact(PeterO.BigInteger,PeterO.PrecisionContext)">
 <summary>Returns a binary number with the same value as this object
-            but rounded to an integer, and signals an invalid operation if the
+            but rounded to the given exponent, and signals an invalid operation if the
             result would be inexact.</summary>
             <param name='exponent'>The minimum exponent the result can have.
             This is the maximum number of fractional digits in the result,
@@ -6247,7 +6267,7 @@
 </doc>
 <doc name="M:PeterO.ExtendedFloat.RoundToExponentExact(System.Int32,PeterO.PrecisionContext)">
 <summary>Returns a binary number with the same value as this object
-            but rounded to an integer, and signals an invalid operation if the
+            but rounded to the given exponent, and signals an invalid operation if the
             result would be inexact.</summary>
             <param name='exponentSmall'>The minimum exponent the result can
             have. This is the maximum number of fractional digits in the
@@ -6509,7 +6529,12 @@
 <doc name="T:PeterO.ExtendedRational">
 <summary>Arbitrary-precision rational number. This class cannot be
             inherited; this is a change in version 2.0 from previous versions,
-            where the class was inadvertently left inheritable.</summary>
+            where the class was inadvertently left inheritable.
+            <para><b>Thread safety:</b>Instances of this class are immutable, so they are inherently
+            safe for use by multiple threads. Multiple instances of this object
+            with the same properties are interchangeable, so they should not be
+            compared using the "==" operator (which only checks if each side of
+            the operator is the same instance).</para></summary>
 </doc>
 <doc name="M:PeterO.ExtendedRational.#ctor(PeterO.BigInteger,PeterO.BigInteger)">
 <summary>Initializes a new instance of the <see cref='ExtendedRational'/> class.</summary>
@@ -7384,7 +7409,18 @@
             properties, and calling the IsInfinity, IsQuietNaN, and
             IsSignalingNaN methods. The return values combined will uniquely
             identify a particular arbitrary-precision decimal
-            value.</item></list></summary>
+            value.</item></list>
+                        <para>If an operation requires creating an intermediate value that might be too big to
+            fit in memory (or might require more than 2 gigabytes of memory to
+            store -- due to the current use of a 32-bit integer internally as a length), the
+            operation may signal an invalid-operation flag and return not-a-number
+            (NaN).  In certain rare cases, the CompareTo method may throw OutOfMemoryException
+            (called OutOfMemoryError in Java) in the same circumstances.</para>
+            <para><b>Thread safety:</b>Instances of this class are immutable, so they are inherently
+            safe for use by multiple threads. Multiple instances of this object
+            with the same properties are interchangeable, so they should not be
+            compared using the "==" operator (which only checks if each side of
+            the operator is the same instance).</para></summary>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Abs">
 <summary>Gets the absolute value of this object.</summary>
@@ -7806,7 +7842,7 @@
 <doc name="M:PeterO.Numbers.EDecimal.Equals(System.Object)">
 <summary>Determines whether this object&#x27;s mantissa and
             exponent are equal to those of another object and that other object
-            is a decimal fraction.</summary>
+            is an arbitrary-precision decimal number.</summary>
             <param name='obj'>An arbitrary object.</param>
             <returns>True if the objects are equal; otherwise, false.</returns>
 </doc>
@@ -7839,12 +7875,12 @@
             set to 0.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.FromDouble(System.Double)">
-<summary>Creates a decimal number from a 64-bit floating-point
+<summary>Creates a decimal number from a 64-bit binary floating-point
             number. This method computes the exact value of the floating point
             number, not an approximation, as is often the case by converting
             the floating point number to a string first. Remember, though, that
-            the exact value of a 64-bit floating-point number is not always the
-            value you get when you pass a literal decimal number (for example,
+            the exact value of a 64-bit binary floating-point number is not always the
+            value that results when passing a literal decimal number (for example,
             calling <c>ExtendedDecimal.FromDouble(0.1f)</c> ), since not all
             decimal numbers can be converted to exact binary numbers (in the
             example given, the resulting arbitrary-precision decimal will be
@@ -7858,10 +7894,10 @@
 <doc name="M:PeterO.Numbers.EDecimal.FromExtendedFloat(PeterO.Numbers.EFloat)">
 <summary>Creates a decimal number from an arbitrary-precision
             binary floating-point number.</summary>
-            <param name='bigfloat'>A big floating-point number.</param>
+            <param name='arbitrary-precision binary float'>An arbitrary-precision binary floating-point number.</param>
             <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
-            <paramref name='bigfloat'/> is null.</exception>
+            <paramref name='arbitrary-precision binary float'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.FromInt32(System.Int32)">
 <summary>Creates a decimal number from a 32-bit signed
@@ -7877,12 +7913,12 @@
             set to 0.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.FromSingle(System.Single)">
-<summary>Creates a decimal number from a 32-bit floating-point
+<summary>Creates a decimal number from a 32-bit binary floating-point
             number. This method computes the exact value of the floating point
             number, not an approximation, as is often the case by converting
             the floating point number to a string first. Remember, though, that
-            the exact value of a 32-bit floating-point number is not always the
-            value you get when you pass a literal decimal number (for example,
+            the exact value of a 32-bit binary floating-point number is not always the
+            value that results when passing a literal decimal number (for example,
             calling <c>ExtendedDecimal.FromSingle(0.1f)</c> ), since not all
             decimal numbers can be converted to exact binary numbers (in the
             example given, the resulting arbitrary-precision decimal will be
@@ -8602,7 +8638,7 @@
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.RoundToExponent(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)">
 <summary>Returns a decimal number with the same value as this
-            object, and rounds it to a new exponent if necessary.</summary>
+            object but rounded to a new exponent if necessary.</summary>
             <param name='exponent'>The minimum exponent the result can have.
             This is the maximum number of fractional digits in the result,
             expressed as a negative number. Can also be positive, which
@@ -8626,7 +8662,7 @@
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.RoundToExponent(System.Int32,PeterO.Numbers.EContext)">
 <summary>Returns a decimal number with the same value as this
-            object, and rounds it to a new exponent if necessary.</summary>
+            object but rounded to a new exponent if necessary.</summary>
             <param name='exponentSmall'>The minimum exponent the result can
             have. This is the maximum number of fractional digits in the
             result, expressed as a negative number. Can also be positive, which
@@ -8938,7 +8974,18 @@
             properties, and calling the IsInfinity, IsQuietNaN, and
             IsSignalingNaN methods. The return values combined will uniquely
             identify a particular arbitrary-precision binary float
-            value.</item></list></summary>
+            value.</item></list>
+                        <para>If an operation requires creating an intermediate value that might be too big to
+            fit in memory (or might require more than 2 gigabytes of memory to
+            store -- due to the current use of a 32-bit integer internally as a length), the
+            operation may signal an invalid-operation flag and return not-a-number
+            (NaN).  In certain rare cases, the CompareTo method may throw OutOfMemoryException
+            (called OutOfMemoryError in Java) in the same circumstances.</para>
+            <para><b>Thread safety:</b>Instances of this class are immutable, so they are inherently
+            safe for use by multiple threads. Multiple instances of this object
+            with the same properties are interchangeable, so they should not be
+            compared using the "==" operator (which only checks if each side of
+            the operator is the same instance).</para></summary>
 </doc>
 <doc name="M:PeterO.Numbers.EFloat.Abs">
 <summary>Gets the absolute value of this object.</summary>
@@ -9355,7 +9402,7 @@
 <doc name="M:PeterO.Numbers.EFloat.Equals(System.Object)">
 <summary>Determines whether this object&#x27;s mantissa and
             exponent are equal to those of another object and that other object
-            is a decimal fraction.</summary>
+            is an arbitrary-precision decimal number.</summary>
             <param name='obj'>An arbitrary object.</param>
             <returns>True if the objects are equal; otherwise, false.</returns>
 </doc>
@@ -10088,7 +10135,7 @@
 </doc>
 <doc name="M:PeterO.Numbers.EFloat.RoundToExponent(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)">
 <summary>Returns a binary number with the same value as this
-            object, and rounds it to a new exponent if necessary.</summary>
+            object but rounded to a new exponent if necessary.</summary>
             <param name='exponent'>The minimum exponent the result can have.
             This is the maximum number of fractional digits in the result,
             expressed as a negative number. Can also be positive, which
@@ -10112,7 +10159,7 @@
 </doc>
 <doc name="M:PeterO.Numbers.EFloat.RoundToExponent(System.Int32,PeterO.Numbers.EContext)">
 <summary>Returns a binary number with the same value as this
-            object, and rounds it to a new exponent if necessary.</summary>
+            object but rounded to a new exponent if necessary.</summary>
             <param name='exponentSmall'>The minimum exponent the result can
             have. This is the maximum number of fractional digits in the
             result, expressed as a negative number. Can also be positive, which
@@ -10136,7 +10183,7 @@
 </doc>
 <doc name="M:PeterO.Numbers.EFloat.RoundToExponentExact(PeterO.Numbers.EInteger,PeterO.Numbers.EContext)">
 <summary>Returns a binary number with the same value as this object
-            but rounded to an integer, and signals an invalid operation if the
+            but rounded to the given exponent, and signals an invalid operation if the
             result would be inexact.</summary>
             <param name='exponent'>The minimum exponent the result can have.
             This is the maximum number of fractional digits in the result,
@@ -10157,7 +10204,7 @@
 </doc>
 <doc name="M:PeterO.Numbers.EFloat.RoundToExponentExact(System.Int32,PeterO.Numbers.EContext)">
 <summary>Returns a binary number with the same value as this object
-            but rounded to an integer, and signals an invalid operation if the
+            but rounded to the given exponent, and signals an invalid operation if the
             result would be inexact.</summary>
             <param name='exponentSmall'>The minimum exponent the result can
             have. This is the maximum number of fractional digits in the
@@ -10408,9 +10455,8 @@
 <summary>An arbitrary-precision integer.
             <para>Instances of this class are immutable, so they are inherently
             safe for use by multiple threads. Multiple instances of this object
-            with the same value are interchangeable, so they should not be
-            compared using the "==" operator (which only checks if each side of
-            the operator is the same instance).</para></summary>
+            with the same value are interchangeable, but they should be
+            compared using the "Equals" method rather than the "==" operator.</para></summary>
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.Abs">
 <summary>Returns the absolute value of this object's
@@ -11063,7 +11109,7 @@
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.op_Modulus(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)">
 <summary>Finds the remainder that results when an
-            arbitrary-precision integer is divided by the value of an
+            arbitrary-precision integer is divided by the value of another
             arbitrary-precision integer.</summary>
             <param name='dividend'>The parameter <paramref name='dividend'/> is
             not documented yet.</param>
@@ -11075,7 +11121,7 @@
 </doc>
 <doc name="M:PeterO.Numbers.EInteger.op_Multiply(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)">
 <summary>Multiplies an arbitrary-precision integer by the value of
-            a arbitrary-precision integer.</summary>
+            an arbitrary-precision integer.</summary>
             <param name='operand1'>The parameter <paramref name='operand1'/> is
             not documented yet.</param>
             <param name='operand2'>The parameter <paramref name='operand2'/> is
@@ -11179,8 +11225,12 @@
 </doc>
 <doc name="T:PeterO.Numbers.ERational">
 <summary>Arbitrary-precision rational number. This class cannot be
-            inherited; this is a change in version 2.0 from previous versions,
-            where the class was inadvertently left inheritable.</summary>
+            inherited.
+            <para><b>Thread safety:</b>Instances of this class are immutable, so they are inherently
+            safe for use by multiple threads. Multiple instances of this object
+            with the same properties are interchangeable, so they should not be
+            compared using the "==" operator (which only checks if each side of
+            the operator is the same instance).</para></summary>
 </doc>
 <doc name="M:PeterO.Numbers.ERational.#ctor(PeterO.Numbers.EInteger,PeterO.Numbers.EInteger)">
 <summary>Initializes a new instance of the <see cref='T:PeterO.Numbers.ERational'/> class.</summary>

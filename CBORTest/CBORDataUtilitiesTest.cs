@@ -15,15 +15,40 @@ namespace Test {
     public void TestPreserveNegativeZero() {
       CBORObject cbor;
       cbor = CBORDataUtilities.ParseJSONNumber("-0", false, false, true);
-      Assert.AreEqual("-0",cbor.ToString());
+      {
+string stringTemp = cbor.ToString();
+Assert.AreEqual(
+"-0",
+stringTemp);
+}
       cbor = CBORDataUtilities.ParseJSONNumber("-0e-1", false, false, true);
-      Assert.AreEqual("-0.0", cbor.ToString());
+      {
+string stringTemp = cbor.ToString();
+Assert.AreEqual(
+"-0.0",
+stringTemp);
+}
       cbor = CBORDataUtilities.ParseJSONNumber("-0e1", false, false, true);
-      Assert.AreEqual("-0E+1", cbor.ToString());
+      {
+string stringTemp = cbor.ToString();
+Assert.AreEqual(
+"-0E+1",
+stringTemp);
+}
       cbor = CBORDataUtilities.ParseJSONNumber("-0.0e1", false, false, true);
-      Assert.AreEqual("-0", cbor.ToString());
+      {
+string stringTemp = cbor.ToString();
+Assert.AreEqual(
+"-0",
+stringTemp);
+}
       cbor = CBORDataUtilities.ParseJSONNumber("-0.0", false, false, true);
-      Assert.AreEqual("-0.0", cbor.ToString());
+      {
+string stringTemp = cbor.ToString();
+Assert.AreEqual(
+"-0.0",
+stringTemp);
+}
 
       this.AssertNegative(
 CBORDataUtilities.ParseJSONNumber(
@@ -238,6 +263,9 @@ false) != null) {
  Assert.Fail();
  }
       if (CBORDataUtilities.ParseJSONNumber("-0.", false, false) != null) {
+ Assert.Fail();
+ }
+      if (CBORDataUtilities.ParseJSONNumber("0g.1", false, false) != null) {
  Assert.Fail();
  }
       if (CBORDataUtilities.ParseJSONNumber("0.e+20", false, false) != null) {
