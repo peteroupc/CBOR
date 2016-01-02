@@ -13,7 +13,19 @@ namespace Test {
     }
     [Test]
     public void TestPreserveNegativeZero() {
-   this.AssertNegative(
+      CBORObject cbor;
+      cbor = CBORDataUtilities.ParseJSONNumber("-0", false, false, true);
+      Assert.AreEqual("-0",cbor.ToString());
+      cbor = CBORDataUtilities.ParseJSONNumber("-0e-1", false, false, true);
+      Assert.AreEqual("-0.0", cbor.ToString());
+      cbor = CBORDataUtilities.ParseJSONNumber("-0e1", false, false, true);
+      Assert.AreEqual("-0E+1", cbor.ToString());
+      cbor = CBORDataUtilities.ParseJSONNumber("-0.0e1", false, false, true);
+      Assert.AreEqual("-0", cbor.ToString());
+      cbor = CBORDataUtilities.ParseJSONNumber("-0.0", false, false, true);
+      Assert.AreEqual("-0.0", cbor.ToString());
+
+      this.AssertNegative(
 CBORDataUtilities.ParseJSONNumber(
 "-0",
 false,

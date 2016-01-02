@@ -10891,7 +10891,7 @@
             Except if the result is 0, it will be negative if this object is
             positive and the other is negative, or vice versa, and will be
             positive if both are positive or both are negative.</summary>
-            <param name='bigintDivisor'>Another arbitrary-precision integer.</param>
+            <param name='bigintDivisor'>The divisor as an arbitrary-precision integer.</param>
             <returns>The quotient of the two objects.</returns>
             <exception cref='T:System.DivideByZeroException'>The divisor is
             zero.</exception>
