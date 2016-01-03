@@ -903,6 +903,7 @@ BigNumberFlags.FlagInfinity | BigNumberFlags.FlagNegative);
     }
 
     private ERational Simplify() {
+      // TODO: Don't simplify automatically in version 3.0
       if ((this.flags & BigNumberFlags.FlagSpecial) == 0) {
         int lowBit = this.unsignedNumerator.getLowBit();
         lowBit = Math.Min(lowBit, this.denominator.getLowBit());

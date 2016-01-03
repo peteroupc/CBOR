@@ -367,9 +367,29 @@ rounding,
 false).WithUnlimitedExponents();
     }
 
+    private static readonly EContext ForRoundingHalfEven = new EContext(
+0,
+ERounding.HalfEven,
+0,
+0,
+false).WithUnlimitedExponents();
+
+    private static readonly EContext ForRoundingDown = new EContext(
+0,
+ERounding.Down,
+0,
+0,
+false).WithUnlimitedExponents();
+
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EContext.ForRounding(PeterO.Numbers.ERounding)"]/*'/>
     public static EContext ForRounding(ERounding rounding) {
+      if (rounding == ERounding.HalfEven) {
+        return ForRoundingHalfEven;
+      }
+      if (rounding == ERounding.Down) {
+        return ForRoundingDown;
+      }
       return new EContext(
 0,
 rounding,

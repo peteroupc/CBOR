@@ -3371,7 +3371,7 @@
             very high number can't be represented in a given exponent range.
             <b>Not-a-number</b> is generally used to signal errors.</para>
             <para>This class implements the General Decimal Arithmetic
-            Specification version 1.70:
+            Specification version 1.70 (except part of chapter 6):
             <c>http://speleotrove.com/decimal/decarith.html</c></para>
             <para>Passing a signaling NaN to any arithmetic operation shown
             here will signal the flag FlagInvalid and return a quiet NaN, even
@@ -3851,10 +3851,10 @@
 <doc name="M:PeterO.ExtendedDecimal.FromExtendedFloat(PeterO.ExtendedFloat)">
 <summary>Creates a decimal number from an arbitrary-precision
             binary floating-point number.</summary>
-            <param name='arbitrary-precision binary float'>An arbitrary-precision binary floating-point number.</param>
+            <param name='bigfloat'>An arbitrary-precision binary floating-point number.</param>
             <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
-            <paramref name='arbitrary-precision binary float'/> is null.</exception>
+            <paramref name='bigfloat'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromInt32(System.Int32)">
 <summary>Creates a decimal number from a 32-bit signed
@@ -7383,7 +7383,7 @@
             very high number can't be represented in a given exponent range.
             <b>Not-a-number</b> is generally used to signal errors.</para>
             <para>This class implements the General Decimal Arithmetic
-            Specification version 1.70:
+            Specification version 1.70 (except part of chapter 6):
             <c>http://speleotrove.com/decimal/decarith.html</c></para>
             <para>Passing a signaling NaN to any arithmetic operation shown
             here will signal the flag FlagInvalid and return a quiet NaN, even
@@ -7894,10 +7894,10 @@
 <doc name="M:PeterO.Numbers.EDecimal.FromExtendedFloat(PeterO.Numbers.EFloat)">
 <summary>Creates a decimal number from an arbitrary-precision
             binary floating-point number.</summary>
-            <param name='arbitrary-precision binary float'>An arbitrary-precision binary floating-point number.</param>
+            <param name='bigfloat'>An arbitrary-precision binary floating-point number.</param>
             <returns>An arbitrary-precision decimal number.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
-            <paramref name='arbitrary-precision binary float'/> is null.</exception>
+            <paramref name='bigfloat'/> is null.</exception>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.FromInt32(System.Int32)">
 <summary>Creates a decimal number from a 32-bit signed

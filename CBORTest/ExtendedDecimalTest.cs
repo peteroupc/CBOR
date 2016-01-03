@@ -1583,9 +1583,29 @@ null);
     public void TestRoundToBinaryPrecision() {
       // not implemented yet
     }
+
+    private void TestRoundToExponentOne(
+      string input,
+      string expected,
+      int exponent,
+      Rounding rounding) {
+      ExtendedDecimal inputED = ExtendedDecimal.FromString(input);
+      inputED = inputED.RoundToExponent(
+exponent,
+PrecisionContext.ForRounding(rounding));
+      Assert.AreEqual(expected, inputED.ToString());
+    }
     [Test]
     public void TestRoundToExponent() {
-      // not implemented yet
+      this.TestRoundToExponentOne("-0", "-0", 0, Rounding.Down);
+      this.TestRoundToExponentOne("-0", "-0", 0, Rounding.HalfEven);
+      this.TestRoundToExponentOne("-0", "-0", 0, Rounding.Floor);
+      this.TestRoundToExponentOne("-0.0", "-0", 0, Rounding.Down);
+      this.TestRoundToExponentOne("-0.0", "-0", 0, Rounding.HalfEven);
+      this.TestRoundToExponentOne("-0.0", "-0", 0, Rounding.Floor);
+      this.TestRoundToExponentOne("-0.0000", "-0", 0, Rounding.Down);
+      this.TestRoundToExponentOne("-0.0000", "-0", 0, Rounding.HalfEven);
+      this.TestRoundToExponentOne("-0.0000", "-0", 0, Rounding.Floor);
     }
     [Test]
     public void TestRoundToExponentExact() {

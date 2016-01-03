@@ -105,12 +105,16 @@ int olderDiscarded) {
       if (fastint == null) {
         throw new ArgumentNullException("fastint");
       }
-      if (fastint.Sign <= 0) {
-        return;
-      }
       if (fastint.CanFitInInt32()) {
-        this.ShiftRightInt(fastint.AsInt32());
+        int fi = fastint.AsInt32();
+        if (fi < 0) {
+          return;
+        }
+        this.ShiftRightInt(fi);
       } else {
+        if (fastint.Sign <= 0) {
+          return;
+        }
         EInteger bi = fastint.AsBigInteger();
         while (bi.Sign > 0) {
           var count = 1000000;
@@ -124,6 +128,24 @@ int olderDiscarded) {
             break;
           }
         }
+      }
+    }
+
+    public void TruncateRight(FastInteger fastint) {
+      if (fastint == null) {
+        throw new ArgumentNullException("fastint");
+      }
+      if (!this.isSmall) {
+        this.ShiftRight(fastint);
+      }
+      if (fastint.CanFitInInt32()) {
+        int fi = fastint.AsInt32();
+        if (fi < 0) {
+          return;
+        }
+        this.TruncateRightSmall(fi);
+      } else {
+        this.ShiftRight(fastint);
       }
     }
 
@@ -401,6 +423,11 @@ bigrem = divrem[1]; }
       }
     }
 
+    private static readonly int[] ValueTenPowers = {
+      1, 10, 100, 1000, 10000, 100000,
+      1000000, 10000000, 100000000
+    };
+
     private void ShiftRightSmall(int digits) {
       if (digits <= 0) {
         return;
@@ -413,8 +440,53 @@ bigrem = divrem[1]; }
         this.knownBitLength = new FastInteger(1);
         return;
       }
+      if (digits >= 2 && digits <= 8) {
+        if (this.shiftedSmall >= ValueTenPowers[digits]) {
+         int bigPower = ValueTenPowers[digits];
+         int smallPower = ValueTenPowers[digits - 1];
+       this.discardedBitCount = this.discardedBitCount ?? (new
+           FastInteger(0));
+         this.discardedBitCount.AddInt(digits);
+         int div = this.shiftedSmall / bigPower;
+         int rem = this.shiftedSmall - (div * bigPower);
+         int rem2 = rem / smallPower;
+         this.bitLeftmost = rem2;
+         this.bitsAfterLeftmost |= rem - (rem2 * smallPower);
+         this.shiftedSmall = div;
+         this.knownBitLength = (div < 10) ? (new FastInteger(1)) :
+           this.CalcKnownDigitLength();
+         return;
+        } else if (this.shiftedSmall >= ValueTenPowers[digits - 1]) {
+         int smallPower = ValueTenPowers[digits - 1];
+         if (this.discardedBitCount != null) {
+           this.discardedBitCount.AddInt(digits);
+         } else {
+           this.discardedBitCount = new FastInteger(digits);
+         }
+         int rem = this.shiftedSmall;
+         int rem2 = rem / smallPower;
+         this.bitLeftmost = rem2;
+         this.bitsAfterLeftmost |= rem - (rem2 * smallPower);
+         this.shiftedSmall = 0;
+         this.knownBitLength = new FastInteger(1);
+         return;
+        } else {
+         if (this.discardedBitCount != null) {
+           this.discardedBitCount.AddInt(digits);
+         } else {
+           this.discardedBitCount = new FastInteger(digits);
+         }
+         int rem = this.shiftedSmall;
+         this.bitLeftmost = 0;
+         this.bitsAfterLeftmost |= rem;
+         this.shiftedSmall = 0;
+         this.knownBitLength = new FastInteger(1);
+         return;
+        }
+      }
       var kb = 0;
       int tmp = this.shiftedSmall;
+      // DebugUtility.Log("" + this.shiftedSmall + ", " + digits);
       while (tmp > 0) {
         ++kb;
         tmp /= 10;
@@ -424,8 +496,11 @@ bigrem = divrem[1]; }
         ++kb;
       }
       this.knownBitLength = new FastInteger(kb);
-      this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
-      this.discardedBitCount.AddInt(digits);
+         if (this.discardedBitCount != null) {
+           this.discardedBitCount.AddInt(digits);
+         } else {
+           this.discardedBitCount = new FastInteger(digits);
+         }
       while (digits > 0) {
         if (this.shiftedSmall == 0) {
           this.bitsAfterLeftmost |= this.bitLeftmost;
@@ -442,6 +517,51 @@ bigrem = divrem[1]; }
         }
       }
       this.bitsAfterLeftmost = (this.bitsAfterLeftmost != 0) ? 1 : 0;
+    }
+
+    private void TruncateRightSmall(int digits) {
+      if (digits <= 0) {
+        return;
+      }
+      if (this.shiftedSmall == 0 || digits >= 11) {
+        this.discardedBitCount = this.discardedBitCount ?? (new FastInteger(0));
+        this.discardedBitCount.AddInt(digits);
+        this.bitsAfterLeftmost = 0;
+        this.bitLeftmost = 0;
+        this.shiftedSmall = 0;
+        this.knownBitLength = new FastInteger(1);
+        return;
+      }
+      if (digits >= 1 && digits <= 8) {
+        if (this.shiftedSmall >= ValueTenPowers[digits]) {
+         int bigPower = ValueTenPowers[digits];
+         int smallPower = ValueTenPowers[digits - 1];
+         if (this.discardedBitCount != null) {
+           this.discardedBitCount.AddInt(digits);
+         } else {
+           this.discardedBitCount = new FastInteger(digits);
+         }
+         this.shiftedSmall /= bigPower;
+         this.bitsAfterLeftmost = 0;
+         this.bitLeftmost = 0;
+         this.knownBitLength = (this.shiftedSmall < 10) ? (new
+           FastInteger(1)) : this.CalcKnownDigitLength();
+         return;
+        } else {
+         int smallPower = ValueTenPowers[digits - 1];
+         if (this.discardedBitCount != null) {
+           this.discardedBitCount.AddInt(digits);
+         } else {
+           this.discardedBitCount = new FastInteger(digits);
+         }
+         this.bitLeftmost = 0;
+         this.bitsAfterLeftmost = 0;
+         this.shiftedSmall = 0;
+         this.knownBitLength = new FastInteger(1);
+         return;
+        }
+      }
+      this.ShiftRightSmall(digits);
     }
 
     public void ShiftToDigits(FastInteger bits) {
@@ -486,10 +606,13 @@ bigrem = divrem[1]; }
       if (this.isSmall) {
         var kb = 0;
         int v2 = this.shiftedSmall;
-        kb = (v2 >= 1000000000) ? 10 : ((v2 >= 100000000) ? 9 : ((v2 >=
-        10000000) ? 8 : ((v2 >= 1000000) ? 7 : ((v2 >= 100000) ? 6 : ((v2 >=
-        10000) ? 5 : ((v2 >= 1000) ? 4 : ((v2 >= 100) ? 3 : ((v2 >= 10) ? 2 :
-        1))))))));
+        if (v2 < 100000) {
+          kb = ((v2 >= 10000) ? 5 : ((v2 >= 1000) ? 4 : ((v2 >= 100) ?
+          3 : ((v2 >= 10) ? 2 : 1))));
+        } else {
+          kb = (v2 >= 1000000000) ? 10 : ((v2 >= 100000000) ? 9 : ((v2 >=
+          10000000) ? 8 : ((v2 >= 1000000) ? 7 : 6)));
+        }
         return new FastInteger(kb);
       }
       return new FastInteger(this.shiftedBigInt.getDigitCount());

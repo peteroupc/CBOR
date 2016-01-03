@@ -359,7 +359,7 @@ Assert.AreEqual(objectTemp, objectTemp2, messageTemp);
         name + ": LostDigits");
     }
 
-    private static void PrintTime(System.Diagnostics.Stopwatch sw) {
+    internal static void PrintTime(System.Diagnostics.Stopwatch sw) {
       Console.WriteLine("Elapsed time: " + (sw.ElapsedMilliseconds / 1000.0) +
                     " s");
     }

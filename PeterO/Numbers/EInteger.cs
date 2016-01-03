@@ -179,16 +179,25 @@ namespace PeterO.Numbers {
       int retwordcount;
       unchecked {
         retnegative = longerValue < 0;
-        retreg = new short[4];
-        if (longerValue == Int64.MinValue) {
+        if ((longerValue >> 15) == 0) {
+          retreg = new short[2];
+          long intValue = (int)longerValue;
+          if (retnegative) {
+            intValue = -intValue;
+          }
+          retreg[0] = (short)(intValue & 0xffff);
+          retwordcount = 1;
+        } else if (longerValue == Int64.MinValue) {
+          retreg = new short[4];
           retreg[0] = 0;
           retreg[1] = 0;
           retreg[2] = 0;
           retreg[3] = unchecked((short)0x8000);
           retwordcount = 4;
         } else {
+          retreg = new short[4];
           long ut = longerValue;
-          if (ut < 0) {
+          if (retnegative) {
             ut = -ut;
           }
           retreg[0] = (short)(ut & 0xffff);
@@ -473,11 +482,25 @@ namespace PeterO.Numbers {
         }
       }
       if ((!this.negative) == (!bigintAugend.negative)) {
+        // both nonnegative or both negative
+        if (bigintAugend.wordCount <= 2 && this.wordCount <= 2 &&
+           (this.wordCount < 2 || (this.words[1] >> 15) == 0) &&
+           (bigintAugend.wordCount < 2 || (bigintAugend.words[1] >> 15) == 0)) {
+          int a = ((int)this.words[0]) & 0xffff;
+          a |= (((int)this.words[1]) & 0xffff) << 16;
+          int b = ((int)bigintAugend.words[0]) & 0xffff;
+          b |= (((int)bigintAugend.words[1]) & 0xffff) << 16;
+          a = unchecked((int)(a + b));
+          sumreg = new short[2];
+          sumreg[0] = unchecked((short)(a & 0xffff));
+          sumreg[1] = unchecked((short)((a >> 16) & 0xffff));
+          int wcount = (sumreg[1] == 0) ? 1 : 2;
+          return new EInteger(wcount, sumreg, this.negative);
+        }
         sumreg = new short[(
           int)Math.Max(
                     this.words.Length,
                     bigintAugend.words.Length)];
-        // both nonnegative or both negative
         int carry;
         int addendCount = this.wordCount;
         int augendCount = bigintAugend.wordCount;

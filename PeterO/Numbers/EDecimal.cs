@@ -558,7 +558,7 @@ namespace PeterO.Numbers {
         bigNewScale,
         negative ? BigNumberFlags.FlagNegative : 0);
       if (ctx != null) {
-        ret = MathValue.RoundAfterConversion(ret, ctx);
+        ret = GetMathValue(ctx).RoundAfterConversion(ret, ctx);
       }
       return ret;
     }
@@ -1704,7 +1704,7 @@ remainder = divrem[1]; }
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Reduce(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Reduce(EContext ctx) {
-      return MathValue.Reduce(this, ctx);
+      return GetMathValue(ctx).Reduce(this, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1740,7 +1740,7 @@ remainder = divrem[1]; }
     public EDecimal Divide(
       EDecimal divisor,
       EContext ctx) {
-      return MathValue.Divide(this, divisor, ctx);
+      return GetMathValue(ctx).Divide(this, divisor, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1761,7 +1761,7 @@ remainder = divrem[1]; }
       EDecimal divisor,
       EInteger exponent,
       EContext ctx) {
-      return MathValue.DivideToExponent(this, divisor, exponent, ctx);
+      return GetMathValue(ctx).DivideToExponent(this, divisor, exponent, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1779,25 +1779,28 @@ remainder = divrem[1]; }
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Abs(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Abs(EContext context) {
-      return MathValue.Abs(this, context);
+      return ((context == null || context == EContext.Unlimited) ?
+        ExtendedMathValue : MathValue).Abs(this, context);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Negate(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Negate(EContext context) {
-      return MathValue.Negate(this, context);
+      return ((context == null || context == EContext.Unlimited) ?
+        ExtendedMathValue : MathValue).Negate(this, context);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Add(PeterO.Numbers.EDecimal)"]/*'/>
     public EDecimal Add(EDecimal otherValue) {
+      // TODO: Use a consistent default rounding mode for version 3
       return this.Add(otherValue, EContext.Unlimited);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Subtract(PeterO.Numbers.EDecimal)"]/*'/>
     public EDecimal Subtract(EDecimal otherValue) {
-      return this.Subtract(otherValue, null);
+      return this.Subtract(otherValue, EContext.Unlimited);
     }
 
     /// <include file='../../docs.xml'
@@ -1838,12 +1841,23 @@ remainder = divrem[1]; }
         new ExtendedOrSimpleRadixMath<EDecimal>(new
                     DecimalMathHelper()));
 
+    private static readonly IRadixMath<EDecimal> ExtendedMathValue = new
+      RadixMath<EDecimal>(new DecimalMathHelper());
+
+    private static IRadixMath<EDecimal> GetMathValue(EContext ctx) {
+      if (ctx == null || ctx == EContext.Unlimited) {
+ return ExtendedMathValue;
+}
+      return (!ctx.IsSimplified && ctx.Traps == 0) ? ExtendedMathValue :
+        MathValue;
+    }
+
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.DivideToIntegerNaturalScale(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal DivideToIntegerNaturalScale(
       EDecimal divisor,
       EContext ctx) {
-      return MathValue.DivideToIntegerNaturalScale(this, divisor, ctx);
+      return GetMathValue(ctx).DivideToIntegerNaturalScale(this, divisor, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1851,7 +1865,7 @@ remainder = divrem[1]; }
     public EDecimal DivideToIntegerZeroScale(
       EDecimal divisor,
       EContext ctx) {
-      return MathValue.DivideToIntegerZeroScale(this, divisor, ctx);
+      return GetMathValue(ctx).DivideToIntegerZeroScale(this, divisor, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1859,7 +1873,7 @@ remainder = divrem[1]; }
     public EDecimal Remainder(
       EDecimal divisor,
       EContext ctx) {
-      return MathValue.Remainder(this, divisor, ctx);
+      return GetMathValue(ctx).Remainder(this, divisor, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1867,19 +1881,21 @@ remainder = divrem[1]; }
     public EDecimal RemainderNear(
       EDecimal divisor,
       EContext ctx) {
-      return MathValue.RemainderNear(this, divisor, ctx);
+      return GetMathValue(ctx)
+        .RemainderNear(this, divisor, ctx);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.NextMinus(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal NextMinus(EContext ctx) {
-      return MathValue.NextMinus(this, ctx);
+      return GetMathValue(ctx).NextMinus(this, ctx);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.NextPlus(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal NextPlus(EContext ctx) {
-      return MathValue.NextPlus(this, ctx);
+      return GetMathValue(ctx)
+        .NextPlus(this, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1887,7 +1903,8 @@ remainder = divrem[1]; }
     public EDecimal NextToward(
       EDecimal otherValue,
       EContext ctx) {
-      return MathValue.NextToward(this, otherValue, ctx);
+      return GetMathValue(ctx)
+        .NextToward(this, otherValue, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1896,7 +1913,7 @@ remainder = divrem[1]; }
       EDecimal first,
       EDecimal second,
       EContext ctx) {
-      return MathValue.Max(first, second, ctx);
+      return GetMathValue(ctx).Max(first, second, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1905,7 +1922,7 @@ remainder = divrem[1]; }
       EDecimal first,
       EDecimal second,
       EContext ctx) {
-      return MathValue.Min(first, second, ctx);
+      return GetMathValue(ctx).Min(first, second, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1914,7 +1931,7 @@ remainder = divrem[1]; }
       EDecimal first,
       EDecimal second,
       EContext ctx) {
-      return MathValue.MaxMagnitude(first, second, ctx);
+      return GetMathValue(ctx).MaxMagnitude(first, second, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1923,7 +1940,7 @@ remainder = divrem[1]; }
       EDecimal first,
       EDecimal second,
       EContext ctx) {
-      return MathValue.MinMagnitude(first, second, ctx);
+      return GetMathValue(ctx).MinMagnitude(first, second, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1961,7 +1978,7 @@ remainder = divrem[1]; }
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.CompareTo(PeterO.Numbers.EDecimal)"]/*'/>
     public int CompareTo(EDecimal other) {
-      return MathValue.CompareTo(this, other);
+      return ExtendedMathValue.CompareTo(this, other);
     }
 
     /// <include file='../../docs.xml'
@@ -1969,7 +1986,7 @@ remainder = divrem[1]; }
     public EDecimal CompareToWithContext(
       EDecimal other,
       EContext ctx) {
-      return MathValue.CompareToWithContext(this, other, false, ctx);
+      return GetMathValue(ctx).CompareToWithContext(this, other, false, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1977,7 +1994,7 @@ remainder = divrem[1]; }
     public EDecimal CompareToSignal(
       EDecimal other,
       EContext ctx) {
-      return MathValue.CompareToWithContext(this, other, true, ctx);
+      return GetMathValue(ctx).CompareToWithContext(this, other, true, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -1985,7 +2002,7 @@ remainder = divrem[1]; }
     public EDecimal Add(
       EDecimal otherValue,
       EContext ctx) {
-      return MathValue.Add(this, otherValue, ctx);
+      return GetMathValue(ctx).Add(this, otherValue, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -2023,19 +2040,20 @@ remainder = divrem[1]; }
     public EDecimal Quantize(
       EDecimal otherValue,
       EContext ctx) {
-      return MathValue.Quantize(this, otherValue, ctx);
+      return GetMathValue(ctx).Quantize(this, otherValue, ctx);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToIntegralExact(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RoundToIntegralExact(EContext ctx) {
-      return MathValue.RoundToExponentExact(this, EInteger.Zero, ctx);
+      return GetMathValue(ctx).RoundToExponentExact(this, EInteger.Zero, ctx);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToIntegralNoRoundedFlag(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RoundToIntegralNoRoundedFlag(EContext ctx) {
-      return MathValue.RoundToExponentNoRoundedFlag(this, EInteger.Zero, ctx);
+      return GetMathValue(ctx)
+        .RoundToExponentNoRoundedFlag(this, EInteger.Zero, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -2043,7 +2061,8 @@ remainder = divrem[1]; }
     public EDecimal RoundToExponentExact(
       EInteger exponent,
       EContext ctx) {
-      return MathValue.RoundToExponentExact(this, exponent, ctx);
+      return GetMathValue(ctx)
+        .RoundToExponentExact(this, exponent, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -2051,7 +2070,8 @@ remainder = divrem[1]; }
     public EDecimal RoundToExponent(
       EInteger exponent,
       EContext ctx) {
-      return MathValue.RoundToExponentSimple(this, exponent, ctx);
+      return GetMathValue(ctx)
+        .RoundToExponentSimple(this, exponent, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -2073,7 +2093,7 @@ remainder = divrem[1]; }
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Multiply(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Multiply(EDecimal op, EContext ctx) {
-      return MathValue.Multiply(this, op, ctx);
+      return GetMathValue(ctx).Multiply(this, op, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -2082,7 +2102,7 @@ remainder = divrem[1]; }
       EDecimal op,
       EDecimal augend,
       EContext ctx) {
-      return MathValue.MultiplyAndAdd(this, op, augend, ctx);
+      return GetMathValue(ctx).MultiplyAndAdd(this, op, augend, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -2105,19 +2125,20 @@ remainder = divrem[1]; }
           subtrahend.exponent,
           newflags);
       }
-      return MathValue.MultiplyAndAdd(this, op, negated, ctx);
+      return GetMathValue(ctx)
+        .MultiplyAndAdd(this, op, negated, ctx);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToPrecision(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RoundToPrecision(EContext ctx) {
-      return MathValue.RoundToPrecision(this, ctx);
+      return GetMathValue(ctx).RoundToPrecision(this, ctx);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Plus(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Plus(EContext ctx) {
-      return MathValue.Plus(this, ctx);
+      return GetMathValue(ctx).Plus(this, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -2129,7 +2150,7 @@ remainder = divrem[1]; }
         return this;
       }
       EContext ctx2 = ctx.Copy().WithPrecisionInBits(true);
-      EDecimal ret = MathValue.RoundToPrecision(this, ctx2);
+      EDecimal ret = GetMathValue(ctx).RoundToPrecision(this, ctx2);
       if (ctx2.HasFlags) {
         ctx.Flags = ctx2.Flags;
       }
@@ -2139,31 +2160,31 @@ remainder = divrem[1]; }
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.SquareRoot(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal SquareRoot(EContext ctx) {
-      return MathValue.SquareRoot(this, ctx);
+      return GetMathValue(ctx).SquareRoot(this, ctx);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Exp(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Exp(EContext ctx) {
-      return MathValue.Exp(this, ctx);
+      return GetMathValue(ctx).Exp(this, ctx);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Log(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Log(EContext ctx) {
-      return MathValue.Ln(this, ctx);
+      return GetMathValue(ctx).Ln(this, ctx);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Log10(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Log10(EContext ctx) {
-      return MathValue.Log10(this, ctx);
+      return GetMathValue(ctx).Log10(this, ctx);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.Pow(PeterO.Numbers.EDecimal,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal Pow(EDecimal exponent, EContext ctx) {
-      return MathValue.Power(this, exponent, ctx);
+      return GetMathValue(ctx).Power(this, exponent, ctx);
     }
 
     /// <include file='../../docs.xml'
@@ -2181,7 +2202,7 @@ remainder = divrem[1]; }
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.PI(PeterO.Numbers.EContext)"]/*'/>
     public static EDecimal PI(EContext ctx) {
-      return MathValue.Pi(ctx);
+      return GetMathValue(ctx).Pi(ctx);
     }
 
     /// <include file='../../docs.xml'
