@@ -23,6 +23,8 @@ namespace PeterO.Numbers {
 
     FastInteger DiscardedDigitCount { get; }
 
+    void TruncateRight(FastInteger bits);
+
     void ShiftRight(FastInteger bits);
 
     void ShiftRightInt(int bits);

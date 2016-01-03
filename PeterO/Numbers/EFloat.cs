@@ -235,7 +235,7 @@ namespace PeterO.Numbers {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.BinaryMathHelper.GetMantissa(PeterO.Numbers.EFloat)"]/*'/>
       public EInteger GetMantissa(EFloat value) {
-        return value.Mantissa;
+        return value.unsignedMantissa;
       }
 
     /// <include file='../../docs.xml'

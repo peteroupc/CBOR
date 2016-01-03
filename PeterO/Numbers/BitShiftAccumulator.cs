@@ -125,6 +125,10 @@ int olderDiscarded) {
       return bsa;
     }
 
+    public void TruncateRight(FastInteger fastint) {
+      this.ShiftRight(fastint);
+    }
+
     public void ShiftRight(FastInteger fastint) {
       if (fastint.Sign <= 0) {
         return;

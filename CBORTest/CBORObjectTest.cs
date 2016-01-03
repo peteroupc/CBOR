@@ -3704,7 +3704,7 @@ throw new InvalidOperationException(String.Empty, ex);
           TestCommon.CompareTestEqualAndConsistent(cbor2, cbor3);
           TestCommon.CompareTestEqualAndConsistent(cbor3, cbor1);
         }
-      } catch (IOException ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(ex.ToString(), ex);
       }
@@ -3723,7 +3723,7 @@ throw new InvalidOperationException(String.Empty, ex);
           TestCommon.CompareTestEqualAndConsistent(cbor2, cbor3);
           TestCommon.CompareTestEqualAndConsistent(cbor3, cbor1);
         }
-      } catch (IOException ex) {
+      } catch (Exception ex) {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(ex.ToString(), ex);
       }
