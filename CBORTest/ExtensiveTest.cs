@@ -1272,7 +1272,7 @@ var obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
                   ParseLine(ln);
                 }
               } catch (Exception ex) {
-                errors.Add(ex.Message);
+                errors.Add(ex.ToString());
                 ++failures;
                 try {
                   Console.SetOut(standardOut);
@@ -1283,8 +1283,7 @@ var obj = CBORObject.DecodeFromBytes(File.ReadAllBytes(
                   }
                 } catch (Exception ex2) {
                   Console.WriteLine(ln);
-                  Console.SetOut(nullWriter);
-                  Console.WriteLine(ex2.Message);
+                  errors.Add(ex2.ToString());
                   Console.SetOut(standardOut);
                 }
               }

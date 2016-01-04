@@ -20,7 +20,7 @@ namespace PeterO.Numbers {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.op_Implicit(System.Int32)~PeterO.Numbers.EInteger"]/*'/>
     public static implicit operator EInteger(int smallValue) {
-      return FromInt64((long)smallValue);
+      return FromInt32(smallValue);
     }
 
     /// <include file='../../docs.xml'

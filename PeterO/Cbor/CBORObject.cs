@@ -663,8 +663,13 @@ nextchar);
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
       }
-      if (bigValue.IsNaN() || bigValue.IsInfinity()) {
-        return new CBORObject(CBORObjectTypeExtendedFloat, bigValue);
+      if (bigValue.IsInfinity()) {
+        return CBORObject.FromObject(bigValue.ToDouble());
+      }
+      if (bigValue.IsNaN()) {
+        return new CBORObject(
+          CBORObjectTypeExtendedFloat,
+          bigValue);
       }
       BigInteger bigintExponent = bigValue.Exponent;
       return (bigintExponent.IsZero && !(bigValue.IsZero &&
@@ -677,8 +682,19 @@ nextchar);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedRational)"]/*'/>
     public static CBORObject FromObject(ExtendedRational bigValue) {
-      return ((object)bigValue == (object)null) ? CBORObject.Null :
-        ((bigValue.IsFinite && bigValue.Denominator.Equals(BigInteger.One)) ?
+      if ((object)bigValue == (object)null) {
+        return CBORObject.Null;
+      }
+      if (bigValue.IsInfinity()) {
+        return CBORObject.FromObject(bigValue.ToDouble());
+      }
+      if (bigValue.IsNaN()) {
+        return new CBORObject(
+          CBORObjectTypeExtendedRational,
+          bigValue);
+      }
+   return ((bigValue.IsFinite &&
+        bigValue.Denominator.Equals(BigInteger.One)) ?
          FromObject(bigValue.Numerator) : (new CBORObject(
            CBORObjectTypeExtendedRational,
            bigValue)));
@@ -690,8 +706,13 @@ nextchar);
       if ((object)otherValue == (object)null) {
         return CBORObject.Null;
       }
-      if (otherValue.IsNaN() || otherValue.IsInfinity()) {
-        return new CBORObject(CBORObjectTypeExtendedDecimal, otherValue);
+      if (otherValue.IsInfinity()) {
+        return CBORObject.FromObject(otherValue.ToDouble());
+      }
+      if (otherValue.IsNaN()) {
+        return new CBORObject(
+          CBORObjectTypeExtendedDecimal,
+          otherValue);
       }
       BigInteger bigintExponent = otherValue.Exponent;
       return (bigintExponent.IsZero && !(otherValue.IsZero &&

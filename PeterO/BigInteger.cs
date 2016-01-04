@@ -162,7 +162,7 @@ return this.Ei.bitLength();
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.canFitInInt"]/*'/>
     public bool canFitInInt() {
-return this.Ei.canFitInInt();
+return this.Ei.CanFitInInt32();
       }
 
     /// <include file='../docs.xml'
@@ -389,13 +389,13 @@ return this.Ei.testBit(index);
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.toBytes(System.Boolean)"]/*'/>
     public byte[] toBytes(bool littleEndian) {
-      return this.Ei.toBytes(littleEndian);
+      return this.Ei.ToBytes(littleEndian);
  }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.toRadixString(System.Int32)"]/*'/>
     public string toRadixString(int radix) {
-      return this.Ei.toRadixString(radix);
+      return this.Ei.ToRadixString(radix);
  }
 
     /// <include file='../docs.xml'

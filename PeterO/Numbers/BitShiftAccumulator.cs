@@ -102,7 +102,7 @@ int olderDiscarded) {
         throw new ArgumentException("bigint's sign (" + bigint.Sign +
           ") is less than 0");
       }
-      if (bigint.canFitInInt()) {
+      if (bigint.CanFitInInt32()) {
         this.isSmall = true;
         this.shiftedSmall = (int)bigint;
       } else {

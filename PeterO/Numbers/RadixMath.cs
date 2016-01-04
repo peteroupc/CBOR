@@ -140,13 +140,13 @@ bool roundToOperandPrecision) {
                     // DebugUtility.Log("Second op's prec too short:
                     // op2MantAbs=" + op2MantAbs + " precdiff= " +
                     // (precisionDiff));
-                    return this.RoundToPrecisionWithShift(
+                    return this.RoundToPrecisionInternal(
           other,
-                    ctx,
            (oneOpIsZero || sameSign) ? 0 : 1,
            (oneOpIsZero && !sameSign) ? 0 : 1,
            shift,
-           false);
+           false,
+                    ctx);
                   }
                   if (!oneOpIsZero && !sameSign) {
                     op2MantAbs = this.TryMultiplyByRadixPower(
@@ -165,26 +165,26 @@ bool roundToOperandPrecision) {
                     this.helper.GetFlags(other));
                     FastInteger shift =
                     FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                    return this.RoundToPrecisionWithShift(
+                    return this.RoundToPrecisionInternal(
           other,
-          ctx,
           0,
           0,
           shift,
-          false);
+          false,
+          ctx);
                   } else {
                     FastInteger shift2 =
                     FastInteger.Copy(digitLength2).Subtract(fastPrecision);
                     if (!sameSign && ctx != null && ctx.HasFlags) {
                     ctx.Flags |= EContext.FlagRounded;
                     }
-                    return this.RoundToPrecisionWithShift(
+                    return this.RoundToPrecisionInternal(
                     other,
-                    ctx,
                     0,
                     sameSign ? 1 : 0,
                     shift2,
-                    false);
+                    false,
+                    ctx);
                   }
                 }
               }
@@ -246,13 +246,13 @@ bool roundToOperandPrecision) {
                     if (oneOpIsZero && ctx != null && ctx.HasFlags) {
                     ctx.Flags |= EContext.FlagRounded;
                     }
-                    return this.RoundToPrecisionWithShift(
+                    return this.RoundToPrecisionInternal(
                     thisValue,
-     ctx,
      (oneOpIsZero || sameSign) ? 0 : 1,
      (oneOpIsZero && !sameSign) ? 0 : 1,
      shift,
-     false);
+     false,
+                    ctx);
                   }
                   if (!oneOpIsZero && !sameSign) {
                     op1MantAbs = this.TryMultiplyByRadixPower(
@@ -271,26 +271,26 @@ bool roundToOperandPrecision) {
                     this.helper.GetFlags(thisValue));
                     FastInteger shift =
                     FastInteger.Copy(digitLength2).Subtract(fastPrecision);
-                    return this.RoundToPrecisionWithShift(
+                    return this.RoundToPrecisionInternal(
           thisValue,
-          ctx,
           0,
           0,
           shift,
-          false);
+          false,
+          ctx);
                   } else {
                     FastInteger shift2 =
                     FastInteger.Copy(digitLength2).Subtract(fastPrecision);
                     if (!sameSign && ctx != null && ctx.HasFlags) {
                     ctx.Flags |= EContext.FlagRounded;
                     }
-                    return this.RoundToPrecisionWithShift(
+                    return this.RoundToPrecisionInternal(
                     thisValue,
-                    ctx,
                     0,
                     sameSign ? 1 : 0,
                     shift2,
-                    false);
+                    false,
+                    ctx);
                   }
                 }
               }
@@ -351,13 +351,13 @@ ctx);
         maxDigitLength.SubtractBig(ctx.Precision);
         // DebugUtility.Log("retval= " + retval + " maxdl=" +
         // maxDigitLength + " prec= " + (ctx.Precision));
-        return (maxDigitLength.Sign > 0) ? this.RoundToPrecisionWithShift(
+        return (maxDigitLength.Sign > 0) ? this.RoundToPrecisionInternal(
             retval,
-            ctx,
             0,
             0,
             maxDigitLength,
-            false) : this.RoundToPrecision(retval, ctx);
+            false,
+            ctx) : this.RoundToPrecision(retval, ctx);
         // DebugUtility.Log("retval now " + retval);
       } else {
         return this.RoundToPrecision(retval, ctx);
@@ -1855,13 +1855,13 @@ ctx,
         // Other exponent is greater
         // DebugUtility.Log("other exp greater");
         FastInteger shift = FastInteger.FromBig(expOther).SubtractBig(expThis);
-        ret = this.RoundToPrecisionWithShift(
+        ret = this.RoundToPrecisionInternal(
 thisValue,
-tmpctx,
 0,
 0,
 shift,
-false);
+false,
+tmpctx);
       }
       if ((tmpctx.Flags & EContext.FlagOverflow) != 0) {
         // DebugUtility.Log("overflow occurred");
@@ -2008,14 +2008,24 @@ EContext ctx) {
 ctx,
 "Exponent not within exponent range: " + expOther);
         }
-        EInteger bigmantissa =
-          this.helper.GetMantissa(thisValue);
         FastInteger shift = FastInteger.FromBig(expOther)
           .SubtractBig(this.helper.GetExponent(thisValue));
-     IShiftAccumulator accum = this.helper.CreateShiftAccumulator(bigmantissa);
+      if (shift.Sign == 0 && ctx != null && HasNoMaxPrecisionOrExponent(ctx)
+          &&
+          !ctx.HasFlags && ctx.Traps == 0) {
+          return thisValue;
+        }
+        EInteger bigmantissa =
+          this.helper.GetMantissa(thisValue);
+     IShiftAccumulator accum =
+          this.helper.CreateShiftAccumulator(bigmantissa);
         if (ctx != null && HasNoMaxPrecisionOrExponent(ctx) &&
           !ctx.HasFlags && ctx.Traps == 0 && ctx.Rounding == ERounding.Down) {
           accum.TruncateRight(shift);
+          return this.helper.CreateNewWithFlags(
+             accum.ShiftedInt,
+             expOther,
+             thisFlags);
         } else {
           accum.ShiftRight(shift);
         }
@@ -2024,13 +2034,13 @@ ctx,
           bigmantissa,
           expOther,
           thisFlags);
-        return this.RoundToPrecisionWithShift(
+        return this.RoundToPrecisionInternal(
           thisValue,
-          ctx,
           accum.LastDiscardedDigit,
           accum.OlderDiscardedDigits,
           null,
-          false);
+          false,
+          ctx);
       }
     }
 
@@ -2728,13 +2738,13 @@ ctx,
               quo,
               natexp.AsBigInteger(),
               resultNeg ? BigNumberFlags.FlagNegative : 0);
-            retval2 = this.RoundToPrecisionWithShift(
+            retval2 = this.RoundToPrecisionInternal(
               retval2,
-              ctxcopy,
               digitStatus[0],
               digitStatus[1],
               null,
-              false);
+              false,
+              ctxcopy);
             if ((ctxcopy.Flags & EContext.FlagInexact) != 0) {
               if (ctx.HasFlags) {
                 ctx.Flags |= ctxcopy.Flags;
@@ -2913,13 +2923,13 @@ ctx,
           bigResult,
           bigexp,
           resultNeg ? BigNumberFlags.FlagNegative : 0);
-        return this.RoundToPrecisionWithShift(
+        return this.RoundToPrecisionInternal(
 retval,
-ctx,
 lastDiscarded,
 olderDiscarded,
 null,
-false);
+false,
+ctx);
       }
     }
 
@@ -3619,7 +3629,7 @@ EContext ctx) {
       int thisFlags = this.helper.GetFlags(thisValue);
       if ((thisFlags & BigNumberFlags.FlagSpecial) != 0) {
         if ((thisFlags & BigNumberFlags.FlagSignalingNaN) != 0) {
-          if (ctx.HasFlags) {
+          if (ctx != null && ctx.HasFlags) {
             ctx.Flags |= EContext.FlagInvalid;
           }
           return this.ReturnQuietNaN(thisValue, ctx);
@@ -3686,7 +3696,7 @@ lastDiscarded, olderDiscarded,
       ctx = ctx ?? EContext.Unlimited.WithRounding(ERounding.HalfEven);
       bool binaryPrec = ctx.IsPrecisionInBits;
       // get the precision
-      FastInteger fastPrecision = ctx.Precision.canFitInInt() ? new
+      FastInteger fastPrecision = ctx.Precision.CanFitInInt32() ? new
     FastInteger(ctx.Precision.AsInt32Checked()) :
       FastInteger.FromBig(ctx.Precision);
       // No need to check if precision is less than 0, since the
@@ -3697,9 +3707,9 @@ lastDiscarded, olderDiscarded,
       FastInteger fastEMax = null;
       // get the exponent range
       if (ctx != null && ctx.HasExponentRange) {
-        fastEMax = ctx.EMax.canFitInInt() ? new
+        fastEMax = ctx.EMax.CanFitInInt32() ? new
        FastInteger(ctx.EMax.AsInt32Checked()) : FastInteger.FromBig(ctx.EMax);
-        fastEMin = ctx.EMin.canFitInInt() ? new
+        fastEMin = ctx.EMin.CanFitInInt32() ? new
        FastInteger(ctx.EMin.AsInt32Checked()) : FastInteger.FromBig(ctx.EMin);
       }
       ERounding rounding = (ctx == null) ? ERounding.HalfEven : ctx.Rounding;
@@ -3735,7 +3745,7 @@ lastDiscarded,
                 return thisValue;
               }
               EInteger bigexp = this.helper.GetExponent(thisValue);
-              FastInteger fastExp = bigexp.canFitInInt() ? new
+              FastInteger fastExp = bigexp.CanFitInInt32() ? new
            FastInteger(bigexp.AsInt32Checked()) : FastInteger.FromBig(bigexp);
               FastInteger fastAdjustedExp = FastInteger.Copy(fastExp);
               FastInteger fastNormalMin = FastInteger.Copy(fastEMin);
@@ -3773,7 +3783,7 @@ lastDiscarded,
                 bigexp,
                 thisFlags);
                 }
-                FastInteger fastExp = bigexp.canFitInInt() ? new
+                FastInteger fastExp = bigexp.CanFitInInt32() ? new
            FastInteger(bigexp.AsInt32Checked()) : FastInteger.FromBig(bigexp);
                 FastInteger fastAdjustedExp = FastInteger.Copy(fastExp);
                 FastInteger fastNormalMin = FastInteger.Copy(fastEMin);
@@ -4214,22 +4224,6 @@ neg ? BigNumberFlags.FlagNegative : 0);
 bigmantissa,
 exp.AsBigInteger(),
 neg ? BigNumberFlags.FlagNegative : 0);
-    }
-
-    private T RoundToPrecisionWithShift(
-T thisValue,
-EContext context,
-int lastDiscarded,
-int olderDiscarded,
-FastInteger shift,
-bool adjustNegativeZero) {
-      return this.RoundToPrecisionInternal(
-thisValue,
-lastDiscarded,
-olderDiscarded,
-shift,
-adjustNegativeZero,
-context);
     }
 
     private T RoundToScale(

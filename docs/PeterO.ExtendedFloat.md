@@ -825,7 +825,7 @@ Creates a binary float from a 32-bit signed integer.
 
 <b>Returns:</b>
 
-An arbitrary-precision binary float.
+An arbitrary-precision binary float with the exponent set to 0.
 
 ### FromInt64
 
@@ -840,7 +840,7 @@ Converts a 64-bit integer to the same value as a binary float.
 
 <b>Returns:</b>
 
-An arbitrary-precision binary float.
+An arbitrary-precision binary float with the exponent set to 0.
 
 ### FromSingle
 

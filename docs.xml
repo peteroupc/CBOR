@@ -3344,9 +3344,29 @@
 </doc>
 <doc name="T:PeterO.ExtendedDecimal">
 <summary>Represents an arbitrary-precision decimal floating-point
-            number. Consists of an integer mantissa and an integer exponent,
+            number.
+            <para><b>About decimal arithmetic</b></para>
+            <para>
+Decimal (base-10) arithmetic, such as that provided by this class,
+is appropriate for calculations involving such real-world data
+as prices, tax rates, and measurements.  These calculations
+often involve multiplying or dividing one decimal with another
+decimal, or performing other operations on decimal numbers.
+</para>
+<para>On the other hand, most implementations of
+<c>float</c> and <c>double</c>, including in C# and Java,
+store numbers in a binary (base-2) floating-point format and use 
+binary floating-point arithmetic.  Many decimal numbers
+can't be represented exactly in binary floating-point format (regardless
+of its length). Applying binary arithmetic to numbers intended 
+to be decimals can sometimes lead to unintuitive results, 
+as is shown in the description for the FromDouble() method 
+of this class.</para>
+           <para><b>About ExtendedDecimal instances</b></para>
+           <para>
+            Each instance of this class consists of an integer mantissa and an integer exponent,
             both arbitrary-precision. The value of the number equals mantissa *
-            10^exponent.
+            10^exponent.</para>
             <para>The mantissa is the value of the digits that make up a
             number, ignoring the decimal point and exponent. For example, in
             the number 2356.78, the mantissa is 235678. The exponent is where
@@ -3373,7 +3393,8 @@
             <para>This class implements the General Decimal Arithmetic
             Specification version 1.70 (except part of chapter 6):
             <c>http://speleotrove.com/decimal/decarith.html</c></para>
-            <para>Passing a signaling NaN to any arithmetic operation shown
+           <para><b>Errors and Exceptions</b></para>
+           <para>Passing a signaling NaN to any arithmetic operation shown
             here will signal the flag FlagInvalid and return a quiet NaN, even
             if another operand to that operation is a quiet NaN, unless noted
             otherwise.</para>
@@ -3387,8 +3408,15 @@
             FlagOverflow, or FlagDivideByZero, it will not throw an exception
             too, unless the flag's trap is enabled in the precision context
             (see EContext's Traps property).</para>
-            <para>An arbitrary-precision decimal value can be serialized in one
-            of the following ways:</para>
+                       <para>If an operation requires creating an intermediate value that might be too big to
+            fit in memory (or might require more than 2 gigabytes of memory to
+            store -- due to the current use of a 32-bit integer internally as a length), the
+            operation may signal an invalid-operation flag and return not-a-number
+            (NaN).  In certain rare cases, the CompareTo method may throw OutOfMemoryException
+            (called OutOfMemoryError in Java) in the same circumstances.</para>
+           <para><b>Serialization</b></para>
+            <para>An arbitrary-precision decimal value can be serialized (converted
+            to a stable format) in one of the following ways:</para>
             <list>
             <item>By calling the toString() method, which will always return
             distinct strings for distinct arbitrary-precision decimal
@@ -3398,17 +3426,17 @@
             IsSignalingNaN methods. The return values combined will uniquely
             identify a particular arbitrary-precision decimal
             value.</item></list>
-            <para>If an operation requires creating an intermediate value that might be too big to
-            fit in memory (or might require more than 2 gigabytes of memory to
-            store -- due to the current use of a 32-bit integer internally as a length), the
-            operation may signal an invalid-operation flag and return not-a-number
-            (NaN).  In certain rare cases, the CompareTo method may throw OutOfMemoryException
-            (called OutOfMemoryError in Java) in the same circumstances.</para>
-             <para><b>Thread safety:</b>Instances of this class are immutable, so they are inherently
+             <para><b>Thread safety</b></para>
+            <para>Instances of this class are immutable, so they are inherently
             safe for use by multiple threads. Multiple instances of this object
             with the same properties are interchangeable, so they should not be
             compared using the "==" operator (which only checks if each side of
             the operator is the same instance).</para>
+            <para><b>Comparison considerations</b></para>
+            <para>This class's natural ordering (under the CompareTo method) is
+            not consistent with the Equals method. This means that two values
+            that compare as equal under the CompareTo method might not be equal
+            under the Equals method.</para>
             </summary>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Abs">
@@ -3860,7 +3888,7 @@
 <summary>Creates a decimal number from a 32-bit signed
             integer.</summary>
             <param name='valueSmaller'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal number.</returns>
+            <returns>An arbitrary-precision decimal number with the exponent set to 0.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.FromInt64(System.Int64)">
 <summary>Creates a decimal number from a 64-bit signed
@@ -5453,13 +5481,13 @@
 <summary>Creates a binary float from a 32-bit signed
             integer.</summary>
             <param name='valueSmaller'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision binary float.</returns>
+            <returns>An arbitrary-precision binary float with the exponent set to 0.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromInt64(System.Int64)">
 <summary>Converts a 64-bit integer to the same value as a binary
             float.</summary>
             <param name='valueSmall'>A 64-bit signed integer.</param>
-            <returns>An arbitrary-precision binary float.</returns>
+            <returns>An arbitrary-precision binary float with the exponent set to 0.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.FromSingle(System.Single)">
 <summary>Creates a binary float from a 32-bit floating-point
@@ -7356,9 +7384,29 @@
 </doc>
 <doc name="T:PeterO.Numbers.EDecimal">
 <summary>Represents an arbitrary-precision decimal floating-point
-            number. Consists of an integer mantissa and an integer exponent,
+            number.
+            <para><b>About decimal arithmetic</b></para>
+            <para>
+Decimal (base-10) arithmetic, such as that provided by this class,
+is appropriate for calculations involving such real-world data
+as prices, tax rates, and measurements.  These calculations
+often involve multiplying or dividing one decimal with another
+decimal, or performing other operations on decimal numbers.
+</para>
+<para>On the other hand, most implementations of
+<c>float</c> and <c>double</c>, including in C# and Java,
+store numbers in a binary (base-2) floating-point format and use 
+binary floating-point arithmetic.  Many decimal numbers
+can't be represented exactly in binary floating-point format (regardless
+of its length). Applying binary arithmetic to numbers intended 
+to be decimals can sometimes lead to unintuitive results, 
+as is shown in the description for the FromDouble() method 
+of this class.</para>
+           <para><b>About EDecimal instances</b></para>
+           <para>
+            Each instance of this class consists of an integer mantissa and an integer exponent,
             both arbitrary-precision. The value of the number equals mantissa *
-            10^exponent.
+            10^exponent.</para>
             <para>The mantissa is the value of the digits that make up a
             number, ignoring the decimal point and exponent. For example, in
             the number 2356.78, the mantissa is 235678. The exponent is where
@@ -7385,7 +7433,8 @@
             <para>This class implements the General Decimal Arithmetic
             Specification version 1.70 (except part of chapter 6):
             <c>http://speleotrove.com/decimal/decarith.html</c></para>
-            <para>Passing a signaling NaN to any arithmetic operation shown
+           <para><b>Errors and Exceptions</b></para>
+           <para>Passing a signaling NaN to any arithmetic operation shown
             here will signal the flag FlagInvalid and return a quiet NaN, even
             if another operand to that operation is a quiet NaN, unless noted
             otherwise.</para>
@@ -7399,8 +7448,15 @@
             FlagOverflow, or FlagDivideByZero, it will not throw an exception
             too, unless the flag's trap is enabled in the precision context
             (see EContext's Traps property).</para>
-            <para>An arbitrary-precision decimal value can be serialized in one
-            of the following ways:</para>
+                       <para>If an operation requires creating an intermediate value that might be too big to
+            fit in memory (or might require more than 2 gigabytes of memory to
+            store -- due to the current use of a 32-bit integer internally as a length), the
+            operation may signal an invalid-operation flag and return not-a-number
+            (NaN).  In certain rare cases, the CompareTo method may throw OutOfMemoryException
+            (called OutOfMemoryError in Java) in the same circumstances.</para>
+           <para><b>Serialization</b></para>
+            <para>An arbitrary-precision decimal value can be serialized (converted
+            to a stable format) in one of the following ways:</para>
             <list>
             <item>By calling the toString() method, which will always return
             distinct strings for distinct arbitrary-precision decimal
@@ -7410,17 +7466,19 @@
             IsSignalingNaN methods. The return values combined will uniquely
             identify a particular arbitrary-precision decimal
             value.</item></list>
-                        <para>If an operation requires creating an intermediate value that might be too big to
-            fit in memory (or might require more than 2 gigabytes of memory to
-            store -- due to the current use of a 32-bit integer internally as a length), the
-            operation may signal an invalid-operation flag and return not-a-number
-            (NaN).  In certain rare cases, the CompareTo method may throw OutOfMemoryException
-            (called OutOfMemoryError in Java) in the same circumstances.</para>
-            <para><b>Thread safety:</b>Instances of this class are immutable, so they are inherently
+             <para><b>Thread safety</b></para>
+            <para>Instances of this class are immutable, so they are inherently
             safe for use by multiple threads. Multiple instances of this object
             with the same properties are interchangeable, so they should not be
             compared using the "==" operator (which only checks if each side of
-            the operator is the same instance).</para></summary>
+            the operator is the same instance).</para>
+            <para><b>Comparison considerations</b></para>
+            <para>This class's natural ordering (under the CompareTo method) is
+            not consistent with the Equals method. This means that two values
+            that compare as equal under the CompareTo method might not be equal
+            under the Equals method.</para>
+            
+            </summary>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Abs">
 <summary>Gets the absolute value of this object.</summary>
@@ -7903,7 +7961,7 @@
 <summary>Creates a decimal number from a 32-bit signed
             integer.</summary>
             <param name='valueSmaller'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision decimal number.</returns>
+            <returns>An arbitrary-precision decimal number with the exponent set to 0.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.FromInt64(System.Int64)">
 <summary>Creates a decimal number from a 64-bit signed
@@ -9454,13 +9512,13 @@
 <summary>Creates a binary float from a 32-bit signed
             integer.</summary>
             <param name='valueSmaller'>A 32-bit signed integer.</param>
-            <returns>An arbitrary-precision binary float.</returns>
+            <returns>An arbitrary-precision binary float with the exponent set to 0.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EFloat.FromInt64(System.Int64)">
 <summary>Converts a 64-bit integer to the same value as a binary
             float.</summary>
             <param name='valueSmall'>A 64-bit signed integer.</param>
-            <returns>An arbitrary-precision binary float.</returns>
+            <returns>An arbitrary-precision binary float with the exponent set to 0.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EFloat.FromSingle(System.Single)">
 <summary>Creates a binary float from a 32-bit floating-point
