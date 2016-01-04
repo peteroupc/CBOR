@@ -73,9 +73,9 @@ string result) {
     public static void DoTestPow(string m1, int m2, string result) {
       BigInteger bigintA = BigFromString(m1);
       AssertBigIntegersEqual(result, bigintA.pow(m2));
-#if UNUSED
+//#if UNUSED
       AssertBigIntegersEqual(result, bigintA.PowBigIntVar((BigInteger)m2));
-#endif
+////#endif
     }
 
     public static void AssertBigIntegersEqual(string a, BigInteger b) {
@@ -110,12 +110,7 @@ string rem) {
       }
     }
 
-    [Test]
-    public void TestMultiplyDivide() {
-      var r = new FastRandom();
-      for (var i = 0; i < 10000; ++i) {
-        BigInteger bigintA = RandomBigInteger(r);
-        BigInteger bigintB = RandomBigInteger(r);
+    private void TestMultiplyDivideOne(BigInteger bigintA, BigInteger bigintB) {
         // Test that A*B/A = B and A*B/B = A
         BigInteger bigintC = bigintA * (BigInteger)bigintB;
         BigInteger bigintRem;
@@ -182,6 +177,16 @@ bigintD,
 "TestMultiplyDivide " + bigintA + "; " + bigintB);
           }
         }
+    }
+
+    [Test]
+    public void TestMultiplyDivide() {
+      var r = new FastRandom();
+      for (var i = 0; i < 10000; ++i) {
+        BigInteger bigintA = RandomBigInteger(r);
+        BigInteger bigintB = RandomBigInteger(r);
+        TestMultiplyDivideOne(bigintA, bigintB);
+        TestMultiplyDivideOne(bigintB, bigintA);
       }
     }
 
@@ -252,6 +257,7 @@ string result) {
       BigIntegerTest.AssertBigIntegersEqual(s, bi - (BigInteger)negbi2);
       BigIntegerTest.AssertBigIntegersEqual(s, bi2 - (BigInteger)negbi);
     }
+
     [Test]
     public void TestAdd() {
       var posSmall = (BigInteger)5;
@@ -982,7 +988,8 @@ Assert.AreEqual(objectTemp, objectTemp2);
     public void TestIsZero() {
       // not implemented yet
     }
-#if true
+
+////#if true
 
     [Test]
     public void TestDivideAndRemainder() {
@@ -1645,7 +1652,8 @@ throw new InvalidOperationException(String.Empty, ex);
         }
       }
     }
-#endif
+
+////#endif
     [Test]
     public void TestNegate() {
       // not implemented yet
@@ -1949,7 +1957,7 @@ throw new InvalidOperationException(String.Empty, ex);
       }
     }
 
-#if true
+////#if true
     [Test]
     public void TestMiscellaneous() {
       Assert.AreEqual(1, BigInteger.Zero.getDigitCount());
@@ -2152,6 +2160,7 @@ Console.Write(String.Empty);
       Assert.AreEqual(BigInteger.One, ((BigInteger)13).mod((BigInteger)4));
       Assert.AreEqual((BigInteger)3, ((BigInteger)(-13)).mod((BigInteger)4));
     }
-#endif
+
+////#endif
   }
 }

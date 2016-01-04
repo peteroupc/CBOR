@@ -162,6 +162,47 @@ namespace PeterO.Numbers {
                     newnegative));
     }
 
+    public static EInteger FromInt32(int intValue) {
+      if (intValue == 0) {
+        return ValueZero;
+      }
+      if (intValue == 1) {
+        return ValueOne;
+      }
+      if (intValue == 10) {
+        return ValueTen;
+      }
+      short[] retreg;
+      bool retnegative;
+      int retwordcount;
+      unchecked {
+        retnegative = intValue < 0;
+        if ((intValue >> 15) == 0) {
+          retreg = new short[2];
+          if (retnegative) {
+            intValue = -intValue;
+          }
+          retreg[0] = (short)(intValue & 0xffff);
+          retwordcount = 1;
+        } else if (intValue == Int32.MinValue) {
+          retreg = new short[2];
+          retreg[0] = 0;
+          retreg[1] = unchecked((short)0x8000);
+          retwordcount = 2;
+        } else {
+          retreg = new short[2];
+          if (retnegative) {
+            intValue = -intValue;
+          }
+          retreg[0] = (short)(intValue & 0xffff);
+          intValue >>= 16;
+          retreg[1] = (short)(intValue & 0xffff);
+          retwordcount = (retreg[1] == 0) ? 1 : 2;
+        }
+      }
+      return new EInteger(retwordcount, retreg, retnegative);
+    }
+
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.FromInt64(System.Int64)"]/*'/>
     public static EInteger FromInt64(long longerValue) {
@@ -739,7 +780,7 @@ namespace PeterO.Numbers {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.canFitInInt"]/*'/>
-    public bool canFitInInt() {
+    public bool CanFitInInt32() {
       var c = (int)this.wordCount;
       if (c > 2) {
         return false;
@@ -824,8 +865,8 @@ namespace PeterO.Numbers {
         // where dividend is 0)
         return EInteger.Zero;
       }
-      if (words1Size <= 2 && words2Size <= 2 && this.canFitInInt() &&
-          bigintDivisor.canFitInInt()) {
+      if (words1Size <= 2 && words2Size <= 2 && this.CanFitInInt32() &&
+          bigintDivisor.CanFitInInt32()) {
         int valueASmall = this.AsInt32Checked();
         int valueBSmall = bigintDivisor.AsInt32Checked();
         if (valueASmall != Int32.MinValue || valueBSmall != -1) {
@@ -1765,7 +1806,7 @@ namespace PeterO.Numbers {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.toBytes(System.Boolean)"]/*'/>
-    public byte[] toBytes(bool littleEndian) {
+    public byte[] ToBytes(bool littleEndian) {
       int sign = this.Sign;
       if (sign == 0) {
         return new[] { (byte)0 };
@@ -1829,7 +1870,7 @@ namespace PeterO.Numbers {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EInteger.toRadixString(System.Int32)"]/*'/>
-    public string toRadixString(int radix) {
+    public string ToRadixString(int radix) {
       if (radix < 2) {
         throw new ArgumentException("radix (" + radix +
                     ") is less than 2");
@@ -2035,7 +2076,7 @@ namespace PeterO.Numbers {
         return "0";
       }
       return this.HasSmallValue() ? this.SmallValueToString() :
-        this.toRadixString(10);
+        this.ToRadixString(10);
     }
 
     private static int Add(
@@ -5236,22 +5277,43 @@ count);
     }
 
     private string SmallValueToString() {
-      long value = this.AsInt64Checked();
+      long value = this.AsInt64Unchecked();
       if (value == Int64.MinValue) {
         return "-9223372036854775808";
       }
-      bool neg = value < 0;
-      var chars = new char[24];
-      var count = 0;
-      if (neg) {
-        chars[0] = '-';
-        ++count;
-        value = -value;
+      if (value == (long)Int32.MinValue) {
+        return "-2147483648";
       }
-      while (value != 0) {
-        char digit = Digits[(int)(value % 10)];
-        chars[count++] = digit;
-        value /= 10;
+      bool neg = value < 0;
+      var count = 0;
+      char[] chars;
+      int intvalue = unchecked((int)value);
+      if ((long)intvalue == value) {
+        chars = new char[12];
+        if (neg) {
+          chars[0] = '-';
+          ++count;
+          intvalue = -intvalue;
+        }
+        while (intvalue != 0) {
+          int intdivvalue = intvalue / 10;
+          char digit = Digits[(int)(intvalue - (intdivvalue * 10))];
+          chars[count++] = digit;
+          intvalue = intdivvalue;
+        }
+      } else {
+        chars = new char[24];
+        if (neg) {
+          chars[0] = '-';
+          ++count;
+          value = -value;
+        }
+        while (value != 0) {
+          long divvalue = value / 10;
+          char digit = Digits[(int)(value - (divvalue * 10))];
+          chars[count++] = digit;
+          value = divvalue;
+        }
       }
       if (neg) {
         ReverseChars(chars, 1, count - 1);
@@ -5274,7 +5336,7 @@ count);
       EInteger bigintY;
       EInteger thisValue = this;
       int powerBits = (thisValue.getUnsignedBitLength() + 1) / 2;
-      if (thisValue.canFitInInt()) {
+      if (thisValue.CanFitInInt32()) {
         int smallValue = thisValue.AsInt32Checked();
         // No need to check for ValueZero; already done above
         var smallintX = 0;

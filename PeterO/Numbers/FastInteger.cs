@@ -19,7 +19,7 @@ namespace PeterO.Numbers {
           throw new ArgumentException("bigintVal's sign (" + bigintVal.Sign +
             ") is less than " + "0 ");
         }
-        byte[] bytes = bigintVal.toBytes(true);
+        byte[] bytes = bigintVal.ToBytes(true);
         int len = bytes.Length;
         int newWordCount = Math.Max(4, (len / 4) + 1);
         if (newWordCount > mnum.data.Length) {
@@ -426,8 +426,8 @@ namespace PeterO.Numbers {
     }
 
     internal static FastInteger FromBig(EInteger bigintVal) {
-      if (bigintVal.canFitInInt()) {
-        return new FastInteger(bigintVal.AsInt32Checked());
+      if (bigintVal.CanFitInInt32()) {
+        return new FastInteger(bigintVal.AsInt32Unchecked());
       }
       if (bigintVal.Sign > 0) {
         var fi = new FastInteger(0);
@@ -713,7 +713,7 @@ bigrem = divrem[1]; }
     internal FastInteger AddBig(EInteger bigintVal) {
       switch (this.integerMode) {
           case 0: {
-            return bigintVal.canFitInInt() ? this.AddInt((int)bigintVal) :
+            return bigintVal.CanFitInInt32() ? this.AddInt((int)bigintVal) :
             this.Add(FastInteger.FromBig(bigintVal));
           }
         case 1:
@@ -961,7 +961,7 @@ bigrem = divrem[1]; }
         case 1:
           return this.mnum.CanFitInInt32();
           case 2: {
-            return this.largeValue.canFitInInt();
+            return this.largeValue.CanFitInInt32();
           }
         default:
           throw new InvalidOperationException();

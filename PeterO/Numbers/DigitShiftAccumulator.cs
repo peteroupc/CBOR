@@ -63,7 +63,7 @@ namespace PeterO.Numbers {
 EInteger bigint,
 int lastDiscarded,
 int olderDiscarded) {
-      if (bigint.canFitInInt()) {
+      if (bigint.CanFitInInt32()) {
         this.shiftedSmall = (int)bigint;
         if (this.shiftedSmall < 0) {
           throw new ArgumentException("shiftedSmall (" + this.shiftedSmall +
@@ -241,7 +241,7 @@ bigrem = divrem[1]; }
         this.bitLeftmost = 0;
         return;
       }
-      if (this.shiftedBigInt.canFitInInt()) {
+      if (this.shiftedBigInt.CanFitInInt32()) {
         this.isSmall = true;
         this.shiftedSmall = (int)this.shiftedBigInt;
         this.ShiftRightSmall(digits);

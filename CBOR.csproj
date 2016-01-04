@@ -155,5 +155,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
+  <!--
   <Import Project="$(MSBuildExtensionsPath)\StyleCop\v4.7\StyleCop.targets" />
+  -->
 </Project>

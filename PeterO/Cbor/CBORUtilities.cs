@@ -154,18 +154,39 @@ System.Globalization.CultureInfo.InvariantCulture);
       if (value == 0) {
         return "0";
       }
-      bool neg = value < 0;
-      var chars = new char[24];
-      var count = 0;
-      if (neg) {
-        chars[0] = '-';
-        ++count;
-        value = -value;
+      if (value == (long)Int32.MinValue) {
+        return "-2147483648";
       }
-      while (value != 0) {
-        char digit = HexAlphabet[(int)(value % 10)];
-        chars[count++] = digit;
-        value /= 10;
+      bool neg = value < 0;
+      var count = 0;
+      char[] chars;
+      int intvalue = unchecked((int)value);
+      if ((long)intvalue == value) {
+        chars = new char[12];
+        if (neg) {
+          chars[0] = '-';
+          ++count;
+          intvalue = -intvalue;
+        }
+        while (intvalue != 0) {
+          int intdivvalue = intvalue / 10;
+          char digit = HexAlphabet[(int)(intvalue - (intdivvalue * 10))];
+          chars[count++] = digit;
+          intvalue = intdivvalue;
+        }
+      } else {
+        chars = new char[24];
+        if (neg) {
+          chars[0] = '-';
+          ++count;
+          value = -value;
+        }
+        while (value != 0) {
+          long divvalue = value / 10;
+          char digit = HexAlphabet[(int)(value - (divvalue * 10))];
+          chars[count++] = digit;
+          value = divvalue;
+        }
       }
       if (neg) {
         ReverseChars(chars, 1, count - 1);
