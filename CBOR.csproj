@@ -147,8 +147,6 @@
     <Compile Include="PeterO\Rounding.cs" />
     <Compile Include="PeterO\TrapException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PeterO\RedBlackTree.cs" />
-    <Compile Include="PeterO\SortedMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="CBOR.ruleset" />

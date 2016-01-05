@@ -2136,8 +2136,6 @@ if (!(decimalPoint.AsInt32() == 0)) {
       1000000, 10000000, 100000000
     };
 
-    private static int eligible, used, total;
-
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToExponent(System.Int32,PeterO.Numbers.EContext)"]/*'/>
     public EDecimal RoundToExponent(
