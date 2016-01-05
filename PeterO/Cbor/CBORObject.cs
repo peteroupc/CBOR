@@ -693,8 +693,7 @@ nextchar);
           CBORObjectTypeExtendedRational,
           bigValue);
       }
-   return ((bigValue.IsFinite &&
-        bigValue.Denominator.Equals(BigInteger.One)) ?
+   return ((bigValue.IsFinite && bigValue.Denominator.Equals(BigInteger.One)) ?
          FromObject(bigValue.Numerator) : (new CBORObject(
            CBORObjectTypeExtendedRational,
            bigValue)));
@@ -3315,12 +3314,10 @@ nextchar);
       if (listBCount == 0) {
         return 1;
       }
-      IDictionary<CBORObject, CBORObject> sortedA =
-        new SortedMap<CBORObject, CBORObject>(mapA);
-      IDictionary<CBORObject, CBORObject> sortedB =
-        new SortedMap<CBORObject, CBORObject>(mapB);
-      IList<CBORObject> sortedASet = new List<CBORObject>(sortedA.Keys);
-      IList<CBORObject> sortedBSet = new List<CBORObject>(sortedB.Keys);
+      var sortedASet = new List<CBORObject>(mapA.Keys);
+      var sortedBSet = new List<CBORObject>(mapB.Keys);
+      sortedASet.Sort();
+      sortedBSet.Sort();
       listACount = sortedASet.Count;
       listBCount = sortedBSet.Count;
       int minCount = Math.Min(listACount, listBCount);

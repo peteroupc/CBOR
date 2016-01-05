@@ -73,7 +73,7 @@ string result) {
     public static void DoTestPow(string m1, int m2, string result) {
       BigInteger bigintA = BigFromString(m1);
       AssertBigIntegersEqual(result, bigintA.pow(m2));
-//#if UNUSED
+// #if UNUSED
       AssertBigIntegersEqual(result, bigintA.PowBigIntVar((BigInteger)m2));
 ////#endif
     }
@@ -185,8 +185,8 @@ bigintD,
       for (var i = 0; i < 10000; ++i) {
         BigInteger bigintA = RandomBigInteger(r);
         BigInteger bigintB = RandomBigInteger(r);
-        TestMultiplyDivideOne(bigintA, bigintB);
-        TestMultiplyDivideOne(bigintB, bigintA);
+        this.TestMultiplyDivideOne(bigintA, bigintB);
+        this.TestMultiplyDivideOne(bigintB, bigintA);
       }
     }
 

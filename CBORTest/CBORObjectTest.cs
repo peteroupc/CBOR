@@ -1684,8 +1684,7 @@ CBORObject.FromObject(0.1f));
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
-   bytes = new byte[] { 0xa3, 0x60, 0x00, 0x62, 0x41, 0x41, 0x00, 0x60, 0x03
-        };
+   bytes = new byte[] { 0xa3, 0x60, 0x00, 0x62, 0x41, 0x41, 0x00, 0x60, 0x03 };
       try {
         CBORObject.DecodeFromBytes(bytes, CBOREncodeOptions.NoDuplicateKeys);
         Assert.Fail("Should have failed");
@@ -1810,35 +1809,38 @@ TestCommon.IntToString(j));
     public void TestEquivalentNegativeInfinity() {
       TestCommon.CompareTestEqualAndConsistent(
       CBORObject.FromObject(ExtendedDecimal.NegativeInfinity),
-      CBORObject.FromObject(ExtendedFloat.NegativeInfinity) );
+      CBORObject.FromObject(ExtendedFloat.NegativeInfinity));
       {
 CBORObject objectTemp = CBORObject.FromObject(ExtendedDecimal.NegativeInfinity);
-CBORObject objectTemp2 = CBORObject.FromObject(ExtendedRational.NegativeInfinity)
-      ;
+CBORObject objectTemp2 =
+  CBORObject.FromObject(ExtendedRational.NegativeInfinity)
+;
 TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
 }
       {
 CBORObject objectTemp = CBORObject.FromObject(ExtendedDecimal.NegativeInfinity);
 CBORObject objectTemp2 = CBORObject.FromObject(Double.NegativeInfinity)
-      ;
+;
 TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
 }
       {
 CBORObject objectTemp = CBORObject.FromObject(ExtendedFloat.NegativeInfinity);
 CBORObject objectTemp2 = CBORObject.FromObject(Double.NegativeInfinity)
-      ;
+;
 TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
 }
       {
-CBORObject objectTemp = CBORObject.FromObject(ExtendedRational.NegativeInfinity);
+CBORObject objectTemp =
+  CBORObject.FromObject(ExtendedRational.NegativeInfinity);
 CBORObject objectTemp2 = CBORObject.FromObject(Double.NegativeInfinity)
-      ;
+;
 TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
 }
       {
 CBORObject objectTemp = CBORObject.FromObject(ExtendedFloat.NegativeInfinity);
-CBORObject objectTemp2 = CBORObject.FromObject(ExtendedRational.NegativeInfinity)
-      ;
+CBORObject objectTemp2 =
+  CBORObject.FromObject(ExtendedRational.NegativeInfinity)
+;
 TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
 }
     }
@@ -1847,35 +1849,38 @@ TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
     public void TestEquivalentPositiveInfinity() {
       TestCommon.CompareTestEqualAndConsistent(
       CBORObject.FromObject(ExtendedDecimal.PositiveInfinity),
-      CBORObject.FromObject(ExtendedFloat.PositiveInfinity) );
+      CBORObject.FromObject(ExtendedFloat.PositiveInfinity));
       {
 CBORObject objectTemp = CBORObject.FromObject(ExtendedDecimal.PositiveInfinity);
-CBORObject objectTemp2 = CBORObject.FromObject(ExtendedRational.PositiveInfinity)
-      ;
+CBORObject objectTemp2 =
+  CBORObject.FromObject(ExtendedRational.PositiveInfinity)
+;
 TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
 }
       {
 CBORObject objectTemp = CBORObject.FromObject(ExtendedDecimal.PositiveInfinity);
 CBORObject objectTemp2 = CBORObject.FromObject(Double.PositiveInfinity)
-      ;
+;
 TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
 }
       {
 CBORObject objectTemp = CBORObject.FromObject(ExtendedFloat.PositiveInfinity);
 CBORObject objectTemp2 = CBORObject.FromObject(Double.PositiveInfinity)
-      ;
+;
 TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
 }
       {
-CBORObject objectTemp = CBORObject.FromObject(ExtendedRational.PositiveInfinity);
+CBORObject objectTemp =
+  CBORObject.FromObject(ExtendedRational.PositiveInfinity);
 CBORObject objectTemp2 = CBORObject.FromObject(Double.PositiveInfinity)
-      ;
+;
 TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
 }
       {
 CBORObject objectTemp = CBORObject.FromObject(ExtendedFloat.PositiveInfinity);
-CBORObject objectTemp2 = CBORObject.FromObject(ExtendedRational.PositiveInfinity)
-      ;
+CBORObject objectTemp2 =
+  CBORObject.FromObject(ExtendedRational.PositiveInfinity)
+;
 TestCommon.CompareTestEqualAndConsistent(objectTemp, objectTemp2);
 }
     }
@@ -2802,8 +2807,7 @@ stringTemp);
        0x65 })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
- using (var msjson = new MemoryStream(new byte[] { 0x74, 0x72, 0x75, 0x65
-          })) {
+ using (var msjson = new MemoryStream(new byte[] { 0x74, 0x72, 0x75, 0x65 })) {
           Assert.AreEqual(CBORObject.True, CBORObject.ReadJSON(msjson));
         }
         using (var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0,
@@ -2847,8 +2851,7 @@ stringTemp);
             stringTemp);
           }
         }
-   using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0, 0x22,
-          0xd8,
+   using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0, 0x22, 0xd8,
         0,
                     0xdc, 0, 0, 0x22 })) {
           {
@@ -3039,8 +3042,7 @@ stringTemp);
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
- using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xd8, 0x00
-          })) {
+ using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xd8, 0x00 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3051,8 +3053,7 @@ stringTemp);
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
- using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xdc, 0x00
-          })) {
+ using (var msjson = new MemoryStream(new byte[] { 0xfe, 0xff, 0xdc, 0x00 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3136,8 +3137,7 @@ stringTemp);
           }
         }
 
- using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8
-          })) {
+ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xd8 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3148,8 +3148,7 @@ stringTemp);
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
- using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xdc
-          })) {
+ using (var msjson = new MemoryStream(new byte[] { 0xff, 0xfe, 0x00, 0xdc })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3245,8 +3244,7 @@ stringTemp);
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-    using (var msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0
-          })) {
+    using (var msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3257,8 +3255,7 @@ stringTemp);
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
- using (var msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0, 0
-          })) {
+ using (var msjson = new MemoryStream(new byte[] { 0, 0, 0, 0x20, 0, 0, 0 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3329,8 +3326,7 @@ stringTemp);
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
-    using (var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0
-          })) {
+    using (var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3341,8 +3337,7 @@ stringTemp);
             throw new InvalidOperationException(String.Empty, ex);
           }
         }
- using (var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0
-          })) {
+ using (var msjson = new MemoryStream(new byte[] { 0, 0, 0xfe, 0xff, 0, 0 })) {
           try {
             CBORObject.ReadJSON(msjson);
             Assert.Fail("Should have failed");
@@ -3742,14 +3737,14 @@ stringTemp);
     public void TestValues() {
       // not implemented yet
     }
-    //[Test]
+    // [Test]
     public void TestWrite() {
       for (var i = 0; i < 100; ++i) {
-        TestWrite2();
+        this.TestWrite2();
       }
     }
 
-    //[Test]
+    // [Test]
     public void TestWrite2() {
       // TODO: Currently fails with negative zero
       try {
