@@ -3349,7 +3349,7 @@
             <para>
 Decimal (base-10) arithmetic, such as that provided by this class,
 is appropriate for calculations involving such real-world data
-as prices, tax rates, and measurements.  These calculations
+as prices and other sums of money, tax rates, and measurements.  These calculations
 often involve multiplying or dividing one decimal with another
 decimal, or performing other operations on decimal numbers.
 Many of these calculations also rely on rounding behavior in which
@@ -3840,8 +3840,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the exponential function's
-            results are generally not exact.--.</param>
+            <i>This parameter cannot be null, as the exponential function's
+            results are generally not exact.</i></param>
             <returns>Exponential of this object. If this object's value is 1,
             returns an approximation to " e" within the given precision.
             Signals FlagInvalid and returns not-a-number (NaN) if the parameter
@@ -4069,8 +4069,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the ln function's results are
-            generally not exact.--.</param>
+            <i>This parameter cannot be null, as the ln function's results are
+            generally not exact.</i></param>
             <returns>Ln(this object). Signals the flag FlagInvalid and returns
             NaN if this object is less than 0 (the result would be a complex
             number with a real part equal to Ln of this object's absolute value
@@ -4089,8 +4089,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the ln function's results are
-            generally not exact.--.</param>
+            <i>This parameter cannot be null, as the ln function's results are
+            generally not exact.</i></param>
             <returns>Ln(this object)/Ln(10). Signals the flag FlagInvalid and
             returns not-a-number (NaN) if this object is less than 0. Signals
             FlagInvalid and returns not-a-number (NaN) if the parameter
@@ -4426,14 +4426,14 @@ of this class.</para>
 <summary>Represents the number 1.</summary>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.PI(PeterO.PrecisionContext)">
-<summary>Finds the constant pi.</summary>
+<summary>Finds the constant &#x3c0;.</summary>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as pi can never be represented
-            exactly.--.</param>
-            <returns>Pi rounded to the given precision. Signals FlagInvalid and
+            <i>This parameter cannot be null, as &#x3c0; can never be represented
+            exactly.</i></param>
+            <returns>&#x3c0; rounded to the given precision. Signals FlagInvalid and
             returns not-a-number (NaN) if the parameter <paramref name='ctx'/>
             is null or the precision is unlimited (the context's Precision
             property is 0).</returns>
@@ -4591,7 +4591,7 @@ of this class.</para>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Reduce(PeterO.PrecisionContext)">
 <summary>Removes trailing zeros from this object&#x27;s mantissa.
-            For example, 1.000 becomes 1.
+            For example, 1.00 becomes 1.
             <para>If this object's value is 0, changes the exponent to
             0.</para></summary>
             <param name='ctx'>A precision context to control precision,
@@ -4883,8 +4883,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the square root function's
-            results are generally not exact for many inputs.--.</param>
+            <i>This parameter cannot be null, as the square root function's
+            results are generally not exact for many inputs.</i></param>
             <returns>The square root. Signals the flag FlagInvalid and returns
             NaN if this object is less than 0 (the square root would be a
             complex number, but the return value is still NaN). Signals
@@ -5450,8 +5450,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the exponential function's
-            results are generally not exact.--.</param>
+            <i>This parameter cannot be null, as the exponential function's
+            results are generally not exact.</i></param>
             <returns>Exponential of this object. If this object's value is 1,
             returns an approximation to " e" within the given
             precision.</returns>
@@ -5651,8 +5651,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the ln function's results are
-            generally not exact.--.</param>
+            <i>This parameter cannot be null, as the ln function's results are
+            generally not exact.</i></param>
             <returns>Ln(this object). Signals the flag FlagInvalid and returns
             NaN if this object is less than 0 (the result would be a complex
             number with a real part equal to Ln of this object's absolute value
@@ -5670,8 +5670,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the ln function's results are
-            generally not exact.--.</param>
+            <i>This parameter cannot be null, as the ln function's results are
+            generally not exact.</i></param>
             <returns>Ln(this object)/Ln(10). Signals the flag FlagInvalid and
             returns not-a-number (NaN) if this object is less than 0. Signals
             FlagInvalid and returns not-a-number (NaN) if the parameter
@@ -6011,14 +6011,14 @@ of this class.</para>
 <summary>Represents the number 1.</summary>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.PI(PeterO.PrecisionContext)">
-<summary>Finds the constant pi.</summary>
+<summary>Finds the constant &#x3c0;.</summary>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as pi can never be represented
-            exactly.--.</param>
-            <returns>Pi rounded to the given precision.</returns>
+            <i>This parameter cannot be null, as &#x3c0; can never be represented
+            exactly.</i></param>
+            <returns>&#x3c0; rounded to the given precision.</returns>
             <exception cref='T:System.ArgumentException'>The parameter
             <paramref name='ctx'/> is null or the precision is unlimited (the
             context's Precision property is 0).</exception>
@@ -6131,7 +6131,7 @@ of this class.</para>
 </doc>
 <doc name="M:PeterO.ExtendedFloat.Reduce(PeterO.PrecisionContext)">
 <summary>Removes trailing zeros from this object&#x27;s mantissa.
-            For example, 1.000 becomes 1.
+            For example, 1.00 becomes 1.
             <para>If this object's value is 0, changes the exponent to
             0.</para></summary>
             <param name='ctx'>A precision context to control precision,
@@ -6419,8 +6419,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the square root function's
-            results are generally not exact for many inputs.--.</param>
+            <i>This parameter cannot be null, as the square root function's
+            results are generally not exact for many inputs.</i></param>
             <returns>The square root. Signals the flag FlagInvalid and returns
             NaN if this object is less than 0 (the square root would be a
             complex number, but the return value is still NaN).</returns>
@@ -7393,7 +7393,7 @@ of this class.</para>
             <para>
 Decimal (base-10) arithmetic, such as that provided by this class,
 is appropriate for calculations involving such real-world data
-as prices, tax rates, and measurements.  These calculations
+as prices and other sums of money, tax rates, and measurements.  These calculations
 often involve multiplying or dividing one decimal with another
 decimal, or performing other operations on decimal numbers.
 Many of these calculations also rely on rounding behavior in which
@@ -7919,8 +7919,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the exponential function's
-            results are generally not exact.--.</param>
+            <i>This parameter cannot be null, as the exponential function's
+            results are generally not exact.</i></param>
             <returns>Exponential of this object. If this object's value is 1,
             returns an approximation to " e" within the given precision.
             Signals FlagInvalid and returns not-a-number (NaN) if the parameter
@@ -8146,8 +8146,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the ln function's results are
-            generally not exact.--.</param>
+            <i>This parameter cannot be null, as the ln function's results are
+            generally not exact.</i></param>
             <returns>Ln(this object). Signals the flag FlagInvalid and returns
             NaN if this object is less than 0 (the result would be a complex
             number with a real part equal to Ln of this object's absolute value
@@ -8166,8 +8166,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the ln function's results are
-            generally not exact.--.</param>
+            <i>This parameter cannot be null, as the ln function's results are
+            generally not exact.</i></param>
             <returns>Ln(this object)/Ln(10). Signals the flag FlagInvalid and
             returns not-a-number (NaN) if this object is less than 0. Signals
             FlagInvalid and returns not-a-number (NaN) if the parameter
@@ -8457,14 +8457,14 @@ of this class.</para>
 <summary>Represents the number 1.</summary>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.PI(PeterO.Numbers.EContext)">
-<summary>Finds the constant pi.</summary>
+<summary>Finds the constant &#x3c0;.</summary>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as pi can never be represented
-            exactly.--.</param>
-            <returns>Pi rounded to the given precision. Signals FlagInvalid and
+            <i>This parameter cannot be null, as &#x3c0; can never be represented
+            exactly.</i></param>
+            <returns>&#x3c0; rounded to the given precision. Signals FlagInvalid and
             returns not-a-number (NaN) if the parameter <paramref name='ctx'/>
             is null or the precision is unlimited (the context's Precision
             property is 0).</returns>
@@ -8616,7 +8616,7 @@ of this class.</para>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Reduce(PeterO.Numbers.EContext)">
 <summary>Removes trailing zeros from this object&#x27;s mantissa.
-            For example, 1.000 becomes 1.
+            For example, 1.00 becomes 1.
             <para>If this object's value is 0, changes the exponent to
             0.</para></summary>
             <param name='ctx'>A precision context to control precision,
@@ -8892,8 +8892,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the square root function's
-            results are generally not exact for many inputs.--.</param>
+            <i>This parameter cannot be null, as the square root function's
+            results are generally not exact for many inputs.</i></param>
             <returns>The square root. Signals the flag FlagInvalid and returns
             NaN if this object is less than 0 (the square root would be a
             complex number, but the return value is still NaN). Signals
@@ -9487,8 +9487,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the exponential function's
-            results are generally not exact.--.</param>
+            <i>This parameter cannot be null, as the exponential function's
+            results are generally not exact.</i></param>
             <returns>Exponential of this object. If this object's value is 1,
             returns an approximation to " e" within the given
             precision.</returns>
@@ -9686,8 +9686,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the ln function's results are
-            generally not exact.--.</param>
+            <i>This parameter cannot be null, as the ln function's results are
+            generally not exact.</i></param>
             <returns>Ln(this object). Signals the flag FlagInvalid and returns
             NaN if this object is less than 0 (the result would be a complex
             number with a real part equal to Ln of this object's absolute value
@@ -9705,8 +9705,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the ln function's results are
-            generally not exact.--.</param>
+            <i>This parameter cannot be null, as the ln function's results are
+            generally not exact.</i></param>
             <returns>Ln(this object)/Ln(10). Signals the flag FlagInvalid and
             returns not-a-number (NaN) if this object is less than 0. Signals
             FlagInvalid and returns not-a-number (NaN) if the parameter
@@ -10000,14 +10000,14 @@ of this class.</para>
 <summary>Represents the number 1.</summary>
 </doc>
 <doc name="M:PeterO.Numbers.EFloat.PI(PeterO.Numbers.EContext)">
-<summary>Finds the constant pi.</summary>
+<summary>Finds the constant &#x3c0;.</summary>
             <param name='ctx'>A precision context to control precision,
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as pi can never be represented
-            exactly.--.</param>
-            <returns>Pi rounded to the given precision.</returns>
+            <i>This parameter cannot be null, as &#x3c0; can never be represented
+            exactly.</i></param>
+            <returns>&#x3c0; rounded to the given precision.</returns>
             <exception cref='T:System.ArgumentException'>The parameter
             <paramref name='ctx'/> is null or the precision is unlimited (the
             context's Precision property is 0).</exception>
@@ -10114,7 +10114,7 @@ of this class.</para>
 </doc>
 <doc name="M:PeterO.Numbers.EFloat.Reduce(PeterO.Numbers.EContext)">
 <summary>Removes trailing zeros from this object&#x27;s mantissa.
-            For example, 1.000 becomes 1.
+            For example, 1.00 becomes 1.
             <para>If this object's value is 0, changes the exponent to
             0.</para></summary>
             <param name='ctx'>A precision context to control precision,
@@ -10386,8 +10386,8 @@ of this class.</para>
             rounding, and exponent range of the result. If HasFlags of the
             context is true, will also store the flags resulting from the
             operation (the flags are in addition to the pre-existing flags).
-            --This parameter cannot be null, as the square root function's
-            results are generally not exact for many inputs.--.</param>
+            <i>This parameter cannot be null, as the square root function's
+            results are generally not exact for many inputs.</i></param>
             <returns>The square root. Signals the flag FlagInvalid and returns
             NaN if this object is less than 0 (the square root would be a
             complex number, but the return value is still NaN).</returns>

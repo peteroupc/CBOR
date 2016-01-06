@@ -524,7 +524,9 @@ namespace PeterO.Numbers {
       }
       if ((!this.negative) == (!bigintAugend.negative)) {
         // both nonnegative or both negative
-        if (bigintAugend.wordCount <= 2 && this.wordCount <= 2 &&
+        int addendCount = this.wordCount;
+        int augendCount = bigintAugend.wordCount;
+        if (augendCount <= 2 && addendCount <= 2 &&
            (this.wordCount < 2 || (this.words[1] >> 15) == 0) &&
            (bigintAugend.wordCount < 2 || (bigintAugend.words[1] >> 15) == 0)) {
           int a = ((int)this.words[0]) & 0xffff;
@@ -543,8 +545,6 @@ namespace PeterO.Numbers {
                     this.words.Length,
                     bigintAugend.words.Length)];
         int carry;
-        int addendCount = this.wordCount;
-        int augendCount = bigintAugend.wordCount;
         int desiredLength = Math.Max(addendCount, augendCount);
         if (addendCount == augendCount) {
           carry = AddOneByOne(

@@ -6,7 +6,7 @@
 
 Represents an arbitrary-precision decimal floating-point number.About decimal arithmetic
 
-Decimal (base-10) arithmetic, such as that provided by this class, is appropriate for calculations involving such real-world data as prices, tax rates, and measurements. These calculations often involve multiplying or dividing one decimal with another decimal, or performing other operations on decimal numbers. Many of these calculations also rely on rounding behavior in which the result after rounding is a decimal number (for example, multiplying a price by a premium rate, then rounding, should result in a decimal amount of money).
+Decimal (base-10) arithmetic, such as that provided by this class, is appropriate for calculations involving such real-world data as prices and other sums of money, tax rates, and measurements. These calculations often involve multiplying or dividing one decimal with another decimal, or performing other operations on decimal numbers. Many of these calculations also rely on rounding behavior in which the result after rounding is a decimal number (for example, multiplying a price by a premium rate, then rounding, should result in a decimal amount of money).
 
 On the other hand, most implementations of `float`  and  `double` , including in C# and Java, store numbers in a binary (base-2) floating-point format and use binary floating-point arithmetic. Many decimal numbers can't be represented exactly in binary floating-point format (regardless of its length). Applying binary arithmetic to numbers intended to be decimals can sometimes lead to unintuitive results, as is shown in the description for the FromDouble() method of this class.
 
@@ -747,7 +747,7 @@ Finds e (the base of natural logarithms) raised to the power of this object's va
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). --This parameter cannot be null, as the exponential function's results are generally not exact.--.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the exponential function's results are generally not exact.
 
 <b>Returns:</b>
 
@@ -1070,7 +1070,7 @@ Finds the natural logarithm of this object, that is, the power (exponent) that e
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). --This parameter cannot be null, as the ln function's results are generally not exact.--.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the ln function's results are generally not exact.
 
 <b>Returns:</b>
 
@@ -1086,7 +1086,7 @@ Finds the base-10 logarithm of this object, that is, the power (exponent) that t
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). --This parameter cannot be null, as the ln function's results are generally not exact.--.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the ln function's results are generally not exact.
 
 <b>Returns:</b>
 
@@ -1686,15 +1686,15 @@ The parameter <i>otherValue</i>
     public static PeterO.ExtendedDecimal PI(
         PeterO.PrecisionContext ctx);
 
-Finds the constant pi.
+Finds the constant π.
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). --This parameter cannot be null, as pi can never be represented exactly.--.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as π can never be represented exactly.
 
 <b>Returns:</b>
 
-Pi rounded to the given precision. Signals FlagInvalid and returns not-a-number (NaN) if the parameter  <i>ctx</i>
+π rounded to the given precision. Signals FlagInvalid and returns not-a-number (NaN) if the parameter  <i>ctx</i>
 is null or the precision is unlimited (the context's Precision property is 0).
 
 ### Plus
@@ -2221,7 +2221,7 @@ Finds the square root of this object's value.
 
 <b>Parameters:</b>
 
- * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags). --This parameter cannot be null, as the square root function's results are generally not exact for many inputs.--.
+ * <i>ctx</i>: A precision context to control precision, rounding, and exponent range of the result. If HasFlags of the context is true, will also store the flags resulting from the operation (the flags are in addition to the pre-existing flags).This parameter cannot be null, as the square root function's results are generally not exact for many inputs.
 
 <b>Returns:</b>
 

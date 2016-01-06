@@ -480,7 +480,16 @@ namespace PeterO.Numbers {
     }
 
     internal FastInteger Abs() {
-      return (this.Sign < 0) ? this.Negate() : this;
+      switch (this.integerMode) {
+        case 0:
+          if (this.smallValue == Int32.MinValue) {
+            return this.Negate();
+          }
+          this.smallValue = Math.Abs(this.smallValue);
+          return this;
+        default:
+          return (this.Sign < 0) ? this.Negate() : this;
+      }
     }
 
     internal static EInteger WordsToBigInteger(int[] words) {
