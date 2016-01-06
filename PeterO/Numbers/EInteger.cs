@@ -1436,7 +1436,21 @@ namespace PeterO.Numbers {
       int productwordCount;
       var needShorten = true;
       if (this.wordCount == 1) {
-        int wc = bigintMult.wordCount;
+        int wc;
+        if (bigintMult.wordCount == 1) {
+          // NOTE: Result can't be 0 here, since checks
+          // for 0 were already made earlier in this function
+          productreg = new short[2];
+          int ba=((int)this.words[0]) & 0xffff;
+          int bb=((int)bigintMult.words[0]) & 0xffff;
+          ba = unchecked(ba*bb);
+          productreg[0]=unchecked((short)(ba & 0xffff));
+          productreg[1]=unchecked((short)((ba >> 16) & 0xffff));
+          wc=(productreg[1]==0) ? 1 : 2;
+          return new EInteger(wc, productreg,
+            this.negative ^ bigintMult.negative);
+        }
+        wc = bigintMult.wordCount;
         int regLength = RoundupSize(wc + 1);
         productreg = new short[regLength];
         productreg[wc] = LinearMultiply(
