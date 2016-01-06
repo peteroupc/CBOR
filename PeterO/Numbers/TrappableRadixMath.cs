@@ -9,16 +9,15 @@ using System;
 using PeterO;
 
 namespace PeterO.Numbers {
-    // <summary>Implements arithmetic methods that support
-    // traps.</summary>
-    // <typeparam name='T'>Data type for a numeric value in a particular
-    // radix.</typeparam>
-  internal class TrappableRadixMath<T> : IRadixMath<T>
-  {
-private static void ThrowTrapException(
-int flag,
-EContext ctx,
-object result) {
+  // <summary>Implements arithmetic methods that support
+  // traps.</summary>
+  // <typeparam name='T'>Data type for a numeric value in a particular
+  // radix.</typeparam>
+  internal class TrappableRadixMath<T> : IRadixMath<T> {
+    private static void ThrowTrapException(
+    int flag,
+    EContext ctx,
+    object result) {
       throw new ETrapException(flag, ctx, result);
     }
 
@@ -82,11 +81,11 @@ result);
     private readonly IRadixMath<T> math;
 
     public TrappableRadixMath(IRadixMath<T> math) {
-      #if DEBUG
+#if DEBUG
       if (math == null) {
         throw new ArgumentNullException("math");
       }
-      #endif
+#endif
       this.math = math;
     }
 
@@ -377,11 +376,11 @@ EContext ctx) {
       return this.TriggerTraps(result, tctx, ctx);
     }
 
-public T AddEx(
-T thisValue,
-T other,
-EContext ctx,
-bool roundToOperandPrecision) {
+    public T AddEx(
+    T thisValue,
+    T other,
+    EContext ctx,
+    bool roundToOperandPrecision) {
       EContext tctx = GetTrappableContext(ctx);
       T result = this.math.AddEx(
 thisValue,

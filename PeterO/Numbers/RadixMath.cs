@@ -68,16 +68,16 @@ bool roundToOperandPrecision) {
       EInteger op1Exponent = this.helper.GetExponent(op1);
       EInteger op2Exponent = this.helper.GetExponent(op2);
       EInteger resultExponent = expcmp < 0 ? op1Exponent : op2Exponent;
-      FastInteger fastOp1Exp = FastInteger.FromBig(op1Exponent);
-      FastInteger fastOp2Exp = FastInteger.FromBig(op2Exponent);
-      FastInteger expdiff =
-        FastInteger.Copy(fastOp1Exp).Subtract(fastOp2Exp).Abs();
-      if (ctx != null && ctx.Precision.Sign > 0) {
+      if (ctx != null && ctx.HasMaxPrecision && ctx.Precision.Sign > 0) {
+        FastInteger fastOp1Exp = FastInteger.FromBig(op1Exponent);
+        FastInteger fastOp2Exp = FastInteger.FromBig(op2Exponent);
+        FastInteger expdiff =
+          FastInteger.Copy(fastOp1Exp).Subtract(fastOp2Exp).Abs();
         // Check if exponent difference is too big for
         // radix-power calculation to work quickly
         FastInteger fastPrecision = FastInteger.FromBig(ctx.Precision);
         // If exponent difference is greater than the precision
-        if (FastInteger.Copy(expdiff).CompareTo(fastPrecision) > 0) {
+        if (expdiff.CompareTo(fastPrecision) > 0) {
           int expcmp2 = fastOp1Exp.CompareTo(fastOp2Exp);
           if (expcmp2 < 0) {
             if (!op2MantAbs.IsZero) {
@@ -335,8 +335,6 @@ resultExponent,
 thisFlags,
 otherFlags,
 ctx);
-        // DebugUtility.Log("" + op1MantAbs + " " + op2MantAbs + " ->" +
-        // (op2Exponent-op1Exponent) + " [op2 exp greater]");
       }
       if (roundToOperandPrecision && ctx != null && ctx.HasMaxPrecision) {
         FastInteger digitLength1 =
@@ -360,7 +358,8 @@ ctx);
             ctx) : this.RoundToPrecision(retval, ctx);
         // DebugUtility.Log("retval now " + retval);
       } else {
-        return this.RoundToPrecision(retval, ctx);
+        return (IsNullOrSimpleContext(ctx)) ? (retval) :
+          (this.RoundToPrecision(retval, ctx));
       }
     }
 
@@ -389,19 +388,253 @@ bool roundToOperandPrecision) {
           return other;
         }
       }
-      int expcmp =
-        this.helper.GetExponent(thisValue)
-        .CompareTo((EInteger)this.helper.GetExponent(other));
+      EInteger op1Exponent = this.helper.GetExponent(thisValue);
+      EInteger op2Exponent = this.helper.GetExponent(other);
+      EInteger op1Mantissa = this.helper.GetMantissa(thisValue);
+      EInteger op2Mantissa = this.helper.GetMantissa(other);
+      int expcmp = op1Exponent.CompareTo(op2Exponent);
+      EInteger resultExponent = expcmp < 0 ? op1Exponent : op2Exponent;
       T retval = default(T);
+      if ((thisFlags & BigNumberFlags.FlagNegative) == 0 &&
+        (otherFlags & BigNumberFlags.FlagNegative) == 0) {
+       if (expcmp<0 && op2Mantissa.IsZero) {
+         return IsNullOrSimpleContext(ctx) ?
+          thisValue : this.RoundToPrecision(thisValue, ctx);
+       } else if (expcmp >= 0 && op1Mantissa.IsZero) {
+         return IsNullOrSimpleContext(ctx) ?
+          other : this.RoundToPrecision(other, ctx);
+       }
+      }
+      if ((expcmp == 0 || (op1Exponent.CanFitInInt32() &&
+        op2Exponent.CanFitInInt32())) &&
+        op1Mantissa.CanFitInInt32() && op2Mantissa.CanFitInInt32() &&
+        (thisFlags & BigNumberFlags.FlagNegative) == 0 &&
+        (otherFlags & BigNumberFlags.FlagNegative) == 0) {
+        var e1int = 0;
+        var e2int = 0;
+        if (expcmp != 0) {
+          e1int = op1Exponent.AsInt32Unchecked();
+          e2int = op2Exponent.AsInt32Unchecked();
+        }
+        int m1, m2;
+        var haveRetval = false;
+        if (expcmp == 0 || (e1int >= -100 && e1int < 100 && e2int >= -100 &&
+          e2int < 100)) {
+          int ediff = (expcmp == 0) ? 0 : Math.Abs(e1int - e2int);
+          int radix = this.thisRadix;
+          if (expcmp == 0) {
+            m1 = op1Mantissa.AsInt32Unchecked();
+            m2 = op2Mantissa.AsInt32Unchecked();
+            if (m2 <= Int32.MaxValue - m1) {
+              m1 += m2;
+              retval = this.helper.CreateNewWithFlags(
+                EInteger.FromInt32(m1),
+                resultExponent,
+                0);
+              haveRetval = true;
+            }
+          } else if (ediff <= 9 && radix == 10) {
+            int power = ValueTenPowers[ediff];
+            int maxoverflow = OverflowMaxes[ediff];
+            if (expcmp > 0) {
+              m1 = op1Mantissa.AsInt32Unchecked();
+              m2 = op2Mantissa.AsInt32Unchecked();
+              if (m1 == 0) {
+                retval = other;
+              } else if (m1 <= maxoverflow) {
+                m1 *= power;
+                if (m2 <= Int32.MaxValue - m1) {
+                  m1 += m2;
+                  retval = this.helper.CreateNewWithFlags(
+                    EInteger.FromInt32(m1),
+                    resultExponent,
+                    0);
+                  haveRetval = true;
+                }
+              }
+            } else {
+              m1 = op1Mantissa.AsInt32Unchecked();
+              m2 = op2Mantissa.AsInt32Unchecked();
+              if (m2 == 0) {
+                retval = thisValue;
+              } if (m2 <= maxoverflow) {
+                m2 *= power;
+                if (m1 <= Int32.MaxValue - m2) {
+                  m2 += m1;
+                  retval = this.helper.CreateNewWithFlags(
+                    EInteger.FromInt32(m2),
+                    resultExponent,
+                    0);
+                  haveRetval = true;
+                }
+              }
+            }
+          } else if (ediff <= 30 && radix == 2) {
+            int mask = BitMasks[ediff];
+            if (expcmp > 0) {
+              m1 = op1Mantissa.AsInt32Unchecked();
+              m2 = op2Mantissa.AsInt32Unchecked();
+              if (m1 == 0) {
+                retval = other;
+              } else if ((m1 & mask) == m1) {
+                m1 <<= ediff;
+                if (m2 <= Int32.MaxValue - m1) {
+                  m1 += m2;
+                  retval = this.helper.CreateNewWithFlags(
+                    EInteger.FromInt32(m1),
+                    resultExponent,
+                    0);
+                  haveRetval = true;
+                }
+              }
+            } else {
+              m1 = op1Mantissa.AsInt32Unchecked();
+              m2 = op2Mantissa.AsInt32Unchecked();
+              if (m2 == 0) {
+                retval = thisValue;
+              } else if ((m2 & mask) == m2) {
+                m2 <<= ediff;
+                if (m1 <= Int32.MaxValue - m2) {
+                  m2 += m1;
+                  retval = this.helper.CreateNewWithFlags(
+                    EInteger.FromInt32(m2),
+                    resultExponent,
+                    0);
+                  haveRetval = true;
+                }
+              }
+            }
+          }
+        }
+        if (haveRetval) {
+          if (!IsNullOrSimpleContext(ctx)) {
+            retval = this.RoundToPrecision(retval, ctx);
+          }
+          return retval;
+        }
+      }
+      if ((expcmp == 0 || (op1Exponent.CanFitInInt32() &&
+        op2Exponent.CanFitInInt32())) &&
+        op1Mantissa.CanFitInInt32() && op2Mantissa.CanFitInInt32() &&
+        (thisFlags & BigNumberFlags.FlagNegative) == 0 &&
+        (otherFlags & BigNumberFlags.FlagNegative) != 0 &&
+        !(op2Mantissa.IsZero)) {
+        var e1int = 0;
+        var e2int = 0;
+        if (expcmp != 0) {
+          e1int = op1Exponent.AsInt32Unchecked();
+          e2int = op2Exponent.AsInt32Unchecked();
+        }
+        int m1, m2;
+        var haveRetval = false;
+        if (expcmp == 0 || (e1int >= -100 && e1int < 100 && e2int >= -100 &&
+          e2int < 100)) {
+          int ediff = (expcmp == 0) ? 0 : Math.Abs(e1int - e2int);
+          int radix = this.thisRadix;
+          if (expcmp == 0) {
+            m1 = op1Mantissa.AsInt32Unchecked();
+            m2 = op2Mantissa.AsInt32Unchecked();
+            if (Int32.MinValue + m2 <= m1) {
+              m1 -= m2;
+              retval = this.helper.CreateNewWithFlags(
+                EInteger.FromInt32(m1),
+                resultExponent,
+                0);
+              haveRetval = true;
+            }
+          } else if (ediff <= 9 && radix == 10) {
+            int power = ValueTenPowers[ediff];
+            int maxoverflow = OverflowMaxes[ediff];
+            if (expcmp > 0) {
+              m1 = op1Mantissa.AsInt32Unchecked();
+              m2 = op2Mantissa.AsInt32Unchecked();
+              if (m1 == 0) {
+                retval = other;
+              } else if (m1 <= maxoverflow) {
+                m1 *= power;
+                if (Int32.MinValue + m2 <= m1) {
+                  m1 -= m2;
+                  retval = this.helper.CreateNewWithFlags(
+                    EInteger.FromInt32(m1),
+                    resultExponent,
+                    0);
+                  haveRetval = true;
+                }
+              }
+            } else {
+              m1 = op1Mantissa.AsInt32Unchecked();
+              m2 = op2Mantissa.AsInt32Unchecked();
+              if (m2 == 0) {
+                retval = thisValue;
+              } if (m2 <= maxoverflow) {
+                m2 *= power;
+                if (Int32.MinValue + m1 <= m2) {
+                  m2 -= m1;
+                  retval = this.helper.CreateNewWithFlags(
+                    EInteger.FromInt32(m2),
+                    resultExponent,
+                    0);
+                  haveRetval = true;
+                }
+              }
+            }
+          } else if (ediff <= 30 && radix == 2) {
+            int mask = BitMasks[ediff];
+            if (expcmp > 0) {
+              m1 = op1Mantissa.AsInt32Unchecked();
+              m2 = op2Mantissa.AsInt32Unchecked();
+              if (m1 == 0) {
+                retval = other;
+              } else if ((m1 & mask) == m1) {
+                m1 <<= ediff;
+                if (Int32.MinValue + m2 <= m1) {
+                  m1 -= m2;
+                  retval = this.helper.CreateNewWithFlags(
+                    EInteger.FromInt32(m1),
+                    resultExponent,
+                    0);
+                  haveRetval = true;
+                }
+              }
+            } else {
+              m1 = op1Mantissa.AsInt32Unchecked();
+              m2 = op2Mantissa.AsInt32Unchecked();
+              if (m2 == 0) {
+                retval = thisValue;
+              } else if ((m2 & mask) == m2) {
+                m2 <<= ediff;
+                if (Int32.MinValue + m1 <= m2) {
+                  m2 -= m1;
+                  retval = this.helper.CreateNewWithFlags(
+                    EInteger.FromInt32(m2),
+                    resultExponent,
+                    0);
+                  haveRetval = true;
+                }
+              }
+            }
+          }
+        }
+        if (haveRetval) {
+          if (!IsNullOrSimpleContext(ctx)) {
+            retval = this.RoundToPrecision(retval, ctx);
+          }
+          return retval;
+        }
+      }
+
+      //DebugUtility.Log("exp=" + (// expcmp) + "/" + 0 + ",res=" + 0 + ",["
+      // + op1Mantissa + "," + op1Exponent + "],[" + (//op2Mantissa) + "," +
+      // op2Exponent + "]");
       if (expcmp == 0) {
         retval = this.AddCore(
-          this.helper.GetMantissa(thisValue),
- this.helper.GetMantissa(other),
- this.helper.GetExponent(thisValue),
- thisFlags,
- otherFlags,
- ctx);
-        if (ctx != null && ctx != EContext.Unlimited) {
+          op1Mantissa,
+          op2Mantissa,
+          op1Exponent,
+          thisFlags,
+          otherFlags,
+          ctx);
+        if (!IsNullOrSimpleContext(ctx)) {
           retval = this.RoundToPrecision(retval, ctx);
         }
       } else {
@@ -750,11 +983,11 @@ ctxCopy);
            .WithBlankFlags();
         fracpart = this.Add(one, this.Divide(fracpart, intpart, ctxdiv), null);
         ctxdiv.Flags = 0;
-        //DebugUtility.Log("fracpart=" + (fracpart));
+        //DebugUtility.Log("fracpart=" + fracpart);
         EInteger workingPrec = ctxdiv.Precision;
         workingPrec += (EInteger)17;
         thisValue = this.ExpInternal(fracpart, workingPrec, ctxdiv);
-        //DebugUtility.Log("thisValue=" + (thisValue));
+        //DebugUtility.Log("thisValue=" + thisValue);
         if ((ctxdiv.Flags & EContext.FlagUnderflow) != 0) {
           if (ctx.HasFlags) {
             ctx.Flags |= ctxdiv.Flags;
@@ -1193,9 +1426,16 @@ negflag);
       return ret;
     }
 
-    private static bool HasNoMaxPrecisionOrExponent(EContext ctx) {
+    private static bool IsNullOrSimpleContext(EContext ctx) {
       return ctx == null || ctx == EContext.Unlimited ||
-       (!ctx.HasExponentRange && !ctx.HasMaxPrecision);
+       (!ctx.HasExponentRange && !ctx.HasMaxPrecision && ctx.Traps == 0 &&
+        !ctx.HasFlags);
+    }
+
+    private static bool IsSimpleContext(EContext ctx) {
+      return ctx != null && (ctx == EContext.Unlimited ||
+       (!ctx.HasExponentRange && !ctx.HasMaxPrecision && ctx.Traps == 0 &&
+        !ctx.HasFlags));
     }
 
     public T MultiplyAndAdd(
@@ -1836,8 +2076,8 @@ negativeFlag);
       } else if (expcmp > 0) {
         // Other exponent is less
         // DebugUtility.Log("other exp less");
-   FastInteger radixPower =
-          FastInteger.FromBig(expThis).SubtractBig(expOther);
+        FastInteger radixPower =
+               FastInteger.FromBig(expThis).SubtractBig(expOther);
         if (tmpctx.Precision.Sign > 0 &&
             radixPower.CompareTo(FastInteger.FromBig(tmpctx.Precision)
                 .AddInt(10)) > 0) {
@@ -1944,8 +2184,8 @@ EInteger.Zero);
       if ((ctx2.Flags & EContext.FlagInvalid) != 0) {
         return this.SignalInvalid(ctx);
       }
- if (this.helper.GetFlags(ret2) == 0 &&
-        this.helper.GetMantissa(ret2).IsZero) {
+      if (this.helper.GetFlags(ret2) == 0 &&
+             this.helper.GetMantissa(ret2).IsZero) {
         ret2 = this.EnsureSign(
 ret2,
 (this.helper.GetFlags(thisValue) & BigNumberFlags.FlagNegative) != 0);
@@ -2016,15 +2256,13 @@ ctx,
         }
         FastInteger shift = FastInteger.FromBig(expOther)
           .SubtractBig(this.helper.GetExponent(thisValue));
-        if (shift.Sign == 0 && ctx != null && HasNoMaxPrecisionOrExponent(ctx)&&
-            !ctx.HasFlags && ctx.Traps == 0) {
+        if (shift.Sign == 0 && IsSimpleContext(ctx)) {
           return thisValue;
         }
         EInteger bigmantissa = this.helper.GetMantissa(thisValue);
         IShiftAccumulator accum =
              this.helper.CreateShiftAccumulator(bigmantissa);
-        if (ctx != null && HasNoMaxPrecisionOrExponent(ctx) &&
-          !ctx.HasFlags && ctx.Traps == 0 && ctx.Rounding == ERounding.Down) {
+        if (IsSimpleContext(ctx) && ctx.Rounding == ERounding.Down) {
           accum.TruncateRight(shift);
           return this.helper.CreateNewWithFlags(
              accum.ShiftedInt,
@@ -2266,7 +2504,7 @@ EContext ctx) {
         mant1 += (EInteger)mant2;
         negResult = neg1;
       }
-      if (mant1.IsZero && negResult) {
+      if (negResult && mant1.IsZero) {
         // Result is negative zero
         negResult &= (neg1 && neg2) || ((neg1 ^ neg2) && ctx != null &&
                     ctx.Rounding == ERounding.Floor);
@@ -2389,17 +2627,17 @@ null) : this.ValueOf(-1, null));
     };
 
     private static int CompareToFast(
-  int e1,
-  int e2,
+  int e1int,
+  int e2int,
   int expcmp,
   int signA,
   EInteger op1Mantissa,
   EInteger op2Mantissa,
-  int radix ) {
+  int radix) {
       int m1, m2;
       int mantcmp;
-      if (e1 >= -100 && e1 < 100 && e2 >= -100 && e2 < 100) {
-        int ediff = Math.Abs(e1 - e2);
+      if (e1int >= -100 && e1int < 100 && e2int >= -100 && e2int < 100) {
+        int ediff = Math.Abs(e1int - e2int);
         if (ediff <= 9 && radix == 10) {
           int power = ValueTenPowers[ediff];
           int maxoverflow = OverflowMaxes[ediff];
@@ -2469,25 +2707,25 @@ null) : this.ValueOf(-1, null));
       // At this point, the signs are equal so we can compare
       // their absolute values instead
       int mantcmp = op1Mantissa.CompareTo(op2Mantissa);
-      if (signA < 0) {
-        mantcmp = -mantcmp;
-      }
       if (mantcmp == 0) {
         // Special case: Mantissas are equal
         return signA < 0 ? -expcmp : expcmp;
+      }
+      if (signA < 0) {
+        mantcmp = -mantcmp;
       }
       if (expcmp == 0) {
         return mantcmp;
       }
       if (op1Exponent.CanFitInInt32() && op2Exponent.CanFitInInt32() &&
           op1Mantissa.CanFitInInt32() && op2Mantissa.CanFitInInt32()) {
-        int e1 = op1Exponent.AsInt32Unchecked();
-        int e2 = op2Exponent.AsInt32Unchecked();
-        int c = CompareToFast(e1, e2,
+        int e1int = op1Exponent.AsInt32Unchecked();
+        int e2int = op2Exponent.AsInt32Unchecked();
+        int c = CompareToFast(e1int, e2int,
           expcmp, signA, op1Mantissa, op2Mantissa, this.thisRadix);
         if (c <= 1) {
- return c;
-}
+          return c;
+        }
       }
       FastInteger fastOp1Exp = FastInteger.FromBig(op1Exponent);
       FastInteger fastOp2Exp = FastInteger.FromBig(op2Exponent);
@@ -2644,8 +2882,8 @@ EInteger desiredExponent) {
           FastInteger.FromBig(this.helper.GetExponent(thisValue));
         FastInteger expDivisor =
           FastInteger.FromBig(this.helper.GetExponent(divisor));
-      FastInteger expdiff =
-          FastInteger.Copy(expDividend).Subtract(expDivisor);
+        FastInteger expdiff =
+            FastInteger.Copy(expDividend).Subtract(expDivisor);
         var adjust = new FastInteger(0);
         var result = new FastInteger(0);
         FastInteger naturalExponent = FastInteger.Copy(expdiff);
@@ -2660,8 +2898,8 @@ EInteger desiredExponent) {
         if (integerMode == IntegerModeFixedScale) {
           FastInteger shift;
           EInteger rem;
-        FastInteger fastDesiredExponent =
-            FastInteger.FromBig(desiredExponent);
+          FastInteger fastDesiredExponent =
+              FastInteger.FromBig(desiredExponent);
           if (ctx != null && ctx.HasFlags &&
               fastDesiredExponent.CompareTo(naturalExponent) > 0) {
             // Treat as rounded if the desired exponent is greater
@@ -2749,8 +2987,8 @@ ctx,
 #endif
             EInteger divid = mantissaDividend;
             FastInteger shift = FastInteger.FromBig(ctx.Precision);
-       dividendPrecision =
-              this.helper.CreateShiftAccumulator(mantissaDividend)
+            dividendPrecision =
+                   this.helper.CreateShiftAccumulator(mantissaDividend)
                     .GetDigitLength();
             divisorPrecision =
               this.helper.CreateShiftAccumulator(mantissaDivisor)
@@ -2784,8 +3022,8 @@ ctx,
             }
             dividendPrecision =
               this.helper.CreateShiftAccumulator(divid).GetDigitLength();
-         divisorPrecision =
-              this.helper.CreateShiftAccumulator(mantissaDivisor)
+            divisorPrecision =
+                 this.helper.CreateShiftAccumulator(mantissaDivisor)
                     .GetDigitLength();
             if (shift.Sign != 0 || quo == null) {
               // if shift isn't zero, recalculate the quotient
@@ -2844,8 +3082,8 @@ ctx,
         int mantcmp = mantissaDividend.CompareTo(mantissaDivisor);
         if (mantcmp < 0) {
           // dividend mantissa is less than divisor mantissa
-       dividendPrecision =
-            this.helper.CreateShiftAccumulator(mantissaDividend)
+          dividendPrecision =
+               this.helper.CreateShiftAccumulator(mantissaDividend)
                     .GetDigitLength();
           divisorPrecision =
             this.helper.CreateShiftAccumulator(mantissaDivisor)
@@ -2877,8 +3115,8 @@ ctx,
           }
         } else if (mantcmp > 0) {
           // dividend mantissa is greater than divisor mantissa
-       dividendPrecision =
-            this.helper.CreateShiftAccumulator(mantissaDividend)
+          dividendPrecision =
+               this.helper.CreateShiftAccumulator(mantissaDividend)
                     .GetDigitLength();
           divisorPrecision =
             this.helper.CreateShiftAccumulator(mantissaDivisor)
@@ -2964,8 +3202,7 @@ ctx,
         var lastDiscarded = 0;
         var olderDiscarded = 0;
         if (!mantissaDividend.IsZero) {
-        if (rounding == ERounding.HalfDown || rounding == ERounding.HalfEven
-            ||
+          if (rounding == ERounding.HalfDown || rounding == ERounding.HalfEven||
               rounding == ERounding.HalfUp) {
             EInteger halfDivisor = mantissaDivisor >> 1;
             int cmpHalf = mantissaDividend.CompareTo(halfDivisor);
@@ -4557,6 +4794,12 @@ EInteger.Zero,
       return (sign < 0) ? this.SignalInvalid(ctx) : default(T);
     }
 
+    // Conservative maximum base-10 radix power for
+    // TryMultiplyByRadix Power; derived from
+    // Int32.MaxValue*8/3 (8 is the number of bits in a byte;
+    // 3 is a conservative estimate of log(10)/log(2).)
+    private static EInteger MaxDigits=(EInteger)5726623058L;
+
     private EInteger TryMultiplyByRadixPower(
       EInteger bi,
       FastInteger radixPower) {
@@ -4567,7 +4810,10 @@ EInteger.Zero,
         // NOTE: For radix 10, each digit fits less than 1 byte; the
         // supported byte length is thus less than the maximum value
         // of a 32-bit integer (2GB).
-        return null;
+        FastInteger fastBI = FastInteger.FromBig(MaxDigits);
+        if (this.thisRadix != 10 || radixPower.CompareTo(fastBI)>0) {
+          return null;
+        }
       }
       return this.helper.MultiplyByRadixPower(bi, radixPower);
     }
