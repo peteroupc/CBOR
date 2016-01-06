@@ -12282,23 +12282,6 @@ of this class.</para>
             fractional part is discarded. In overflow, the fractional part is
             always discarded.</summary>
 </doc>
-<doc name="T:PeterO.SortedMap`2">
-<summary>A dictionary sorted by key. It is here because the
-            Portable Class Library subset used by CBOR doesn't include the
-            System.Collections.Generic.SortedDictionary class.</summary>
-            <typeparam name='T1'>The type of each key.</typeparam>
-            <typeparam name='T2'>The type of each value.</typeparam>
-</doc>
-<doc name="M:PeterO.SortedMap`2.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)">
-<summary>Copies this object's elements to another array.</summary>
-            <param name='array'>An array of KeyValuePair.</param>
-            <param name='arrayIndex'>Index into the array to copy to.</param>
-</doc>
-<doc name="P:PeterO.SortedMap`2.IsReadOnly">
-<summary>Gets a value indicating whether this map is
-            read-only.</summary>
-            <value>Always false.</value>
-</doc>
 <doc name="T:PeterO.TrapException">
 <summary>Exception thrown for arithmetic trap errors.</summary>
 </doc>

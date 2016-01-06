@@ -31,6 +31,18 @@ namespace Test {
         TestCommon.CompareTestRelations(bigintA, bigintB, bigintC);
       }
       TestCommon.CompareTestLess(ExtendedDecimal.Zero, ExtendedDecimal.NaN);
+      TestCommon.CompareTestLess(
+ExtendedDecimal.FromString("-4328117878201602191937590091183.9810549"),
+ExtendedDecimal.FromString("-14"));
+      TestCommon.CompareTestGreater(
+ExtendedDecimal.FromString("937125319376706291597172.99"),
+ExtendedDecimal.FromString("9755.2823"));
+      TestCommon.CompareTestLess(
+ExtendedDecimal.FromString("95"),
+ExtendedDecimal.FromString("1.41189247453434859259019E+26"));
+      TestCommon.CompareTestGreater(
+ExtendedDecimal.FromString("379351600076111561037"),
+ExtendedDecimal.FromString("8451910"));
     }
     [Test]
     public void TestCompareToBinary() {

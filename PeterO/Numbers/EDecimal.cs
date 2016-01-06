@@ -643,16 +643,18 @@ namespace PeterO.Numbers {
         EInteger bigint,
         FastInteger power) {
         EInteger tmpbigint = bigint;
-        if (power.Sign <= 0) {
+        if (tmpbigint.IsZero) {
           return tmpbigint;
         }
-        if (tmpbigint.IsZero) {
+        bool fitsInInt32 = power.CanFitInInt32();
+        int powerInt=(fitsInInt32) ? power.AsInt32() : 0;
+        if (fitsInInt32 && powerInt == 0) {
           return tmpbigint;
         }
         EInteger bigtmp = null;
         if (tmpbigint.CompareTo(EInteger.One) != 0) {
-          if (power.CanFitInInt32()) {
-            bigtmp = DecimalUtility.FindPowerOfTen(power.AsInt32());
+          if (fitsInInt32) {
+            bigtmp = DecimalUtility.FindPowerOfTen(powerInt);
             tmpbigint *= (EInteger)bigtmp;
           } else {
             bigtmp = DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger());
@@ -660,8 +662,7 @@ namespace PeterO.Numbers {
           }
           return tmpbigint;
         }
-        return power.CanFitInInt32() ?
-          DecimalUtility.FindPowerOfTen(power.AsInt32()) :
+        return fitsInInt32 ? DecimalUtility.FindPowerOfTen(powerInt) :
           DecimalUtility.FindPowerOfTenFromBig(power.AsBigInteger());
       }
 
@@ -2133,7 +2134,8 @@ if (!(decimalPoint.AsInt32() == 0)) {
 
     private static readonly int[] ValueTenPowers = {
       1, 10, 100, 1000, 10000, 100000,
-      1000000, 10000000, 100000000
+      1000000, 10000000, 100000000,
+      1000000000
     };
 
     /// <include file='../../docs.xml'
@@ -2155,7 +2157,7 @@ if (!(decimalPoint.AsInt32() == 0)) {
             exponentSmall >= -100 && exponentSmall <= 100) {
             if (rounding == ERounding.Down) {
               int diff = exponentSmall - thisExponentSmall;
-              if (diff >= 1 && diff <= 8) {
+              if (diff >= 1 && diff <= 9) {
                 thisMantissaSmall /= ValueTenPowers[diff];
                 return CreateWithFlags(
                   EInteger.FromInt32(thisMantissaSmall),
@@ -2165,7 +2167,7 @@ if (!(decimalPoint.AsInt32() == 0)) {
             } else if (rounding == ERounding.HalfEven &&
                 thisMantissaSmall != Int32.MaxValue) {
               int diff = exponentSmall - thisExponentSmall;
-              if (diff >= 1 && diff <= 8) {
+              if (diff >= 1 && diff <= 9) {
                 int pwr = ValueTenPowers[diff - 1];
                 int div = thisMantissaSmall / pwr;
                 int div2 = div / 10;

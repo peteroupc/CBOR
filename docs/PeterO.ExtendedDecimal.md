@@ -6,7 +6,7 @@
 
 Represents an arbitrary-precision decimal floating-point number.About decimal arithmetic
 
-Decimal (base-10) arithmetic, such as that provided by this class, is appropriate for calculations involving such real-world data as prices, tax rates, and measurements. These calculations often involve multiplying or dividing one decimal with another decimal, or performing other operations on decimal numbers.
+Decimal (base-10) arithmetic, such as that provided by this class, is appropriate for calculations involving such real-world data as prices, tax rates, and measurements. These calculations often involve multiplying or dividing one decimal with another decimal, or performing other operations on decimal numbers. Many of these calculations also rely on rounding behavior in which the result after rounding is a decimal number (for example, multiplying a price by a premium rate, then rounding, should result in a decimal amount of money).
 
 On the other hand, most implementations of `float`  and  `double` , including in C# and Java, store numbers in a binary (base-2) floating-point format and use binary floating-point arithmetic. Many decimal numbers can't be represented exactly in binary floating-point format (regardless of its length). Applying binary arithmetic to numbers intended to be decimals can sometimes lead to unintuitive results, as is shown in the description for the FromDouble() method of this class.
 

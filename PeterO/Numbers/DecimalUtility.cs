@@ -402,14 +402,11 @@ namespace PeterO.Numbers {
       if (precision < 0) {
         return EInteger.Zero;
       }
-      if (precision == 0) {
-        return EInteger.One;
-      }
-      EInteger bigpow;
-      EInteger ret;
       if (precision <= 27) {
         return ValueBigIntPowersOfFive[(int)precision];
       }
+      EInteger bigpow;
+      EInteger ret;
       if (precision == 40) {
         return ValueFivePower40;
       }
@@ -505,14 +502,11 @@ namespace PeterO.Numbers {
       if (precision < 0) {
         return EInteger.Zero;
       }
-      if (precision == 0) {
-        return EInteger.One;
-      }
-      EInteger bigpow;
-      EInteger ret;
       if (precision <= 18) {
         return ValueBigIntPowersOfTen[(int)precision];
       }
+      EInteger bigpow;
+      EInteger ret;
       int startPrecision = precision;
       bigpow = ValuePowerOfTenCache.GetCachedPowerInt(precision);
       if (bigpow != null) {

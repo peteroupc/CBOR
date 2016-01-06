@@ -160,8 +160,9 @@ string msg) where T :
       if (o2 == null) {
         throw new ArgumentNullException("o2");
       }
-      int cmp = Math.Sign(o1.CompareTo(o2));
-      int cmp2 = Math.Sign(o2.CompareTo(o1));
+      int cmp, cmp2;
+      cmp = Math.Sign(o1.CompareTo(o2));
+      cmp2 = Math.Sign(o2.CompareTo(o1));
       if (-cmp2 != cmp) {
         Assert.AreEqual(cmp, -cmp2, ObjectMessages(o1, o2, "Not reciprocal"));
       }
