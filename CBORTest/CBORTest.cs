@@ -152,12 +152,6 @@ namespace Test {
     }
 
     [Test]
-    public void TestFalse() {
-      TestCommon.AssertSer(CBORObject.False, "false");
-      Assert.AreEqual(CBORObject.False, CBORObject.FromObject(false));
-    }
-
-    [Test]
     public void TestByteArray() {
       TestCommon.AssertSer(
         CBORObject.FromObject(new byte[] { 0x20, 0x78 }),
@@ -923,7 +917,6 @@ AddSubCompare(objectTemp, objectTemp2);
 
     [Test]
     public void TestExtendedMiscellaneous() {
-      Assert.AreEqual(ExtendedDecimal.Zero, ExtendedDecimal.FromInt32(0));
       Assert.AreEqual(ExtendedDecimal.One, ExtendedDecimal.FromInt32(1));
 
       Assert.AreEqual(
@@ -932,12 +925,6 @@ AddSubCompare(objectTemp, objectTemp2);
       Assert.AreEqual(
         ExtendedFloat.NegativeZero,
         ExtendedDecimal.NegativeZero.ToExtendedFloat());
-      if (0.0 != ExtendedDecimal.Zero.ToSingle()) {
-        Assert.Fail("Failed " + ExtendedDecimal.Zero.ToSingle());
-      }
-      if (0.0 != ExtendedDecimal.Zero.ToDouble()) {
-        Assert.Fail("Failed " + ExtendedDecimal.Zero.ToDouble());
-      }
       if (0.0f != ExtendedFloat.Zero.ToSingle()) {
         Assert.Fail("Failed " + ExtendedFloat.Zero.ToDouble());
       }

@@ -1364,23 +1364,6 @@ namespace PeterO.Numbers {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.RoundToBinaryPrecision(PeterO.Numbers.EContext)"]/*'/>
-    [Obsolete(
-      "Instead of this method use RoundToPrecision and pass a precision " + "context with the IsPrecisionInBits property set.")]
-    public EFloat RoundToBinaryPrecision(
-      EContext ctx) {
-      if (ctx == null) {
-        return this;
-      }
-      EContext ctx2 = ctx.Copy().WithPrecisionInBits(true);
-      EFloat ret = MathValue.RoundToPrecision(this, ctx2);
-      if (ctx2.HasFlags) {
-        ctx.Flags = ctx2.Flags;
-      }
-      return ret;
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EFloat.SquareRoot(PeterO.Numbers.EContext)"]/*'/>
     public EFloat SquareRoot(EContext ctx) {
       return MathValue.SquareRoot(this, ctx);

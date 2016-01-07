@@ -2257,22 +2257,6 @@ if (!(decimalPoint.AsInt32() == 0)) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.RoundToBinaryPrecision(PeterO.Numbers.EContext)"]/*'/>
-    [Obsolete(
-      "Instead of this method use RoundToPrecision and pass a " + "precision context with the IsPrecisionInBits property set.")]
-    public EDecimal RoundToBinaryPrecision(EContext ctx) {
-      if (ctx == null) {
-        return this;
-      }
-      EContext ctx2 = ctx.Copy().WithPrecisionInBits(true);
-      EDecimal ret = GetMathValue(ctx).RoundToPrecision(this, ctx2);
-      if (ctx2.HasFlags) {
-        ctx.Flags = ctx2.Flags;
-      }
-      return ret;
-    }
-
-    /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Numbers.EDecimal.SquareRoot(PeterO.Numbers.EContext)"]/*'/>
     public EDecimal SquareRoot(EContext ctx) {
       return GetMathValue(ctx).SquareRoot(this, ctx);

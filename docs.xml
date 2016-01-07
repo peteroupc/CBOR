@@ -282,9 +282,13 @@
 <doc name="M:PeterO.BigInteger.fromBytes(System.Byte[],System.Boolean)">
 <summary>Initializes an arbitrary-precision integer from an array
             of bytes.</summary>
-            <param name='bytes'>A byte array.</param>
-            <param name='littleEndian'>A Boolean object.</param>
-            <returns>An arbitrary-precision integer.</returns>
+            <param name='bytes'>A byte array consisting of the two's-complement integer representation of the arbitrary-precision integer to create.
+The last byte contains the lowest 8-bits, the next-to-last contains the next lowest 8 bits, and so on. To encode negative numbers, take the absolute value of the number, subtract by 1, encode the number into bytes, XOR each byte, and if the most-significant bit of the first byte isn't set, add an additional byte at the start with the value 255.  For little-endian, the byte order is reversed from the byte order just discussed.</param>
+            <param name='littleEndian'>If true, the byte order is little-endian,
+            or least-significant-byte first.  If false, the byte order is big-endian,
+            or most-significant-byte first.</param>
+            <returns>An arbitrary-precision integer.  Returns 0 if the byte
+            array's length is 0.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bytes'/> is null.</exception>
 </doc>
@@ -2629,8 +2633,7 @@
 <doc name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream)">
 <summary>Initializes a new instance of the <see cref='CharacterReader'/> class;
             will read the stream as UTF-8, skip the byte-order mark (U+FEFF)
-            if it appears first in the stream, and replace invalidly encoded
-            bytes with replacement characters (U+FFFD).</summary>
+            if it appears first in the stream, and replace invalid byte sequences with replacement characters (U+FFFD).</summary>
             <param name='stream'>A readable data stream.</param>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='stream'/> is null.</exception>
@@ -2638,7 +2641,7 @@
 <doc name="M:PeterO.Cbor.CharacterReader.#ctor(System.IO.Stream,System.Int32)">
 <summary>Initializes a new instance of the <see cref='CharacterReader'/> class;
             will skip the byte-order mark (U+FEFF) if it appears first in the
-            stream and replace invalidly encoded bytes with replacement
+            stream and replace invalid byte sequences with replacement
             characters (U+FFFD).</summary>
             <param name='stream'>A readable byte stream.</param>
             <param name='mode'>The method to use when detecting encodings other
@@ -3440,7 +3443,11 @@ of this class.</para>
             <para>This class's natural ordering (under the CompareTo method) is
             not consistent with the Equals method. This means that two values
             that compare as equal under the CompareTo method might not be equal
-            under the Equals method.</para>
+            under the Equals method.  The CompareTo method compares
+            the mathematical values of the two instances passed to it (and
+            considers two different NaN values as equal), while two instances
+            with the same mathematical value, but different exponents, will be
+            considered unequal under the Equals method.</para>
             </summary>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.Abs">
@@ -7484,7 +7491,11 @@ of this class.</para>
             <para>This class's natural ordering (under the CompareTo method) is
             not consistent with the Equals method. This means that two values
             that compare as equal under the CompareTo method might not be equal
-            under the Equals method.</para>
+            under the Equals method. The CompareTo method compares
+            the mathematical values of the two instances passed to it (and
+            considers two different NaN values as equal), while two instances
+            with the same mathematical value, but different exponents, will be
+            considered unequal under the Equals method.</para>
             
             </summary>
 </doc>
@@ -8535,7 +8546,12 @@ of this class.</para>
             between this value's exponent and the desired exponent is too big,
             depending on the maximum precision. If rounding to a number of
             decimal places is desired, it's better to use the RoundToExponent
-            and RoundToIntegral methods instead.</para></summary>
+            and RoundToIntegral methods instead.</para>
+            <para><b>Remark:</b> This method can be used to implement
+            fixed-point decimal arithmetic, in which a fixed number of digits
+            come after the decimal point.  A fixed-point decimal arithmetic in which no digits come after
+            the decimal point (a desired exponent of 0) is considered
+            an "integer arithmetic".</para></summary>
             <param name='otherValue'>A decimal number containing the desired
             exponent of the result. The mantissa is ignored. The exponent is
             the number of fractional digits in the result, expressed as a
@@ -8562,8 +8578,30 @@ of this class.</para>
             between this value's exponent and the desired exponent is too big,
             depending on the maximum precision. If rounding to a number of
             decimal places is desired, it's better to use the RoundToExponent
-            and RoundToIntegral methods instead.</para></summary>
-            <param name='desiredExponent'>An arbitrary-precision
+            and RoundToIntegral methods instead.</para>
+            <para><b>Remark:</b> This method can be used to implement
+            fixed-point decimal arithmetic, in which each decimal number has
+            a fixed number of digits after the decimal point.  The following code example
+            returns a fixed-point number with up to 20 digits before and exactly 5 digits after
+            the decimal point:</para>
+            <code>
+            // After performing arithmetic operations, adjust
+            // the number to 5 digits after the decimal point
+            number = number.Quantize(
+              EInteger.FromInt32(-5), // five digits after the decimal point
+              PrecisionContext.ForPrecision(25) // 25-digit precision
+            );
+            </code><para>
+            A fixed-point decimal arithmetic in which no digits come after
+            the decimal point (a desired exponent of 0) is considered
+            an "integer arithmetic".
+            </para></summary>
+            <param name='desiredExponent'>The desired exponent for the
+            result. The exponent is the number of fractional digits in the
+            result, expressed as a negative number. Can also be positive, which
+            eliminates lower-order places from the number. For example, -3
+            means round to the thousandth (10^-3, 0.0001), and 3 means round to
+            the thousand (10^3, 1000). A value of 0 rounds the number to an
             integer.</param>
             <param name='ctx'>A precision context to control precision and
             rounding of the result. If HasFlags of the context is true, will
@@ -8572,7 +8610,7 @@ of this class.</para>
             default rounding mode is HalfEven.</param>
             <returns>A decimal number with the same value as this object but
             with the exponent changed. Signals FlagInvalid and returns
-            not-a-number (NaN) if the rounded result can't fit the given
+            not-a-number (NaN) if this object is infinity, if the rounded result can't fit the given
             precision, or if the context defines an exponent range and the
             given exponent is outside that range.</returns>
 </doc>
@@ -8584,7 +8622,24 @@ of this class.</para>
             between this value's exponent and the desired exponent is too big,
             depending on the maximum precision. If rounding to a number of
             decimal places is desired, it's better to use the RoundToExponent
-            and RoundToIntegral methods instead.</para></summary>
+            and RoundToIntegral methods instead.</para>
+            <para><b>Remark:</b> This method can be used to implement
+            fixed-point decimal arithmetic, in which each decimal number has
+            a fixed number of digits after the decimal point.  The following code example
+            returns a fixed-point number with up to 20 digits before and exactly 5 digits after
+            the decimal point:</para>
+            <code>
+            // After performing arithmetic operations, adjust
+            // the number to 5 digits after the decimal point
+            number = number.Quantize(
+              -5, // five digits after the decimal point
+              PrecisionContext.ForPrecision(25) // 25-digit precision
+            );
+            </code><para>
+            A fixed-point decimal arithmetic in which no digits come after
+            the decimal point (a desired exponent of 0) is considered
+            an "integer arithmetic".
+            </para></summary>
             <param name='desiredExponentSmall'>The desired exponent for the
             result. The exponent is the number of fractional digits in the
             result, expressed as a negative number. Can also be positive, which
@@ -8599,19 +8654,29 @@ of this class.</para>
             default rounding mode is HalfEven.</param>
             <returns>A decimal number with the same value as this object but
             with the exponent changed. Signals FlagInvalid and returns
-            not-a-number (NaN) if the rounded result can't fit the given
+            not-a-number (NaN) if this object is infinity, if the rounded result can't fit the given
             precision, or if the context defines an exponent range and the
             given exponent is outside that range.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Quantize(System.Int32,PeterO.Numbers.ERounding)">
 <summary>Returns a decimal number with the same value as this one
-            but a new exponent.</summary>
-            <param name='desiredExponentSmall'>A 32-bit signed integer.</param>
-            <param name='rounding'>The parameter <paramref name='rounding'/> is
-            not documented yet.</param>
+            but a new exponent.<para><b>Remark:</b> This method can be used to implement
+            fixed-point decimal arithmetic, in which a fixed number of digits
+            come after the decimal point.  A fixed-point decimal arithmetic in which no digits come after
+            the decimal point (a desired exponent of 0) is considered
+            an "integer arithmetic".</para></summary>
+            <param name='desiredExponentSmall'>The desired exponent for the
+            result. The exponent is the number of fractional digits in the
+            result, expressed as a negative number. Can also be positive, which
+            eliminates lower-order places from the number. For example, -3
+            means round to the thousandth (10^-3, 0.0001), and 3 means round to
+            the thousand (10^3, 1000). A value of 0 rounds the number to an
+            integer.</param>
+            <param name='rounding'>A rounding mode to use in case the
+            result needs to be rounded to fit the given exponent.</param>
             <returns>A decimal number with the same value as this object but
-            with the exponent changed. Returns not-a-number (NaN) if the
-            rounding mode is Rounding.Unnecessary and the result is not
+            with the exponent changed. Returns not-a-number (NaN) if
+            this object is infinity, or if the rounding mode is ERounding.None and the result is not
             exact.</returns>
 </doc>
 <doc name="M:PeterO.Numbers.EDecimal.Reduce(PeterO.Numbers.EContext)">
@@ -9047,11 +9112,21 @@ of this class.</para>
             operation may signal an invalid-operation flag and return not-a-number
             (NaN).  In certain rare cases, the CompareTo method may throw OutOfMemoryException
             (called OutOfMemoryError in Java) in the same circumstances.</para>
-            <para><b>Thread safety:</b>Instances of this class are immutable, so they are inherently
+             <para><b>Thread safety</b></para>
+            <para>Instances of this class are immutable, so they are inherently
             safe for use by multiple threads. Multiple instances of this object
             with the same properties are interchangeable, so they should not be
             compared using the "==" operator (which only checks if each side of
-            the operator is the same instance).</para></summary>
+            the operator is the same instance).</para>
+            <para><b>Comparison considerations</b></para>
+            <para>This class's natural ordering (under the CompareTo method) is
+            not consistent with the Equals method. This means that two values
+            that compare as equal under the CompareTo method might not be equal
+            under the Equals method. The CompareTo method compares
+            the mathematical values of the two instances passed to it (and
+            considers two different NaN values as equal), while two instances
+            with the same mathematical value, but different exponents, will be
+            considered unequal under the Equals method.</para></summary>
 </doc>
 <doc name="M:PeterO.Numbers.EFloat.Abs">
 <summary>Gets the absolute value of this object.</summary>
@@ -10642,9 +10717,13 @@ of this class.</para>
 <doc name="M:PeterO.Numbers.EInteger.FromBytes(System.Byte[],System.Boolean)">
 <summary>Initializes an arbitrary-precision integer from an array
             of bytes.</summary>
-            <param name='bytes'>A byte array.</param>
-            <param name='littleEndian'>A Boolean object.</param>
-            <returns>An arbitrary-precision integer.</returns>
+            <param name='bytes'>A byte array consisting of the two's-complement integer representation of the arbitrary-precision integer to create.
+The last byte contains the lowest 8-bits, the next-to-last contains the next lowest 8 bits, and so on. To encode negative numbers, take the absolute value of the number, subtract by 1, encode the number into bytes, XOR each byte, and if the most-significant bit of the first byte isn't set, add an additional byte at the start with the value 255.  For little-endian, the byte order is reversed from the byte order just discussed.</param>
+            <param name='littleEndian'>If true, the byte order is little-endian,
+            or least-significant-byte first.  If false, the byte order is big-endian,
+            or most-significant-byte first.</param>
+            <returns>An arbitrary-precision integer.  Returns 0 if the byte
+            array's length is 0.</returns>
             <exception cref='T:System.ArgumentNullException'>The parameter
             <paramref name='bytes'/> is null.</exception>
 </doc>

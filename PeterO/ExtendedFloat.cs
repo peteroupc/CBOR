@@ -1212,12 +1212,15 @@ ctx == null ? null : ctx.Ec));
     [Obsolete(
       "Instead of this method use RoundToPrecision and pass a precision " + "context with the IsPrecisionInBits property set.")]
     public ExtendedFloat RoundToBinaryPrecision(PrecisionContext ctx) {
-      try {
-        return new ExtendedFloat(this.Ef.RoundToBinaryPrecision(ctx == null ?
-          null : ctx.Ec));
-      } catch (ETrapException ex) {
-        throw TrapException.Create(ex);
+      if (ctx == null) {
+        return this;
       }
+      PrecisionContext ctx2 = ctx.Copy().WithPrecisionInBits(true);
+      ExtendedFloat ret = this.RoundToPrecision(ctx2);
+      if (ctx2.HasFlags) {
+        ctx.Flags = ctx2.Flags;
+      }
+      return ret;
     }
 
     /// <include file='../docs.xml'
