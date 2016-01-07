@@ -143,20 +143,18 @@ namespace Test {
     }
 
     [Test]
-    public void TestBoolean() {
-      TestCommon.AssertSer(CBORObject.True, "true");
-      TestCommon.AssertSer(CBORObject.False, "false");
-      Assert.AreEqual(CBORObject.True, CBORObject.FromObject(true));
-      Assert.AreEqual(CBORObject.False, CBORObject.FromObject(false));
-    }
-
-    [Test]
     public void TestByte() {
       for (var i = 0; i <= 255; ++i) {
         TestCommon.AssertSer(
           CBORObject.FromObject((byte)i),
-          String.Empty + i);
+          TestCommon.IntToString(i));
       }
+    }
+
+    [Test]
+    public void TestFalse() {
+      TestCommon.AssertSer(CBORObject.False, "false");
+      Assert.AreEqual(CBORObject.False, CBORObject.FromObject(false));
     }
 
     [Test]

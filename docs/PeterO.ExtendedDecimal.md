@@ -1871,7 +1871,7 @@ The parameter <i>otherValue</i>
     public PeterO.ExtendedDecimal Reduce(
         PeterO.PrecisionContext ctx);
 
-Removes trailing zeros from this object's mantissa. For example, 1.000 becomes 1.If this object's value is 0, changes the exponent to 0.
+Removes trailing zeros from this object's mantissa. For example, 1.00 becomes 1.If this object's value is 0, changes the exponent to 0.
 
 <b>Parameters:</b>
 

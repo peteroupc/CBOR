@@ -9,6 +9,17 @@ namespace Test {
     public void TestAbs() {
       // not implemented yet
     }
+
+    private static void AssertAddSubtract(string a, string b) {
+      ExtendedDecimal decA = ExtendedDecimal.FromString(a);
+      ExtendedDecimal decB = ExtendedDecimal.FromString(b);
+      ExtendedDecimal decC = decA.Add(decB);
+      ExtendedDecimal decD = decC.Subtract(decA);
+      TestCommon.CompareTestEqual(decD, decB);
+      decD = decC.Subtract(decB);
+      TestCommon.CompareTestEqual(decD, decA);
+    }
+
     [Test]
     public void TestAdd() {
       try {
@@ -20,7 +31,9 @@ namespace Test {
         Assert.Fail(ex.ToString());
         throw new InvalidOperationException(String.Empty, ex);
       }
+      AssertAddSubtract("617862143", "1528127703");
     }
+
     [Test]
     public void TestCompareTo() {
       var r = new FastRandom();
