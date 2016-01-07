@@ -518,9 +518,11 @@ bool roundToOperandPrecision) {
         op1Mantissa.CanFitInInt32() && op2Mantissa.CanFitInInt32() &&
         (thisFlags & BigNumberFlags.FlagNegative) == 0 &&
         (otherFlags & BigNumberFlags.FlagNegative) != 0 &&
-        !(op2Mantissa.IsZero)) {
+        !(op2Mantissa.IsZero) && !(op1Mantissa.IsZero)) {
         var e1int = 0;
         var e2int = 0;
+        var result = 0;
+        //DebugUtility.Log("e1=" + op1Exponent + "," + op2Exponent + ",cmp=" + (expcmp));
         if (expcmp != 0) {
           e1int = op1Exponent.AsInt32Unchecked();
           e2int = op2Exponent.AsInt32Unchecked();
@@ -534,88 +536,18 @@ bool roundToOperandPrecision) {
           if (expcmp == 0) {
             m1 = op1Mantissa.AsInt32Unchecked();
             m2 = op2Mantissa.AsInt32Unchecked();
-            if (Int32.MinValue + m2 <= m1) {
+            if (Int32.MinValue + m2 <= m1 && m1 >= m2) {
               m1 -= m2;
+              result = m1;
               retval = this.helper.CreateNewWithFlags(
                 EInteger.FromInt32(m1),
                 resultExponent,
                 0);
               haveRetval = true;
             }
-          } else if (ediff <= 9 && radix == 10) {
-            int power = ValueTenPowers[ediff];
-            int maxoverflow = OverflowMaxes[ediff];
-            if (expcmp > 0) {
-              m1 = op1Mantissa.AsInt32Unchecked();
-              m2 = op2Mantissa.AsInt32Unchecked();
-              if (m1 == 0) {
-                retval = other;
-              } else if (m1 <= maxoverflow) {
-                m1 *= power;
-                if (Int32.MinValue + m2 <= m1) {
-                  m1 -= m2;
-                  retval = this.helper.CreateNewWithFlags(
-                    EInteger.FromInt32(m1),
-                    resultExponent,
-                    0);
-                  haveRetval = true;
-                }
-              }
-            } else {
-              m1 = op1Mantissa.AsInt32Unchecked();
-              m2 = op2Mantissa.AsInt32Unchecked();
-              if (m2 == 0) {
-                retval = thisValue;
-              } if (m2 <= maxoverflow) {
-                m2 *= power;
-                if (Int32.MinValue + m1 <= m2) {
-                  m2 -= m1;
-                  retval = this.helper.CreateNewWithFlags(
-                    EInteger.FromInt32(m2),
-                    resultExponent,
-                    0);
-                  haveRetval = true;
-                }
-              }
-            }
-          } else if (ediff <= 30 && radix == 2) {
-            int mask = BitMasks[ediff];
-            if (expcmp > 0) {
-              m1 = op1Mantissa.AsInt32Unchecked();
-              m2 = op2Mantissa.AsInt32Unchecked();
-              if (m1 == 0) {
-                retval = other;
-              } else if ((m1 & mask) == m1) {
-                m1 <<= ediff;
-                if (Int32.MinValue + m2 <= m1) {
-                  m1 -= m2;
-                  retval = this.helper.CreateNewWithFlags(
-                    EInteger.FromInt32(m1),
-                    resultExponent,
-                    0);
-                  haveRetval = true;
-                }
-              }
-            } else {
-              m1 = op1Mantissa.AsInt32Unchecked();
-              m2 = op2Mantissa.AsInt32Unchecked();
-              if (m2 == 0) {
-                retval = thisValue;
-              } else if ((m2 & mask) == m2) {
-                m2 <<= ediff;
-                if (Int32.MinValue + m1 <= m2) {
-                  m2 -= m1;
-                  retval = this.helper.CreateNewWithFlags(
-                    EInteger.FromInt32(m2),
-                    resultExponent,
-                    0);
-                  haveRetval = true;
-                }
-              }
-            }
           }
         }
-        if (haveRetval) {
+        if (haveRetval && result != 0) {
           if (!IsNullOrSimpleContext(ctx)) {
             retval = this.RoundToPrecision(retval, ctx);
           }
@@ -623,8 +555,8 @@ bool roundToOperandPrecision) {
         }
       }
 
-      //DebugUtility.Log("exp=" + (// expcmp) + "/" + 0 + ",res=" + 0 + ",["
-      // + op1Mantissa + "," + op1Exponent + "],[" + (//op2Mantissa) + "," +
+      //DebugUtility.Log("exp=" + expcmp + "/" + 0 + ",res=" + 0 + ",["
+      // + op1Mantissa + "," + op1Exponent + "],[" + op2Mantissa + "," +
       // op2Exponent + "]");
       if (expcmp == 0) {
         retval = this.AddCore(

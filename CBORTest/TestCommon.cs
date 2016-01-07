@@ -110,6 +110,17 @@ String.Empty + o + " and " + o2 + " don't have equal hash codes");
       }
     }
 
+    public static void CompareTestEqual<T>(T o1, T o2, string msg) where T :
+        IComparable<T> {
+      if (CompareTestReciprocal(o1, o2) != 0) {
+        string str = msg + "\r\n" + ObjectMessages(
+          o1,
+          o2,
+          "Not equal: " + CompareTestReciprocal(o1, o2));
+        Assert.Fail(str);
+      }
+    }
+
     public static void CompareTestEqualAndConsistent<T>(T o1, T o2) where T :
     IComparable<T> {
       CompareTestEqualAndConsistent(o1, o2, null);
