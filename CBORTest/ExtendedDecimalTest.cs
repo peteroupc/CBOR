@@ -178,7 +178,55 @@ Assert.AreEqual(1, numberTemp);
     }
     [Test]
     public void TestExp() {
-      // not implemented yet
+      {
+string stringTemp =
+  ExtendedDecimal.One.Exp(PrecisionContext.ForPrecision(25)).ToString();
+Assert.AreEqual(
+"2.718281828459045235360287",
+stringTemp);
+}
+      {
+string stringTemp =
+  ExtendedDecimal.One.Exp(PrecisionContext.ForPrecision(10)).ToString();
+Assert.AreEqual(
+"2.718281828",
+stringTemp);
+}
+      {
+string stringTemp =
+  ExtendedDecimal.One.Exp(PrecisionContext.ForPrecision(9)).ToString();
+Assert.AreEqual(
+"2.71828183",
+stringTemp);
+}
+      {
+string stringTemp =
+  ExtendedDecimal.One.Exp(PrecisionContext.ForPrecision(8)).ToString();
+Assert.AreEqual(
+"2.7182818",
+stringTemp);
+}
+      {
+string stringTemp =
+  ExtendedDecimal.One.Exp(PrecisionContext.ForPrecision(5)).ToString();
+Assert.AreEqual(
+"2.7183",
+stringTemp);
+}
+      {
+string stringTemp =
+  ExtendedDecimal.One.Exp(PrecisionContext.ForPrecision(3)).ToString();
+Assert.AreEqual(
+"2.72",
+stringTemp);
+}
+      {
+string stringTemp =
+  ExtendedDecimal.One.Exp(PrecisionContext.ForPrecision(1)).ToString();
+Assert.AreEqual(
+"3",
+stringTemp);
+}
     }
     [Test]
     public void TestExponent() {
@@ -1510,6 +1558,17 @@ null);
     public void TestNextToward() {
       // not implemented yet
     }
+    [Test]
+    public void TestZero() {
+      Assert.AreEqual(ExtendedDecimal.Zero, ExtendedDecimal.FromInt32(0));
+      if (0.0 != ExtendedDecimal.Zero.ToSingle()) {
+        Assert.Fail("Failed " + ExtendedDecimal.Zero.ToSingle());
+      }
+      if (0.0 != ExtendedDecimal.Zero.ToDouble()) {
+        Assert.Fail("Failed " + ExtendedDecimal.Zero.ToDouble());
+      }
+    }
+
     [Test]
     public void TestPI() {
       ExtendedDecimal pi = ExtendedDecimal.PI(PrecisionContext.ForPrecision(3));
