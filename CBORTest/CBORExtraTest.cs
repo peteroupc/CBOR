@@ -47,7 +47,7 @@ namespace Test {
         for (int j = 0; j < 8; ++j) {
           decimal d = RandomDecimal(rand, i);
           CBORObject obj = CBORObject.FromObject(d);
-          TestCommon.AssertRoundTrip(obj);
+          CBORTestCommon.AssertRoundTrip(obj);
           Assert.AreEqual(d, obj.AsDecimal());
         }
       }
@@ -128,7 +128,7 @@ Console.Write(String.Empty);
     [Test]
     public void TestSByte() {
       for (int i = SByte.MinValue; i <= SByte.MaxValue; ++i) {
-        TestCommon.AssertSer(
+        CBORTestCommon.AssertSer(
           CBORObject.FromObject((sbyte)i),
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
       }
@@ -218,7 +218,7 @@ Console.Write(String.Empty);
           "b",
           stringTemp);
       }
-      TestCommon.AssertRoundTrip(obj);
+      CBORTestCommon.AssertRoundTrip(obj);
       obj = CBORObject.FromObject(new { A = "c", B = "b" });
       {
         string stringTemp = obj["a"].AsString();
@@ -232,7 +232,7 @@ Console.Write(String.Empty);
           "b",
           stringTemp);
       }
-      TestCommon.AssertRoundTrip(obj);
+      CBORTestCommon.AssertRoundTrip(obj);
       obj = CBORObject.FromObject(RangeExclusive(0, 10));
       Assert.AreEqual(10, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
@@ -241,7 +241,7 @@ Console.Write(String.Empty);
       Assert.AreEqual(10, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(1, obj[1].AsInt32());
-      TestCommon.AssertRoundTrip(obj);
+      CBORTestCommon.AssertRoundTrip(obj);
       // Select all even numbers
       var query =
 from i in RangeExclusive(0, 10)
@@ -251,7 +251,7 @@ select i;
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0].AsInt32());
       Assert.AreEqual(2, obj[1].AsInt32());
-      TestCommon.AssertRoundTrip(obj);
+      CBORTestCommon.AssertRoundTrip(obj);
       // Select all even numbers
       var query2 =
 from i in RangeExclusive(0, 10)
@@ -261,7 +261,7 @@ select new { A = i, B = i + 1 };
       Assert.AreEqual(5, obj.Count);
       Assert.AreEqual(0, obj[0]["a"].AsInt32());
       Assert.AreEqual(3, obj[1]["b"].AsInt32());
-      TestCommon.AssertRoundTrip(obj);
+      CBORTestCommon.AssertRoundTrip(obj);
     }
 
     private static string DateTimeToString(DateTime bi) {
@@ -4654,7 +4654,7 @@ Console.Write(String.Empty);
       for (var i = 0; i < ranges.Length; i += 2) {
         ulong j = ranges[i];
         while (true) {
-          TestCommon.AssertSer(
+          CBORTestCommon.AssertSer(
             CBORObject.FromObject(j),
             String.Format(CultureInfo.InvariantCulture, "{0}", j));
           if (j == ranges[i + 1]) {
@@ -4711,7 +4711,7 @@ Assert.AreEqual(
 "[[[0,0],[0,0],[0,0]],[[0,0],[0,0],[0,0]]]",
 stringTemp);
 }
-      TestCommon.AssertRoundTrip(cbor);
+      CBORTestCommon.AssertRoundTrip(cbor);
     }
 
     [Test]
@@ -4743,7 +4743,7 @@ stringTemp);
       for (var i = 0; i < ranges.Length; i += 2) {
         uint j = ranges[i];
         while (true) {
-          TestCommon.AssertSer(
+          CBORTestCommon.AssertSer(
             CBORObject.FromObject(j),
             String.Format(CultureInfo.InvariantCulture, "{0}", j));
           Assert.AreEqual(
@@ -4759,14 +4759,14 @@ stringTemp);
 
     [Test]
     public void TestDecimal() {
-      TestCommon.AssertSer(
+      CBORTestCommon.AssertSer(
         CBORObject.FromObject(Decimal.MinValue),
         String.Format(CultureInfo.InvariantCulture, "{0}", Decimal.MinValue));
-      TestCommon.AssertSer(
+      CBORTestCommon.AssertSer(
         CBORObject.FromObject(Decimal.MaxValue),
         String.Format(CultureInfo.InvariantCulture, "{0}", Decimal.MaxValue));
       for (int i = -100; i <= 100; ++i) {
-        TestCommon.AssertSer(
+        CBORTestCommon.AssertSer(
           CBORObject.FromObject((decimal)i),
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
         {
@@ -4775,9 +4775,9 @@ string objectTemp2 = String.Format(
   CultureInfo.InvariantCulture,
   "{0}",
   (decimal)i + 0.1m);
-TestCommon.AssertSer(objectTemp, objectTemp2);
+CBORTestCommon.AssertSer(objectTemp, objectTemp2);
 }
-        TestCommon.AssertSer(
+        CBORTestCommon.AssertSer(
           CBORObject.FromObject((decimal)i + 0.1111m),
      String.Format(CultureInfo.InvariantCulture, "{0}", (decimal)i + 0.1111m));
       }
@@ -4786,7 +4786,7 @@ TestCommon.AssertSer(objectTemp, objectTemp2);
     [Test]
     public void TestUShort() {
       for (int i = UInt16.MinValue; i <= UInt16.MaxValue; ++i) {
-        TestCommon.AssertSer(
+        CBORTestCommon.AssertSer(
           CBORObject.FromObject((UInt16)i),
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
       }
@@ -4864,10 +4864,10 @@ Console.Write(String.Empty);
         DateTime j = ranges[i];
         while (true) {
           DateTime j2 = j.AddMilliseconds(200);
-          TestCommon.AssertSer(
+          CBORTestCommon.AssertSer(
             CBORObject.FromObject(j),
             "0(\"" + DateTimeToString(j) + "\")");
-          TestCommon.AssertSer(
+          CBORTestCommon.AssertSer(
             CBORObject.FromObject(j2),
             "0(\"" + DateTimeToString(j2) + "\")");
           if (j >= ranges[i + 1]) {

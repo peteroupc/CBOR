@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{8FE63143-541E-448D-8337-A98D1FA51541}</ProjectGuid>
@@ -92,30 +92,23 @@
     <Compile Include="AppResources.cs" />
     <Compile Include="BEncoding.cs" />
     <Compile Include="BEncodingTest.cs" />
-    <Compile Include="BigIntegerTest.cs" />
     <Compile Include="CBORDataUtilitiesTest.cs" />
     <Compile Include="CBORExceptionTest.cs" />
     <Compile Include="CBORExtraTest.cs" />
     <Compile Include="CBORObjectTest.cs" />
     <Compile Include="CBORSupplementTest.cs" />
     <Compile Include="CBORTest.cs" />
+    <Compile Include="CBORTestCommon.cs" />
     <Compile Include="CBORTypeFilterTest.cs" />
     <Compile Include="DataUtilitiesTest.cs" />
-    <Compile Include="DecimalTest.cs" />
-    <Compile Include="ExtendedDecimalTest.cs" />
-    <Compile Include="ExtendedFloatTest.cs" />
-    <Compile Include="ExtendedRationalTest.cs" />
-    <Compile Include="ExtensiveTest.cs" />
     <Compile Include="FastRandom.cs" />
     <Compile Include="MiniCBOR.cs" />
-    <Compile Include="PrecisionContextTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomObjects.cs" />
     <Compile Include="Reflect.cs" />
     <Compile Include="Runner.cs" />
     <Compile Include="StringAndBigInt.cs" />
     <Compile Include="TestCommon.cs" />
-    <Compile Include="TrapExceptionTest.cs" />
     <Compile Include="URIUtilityTest.cs" />
   </ItemGroup>
   <ItemGroup>

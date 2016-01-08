@@ -9,7 +9,7 @@ namespace Test {
     private void AssertNegative(CBORObject obj) {
       ExtendedDecimal ed = obj.AsExtendedDecimal();
       Assert.IsTrue(ed.IsNegative);
-      TestCommon.AssertRoundTrip(obj);
+      CBORTestCommon.AssertRoundTrip(obj);
     }
     [Test]
     public void TestPreserveNegativeZero() {
@@ -328,7 +328,7 @@ false) != null) {
  Assert.Fail();
  }
       CBORObject cbor = CBORDataUtilities.ParseJSONNumber("2e-2147483648");
-      TestCommon.AssertSer(cbor, "2E-2147483648");
+      CBORTestCommon.AssertSer(cbor, "2E-2147483648");
     if (
 CBORDataUtilities.ParseJSONNumber(
 "0.5e+xyz",
@@ -407,7 +407,7 @@ false,
 false);
       Assert.IsTrue(cbor != null);
       Assert.IsFalse(cbor.CanFitInDouble());
-      TestCommon.AssertRoundTrip(cbor);
+      CBORTestCommon.AssertRoundTrip(cbor);
     }
   }
 }
