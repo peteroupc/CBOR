@@ -59,7 +59,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DocumentationFile>bin\Release\CBOR.xml</DocumentationFile>
-    <CodeAnalysisRuleSet>CBORTest\CBOR.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>CBOR.ruleset</CodeAnalysisRuleSet>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>

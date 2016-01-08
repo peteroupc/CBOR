@@ -1,16 +1,13 @@
 /*
-Written in 2013 by Peter O.
+Written in 2013-2016 by Peter O.
 Any copyright is dedicated to the Public Domain.
 http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using System.Collections.Generic;
 using System.Text;
 using NUnit.Framework;
-using PeterO;
-using PeterO.Cbor;
 
 namespace Test {
   public static class TestCommon {
@@ -56,26 +53,6 @@ String.Empty + o + " and " + o2 + " don't have equal hash codes");
           throw new InvalidOperationException(String.Empty, ex);
         }
       }
-    }
-
-    public static void AssertRoundTrip(CBORObject o) {
-      CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      CompareTestEqual(o, o2);
-      TestNumber(o);
-      AssertEqualsHashCode(o, o2);
-    }
-
-    public static void AssertSer(CBORObject o, String s) {
-      if (!s.Equals(o.ToString())) {
-        Assert.AreEqual(s, o.ToString(), "o is not equal to s");
-      }
-      // Test round-tripping
-      CBORObject o2 = FromBytesTestAB(o.EncodeToBytes());
-      if (!s.Equals(o2.ToString())) {
-        Assert.AreEqual(s, o2.ToString(), "o2 is not equal to s");
-      }
-      TestNumber(o);
-      AssertEqualsHashCode(o, o2);
     }
 
     public static void CompareTestConsistency<T>(T o1, T o2, T o3) where T :
@@ -228,15 +205,6 @@ string msg) where T :
         }
       }
     }
-    // Tests the equivalence of the FromBytes and Read methods.
-    public static CBORObject FromBytesTestAB(byte[] b) {
-      CBORObject oa = FromBytesA(b);
-      CBORObject ob = FromBytesB(b);
-      if (!oa.Equals(ob)) {
-        Assert.AreEqual(oa, ob);
-      }
-      return oa;
-    }
 
     public static string IntToString(int value) {
       if (value == Int32.MinValue) {
@@ -321,24 +289,7 @@ string msg) where T :
       object o1,
       object o2,
       String s) {
-      var co1 = o1 as CBORObject;
-      var co2 = o2 as CBORObject;
-      return (co1 != null) ? TestCommon.ObjectMessages(co1, co2, s) : (s +
-        ":\n" + o1 + " and\n" + o2);
-    }
-
-    public static string ObjectMessages(
-      CBORObject o1,
-      CBORObject o2,
-      String s) {
-      if (o1.Type == CBORType.Number && o2.Type == CBORType.Number) {
-        return s + ":\n" + o1 + " and\n" + o2 + "\nOR\n" +
-          o1.AsExtendedDecimal() + " and\n" + o2.AsExtendedDecimal() +
-       "\nOR\n" + "AddSubCompare(" + TestCommon.ToByteArrayString(o1) + ",\n" +
-          TestCommon.ToByteArrayString(o2) + ");";
-      }
-      return s + ":\n" + o1 + " and\n" + o2 + "\nOR\n" +
-TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2);
+      return s + ":\n" + o1 + " and\n" + o2;
     }
 
     public static string ObjectMessages(
@@ -346,21 +297,7 @@ TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2);
       object o2,
       object o3,
       String s) {
-      var co1 = o1 as CBORObject;
-      var co2 = o2 as CBORObject;
-      var co3 = o3 as CBORObject;
-      return (co1 != null) ? TestCommon.ObjectMessages(co1, co2, co3, s) :
-        (s + ":\n" + o1 + " and\n" + o2 + " and\n" + o3);
-    }
-
-    public static string ObjectMessages(
-      CBORObject o1,
-      CBORObject o2,
-      CBORObject o3,
-      String s) {
-      return s + ":\n" + o1 + " and\n" + o2 + " and\n" + o3 + "\nOR\n" +
-TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2) +
- " and\n" + TestCommon.ToByteArrayString(o3);
+      return s + ":\n" + o1 + " and\n" + o2 + " and\n" + o3;
     }
 
     public static String Repeat(char c, int num) {
@@ -377,85 +314,6 @@ TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2) +
         sb.Append(c);
       }
       return sb.ToString();
-    }
-
-    public static void TestNumber(CBORObject o) {
-      if (o.Type != CBORType.Number) {
-        return;
-      }
-      if (o.IsPositiveInfinity() || o.IsNegativeInfinity() ||
-          o.IsNaN()) {
-        try {
-          o.AsByte();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-          Console.Write(String.Empty);
-        } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsInt16();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-          Console.Write(String.Empty);
-        } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsInt32();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-          Console.Write(String.Empty);
-        } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsInt64();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-          Console.Write(String.Empty);
-        } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsSingle();
-        } catch (Exception ex) {
-          Assert.Fail(ex.ToString());
-          throw new InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsDouble();
-        } catch (Exception ex) {
-          Assert.Fail(ex.ToString());
-          throw new InvalidOperationException(String.Empty, ex);
-        }
-        try {
-          o.AsBigInteger();
-          Assert.Fail("Should have failed");
-        } catch (OverflowException) {
-          Console.Write(String.Empty);
-        } catch (Exception ex) {
-          Assert.Fail("Object: " + o + ", " + ex); throw new
-            InvalidOperationException(String.Empty, ex);
-        }
-        return;
-      }
-      try {
-        o.AsSingle();
-      } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex); throw new
-          InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        o.AsDouble();
-      } catch (Exception ex) {
-        Assert.Fail("Object: " + o + ", " + ex); throw new
-          InvalidOperationException(String.Empty, ex);
-      }
     }
 
     public static string ToByteArrayString(byte[] bytes) {
@@ -480,13 +338,6 @@ TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2) +
       return sb.ToString();
     }
 
-    public static string ToByteArrayString(CBORObject obj) {
-      return new System.Text.StringBuilder()
-        .Append("CBORObject.DecodeFromBytes(")
-           .Append(ToByteArrayString(obj.EncodeToBytes()))
-           .Append(")").ToString();
-    }
-
     private static bool ByteArraysEqual(byte[] arr1, byte[] arr2) {
       if (arr1 == null) {
         return arr2 == null;
@@ -503,20 +354,6 @@ TestCommon.ToByteArrayString(o1) + " and\n" + TestCommon.ToByteArrayString(o2) +
         }
       }
       return true;
-    }
-
-    private static CBORObject FromBytesA(byte[] b) {
-      return CBORObject.DecodeFromBytes(b);
-    }
-
-    private static CBORObject FromBytesB(byte[] b) {
-      using (var ms = new System.IO.MemoryStream(b)) {
-        CBORObject o = CBORObject.Read(ms);
-        if (ms.Position != ms.Length) {
-          throw new CBORException("not at EOF");
-        }
-        return o;
-      }
     }
 
     private static void ReverseChars(char[] chars, int offset, int length) {
