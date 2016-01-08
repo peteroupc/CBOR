@@ -92,6 +92,27 @@ return this.Er.ToString();
       this.er = er;
     }
 
+
+    private ExtendedRational Simplify() {
+      // TODO: Don't simplify automatically in version 3.0
+      if (this.IsFinite) {
+        BigInteger num = BigInteger.Abs(this.Numerator);
+        BigInteger den = BigInteger.Abs(this.Denominator);
+        bool neg = this.IsNegative;
+        int lowBit = num.getLowBit();
+        lowBit = Math.Min(lowBit, den.getLowBit());
+        if (lowBit > 0) {
+          num >>= lowBit;
+          den >>= lowBit;
+          if (neg) {
+            num = -num;
+          }
+          return Create(num, den);
+        }
+      }
+      return this;
+    }
+
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.FromBigInteger(PeterO.BigInteger)"]/*'/>
     public static ExtendedRational FromBigInteger(BigInteger bigint) {
@@ -370,7 +391,7 @@ return this.Er.IsSignalingNaN();
   if (otherValue == null) {
   throw new ArgumentNullException("otherValue");
 }
-return new ExtendedRational(this.Er.Add(otherValue.Er));
+return new ExtendedRational(this.Er.Add(otherValue.Er)).Simplify();
 }
 
     /// <include file='../docs.xml'
@@ -379,7 +400,7 @@ return new ExtendedRational(this.Er.Add(otherValue.Er));
   if (otherValue == null) {
   throw new ArgumentNullException("otherValue");
 }
-return new ExtendedRational(this.Er.Subtract(otherValue.Er));
+return new ExtendedRational(this.Er.Subtract(otherValue.Er)).Simplify();
 }
 
     /// <include file='../docs.xml'
@@ -388,7 +409,7 @@ return new ExtendedRational(this.Er.Subtract(otherValue.Er));
   if (otherValue == null) {
   throw new ArgumentNullException("otherValue");
 }
-return new ExtendedRational(this.Er.Multiply(otherValue.Er));
+return new ExtendedRational(this.Er.Multiply(otherValue.Er)).Simplify();
 }
 
     /// <include file='../docs.xml'
@@ -397,7 +418,7 @@ return new ExtendedRational(this.Er.Multiply(otherValue.Er));
   if (otherValue == null) {
   throw new ArgumentNullException("otherValue");
 }
-return new ExtendedRational(this.Er.Divide(otherValue.Er));
+return new ExtendedRational(this.Er.Divide(otherValue.Er)).Simplify();
 }
 
     /// <include file='../docs.xml'
@@ -406,7 +427,7 @@ return new ExtendedRational(this.Er.Divide(otherValue.Er));
   if (otherValue == null) {
   throw new ArgumentNullException("otherValue");
 }
-return new ExtendedRational(this.Er.Remainder(otherValue.Er));
+return new ExtendedRational(this.Er.Remainder(otherValue.Er)).Simplify();
 }
 
     /// <include file='../docs.xml'
