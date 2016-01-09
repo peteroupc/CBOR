@@ -6,7 +6,6 @@ coverage/
 Help/
 .vs/
 *.user
-*.nupkg
 *.versionsBackup
 *.sdsettings
 *.vspx
