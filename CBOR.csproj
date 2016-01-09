@@ -122,27 +122,6 @@
     <Compile Include="PeterO\ExtendedDecimal.cs" />
     <Compile Include="PeterO\ExtendedFloat.cs" />
     <Compile Include="PeterO\ExtendedRational.cs" />
-    <Compile Include="PeterO\Numbers\EInteger.cs" />
-    <Compile Include="PeterO\Numbers\EIntegerExtra.cs" />
-    <Compile Include="PeterO\Numbers\BigNumberFlags.cs" />
-    <Compile Include="PeterO\Numbers\BitShiftAccumulator.cs" />
-    <Compile Include="PeterO\Numbers\DecimalUtility.cs" />
-    <Compile Include="PeterO\Numbers\DigitShiftAccumulator.cs" />
-    <Compile Include="PeterO\Numbers\EDecimal.cs" />
-    <Compile Include="PeterO\Numbers\EFloat.cs" />
-    <Compile Include="PeterO\Numbers\ExtendedOrSimpleRadixMath.cs" />
-    <Compile Include="PeterO\Numbers\ERational.cs" />
-    <Compile Include="PeterO\Numbers\Extras.cs" />
-    <Compile Include="PeterO\Numbers\FastInteger.cs" />
-    <Compile Include="PeterO\Numbers\IRadixMath.cs" />
-    <Compile Include="PeterO\Numbers\IRadixMathHelper.cs" />
-    <Compile Include="PeterO\Numbers\IShiftAccumulator.cs" />
-    <Compile Include="PeterO\Numbers\EContext.cs" />
-    <Compile Include="PeterO\Numbers\RadixMath.cs" />
-    <Compile Include="PeterO\Numbers\ERounding.cs" />
-    <Compile Include="PeterO\Numbers\SimpleRadixMath.cs" />
-    <Compile Include="PeterO\Numbers\ETrapException.cs" />
-    <Compile Include="PeterO\Numbers\TrappableRadixMath.cs" />
     <Compile Include="PeterO\PrecisionContext.cs" />
     <Compile Include="PeterO\Rounding.cs" />
     <Compile Include="PeterO\TrapException.cs" />
@@ -151,6 +130,12 @@
   <ItemGroup>
     <None Include="CBOR.ruleset" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Numbers, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\PeterO.Numbers.0.1.0\lib\portable-net40+sl50+win+wpa81+wp80\Numbers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!--

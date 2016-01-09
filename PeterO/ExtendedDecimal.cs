@@ -172,7 +172,7 @@ ctx == null ? null : ctx.Ec));
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.ToBigInteger"]/*'/>
     public BigInteger ToBigInteger() {
-      return new BigInteger(this.Ed.ToBigInteger());
+      return new BigInteger(this.Ed.ToEInteger());
     }
 
     internal static ERounding ToERounding(Rounding r) {
@@ -236,7 +236,7 @@ ctx == null ? null : ctx.Ec));
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.ToBigIntegerExact"]/*'/>
     public BigInteger ToBigIntegerExact() {
-      return new BigInteger(this.Ed.ToBigIntegerExact());
+      return new BigInteger(this.Ed.ToEIntegerExact());
     }
 
     private static readonly BigInteger ValueOneShift62 = BigInteger.One << 62;
@@ -271,7 +271,7 @@ ctx == null ? null : ctx.Ec));
       if (bigint == null) {
         throw new ArgumentNullException("bigint");
       }
-      return new ExtendedDecimal(EDecimal.FromBigInteger(bigint.Ei));
+      return new ExtendedDecimal(EDecimal.FromEInteger(bigint.Ei));
     }
 
     /// <include file='../docs.xml'

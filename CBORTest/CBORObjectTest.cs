@@ -1259,8 +1259,10 @@ cbornumber.AsSingle());
         // Try a random double with a given
         // exponent
         Assert.IsTrue(
-CBORObject.FromObject(RandomObjects.RandomDouble(rand,
-          i)).CanFitInDouble());
+CBORObject.FromObject(
+RandomObjects.RandomDouble(
+rand,
+i)).CanFitInDouble());
       }
     }
     [Test]
@@ -1343,8 +1345,10 @@ CBORObject.FromObject(RandomObjects.RandomDouble(rand,
         // Try a random float with a given
         // exponent
         Assert.IsTrue(
-CBORObject.FromObject(RandomObjects.RandomSingle(rand,
-          i)).CanFitInSingle());
+CBORObject.FromObject(
+RandomObjects.RandomSingle(
+rand,
+i)).CanFitInSingle());
       }
     }
     [Test]

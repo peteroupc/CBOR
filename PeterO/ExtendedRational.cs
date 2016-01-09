@@ -92,7 +92,6 @@ return this.Er.ToString();
       this.er = er;
     }
 
-
     private ExtendedRational Simplify() {
       // TODO: Don't simplify automatically in version 3.0
       if (this.IsFinite) {
@@ -116,7 +115,7 @@ return this.Er.ToString();
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.FromBigInteger(PeterO.BigInteger)"]/*'/>
     public static ExtendedRational FromBigInteger(BigInteger bigint) {
-      return new ExtendedRational(ERational.FromBigInteger(bigint.Ei));
+      return new ExtendedRational(ERational.FromEInteger(bigint.Ei));
  }
 
     /// <include file='../docs.xml'
@@ -221,13 +220,13 @@ return this.Er.IsFinite;
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.ToBigInteger"]/*'/>
     public BigInteger ToBigInteger() {
-return new BigInteger(this.Er.ToBigInteger());
+return new BigInteger(this.Er.ToEInteger());
 }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.ToBigIntegerExact"]/*'/>
     public BigInteger ToBigIntegerExact() {
-return new BigInteger(this.Er.ToBigIntegerExact());
+return new BigInteger(this.Er.ToEIntegerExact());
 }
 
     /// <include file='../docs.xml'

@@ -171,13 +171,13 @@ ctx == null ? null : ctx.Ec));
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.ToBigInteger"]/*'/>
     public BigInteger ToBigInteger() {
-      return new BigInteger(this.Ef.ToBigInteger());
+      return new BigInteger(this.Ef.ToEInteger());
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.ToBigIntegerExact"]/*'/>
     public BigInteger ToBigIntegerExact() {
-      return new BigInteger(this.Ef.ToBigIntegerExact());
+      return new BigInteger(this.Ef.ToEIntegerExact());
     }
 
     /// <include file='../docs.xml'
@@ -204,7 +204,7 @@ ctx == null ? null : ctx.Ec));
       if (bigint == null) {
         throw new ArgumentNullException("bigint");
       }
-      return new ExtendedFloat(EFloat.FromBigInteger(bigint.Ei));
+      return new ExtendedFloat(EFloat.FromEInteger(bigint.Ei));
     }
 
     /// <include file='../docs.xml'
