@@ -158,7 +158,7 @@ BigInteger otherValue) {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.BigInteger.IsPowerOfTwo"]/*'/>
     public bool IsPowerOfTwo { get {
-        return this.Ei.IsPowerOfTwo;
+        return this.Ei.Abs().IsPowerOfTwo;
 } }
 
     /// <include file='../docs.xml'

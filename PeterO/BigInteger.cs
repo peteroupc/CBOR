@@ -120,7 +120,7 @@ endIndex));
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.fromString(System.String)"]/*'/>
     public static BigInteger fromString(string str) {
-return new BigInteger(EInteger.fromString(str));
+return new BigInteger(EInteger.FromString(str));
 }
 
     /// <include file='../docs.xml'
@@ -156,7 +156,7 @@ return new BigInteger(this.Ei.Add(bigintAugend.Ei));
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.bitLength"]/*'/>
     public int bitLength() {
-return this.Ei.bitLength();
+return this.Ei.GetSignedBitLength();
  }
 
     /// <include file='../docs.xml'
@@ -204,13 +204,13 @@ return this.Ei.CanFitInInt32();
   if (bigintSecond == null) {
   throw new ArgumentNullException("bigintSecond");
 }
-return new BigInteger(this.Ei.gcd(bigintSecond.Ei));
+return new BigInteger(this.Ei.Gcd(bigintSecond.Ei));
 }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.getDigitCount"]/*'/>
     public int getDigitCount() {
-      return this.Ei.getDigitCount();
+      return this.Ei.GetDigitCount();
  }
 
     /// <include file='../docs.xml'
@@ -222,7 +222,7 @@ return new BigInteger(this.Ei.gcd(bigintSecond.Ei));
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.getLowBit"]/*'/>
     public int getLowBit() {
-      return this.Ei.getLowBit();
+      return (this.IsZero) ? (0) : (this.Ei.GetLowBit());
  }
 
     /// <include file='../docs.xml'
@@ -284,7 +284,7 @@ return this.Ei.AsInt64Checked();
   if (divisor == null) {
   throw new ArgumentNullException("divisor");
 }
-return new BigInteger(this.Ei.mod(divisor.Ei));
+return new BigInteger(this.Ei.Mod(divisor.Ei));
 }
 
     /// <include file='../docs.xml'
@@ -317,7 +317,7 @@ return new BigInteger(this.Ei.ModPow(pow.Ei, mod.Ei));
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.pow(System.Int32)"]/*'/>
     public BigInteger pow(int powerSmall) {
-return new BigInteger(this.Ei.pow(powerSmall));
+return new BigInteger(this.Ei.Pow(powerSmall));
 }
 
     /// <include file='../docs.xml'
@@ -376,7 +376,7 @@ return new BigInteger(this.Ei.Remainder(divisor.Ei));
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.testBit(System.Int32)"]/*'/>
     public bool testBit(int index) {
-return this.Ei.testBit(index);
+return this.Ei.GetSignedBit(index);
 }
 
     /// <include file='../docs.xml'

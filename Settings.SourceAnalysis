@@ -27,11 +27,6 @@
             <BooleanProperty Name="Enabled">True</BooleanProperty>
           </RuleSettings>
         </Rule>
-        <Rule Name="ElementsMustBeDocumented">
-          <RuleSettings>
-            <BooleanProperty Name="Enabled">False</BooleanProperty>
-          </RuleSettings>
-        </Rule>
         <Rule Name="PartialElementsMustBeDocumented">
           <RuleSettings>
             <BooleanProperty Name="Enabled">False</BooleanProperty>
@@ -101,16 +96,6 @@
           </RuleSettings>
         </Rule>
         <Rule Name="UseBuiltInTypeAlias">
-          <RuleSettings>
-            <BooleanProperty Name="Enabled">False</BooleanProperty>
-          </RuleSettings>
-        </Rule>
-      </Rules>
-      <AnalyzerSettings />
-    </Analyzer>
-    <Analyzer AnalyzerId="StyleCop.CSharp.NamingRules">
-      <Rules>
-        <Rule Name="ElementMustBeginWithUpperCaseLetter">
           <RuleSettings>
             <BooleanProperty Name="Enabled">False</BooleanProperty>
           </RuleSettings>

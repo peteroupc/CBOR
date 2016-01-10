@@ -40,7 +40,7 @@ True if this value is even; otherwise, false.
 
     public bool IsPowerOfTwo { get; }
 
-Gets a value indicating whether this object's value is a power of two.
+Gets a value indicating whether this object's value is a power of two. (NOTE: This version allows negative numbers to be powers of two. In the EInteger version, only positive numbers will be considered powers of two.)
 
 <b>Returns:</b>
 

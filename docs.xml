@@ -87,7 +87,9 @@
 </doc>
 <doc name="P:PeterO.BigInteger.IsPowerOfTwo">
 <summary>Gets a value indicating whether this object&#x27;s value
-            is a power of two.</summary>
+            is a power of two. (NOTE: This version allows negative numbers
+            to be powers of two. In the EInteger version, only positive
+            numbers will be considered powers of two.)</summary>
             <value>True if this object&apos;s value is a power of two;
             otherwise, false.</value>
 </doc>
