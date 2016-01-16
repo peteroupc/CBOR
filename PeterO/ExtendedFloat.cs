@@ -393,13 +393,13 @@ ctx == null ? null : ctx.Ec));
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Abs"]/*'/>
     public ExtendedFloat Abs() {
-      return new ExtendedFloat(this.Ef.Abs());
+      return new ExtendedFloat(this.Ef.Abs(null));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Negate"]/*'/>
     public ExtendedFloat Negate() {
-      return new ExtendedFloat(this.Ef.Negate());
+      return new ExtendedFloat(this.Ef.Negate(null));
     }
 
     /// <include file='../docs.xml'
