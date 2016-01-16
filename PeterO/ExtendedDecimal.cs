@@ -455,13 +455,13 @@ ctx == null ? null : ctx.Ec));
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Abs"]/*'/>
     public ExtendedDecimal Abs() {
-      return new ExtendedDecimal(this.Ed.Abs());
+      return new ExtendedDecimal(this.Ed.Abs(null));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Negate"]/*'/>
     public ExtendedDecimal Negate() {
-      return new ExtendedDecimal(this.Ed.Negate());
+      return new ExtendedDecimal(this.Ed.Negate(null));
     }
 
     /// <include file='../docs.xml'
