@@ -7,7 +7,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 using System.Text;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
@@ -80,7 +80,7 @@ namespace PeterO.Cbor {
 System.Globalization.CultureInfo.InvariantCulture);
       // TODO: Use this version in version 3, and preserve
       // TODO: negative zeros in that version
-      // return ExtendedFloat.FromDouble(dbl).ToString();
+      // return EFloat.FromDouble(dbl).ToString();
     }
 
     public static string SingleToString(float sing) {
@@ -89,10 +89,10 @@ System.Globalization.CultureInfo.InvariantCulture);
 System.Globalization.CultureInfo.InvariantCulture);
       // TODO: Use this version in version 3, and preserve
       // TODO: negative zeros in that version
-      // return ExtendedFloat.FromSingle(dbl).ToString();
+      // return EFloat.FromSingle(dbl).ToString();
     }
 
-    public static BigInteger BigIntegerFromSingle(float flt) {
+    public static EInteger BigIntegerFromSingle(float flt) {
       int value = BitConverter.ToInt32(BitConverter.GetBytes((float)flt), 0);
       var fpexponent = (int)((value >> 23) & 0xff);
       if (fpexponent == 255) {
@@ -105,7 +105,7 @@ System.Globalization.CultureInfo.InvariantCulture);
         mantissa |= 1 << 23;
       }
       if (mantissa == 0) {
-        return BigInteger.Zero;
+        return EInteger.Zero;
       }
       fpexponent -= 150;
       while ((mantissa & 1) == 0) {
@@ -117,14 +117,14 @@ System.Globalization.CultureInfo.InvariantCulture);
         if (neg) {
           mantissa = -mantissa;
         }
-        return (BigInteger)mantissa;
+        return (EInteger)mantissa;
       }
       if (fpexponent > 0) {
         // Value is an integer
-        var bigmantissa = (BigInteger)mantissa;
+        var bigmantissa = (EInteger)mantissa;
         bigmantissa <<= fpexponent;
         if (neg) {
-          bigmantissa = -(BigInteger)bigmantissa;
+          bigmantissa = -(EInteger)bigmantissa;
         }
         return bigmantissa;
       } else {
@@ -133,7 +133,7 @@ System.Globalization.CultureInfo.InvariantCulture);
         for (var i = 0; i < exp && mantissa != 0; ++i) {
           mantissa >>= 1;
         }
-        return (BigInteger)mantissa;
+        return (EInteger)mantissa;
       }
     }
 
@@ -196,11 +196,11 @@ System.Globalization.CultureInfo.InvariantCulture);
       return new String(chars, 0, count);
     }
 
-    public static string BigIntToString(BigInteger bigint) {
+    public static string BigIntToString(EInteger bigint) {
       return bigint.ToString();
     }
 
-    public static BigInteger BigIntegerFromDouble(double dbl) {
+    public static EInteger BigIntegerFromDouble(double dbl) {
       long lvalue = BitConverter.ToInt64(
 BitConverter.GetBytes((double)dbl),
 0);
@@ -228,7 +228,7 @@ BitConverter.GetBytes((double)dbl),
       }
       floatExponent -= 1075;
       var bytes = new byte[9];
-      BigInteger bigmantissa;
+      EInteger bigmantissa;
       bytes[0] = (byte)(value0 & 0xff);
       bytes[1] = (byte)((value0 >> 8) & 0xff);
       bytes[2] = (byte)((value0 >> 16) & 0xff);
@@ -238,7 +238,7 @@ BitConverter.GetBytes((double)dbl),
       bytes[6] = (byte)((value1 >> 16) & 0xff);
       bytes[7] = (byte)((value1 >> 24) & 0xff);
       bytes[8] = (byte)0;
-      bigmantissa = BigInteger.fromBytes(bytes, true);
+      bigmantissa = EInteger.FromBytes(bytes, true);
       if (floatExponent == 0) {
         if (neg) {
           bigmantissa = -bigmantissa;
@@ -249,7 +249,7 @@ BitConverter.GetBytes((double)dbl),
         // Value is an integer
         bigmantissa <<= floatExponent;
         if (neg) {
-          bigmantissa = -(BigInteger)bigmantissa;
+          bigmantissa = -(EInteger)bigmantissa;
         }
         return bigmantissa;
       } else {
@@ -257,7 +257,7 @@ BitConverter.GetBytes((double)dbl),
         int exp = -floatExponent;
         bigmantissa >>= exp;
         if (neg) {
-          bigmantissa = -(BigInteger)bigmantissa;
+          bigmantissa = -(EInteger)bigmantissa;
         }
         return bigmantissa;
       }

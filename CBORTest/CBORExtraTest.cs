@@ -70,7 +70,7 @@ Console.Write(String.Empty);
           InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedDecimal.PositiveInfinity).AsDecimal();
+        CBORObject.FromObject(CBORTestCommon.DecPosInf).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 Console.Write(String.Empty);
@@ -79,7 +79,7 @@ Console.Write(String.Empty);
           InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedDecimal.NegativeInfinity).AsDecimal();
+        CBORObject.FromObject(CBORTestCommon.DecNegInf).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 Console.Write(String.Empty);
@@ -106,7 +106,7 @@ Console.Write(String.Empty);
           InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedFloat.PositiveInfinity).AsDecimal();
+        CBORObject.FromObject(CBORTestCommon.FloatPosInf).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 Console.Write(String.Empty);
@@ -115,7 +115,7 @@ Console.Write(String.Empty);
           InvalidOperationException(String.Empty, ex);
       }
       try {
-        CBORObject.FromObject(ExtendedFloat.NegativeInfinity).AsDecimal();
+        CBORObject.FromObject(CBORTestCommon.FloatNegInf).AsDecimal();
         Assert.Fail("Should have failed");
       } catch (OverflowException) {
 Console.Write(String.Empty);
@@ -131,40 +131,6 @@ Console.Write(String.Empty);
         CBORTestCommon.AssertSer(
           CBORObject.FromObject((sbyte)i),
           String.Format(CultureInfo.InvariantCulture, "{0}", i));
-      }
-    }
-    [Test]
-    public void TestBigIntegerAbs() {
-      try {
- BigInteger.Abs(null);
-Assert.Fail("Should have failed");
-} catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
- Assert.Fail(ex.ToString());
-throw new InvalidOperationException(String.Empty, ex);
-}
-    }
-
-    [Test]
-    public void TestBigIntegerAnd() {
-      try {
-        BigInteger.And(BigInteger.Zero, null);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
-      }
-      try {
-        BigInteger.And(null, BigInteger.Zero);
-        Assert.Fail("Should have failed");
-      } catch (ArgumentNullException) {
-Console.Write(String.Empty);
-} catch (Exception ex) {
-        Assert.Fail(ex.ToString());
-        throw new InvalidOperationException(String.Empty, ex);
       }
     }
 

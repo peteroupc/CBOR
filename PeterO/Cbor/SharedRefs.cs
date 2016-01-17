@@ -7,7 +7,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 using System.Collections.Generic;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class SharedRefs {
@@ -36,11 +36,11 @@ namespace PeterO.Cbor {
       return this.sharedObjects[index];
     }
 
-    public CBORObject GetObject(BigInteger bigIndex) {
+    public CBORObject GetObject(EInteger bigIndex) {
       if (bigIndex.Sign < 0) {
         throw new CBORException("Unexpected index");
       }
-      if (!bigIndex.canFitInInt()) {
+      if (!bigIndex.CanFitInInt32()) {
         throw new CBORException("Index " + bigIndex +
                     " is bigger than supported ");
       }

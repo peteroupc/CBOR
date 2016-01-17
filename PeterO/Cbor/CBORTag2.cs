@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class CBORTag2 : ICBORTag
@@ -26,7 +26,7 @@ CBORObject objectWithTags) {
       if (!objectWithTags.IsTagged) {
         return newObject;
       }
-      BigInteger[] tags = objectWithTags.GetTags();
+      EInteger[] tags = objectWithTags.GetTagsEInteger();
       for (int i = tags.Length - 1; i >= 0; --i) {
         newObject = CBORObject.FromObjectAndTag(newObject, tags[i]);
       }
@@ -52,7 +52,7 @@ CBORObject objectWithTags) {
       }
       int neededLength = data.Length;
       byte[] bytes;
-      BigInteger bi;
+      EInteger bi;
       var extended = false;
       if (((data[0] >> 7) & 1) != 0) {
         // Increase the needed length
@@ -72,7 +72,7 @@ CBORObject objectWithTags) {
       if (extended) {
           bytes[bytes.Length - 1] = negative ? (byte)0xff : (byte)0;
       }
-      bi = BigInteger.fromBytes(bytes, true);
+      bi = EInteger.FromBytes(bytes, true);
       // NOTE: Here, any tags are discarded; when called from
       // the Read method, "o" will have no tags anyway (beyond tag 2),
       // and when called from FromObjectAndTag, we prefer

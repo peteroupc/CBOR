@@ -7,7 +7,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 using System.Collections.Generic;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
@@ -90,11 +90,11 @@ namespace PeterO.Cbor {
         CBORObject.FromObject(ret.GetByteString()) : ret;
     }
 
-    public CBORObject GetString(BigInteger bigIndex) {
+    public CBORObject GetString(EInteger bigIndex) {
       if (bigIndex.Sign < 0) {
         throw new CBORException("Unexpected index");
       }
-      if (!bigIndex.canFitInInt()) {
+      if (!bigIndex.CanFitInInt32()) {
     throw new CBORException("Index " + bigIndex +
           " is bigger than supported ");
       }

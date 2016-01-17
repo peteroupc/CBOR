@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class CBORTag5 : ICBORTag
@@ -52,9 +52,9 @@ CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
       if (!o[1].IsIntegral) {
         throw new CBORException("Mantissa is not an integer");
       }
-      BigInteger exponent = o[0].AsBigInteger();
-      BigInteger mantissa = o[1].AsBigInteger();
-      if (exponent.bitLength() > 64 && !extended) {
+      EInteger exponent = o[0].AsEInteger();
+      EInteger mantissa = o[1].AsEInteger();
+      if (exponent.GetSignedBitLength() > 64 && !extended) {
         throw new CBORException("Exponent is too big");
       }
       if (exponent.IsZero) {
@@ -63,8 +63,8 @@ CBORTypeFilter.UnsignedInteger.WithNegativeInteger().WithTags(2, 3));
       }
       // NOTE: Discards tags. See comment in CBORTag2.
       return isDecimal ?
-      CBORObject.FromObject(ExtendedDecimal.Create(mantissa, exponent)) :
-      CBORObject.FromObject(ExtendedFloat.Create(mantissa, exponent));
+      CBORObject.FromObject(EDecimal.Create(mantissa, exponent)) :
+      CBORObject.FromObject(EFloat.Create(mantissa, exponent));
     }
 
     public CBORObject ValidateObject(CBORObject obj) {

@@ -8,7 +8,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal static class PropertyMap {
@@ -155,7 +155,7 @@ CBORObject obj) {
         data[6] = (byte)((uvalue >> 48) & 0xff);
         data[7] = (byte)((uvalue >> 56) & 0xff);
         data[8] = (byte)0;
-        return BigInteger.fromBytes(data, true);
+        return new BigInteger(EInteger.FromBytes(data, true));
       }
       return t.Equals(typeof(long)) ? Convert.ToInt64(value) :
       (t.Equals(typeof(uint)) ? Convert.ToInt64(value) :

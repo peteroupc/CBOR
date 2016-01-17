@@ -6,75 +6,75 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class CBORExtendedFloat : ICBORNumber
   {
     public bool IsPositiveInfinity(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       return ef.IsPositiveInfinity();
     }
 
     public bool IsInfinity(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       return ef.IsInfinity();
     }
 
     public bool IsNegativeInfinity(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       return ef.IsNegativeInfinity();
     }
 
     public bool IsNaN(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       return ef.IsNaN();
     }
 
     public double AsDouble(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       return ef.ToDouble();
     }
 
-    public ExtendedDecimal AsExtendedDecimal(object obj) {
-      var ef = (ExtendedFloat)obj;
+    public EDecimal AsExtendedDecimal(object obj) {
+      var ef = (EFloat)obj;
       return ef.ToExtendedDecimal();
     }
 
-    public ExtendedFloat AsExtendedFloat(object obj) {
-      var ef = (ExtendedFloat)obj;
+    public EFloat AsExtendedFloat(object obj) {
+      var ef = (EFloat)obj;
       return ef;
     }
 
     public float AsSingle(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       return ef.ToSingle();
     }
 
-    public BigInteger AsBigInteger(object obj) {
-      var ef = (ExtendedFloat)obj;
-      return ef.ToBigInteger();
+    public EInteger AsBigInteger(object obj) {
+      var ef = (EFloat)obj;
+      return ef.ToEInteger();
     }
 
     public long AsInt64(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       if (this.CanTruncatedIntFitInInt64(obj)) {
-        BigInteger bi = ef.ToBigInteger();
+        EInteger bi = ef.ToEInteger();
         return (long)bi;
       }
       throw new OverflowException("This object's value is out of range");
     }
 
     public bool CanFitInSingle(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       return (!ef.IsFinite) ||
-      (ef.CompareTo(ExtendedFloat.FromSingle(ef.ToSingle())) == 0);
+      (ef.CompareTo(EFloat.FromSingle(ef.ToSingle())) == 0);
     }
 
     public bool CanFitInDouble(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       return (!ef.IsFinite) ||
-      (ef.CompareTo(ExtendedFloat.FromDouble(ef.ToDouble())) == 0);
+      (ef.CompareTo(EFloat.FromDouble(ef.ToDouble())) == 0);
     }
 
     public bool CanFitInInt32(object obj) {
@@ -86,61 +86,61 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt64(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       if (!ef.IsFinite) {
         return false;
       }
       if (ef.IsZero) {
         return true;
       }
-      if (ef.Exponent.CompareTo((BigInteger)65) >= 0) {
+      if (ef.Exponent.CompareTo((EInteger)65) >= 0) {
         return false;
       }
-      BigInteger bi = ef.ToBigInteger();
-      return bi.bitLength() <= 63;
+      EInteger bi = ef.ToEInteger();
+      return bi.GetSignedBitLength() <= 63;
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       if (!ef.IsFinite) {
         return false;
       }
       if (ef.IsZero) {
         return true;
       }
-      if (ef.Exponent.CompareTo((BigInteger)33) >= 0) {
+      if (ef.Exponent.CompareTo((EInteger)33) >= 0) {
         return false;
       }
-      BigInteger bi = ef.ToBigInteger();
-      return bi.canFitInInt();
+      EInteger bi = ef.ToEInteger();
+      return bi.CanFitInInt32();
     }
 
     public bool IsZero(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       return ef.IsZero;
     }
 
     public int Sign(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       return ef.IsNaN() ? 2 : ef.Sign;
     }
 
     public bool IsIntegral(object obj) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       if (!ef.IsFinite) {
         return false;
       }
       if (ef.Exponent.Sign >= 0) {
         return true;
       }
-      ExtendedFloat ef2 = ExtendedFloat.FromBigInteger(ef.ToBigInteger());
+      EFloat ef2 = EFloat.FromEInteger(ef.ToEInteger());
       return ef2.CompareTo(ef) == 0;
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
-      var ef = (ExtendedFloat)obj;
+      var ef = (EFloat)obj;
       if (this.CanTruncatedIntFitInInt32(obj)) {
-        BigInteger bi = ef.ToBigInteger();
+        EInteger bi = ef.ToEInteger();
         var ret = (int)bi;
         if (ret >= minValue && ret <= maxValue) {
           return ret;
@@ -150,17 +150,17 @@ namespace PeterO.Cbor {
     }
 
     public object Negate(object obj) {
-      var ed = (ExtendedFloat)obj;
+      var ed = (EFloat)obj;
       return ed.Negate();
     }
 
     public object Abs(object obj) {
-      var ed = (ExtendedFloat)obj;
+      var ed = (EFloat)obj;
       return ed.Abs();
     }
 
-    public ExtendedRational AsExtendedRational(object obj) {
-      return ExtendedRational.FromExtendedFloat((ExtendedFloat)obj);
+    public ERational AsExtendedRational(object obj) {
+      return ERational.FromExtendedFloat((EFloat)obj);
     }
   }
 }

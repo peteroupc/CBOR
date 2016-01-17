@@ -8,7 +8,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 using System.IO;
 using System.Text;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class CBORReader {
@@ -109,7 +109,7 @@ CBORTypeFilter filter) {
         return cbor;
       }
       var uadditional = (long)additional;
-      BigInteger bigintAdditional = BigInteger.Zero;
+      EInteger bigintAdditional = EInteger.Zero;
       var hasBigAdditional = false;
       data = new byte[8];
       var lowAdditional = 0;
@@ -159,7 +159,7 @@ CBORTypeFilter filter) {
               uabytes[7] = data[0];
               uabytes[8] = 0;
               hasBigAdditional = true;
-              bigintAdditional = BigInteger.fromBytes(uabytes, true);
+              bigintAdditional = EInteger.FromBytes(uabytes, true);
             } else {
               uadditional = ((long)(data[0] & (long)0xff)) << 56;
               uadditional |= ((long)(data[1] & (long)0xff)) << 48;
@@ -468,7 +468,7 @@ taginfo == null ? null : taginfo.GetTypeFilter()) :
               break;
             case 25:
               // stringref tag
-              return this.stringRefs.GetString(o.AsBigInteger());
+              return this.stringRefs.GetString(o.AsEInteger());
             case 28:
               // shareable object
               this.addSharedRef = false;
@@ -483,7 +483,7 @@ taginfo == null ? null : taginfo.GetTypeFilter()) :
               break;
             case 29:
               // shared object reference
-              return this.sharedRefs.GetObject(o.AsBigInteger());
+              return this.sharedRefs.GetObject(o.AsEInteger());
           }
 
           return CBORObject.FromObjectAndTag(
@@ -492,7 +492,7 @@ taginfo == null ? null : taginfo.GetTypeFilter()) :
         }
         return CBORObject.FromObjectAndTag(
           o,
-          (BigInteger)uadditional);
+          (EInteger)uadditional);
       }
       throw new CBORException("Unexpected data encountered");
     }
@@ -610,11 +610,11 @@ int expectedType) {
       }
     }
 
-    private static BigInteger ToUnsignedBigInteger(long val) {
-      var lval = (BigInteger)(val & ~(1L << 63));
+    private static EInteger ToUnsignedBigInteger(long val) {
+      var lval = (EInteger)(val & ~(1L << 63));
       if ((val >> 63) != 0) {
-        BigInteger bigintAdd = BigInteger.One << 63;
-        lval += (BigInteger)bigintAdd;
+        EInteger bigintAdd = EInteger.One << 63;
+        lval += (EInteger)bigintAdd;
       }
       return lval;
     }

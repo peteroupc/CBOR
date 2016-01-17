@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal interface ICBORNumber
@@ -25,15 +25,15 @@ namespace PeterO.Cbor {
 
     object Abs(Object obj);
 
-    ExtendedDecimal AsExtendedDecimal(Object obj);
+    EDecimal AsExtendedDecimal(Object obj);
 
-    ExtendedFloat AsExtendedFloat(Object obj);
+    EFloat AsExtendedFloat(Object obj);
 
-    ExtendedRational AsExtendedRational(Object obj);
+    ERational AsExtendedRational(Object obj);
 
     float AsSingle(Object obj);
 
-    BigInteger AsBigInteger(Object obj);
+    EInteger AsBigInteger(Object obj);
 
     long AsInt64(Object obj);
 

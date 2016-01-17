@@ -8,7 +8,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal sealed class CBORJson {
@@ -557,11 +557,11 @@ namespace PeterO.Cbor {
           }
           case CBORObject.CBORObjectTypeBigInteger: {
             writer.WriteString(
-              CBORUtilities.BigIntToString((BigInteger)thisItem));
+              CBORUtilities.BigIntToString((EInteger)thisItem));
             return;
           }
           case CBORObject.CBORObjectTypeExtendedDecimal: {
-            var dec = (ExtendedDecimal)thisItem;
+            var dec = (EDecimal)thisItem;
             if (dec.IsInfinity() || dec.IsNaN()) {
               writer.WriteString("null");
             } else {
@@ -570,13 +570,13 @@ namespace PeterO.Cbor {
             return;
           }
           case CBORObject.CBORObjectTypeExtendedFloat: {
-            var flo = (ExtendedFloat)thisItem;
+            var flo = (EFloat)thisItem;
             if (flo.IsInfinity() || flo.IsNaN()) {
               writer.WriteString("null");
               return;
             }
             if (flo.IsFinite &&
-                BigInteger.Abs(flo.Exponent).CompareTo((BigInteger)2500) > 0) {
+                (flo.Exponent).Abs().CompareTo((EInteger)2500) > 0) {
               // Too inefficient to convert to a decimal number
               // from a bigfloat with a very high exponent,
               // so convert to double instead
@@ -651,9 +651,9 @@ namespace PeterO.Cbor {
             break;
           }
           case CBORObject.CBORObjectTypeExtendedRational: {
-            var dec = (ExtendedRational)thisItem;
-            ExtendedDecimal f = dec.ToExtendedDecimalExactIfPossible(
-              PrecisionContext.Decimal128.WithUnlimitedExponents());
+            var dec = (ERational)thisItem;
+            EDecimal f = dec.ToExtendedDecimalExactIfPossible(
+              EContext.Decimal128.WithUnlimitedExponents());
             if (!f.IsFinite) {
               writer.WriteString("null");
             } else {
