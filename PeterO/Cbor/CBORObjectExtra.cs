@@ -7,6 +7,7 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
 using System.IO;
+using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   // Contains extra methods placed separately
@@ -47,7 +48,7 @@ namespace PeterO.Cbor {
     }
 
     private static decimal EncodeDecimal(
-BigInteger bigmant,
+EInteger bigmant,
 int scale,
 bool neg) {
       if (scale < 0) {
@@ -58,7 +59,7 @@ bool neg) {
         throw new ArgumentException(
 "scale (" + scale + ") is more than " + "28");
       }
-      byte[] data = bigmant.toBytes(true);
+      byte[] data = bigmant.ToBytes(true);
       var a = 0;
       var b = 0;
       var c = 0;
@@ -78,13 +79,13 @@ bool neg) {
       return new Decimal(new[] { a, b, c, d });
     }
 
-    private static readonly BigInteger DecimalMaxValue = (BigInteger.One <<
-      96) - BigInteger.One;
+    private static readonly EInteger DecimalMaxValue = (EInteger.One <<
+      96) - EInteger.One;
 
-    private static readonly BigInteger DecimalMinValue = -((BigInteger.One <<
-      96) - BigInteger.One);
+    private static readonly EInteger DecimalMinValue = -((EInteger.One <<
+      96) - EInteger.One);
 
-    private static BigInteger DecimalToBigInteger(decimal dec) {
+    private static EInteger DecimalToEInteger(decimal dec) {
       int[] bits = Decimal.GetBits(dec);
       var data = new byte[13];
       data[0] = (byte)(bits[0] & 0xff);
@@ -101,9 +102,9 @@ bool neg) {
       data[11] = (byte)((bits[2] >> 24) & 0xff);
       data[12] = 0;
       int scale = (bits[3] >> 16) & 0xff;
-      var bigint = BigInteger.fromBytes(data, true);
+      var bigint = EInteger.FromBytes(data, true);
       for (var i = 0; i < scale; ++i) {
-        bigint /= (BigInteger)10;
+        bigint /= (EInteger)10;
       }
       if ((bits[3] >> 31) != 0) {
         bigint = -bigint;
@@ -111,39 +112,38 @@ bool neg) {
       return bigint;
     }
 
-    private static decimal ExtendedRationalToDecimal(ExtendedRational
+    private static decimal ExtendedRationalToDecimal(ERational
       extendedNumber) {
       if (extendedNumber.IsInfinity() || extendedNumber.IsNaN()) {
         throw new OverflowException("This object's value is out of range");
       }
       try {
-        ExtendedDecimal newDecimal =
-          ExtendedDecimal.FromBigInteger(extendedNumber.Numerator)
+        EDecimal newDecimal = EDecimal.FromEInteger(extendedNumber.Numerator)
           .Divide(
-ExtendedDecimal.FromBigInteger(extendedNumber.Denominator),
-PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
+EDecimal.FromEInteger(extendedNumber.Denominator),
+EContext.CliDecimal.WithTraps(EContext.FlagOverflow));
         return EncodeDecimal(
-BigInteger.Abs(newDecimal.Mantissa),
+(newDecimal.Mantissa).Abs(),
 -((int)newDecimal.Exponent),
 newDecimal.Mantissa.Sign < 0);
-      } catch (TrapException ex) {
+      } catch (ETrapException ex) {
         throw new OverflowException("This object's value is out of range", ex);
       }
     }
 
-    private static decimal ExtendedDecimalToDecimal(ExtendedDecimal
+    private static decimal ExtendedDecimalToDecimal(EDecimal
       extendedNumber) {
       if (extendedNumber.IsInfinity() || extendedNumber.IsNaN()) {
         throw new OverflowException("This object's value is out of range");
       }
       try {
-        ExtendedDecimal newDecimal = extendedNumber.RoundToPrecision(
-          PrecisionContext.CliDecimal.WithTraps(PrecisionContext.FlagOverflow));
+        EDecimal newDecimal = extendedNumber.RoundToPrecision(
+          EContext.CliDecimal.WithTraps(EContext.FlagOverflow));
         return EncodeDecimal(
-BigInteger.Abs(newDecimal.Mantissa),
+(newDecimal.Mantissa).Abs(),
 -((int)newDecimal.Exponent),
 newDecimal.Mantissa.Sign < 0);
-      } catch (TrapException ex) {
+      } catch (ETrapException ex) {
         throw new OverflowException("This object's value is out of range", ex);
       }
     }
@@ -155,19 +155,23 @@ newDecimal.Mantissa.Sign < 0);
       return (this.ItemType == CBORObjectTypeInteger) ?
         ((decimal)(long)this.ThisItem) : ((this.ItemType ==
         CBORObjectTypeExtendedRational) ?
-        ExtendedRationalToDecimal((ExtendedRational)this.ThisItem) :
-        ExtendedDecimalToDecimal(this.AsExtendedDecimal()));
+        ExtendedRationalToDecimal((ERational)this.ThisItem) :
+        ExtendedDecimalToDecimal(this.AsEDecimal()));
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsUInt64"]/*'/>
     [CLSCompliant(false)]
     public ulong AsUInt64() {
-      BigInteger bigint = this.AsBigInteger();
-      if (bigint.Sign < 0 || bigint.bitLength() > 64) {
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
+        throw new InvalidOperationException("Not a number type");
+      }
+      EInteger bigint = cn.AsBigInteger(this.ThisItem);
+      if (bigint.Sign < 0 || bigint.GetSignedBitLength() > 64) {
         throw new OverflowException("This object's value is out of range");
       }
-      byte[] data = bigint.toBytes(true);
+      byte[] data = bigint.ToBytes(true);
       var a = 0;
       var b = 0;
       for (var i = 0; i < Math.Min(4, data.Length); ++i) {
@@ -224,7 +228,7 @@ newDecimal.Mantissa.Sign < 0);
       if (scale == 0 && Math.Round(value) == value) {
         // This is an integer
         return (value >= 0 && value <= UInt64.MaxValue) ?
-          FromObject((ulong)value) : FromObject(DecimalToBigInteger(value));
+          FromObject((ulong)value) : FromObject(DecimalToEInteger(value));
       }
       var data = new byte[13];
       data[0] = (byte)(bits[0] & 0xff);
@@ -240,7 +244,7 @@ newDecimal.Mantissa.Sign < 0);
       data[10] = (byte)((bits[2] >> 16) & 0xff);
       data[11] = (byte)((bits[2] >> 24) & 0xff);
       data[12] = 0;
-      var mantissa = BigInteger.fromBytes(data, true);
+      var mantissa = EInteger.FromBytes(data, true);
       bool negative = (bits[3] >> 31) != 0;
       if (negative) {
         mantissa = -mantissa;
@@ -272,7 +276,7 @@ new[] { FromObject(-scale),
       return FromObject((long)value);
     }
 
-    private static BigInteger UInt64ToBigInteger(ulong value) {
+    private static EInteger UInt64ToEInteger(ulong value) {
       var data = new byte[9];
       ulong uvalue = value;
       data[0] = (byte)(uvalue & 0xff);
@@ -284,14 +288,15 @@ new[] { FromObject(-scale),
       data[6] = (byte)((uvalue >> 48) & 0xff);
       data[7] = (byte)((uvalue >> 56) & 0xff);
       data[8] = (byte)0;
-      return BigInteger.fromBytes(data, true);
+      return EInteger.FromBytes(data, true);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(System.UInt64)"]/*'/>
     [CLSCompliant(false)]
     public static CBORObject FromObject(ulong value) {
-      return CBORObject.FromObject(UInt64ToBigInteger(value));
+      return CBORObject.FromObject(new BigInteger(
+        UInt64ToEInteger(value)));
     }
 
     /// <include file='../../docs.xml'
@@ -312,7 +317,7 @@ new[] { FromObject(-scale),
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObjectAndTag(System.Object,System.UInt64)"]/*'/>
     [CLSCompliant(false)]
     public static CBORObject FromObjectAndTag(Object o, ulong tag) {
-      return FromObjectAndTag(o, UInt64ToBigInteger(tag));
+      return FromObjectAndTag(o, UInt64ToEInteger(tag));
     }
 
     /// <include file='../../docs.xml'

@@ -5,9 +5,12 @@ http://creativecommons.org/publicdomain/zero/1.0/
 If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
+
+using System;
 namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="T:PeterO.Rounding"]/*'/>
+  [Obsolete("Use ERounding from PeterO.Numbers/com.upokecenter.numbers.")]
   public enum Rounding {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="F:PeterO.Rounding.Up"]/*'/>

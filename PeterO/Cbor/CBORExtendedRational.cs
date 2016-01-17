@@ -6,61 +6,61 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class CBORExtendedRational : ICBORNumber
   {
     public bool IsPositiveInfinity(object obj) {
-      return ((ExtendedRational)obj).IsPositiveInfinity();
+      return ((ERational)obj).IsPositiveInfinity();
     }
 
     public bool IsInfinity(object obj) {
-      return ((ExtendedRational)obj).IsInfinity();
+      return ((ERational)obj).IsInfinity();
     }
 
     public bool IsNegativeInfinity(object obj) {
-      return ((ExtendedRational)obj).IsNegativeInfinity();
+      return ((ERational)obj).IsNegativeInfinity();
     }
 
     public bool IsNaN(object obj) {
-      return ((ExtendedRational)obj).IsNaN();
+      return ((ERational)obj).IsNaN();
     }
 
     public double AsDouble(object obj) {
-      var er = (ExtendedRational)obj;
+      var er = (ERational)obj;
       return er.ToDouble();
     }
 
-    public ExtendedDecimal AsExtendedDecimal(object obj) {
-      var er = (ExtendedRational)obj;
+    public EDecimal AsExtendedDecimal(object obj) {
+      var er = (ERational)obj;
       return
 
-  er.ToExtendedDecimalExactIfPossible(PrecisionContext.Decimal128.WithUnlimitedExponents());
+  er.ToExtendedDecimalExactIfPossible(EContext.Decimal128.WithUnlimitedExponents());
     }
 
-    public ExtendedFloat AsExtendedFloat(object obj) {
-      var er = (ExtendedRational)obj;
+    public EFloat AsExtendedFloat(object obj) {
+      var er = (ERational)obj;
       return
 
-  er.ToExtendedFloatExactIfPossible(PrecisionContext.Binary128.WithUnlimitedExponents());
+  er.ToExtendedFloatExactIfPossible(EContext.Binary128.WithUnlimitedExponents());
     }
 
     public float AsSingle(object obj) {
-      var er = (ExtendedRational)obj;
+      var er = (ERational)obj;
       return er.ToSingle();
     }
 
-    public BigInteger AsBigInteger(object obj) {
-      var er = (ExtendedRational)obj;
-      return er.ToBigInteger();
+    public EInteger AsBigInteger(object obj) {
+      var er = (ERational)obj;
+      return er.ToEInteger();
     }
 
     public long AsInt64(object obj) {
-      var ef = (ExtendedRational)obj;
+      var ef = (ERational)obj;
       if (ef.IsFinite) {
-        BigInteger bi = ef.ToBigInteger();
-        if (bi.bitLength() <= 63) {
+        EInteger bi = ef.ToEInteger();
+        if (bi.GetSignedBitLength() <= 63) {
           return (long)bi;
         }
       }
@@ -68,15 +68,15 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInSingle(object obj) {
-      var ef = (ExtendedRational)obj;
+      var ef = (ERational)obj;
       return (!ef.IsFinite) ||
-      (ef.CompareTo(ExtendedRational.FromSingle(ef.ToSingle())) == 0);
+      (ef.CompareTo(ERational.FromSingle(ef.ToSingle())) == 0);
     }
 
     public bool CanFitInDouble(object obj) {
-      var ef = (ExtendedRational)obj;
+      var ef = (ERational)obj;
       return (!ef.IsFinite) ||
-      (ef.CompareTo(ExtendedRational.FromDouble(ef.ToDouble())) == 0);
+      (ef.CompareTo(ERational.FromDouble(ef.ToDouble())) == 0);
     }
 
     public bool CanFitInInt32(object obj) {
@@ -88,53 +88,53 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt64(object obj) {
-      var ef = (ExtendedRational)obj;
+      var ef = (ERational)obj;
       if (!ef.IsFinite) {
         return false;
       }
-      BigInteger bi = ef.ToBigInteger();
-      return bi.bitLength() <= 63;
+      EInteger bi = ef.ToEInteger();
+      return bi.GetSignedBitLength() <= 63;
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
-      var ef = (ExtendedRational)obj;
+      var ef = (ERational)obj;
       if (!ef.IsFinite) {
         return false;
       }
-      BigInteger bi = ef.ToBigInteger();
-      return bi.canFitInInt();
+      EInteger bi = ef.ToEInteger();
+      return bi.CanFitInInt32();
     }
 
     public bool IsZero(object obj) {
-      var ef = (ExtendedRational)obj;
+      var ef = (ERational)obj;
       return ef.IsZero;
     }
 
     public int Sign(object obj) {
-      var ef = (ExtendedRational)obj;
+      var ef = (ERational)obj;
       return ef.Sign;
     }
 
     public bool IsIntegral(object obj) {
-      var ef = (ExtendedRational)obj;
+      var ef = (ERational)obj;
       if (!ef.IsFinite) {
         return false;
       }
-      if (ef.Denominator.Equals(BigInteger.One)) {
+      if (ef.Denominator.Equals(EInteger.One)) {
         return true;
       }
       // A rational number is integral if the remainder
       // of the numerator divided by the denominator is 0
-      BigInteger denom = ef.Denominator;
-      BigInteger rem = ef.Numerator % (BigInteger)denom;
+      EInteger denom = ef.Denominator;
+      EInteger rem = ef.Numerator % (EInteger)denom;
       return rem.IsZero;
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
-      var ef = (ExtendedRational)obj;
+      var ef = (ERational)obj;
       if (ef.IsFinite) {
-        BigInteger bi = ef.ToBigInteger();
-        if (bi.canFitInInt()) {
+        EInteger bi = ef.ToEInteger();
+        if (bi.CanFitInInt32()) {
           var ret = (int)bi;
           if (ret >= minValue && ret <= maxValue) {
             return ret;
@@ -145,17 +145,17 @@ namespace PeterO.Cbor {
     }
 
     public object Negate(object obj) {
-      var ed = (ExtendedRational)obj;
+      var ed = (ERational)obj;
       return ed.Negate();
     }
 
     public object Abs(object obj) {
-      var ed = (ExtendedRational)obj;
+      var ed = (ERational)obj;
       return ed.Abs();
     }
 
-    public ExtendedRational AsExtendedRational(object obj) {
-      return (ExtendedRational)obj;
+    public ERational AsExtendedRational(object obj) {
+      return (ERational)obj;
     }
   }
 }

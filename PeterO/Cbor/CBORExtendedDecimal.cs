@@ -6,75 +6,75 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class CBORExtendedDecimal : ICBORNumber
   {
     public bool IsPositiveInfinity(object obj) {
-      var ed = (ExtendedDecimal)obj;
+      var ed = (EDecimal)obj;
       return ed.IsPositiveInfinity();
     }
 
     public bool IsInfinity(object obj) {
-      var ed = (ExtendedDecimal)obj;
+      var ed = (EDecimal)obj;
       return ed.IsInfinity();
     }
 
     public bool IsNegativeInfinity(object obj) {
-      var ed = (ExtendedDecimal)obj;
+      var ed = (EDecimal)obj;
       return ed.IsNegativeInfinity();
     }
 
     public bool IsNaN(object obj) {
-      var ed = (ExtendedDecimal)obj;
+      var ed = (EDecimal)obj;
       return ed.IsNaN();
     }
 
     public double AsDouble(object obj) {
-      var ed = (ExtendedDecimal)obj;
+      var ed = (EDecimal)obj;
       return ed.ToDouble();
     }
 
-    public ExtendedDecimal AsExtendedDecimal(object obj) {
-      var ed = (ExtendedDecimal)obj;
+    public EDecimal AsExtendedDecimal(object obj) {
+      var ed = (EDecimal)obj;
       return ed;
     }
 
-    public ExtendedFloat AsExtendedFloat(object obj) {
-      var ed = (ExtendedDecimal)obj;
+    public EFloat AsExtendedFloat(object obj) {
+      var ed = (EDecimal)obj;
       return ed.ToExtendedFloat();
     }
 
     public float AsSingle(object obj) {
-      var ed = (ExtendedDecimal)obj;
+      var ed = (EDecimal)obj;
       return ed.ToSingle();
     }
 
-    public BigInteger AsBigInteger(object obj) {
-      var ed = (ExtendedDecimal)obj;
-      return ed.ToBigInteger();
+    public EInteger AsBigInteger(object obj) {
+      var ed = (EDecimal)obj;
+      return ed.ToEInteger();
     }
 
     public long AsInt64(object obj) {
-      var ef = (ExtendedDecimal)obj;
+      var ef = (EDecimal)obj;
       if (this.CanTruncatedIntFitInInt64(obj)) {
-        BigInteger bi = ef.ToBigInteger();
+        EInteger bi = ef.ToEInteger();
         return (long)bi;
       }
       throw new OverflowException("This object's value is out of range");
     }
 
     public bool CanFitInSingle(object obj) {
-      var ef = (ExtendedDecimal)obj;
+      var ef = (EDecimal)obj;
       return (!ef.IsFinite) ||
-      (ef.CompareTo(ExtendedDecimal.FromSingle(ef.ToSingle())) == 0);
+      (ef.CompareTo(EDecimal.FromSingle(ef.ToSingle())) == 0);
     }
 
     public bool CanFitInDouble(object obj) {
-      var ef = (ExtendedDecimal)obj;
+      var ef = (EDecimal)obj;
       return (!ef.IsFinite) ||
-      (ef.CompareTo(ExtendedDecimal.FromDouble(ef.ToDouble())) == 0);
+      (ef.CompareTo(EDecimal.FromDouble(ef.ToDouble())) == 0);
     }
 
     public bool CanFitInInt32(object obj) {
@@ -86,56 +86,56 @@ namespace PeterO.Cbor {
     }
 
     public bool CanTruncatedIntFitInInt64(object obj) {
-      var ef = (ExtendedDecimal)obj;
+      var ef = (EDecimal)obj;
       if (!ef.IsFinite) {
         return false;
       }
       if (ef.IsZero) {
         return true;
       }
-      if (ef.Exponent.CompareTo((BigInteger)21) >= 0) {
+      if (ef.Exponent.CompareTo((EInteger)21) >= 0) {
         return false;
       }
-      BigInteger bi = ef.ToBigInteger();
-      return bi.bitLength() <= 63;
+      EInteger bi = ef.ToEInteger();
+      return bi.GetSignedBitLength() <= 63;
     }
 
     public bool CanTruncatedIntFitInInt32(object obj) {
-      var ef = (ExtendedDecimal)obj;
+      var ef = (EDecimal)obj;
       if (!ef.IsFinite) {
         return false;
       }
       if (ef.IsZero) {
         return true;
       }
-      if (ef.Exponent.CompareTo((BigInteger)11) >= 0) {
+      if (ef.Exponent.CompareTo((EInteger)11) >= 0) {
         return false;
       }
-      BigInteger bi = ef.ToBigInteger();
-      return bi.canFitInInt();
+      EInteger bi = ef.ToEInteger();
+      return bi.CanFitInInt32();
     }
 
     public bool IsZero(object obj) {
-      var ed = (ExtendedDecimal)obj;
+      var ed = (EDecimal)obj;
       return ed.IsZero;
     }
 
     public int Sign(object obj) {
-      var ed = (ExtendedDecimal)obj;
+      var ed = (EDecimal)obj;
       return ed.IsNaN() ? 2 : ed.Sign;
     }
 
     public bool IsIntegral(object obj) {
-      var ed = (ExtendedDecimal)obj;
+      var ed = (EDecimal)obj;
       return ed.IsFinite && ((ed.Exponent.Sign >= 0) ||
-      (ed.CompareTo(ExtendedDecimal.FromBigInteger(ed.ToBigInteger())) ==
+      (ed.CompareTo(EDecimal.FromEInteger(ed.ToEInteger())) ==
       0));
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
-      var ef = (ExtendedDecimal)obj;
+      var ef = (EDecimal)obj;
       if (this.CanTruncatedIntFitInInt32(obj)) {
-        BigInteger bi = ef.ToBigInteger();
+        EInteger bi = ef.ToEInteger();
         var ret = (int)bi;
         if (ret >= minValue && ret <= maxValue) {
           return ret;
@@ -145,17 +145,17 @@ namespace PeterO.Cbor {
     }
 
     public object Negate(object obj) {
-      var ed = (ExtendedDecimal)obj;
+      var ed = (EDecimal)obj;
       return ed.Negate();
     }
 
     public object Abs(object obj) {
-      var ed = (ExtendedDecimal)obj;
+      var ed = (EDecimal)obj;
       return ed.Abs();
     }
 
-    public ExtendedRational AsExtendedRational(object obj) {
-      return ExtendedRational.FromExtendedDecimal((ExtendedDecimal)obj);
+    public ERational AsExtendedRational(object obj) {
+      return ERational.FromExtendedDecimal((EDecimal)obj);
     }
   }
 }

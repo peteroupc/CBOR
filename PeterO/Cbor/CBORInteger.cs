@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal class CBORInteger : ICBORNumber
@@ -31,20 +31,20 @@ namespace PeterO.Cbor {
       return (double)(long)obj;
     }
 
-    public ExtendedDecimal AsExtendedDecimal(object obj) {
-      return ExtendedDecimal.FromInt64((long)obj);
+    public EDecimal AsExtendedDecimal(object obj) {
+      return EDecimal.FromInt64((long)obj);
     }
 
-    public ExtendedFloat AsExtendedFloat(object obj) {
-      return ExtendedFloat.FromInt64((long)obj);
+    public EFloat AsExtendedFloat(object obj) {
+      return EFloat.FromInt64((long)obj);
     }
 
     public float AsSingle(object obj) {
       return (float)(long)obj;
     }
 
-    public BigInteger AsBigInteger(object obj) {
-      return (BigInteger)(long)obj;
+    public EInteger AsBigInteger(object obj) {
+      return (EInteger)(long)obj;
     }
 
     public long AsInt64(object obj) {
@@ -85,7 +85,7 @@ namespace PeterO.Cbor {
     }
 
     public object Negate(object obj) {
-      return (((long)obj) == Int64.MinValue) ? (BigInteger.One << 63) :
+      return (((long)obj) == Int64.MinValue) ? (EInteger.One << 63) :
       (-((long)obj));
     }
 
@@ -121,12 +121,12 @@ namespace PeterO.Cbor {
 
     public object Abs(object obj) {
       var val = (long)obj;
-      return (val == Int32.MinValue) ? (BigInteger.One << 63) : ((val < 0) ?
+      return (val == Int32.MinValue) ? (EInteger.One << 63) : ((val < 0) ?
       -val : obj);
     }
 
-public ExtendedRational AsExtendedRational(object obj) {
-      return ExtendedRational.FromInt64((long)obj);
+public ERational AsExtendedRational(object obj) {
+      return ERational.FromInt64((long)obj);
     }
   }
 }

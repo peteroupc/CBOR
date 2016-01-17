@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using PeterO;
+using PeterO.Numbers;
 
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
@@ -95,11 +96,11 @@ namespace PeterO.Cbor {
     internal const int CBORObjectTypeSingle = 7;
     internal const int CBORObjectTypeTagged = 10;
     internal const int CBORObjectTypeTextString = 3;
-    internal static readonly BigInteger Int64MaxValue =
-      (BigInteger)Int64.MaxValue;
+    internal static readonly EInteger Int64MaxValue =
+      (EInteger)Int64.MaxValue;
 
-    internal static readonly BigInteger Int64MinValue =
-      (BigInteger)Int64.MinValue;
+    internal static readonly EInteger Int64MinValue =
+      (EInteger)Int64.MinValue;
 
     private const int StreamedStringBufferLength = 4096;
 
@@ -107,19 +108,19 @@ namespace PeterO.Cbor {
       ValueConverters = new Dictionary<Object, ConverterInfo>();
 
     private static readonly ICBORNumber[] NumberInterfaces = {
-      new CBORInteger(), new CBORBigInteger(), null, null,
+      new CBORInteger(), new CBOREInteger(), null, null,
       null, null, null, new CBORSingle(),
       new CBORDouble(), new CBORExtendedDecimal(),
       null, new CBORExtendedFloat(), new CBORExtendedRational()
     };
 
-    private static readonly IDictionary<BigInteger, ICBORTag>
-      ValueTagHandlers = new Dictionary<BigInteger, ICBORTag>();
+    private static readonly IDictionary<EInteger, ICBORTag>
+      ValueTagHandlers = new Dictionary<EInteger, ICBORTag>();
 
-    private static readonly BigInteger UInt64MaxValue =
-      (BigInteger.One << 64) - BigInteger.One;
+    private static readonly EInteger UInt64MaxValue =
+      (EInteger.One << 64) - EInteger.One;
 
-    private static readonly BigInteger[] ValueEmptyTags = new BigInteger[0];
+    private static readonly EInteger[] ValueEmptyTags = new EInteger[0];
     // Expected lengths for each head byte.
     // 0 means length varies. -1 means invalid.
     private static readonly int[] ValueExpectedLengths = { 1, 1, 1, 1, 1, 1,
@@ -167,11 +168,11 @@ namespace PeterO.Cbor {
 
     internal CBORObject(int type, object item) {
 #if DEBUG
-      // Check range in debug mode to ensure that Integer and BigInteger
+      // Check range in debug mode to ensure that Integer and EInteger
       // are unambiguous
       if ((type == CBORObjectTypeBigInteger) &&
-          ((BigInteger)item).CompareTo(Int64MinValue) >= 0 &&
-          ((BigInteger)item).CompareTo(Int64MaxValue) <= 0) {
+          ((EInteger)item).CompareTo(Int64MinValue) >= 0 &&
+          ((EInteger)item).CompareTo(Int64MaxValue) <= 0) {
         throw new ArgumentException("Big integer is within range for Integer");
       }
 #endif
@@ -193,7 +194,7 @@ namespace PeterO.Cbor {
     public BigInteger InnermostTag {
       get {
         if (!this.IsTagged) {
-          return BigInteger.Zero - BigInteger.One;
+          return new BigInteger(EInteger.FromInt32(-1));
         }
         CBORObject previtem = this;
         var curitem = (CBORObject)this.itemValue;
@@ -203,11 +204,11 @@ namespace PeterO.Cbor {
         }
         if (previtem.tagHigh == 0 && previtem.tagLow >= 0 &&
             previtem.tagLow < 0x10000) {
-          return (BigInteger)previtem.tagLow;
+          return new BigInteger((EInteger)previtem.tagLow);
         }
-        return LowHighToBigInteger(
+        return new BigInteger(LowHighToEInteger(
           previtem.tagLow,
-          previtem.tagHigh);
+          previtem.tagHigh));
       }
     }
 
@@ -299,15 +300,15 @@ namespace PeterO.Cbor {
     public BigInteger OutermostTag {
       get {
         if (!this.IsTagged) {
-          return BigInteger.Zero - BigInteger.One;
+          return new BigInteger(EInteger.FromInt32(-1));
         }
         if (this.tagHigh == 0 &&
             this.tagLow >= 0 && this.tagLow < 0x10000) {
-          return (BigInteger)this.tagLow;
+          return new BigInteger((EInteger)this.tagLow);
         }
-        return LowHighToBigInteger(
+        return new BigInteger(LowHighToEInteger(
           this.tagLow,
-          this.tagHigh);
+          this.tagHigh));
       }
     }
 
@@ -515,8 +516,20 @@ namespace PeterO.Cbor {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.BigInteger,PeterO.Cbor.ICBORTag)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.Numbers.EInteger,PeterO.Cbor.ICBORTag)"]/*'/>
     public static void AddTagHandler(BigInteger bigintTag, ICBORTag handler) {
+      if (bigintTag == null) {
+        throw new ArgumentNullException("bigintTag");
+      }
+      if (handler == null) {
+        throw new ArgumentNullException("handler");
+      }
+      AddTagHandler(bigintTag.Ei, handler);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AddTagHandler(PeterO.Numbers.EInteger,PeterO.Cbor.ICBORTag)"]/*'/>
+    internal static void AddTagHandler(EInteger bigintTag, ICBORTag handler) {
       if (bigintTag == null) {
         throw new ArgumentNullException("bigintTag");
       }
@@ -527,9 +540,9 @@ namespace PeterO.Cbor {
         throw new ArgumentException("bigintTag.Sign (" +
                     bigintTag.Sign + ") is less than 0");
       }
-      if (bigintTag.bitLength() > 64) {
+      if (bigintTag.GetSignedBitLength() > 64) {
         throw new ArgumentException("bigintTag.bitLength (" +
-                    (long)bigintTag.bitLength() + ") is more than " +
+                    (long)bigintTag.GetSignedBitLength() + ") is more than " +
                     "64");
       }
       lock (ValueTagHandlers) {
@@ -555,8 +568,8 @@ CBOREncodeOptions options) {
         throw new CBORException("data is empty.");
       }
       if (options == null) {
-  throw new ArgumentNullException("options");
-}
+        throw new ArgumentNullException("options");
+      }
       var firstbyte = (int)(data[0] & (int)0xff);
       int expectedLength = ValueExpectedLengths[firstbyte];
       // if invalid
@@ -608,8 +621,8 @@ CBOREncodeOptions options) {
         throw new ArgumentNullException("str");
       }
       if (options == null) {
-  throw new ArgumentNullException("options");
-}
+        throw new ArgumentNullException("options");
+      }
       if (str.Length > 0 && str[0] == 0xfeff) {
         throw new CBORException(
           "JSON object began with a byte order mark (U+FEFF) (offset 0)");
@@ -618,11 +631,11 @@ CBOREncodeOptions options) {
         new CharacterReader(str, false, true));
       CBOREncodeOptions opt = options.And(CBOREncodeOptions.NoDuplicateKeys);
       var nextchar = new int[1];
-CBORObject obj = CBORJson.ParseJSONValue(
-reader,
-opt.Value != 0,
-false,
-nextchar);
+      CBORObject obj = CBORJson.ParseJSONValue(
+      reader,
+      opt.Value != 0,
+      false,
+      nextchar);
       if (nextchar[0] != -1) {
         reader.RaiseError("End of string not reached");
       }
@@ -645,6 +658,10 @@ nextchar);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.BigInteger)"]/*'/>
     public static CBORObject FromObject(BigInteger bigintValue) {
+      return ((object)bigintValue == (object)null) ? (CBORObject.Null) :
+        (FromObject(bigintValue.Ei));
+    }
+    internal static CBORObject FromObject(EInteger bigintValue) {
       if ((object)bigintValue == (object)null) {
         return CBORObject.Null;
       }
@@ -652,14 +669,21 @@ nextchar);
               bigintValue.CompareTo(Int64MaxValue) <= 0) ?
         new CBORObject(
           CBORObjectTypeInteger,
-          (long)(BigInteger)bigintValue) : (new CBORObject(
+          (long)(EInteger)bigintValue) : (new CBORObject(
         CBORObjectTypeBigInteger,
         bigintValue));
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedFloat)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EFloat)"]/*'/>
     public static CBORObject FromObject(ExtendedFloat bigValue) {
+      return ((object)bigValue == (object)null) ? (CBORObject.Null) :
+        (FromObject(bigValue.Ef));
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EFloat)"]/*'/>
+    internal static CBORObject FromObject(EFloat bigValue) {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
       }
@@ -671,7 +695,7 @@ nextchar);
           CBORObjectTypeExtendedFloat,
           bigValue);
       }
-      BigInteger bigintExponent = bigValue.Exponent;
+      EInteger bigintExponent = bigValue.Exponent;
       return (bigintExponent.IsZero && !(bigValue.IsZero &&
                     bigValue.IsNegative)) ? FromObject(bigValue.Mantissa) :
         new CBORObject(
@@ -680,8 +704,15 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedRational)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EFloat)"]/*'/>
     public static CBORObject FromObject(ExtendedRational bigValue) {
+      return ((object)bigValue == (object)null) ? (CBORObject.Null) :
+        (FromObject(bigValue.Er));
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.ERational)"]/*'/>
+    internal static CBORObject FromObject(ERational bigValue) {
       if ((object)bigValue == (object)null) {
         return CBORObject.Null;
       }
@@ -693,15 +724,15 @@ nextchar);
           CBORObjectTypeExtendedRational,
           bigValue);
       }
-   return ((bigValue.IsFinite && bigValue.Denominator.Equals(BigInteger.One)) ?
-         FromObject(bigValue.Numerator) : (new CBORObject(
-           CBORObjectTypeExtendedRational,
-           bigValue)));
+      return ((bigValue.IsFinite && bigValue.Denominator.Equals(EInteger.One)) ?
+            FromObject(bigValue.Numerator) : (new CBORObject(
+              CBORObjectTypeExtendedRational,
+              bigValue)));
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedDecimal)"]/*'/>
-    public static CBORObject FromObject(ExtendedDecimal otherValue) {
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EDecimal)"]/*'/>
+    internal static CBORObject FromObject(EDecimal otherValue) {
       if ((object)otherValue == (object)null) {
         return CBORObject.Null;
       }
@@ -713,12 +744,19 @@ nextchar);
           CBORObjectTypeExtendedDecimal,
           otherValue);
       }
-      BigInteger bigintExponent = otherValue.Exponent;
+      EInteger bigintExponent = otherValue.Exponent;
       return (bigintExponent.IsZero && !(otherValue.IsZero &&
                     otherValue.IsNegative)) ? FromObject(otherValue.Mantissa) :
         new CBORObject(
           CBORObjectTypeExtendedDecimal,
           otherValue);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedDecimal)"]/*'/>
+    public static CBORObject FromObject(ExtendedDecimal otherValue) {
+      return ((object)otherValue == (object)null) ? (CBORObject.Null) :
+        (FromObject(otherValue.Ed));
     }
 
     /// <include file='../../docs.xml'
@@ -955,7 +993,8 @@ nextchar);
         System.Collections.IDictionary objdic =
           (System.Collections.IDictionary)obj;
         foreach (object key in (System.Collections.IDictionary)objdic) {
-       objret[CBORObject.FromObject(key)] = CBORObject.FromObject(objdic[key]);
+       objret[CBORObject.FromObject(key)] =
+            CBORObject.FromObject(objdic[key]);
         }
         return objret;
       }
@@ -989,6 +1028,14 @@ nextchar);
       if (bigintTag == null) {
         throw new ArgumentNullException("bigintTag");
       }
+      return FromObjectAndTag(valueOb, bigintTag.Ei);
+    }
+    internal static CBORObject FromObjectAndTag(
+      object valueOb,
+      EInteger bigintTag) {
+      if (bigintTag == null) {
+        throw new ArgumentNullException("bigintTag");
+      }
       if (bigintTag.Sign < 0) {
         throw new ArgumentException("bigintTag's sign (" + bigintTag.Sign +
                     ") is less than 0");
@@ -998,13 +1045,13 @@ nextchar);
           "tag more than 18446744073709551615 (" + bigintTag + ")");
       }
       CBORObject c = FromObject(valueOb);
-      if (bigintTag.bitLength() <= 16) {
+      if (bigintTag.GetSignedBitLength() <= 16) {
         // Low-numbered, commonly used tags
         return FromObjectAndTag(c, (int)bigintTag);
       } else {
         var tagLow = 0;
         var tagHigh = 0;
-        byte[] bytes = bigintTag.toBytes(true);
+        byte[] bytes = bigintTag.ToBytes(true);
         for (var i = 0; i < Math.Min(4, bytes.Length); ++i) {
           int b = ((int)bytes[i]) & 0xff;
           tagLow = unchecked(tagLow | (((int)b) << (i * 8)));
@@ -1082,8 +1129,8 @@ nextchar);
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream)"]/*'/>
     public static CBORObject Read(Stream stream) {
       if (stream == null) {
-  throw new ArgumentNullException("stream");
-}
+        throw new ArgumentNullException("stream");
+      }
       try {
         return new CBORReader(stream).Read(null);
       } catch (IOException ex) {
@@ -1095,8 +1142,8 @@ nextchar);
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Read(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public static CBORObject Read(Stream stream, CBOREncodeOptions options) {
       if (options == null) {
-  throw new ArgumentNullException("options");
-}
+        throw new ArgumentNullException("options");
+      }
       try {
         var reader = new CBORReader(stream);
         CBOREncodeOptions opt = options.And(CBOREncodeOptions.NoDuplicateKeys);
@@ -1117,25 +1164,25 @@ nextchar);
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.ReadJSON(System.IO.Stream,PeterO.Cbor.CBOREncodeOptions)"]/*'/>
-  public static CBORObject ReadJSON(
-Stream stream,
-CBOREncodeOptions options) {
+    public static CBORObject ReadJSON(
+  Stream stream,
+  CBOREncodeOptions options) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
       if (options == null) {
-  throw new ArgumentNullException("options");
-}
+        throw new ArgumentNullException("options");
+      }
       var reader = new CharacterInputWithCount(
         new CharacterReader(stream, 2, true));
       try {
         CBOREncodeOptions opt = options.And(CBOREncodeOptions.NoDuplicateKeys);
         var nextchar = new int[1];
-   CBORObject obj = CBORJson.ParseJSONValue(
-reader,
-opt.Value != 0,
-false,
-nextchar);
+        CBORObject obj = CBORJson.ParseJSONValue(
+     reader,
+     opt.Value != 0,
+     false,
+     nextchar);
         if (nextchar[0] != -1) {
           reader.RaiseError("End of data stream not reached");
         }
@@ -1201,8 +1248,21 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedFloat,System.IO.Stream)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EFloat,System.IO.Stream)"]/*'/>
     public static void Write(ExtendedFloat bignum, Stream stream) {
+      if (stream == null) {
+        throw new ArgumentNullException("stream");
+      }
+      if (bignum == null) {
+        stream.WriteByte(0xf6);
+        return;
+      }
+      Write(bignum.Ef, stream);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EFloat,System.IO.Stream)"]/*'/>
+    internal static void Write(EFloat bignum, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
@@ -1215,7 +1275,7 @@ nextchar);
         Write(bignum.ToDouble(), stream);
         return;
       }
-      BigInteger exponent = bignum.Exponent;
+      EInteger exponent = bignum.Exponent;
       if (exponent.IsZero) {
         Write(bignum.Mantissa, stream);
       } else {
@@ -1234,8 +1294,21 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedRational,System.IO.Stream)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.ERational,System.IO.Stream)"]/*'/>
     public static void Write(ExtendedRational rational, Stream stream) {
+      if (stream == null) {
+        throw new ArgumentNullException("stream");
+      }
+      if (rational == null) {
+        stream.WriteByte(0xf6);
+        return;
+      }
+      Write(rational.Er, stream);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.ERational,System.IO.Stream)"]/*'/>
+    internal static void Write(ERational rational, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
@@ -1247,7 +1320,7 @@ nextchar);
         Write(rational.ToDouble(), stream);
         return;
       }
-      if (rational.Denominator.Equals(BigInteger.One)) {
+      if (rational.Denominator.Equals(EInteger.One)) {
         Write(rational.Numerator, stream);
         return;
       }
@@ -1259,8 +1332,21 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.ExtendedDecimal,System.IO.Stream)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EDecimal,System.IO.Stream)"]/*'/>
     public static void Write(ExtendedDecimal bignum, Stream stream) {
+      if (stream == null) {
+        throw new ArgumentNullException("stream");
+      }
+      if (bignum == null) {
+        stream.WriteByte(0xf6);
+        return;
+      }
+      Write(bignum.Ed, stream);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EDecimal,System.IO.Stream)"]/*'/>
+    internal static void Write(EDecimal bignum, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
@@ -1273,7 +1359,7 @@ nextchar);
         Write(bignum.ToDouble(), stream);
         return;
       }
-      BigInteger exponent = bignum.Exponent;
+      EInteger exponent = bignum.Exponent;
       if (exponent.IsZero) {
         Write(bignum.Mantissa, stream);
       } else {
@@ -1292,8 +1378,21 @@ nextchar);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.BigInteger,System.IO.Stream)"]/*'/>
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EInteger,System.IO.Stream)"]/*'/>
     public static void Write(BigInteger bigint, Stream stream) {
+      if (stream == null) {
+        throw new ArgumentNullException("stream");
+      }
+      if ((object)bigint == (object)null) {
+        stream.WriteByte(0xf6);
+        return;
+      }
+      Write(bigint.Ei, stream);
+    }
+
+    /// <include file='../../docs.xml'
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.Write(PeterO.Numbers.EInteger,System.IO.Stream)"]/*'/>
+    internal static void Write(EInteger bigint, Stream stream) {
       if (stream == null) {
         throw new ArgumentNullException("stream");
       }
@@ -1304,20 +1403,20 @@ nextchar);
       var datatype = 0;
       if (bigint.Sign < 0) {
         datatype = 1;
-        bigint += (BigInteger)BigInteger.One;
-        bigint = -(BigInteger)bigint;
+        bigint += (EInteger)EInteger.One;
+        bigint = -(EInteger)bigint;
       }
       if (bigint.CompareTo(Int64MaxValue) <= 0) {
         // If the big integer is representable as a long and in
         // major type 0 or 1, write that major type
         // instead of as a bignum
-        var ui = (long)(BigInteger)bigint;
+        var ui = (long)(EInteger)bigint;
         WritePositiveInt64(datatype, ui, stream);
       } else {
         // Get a byte array of the big integer's value,
         // since shifting and doing AND operations is
         // slow with large BigIntegers
-        byte[] bytes = bigint.toBytes(true);
+        byte[] bytes = bigint.ToBytes(true);
         int byteCount = bytes.Length;
         while (byteCount > 0 && bytes[byteCount - 1] == 0) {
           // Ignore trailing zero bytes
@@ -1375,7 +1474,7 @@ nextchar);
             stream.Write(bytes, 0, byteCount);
             break;
           default: stream.WriteByte((datatype == 0) ?
-    (byte)0xc2 : (byte)0xc3);
+(byte)0xc2 : (byte)0xc3);
             WritePositiveInt(2, byteCount, stream);
             stream.Write(bytes, 0, byteCount);
             break;
@@ -1582,7 +1681,21 @@ nextchar);
       }
       object oldItem = this.ThisItem;
       object newItem = cn.Abs(oldItem);
-      return (oldItem == newItem) ? this : CBORObject.FromObject(newItem);
+      if (oldItem == newItem) {
+        return this;
+      }
+      if (newItem is EDecimal) {
+        return CBORObject.FromObject((EDecimal)newItem);
+      }
+      if (newItem is EInteger) {
+        return CBORObject.FromObject((EInteger)newItem);
+      }
+      if (newItem is EFloat) {
+        return CBORObject.FromObject((EFloat)newItem);
+      }
+      return (newItem is ERational) ?
+        (CBORObject.FromObject((ERational)newItem)) : ((oldItem == newItem)?
+        this : CBORObject.FromObject(newItem));
     }
 
     /// <include file='../../docs.xml'
@@ -1643,6 +1756,16 @@ nextchar);
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
       }
+      return BigInteger.fromBytes(
+        cn.AsBigInteger(this.ThisItem).ToBytes(true),
+        true);
+    }
+
+    internal EInteger AsEInteger() {
+      ICBORNumber cn = NumberInterfaces[this.ItemType];
+      if (cn == null) {
+        throw new InvalidOperationException("Not a number type");
+      }
       return cn.AsBigInteger(this.ThisItem);
     }
 
@@ -1671,6 +1794,10 @@ nextchar);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsExtendedDecimal"]/*'/>
     public ExtendedDecimal AsExtendedDecimal() {
+      return ExtendedDecimal.FromString(AsEDecimal().ToString());
+    }
+
+    internal EDecimal AsEDecimal() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
@@ -1681,6 +1808,9 @@ nextchar);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsExtendedFloat"]/*'/>
     public ExtendedFloat AsExtendedFloat() {
+      return ExtendedFloat.FromString(AsEFloat().ToString());
+    }
+    internal EFloat AsEFloat() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
@@ -1691,6 +1821,9 @@ nextchar);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.AsExtendedRational"]/*'/>
     public ExtendedRational AsExtendedRational() {
+      return new ExtendedRational(AsERational());
+    }
+    internal ERational AsERational() {
       ICBORNumber cn = NumberInterfaces[this.ItemType];
       if (cn == null) {
         throw new InvalidOperationException("Not a number type");
@@ -1852,8 +1985,8 @@ nextchar);
               break;
             }
           case CBORObjectTypeBigInteger: {
-              var bigintA = (BigInteger)objA;
-              var bigintB = (BigInteger)objB;
+              var bigintA = (EInteger)objA;
+              var bigintB = (EInteger)objB;
               cmp = bigintA.CompareTo(bigintB);
               break;
             }
@@ -1867,17 +2000,17 @@ nextchar);
               break;
             }
           case CBORObjectTypeExtendedDecimal: {
-              cmp = ((ExtendedDecimal)objA).CompareTo((ExtendedDecimal)objB);
+              cmp = ((EDecimal)objA).CompareTo((EDecimal)objB);
               break;
             }
           case CBORObjectTypeExtendedFloat: {
-              cmp = ((ExtendedFloat)objA).CompareTo(
-                (ExtendedFloat)objB);
+              cmp = ((EFloat)objA).CompareTo(
+                (EFloat)objB);
               break;
             }
           case CBORObjectTypeExtendedRational: {
-              cmp = ((ExtendedRational)objA).CompareTo(
-                (ExtendedRational)objB);
+              cmp = ((ERational)objA).CompareTo(
+                (ERational)objB);
               break;
             }
           case CBORObjectTypeByteString: {
@@ -1946,37 +2079,37 @@ nextchar);
         } else {
           // DebugUtility.Log("a=" + this + " b=" + other);
           if (typeA == CBORObjectTypeExtendedRational) {
-        ExtendedRational e1 = NumberInterfaces[typeA].AsExtendedRational(objA);
+            ERational e1 = NumberInterfaces[typeA].AsExtendedRational(objA);
             if (typeB == CBORObjectTypeExtendedDecimal) {
-          ExtendedDecimal e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
+              EDecimal e2 = NumberInterfaces[typeB].AsExtendedDecimal(objB);
               cmp = e1.CompareToDecimal(e2);
             } else {
-              ExtendedFloat e2 = NumberInterfaces[typeB].AsExtendedFloat(objB);
+              EFloat e2 = NumberInterfaces[typeB].AsExtendedFloat(objB);
               cmp = e1.CompareToBinary(e2);
             }
           } else if (typeB == CBORObjectTypeExtendedRational) {
-        ExtendedRational e2 = NumberInterfaces[typeB].AsExtendedRational(objB);
+            ERational e2 = NumberInterfaces[typeB].AsExtendedRational(objB);
             if (typeA == CBORObjectTypeExtendedDecimal) {
-          ExtendedDecimal e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
+              EDecimal e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
               cmp = e2.CompareToDecimal(e1);
               cmp = -cmp;
             } else {
-              ExtendedFloat e1 = NumberInterfaces[typeA].AsExtendedFloat(objA);
+              EFloat e1 = NumberInterfaces[typeA].AsExtendedFloat(objA);
               cmp = e2.CompareToBinary(e1);
               cmp = -cmp;
             }
           } else if (typeA == CBORObjectTypeExtendedDecimal ||
                     typeB == CBORObjectTypeExtendedDecimal) {
-            ExtendedDecimal e1 = null;
-            ExtendedDecimal e2 = null;
+            EDecimal e1 = null;
+            EDecimal e2 = null;
             if (typeA == CBORObjectTypeExtendedFloat) {
-              var ef1 = (ExtendedFloat)objA;
-              e2 = (ExtendedDecimal)objB;
+              var ef1 = (EFloat)objA;
+              e2 = (EDecimal)objB;
               cmp = e2.CompareToBinary(ef1);
               cmp = -cmp;
             } else if (typeB == CBORObjectTypeExtendedFloat) {
-              var ef1 = (ExtendedFloat)objB;
-              e2 = (ExtendedDecimal)objA;
+              var ef1 = (EFloat)objB;
+              e2 = (EDecimal)objA;
               cmp = e2.CompareToBinary(ef1);
             } else {
               e1 = NumberInterfaces[typeA].AsExtendedDecimal(objA);
@@ -1989,18 +2122,19 @@ nextchar);
                     CBORObjectTypeDouble ||
                     typeA == CBORObjectTypeSingle || typeB ==
                     CBORObjectTypeSingle) {
-            ExtendedFloat e1 = NumberInterfaces[typeA].AsExtendedFloat(objA);
-            ExtendedFloat e2 = NumberInterfaces[typeB].AsExtendedFloat(objB);
+            EFloat e1 = NumberInterfaces[typeA].AsExtendedFloat(objA);
+            EFloat e2 = NumberInterfaces[typeB].AsExtendedFloat(objB);
             cmp = e1.CompareTo(e2);
           } else {
-            BigInteger b1 = NumberInterfaces[typeA].AsBigInteger(objA);
-            BigInteger b2 = NumberInterfaces[typeB].AsBigInteger(objB);
+            EInteger b1 = NumberInterfaces[typeA].AsBigInteger(objA);
+            EInteger b2 = NumberInterfaces[typeB].AsBigInteger(objB);
             cmp = b1.CompareTo(b2);
           }
         }
       }
       return (cmp == 0) ? ((!this.IsTagged && !other.IsTagged) ? 0 :
-                    TagsCompare(this.GetTags(), other.GetTags())) : cmp;
+           TagsCompare(this.GetTagsEInteger(), other.GetTagsEInteger())) :
+                      cmp;
     }
 
     /// <include file='../../docs.xml'
@@ -2046,8 +2180,8 @@ nextchar);
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.EncodeToBytes(PeterO.Cbor.CBOREncodeOptions)"]/*'/>
     public byte[] EncodeToBytes(CBOREncodeOptions options) {
       if (options == null) {
-  throw new ArgumentNullException("options");
-}
+        throw new ArgumentNullException("options");
+      }
 
       // For some types, a memory stream is a lot of
       // overhead since the amount of memory the types
@@ -2249,22 +2383,33 @@ nextchar);
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORObject.GetTags"]/*'/>
     public BigInteger[] GetTags() {
+      EInteger[] etags = GetTagsEInteger();
+      if (etags.Length == 0) {
+        return new BigInteger[0];
+      }
+      var bigret = new BigInteger[etags.Length];
+      for (var i = 0; i < bigret.Length; ++i) {
+        bigret[i] = new BigInteger(etags[i]);
+      }
+      return bigret;
+    }
+    internal EInteger[] GetTagsEInteger() {
       if (!this.IsTagged) {
         return ValueEmptyTags;
       }
       CBORObject curitem = this;
       if (curitem.IsTagged) {
-        var list = new List<BigInteger>();
+        var list = new List<EInteger>();
         while (curitem.IsTagged) {
           list.Add(
-            LowHighToBigInteger(
+            LowHighToEInteger(
               curitem.tagLow,
               curitem.tagHigh));
           curitem = (CBORObject)curitem.itemValue;
         }
-        return (BigInteger[])list.ToArray();
+        return (EInteger[])list.ToArray();
       }
-      return new[] { LowHighToBigInteger(this.tagLow, this.tagHigh) };
+      return new[] { LowHighToEInteger(this.tagLow, this.tagHigh) };
     }
 
     /// <include file='../../docs.xml'
@@ -2297,11 +2442,20 @@ nextchar);
       if (bigTagValue == null) {
         throw new ArgumentNullException("bigTagValue");
       }
+      return HasTag(EInteger.FromBytes(
+        bigTagValue.toBytes(true),
+        true));
+    }
+
+    internal bool HasTag(EInteger bigTagValue) {
+      if (bigTagValue == null) {
+        throw new ArgumentNullException("bigTagValue");
+      }
       if (bigTagValue.Sign < 0) {
         throw new ArgumentException("doesn't satisfy bigTagValue.Sign>= 0");
       }
-      BigInteger[] bigTags = this.GetTags();
-      foreach (BigInteger bigTag in bigTags) {
+      EInteger[] bigTags = this.GetTagsEInteger();
+      foreach (EInteger bigTag in bigTags) {
         if (bigTagValue.Equals(bigTag)) {
           return true;
         }
@@ -2366,7 +2520,19 @@ nextchar);
       if (cn == null) {
         throw new InvalidOperationException("This object is not a number.");
       }
-      return CBORObject.FromObject(cn.Negate(this.ThisItem));
+      object newItem = cn.Negate(this.ThisItem);
+      if (newItem is EDecimal) {
+        return CBORObject.FromObject((EDecimal)newItem);
+      }
+      if (newItem is EInteger) {
+        return CBORObject.FromObject((EInteger)newItem);
+      }
+      if (newItem is EFloat) {
+        return CBORObject.FromObject((EFloat)newItem);
+      }
+      return (newItem is ERational) ?
+        (CBORObject.FromObject((ERational)newItem)) :
+        (CBORObject.FromObject(newItem));
     }
 
     /// <include file='../../docs.xml'
@@ -2526,7 +2692,7 @@ nextchar);
             break;
           }
         case CBORObjectTypeExtendedFloat: {
-            simvalue = ExtendedToString((ExtendedFloat)this.ThisItem);
+            simvalue = ExtendedToString((EFloat)this.ThisItem);
             if (sb == null) {
               return simvalue;
             }
@@ -2543,7 +2709,7 @@ nextchar);
             break;
           }
         case CBORObjectTypeBigInteger: {
-            simvalue = CBORUtilities.BigIntToString((BigInteger)this.ThisItem);
+            simvalue = CBORUtilities.BigIntToString((EInteger)this.ThisItem);
             if (sb == null) {
               return simvalue;
             }
@@ -2661,7 +2827,7 @@ nextchar);
             break;
           }
         case CBORObjectTypeBigInteger: {
-            Write((BigInteger)this.ThisItem, stream);
+            Write((EInteger)this.ThisItem, stream);
             break;
           }
         case CBORObjectTypeByteString: {
@@ -2682,17 +2848,17 @@ nextchar);
             break;
           }
         case CBORObjectTypeExtendedDecimal: {
-            var dec = (ExtendedDecimal)this.ThisItem;
+            var dec = (EDecimal)this.ThisItem;
             Write(dec, stream);
             break;
           }
         case CBORObjectTypeExtendedFloat: {
-            var flo = (ExtendedFloat)this.ThisItem;
+            var flo = (EFloat)this.ThisItem;
             Write(flo, stream);
             break;
           }
         case CBORObjectTypeExtendedRational: {
-            var flo = (ExtendedRational)this.ThisItem;
+            var flo = (ERational)this.ThisItem;
             Write(flo, stream);
             break;
           }
@@ -2732,33 +2898,33 @@ nextchar);
       }
     }
 
-    internal static ICBORTag FindTagConverter(BigInteger bigintTag) {
+    internal static ICBORTag FindTagConverter(EInteger bigintTag) {
       if (TagHandlersEmpty()) {
-        AddTagHandler((BigInteger)2, new CBORTag2());
-        AddTagHandler((BigInteger)3, new CBORTag3());
-        AddTagHandler((BigInteger)4, new CBORTag4());
-        AddTagHandler((BigInteger)5, new CBORTag5());
-        AddTagHandler((BigInteger)264, new CBORTag4(true));
-        AddTagHandler((BigInteger)265, new CBORTag5(true));
-        AddTagHandler((BigInteger)25, new CBORTagUnsigned());
-        AddTagHandler((BigInteger)28, new CBORTag28());
-        AddTagHandler((BigInteger)29, new CBORTagUnsigned());
-        AddTagHandler((BigInteger)256, new CBORTagAny());
-        AddTagHandler(BigInteger.Zero, new CBORTag0());
-        AddTagHandler((BigInteger)32, new CBORTag32());
-        AddTagHandler((BigInteger)33, new CBORTagGenericString());
-        AddTagHandler((BigInteger)34, new CBORTagGenericString());
-        AddTagHandler((BigInteger)35, new CBORTagGenericString());
-        AddTagHandler((BigInteger)36, new CBORTagGenericString());
-        AddTagHandler((BigInteger)37, new CBORTag37());
-        AddTagHandler((BigInteger)30, new CBORTag30());
+        AddTagHandler((EInteger)2, new CBORTag2());
+        AddTagHandler((EInteger)3, new CBORTag3());
+        AddTagHandler((EInteger)4, new CBORTag4());
+        AddTagHandler((EInteger)5, new CBORTag5());
+        AddTagHandler((EInteger)264, new CBORTag4(true));
+        AddTagHandler((EInteger)265, new CBORTag5(true));
+        AddTagHandler((EInteger)25, new CBORTagUnsigned());
+        AddTagHandler((EInteger)28, new CBORTag28());
+        AddTagHandler((EInteger)29, new CBORTagUnsigned());
+        AddTagHandler((EInteger)256, new CBORTagAny());
+        AddTagHandler(EInteger.Zero, new CBORTag0());
+        AddTagHandler((EInteger)32, new CBORTag32());
+        AddTagHandler((EInteger)33, new CBORTagGenericString());
+        AddTagHandler((EInteger)34, new CBORTagGenericString());
+        AddTagHandler((EInteger)35, new CBORTagGenericString());
+        AddTagHandler((EInteger)36, new CBORTagGenericString());
+        AddTagHandler((EInteger)37, new CBORTag37());
+        AddTagHandler((EInteger)30, new CBORTag30());
       }
       lock (ValueTagHandlers) {
         if (ValueTagHandlers.ContainsKey(bigintTag)) {
           return ValueTagHandlers[bigintTag];
         }
 #if DEBUG
-        if (bigintTag.Equals((BigInteger)2)) {
+        if (bigintTag.Equals((EInteger)2)) {
           throw new InvalidOperationException("Expected valid tag handler");
         }
 #endif
@@ -2767,7 +2933,7 @@ nextchar);
     }
 
     internal static ICBORTag FindTagConverterLong(long tag) {
-      return FindTagConverter((BigInteger)tag);
+      return FindTagConverter((EInteger)tag);
     }
 
     internal static CBORObject FromRaw(string str) {
@@ -2844,7 +3010,7 @@ nextchar);
             } else {
               int low = unchecked((int)((uadditional) & 0xFFFFFFFFL));
               int high = unchecked((int)((uadditional >> 32) & 0xFFFFFFFFL));
-              return FromObject(LowHighToBigInteger(low, high));
+              return FromObject(LowHighToEInteger(low, high));
             }
           case 1:
             if ((uadditional >> 63) == 0) {
@@ -2854,9 +3020,9 @@ nextchar);
             } else {
               int low = unchecked((int)((uadditional) & 0xFFFFFFFFL));
               int high = unchecked((int)((uadditional >> 32) & 0xFFFFFFFFL));
-              BigInteger bigintAdditional = LowHighToBigInteger(low, high);
-              BigInteger minusOne = -BigInteger.One;
-              bigintAdditional = minusOne - (BigInteger)bigintAdditional;
+              EInteger bigintAdditional = LowHighToEInteger(low, high);
+              EInteger minusOne = -EInteger.One;
+              bigintAdditional = minusOne - (EInteger)bigintAdditional;
               return FromObject(bigintAdditional);
             }
           case 7:
@@ -2948,8 +3114,8 @@ nextchar);
       this.itemValue = cbor.itemValue;
     }
 
-    private static bool BigIntFits(BigInteger bigint) {
-      return bigint.bitLength() <= 64;
+    private static bool BigIntFits(EInteger bigint) {
+      return bigint.GetSignedBitLength() <= 64;
     }
 
     private static bool CBORArrayEquals(
@@ -3077,9 +3243,9 @@ nextchar);
         obj);
     }
 
-    private static string ExtendedToString(ExtendedFloat ef) {
-      if (ef.IsFinite && (ef.Exponent.CompareTo((BigInteger)2500) > 0 ||
-                    ef.Exponent.CompareTo((BigInteger)(-2500)) < 0)) {
+    private static string ExtendedToString(EFloat ef) {
+      if (ef.IsFinite && (ef.Exponent.CompareTo((EInteger)2500) > 0 ||
+                    ef.Exponent.CompareTo((EInteger)(-2500)) < 0)) {
         // It can take very long to convert a number with a very high
         // or very low exponent to a decimal string, so do this instead
         return ef.Mantissa + "p" + ef.Exponent;
@@ -3088,7 +3254,7 @@ nextchar);
     }
 
     private static ICBORTag FindTagConverter(int tag) {
-      return FindTagConverter((BigInteger)tag);
+      return FindTagConverter((EInteger)tag);
     }
 
     private static byte[] GetOptimizedBytesIfShortAscii(
@@ -3264,7 +3430,7 @@ nextchar);
         0;
     }
 
-    private static BigInteger LowHighToBigInteger(int tagLow, int tagHigh) {
+    private static EInteger LowHighToEInteger(int tagLow, int tagHigh) {
       byte[] uabytes = null;
       if (tagHigh != 0) {
         uabytes = new byte[9];
@@ -3277,7 +3443,7 @@ nextchar);
         uabytes[1] = (byte)((tagLow >> 8) & 0xff);
         uabytes[0] = (byte)(tagLow & 0xff);
         uabytes[8] = 0;
-        return BigInteger.fromBytes(uabytes, true);
+        return EInteger.FromBytes(uabytes, true);
       }
       if (tagLow != 0) {
         uabytes = new byte[5];
@@ -3286,9 +3452,9 @@ nextchar);
         uabytes[1] = (byte)((tagLow >> 8) & 0xff);
         uabytes[0] = (byte)(tagLow & 0xff);
         uabytes[4] = 0;
-        return BigInteger.fromBytes(uabytes, true);
+        return EInteger.FromBytes(uabytes, true);
       }
-      return BigInteger.Zero;
+      return EInteger.Zero;
     }
 
     private static int MapCompare(
@@ -3371,7 +3537,7 @@ nextchar);
       }
     }
 
-    private static int TagsCompare(BigInteger[] tagsA, BigInteger[] tagsB) {
+    private static int TagsCompare(EInteger[] tagsA, EInteger[] tagsB) {
       if (tagsA == null) {
         return (tagsB == null) ? 0 : -1;
       }
@@ -3588,7 +3754,7 @@ nextchar);
         if (high == 0 && (low >> 16) == 0) {
           sb.Append(CBORUtilities.LongToString(low));
         } else {
-          BigInteger bi = LowHighToBigInteger(low, high);
+          EInteger bi = LowHighToEInteger(low, high);
           sb.Append(CBORUtilities.BigIntToString(bi));
         }
         sb.Append('(');

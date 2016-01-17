@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
@@ -19,7 +19,7 @@ namespace PeterO.Cbor {
     private bool anyArrayLength;
     private bool arrayMinLength;
     private CBORTypeFilter[] elements;
-    private BigInteger[] tags;
+    private EInteger[] tags;
 
     private CBORTypeFilter Copy() {
       var filter = new CBORTypeFilter();
@@ -94,22 +94,22 @@ namespace PeterO.Cbor {
       filter.types |= 1 << 6;  // Always include the "tag" major type
       var startIndex = 0;
       if (filter.tags != null) {
-        var newTags = new BigInteger[tags.Length + filter.tags.Length];
+        var newTags = new EInteger[tags.Length + filter.tags.Length];
         Array.Copy(filter.tags, newTags, filter.tags.Length);
         startIndex = filter.tags.Length;
         filter.tags = newTags;
       } else {
-        filter.tags = new BigInteger[tags.Length];
+        filter.tags = new EInteger[tags.Length];
       }
       for (var i = 0; i < tags.Length; ++i) {
-        filter.tags[startIndex + i] = (BigInteger)tags[i];
+        filter.tags[startIndex + i] = (EInteger)tags[i];
       }
       return filter;
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithTags(PeterO.BigInteger[])"]/*'/>
-    public CBORTypeFilter WithTags(params BigInteger[] tags) {
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.WithTags(PeterO.Numbers.EInteger[])"]/*'/>
+    public CBORTypeFilter WithTags(params EInteger[] tags) {
       if (this.any) {
         return this;
       }
@@ -122,12 +122,12 @@ namespace PeterO.Cbor {
       filter.types |= 1 << 6;  // Always include the "tag" major type
       var startIndex = 0;
       if (filter.tags != null) {
-        var newTags = new BigInteger[tags.Length + filter.tags.Length];
+        var newTags = new EInteger[tags.Length + filter.tags.Length];
         Array.Copy(filter.tags, newTags, filter.tags.Length);
         startIndex = filter.tags.Length;
         filter.tags = newTags;
       } else {
-        filter.tags = new BigInteger[tags.Length];
+        filter.tags = new EInteger[tags.Length];
       }
       Array.Copy(tags, 0, filter.tags, startIndex, tags.Length);
       return filter;
@@ -253,33 +253,33 @@ params CBORTypeFilter[] elements) {
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(PeterO.BigInteger)"]/*'/>
-    public bool ArrayLengthMatches(BigInteger bigLength) {
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.ArrayLengthMatches(PeterO.Numbers.EInteger)"]/*'/>
+    public bool ArrayLengthMatches(EInteger bigLength) {
       if (bigLength == null) {
         throw new ArgumentNullException("bigLength");
       }
       return ((this.types & (1 << 4)) == 0) && (this.anyArrayLength ||
         ((!this.arrayMinLength &&
-        bigLength.CompareTo((BigInteger)this.arrayLength) == 0) ||
+        bigLength.CompareTo((EInteger)this.arrayLength) == 0) ||
         (this.arrayMinLength &&
-        bigLength.CompareTo((BigInteger)this.arrayLength) >= 0)));
+        bigLength.CompareTo((EInteger)this.arrayLength) >= 0)));
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int32)"]/*'/>
     public bool TagAllowed(int tag) {
-      return this.any || this.TagAllowed((BigInteger)tag);
+      return this.any || this.TagAllowed((EInteger)tag);
     }
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int64)"]/*'/>
     public bool TagAllowed(long tag) {
-      return this.any || this.TagAllowed((BigInteger)tag);
+      return this.any || this.TagAllowed((EInteger)tag);
     }
 
     /// <include file='../../docs.xml'
-    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(PeterO.BigInteger)"]/*'/>
-    public bool TagAllowed(BigInteger bigTag) {
+    /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(PeterO.Numbers.EInteger)"]/*'/>
+    public bool TagAllowed(EInteger bigTag) {
       if (bigTag == null) {
         throw new ArgumentNullException("bigTag");
       }
@@ -295,7 +295,7 @@ params CBORTypeFilter[] elements) {
       if (this.tags == null) {
         return true;
       }
-      foreach (BigInteger tag in this.tags) {
+      foreach (EInteger tag in this.tags) {
         if (bigTag.Equals(tag)) {
           return true;
         }

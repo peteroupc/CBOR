@@ -42,7 +42,7 @@ namespace Test {
     public static ExtendedRational RandomRational(FastRandom rand) {
       BigInteger bigintA = RandomBigInteger(rand);
       BigInteger bigintB = RandomBigInteger(rand);
-      if (bigintB.IsZero) {
+      if (bigintB.Equals(BigInteger.Zero)) {
         bigintB = BigInteger.One;
       }
       return new ExtendedRational(bigintA, bigintB);
@@ -94,10 +94,10 @@ namespace Test {
       if (r.NextValue(100) == 0) {
         int x = r.NextValue(3);
         if (x == 0) {
-          return ExtendedDecimal.PositiveInfinity;
+          return CBORTestCommon.DecPosInf;
         }
         if (x == 1) {
-          return ExtendedDecimal.NegativeInfinity;
+          return CBORTestCommon.DecNegInf;
         }
         if (x == 2) {
           return ExtendedDecimal.NaN;
@@ -132,10 +132,10 @@ namespace Test {
       if (r.NextValue(100) == 0) {
         int x = r.NextValue(3);
         if (x == 0) {
-          return ExtendedFloat.PositiveInfinity;
+          return CBORTestCommon.FloatPosInf;
         }
         if (x == 1) {
-          return ExtendedFloat.NegativeInfinity;
+          return CBORTestCommon.FloatNegInf;
         }
         if (x == 2) {
           return ExtendedFloat.NaN;

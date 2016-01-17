@@ -6,10 +6,10 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
-  internal class CBORBigInteger : ICBORNumber
+  internal class CBOREInteger : ICBORNumber
   {
     public bool IsPositiveInfinity(object obj) {
       return false;
@@ -28,27 +28,27 @@ namespace PeterO.Cbor {
     }
 
     public double AsDouble(object obj) {
-      return ExtendedFloat.FromBigInteger((BigInteger)obj).ToDouble();
+      return EFloat.FromEInteger((EInteger)obj).ToDouble();
     }
 
-    public ExtendedDecimal AsExtendedDecimal(object obj) {
-      return ExtendedDecimal.FromBigInteger((BigInteger)obj);
+    public EDecimal AsExtendedDecimal(object obj) {
+      return EDecimal.FromEInteger((EInteger)obj);
     }
 
-    public ExtendedFloat AsExtendedFloat(object obj) {
-      return ExtendedFloat.FromBigInteger((BigInteger)obj);
+    public EFloat AsExtendedFloat(object obj) {
+      return EFloat.FromEInteger((EInteger)obj);
     }
 
     public float AsSingle(object obj) {
-      return ExtendedFloat.FromBigInteger((BigInteger)obj).ToSingle();
+      return EFloat.FromEInteger((EInteger)obj).ToSingle();
     }
 
-    public BigInteger AsBigInteger(object obj) {
-      return (BigInteger)obj;
+    public EInteger AsBigInteger(object obj) {
+      return (EInteger)obj;
     }
 
     public long AsInt64(object obj) {
-      var bi = (BigInteger)obj;
+      var bi = (EInteger)obj;
       if (bi.CompareTo(CBORObject.Int64MaxValue) > 0 ||
           bi.CompareTo(CBORObject.Int64MinValue) < 0) {
         throw new OverflowException("This object's value is out of range");
@@ -57,27 +57,27 @@ namespace PeterO.Cbor {
     }
 
     public bool CanFitInSingle(object obj) {
-      var bigintItem = (BigInteger)obj;
-      ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
-      ExtendedFloat ef2 = ExtendedFloat.FromSingle(ef.ToSingle());
+      var bigintItem = (EInteger)obj;
+      EFloat ef = EFloat.FromEInteger(bigintItem);
+      EFloat ef2 = EFloat.FromSingle(ef.ToSingle());
       return ef.CompareTo(ef2) == 0;
     }
 
     public bool CanFitInDouble(object obj) {
-      var bigintItem = (BigInteger)obj;
-      ExtendedFloat ef = ExtendedFloat.FromBigInteger(bigintItem);
-      ExtendedFloat ef2 = ExtendedFloat.FromDouble(ef.ToDouble());
+      var bigintItem = (EInteger)obj;
+      EFloat ef = EFloat.FromEInteger(bigintItem);
+      EFloat ef2 = EFloat.FromDouble(ef.ToDouble());
       return ef.CompareTo(ef2) == 0;
     }
 
     public bool CanFitInInt32(object obj) {
-      var bi = (BigInteger)obj;
-      return bi.canFitInInt();
+      var bi = (EInteger)obj;
+      return bi.CanFitInInt32();
     }
 
     public bool CanFitInInt64(object obj) {
-      var bi = (BigInteger)obj;
-      return bi.bitLength() <= 63;
+      var bi = (EInteger)obj;
+      return bi.GetSignedBitLength() <= 63;
     }
 
     public bool CanTruncatedIntFitInInt64(object obj) {
@@ -89,11 +89,11 @@ namespace PeterO.Cbor {
     }
 
     public bool IsZero(object obj) {
-      return ((BigInteger)obj).IsZero;
+      return ((EInteger)obj).IsZero;
     }
 
     public int Sign(object obj) {
-      return ((BigInteger)obj).Sign;
+      return ((EInteger)obj).Sign;
     }
 
     public bool IsIntegral(object obj) {
@@ -101,8 +101,8 @@ namespace PeterO.Cbor {
     }
 
     public int AsInt32(object obj, int minValue, int maxValue) {
-      var bi = (BigInteger)obj;
-      if (bi.canFitInInt()) {
+      var bi = (EInteger)obj;
+      if (bi.CanFitInInt32()) {
         var ret = (int)bi;
         if (ret >= minValue && ret <= maxValue) {
           return ret;
@@ -112,17 +112,17 @@ namespace PeterO.Cbor {
     }
 
     public object Negate(object obj) {
-      var bigobj = (BigInteger)obj;
-      bigobj = -(BigInteger)bigobj;
+      var bigobj = (EInteger)obj;
+      bigobj = -(EInteger)bigobj;
       return bigobj;
     }
 
     public object Abs(object obj) {
-      return BigInteger.Abs((BigInteger)obj);
+      return ((EInteger)obj).Abs();
     }
 
-    public ExtendedRational AsExtendedRational(object obj) {
-      return ExtendedRational.FromBigInteger((BigInteger)obj);
+    public ERational AsExtendedRational(object obj) {
+      return ERational.FromEInteger((EInteger)obj);
     }
   }
 }

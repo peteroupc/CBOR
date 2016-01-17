@@ -367,47 +367,45 @@ cbor.AsBigInteger());
     public void TestCBORInfinity() {
       {
         string stringTemp =
-          CBORObject.FromObject(ExtendedRational.NegativeInfinity).ToString();
+          CBORObject.FromObject(CBORTestCommon.FloatNegInf).ToString();
         Assert.AreEqual(
         "-Infinity",
         stringTemp);
       }
       {
         string stringTemp =
-          CBORObject.FromObject(ExtendedRational.PositiveInfinity).ToString();
+          CBORObject.FromObject(CBORTestCommon.RatPosInf).ToString();
         Assert.AreEqual(
         "Infinity",
         stringTemp);
       }
 
-  CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.NegativeInfinity));
+  CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(CBORTestCommon.FloatNegInf));
 
-  CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedRational.PositiveInfinity));
-      Assert.IsTrue(CBORObject.FromObject(ExtendedRational.NegativeInfinity)
+  CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(CBORTestCommon.RatPosInf));
+      Assert.IsTrue(CBORObject.FromObject(CBORTestCommon.FloatNegInf)
                     .IsInfinity());
-      Assert.IsTrue(CBORObject.FromObject(ExtendedRational.PositiveInfinity)
+      Assert.IsTrue(CBORObject.FromObject(CBORTestCommon.RatPosInf)
                     .IsInfinity());
-      Assert.IsTrue(CBORObject.FromObject(ExtendedRational.NegativeInfinity)
+      Assert.IsTrue(CBORObject.FromObject(CBORTestCommon.FloatNegInf)
                     .IsNegativeInfinity());
-      Assert.IsTrue(CBORObject.FromObject(ExtendedRational.PositiveInfinity)
+      Assert.IsTrue(CBORObject.FromObject(CBORTestCommon.RatPosInf)
                     .IsPositiveInfinity());
-      Assert.IsTrue(CBORObject.PositiveInfinity.IsInfinity());
       Assert.IsTrue(CBORObject.PositiveInfinity.IsPositiveInfinity());
-      Assert.IsTrue(CBORObject.NegativeInfinity.IsInfinity());
       Assert.IsTrue(CBORObject.NegativeInfinity.IsNegativeInfinity());
       Assert.IsTrue(CBORObject.NaN.IsNaN());
 
-  CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.NegativeInfinity));
+  CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(CBORTestCommon.DecNegInf));
 
-  CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.NegativeInfinity));
+  CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(CBORTestCommon.FloatNegInf));
 
   CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(Double.NegativeInfinity));
 
   CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(Single.NegativeInfinity));
 
-  CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedDecimal.PositiveInfinity));
+  CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(CBORTestCommon.DecPosInf));
 
-  CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(ExtendedFloat.PositiveInfinity));
+  CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(CBORTestCommon.FloatPosInf));
 
   CBORTestCommon.AssertRoundTrip(CBORObject.FromObject(Double.PositiveInfinity));
 
@@ -447,19 +445,19 @@ AddSubCompare(objectTemp, objectTemp2);
       cbor =
 
         CBORObject.FromObjectAndTag(
-          CBORObject.FromObject(ExtendedFloat.NegativeInfinity),
+          CBORObject.FromObject(CBORTestCommon.FloatNegInf),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
       cbor =
 
         CBORObject.FromObjectAndTag(
-          CBORObject.FromObject(ExtendedDecimal.NegativeInfinity),
+          CBORObject.FromObject(CBORTestCommon.DecNegInf),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
       cbor =
 
         CBORObject.FromObjectAndTag(
-          CBORObject.FromObject(ExtendedRational.NegativeInfinity),
+          CBORObject.FromObject(CBORTestCommon.FloatNegInf),
           1956611);
       CBORTestCommon.AssertRoundTrip(cbor);
     }
@@ -1114,7 +1112,7 @@ AddSubCompare(objectTemp, objectTemp2);
         maxuint };
       Assert.IsFalse(CBORObject.True.IsTagged);
       Assert.AreEqual(
-        BigInteger.Zero - BigInteger.One,
+        BigInteger.valueOf(-1),
         CBORObject.True.InnermostTag);
       BigInteger[] tagstmp = CBORObject.True.GetTags();
       Assert.AreEqual(0, tagstmp.Length);
@@ -1184,7 +1182,7 @@ AddSubCompare(objectTemp, objectTemp2);
                     stringTemp);
               }
             }
-            if (!bi[1].Equals((BigInteger)bigintTemp)) {
+            if (!bi[1].Equals((object)bigintTemp)) {
               {
                 string stringTemp = String.Format(
                     CultureInfo.InvariantCulture,
@@ -1196,7 +1194,7 @@ AddSubCompare(objectTemp, objectTemp2);
                     stringTemp);
               }
             }
-            if (!obj2.InnermostTag.Equals((BigInteger)bigintTemp)) {
+            if (!obj2.InnermostTag.Equals((object)bigintTemp)) {
               {
                 string stringTemp = String.Format(
                     CultureInfo.InvariantCulture,

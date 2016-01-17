@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
@@ -65,7 +65,7 @@ namespace PeterO.Cbor {
         if (i == str.Length) {
           if (preserveNegativeZero && negative) {
             return CBORObject.FromObject(
-             ExtendedDecimal.NegativeZero);
+             EDecimal.NegativeZero);
           }
           return CBORObject.FromObject(0);
         }
@@ -230,31 +230,31 @@ namespace PeterO.Cbor {
             mantInt = -mantInt;
             if (preserveNegativeZero && mantInt == 0) {
               return CBORObject.FromObject(
-                ExtendedDecimal.NegativeZero);
+                EDecimal.NegativeZero);
             }
           }
           return CBORObject.FromObject(mantInt);
         } else {
-          BigInteger bigmant2 = mant.AsBigInteger();
+          EInteger bigmant2 = mant.AsBigInteger();
           if (negative) {
-            bigmant2 = -(BigInteger)bigmant2;
+            bigmant2 = -(EInteger)bigmant2;
           }
           return CBORObject.FromObject(bigmant2);
         }
       } else {
-        BigInteger bigmant = (mant == null) ? ((BigInteger)mantInt) :
+        EInteger bigmant = (mant == null) ? ((EInteger)mantInt) :
           mant.AsBigInteger();
-        BigInteger bigexp = (newScale == null) ? ((BigInteger)newScaleInt) :
+        EInteger bigexp = (newScale == null) ? ((EInteger)newScaleInt) :
           newScale.AsBigInteger();
         if (negative) {
-          bigmant = -(BigInteger)bigmant;
+          bigmant = -(EInteger)bigmant;
         }
-        ExtendedDecimal edec;
-        edec = ExtendedDecimal.Create(
+        EDecimal edec;
+        edec = EDecimal.Create(
           bigmant,
           bigexp);
         if (negative && preserveNegativeZero && bigmant.IsZero) {
-          ExtendedDecimal negzero = ExtendedDecimal.NegativeZero;
+          EDecimal negzero = EDecimal.NegativeZero;
           negzero = negzero.Quantize(bigexp, null);
           edec = negzero.Subtract(edec);
         }

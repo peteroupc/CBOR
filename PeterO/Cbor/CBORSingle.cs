@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal sealed class CBORSingle : ICBORNumber
@@ -33,19 +33,19 @@ namespace PeterO.Cbor {
       return (double)(float)obj;
     }
 
-    public ExtendedDecimal AsExtendedDecimal(object obj) {
-      return ExtendedDecimal.FromSingle((float)obj);
+    public EDecimal AsExtendedDecimal(object obj) {
+      return EDecimal.FromSingle((float)obj);
     }
 
-    public ExtendedFloat AsExtendedFloat(object obj) {
-      return ExtendedFloat.FromSingle((float)obj);
+    public EFloat AsExtendedFloat(object obj) {
+      return EFloat.FromSingle((float)obj);
     }
 
     public float AsSingle(object obj) {
       return (float)obj;
     }
 
-    public BigInteger AsBigInteger(object obj) {
+    public EInteger AsBigInteger(object obj) {
       return CBORUtilities.BigIntegerFromSingle((float)obj);
     }
 
@@ -148,8 +148,8 @@ namespace PeterO.Cbor {
       return (val < 0) ? -val : obj;
     }
 
-    public ExtendedRational AsExtendedRational(object obj) {
-      return ExtendedRational.FromSingle((float)obj);
+    public ERational AsExtendedRational(object obj) {
+      return ERational.FromSingle((float)obj);
     }
   }
 }

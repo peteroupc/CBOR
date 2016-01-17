@@ -6,7 +6,7 @@ If you like this, you should donate to Peter O.
 at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
  */
 using System;
-using PeterO;
+using PeterO; using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal sealed class FastInteger2 {
@@ -23,9 +23,9 @@ namespace PeterO.Cbor {
         this.data[0] = val;
       }
 
-      internal BigInteger ToBigInteger() {
+      internal EInteger ToEInteger() {
         if (this.wordCount == 1 && (this.data[0] >> 31) == 0) {
-          return (BigInteger)((int)this.data[0]);
+          return (EInteger)((int)this.data[0]);
         }
         var bytes = new byte[(this.wordCount * 4) + 1];
         for (var i = 0; i < this.wordCount; ++i) {
@@ -35,7 +35,7 @@ namespace PeterO.Cbor {
           bytes[(i * 4) + 3] = (byte)((this.data[i] >> 24) & 0xff);
         }
         bytes[bytes.Length - 1] = (byte)0;
-        return BigInteger.fromBytes(bytes, true);
+        return EInteger.FromBytes(bytes, true);
       }
 
       internal int[] GetLastWordsInternal(int numWords32Bit) {
@@ -305,16 +305,16 @@ namespace PeterO.Cbor {
 
     private int smallValue;  // if integerMode is 0
     private MutableNumber mnum;  // if integerMode is 1
-    private BigInteger largeValue;  // if integerMode is 2
+    private EInteger largeValue;  // if integerMode is 2
     private int integerMode;
-    private static readonly BigInteger ValueInt32MinValue =
-      (BigInteger)Int32.MinValue;
+    private static readonly EInteger ValueInt32MinValue =
+      (EInteger)Int32.MinValue;
 
-    private static readonly BigInteger ValueInt32MaxValue =
-      (BigInteger)Int32.MaxValue;
+    private static readonly EInteger ValueInt32MaxValue =
+      (EInteger)Int32.MaxValue;
 
-    private static readonly BigInteger ValueNegativeInt32MinValue =
-    -(BigInteger)ValueInt32MinValue;
+    private static readonly EInteger ValueNegativeInt32MinValue =
+    -(EInteger)ValueInt32MinValue;
 
     internal FastInteger2(int value) {
       this.smallValue = value;
@@ -332,10 +332,10 @@ namespace PeterO.Cbor {
       }
     }
 
-    internal static BigInteger WordsToBigInteger(int[] words) {
+    internal static EInteger WordsToEInteger(int[] words) {
       int wordCount = words.Length;
       if (wordCount == 1 && (words[0] >> 31) == 0) {
-        return (BigInteger)((int)words[0]);
+        return (EInteger)((int)words[0]);
       }
       var bytes = new byte[(wordCount * 4) + 1];
       for (var i = 0; i < wordCount; ++i) {
@@ -345,7 +345,7 @@ namespace PeterO.Cbor {
         bytes[(i * 4) + 3] = (byte)((words[i] >> 24) & 0xff);
       }
       bytes[bytes.Length - 1] = (byte)0;
-      return BigInteger.fromBytes(bytes, true);
+      return EInteger.FromBytes(bytes, true);
     }
 
     internal FastInteger2 SetInt(int val) {
@@ -382,8 +382,8 @@ namespace PeterO.Cbor {
                 // if either operand is negative
                 // convert to big integer
                 this.integerMode = 2;
-                this.largeValue = (BigInteger)this.smallValue;
-                this.largeValue *= (BigInteger)val;
+                this.largeValue = (EInteger)this.smallValue;
+                this.largeValue *= (EInteger)val;
               }
             } else {
               smallValue *= val;
@@ -392,14 +392,14 @@ namespace PeterO.Cbor {
           case 1:
             if (val < 0) {
               this.integerMode = 2;
-              this.largeValue = this.mnum.ToBigInteger();
-              this.largeValue *= (BigInteger)val;
+              this.largeValue = this.mnum.ToEInteger();
+              this.largeValue *= (EInteger)val;
             } else {
               mnum.Multiply(val);
             }
             break;
           case 2:
-            this.largeValue *= (BigInteger)val;
+            this.largeValue *= (EInteger)val;
             break;
           default: throw new InvalidOperationException();
         }
@@ -410,7 +410,7 @@ namespace PeterO.Cbor {
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.FastInteger2.Subtract(PeterO.Cbor.FastInteger2)"]/*'/>
     internal FastInteger2 Subtract(FastInteger2 val) {
-      BigInteger valValue;
+      EInteger valValue;
       switch (this.integerMode) {
         case 0:
           if (val.integerMode == 0) {
@@ -419,16 +419,16 @@ namespace PeterO.Cbor {
                 (vsv > 0 && Int32.MinValue + vsv > this.smallValue)) {
               // would overflow, convert to large
               this.integerMode = 2;
-              this.largeValue = (BigInteger)this.smallValue;
-              this.largeValue -= (BigInteger)vsv;
+              this.largeValue = (EInteger)this.smallValue;
+              this.largeValue -= (EInteger)vsv;
             } else {
               this.smallValue -= vsv;
             }
           } else {
             integerMode = 2;
-            largeValue = (BigInteger)smallValue;
+            largeValue = (EInteger)smallValue;
             valValue = val.AsBigInteger();
-            largeValue -= (BigInteger)valValue;
+            largeValue -= (EInteger)valValue;
           }
           break;
         case 1:
@@ -440,14 +440,14 @@ namespace PeterO.Cbor {
             mnum.SubtractInt(val.smallValue);
           } else {
             integerMode = 2;
-            largeValue = mnum.ToBigInteger();
+            largeValue = mnum.ToEInteger();
             valValue = val.AsBigInteger();
-            largeValue -= (BigInteger)valValue;
+            largeValue -= (EInteger)valValue;
           }
           break;
         case 2:
           valValue = val.AsBigInteger();
-          this.largeValue -= (BigInteger)valValue;
+          this.largeValue -= (EInteger)valValue;
           break;
         default: throw new InvalidOperationException();
       }
@@ -465,8 +465,8 @@ namespace PeterO.Cbor {
                 (val > 0 && Int32.MinValue + val > this.smallValue)) {
           // would overflow, convert to large
           this.integerMode = 2;
-          this.largeValue = (BigInteger)this.smallValue;
-          this.largeValue -= (BigInteger)val;
+          this.largeValue = (EInteger)this.smallValue;
+          this.largeValue -= (EInteger)val;
         } else {
           this.smallValue -= val;
         }
@@ -476,7 +476,7 @@ namespace PeterO.Cbor {
     }
 
     internal FastInteger2 Add(FastInteger2 val) {
-      BigInteger valValue;
+      EInteger valValue;
       switch (this.integerMode) {
         case 0:
           if (val.integerMode == 0) {
@@ -491,17 +491,17 @@ namespace PeterO.Cbor {
                 this.mnum.Add(val.smallValue);
               } else {
                 this.integerMode = 2;
-                this.largeValue = (BigInteger)this.smallValue;
-                this.largeValue += (BigInteger)val.smallValue;
+                this.largeValue = (EInteger)this.smallValue;
+                this.largeValue += (EInteger)val.smallValue;
               }
             } else {
               this.smallValue += val.smallValue;
             }
           } else {
             integerMode = 2;
-            largeValue = (BigInteger)smallValue;
+            largeValue = (EInteger)smallValue;
             valValue = val.AsBigInteger();
-            largeValue += (BigInteger)valValue;
+            largeValue += (EInteger)valValue;
           }
           break;
         case 1:
@@ -509,14 +509,14 @@ namespace PeterO.Cbor {
             this.mnum.Add(val.smallValue);
           } else {
             integerMode = 2;
-            largeValue = mnum.ToBigInteger();
+            largeValue = mnum.ToEInteger();
             valValue = val.AsBigInteger();
-            largeValue += (BigInteger)valValue;
+            largeValue += (EInteger)valValue;
           }
           break;
         case 2:
           valValue = val.AsBigInteger();
-          this.largeValue += (BigInteger)valValue;
+          this.largeValue += (EInteger)valValue;
           break;
         default: throw new InvalidOperationException();
       }
@@ -524,7 +524,7 @@ namespace PeterO.Cbor {
     }
 
     internal FastInteger2 AddInt(int val) {
-      BigInteger valValue;
+      EInteger valValue;
       switch (this.integerMode) {
         case 0:
           if ((this.smallValue < 0 && (int)val < Int32.MinValue -
@@ -537,8 +537,8 @@ namespace PeterO.Cbor {
               this.mnum.Add(val);
             } else {
               this.integerMode = 2;
-              this.largeValue = (BigInteger)this.smallValue;
-              this.largeValue += (BigInteger)val;
+              this.largeValue = (EInteger)this.smallValue;
+              this.largeValue += (EInteger)val;
             }
           } else {
             smallValue += val;
@@ -549,14 +549,14 @@ namespace PeterO.Cbor {
             this.mnum.Add(val);
           } else {
             integerMode = 2;
-            largeValue = mnum.ToBigInteger();
-            valValue = (BigInteger)val;
-            largeValue += (BigInteger)valValue;
+            largeValue = mnum.ToEInteger();
+            valValue = (EInteger)val;
+            largeValue += (EInteger)valValue;
           }
           break;
         case 2:
-          valValue = (BigInteger)val;
-          this.largeValue += (BigInteger)valValue;
+          valValue = (EInteger)val;
+          this.largeValue += (EInteger)valValue;
           break;
         default: throw new InvalidOperationException();
       }
@@ -570,7 +570,7 @@ namespace PeterO.Cbor {
         case 1:
           return this.mnum.CanFitInInt32();
           case 2: {
-            return this.largeValue.canFitInInt();
+            return this.largeValue.CanFitInInt32();
           }
         default:
           throw new InvalidOperationException();
@@ -594,12 +594,12 @@ namespace PeterO.Cbor {
       }
     }
 
-    internal BigInteger AsBigInteger() {
+    internal EInteger AsBigInteger() {
       switch (this.integerMode) {
         case 0:
-          return BigInteger.valueOf(this.smallValue);
+          return EInteger.FromInt32(this.smallValue);
         case 1:
-          return this.mnum.ToBigInteger();
+          return this.mnum.ToEInteger();
         case 2:
           return this.largeValue;
         default: throw new InvalidOperationException();
