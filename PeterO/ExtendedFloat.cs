@@ -46,6 +46,13 @@ namespace PeterO {
       }
     }
 
+    internal static ExtendedFloat ToLegacy(EFloat ei) {
+      return new ExtendedFloat(ei);
+    }
+    internal static EFloat FromLegacy(ExtendedFloat bei) {
+      return bei.Ef;
+    }
+
     #region Equals and GetHashCode implementation
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.EqualsInternal(PeterO.ExtendedFloat)"]/*'/>

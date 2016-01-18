@@ -40,6 +40,13 @@ namespace PeterO {
       }
     }
 
+    internal static ExtendedRational ToLegacy(ERational ei) {
+      return new ExtendedRational(ei);
+    }
+    internal static ERational FromLegacy(ExtendedRational bei) {
+      return bei.Er;
+    }
+
     #region Equals and GetHashCode implementation
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedRational.Equals(System.Object)"]/*'/>

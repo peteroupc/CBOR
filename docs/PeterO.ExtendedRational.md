@@ -12,6 +12,8 @@ Arbitrary-precision rational number. This class cannot be inherited; this is a c
         PeterO.BigInteger numerator,
         PeterO.BigInteger denominator);
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Initializes a new instance of the  class.
 
 <b>Parameters:</b>
@@ -79,6 +81,8 @@ A rational number for zero.
 
     public PeterO.BigInteger Denominator { get; }
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets this object's denominator.
 
 <b>Returns:</b>
@@ -88,6 +92,8 @@ This object's denominator.
 ### IsFinite
 
     public bool IsFinite { get; }
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets a value indicating whether this object is finite (not infinity or NaN).
 
@@ -99,6 +105,8 @@ True if this object is finite (not infinity or NaN); otherwise, false.
 
     public bool IsNegative { get; }
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets a value indicating whether this object's value is negative (including negative zero).
 
 <b>Returns:</b>
@@ -108,6 +116,8 @@ True if this object's value is negative; otherwise, false.
 ### IsZero
 
     public bool IsZero { get; }
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets a value indicating whether this object's value equals 0.
 
@@ -119,6 +129,8 @@ True if this object's value equals 0; otherwise, false.
 
     public PeterO.BigInteger Numerator { get; }
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets this object's numerator.
 
 <b>Returns:</b>
@@ -128,6 +140,8 @@ This object's numerator. If this object is a not-a-number value, returns the dia
 ### Sign
 
     public int Sign { get; }
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets the sign of this rational number.
 
@@ -139,6 +153,8 @@ Zero if this value is zero or negative zero; -1 if this value is less than 0; an
 
     public PeterO.BigInteger UnsignedNumerator { get; }
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets this object's numerator with the sign removed.
 
 <b>Returns:</b>
@@ -148,6 +164,8 @@ This object's numerator. If this object is a not-a-number value, returns the dia
 ### Abs
 
     public PeterO.ExtendedRational Abs();
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the absolute value of this rational number.
 
@@ -159,6 +177,8 @@ An arbitrary-precision rational number.
 
     public PeterO.ExtendedRational Add(
         PeterO.ExtendedRational otherValue);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Adds two rational numbers.
 
@@ -181,6 +201,8 @@ The parameter <i>otherValue</i>
     public sealed int CompareTo(
         PeterO.ExtendedRational other);
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Compares an arbitrary-precision rational number with this instance.
 
 <b>Parameters:</b>
@@ -202,6 +224,8 @@ The parameter <i>other</i>
     public int CompareToBinary(
         PeterO.ExtendedFloat other);
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Compares an arbitrary-precision binary float with this instance.
 
 <b>Parameters:</b>
@@ -222,6 +246,8 @@ The parameter <i>other</i>
 
     public int CompareToDecimal(
         PeterO.ExtendedDecimal other);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Compares an arbitrary-precision decimal number with this instance.
 
@@ -245,6 +271,8 @@ The parameter <i>other</i>
         int numeratorSmall,
         int denominatorSmall);
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Creates a rational number with the given numerator and denominator.
 
 <b>Parameters:</b>
@@ -262,6 +290,8 @@ An arbitrary-precision rational number.
     public static PeterO.ExtendedRational Create(
         PeterO.BigInteger numerator,
         PeterO.BigInteger denominator);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a rational number with the given numerator and denominator.
 
@@ -286,6 +316,8 @@ The parameter <i>numerator</i>
 
     public static PeterO.ExtendedRational CreateNaN(
         PeterO.BigInteger diag);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a not-a-number arbitrary-precision rational number.
 
@@ -313,6 +345,8 @@ The parameter <i>diag</i>
         PeterO.BigInteger diag,
         bool signaling,
         bool negative);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a not-a-number arbitrary-precision rational number.
 
@@ -342,6 +376,8 @@ The parameter <i>diag</i>
 
     public PeterO.ExtendedRational Divide(
         PeterO.ExtendedRational otherValue);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Divides this instance by the value of an arbitrary-precision rational number object.
 
@@ -379,6 +415,8 @@ True if the objects are equal; otherwise, false.
     public sealed bool Equals(
         PeterO.ExtendedRational other);
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Not documented yet.
 
 <b>Parameters:</b>
@@ -400,6 +438,8 @@ The parameter <i>other</i>
     public static PeterO.ExtendedRational FromBigInteger(
         PeterO.BigInteger bigint);
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts a big integer to a rational number.
 
 <b>Parameters:</b>
@@ -414,6 +454,8 @@ The exact value of the integer as a rational number.
 
     public static PeterO.ExtendedRational FromDouble(
         double flt);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts a 64-bit floating-point number to a rational number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the number to a string.
 
@@ -430,6 +472,8 @@ A rational number with the same value as  <i>flt</i>
 
     public static PeterO.ExtendedRational FromExtendedDecimal(
         PeterO.ExtendedDecimal ef);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts an arbitrary-precision decimal number to a rational number.
 
@@ -452,6 +496,8 @@ The parameter <i>ef</i>
     public static PeterO.ExtendedRational FromExtendedFloat(
         PeterO.ExtendedFloat ef);
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Not documented yet.
 
 <b>Parameters:</b>
@@ -473,6 +519,8 @@ The parameter <i>ef</i>
     public static PeterO.ExtendedRational FromInt32(
         int smallint);
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Not documented yet.
 
 <b>Parameters:</b>
@@ -488,6 +536,8 @@ An arbitrary-precision rational number.
     public static PeterO.ExtendedRational FromInt64(
         long longInt);
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Not documented yet.
 
 <b>Parameters:</b>
@@ -502,6 +552,8 @@ An arbitrary-precision rational number.
 
     public static PeterO.ExtendedRational FromSingle(
         float flt);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts a 32-bit floating-point number to a rational number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the number to a string.
 
@@ -528,6 +580,8 @@ A 32-bit hash code.
 
     public bool IsInfinity();
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets a value indicating whether this object's value is infinity.
 
 <b>Returns:</b>
@@ -537,6 +591,8 @@ True if this object's value is infinity; otherwise, false.
 ### IsNaN
 
     public bool IsNaN();
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns whether this object is a not-a-number value.
 
@@ -548,6 +604,8 @@ True if this object is a not-a-number value; otherwise, false.
 
     public bool IsNegativeInfinity();
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns whether this object is negative infinity.
 
 <b>Returns:</b>
@@ -557,6 +615,8 @@ True if this object is negative infinity; otherwise, false.
 ### IsPositiveInfinity
 
     public bool IsPositiveInfinity();
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns whether this object is positive infinity.
 
@@ -568,6 +628,8 @@ True if this object is positive infinity; otherwise, false.
 
     public bool IsQuietNaN();
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns whether this object is a quiet not-a-number value.
 
 <b>Returns:</b>
@@ -577,6 +639,8 @@ True if this object is a quiet not-a-number value; otherwise, false.
 ### IsSignalingNaN
 
     public bool IsSignalingNaN();
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns whether this object is a signaling not-a-number value (which causes an error if the value is passed to any arithmetic operation in this class).
 
@@ -588,6 +652,8 @@ True if this object is a signaling not-a-number value (which causes an error if 
 
     public PeterO.ExtendedRational Multiply(
         PeterO.ExtendedRational otherValue);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Multiplies this instance by the value of an arbitrary-precision rational number.
 
@@ -609,6 +675,8 @@ The parameter <i>otherValue</i>
 
     public PeterO.ExtendedRational Negate();
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds a rational number with the same value as this object but with the sign reversed.
 
 <b>Returns:</b>
@@ -619,6 +687,8 @@ The negated form of this rational number.
 
     public PeterO.ExtendedRational Remainder(
         PeterO.ExtendedRational otherValue);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the remainder that results when this instance is divided by the value of an arbitrary-precision rational number.
 
@@ -641,6 +711,8 @@ The parameter <i>otherValue</i>
     public PeterO.ExtendedRational Subtract(
         PeterO.ExtendedRational otherValue);
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Subtracts an arbitrary-precision rational number from this instance.
 
 <b>Parameters:</b>
@@ -661,6 +733,8 @@ The parameter <i>otherValue</i>
 
     public PeterO.BigInteger ToBigInteger();
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts this value to an arbitrary-precision integer. Any fractional part in this value will be discarded when converting to a big integer.
 
 <b>Returns:</b>
@@ -675,6 +749,8 @@ This object's value is infinity or NaN.
 ### ToBigIntegerExact
 
     public PeterO.BigInteger ToBigIntegerExact();
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts this value to an arbitrary-precision integer, checking whether the value is an exact integer.
 
@@ -694,6 +770,8 @@ This object's value is not an exact integer.
 
     public double ToDouble();
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts this value to a 64-bit floating-point number. The half-even rounding mode is used.
 
 <b>Returns:</b>
@@ -704,6 +782,8 @@ The closest 64-bit floating-point number to this value. The return value can be 
 
     public PeterO.ExtendedDecimal ToExtendedDecimal(
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts this rational number to a decimal number and rounds the result to the given precision.
 
@@ -719,6 +799,8 @@ An arbitrary-precision decimal.
 
     public PeterO.ExtendedDecimal ToExtendedDecimal();
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts this rational number to a decimal number.
 
 <b>Returns:</b>
@@ -729,6 +811,8 @@ The exact value of the rational number, or not-a-number (NaN) if the result can'
 
     public PeterO.ExtendedDecimal ToExtendedDecimalExactIfPossible(
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts this rational number to a decimal number, but if the result would have a nonterminating decimal expansion, rounds that result to the given precision.
 
@@ -745,6 +829,8 @@ An arbitrary-precision decimal.
     public PeterO.ExtendedFloat ToExtendedFloat(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts this rational number to a binary number and rounds the result to the given precision.
 
 <b>Parameters:</b>
@@ -759,6 +845,8 @@ An arbitrary-precision binary float.
 
     public PeterO.ExtendedFloat ToExtendedFloat();
 
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts this rational number to a binary number.
 
 <b>Returns:</b>
@@ -769,6 +857,8 @@ The exact value of the rational number, or not-a-number (NaN) if the result can'
 
     public PeterO.ExtendedFloat ToExtendedFloatExactIfPossible(
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts this rational number to a binary number, but if the result would have a nonterminating binary expansion, rounds that result to the given precision.
 
@@ -783,6 +873,8 @@ An arbitrary-precision binary float.
 ### ToSingle
 
     public float ToSingle();
+
+<b>Deprecated.</b> Use ERational from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.
 

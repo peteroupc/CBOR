@@ -1279,11 +1279,11 @@ A CBOR number.
     public static PeterO.Cbor.CBORObject FromObject(
         PeterO.ExtendedRational bigValue);
 
-Generates a CBOR object from a rational number.
+Generates a CBOR object from an arbitrary-precision binary floating-point number.
 
 <b>Parameters:</b>
 
- * <i>bigValue</i>: A rational number.
+ * <i>bigValue</i>: An arbitrary-precision binary floating-point number.
 
 <b>Returns:</b>
 

@@ -273,8 +273,8 @@ params CBORTypeFilter[] elements) {
 
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int64)"]/*'/>
-    public bool TagAllowed(long tag) {
-      return this.any || this.TagAllowed((EInteger)tag);
+    public bool TagAllowed(long longTag) {
+      return this.any || this.TagAllowed((EInteger)longTag);
     }
 
     /// <include file='../../docs.xml'

@@ -6,6 +6,8 @@
         System.IFormattable,
         System.IConvertible
 
+<b>Deprecated.</b> Use ERounding from PeterO.Numbers/com.upokecenter.numbers.
+
 Specifies the mode to use when "shortening" numbers that otherwise can't fit a given number of digits, so that the shortened number has about the same value. This "shortening" is known as rounding.
 
 ### Ceiling
