@@ -74,6 +74,8 @@ Represents the number 0.
 
     public PeterO.BigInteger Exponent { get; }
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets this object's exponent. This object's value will be an integer if the exponent is positive or zero.
 
 <b>Returns:</b>
@@ -83,6 +85,8 @@ This object's exponent. This object's value will be an integer if the exponent i
 ### IsFinite
 
     public bool IsFinite { get; }
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets a value indicating whether this object is finite (not infinity or NaN).
 
@@ -94,6 +98,8 @@ True if this object is finite (not infinity or NaN); otherwise, false.
 
     public bool IsNegative { get; }
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets a value indicating whether this object is negative, including negative zero.
 
 <b>Returns:</b>
@@ -103,6 +109,8 @@ True if this object is negative, including negative zero; otherwise, false.
 ### IsZero
 
     public bool IsZero { get; }
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets a value indicating whether this object's value equals 0.
 
@@ -114,6 +122,8 @@ True if this object's value equals 0; otherwise, false.
 
     public PeterO.BigInteger Mantissa { get; }
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets this object's un-scaled value.
 
 <b>Returns:</b>
@@ -123,6 +133,8 @@ This object's un-scaled value. Will be negative if this object's value is negati
 ### Sign
 
     public int Sign { get; }
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
 
@@ -134,6 +146,8 @@ This value's sign: -1 if negative; 1 if positive; 0 if zero.
 
     public PeterO.BigInteger UnsignedMantissa { get; }
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the absolute value of this object's un-scaled value.
 
 <b>Returns:</b>
@@ -144,6 +158,8 @@ The absolute value of this object's un-scaled value.
 
     public PeterO.ExtendedFloat Abs(
         PeterO.PrecisionContext context);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the absolute value of this object (if it's negative, it becomes positive).
 
@@ -159,6 +175,8 @@ The absolute value of this object.
 
     public PeterO.ExtendedFloat Abs();
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the absolute value of this object.
 
 <b>Returns:</b>
@@ -169,6 +187,8 @@ An arbitrary-precision binary float.
 
     public PeterO.ExtendedFloat Add(
         PeterO.ExtendedFloat otherValue);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Adds this object and another binary float and returns the result.
 
@@ -192,6 +212,8 @@ The parameter <i>otherValue</i>
         PeterO.ExtendedFloat otherValue,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds the sum of this object and another object. The result's exponent is set to the lower of the exponents of the two operands.
 
 <b>Parameters:</b>
@@ -214,6 +236,8 @@ The parameter <i>otherValue</i>
 
     public sealed int CompareTo(
         PeterO.ExtendedFloat other);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Compares the mathematical values of this object and another object, accepting NaN values.This method is not consistent with the Equals method because two different numbers with the same mathematical value, but different exponents, will compare as equal.
 
@@ -242,6 +266,8 @@ The parameter <i>other</i>
         PeterO.ExtendedFloat other,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Compares the mathematical values of this object and another object, treating quiet NaN as signaling.In this method, negative zero and positive zero are considered equal.
 
 If this object or the other object is a quiet NaN or signaling NaN, this method will return a quiet NaN and will signal a FlagInvalid flag.
@@ -267,6 +293,8 @@ The parameter <i>other</i>
     public PeterO.ExtendedFloat CompareToWithContext(
         PeterO.ExtendedFloat other,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Compares the mathematical values of this object and another object.In this method, negative zero and positive zero are considered equal.
 
@@ -294,6 +322,8 @@ The parameter <i>other</i>
         int mantissaSmall,
         int exponentSmall);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Creates a number with the value exponent*2^mantissa.
 
 <b>Parameters:</b>
@@ -311,6 +341,8 @@ An arbitrary-precision binary float.
     public static PeterO.ExtendedFloat Create(
         PeterO.BigInteger mantissa,
         PeterO.BigInteger exponent);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a number with the value exponent*2^mantissa.
 
@@ -335,6 +367,8 @@ The parameter <i>mantissa</i>
 
     public static PeterO.ExtendedFloat CreateNaN(
         PeterO.BigInteger diag);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a not-a-number arbitrary-precision binary float.
 
@@ -363,6 +397,8 @@ The parameter <i>diag</i>
         bool signaling,
         bool negative,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a not-a-number arbitrary-precision binary float.
 
@@ -395,6 +431,8 @@ The parameter <i>diag</i>
     public PeterO.ExtendedFloat Divide(
         PeterO.ExtendedFloat divisor);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Divides this object by another binary float and returns the result. When possible, the result will be exact.
 
 <b>Parameters:</b>
@@ -419,6 +457,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedFloat Divide(
         PeterO.ExtendedFloat divisor,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Divides this arbitrary-precision binary float by another arbitrary-precision binary float object. The preferred exponent for the result is this object's exponent minus the divisor's exponent.
 
@@ -448,6 +488,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedFloat[] DivideAndRemainderNaturalScale(
         PeterO.ExtendedFloat divisor);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale.
 
 <b>Parameters:</b>
@@ -463,6 +505,8 @@ A 2 element array consisting of the quotient and remainder in that order.
     public PeterO.ExtendedFloat[] DivideAndRemainderNaturalScale(
         PeterO.ExtendedFloat divisor,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale.
 
@@ -482,6 +526,8 @@ A 2 element array consisting of the quotient and remainder in that order.
         PeterO.ExtendedFloat divisor,
         long desiredExponentSmall,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Divides two arbitrary-precision binary floats, and gives a particular exponent to the result.
 
@@ -513,6 +559,8 @@ The parameter <i>divisor</i>
         long desiredExponentSmall,
         PeterO.Rounding rounding);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Divides two arbitrary-precision binary floats, and gives a particular exponent to the result.
 
 <b>Parameters:</b>
@@ -542,6 +590,8 @@ The parameter <i>divisor</i>
         PeterO.ExtendedFloat divisor,
         PeterO.BigInteger desiredExponent,
         PeterO.Rounding rounding);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Divides two arbitrary-precision binary floats, and gives a particular exponent to the result.
 
@@ -574,6 +624,8 @@ The parameter <i>divisor</i>
         PeterO.BigInteger exponent,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Divides two arbitrary-precision binary floats, and gives a particular exponent to the result.
 
 <b>Parameters:</b>
@@ -603,6 +655,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedFloat DivideToIntegerNaturalScale(
         PeterO.ExtendedFloat divisor);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Divides two arbitrary-precision binary floats, and returns the integer part of the result, rounded down, with the preferred exponent set to this value's exponent minus the divisor's exponent.
 
 <b>Parameters:</b>
@@ -624,6 +678,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedFloat DivideToIntegerNaturalScale(
         PeterO.ExtendedFloat divisor,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Divides this object by another object, and returns the integer part of the result, with the preferred exponent set to this value's exponent minus the divisor's exponent.
 
@@ -652,6 +708,8 @@ The parameter <i>divisor</i>
         PeterO.ExtendedFloat divisor,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Divides this object by another object, and returns the integer part of the result, with the exponent set to 0.
 
 <b>Parameters:</b>
@@ -675,6 +733,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedFloat DivideToSameExponent(
         PeterO.ExtendedFloat divisor,
         PeterO.Rounding rounding);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Divides this object by another binary float and returns a result with the same exponent as this object (the dividend).
 
@@ -717,6 +777,8 @@ True if the objects are equal; otherwise, false.
     public sealed bool Equals(
         PeterO.ExtendedFloat other);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Determines whether this object's mantissa and exponent are equal to those of another object.
 
 <b>Parameters:</b>
@@ -737,6 +799,8 @@ The parameter <i>other</i>
 
     public bool EqualsInternal(
         PeterO.ExtendedFloat otherValue);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Determines whether this object's mantissa and exponent are equal to those of another object.
 
@@ -759,6 +823,8 @@ The parameter <i>otherValue</i>
     public PeterO.ExtendedFloat Exp(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds e (the base of natural logarithms) raised to the power of this object's value.
 
 <b>Parameters:</b>
@@ -779,6 +845,8 @@ The parameter <i>ctx</i>
 
     public static PeterO.ExtendedFloat FromBigInteger(
         PeterO.BigInteger bigint);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts a big integer to the same value as a binary float.
 
@@ -801,6 +869,8 @@ The parameter <i>bigint</i>
     public static PeterO.ExtendedFloat FromDouble(
         double dbl);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Creates a binary float from a 64-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first.
 
 <b>Parameters:</b>
@@ -817,6 +887,8 @@ A binary float with the same value as  <i>dbl</i>
     public static PeterO.ExtendedFloat FromInt32(
         int valueSmaller);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Creates a binary float from a 32-bit signed integer.
 
 <b>Parameters:</b>
@@ -832,6 +904,8 @@ An arbitrary-precision binary float with the exponent set to 0.
     public static PeterO.ExtendedFloat FromInt64(
         long valueSmall);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts a 64-bit integer to the same value as a binary float.
 
 <b>Parameters:</b>
@@ -846,6 +920,8 @@ An arbitrary-precision binary float with the exponent set to 0.
 
     public static PeterO.ExtendedFloat FromSingle(
         float flt);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a binary float from a 32-bit floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first.
 
@@ -865,7 +941,7 @@ A binary float with the same value as  <i>flt</i>
 
 Creates a binary float from a string that represents a number. See the four-parameter FromString method.
 
-The following example converts a number in the form of string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
+The following example converts a number in the form of a string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
     return arbitrary-precision binary float.FromString(str).ToDouble();
     }
 
@@ -884,6 +960,8 @@ The parsed number, converted to arbitrary-precision binary float.
         string str,
         int offset,
         int length);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Not documented yet.
 
@@ -924,6 +1002,8 @@ Either  <i>offset</i>
         int offset,
         int length,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a binary float from a string that represents a number. Note that if the string contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double).The format of the string generally consists of:
 
@@ -975,6 +1055,8 @@ Either  <i>offset</i>
         string str,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Not documented yet.
 
 <b>Parameters:</b>
@@ -1007,6 +1089,8 @@ This object's hash code.
 
     public bool IsInfinity();
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets a value indicating whether this object is positive or negative infinity.
 
 <b>Returns:</b>
@@ -1016,6 +1100,8 @@ True if this object is positive or negative infinity; otherwise, false.
 ### IsNaN
 
     public bool IsNaN();
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns whether this object is a not-a-number value.
 
@@ -1027,6 +1113,8 @@ True if this object is a not-a-number value; otherwise, false.
 
     public bool IsNegativeInfinity();
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns whether this object is negative infinity.
 
 <b>Returns:</b>
@@ -1036,6 +1124,8 @@ True if this object is negative infinity; otherwise, false.
 ### IsPositiveInfinity
 
     public bool IsPositiveInfinity();
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns whether this object is positive infinity.
 
@@ -1047,6 +1137,8 @@ True if this object is positive infinity; otherwise, false.
 
     public bool IsQuietNaN();
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets a value indicating whether this object is a quiet not-a-number value.
 
 <b>Returns:</b>
@@ -1056,6 +1148,8 @@ True if this object is a quiet not-a-number value; otherwise, false.
 ### IsSignalingNaN
 
     public bool IsSignalingNaN();
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets a value indicating whether this object is a signaling not-a-number value.
 
@@ -1067,6 +1161,8 @@ True if this object is a signaling not-a-number value; otherwise, false.
 
     public PeterO.ExtendedFloat Log(
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the natural logarithm of this object, that is, the power (exponent) that e (the base of natural logarithms) must be raised to in order to equal this object's value.
 
@@ -1089,6 +1185,8 @@ The parameter <i>ctx</i>
     public PeterO.ExtendedFloat Log10(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds the base-10 logarithm of this object, that is, the power (exponent) that the number 10 must be raised to in order to equal this object's value.
 
 <b>Parameters:</b>
@@ -1106,6 +1204,8 @@ Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns not-a-number (N
         PeterO.ExtendedFloat first,
         PeterO.ExtendedFloat second);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the greater value between two binary floats.
 
 <b>Parameters:</b>
@@ -1132,6 +1232,8 @@ The parameter <i>first</i>
         PeterO.ExtendedFloat second,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the greater value between two binary floats.
 
 <b>Parameters:</b>
@@ -1159,6 +1261,8 @@ The parameter <i>first</i>
         PeterO.ExtendedFloat first,
         PeterO.ExtendedFloat second);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the greater value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Max.
 
 <b>Parameters:</b>
@@ -1185,6 +1289,8 @@ The parameter <i>first</i>
         PeterO.ExtendedFloat second,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the greater value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Max.
 
 <b>Parameters:</b>
@@ -1212,6 +1318,8 @@ The parameter <i>first</i>
         PeterO.ExtendedFloat first,
         PeterO.ExtendedFloat second);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the lesser value between two binary floats.
 
 <b>Parameters:</b>
@@ -1237,6 +1345,8 @@ The parameter <i>first</i>
         PeterO.ExtendedFloat first,
         PeterO.ExtendedFloat second,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets the lesser value between two binary floats.
 
@@ -1265,6 +1375,8 @@ The parameter <i>first</i>
         PeterO.ExtendedFloat first,
         PeterO.ExtendedFloat second);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the lesser value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Min.
 
 <b>Parameters:</b>
@@ -1291,6 +1403,8 @@ The parameter <i>first</i>
         PeterO.ExtendedFloat second,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the lesser value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Min.
 
 <b>Parameters:</b>
@@ -1317,6 +1431,8 @@ The parameter <i>first</i>
     public PeterO.ExtendedFloat MovePointLeft(
         int places);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a number similar to this number but with the radix point moved to the left.
 
 <b>Parameters:</b>
@@ -1332,6 +1448,8 @@ An arbitrary-precision binary float.
     public PeterO.ExtendedFloat MovePointLeft(
         int places,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the radix point moved to the left.
 
@@ -1349,6 +1467,8 @@ An arbitrary-precision binary float.
 
     public PeterO.ExtendedFloat MovePointLeft(
         PeterO.BigInteger bigPlaces);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the radix point moved to the left.
 
@@ -1371,6 +1491,8 @@ The parameter <i>bigPlaces</i>
     public PeterO.ExtendedFloat MovePointLeft(
         PeterO.BigInteger bigPlaces,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the radix point moved to the left.
 
@@ -1395,6 +1517,8 @@ The parameter <i>bigPlaces</i>
     public PeterO.ExtendedFloat MovePointRight(
         int places);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a number similar to this number but with the radix point moved to the right.
 
 <b>Parameters:</b>
@@ -1410,6 +1534,8 @@ An arbitrary-precision binary float.
     public PeterO.ExtendedFloat MovePointRight(
         int places,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the radix point moved to the right.
 
@@ -1427,6 +1553,8 @@ An arbitrary-precision binary float.
 
     public PeterO.ExtendedFloat MovePointRight(
         PeterO.BigInteger bigPlaces);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the radix point moved to the right.
 
@@ -1449,6 +1577,8 @@ The parameter <i>bigPlaces</i>
     public PeterO.ExtendedFloat MovePointRight(
         PeterO.BigInteger bigPlaces,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the radix point moved to the right.
 
@@ -1475,6 +1605,8 @@ The parameter <i>bigPlaces</i>
         PeterO.ExtendedFloat op,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Multiplies two binary floats. The resulting scale will be the sum of the scales of the two binary floats. The result's sign is positive if both operands have the same sign, and negative if they have different signs.
 
 <b>Parameters:</b>
@@ -1498,6 +1630,8 @@ The parameter <i>op</i>
     public PeterO.ExtendedFloat Multiply(
         PeterO.ExtendedFloat otherValue);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Multiplies two binary floats. The resulting exponent will be the sum of the exponents of the two binary floats.
 
 <b>Parameters:</b>
@@ -1519,6 +1653,8 @@ The parameter <i>otherValue</i>
     public PeterO.ExtendedFloat MultiplyAndAdd(
         PeterO.ExtendedFloat multiplicand,
         PeterO.ExtendedFloat augend);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Multiplies by one binary float, and then adds another binary float.
 
@@ -1545,6 +1681,8 @@ The parameter <i>multiplicand</i>
         PeterO.ExtendedFloat op,
         PeterO.ExtendedFloat augend,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Multiplies by one value, and then adds another value.
 
@@ -1574,6 +1712,8 @@ The parameter <i>op</i>
         PeterO.ExtendedFloat subtrahend,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Multiplies by one value, and then subtracts another value.
 
 <b>Parameters:</b>
@@ -1600,6 +1740,8 @@ The parameter <i>op</i>
     public PeterO.ExtendedFloat Negate(
         PeterO.PrecisionContext context);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a binary float with the same value as this object but with the sign reversed.
 
 <b>Parameters:</b>
@@ -1620,6 +1762,8 @@ The parameter <i>context</i>
 
     public PeterO.ExtendedFloat Negate();
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets an object with the same value as this one, but with the sign reversed.
 
 <b>Returns:</b>
@@ -1630,6 +1774,8 @@ An arbitrary-precision binary float. If this value is positive zero, returns pos
 
     public PeterO.ExtendedFloat NextMinus(
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the largest value that's smaller than the given value.
 
@@ -1653,6 +1799,8 @@ The parameter <i>ctx</i>
     public PeterO.ExtendedFloat NextPlus(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds the smallest value that's greater than the given value.
 
 <b>Parameters:</b>
@@ -1675,6 +1823,8 @@ The parameter <i>ctx</i>
     public PeterO.ExtendedFloat NextToward(
         PeterO.ExtendedFloat otherValue,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the next value that is closer to the other object's value than this object's value.
 
@@ -1704,6 +1854,8 @@ The parameter <i>otherValue</i>
     public static PeterO.ExtendedFloat PI(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds the constant π.
 
 <b>Parameters:</b>
@@ -1725,6 +1877,8 @@ The parameter <i>ctx</i>
     public PeterO.ExtendedFloat Plus(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Rounds this object's value to a given precision, using the given rounding mode and range of exponent, and also converts negative zero to positive zero.
 
 <b>Parameters:</b>
@@ -1741,6 +1895,8 @@ The closest value to this object's value, rounded to the specified precision. Re
     public PeterO.ExtendedFloat Pow(
         int exponentSmall);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Raises this object's value to the given exponent.
 
 <b>Parameters:</b>
@@ -1756,6 +1912,8 @@ This^exponent. Returns not-a-number (NaN) if this object and exponent are both 0
     public PeterO.ExtendedFloat Pow(
         int exponentSmall,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Raises this object's value to the given exponent.
 
@@ -1774,6 +1932,8 @@ This^exponent. Signals the flag FlagInvalid and returns NaN if this object and e
     public PeterO.ExtendedFloat Pow(
         PeterO.ExtendedFloat exponent,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Raises this object's value to the given exponent.
 
@@ -1801,6 +1961,8 @@ The parameter <i>exponent</i>
 
     public PeterO.BigInteger Precision();
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds the number of digits in this number's mantissa. Returns 1 if this value is 0, and 0 if this value is infinity or NaN.
 
 <b>Returns:</b>
@@ -1812,6 +1974,8 @@ An arbitrary-precision integer.
     public PeterO.ExtendedFloat Quantize(
         int desiredExponentSmall,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a binary float with the same value but a new exponent.
 
@@ -1830,6 +1994,8 @@ A binary float with the same value as this object but with the exponent changed.
     public PeterO.ExtendedFloat Quantize(
         PeterO.BigInteger desiredExponent,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a binary float with the same value but a new exponent.
 
@@ -1855,6 +2021,8 @@ The parameter <i>desiredExponent</i>
         PeterO.ExtendedFloat otherValue,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a binary float with the same value as this object but with the same exponent as another binary float.
 
 <b>Parameters:</b>
@@ -1878,6 +2046,8 @@ The parameter <i>otherValue</i>
     public PeterO.ExtendedFloat Reduce(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Removes trailing zeros from this object's mantissa. For example, 1.00 becomes 1.If this object's value is 0, changes the exponent to 0.
 
 <b>Parameters:</b>
@@ -1893,6 +2063,8 @@ This value with trailing zeros removed. Note that if the result has a very high 
     public PeterO.ExtendedFloat Remainder(
         PeterO.ExtendedFloat divisor,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the remainder that results when dividing two arbitrary-precision binary floats.
 
@@ -1917,6 +2089,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedFloat RemainderNaturalScale(
         PeterO.ExtendedFloat divisor);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Not documented yet.
 
 <b>Parameters:</b>
@@ -1938,6 +2112,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedFloat RemainderNaturalScale(
         PeterO.ExtendedFloat divisor,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Calculates the remainder of a number by the formula this - ((this / divisor) * divisor). This is meant to be similar to the remainder operation in Java's BigDecimal.
 
@@ -1962,6 +2138,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedFloat RemainderNear(
         PeterO.ExtendedFloat divisor,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the distance to the closest multiple of the given divisor, based on the result of dividing this object's value by another object's value.
 
@@ -1996,7 +2174,7 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedFloat RoundToBinaryPrecision(
         PeterO.PrecisionContext ctx);
 
-<b>Deprecated.</b> Instead of this method use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Rounds this object's value to a given maximum bit length, using the given rounding mode and range of exponent.
 
@@ -2015,6 +2193,8 @@ The closest value to this object's value, rounded to the specified precision. Re
         int exponentSmall,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a binary number with the same value as this object but rounded to a new exponent if necessary.
 
 <b>Parameters:</b>
@@ -2032,6 +2212,8 @@ A binary number rounded to the closest value representable in the given precisio
     public PeterO.ExtendedFloat RoundToExponent(
         PeterO.BigInteger exponent,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a binary number with the same value as this object but rounded to a new exponent if necessary.
 
@@ -2057,6 +2239,8 @@ The parameter <i>exponent</i>
         int exponentSmall,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a binary number with the same value as this object but rounded to the given exponent, and signals an invalid operation if the result would be inexact.
 
 <b>Parameters:</b>
@@ -2074,6 +2258,8 @@ A binary number rounded to the closest value representable in the given precisio
     public PeterO.ExtendedFloat RoundToExponentExact(
         PeterO.BigInteger exponent,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a binary number with the same value as this object but rounded to the given exponent, and signals an invalid operation if the result would be inexact.
 
@@ -2098,6 +2284,8 @@ The parameter <i>exponent</i>
     public PeterO.ExtendedFloat RoundToIntegralExact(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a binary number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
 <b>Parameters:</b>
@@ -2113,6 +2301,8 @@ A binary number rounded to the closest integer representable in the given precis
     public PeterO.ExtendedFloat RoundToIntegralNoRoundedFlag(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a binary number with the same value as this object but rounded to an integer, without adding the FlagInexact or FlagRounded flags.
 
 <b>Parameters:</b>
@@ -2127,6 +2317,8 @@ A binary number rounded to the closest integer representable in the given precis
 
     public PeterO.ExtendedFloat RoundToPrecision(
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Rounds this object's value to a given precision, using the given rounding mode and range of exponent.
 
@@ -2144,6 +2336,8 @@ The closest value to this object's value, rounded to the specified precision. Re
     public PeterO.ExtendedFloat ScaleByPowerOfTwo(
         int places);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a number similar to this number but with the scale adjusted.
 
 <b>Parameters:</b>
@@ -2159,6 +2353,8 @@ An arbitrary-precision binary float.
     public PeterO.ExtendedFloat ScaleByPowerOfTwo(
         int places,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the scale adjusted.
 
@@ -2176,6 +2372,8 @@ An arbitrary-precision binary float.
 
     public PeterO.ExtendedFloat ScaleByPowerOfTwo(
         PeterO.BigInteger bigPlaces);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the scale adjusted.
 
@@ -2198,6 +2396,8 @@ The parameter <i>bigPlaces</i>
     public PeterO.ExtendedFloat ScaleByPowerOfTwo(
         PeterO.BigInteger bigPlaces,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with its scale adjusted.
 
@@ -2223,6 +2423,8 @@ The parameter <i>bigPlaces</i>
     public PeterO.ExtendedFloat SquareRoot(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds the square root of this object's value.
 
 <b>Parameters:</b>
@@ -2243,6 +2445,8 @@ The parameter <i>ctx</i>
 
     public PeterO.ExtendedFloat Subtract(
         PeterO.ExtendedFloat otherValue);
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Subtracts an arbitrary-precision binary float from this instance and returns the result..
 
@@ -2266,6 +2470,8 @@ The parameter <i>otherValue</i>
         PeterO.ExtendedFloat otherValue,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Subtracts an arbitrary-precision binary float from this instance.
 
 <b>Parameters:</b>
@@ -2288,6 +2494,8 @@ The parameter <i>otherValue</i>
 
     public PeterO.BigInteger ToBigInteger();
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts this value to an arbitrary-precision integer. Any fractional part of this value will be discarded when converting to a big integer.
 
 <b>Returns:</b>
@@ -2302,6 +2510,8 @@ This object's value is infinity or NaN.
 ### ToBigIntegerExact
 
     public PeterO.BigInteger ToBigIntegerExact();
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts this value to an arbitrary-precision integer, checking whether the value contains a fractional part.
 
@@ -2321,9 +2531,11 @@ This object's value is not an exact integer.
 
     public double ToDouble();
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts this value to a 64-bit floating-point number. The half-even rounding mode is used. If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
-The following example converts a number in the form of string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
+The following example converts a number in the form of a string to a `double` , or a 64-bit floating point number.    public static double StringToDouble(String str) {
     return arbitrary-precision binary float.FromString(str).ToDouble();
     }
 
@@ -2341,6 +2553,8 @@ The closest 64-bit floating-point number to this value. The return value can be 
 
     public string ToEngineeringString();
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts this value to an extended decimal, then returns the value of that decimal's ToEngineeringString method.
 
 <b>Returns:</b>
@@ -2350,6 +2564,8 @@ A text string.
 ### ToExtendedDecimal
 
     public PeterO.ExtendedDecimal ToExtendedDecimal();
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts this value to an extended decimal.
 
@@ -2361,6 +2577,8 @@ An extended decimal with the same value as this extended float.
 
     public string ToPlainString();
 
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts this value to a string, but without exponential notation.
 
 <b>Returns:</b>
@@ -2370,6 +2588,8 @@ A text string.
 ### ToSingle
 
     public float ToSingle();
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
@@ -2390,6 +2610,8 @@ A string representation of this object. The value is converted to decimal and th
 ### Ulp
 
     public PeterO.ExtendedFloat Ulp();
+
+<b>Deprecated.</b> Use EFloat from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns the unit in the last place. The mantissa will be 1 and the exponent will be this number's exponent. Returns 1 with an exponent of 0 if this number is infinity or NaN.
 

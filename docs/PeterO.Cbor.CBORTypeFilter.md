@@ -88,7 +88,7 @@ True if this filter allows CBOR arrays and an array's length is allowed under a 
 ### ArrayLengthMatches
 
     public bool ArrayLengthMatches(
-        PeterO.BigInteger bigLength);
+        PeterO.Numbers.EInteger bigLength);
 
 Returns whether an array's length is allowed under a filter.
 
@@ -179,13 +179,13 @@ True if CBOR objects can have the given tag number; otherwise, false.
 ### TagAllowed
 
     public bool TagAllowed(
-        long tag);
+        long longTag);
 
 Gets a value indicating whether CBOR objects can have the given tag number.
 
 <b>Parameters:</b>
 
- * <i>tag</i>: A tag number. Returns false if this is less than 0.
+ * <i>longTag</i>: A tag number. Returns false if this is less than 0.
 
 <b>Returns:</b>
 
@@ -194,7 +194,7 @@ True if CBOR objects can have the given tag number; otherwise, false.
 ### TagAllowed
 
     public bool TagAllowed(
-        PeterO.BigInteger bigTag);
+        PeterO.Numbers.EInteger bigTag);
 
 Gets a value indicating whether CBOR objects can have the given tag number.
 
@@ -338,7 +338,7 @@ A CBORTypeFilter object.
 ### WithTags
 
     public PeterO.Cbor.CBORTypeFilter WithTags(
-        params PeterO.BigInteger[] tags);
+        params PeterO.Numbers.EInteger[] tags);
 
 Not documented yet.
 

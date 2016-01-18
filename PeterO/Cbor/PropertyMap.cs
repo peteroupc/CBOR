@@ -8,7 +8,8 @@ at: http://upokecenter.dreamhosters.com/articles/donate-now-2/
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using PeterO; using PeterO.Numbers;
+using PeterO;
+using PeterO.Numbers;
 
 namespace PeterO.Cbor {
   internal static class PropertyMap {
@@ -95,6 +96,32 @@ Type[] parameters) {
         ValuePropertyLists.Add(t, ret);
         return ret;
       }
+    }
+
+    public static BigInteger ToLegacy(EInteger ei) {
+      return BigInteger.ToLegacy(ei);
+    }
+    public static ExtendedDecimal ToLegacy(EDecimal ed) {
+      return ExtendedDecimal.ToLegacy(ed);
+    }
+    public static ExtendedFloat ToLegacy(EFloat ef) {
+      return ExtendedFloat.ToLegacy(ef);
+    }
+    public static ExtendedRational ToLegacy(ERational er) {
+      return ExtendedRational.ToLegacy(er);
+    }
+
+    public static EInteger FromLegacy(BigInteger ei) {
+      return BigInteger.FromLegacy(ei);
+    }
+    public static EDecimal FromLegacy(ExtendedDecimal ed) {
+      return ExtendedDecimal.FromLegacy(ed);
+    }
+    public static EFloat FromLegacy(ExtendedFloat ef) {
+      return ExtendedFloat.FromLegacy(ef);
+    }
+    public static ERational FromLegacy(ExtendedRational er) {
+      return ExtendedRational.FromLegacy(er);
     }
 
     private static void FromArrayRecursive(

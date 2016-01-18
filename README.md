@@ -49,8 +49,6 @@ Other Sites
 Examples
 ----------
 
-*For more examples, see [examples.md](https://github.com/peteroupc/CBOR/tree/master/examples.md).*
-
 Creating a map and converting that map to CBOR bytes
 and a JSON string:
 

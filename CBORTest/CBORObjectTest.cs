@@ -180,10 +180,11 @@ namespace Test {
     public void TestAddConverter() {
       // not implemented yet
     }
+
     [Test]
     public void TestAddition() {
       var r = new FastRandom();
-      for (var i = 0; i < 3000; ++i) {
+      for (var i = 0; i < 1000; ++i) {
         CBORObject o1 = CBORTestCommon.RandomNumber(r);
         CBORObject o2 = CBORTestCommon.RandomNumber(r);
         ExtendedDecimal cmpDecFrac =
@@ -191,10 +192,14 @@ namespace Test {
         ExtendedDecimal cmpCobj = CBORObject.Addition(
           o1,
           o2).AsExtendedDecimal();
+        if (cmpDecFrac.CompareTo(cmpCobj) != 0) {
         TestCommon.CompareTestEqual(
 cmpDecFrac,
 cmpCobj,
-TestCommon.ObjectMessages(o1, o2, String.Empty));
+TestCommon.ObjectMessages(o1, o2,
+          TestCommon.ToByteArrayString(o1.EncodeToBytes())+"\r\n"+
+          TestCommon.ToByteArrayString(o2.EncodeToBytes())));
+          }
         CBORTestCommon.AssertRoundTrip(o1);
         CBORTestCommon.AssertRoundTrip(o2);
       }

@@ -102,6 +102,8 @@ Represents the number 0.
 
     public PeterO.BigInteger Exponent { get; }
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets this object's exponent. This object's value will be an integer if the exponent is positive or zero.
 
 <b>Returns:</b>
@@ -111,6 +113,8 @@ This object's exponent. This object's value will be an integer if the exponent i
 ### IsFinite
 
     public bool IsFinite { get; }
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets a value indicating whether this object is finite (not infinity or NaN).
 
@@ -122,6 +126,8 @@ True if this object is finite (not infinity or NaN); otherwise, false.
 
     public bool IsNegative { get; }
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets a value indicating whether this object is negative, including negative zero.
 
 <b>Returns:</b>
@@ -131,6 +137,8 @@ True if this object is negative, including negative zero; otherwise, false.
 ### IsZero
 
     public bool IsZero { get; }
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets a value indicating whether this object's value equals 0.
 
@@ -142,6 +150,8 @@ True if this object's value equals 0; otherwise, false.
 
     public PeterO.BigInteger Mantissa { get; }
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets this object's un-scaled value.
 
 <b>Returns:</b>
@@ -151,6 +161,8 @@ This object's un-scaled value. Will be negative if this object's value is negati
 ### Sign
 
     public int Sign { get; }
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets this value's sign: -1 if negative; 1 if positive; 0 if zero.
 
@@ -162,6 +174,8 @@ This value's sign: -1 if negative; 1 if positive; 0 if zero.
 
     public PeterO.BigInteger UnsignedMantissa { get; }
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the absolute value of this object's un-scaled value.
 
 <b>Returns:</b>
@@ -172,6 +186,8 @@ The absolute value of this object's un-scaled value.
 
     public PeterO.ExtendedDecimal Abs(
         PeterO.PrecisionContext context);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the absolute value of this object (if it's negative, it becomes positive).
 
@@ -187,6 +203,8 @@ The absolute value of this object.
 
     public PeterO.ExtendedDecimal Abs();
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the absolute value of this object.
 
 <b>Returns:</b>
@@ -197,6 +215,8 @@ An arbitrary-precision decimal number.
 
     public PeterO.ExtendedDecimal Add(
         PeterO.ExtendedDecimal otherValue);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Adds this object and another decimal number and returns the result.
 
@@ -220,6 +240,8 @@ The parameter <i>otherValue</i>
         PeterO.ExtendedDecimal otherValue,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds the sum of this object and another object. The result's exponent is set to the lower of the exponents of the two operands.
 
 <b>Parameters:</b>
@@ -242,6 +264,8 @@ The parameter <i>otherValue</i>
 
     public sealed int CompareTo(
         PeterO.ExtendedDecimal other);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Compares the mathematical values of this object and another object, accepting NaN values.This method is not consistent with the Equals method because two different numbers with the same mathematical value, but different exponents, will compare as equal.
 
@@ -269,6 +293,8 @@ The parameter <i>other</i>
     public int CompareToBinary(
         PeterO.ExtendedFloat other);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Compares an arbitrary-precision binary float with this instance.
 
 <b>Parameters:</b>
@@ -284,6 +310,8 @@ Zero if the values are equal; a negative number if this instance is less, or a p
     public PeterO.ExtendedDecimal CompareToSignal(
         PeterO.ExtendedDecimal other,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Compares the mathematical values of this object and another object, treating quiet NaN as signaling.In this method, negative zero and positive zero are considered equal.
 
@@ -311,6 +339,8 @@ The parameter <i>other</i>
         PeterO.ExtendedDecimal other,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Compares the mathematical values of this object and another object.In this method, negative zero and positive zero are considered equal.
 
 If this object or the other object is a quiet NaN or signaling NaN, this method returns a quiet NaN, and will signal a FlagInvalid flag if either is a signaling NaN.
@@ -337,6 +367,8 @@ The parameter <i>other</i>
         int mantissaSmall,
         int exponentSmall);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Creates a number with the value exponent*10^mantissa.
 
 <b>Parameters:</b>
@@ -354,6 +386,8 @@ An arbitrary-precision decimal number.
     public static PeterO.ExtendedDecimal Create(
         PeterO.BigInteger mantissa,
         PeterO.BigInteger exponent);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a number with the value exponent*10^mantissa.
 
@@ -379,6 +413,8 @@ The parameter <i>mantissa</i>
     public static PeterO.ExtendedDecimal CreateNaN(
         PeterO.BigInteger diag);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Creates a not-a-number arbitrary-precision decimal number.
 
 <b>Parameters:</b>
@@ -402,6 +438,8 @@ The parameter <i>diag</i>
         bool signaling,
         bool negative,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a not-a-number arbitrary-precision decimal number.
 
@@ -430,6 +468,8 @@ The parameter <i>diag</i>
     public PeterO.ExtendedDecimal Divide(
         PeterO.ExtendedDecimal divisor);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Divides this object by another decimal number and returns the result. When possible, the result will be exact.
 
 <b>Parameters:</b>
@@ -451,6 +491,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedDecimal Divide(
         PeterO.ExtendedDecimal divisor,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Divides this arbitrary-precision decimal number by another arbitrary-precision decimal number. The preferred exponent for the result is this object's exponent minus the divisor's exponent.
 
@@ -477,6 +519,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedDecimal[] DivideAndRemainderNaturalScale(
         PeterO.ExtendedDecimal divisor);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale.
 
 <b>Parameters:</b>
@@ -492,6 +536,8 @@ A 2 element array consisting of the quotient and remainder in that order.
     public PeterO.ExtendedDecimal[] DivideAndRemainderNaturalScale(
         PeterO.ExtendedDecimal divisor,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Calculates the quotient and remainder using the DivideToIntegerNaturalScale and the formula in RemainderNaturalScale.
 
@@ -511,6 +557,8 @@ A 2 element array consisting of the quotient and remainder in that order.
         PeterO.ExtendedDecimal divisor,
         long desiredExponentSmall,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Divides two arbitrary-precision decimal numbers, and gives a particular exponent to the result.
 
@@ -539,6 +587,8 @@ The parameter <i>divisor</i>
         long desiredExponentSmall,
         PeterO.Rounding rounding);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Divides two arbitrary-precision decimal numbers, and gives a particular exponent to the result.
 
 <b>Parameters:</b>
@@ -565,6 +615,8 @@ The parameter <i>divisor</i>
         PeterO.ExtendedDecimal divisor,
         PeterO.BigInteger desiredExponent,
         PeterO.Rounding rounding);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Divides two arbitrary-precision decimal numbers, and gives a particular exponent to the result.
 
@@ -594,6 +646,8 @@ The parameter <i>divisor</i>
         PeterO.BigInteger exponent,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Divides two arbitrary-precision decimal numbers, and gives a particular exponent to the result.
 
 <b>Parameters:</b>
@@ -620,6 +674,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedDecimal DivideToIntegerNaturalScale(
         PeterO.ExtendedDecimal divisor);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Divides two arbitrary-precision decimal numbers, and returns the integer part of the result, rounded down, with the preferred exponent set to this value's exponent minus the divisor's exponent.
 
 <b>Parameters:</b>
@@ -641,6 +697,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedDecimal DivideToIntegerNaturalScale(
         PeterO.ExtendedDecimal divisor,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Divides this object by another object, and returns the integer part of the result, with the preferred exponent set to this value's exponent minus the divisor's exponent.
 
@@ -666,6 +724,8 @@ The parameter <i>divisor</i>
         PeterO.ExtendedDecimal divisor,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Divides this object by another object, and returns the integer part of the result, with the exponent set to 0.
 
 <b>Parameters:</b>
@@ -689,6 +749,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedDecimal DivideToSameExponent(
         PeterO.ExtendedDecimal divisor,
         PeterO.Rounding rounding);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Divides this object by another decimal number and returns a result with the same exponent as this object (the dividend).
 
@@ -728,6 +790,8 @@ True if the objects are equal; otherwise, false.
     public sealed bool Equals(
         PeterO.ExtendedDecimal other);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Determines whether this object's mantissa and exponent are equal to those of another object.
 
 <b>Parameters:</b>
@@ -742,6 +806,8 @@ True if this object's mantissa and exponent are equal to those of another object
 
     public PeterO.ExtendedDecimal Exp(
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds e (the base of natural logarithms) raised to the power of this object's value.
 
@@ -758,6 +824,8 @@ Exponential of this object. If this object's value is 1, returns an approximatio
 
     public static PeterO.ExtendedDecimal FromBigInteger(
         PeterO.BigInteger bigint);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts a big integer to an arbitrary precision decimal.
 
@@ -780,6 +848,8 @@ The parameter <i>bigint</i>
     public static PeterO.ExtendedDecimal FromDouble(
         double dbl);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Creates a decimal number from a 64-bit binary floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 64-bit binary floating-point number is not always the value that results when passing a literal decimal number (for example, calling  `ExtendedDecimal.FromDouble(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the value of the closest "double" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
 
 <b>Parameters:</b>
@@ -795,6 +865,8 @@ A decimal number with the same value as  <i>dbl</i>
 
     public static PeterO.ExtendedDecimal FromExtendedFloat(
         PeterO.ExtendedFloat bigfloat);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a decimal number from an arbitrary-precision binary floating-point number.
 
@@ -817,6 +889,8 @@ The parameter <i>bigfloat</i>
     public static PeterO.ExtendedDecimal FromInt32(
         int valueSmaller);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Creates a decimal number from a 32-bit signed integer.
 
 <b>Parameters:</b>
@@ -832,6 +906,8 @@ An arbitrary-precision decimal number with the exponent set to 0.
     public static PeterO.ExtendedDecimal FromInt64(
         long valueSmall);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Creates a decimal number from a 64-bit signed integer.
 
 <b>Parameters:</b>
@@ -846,6 +922,8 @@ An arbitrary-precision decimal number with the exponent set to 0.
 
     public static PeterO.ExtendedDecimal FromSingle(
         float flt);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a decimal number from a 32-bit binary floating-point number. This method computes the exact value of the floating point number, not an approximation, as is often the case by converting the floating point number to a string first. Remember, though, that the exact value of a 32-bit binary floating-point number is not always the value that results when passing a literal decimal number (for example, calling  `ExtendedDecimal.FromSingle(0.1f)`  ), since not all decimal numbers can be converted to exact binary numbers (in the example given, the resulting arbitrary-precision decimal will be the the value of the closest "float" to 0.1, not 0.1 exactly). To create an arbitrary-precision decimal number from a decimal number, use FromString instead in most cases (for example: `ExtendedDecimal.FromString("0.1")`  ).
 
@@ -890,6 +968,8 @@ The parameter  <i>str</i>
         int offset,
         int length);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Creates a decimal number from a string that represents a number. See  `FromString(String, int, int, EContext)`  for more information.
 
 <b>Parameters:</b>
@@ -924,6 +1004,8 @@ The parameter  <i>str</i>
         int offset,
         int length,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Creates a decimal number from a string that represents a number.
 
@@ -969,6 +1051,8 @@ The parameter  <i>str</i>
         string str,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Creates a decimal number from a string that represents a number. See  `FromString(String, int, int, EContext)`  for more information.
 
 <b>Parameters:</b>
@@ -1005,6 +1089,8 @@ This object's hash code.
 
     public bool IsInfinity();
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets a value indicating whether this object is positive or negative infinity.
 
 <b>Returns:</b>
@@ -1014,6 +1100,8 @@ True if this object is positive or negative infinity; otherwise, false.
 ### IsNaN
 
     public bool IsNaN();
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets a value indicating whether this object is not a number (NaN).
 
@@ -1025,6 +1113,8 @@ True if this object is not a number (NaN); otherwise, false.
 
     public bool IsNegativeInfinity();
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns whether this object is negative infinity.
 
 <b>Returns:</b>
@@ -1034,6 +1124,8 @@ True if this object is negative infinity; otherwise, false.
 ### IsPositiveInfinity
 
     public bool IsPositiveInfinity();
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns whether this object is positive infinity.
 
@@ -1045,6 +1137,8 @@ True if this object is positive infinity; otherwise, false.
 
     public bool IsQuietNaN();
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets a value indicating whether this object is a quiet not-a-number value.
 
 <b>Returns:</b>
@@ -1054,6 +1148,8 @@ True if this object is a quiet not-a-number value; otherwise, false.
 ### IsSignalingNaN
 
     public bool IsSignalingNaN();
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets a value indicating whether this object is a signaling not-a-number value.
 
@@ -1065,6 +1161,8 @@ True if this object is a signaling not-a-number value; otherwise, false.
 
     public PeterO.ExtendedDecimal Log(
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the natural logarithm of this object, that is, the power (exponent) that e (the base of natural logarithms) must be raised to in order to equal this object's value.
 
@@ -1082,6 +1180,8 @@ Ln(this object). Signals the flag FlagInvalid and returns NaN if this object is 
     public PeterO.ExtendedDecimal Log10(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds the base-10 logarithm of this object, that is, the power (exponent) that the number 10 must be raised to in order to equal this object's value.
 
 <b>Parameters:</b>
@@ -1098,6 +1198,8 @@ Ln(this object)/Ln(10). Signals the flag FlagInvalid and returns not-a-number (N
     public static PeterO.ExtendedDecimal Max(
         PeterO.ExtendedDecimal first,
         PeterO.ExtendedDecimal second);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets the greater value between two decimal numbers.
 
@@ -1125,6 +1227,8 @@ The parameter <i>first</i>
         PeterO.ExtendedDecimal second,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the greater value between two decimal numbers.
 
 <b>Parameters:</b>
@@ -1152,6 +1256,8 @@ The parameter <i>first</i>
         PeterO.ExtendedDecimal first,
         PeterO.ExtendedDecimal second);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the greater value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Max.
 
 <b>Parameters:</b>
@@ -1178,6 +1284,8 @@ The parameter <i>first</i>
         PeterO.ExtendedDecimal second,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the greater value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Max.
 
 <b>Parameters:</b>
@@ -1205,6 +1313,8 @@ The parameter <i>first</i>
         PeterO.ExtendedDecimal first,
         PeterO.ExtendedDecimal second);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the lesser value between two decimal numbers.
 
 <b>Parameters:</b>
@@ -1230,6 +1340,8 @@ The parameter <i>first</i>
         PeterO.ExtendedDecimal first,
         PeterO.ExtendedDecimal second,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets the lesser value between two decimal numbers.
 
@@ -1258,6 +1370,8 @@ The parameter <i>first</i>
         PeterO.ExtendedDecimal first,
         PeterO.ExtendedDecimal second);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the lesser value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Min.
 
 <b>Parameters:</b>
@@ -1284,6 +1398,8 @@ The parameter <i>first</i>
         PeterO.ExtendedDecimal second,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets the lesser value between two values, ignoring their signs. If the absolute values are equal, has the same effect as Min.
 
 <b>Parameters:</b>
@@ -1310,6 +1426,8 @@ The parameter <i>first</i>
     public PeterO.ExtendedDecimal MovePointLeft(
         int places);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a number similar to this number but with the decimal point moved to the left.
 
 <b>Parameters:</b>
@@ -1325,6 +1443,8 @@ An arbitrary-precision decimal number.
     public PeterO.ExtendedDecimal MovePointLeft(
         int places,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the decimal point moved to the left.
 
@@ -1342,6 +1462,8 @@ An arbitrary-precision decimal number.
 
     public PeterO.ExtendedDecimal MovePointLeft(
         PeterO.BigInteger bigPlaces);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the decimal point moved to the left.
 
@@ -1364,6 +1486,8 @@ The parameter <i>bigPlaces</i>
     public PeterO.ExtendedDecimal MovePointLeft(
         PeterO.BigInteger bigPlaces,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the decimal point moved to the left.
 
@@ -1388,6 +1512,8 @@ The parameter <i>bigPlaces</i>
     public PeterO.ExtendedDecimal MovePointRight(
         int places);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a number similar to this number but with the decimal point moved to the right.
 
 <b>Parameters:</b>
@@ -1403,6 +1529,8 @@ An arbitrary-precision decimal number.
     public PeterO.ExtendedDecimal MovePointRight(
         int places,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the decimal point moved to the right.
 
@@ -1420,6 +1548,8 @@ An arbitrary-precision decimal number.
 
     public PeterO.ExtendedDecimal MovePointRight(
         PeterO.BigInteger bigPlaces);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the decimal point moved to the right.
 
@@ -1442,6 +1572,8 @@ The parameter <i>bigPlaces</i>
     public PeterO.ExtendedDecimal MovePointRight(
         PeterO.BigInteger bigPlaces,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the decimal point moved to the right.
 
@@ -1468,6 +1600,8 @@ The parameter <i>bigPlaces</i>
         PeterO.ExtendedDecimal op,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Multiplies two decimal numbers. The resulting scale will be the sum of the scales of the two decimal numbers. The result's sign is positive if both operands have the same sign, and negative if they have different signs.
 
 <b>Parameters:</b>
@@ -1491,6 +1625,8 @@ The parameter <i>op</i>
     public PeterO.ExtendedDecimal Multiply(
         PeterO.ExtendedDecimal otherValue);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Multiplies two decimal numbers. The resulting exponent will be the sum of the exponents of the two decimal numbers.
 
 <b>Parameters:</b>
@@ -1512,6 +1648,8 @@ The parameter <i>otherValue</i>
     public PeterO.ExtendedDecimal MultiplyAndAdd(
         PeterO.ExtendedDecimal multiplicand,
         PeterO.ExtendedDecimal augend);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Multiplies by one decimal number, and then adds another decimal number.
 
@@ -1541,6 +1679,8 @@ The parameter <i>multiplicand</i>
         PeterO.ExtendedDecimal augend,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Multiplies by one value, and then adds another value.
 
 <b>Parameters:</b>
@@ -1569,6 +1709,8 @@ The parameter <i>op</i>
         PeterO.ExtendedDecimal subtrahend,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Multiplies by one value, and then subtracts another value.
 
 <b>Parameters:</b>
@@ -1595,6 +1737,8 @@ The parameter <i>op</i>
     public PeterO.ExtendedDecimal Negate(
         PeterO.PrecisionContext context);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a decimal number with the same value as this object but with the sign reversed.
 
 <b>Parameters:</b>
@@ -1615,6 +1759,8 @@ The parameter <i>context</i>
 
     public PeterO.ExtendedDecimal Negate();
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Gets an object with the same value as this one, but with the sign reversed.
 
 <b>Returns:</b>
@@ -1625,6 +1771,8 @@ An arbitrary-precision decimal number. If this value is positive zero, returns p
 
     public PeterO.ExtendedDecimal NextMinus(
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the largest value that's smaller than the given value.
 
@@ -1643,6 +1791,8 @@ Returns the largest value that's less than the given value. Returns negative inf
     public PeterO.ExtendedDecimal NextPlus(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds the smallest value that's greater than the given value.
 
 <b>Parameters:</b>
@@ -1660,6 +1810,8 @@ Returns the smallest value that's greater than the given value.Signals FlagInval
     public PeterO.ExtendedDecimal NextToward(
         PeterO.ExtendedDecimal otherValue,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the next value that is closer to the other object's value than this object's value. Returns a copy of this value with the same sign as the other value if both values are equal.
 
@@ -1686,6 +1838,8 @@ The parameter <i>otherValue</i>
     public static PeterO.ExtendedDecimal PI(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds the constant π.
 
 <b>Parameters:</b>
@@ -1701,6 +1855,8 @@ is null or the precision is unlimited (the context's Precision property is 0).
 
     public PeterO.ExtendedDecimal Plus(
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Rounds this object's value to a given precision, using the given rounding mode and range of exponent, and also converts negative zero to positive zero.
 
@@ -1718,6 +1874,8 @@ The closest value to this object's value, rounded to the specified precision. Re
     public PeterO.ExtendedDecimal Pow(
         int exponentSmall);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Raises this object's value to the given exponent.
 
 <b>Parameters:</b>
@@ -1733,6 +1891,8 @@ This^exponent. Returns not-a-number (NaN) if this object and exponent are both 0
     public PeterO.ExtendedDecimal Pow(
         int exponentSmall,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Raises this object's value to the given exponent.
 
@@ -1751,6 +1911,8 @@ This^exponent. Signals the flag FlagInvalid and returns NaN if this object and e
     public PeterO.ExtendedDecimal Pow(
         PeterO.ExtendedDecimal exponent,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Raises this object's value to the given exponent.
 
@@ -1775,6 +1937,8 @@ The parameter <i>exponent</i>
 
     public PeterO.BigInteger Precision();
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds the number of digits in this number's mantissa. Returns 1 if this value is 0, and 0 if this value is infinity or NaN.
 
 <b>Returns:</b>
@@ -1786,6 +1950,8 @@ An arbitrary-precision integer.
     public PeterO.ExtendedDecimal Quantize(
         int desiredExponentSmall,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a decimal number with the same value but a new exponent.Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
 
@@ -1805,6 +1971,8 @@ A decimal number with the same value as this object but with the exponent change
         int desiredExponentSmall,
         PeterO.Rounding rounding);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a decimal number with the same value as this one but a new exponent.
 
 <b>Parameters:</b>
@@ -1823,6 +1991,8 @@ A decimal number with the same value as this object but with the exponent change
     public PeterO.ExtendedDecimal Quantize(
         PeterO.BigInteger desiredExponent,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a decimal number with the same value but a new exponent.Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
 
@@ -1848,6 +2018,8 @@ The parameter <i>desiredExponent</i>
         PeterO.ExtendedDecimal otherValue,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a decimal number with the same value as this object but with the same exponent as another decimal number.Note that this is not always the same as rounding to a given number of decimal places, since it can fail if the difference between this value's exponent and the desired exponent is too big, depending on the maximum precision. If rounding to a number of decimal places is desired, it's better to use the RoundToExponent and RoundToIntegral methods instead.
 
 <b>Parameters:</b>
@@ -1871,6 +2043,8 @@ The parameter <i>otherValue</i>
     public PeterO.ExtendedDecimal Reduce(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Removes trailing zeros from this object's mantissa. For example, 1.00 becomes 1.If this object's value is 0, changes the exponent to 0.
 
 <b>Parameters:</b>
@@ -1886,6 +2060,8 @@ This value with trailing zeros removed. Note that if the result has a very high 
     public PeterO.ExtendedDecimal Remainder(
         PeterO.ExtendedDecimal divisor,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the remainder that results when dividing two arbitrary-precision decimal numbers.
 
@@ -1911,6 +2087,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedDecimal RemainderNaturalScale(
         PeterO.ExtendedDecimal divisor);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Calculates the remainder of a number by the formula "this" - (("this" / "divisor") * "divisor").
 
 <b>Parameters:</b>
@@ -1932,6 +2110,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedDecimal RemainderNaturalScale(
         PeterO.ExtendedDecimal divisor,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Calculates the remainder of a number by the formula "this" - (("this" / "divisor") * "divisor").
 
@@ -1956,6 +2136,8 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedDecimal RemainderNear(
         PeterO.ExtendedDecimal divisor,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Finds the distance to the closest multiple of the given divisor, based on the result of dividing this object's value by another object's value.
 
@@ -1990,7 +2172,7 @@ The parameter <i>divisor</i>
     public PeterO.ExtendedDecimal RoundToBinaryPrecision(
         PeterO.PrecisionContext ctx);
 
-<b>Deprecated.</b> Instead of this method use RoundToPrecision and pass a precision context with the IsPrecisionInBits property set.
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Rounds this object's value to a given maximum bit length, using the given rounding mode and range of exponent.
 
@@ -2009,6 +2191,8 @@ The closest value to this object's value, rounded to the specified precision. Re
         int exponentSmall,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a decimal number with the same value as this object but rounded to a new exponent if necessary.
 
 <b>Parameters:</b>
@@ -2026,6 +2210,8 @@ A decimal number rounded to the closest value representable in the given precisi
     public PeterO.ExtendedDecimal RoundToExponent(
         PeterO.BigInteger exponent,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a decimal number with the same value as this object but rounded to a new exponent if necessary.
 
@@ -2051,6 +2237,8 @@ The parameter <i>exponent</i>
         int exponentSmall,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a decimal number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
 <b>Parameters:</b>
@@ -2068,6 +2256,8 @@ A decimal number rounded to the closest value representable in the given precisi
     public PeterO.ExtendedDecimal RoundToExponentExact(
         PeterO.BigInteger exponent,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a decimal number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
@@ -2092,6 +2282,8 @@ The parameter <i>exponent</i>
     public PeterO.ExtendedDecimal RoundToIntegralExact(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a decimal number with the same value as this object but rounded to an integer, and signals an invalid operation if the result would be inexact.
 
 <b>Parameters:</b>
@@ -2107,6 +2299,8 @@ A decimal number rounded to the closest integer representable in the given preci
     public PeterO.ExtendedDecimal RoundToIntegralNoRoundedFlag(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a decimal number with the same value as this object but rounded to an integer, without adding the FlagInexact or FlagRounded flags.
 
 <b>Parameters:</b>
@@ -2121,6 +2315,8 @@ A decimal number rounded to the closest integer representable in the given preci
 
     public PeterO.ExtendedDecimal RoundToPrecision(
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Rounds this object's value to a given precision, using the given rounding mode and range of exponent.
 
@@ -2138,6 +2334,8 @@ The closest value to this object's value, rounded to the specified precision. Re
     public PeterO.ExtendedDecimal ScaleByPowerOfTen(
         int places);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Returns a number similar to this number but with the scale adjusted.
 
 <b>Parameters:</b>
@@ -2153,6 +2351,8 @@ An arbitrary-precision decimal number.
     public PeterO.ExtendedDecimal ScaleByPowerOfTen(
         int places,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the scale adjusted.
 
@@ -2170,6 +2370,8 @@ An arbitrary-precision decimal number.
 
     public PeterO.ExtendedDecimal ScaleByPowerOfTen(
         PeterO.BigInteger bigPlaces);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with the scale adjusted.
 
@@ -2192,6 +2394,8 @@ The parameter <i>bigPlaces</i>
     public PeterO.ExtendedDecimal ScaleByPowerOfTen(
         PeterO.BigInteger bigPlaces,
         PeterO.PrecisionContext ctx);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns a number similar to this number but with its scale adjusted.
 
@@ -2217,6 +2421,8 @@ The parameter <i>bigPlaces</i>
     public PeterO.ExtendedDecimal SquareRoot(
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Finds the square root of this object's value.
 
 <b>Parameters:</b>
@@ -2232,6 +2438,8 @@ The square root. Signals the flag FlagInvalid and returns NaN if this object is 
 
     public PeterO.ExtendedDecimal Subtract(
         PeterO.ExtendedDecimal otherValue);
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Subtracts an arbitrary-precision decimal number from this instance and returns the result.
 
@@ -2255,6 +2463,8 @@ The parameter <i>otherValue</i>
         PeterO.ExtendedDecimal otherValue,
         PeterO.PrecisionContext ctx);
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Subtracts an arbitrary-precision decimal number from this instance.
 
 <b>Parameters:</b>
@@ -2277,6 +2487,8 @@ The parameter <i>otherValue</i>
 
     public PeterO.BigInteger ToBigInteger();
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts this value to an arbitrary-precision integer. Any fractional part in this value will be discarded when converting to a big integer.
 
 <b>Returns:</b>
@@ -2291,6 +2503,8 @@ This object's value is infinity or NaN.
 ### ToBigIntegerExact
 
     public PeterO.BigInteger ToBigIntegerExact();
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts this value to an arbitrary-precision integer, checking whether the fractional part of the integer would be lost.
 
@@ -2310,6 +2524,8 @@ This object's value is not an exact integer.
 
     public double ToDouble();
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts this value to a 64-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 64-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
 <b>Returns:</b>
@@ -2319,6 +2535,8 @@ The closest 64-bit floating-point number to this value. The return value can be 
 ### ToEngineeringString
 
     public string ToEngineeringString();
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Same as toString(), except that when an exponent is used it will be a multiple of 3.
 
@@ -2330,6 +2548,8 @@ A text string.
 
     public PeterO.ExtendedFloat ToExtendedFloat();
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Creates a binary floating-point number from this object's value. Note that if the binary floating-point number contains a negative exponent, the resulting value might not be exact. However, the resulting binary float will contain enough precision to accurately convert it to a 32-bit or 64-bit floating point number (float or double).
 
 <b>Returns:</b>
@@ -2340,6 +2560,8 @@ An arbitrary-precision binary float.
 
     public string ToPlainString();
 
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
+
 Converts this value to a string, but without using exponential notation.
 
 <b>Returns:</b>
@@ -2349,6 +2571,8 @@ A text string.
 ### ToSingle
 
     public float ToSingle();
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Converts this value to a 32-bit floating-point number. The half-even rounding mode is used.If this value is a NaN, sets the high bit of the 32-bit floating point number's mantissa for a quiet NaN, and clears it for a signaling NaN. Then the next highest bit of the mantissa is cleared for a quiet NaN, and set for a signaling NaN. Then the other bits of the mantissa are set to the lowest bits of this object's unsigned mantissa.
 
@@ -2369,6 +2593,8 @@ A string representation of this object.
 ### Ulp
 
     public PeterO.ExtendedDecimal Ulp();
+
+<b>Deprecated.</b> Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.
 
 Returns the unit in the last place. The mantissa will be 1 and the exponent will be this number's exponent. Returns 1 with an exponent of 0 if this number is infinity or NaN.
 

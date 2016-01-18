@@ -2650,7 +2650,7 @@
 <doc name="M:PeterO.Cbor.CBORTypeFilter.TagAllowed(System.Int64)">
 <summary>Gets a value indicating whether CBOR objects can have the
             given tag number.</summary>
-            <param name='tag'>A tag number. Returns false if this is less than
+            <param name='longTag'>A tag number. Returns false if this is less than
             0.</param>
             <returns>True if CBOR objects can have the given tag number;
             otherwise, false.</returns>

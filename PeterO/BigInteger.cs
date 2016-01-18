@@ -39,6 +39,13 @@ namespace PeterO {
       this.ei = ei;
     }
 
+    internal static BigInteger ToLegacy(EInteger ei) {
+      return new BigInteger(ei);
+    }
+    internal static EInteger FromLegacy(BigInteger bei) {
+      return bei.Ei;
+    }
+
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="F:PeterO.BigInteger.TEN"]/*'/>
 #if CODE_ANALYSIS
