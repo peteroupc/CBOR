@@ -4,6 +4,8 @@
         System.IComparable,
         System.IEquatable
 
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.ERational`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.ERational`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method, among other things, but for method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't include any methods that explicitly take an  `ERational`  as a parameter or return value.
+
 Arbitrary-precision rational number. This class cannot be inherited; this is a change in version 2.0 from previous versions, where the class was inadvertently left inheritable.Thread safety:Instances of this class are immutable, so they are inherently safe for use by multiple threads. Multiple instances of this object with the same properties are interchangeable, so they should not be compared using the "==" operator (which only checks if each side of the operator is the same instance).
 
 ### ExtendedRational Constructor

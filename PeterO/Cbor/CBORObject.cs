@@ -934,9 +934,21 @@ CBOREncodeOptions options) {
       if (obj is BigInteger) {
         return FromObject((BigInteger)obj);
       }
-      var df = obj as ExtendedDecimal;
-      if (df != null) {
-        return FromObject(df);
+      var eif = obj as EInteger;
+      if (eif != null) {
+        return FromObject(eif);
+      }
+      var edf = obj as EDecimal;
+      if (edf != null) {
+        return FromObject(edf);
+      }
+      var eff = obj as EFloat;
+      if (eff != null) {
+        return FromObject(eff);
+      }
+      var erf = obj as ERational;
+      if (erf != null) {
+        return FromObject(erf);
       }
       var bf = obj as ExtendedFloat;
       if (bf != null) {

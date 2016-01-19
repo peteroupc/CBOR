@@ -134,7 +134,6 @@ endIndex));
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.fromString(System.String)"]/*'/>
-    [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
   public static BigInteger fromString(string str) {
 return new BigInteger(EInteger.FromString(str));
 }
