@@ -950,6 +950,10 @@ CBOREncodeOptions options) {
       if (erf != null) {
         return FromObject(erf);
       }
+      var df = obj as ExtendedDecimal;
+      if (df != null) {
+        return FromObject(df);
+      }
       var bf = obj as ExtendedFloat;
       if (bf != null) {
         return FromObject(bf);

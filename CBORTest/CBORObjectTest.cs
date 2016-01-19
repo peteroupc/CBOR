@@ -2055,7 +2055,7 @@ stringTemp);
       {
 string stringTemp = cbor.ToString();
 Assert.AreEqual(
-"0.5",
+"1/2",
 stringTemp);
 }
     }
