@@ -2,6 +2,8 @@
 
     public class PrecisionContext
 
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EContext`  in the  `PeterO.EContext` library (in .NET), or  `com.upokecenter.numbers.EFloat`  in the  `com.github.peteroupc/numbers` artifact (in Java).
+
 Contains parameters for controlling the precision, rounding, and exponent range of arbitrary-precision numbers.
 
 ### PrecisionContext Constructor

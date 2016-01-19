@@ -9,12 +9,7 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO {
-    /// <summary>An arbitrary-precision integer.
-    /// <para><b>Thread safety:</b> Instances of this class are immutable,
-    /// so they are inherently safe for use by multiple threads. Multiple
-    /// instances of this object with the same value are interchangeable,
-    /// but they should be compared using the "Equals" method rather than
-    /// the "==" operator.</para></summary>
+    /// <include file='../docs.xml' path='docs/doc[@name="blank"]/*'/>
   public sealed partial class BigInteger {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.op_Implicit(System.Int64)~PeterO.BigInteger"]/*'/>

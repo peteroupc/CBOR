@@ -4,7 +4,11 @@
         System.IComparable,
         System.IEquatable
 
-Represents an arbitrary-precision binary floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 2^exponent. This class also supports values for negative zero, not-a-number (NaN) values, and infinity.Passing a signaling NaN to any arithmetic operation shown here will signal the flag FlagInvalid and return a quiet NaN, even if another operand to that operation is a quiet NaN, unless noted otherwise.
+This class is largely obsolete. It will be replaced by a new version of this class in a different namespace/package and library, called  `PeterO.Numbers.EFloat`  in the  `PeterO.Numbers` library (in .NET), or  `com.upokecenter.numbers.EFloat`  in the  `com.github.peteroupc/numbers` artifact (in Java). This new class can be used in the  `CBORObject.FromObject(Object)` method, among other things, but for method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't include any methods that explicitly take an  `EFloat`  as a parameter or return value.
+
+Represents an arbitrary-precision binary floating-point number. Consists of an integer mantissa and an integer exponent, both arbitrary-precision. The value of the number equals mantissa * 2^exponent. This class also supports values for negative zero, not-a-number (NaN) values, and infinity.
+
+Passing a signaling NaN to any arithmetic operation shown here will signal the flag FlagInvalid and return a quiet NaN, even if another operand to that operation is a quiet NaN, unless noted otherwise.
 
 Passing a quiet NaN to any arithmetic operation shown here will return a quiet NaN, unless noted otherwise.
 

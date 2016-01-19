@@ -3,6 +3,7 @@ using System.IO;
 using NUnit.Framework;
 using PeterO;
 using PeterO.Cbor;
+using PeterO.Numbers;
 
 namespace Test {
   [TestFixture]
@@ -2022,6 +2023,41 @@ TestCommon.IntToString(j));
      "]",
      2000);
       TestFailingJSON(jsonTemp);
+    }
+    [Test]
+    public void TestEI() {
+      CBORObject cbor = CBORObject.FromObject(EInteger.FromString("100"));
+      Assert.AreEqual(CBORType.Number, cbor.Type);
+      {
+string stringTemp = cbor.ToString();
+Assert.AreEqual(
+"100",
+stringTemp);
+}
+      cbor = CBORObject.FromObject(EDecimal.FromString("200"));
+      Assert.AreEqual(CBORType.Number, cbor.Type);
+      {
+string stringTemp = cbor.ToString();
+Assert.AreEqual(
+"200",
+stringTemp);
+}
+      cbor = CBORObject.FromObject(EFloat.FromString("300"));
+      Assert.AreEqual(CBORType.Number, cbor.Type);
+      {
+string stringTemp = cbor.ToString();
+Assert.AreEqual(
+"300",
+stringTemp);
+}
+      cbor = CBORObject.FromObject(ERational.Create(1, 2));
+      Assert.AreEqual(CBORType.Number, cbor.Type);
+      {
+string stringTemp = cbor.ToString();
+Assert.AreEqual(
+"0.5",
+stringTemp);
+}
     }
     [Test]
     public void TestFromObject() {
