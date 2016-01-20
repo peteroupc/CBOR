@@ -5113,9 +5113,14 @@ Represents an arbitrary-precision decimal floating-point
 <summary>Creates a binary floating-point number from this
             object&#x27;s value. Note that if the binary floating-point number
             contains a negative exponent, the resulting value might not be
-            exact. However, the resulting binary float will contain enough
+            exact, in which case the resulting binary float will be an
+            approximation of this decimal number's value. (NOTE: This
+documentation previously said the binary float will contain enough
             precision to accurately convert it to a 32-bit or 64-bit floating
-            point number (float or double).</summary>
+            point number.  Due to double rounding, this will generally not
+            be the case for certain numbers converted from decimal
+            to ExtendedFloat via this method and in turn converted
+            to <c>double</c> or <c>float</c>.)</summary>
             <returns>An arbitrary-precision binary float.</returns>
 </doc>
 <doc name="M:PeterO.ExtendedDecimal.ToPlainString">
@@ -5713,9 +5718,14 @@ Represents an arbitrary-precision binary floating-point
 <doc name="M:PeterO.ExtendedFloat.FromString(System.String,System.Int32,System.Int32,PeterO.PrecisionContext)">
 <summary>Creates a binary float from a string that represents a
             number. Note that if the string contains a negative exponent, the
-            resulting value might not be exact. However, the resulting binary
-            float will contain enough precision to accurately convert it to a
-            32-bit or 64-bit floating point number (float or double).
+            resulting value might not be exact, in which case the resulting binary float will be an
+            approximation of this decimal number's value. (NOTE: This
+documentation previously said the binary float will contain enough
+            precision to accurately convert it to a 32-bit or 64-bit floating
+            point number.  Due to double rounding, this will generally not
+            be the case for certain numbers converted from decimal
+            to ExtendedFloat via this method and in turn converted
+            to <c>double</c> or <c>float</c>.)
             <para>The format of the string generally consists of:</para>
             <list type=''>
             <item>An optional plus sign ("+" , U+002B) or minus sign ("-",
