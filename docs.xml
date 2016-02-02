@@ -1,5 +1,4 @@
 <docs>
-<doc name="blank"></doc>
 <doc name="T:PeterO.BigInteger">
 <summary>
             <para><b>This class is largely obsolete. It will be replaced by a new
@@ -11,12 +10,13 @@
             method, among other things, but for  method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't
             include any methods that explicitly take an <c>EInteger</c> as a parameter
             or return value.</b></para>
-   An arbitrary-precision integer.
+            An arbitrary-precision integer.
             <para><b>Thread safety:</b>Instances of this class are immutable, so they are inherently
             safe for use by multiple threads. Multiple instances of this object
             with the same value are interchangeable, but they should be
             compared using the "Equals" method rather than the "==" operator.</para>
             </summary>
+            ///
 </doc>
 <doc name="M:PeterO.BigInteger.Abs(PeterO.BigInteger)">
 <summary>Not documented yet.</summary>
@@ -1469,8 +1469,10 @@
             <returns>A CBOR number.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.ExtendedRational)">
-<summary>Generates a CBOR object from a rational number.</summary>
-            <param name='bigValue'>A rational number.</param>
+<summary>Generates a CBOR object from an arbitrary-precision binary
+            floating-point number.</summary>
+            <param name='bigValue'>An arbitrary-precision binary floating-point
+            number.</param>
             <returns>A CBOR number.</returns>
 </doc>
 <doc name="M:PeterO.Cbor.CBORObject.FromObject(PeterO.Numbers.EDecimal)">
@@ -3493,7 +3495,7 @@
             method, among other things, but for  method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't
             include any methods that explicitly take an <c>EDecimal</c> as a parameter
             or return value.</b></para>
-Represents an arbitrary-precision decimal floating-point
+            Represents an arbitrary-precision decimal floating-point
             number.
             <para><b>About decimal arithmetic</b></para>
             <para>
@@ -5115,7 +5117,7 @@ Represents an arbitrary-precision decimal floating-point
             contains a negative exponent, the resulting value might not be
             exact, in which case the resulting binary float will be an
             approximation of this decimal number's value. (NOTE: This
-documentation previously said the binary float will contain enough
+            documentation previously said the binary float will contain enough
             precision to accurately convert it to a 32-bit or 64-bit floating
             point number.  Due to double rounding, this will generally not
             be the case for certain numbers converted from decimal
@@ -5174,7 +5176,7 @@ documentation previously said the binary float will contain enough
             include any methods that explicitly take an <c>EFloat</c> as a parameter
             or return value.</b></para>
             <para>
-Represents an arbitrary-precision binary floating-point
+            Represents an arbitrary-precision binary floating-point
             number. Consists of an integer mantissa and an integer exponent,
             both arbitrary-precision. The value of the number equals mantissa *
             2^exponent. This class also supports values for negative zero,
@@ -5720,7 +5722,7 @@ Represents an arbitrary-precision binary floating-point
             number. Note that if the string contains a negative exponent, the
             resulting value might not be exact, in which case the resulting binary float will be an
             approximation of this decimal number's value. (NOTE: This
-documentation previously said the binary float will contain enough
+            documentation previously said the binary float will contain enough
             precision to accurately convert it to a 32-bit or 64-bit floating
             point number.  Due to double rounding, this will generally not
             be the case for certain numbers converted from decimal
