@@ -11,8 +11,8 @@ using PeterO.Numbers;
 namespace PeterO {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="T:PeterO.TrapException"]/*'/>
-  [Obsolete("Use ETrapException from PeterO.Numbers/com.upokecenter.numbers."
-)]
+  [Obsolete(
+"Use ETrapException from PeterO.Numbers/com.upokecenter.numbers.")]
   public class TrapException : ArithmeticException {
     private ETrapException ete;
 

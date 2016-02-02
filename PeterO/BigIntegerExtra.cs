@@ -9,7 +9,8 @@ using System;
 using PeterO.Numbers;
 
 namespace PeterO {
-    /// <include file='../docs.xml' path='docs/doc[@name="blank"]/*'/>
+    /// <include file='../docs.xml'
+    /// path='docs/doc[@name="T:PeterO.BigInteger"]/*'/>
   public sealed partial class BigInteger {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.op_Implicit(System.Int64)~PeterO.BigInteger"]/*'/>
