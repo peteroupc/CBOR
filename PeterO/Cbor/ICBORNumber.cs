@@ -19,6 +19,8 @@ namespace PeterO.Cbor {
 
     bool IsNaN(Object obj);
 
+    bool IsNegative(Object obj);
+
     double AsDouble(Object obj);
 
     object Negate(Object obj);

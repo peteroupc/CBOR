@@ -143,7 +143,7 @@ namespace Test {
       }
       return ExtendedFloat.Create(
 RandomBigInteger(r),
-(BigInteger)(r.NextValue(400) - 200));
+BigInteger.valueOf(r.NextValue(400) - 200));
     }
 
     public static byte[] RandomByteString(FastRandom rand) {

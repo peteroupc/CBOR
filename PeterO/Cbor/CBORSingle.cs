@@ -151,5 +151,11 @@ namespace PeterO.Cbor {
     public ERational AsExtendedRational(object obj) {
       return ERational.FromSingle((float)obj);
     }
+
+    public bool IsNegative(object obj) {
+      float val = (float)obj;
+      int ivalue = BitConverter.ToInt32(BitConverter.GetBytes((float)val), 0);
+      return (ivalue >> 31) != 0;
+    }
   }
 }

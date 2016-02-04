@@ -7,7 +7,7 @@
             library (in .NET), or <c>com.upokecenter.numbers.EInteger</c> in the 
             <c>com.github.peteroupc/numbers</c>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
-            method, among other things, but for  method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't
+            method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
             include any methods that explicitly take an <c>EInteger</c> as a parameter
             or return value.</b></para>
             An arbitrary-precision integer.
@@ -3492,7 +3492,7 @@
             library (in .NET), or <c>com.upokecenter.numbers.EDecimal</c> in the 
             <c>com.github.peteroupc/numbers</c>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
-            method, among other things, but for  method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't
+            method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
             include any methods that explicitly take an <c>EDecimal</c> as a parameter
             or return value.</b></para>
             Represents an arbitrary-precision decimal floating-point
@@ -5172,7 +5172,7 @@
             library (in .NET), or <c>com.upokecenter.numbers.EFloat</c> in the 
             <c>com.github.peteroupc/numbers</c>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
-            method, among other things, but for  method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't
+            method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
             include any methods that explicitly take an <c>EFloat</c> as a parameter
             or return value.</b></para>
             <para>
@@ -6742,7 +6742,7 @@
             library (in .NET), or <c>com.upokecenter.numbers.ERational</c> in the 
             <c>com.github.peteroupc/numbers</c>
             artifact (in Java).  This new class can be used in the <c>CBORObject.FromObject(Object)</c>
-            method, among other things, but for  method, among other things (by including the new library in your code), but for this versionof the CBOR library doesn't
+            method (by including the new library in your code, among other things), but this version of the CBOR library doesn't
             include any methods that explicitly take an <c>ERational</c> as a parameter
             or return value.</b></para>Arbitrary-precision rational number. This class cannot be
             inherited; this is a change in version 2.0 from previous versions,

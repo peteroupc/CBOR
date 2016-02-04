@@ -16,7 +16,6 @@ namespace PeterO {
   IEquatable<ExtendedDecimal> {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.Exponent"]/*'/>
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public BigInteger Exponent {
       get {
         return new BigInteger(this.Ed.Exponent);
@@ -25,7 +24,6 @@ namespace PeterO {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.UnsignedMantissa"]/*'/>
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public BigInteger UnsignedMantissa {
       get {
         return new BigInteger(this.Ed.UnsignedMantissa);
@@ -34,7 +32,6 @@ namespace PeterO {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.ExtendedDecimal.Mantissa"]/*'/>
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public BigInteger Mantissa {
       get {
         return new BigInteger(this.Ed.Mantissa);
@@ -89,7 +86,6 @@ namespace PeterO {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedDecimal Create(
       BigInteger mantissa,
       BigInteger exponent) {
@@ -195,10 +191,7 @@ PrecisionContext ctx) {
       return new BigInteger(this.Ed.ToEInteger());
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-      "",
-      "CS0618",
-      Justification = "Implements legacy behavior using an obsolete class for convenience.")]
+    [Obsolete("Implements legacy behavior using an obsolete class for convenience.")]
     internal static ERounding ToERounding(Rounding r) {
       if (r == Rounding.Ceiling) {
         return ERounding.Ceiling;
@@ -277,14 +270,12 @@ PrecisionContext ctx) {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.ToSingle"]/*'/>
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public float ToSingle() {
       return this.Ed.ToSingle();
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedDecimal.ToDouble"]/*'/>
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public double ToDouble() {
       return this.Ed.ToDouble();
     }
@@ -383,7 +374,6 @@ PrecisionContext ctx) {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
                 "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static readonly ExtendedDecimal NegativeZero =
       new ExtendedDecimal(EDecimal.NegativeZero);
 
@@ -393,34 +383,28 @@ PrecisionContext ctx) {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
                 "CA2104", Justification = "ExtendedDecimal is immutable")]
 #endif
-
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static readonly ExtendedDecimal Ten =
-      ExtendedDecimal.Create((BigInteger)10, BigInteger.Zero);
+      new ExtendedDecimal(EDecimal.Ten);
 
     //----------------------------------------------------------------
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="F:PeterO.ExtendedDecimal.NaN"]/*'/>
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static readonly ExtendedDecimal NaN =
       new ExtendedDecimal(EDecimal.NaN);
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="F:PeterO.ExtendedDecimal.SignalingNaN"]/*'/>
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static readonly ExtendedDecimal SignalingNaN =
       new ExtendedDecimal(EDecimal.SignalingNaN);
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="F:PeterO.ExtendedDecimal.PositiveInfinity"]/*'/>
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static readonly ExtendedDecimal PositiveInfinity =
       new ExtendedDecimal(EDecimal.PositiveInfinity);
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="F:PeterO.ExtendedDecimal.NegativeInfinity"]/*'/>
-    [Obsolete("Use EDecimal from PeterO.Numbers/com.upokecenter.numbers.")]
     public static readonly ExtendedDecimal NegativeInfinity =
       new ExtendedDecimal(EDecimal.NegativeInfinity);
 

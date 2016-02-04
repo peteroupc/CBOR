@@ -7,8 +7,7 @@ namespace Test {
   [TestFixture]
   public class CBORDataUtilitiesTest {
     private void AssertNegative(CBORObject obj) {
-      ExtendedDecimal ed = obj.AsExtendedDecimal();
-      Assert.IsTrue(ed.IsNegative);
+      Assert.IsTrue(obj.IsNegative);
       CBORTestCommon.AssertRoundTrip(obj);
     }
     [Test]

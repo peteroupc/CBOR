@@ -70,8 +70,6 @@ True if this value is 0; otherwise, false.
 
     public static PeterO.BigInteger One { get; }
 
-<b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
-
 Gets the arbitrary-precision integer for one.
 
 <b>Returns:</b>
@@ -93,8 +91,6 @@ Gets the sign of this object's value.
 ### Zero
 
     public static PeterO.BigInteger Zero { get; }
-
-<b>Deprecated.</b> Use EInteger from PeterO.Numbers/com.upokecenter.numbers.
 
 Gets the arbitrary-precision integer for zero.
 
