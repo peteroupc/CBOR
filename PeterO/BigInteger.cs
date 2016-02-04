@@ -28,8 +28,9 @@ namespace PeterO {
 #endif
 
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
-  public static readonly BigInteger ONE = new BigInteger(EInteger.One);
+    public static readonly BigInteger ONE = oneValue;
 
+  private static readonly BigInteger oneValue = new BigInteger(EInteger.One);
     private readonly EInteger ei;
 
     internal BigInteger(EInteger ei) {
@@ -67,8 +68,9 @@ namespace PeterO {
       Justification = "BigInteger is immutable")]
 #endif
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
-  public static readonly BigInteger ZERO = new BigInteger(EInteger.Zero);
+  public static readonly BigInteger ZERO = zeroValue;
 
+    private static readonly BigInteger zeroValue = new BigInteger(EInteger.Zero);
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.BigInteger.IsEven"]/*'/>
     [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
@@ -111,7 +113,6 @@ namespace PeterO {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.fromRadixString(System.String,System.Int32)"]/*'/>
-    [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
   public static BigInteger fromRadixString(string str, int radix) {
       return new BigInteger(EInteger.FromRadixString(str, radix));
     }
@@ -150,7 +151,6 @@ return new BigInteger(EInteger.FromSubstring(str, index, endIndex));
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.valueOf(System.Int64)"]/*'/>
-    [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
   public static BigInteger valueOf(long longerValue) {
       return new BigInteger(EInteger.FromInt64(longerValue));
  }
@@ -174,7 +174,6 @@ return new BigInteger(this.Ei.Add(bigintAugend.Ei));
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.bitLength"]/*'/>
-    [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
   public int bitLength() {
 return this.Ei.GetSignedBitLength();
  }
@@ -437,7 +436,6 @@ return this.Ei.GetSignedBit(index);
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.BigInteger.toRadixString(System.Int32)"]/*'/>
-    [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
   public string toRadixString(int radix) {
       return this.Ei.ToRadixString(radix);
  }

@@ -195,20 +195,18 @@ BigInteger otherValue) {
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.BigInteger.Zero"]/*'/>
     [CLSCompliant(false)]
-    [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
     public static BigInteger Zero {
       get {
-        return BigInteger.ZERO;
+        return zeroValue;
       }
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.BigInteger.One"]/*'/>
     [CLSCompliant(false)]
-    [Obsolete("Use EInteger from PeterO.Numbers/com.upokecenter.numbers.")]
     public static BigInteger One {
       get {
-        return BigInteger.ONE;
+        return oneValue;
       }
     }
 

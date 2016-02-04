@@ -124,5 +124,9 @@ namespace PeterO.Cbor {
     public ERational AsExtendedRational(object obj) {
       return ERational.FromEInteger((EInteger)obj);
     }
+
+    public bool IsNegative(object obj) {
+      return ((EInteger)obj).Sign < 0;
+    }
   }
 }

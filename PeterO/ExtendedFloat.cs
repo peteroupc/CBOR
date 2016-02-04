@@ -21,7 +21,6 @@ namespace PeterO {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.ExtendedFloat.Exponent"]/*'/>
-    [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public BigInteger Exponent {
       get {
         return new BigInteger(this.Ef.Exponent);
@@ -30,7 +29,6 @@ namespace PeterO {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.ExtendedFloat.UnsignedMantissa"]/*'/>
-    [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public BigInteger UnsignedMantissa {
       get {
         return new BigInteger(this.Ef.UnsignedMantissa);
@@ -39,7 +37,6 @@ namespace PeterO {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="P:PeterO.ExtendedFloat.Mantissa"]/*'/>
-    [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public BigInteger Mantissa {
       get {
         return new BigInteger(this.Ef.Mantissa);
@@ -120,14 +117,12 @@ ctx == null ? null : ctx.Ec));
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Create(System.Int32,System.Int32)"]/*'/>
-    [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat Create(int mantissaSmall, int exponentSmall) {
       return new ExtendedFloat(EFloat.Create(mantissaSmall, exponentSmall));
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.Create(PeterO.BigInteger,PeterO.BigInteger)"]/*'/>
-    [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static ExtendedFloat Create(
 BigInteger mantissa,
 BigInteger exponent) {
@@ -333,7 +328,6 @@ PrecisionContext ctx) {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="F:PeterO.ExtendedFloat.NaN"]/*'/>
-    [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static readonly ExtendedFloat NaN =
      new ExtendedFloat(EFloat.NaN);
 
@@ -345,13 +339,11 @@ PrecisionContext ctx) {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="F:PeterO.ExtendedFloat.PositiveInfinity"]/*'/>
-    [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static readonly ExtendedFloat PositiveInfinity =
      new ExtendedFloat(EFloat.PositiveInfinity);
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="F:PeterO.ExtendedFloat.NegativeInfinity"]/*'/>
-    [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public static readonly ExtendedFloat NegativeInfinity =
      new ExtendedFloat(EFloat.NegativeInfinity);
 
@@ -371,14 +363,12 @@ PrecisionContext ctx) {
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.IsNaN"]/*'/>
-    [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsNaN() {
       return this.Ef.IsNaN();
     }
 
     /// <include file='../docs.xml'
     /// path='docs/doc[@name="M:PeterO.ExtendedFloat.IsInfinity"]/*'/>
-    [Obsolete("Use EFloat from PeterO.Numbers/com.upokecenter.numbers.")]
     public bool IsInfinity() {
       return this.Ef.IsInfinity();
     }

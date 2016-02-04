@@ -103,6 +103,68 @@ namespace PeterO {
       throw new CBORException("Object expected");
     }
 
+    private static readonly string ValueDigits = "0123456789";
+
+    private static void ReverseChars(char[] chars, int offset, int length) {
+      int half = length >> 1;
+      int right = offset + length - 1;
+      for (var i = 0; i < half; i++, right--) {
+        char value = chars[offset + i];
+        chars[offset + i] = chars[right];
+        chars[right] = value;
+      }
+    }
+
+    public static string LongToString(long longValue) {
+      if (longValue == Int64.MinValue) {
+        return "-9223372036854775808";
+      }
+      if (longValue == 0L) {
+        return "0";
+      }
+      if (longValue == (long)Int32.MinValue) {
+        return "-2147483648";
+      }
+      bool neg = longValue < 0;
+      var count = 0;
+      char[] chars;
+      int intlongValue = unchecked((int)longValue);
+      if ((long)intlongValue == longValue) {
+        chars = new char[12];
+        if (neg) {
+          chars[0] = '-';
+          ++count;
+          intlongValue = -intlongValue;
+        }
+        while (intlongValue != 0) {
+          int intdivlongValue = intlongValue / 10;
+          char digit = ValueDigits[(int)(intlongValue - (intdivlongValue *
+              10))];
+          chars[count++] = digit;
+          intlongValue = intdivlongValue;
+        }
+      } else {
+        chars = new char[24];
+        if (neg) {
+          chars[0] = '-';
+          ++count;
+          longValue = -longValue;
+        }
+        while (longValue != 0) {
+          long divlongValue = longValue / 10;
+          char digit = ValueDigits[(int)(longValue - (divlongValue * 10))];
+          chars[count++] = digit;
+          longValue = divlongValue;
+        }
+      }
+      if (neg) {
+        ReverseChars(chars, 1, count - 1);
+      } else {
+        ReverseChars(chars, 0, count);
+      }
+      return new String(chars, 0, count);
+    }
+
     private static CBORObject readString(Stream stream, char firstChar) {
       var builder = new StringBuilder();
       if (firstChar < (int)'0' && firstChar > (int)'9') {
@@ -153,7 +215,7 @@ namespace PeterO {
         if (length < 0) {
           throw new CBORException("invalid string");
         }
-        var bigLength = (BigInteger)length;
+        var bigLength = (PeterO.Numbers.EInteger)length;
         writeUtf8(
 bigLength.ToString(),
 stream);
@@ -186,9 +248,7 @@ stream);
             if (length < 0) {
               throw new CBORException("invalid string");
             }
-            var bigLength = (BigInteger)length;
-            writeUtf8(
-bigLength.ToString(),
+            writeUtf8(LongToString(length),
 stream);
             stream.WriteByte(unchecked((byte)((byte)':')));
             writeUtf8(key, stream);
@@ -203,7 +263,7 @@ stream);
             if (length < 0) {
               throw new CBORException("invalid string");
             }
-            var bigLength = (BigInteger)length;
+            var bigLength = PeterO.Numbers.EInteger.FromInt64(length);
             writeUtf8(
 bigLength.ToString(),
 stream);
@@ -225,7 +285,7 @@ stream);
         if (length < 0) {
           throw new CBORException("invalid string");
         }
-        var bigLength = (BigInteger)length;
+        var bigLength = PeterO.Numbers.EInteger.FromInt64(length);
         writeUtf8(
 bigLength.ToString(),
 stream);

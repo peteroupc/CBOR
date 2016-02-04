@@ -295,6 +295,16 @@ namespace PeterO.Cbor {
       }
     }
 
+    /// <summary>
+    ///
+    /// </summary>
+    public bool IsNegative {
+      get {
+        ICBORNumber cn = NumberInterfaces[this.ItemType];
+        return (cn != null) && cn.IsNegative(this.ThisItem);
+      }
+    }
+
     /// <include file='../../docs.xml'
     /// path='docs/doc[@name="P:PeterO.Cbor.CBORObject.OutermostTag"]/*'/>
     public BigInteger OutermostTag {

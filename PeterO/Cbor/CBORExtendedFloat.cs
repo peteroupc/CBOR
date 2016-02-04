@@ -162,5 +162,9 @@ namespace PeterO.Cbor {
     public ERational AsExtendedRational(object obj) {
       return ERational.FromExtendedFloat((EFloat)obj);
     }
+
+    public bool IsNegative(object obj) {
+      return ((EFloat)obj).IsNegative;
+    }
   }
 }

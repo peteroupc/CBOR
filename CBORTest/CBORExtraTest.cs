@@ -4712,9 +4712,6 @@ stringTemp);
           CBORTestCommon.AssertSer(
             CBORObject.FromObject(j),
             String.Format(CultureInfo.InvariantCulture, "{0}", j));
-          Assert.AreEqual(
-            CBORObject.FromObject(j),
-            CBORObject.FromObject((BigInteger)j));
           if (j == ranges[i + 1]) {
             break;
           }

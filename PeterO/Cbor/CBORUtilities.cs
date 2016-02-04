@@ -80,7 +80,7 @@ namespace PeterO.Cbor {
 System.Globalization.CultureInfo.InvariantCulture);
       // TODO: Use this version in version 3, and preserve
       // TODO: negative zeros in that version
-      // return EFloat.FromDouble(dbl).ToString();
+      // return EFloat.FromDouble(dbl).ToShortestString(EContext.Binary32);
     }
 
     public static string SingleToString(float sing) {
@@ -89,7 +89,7 @@ System.Globalization.CultureInfo.InvariantCulture);
 System.Globalization.CultureInfo.InvariantCulture);
       // TODO: Use this version in version 3, and preserve
       // TODO: negative zeros in that version
-      // return EFloat.FromSingle(dbl).ToString();
+      // return EFloat.FromSingle(sing).ToShortestString(EContext.Binary64);
     }
 
     public static EInteger BigIntegerFromSingle(float flt) {

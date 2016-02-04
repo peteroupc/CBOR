@@ -157,5 +157,9 @@ namespace PeterO.Cbor {
     public ERational AsExtendedRational(object obj) {
       return ERational.FromExtendedDecimal((EDecimal)obj);
     }
+
+    public bool IsNegative(object obj) {
+      return ((EDecimal)obj).IsNegative;
+    }
   }
 }

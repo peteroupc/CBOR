@@ -42,14 +42,15 @@ namespace Test {
         } else {
           builder.Append(ValueDigitsLower[digit]);
         }
-        var bigintTmp = (BigInteger)radix;
-        bv *= bigintTmp;
-        bigintTmp = (BigInteger)digit;
-        bv += bigintTmp;
+        //var bigintTmp = (BigInteger)radix;
+        //bv *= bigintTmp;
+        //bigintTmp = (BigInteger)digit;
+        //bv += bigintTmp;
       }
-      if (negative) {
-        bv = -bv;
-      }
+      //if (negative) {
+      //  bv = -bv;
+      //}
+      bv = BigInteger.fromRadixString(builder.ToString(),radix);
       sabi.bigintValue = bv;
       sabi.stringValue = builder.ToString();
       return sabi;
